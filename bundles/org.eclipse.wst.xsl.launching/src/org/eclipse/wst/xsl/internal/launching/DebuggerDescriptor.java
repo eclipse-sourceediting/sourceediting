@@ -10,6 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.launching;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.xsl.launching.IDebugger;
 import org.eclipse.wst.xsl.launching.IProcessorType;
 import org.eclipse.wst.xsl.launching.XSLTRuntime;
@@ -40,17 +45,27 @@ public class DebuggerDescriptor implements IDebugger
 
 	public String[] getClassPath()
 	{
-		return classpath;
+		List<String> entries = new ArrayList<String>();
+		try 
+		{
+			// in dev, add the bin dir
+			if (Platform.inDevelopmentMode())
+				entries.add(ProcessorInvokerDescriptor.getFileLocation(bundleId, "/bin"));
+			for (String jar : classpath)
+			{
+				entries.add(ProcessorInvokerDescriptor.getFileLocation(bundleId, "/" + jar));
+			}
+		} 
+		catch (CoreException e) 
+		{
+			LaunchingPlugin.log(e);
+		}
+		return entries.toArray(new String[0]);
 	}
 
 	public String getId()
 	{
 		return id;
-	}
-
-	public String getBundleId()
-	{
-		return bundleId;
 	}
 
 	public String getName()

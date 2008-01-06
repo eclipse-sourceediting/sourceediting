@@ -22,7 +22,6 @@ import java.util.List;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -49,7 +48,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.xsl.launching.IDebugger;
 import org.eclipse.wst.xsl.launching.IProcessorInstall;
-import org.eclipse.wst.xsl.launching.IProcessorInvokerDescriptor;
+import org.eclipse.wst.xsl.launching.IProcessorInvoker;
 import org.eclipse.wst.xsl.launching.IProcessorJar;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
 import org.eclipse.wst.xsl.launching.XSLTRuntime;
@@ -220,7 +219,7 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 		return null;
 	}
 
-	private IProcessorInvokerDescriptor getProcessorInvokerDescriptor(ILaunchConfiguration configuration) throws CoreException
+	private IProcessorInvoker getProcessorInvokerDescriptor(ILaunchConfiguration configuration) throws CoreException
 	{
 		String invokerId = configuration.getAttribute(XSLLaunchConfigurationConstants.INVOKER_DESCRIPTOR, (String) null);
 		if (invokerId == null)
@@ -241,40 +240,12 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 			String processorId = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_PROCESSOR, "");
 			install = XSLTRuntime.getProcessor(processorId);
 		}
-		if (mode.equals(ILaunchManager.DEBUG_MODE) && install.getDebugger() != null)
+		if (mode.equals(ILaunchManager.DEBUG_MODE) && install.getDebugger() == null)
 		{
 			String debuggingInstallId = LaunchingPlugin.getDefault().getPluginPreferences().getString(XSLLaunchConfigurationConstants.ATTR_DEFAULT_DEBUGGING_INSTALL_ID);
 			install = XSLTRuntime.getProcessor(debuggingInstallId);
 		}
 		return install;
-	}
-
-	private URL getURL(String bundleId, String path)
-	{
-		return FileLocator.find(Platform.getBundle(bundleId), new Path(path), null);
-	}
-
-	private String getFileURL(String bundleId, String path) throws CoreException
-	{
-		String file = null;
-		URL fileUrl;
-		try
-		{
-			URL url = getURL(bundleId, path);
-			if (url != null)
-			{
-				fileUrl = FileLocator.toFileURL(url);
-				file = fileUrl.getFile();
-				// remove prefixed "/" on windows
-				if (Platform.OS_WIN32.equals(Platform.getOS()) && file.startsWith("/"))
-					file = file.substring(1);
-			}
-		}
-		catch (IOException e)
-		{
-			throw new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.ERROR, "Error extracting jar file: " + path + " from bundle: " + bundleId, e));
-		}
-		return file;
 	}
 
 	@Override
@@ -289,7 +260,7 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 	public String getProgramArguments(ILaunchConfiguration configuration) throws CoreException
 	{
 		// classname, sourceurl, output file
-		IProcessorInvokerDescriptor invoker = getProcessorInvokerDescriptor(configuration);
+		IProcessorInvoker invoker = getProcessorInvokerDescriptor(configuration);
 		String clazz = invoker.getInvokerClassName();
 
 		StringBuffer sb = new StringBuffer();
@@ -322,33 +293,21 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 		String[] userClasspath = super.getClasspath(configuration);
 
 		// get the classpath required for the transformation
-		IProcessorInvokerDescriptor invoker = getProcessorInvokerDescriptor(configuration);
-		String[] userEntries = invoker.getClasspathEntries();
-
+		IProcessorInvoker invoker = getProcessorInvokerDescriptor(configuration);
 		List<String> invokerCP = new ArrayList<String>();
-		// in dev, add the bin dir
-		if (Platform.inDevelopmentMode())
-			invokerCP.add(getFileURL(invoker.getBundleId(), "/bin"));
-		for (String entry : userEntries)
+		for (String entry : invoker.getClasspathEntries())
 		{
-			String url = getFileURL(invoker.getBundleId(), "/" + entry);
-			if (url != null)
-				invokerCP.add(url);
+			invokerCP.add(entry);
 		}
 
-		// add the various debuggers...
-
+		// add the debugger...
 		IProcessorInstall install = getProcessorInstall(configuration, mode);
 		if (ILaunchManager.DEBUG_MODE.equals(mode) && install.getDebugger() != null)
 		{
-			IDebugger debugger = install.getDebugger();
-			// in dev, add the bin dir
-			if (Platform.inDevelopmentMode())
-				invokerCP.add(getFileURL(debugger.getBundleId(), "/bin"));
-			String[] jars = debugger.getClassPath();
+			String[] jars = install.getDebugger().getClassPath();
 			for (String jar : jars)
 			{
-				invokerCP.add(getFileURL(debugger.getBundleId(), "/" + jar));
+				invokerCP.add(jar);
 			}
 		}
 
