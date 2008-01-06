@@ -25,12 +25,6 @@ public interface IDebugger
 	String getId();
 
 	/**
-	 * Get the id of the bundle that contributed this debugger.
-	 * @return bundle id
-	 */
-	String getBundleId();
-
-	/**
 	 * Get the set of bundle-relative jar files to add to the classpath. 
 	 * @return array of bundle-relative jars
 	 */
