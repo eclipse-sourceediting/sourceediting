@@ -39,6 +39,8 @@ import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IProcess;
+import org.eclipse.debug.core.model.ISourceLocator;
+import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.JavaLaunchDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -67,7 +69,6 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 		this.mode = mode;
 		launchHelper = new LaunchHelper(configuration);
 		launchHelper.save(getLaunchConfigFile());
-
 		DebugPlugin.getDefault().addDebugEventListener(new IDebugEventSetListener()
 		{
 
@@ -80,38 +81,11 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 					{
 						if (debugEvent.getSource() == process)
 						{
-							// add debug target once the process has been
-							// created
-							if (debugEvent.getKind() == DebugEvent.CREATE)
-							{
-								if (mode.equals(ILaunchManager.DEBUG_MODE))
-								{
-									// remove the target added by the Java
-									// Launch Delegate
-									IDebugTarget[] targets = launch.getDebugTargets();
-									for (IDebugTarget target : targets)
-									{
-										launch.removeDebugTarget(target);
-									}
-									try
-									{
-										IDebugTarget target = new XSLDebugTarget(launch, launch.getProcesses()[0], launchHelper);
-										launch.addDebugTarget(target);
-									}
-									catch (CoreException e)
-									{
-										LaunchingPlugin.log(e);
-									}
-								}
-							}
-							// remove this listener once process is terminated
-							else if (debugEvent.getKind() == DebugEvent.TERMINATE)
+							if (debugEvent.getKind() == DebugEvent.TERMINATE)
 							{
 								// remove self as listener
 								DebugPlugin.getDefault().removeDebugEventListener(this);
-								// TODO this is dirty - need to declare
-								// extension point and move the UI code into the
-								// UI plugin
+								// TODO this is dirty - need to declare extension point and move the UI code into the UI plugin
 								if (launchHelper.getOpenFileOnCompletion())
 								{
 									PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable()
@@ -142,20 +116,47 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 
 		});
 
-		super.launch(configuration, mode, launch, monitor);
+		// the super.launch will add a Java source director if we set it to null here
+		final ISourceLocator configuredLocator = launch.getSourceLocator();
+		launch.setSourceLocator(null);
 
+		super.launch(configuration, mode, launch, monitor);
+		
+		// now get the java source locator
+		final ISourceLocator javaSourceLookupDirector = (ISourceLocator)launch.getSourceLocator();
+		// now add our own participant to the java director
+		launch.setSourceLocator(new ISourceLocator(){
+
+			public Object getSourceElement(IStackFrame stackFrame) 
+			{
+				// simply look at one and then the other
+				Object sourceElement = javaSourceLookupDirector.getSourceElement(stackFrame);
+				if (sourceElement == null)
+					sourceElement = configuredLocator.getSourceElement(stackFrame);
+				return sourceElement;
+			}});
+		
+		IDebugTarget target = new XSLDebugTarget(launch, launch.getProcesses()[0], launchHelper);
+		launch.addDebugTarget(target);
 	}
 
+	/**
+	 * Get the Java breakpoint and the XSL breakpoints
+	 */
 	@Override
 	protected IBreakpoint[] getBreakpoints(ILaunchConfiguration configuration)
 	{
 		IBreakpointManager breakpointManager = DebugPlugin.getDefault().getBreakpointManager();
 		if (!breakpointManager.isEnabled())
-		{
-			// no need to check breakpoints individually.
 			return null;
-		}
-		return breakpointManager.getBreakpoints(IXSLConstants.ID_XSL_DEBUG_MODEL);
+		
+		IBreakpoint[] javaBreakpoints = super.getBreakpoints(configuration);
+		IBreakpoint[] xslBreakpoints = breakpointManager.getBreakpoints(IXSLConstants.ID_XSL_DEBUG_MODEL);
+		IBreakpoint[] breakpoints = new IBreakpoint[javaBreakpoints.length+xslBreakpoints.length];
+		System.arraycopy(javaBreakpoints, 0, breakpoints, 0, javaBreakpoints.length);
+		System.arraycopy(xslBreakpoints, 0, breakpoints, javaBreakpoints.length, xslBreakpoints.length);
+		
+		return breakpoints;
 	}
 
 	@Override
@@ -192,8 +193,8 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 	public IVMRunner getVMRunner(ILaunchConfiguration configuration, String mode) throws CoreException
 	{
 		// always get the run mode when it is debug mode...
-		if (ILaunchManager.DEBUG_MODE.equals(mode))
-			return super.getVMRunner(configuration, ILaunchManager.RUN_MODE);
+//		if (ILaunchManager.DEBUG_MODE.equals(mode))
+//			return super.getVMRunner(configuration, ILaunchManager.RUN_MODE);
 		return super.getVMRunner(configuration, mode);
 	}
 
