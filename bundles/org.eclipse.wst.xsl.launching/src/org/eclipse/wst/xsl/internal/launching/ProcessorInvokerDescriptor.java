@@ -62,7 +62,8 @@ public class ProcessorInvokerDescriptor implements IProcessorInvoker
 				{
 					entry = getFileLocation(bundleId,string);
 				}
-				entries.add(entry);
+				if (entry!=null)
+					entries.add(entry);
 			}
 		} 
 		catch (CoreException e) 

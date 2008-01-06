@@ -53,7 +53,9 @@ public class DebuggerDescriptor implements IDebugger
 				entries.add(ProcessorInvokerDescriptor.getFileLocation(bundleId, "/bin"));
 			for (String jar : classpath)
 			{
-				entries.add(ProcessorInvokerDescriptor.getFileLocation(bundleId, "/" + jar));
+				String entry = ProcessorInvokerDescriptor.getFileLocation(bundleId, "/" + jar);
+				if (entry!=null)
+					entries.add(entry);
 			}
 		} 
 		catch (CoreException e) 
