@@ -53,6 +53,10 @@ public abstract class XSLDebugElement extends PlatformObject implements IDebugEl
 		{
 			return this;
 		}
+		else if (adapter == ILaunch.class)
+		{
+			return getLaunch();
+		}
 		return super.getAdapter(adapter);
 	}
 

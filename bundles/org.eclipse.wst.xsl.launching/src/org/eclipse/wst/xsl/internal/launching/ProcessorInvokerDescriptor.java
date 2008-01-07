@@ -12,7 +12,6 @@ package org.eclipse.wst.xsl.internal.launching;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,18 +99,15 @@ public class ProcessorInvokerDescriptor implements IProcessorInvoker
 			if (url != null)
 			{
 				URL fileUrl = FileLocator.toFileURL(url);
-				File file = new File(fileUrl.toURI());
+				File file = new File(fileUrl.getFile());
 				location = file.getAbsolutePath();
+//				location = null;
 			}
 		}
 		catch (IOException e)
 		{
 			throw new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.ERROR, "Error determining jar file location: " + path + " from bundle: " + bundleId, e));
 		} 
-		catch (URISyntaxException e) 
-		{
-			throw new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.ERROR, "Error extracting jar file location: " + path + " from bundle: " + bundleId, e));
-		}
 		return location;
 	}
 

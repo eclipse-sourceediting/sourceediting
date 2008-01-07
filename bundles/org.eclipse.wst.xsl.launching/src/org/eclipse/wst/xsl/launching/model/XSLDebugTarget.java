@@ -18,9 +18,7 @@ import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
@@ -48,7 +46,6 @@ import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
 import org.eclipse.wst.xsl.internal.launching.XSLTLaunchConfigurationDelegate;
 import org.eclipse.wst.xsl.launching.IProcessorInstall;
 import org.eclipse.wst.xsl.launching.config.LaunchHelper;
-import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 
 public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 {
@@ -61,11 +58,11 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 
 	private final IProcess process;
 	private final ILaunch launch;
-	private final XSLThread thread;
+	private XSLThread thread;
 	private IThread[] threads;
 	private IStackFrame[] stackFramesCache;
 
-	private final EventDispatchJob eventDispatch;
+	private EventDispatchJob eventDispatch;
 	private final LaunchHelper launchHelper;
 
 	private final Map<XSLVariable, XSLValue> valueMapCache = new HashMap<XSLVariable, XSLValue>();
@@ -86,26 +83,28 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 		this.debugTarget = this;
 		this.process = process;
 		this.launchHelper = launchHelper;
+		this.requestSocket = attemptConnect(launchHelper.getRequestPort());
+		this.eventSocket = attemptConnect(launchHelper.getEventPort());
 
-		try
+		if (requestSocket != null && eventSocket != null)
 		{
-			this.requestSocket = attemptConnect(launchHelper.getRequestPort());
-			this.requestWriter = new PrintWriter(requestSocket.getOutputStream());
-			this.requestReader = new BufferedReader(new InputStreamReader(requestSocket.getInputStream()));
-			this.eventSocket = attemptConnect(launchHelper.getEventPort());
-			this.eventReader = new BufferedReader(new InputStreamReader(eventSocket.getInputStream()));
-		}
-		catch (IOException e)
-		{
-			abort("Unable to connect to debugger", e);
-		}
+			try
+			{
+				this.eventReader = new BufferedReader(new InputStreamReader(eventSocket.getInputStream()));
+				this.requestWriter = new PrintWriter(requestSocket.getOutputStream());
+				this.requestReader = new BufferedReader(new InputStreamReader(requestSocket.getInputStream()));
+			}
+			catch (IOException e)
+			{
+				abort("Unable to connect to debugger", e);
+			}
+			this.thread = new XSLThread(this);
+			this.threads = new IThread[]{ thread };
+			this.eventDispatch = new EventDispatchJob();
+			this.eventDispatch.schedule();
 
-		this.thread = new XSLThread(this);
-		this.threads = new IThread[]{ thread };
-		this.eventDispatch = new EventDispatchJob();
-		this.eventDispatch.schedule();
-
-		DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(this);
+			DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(this);
+		}
 	}
 	
 	private Socket attemptConnect(int port) throws CoreException
@@ -113,6 +112,9 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 		Socket socket = null;
 		for(int i=0;i<CONNECT_ATTEMPTS;i++)
 		{	
+			// break out if process is terminated
+			if (process.isTerminated())
+				break;
 			try
 			{
 				socket = new Socket("localhost",port);
@@ -130,7 +132,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 			catch (InterruptedException e)
 			{}
 		}
-		if (socket == null)
+		if (socket == null && !process.isTerminated())
 			throw new CoreException(new Status(Status.ERROR, LaunchingPlugin.PLUGIN_ID, "Could not connect to socket "+port+" after "+CONNECT_ATTEMPTS+" attempts"));
 		return socket;
 	}
@@ -172,21 +174,22 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 	{
 		if (breakpoint.getModelIdentifier().equals(IXSLConstants.ID_XSL_DEBUG_MODEL) && breakpoint instanceof ILineBreakpoint)
 		{
-			try
-			{
-				ILineBreakpoint lb = (ILineBreakpoint) breakpoint;
-				IMarker marker = lb.getMarker();
-				for (Iterator<?> iter = launchHelper.getPipeline().getTransformDefs().iterator(); iter.hasNext();)
-				{
-					LaunchTransform lt = (LaunchTransform) iter.next();
-					if (marker.getResource().getLocation().equals(lt.getLocation()))
-						return true;
-				}
-			}
-			catch (CoreException e)
-			{
-				LaunchingPlugin.log(e);
-			}
+//			try
+//			{
+//				ILineBreakpoint lb = (ILineBreakpoint) breakpoint;
+//				IMarker marker = lb.getMarker();
+//				for (Iterator<?> iter = launchHelper.getPipeline().getTransformDefs().iterator(); iter.hasNext();)
+//				{
+//					LaunchTransform lt = (LaunchTransform) iter.next();
+//					if (marker.getResource().getLocation().equals(lt.getLocation()))
+//						return true;
+//				}
+//			}
+//			catch (CoreException e)
+//			{
+//				LaunchingPlugin.log(e);
+//			}
+			return true;
 		}
 		return false;
 	}

@@ -6,6 +6,5 @@ INTEGRATE ORANGEVOLT PARTS:
 - keywords
 - launch config export
 
-XALAN
-
-- does xalan belong in an org.apache.xalan plugin?
+- when debugging too quickly, get a null pointer exception because variable view is trying to 
+get a variable at the same time as we have moved on to the next frame.

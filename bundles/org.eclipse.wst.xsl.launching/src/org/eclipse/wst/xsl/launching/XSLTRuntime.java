@@ -16,12 +16,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.wst.xsl.internal.launching.FeaturePreferences;
 import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
 import org.eclipse.wst.xsl.internal.launching.OutputPropertyPreferences;
@@ -316,5 +320,35 @@ public class XSLTRuntime
 		else if (XSLLaunchConfigurationConstants.SAXONB_TYPE_ID.equals(typeId))
 			props.put("{http://saxon.sf.net/}indent-spaces", "4");
 		return props;
+	}
+	
+	public static boolean isXMLFile(IFile file)
+	{
+		IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
+		IContentType[] types = contentTypeManager.findContentTypesFor(file.getName());
+		for (IContentType contentType : types)
+		{
+			// TODO what is the correct content type?
+			if (contentType.isKindOf(contentTypeManager.getContentType("org.eclipse.core.runtime.xml")))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean isXSLFile(IFile file)
+	{
+		IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
+		IContentType[] types = contentTypeManager.findContentTypesFor(file.getName());
+		for (IContentType contentType : types)
+		{
+			// TODO what is the correct content type?
+			if (contentType.isKindOf(contentTypeManager.getContentType("org.eclipse.wst.xml.core.xmlsource")))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }
