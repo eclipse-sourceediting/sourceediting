@@ -4,9 +4,10 @@
 
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
-			class="org.eclipse.wst.xsl.internal.debug.ui.preferences.MainPreferencePage"
-			id="org.eclipse.wst.xsl.launching.ui.preferences.BasePreferencePage"
-			name="%page.name.0" />
+        category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
+        class="org.eclipse.wst.xsl.internal.debug.ui.preferences.MainPreferencePage"
+        id="org.eclipse.wst.xsl.launching.ui.preferences.BasePreferencePage"
+        name="%page.name.0"/>
 		<page
 			category="org.eclipse.wst.xsl.launching.ui.preferences.BasePreferencePage"
 			class="org.eclipse.wst.xsl.internal.debug.ui.preferences.ProcessorsPreferencePage"
