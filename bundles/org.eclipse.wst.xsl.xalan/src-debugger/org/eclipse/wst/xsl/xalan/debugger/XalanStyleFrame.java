@@ -127,14 +127,16 @@ public class XalanStyleFrame extends StyleFrame
 	{
 		currentLine = e.m_styleNode.getLineNumber();
 		eventStack.push(e);
-		log.debug("Pushed element " + e);
+		if (log.isDebugEnabled())
+			log.debug("Pushed element " + TracerEvent.printNode(e.m_styleNode)+" at line "+currentLine);
 	}
 
 	public TracerEvent popElement()
 	{
 		TracerEvent e = (TracerEvent) eventStack.pop();
-		log.debug("Popped element " + e);
 		currentLine = e.m_styleNode.getEndLineNumber();
+		if (log.isDebugEnabled())
+			log.debug("Popped element " + TracerEvent.printNode(e.m_styleNode)+" at line "+currentLine);
 
 		ElemTemplateElement element = e.m_styleNode;
 		String name = element.getNodeName();
@@ -155,7 +157,7 @@ public class XalanStyleFrame extends StyleFrame
 	{
 		String scope = variable.getIsTopLevel() ? Variable.GLOBAL_SCOPE : Variable.LOCAL_SCOPE;
 		VariableStack vs = event.m_processor.getXPathContext().getVarStack();
-		Variable xvar = new XalanVariable(vs, scope, variable.getIndex(), variable);
+		Variable xvar = new XalanVariable(this,vs, scope, variable.getIndex(), variable);
 		varNames.put(variable.getName(),xvar);
 	}
 

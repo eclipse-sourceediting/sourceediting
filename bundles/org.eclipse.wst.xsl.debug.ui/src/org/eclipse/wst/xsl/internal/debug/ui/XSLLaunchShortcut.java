@@ -11,17 +11,16 @@
 package org.eclipse.wst.xsl.internal.debug.ui;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.core.runtime.content.IContentTypeManager;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -36,10 +35,16 @@ import org.eclipse.jface.dialogs.StatusDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.InputFileBlock;
@@ -49,30 +54,126 @@ import org.eclipse.wst.xsl.launching.config.LaunchHelper;
 import org.eclipse.wst.xsl.launching.config.LaunchPipeline;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 
+/**
+ * <table border=1>
+ * 	<th>
+ * 		<tr>
+ * 			<td>XML Files</td>
+ *  		<td>XSL Files</td>			
+ * 			<td>Action</td>
+ * 		</tr>
+ *  </th>
+ *  <tbody>
+ *  	<tr>
+ * 			<td>1</td>
+ * 			<td>0</td>
+ * 			<td>Launch assuming embedded stylesheet instruction</td>
+ *  	</tr>
+ *  	<tr>
+ * 			<td>0</td>
+ * 			<td>&gt;=1</td>
+ * 			<td>Open dialog - prompt for input file</td>
+ *  	</tr>
+ *  	<tr>
+ * 			<td>1</td>
+ * 			<td>&gt;=1</td>
+ * 			<td>Launch</td>
+ *  	</tr>
+ *  </tbody>
+ * </table>
+ * 
+ * <p>The launch shortcut should not appear in the menu for any other combination of files</p>
+ * <p>In all cases, a check must be performed to find any existing launch configuration that uses the selected files.</p>
+ * 
+ * @author Doug
+ */
 public class XSLLaunchShortcut implements ILaunchShortcut
 {
 	private IFile xmlFile;
+	private IPath xmlFilePath;
 	private IFile[] xslFiles;
 	
 	public void launch(ISelection selection, String mode)
 	{
-		xmlFile = null;
-		xslFiles = new IFile[0];
 		if (selection instanceof IStructuredSelection)
 		{
 			IStructuredSelection ssel = (IStructuredSelection)selection;
-			fillFiles(ssel.toArray());
-			launch(mode);
+			searchAndLaunch(ssel.toArray(),mode);
 		}
 	}
 
 	public void launch(IEditorPart editor, String mode)
 	{
-		// don't think this route is possible
+        IEditorInput input = editor.getEditorInput();
+		if (input != null)
+		{
+			IFile file = (IFile) input.getAdapter(IFile.class);
+			if (file != null)
+				searchAndLaunch(new Object[]{ file }, mode);
+		} 
 	}
 	
-	private void fillFiles(Object[] selections)
+	private void searchAndLaunch(Object[] objects, String mode)
 	{
+		if (fillFiles(objects))
+		{
+			// ensure we have an input file
+			if (xmlFile == null)
+				promptForInput();
+			if (xmlFile != null || xmlFilePath != null)
+				launch(mode);
+		}
+	}
+
+	private void promptForInput()
+	{
+		// prompt for input xml file
+		StatusDialog dialog = new StatusDialog(getShell()){
+			private InputFileBlock inputFileBlock = new InputFileBlock(null);
+			
+			@Override
+			protected Control createDialogArea(Composite parent)
+			{
+				Composite comp = (Composite)super.createDialogArea(parent);
+				comp.setFont(parent.getFont());
+				GridLayout layout = new GridLayout(1, false);
+				comp.setLayout(layout);
+				
+				Label label = new Label(comp,SWT.NONE);
+				label.setFont(comp.getFont());
+				GridData gd = new GridData();
+				gd.horizontalIndent = 5;
+				gd.verticalIndent = 5;
+				gd.widthHint = 380;
+				label.setLayoutData(gd);
+				label.setText("Select an input file for the transformation");
+				
+				inputFileBlock.createControl(comp);
+				return comp;
+			}
+			
+			@Override
+			protected void okPressed()
+			{
+				IResource res = inputFileBlock.getResource();
+				if (res == null)
+					xmlFilePath = new Path(inputFileBlock.getText());
+				else if (ResourcesPlugin.getWorkspace().getRoot().exists(res.getFullPath()) && res.getType() == IResource.FILE)
+					xmlFile = (IFile)res;
+				super.okPressed();
+			}
+			
+		};
+		dialog.setHelpAvailable(false);
+		dialog.setStatusLineAboveButtons(true);
+		dialog.setTitle("Input File");
+		dialog.open();
+	}
+
+	private boolean fillFiles(Object[] selections)
+	{
+		xmlFile = null;
+		xmlFilePath = null;
 		List<IFile> xslFileList = new ArrayList<IFile>();
 		for (Object object : selections)
 		{
@@ -84,33 +185,31 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 				{
 					if (XSLTRuntime.isXSLFile(file))
 						xslFileList.add(file);
-					else if (xmlFile!=null)
+					else if (xmlFile==null)
 						xmlFile = file;
+					else
+						return false; // no action if we have more than than 1 xml file
 				}
 			}
 		}
 		xslFiles = xslFileList.toArray(new IFile[0]);
+		return true;
 	}
 
 	private void launch(String mode)
 	{
+		if (xmlFile!=null)
+			xmlFilePath = xmlFile.getLocation();
 		ILaunchConfiguration config = null;
 		try
 		{
-			config = findLaunchConfiguration();
+			config = findOrCreateLaunchConfiguration();
+			if (config!=null)
+				DebugUITools.launch(config, mode);
 		}
 		catch (CoreException e)
 		{
 			XSLDebugUIPlugin.log(e);
-		}
-		if (config != null)
-		{
-			DebugUITools.launch(config, mode);
-		}
-		else
-		{
-			// open the launch configuration dialog
-
 		}
 	}
 
@@ -124,84 +223,54 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 		return getLaunchManager().getLaunchConfigurationType(XSLLaunchConfigurationConstants.ID_LAUNCH_CONFIG_TYPE);
 	}
 
-	private ILaunchConfiguration findLaunchConfiguration() throws CoreException
+	private ILaunchConfiguration findOrCreateLaunchConfiguration() throws CoreException
 	{
 		ILaunchConfiguration[] configs = getLaunchManager().getLaunchConfigurations(getConfigurationType());
 		List<ILaunchConfiguration> candidateConfigs = new ArrayList<ILaunchConfiguration>(configs.length);
-		if (xmlFile!=null)
+		for (ILaunchConfiguration config : configs)
 		{
-			for (ILaunchConfiguration config : configs)
+			String inputFile = config.getAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, (String) null);
+			inputFile = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(inputFile);
+			Path path = new Path(inputFile);
+			// the source xml file must be the same
+			if (path.equals(xmlFilePath))
 			{
-				String inputFile = config.getAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, (String) null);
-				inputFile = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(inputFile);
-				Path path = new Path(inputFile);
-				// the source xml file must be the same
-				if (path.equals(xmlFile.getLocation()))
+				LaunchHelper lh = new LaunchHelper(config);
+				// all the selected stylesheets must be in the pipeline
+				boolean found = false;
+				for (IFile stylesheet : xslFiles)
 				{
-					LaunchHelper lh = new LaunchHelper(config);
-					boolean found = true;
-					// all the selected stylesheets must be in the pipeline
-					for (IFile stylesheet : xslFiles)
+					found = false;
+					for (Iterator<LaunchTransform> iter = lh.getPipeline().getTransformDefs().iterator(); iter.hasNext();)
 					{
-						found = false;
-						for (Iterator<?> iter = lh.getPipeline().getTransformDefs().iterator(); iter.hasNext();)
+						LaunchTransform lt = iter.next();
+						if (lt.getLocation().equals(stylesheet.getLocation()))
 						{
-							LaunchTransform lt = (LaunchTransform) iter.next();
-							if (lt.getLocation().equals(stylesheet.getLocation()))
-							{
-								found = true;
-								break;
-							}
-						}
-						if (!found)
+							found = true;
 							break;
+						}
 					}
-					if (found)
-					{
-						candidateConfigs.add(config);
-					}
+					if (!found)
+						break;
 				}
+				if (found)
+					candidateConfigs.add(config);
 			}
 		}
 
 		ILaunchConfiguration config = null;
 		int candidateCount = candidateConfigs.size();
 		if (candidateCount == 1)
-		{
-			config = (ILaunchConfiguration) candidateConfigs.get(0);
-		}
+			config = (ILaunchConfiguration)candidateConfigs.get(0);
 		else if (candidateCount > 1)
-		{
-			// Prompt the user to choose a config
 			config = chooseConfiguration(candidateConfigs);
-		}
 		else
-		{
-			if (xmlFile == null)
-			{
-				final InputFileBlock inputFileBlock = new InputFileBlock(null);
-				// TODO prompt for input xml file
-				new StatusDialog(getShell()){
-					
-					@Override
-					protected Control createDialogArea(Composite parent)
-					{
-						Composite comp = (Composite)super.createDialogArea(parent);
-						GridLayout layout = new GridLayout(1, false);
-						comp.setLayout(layout);
-						inputFileBlock.createControl(comp);
-						return comp;
-					}
-				};
-				xmlFile = (IFile)inputFileBlock.getResource();
-			}
-			if (xmlFile != null)
-				config = createConfiguration();
-		}
+			config = createConfiguration();
+
 		return config;
 	}
 
-	protected ILaunchConfiguration chooseConfiguration(List<ILaunchConfiguration> configList)
+	private ILaunchConfiguration chooseConfiguration(List<ILaunchConfiguration> configList)
 	{
 		IDebugModelPresentation labelProvider = DebugUITools.newDebugModelPresentation();
 		ElementListSelectionDialog dialog = new ElementListSelectionDialog(getShell(), labelProvider);
@@ -224,8 +293,11 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 		try
 		{
 			ILaunchConfigurationType configType = getConfigurationType();
-			ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, getLaunchManager().generateUniqueLaunchConfigurationNameFrom(xmlFile.getName()));
-			wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, "${workspace_loc}" + xmlFile.getFullPath().toString());
+			ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, getLaunchManager().generateUniqueLaunchConfigurationNameFrom(xmlFilePath.lastSegment()));
+			if (xmlFile != null)
+				wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, "${workspace_loc:" + xmlFile.getFullPath().toPortableString()+"}");
+			else
+				wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, xmlFilePath.toPortableString());
 			wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_USE_FEATURES_FROM_PREFERENCES, true);
 			wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_OUTPUT_FILE, true);
 			wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_PROCESSOR, true);
@@ -237,8 +309,8 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 				pipeline.addTransformDef(new LaunchTransform(element.getFullPath().toPortableString(), LaunchTransform.RESOURCE_TYPE));
 			}
 			wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_PIPELINE, pipeline.toXML());
-
-			wc.setMappedResources(new IResource[]{ xmlFile.getProject() });
+			if (xmlFile!=null)
+				wc.setMappedResources(new IResource[]{ xmlFile.getProject() });
 			config = wc.doSave();
 		}
 		catch (CoreException exception)

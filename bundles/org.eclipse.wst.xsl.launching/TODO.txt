@@ -8,3 +8,23 @@ INTEGRATE ORANGEVOLT PARTS:
 
 - when debugging too quickly, get a null pointer exception because variable view is trying to 
 get a variable at the same time as we have moved on to the next frame.
+
+1 xml file: Launch assuming it has embedded stylesheet instruction
+more than 1 xml file: not possible
+
+1 or more stylesheets: 
+1 xml file, 1 or more stylesheets: 
+
+more than 1 xml file, 1 or more stylesheets: 
+
+xml files     xsl files
+---------     ----------
+0                 0
+1                 0
+>1                0
+0                 1
+0                 >1
+1                 1
+1                 >1
+>1                1
+>1                >1

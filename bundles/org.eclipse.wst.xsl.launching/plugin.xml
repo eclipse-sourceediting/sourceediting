@@ -16,7 +16,7 @@
             sourcePathComputerId="org.eclipse.wst.xsl.launching.sourcePathComputer"
 			delegate="org.eclipse.wst.xsl.internal.launching.XSLTLaunchConfigurationDelegate"
 			id="org.eclipse.wst.xsl.launching.launchConfigurationType"
-			modes="run, debug" name="%launchConfigurationType.name.0" />
+			modes="run, debug, profile" name="%launchConfigurationType.name.0" />
 	</extension>
 	
    <extension
@@ -55,15 +55,6 @@
             value="true">
       </persistent>
    </extension>
-   
-<!--	<extension point="org.eclipse.core.expressions.propertyTesters">
-		<propertyTester
-			class="org.eclipse.wst.xsl.internal.launching.XSLPropertyTester"
-			id="org.eclipse.wst.xsl.launching.xslPropertyTester"
-			namespace="org.eclipse.wst.xsl.launching"
-			properties="canTransform" type="org.eclipse.core.runtime.IAdaptable" />
-	</extension>
-	-->
  	
 	<extension point="org.eclipse.core.runtime.preferences">
 		<initializer

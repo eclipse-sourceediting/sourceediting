@@ -44,7 +44,7 @@ public class XalanRootStyleFrame extends XalanStyleFrame
 	    while (--i >= 0)
 		{
 			ElemVariable variable = (ElemVariable) vars.elementAt(i);
-			XalanVariable xvar = new XalanVariable(vs,Variable.GLOBAL_SCOPE,i,variable);
+			XalanVariable xvar = new XalanVariable(this,vs,Variable.GLOBAL_SCOPE,i,variable);
 			globals.add(xvar);
 		}
 	}

@@ -27,20 +27,20 @@ public class XalanVariable extends Variable implements Comparable
 	private final VariableStack varStack;
 	private int stackFrame;
 
-	public XalanVariable(VariableStack varStack, String scope, int slotNumber, ElemVariable elemVariable)
+	public XalanVariable(XalanStyleFrame xalanStyleFrame, VariableStack varStack, String scope, int slotNumber, ElemVariable elemVariable)
 	{
-		super(getName(elemVariable), scope, slotNumber+varStack.getStackFrame());
+		super(getName(elemVariable,scope,xalanStyleFrame), scope, slotNumber+varStack.getStackFrame());
 		this.elemVariable = elemVariable;
 		this.varStack = varStack;
 		// get the stack frame at this current point in time
 		this.stackFrame = varStack.getStackFrame();
 	}
 
-	private static String getName(ElemVariable elemVariable)
+	private static String getName(ElemVariable elemVariable, String scope, XalanStyleFrame xalanStyleFrame)
 	{
 		String name = elemVariable.getName().getLocalName();
 		String systemId = elemVariable.getStylesheet().getSystemId();
-		if (systemId != null)
+		if (GLOBAL_SCOPE.equals(scope) && systemId != null)
 		{
 			int index;
 			if ((index = systemId.lastIndexOf('/')) > 0)
@@ -48,7 +48,10 @@ public class XalanVariable extends Variable implements Comparable
 			else
 				name += " (" + systemId + ")";
 		}
-
+//		else if (LOCAL_SCOPE.equals(scope))
+//		{
+//			name += " (" + xalanStyleFrame.getName() + ")";
+//		}
 		return name;
 	}
 
@@ -67,7 +70,11 @@ public class XalanVariable extends Variable implements Comparable
 						value = "";
 						break;
 					case XObject.CLASS_NODESET:
-						value = ((XNodeSet) xobject).xstr().toString();
+						XNodeSet xns = (XNodeSet) xobject;
+						if (xns.nodelist().getLength() > 0)
+							value = ((XNodeSet) xobject).nodelist().item(0).toString();
+						else
+							value = "<EMPTY NODESET>";
 						break;
 					case XObject.CLASS_BOOLEAN:
 					case XObject.CLASS_NUMBER:

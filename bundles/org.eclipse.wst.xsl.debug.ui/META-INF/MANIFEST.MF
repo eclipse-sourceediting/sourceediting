@@ -18,7 +18,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.wst.sse.ui,
  org.eclipse.wst.xsl.launching,
- org.eclipse.wst.xsl.debug
+ org.eclipse.wst.xsl.debug,
+ org.eclipse.ui.console
 Eclipse-LazyStart: true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Localization: plugin

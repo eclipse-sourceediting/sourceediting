@@ -322,14 +322,16 @@ public class XSLTRuntime
 		return props;
 	}
 	
+	/*
+	 * TODO move to XSLCore
+	 */
 	public static boolean isXMLFile(IFile file)
 	{
 		IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
 		IContentType[] types = contentTypeManager.findContentTypesFor(file.getName());
 		for (IContentType contentType : types)
 		{
-			// TODO what is the correct content type?
-			if (contentType.isKindOf(contentTypeManager.getContentType("org.eclipse.core.runtime.xml")))
+			if (contentType.isKindOf(contentTypeManager.getContentType("org.eclipse.core.runtime.xml")) || contentType.isKindOf(contentTypeManager.getContentType("org.eclipse.wst.xml.core.xmlsource")))
 			{
 				return true;
 			}
@@ -337,14 +339,16 @@ public class XSLTRuntime
 		return false;
 	}
 	
+	/*
+	 * TODO move to XSLCore
+	 */
 	public static boolean isXSLFile(IFile file)
 	{
 		IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
 		IContentType[] types = contentTypeManager.findContentTypesFor(file.getName());
 		for (IContentType contentType : types)
 		{
-			// TODO what is the correct content type?
-			if (contentType.isKindOf(contentTypeManager.getContentType("org.eclipse.wst.xml.core.xmlsource")))
+			if (contentType.isKindOf(contentTypeManager.getContentType("org.eclipse.wst.xml.core.xslsource")))
 			{
 				return true;
 			}

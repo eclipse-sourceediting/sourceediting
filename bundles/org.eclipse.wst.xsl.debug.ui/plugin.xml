@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-	
+
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
 			class="org.eclipse.wst.xsl.internal.debug.ui.preferences.MainPreferencePage"
@@ -16,55 +16,49 @@
 		<page
 			category="org.eclipse.wst.xsl.launching.ui.preferences.BasePreferencePage"
 			class="org.eclipse.wst.xsl.internal.debug.ui.preferences.FeaturesPreferencePage"
-			id="org.eclipse.wst.xsl.debug.ui.page1" 
-			name="%page.name.2" />
+			id="org.eclipse.wst.xsl.debug.ui.page1" name="%page.name.2" />
 		<page
 			category="org.eclipse.wst.xsl.launching.ui.preferences.BasePreferencePage"
 			class="org.eclipse.wst.xsl.internal.debug.ui.preferences.OutputPreferencePage"
-			id="org.eclipse.wst.xsl.debug.ui.output" 
-			name="%page.name.3" />
+			id="org.eclipse.wst.xsl.debug.ui.output" name="%page.name.3" />
 	</extension>
- <extension
-       point="org.eclipse.ui.perspectiveExtensions">
-    <perspectiveExtension targetID="org.eclipse.wst.xml.perspective">
-       <actionSet id="org.eclipse.debug.ui.debugActionSet"/>
-       <actionSet id="org.eclipse.debug.ui.launchActionSet"/>
-       <actionSet id="org.eclipse.debug.ui.breakpointActionSet"/>
-       <actionSet id="org.eclipse.debug.ui.profileActionSet"/>
-    </perspectiveExtension>
- </extension>
+	
+	<extension point="org.eclipse.ui.perspectiveExtensions">
+		<perspectiveExtension
+			targetID="org.eclipse.wst.xml.perspective">
+			<actionSet id="org.eclipse.debug.ui.debugActionSet" />
+			<actionSet id="org.eclipse.debug.ui.launchActionSet" />
+			<actionSet id="org.eclipse.debug.ui.breakpointActionSet" />
+			<actionSet id="org.eclipse.debug.ui.profileActionSet" />
+		</perspectiveExtension>
+	</extension>
+	
 	<extension
 		point="org.eclipse.debug.ui.launchConfigurationTypeImages">
 		<launchConfigurationTypeImage icon="icons/sample.gif"
 			configTypeID="org.eclipse.wst.xsl.launching.launchConfigurationType"
 			id="org.eclipse.wst.xsl.internal.debug.ui.launchConfigurationTypeImage" />
 	</extension>
-	
+
 	<extension
 		point="org.eclipse.debug.ui.launchConfigurationTabGroups">
 		<launchConfigurationTabGroup
-        class="org.eclipse.wst.xsl.internal.debug.ui.XSLTTabGroup"
-        id="org.eclipse.wst.xsl.internal.debug.ui.launchConfigurationTabGroup.xslt"
-        type="org.eclipse.wst.xsl.launching.launchConfigurationType">
-     <launchMode
-           description="%launchMode.description.0"
-           mode="debug"
-           perspective="org.eclipse.debug.ui.DebugPerspective"/>
-     <launchMode
-           description="%launchMode.description.1"
-           mode="run"
-           perspective="org.eclipse.wst.xml.perspective"/>
-  </launchConfigurationTabGroup>
+			class="org.eclipse.wst.xsl.internal.debug.ui.XSLTTabGroup"
+			id="org.eclipse.wst.xsl.internal.debug.ui.launchConfigurationTabGroup.xslt"
+			type="org.eclipse.wst.xsl.launching.launchConfigurationType">
+			<launchMode description="%launchMode.description.0"
+				mode="debug" perspective="org.eclipse.debug.ui.DebugPerspective" />
+			<launchMode description="%launchMode.description.1"
+				mode="run" perspective="org.eclipse.wst.xml.perspective" />
+		</launchConfigurationTabGroup>
 	</extension>
- <extension
-       point="org.eclipse.ui.contexts">
-    <context
-          description="%context.description.0"
-          id="org.eclipse.wst.xsl.debug.ui.context"
-          name="%context.name.0"
-          parentId="org.eclipse.debug.ui.debugging">
-    </context>
- </extension>
+	
+	<extension point="org.eclipse.ui.contexts">
+		<context description="%context.description.0"
+			id="org.eclipse.wst.xsl.debug.ui.context" name="%context.name.0"
+			parentId="org.eclipse.debug.ui.debugging">
+		</context>
+	</extension>
 
 	<extension point="org.eclipse.debug.ui.debugModelPresentations">
 		<debugModelPresentation
@@ -81,41 +75,53 @@
 			<contextualLaunch>
 				<enablement>
 					<with variable="selection">
-						<count value="2" />
-						<!--               <iterate>
-							<or>
-							<test property="org.eclipse.wst.xsl.debug.ui.canTransform"/>
-							</or>
-							</iterate> -->
+						<iterate>
+							<adapt
+								type="org.eclipse.core.resources.IFile">
+								<or>
+									<test
+										property="org.eclipse.core.resources.contentTypeId"
+										value="org.eclipse.core.runtime.xml" />
+									<test
+										property="org.eclipse.core.resources.contentTypeId"
+										value="org.eclipse.wst.xml.core.xmlsource" />
+									<test
+										property="org.eclipse.core.resources.contentTypeId"
+										value="org.eclipse.wst.xml.core.xslsource" />
+								</or>
+							</adapt>
+						</iterate>
 					</with>
 				</enablement>
 			</contextualLaunch>
-
-			<!--         <contextualLaunch>
-				<enablement>
-				<with variable="selection">
-				<count value="+"/>
-				<test property="org.eclipse.wst.xslt.launching.ui.canTransform"/>
-				</with>
-				</enablement>
-				</contextualLaunch> -->
+		   <description
+		         description="%description.description.0"
+		         mode="run">
+		   </description>
+		   <description
+		         description="%description.description.1"
+		         mode="debug">
+		   </description>
+		   <description
+		         description="%description.description.2"
+		         mode="profile">
+		   </description>
 		</shortcut>
 	</extension>
- <extension
-       point="org.eclipse.debug.ui.debugModelContextBindings">
-    <modelContextBinding
-          contextId="org.eclipse.wst.xsl.debug.ui.context"
-          debugModelId="org.eclipse.wst.xsl.launching.XSLDebugModel">
-    </modelContextBinding>
- </extension>
- <extension
-       point="org.eclipse.debug.ui.contextViewBindings">
-    <contextViewBinding
-          autoOpen="true"
-          contextId="org.eclipse.wst.xsl.debug.ui.context"
-          viewId="org.eclipse.wst.xml.ui.xpath.view">
-    </contextViewBinding>
- </extension>
+	
+	<extension point="org.eclipse.debug.ui.debugModelContextBindings">
+		<modelContextBinding
+			contextId="org.eclipse.wst.xsl.debug.ui.context"
+			debugModelId="org.eclipse.wst.xsl.launching.XSLDebugModel">
+		</modelContextBinding>
+	</extension>
+	
+	<extension point="org.eclipse.debug.ui.contextViewBindings">
+		<contextViewBinding autoOpen="true"
+			contextId="org.eclipse.wst.xsl.debug.ui.context"
+			viewId="org.eclipse.wst.xml.ui.xpath.view">
+		</contextViewBinding>
+	</extension>
 
 	<extension point="org.eclipse.wst.sse.ui.breakpoint">
 		<breakpointContribution
@@ -125,15 +131,13 @@
 				id="org.eclipse.wst.xsl.debug.ui.XSLBreakpointProvider" />
 		</breakpointContribution>
 	</extension>
- <extension
-       point="org.eclipse.debug.ui.launchShortcuts">
-    <shortcut
-          class="org.eclipse.wst.xsl.internal.debug.ui.XSLLaunchShortcut"
-          id="org.eclipse.wst.xsl.internal.debug.ui.XSLLaunchShortcut"
-          label="%shortcut.label.1"
-          modes="run,debug,profile">
-       <contextualLaunch></contextualLaunch>
-    </shortcut>
- </extension>
+
+	<extension point="org.eclipse.debug.ui.consoleLineTrackers">
+		<consoleLineTracker
+			id="org.eclipse.wst.xsl.internal.debug.ui.XSLConsoleLineTracker"
+			class="org.eclipse.wst.xsl.internal.debug.ui.XSLConsoleLineTracker"
+			processType="java">
+		</consoleLineTracker>
+	</extension>
 
 </plugin>

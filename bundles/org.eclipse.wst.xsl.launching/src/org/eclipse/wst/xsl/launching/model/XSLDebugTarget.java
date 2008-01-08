@@ -63,7 +63,6 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 	private IStackFrame[] stackFramesCache;
 
 	private EventDispatchJob eventDispatch;
-	private final LaunchHelper launchHelper;
 
 	private final Map<XSLVariable, XSLValue> valueMapCache = new HashMap<XSLVariable, XSLValue>();
 	private String name;
@@ -82,7 +81,6 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 		this.launch = launch;
 		this.debugTarget = this;
 		this.process = process;
-		this.launchHelper = launchHelper;
 		this.requestSocket = attemptConnect(launchHelper.getRequestPort());
 		this.eventSocket = attemptConnect(launchHelper.getEventPort());
 
@@ -275,7 +273,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 						IMarker marker = lb.getMarker();
 						if (marker != null)
 						{
-							URL file = marker.getResource().getLocation().toFile().toURL();
+							URL file = marker.getResource().getLocation().toFile().toURI().toURL();
 							sendRequest(DebugConstants.REQUEST_ADD_BREAKPOINT + " " + file + " " + lb.getLineNumber());
 						}
 					}
@@ -305,7 +303,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 				IMarker marker = lb.getMarker();
 				if (marker != null)
 				{
-					URL file = marker.getResource().getLocation().toFile().toURL();
+					URL file = marker.getResource().getLocation().toFile().toURI().toURL();
 					sendRequest(DebugConstants.REQUEST_REMOVE_BREAKPOINT + " " + file + " " + lb.getLineNumber());
 				}
 			}
