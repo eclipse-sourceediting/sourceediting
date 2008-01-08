@@ -40,6 +40,7 @@ import org.eclipse.wst.common.project.facet.core.IFacetedProjectWorkingCopy;
 import org.eclipse.wst.common.project.facet.core.events.IFacetedProjectEvent;
 import org.eclipse.wst.common.project.facet.core.events.IFacetedProjectListener;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
+import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
 import org.eclipse.wst.common.project.facet.ui.ModifyFacetedProjectWizard;
 import org.eclipse.wst.common.project.facet.ui.PresetSelectionPanel;
 import org.eclipse.wst.project.facet.ProductManager;
@@ -94,29 +95,94 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		return launchNewRuntimeWizard(shell, model, null);
 	}
 	
-	public static boolean launchNewRuntimeWizard(Shell shell, IDataModel model, String serverTypeID) {
-		DataModelPropertyDescriptor[] preAdditionDescriptors = model.getValidPropertyDescriptors(FACET_RUNTIME);
+	public static boolean launchNewRuntimeWizard(Shell shell, final IDataModel model, String serverTypeID) 
+	{
+	    if( model == null )
+	    {
+	        return false;
+	    }
+	    
+		final DataModelPropertyDescriptor[] preAdditionDescriptors = model.getValidPropertyDescriptors(FACET_RUNTIME);
+		
+		final boolean[] keepWaiting = { true };
+		
+		final IDataModelListener listener = new IDataModelListener()
+		{
+            public void propertyChanged( final DataModelEvent event )
+            {
+                if( event.getPropertyName().equals( FACET_RUNTIME ) &&
+                    event.getFlag() == DataModelEvent.VALID_VALUES_CHG )
+                {
+                    synchronized( keepWaiting )
+                    {
+                        keepWaiting[ 0 ] = false;
+                        keepWaiting.notify();
+                    }
+                    
+                    model.removeListener( this );
+                }
+            }
+		};
+		
+		model.addListener( listener );
+		
 		boolean isOK = ServerUIUtil.showNewRuntimeWizard(shell, serverTypeID, null);
-		if (isOK && model != null) {
-
-			DataModelPropertyDescriptor[] postAdditionDescriptors = model.getValidPropertyDescriptors(FACET_RUNTIME);
-			Object[] preAddition = new Object[preAdditionDescriptors.length];
-			for (int i = 0; i < preAddition.length; i++) {
-				preAddition[i] = preAdditionDescriptors[i].getPropertyValue();
-			}
-			Object[] postAddition = new Object[postAdditionDescriptors.length];
-			for (int i = 0; i < postAddition.length; i++) {
-				postAddition[i] = postAdditionDescriptors[i].getPropertyValue();
-			}
-			Object newAddition = getNewObject(preAddition, postAddition);
-
-			model.notifyPropertyChange(FACET_RUNTIME, IDataModel.VALID_VALUES_CHG);
-			if (newAddition != null)
-				model.setProperty(FACET_RUNTIME, newAddition);
-			else
-				return false;
+		
+		if( isOK ) 
+		{
+		    // Do the rest of the processing in a separate thread. Since we are going to block
+		    // and wait, doing this on the UI thread can cause hangs.
+		    
+		    final Thread newRuntimeSelectionThread = new Thread()
+		    {
+		        public void run()
+		        {
+        		    // Causes the list of runtimes held by the RuntimeManager to be refreshed and 
+        		    // triggers events to listeners on that list.
+        		    
+        		    RuntimeManager.getRuntimes();
+        		    
+        		    // Wait until the list of valid values has updated to include the new runtime.
+        		    
+        		    synchronized( keepWaiting )
+        		    {
+        		        while( keepWaiting[ 0 ] == true )
+        		        {
+        		            try
+        		            {
+        		                keepWaiting.wait();
+        		            }
+        		            catch( InterruptedException e ) {}
+        		        }
+        		    }
+        		    
+        		    // Select the new runtime.
+        		    
+        			DataModelPropertyDescriptor[] postAdditionDescriptors = model.getValidPropertyDescriptors(FACET_RUNTIME);
+        			Object[] preAddition = new Object[preAdditionDescriptors.length];
+        			for (int i = 0; i < preAddition.length; i++) {
+        				preAddition[i] = preAdditionDescriptors[i].getPropertyValue();
+        			}
+        			Object[] postAddition = new Object[postAdditionDescriptors.length];
+        			for (int i = 0; i < postAddition.length; i++) {
+        				postAddition[i] = postAdditionDescriptors[i].getPropertyValue();
+        			}
+        			Object newAddition = getNewObject(preAddition, postAddition);
+        
+        			if (newAddition != null) // can this ever be null?
+        				model.setProperty(FACET_RUNTIME, newAddition);
+		        }
+		    };
+		    
+		    newRuntimeSelectionThread.start();
+		    
+		    return true;
 		}
-		return isOK;
+		else
+		{
+		    model.removeListener( listener );
+		    return false;
+		}
 	}
 	
 	public boolean internalLaunchNewRuntimeWizard(Shell shell, IDataModel model) {
