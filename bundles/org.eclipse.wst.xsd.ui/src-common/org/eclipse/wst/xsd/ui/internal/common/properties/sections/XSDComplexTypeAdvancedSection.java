@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateAttributeValueCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDConstants;
@@ -56,8 +57,7 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    // TODO Should be a translatable string here
-    CLabel abstractLabel = getWidgetFactory().createCLabel(composite, XSDConstants.ABSTRACT_ATTRIBUTE + ":");
+    CLabel abstractLabel = getWidgetFactory().createCLabel(composite, Messages._UI_LABEL_ABSTRACT + ":");
     abstractLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -80,8 +80,7 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    // TODO Should be a translatable string here
-    CLabel blockLabel = getWidgetFactory().createCLabel(composite, XSDConstants.BLOCK_ATTRIBUTE + ":");
+    CLabel blockLabel = getWidgetFactory().createCLabel(composite, Messages._UI_LABEL_BLOCK + ":");
     blockLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -104,8 +103,7 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    // TODO Should be a translatable string here
-    CLabel finalLabel = getWidgetFactory().createCLabel(composite, XSDConstants.FINAL_ATTRIBUTE + ":");
+    CLabel finalLabel = getWidgetFactory().createCLabel(composite, Messages._UI_LABEL_FINAL + ":");
     finalLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -128,8 +126,7 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    // TODO Should be a translatable string here
-    CLabel mixedLabel = getWidgetFactory().createCLabel(composite, XSDConstants.MIXED_ATTRIBUTE + ":");
+    CLabel mixedLabel = getWidgetFactory().createCLabel(composite, Messages._UI_LABEL_MIXED + ":");
     mixedLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -153,46 +150,30 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
     if (e.widget == blockCombo)
     {
       String value = blockCombo.getText();
-
-      UpdateAttributeValueCommand command = new UpdateAttributeValueCommand(complexType.getElement(), XSDConstants.BLOCK_ATTRIBUTE, value);
+      UpdateAttributeValueCommand command = new UpdateAttributeValueCommand(complexType.getElement(), XSDConstants.BLOCK_ATTRIBUTE, value, Messages._UI_LABEL_BLOCK);
       command.setDeleteIfEmpty(true);
       getCommandStack().execute(command);
     }
     else if (e.widget == finalCombo)
     {
       String value = finalCombo.getText();
-
-      UpdateAttributeValueCommand command = new UpdateAttributeValueCommand(complexType.getElement(), XSDConstants.FINAL_ATTRIBUTE, value);
+      UpdateAttributeValueCommand command = new UpdateAttributeValueCommand(complexType.getElement(), XSDConstants.FINAL_ATTRIBUTE, value, Messages._UI_LABEL_FINAL);
       command.setDeleteIfEmpty(true);
       getCommandStack().execute(command);
     }
     else if (e.widget == abstractCombo)
     {
       String value = abstractCombo.getText();
-
-      if (value.equals(EMPTY))
-        complexType.getElement().removeAttribute(XSDConstants.ABSTRACT_ATTRIBUTE);
-      else
-      {
-        if (value.equals(TRUE))
-          complexType.setAbstract(true);
-        else if (value.equals(FALSE))
-          complexType.setAbstract(false);
-      }
+      UpdateAttributeValueCommand command = new UpdateAttributeValueCommand(complexType.getElement(), XSDConstants.ABSTRACT_ATTRIBUTE, value, Messages._UI_LABEL_ABSTRACT);
+      command.setDeleteIfEmpty(true);
+      getCommandStack().execute(command);
     }
     else if (e.widget == mixedCombo)
     {
       String value = mixedCombo.getText();
-
-      if (value.equals(EMPTY))
-        complexType.getElement().removeAttribute(XSDConstants.MIXED_ATTRIBUTE);
-      else
-      {
-        if (value.equals(TRUE))
-          complexType.setMixed(true);
-        else if (value.equals(FALSE))
-          complexType.setMixed(false);
-      }
+      UpdateAttributeValueCommand command = new UpdateAttributeValueCommand(complexType.getElement(), XSDConstants.MIXED_ATTRIBUTE, value, Messages._UI_LABEL_MIXED);
+      command.setDeleteIfEmpty(true);
+      getCommandStack().execute(command);
     }
   }
 

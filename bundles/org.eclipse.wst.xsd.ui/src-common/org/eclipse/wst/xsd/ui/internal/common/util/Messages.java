@@ -116,4 +116,14 @@ public class Messages extends NLS
   public static String _UI_FIXED;
   public static String _UI_DEFAULT;
   public static String _UI_FORM;
+  public static String _UI_USAGE;
+  public static String _UI_ACTION_CHANGE;
+  public static String _UI_ACTION_NAMESPACE_INFORMATION_CHANGE;
+  public static String _UI_LABEL_ABSTRACT;
+  public static String _UI_LABEL_BLOCK;
+  public static String _UI_LABEL_FINAL;
+  public static String _UI_LABEL_SUBSTITUTION_GROUP;
+  public static String _UI_LABEL_MIXED;
+  public static String _UI_LABEL_VALUE;
+  public static String _UI_LABEL_FORM;
 }

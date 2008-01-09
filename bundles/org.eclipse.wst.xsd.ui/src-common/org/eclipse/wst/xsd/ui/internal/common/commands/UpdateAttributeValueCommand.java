@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.w3c.dom.Element;
 
 /*
@@ -21,9 +23,9 @@ import org.w3c.dom.Element;
  */
 public class UpdateAttributeValueCommand  extends BaseCommand
 {
-  Element element;
-  String attributeName;
-  String attributeValue;
+  protected Element element;
+  protected String attributeName;
+  protected String attributeValue;
   
   /** Whether the attribute should be deleted if value to 
    *   be set is an empty String or null  */
@@ -36,15 +38,27 @@ public class UpdateAttributeValueCommand  extends BaseCommand
     this.attributeValue = attributeValue;
     this.deleteIfValueEmpty = deleteIfValueEmpty;
   }
+
+  public UpdateAttributeValueCommand(Element element, String attributeName, String attributeValue, String label)
+  {
+    this(element, attributeName, attributeValue, false);
+    setLabel(NLS.bind(Messages._UI_ACTION_CHANGE, label));
+  }
   
   public UpdateAttributeValueCommand(Element element, String attributeName, String attributeValue)
   {
-    this(element, attributeName, attributeValue, false);       
+    this(element, attributeName, attributeValue, false);
+    setLabel(NLS.bind(Messages._UI_ACTION_CHANGE, attributeName));
   }
 
   public void setDeleteIfEmpty(boolean v)
   {
-	deleteIfValueEmpty = v;
+	  deleteIfValueEmpty = v;
+  }
+  
+  public void setAttributeName(String attributeName)
+  {
+    this.attributeName = attributeName;
   }
   
   public void execute()
@@ -61,10 +75,17 @@ public class UpdateAttributeValueCommand  extends BaseCommand
       {
         element.setAttribute(attributeName, attributeValue);
       }
+      
+      doPostProcessing();
     }
     finally
     {
       endRecording();
     }
-  } 
+  }
+  
+  protected void doPostProcessing()
+  {
+    
+  }
 }

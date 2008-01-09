@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CommandStack;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -46,6 +47,7 @@ public class ExtensionDetailsViewer extends Viewer
   ExtensionDetailsContentProvider contentProvider;
   TabbedPropertySheetWidgetFactory widgetFactory;  
   InternalControlListener internalControlListener;
+  CommandStack commandStack;
   
   public ExtensionDetailsViewer(Composite parent, TabbedPropertySheetWidgetFactory widgetFactory)
   {
@@ -59,7 +61,11 @@ public class ExtensionDetailsViewer extends Viewer
     return control;
   }
   
-
+  public void setCommandStack(CommandStack commandStack)
+  {
+    this.commandStack = commandStack;
+  }
+  
   public Object getInput()
   {
     // TODO Auto-generated method stub
@@ -237,8 +243,10 @@ public class ExtensionDetailsViewer extends Viewer
         Command command = item.getUpdateValueCommand(value);
         if (command != null)
         {
-          // TODO (cs) add command stack handling stuff
-          command.execute();
+          if (commandStack != null)
+            commandStack.execute(command);
+          else
+            command.execute();
         }
       }                    
     }              

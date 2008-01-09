@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import org.apache.xerces.util.XMLChar;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
@@ -32,6 +33,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
+import org.eclipse.wst.xsd.ui.internal.common.commands.BaseCommand;
+import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateAttributeValueCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.dialogs.NewTypeDialog;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
@@ -511,25 +514,38 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
     	Element element = xsdAttribute.getElement();
       if (e.widget == usageCombo)
 	    {	      
-	      String newValue = usageCombo.getText();
-	      
+	      final String newValue = usageCombo.getText();
 	      if (element != null)
 	      {
-	        if (newValue.length() == 0)
-	          element.removeAttribute(XSDConstants.USE_ATTRIBUTE);
-	        else
-	          element.setAttribute(XSDConstants.USE_ATTRIBUTE, newValue);
+          PropertiesChangeCommand command = new PropertiesChangeCommand(element, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_USAGE)
+          {
+            protected void doExecuteSteps()
+            {
+              if (newValue.length() == 0)
+                element.removeAttribute(XSDConstants.USE_ATTRIBUTE);
+              else
+                element.setAttribute(XSDConstants.USE_ATTRIBUTE, newValue);
+            }
+          };
+          getCommandStack().execute(command);
 	      }
 	    }
 	    else if (e.widget == formCombo)
 	    {
-	      String newValue = formCombo.getText();
+	      final String newValue = formCombo.getText();
 	      if (element != null)
 	      {
-	        if (newValue.length() == 0)
-	          element.removeAttribute(XSDConstants.FORM_ATTRIBUTE);
-	        else
-	          element.setAttribute(XSDConstants.FORM_ATTRIBUTE, newValue);
+          PropertiesChangeCommand command = new PropertiesChangeCommand(element, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_FORM)
+          {
+            protected void doExecuteSteps()
+            {
+              if (newValue.length() == 0)
+                element.removeAttribute(XSDConstants.FORM_ATTRIBUTE);
+              else
+                element.setAttribute(XSDConstants.FORM_ATTRIBUTE, newValue);
+            }
+          };
+          getCommandStack().execute(command);
 	      }
 	    }
 	    else if (e.widget == defaultButton)
@@ -541,9 +557,17 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
 	    		{
 	    			if (element.hasAttribute(XSDConstants.FIXED_ATTRIBUTE))
 	    			{
-	            String value = element.getAttribute(XSDConstants.FIXED_ATTRIBUTE);
-	            element.removeAttribute(XSDConstants.FIXED_ATTRIBUTE);
-	            element.setAttribute(XSDConstants.DEFAULT_ATTRIBUTE, value);
+	            final String value = element.getAttribute(XSDConstants.FIXED_ATTRIBUTE);
+              
+              PropertiesChangeCommand command = new PropertiesChangeCommand(element, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_DEFAULT)
+              {
+                protected void doExecuteSteps()
+                {
+                  element.removeAttribute(XSDConstants.FIXED_ATTRIBUTE);
+                  element.setAttribute(XSDConstants.DEFAULT_ATTRIBUTE, value);
+                }
+              };
+              getCommandStack().execute(command);
 	    			}
 	    		}
 	    	}
@@ -557,9 +581,16 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
 	    		{
 	    			if (element.hasAttribute(XSDConstants.DEFAULT_ATTRIBUTE))
 	    			{
-	            String value = element.getAttribute(XSDConstants.DEFAULT_ATTRIBUTE);
-	            element.removeAttribute(XSDConstants.DEFAULT_ATTRIBUTE);
-	            element.setAttribute(XSDConstants.FIXED_ATTRIBUTE, value);
+	            final String value = element.getAttribute(XSDConstants.DEFAULT_ATTRIBUTE);
+              PropertiesChangeCommand command = new PropertiesChangeCommand(element, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_FIXED)
+              {
+                protected void doExecuteSteps()
+                {
+                  element.removeAttribute(XSDConstants.DEFAULT_ATTRIBUTE);
+                  element.setAttribute(XSDConstants.FIXED_ATTRIBUTE, value);
+                }
+              };
+              getCommandStack().execute(command);
 	    			}
 	    		}
 	    	}
@@ -624,15 +655,41 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
       {
         if (newValue.length() == 0)
         {
-          element.removeAttribute(XSDConstants.DEFAULT_ATTRIBUTE);
-          element.removeAttribute(XSDConstants.FIXED_ATTRIBUTE);
+          PropertiesChangeCommand command = new PropertiesChangeCommand(element, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_VALUE)
+          {
+            protected void doExecuteSteps()
+            {
+              element.removeAttribute(XSDConstants.FIXED_ATTRIBUTE);
+              element.removeAttribute(XSDConstants.DEFAULT_ATTRIBUTE);
+            }
+          };
+          getCommandStack().execute(command);
         }
         else
         {
-          element.removeAttribute(fixedButton.getSelection() 
-        		  ? XSDConstants.DEFAULT_ATTRIBUTE : XSDConstants.FIXED_ATTRIBUTE);
-          element.setAttribute(fixedButton.getSelection() 
-        		  ? XSDConstants.FIXED_ATTRIBUTE : XSDConstants.DEFAULT_ATTRIBUTE, newValue);
+          UpdateAttributeValueCommand command = null;
+          if (fixedButton.getSelection())
+          {
+            command = new UpdateAttributeValueCommand(element, XSDConstants.FIXED_ATTRIBUTE, newValue, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_FIXED)
+            {
+              protected void doPostProcessing()
+              {
+                element.removeAttribute(XSDConstants.DEFAULT_ATTRIBUTE);
+              }
+            };
+          }
+          else
+          {
+            command = new UpdateAttributeValueCommand(element, XSDConstants.DEFAULT_ATTRIBUTE, newValue, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_DEFAULT)
+            {
+              protected void doPostProcessing()
+              {
+                element.removeAttribute(XSDConstants.FIXED_ATTRIBUTE);
+              }
+            };
+          }
+          command.setDeleteIfEmpty(true);
+          getCommandStack().execute(command);
         }
       }
     }
@@ -762,4 +819,31 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
     } 
   }
 
+  protected class PropertiesChangeCommand extends BaseCommand
+  {
+    protected Element element;
+    public PropertiesChangeCommand(Element element, String label)
+    {
+      super(NLS.bind(org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_ACTION_CHANGE, label));
+      this.element = element;
+    }
+    
+    public void execute()
+    {
+      try
+      {
+        beginRecording(element);
+        doExecuteSteps();
+      }
+      finally
+      {
+        endRecording();
+      }
+    }
+    
+    protected void doExecuteSteps()
+    {
+      
+    }
+  }
 }

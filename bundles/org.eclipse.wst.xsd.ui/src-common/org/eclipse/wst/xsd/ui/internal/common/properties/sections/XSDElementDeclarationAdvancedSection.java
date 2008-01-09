@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,8 +65,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    // TODO Should be a translatable string here
-    CLabel abstractLabel = getWidgetFactory().createCLabel(composite, XSDConstants.ABSTRACT_ATTRIBUTE + ":");
+    CLabel abstractLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_ABSTRACT + ":");
     abstractLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -89,8 +88,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    // TODO Should be a translatable string here
-    CLabel blockLabel = getWidgetFactory().createCLabel(composite, XSDConstants.BLOCK_ATTRIBUTE + ":");
+    CLabel blockLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_BLOCK + ":");
     blockLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -113,8 +111,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    // TODO Should be a translatable string here
-    CLabel finalLabel = getWidgetFactory().createCLabel(composite, XSDConstants.FINAL_ATTRIBUTE + ":");
+    CLabel finalLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_FINAL + ":");
     finalLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -137,8 +134,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    // TODO Should be a translatable string here
-    CLabel subGroupLabel = getWidgetFactory().createCLabel(composite, XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE + ":");
+    CLabel subGroupLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_SUBSTITUTION_GROUP + ":");
     subGroupLabel.setLayoutData(data);
 
     // ------------------------------------------------------------------
@@ -166,7 +162,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
       if (value.equals(oldValue))
         return;
 
-      UpdateAttributeValueCommand command = new UpdateAttributeValueCommand(eleDec.getElement(), XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE, value);
+      UpdateAttributeValueCommand command = new UpdateAttributeValueCommand(eleDec.getElement(), XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE, value, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_SUBSTITUTION_GROUP);
       command.setDeleteIfEmpty(true);
       getCommandStack().execute(command);
     }
@@ -179,7 +175,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
       XSDElementDeclaration eleDec = (XSDElementDeclaration) input;
       String value = blockCombo.getText();
 
-      UpdateAttributeValueCommand command = new UpdateAttributeValueCommand(eleDec.getElement(), XSDConstants.BLOCK_ATTRIBUTE, value);
+      UpdateAttributeValueCommand command = new UpdateAttributeValueCommand(eleDec.getElement(), XSDConstants.BLOCK_ATTRIBUTE, value, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_BLOCK);
       command.setDeleteIfEmpty(true);
       getCommandStack().execute(command);
     }
@@ -188,7 +184,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
       XSDElementDeclaration eleDec = (XSDElementDeclaration) input;
       String value = finalCombo.getText();
 
-      UpdateAttributeValueCommand command = new UpdateAttributeValueCommand(eleDec.getElement(), XSDConstants.FINAL_ATTRIBUTE, value);
+      UpdateAttributeValueCommand command = new UpdateAttributeValueCommand(eleDec.getElement(), XSDConstants.FINAL_ATTRIBUTE, value, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_FINAL);
       command.setDeleteIfEmpty(true);
       getCommandStack().execute(command);
     }
@@ -196,16 +192,9 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
     {
       XSDElementDeclaration eleDec = (XSDElementDeclaration) input;
       String value = abstractCombo.getText();
-
-      if (value.equals(EMPTY))
-        eleDec.getElement().removeAttribute(XSDConstants.ABSTRACT_ATTRIBUTE);
-      else
-      {
-        if (value.equals(TRUE))
-          eleDec.setAbstract(true);
-        else if (value.equals(FALSE))
-          eleDec.setAbstract(false);
-      }
+      UpdateAttributeValueCommand command = new UpdateAttributeValueCommand(eleDec.getElement(), XSDConstants.ABSTRACT_ATTRIBUTE, value, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_ABSTRACT);
+      command.setDeleteIfEmpty(true);
+      getCommandStack().execute(command);
     }
     else if (e.widget == substGroupCombo)
     {

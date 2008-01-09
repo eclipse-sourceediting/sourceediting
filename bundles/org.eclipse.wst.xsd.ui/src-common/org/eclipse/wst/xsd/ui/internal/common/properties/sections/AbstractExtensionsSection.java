@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -81,6 +81,12 @@ public abstract class AbstractExtensionsSection extends AbstractSection
   public AbstractExtensionsSection()
   {
     super();    
+  }
+  
+  public void setInput(IWorkbenchPart part, ISelection selection)
+  {
+    super.setInput(part, selection);
+    extensionDetailsViewer.setCommandStack(getCommandStack());
   }
   
   class InternalNodeAdapter implements INodeAdapter

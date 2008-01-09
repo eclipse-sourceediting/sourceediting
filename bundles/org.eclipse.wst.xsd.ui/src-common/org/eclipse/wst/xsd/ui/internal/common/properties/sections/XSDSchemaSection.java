@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,6 +35,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xsd.ui.internal.actions.XSDEditNamespacesAction;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNamespaceInformationCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.nsedit.TargetNamespaceChangeHandler;
@@ -288,8 +289,8 @@ public class XSDSchemaSection extends AbstractSection
 
   private void updateNamespaceInfo(String newPrefix, String newTargetNamespace)
   {
-    UpdateNamespaceInformationCommand command = new UpdateNamespaceInformationCommand("", xsdSchema, newPrefix, newTargetNamespace);
-    command.execute();
+    UpdateNamespaceInformationCommand command = new UpdateNamespaceInformationCommand(Messages._UI_ACTION_NAMESPACE_INFORMATION_CHANGE, xsdSchema, newPrefix, newTargetNamespace);
+    getCommandStack().execute(command);
   }
 
   public void dispose()
