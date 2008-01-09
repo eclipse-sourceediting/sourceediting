@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -93,16 +93,21 @@ public class XSDModelReconcileAdapter extends ModelReconcileAdapter
         {
           // workaround
         }
+
         // TODO (cs) I'm not sure why the above isn't enough
         // to clear out all of the component lists
         // for now I've just added a few more lines to do additional clearing
         //
-        schema.getElementDeclarations().clear();
-        schema.getTypeDefinitions().clear();
-        schema.getAttributeDeclarations().clear();
-        schema.getModelGroupDefinitions().clear();
-        schema.getAttributeGroupDefinitions().clear();     
-        
+        // See comment above for https://bugs.eclipse.org/bugs/show_bug.cgi?id=203291
+        try { schema.getIncorporatedVersions().clear(); } catch (Exception e) { }
+        try { schema.getElementDeclarations().clear(); } catch (Exception e) {}
+        try { schema.getTypeDefinitions().clear(); } catch (Exception e) {}
+        try { schema.getAttributeDeclarations().clear(); } catch (Exception e) {}
+        try { schema.getModelGroupDefinitions().clear(); } catch (Exception e) {}
+        try { schema.getAttributeGroupDefinitions().clear(); } catch (Exception e) {}     
+        try { schema.setTargetNamespace(null); } catch (Exception e) {}
+        try { schema.reset(); } catch (Exception e) {}
+
         schema.setElement(null);
       }      
     } 

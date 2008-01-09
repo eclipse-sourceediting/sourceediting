@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -200,7 +200,8 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     
     Object newValue = msg.getNewValue();
     if (newValue instanceof XSDInclude || newValue instanceof XSDImport || newValue instanceof XSDRedefine ||
-        (msg.getFeature() == XSDPackage.eINSTANCE.getXSDSchema_Contents() && msg.getOldValue() instanceof XSDSchemaDirective)) // handle the case for delete directive
+        (msg.getFeature() == XSDPackage.eINSTANCE.getXSDSchema_Contents() && msg.getOldValue() instanceof XSDSchemaDirective) || // handle the case for delete directive
+         msg.getFeature() == XSDPackage.eINSTANCE.getXSDSchema_IncorporatedVersions()) // updates to the imports/includes
     {
       CategoryAdapter adapter = getCategory(CategoryAdapter.DIRECTIVES);
       Assert.isTrue(adapter != null);
