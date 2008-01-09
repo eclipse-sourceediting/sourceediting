@@ -563,7 +563,7 @@
           class="org.eclipse.wst.xml.ui.internal.wizards.ImportXMLCatalogWizard"
           icon="icons/xmldoc.gif"
           id="org.eclipse.wst.xml.ui.internal.wizards.ImportXMLCatalogWizard"
-          name="%_UI_WIZARD_IMPORT_XMLCATALOG">
+          name="%_UI_WIZARD_IMPORT_EXPORT_XMLCATALOG">
        <description>
           %_UI_IMPORT_XML_CATALOG_FILE
        </description>
@@ -580,7 +580,7 @@
           class="org.eclipse.wst.xml.ui.internal.wizards.ExportXMLCatalogWizard"
           icon="icons/xmldoc.gif"
           id="org.eclipse.wst.xml.ui.internal.wizards.ExportXMLCatalogWizard"
-          name="%_UI_WIZARD_EXPORT_XMLCATALOG">
+          name="%_UI_WIZARD_IMPORT_EXPORT_XMLCATALOG">
        <description>
           %_UI_EXPORT_XML_CATALOG_FILE
        </description>
