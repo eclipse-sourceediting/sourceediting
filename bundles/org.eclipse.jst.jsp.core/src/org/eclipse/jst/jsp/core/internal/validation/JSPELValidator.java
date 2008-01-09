@@ -1,5 +1,5 @@
 /*******************************************************************************
- Copyright (c) 2005, 2006 BEA Systems and others.
+ Copyright (c) 2005, 2008 BEA Systems and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,10 +29,8 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.validation.internal.core.Message;
-import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
-import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
@@ -48,11 +46,6 @@ public class JSPELValidator extends JSPValidator {
 
 	public JSPELValidator(IValidator validator) {
 		this.fMessageOriginator = validator;
-	}
-
-	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException {
-		reporter.removeAllMessages(this);
-		super.validate(helper, reporter);
 	}
 
 	protected void validateFile(IFile file, IReporter reporter) {

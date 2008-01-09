@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -175,8 +175,6 @@ public final class JSPBatchValidator implements IValidatorJob, IExecutableExtens
 
 
 	void doValidate(IValidationContext helper, IReporter reporter) throws ValidationException {
-		reporter.removeAllMessages(this);
-
 		String[] uris = helper.getURIs();
 		if (uris.length > 0) {
 			IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
