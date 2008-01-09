@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,8 +12,6 @@ package org.eclipse.wst.html.core.internal.validate;
 
 
 
-import java.util.Iterator;
-
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
@@ -25,7 +23,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
-import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -115,13 +112,13 @@ public class HTMLAttributeValidator extends PrimeValidator {
 			if (adec == null) {
 				// No attr declaration was found. That is, the attr name is
 				// undefined.
-				// but not regard it as undefined name if it includes JSP
-				if (!hasJSPRegion(((IDOMNode) a).getNameRegion())) {
+				// but not regard it as undefined name if it includes nested
+				// region
+				if (!hasNestedRegion(((IDOMNode) a).getNameRegion())) {
 					rgnType = REGION_NAME;
 					state = ErrorState.UNDEFINED_NAME_ERROR;
 				}
-			}
-			else {
+			} else {
 				// The attr declaration was found.
 				// At 1st, the name should be checked.
 				if (CMUtil.isHTML(edec) && (!CMUtil.isXHTML(edec))) {
@@ -132,8 +129,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 					if (CMUtil.isBooleanAttr(adec) && ((IDOMAttr) a).hasNameOnly())
 						continue; // OK, keep going. No more check is needed
 					// against this attr.
-				}
-				else {
+				} else {
 					// If the target is other than pure HTML (JSP or XHTML),
 					// the name
 					// must be checked exactly (ie in case sensitive way).
@@ -156,8 +152,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 							rgnType = REGION_VALUE;
 							state = ErrorState.UNDEFINED_VALUE_ERROR;
 						}
-					}
-					else {
+					} else {
 						String[] candidates = attrType.getEnumeratedValues();
 						if (candidates != null && candidates.length > 0) {
 							// several candidates are found.
@@ -178,8 +173,8 @@ public class HTMLAttributeValidator extends PrimeValidator {
 								// No candidate was found. That is,
 								// actualValue is invalid.
 								// but not regard it as undefined value if it
-								// includes JSP.
-								if (!hasJSPRegion(((IDOMNode) a).getValueRegion())) {
+								// includes nested region.
+								if (!hasNestedRegion(((IDOMNode) a).getValueRegion())) {
 									rgnType = REGION_VALUE;
 									state = ErrorState.UNDEFINED_VALUE_ERROR;
 								}
@@ -214,37 +209,18 @@ public class HTMLAttributeValidator extends PrimeValidator {
 	}
 
 	/**
+	 * True if container has nested regions, meaning container is probably too
+	 * complicated (like JSP regions) to validate with this validator.
 	 */
-	private boolean hasJSPRegion(ITextRegion container) {
+	private boolean hasNestedRegion(ITextRegion container) {
 		if (!(container instanceof ITextRegionContainer))
 			return false;
 		ITextRegionList regions = ((ITextRegionContainer) container).getRegions();
 		if (regions == null)
 			return false;
-		Iterator e = regions.iterator();
-		while (e.hasNext()) {
-			ITextRegion region = (ITextRegion) e.next();
-			if (region == null)
-				continue;
-			String regionType = region.getType();
-			if (regionType == DOMRegionContext.XML_TAG_OPEN || (isNestedTagName(regionType)))
-				return true;
-		}
-		return false;
-	}
-
-    /**
-     * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
-     * way for expedency. Should be evolved in future to depend on "nestedContext".
-     */
-	private boolean isNestedTagName(String regionType) {
-		final String JSP_SCRIPTLET_OPEN = "JSP_SCRIPTLET_OPEN"; //$NON-NLS-1$
-		final String JSP_EXPRESSION_OPEN = "JSP_EXPRESSION_OPEN"; //$NON-NLS-1$
-		final String JSP_DECLARATION_OPEN = "JSP_DECLARATION_OPEN"; //$NON-NLS-1$
-		final String JSP_DIRECTIVE_OPEN = "JSP_DIRECTIVE_OPEN"; //$NON-NLS-1$
-
-		boolean result = regionType.equals(JSP_SCRIPTLET_OPEN) || regionType.equals(JSP_EXPRESSION_OPEN) || regionType.equals(JSP_DECLARATION_OPEN) || regionType.equals(JSP_DIRECTIVE_OPEN);
-		return result;
+		// BUG207194: return true by default as long as container is an
+		// ITextRegionContainer with at least 1 region
+		return true;
 	}
 
 	// <<D214022
