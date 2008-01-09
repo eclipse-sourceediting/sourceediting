@@ -242,22 +242,6 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		IDataModel nestedProjectDM = model.getNestedModel(NESTED_PROJECT_DM);
 		nestedProjectDM.addListener(this);
 		projectNameGroup = new NewProjectGroup(parent, nestedProjectDM);
-		
-		final IDataModelListener projectNameChangedListener = new IDataModelListener()
-		{
-            public void propertyChanged( final DataModelEvent event )
-            {
-                if( event.getFlag() == IDataModel.VALUE_CHG &&
-                    event.getPropertyName().equals( IProjectCreationPropertiesNew.PROJECT_NAME ) )
-                {
-                    final ModifyFacetedProjectWizard wizard = (ModifyFacetedProjectWizard) getWizard();
-                    final String projectName = (String) event.getProperty();
-                    wizard.getFacetedProjectWorkingCopy().setProjectName( projectName );
-                }
-            }
-		};
-		
-		nestedProjectDM.addListener( projectNameChangedListener );
 	}
 
 	protected String[] getValidationPropertyNames() 
