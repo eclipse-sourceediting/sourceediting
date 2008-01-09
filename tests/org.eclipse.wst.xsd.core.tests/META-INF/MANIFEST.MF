@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name.0
+Bundle-SymbolicName: org.eclipse.wst.xsd.core.tests
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.eclipse.wst.xsd.core.tests.internal.Activator
+Require-Bundle: org.eclipse.core.runtime,
+ org.junit;bundle-version="3.8.2"
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Eclipse-LazyStart: true
+Bundle-Vendor: %Bundle-Vendor.0
