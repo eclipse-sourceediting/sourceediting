@@ -22,11 +22,11 @@
       <discovery label="Web Tools Platform (WTP) Updates" url="http://download.eclipse.org/webtools/updates"/>
    </url>
 
+<!-- for now, can not leave test plugins jarred, they must be a directory -->
    <plugin
          id="org.eclipse.wst.xsl.launching.tests"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
 </feature>
