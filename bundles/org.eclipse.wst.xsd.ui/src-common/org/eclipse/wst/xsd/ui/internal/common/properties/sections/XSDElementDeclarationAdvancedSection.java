@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver - STAR - added nillable advanced tab option, bug 209356
  *******************************************************************************/
 
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
@@ -40,6 +41,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
   protected CCombo finalCombo;
   protected CCombo abstractCombo;
   protected CCombo substGroupCombo;
+  protected CCombo nillableCombo;
 
   private String blockValues[] = { EMPTY, "#" + XSDConstants.ALL_ELEMENT_TAG, //$NON-NLS-1$
       XSDConstants.EXTENSION_ELEMENT_TAG, XSDConstants.RESTRICTION_ELEMENT_TAG,
@@ -48,7 +50,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
   private String finalValues[] = { EMPTY, "#" + XSDConstants.ALL_ELEMENT_TAG, XSDConstants.EXTENSION_ELEMENT_TAG, //$NON-NLS-1$
       XSDConstants.RESTRICTION_ELEMENT_TAG }; //$NON-NLS-1$
 
-  private String abstractValues[] = { EMPTY, TRUE, FALSE }; // TODO use some external string here instead
+  private String booleanValues[] = { EMPTY, TRUE, FALSE }; 
 
   protected void createContents(Composite parent)
   {
@@ -78,7 +80,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
     abstractCombo.setLayoutData(data);
     abstractCombo.setEditable(false);
 
-    abstractCombo.setItems(abstractValues);
+    abstractCombo.setItems(booleanValues);
     abstractCombo.addSelectionListener(this);
 
     // ------------------------------------------------------------------
@@ -148,6 +150,30 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
     substGroupCombo.setEditable(true);
     substGroupCombo.addSelectionListener(this);
     applyAllListeners(substGroupCombo);
+    
+    // ------------------------------------------------------------------
+    // Nillable Label
+    // ------------------------------------------------------------------
+    data = new GridData();
+    data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
+    data.grabExcessHorizontalSpace = false;
+
+    CLabel nillableLabel = getWidgetFactory().createCLabel(composite, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_NILLABLE + ":");
+    nillableLabel.setLayoutData(data);
+
+    // ------------------------------------------------------------------
+    // NillableCombo
+    // ------------------------------------------------------------------
+    data = new GridData();
+    data.grabExcessHorizontalSpace = true;
+    data.horizontalAlignment = GridData.FILL;
+    nillableCombo = getWidgetFactory().createCCombo(composite);
+    nillableCombo.setLayoutData(data);
+    nillableCombo.setEditable(false);
+
+    nillableCombo.setItems(booleanValues);
+    nillableCombo.addSelectionListener(this);
+    
   }
 
   public void doHandleEvent(Event e)
@@ -233,6 +259,16 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
           manager.modifyComponentReference(input, newValue);
       }
     }
+    else if (e.widget == nillableCombo)
+    {
+        XSDElementDeclaration eleDec = (XSDElementDeclaration) input;
+        String value = nillableCombo.getText();
+
+        UpdateAttributeValueCommand command = new UpdateAttributeValueCommand(eleDec.getElement(), XSDConstants.NILLABLE_ATTRIBUTE, value, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_NILLABLE);
+        command.setDeleteIfEmpty(true);
+        getCommandStack().execute(command);
+    }
+
   }
 
   public void refresh()
@@ -252,12 +288,17 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
           abstractCombo.setEnabled(true);
           finalCombo.setEnabled(true);
           substGroupCombo.setEnabled(true);
+          nillableCombo.setEnabled(true);
         }
         else
         {
           abstractCombo.setEnabled(false);
           finalCombo.setEnabled(false);
           substGroupCombo.setEnabled(false);
+          
+          // Nillable when used in a local element declaration can't be set on
+          // on elements that use @ref.
+       	  nillableCombo.setEnabled(!eleDec.isElementDeclarationReference());
         }
 
         Element element = eleDec.getElement();
@@ -270,6 +311,17 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
         {
           blockCombo.setText(EMPTY);
         }
+        // We should show the value of the attribute regardless if it is invalid
+        if (element.hasAttribute(XSDConstants.NILLABLE_ATTRIBUTE))
+        {
+          String attrValue = element.getAttribute(XSDConstants.NILLABLE_ATTRIBUTE);
+          nillableCombo.setText(attrValue);
+        }
+        else
+        {
+          nillableCombo.setText(EMPTY);
+        }
+
 
         String finalAttValue = element.getAttribute(XSDConstants.FINAL_ATTRIBUTE);
         if (finalAttValue != null)
