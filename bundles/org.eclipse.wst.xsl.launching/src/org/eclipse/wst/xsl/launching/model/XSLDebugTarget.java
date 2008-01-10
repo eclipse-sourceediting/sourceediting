@@ -84,7 +84,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 		this.requestSocket = attemptConnect(launchHelper.getRequestPort());
 		this.eventSocket = attemptConnect(launchHelper.getEventPort());
 
-		if (requestSocket != null && eventSocket != null)
+		if (!process.isTerminated())
 		{
 			try
 			{
@@ -100,7 +100,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 			this.threads = new IThread[]{ thread };
 			this.eventDispatch = new EventDispatchJob();
 			this.eventDispatch.schedule();
-
+	
 			DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(this);
 		}
 	}
@@ -147,7 +147,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 
 	public boolean hasThreads() throws DebugException
 	{
-		return threads.length > 0;
+		return threads != null && threads.length > 0;
 	}
 
 	public String getName() throws DebugException

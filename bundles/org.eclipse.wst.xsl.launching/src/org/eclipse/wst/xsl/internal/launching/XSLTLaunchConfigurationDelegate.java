@@ -21,10 +21,14 @@ import java.util.List;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
@@ -38,7 +42,6 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IDebugTarget;
-import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.ISourceLocator;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.jdt.launching.IVMRunner;
@@ -62,6 +65,78 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 {
 	private String mode;
 	private LaunchHelper launchHelper;
+	
+	private class XSLDebugEventSetListener implements IDebugEventSetListener
+	{
+		private ILaunch launch;
+
+		public XSLDebugEventSetListener(ILaunch launch)
+		{
+			this.launch = launch;
+		}
+		
+		public void handleDebugEvents(DebugEvent[] events)
+		{
+			for (DebugEvent debugEvent : events)
+			{
+				if (debugEvent.getSource() == launch.getProcesses()[0] && debugEvent.getKind() == DebugEvent.TERMINATE)
+				{
+					// remove self as listener
+					DebugPlugin.getDefault().removeDebugEventListener(this);
+					File file = launchHelper.getTarget();
+					IFile ifile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(file.getAbsolutePath()));
+					if (ifile != null)
+					{// refresh this workspace file..
+						try
+						{
+							ifile.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor(){
+								@Override
+								public void done()
+								{
+									openFileIfRequired();
+								}
+							});
+						}
+						catch (CoreException e)
+						{
+							LaunchingPlugin.log(e);
+						}
+					}
+					else
+					{
+						openFileIfRequired();
+					}
+				}
+			}
+		}
+
+		private void openFileIfRequired()
+		{
+			// TODO this is dirty - need to declare extension point and move the UI code into the UI plugin
+			if (launchHelper.getOpenFileOnCompletion())
+			{
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable()
+				{
+					public void run()
+					{
+						// Open editor on new file.
+						IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+						try
+						{
+							File file = launchHelper.getTarget();
+							Path path = new Path(file.getAbsolutePath());
+							IFileStore filestore = EFS.getLocalFileSystem().getStore(path);
+							IDE.openEditorOnFileStore(dw.getActivePage(), filestore);
+						}
+						catch (PartInitException e)
+						{
+							LaunchingPlugin.log(e);
+						}
+					}
+				});
+			}
+		}
+	}
 
 	@Override
 	public synchronized void launch(ILaunchConfiguration configuration, final String mode, final ILaunch launch, IProgressMonitor monitor) throws CoreException
@@ -69,52 +144,7 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 		this.mode = mode;
 		launchHelper = new LaunchHelper(configuration);
 		launchHelper.save(getLaunchConfigFile());
-		DebugPlugin.getDefault().addDebugEventListener(new IDebugEventSetListener()
-		{
-
-			public void handleDebugEvents(DebugEvent[] events)
-			{
-				if (launch.getProcesses().length == 1)
-				{
-					IProcess process = launch.getProcesses()[0];
-					for (DebugEvent debugEvent : events)
-					{
-						if (debugEvent.getSource() == process)
-						{
-							if (debugEvent.getKind() == DebugEvent.TERMINATE)
-							{
-								// remove self as listener
-								DebugPlugin.getDefault().removeDebugEventListener(this);
-								// TODO this is dirty - need to declare extension point and move the UI code into the UI plugin
-								if (launchHelper.getOpenFileOnCompletion())
-								{
-									PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable()
-									{
-										public void run()
-										{
-											// Open editor on new file.
-											IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-											try
-											{
-												File file = launchHelper.getTarget();
-												Path path = new Path(file.getAbsolutePath());
-												IFileStore filestore = EFS.getLocalFileSystem().getStore(path);
-												IDE.openEditorOnFileStore(dw.getActivePage(), filestore);
-											}
-											catch (PartInitException e)
-											{
-												LaunchingPlugin.log(e);
-											}
-										}
-									});
-								}
-							}
-						}
-					}
-				}
-			}
-
-		});
+		DebugPlugin.getDefault().addDebugEventListener(new XSLDebugEventSetListener(launch));
 
 		// the super.launch will add a Java source director if we set it to null here
 		final ISourceLocator configuredLocator = launch.getSourceLocator();
