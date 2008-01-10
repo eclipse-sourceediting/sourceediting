@@ -312,6 +312,8 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
           blockCombo.setText(EMPTY);
         }
         // We should show the value of the attribute regardless if it is invalid
+        // ie. as the user starts typing 'true' in the source, the properties view
+        // should show the value dynamically
         if (element.hasAttribute(XSDConstants.NILLABLE_ATTRIBUTE))
         {
           String attrValue = element.getAttribute(XSDConstants.NILLABLE_ATTRIBUTE);
@@ -335,11 +337,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
 
         if (element.hasAttribute(XSDConstants.ABSTRACT_ATTRIBUTE))
         {
-          boolean absAttValue = eleDec.isAbstract();
-          if (absAttValue)
-            abstractCombo.setText(TRUE);
-          else
-            abstractCombo.setText(FALSE);
+          abstractCombo.setText(element.getAttribute(XSDConstants.ABSTRACT_ATTRIBUTE));
         }
         else
           abstractCombo.setText(EMPTY);
