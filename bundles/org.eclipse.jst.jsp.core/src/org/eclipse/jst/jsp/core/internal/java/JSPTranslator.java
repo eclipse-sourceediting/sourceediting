@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -132,7 +132,7 @@ public class JSPTranslator {
 	private int fRelativeOffset = -1;
 	/** fCursorPosition = offset in the translated java document */
 	private int fCursorPosition = -1;
-	
+
 	/** some page directive attributes */
 	private boolean fIsErrorPage, fCursorInExpression = false;
 	private boolean fIsInASession = true;
@@ -530,7 +530,7 @@ public class JSPTranslator {
 		fResult.append(fServiceHeader);
 		javaOffset += fServiceHeader.length();
 		// session participant
-		if(fIsInASession) {
+		if (fIsInASession) {
 			fResult.append(fSessionVariableDeclaration);
 			javaOffset += fSessionVariableDeclaration.length();
 		}
@@ -976,7 +976,9 @@ public class JSPTranslator {
 			if (type == DOMRegionContext.BLOCK_TEXT) {
 				// check if it's nested jsp in a script tag...
 				if (region instanceof ITextRegionContainer) {
-					translateJSPNode(region, regions, type, EMBEDDED_JSP);
+					// pass in block text's container & iterator
+					Iterator regionIterator = ((ITextRegionCollection) region).getRegions().iterator();
+					translateJSPNode(region, regionIterator, type, EMBEDDED_JSP);
 				}
 				else {
 					/**
@@ -1022,8 +1024,11 @@ public class JSPTranslator {
 	}
 
 	private void handleScopingIfNecessary(ITextRegionCollection containerRegion) {
-		/* 199047 - Braces missing from translation of custom tags not defining variables */
-		
+		/*
+		 * 199047 - Braces missing from translation of custom tags not
+		 * defining variables
+		 */
+
 		// code within a custom tag gets its own scope
 		// so if we encounter a start of a custom tag, we add '{'
 		// and for the end of a custom tag we add '}'
@@ -1456,7 +1461,7 @@ public class JSPTranslator {
 				contentRegion = getCurrentNode();
 			}
 			else if (JSPType == EMBEDDED_JSP && region instanceof ITextRegionCollection) {
-				translateEmbeddedJSPInBlock((ITextRegionCollection) region);
+				translateEmbeddedJSPInBlock((ITextRegionCollection) region, regions);
 				// ensure the rest of this method won't be called
 			}
 			if (contentRegion != null) {
@@ -1544,10 +1549,10 @@ public class JSPTranslator {
 	/**
 	 * Pass the ITextRegionCollection which is the embedded region
 	 * 
-	 * @param iterator
+	 * @param regions
+	 *            iterator for collection
 	 */
-	private void translateEmbeddedJSPInBlock(ITextRegionCollection collection) {
-		Iterator regions = collection.getRegions().iterator();
+	private void translateEmbeddedJSPInBlock(ITextRegionCollection collection, Iterator regions) {
 		ITextRegion region = null;
 		while (regions.hasNext()) {
 			region = (ITextRegion) regions.next();
@@ -1557,11 +1562,16 @@ public class JSPTranslator {
 		}
 		if (region != null) {
 			translateEmbeddedJSPInAttribute(collection);
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=126377
+			// all of collection was translated so just finish off iterator
+			while (regions.hasNext())
+				regions.next();
 		}
 	}
 
 	/*
-	 * for example: <a href="index.jsp?p=<%=abc%>b=<%=xyz%>">abc</a>
+	 * Translates all embedded jsp regions in embeddedContainer for example:
+	 * <a href="index.jsp?p=<%=abc%>b=<%=xyz%>">abc</a>
 	 */
 	private void translateEmbeddedJSPInAttribute(ITextRegionCollection embeddedContainer) {
 		// THIS METHOD IS A FIX FOR
@@ -1925,9 +1935,9 @@ public class JSPTranslator {
 			addImports(attrValue);
 		}
 		else if (attrName.equals("session")) //$NON-NLS-1$
- 		{
+		{
 			fIsInASession = "true".equalsIgnoreCase(attrValue);
- 		}
+		}
 		else if (attrName.equals("buffer")) //$NON-NLS-1$
 		{
 			// ignore for now
@@ -1949,9 +1959,9 @@ public class JSPTranslator {
 	protected void handleIncludeFile(String filename) {
 		if (filename != null && fProcessIncludes) {
 			IPath basePath = getModelPath();
-			if(basePath != null) {
+			if (basePath != null) {
 				String filePath = FacetModuleCoreSupport.resolve(basePath, filename).toString();
-	
+
 				if (!getIncludes().contains(filePath) && !filePath.equals(basePath.toString())) {
 					getIncludes().push(filePath);
 					JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
@@ -2592,7 +2602,7 @@ public class JSPTranslator {
 	public IStructuredDocument getStructuredDocument() {
 		return fStructuredDocument;
 	}
-	
+
 	private IPath getModelPath() {
 		IPath path = null;
 		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(getStructuredDocument());
@@ -2612,7 +2622,7 @@ public class JSPTranslator {
 		IPath modelpath = getModelPath();
 		if (modelpath != null) {
 			PropertyGroup[] propertyGroups = DeploymentDescriptorPropertyCache.getInstance().getPropertyGroups(modelpath);
-			for(int j = 0; j < propertyGroups.length; j++) {
+			for (int j = 0; j < propertyGroups.length; j++) {
 				IPath[] codas = propertyGroups[j].getIncludeCoda();
 				for (int i = 0; i < codas.length; i++) {
 					if (!getIncludes().contains(codas[i].toString()) && !codas[i].equals(modelpath)) {
@@ -2632,7 +2642,7 @@ public class JSPTranslator {
 		IPath modelpath = getModelPath();
 		if (modelpath != null) {
 			PropertyGroup[] propertyGroups = DeploymentDescriptorPropertyCache.getInstance().getPropertyGroups(modelpath);
-			for(int j = 0; j < propertyGroups.length; j++) {
+			for (int j = 0; j < propertyGroups.length; j++) {
 				IPath[] preludes = propertyGroups[j].getIncludePrelude();
 				for (int i = 0; i < preludes.length; i++) {
 					if (!getIncludes().contains(preludes[i].toString()) && !preludes[i].equals(modelpath)) {
