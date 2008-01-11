@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,16 +12,24 @@ package org.eclipse.jst.jsp.core.tests.validation;
 
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 
-class ValidationContextForTest implements IValidationContext {
-	private String fURI = null;
+public class ValidationContextForTest implements IValidationContext {
+	private String[] fURIs = null;
 
 	public void setURI(String uri) {
-		fURI = uri;
+		String[] uris = null;
+		if (uri != null)
+			uris = new String[]{uri};
+
+		setURIs(uris);
+	}
+	
+	public void setURIs(String[] uris) {
+		fURIs = uris;
 	}
 
 	public String[] getURIs() {
-		if (fURI != null)
-			return new String[]{fURI};
+		if (fURIs != null)
+			return fURIs;
 		return new String[0];
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,11 +30,16 @@ import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
+import org.eclipse.jst.jsp.core.internal.validation.JSPJavaValidator;
+import org.eclipse.jst.jsp.core.internal.validation.JSPValidator;
 import org.eclipse.jst.jsp.core.tests.JSPCoreTestsPlugin;
 import org.eclipse.jst.jsp.core.tests.taglibindex.BundleResourceUtil;
+import org.eclipse.jst.jsp.core.tests.validation.ReporterForTest;
+import org.eclipse.jst.jsp.core.tests.validation.ValidationContextForTest;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.validation.internal.operations.ValidatorManager;
+import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
@@ -94,6 +99,38 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		assertTrue("new-line beginning scriptlet missing from translation", translation.getJavaText().indexOf("int i = 0;") >= 0);
 
 		model.releaseFromRead();
+	}
+
+	/**
+	 * Tests jsp translation when jsp is within html comments. See
+	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=126377
+	 * 
+	 * @throws Exception
+	 */
+	public void test_126377() throws Exception {
+		String projectName = "bug_126377";
+		// Create new project
+		IProject project = BundleResourceUtil.createSimpleProject(projectName, null, null);
+		assertTrue(project.exists());
+		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + projectName, "/" + projectName);
+		IFile file = project.getFile("WebContent/test126377_noerror.jsp");
+		assertTrue(file.exists());
+				
+		JSPValidator validator = new JSPJavaValidator();
+		IReporter reporter = new ReporterForTest();
+		ValidationContextForTest helper = new ValidationContextForTest();
+		helper.setURI(file.getFullPath().toOSString());
+		validator.validate(helper, reporter);
+		
+		assertTrue("found jsp java error within html comments when there are none", reporter.getMessages().isEmpty());
+		
+		file = project.getFile("WebContent/test126377_error.jsp");
+		assertTrue(file.exists());
+		helper.setURI(file.getFullPath().toOSString());
+		validator.validate(helper, reporter);
+		
+		int errors = reporter.getMessages().size();
+		assertTrue("found "+errors+" jsp java errors within html comments when there should be 3", (errors == 3));
 	}
 
 	// public void testMangling() {
@@ -177,7 +214,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		BundleResourceUtil.copyBundleEntryIntoWorkspace("/testfiles/struts.jar", "/" + testName + "/struts.jar");
 
 		waitForBuildAndValidation(project);
-		
+
 		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, doValidateSegments);
 		IFile main = project.getFile("main.jsp");
 		IMarker[] markers = main.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
@@ -208,13 +245,14 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, doValidateSegments);
 		IFile main = project.getFile("WebContent/main.jsp");
 		IMarker[] markers = main.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
-		
+
 		StringBuffer s = new StringBuffer();
 		for (int i = 0; i < markers.length; i++) {
 			s.append("\nproblem on line " + markers[i].getAttribute(IMarker.LINE_NUMBER) + ": " + markers[i].getAttribute(IMarker.MESSAGE));
 		}
 		assertEquals("problem markers found" + s.toString(), 0, markers.length);
 	}
+
 	public void test_181057a() throws Exception {
 		boolean doValidateSegments = JSPCorePlugin.getDefault().getPluginPreferences().getBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS);
 		String testName = "bug_181057";
