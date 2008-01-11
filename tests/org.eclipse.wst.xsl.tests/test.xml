@@ -17,7 +17,7 @@
         value="org.eclipse.wst.xsl.tests" />
     <property
         name="classname"
-        value="org.eclipse.wst.xsl.tests.AllTestSuite" />
+        value="org.eclipse.wst.xsl.tests.AllTestsSuite" />
     <property
         name="testType"
         value="ui-test" />
