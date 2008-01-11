@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.core.tests.internal;
 
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
+import org.eclipse.wst.xsd.contentmodel.internal.XSDImpl;
+
 import junit.framework.TestCase;
 
 /**
@@ -34,4 +38,17 @@ public class BaseTestCase extends TestCase
   {
     PLUGIN_ABSOLUTE_PATH = XSDCoreTestsPlugin.getInstallURL();
   }
+  
+  protected String locateFileUsingCatalog(String namespaceURI)
+  {
+    URIResolver resolver = URIResolverPlugin.createResolver();
+    String result = resolver.resolve("", namespaceURI, "");
+    String resolvedURI = resolver.resolvePhysicalLocation("", namespaceURI, result);
+    if (resolvedURI == null || resolvedURI.length() == 0)
+    {
+      return namespaceURI;
+    }
+    return resolvedURI;
+  }
+
 }
