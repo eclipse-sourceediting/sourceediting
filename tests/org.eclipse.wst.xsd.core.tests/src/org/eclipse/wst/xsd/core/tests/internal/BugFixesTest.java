@@ -122,7 +122,7 @@ public class BugFixesTest extends BaseTestCase
         }
       }
     }
-    assertTrue(foundDesiredType);  // if we didn't even find the binding element, then something terrible went wrong
+    assertTrue(foundDesiredType);  // if we didn't even find the complex type, then something terrible went wrong
     
     // Second way to test via content model
     
@@ -147,7 +147,7 @@ public class BugFixesTest extends BaseTestCase
         break;
       }
     }
-    assertTrue(foundDesiredElement);  // if we didn't even find the binding element, then something terrible went wrong
+    assertTrue(foundDesiredElement);  // if we didn't even find the noinput element, then something terrible went wrong
   }
 
 }
