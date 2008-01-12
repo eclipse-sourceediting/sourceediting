@@ -27,7 +27,7 @@ public class AllTestsSuite extends TestSuite {
 	}
 
 	/**
-	 * This is just need to run in development environment workbench.
+	 * This is just need to run in a development environment workbench.
 	 */
 	public void testAll() {
 		// this method needs to exist, but doesn't really do anything
