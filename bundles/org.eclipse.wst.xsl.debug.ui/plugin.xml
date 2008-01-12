@@ -4,22 +4,17 @@
 
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
-        category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
-        class="org.eclipse.wst.xsl.internal.debug.ui.preferences.MainPreferencePage"
-        id="org.eclipse.wst.xsl.launching.ui.preferences.BasePreferencePage"
-        name="%page.name.0"/>
-		<page
-			category="org.eclipse.wst.xsl.launching.ui.preferences.BasePreferencePage"
+			category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
 			class="org.eclipse.wst.xsl.internal.debug.ui.preferences.ProcessorsPreferencePage"
 			id="org.eclipse.wst.xsl.launching.ui.preferences.ProcessorPreferencePage"
 			name="%page.name.1">
 		</page>
 		<page
-			category="org.eclipse.wst.xsl.launching.ui.preferences.BasePreferencePage"
+			category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
 			class="org.eclipse.wst.xsl.internal.debug.ui.preferences.FeaturesPreferencePage"
 			id="org.eclipse.wst.xsl.debug.ui.page1" name="%page.name.2" />
 		<page
-			category="org.eclipse.wst.xsl.launching.ui.preferences.BasePreferencePage"
+			category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
 			class="org.eclipse.wst.xsl.internal.debug.ui.preferences.OutputPreferencePage"
 			id="org.eclipse.wst.xsl.debug.ui.output" name="%page.name.3" />
 	</extension>
