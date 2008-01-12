@@ -16,12 +16,11 @@
       </catalogContribution>
    </extension>
    <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="org.eclipse.wst.xsl.ui.XSLPerspective"
-            icon="icons/xslt-16.gif"
-            id="org.eclipse.wst.xsl.ui.perspective1"
-            name="%perspectiveName">
-      </perspective>
+         point="org.eclipse.ui.preferencePages">
+		<page
+	        category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
+	        class="org.eclipse.wst.xsl.internal.ui.preferences.MainPreferencePage"
+	        id="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
+	        name="%page.name.0"/>
    </extension>
 </plugin>

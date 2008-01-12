@@ -7,10 +7,10 @@
  *
  * Contributors:
  *     Lars Gersmann (www.orangevolt.com) 
- *     
+ *     David Carver - STAR - renaming package to follow wst naming.
  *******************************************************************************/
 
-package org.eclipse.wst.xsl.ui;
+package org.eclipse.wst.xsl.internal.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;

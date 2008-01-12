@@ -1,25 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?><templates><template id="com.orangevolt.eclipse.xslt.templates.docbook.1" autoinsert="true" context="xml_new" deleted="false" description="DocBook 4.5 conform Document Template" enabled="true" name="DocBook 4.5 Document">&lt;?xml version="1.0" encoding="${encoding}"?&gt;
-&lt;!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"  "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"&gt;
-&lt;book&gt;
-	&lt;title&gt;${cursor}&lt;/title&gt;
-	&lt;toc&gt;&lt;/toc&gt;
-&lt;/book&gt;</template><template id="com.orangevolt.eclipse.xslt.templates.xslt.1" autoinsert="true" context="xml_new" deleted="false" description="XSLT 1.0 conform XSLT Document Template" enabled="true" name="XSLT 1.0 Document">&lt;?xml version="1.0" encoding="${encoding}"?&gt;
-&lt;!DOCTYPE xsl:stylesheet SYSTEM "http://www.w3.org/1999/XSL/Transform" &gt;
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+<template id="org.eclipse.wst.xslt.templates.xslt.1"
+          autoinsert="true"
+          context="xml_new"
+          deleted="false"
+          description="XSLT 1.0 conform XSLT Document Template"
+          enabled="true"
+          name="XSLT 1.0 Document">&lt;?xml version="1.0" encoding="${encoding}"?&gt;
 
 &lt;xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
 	${cursor}
 &lt;/xsl:stylesheet&gt;</template>
-<template autoinsert="true" id="com.orangevolt.eclipse.xslt.templates.xmlfo.1" context="xml_new" deleted="false" description="XML-FO conform Document Template" enabled="true" name="XML-FO Template">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;!DOCTYPE fo:root SYSTEM "http://www.w3.org/1999/XSL/Format" &gt;
-&lt;fo:root xmlns:fo=""&gt;
-  &lt;fo:layout-master-set&gt;
-    &lt;fo:simple-page-master master-name=""&gt;
-      &lt;fo:region-body/&gt;
-    &lt;/fo:simple-page-master&gt;
-  &lt;/fo:layout-master-set&gt;
-  &lt;fo:page-sequence master-reference=""&gt;
-    &lt;fo:flow flow-name=""&gt;
-      &lt;fo:block/&gt;
-    &lt;/fo:flow&gt;
-  &lt;/fo:page-sequence&gt;
-&lt;/fo:root&gt;</template></templates>
+</templates>
