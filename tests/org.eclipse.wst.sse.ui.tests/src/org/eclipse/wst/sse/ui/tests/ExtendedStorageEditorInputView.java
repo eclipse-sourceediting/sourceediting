@@ -73,6 +73,7 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.actions.OpenWithMenu;
 import org.eclipse.ui.dialogs.ResourceSelectionDialog;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
@@ -665,9 +666,12 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 		for (int i = 0; i < paths.length; i++) {
 			if (paths[i].startsWith("S!")) {
 				fInputs.add(new FileBasedStorageEditorInput(new File(paths[i].substring(2))));
+				menuManager.add(new OpenWithMenu(getSite().getPage(), null));
 			}
 			else if (paths[i].startsWith("F!")) {
-				fInputs.add(new FileEditorInput(ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(paths[i].substring(2)))));
+				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(paths[i].substring(2)));
+				fInputs.add(new FileEditorInput(file));
+				menuManager.add(new OpenWithMenu(getSite().getPage(), file));
 			}
 		}
 
