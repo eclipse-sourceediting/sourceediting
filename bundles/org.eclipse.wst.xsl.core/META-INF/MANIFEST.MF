@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %Bundle-Name.0
+Bundle-SymbolicName: org.eclipse.wst.xsl.core;singleton:=true
+Bundle-Version: 0.5.0.qualifier
+Bundle-Activator: org.eclipse.wst.xsl.core.XSLCorePlugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.wst.common.uriresolver,
+ org.eclipse.wst.xml.core,
+ org.eclipse.core.resources
+Eclipse-LazyStart: true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ClassPath: .
+Bundle-Localization: plugin
+Bundle-Vendor: %Bundle-Vendor.0
