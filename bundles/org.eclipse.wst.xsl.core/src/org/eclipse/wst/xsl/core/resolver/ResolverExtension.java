@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2008 Jesper Steen Møller and others
+ * Copyright (c) 2008 Jesper Steen Mï¿½ller and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- * Jesper Steen Møller - XSL core plugin
+ * Jesper Steen Mï¿½ller - XSL core plugin
  *******************************************************************************/
 
 package org.eclipse.wst.xsl.core.resolver;
@@ -36,7 +36,6 @@ public class ResolverExtension implements URIResolverExtension {
 	public ResolverExtension() {		
 	}
 
-	@Override
 	public String resolve(IFile file, String baseLocation, String publicId,
 			String systemId) {
 
