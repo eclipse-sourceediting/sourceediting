@@ -30,7 +30,7 @@ public class AllXSDCoreTests extends junit.framework.TestSuite
    */
   public AllXSDCoreTests()
   {
-    super("AllXSDTests");
+    super("AllXSDCoreTests");
     addTest(BugFixesTest.suite());
   }
 }
