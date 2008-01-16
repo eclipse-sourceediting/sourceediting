@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -358,6 +358,12 @@ public class XSDImpl
   public static String[] getEnumeratedValuesForType(XSDTypeDefinition type)
   {
     List result = new ArrayList();
+    // See bug 214804 - Content assist not showing valid values when it's a complex
+    // type with simple content
+    if (type instanceof XSDComplexTypeDefinition)
+    {
+      type = ((XSDComplexTypeDefinition)type).getSimpleType();
+    }
     if (type instanceof XSDSimpleTypeDefinition)
     {         
       if (TYPE_NAME_BOOLEAN.equals(type.getName()) && type.getSchema().getSchemaForSchema() == type.getSchema())
