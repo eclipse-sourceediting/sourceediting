@@ -22,13 +22,14 @@ import org.apache.xalan.trace.SelectionEvent;
 import org.apache.xalan.trace.TraceListenerEx2;
 import org.apache.xalan.trace.TracerEvent;
 import org.eclipse.wst.xsl.debugger.BreakPoint;
+import org.eclipse.wst.xsl.debugger.Variable;
 
 public class XalanTraceListener implements TraceListenerEx2 //TraceListenerEx3
 {
 	private static final Log log = LogFactory.getLog(XalanTraceListener.class);
 
 	private final XalanDebugger debugger;
-	private boolean started;
+	private XalanRootStyleFrame rootStyleFrame;
 	
 	public XalanTraceListener(XalanDebugger debugger)
 	{
@@ -38,11 +39,12 @@ public class XalanTraceListener implements TraceListenerEx2 //TraceListenerEx3
 	public void trace(TracerEvent ev)
 	{
 		XalanStyleFrame styleFrame = null;
-		if (!started)
+		if (rootStyleFrame == null)
 		{// this is the root of the stack
-			started = true;
 			debugger.debuggerTransformStarted();
-			styleFrame = new XalanRootStyleFrame(ev);
+			debugger.setCurrentTraceListener(this);
+			rootStyleFrame = new XalanRootStyleFrame(ev);
+			styleFrame = rootStyleFrame;
 			debugger.pushStyleFrame(styleFrame);
 		}
 		else if (ev.m_styleNode.getOwnerXSLTemplate() == ev.m_styleNode)
@@ -65,32 +67,35 @@ public class XalanTraceListener implements TraceListenerEx2 //TraceListenerEx3
 	public void traceEnd(TracerEvent ev)
 	{
 		XalanStyleFrame styleFrame = (XalanStyleFrame) debugger.peekStyleFrame();
-		if (ev.m_styleNode.getOwnerXSLTemplate() == ev.m_styleNode)
-		{// remove from current template element stack
-			styleFrame.popElement();
-		}
-		else if (ev.m_styleNode.getXSLToken() != Constants.ELEMNAME_TEXTLITERALRESULT)
-		{// remove from current template element stack
-			styleFrame.popElement();
-		}
-		else
+		if (styleFrame!=null)
 		{
-			log.debug("Skipped pop for element "+ev.m_styleNode.getLocalName());
-		}
-		check(styleFrame);
-		if (ev.m_styleNode.getOwnerXSLTemplate() == ev.m_styleNode)
-		{// end of template, so remove from stack
-			debugger.popStyleFrame();
-		}
-		else
-		{// because we don't get selectEnd events, we need to do this check
-			TracerEvent tel = styleFrame.peekElement();
-			// if the parent is a choose, move on to it
-			switch (tel.m_styleNode.getXSLToken())
+			if (ev.m_styleNode.getOwnerXSLTemplate() == ev.m_styleNode)
+			{// remove from current template element stack
+				styleFrame.popElement();
+			}
+			else if (ev.m_styleNode.getXSLToken() != Constants.ELEMNAME_TEXTLITERALRESULT)
+			{// remove from current template element stack
+				styleFrame.popElement();
+			}
+			else
 			{
-				case Constants.ELEMNAME_CHOOSE:
-					styleFrame.popElement();
-					check(styleFrame);
+				log.debug("Skipped pop for element "+ev.m_styleNode.getLocalName());
+			}
+			check(styleFrame);
+			if (ev.m_styleNode.getOwnerXSLTemplate() == ev.m_styleNode)
+			{// end of template, so remove from stack
+				debugger.popStyleFrame();
+			}
+			else
+			{// because we don't get selectEnd events, we need to do this check
+				TracerEvent tel = styleFrame.peekElement();
+				// if the parent is a choose, move on to it
+				switch (tel.m_styleNode.getXSLToken())
+				{
+					case Constants.ELEMNAME_CHOOSE:
+						styleFrame.popElement();
+						check(styleFrame);
+				}
 			}
 		}
 	}
@@ -119,5 +124,10 @@ public class XalanTraceListener implements TraceListenerEx2 //TraceListenerEx3
 
 	public void extensionEnd(ExtensionEvent ee)
 	{}
+
+	public Variable getVariable(int id)
+	{
+		return rootStyleFrame.getVariable(id);
+	}
 
 }

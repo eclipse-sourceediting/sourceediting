@@ -26,23 +26,21 @@ import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
  */
 public class XSLStackFrame extends XSLDebugElement implements IStackFrame
 {
-
-	private final int id;
 	private final XSLThread xslThread;
+	private int id;
 	private String name;
 	private int lineNumber;
 	private String xslFileName;
 	private IVariable[] variables;
 
-	public XSLStackFrame(XSLThread thread, String data, int id)
+	public XSLStackFrame(XSLThread thread, String data, int index)
 	{
 		super((XSLDebugTarget) thread.getDebugTarget());
-		this.id = id;
 		this.xslThread = thread;
-		init(data);
+		init(data,(XSLDebugTarget) thread.getDebugTarget());
 	}
 
-	private void init(String data)
+	private void init(String data,XSLDebugTarget debugTarget)
 	{
 
 		String[] strings = data.split("\\|");
@@ -53,9 +51,11 @@ public class XSLStackFrame extends XSLDebugElement implements IStackFrame
 			Path p = new Path(url.getFile());
 			xslFileName = (new Path(fileName)).lastSegment();
 
-			String pc = strings[1];
+			String idString = strings[1];
+			id = Integer.parseInt(idString);
+			String pc = strings[2];
 			lineNumber = Integer.parseInt(pc);
-			String safename = strings[2];
+			String safename = strings[3];
 
 			int theIndex;
 			while ((theIndex = safename.indexOf("%@_PIPE_@%")) != -1)
@@ -63,20 +63,21 @@ public class XSLStackFrame extends XSLDebugElement implements IStackFrame
 				safename = safename.substring(0, theIndex) + "|" + safename.substring(theIndex + "%@_PIPE_@%".length(), safename.length());
 			}
 
-			name = p.lastSegment() + " " + safename + " line: " + lineNumber;
-
-			int numVars = strings.length - 3;
-			variables = new IVariable[numVars];
-			for (int i = 0; i < numVars; i++)
+			name = p.lastSegment() + " " + safename;
+			
+			variables = new XSLVariable[strings.length-4];
+			for (int i=0;i<variables.length;i++)
 			{
-				String val = strings[i + 3];
-				int index = val.lastIndexOf('&');
-				int slotNumber = Integer.parseInt(val.substring(index + 1));
-				val = val.substring(0, index);
-				index = val.lastIndexOf('&');
-				String name = val.substring(0, index);
-				String scope = val.substring(index + 1);
-				variables[i] = new XSLVariable(this, scope, name, slotNumber);
+				int varId = Integer.parseInt(strings[i+4]);
+				try
+				{
+					XSLVariable var = debugTarget.getVariable(varId);
+					variables[i] = var;
+				}
+				catch (DebugException e)
+				{
+					LaunchingPlugin.log(e);
+				}
 			}
 		}
 		catch (MalformedURLException e)
@@ -117,7 +118,7 @@ public class XSLStackFrame extends XSLDebugElement implements IStackFrame
 
 	public String getName() throws DebugException
 	{
-		return name;
+		return name + " line: " + lineNumber;
 	}
 
 	public IRegisterGroup[] getRegisterGroups() throws DebugException
@@ -219,13 +220,7 @@ public class XSLStackFrame extends XSLDebugElement implements IStackFrame
 		if (obj instanceof XSLStackFrame)
 		{
 			XSLStackFrame sf = (XSLStackFrame) obj;
-			try
-			{
-				return sf.getSourceName().equals(getSourceName()) && sf.getLineNumber() == getLineNumber() && sf.id == id;
-			}
-			catch (DebugException e)
-			{
-			}
+			return sf.id == id;
 		}
 		return false;
 	}
@@ -239,5 +234,15 @@ public class XSLStackFrame extends XSLDebugElement implements IStackFrame
 	protected int getIdentifier()
 	{
 		return id;
+	}
+
+	public void setLineNumber(int lineNumber)
+	{
+		this.lineNumber = lineNumber;
+	}
+
+	public void setVariables(IVariable[] variables)
+	{
+		this.variables = variables;
 	}
 }

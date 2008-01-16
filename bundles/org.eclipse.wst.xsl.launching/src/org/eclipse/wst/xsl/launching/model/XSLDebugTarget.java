@@ -18,7 +18,9 @@ import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
@@ -60,10 +62,11 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 	private final ILaunch launch;
 	private XSLThread thread;
 	private IThread[] threads;
-	private IStackFrame[] stackFramesCache;
+	private IStackFrame[] stackFramesCache = new IStackFrame[0];
 
 	private EventDispatchJob eventDispatch;
 
+	private final Map<Integer,XSLVariable> variableMapCache = new HashMap<Integer, XSLVariable>();
 	private final Map<XSLVariable, XSLValue> valueMapCache = new HashMap<XSLVariable, XSLValue>();
 	private String name;
 	private boolean suspended;
@@ -74,6 +77,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 	private BufferedReader requestReader;
 	private BufferedReader eventReader;
 	private PrintWriter requestWriter;
+	private boolean stale;
 
 	public XSLDebugTarget(ILaunch launch, IProcess process, LaunchHelper launchHelper) throws CoreException
 	{
@@ -408,36 +412,83 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 	{
 		synchronized (STACK_FRAMES_LOCK)
 		{
-			if (stackFramesCache == null)
+			if (stale)
 			{
+				stale = false;
 				String framesData = sendRequest(DebugConstants.REQUEST_STACK);
-				IStackFrame[] sf = null;
-				if (framesData != null && framesData.length() > 0)
+				String[] frames = framesData.split("\\$\\$\\$");
+				IStackFrame[] sf = new IStackFrame[frames.length];
+				List<IStackFrame> currentFrames = Arrays.asList(stackFramesCache);
+				for (int i = 0; i < frames.length; i++)
 				{
-					String[] frames = framesData.split("\\$\\$\\$");
-					sf = new IStackFrame[frames.length];
-					for (int i = 0; i < frames.length; i++)
+					String data = frames[i];
+					XSLStackFrame frame = new XSLStackFrame(thread, data, i);
+					int index;
+					if ((index = currentFrames.indexOf(frame)) != -1)
 					{
-						String data = frames[i];
-						sf[frames.length - i - 1] = new XSLStackFrame(thread, data, i);
+						XSLStackFrame curr = (XSLStackFrame)currentFrames.get(index);
+						curr.setLineNumber(frame.getLineNumber());
+						curr.setVariables(frame.getVariables());
+						frame = curr;
 					}
-				}
-				else
-				{
-					sf = new IStackFrame[0];
+					sf[frames.length - i - 1] = frame;
 				}
 				stackFramesCache = sf;
 			}
 			return stackFramesCache;
 		}
 	}
+	
+/*
+	private void init(String data)
+	{
+
+		String[] strings = data.split("\\|");
+		String fileName = strings[0];
+		try
+		{
+			URL url = new URL(fileName);
+			Path p = new Path(url.getFile());
+			xslFileName = (new Path(fileName)).lastSegment();
+
+			String idString = strings[1];
+			id = Integer.parseInt(idString);
+			String pc = strings[2];
+			lineNumber = Integer.parseInt(pc);
+			String safename = strings[3];
+
+			int theIndex;
+			while ((theIndex = safename.indexOf("%@_PIPE_@%")) != -1)
+			{
+				safename = safename.substring(0, theIndex) + "|" + safename.substring(theIndex + "%@_PIPE_@%".length(), safename.length());
+			}
+
+			name = p.lastSegment() + " " + safename;
+
+			int numVars = strings.length - 4;
+			variables = new IVariable[numVars];
+			for (int i = 0; i < numVars; i++)
+			{
+				String val = strings[i + 4];
+				int index = val.lastIndexOf('&');
+				int slotNumber = Integer.parseInt(val.substring(index + 1));
+				val = val.substring(0, index);
+				index = val.lastIndexOf('&');
+				String name = val.substring(0, index);
+				String scope = val.substring(index + 1);
+				variables[i] = new XSLVariable(this, scope, name, slotNumber);
+			}
+		}
+		catch (MalformedURLException e)
+		{
+			LaunchingPlugin.log(e);
+		}
+	}
+*/
 
 	private void ressetStackFramesCache()
 	{
-		synchronized (STACK_FRAMES_LOCK)
-		{
-			stackFramesCache = null;
-		}
+		stale = true;
 		synchronized (VALUE_MAP_LOCK)
 		{
 			valueMapCache.clear();
@@ -457,15 +508,45 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 		sendRequest(DebugConstants.REQUEST_STEP_INTO);
 	}
 
-	protected IValue getVariableValue(XSLVariable variable) throws DebugException
+	protected void stepReturn() throws DebugException
+	{
+		sendRequest(DebugConstants.REQUEST_STEP_RETURN);
+	}
+
+	XSLVariable getVariable(int varId) throws DebugException
+	{
+		synchronized (variableMapCache)
+		{
+			XSLVariable var = variableMapCache.get(varId);
+			if (var == null)
+			{
+				var = new XSLVariable(this,varId);
+				String res = sendRequest(DebugConstants.REQUEST_VARIABLE + " " + varId);
+				String[] data = res.split("&");
+				var.setScope(data[0]);
+				var.setName(data[1]);
+				variableMapCache.put(varId,var);
+			}
+			return var;
+		}
+	}
+
+	IValue getVariableValue(XSLVariable variable) throws DebugException
 	{
 		synchronized (VALUE_MAP_LOCK)
 		{
 			XSLValue value = (XSLValue) valueMapCache.get(variable);
-			if (value == null)
+			if (value == null && isSuspended())
 			{
-				String res = sendRequest(DebugConstants.REQUEST_VARIABLE + " " + variable.getStackFrame().getIdentifier() + "&" + variable.getScope() + "&" + variable.getSlotNumber());
-				value = new XSLValue(this, res);
+				String res = sendRequest(DebugConstants.REQUEST_VALUE + " " + variable.getId());
+				String[] data = res.split("&");
+				String type = data[0];
+				String theval;
+				if (data.length > 1)
+					theval = data[1];
+				else
+					theval = "";
+				value = new XSLValue(this, type, theval);
 			}
 			valueMapCache.put(variable, value);
 			return value;

@@ -16,30 +16,25 @@ import org.eclipse.debug.core.model.IVariable;
 
 public class XSLValue extends XSLDebugElement implements IValue
 {
-
 	private final String fValue;
+	private final String type;
 
-	public XSLValue(XSLDebugTarget target, String value)
+	public XSLValue(XSLDebugTarget target, String type, String value)
 	{
 		super(target);
+		this.type = type;
 		fValue = value;
 	}
 
 	public String getReferenceTypeName() throws DebugException
 	{
-		try
-		{
-			Integer.parseInt(fValue);
-		}
-		catch (NumberFormatException e)
-		{
-			return "text";
-		}
-		return "integer";
+		return type;
 	}
 
 	public String getValueString() throws DebugException
 	{
+		if ("string".equals(type))
+			return "'"+fValue+"'";
 		return fValue;
 	}
 

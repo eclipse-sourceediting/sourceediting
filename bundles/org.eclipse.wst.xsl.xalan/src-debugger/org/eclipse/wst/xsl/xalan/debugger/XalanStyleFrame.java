@@ -39,6 +39,7 @@ public class XalanStyleFrame extends StyleFrame
 	private final Stack eventStack = new Stack();
 	final TracerEvent event;
 	private int currentLine;
+	private XalanRootStyleFrame rootStyleFrame;
 
 	public XalanStyleFrame(StyleFrame parent, TracerEvent event)
 	{
@@ -49,6 +50,17 @@ public class XalanStyleFrame extends StyleFrame
 		else
 			this.varNames = new HashMap();
 		pushElement(event);
+		findRootStyleFrame();
+	}
+	
+	private void findRootStyleFrame()
+	{
+		XalanStyleFrame frame = this;
+		do
+		{
+			if (frame instanceof XalanRootStyleFrame)
+				rootStyleFrame = (XalanRootStyleFrame) frame;
+		} while ((frame = (XalanStyleFrame) frame.getParent()) != null);
 	}
 
 	public String getFilename()
@@ -93,31 +105,6 @@ public class XalanStyleFrame extends StyleFrame
 		return vars;
 	}
 
-	public Variable getVariable(String scope, int slotNumber)
-	{
-		if (Variable.GLOBAL_SCOPE.equals(scope))
-		{
-			List vars = getGlobals();
-			for (Iterator iterator = vars.iterator(); iterator.hasNext();)
-			{
-				Variable var = (Variable) iterator.next();
-				if (var.getSlotNumber() == slotNumber)
-					return var;
-			}
-		}
-		else if (Variable.LOCAL_SCOPE.equals(scope))
-		{
-			List vars = getLocals();
-			for (Iterator iterator = vars.iterator(); iterator.hasNext();)
-			{
-				Variable var = (Variable) iterator.next();
-				if (var.getSlotNumber() == slotNumber)
-					return var;
-			}
-		}
-		return null;
-	}
-
 	public int getCurrentLine()
 	{
 		return currentLine;
@@ -140,6 +127,7 @@ public class XalanStyleFrame extends StyleFrame
 
 		ElemTemplateElement element = e.m_styleNode;
 		String name = element.getNodeName();
+		log.debug(" name " + name);
 		if (name.equals("param") || name.equals("variable"))
 			addVariable((ElemVariable) e.m_styleNode);
 
@@ -157,7 +145,8 @@ public class XalanStyleFrame extends StyleFrame
 	{
 		String scope = variable.getIsTopLevel() ? Variable.GLOBAL_SCOPE : Variable.LOCAL_SCOPE;
 		VariableStack vs = event.m_processor.getXPathContext().getVarStack();
-		Variable xvar = new XalanVariable(this,vs, scope, variable.getIndex(), variable);
+		XalanVariable xvar = new XalanVariable(this,vs, scope, variable.getIndex(), variable);
+		rootStyleFrame.addVariable(xvar);
 		varNames.put(variable.getName(),xvar);
 	}
 
@@ -166,20 +155,11 @@ public class XalanStyleFrame extends StyleFrame
 		List locals = new ArrayList(varNames.values());
 		// sort by slotNumber
 		Collections.sort(locals);
-		return locals;
+		return new ArrayList(varNames.values());
 	}
 
 	protected List getGlobals()
 	{
-		XalanStyleFrame frame = this;
-		while ((frame = (XalanStyleFrame) frame.getParent()) != null)
-		{
-			if (frame instanceof XalanRootStyleFrame)
-			{
-				XalanRootStyleFrame root = (XalanRootStyleFrame) frame;
-				return root.getGlobals();
-			}
-		}
-		return null;
+		return rootStyleFrame.getGlobals();
 	}
 }

@@ -20,28 +20,30 @@ public class XSLVariable extends XSLDebugElement implements IVariable
 	public static final String TUNNEL_SCOPE = "T";
 	public static final String GLOBAL_SCOPE = "G";
 
-	private final String fName;
-	private final XSLStackFrame fFrame;
-	private final int slotNumber;
-	private final String scope;
+	private final int id;
+	private String fName;
+	private String scope;
+	private String type;
 
-	public XSLVariable(XSLStackFrame frame, String scope, String name, int slotNumber)
+	public XSLVariable(XSLDebugTarget target, int id)
 	{
-		super((XSLDebugTarget) frame.getDebugTarget());
-		fFrame = frame;
-		fName = name;
-		this.scope = scope;
-		this.slotNumber = slotNumber;
+		super(target);
+		this.id = id;
 	}
 
-	public int getSlotNumber()
+	public int getId()
 	{
-		return slotNumber;
+		return id;
 	}
 
 	public IValue getValue() throws DebugException
 	{
 		return ((XSLDebugTarget) getDebugTarget()).getVariableValue(this);
+	}
+	
+	public void setName(String name)
+	{
+		this.fName = name;
 	}
 
 	public String getName() throws DebugException
@@ -51,8 +53,9 @@ public class XSLVariable extends XSLDebugElement implements IVariable
 
 	public String getReferenceTypeName() throws DebugException
 	{
-		// TODO getReferenceTypeName
-		return "Thing";
+		if (GLOBAL_SCOPE.equals(scope))
+			return "global";
+		return "local";
 	}
 
 	public boolean hasValueChanged() throws DebugException
@@ -82,20 +85,14 @@ public class XSLVariable extends XSLDebugElement implements IVariable
 	{
 		return false;
 	}
-
-	/**
-	 * Returns the stack frame owning this variable.
-	 * 
-	 * @return the stack frame owning this variable
-	 */
-	protected XSLStackFrame getStackFrame()
+	
+	public void setScope(String scope)
 	{
-		return fFrame;
+		this.scope = scope;
 	}
 
 	public String getScope()
 	{
 		return scope;
 	}
-
 }

@@ -122,20 +122,17 @@ public class XSLThread extends XSLDebugElement implements IThread
 
 	public boolean canStepInto()
 	{
-		// TODO canStepInto
-		return true;
+		return isSuspended();
 	}
 
 	public boolean canStepOver()
 	{
-		// TODO canStepOver
 		return isSuspended();
 	}
 
 	public boolean canStepReturn()
 	{
-		// TODO canStepReturn
-		return false;
+		return isSuspended();
 	}
 
 	public boolean isStepping()
@@ -155,6 +152,7 @@ public class XSLThread extends XSLDebugElement implements IThread
 
 	public void stepReturn() throws DebugException
 	{
+		((XSLDebugTarget) getDebugTarget()).stepReturn();
 	}
 
 	public boolean canTerminate()

@@ -16,13 +16,19 @@ import java.util.TooManyListenersException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.xalan.processor.TransformerFactoryImpl;
 import org.apache.xalan.trace.TraceManager;
 import org.apache.xalan.transformer.TransformerImpl;
 import org.eclipse.wst.xsl.debugger.AbstractDebugger;
+import org.eclipse.wst.xsl.debugger.Variable;
 
 public class XalanDebugger extends AbstractDebugger
 {
+	private static final Log log = LogFactory.getLog(XalanDebugger.class);
+	private XalanTraceListener currentTraceListener;
+	
 	public void setTransformerFactory(TransformerFactory factory)
 	{
 		TransformerFactoryImpl tfi = (TransformerFactoryImpl) factory;
@@ -49,5 +55,16 @@ public class XalanDebugger extends AbstractDebugger
 		{
 			// ignore
 		}
+	}
+
+	public Variable getVariable(int id)
+	{
+		return currentTraceListener.getVariable(id);
+	}
+
+	void setCurrentTraceListener(XalanTraceListener currentTraceListener)
+	{
+		log.debug("Setting new XalanTraceListener");
+		this.currentTraceListener = currentTraceListener;
 	}
 }

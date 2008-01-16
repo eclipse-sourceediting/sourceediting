@@ -54,6 +54,46 @@ public class XalanVariable extends Variable implements Comparable
 //		}
 		return name;
 	}
+	
+	public String getType()
+	{
+		String value = UNKNOWN;
+		try
+		{
+			XObject xobject = getXObject();
+			if (xobject != null)
+			{
+				int xalanType = xobject.getType();
+				switch (xalanType)
+				{
+					case XObject.CLASS_UNRESOLVEDVARIABLE:
+						value = UNRESOLVED;
+						break;
+					case XObject.CLASS_NODESET:
+						value = NODESET;
+						break;
+					case XObject.CLASS_BOOLEAN:
+						value = BOOLEAN;
+						break;
+					case XObject.CLASS_NUMBER:
+						value = NUMBER;
+						break;
+					case XObject.CLASS_UNKNOWN:
+						value = UNKNOWN;
+						break;
+					case XObject.CLASS_STRING:
+					default:
+						value = STRING;
+						break;
+				}
+			}
+		}
+		catch (TransformerException e)
+		{
+			e.printStackTrace();
+		}
+		return value;
+	}
 
 	public String getValue()
 	{
