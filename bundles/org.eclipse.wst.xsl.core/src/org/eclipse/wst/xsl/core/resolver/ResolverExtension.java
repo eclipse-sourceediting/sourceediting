@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Jesper Steen M�ller and others
+ * Copyright (c) 2008 Jesper Steen Moeller and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -116,16 +116,19 @@ public class ResolverExtension implements URIResolverExtension {
 		if (manager != null) {
 			String id = manager.calculateId(file);
 			IStructuredModel model = manager.getExistingModelForRead(id);
-			if (model instanceof IDOMModel) {
-				Document doc = ((IDOMModel)model).getDocument();
-				if (doc != null && doc.getDocumentElement() != null) {
-					Element documentElement = doc.getDocumentElement();
-					if (XSLT_STYLESHEET.equals(documentElement.getLocalName()) ||
-						XSLT_TEMPLATE.equals(documentElement.getLocalName())) {
-						return documentElement.getAttribute(XSLT_VERSION);
-					} else return ""; //$NON-NLS-1$
+			try {
+				if (model instanceof IDOMModel) {
+					Document doc = ((IDOMModel)model).getDocument();
+					if (doc != null && doc.getDocumentElement() != null) {
+						Element documentElement = doc.getDocumentElement();
+						if (XSLT_STYLESHEET.equals(documentElement.getLocalName()) ||
+							XSLT_TEMPLATE.equals(documentElement.getLocalName())) {
+							return documentElement.getAttribute(XSLT_VERSION);
+						} else return ""; //$NON-NLS-1$
+					}
 				}
-				
+			} finally {
+				model.releaseFromRead();
 			}
 		}
 		return null;
