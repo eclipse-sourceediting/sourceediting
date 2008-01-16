@@ -52,16 +52,6 @@ public final class XSLVersionHandler extends DefaultHandler implements LexicalHa
 	private static final String XSLT_VERSION = "version"; //$NON-NLS-1$
 
 	/**
-	 * Did we find a suitable XSLT template tool element
-	 * (either "template" or "style-sheet", in the namespace
-	 * <http://www.w3.org/1999/XSL/Transform>)?
-	 * 
-	 * This member variable is <code>null</code> unless the file has been parsed
-	 * successful to the point of finding the top-level element.
-	 */
-	private Boolean xslTemplateFound = null;
-
-	/**
 	 * This is the value of the version attribute in the XSLT file.
 	 * This member variable is <code>null</code> unless the file has been
 	 * parsed successful to the point of finding the top-level element,
@@ -143,10 +133,6 @@ public final class XSLVersionHandler extends DefaultHandler implements LexicalHa
 		// Not interested.
 	}
 
-	public Boolean getXslTemplateFound() {
-		return xslTemplateFound;
-	}
-
 	public String getVersionAttribute() {
 		return versionAttribute;
 	}
@@ -203,10 +189,9 @@ public final class XSLVersionHandler extends DefaultHandler implements LexicalHa
 	 */
 	public final void startElement(final String uri, final String elementName, final String qualifiedName, final Attributes attributes) throws SAXException {
 		if (uri.equals(XSLCorePlugin.XSLT_NS) && (XSLT_TEMPLATE.equals(elementName) || XSLT_STYLESHEET.equals(elementName))) {
-			xslTemplateFound = Boolean.TRUE;
 			versionAttribute = attributes.getValue(XSLT_VERSION);
 		} else {
-			xslTemplateFound = Boolean.FALSE;
+			versionAttribute = "";
 		}
 		throw new StopParsingException();
 	}
