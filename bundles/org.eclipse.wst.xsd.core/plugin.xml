@@ -63,4 +63,19 @@
 			class="org.eclipse.wst.xsd.core.internal.preferences.XSDCorePreferenceInitializer" />
 	</extension>
 
+	<!-- ====================================================== -->
+	<!-- Add schemas to XML Catalog                             -->
+	<!-- ====================================================== -->
+	<extension
+		point="org.eclipse.wst.xml.core.catalogContributions">
+		<catalogContribution id="default">
+			<uri
+				name="http://www.w3.org/2001/XMLSchema"
+				uri="platform:/plugin/org.eclipse.xsd/cache/www.w3.org/2001/XMLSchema.xsd" />
+			<system
+				systemId="http://www.w3.org/2001/xml.xsd"
+				uri="platform:/plugin/org.eclipse.xsd/cache/www.w3.org/2001/xml.xsd"/>				
+		</catalogContribution>
+	</extension>
+
 </plugin>
