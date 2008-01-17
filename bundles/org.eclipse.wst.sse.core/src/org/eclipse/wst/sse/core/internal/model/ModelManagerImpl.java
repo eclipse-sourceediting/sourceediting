@@ -1041,7 +1041,7 @@ public class ModelManagerImpl implements IModelManager {
 		IStructuredModel result = null;
 		
 		SYNC.acquire();
-		Assert.isTrue(SYNC.getDepth()==1, "depth not equal to 1");
+		//Assert.isTrue(SYNC.getDepth()==1, "depth not equal to 1");
 		// let's see if we already have it in our cache
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
 		// if not, then we'll simply return null
@@ -1194,7 +1194,7 @@ public class ModelManagerImpl implements IModelManager {
 	public  IStructuredModel getExistingModelForRead(Object id) {
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		IStructuredModel result = null;
-		boolean doRealease = true;
+		boolean doRelease = true;
 		// let's see if we already have it in our cache
 		try {
 			SYNC.acquire();
@@ -1205,7 +1205,7 @@ public class ModelManagerImpl implements IModelManager {
 				// count,
 				// and return the object.
 				SYNC.release();
-				doRealease=false;
+				doRelease=false;
 
 				synchronized(sharedObject) {
 					if (sharedObject.doWait) {
@@ -1218,7 +1218,7 @@ public class ModelManagerImpl implements IModelManager {
 				}
 			}
 		} finally {
-			if (doRealease)
+			if (doRelease)
 				SYNC.release();
 		}
 		return result;
@@ -1516,10 +1516,8 @@ public class ModelManagerImpl implements IModelManager {
 			synchronized(sharedObject) {
 				count = sharedObject.referenceCountForRead + sharedObject.referenceCountForEdit;
 			}
-			SYNC.release();
-		} else {
-			SYNC.release();
 		}
+		SYNC.release();
 		result = count > 1;
 		return result;
 	}
@@ -1570,10 +1568,8 @@ public class ModelManagerImpl implements IModelManager {
 			synchronized(sharedObject) {
 				count = sharedObject.referenceCountForRead;
 			}
-			SYNC.release();
-		} else {
-			SYNC.release();
 		}
+		SYNC.release();
 		result = count > 1;
 		return result;
 	}
