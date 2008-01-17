@@ -816,7 +816,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		Iterator alldocs = getTaglibTrackers().iterator();
 		while (alldocs.hasNext()) {
 			TaglibTracker aTracker = (TaglibTracker) alldocs.next();
-			if (aTracker.getStructuredDocumentRegion().getStartOffset() < offset || offset < 0) {
+			if (aTracker.getStructuredDocumentRegion().getStartOffset() <= offset || offset < 0) {
 				validDocs.add(aTracker);
 			}
 		}
@@ -828,7 +828,10 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		Iterator alldocs = getTaglibTrackers().iterator();
 		while (alldocs.hasNext()) {
 			TaglibTracker aTracker = (TaglibTracker) alldocs.next();
-			if ((aTracker.getStructuredDocumentRegion().getStartOffset() < offset || offset < 0) && aTracker.getPrefix().equals(prefix)) {
+			/**
+			 * '<' is used to support the immediate use of a custom tag in jspx files
+			 */
+			if ((aTracker.getStructuredDocumentRegion().getStartOffset() <= offset || offset < 0) && aTracker.getPrefix().equals(prefix)) {
 				validDocs.add(aTracker);
 			}
 		}
