@@ -200,8 +200,16 @@
 			<run
 				enabled="true"
 				class="org.eclipse.jst.jsp.core.internal.validation.JSPBatchValidator"/>
-		</validator>
+         <markerId markerIdValue="org.eclipse.jst.jsp.core.validationMarker"/>
+      </validator>
 	</extension>
+ <extension
+         id="validationMarker"
+         name="%_validationMarker.name"
+         point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.wst.validation.problemmarker"/>
+      <persistent value="true"/>
+ </extension>
 	
 	<extension
 		id="JSPContentValidator"
@@ -239,9 +247,10 @@
 				incremental="true"
 				enabled="true"
 				class="org.eclipse.jst.jsp.core.internal.validation.JSPContentValidator"/>
-		</validator>
+         <markerId markerIdValue="org.eclipse.jst.jsp.core.validationMarker"/>
+	</validator>
 	</extension>
-	
+		
     <extension
        point="org.eclipse.jst.jsp.core.elTranslator">
        <elTranslator

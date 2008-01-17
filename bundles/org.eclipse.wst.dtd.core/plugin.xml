@@ -107,8 +107,16 @@
          		enabled="true"
          		fullBuild="true"
          		incremental="true"/>
-		</validator>
+         <markerId markerIdValue="org.eclipse.wst.dtd.core.validationMarker"/>
+      </validator>
 	</extension>
+ <extension
+         id="validationMarker"
+         name="%_validationMarker.name"
+         point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.wst.validation.problemmarker"/>
+      <persistent value="true"/>
+ </extension>
 
 	<!-- ====================================================== -->
 	<!-- DTD as you type validation								-->
