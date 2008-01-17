@@ -31,8 +31,15 @@
 	<extension point="org.eclipse.wst.sse.core.taskscanner">
 		<scanner
 			id="org.eclipse.jst.jsp.core.internal.tasks.JSPFileTaskScanner"
-			class="org.eclipse.jst.jsp.core.internal.tasks.JSPFileTaskScanner"
+			class="org.eclipse.jst.jsp.core.internal.tasks.JSPFileTaskScanner:org.eclipse.jst.jsp.core.taskMarker"
 			contentTypeIds="org.eclipse.jst.jsp.core.jspsource" />
+	</extension>
+	<extension
+		id="taskMarker"
+		name="%_taskMarker.name"
+		point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.wst.sse.core.task"/>
+		<persistent value="true"/>
 	</extension>
 
 	<extension
