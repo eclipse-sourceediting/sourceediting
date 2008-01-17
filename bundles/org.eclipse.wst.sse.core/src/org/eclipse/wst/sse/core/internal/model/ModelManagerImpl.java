@@ -571,6 +571,7 @@ public class ModelManagerImpl implements IModelManager {
 				SYNC.release();
 				break;
 			} else {
+				SYNC.release();
 				sharedObject = testObject;
 			}
 		}
@@ -1040,7 +1041,7 @@ public class ModelManagerImpl implements IModelManager {
 		IStructuredModel result = null;
 		
 		SYNC.acquire();
-		Assert.isTrue(SYNC.getDepth()==1);
+		Assert.isTrue(SYNC.getDepth()==1, "depth not equal to 1");
 		// let's see if we already have it in our cache
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
 		// if not, then we'll simply return null
@@ -1111,7 +1112,7 @@ public class ModelManagerImpl implements IModelManager {
 
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		IStructuredModel result = null;
-		boolean doRealease = true;
+		boolean doRelease = true;
 		// let's see if we already have it in our cache
 		try {
 			SYNC.acquire();
@@ -1122,7 +1123,7 @@ public class ModelManagerImpl implements IModelManager {
 				// count,
 				// and return the object.
 				SYNC.release();
-				doRealease=false;
+				doRelease=false;
 				synchronized(sharedObject) {
 					if (sharedObject.doWait) {
 						sharedObject.waitForLoadAttempt();
@@ -1136,8 +1137,9 @@ public class ModelManagerImpl implements IModelManager {
 				trace("   incremented referenceCountForEdit ", id, sharedObject.referenceCountForEdit); //$NON-NLS-1$
 			}
 		} finally {
-			if (doRealease)
+			if (doRelease) {
 				SYNC.release();
+			}
 		}
 		
 		return result;
@@ -1430,13 +1432,11 @@ public class ModelManagerImpl implements IModelManager {
 			SYNC.release();
 			sharedObject.waitForLoadAttempt();
 			SYNC.acquire();
-			synchronized(sharedObject) {
+			synchronized (sharedObject) {
 				count = sharedObject.referenceCountForRead + sharedObject.referenceCountForEdit;
 			}
-			SYNC.release();
-		} else {
-			SYNC.release();
 		}
+		SYNC.release();
 		return count;
 	}
 
@@ -1471,7 +1471,7 @@ public class ModelManagerImpl implements IModelManager {
 	 *            Object The id of the model TODO: try to refine the design
 	 *            not to use this function
 	 */
-	public  int getReferenceCountForRead(Object id) {
+	public int getReferenceCountForRead(Object id) {
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		int count = 0;
 		SYNC.acquire();
@@ -1483,10 +1483,8 @@ public class ModelManagerImpl implements IModelManager {
 			synchronized(sharedObject) {
 				count = sharedObject.referenceCountForRead;
 			}
-			SYNC.release();
-		} else {
-			SYNC.release();
 		}
+		SYNC.release();
 		return count;
 	}
 
