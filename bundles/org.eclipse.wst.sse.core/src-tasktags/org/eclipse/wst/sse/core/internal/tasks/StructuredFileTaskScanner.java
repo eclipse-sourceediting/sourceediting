@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
@@ -53,12 +55,13 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 /**
  * A delegate to create IMarker.TASKs for "todos" and similiar comments.
  */
-public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
+public abstract class StructuredFileTaskScanner implements IFileTaskScanner, IExecutableExtension {
 	// the list of attributes for the new tasks for the current file
 	protected List fNewMarkerAttributeMaps = null;
 
 	List oldMarkers = null;
 	private long time0;
+	private String runtimeMarkerType;
 
 	public StructuredFileTaskScanner() {
 		super();
@@ -78,7 +81,7 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 		Map attributes = new HashMap(6);
 		// marker line numbers are 1-based
 		attributes.put(IMarker.LINE_NUMBER, new Integer(documentLine + 1));
-		attributes.put(IMarker.TASK, IFileTaskScanner.TASK_MARKER_ID);
+		attributes.put(IMarker.TASK, getMarkerType());
 		attributes.put(IMarker.CHAR_START, new Integer(startOffset));
 		attributes.put(IMarker.CHAR_END, new Integer(startOffset + length));
 		attributes.put(IMarker.MESSAGE, text);
@@ -100,6 +103,16 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 		}
 
 		return attributes;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.core.internal.provisional.tasks.IFileTaskScanner#getMarkerType()
+	 */
+	public String getMarkerType() {
+		if (runtimeMarkerType != null)
+			return runtimeMarkerType;
+		
+		return IFileTaskScanner.TASK_MARKER_ID;
 	}
 
 	private String detectCharset(IFile file) {
@@ -274,6 +287,15 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 				catch (IOException x) {
 				}
 			}
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)
+	 */
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+		if (data != null && data instanceof String) {
+			runtimeMarkerType = data.toString();
 		}
 	}
 

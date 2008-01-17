@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,10 +30,16 @@ import org.eclipse.wst.sse.core.internal.SSECorePlugin;
  */
 public interface IFileTaskScanner {
 	/**
-	 * Marker type ID of task markers that are created, all scanners are
-	 * expected to use this type or subtypes
+	 * Default marker type ID of task markers that are created.
 	 */
 	String TASK_MARKER_ID = SSECorePlugin.ID + ".task"; //$NON-NLS-1$;
+
+	/**
+	 * @return the task marker type that should be removed each time tasks are
+	 *         rescanned and used by default when creating task markers.
+	 *         Children of this marker type will be removed automatically.
+	 */
+	String getMarkerType();
 
 	/**
 	 * Requests that the list of automatically discovered tasks for the given
@@ -46,8 +52,13 @@ public interface IFileTaskScanner {
 	 *            the list of task tags for which to scan
 	 * @param monitor -
 	 *            a progress monitor
-	 * @return an array of maps containing the attributes for task markers to
+	 * @return an array of maps containing the attributes of task markers to
 	 *         be created
+	 *         <p>
+	 *         The reserved attribute name
+	 *         <b>org.eclipse.core.resources.taskmarker</b> may be used to
+	 *         specify a type to use when creating the task marker.
+	 *         </p>
 	 */
 	Map[] scan(IFile file, TaskTag[] taskTags, IProgressMonitor monitor);
 

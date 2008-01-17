@@ -13,8 +13,15 @@
 	<extension point="org.eclipse.wst.sse.core.taskscanner">
 		<scanner
 			id="org.eclipse.wst.dtd.core.internal.tasks.DTDFileTaskScanner"
-			class="org.eclipse.wst.dtd.core.internal.tasks.DTDFileTaskScanner"
+			class="org.eclipse.wst.dtd.core.internal.tasks.DTDFileTaskScanner:org.eclipse.wst.dtd.core.taskMarker"
 			contentTypeIds="org.eclipse.wst.dtd.core.dtdsource" />
+	</extension>
+	<extension
+		id="taskMarker"
+		name="%_taskMarker.name"
+		point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.wst.sse.core.task"/>
+		<persistent value="true"/>
 	</extension>
 
 	<extension

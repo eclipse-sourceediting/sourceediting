@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,8 +13,10 @@
 package org.eclipse.wst.sse.core.internal.tasks;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -244,7 +246,7 @@ class WorkspaceTaskScanner {
 		}
 	}
 
-	private void replaceTaskMarkers(final IFile file, final Map markerAttributes[], IProgressMonitor monitor) {
+	private void replaceTaskMarkers(final IFile file, final String[] markerTypes, final Map markerAttributes[], IProgressMonitor monitor) {
 		final IFile finalFile = file;
 		if (file.isAccessible()) {
 			try {
@@ -253,9 +255,11 @@ class WorkspaceTaskScanner {
 						try {
 							/*
 							 * Delete old Task markers (don't delete regular
-							 * Tasks since that includes user-defined ones
+							 * Tasks since that includes user-defined ones)
 							 */
-							file.deleteMarkers(DEFAULT_MARKER_TYPE, true, IResource.DEPTH_ZERO);
+							for (int i = 0; i < markerTypes.length; i++) {
+								file.deleteMarkers(markerTypes[i], true, IResource.DEPTH_ZERO);
+							}
 						}
 						catch (CoreException e) {
 							Logger.logException("exception deleting old tasks", e); //$NON-NLS-1$ 
@@ -336,6 +340,11 @@ class WorkspaceTaskScanner {
 
 		List markerAttributes = null;
 		IContentType[] types = detectContentTypes(file);
+		Set markerTypes = new HashSet(3);
+		// Always included for safety and migration
+		markerTypes.add(DEFAULT_MARKER_TYPE);
+
+		
 		monitor.worked(1);
 
 		IFileTaskScanner[] fileScanners = null;
@@ -368,6 +377,7 @@ class WorkspaceTaskScanner {
 							fileScanners[j].startup(file.getProject());
 							fActiveScanners.add(fileScanners[j]);
 						}
+						markerTypes.add(fileScanners[j].getMarkerType());
 						Map[] taskMarkerAttributes = fileScanners[j].scan(file, taskTags, new SubProgressMonitor(scannerMonitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
 						/*
 						 * TODO: pool the marker results so there's only one
@@ -376,6 +386,9 @@ class WorkspaceTaskScanner {
 						for (int i = 0; i < taskMarkerAttributes.length; i++) {
 							if (markerAttributes == null) {
 								markerAttributes = new ArrayList();
+							}
+							if (!taskMarkerAttributes[i].containsKey(IMarker.TASK)) {
+								taskMarkerAttributes[i].put(IMarker.TASK, fileScanners[j].getMarkerType());
 							}
 							markerAttributes.add(taskMarkerAttributes[i]);
 						}
@@ -397,10 +410,7 @@ class WorkspaceTaskScanner {
 		if (fileScanners != null && fileScanners.length > 0) {
 			IProgressMonitor markerUpdateMonitor = new SubProgressMonitor(monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
 			if (markerAttributes != null) {
-				replaceTaskMarkers(file, (Map[]) markerAttributes.toArray(new Map[markerAttributes.size()]), markerUpdateMonitor);
-			}
-			else {
-				replaceTaskMarkers(file, null, markerUpdateMonitor);
+				replaceTaskMarkers(file, (String[]) markerTypes.toArray(new String[markerTypes.size()]), (Map[]) markerAttributes.toArray(new Map[markerAttributes.size()]), markerUpdateMonitor);
 			}
 		}
 		else {
