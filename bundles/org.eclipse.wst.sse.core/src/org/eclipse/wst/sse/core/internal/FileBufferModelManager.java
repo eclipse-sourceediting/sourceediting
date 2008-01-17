@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,7 +55,14 @@ import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 
-
+/**
+ * Not intended to be subclassed, referenced or instantiated by clients.
+ * 
+ * This class is responsible for coordinating the creation and disposal of
+ * structured models built on structured documents found in FileBuffers. It
+ * allows the SSE Model Manager to act as a client to the
+ * TextFileBufferManager.
+ */
 public class FileBufferModelManager {
 
 	static class DocumentInfo {

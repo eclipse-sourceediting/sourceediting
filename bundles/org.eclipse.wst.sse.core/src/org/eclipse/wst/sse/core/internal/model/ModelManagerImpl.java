@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,12 +21,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.util.Dictionary;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
@@ -41,6 +43,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ILock;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -79,7 +83,7 @@ import org.eclipse.wst.sse.core.internal.util.Utilities;
 /**
  * Not intended to be subclassed, referenced or instantiated by clients.
  * 
- * This class is responsible for creating, retriving, and caching
+ * This class is responsible for creating, retrieving, and caching
  * StructuredModels It retrieves the cached objects by an id which is
  * typically a String representing the resources URI. Note: Its important that
  * all clients that share a resource do so using <b>identical </b>
@@ -90,37 +94,6 @@ import org.eclipse.wst.sse.core.internal.util.Utilities;
  */
 public class ModelManagerImpl implements IModelManager {
 
-	static class EnumeratedModelIds implements Enumeration {
-
-		Enumeration fSharedObjectKeys;
-
-		protected EnumeratedModelIds(Dictionary sharedObjects) {
-
-			if (sharedObjects == null) {
-				// if no shared objects yet, return empty enumeration
-				fSharedObjectKeys = null;
-			}
-			else {
-				fSharedObjectKeys = sharedObjects.keys();
-			}
-		}
-
-		public boolean hasMoreElements() {
-
-			boolean result = false;
-			if (fSharedObjectKeys != null)
-				result = fSharedObjectKeys.hasMoreElements();
-			return result;
-		}
-
-		public Object nextElement() {
-
-			if (fSharedObjectKeys == null)
-				throw new NoSuchElementException();
-			return fSharedObjectKeys.nextElement();
-		}
-	}
-
 	static class ReadEditType {
 		ReadEditType(String type) {
 		}
@@ -129,24 +102,55 @@ public class ModelManagerImpl implements IModelManager {
 	/**
 	 * A Data class to track our shared objects
 	 */
-	static class SharedObject {
+	 static class SharedObject {
 		int referenceCountForEdit;
 		int referenceCountForRead;
 		IStructuredModel theSharedModel;
-
+		boolean initializing = true;
+		boolean doWait = true;
+		
 		SharedObject(IStructuredModel sharedModel) {
 			theSharedModel = sharedModel;
 			referenceCountForRead = 0;
 			referenceCountForEdit = 0;
 		}
+		
+		/**
+		 * Waits until this shared object has been attempted to be loaded. 
+		 * The load is "attempted" because not all loads result in a model. 
+		 * However, upon leaving this method, theShareModel variable
+		 * is up-to-date.
+		 */
+		public synchronized void waitForLoadAttempt() {
+			while(initializing) {
+				try {
+					wait();
+				}
+				catch (InterruptedException e) {
+					// ignore interruption!
+				}
+			}
+		}
+		
+		/**
+		 * Flags this model as loaded. All waiting methods on 
+		 * {@link #waitForLoadAttempt()} will proceed after this 
+		 * method returns. 
+		 */
+		public synchronized void setLoaded() {
+			initializing = false;
+			notifyAll();
+		}
 	}
+
+	private Exception debugException = null;
 
 	/**
 	 * Our singleton instance
 	 */
 	private static ModelManagerImpl instance;
-
 	private final static int READ_BUFFER_SIZE = 4096;
+
 	/**
 	 * Not to be called by clients, will be made restricted access.
 	 * 
@@ -160,74 +164,189 @@ public class ModelManagerImpl implements IModelManager {
 		return instance;
 	}
 
-	private Exception debugException = null;
-
-	private final ReadEditType EDIT = new ReadEditType("edit"); //$NON-NLS-1$
 	/**
 	 * Our cache of managed objects
 	 */
-	private Dictionary fManagedObjects;
+	private Map fManagedObjects;
 
 	private ModelHandlerRegistry fModelHandlerRegistry;
-	private int modelManagerStateChanging;
 	private final ReadEditType READ = new ReadEditType("read"); //$NON-NLS-1$
-
+	private final ReadEditType EDIT = new ReadEditType("edit"); //$NON-NLS-1$
+	
+	private final ILock SYNC = Job.getJobManager().newLock();
 	/**
-	 * Intentially default access only.
+	 * Intentionally default access only.
 	 * 
 	 */
 	ModelManagerImpl() {
-
 		super();
-		fManagedObjects = new Hashtable();
+		fManagedObjects = new HashMap();
+		// To prevent deadlocks:  always acquire multiple locks in this order: SYNC, sharedObject. 
+		// DO NOT acquire a SYNC within a sharedObject lock, unless you already own the SYNC lock
+		// Tip: Try to hold the smallest number of locks you can
 	}
 
-	private IStructuredModel _commonCreateModel(InputStream inputStream, String id, IModelHandler handler, URIResolver resolver, ReadEditType rwType, EncodingRule encodingRule) throws IOException {
-
-		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
-		IStructuredModel model = null;
-		if (sharedObject == null) {
-			try {
-				model = _commonCreateModel(id, handler, resolver);
-				IModelLoader loader = handler.getModelLoader();
-				loader.load(Utilities.getMarkSupportedStream(inputStream), model, encodingRule);
+	private IStructuredModel _commonCreateModel(IFile file, String id, IModelHandler handler, URIResolver resolver, ReadEditType rwType, EncodingRule encodingRule) throws IOException,CoreException {
+		SharedObject sharedObject = null;
+		
+		SYNC.acquire();
+		sharedObject = (SharedObject) fManagedObjects.get(id);
+		SYNC.release();
+		
+		while(true) {
+			if (sharedObject!=null) {
+				sharedObject.waitForLoadAttempt();
 			}
-			catch (ResourceInUse e) {
-				// impossible, since we've already found
-				handleProgramError(e);
-			}
-			if (model != null) {
-				// add to our cache
-				sharedObject = new SharedObject(model);
-				_initCount(sharedObject, rwType);
+			SYNC.acquire();
+			// we know this object's model has passed the load, however, we don't know 
+			// it's reference count status. It might have already been disposed. Or it could have 
+			// been disposed and a concurrent thread has already begun loading it, in which case
+			// we should use the sharedobject they are loading. 
+			// NOTE: This pattern is applied 3 times in this class, but only doc'd once. The logic is 
+			// exactly the same. 
+			SharedObject testObject = (SharedObject) fManagedObjects.get(id);
+			if (testObject==null) {
+				// null means it's been disposed, we need to do the work to reload it.
+				sharedObject = new SharedObject(null);
 				fManagedObjects.put(id, sharedObject);
+				SYNC.release();
+				_doCommonCreateModel(file, id, handler, resolver, rwType, encodingRule,
+						sharedObject);
+				break;
+			} else if (sharedObject == testObject) {
+				// if nothing happened, just increment the could and return the shared model
+				synchronized(sharedObject) {
+					if (sharedObject.theSharedModel!=null) {
+						_incrCount(sharedObject, rwType);
+					}
+				}
+				SYNC.release();
+				break;
+			} else {
+				// sharedObject != testObject which means the object we were waiting on has been disposed
+				// a replacement has already been placed in the managedObjects table. Through away our
+				// stale sharedObject and continue on with the one we got from the queue. Note: We don't know its
+				// state, so continue the waitForLoad-check loop. 
+				SYNC.release();
+				sharedObject = testObject;
 			}
 		}
-		else {
-			// if shared object is initially in our cache, then simply
-			// increment its ref count,
-			// and return the object.
-			_incrCount(sharedObject, rwType);
-		}
+		
 		// we expect to always return something
 		if (sharedObject == null) {
 			debugException = new Exception("instance only for stack trace"); //$NON-NLS-1$
 			Logger.logException("Program Error: no model recorded for id " + id, debugException); //$NON-NLS-1$
 		}
-
-
+		
 		// note: clients must call release for each time they call get.
-		return sharedObject.theSharedModel;
+		return sharedObject==null ? null : sharedObject.theSharedModel;
+	}
+
+	private void _decrCount(SharedObject sharedObject, ReadEditType type) {
+		if (type == READ) {
+			sharedObject.referenceCountForRead--;
+			FileBufferModelManager.getInstance().disconnect(sharedObject.theSharedModel.getStructuredDocument());
+		}
+		else if (type == EDIT) {
+			sharedObject.referenceCountForEdit--;
+			FileBufferModelManager.getInstance().disconnect(sharedObject.theSharedModel.getStructuredDocument());
+		}
+		else
+			throw new IllegalArgumentException();
+	}
+
+	private void _doCommonCreateModel(IFile file, String id, IModelHandler handler,
+			URIResolver resolver, ReadEditType rwType, EncodingRule encodingRule,
+			SharedObject sharedObject) throws CoreException, IOException {
+		boolean doRemove = false;
+		synchronized(sharedObject) {
+			InputStream inputStream = null;
+			IStructuredModel model = null;
+			try {
+				model = _commonCreateModel(id, handler, resolver);
+				IModelLoader loader = handler.getModelLoader();
+				inputStream = Utilities.getMarkSupportedStream(file.getContents(true));
+				loader.load(Utilities.getMarkSupportedStream(inputStream), model, encodingRule);
+			}
+			catch (ResourceInUse e) {
+				// impossible, since we've already found
+				handleProgramError(e);
+			} finally {
+				if (inputStream!=null) {
+					try { 
+						inputStream.close();
+					} catch(IOException e) {
+					}
+				}
+			}
+			if (model != null) {
+				// add to our cache
+				sharedObject.theSharedModel=model;
+				_initCount(sharedObject, rwType);
+			} else {
+				doRemove = true;
+			}
+		}
+		if (doRemove) {
+			SYNC.acquire();	
+			fManagedObjects.remove(id);	
+			SYNC.release();
+		}
+		sharedObject.setLoaded();
 	}
 
 	private IStructuredModel _commonCreateModel(InputStream inputStream, String id, IModelHandler handler, URIResolver resolver, ReadEditType rwType, String encoding, String lineDelimiter) throws IOException {
-
+		
 		if (id == null) {
 			throw new IllegalArgumentException("Program Error: id may not be null"); //$NON-NLS-1$
 		}
-		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
-		IStructuredModel model = null;
-		if (sharedObject == null) {
+		SharedObject sharedObject = null;
+	
+		SYNC.acquire();
+		sharedObject = (SharedObject) fManagedObjects.get(id);
+		SYNC.release();
+		
+		while(true) {
+			if (sharedObject!=null) {
+				sharedObject.waitForLoadAttempt();
+			}
+			SYNC.acquire();
+			SharedObject testObject = (SharedObject) fManagedObjects.get(id);
+			if (testObject==null) {
+				// it was removed ,so lets create it
+				sharedObject = new SharedObject(null);
+				fManagedObjects.put(id, sharedObject);
+				SYNC.release();
+				_doCommonCreateModel(inputStream, id, handler, resolver, rwType,
+						encoding, lineDelimiter, sharedObject);
+				break;
+			} else if (sharedObject == testObject) {
+				synchronized(sharedObject) {
+					if (sharedObject.theSharedModel!=null) {
+						_incrCount(sharedObject, rwType);
+					}
+				}
+				SYNC.release();
+				break;
+			} else {
+				SYNC.release();
+				sharedObject = testObject;
+			}
+		}
+		
+		// we expect to always return something
+		Assert.isNotNull(sharedObject, "Program Error: no model recorded for id " + id); //$NON-NLS-1$
+		// note: clients must call release for each time they call get.
+		return sharedObject.theSharedModel;
+	
+	}
+
+	private void _doCommonCreateModel(InputStream inputStream, String id, IModelHandler handler,
+			URIResolver resolver, ReadEditType rwType, String encoding, String lineDelimiter,
+			SharedObject sharedObject) throws IOException {
+		boolean doRemove = false;
+		synchronized(sharedObject) {
+			IStructuredModel model = null;
 			try {
 				model = _commonCreateModel(id, handler, resolver);
 				IModelLoader loader = handler.getModelLoader();
@@ -241,22 +360,19 @@ public class ModelManagerImpl implements IModelManager {
 				handleProgramError(e);
 			}
 			if (model != null) {
-				// add to our cache
-				sharedObject = new SharedObject(model);
+				sharedObject.theSharedModel = model;
 				_initCount(sharedObject, rwType);
-				fManagedObjects.put(id, sharedObject);
+			} else {
+				doRemove = true;
 			}
 		}
-		else {
-			// if shared object is initially in our cache, then simply
-			// increment its ref count,
-			// and return the object.
-			_incrCount(sharedObject, rwType);
+		if (doRemove) {
+			SYNC.acquire();
+			// remove it if we didn't get one back
+			fManagedObjects.remove(id);
+			SYNC.release();
 		}
-		// we expect to always return something
-		Assert.isNotNull(sharedObject, "Program Error: no model recorded for id " + id); //$NON-NLS-1$
-		// note: clients must call release for each time they call get.
-		return sharedObject.theSharedModel;
+		sharedObject.setLoaded();
 	}
 
 	private IStructuredModel _commonCreateModel(String id, IModelHandler handler, URIResolver resolver) throws ResourceInUse {
@@ -287,15 +403,7 @@ public class ModelManagerImpl implements IModelManager {
 			String id = calculateId(iFile);
 			IModelHandler handler = calculateType(iFile);
 			URIResolver resolver = calculateURIResolver(iFile);
-			InputStream inputStream = Utilities.getMarkSupportedStream(iFile.getContents(true));
-			try {
-				model = _commonCreateModel(inputStream, id, handler, resolver, rwType, encodingRule);
-			}
-			finally {
-				if (inputStream != null) {
-					inputStream.close();
-				}
-			}
+			model = _commonCreateModel(iFile, id, handler, resolver, rwType, encodingRule);
 		}
 
 		return model;
@@ -314,36 +422,72 @@ public class ModelManagerImpl implements IModelManager {
 		if (id == null)
 			throw new IllegalArgumentException("Program Error: id may not be null"); //$NON-NLS-1$
 
-		IStructuredModel model = null;
-
+		SharedObject sharedObject = null;
 		if (file != null && file.exists()) {
-			SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
-			if (sharedObject == null) {
-				model = FileBufferModelManager.getInstance().getModel(file);
-				if (model != null) {
-					// add to our cache
-					sharedObject = new SharedObject(model);
-					_initCount(sharedObject, rwType);
+			SYNC.acquire();
+			sharedObject = (SharedObject) fManagedObjects.get(id);
+			SYNC.release();
+			
+			while(true) {
+				if (sharedObject!=null) {
+					sharedObject.waitForLoadAttempt();
+				}
+				SYNC.acquire();
+				SharedObject testObject = (SharedObject) fManagedObjects.get(id);
+				if (testObject==null) {
+					// it was removed ,so lets create it
+					sharedObject = new SharedObject(null);
 					fManagedObjects.put(id, sharedObject);
+					
+					SYNC.release();
+					_doCommonGetModel(file, id, sharedObject,rwType);
+					break;
+				} else if (sharedObject == testObject) {
+					synchronized(sharedObject) {
+						if (sharedObject.theSharedModel!=null) {
+							_incrCount(sharedObject, rwType);
+						}
+					}
+					SYNC.release();
+					break;
+				} else {
+					// we got a different object than what we were expecting
+					SYNC.release();
+					// two threads were interested in models for the same id. 
+					// The other thread one, so lets back off and try again. 
+					sharedObject = testObject; 
 				}
 			}
-			else {
-				// if shared object is initially in our cache, then simply
-				// increment its ref count,
-				// and return the object.
-				_incrCount(sharedObject, rwType);
-			}
+		}
+		
+		// if we don't know how to create a model
+		// for this type of file, return null
+	
+		// note: clients must call release for each time they call
+		// get.
+			
+		return sharedObject==null ? null : sharedObject.theSharedModel;
+	}
 
-			// if we don't know how to create a model
-			// for this type of file, return null
-			if (sharedObject != null) {
-				// note: clients must call release for each time they call
-				// get.
-				model = sharedObject.theSharedModel;
+	private void _doCommonGetModel(IFile file, String id, SharedObject sharedObject,ReadEditType rwType) {
+		boolean doRemove = false;
+		synchronized(sharedObject) {
+			sharedObject.doWait=false;
+			IStructuredModel model = FileBufferModelManager.getInstance().getModel(file);
+			sharedObject.doWait=true;
+			if (model != null) {
+				sharedObject.theSharedModel=model;
+				_initCount(sharedObject, rwType);
+			} else {
+				doRemove = true;
 			}
 		}
-
-		return model;
+		if (doRemove) {
+			SYNC.acquire();
+			fManagedObjects.remove(id);
+			SYNC.release();
+		}
+		sharedObject.setLoaded();
 	}
 
 	private SharedObject _commonNewModel(IFile iFile, boolean force) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
@@ -354,24 +498,36 @@ public class ModelManagerImpl implements IModelManager {
 		if (iFile.exists() && !force) {
 			throw new ResourceAlreadyExists();
 		}
-
+		
+		SharedObject sharedObject = null;
 		String id = calculateId(iFile);
-		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
-
-		if (sharedObject != null && !force) {
-			// if in cache already, and force is not true, then this is an
-			// error
-			// in call
-			throw new ResourceInUse();
+		try {
+			SYNC.acquire();
+		
+			 sharedObject = (SharedObject) fManagedObjects.get(id);
+	
+			if (sharedObject != null && !force) {
+				// if in cache already, and force is not true, then this is an
+				// error
+				// in call
+				throw new ResourceInUse();
+			}
+			
+			sharedObject = new SharedObject(null);
+			fManagedObjects.put(id, sharedObject);
+			
+		} finally {
+			SYNC.release();
 		}
-
-		// if we get to hear without above exceptions, then all is ok
+		
+		// if we get to here without above exceptions, then all is ok
 		// to get model like normal, but set 'new' attribute (where the
 		// 'new' attribute means this is a model without a corresponding
 		// underlying resource.
 		aSharedModel = FileBufferModelManager.getInstance().getModel(iFile);
 		aSharedModel.setNewState(true);
-		sharedObject = addToCache(id, aSharedModel);
+		
+		sharedObject.theSharedModel=aSharedModel;
 		// when resource is provided, we can set
 		// synchronization stamp ... otherwise client should
 		// Note: one client which does this is FileModelProvider.
@@ -380,61 +536,76 @@ public class ModelManagerImpl implements IModelManager {
 	}
 
 	public IStructuredModel _getModelFor(IStructuredDocument document, ReadEditType accessType) {
-		IStructuredModel model = null;
+
 		String id = FileBufferModelManager.getInstance().calculateId(document);
 		Assert.isNotNull(id, "unknown IStructuredDocument " + document); //$NON-NLS-1$
-		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
-		if (sharedObject != null) {
-			sharedObject = (SharedObject) fManagedObjects.get(id);
-			_incrCount(sharedObject, accessType);
-			model = sharedObject.theSharedModel;
+		
+		SharedObject sharedObject = null;
+		SYNC.acquire();
+		sharedObject = (SharedObject) fManagedObjects.get(id);
+		SYNC.release();
+		
+		while(true) {
+			if (sharedObject!=null) {
+				sharedObject.waitForLoadAttempt();
+			}
+			SYNC.acquire();
+			SharedObject testObject = (SharedObject) fManagedObjects.get(id);
+			if (testObject==null) {
+				sharedObject = new SharedObject(null);
+				fManagedObjects.put(id, sharedObject);
+				SYNC.release();
+				synchronized(sharedObject) {
+					sharedObject.theSharedModel = FileBufferModelManager.getInstance().getModel(document);
+					_initCount(sharedObject, accessType);
+					sharedObject.setLoaded();
+				}
+				break;
+			} else if (sharedObject == testObject) {
+				synchronized(sharedObject) {
+					Assert.isTrue(sharedObject.referenceCountForEdit + sharedObject.referenceCountForRead > 0);
+					if (sharedObject.theSharedModel!=null) {
+						_incrCount(sharedObject, accessType);
+					}
+				}
+				SYNC.release();
+				break;
+			} else {
+				sharedObject = testObject;
+			}
 		}
-		else {
-			model = FileBufferModelManager.getInstance().getModel(document);
-			sharedObject = new SharedObject(model);
-			_initCount(sharedObject, accessType);
-			fManagedObjects.put(id, sharedObject);
-		}
-		return model;
+		
+		return sharedObject==null ? null : sharedObject.theSharedModel;
 	}
 
 	private void _incrCount(SharedObject sharedObject, ReadEditType type) {
-		if (type == READ) {
-			sharedObject.referenceCountForRead++;
-			FileBufferModelManager.getInstance().connect(sharedObject.theSharedModel.getStructuredDocument());
+		synchronized(sharedObject) {
+			if (type == READ) {
+				sharedObject.referenceCountForRead++;
+				FileBufferModelManager.getInstance().connect(sharedObject.theSharedModel.getStructuredDocument());
+			}
+			else if (type == EDIT) {
+				sharedObject.referenceCountForEdit++;
+				FileBufferModelManager.getInstance().connect(sharedObject.theSharedModel.getStructuredDocument());
+			}
+			else
+				throw new IllegalArgumentException();
 		}
-		else if (type == EDIT) {
-			sharedObject.referenceCountForEdit++;
-			FileBufferModelManager.getInstance().connect(sharedObject.theSharedModel.getStructuredDocument());
-		}
-		else
-			throw new IllegalArgumentException();
-	}
-
-	private void _decrCount(SharedObject sharedObject, ReadEditType type) {
-		if (type == READ) {
-			sharedObject.referenceCountForRead--;
-			FileBufferModelManager.getInstance().disconnect(sharedObject.theSharedModel.getStructuredDocument());
-		}
-		else if (type == EDIT) {
-			sharedObject.referenceCountForEdit--;
-			FileBufferModelManager.getInstance().disconnect(sharedObject.theSharedModel.getStructuredDocument());
-		}
-		else
-			throw new IllegalArgumentException();
 	}
 
 	private void _initCount(SharedObject sharedObject, ReadEditType type) {
-		if (type == READ) {
-			sharedObject.referenceCountForRead = 1;
-			FileBufferModelManager.getInstance().connect(sharedObject.theSharedModel.getStructuredDocument());
+		synchronized(sharedObject) {
+			if (type == READ) {
+				FileBufferModelManager.getInstance().connect(sharedObject.theSharedModel.getStructuredDocument());
+				sharedObject.referenceCountForRead = 1;
+			}
+			else if (type == EDIT) {
+				FileBufferModelManager.getInstance().connect(sharedObject.theSharedModel.getStructuredDocument());
+				sharedObject.referenceCountForEdit = 1;
+			}
+			else
+				throw new IllegalArgumentException();
 		}
-		else if (type == EDIT) {
-			sharedObject.referenceCountForEdit = 1;
-			FileBufferModelManager.getInstance().connect(sharedObject.theSharedModel.getStructuredDocument());
-		}
-		else
-			throw new IllegalArgumentException();
 	}
 
 	private void addFactories(IStructuredModel model, IModelHandler handler) {
@@ -460,12 +631,6 @@ public class ModelManagerImpl implements IModelManager {
 		}
 	}
 
-	private SharedObject addToCache(String id, IStructuredModel aSharedModel) {
-		SharedObject sharedObject;
-		sharedObject = new SharedObject(aSharedModel);
-		fManagedObjects.put(id, sharedObject);
-		return sharedObject;
-	}
 
 	/**
 	 * Calculate id provides a common way to determine the id from the input
@@ -501,46 +666,8 @@ public class ModelManagerImpl implements IModelManager {
 		URIResolver resolver = (URIResolver) project.getAdapter(URIResolver.class);
 		if (resolver == null)
 			resolver = new ProjectResolver(project);
-
-		String locationString = null;		
-		if (file.getLocation() != null) {
-			locationString = file.getLocation().toString();
-		}
-		if (locationString == null && file.getLocationURI() != null) {
-			locationString = file.getLocationURI().toString();
-		}
-		if (locationString == null) {
-			locationString = file.getFullPath().toString();
-		}
-		resolver.setFileBaseLocation(locationString);
-
+		resolver.setFileBaseLocation(file.getLocation().toString());
 		return resolver;
-	}
-
-	private void cleanupDiscardedModel(IStructuredModel structuredModel) {
-		IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
-		/*
-		 * This call (and setting the StructuredDocument to null) were
-		 * previously done within the model itself, but for concurrency it
-		 * must be done here during a synchronized release.
-		 */
-		structuredModel.getFactoryRegistry().release();
-
-		/*
-		 * For structured documents originating from file buffers, disconnect
-		 * us from the file buffer, now.
-		 */
-		FileBufferModelManager.getInstance().releaseModel(structuredDocument);
-
-		/*
-		 * Setting the document to null is required since some subclasses of
-		 * model might have "cleanup" of listeners, etc., to remove, which
-		 * were initialized during the initial setStructuredDocument.
-		 * 
-		 * The model itself in particular may have internal listeners used to
-		 * coordinate the document with its own "structure".
-		 */
-		structuredModel.setStructuredDocument(null);
 	}
 
 	/*
@@ -622,7 +749,7 @@ public class ModelManagerImpl implements IModelManager {
 
 	/**
 	 */
-	public synchronized IStructuredModel copyModelForEdit(String oldId, String newId) throws ResourceInUse {
+	public IStructuredModel copyModelForEdit(String oldId, String newId) throws ResourceInUse {
 		IStructuredModel newModel = null;
 		// get the existing model associated with this id
 		IStructuredModel model = getExistingModel(oldId);
@@ -630,10 +757,18 @@ public class ModelManagerImpl implements IModelManager {
 		// be a programming error.
 		if (model == null)
 			return null;
-		// now be sure newModel does not exist
-		SharedObject sharedObject = (SharedObject) fManagedObjects.get(newId);
-		if (sharedObject != null) {
-			throw new ResourceInUse();
+		SharedObject sharedObject = null;
+		try {
+			SYNC.acquire();
+			// now be sure newModel does not exist
+			sharedObject = (SharedObject) fManagedObjects.get(newId);
+			if (sharedObject != null) {
+				throw new ResourceInUse();
+			}
+			sharedObject = new SharedObject(null);
+			fManagedObjects.put(newId,sharedObject);
+		} finally {
+			SYNC.release();
 		}
 		// get loader based on existing type (note the type assumption)
 		// Object type = ((IStructuredModel) model).getType();
@@ -641,14 +776,24 @@ public class ModelManagerImpl implements IModelManager {
 		// IModelLoader loader = (IModelLoader) getModelLoaders().get(type);
 		// IModelLoader loader = (IModelLoader) getModelLoaders().get(type);
 		// ask the loader to copy
-		newModel = copy(model, newId);
+		synchronized(sharedObject) {
+			sharedObject.doWait = false;
+			newModel = copy(model, newId);
+			sharedObject.doWait = true;
+		}
 		if (newModel != null) {
 			// add to our cache
-			sharedObject = new SharedObject(newModel);
-			sharedObject.referenceCountForEdit = 1;
-			fManagedObjects.put(newId, sharedObject);
-			trace("copied model", newId, sharedObject.referenceCountForEdit); //$NON-NLS-1$
+			synchronized(sharedObject) {
+				sharedObject.theSharedModel=newModel;
+				sharedObject.referenceCountForEdit = 1;
+				trace("copied model", newId, sharedObject.referenceCountForEdit); //$NON-NLS-1$
+			}
+		} else {
+			SYNC.acquire();
+			fManagedObjects.remove(newId);
+			SYNC.release();
 		}
+		sharedObject.setLoaded();
 		return newModel;
 	}
 
@@ -657,7 +802,7 @@ public class ModelManagerImpl implements IModelManager {
 	 * produces an unmanaged model, for temporary use. If a true shared model
 	 * is desired, use "copy".
 	 */
-	public synchronized IStructuredModel createNewInstance(IStructuredModel oldModel) throws IOException {
+	public IStructuredModel createNewInstance(IStructuredModel oldModel) throws IOException {
 		IModelHandler handler = oldModel.getModelHandler();
 		IModelLoader loader = handler.getModelLoader();
 		IStructuredModel newModel = loader.createModel(oldModel);
@@ -689,7 +834,7 @@ public class ModelManagerImpl implements IModelManager {
 	 * @throws ResourceInUse
 	 * 
 	 */
-	public synchronized IStructuredDocument createNewStructuredDocumentFor(IFile iFile) throws ResourceAlreadyExists, IOException, CoreException {
+	public  IStructuredDocument createNewStructuredDocumentFor(IFile iFile) throws ResourceAlreadyExists, IOException, CoreException {
 		if (iFile.exists()) {
 			throw new ResourceAlreadyExists(iFile.getFullPath().toOSString());
 		}
@@ -715,7 +860,7 @@ public class ModelManagerImpl implements IModelManager {
 	 * 
 	 * @throws ResourceInUse
 	 */
-	public synchronized IStructuredDocument createStructuredDocumentFor(IFile iFile) throws IOException, CoreException {
+	public  IStructuredDocument createStructuredDocumentFor(IFile iFile) throws IOException, CoreException {
 		if (!iFile.exists()) {
 			throw new FileNotFoundException(iFile.getFullPath().toOSString());
 		}
@@ -744,7 +889,7 @@ public class ModelManagerImpl implements IModelManager {
 	 *             we - want the handler that "goes with" a certain type of -
 	 *             file.
 	 */
-	public synchronized IStructuredDocument createStructuredDocumentFor(String contentTypeId) {
+	public  IStructuredDocument createStructuredDocumentFor(String contentTypeId) {
 		IDocumentLoader loader = null;
 		ModelHandlerRegistry cr = getModelHandlerRegistry();
 		IModelHandler handler = cr.getHandlerForContentTypeId(contentTypeId);
@@ -794,7 +939,7 @@ public class ModelManagerImpl implements IModelManager {
 	 * meta tag, its ignored since its assumed its all correctly decoded by
 	 * the HTTP charset.
 	 */
-	public synchronized IStructuredDocument createStructuredDocumentFor(String filename, InputStream inputStream, URIResolver resolver, String encoding) throws IOException {
+	public  IStructuredDocument createStructuredDocumentFor(String filename, InputStream inputStream, URIResolver resolver, String encoding) throws IOException {
 		String content = readInputStream(inputStream, encoding);
 		IStructuredDocument result = createStructuredDocumentFor(filename, content, resolver);
 		return result;
@@ -807,7 +952,7 @@ public class ModelManagerImpl implements IModelManager {
 	 * a String, it is assumed to already be decoded correctly so no
 	 * transformation is done.
 	 */
-	public synchronized IStructuredDocument createStructuredDocumentFor(String filename, String content, URIResolver resolver) throws IOException {
+	public  IStructuredDocument createStructuredDocumentFor(String filename, String content, URIResolver resolver) throws IOException {
 		// TODO: avoid all these String instances
 		StringBuffer contentBuffer = new StringBuffer(content);
 		IDocumentLoader loader = null;
@@ -850,7 +995,7 @@ public class ModelManagerImpl implements IModelManager {
 	 * Conveience method. It depends on the loaders newModel method to return
 	 * an appropriate StrucuturedModel appropriately initialized.
 	 */
-	public synchronized IStructuredModel createUnManagedStructuredModelFor(IFile iFile) throws IOException, CoreException {
+	public IStructuredModel createUnManagedStructuredModelFor(IFile iFile) throws IOException, CoreException {
 		IStructuredModel result = null;
 		result = createUnManagedEmptyModelFor(iFile);
 
@@ -866,7 +1011,7 @@ public class ModelManagerImpl implements IModelManager {
 	 * Conveience method. It depends on the loaders newModel method to return
 	 * an appropriate StrucuturedModel appropriately initialized.
 	 */
-	public synchronized IStructuredModel createUnManagedStructuredModelFor(String contentTypeId) {
+	public  IStructuredModel createUnManagedStructuredModelFor(String contentTypeId) {
 		return createUnManagedStructuredModelFor(contentTypeId, null);
 	}
 
@@ -874,7 +1019,7 @@ public class ModelManagerImpl implements IModelManager {
 	 * Conveience method. It depends on the loaders newModel method to return
 	 * an appropriate StrucuturedModel appropriately initialized.
 	 */
-	public synchronized IStructuredModel createUnManagedStructuredModelFor(String contentTypeId, URIResolver resolver) {
+	public  IStructuredModel createUnManagedStructuredModelFor(String contentTypeId, URIResolver resolver) {
 		IStructuredModel result = null;
 		ModelHandlerRegistry cr = getModelHandlerRegistry();
 		IModelHandler handler = cr.getHandlerForContentTypeId(contentTypeId);
@@ -891,33 +1036,22 @@ public class ModelManagerImpl implements IModelManager {
 		return result;
 	}
 
-	private void discardModel(Object id, SharedObject sharedObject) {
-		fManagedObjects.remove(id);
-		IStructuredDocument structuredDocument = sharedObject.theSharedModel.getStructuredDocument();
-
-		if (structuredDocument == null) {
-			Platform.getLog(SSECorePlugin.getDefault().getBundle()).log(new Status(IStatus.ERROR, SSECorePlugin.ID, IStatus.ERROR, "Attempted to discard a structured model but the underlying document has already been set to null: " + sharedObject.theSharedModel.getBaseLocation(), null));
-		}
-
-		cleanupDiscardedModel(sharedObject.theSharedModel);
-	}
-
-	private EnumeratedModelIds getEnumeratedModelIds() {
-		// return new instance each time so will "act like" proper enumeration
-		// to client
-		// (if we cached, may not be at beginning).
-		return new EnumeratedModelIds(fManagedObjects);
-	}
-
 	private IStructuredModel getExistingModel(Object id) {
-
 		IStructuredModel result = null;
+		
+		SYNC.acquire();
+		Assert.isTrue(SYNC.getDepth()==1);
 		// let's see if we already have it in our cache
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
 		// if not, then we'll simply return null
 		if (sharedObject != null) {
+			SYNC.release();
+			sharedObject.waitForLoadAttempt();
 			result = sharedObject.theSharedModel;
+		} else {
+			SYNC.release();
 		}
+		
 		return result;
 	}
 
@@ -925,17 +1059,29 @@ public class ModelManagerImpl implements IModelManager {
 	 * Note: users of this 'model' must still release it when finished.
 	 * Returns null if there's not a model corresponding to document.
 	 */
-	public synchronized IStructuredModel getExistingModelForEdit(IDocument document) {
+	public IStructuredModel getExistingModelForEdit(IDocument document) {
 		IStructuredModel result = null;
-		Enumeration ids = getEnumeratedModelIds();
-		while (ids.hasMoreElements()) {
-			Object potentialId = ids.nextElement();
-			IStructuredModel tempResult = getExistingModel(potentialId);
-			if (document == tempResult.getStructuredDocument()) {
-				result = getExistingModelForEdit(potentialId);
-				break;
+		
+		SYNC.acquire();		
+		// create a snapshot
+		Set ids = new HashSet(fManagedObjects.keySet());
+		SYNC.release();
+		for (Iterator iterator = ids.iterator(); iterator.hasNext();) {
+			Object potentialId = iterator.next();
+			SYNC.acquire();	
+			if (fManagedObjects.containsKey(potentialId)) {
+				// check to see if still valid
+				SYNC.release();
+				IStructuredModel tempResult = getExistingModel(potentialId);
+				if (tempResult!=null && document == tempResult.getStructuredDocument()) {
+					result = getExistingModelForEdit(potentialId);
+					break;
+				}
+			} else {
+				SYNC.release();
 			}
 		}
+		
 		return result;
 	}
 
@@ -945,7 +1091,7 @@ public class ModelManagerImpl implements IModelManager {
 	 * exists). If the model does not already exist in the cache of models,
 	 * null is returned.
 	 */
-	public synchronized IStructuredModel getExistingModelForEdit(IFile iFile) {
+	public  IStructuredModel getExistingModelForEdit(IFile iFile) {
 
 		Assert.isNotNull(iFile, "IFile parameter can not be null"); //$NON-NLS-1$
 		Object id = calculateId(iFile);
@@ -961,22 +1107,39 @@ public class ModelManagerImpl implements IModelManager {
 	 * 
 	 * @deprecated use IFile form - this one will become protected or private
 	 */
-	public synchronized IStructuredModel getExistingModelForEdit(Object id) {
+	public IStructuredModel getExistingModelForEdit(Object id) {
 
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		IStructuredModel result = null;
+		boolean doRealease = true;
 		// let's see if we already have it in our cache
-		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
-		// if not, then we'll simply return null
-		if (sharedObject != null) {
-			// if shared object is in our cache, then simply increment its ref
-			// count,
-			// and return the object.
-			_incrCount(sharedObject, EDIT);
-			result = sharedObject.theSharedModel;
-			trace("got existing model for Edit: ", id); //$NON-NLS-1$
-			trace("   incremented referenceCountForEdit ", id, sharedObject.referenceCountForEdit); //$NON-NLS-1$
+		try {
+			SYNC.acquire();
+			SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
+			// if not, then we'll simply return null
+			if (sharedObject != null) {
+				// if shared object is in our cache, then simply increment its ref
+				// count,
+				// and return the object.
+				SYNC.release();
+				doRealease=false;
+				synchronized(sharedObject) {
+					if (sharedObject.doWait) {
+						sharedObject.waitForLoadAttempt();
+					}
+					if (sharedObject.theSharedModel!=null) {
+						_incrCount(sharedObject, EDIT);
+					}
+					result = sharedObject.theSharedModel;
+				}
+				trace("got existing model for Edit: ", id); //$NON-NLS-1$
+				trace("   incremented referenceCountForEdit ", id, sharedObject.referenceCountForEdit); //$NON-NLS-1$
+			}
+		} finally {
+			if (doRealease)
+				SYNC.release();
 		}
+		
 		return result;
 	}
 
@@ -984,21 +1147,33 @@ public class ModelManagerImpl implements IModelManager {
 	 * Note: users of this 'model' must still release it when finished.
 	 * Returns null if there's not a model corresponding to document.
 	 */
-	public synchronized IStructuredModel getExistingModelForRead(IDocument document) {
+	public IStructuredModel getExistingModelForRead(IDocument document) {
 		IStructuredModel result = null;
-		Enumeration ids = getEnumeratedModelIds();
-		while (ids.hasMoreElements()) {
-			Object potentialId = ids.nextElement();
-			IStructuredModel tempResult = getExistingModel(potentialId);
-			if (document == tempResult.getStructuredDocument()) {
-				result = getExistingModelForRead(potentialId);
-				break;
+		
+		SYNC.acquire();		
+		// create a snapshot
+		Set ids = new HashSet(fManagedObjects.keySet());
+		SYNC.release();
+		for (Iterator iterator = ids.iterator(); iterator.hasNext();) {
+			Object potentialId = iterator.next();
+			SYNC.acquire();	
+			if (fManagedObjects.containsKey(potentialId)) {
+				// check to see if still valid
+				SYNC.release();
+				IStructuredModel tempResult = getExistingModel(potentialId);
+				if (tempResult!=null && document == tempResult.getStructuredDocument()) {
+					result = getExistingModelForRead(potentialId);
+					break;
+				}
+			} else {
+				SYNC.release();
 			}
 		}
+		
 		return result;
 	}
 
-	public synchronized IStructuredModel getExistingModelForRead(IFile iFile) {
+	public IStructuredModel getExistingModelForRead(IFile iFile) {
 
 		Assert.isNotNull(iFile, "IFile parameter can not be null"); //$NON-NLS-1$
 		Object id = calculateId(iFile);
@@ -1014,19 +1189,35 @@ public class ModelManagerImpl implements IModelManager {
 	 * 
 	 * @deprecated use IFile form - this one will become protected or private
 	 */
-	public synchronized IStructuredModel getExistingModelForRead(Object id) {
-
+	public  IStructuredModel getExistingModelForRead(Object id) {
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		IStructuredModel result = null;
+		boolean doRealease = true;
 		// let's see if we already have it in our cache
-		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
-		// if not, then we'll simply return null
-		if (sharedObject != null) {
-			// if shared object is in our cache, then simply increment its ref
-			// count,
-			// and return the object.
-			_incrCount(sharedObject, READ);
-			result = sharedObject.theSharedModel;
+		try {
+			SYNC.acquire();
+			SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
+			// if not, then we'll simply return null
+			if (sharedObject != null) {
+				// if shared object is in our cache, then simply increment its ref
+				// count,
+				// and return the object.
+				SYNC.release();
+				doRealease=false;
+
+				synchronized(sharedObject) {
+					if (sharedObject.doWait) {
+						sharedObject.waitForLoadAttempt();
+					}
+					if (sharedObject.theSharedModel!=null) {
+						_incrCount(sharedObject, READ);
+					}
+					result = sharedObject.theSharedModel;
+				}
+			}
+		} finally {
+			if (doRealease)
+				SYNC.release();
 		}
 		return result;
 	}
@@ -1038,10 +1229,15 @@ public class ModelManagerImpl implements IModelManager {
 	 *             safe for one thread to get the Enumeration, when underlying
 	 *             data could be changed in another thread.
 	 */
-	public synchronized Enumeration getExistingModelIds() {
-
-		Enumeration result = getEnumeratedModelIds();
-		return result;
+	public  Enumeration getExistingModelIds() {
+		try {
+			SYNC.acquire();
+			// create a copy
+			Vector keys = new Vector( fManagedObjects.keySet() );
+			return keys.elements();
+		} finally {
+			SYNC.release();
+		}
 	}
 
 	// TODO: replace (or supplement) this is a "model info" association to the
@@ -1065,24 +1261,24 @@ public class ModelManagerImpl implements IModelManager {
 	/**
 	 * One of the primary forms to get a managed model
 	 */
-	public synchronized IStructuredModel getModelForEdit(IFile iFile) throws IOException, CoreException {
+	public  IStructuredModel getModelForEdit(IFile iFile) throws IOException, CoreException {
 		Assert.isNotNull(iFile, "IFile parameter can not be null"); //$NON-NLS-1$
 		return _commonGetModel(iFile, EDIT, null, null);
 	}
 
-	public synchronized IStructuredModel getModelForEdit(IFile iFile, EncodingRule encodingRule) throws UnsupportedEncodingException, IOException, CoreException {
+	public  IStructuredModel getModelForEdit(IFile iFile, EncodingRule encodingRule) throws UnsupportedEncodingException, IOException, CoreException {
 
 		Assert.isNotNull(iFile, "IFile parameter can not be null"); //$NON-NLS-1$
 		return _commonGetModel(iFile, EDIT, encodingRule);
 	}
 
-	public synchronized IStructuredModel getModelForEdit(IFile iFile, String encoding, String lineDelimiter) throws java.io.UnsupportedEncodingException, IOException, CoreException {
+	public  IStructuredModel getModelForEdit(IFile iFile, String encoding, String lineDelimiter) throws java.io.UnsupportedEncodingException, IOException, CoreException {
 
 		Assert.isNotNull(iFile, "IFile parameter can not be null"); //$NON-NLS-1$
 		return _commonGetModel(iFile, EDIT, encoding, lineDelimiter);
 	}
 
-	public synchronized IStructuredModel getModelForEdit(IStructuredDocument document) {
+	public  IStructuredModel getModelForEdit(IStructuredDocument document) {
 		return _getModelFor(document, EDIT);
 	}
 
@@ -1090,7 +1286,7 @@ public class ModelManagerImpl implements IModelManager {
 	 * @see IModelManager
 	 * @deprecated use IFile or String form
 	 */
-	public synchronized IStructuredModel getModelForEdit(Object id, InputStream inputStream, URIResolver resolver) throws java.io.UnsupportedEncodingException, IOException {
+	public  IStructuredModel getModelForEdit(Object id, InputStream inputStream, URIResolver resolver) throws java.io.UnsupportedEncodingException, IOException {
 
 		Assert.isNotNull(id, "IFile parameter can not be null"); //$NON-NLS-1$
 		String stringId = id.toString();
@@ -1101,14 +1297,14 @@ public class ModelManagerImpl implements IModelManager {
 	 * @see IModelManager
 	 * @deprecated - use IFile or String form
 	 */
-	public synchronized IStructuredModel getModelForEdit(Object id, Object modelType, String encodingName, String lineDelimiter, InputStream inputStream, URIResolver resolver) throws java.io.UnsupportedEncodingException, IOException {
+	public  IStructuredModel getModelForEdit(Object id, Object modelType, String encodingName, String lineDelimiter, InputStream inputStream, URIResolver resolver) throws java.io.UnsupportedEncodingException, IOException {
 
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		String stringId = id.toString();
 		return getModelForEdit(stringId, Utilities.getMarkSupportedStream(inputStream), resolver);
 	}
 
-	public synchronized IStructuredModel getModelForEdit(String id, InputStream inputStream, URIResolver resolver) throws IOException {
+	public  IStructuredModel getModelForEdit(String id, InputStream inputStream, URIResolver resolver) throws IOException {
 		if (id == null) {
 			throw new IllegalArgumentException("Program Error: id may not be null"); //$NON-NLS-1$
 		}
@@ -1128,23 +1324,23 @@ public class ModelManagerImpl implements IModelManager {
 	/**
 	 * One of the primary forms to get a managed model
 	 */
-	public synchronized IStructuredModel getModelForRead(IFile iFile) throws IOException, CoreException {
+	public  IStructuredModel getModelForRead(IFile iFile) throws IOException, CoreException {
 
 		Assert.isNotNull(iFile, "IFile parameter can not be null"); //$NON-NLS-1$
 		return _commonGetModel(iFile, READ, null, null);
 	}
 
-	public synchronized IStructuredModel getModelForRead(IFile iFile, EncodingRule encodingRule) throws UnsupportedEncodingException, IOException, CoreException {
+	public  IStructuredModel getModelForRead(IFile iFile, EncodingRule encodingRule) throws UnsupportedEncodingException, IOException, CoreException {
 		Assert.isNotNull(iFile, "IFile parameter can not be null"); //$NON-NLS-1$
 		return _commonGetModel(iFile, READ, encodingRule);
 	}
 
-	public synchronized IStructuredModel getModelForRead(IFile iFile, String encodingName, String lineDelimiter) throws java.io.UnsupportedEncodingException, IOException, CoreException {
+	public  IStructuredModel getModelForRead(IFile iFile, String encodingName, String lineDelimiter) throws java.io.UnsupportedEncodingException, IOException, CoreException {
 		Assert.isNotNull(iFile, "IFile parameter can not be null"); //$NON-NLS-1$
 		return _commonGetModel(iFile, READ, encodingName, lineDelimiter);
 	}
 
-	public synchronized IStructuredModel getModelForRead(IStructuredDocument document) {
+	public  IStructuredModel getModelForRead(IStructuredDocument document) {
 		return _getModelFor(document, READ);
 	}
 
@@ -1152,7 +1348,7 @@ public class ModelManagerImpl implements IModelManager {
 	 * @see IModelManager
 	 * @deprecated use IFile or String form
 	 */
-	public synchronized IStructuredModel getModelForRead(Object id, InputStream inputStream, URIResolver resolver) throws java.io.UnsupportedEncodingException, IOException {
+	public  IStructuredModel getModelForRead(Object id, InputStream inputStream, URIResolver resolver) throws java.io.UnsupportedEncodingException, IOException {
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		String stringId = id.toString();
 		return getModelForRead(stringId, Utilities.getMarkSupportedStream(inputStream), resolver);
@@ -1162,13 +1358,13 @@ public class ModelManagerImpl implements IModelManager {
 	 * @see IModelManager
 	 * @deprecated use IFile form
 	 */
-	public synchronized IStructuredModel getModelForRead(Object id, Object modelType, String encodingName, String lineDelimiter, InputStream inputStream, URIResolver resolver) throws java.io.UnsupportedEncodingException, IOException {
+	public  IStructuredModel getModelForRead(Object id, Object modelType, String encodingName, String lineDelimiter, InputStream inputStream, URIResolver resolver) throws java.io.UnsupportedEncodingException, IOException {
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		String stringId = id.toString();
 		return getModelForRead(stringId, Utilities.getMarkSupportedStream(inputStream), resolver);
 	}
 
-	public synchronized IStructuredModel getModelForRead(String id, InputStream inputStream, URIResolver resolver) throws IOException {
+	public  IStructuredModel getModelForRead(String id, InputStream inputStream, URIResolver resolver) throws IOException {
 		InputStream istream = Utilities.getMarkSupportedStream(inputStream);
 		IModelHandler handler = calculateType(id, istream);
 		IStructuredModel result = null;
@@ -1189,21 +1385,31 @@ public class ModelManagerImpl implements IModelManager {
 	/**
 	 * @see IModelManager#getNewModelForEdit(IFile, boolean)
 	 */
-	public synchronized IStructuredModel getNewModelForEdit(IFile iFile, boolean force) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
+	public  IStructuredModel getNewModelForEdit(IFile iFile, boolean force) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
 		Assert.isNotNull(iFile, "IFile parameter can not be null"); //$NON-NLS-1$
 		SharedObject sharedObject = _commonNewModel(iFile, force);
-		sharedObject.referenceCountForEdit = 1;
+		synchronized(sharedObject) {
+			sharedObject.referenceCountForEdit = 1;
+		}
+		sharedObject.setLoaded();
 		return sharedObject.theSharedModel;
 	}
 
 	/**
 	 * @see IModelManager#getNewModelForRead(IFile, boolean)
 	 */
-	public synchronized IStructuredModel getNewModelForRead(IFile iFile, boolean force) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
+	public  IStructuredModel getNewModelForRead(IFile iFile, boolean force) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
 
 		Assert.isNotNull(iFile, "IFile parameter can not be null"); //$NON-NLS-1$
 		SharedObject sharedObject = _commonNewModel(iFile, force);
-		sharedObject.referenceCountForRead = 1;
+		SYNC.acquire();
+		synchronized(sharedObject) {
+			if (sharedObject.theSharedModel!=null) {
+				sharedObject.referenceCountForRead = 1;
+			}
+		}
+		SYNC.release();
+		sharedObject.setLoaded();
 		return sharedObject.theSharedModel;
 	}
 
@@ -1214,12 +1420,23 @@ public class ModelManagerImpl implements IModelManager {
 	 *            Object The id of the model TODO: try to refine the design
 	 *            not to use this function
 	 */
-	public synchronized int getReferenceCount(Object id) {
+	public  int getReferenceCount(Object id) {
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		int count = 0;
+	
+		SYNC.acquire();
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
-		if (sharedObject != null)
-			count = sharedObject.referenceCountForRead + sharedObject.referenceCountForEdit;
+		if (sharedObject != null) {
+			SYNC.release();
+			sharedObject.waitForLoadAttempt();
+			SYNC.acquire();
+			synchronized(sharedObject) {
+				count = sharedObject.referenceCountForRead + sharedObject.referenceCountForEdit;
+			}
+			SYNC.release();
+		} else {
+			SYNC.release();
+		}
 		return count;
 	}
 
@@ -1230,12 +1447,20 @@ public class ModelManagerImpl implements IModelManager {
 	 *            Object The id of the model TODO: try to refine the design
 	 *            not to use this function
 	 */
-	public synchronized int getReferenceCountForEdit(Object id) {
+	public int getReferenceCountForEdit(Object id) {
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		int count = 0;
+		SYNC.acquire();
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
-		if (sharedObject != null)
-			count = sharedObject.referenceCountForEdit;
+		if (sharedObject != null) {
+			SYNC.release();
+			sharedObject.waitForLoadAttempt();
+			synchronized(sharedObject) {
+				count = sharedObject.referenceCountForEdit;
+			}
+		} else {
+			SYNC.release();
+		}
 		return count;
 	}
 
@@ -1246,12 +1471,22 @@ public class ModelManagerImpl implements IModelManager {
 	 *            Object The id of the model TODO: try to refine the design
 	 *            not to use this function
 	 */
-	public synchronized int getReferenceCountForRead(Object id) {
+	public  int getReferenceCountForRead(Object id) {
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		int count = 0;
+		SYNC.acquire();
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
-		if (sharedObject != null)
-			count = sharedObject.referenceCountForRead;
+		if (sharedObject != null) {
+			SYNC.release();
+			sharedObject.waitForLoadAttempt();
+			SYNC.acquire();
+			synchronized(sharedObject) {
+				count = sharedObject.referenceCountForRead;
+			}
+			SYNC.release();
+		} else {
+			SYNC.release();
+		}
 		return count;
 	}
 
@@ -1270,13 +1505,23 @@ public class ModelManagerImpl implements IModelManager {
 	 * This function returns true if there are other references to the
 	 * underlying model.
 	 */
-	public synchronized boolean isShared(Object id) {
+	public  boolean isShared(Object id) {
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		int count = 0;
 		boolean result = false;
+		SYNC.acquire();
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
-		if (sharedObject != null)
-			count = sharedObject.referenceCountForRead + sharedObject.referenceCountForEdit;
+		if (sharedObject != null) {
+			SYNC.release();
+			sharedObject.waitForLoadAttempt();
+			SYNC.acquire();
+			synchronized(sharedObject) {
+				count = sharedObject.referenceCountForRead + sharedObject.referenceCountForEdit;
+			}
+			SYNC.release();
+		} else {
+			SYNC.release();
+		}
 		result = count > 1;
 		return result;
 	}
@@ -1288,13 +1533,21 @@ public class ModelManagerImpl implements IModelManager {
 	 * @param id
 	 *            Object The id of the model
 	 */
-	public synchronized boolean isSharedForEdit(Object id) {
+	public  boolean isSharedForEdit(Object id) {
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		int count = 0;
 		boolean result = false;
+		SYNC.acquire();
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
-		if (sharedObject != null)
-			count = sharedObject.referenceCountForEdit;
+		if (sharedObject != null) {
+			SYNC.release();
+			sharedObject.waitForLoadAttempt();
+			synchronized(sharedObject) {
+				count = sharedObject.referenceCountForEdit;
+			}
+		} else {
+			SYNC.release();
+		}
 		result = count > 1;
 		return result;
 	}
@@ -1306,13 +1559,23 @@ public class ModelManagerImpl implements IModelManager {
 	 * @param id
 	 *            Object The id of the model
 	 */
-	public synchronized boolean isSharedForRead(Object id) {
+	public  boolean isSharedForRead(Object id) {
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		int count = 0;
 		boolean result = false;
+		SYNC.acquire();
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
-		if (sharedObject != null)
-			count = sharedObject.referenceCountForRead;
+		if (sharedObject != null) {
+			SYNC.release();
+			sharedObject.waitForLoadAttempt();
+			SYNC.acquire();
+			synchronized(sharedObject) {
+				count = sharedObject.referenceCountForRead;
+			}
+			SYNC.release();
+		} else {
+			SYNC.release();
+		}
 		result = count > 1;
 		return result;
 	}
@@ -1320,18 +1583,22 @@ public class ModelManagerImpl implements IModelManager {
 	/**
 	 * This method can be called to determine if the model manager is within a
 	 * "aboutToChange" and "changed" sequence.
+	 * 
+	 * @deprecated the manager does not otherwise interact with these states
+	 * @return false
 	 */
-	public synchronized boolean isStateChanging() {
-
-		return modelManagerStateChanging > 0;
+	public boolean isStateChanging() {
+		// doesn't seem to be used anymore
+		return false;
 	}
 
 	/**
 	 * This method changes the id of the model. TODO: try to refine the design
 	 * not to use this function
 	 */
-	public synchronized void moveModel(Object oldId, Object newId) {
+	public void moveModel(Object oldId, Object newId) {
 		org.eclipse.wst.sse.core.internal.util.Assert.isNotNull(oldId, "id parameter can not be null"); //$NON-NLS-1$
+		SYNC.acquire();
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(oldId);
 		// if not found in cache, ignore request.
 		// this would normally be a program error
@@ -1339,6 +1606,7 @@ public class ModelManagerImpl implements IModelManager {
 			fManagedObjects.remove(oldId);
 			fManagedObjects.put(newId, sharedObject);
 		}
+		SYNC.release();
 	}
 
 	private String readInputStream(InputStream inputStream, String ianaEncodingName) throws UnsupportedEncodingException, IOException {
@@ -1379,11 +1647,11 @@ public class ModelManagerImpl implements IModelManager {
 		// remember -- we didn't open stream ... so we don't close it
 		return buffer.toString();
 	}
-	
+
 	/*
 	 * @see IModelManager#reinitialize(IStructuredModel)
 	 */
-	public synchronized IStructuredModel reinitialize(IStructuredModel model) {
+	public IStructuredModel reinitialize(IStructuredModel model) {
 
 		// getHandler (assume its the "new one")
 		IModelHandler handler = model.getModelHandler();
@@ -1401,7 +1669,8 @@ public class ModelManagerImpl implements IModelManager {
 		// its embedded content checking and initialization
 		return model;
 	}
-	synchronized void releaseFromEdit(IStructuredModel structuredModel) {
+
+	 void releaseFromEdit(IStructuredModel structuredModel) {
 		Object id = structuredModel.getId();
 		if (id.equals(UNMANAGED_MODEL) || id.equals(DUPLICATED_MODEL)) {
 			cleanupDiscardedModel(structuredModel);
@@ -1411,12 +1680,22 @@ public class ModelManagerImpl implements IModelManager {
 		}
 
 	}
+	
+	 void releaseFromRead(IStructuredModel structuredModel) {
+		Object id = structuredModel.getId();
+		if (id.equals(UNMANAGED_MODEL) || id.equals(DUPLICATED_MODEL)) {
+			cleanupDiscardedModel(structuredModel);
+		}
+		else {
+			releaseFromRead(id);
+		}
 
+	}
 	/**
 	 * default for use in same package, not subclasses
 	 * 
 	 */
-	synchronized private void releaseFromEdit(Object id) {
+	 private void releaseFromEdit(Object id) {
 		// ISSUE: many of these asserts should be changed to "logs"
 		// and continue to limp along?
 
@@ -1431,22 +1710,30 @@ public class ModelManagerImpl implements IModelManager {
 			throw new IllegalArgumentException("Ids of UNMANAGED_MODEL or DUPLICATED_MODEL are illegal here");
 		}
 		else {
+			SYNC.acquire();
 			sharedObject = (SharedObject) fManagedObjects.get(id);
+			SYNC.release();
+			
 			Assert.isNotNull(sharedObject, "release was requested on a model that was not being managed"); //$NON-NLS-1$
-
-
-			if (sharedObject != null) {
+			sharedObject.waitForLoadAttempt();
+			
+			SYNC.acquire();
+			synchronized(sharedObject) {
 				_decrCount(sharedObject, EDIT);
 				if ((sharedObject.referenceCountForRead == 0) && (sharedObject.referenceCountForEdit == 0)) {
 					discardModel(id, sharedObject);
 				}
-				// if edit goes to zero, but still open for read,
-				// then we should reload here, so we are in synch with
-				// contents on disk.
-				// ISSUE: should we check isDirty here?
-				// ANSWER: here, for now now. model still has its own dirty
-				// flag for some reason.
-				// we need to address * that * too.
+			}
+			SYNC.release();
+			// if edit goes to zero, but still open for read,
+			// then we should reload here, so we are in synch with
+			// contents on disk.
+			// ISSUE: should we check isDirty here?
+			// ANSWER: here, for now now. model still has its own dirty
+			// flag for some reason.
+			// we need to address * that * too.
+
+			synchronized(sharedObject) {
 				if ((sharedObject.referenceCountForRead > 0) && (sharedObject.referenceCountForEdit == 0) && sharedObject.theSharedModel.isDirty()) {
 					signalPreLifeCycleListenerRevert(sharedObject.theSharedModel);
 					revertModel(id, sharedObject);
@@ -1454,25 +1741,75 @@ public class ModelManagerImpl implements IModelManager {
 					signalPostLifeCycleListenerRevert(sharedObject.theSharedModel);
 				}
 			}
+			
 		}
 	}
 
-	synchronized void releaseFromRead(IStructuredModel structuredModel) {
-		Object id = structuredModel.getId();
-		if (id.equals(UNMANAGED_MODEL) || id.equals(DUPLICATED_MODEL)) {
-			cleanupDiscardedModel(structuredModel);
-		}
-		else {
-			releaseFromRead(id);
-		}
-
+	// private for now, though public forms have been requested, in past.
+	private void revertModel(Object id, SharedObject sharedObject) {
+		IStructuredDocument structuredDocument = sharedObject.theSharedModel.getStructuredDocument();
+		FileBufferModelManager.getInstance().revert(structuredDocument);
 	}
 
+	private void signalPreLifeCycleListenerRevert(IStructuredModel structuredModel) {
+		int type = ModelLifecycleEvent.MODEL_REVERT | ModelLifecycleEvent.PRE_EVENT;
+		// what's wrong with this design that a cast is needed here!?
+		ModelLifecycleEvent event = new ModelLifecycleEvent(structuredModel, type);
+		((AbstractStructuredModel) structuredModel).signalLifecycleEvent(event);
+	}
+
+	private void signalPostLifeCycleListenerRevert(IStructuredModel structuredModel) {
+		int type = ModelLifecycleEvent.MODEL_REVERT | ModelLifecycleEvent.POST_EVENT;
+		// what's wrong with this design that a cast is needed here!?
+		ModelLifecycleEvent event = new ModelLifecycleEvent(structuredModel, type);
+		((AbstractStructuredModel) structuredModel).signalLifecycleEvent(event);
+	}
+
+	private void discardModel(Object id, SharedObject sharedObject) {
+		SYNC.acquire();
+		fManagedObjects.remove(id);
+		SYNC.release();
+		IStructuredDocument structuredDocument = sharedObject.theSharedModel.getStructuredDocument();
+
+		if (structuredDocument == null) {
+			Platform.getLog(SSECorePlugin.getDefault().getBundle()).log(new Status(IStatus.ERROR, SSECorePlugin.ID, IStatus.ERROR, "Attempted to discard a structured model but the underlying document has already been set to null: " + sharedObject.theSharedModel.getBaseLocation(), null));
+		}
+
+		cleanupDiscardedModel(sharedObject.theSharedModel);
+	}
+
+	private void cleanupDiscardedModel(IStructuredModel structuredModel) {
+		IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
+		/*
+		 * This call (and setting the StructuredDocument to null) were
+		 * previously done within the model itself, but for concurrency it
+		 * must be done here during a synchronized release.
+		 */
+		structuredModel.getFactoryRegistry().release();
+
+		/*
+		 * For structured documents originating from file buffers, disconnect
+		 * us from the file buffer, now.
+		 */
+		FileBufferModelManager.getInstance().releaseModel(structuredDocument);
+
+		/*
+		 * Setting the document to null is required since some subclasses of
+		 * model might have "cleanup" of listeners, etc., to remove, which
+		 * were initialized during the initial setStructuredDocument.
+		 * 
+		 * The model itself in particular may have internal listeners used to
+		 * coordinate the document with its own "structure".
+		 */
+		structuredModel.setStructuredDocument(null);
+	}
+
+	
 	/**
 	 * default for use in same package, not subclasses
 	 * 
 	 */
-	synchronized private void releaseFromRead(Object id) {
+	 private void releaseFromRead(Object id) {
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		SharedObject sharedObject = null;
 
@@ -1480,17 +1817,20 @@ public class ModelManagerImpl implements IModelManager {
 			throw new IllegalArgumentException("Ids of UNMANAGED_MODEL or DUPLICATED_MODEL are illegal here");
 		}
 		else {
-
+			SYNC.acquire();
 			sharedObject = (SharedObject) fManagedObjects.get(id);
+			SYNC.release();
 			Assert.isNotNull(sharedObject, "release was requested on a model that was not being managed"); //$NON-NLS-1$
+			sharedObject.waitForLoadAttempt();
 		}
-
-		if (sharedObject != null) {
+		SYNC.acquire();
+		synchronized(sharedObject) {
 			_decrCount(sharedObject, READ);
 			if ((sharedObject.referenceCountForRead == 0) && (sharedObject.referenceCountForEdit == 0)) {
 				discardModel(id, sharedObject);
 			}
 		}
+		SYNC.release();
 	}
 
 	/**
@@ -1503,7 +1843,7 @@ public class ModelManagerImpl implements IModelManager {
 	 * 
 	 * @deprecated - will become protected, use reload directly on model
 	 */
-	public synchronized IStructuredModel reloadModel(Object id, java.io.InputStream inputStream) throws java.io.UnsupportedEncodingException {
+	public  IStructuredModel reloadModel(Object id, java.io.InputStream inputStream) throws java.io.UnsupportedEncodingException {
 
 		// get the existing model associated with this id
 		IStructuredModel structuredModel = getExistingModel(id);
@@ -1524,39 +1864,44 @@ public class ModelManagerImpl implements IModelManager {
 		return structuredModel;
 	}
 
-	// private for now, though public forms have been requested, in past.
-	private void revertModel(Object id, SharedObject sharedObject) {
-		IStructuredDocument structuredDocument = sharedObject.theSharedModel.getStructuredDocument();
-		FileBufferModelManager.getInstance().revert(structuredDocument);
-	}
-
 	public void saveModel(IFile iFile, String id, EncodingRule encodingRule) throws UnsupportedEncodingException, IOException, CoreException {
+
 		// let's see if we already have it in our cache
+	
+		SYNC.acquire();
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
 		if (sharedObject == null || sharedObject.theSharedModel == null) {
+			SYNC.release();
 			throw new IllegalStateException(SSECoreMessages.Program_Error__ModelManage_EXC_); //$NON-NLS-1$ = "Program Error: ModelManagerImpl::saveModel. Model should be in the cache"
-		}
+		} 
 		else {
-			boolean saved = false;
-			// if this model was based on a File Buffer and we're writing back
-			// to the same location, use the buffer to do the writing
-			if (FileBufferModelManager.getInstance().isExistingBuffer(sharedObject.theSharedModel.getStructuredDocument())) {
-				ITextFileBuffer buffer = FileBufferModelManager.getInstance().getBuffer(sharedObject.theSharedModel.getStructuredDocument());
-				IPath fileLocation = FileBuffers.normalizeLocation(iFile.getFullPath());
-				if (fileLocation.equals(buffer.getLocation())) {
-					buffer.commit(new NullProgressMonitor(), true);
-					saved = true;
+			SYNC.release();
+			sharedObject.waitForLoadAttempt();
+			
+			synchronized(sharedObject) {
+				// sync here on to prevent a dispose from yanking the model from us!
+				boolean saved = false;
+				// if this model was based on a File Buffer and we're writing back
+				// to the same location, use the buffer to do the writing
+				if (FileBufferModelManager.getInstance().isExistingBuffer(sharedObject.theSharedModel.getStructuredDocument())) {
+					ITextFileBuffer buffer = FileBufferModelManager.getInstance().getBuffer(sharedObject.theSharedModel.getStructuredDocument());
+					IPath fileLocation = FileBuffers.normalizeLocation(iFile.getFullPath());
+					if (fileLocation.equals(buffer.getLocation())) {
+						buffer.commit(new NullProgressMonitor(), true);
+						saved = true;
+					}
 				}
-			}
-			if (!saved) {
-				IStructuredModel model = sharedObject.theSharedModel;
-				IStructuredDocument document = model.getStructuredDocument();
-				saveStructuredDocument(document, iFile, encodingRule);
-				trace("saving model", id); //$NON-NLS-1$
-			}
-			sharedObject.theSharedModel.setDirtyState(false);
-			sharedObject.theSharedModel.setNewState(false);
+				if (!saved) {
+					IStructuredModel model = sharedObject.theSharedModel;
+					IStructuredDocument document = model.getStructuredDocument();
+					saveStructuredDocument(document, iFile, encodingRule);
+					trace("saving model", id); //$NON-NLS-1$
+				}
+				sharedObject.theSharedModel.setDirtyState(false);
+				sharedObject.theSharedModel.setNewState(false);
+			}	
 		}
+	
 	}
 
 	/**
@@ -1570,28 +1915,36 @@ public class ModelManagerImpl implements IModelManager {
 	 * @throws CoreException
 	 */
 	public void saveModel(String id, EncodingRule encodingRule) throws UnsupportedEncodingException, IOException, CoreException {
+
 		// let's see if we already have it in our cache
+
+		SYNC.acquire();
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
 		if (sharedObject == null) {
+			SYNC.release();
 			throw new IllegalStateException(SSECoreMessages.Program_Error__ModelManage_EXC_); //$NON-NLS-1$ = "Program Error: ModelManagerImpl::saveModel. Model should be in the cache"
 		}
 		else {
-			// if this model was based on a File Buffer and we're writing back
-			// to the same location, use the buffer to do the writing
-			if (FileBufferModelManager.getInstance().isExistingBuffer(sharedObject.theSharedModel.getStructuredDocument())) {
-				ITextFileBuffer buffer = FileBufferModelManager.getInstance().getBuffer(sharedObject.theSharedModel.getStructuredDocument());
-				buffer.commit(new NullProgressMonitor(), true);
-			}
-			else {
-				IFile iFile = getFileFor(sharedObject.theSharedModel);
-				IStructuredModel model = sharedObject.theSharedModel;
-				IStructuredDocument document = model.getStructuredDocument();
-				saveStructuredDocument(document, iFile);
-				trace("saving model", id); //$NON-NLS-1$
+			SYNC.release();
+			sharedObject.waitForLoadAttempt();
+			synchronized(sharedObject) {
+				// if this model was based on a File Buffer and we're writing back
+				// to the same location, use the buffer to do the writing
+				if (FileBufferModelManager.getInstance().isExistingBuffer(sharedObject.theSharedModel.getStructuredDocument())) {
+					ITextFileBuffer buffer = FileBufferModelManager.getInstance().getBuffer(sharedObject.theSharedModel.getStructuredDocument());
+					buffer.commit(new NullProgressMonitor(), true);
+				}
+				else {
+					IFile iFile = getFileFor(sharedObject.theSharedModel);
+					IStructuredModel model = sharedObject.theSharedModel;
+					IStructuredDocument document = model.getStructuredDocument();
+					saveStructuredDocument(document, iFile);
+					trace("saving model", id); //$NON-NLS-1$
+				}
+				sharedObject.theSharedModel.setDirtyState(false);
+				sharedObject.theSharedModel.setNewState(false);
 			}
 		}
-		sharedObject.theSharedModel.setDirtyState(false);
-		sharedObject.theSharedModel.setNewState(false);
 	}
 
 	/**
@@ -1600,23 +1953,28 @@ public class ModelManagerImpl implements IModelManager {
 	 *             in favor of the IFile form.
 	 */
 	public void saveModel(String id, OutputStream outputStream, EncodingRule encodingRule) throws UnsupportedEncodingException, CoreException, IOException {
-
+		SYNC.acquire();
 		// let's see if we already have it in our cache
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
 		if (sharedObject == null) {
+			SYNC.release();
 			throw new IllegalStateException(SSECoreMessages.Program_Error__ModelManage_EXC_); //$NON-NLS-1$ = "Program Error: ModelManagerImpl::saveModel. Model should be in the cache"
 		}
 		else {
-			CodedStreamCreator codedStreamCreator = new CodedStreamCreator();
-			codedStreamCreator.set(sharedObject.theSharedModel.getId(), new DocumentReader(sharedObject.theSharedModel.getStructuredDocument()));
-			codedStreamCreator.setPreviousEncodingMemento(sharedObject.theSharedModel.getStructuredDocument().getEncodingMemento());
-			ByteArrayOutputStream byteArrayOutputStream = codedStreamCreator.getCodedByteArrayOutputStream(encodingRule);
-			byte[] outputBytes = byteArrayOutputStream.toByteArray();
-			outputStream.write(outputBytes);
-			trace("saving model", id); //$NON-NLS-1$
+			SYNC.release();
+			sharedObject.waitForLoadAttempt();
+			synchronized(sharedObject) {
+				CodedStreamCreator codedStreamCreator = new CodedStreamCreator();
+				codedStreamCreator.set(sharedObject.theSharedModel.getId(), new DocumentReader(sharedObject.theSharedModel.getStructuredDocument()));
+				codedStreamCreator.setPreviousEncodingMemento(sharedObject.theSharedModel.getStructuredDocument().getEncodingMemento());
+				ByteArrayOutputStream byteArrayOutputStream = codedStreamCreator.getCodedByteArrayOutputStream(encodingRule);
+				byte[] outputBytes = byteArrayOutputStream.toByteArray();
+				outputStream.write(outputBytes);
+				trace("saving model", id); //$NON-NLS-1$
+				sharedObject.theSharedModel.setDirtyState(false);
+				sharedObject.theSharedModel.setNewState(false);
+			}
 		}
-		sharedObject.theSharedModel.setDirtyState(false);
-		sharedObject.theSharedModel.setNewState(false);
 	}
 
 	public void saveStructuredDocument(IStructuredDocument structuredDocument, IFile iFile) throws UnsupportedEncodingException, CoreException, IOException {
@@ -1659,20 +2017,6 @@ public class ModelManagerImpl implements IModelManager {
 		}
 	}
 
-	private void signalPostLifeCycleListenerRevert(IStructuredModel structuredModel) {
-		int type = ModelLifecycleEvent.MODEL_REVERT | ModelLifecycleEvent.POST_EVENT;
-		// what's wrong with this design that a cast is needed here!?
-		ModelLifecycleEvent event = new ModelLifecycleEvent(structuredModel, type);
-		((AbstractStructuredModel) structuredModel).signalLifecycleEvent(event);
-	}
-
-	private void signalPreLifeCycleListenerRevert(IStructuredModel structuredModel) {
-		int type = ModelLifecycleEvent.MODEL_REVERT | ModelLifecycleEvent.PRE_EVENT;
-		// what's wrong with this design that a cast is needed here!?
-		ModelLifecycleEvent event = new ModelLifecycleEvent(structuredModel, type);
-		((AbstractStructuredModel) structuredModel).signalLifecycleEvent(event);
-	}
-
 	/**
 	 * Common trace method
 	 */
@@ -1690,4 +2034,15 @@ public class ModelManagerImpl implements IModelManager {
 			Logger.log(Logger.INFO, msg + Utilities.makeShortId(id) + " (" + value + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
+
+	 boolean isIdInUse(String newId) {
+			boolean inUse = false;
+			SYNC.acquire();
+			SharedObject object =(SharedObject) fManagedObjects.get(newId);
+			if (object!=null) {
+				inUse = object.theSharedModel!=null;
+			}
+			SYNC.release();
+			return inUse;
+		}
 }
