@@ -477,6 +477,18 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 
 			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
 			if (model != null) {
+				Text modelIdLabel = new Text(composite, SWT.SINGLE | SWT.READ_ONLY);
+				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+				gd.horizontalSpan = 2;
+				modelIdLabel.setLayoutData(gd);
+				modelIdLabel.setText("ID: " + model.getId()); //$NON-NLS-1$
+
+				Text modelBaseLocationLabel = new Text(composite, SWT.SINGLE | SWT.READ_ONLY);
+				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+				gd.horizontalSpan = 2;
+				modelBaseLocationLabel.setLayoutData(gd);
+				modelBaseLocationLabel.setText("Base Location: " + model.getBaseLocation()); //$NON-NLS-1$
+
 				Text modelContentTypeLabel = new Text(composite, SWT.SINGLE | SWT.READ_ONLY);
 				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 				gd.horizontalSpan = 2;
@@ -487,7 +499,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 				gd.horizontalSpan = 2;
 				modelHandlerContentTypeLabel.setLayoutData(gd);
-				modelHandlerContentTypeLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_5 + model.getModelHandler() + " (" + model.getModelHandler().getAssociatedContentTypeId() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				modelHandlerContentTypeLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_5 + model.getModelHandler().getAssociatedContentTypeId() + " (" + model.getModelHandler() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 				Label blankRow = new Label(composite, SWT.NONE);
 				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
@@ -786,7 +798,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				}
 
 				public Object[] getElements(Object inputElement) {
-					return new Object[]{textSelection};
+					return documentRegions.toArray();
 				}
 
 				public Object getParent(Object element) {
@@ -1103,6 +1115,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 	 */
 	public OffsetStatusLineContributionItem(String id) {
 		super(id);
+		setToolTipText("Double-click for more information");
 	}
 
 	/**
@@ -1112,6 +1125,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 	 */
 	public OffsetStatusLineContributionItem(String id, boolean visible, int widthInChars) {
 		super(id, visible, widthInChars);
+		setToolTipText("Double-click for more information");
 	}
 
 	public void setActiveEditor(ITextEditor textEditor) {
