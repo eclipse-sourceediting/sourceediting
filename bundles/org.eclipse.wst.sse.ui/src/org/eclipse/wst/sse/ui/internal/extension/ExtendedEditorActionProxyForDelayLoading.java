@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -617,7 +617,7 @@ public class ExtendedEditorActionProxyForDelayLoading implements IExtendedEditor
 			}
 			catch (Exception e) {
 				// catch and log ANY exception from extension point
-				handleCreateExecutableException(result, e);
+				handleCreateExecutableException(result, e, elm.getAttribute(cla));
 			}
 		}
 		else {
@@ -628,7 +628,7 @@ public class ExtendedEditorActionProxyForDelayLoading implements IExtendedEditor
 					}
 					catch (Exception e) {
 						// catch and log ANY exception from extension point
-						handleCreateExecutableException(result, e);
+						handleCreateExecutableException(result, e, elm.getAttribute(cla));
 					}
 				}
 			});
@@ -639,8 +639,8 @@ public class ExtendedEditorActionProxyForDelayLoading implements IExtendedEditor
 		return null;
     }
 	
-	private static void handleCreateExecutableException(final Object[] result, Throwable e) {
-		Logger.logException(e);
+	private static void handleCreateExecutableException(final Object[] result, Throwable e, String classname) {
+		Logger.logException("Unable to create proxy action for " + classname, e);
 		result[0] = null;
 	}
 
@@ -651,8 +651,6 @@ public class ExtendedEditorActionProxyForDelayLoading implements IExtendedEditor
         if ((proxy == null) && (element != null) && (classAttribute != null)) {
             proxy = newInstance(element, classAttribute);
 	        if (proxy != null) {
-	            element = null;
-	            classAttribute = null;
 	            // propagate proxy'ed properties
 	            if (set_p_listeners == true) {
 	                if (p_listeners.size() > 0) {
