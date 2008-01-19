@@ -57,7 +57,8 @@ public class ResolverExtension implements URIResolverExtension {
 
 		String version = null;
 		
-		version = peekVersionAttributeFromSSE(file);
+		if (file != null) 
+			version = peekVersionAttributeFromSSE(file);
 		if (version == null)
 			version = peekVersionFromFile(file, baseLocation);
 		
