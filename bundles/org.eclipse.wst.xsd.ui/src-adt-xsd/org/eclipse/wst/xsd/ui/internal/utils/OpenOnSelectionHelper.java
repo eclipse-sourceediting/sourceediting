@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -164,6 +164,19 @@ public class OpenOnSelectionHelper
     if (comp instanceof XSDNamedComponent)
     {
       name = ((XSDNamedComponent) comp).getName();
+    }
+    if (name == null)
+    {
+      // For Anonymous types, just show the element
+      if (comp instanceof XSDTypeDefinition)
+      {
+        XSDTypeDefinition type = (XSDTypeDefinition) comp;
+        comp = type.getContainer();
+        if (comp instanceof XSDNamedComponent)
+        {
+          name = ((XSDNamedComponent) comp).getName();
+        }
+      }
     }
     
     if (schema == null || name == null)
