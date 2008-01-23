@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -90,11 +90,37 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
         {
           setInput((IADTObject)selectedObject);              
         }
-        else if (!((IGraphElement)selectedObject).isFocusAllowed() && (event.getSource() instanceof ADTContentOutlinePage))
+        else if (!((IGraphElement)selectedObject).isFocusAllowed())
         {
+          // We encountered an object that is not a valid input to the graph viewer
+          // Now find the top container that can be a valid input
           IADTObject obj = ((IGraphElement)selectedObject).getTopContainer();
-          if (obj != null)
-            setInput (obj);
+          if (event.getSource() instanceof ADTContentOutlinePage)
+          {
+            // In this case, if the selection is originated from the outline, we should 
+            // change the inputs
+            if (obj != null)
+              setInput (obj);
+          }
+          else if (event.getSource() instanceof CommonSelectionManager)
+          {
+            // In this case, if the selection is originated from some action, ie. adding
+            // a new element, we should change the input only if the current input is the model
+            // otherwise, inputs will change unexpectedly!!
+            if (getInput() instanceof IModel) 
+            {
+              if (obj != null)
+                setInput (obj);
+            }
+          }
+          else if (event.getSource() instanceof org.eclipse.jface.viewers.IPostSelectionProvider )
+          {
+            // In this case, if the selection is originated from the source viewer
+            // we should change the input regardless.  Test is for multiple levels
+            // of anonymous types
+            if (obj != null)
+              setInput (obj);
+          }
         }
         if (selectedObject instanceof IField) 
         {
