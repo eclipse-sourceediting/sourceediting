@@ -165,6 +165,14 @@
                 name="http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd"
                 uri="dtdsAndSchemas/web-facesconfig_1_2.xsd" />
                 
+            <uri
+                name="http://java.sun.com/xml/ns/persistence/orm"
+                uri="dtdsAndSchemas/orm_1_0.xsd" />
+   
+            <uri
+                name="http://java.sun.com/xml/ns/persistence"
+                uri="dtdsAndSchemas/persistence_1_0.xsd" />   
+                          
         </catalogContribution>
 
     </extension>
