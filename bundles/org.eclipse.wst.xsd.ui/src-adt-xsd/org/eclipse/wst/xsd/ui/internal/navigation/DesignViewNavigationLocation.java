@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -147,11 +147,11 @@ public class DesignViewNavigationLocation extends NavigationLocation
       {
         String token = st.nextToken();
         int kind = -1;
-        if (token.equals("element"))
+        if (token.startsWith("element"))
         {
           kind = PathSegment.ELEMENT;
         }
-        else if (token.equals("type"))
+        else if (token.startsWith("type"))
         {
           kind = PathSegment.TYPE;
         }

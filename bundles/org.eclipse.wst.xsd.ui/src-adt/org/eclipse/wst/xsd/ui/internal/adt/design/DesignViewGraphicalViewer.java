@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.IHolderEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.StructureEditPart;
@@ -38,10 +39,12 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
 {
   protected ADTSelectionChangedListener internalSelectionProvider = new ADTSelectionChangedListener();
   protected InputChangeManager inputChangeManager = new InputChangeManager();
+  private IEditorPart editorPart;
 
   public DesignViewGraphicalViewer(IEditorPart editor, CommonSelectionManager manager)
   {
     super();
+    this.editorPart = editor;
     setContextMenu(new DesignViewContextMenuProvider(editor, this, this));
     editor.getEditorSite().registerContextMenu("org.eclipse.wst.xsd.ui.popup.graph", getContextMenu(), internalSelectionProvider, false); //$NON-NLS-1$
     
@@ -74,27 +77,37 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
         if (((getInput() instanceof IModel) && (event.getSource() instanceof ADTContentOutlinePage)) ||
             (!(getInput() instanceof IModel)))
         {
-          if (selectedObject instanceof IGraphElement)
+          if ((selectedObject instanceof IGraphElement) && ((IGraphElement)selectedObject).isFocusAllowed()) 
           {
-            if (((IGraphElement)selectedObject).isFocusAllowed())
+            if (event.getSource() instanceof org.eclipse.jface.viewers.IPostSelectionProvider)
             {
-             setInput((IStructure)selectedObject);              
+              setInput((IStructure)selectedObject);
+            }
+            else
+            {
+              setInputAndMarkLocation((IStructure)selectedObject);
             }
           }
         }
       }
       else if (selectedObject instanceof IGraphElement)
       {
-        if (((IGraphElement)selectedObject).isFocusAllowed() && ((event.getSource() instanceof ADTContentOutlinePage) ||
-            (event.getSource() instanceof org.eclipse.jface.viewers.IPostSelectionProvider && !(getInput() instanceof IModel))))
+        if (((IGraphElement)selectedObject).isFocusAllowed() && ((event.getSource() instanceof ADTContentOutlinePage)))
         {
-          setInput((IADTObject)selectedObject);              
+          setInputAndMarkLocation((IADTObject)selectedObject);              
+        }
+        else if (((IGraphElement)selectedObject).isFocusAllowed() 
+            && (event.getSource() instanceof org.eclipse.jface.viewers.IPostSelectionProvider && !(getInput() instanceof IModel)))
+        {
+          setInput((IADTObject)selectedObject);
         }
         else if (!((IGraphElement)selectedObject).isFocusAllowed())
         {
           // We encountered an object that is not a valid input to the graph viewer
           // Now find the top container that can be a valid input
           IADTObject obj = ((IGraphElement)selectedObject).getTopContainer();
+          if (obj != null)
+            setInputAndMarkLocation(obj);
           if (event.getSource() instanceof ADTContentOutlinePage)
           {
             // In this case, if the selection is originated from the outline, we should 
@@ -130,11 +143,14 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
           {
             IADTObject obj = ((IGraphElement)selectedObject).getTopContainer();
             if (obj != null)
-              setInput (obj);
+              setInputAndMarkLocation(obj);
           }
           else if (field.isGlobal() && !(getInput() instanceof IModel))
           {
-            setInput(field);
+            if (event.getSource() instanceof org.eclipse.jface.viewers.IPostSelectionProvider )
+              setInput(field);
+            else
+              setInputAndMarkLocation(field);
           }
         }
       }
@@ -144,7 +160,7 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
         if ( (field.isGlobal() && (getInput() instanceof IModel) && (event.getSource() instanceof ADTContentOutlinePage)) ||
             ( (field.isGlobal() && !(getInput() instanceof IModel))))
         {  
-          setInput(field);
+          setInputAndMarkLocation(field);
         }
       }
       else if (selectedObject instanceof IModelProxy)
@@ -309,6 +325,21 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
     }
   
     return result;
+  }
+  
+  public void setInputAndMarkLocation(IADTObject object)
+  {
+    IADTObject oldInput = getInput();    
+    if (editorPart != null && oldInput != object)
+    {          
+      PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getNavigationHistory().markLocation(editorPart);
+    }  
+    setInput(object);
+
+    if (editorPart != null && oldInput != object)
+    {
+      PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getNavigationHistory().markLocation(editorPart);
+    }
   }
   
   public void setInput(IADTObject object)

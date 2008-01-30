@@ -1061,6 +1061,16 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
           if (input instanceof Adapter)
           {
             XSDConcreteComponent concreteComponent = (XSDConcreteComponent)((Adapter)input).getTarget();
+            
+            Object object = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getAdapter(ProductCustomizationProvider.class);
+            if (object instanceof ProductCustomizationProvider)
+            {
+              ProductCustomizationProvider productCustomizationProvider = (ProductCustomizationProvider)object;
+              if (productCustomizationProvider != null)
+              {
+                return productCustomizationProvider.getNavigationLocation(this, concreteComponent, rootContentEditPart);
+              }
+            }
             return new DesignViewNavigationLocation(this, concreteComponent);
           }
         }   
