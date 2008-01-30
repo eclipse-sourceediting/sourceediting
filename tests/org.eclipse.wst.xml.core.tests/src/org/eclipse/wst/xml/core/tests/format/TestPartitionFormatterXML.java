@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -250,6 +250,11 @@ public class TestPartitionFormatterXML extends TestCase {
 		prefs.setIndentMultipleAttributes(true);
 		prefs.setAlignFinalBracket(true);
 		formatAndAssertEquals("testfiles/xml/multiattributes.xml", "testfiles/xml/multiattributes-yessplit-yesalign-newfmt.xml", prefs);
-
 	}
+	
+	  public void testProcessingInstruction() throws UnsupportedEncodingException, IOException, CoreException
+	  {
+	    // BUG198297
+	    formatAndAssertEquals("testfiles/xml/processinginstruction.xml", "testfiles/xml/processinginstruction-fmt.xml");
+	  }
 }

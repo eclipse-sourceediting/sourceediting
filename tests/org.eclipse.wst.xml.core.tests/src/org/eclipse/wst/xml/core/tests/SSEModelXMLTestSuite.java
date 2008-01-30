@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,7 @@ import org.eclipse.wst.xml.core.tests.document.TestStructuredDocument;
 import org.eclipse.wst.xml.core.tests.document.TestXMLDocumentLoader;
 import org.eclipse.wst.xml.core.tests.document.TransitionTests;
 import org.eclipse.wst.xml.core.tests.dom.NameValidatorTests;
-import org.eclipse.wst.xml.core.tests.format.TestFormatProcessorXML;
+import org.eclipse.wst.xml.core.tests.format.TestPartitionFormatterXML;
 import org.eclipse.wst.xml.core.tests.model.TestModelManager;
 import org.eclipse.wst.xml.core.tests.model.TestModelsFromFiles;
 import org.eclipse.wst.xml.core.tests.model.TestStructuredModel;
@@ -53,7 +53,7 @@ public class SSEModelXMLTestSuite extends TestSuite {
 		addTest(new TestSuite(GetDocumentRegionsTest.class));
 		addTest(new TestSuite(NodeImplTestCase.class));
 
-		addTest(new TestSuite(TestFormatProcessorXML.class));
+		addTest(new TestSuite(TestPartitionFormatterXML.class));
 
 		addTest(new TestSuite(TestAttributesOrder.class));
 	}
