@@ -81,7 +81,7 @@
 		<!-- "common" task tags preference page -->
 		<page
 			name="%Task_Tags_Preferences.name"
-			category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
+			category="org.eclipse.wst.sse.ui.preferences.editor"
 			class="org.eclipse.wst.sse.ui.internal.preferences.ui.TaskTagPreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.tasktags">
 			<keywordReference id="org.eclipse.wst.sse.ui.todo"/>

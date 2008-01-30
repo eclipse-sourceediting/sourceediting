@@ -131,4 +131,5 @@ public class HTMLUIMessages extends NLS {
 	public static String HTMLFilesPreferencePage_2;
 	public static String HTMLFilesPreferencePage_3;
 	// above are possibly unused strings that may be deleted
+	public static String EmptyFilePreferencePage_0;
 }

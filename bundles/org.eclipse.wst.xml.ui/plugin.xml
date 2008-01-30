@@ -4,15 +4,6 @@
 
 	<extension-point id="catalogFileType" name="%XML_Catalog_File_Type_Extension_Point.name" schema="schema/catalogFileType.exsd"/>
 
-	<extension point="org.eclipse.ui.preferencePages">
-		<page
-			name="%_UI_PREF_XML_CATALOG"
-			category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
-			class="org.eclipse.wst.xml.ui.internal.catalog.XMLCatalogPreferencePage"
-			id="org.eclipse.wst.xml.core.ui.XMLCatalogPreferencePage">
-         	<keywordReference id="org.eclipse.wst.xml.ui.xmlcatalog"/>
-		</page>
-	</extension>
 	<extension point="org.eclipse.wst.xml.ui.catalogFileType">
 		<fileType
 			extensions="dtd, ent, mod"
@@ -102,34 +93,48 @@
 		</adapterFactoryDescription>
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
-		<!-- XML PREFERENCE PAGES -->
+		<!-- The "top-level" XML category -->
+		<page
+			name="%XML.name"
+			class="org.eclipse.wst.xml.ui.internal.preferences.EmptyFilePreferencePage"
+			id="org.eclipse.wst.xml.ui.preferences.xml">
+		</page>
+		<!-- The "lower level" XML Files category/page -->
 		<page
 			name="%XML_Files.name"
-			category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
+			category="org.eclipse.wst.xml.ui.preferences.xml"
 			class="org.eclipse.wst.xml.ui.internal.preferences.XMLFilesPreferencePage"
-			id="org.eclipse.wst.sse.ui.preferences.xml">
+			id="org.eclipse.wst.xml.ui.preferences.xml.xml">
          	<keywordReference id="org.eclipse.wst.xml.ui.files"/>
 		</page>
+		<!-- XML PREFERENCE PAGES -->
 		<page
 			name="%XML_Source.name"
-			category="org.eclipse.wst.sse.ui.preferences.xml"
+			category="org.eclipse.wst.xml.ui.preferences.xml.xml"
 			class="org.eclipse.wst.xml.ui.internal.preferences.XMLSourcePreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.xml.source">
          	<keywordReference id="org.eclipse.wst.xml.ui.source"/>
 		</page>
 		<page
 			name="%XML_Templates.name"
-			category="org.eclipse.wst.sse.ui.preferences.xml"
+			category="org.eclipse.wst.xml.ui.preferences.xml.xml"
 			class="org.eclipse.wst.xml.ui.internal.preferences.XMLTemplatePreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.xml.templates">
          	<keywordReference id="org.eclipse.wst.xml.ui.templates"/>
 		</page>
 		<page
 			name="%XML_Syntax_Coloring"
-			category="org.eclipse.wst.sse.ui.preferences.xml"
+			category="org.eclipse.wst.xml.ui.preferences.xml.xml"
 			class="org.eclipse.wst.xml.ui.internal.preferences.XMLSyntaxColoringPage"
 			id="org.eclipse.wst.sse.ui.preferences.xml.colors">
          	<keywordReference id="org.eclipse.wst.xml.ui.styles"/>
+		</page>
+		<page
+			name="%_UI_PREF_XML_CATALOG"
+			category="org.eclipse.wst.xml.ui.preferences.xml"
+			class="org.eclipse.wst.xml.ui.internal.catalog.XMLCatalogPreferencePage"
+			id="org.eclipse.wst.xml.core.ui.XMLCatalogPreferencePage">
+         	<keywordReference id="org.eclipse.wst.xml.ui.xmlcatalog"/>
 		</page>
 	</extension>
 	

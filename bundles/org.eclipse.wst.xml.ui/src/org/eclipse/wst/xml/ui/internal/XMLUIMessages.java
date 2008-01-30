@@ -282,6 +282,7 @@ public class XMLUIMessages extends NLS {
 	public static String SyntaxColoringPage_4;
 	public static String SyntaxColoringPage_5;
 	public static String SyntaxColoringPage_6;
+	public static String EmptyFilePreferencePage_0;
 
 
 	static {

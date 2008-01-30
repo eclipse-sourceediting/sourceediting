@@ -199,27 +199,27 @@
 		<!--======================================================================================-->
 		<page
 			name="%JSP_Files.name"
-			category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
+			category="org.eclipse.wst.html.ui.preferences.web"
 			class="org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPFilesPreferencePage"
-			id="org.eclipse.wst.sse.ui.preferences.jsp">
+			id="org.eclipse.jst.jsp.ui.preferences.jsp">
 			<keywordReference id="org.eclipse.wst.jsp.ui.files"/>
 		</page>
 		<page
 			name="%JSP_Source.name"
-			category="org.eclipse.wst.sse.ui.preferences.jsp"
+			category="org.eclipse.jst.jsp.ui.preferences.jsp"
 			class="org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPSourcePreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.jsp.source">
 		</page>
 		<page
 			name="%JSP_Templates.name"
-			category="org.eclipse.wst.sse.ui.preferences.jsp"
+			category="org.eclipse.jst.jsp.ui.preferences.jsp"
 			class="org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPTemplatePreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.jsp.templates">
 			<keywordReference id="org.eclipse.wst.jsp.ui.templates"/>
 		</page>
 		<page
 			name="%JSP_Syntax_Coloring"
-			category="org.eclipse.wst.sse.ui.preferences.jsp"
+			category="org.eclipse.jst.jsp.ui.preferences.jsp"
 			class="org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPSyntaxColoringPage"
 			id="org.eclipse.wst.sse.ui.preferences.jsp.styles">
 			<keywordReference id="org.eclipse.wst.jsp.ui.styles"/>

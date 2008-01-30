@@ -61,28 +61,28 @@
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
 			name="%CSS_Files.name"
-			category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
+			category="org.eclipse.wst.html.ui.preferences.web"
 			class="org.eclipse.wst.css.ui.internal.preferences.ui.CSSFilesPreferencePage"
-			id="org.eclipse.wst.sse.ui.preferences.css">
+			id="org.eclipse.wst.css.ui.preferences.css">
 			<keywordReference id="org.eclipse.wst.css.ui.files"/>
 		</page>
 		<page
 			name="%CSS_Source.name"
-			category="org.eclipse.wst.sse.ui.preferences.css"
+			category="org.eclipse.wst.css.ui.preferences.css"
 			class="org.eclipse.wst.css.ui.internal.preferences.ui.CSSSourcePreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.css.source">
 			<keywordReference id="org.eclipse.wst.css.ui.source"/>
 		</page>
 		<page
 			name="%CSS_Templates.name"
-			category="org.eclipse.wst.sse.ui.preferences.css"
+			category="org.eclipse.wst.css.ui.preferences.css"
 			class="org.eclipse.wst.css.ui.internal.preferences.ui.CSSTemplatePreferencePage"
 			id="org.eclipse.wst.css.ui.preferences.templates">
 			<keywordReference id="org.eclipse.wst.css.ui.templates"/>
 		</page>
 		<page
 			name="%CSS_Syntax_Coloring"
-			category="org.eclipse.wst.sse.ui.preferences.css"
+			category="org.eclipse.wst.css.ui.preferences.css"
 			class="org.eclipse.wst.css.ui.internal.preferences.ui.CSSSyntaxColoringPage"
 			id="org.eclipse.wst.sse.ui.preferences.css.styles">
          	<keywordReference id="org.eclipse.wst.css.ui.styles"/>

@@ -134,21 +134,21 @@
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
 			name="%_UI_LABEL_DTD_FILES"
-			category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
+			category="org.eclipse.wst.xml.ui.preferences.xml"
 			class="org.eclipse.wst.dtd.ui.internal.preferences.DTDFilesPreferencePage"
-			id="org.eclipse.wst.sse.ui.preferences.dtd">
+			id="org.eclipse.wst.dtd.ui.preferences.dtd">
          	<keywordReference id="org.eclipse.wst.dtd.ui.files"/>
 		</page>
 		<page
 			name="%DTD_Templates.name"
-			category="org.eclipse.wst.sse.ui.preferences.dtd"
+			category="org.eclipse.wst.dtd.ui.preferences.dtd"
 			class="org.eclipse.wst.dtd.ui.internal.preferences.DTDTemplatePreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.dtd.templates">
          	<keywordReference id="org.eclipse.wst.dtd.ui.templates"/>
 		</page>
 		<page
 			name="%DTD_Syntax_Coloring"
-			category="org.eclipse.wst.sse.ui.preferences.dtd"
+			category="org.eclipse.wst.dtd.ui.preferences.dtd"
 			class="org.eclipse.wst.dtd.ui.internal.preferences.DTDSyntaxColoringPage"
 			id="org.eclipse.wst.sse.ui.preferences.dtd.styles">
          	<keywordReference id="org.eclipse.wst.dtd.ui.styles"/>
