@@ -283,6 +283,7 @@ public class XMLUIMessages extends NLS {
 	public static String SyntaxColoringPage_5;
 	public static String SyntaxColoringPage_6;
 	public static String EmptyFilePreferencePage_0;
+	public static String _UI_STRUCTURED_TEXT_EDITOR_PREFS_LINK;
 
 
 	static {

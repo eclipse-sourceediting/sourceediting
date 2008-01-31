@@ -132,4 +132,5 @@ public class HTMLUIMessages extends NLS {
 	public static String HTMLFilesPreferencePage_3;
 	// above are possibly unused strings that may be deleted
 	public static String EmptyFilePreferencePage_0;
+	public static String _UI_STRUCTURED_TEXT_EDITOR_PREFS_LINK;
 }

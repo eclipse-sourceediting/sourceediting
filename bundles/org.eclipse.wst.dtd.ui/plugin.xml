@@ -35,7 +35,7 @@
 		-->
 		<provisionalDefinition
 			type="preferencepages"
-			value="org.eclipse.wst.sse.ui.preferences.dtd, org.eclipse.wst.sse.ui.preferences.dtd.templates, org.eclipse.wst.sse.ui.preferences.dtd.styles"
+			value="org.eclipse.wst.dtd.ui.preferences.dtd, org.eclipse.wst.sse.ui.preferences.dtd.templates, org.eclipse.wst.sse.ui.preferences.dtd.styles"
 			target="org.eclipse.wst.dtd.core.dtdsource" />
 		<!-- provide syntax highlighting for DTD subset within XML -->
 		<provisionalConfiguration

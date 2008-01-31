@@ -52,7 +52,7 @@
 			target="org.eclipse.wst.html.HTML_DEFAULT, org.eclipse.wst.html.HTML_DECLARATION" />
 		<provisionalDefinition
 			type="preferencepages"
-			value="org.eclipse.wst.html.ui.preferences, org.eclipse.wst.html.ui.preferences.source, org.eclipse.wst.html.ui.preferences.templates, org.eclipse.wst.html.ui.preferences.styles"
+			value="org.eclipse.wst.html.ui.preferences.html, org.eclipse.wst.html.ui.preferences.source, org.eclipse.wst.html.ui.preferences.templates, org.eclipse.wst.html.ui.preferences.styles"
 			target="org.eclipse.wst.html.core.htmlsource" />
 		<provisionalDefinition
 			type="spellingregions"
@@ -95,14 +95,14 @@
 		</page>
 		<page
 			name="%HTML_Templates.name"
-			category="org.eclipse.wst.html.ui.preferences.html"
+			category="org.eclipse.wst.html.ui.preferences.source"
 			class="org.eclipse.wst.html.ui.internal.preferences.ui.HTMLTemplatePreferencePage"
 			id="org.eclipse.wst.html.ui.preferences.templates">
 			<keywordReference id="org.eclipse.wst.html.ui.templates"/>
 		</page>
 		<page
 			name="%HTML_Syntax_Coloring"
-			category="org.eclipse.wst.html.ui.preferences.html"
+			category="org.eclipse.wst.html.ui.preferences.source"
 			class="org.eclipse.wst.html.ui.internal.preferences.ui.HTMLSyntaxColoringPage"
 			id="org.eclipse.wst.html.ui.preferences.styles">
 			<keywordReference id="org.eclipse.wst.html.ui.styles"/>
