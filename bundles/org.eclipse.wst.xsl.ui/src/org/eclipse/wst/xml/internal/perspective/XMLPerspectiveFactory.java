@@ -57,6 +57,10 @@ public class XMLPerspectiveFactory implements IPerspectiveFactory {
 		layout.addNewWizardShortcut("org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard");
 		layout.addNewWizardShortcut("org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard");
 		layout.addNewWizardShortcut("org.eclipse.wst.wsdl.ui");
+		layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.project");
+		layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.folder");
+		
+		layout.addPerspectiveShortcut("org.eclipse.debug.ui.DebugPerspective");
 		
 	}
 	
