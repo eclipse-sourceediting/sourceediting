@@ -18,10 +18,12 @@
   This is just
      
  a simple test
-    <nothing> this space is not for sale OR FORMATTING , please 
-	</nothing> <!-- NOTE THE SPACES -->  <space-default> No man is an
-		island, . . . but this section is, really, so clean it up please -
-		waste of space</space-default>
+    <nothing>
+		this space   is not for sale	OR FORMATTING
+		, please </nothing> <!-- NOTE THE SPACES -->  <space-default>
+		No man is an island, . . . but this section is, really, so clean it up
+		please - waste of space
+	</space-default>
   .
   . This should be space   preserved
   </preserve>
