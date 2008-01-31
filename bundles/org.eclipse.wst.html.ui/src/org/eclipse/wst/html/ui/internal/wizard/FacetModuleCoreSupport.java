@@ -30,6 +30,8 @@ final class FacetModuleCoreSupport {
 	 * @return the IPath to the "root" of the web contents
 	 */
 	public static IPath getWebContentRootPath(IProject project) {
+		if (project == null)
+			return null;
 		IPath path = null;
 		try {
 			path = FacetModuleCoreSupportDelegate.getWebContentRootPath(project);
@@ -47,6 +49,8 @@ final class FacetModuleCoreSupport {
 	 * @throws org.eclipse.core.runtime.CoreException
 	 */
 	public static boolean isWebProject(IProject project) {
+		if (project == null)
+			return false;
 		try {
 			return FacetModuleCoreSupportDelegate.isWebProject(project);
 		}

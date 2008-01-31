@@ -51,6 +51,9 @@ final class FacetModuleCoreSupportDelegate {
 	 * @throws CoreException
 	 */
 	static float getDynamicWebProjectVersion(IProject project) {
+		if (project == null)
+			return 2.5f;
+
 		// In the absence of any facet information, assume the highest level
 		float version = 2.5f;
 		try {
@@ -78,6 +81,9 @@ final class FacetModuleCoreSupportDelegate {
 	 *         otherwise
 	 */
 	static IPath getRuntimePath(IPath path) {
+		if (path == null)
+			return null;
+
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0));
 
 		if (!ModuleCoreNature.isFlexibleProject(project))
@@ -95,6 +101,9 @@ final class FacetModuleCoreSupportDelegate {
 	 * @return the IPath to the "root" of the web contents
 	 */
 	static IPath getWebContentRootPath(IProject project) {
+		if (project == null)
+			return null;
+
 		if (!ModuleCoreNature.isFlexibleProject(project))
 			return null;
 
@@ -112,6 +121,9 @@ final class FacetModuleCoreSupportDelegate {
 	 * @throws CoreException
 	 */
 	static boolean isDynamicWebProject(IProject project) {
+		if (project == null)
+			return false;
+		
 		try {
 			if (ProjectFacetsManager.isProjectFacetDefined(JST_WEB_MODULE)) {
 				IFacetedProject faceted = ProjectFacetsManager.create(project);

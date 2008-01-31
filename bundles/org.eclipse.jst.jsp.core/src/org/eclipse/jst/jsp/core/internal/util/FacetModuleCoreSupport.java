@@ -79,6 +79,9 @@ public final class FacetModuleCoreSupport {
 	 * @return the IPath to the "root" of the web contents
 	 */
 	public static IPath getWebContentRootPath(IProject project) {
+		if (project == null)
+			return null;
+
 		IPath path = null;
 		try {
 			path = FacetModuleCoreSupportDelegate.getWebContentRootPath(project);
@@ -112,6 +115,9 @@ public final class FacetModuleCoreSupport {
 	 * @throws CoreException
 	 */
 	public static boolean isDynamicWebProject(IProject project) {
+		if (project == null)
+			return false;
+		
 		try {
 			return FacetModuleCoreSupportDelegate.isDynamicWebProject(project);
 		}
