@@ -11,7 +11,10 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.xml.core,
  org.eclipse.ui.console,
  org.eclipse.debug.ui,
- org.eclipse.search
+ org.eclipse.wst.xml.ui.xpath,
+ org.eclipse.search,
+ org.eclipse.ui.navigator.resources,
+ org.eclipse.team.ui
 Eclipse-LazyStart: true
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
