@@ -51,6 +51,7 @@ public class XMLPerspectiveFactory implements IPerspectiveFactory {
 		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
 		bottom.addView(IPageLayout.ID_PROP_SHEET);
 		bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
+		bottom.addView("org.eclipse.wst.common.snippets.internal.ui.SnippetsView");
 		
 	}
 	
@@ -61,6 +62,7 @@ public class XMLPerspectiveFactory implements IPerspectiveFactory {
         layout.addShowViewShortcut(IPageLayout.ID_OUTLINE);
         layout.addShowViewShortcut(IPageLayout.ID_PROBLEM_VIEW);
         layout.addShowViewShortcut(IConsoleConstants.ID_CONSOLE_VIEW);
+        layout.addShowViewShortcut(" org.eclipse.wst.common.snippets.internal.ui.SnippetsView");
 	}
 	
 	private void addShortCutPerspective(IPageLayout layout) {

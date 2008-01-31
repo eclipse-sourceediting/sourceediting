@@ -12,4 +12,13 @@
 	        id="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
 	        name="%page.name.0"/>
    </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.eclipse.wst.xml.internal.perspective.XMLPerspectiveFactory"
+            icon="icons/XMLFile.gif"
+            id="org.eclipse.wst.xsl.ui.perspective"
+            name="%perspectiveName">
+      </perspective>
+   </extension>
 </plugin>
