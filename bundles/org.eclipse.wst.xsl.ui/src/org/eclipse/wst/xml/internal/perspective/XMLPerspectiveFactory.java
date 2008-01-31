@@ -53,6 +53,11 @@ public class XMLPerspectiveFactory implements IPerspectiveFactory {
 		bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
 		bottom.addView("org.eclipse.wst.common.snippets.internal.ui.SnippetsView");
 		
+		layout.addNewWizardShortcut("org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard");
+		layout.addNewWizardShortcut("org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard");
+		layout.addNewWizardShortcut("org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard");
+		layout.addNewWizardShortcut("org.eclipse.wst.wsdl.ui");
+		
 	}
 	
 	private void addShortCutViews(IPageLayout layout) {
