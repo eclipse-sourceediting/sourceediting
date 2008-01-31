@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -271,7 +271,7 @@ public class DefaultXMLPartitionFormatter {
 		if (!oneSpaceInTagName && thereAreSpaces) {
 			deleteTrailingSpaces(textEdit, currentTextRegion, currentDocumentRegion);
 		}
-		else {
+		else if(oneSpaceInTagName) {
 			insertSpaceAndCollapse(textEdit, currentDocumentRegion, availableLineWidth, currentTextRegion);
 		}
 		constraints.setAvailableLineWidth(availableLineWidth);
@@ -1173,7 +1173,9 @@ public class DefaultXMLPartitionFormatter {
 						int length = nodeList.getLength();
 						int index = 0;
 						boolean textNodeFound = false;
-						while (index < length && !textNodeFound) {
+						// BUG214516 - If the parent constraint is to preserve whitespace, child constraints should
+						// still reflect the parent constraints
+						while (index < length && !textNodeFound && !XMLFormattingConstraints.PRESERVE.equals(parentConstraints.getWhitespaceStrategy())) {
 							Node childNode = nodeList.item(index);
 							if (childNode.getNodeType() == Node.TEXT_NODE) {
 								textNodeFound = !((IDOMText) childNode).isElementContentWhitespace();
@@ -1204,10 +1206,10 @@ public class DefaultXMLPartitionFormatter {
 							// follow whitespace strategy preference for
 							// pcdata content
 							int contentType = elementDeclaration.getContentType();
-							if (contentType == CMElementDeclaration.PCDATA) {
+							if (contentType == CMElementDeclaration.PCDATA && !XMLFormattingConstraints.PRESERVE.equals(parentConstraints.getWhitespaceStrategy())) {
 								childConstraints.setWhitespaceStrategy(preferences.getPCDataWhitespaceStrategy());
 							}
-							else if (contentType == CMElementDeclaration.ELEMENT) {
+							else if (contentType == CMElementDeclaration.ELEMENT && !XMLFormattingConstraints.PRESERVE.equals(parentConstraints.getWhitespaceStrategy())) {
 								childConstraints.setWhitespaceStrategy(XMLFormattingConstraints.IGNORE);
 								childConstraints.setIndentStrategy(XMLFormattingConstraints.INDENT);
 								childConstraints.setIsWhitespaceStrategyAHint(true);
@@ -1226,17 +1228,26 @@ public class DefaultXMLPartitionFormatter {
 										// CMAttributeDeclaration found, check
 										// it
 										// out.
-										String defaultValue = attributeDeclaration.getAttrType().getImpliedValue();
-
+										
+										//BUG214516 - Fixed NPE that was causing document formatting to fail if
+										// an xml:space="preserve" attribute was found
+										String defaultValue = null;
+										
+										if(attributeDeclaration.getAttrType() != null)
+											defaultValue = attributeDeclaration.getAttrType().getImpliedValue();
+										
 										// xml:space="preserve" means preserve
 										// space,
 										// everything else means back to
 										// default.
-										if (defaultValue.compareTo(PRESERVE) == 0)
+										if(PRESERVE.equals(defaultValue))
 											childConstraints.setWhitespaceStrategy(XMLFormattingConstraints.PRESERVE);
 										else
 											childConstraints.setWhitespaceStrategy(null);
 									}
+									// If the node has no attributes, inherit the parents whitespace strategy
+									else
+										childConstraints.setWhitespaceStrategy(parentConstraints.getWhitespaceStrategy());
 								}
 							}
 						}
