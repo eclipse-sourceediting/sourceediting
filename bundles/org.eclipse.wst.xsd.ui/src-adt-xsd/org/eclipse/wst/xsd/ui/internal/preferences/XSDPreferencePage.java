@@ -30,7 +30,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.PreferenceLinkArea;
 import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.wst.xsd.core.internal.XSDCorePlugin;
 import org.eclipse.wst.xsd.core.internal.preferences.XSDCorePreferenceNames;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
@@ -53,9 +55,13 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
    * Creates preference page controls on demand.
    *   @param parent  the parent for the preference page
    */
-  protected Control createContents(Composite parent)
+  protected Control createContents(final Composite parent)
   {
     WorkbenchHelp.setHelp(parent, XSDEditorContextIds.XSDP_PREFERENCE_PAGE);
+
+	new PreferenceLinkArea(parent, SWT.WRAP | SWT.MULTI, "org.eclipse.wst.sse.ui.preferences.editor", Messages._UI_STRUCTURED_TEXT_EDITOR_PREFS_LINK,//$NON-NLS-1$
+				(IWorkbenchPreferenceContainer) getContainer(), null).getControl().setLayoutData(GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).create());
+	new Label(parent, SWT.NONE).setLayoutData(GridDataFactory.swtDefaults().create());
 
     Group group = createGroup(parent, 2);   
     group.setText(Messages._UI_TEXT_XSD_NAMESPACE_PREFIX);

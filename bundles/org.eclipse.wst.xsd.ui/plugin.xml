@@ -47,7 +47,7 @@
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
 			name="%_UI_XML_SCHEMA_PREFERENCE"
-			category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
+			category="org.eclipse.wst.xml.ui.preferences.xml"
 			class="org.eclipse.wst.xsd.ui.internal.preferences.XSDPreferencePage"
 			id="org.eclipse.wst.xsd.ui.internal.preferences.XSDPreferencePage">
 		</page>
