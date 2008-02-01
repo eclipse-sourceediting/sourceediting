@@ -16,11 +16,14 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -47,6 +50,9 @@ import org.w3c.dom.NodeList;
  */
 public class TestIndex extends TestCase {
 	String wtp_autotest_noninteractive = null;
+	int MAX_RETRYS = 5;
+	int PAUSE_TIME = 1;
+	boolean DEBUG = true;
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -235,7 +241,7 @@ public class TestIndex extends TestCase {
 			}
 		}
 	}
-	
+
 	public void testWebXMLTaglibMappingsToJARs() throws Exception {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("bug_148717");
 		if (!project.exists()) {
@@ -419,11 +425,53 @@ public class TestIndex extends TestCase {
 		records = TaglibIndex.getAvailableTaglibRecords(new Path("/testavailable1/WebContent"));
 		assertEquals("total ITaglibRecord count doesn't match (after exporting jar and restarting)", 1, records.length);
 	}
-	private void removeAllProjects() throws CoreException {
+
+	private void removeAllProjects() throws CoreException, InterruptedException {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IProject[] projects = workspace.getRoot().getProjects();
+		IProject project = null;
 		for (int i = 0; i < projects.length; i++) {
-			projects[i].delete(true, null);
+			project = projects[i];
+			deleteProject(project);
+		}
+	}
+
+	private void deleteProject(IProject project) throws CoreException, InterruptedException {
+		int nTrys = 0;
+		while (project != null && project.exists() && nTrys < MAX_RETRYS) {
+			try {
+				nTrys++;
+				project.delete(true, true, null);
+			}
+			catch (ResourceException e) {
+				if (DEBUG) {
+					System.out.println();
+					System.out.println("Could not delete project on attempt number: "+ nTrys);
+					IStatus eStatus = e.getStatus();
+					// should always be MultiStatus, but we'll check
+					if (eStatus instanceof MultiStatus) {
+						MultiStatus mStatus = (MultiStatus) eStatus;
+						IStatus[] iStatus = mStatus.getChildren();
+						for (int j = 0; j < iStatus.length; j++) {
+							System.out.println("Status: " + j + " " + iStatus[j]);
+						}
+					}
+					else {
+						System.out.println("Status: " + eStatus);
+					}
+				}
+				/*
+				 * If we could not delete the first time, wait a bit and
+				 * re-try. If we could not delete, it is likely because
+				 * another thread has a file open, or similar (such as the
+				 * validation thread).
+				 */
+				Thread.sleep(PAUSE_TIME);
+			}
+		}
+		
+		if (project != null && project.exists()) {
+			fail("Error in test infrastructure. Could not delete project " + project + " after " + MAX_RETRYS + "attempts.");
 		}
 	}
 }
