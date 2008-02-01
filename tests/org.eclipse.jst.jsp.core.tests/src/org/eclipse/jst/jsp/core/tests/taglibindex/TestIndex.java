@@ -436,6 +436,13 @@ public class TestIndex extends TestCase {
 		}
 	}
 
+	/**
+	 * It's not easy to delete projects. If any of it's files are open by another thread, 
+	 * the operation will fail. So, this method will make several attempts before giving up. 
+	 * @param project
+	 * @throws CoreException
+	 * @throws InterruptedException
+	 */
 	private void deleteProject(IProject project) throws CoreException, InterruptedException {
 		int nTrys = 0;
 		while (project != null && project.exists() && nTrys < MAX_RETRYS) {
