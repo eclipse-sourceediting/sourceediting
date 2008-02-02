@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -69,10 +69,9 @@ public abstract class CommonDirectivesSection extends AbstractSection
           URI newURI = URI.createURI(xsdModelFile);
           String xsdFile = URIHelper.getRelativeURI(newURI.toString(), currentIFile.getFullPath().toString());
           final String normalizedXSDFile = URIHelper.normalize(xsdFile, currentIFile.getLocation().toString(), ""); //$NON-NLS-1$
-          
+          final String normalizedURI = URI.encodeFragment(URIHelper.addImpliedFileProtocol(normalizedXSDFile), true).toString();
           XSDParser parser = new XSDParser(new HashMap());
-          parser.parse(normalizedXSDFile);
-          
+          parser.parse(normalizedURI);
           externalSchema = parser.getSchema();
 
           if (externalSchema != null)
