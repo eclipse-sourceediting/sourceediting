@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.variables.IStringVariableManager;
 import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -22,10 +23,14 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.wst.xsl.internal.debug.ui.ResourceSelectionBlock;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
+import org.eclipse.core.runtime.content.IContentTypeMatcher;
 
 public class InputFileBlock extends ResourceSelectionBlock
 {
 	private final IFile defaultFile;
+	IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
 
 	public InputFileBlock(IFile defaultFile)
 	{
@@ -36,8 +41,10 @@ public class InputFileBlock extends ResourceSelectionBlock
 	@Override
 	protected String[] getFileExtensions()
 	{
-		return new String[]
-		{ "xml", "xhtml" };
+		IContentType contentType = contentTypeManager.getContentType("org.eclipse.wst.xml.core.xmlsource");
+		String[] xmlContentTypes = contentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+		
+		return xmlContentTypes;
 	}
 
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
