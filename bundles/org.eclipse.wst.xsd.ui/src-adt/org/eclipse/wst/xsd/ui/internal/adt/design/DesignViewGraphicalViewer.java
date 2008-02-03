@@ -106,14 +106,12 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
           // We encountered an object that is not a valid input to the graph viewer
           // Now find the top container that can be a valid input
           IADTObject obj = ((IGraphElement)selectedObject).getTopContainer();
-          if (obj != null)
-            setInputAndMarkLocation(obj);
           if (event.getSource() instanceof ADTContentOutlinePage)
           {
             // In this case, if the selection is originated from the outline, we should 
             // change the inputs
             if (obj != null)
-              setInput (obj);
+              setInputAndMarkLocation(obj);
           }
           else if (event.getSource() instanceof CommonSelectionManager)
           {
@@ -133,6 +131,11 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
             // of anonymous types
             if (obj != null)
               setInput (obj);
+          }
+          else
+          {
+            if (obj != null && getInput() instanceof IModel)
+              setInputAndMarkLocation(obj);
           }
         }
         if (selectedObject instanceof IField) 
