@@ -49,7 +49,7 @@ import org.eclipse.wst.xsl.internal.launching.XSLTLaunchConfigurationDelegate;
 import org.eclipse.wst.xsl.launching.IProcessorInstall;
 import org.eclipse.wst.xsl.launching.config.LaunchHelper;
 
-public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
+public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget
 {
 	private final byte[] STACK_FRAMES_LOCK = new byte[0];
 	private final byte[] VALUE_MAP_LOCK = new byte[0];
@@ -83,7 +83,6 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 	{
 		super(null);
 		this.launch = launch;
-		this.debugTarget = this;
 		this.process = process;
 		this.requestSocket = attemptConnect(launchHelper.getRequestPort());
 		this.eventSocket = attemptConnect(launchHelper.getEventPort());
@@ -107,6 +106,13 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 	
 			DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(this);
 		}
+	}
+
+    private void abort(String message, Throwable e) throws DebugException
+	{
+		if (!getDebugTarget().isTerminated())
+			getDebugTarget().getProcess().terminate();
+		throw new DebugException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, DebugPlugin.INTERNAL_ERROR, message, e));
 	}
 	
 	private Socket attemptConnect(int port) throws CoreException
@@ -345,15 +351,18 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 
 	public boolean canDisconnect()
 	{
+		// TODO implement disconnect
 		return false;
 	}
 
 	public void disconnect() throws DebugException
 	{
+		// TODO implement disconnect
 	}
 
 	public boolean isDisconnected()
 	{
+		// TODO implement disconnect
 		return false;
 	}
 
@@ -408,7 +417,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 	/**
 	 * Returns the current stack frames in the target.
 	 */
-	protected IStackFrame[] getStackFrames() throws DebugException
+	public IStackFrame[] getStackFrames() throws DebugException
 	{
 		synchronized (STACK_FRAMES_LOCK)
 		{
@@ -498,22 +507,22 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 	/**
 	 * Single step the interpreter.
 	 */
-	protected void stepOver() throws DebugException
+	public void stepOver() throws DebugException
 	{
 		sendRequest(DebugConstants.REQUEST_STEP_OVER);
 	}
 
-	protected void stepInto() throws DebugException
+	public void stepInto() throws DebugException
 	{
 		sendRequest(DebugConstants.REQUEST_STEP_INTO);
 	}
 
-	protected void stepReturn() throws DebugException
+	public void stepReturn() throws DebugException
 	{
 		sendRequest(DebugConstants.REQUEST_STEP_RETURN);
 	}
 
-	XSLVariable getVariable(int varId) throws DebugException
+	public XSLVariable getVariable(int varId) throws DebugException
 	{
 		synchronized (variableMapCache)
 		{
@@ -531,24 +540,32 @@ public class XSLDebugTarget extends XSLDebugElement implements IDebugTarget
 		}
 	}
 
-	IValue getVariableValue(XSLVariable variable) throws DebugException
+	public IValue getVariableValue(XSLVariable variable) throws DebugException
 	{
 		synchronized (VALUE_MAP_LOCK)
 		{
 			XSLValue value = (XSLValue) valueMapCache.get(variable);
-			if (value == null && isSuspended())
+			if (value == null)
 			{
-				String res = sendRequest(DebugConstants.REQUEST_VALUE + " " + variable.getId());
-				String[] data = res.split("&");
-				String type = data[0];
-				String theval;
-				if (data.length > 1)
-					theval = data[1];
+				if (isSuspended())
+				{
+					String res = sendRequest(DebugConstants.REQUEST_VALUE + " " + variable.getId());
+					String[] data = res.split("&");
+					String type = data[0];
+					String theval;
+					if (data.length > 1)
+						theval = data[1];
+					else
+						theval = "";
+					value = new XSLValue(this, type, theval);
+					valueMapCache.put(variable, value);
+				}
 				else
-					theval = "";
-				value = new XSLValue(this, type, theval);
+				{
+					// anything as long as not null!
+					value = new XSLValue(this, "G", "");
+				}
 			}
-			valueMapCache.put(variable, value);
 			return value;
 		}
 	}

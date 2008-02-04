@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsl.launching.model;
 
 import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 
@@ -19,7 +20,7 @@ public class XSLValue extends XSLDebugElement implements IValue
 	private final String fValue;
 	private final String type;
 
-	public XSLValue(XSLDebugTarget target, String type, String value)
+	public XSLValue(IDebugTarget target, String type, String value)
 	{
 		super(target);
 		this.type = type;

@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsl.launching.model;
 
 import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 
@@ -25,7 +26,7 @@ public class XSLVariable extends XSLDebugElement implements IVariable
 	private String scope;
 	private String type;
 
-	public XSLVariable(XSLDebugTarget target, int id)
+	public XSLVariable(IDebugTarget target, int id)
 	{
 		super(target);
 		this.id = id;
@@ -38,7 +39,7 @@ public class XSLVariable extends XSLDebugElement implements IVariable
 
 	public IValue getValue() throws DebugException
 	{
-		return ((XSLDebugTarget) getDebugTarget()).getVariableValue(this);
+		return ((IXSLDebugTarget) getDebugTarget()).getVariableValue(this);
 	}
 	
 	public void setName(String name)

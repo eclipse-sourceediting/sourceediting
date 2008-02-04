@@ -166,8 +166,13 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 				return sourceElement;
 			}});
 		
-		IDebugTarget target = new XSLDebugTarget(launch, launch.getProcesses()[0], launchHelper);
-		launch.addDebugTarget(target);
+//		IJavaDebugTarget javaTarget = (IJavaDebugTarget)launch.getDebugTarget();
+//		launch.removeDebugTarget(javaTarget);
+		IDebugTarget xslTarget = new XSLDebugTarget(launch, launch.getProcesses()[0], launchHelper);
+		launch.addDebugTarget(xslTarget);
+		
+	//	launch.addDebugTarget(new JavaXSLDebugTarget(launch, launch.getProcesses()[0], launchHelper, javaTarget));
+	//	launch.addDebugTarget(new JavaXSLDebugTarget(launch, launch.getProcesses()[0], launchHelper,javaTarget));
 	}
 
 	/**

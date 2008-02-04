@@ -12,6 +12,7 @@ package org.eclipse.wst.xsl.launching.model;
 
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IBreakpoint;
+import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 
@@ -31,7 +32,7 @@ public class XSLThread extends XSLDebugElement implements IThread
 	/**
 	 * Constructs a new thread for the given target
 	 */
-	public XSLThread(XSLDebugTarget target)
+	public XSLThread(IDebugTarget target)
 	{
 		super(target);
 	}
@@ -40,7 +41,7 @@ public class XSLThread extends XSLDebugElement implements IThread
 	{
 		if (isSuspended())
 		{
-			return ((XSLDebugTarget) getDebugTarget()).getStackFrames();
+			return ((IXSLDebugTarget) getDebugTarget()).getStackFrames();
 		}
 		else
 		{
@@ -142,17 +143,17 @@ public class XSLThread extends XSLDebugElement implements IThread
 
 	public void stepInto() throws DebugException
 	{
-		((XSLDebugTarget) getDebugTarget()).stepInto();
+		((IXSLDebugTarget) getDebugTarget()).stepInto();
 	}
 
 	public void stepOver() throws DebugException
 	{
-		((XSLDebugTarget) getDebugTarget()).stepOver();
+		((IXSLDebugTarget) getDebugTarget()).stepOver();
 	}
 
 	public void stepReturn() throws DebugException
 	{
-		((XSLDebugTarget) getDebugTarget()).stepReturn();
+		((IXSLDebugTarget) getDebugTarget()).stepReturn();
 	}
 
 	public boolean canTerminate()

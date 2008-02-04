@@ -13,10 +13,11 @@ package org.eclipse.wst.xsl.xalan.debugger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+
+import javax.xml.transform.SourceLocator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,11 +26,13 @@ import org.apache.xalan.templates.ElemTemplate;
 import org.apache.xalan.templates.ElemTemplateElement;
 import org.apache.xalan.templates.ElemVariable;
 import org.apache.xalan.trace.TracerEvent;
+import org.apache.xml.dtm.ref.DTMNodeProxy;
 import org.apache.xml.utils.QName;
 import org.apache.xpath.VariableStack;
 import org.apache.xpath.XPath;
 import org.eclipse.wst.xsl.debugger.StyleFrame;
 import org.eclipse.wst.xsl.debugger.Variable;
+import org.w3c.dom.Node;
 
 public class XalanStyleFrame extends StyleFrame
 {
@@ -46,13 +49,13 @@ public class XalanStyleFrame extends StyleFrame
 		super(parent);
 		this.event = event;
 		if (parent != null)
-			this.varNames = new HashMap(((XalanStyleFrame)parent).varNames);
+			this.varNames = new HashMap(((XalanStyleFrame) parent).varNames);
 		else
 			this.varNames = new HashMap();
 		pushElement(event);
 		findRootStyleFrame();
 	}
-	
+
 	private void findRootStyleFrame()
 	{
 		XalanStyleFrame frame = this;
@@ -60,7 +63,8 @@ public class XalanStyleFrame extends StyleFrame
 		{
 			if (frame instanceof XalanRootStyleFrame)
 				rootStyleFrame = (XalanRootStyleFrame) frame;
-		} while ((frame = (XalanStyleFrame) frame.getParent()) != null);
+		}
+		while ((frame = (XalanStyleFrame) frame.getParent()) != null);
 	}
 
 	public String getFilename()
@@ -115,7 +119,7 @@ public class XalanStyleFrame extends StyleFrame
 		currentLine = e.m_styleNode.getLineNumber();
 		eventStack.push(e);
 		if (log.isDebugEnabled())
-			log.debug("Pushed element " + TracerEvent.printNode(e.m_styleNode)+" at line "+currentLine);
+			log.debug("Pushed element " + TracerEvent.printNode(e.m_styleNode) + " at line " + currentLine);
 	}
 
 	public TracerEvent popElement()
@@ -123,7 +127,7 @@ public class XalanStyleFrame extends StyleFrame
 		TracerEvent e = (TracerEvent) eventStack.pop();
 		currentLine = e.m_styleNode.getEndLineNumber();
 		if (log.isDebugEnabled())
-			log.debug("Popped element " + TracerEvent.printNode(e.m_styleNode)+" at line "+currentLine);
+			log.debug("Popped element " + TracerEvent.printNode(e.m_styleNode) + " at line " + currentLine);
 
 		ElemTemplateElement element = e.m_styleNode;
 		String name = element.getNodeName();
@@ -145,9 +149,9 @@ public class XalanStyleFrame extends StyleFrame
 	{
 		String scope = variable.getIsTopLevel() ? Variable.GLOBAL_SCOPE : Variable.LOCAL_SCOPE;
 		VariableStack vs = event.m_processor.getXPathContext().getVarStack();
-		XalanVariable xvar = new XalanVariable(this,vs, scope, variable.getIndex(), variable);
+		XalanVariable xvar = new XalanVariable(this, vs, scope, variable.getIndex(), variable);
 		rootStyleFrame.addVariable(xvar);
-		varNames.put(variable.getName(),xvar);
+		varNames.put(variable.getName(), xvar);
 	}
 
 	private List getLocals()
@@ -161,5 +165,33 @@ public class XalanStyleFrame extends StyleFrame
 	protected List getGlobals()
 	{
 		return rootStyleFrame.getGlobals();
+	}
+
+	public String getSourceFilename()
+	{
+		SourceLocator locator = getSourceLocator();
+		if (locator != null)
+			return locator.getSystemId();
+		return "";
+	}
+
+	public int getSourceCurrentLine()
+	{
+		SourceLocator locator = getSourceLocator();
+		if (locator != null)
+			return locator.getLineNumber();
+		return 0;
+	}
+	
+	private SourceLocator getSourceLocator()
+	{
+		Node sourceNode = event.m_sourceNode;
+        SourceLocator locator = null;
+		if (sourceNode instanceof DTMNodeProxy)
+		{
+			int nodeHandler = ((DTMNodeProxy) sourceNode).getDTMNodeNumber();
+			return ((DTMNodeProxy) sourceNode).getDTM().getSourceLocatorFor(nodeHandler);
+		}
+		return null;
 	}
 }

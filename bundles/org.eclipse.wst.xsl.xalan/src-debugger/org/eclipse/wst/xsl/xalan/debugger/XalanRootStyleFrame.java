@@ -60,7 +60,7 @@ public class XalanRootStyleFrame extends XalanStyleFrame
 
 	public Variable getVariable(int id)
 	{
-		log.debug("Getting variable with id "+id+" from variables "+variables.size());
+//		log.debug("Getting variable with id "+id+" from variables "+variables.size());
 		return (Variable)variables.get(new Integer(id));
 	}
 

@@ -15,6 +15,7 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.DebugException;
+import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IRegisterGroup;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
@@ -35,12 +36,12 @@ public class XSLStackFrame extends XSLDebugElement implements IStackFrame
 
 	public XSLStackFrame(XSLThread thread, String data, int index)
 	{
-		super((XSLDebugTarget) thread.getDebugTarget());
+		super(thread.getDebugTarget());
 		this.xslThread = thread;
-		init(data,(XSLDebugTarget) thread.getDebugTarget());
+		init(data,(IXSLDebugTarget) thread.getDebugTarget());
 	}
 
-	private void init(String data,XSLDebugTarget debugTarget)
+	private void init(String data,IXSLDebugTarget debugTarget)
 	{
 
 		String[] strings = data.split("\\|");

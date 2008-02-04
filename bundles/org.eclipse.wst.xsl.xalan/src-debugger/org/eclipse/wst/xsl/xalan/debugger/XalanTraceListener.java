@@ -105,9 +105,15 @@ public class XalanTraceListener implements TraceListenerEx2 //TraceListenerEx3
 		debugger.checkStopped();
 		if (styleFrame!=null)
 		{
+			// check breakpoint in stylesheet
 			BreakPoint breakpoint = new BreakPoint(styleFrame.getFilename(), styleFrame.getCurrentLine());
 			debugger.checkSuspended(styleFrame, breakpoint);
-		}
+			// TODO check breakpoint in source
+/*			breakpoint = new BreakPoint(styleFrame.getSourceFilename(), styleFrame.getSourceCurrentLine());
+			System.out.println("---------------"+breakpoint);
+			if (breakpoint.getFile() != null)
+				debugger.checkSuspended(styleFrame, breakpoint);
+*/		}
 	}
 
 	public void selected(SelectionEvent ev) throws TransformerException
