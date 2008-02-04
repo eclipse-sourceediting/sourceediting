@@ -9,12 +9,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.wst.jsdt.core.ClasspathContainerInitializer;
-import org.eclipse.wst.jsdt.core.IClasspathContainer;
+import org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer;
+import org.eclipse.wst.jsdt.core.IJsGlobalScopeContainer;
 import org.eclipse.wst.jsdt.core.IClasspathEntry;
 import org.eclipse.wst.jsdt.core.IJavaProject;
 import org.eclipse.wst.jsdt.core.compiler.libraries.LibraryLocation;
-import org.eclipse.wst.jsdt.internal.ui.IClasspathContainerInitialzerExtension;
+import org.eclipse.wst.jsdt.internal.ui.IJsGlobalScopeContainerInitialzerExtension;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsNameManglerUtil;
 import org.eclipse.wst.jsdt.web.core.internal.java.WebRootFinder;
 import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
@@ -23,8 +23,8 @@ import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
  * @author childsb
  * 
  */
-public class WebProjectClassPathContainerInitializer extends ClasspathContainerInitializer implements IClasspathContainerInitialzerExtension {
-	private static final String CONTAINER_DESCRIPTION = Messages.getString("WebProjectClassPathContainerInitializer.0"); //$NON-NLS-1$
+public class WebProjectJsGlobalScopeContainerInitializer extends JsGlobalScopeContainerInitializer implements IJsGlobalScopeContainerInitialzerExtension {
+	private static final String CONTAINER_DESCRIPTION = Messages.getString("WebProjectJsGlobalScopeContainerInitializer.0"); //$NON-NLS-1$
 	
 	public static final char[] LIB_NAME = {'b','r','o','w','s','e','r','W','i','n','d','o','w','.','j','s'};
 	/* Some tokens for us to identify mangled paths */
@@ -38,7 +38,7 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 		if (containerPathString == null) {
 			return null;
 		}
-		if (containerPathString.toLowerCase().indexOf(WebProjectClassPathContainerInitializer.MANGLED_BUTT1) != -1 && containerPathString.toLowerCase().indexOf(WebProjectClassPathContainerInitializer.MANGLED_BUTT2) != -1) {
+		if (containerPathString.toLowerCase().indexOf(WebProjectJsGlobalScopeContainerInitializer.MANGLED_BUTT1) != -1 && containerPathString.toLowerCase().indexOf(WebProjectJsGlobalScopeContainerInitializer.MANGLED_BUTT2) != -1) {
 			return JsNameManglerUtil.unmangle(containerPathString);
 		}
 		return null;
@@ -52,35 +52,35 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.jsdt.core.ClasspathContainerInitializer#canUpdateClasspathContainer(org.eclipse.core.runtime.IPath,
+	 * @see org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer#canUpdateJsGlobalScopeContainer(org.eclipse.core.runtime.IPath,
 	 *      org.eclipse.wst.jsdt.core.IJavaProject)
 	 */
 	
-	public boolean canUpdateClasspathContainer(IPath containerPath, IJavaProject project) {
+	public boolean canUpdateJsGlobalScopeContainer(IPath containerPath, IJavaProject project) {
 		/* dont remove from this project */
 		return false;
 	}
 	
 	
-	protected IClasspathContainer getContainer(IPath containerPath, IJavaProject project) {
+	protected IJsGlobalScopeContainer getContainer(IPath containerPath, IJavaProject project) {
 		return this;
 	}
 	
 	
 	public String getDescription() {
-		return WebProjectClassPathContainerInitializer.CONTAINER_DESCRIPTION;
+		return WebProjectJsGlobalScopeContainerInitializer.CONTAINER_DESCRIPTION;
 	}
 	
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.jsdt.core.ClasspathContainerInitializer#getDescription(org.eclipse.core.runtime.IPath,
+	 * @see org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer#getDescription(org.eclipse.core.runtime.IPath,
 	 *      org.eclipse.wst.jsdt.core.IJavaProject)
 	 */
 	
 	public String getDescription(IPath containerPath, IJavaProject javaProject) {
 		if (containerPath.equals(new Path(JsWebNature.VIRTUAL_CONTAINER))) {
-			return WebProjectClassPathContainerInitializer.CONTAINER_DESCRIPTION;
+			return WebProjectJsGlobalScopeContainerInitializer.CONTAINER_DESCRIPTION;
 		}
 		
 		String containerPathString = containerPath.toString();
@@ -89,7 +89,7 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 		if(containerPath.equals(getWebContextRoot(javaProject)) || (fileExtension!=null && fileExtension.equals("js"))) { //$NON-NLS-1$
 			return webContext.toString();
 		}
-		String unmangled = WebProjectClassPathContainerInitializer.getUnmangedHtmlPath(containerPathString);
+		String unmangled = WebProjectJsGlobalScopeContainerInitializer.getUnmangedHtmlPath(containerPathString);
 		if (unmangled != null) {
 			IPath projectPath = javaProject.getPath();
 			/* Replace the project path with the project name */
@@ -104,12 +104,12 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.jsdt.core.ClasspathContainerInitializer#getHostPath(org.eclipse.core.runtime.IPath)
+	 * @see org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer#getHostPath(org.eclipse.core.runtime.IPath)
 	 */
 	
 	public URI getHostPath(IPath path, IJavaProject project) {
 		// TODO Auto-generated method stub
-		String htmlPath = WebProjectClassPathContainerInitializer.getUnmangedHtmlPath(path.toString());
+		String htmlPath = WebProjectJsGlobalScopeContainerInitializer.getUnmangedHtmlPath(path.toString());
 		if (htmlPath != null) {
 			URI fileUri =  new Path(htmlPath).toFile().toURI();
 			return fileUri;
@@ -132,7 +132,7 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 	
 	
 	public int getKind() {
-		return IClasspathContainer.K_SYSTEM;
+		return IJsGlobalScopeContainer.K_SYSTEM;
 	}
 	
 	
@@ -140,7 +140,7 @@ public class WebProjectClassPathContainerInitializer extends ClasspathContainerI
 		return new Path(JsWebNature.VIRTUAL_CONTAINER);
 	}
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.jsdt.internal.ui.IClasspathContainerInitialzerExtension#getImage(org.eclipse.core.runtime.IPath, java.lang.String, org.eclipse.wst.jsdt.core.IJavaProject)
+	 * @see org.eclipse.wst.jsdt.internal.ui.IJsGlobalScopeContainerInitialzerExtension#getImage(org.eclipse.core.runtime.IPath, java.lang.String, org.eclipse.wst.jsdt.core.IJavaProject)
 	 */
 	public ImageDescriptor getImage(IPath containerPath, String element, IJavaProject project) {
 		return ImageDescriptor.createFromFile(this.getClass(),"web1.JPG"); //$NON-NLS-1$

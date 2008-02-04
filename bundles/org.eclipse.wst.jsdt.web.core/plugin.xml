@@ -88,8 +88,6 @@
 			</filter>
 			 
 
-			<enablement/>
-
 			<helper
 				class="org.eclipse.wst.validation.internal.operations.WorkbenchContext">
 			</helper>
