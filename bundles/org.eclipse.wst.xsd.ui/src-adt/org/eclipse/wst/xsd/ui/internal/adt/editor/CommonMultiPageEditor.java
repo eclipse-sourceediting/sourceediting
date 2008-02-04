@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -76,9 +77,12 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
+import org.eclipse.ui.part.MultiPageEditorSite;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.tabbed.ITabbedPropertySheetPageContributor;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewerGraphicConstants;
 import org.eclipse.wst.xsd.ui.internal.adt.design.FlatCCombo;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootEditPart;
@@ -425,7 +429,8 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
         }
       };
     }
-
+    if (type == ITextEditor.class)
+      return getTextEditor();
     
     return super.getAdapter(type);
   }
@@ -498,6 +503,26 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
     setPageText(index, Messages._UI_LABEL_DESIGN);
   }
 
+	/**
+	 * @see org.eclipse.ui.part.MultiPageEditorPart#createSite(org.eclipse.ui.IEditorPart)
+	 */
+	protected IEditorSite createSite(IEditorPart editor) {
+		IEditorSite site = null;
+		if (editor == structuredTextEditor) {
+			site = new MultiPageEditorSite(this, editor) {
+				public String getId() {
+					// sets this id so nested editor is considered xml source
+					// page
+					return ContentTypeIdForXML.ContentTypeID_XML + ".source"; //$NON-NLS-1$;
+				}
+			};
+		}
+		else {
+			site = super.createSite(editor);
+		}
+		return site;
+	}
+  
   protected void createSourcePage()
   {
     structuredTextEditor = new StructuredTextEditor();
