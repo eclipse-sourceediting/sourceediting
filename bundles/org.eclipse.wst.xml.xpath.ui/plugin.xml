@@ -12,6 +12,11 @@
             category="org.eclipse.wst.xml"
             name="%xpathNavigatorName"
             id="org.eclipse.wst.xml.xpath.ui.views.XPathNavigator"/>
-   </extension>
+    <view
+          category="org.eclipse.wst.xml"
+          class="org.eclipse.wst.xml.xpath.internal.ui.views.XPathView"
+          id="org.eclipse.wst.xml.internal.ui.views.XPathView"
+          name="%xpathViewName"/>
+ </extension>
    
 </plugin>
