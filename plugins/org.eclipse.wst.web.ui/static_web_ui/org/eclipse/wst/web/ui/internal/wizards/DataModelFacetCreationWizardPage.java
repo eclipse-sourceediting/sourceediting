@@ -14,9 +14,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -25,6 +30,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -37,8 +43,12 @@ import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPa
 import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationPropertiesNew;
 import org.eclipse.wst.common.frameworks.internal.ui.NewProjectGroup;
 import org.eclipse.wst.common.project.facet.core.IFacetedProjectWorkingCopy;
+import org.eclipse.wst.common.project.facet.core.IProjectFacet;
+import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
+import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 import org.eclipse.wst.common.project.facet.core.events.IFacetedProjectEvent;
 import org.eclipse.wst.common.project.facet.core.events.IFacetedProjectListener;
+import org.eclipse.wst.common.project.facet.core.events.IProjectFacetsChangedEvent;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
 import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
 import org.eclipse.wst.common.project.facet.ui.ModifyFacetedProjectWizard;
@@ -51,6 +61,9 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 
 	private static final String NULL_RUNTIME = "NULL_RUNTIME"; //$NON-NLS-1$
 	private static final String MRU_RUNTIME_STORE = "MRU_RUNTIME_STORE"; //$NON-NLS-1$
+	
+	protected IProjectFacet primaryProjectFacet = null;
+	protected Combo primaryVersionCombo = null;
 	
 	private static final String[] VALIDATION_PROPERTIES = 
 	{
@@ -78,10 +91,121 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		top.setLayoutData(new GridData(GridData.FILL_BOTH));
 		createProjectGroup(top);
 		createServerTargetComposite(top);
+		createPrimaryFacetComposite(top);
         createPresetPanel(top);
         return top;
 	}
 
+	protected void createPrimaryFacetComposite(Composite top) {
+		primaryProjectFacet = ProjectFacetsManager.getProjectFacet( getModuleTypeID() );
+		if (primaryProjectFacet.getVersions().size()  <= 1){
+			//there is no need to create this section if there is only one
+			//facet version to choose from (e.g. utility and static web)
+			return;
+		}
+		
+		final Group group = new Group( top, SWT.NONE );
+        group.setLayoutData( gdhfill() );
+        group.setLayout( new GridLayout( 1, false ) );
+        group.setText( Messages.bind( Messages.FACET_VERSION, new Object [] {primaryProjectFacet.getLabel()}));
+		
+        primaryVersionCombo = new Combo( group, SWT.BORDER | SWT.READ_ONLY );
+        primaryVersionCombo.setLayoutData( gdhfill() );
+        updatePrimaryVersions();
+        
+        primaryVersionCombo.addModifyListener(new ModifyListener(){
+			public void modifyText(ModifyEvent e) {
+				int selectedIndex = primaryVersionCombo.getSelectionIndex();
+				//this block updates the underlying model when the user changes the combo
+				if(selectedIndex != -1){
+					String versionString = primaryVersionCombo.getItem(selectedIndex);
+					SortedSet<IProjectFacetVersion> availableVersions = fpjwc.getAvailableVersions(primaryProjectFacet);
+					IProjectFacetVersion selectedVersion = null;
+					for(Iterator <IProjectFacetVersion> iterator = availableVersions.iterator(); iterator.hasNext() && null == selectedVersion;){
+						IProjectFacetVersion next = iterator.next();
+						if(versionString.equals(next.getVersionString())){
+							selectedVersion = next;
+							fpjwc.changeProjectFacetVersion(selectedVersion);
+						}
+					}
+				}
+			}
+        });
+        
+        fpjwc.addListener(new IFacetedProjectListener() {
+			public void handleEvent(IFacetedProjectEvent event) {
+				if(event.getType() == IFacetedProjectEvent.Type.PROJECT_FACETS_CHANGED){
+					//this block is to update the combo when the underlying facet version changes
+					IProjectFacetsChangedEvent actionEvent = (IProjectFacetsChangedEvent)event;
+					Set<IProjectFacetVersion> changedVersions = actionEvent.getFacetsWithChangedVersions();
+					
+					boolean foundComboVersion = false;
+					for(Iterator <IProjectFacetVersion> iterator = changedVersions.iterator(); iterator.hasNext() && !foundComboVersion;){
+						IProjectFacetVersion next = iterator.next();
+						if(next.getProjectFacet().equals(primaryProjectFacet)){
+							foundComboVersion = true;
+							final IProjectFacetVersion selectedVersion = next;
+							Display.getDefault().syncExec(new Runnable(){
+								public void run() {
+									String selectedText = primaryVersionCombo.getItem(primaryVersionCombo.getSelectionIndex());
+									if(!selectedText.equals(selectedVersion.getVersionString())){
+										String [] items = primaryVersionCombo.getItems();
+										int selectedVersionIndex = -1;
+										for(int i=0;i<items.length && selectedVersionIndex == -1; i++){
+											if(items[i].equals(selectedVersion.getVersionString())){
+												selectedVersionIndex = i;
+												primaryVersionCombo.select(selectedVersionIndex);
+											}
+										}
+									}	
+								}
+							});
+						}
+					}
+				} else if(event.getType() == IFacetedProjectEvent.Type.PRIMARY_RUNTIME_CHANGED){
+					//this block updates the items in the combo when the runtime changes
+					Display.getDefault().syncExec(new Runnable(){
+						public void run() {
+							updatePrimaryVersions();
+						}
+					});
+				}
+			}
+        	
+        }, IFacetedProjectEvent.Type.PROJECT_FACETS_CHANGED, IFacetedProjectEvent.Type.PRIMARY_RUNTIME_CHANGED);
+	}
+
+	protected void updatePrimaryVersions(){
+		IProjectFacetVersion selectedVersion = fpjwc.getProjectFacetVersion(primaryProjectFacet);
+		SortedSet<IProjectFacetVersion> initialVersions = fpjwc.getAvailableVersions(primaryProjectFacet);
+        String [] items = new String[initialVersions.size()];
+        int i=0;
+        int selectedVersionIndex = -1;
+        for(Iterator <IProjectFacetVersion> iterator = initialVersions.iterator(); iterator.hasNext(); i++){
+        	items[i] = iterator.next().getVersionString();
+        	if(selectedVersionIndex == -1 && items[i].equals(selectedVersion.getVersionString())){
+        		selectedVersionIndex = i;
+        	}
+        }
+        primaryVersionCombo.clearSelection();
+        primaryVersionCombo.setItems(items);
+        primaryVersionCombo.select(selectedVersionIndex);
+	}
+	
+	public static class Messages extends NLS {
+		private static final String BUNDLE_NAME = "org.eclipse.wst.web.ui.internal.wizards.facetcreationpagemessages"; //$NON-NLS-1$
+
+		public static String FACET_VERSION;
+		
+		static {
+			// initialize resource bundle
+			NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+		}
+
+		private Messages() {
+		}
+	}
+	
 	protected void createPresetPanel(Composite top) {
 		final IFacetedProjectWorkingCopy fpjwc
             = ( (ModifyFacetedProjectWizard) getWizard() ).getFacetedProjectWorkingCopy();
