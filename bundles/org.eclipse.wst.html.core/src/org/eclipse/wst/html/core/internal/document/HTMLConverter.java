@@ -171,7 +171,7 @@ public class HTMLConverter {
 		IModelManager manager = StructuredModelManager.getModelManager();
 		IStructuredModel model = manager.getModelForEdit(id, input, null);
 		if (!(model instanceof IDOMModel)) {
-			if (model == null)
+			if (model != null)
 				model.releaseFromEdit();
 			return null;
 		}
