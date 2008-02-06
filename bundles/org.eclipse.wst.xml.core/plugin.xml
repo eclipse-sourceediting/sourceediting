@@ -165,16 +165,21 @@
 	<!-- Register the XML validator with the validation 		-->
 	<!-- framework. 										    -->
 	<!-- ====================================================== -->
+<!--
  <extension
  id="xmlValidator"
 		name="%XML_Validator.name"
        point="org.eclipse.wst.validation.validator">
     <validator>
+-->
 			<!-- There is a custom XML validator for EJBs -->
+<!--
 			<projectNature
 				include="false"
 				id="org.eclipse.jst.j2ee.ejb.EJBNature"/>
+-->
 			<!-- There is a custom XML validator for EARs -->
+<!--
 			<projectNature
 				include="false"
 				id="org.eclipse.jst.j2ee.EARNature"/>
@@ -194,7 +199,9 @@
 				nameFilter="*.wdo-connections">
 			</filter>
          	<contentTypeBinding contentTypeId="org.eclipse.core.runtime.xml"/>
+-->
          	<!-- needed until bug 181443 is implemented -->
+<!--
          	<contentTypeBinding contentTypeId="org.eclipse.wst.xml.core.xmlsource"/>
          	<contentTypeBinding contentTypeId="org.eclipse.wst.xml.core.xslsource"/>
          	<contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.tldsource"/>
@@ -208,6 +215,7 @@
          <markerId markerIdValue="org.eclipse.wst.xml.core.validationMarker"/>
       </validator>
  </extension>
+-->
  <extension
          id="validationMarker"
          name="%_validationMarker.name"
@@ -216,4 +224,27 @@
       <persistent value="true"/>
  </extension>
 
+   <extension id="xml" name="%XML_Validator.name" point="org.eclipse.wst.validation.validatorV2">
+      <validator
+            build="true"
+            class="org.eclipse.wst.xml.core.internal.validation.eclipse.Validator"
+            manual="true"
+            sourceid="org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidatorForXML"
+            version="2">
+         <include>
+            <rules>
+               <contentType id="org.eclipse.core.runtime.xml"></contentType>
+               <contentType id="org.eclipse.wst.xml.core.xmlsource"></contentType>
+               <contentType id="org.eclipse.wst.xml.core.xslsource"></contentType>
+               <contentType id="org.eclipse.jst.jsp.core.tldsource"></contentType>
+            </rules>
+         </include>
+         <exclude>
+            <rules>
+				<projectNature id="org.eclipse.jst.j2ee.ejb.EJBNature"/>
+				<projectNature id="org.eclipse.jst.j2ee.EARNature"/>
+            </rules>
+         </exclude>
+      </validator>
+   </extension>
 </plugin>

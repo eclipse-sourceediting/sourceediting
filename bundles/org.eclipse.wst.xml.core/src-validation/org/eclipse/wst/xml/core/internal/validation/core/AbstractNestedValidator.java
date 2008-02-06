@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,9 +21,13 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.wst.validation.AbstractValidator;
+import org.eclipse.wst.validation.ValidationResult;
+import org.eclipse.wst.validation.ValidationState;
 import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
@@ -39,7 +43,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidatorJob;
  * benefit from the use of this class. This class takes care of iterating
  * through results for validators that use the standard context.
  */
-public abstract class AbstractNestedValidator implements IValidatorJob 
+public abstract class AbstractNestedValidator extends AbstractValidator implements IValidatorJob 
 {
   // Locally used, non-UI strings.
   private static final String REFERENCED_FILE_ERROR_OPEN = "referencedFileError("; //$NON-NLS-1$
@@ -57,7 +61,21 @@ public abstract class AbstractNestedValidator implements IValidatorJob
   protected static final String SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE = "squiggleSelectionStrategy"; //$NON-NLS-1$
   protected static final String SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE = "squiggleNameOrValue"; //$NON-NLS-1$
 
-  
+  /**
+   * Perform the validation using version 2 of the validation framework.
+   */
+  public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor){
+	  ValidationResult result = new ValidationResult();  
+	  IReporter reporter = result.getReporter(monitor);
+	  NestedValidatorContext nestedcontext = new NestedValidatorContext();
+		setupValidation(nestedcontext);
+		IFile file = null;
+		if (resource instanceof IFile)file = (IFile)resource;
+		if (file != null)validate(file, null, reporter, nestedcontext);
+		teardownValidation(nestedcontext);
+	    return result;
+  }
+ 
 
   /* (non-Javadoc)
    * @see org.eclipse.wst.validation.internal.provisional.core.IValidatorJob#validateInJob(org.eclipse.wst.validation.internal.provisional.core.IValidationContext, org.eclipse.wst.validation.internal.provisional.core.IReporter)
@@ -173,10 +191,9 @@ public abstract class AbstractNestedValidator implements IValidatorJob
   /* (non-Javadoc)
    * @see org.eclipse.wst.validation.internal.provisional.core.IValidator#validate(org.eclipse.wst.validation.internal.provisional.core.IValidationContext, org.eclipse.wst.validation.internal.provisional.core.IReporter)
    */
-  public void validate(IValidationContext arg0, IReporter arg1) throws ValidationException 
+  public void validate(IValidationContext context, IReporter reporter) throws ValidationException 
   {  
-	// This method should not be implemented by validators implementing the validateInJob
-	// method.
+	validateInJob(context, reporter);
   }
 	
 	

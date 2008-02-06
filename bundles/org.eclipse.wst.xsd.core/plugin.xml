@@ -23,6 +23,7 @@
 	<!-- Register the XSD validator with the validation 		-->
 	<!-- framework. 										    -->
 	<!-- ====================================================== -->
+	<!--
 	<extension
 		id="xsdValidator"
 		name="%_UI_XML_SCHEMA_VALIDATOR"
@@ -45,9 +46,24 @@
          fullBuild="true"
          incremental="true">
 			</run>
-       <!-- <markerId markerIdValue="org.eclipse.xsd.diagnostic"/>-->
 		</validator>
 	</extension>
+	-->
+	
+   <extension id="xsd" name="%_UI_XML_SCHEMA_VALIDATOR" point="org.eclipse.wst.validation.validatorV2">
+      <validator
+            build="true"
+            class="org.eclipse.wst.xsd.core.internal.validation.eclipse.XSDDelegatingValidator"
+            manual="true"
+            sourceid="org.eclipse.wst.xsd.ui.internal.validation.DelegatingSourceValidatorForXSD"
+            version="2">
+         <include>
+            <rules>
+               <fileext caseSensitive="false" ext="xsd"></fileext>
+            </rules>
+         </include>
+      </validator>
+   </extension>
 
 	<extension
        point="org.eclipse.wst.validation.validatorDelegates">
@@ -56,7 +72,7 @@
 			name="%_UI_XERCES_VALIDATOR_DELEGATE"
         	target="org.eclipse.wst.xsd.core.internal.validation.eclipse.XSDDelegatingValidator"/>
 	 </extension>
-	 
+ 	 
 	 <!-- initialize xml core preferences -->
 	<extension point="org.eclipse.core.runtime.preferences">
 		<initializer
