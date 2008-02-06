@@ -30,6 +30,7 @@ public class WebDevelopmentPerspective implements IPerspectiveFactory {
 	// view id's
 	protected static final String ID_PROJECT_EXPLORER = "org.eclipse.ui.navigator.ProjectExplorer"; //$NON-NLS-N$
 	protected static final String ID_SERVER = "org.eclipse.wst.server.ui.ServersView";
+	protected static String ID_WST_SNIPPETS_VIEW = "org.eclipse.wst.common.snippets.internal.ui.SnippetsView"; //$NON-NLS-1$
 
 	/*
 	 *____ ________________ _____
@@ -50,7 +51,7 @@ public class WebDevelopmentPerspective implements IPerspectiveFactory {
 
 		// LEFT Area (Project Explorer)
 		IFolderLayout topLeft = layout.createFolder(TOP_LEFT_LOCATION,
-				IPageLayout.LEFT, 0.20f, editorArea);
+				IPageLayout.LEFT, 0.25f, editorArea);
 		topLeft.addView(ID_PROJECT_EXPLORER);
 		topLeft.addPlaceholder(IPageLayout.ID_RES_NAV);
 
@@ -58,6 +59,7 @@ public class WebDevelopmentPerspective implements IPerspectiveFactory {
 		IFolderLayout topRight = layout.createFolder(TOP_RIGHT_LOCATION,
 				IPageLayout.RIGHT, 0.80f, editorArea);
 		topRight.addView(IPageLayout.ID_OUTLINE);
+		topRight.addView(ID_WST_SNIPPETS_VIEW);
 
 		// BOTTOM Area (Problems, Server, Properties)
 		IFolderLayout bottom = layout.createFolder(BOTTOM_LOCATION,
