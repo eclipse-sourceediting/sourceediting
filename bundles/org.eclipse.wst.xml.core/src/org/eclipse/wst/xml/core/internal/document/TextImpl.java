@@ -145,7 +145,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 
 		TextImpl text = (TextImpl) newText;
 		String newSource = text.getSource();
-		if (newSource == null && newSource.length() == 0)
+		if (newSource == null || newSource.length() == 0)
 			return;
 		String source = getSource();
 		if (source != null)
