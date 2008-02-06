@@ -345,10 +345,10 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				private String getType(Annotation annotation) {
 					String type = null;
 					if (annotation instanceof MarkerAnnotation) {
-						type = MarkerUtilities.getMarkerType(((MarkerAnnotation) annotation).getMarker());
+						type = "M:"+MarkerUtilities.getMarkerType(((MarkerAnnotation) annotation).getMarker()); //$NON-NLS-1$
 					}
 					else {
-						type = annotation.getType();
+						type = "A:"+annotation.getType(); //$NON-NLS-1$
 					}
 					if (type == null)
 						type = ""; //$NON-NLS-1$
