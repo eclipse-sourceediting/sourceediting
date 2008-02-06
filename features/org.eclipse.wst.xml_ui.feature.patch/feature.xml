@@ -21,9 +21,15 @@
       <import feature="org.eclipse.wst.xml_ui.feature" version="1.5.5.v200707311635-zkiCfzO-IFUOjzR" patch="true"/>
    </requires>
 
-
    <plugin
          id="org.eclipse.wst.sse.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.wst.xsd.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
