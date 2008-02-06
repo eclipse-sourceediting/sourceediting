@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.BadLocationException;
@@ -294,8 +293,10 @@ public abstract class DelegatingSourceValidator implements IValidator {
 	 * @return the IFile
 	 */
 	public IFile getFile(String delta) {
-		IResource res = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(delta));
-		return res instanceof IFile ? (IFile) res : null;
+		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(delta));
+		if (file != null && file.exists())
+		  return file;
+		return null;
 	}
 
 	/**

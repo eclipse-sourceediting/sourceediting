@@ -17,8 +17,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidator;
 
 /**
- * This performs the as-you-type validation
- * @author Mark Hutchinson
+ * This performs the as-you-type validation for schema files
  *
  */
 public class DelegatingSourceValidatorForXSD extends DelegatingSourceValidator {                                                
