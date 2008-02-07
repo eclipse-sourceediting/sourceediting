@@ -65,28 +65,6 @@
     </extension>
     
 	<extension point="org.eclipse.ui.preferencePages">
-		<!-- ROOT PREFERENCE PAGE FOR WEB AND XML FILES -->
-		<!--  Comment out for now since this preference page is not used
-			<page
-			name="%WEB_AND_XML_Files.name"
-			class="org.eclipse.wst.sse.ui.internal.preferences.ui.FilePreferencePage"
-			id="org.eclipse.wst.sse.ui.internal.provisional.preferences">
-			</page>
-		-->
-		<page
-			name="%WEB_AND_XML_Files.name"
-			class="org.eclipse.wst.sse.ui.internal.preferences.ui.EmptyFilePreferencePage"
-			id="org.eclipse.wst.sse.ui.internal.provisional.preferences">
-		</page>
-		<!-- "common" task tags preference page -->
-		<page
-			name="%Task_Tags_Preferences.name"
-			category="org.eclipse.wst.sse.ui.preferences.editor"
-			class="org.eclipse.wst.sse.ui.internal.preferences.ui.TaskTagPreferencePage"
-			id="org.eclipse.wst.sse.ui.preferences.tasktags">
-			<keywordReference id="org.eclipse.wst.sse.ui.todo"/>
-		</page>
-
 		<!-- Source Editor Preference page under Workbench->Editors -->
 		<page
 			name="%Structured_Text_Editor.name"
@@ -94,6 +72,15 @@
 			class="org.eclipse.wst.sse.ui.internal.preferences.ui.StructuredTextEditorPreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.editor">
 			<keywordReference id="org.eclipse.wst.sse.ui.sseeditor"/>
+		</page>
+
+		<!-- SSE task tags preference page under that-->
+		<page
+			name="%Task_Tags_Preferences.name"
+			category="org.eclipse.wst.sse.ui.preferences.editor"
+			class="org.eclipse.wst.sse.ui.internal.preferences.ui.TaskTagPreferencePage"
+			id="org.eclipse.wst.sse.ui.preferences.tasktags">
+			<keywordReference id="org.eclipse.wst.sse.ui.todo"/>
 		</page>
 	</extension>
 	<!-- ================================================================================================ -->
