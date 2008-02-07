@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.reconcile.validator;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -22,7 +21,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -38,14 +36,12 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
-import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
-import org.eclipse.wst.validation.internal.ConfigurationManager;
-import org.eclipse.wst.validation.internal.ProjectConfiguration;
-import org.eclipse.wst.validation.internal.ValidationRegistryReader;
+import org.eclipse.wst.validation.ValidationFramework;
+import org.eclipse.wst.validation.Validator;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 
 
@@ -62,7 +58,6 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 	private List fMetaData = null;
 	/** validator id (as declared in ext point) -> ReconcileStepForValidator * */
 	private HashMap fVidToVStepMap = null;
-	private ProjectConfiguration fProjectConfiguration = null;
 
 	/*
 	 * List of ValidatorMetaDatas of total scope validators that have been run
@@ -156,8 +151,11 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 	 *            Dirty region representation of the typed region
 	 */
 	public void reconcile(ITypedRegion tr, DirtyRegion dr) {
-
-		if (isCanceled())
+		/*
+		 * Abort if no workspace file is known (new validation framework does
+		 * not support that scenario) or no validators have been specified
+		 */
+		if (isCanceled() || fMetaData.isEmpty())
 			return;
 
 		IDocument doc = getDocument();
@@ -170,6 +168,30 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		ValidatorMetaData vmd = null;
 		List annotationsToAdd = new ArrayList();
 		List stepsRanOnThisDirtyRegion = new ArrayList(1);
+		
+		/*
+		 * Keep track of the disabled validators by source id for the V2
+		 * validators.
+		 */
+		Set disabledValsBySourceId = new HashSet(20);
+		
+		/*
+		 * Keep track of the disabled validators by class id for the v1
+		 * validators.
+		 */
+		Set disabledValsByClass = new HashSet(20);
+		if (getFile() != null) {
+			for (Iterator it = ValidationFramework.getDefault().getDisabledValidatorsFor(getFile()).iterator(); it.hasNext();) {
+				Validator v = (Validator) it.next();
+				IValidator iv = v.asIValidator();
+				if (iv != null && v.getSourceId() != null)
+					disabledValsBySourceId.add(v.getSourceId());
+				Validator.V1 v1 = v.asV1Validator();
+				if (v1 != null)
+					disabledValsByClass.add(v1.getId());
+			}
+		}
+				
 		/*
 		 * Loop through all of the relevant validator meta data to find
 		 * supporting validators for this partition type. Don't check
@@ -184,7 +206,7 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 				 * Check if validator is enabled according to validation
 				 * preferences before attempting to create/use it
 				 */
-				if (isValidatorEnabled(vmd)) {
+				if (!disabledValsBySourceId.contains(vmd.getValidatorId()) && !disabledValsByClass.contains(vmd.getValidatorClass())) {
 					int validatorScope = vmd.getValidatorScope();
 					ReconcileStepForValidator validatorStep = null;
 					// get step for partition type
@@ -246,48 +268,6 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 			step = (IReconcileStep) it.next();
 			step.setInputModel(new DocumentAdapter(document));
 		}
-	}
-
-	/**
-	 * Checks if validator is enabled according to Validation preferences
-	 * 
-	 * @param vmd
-	 * @return
-	 */
-	private boolean isValidatorEnabled(ValidatorMetaData vmd) {
-		boolean enabled = true;
-		ProjectConfiguration configuration = getProjectConfiguration();
-		org.eclipse.wst.validation.internal.ValidatorMetaData metadata = ValidationRegistryReader.getReader().getValidatorMetaData(vmd.getValidatorClass());
-		if (configuration != null && metadata != null) {
-			if (!configuration.isBuildEnabled(metadata) && !configuration.isManualEnabled(metadata))
-				enabled = false;
-		}
-		return enabled;
-	}
-
-	/**
-	 * Gets current validation project configuration based on current project
-	 * (which is based on current document)
-	 * 
-	 * @return ProjectConfiguration
-	 */
-	private ProjectConfiguration getProjectConfiguration() {
-		if (fProjectConfiguration == null) {
-			IFile file = getFile();
-			if (file != null) {
-				IProject project = file.getProject();
-				if (project != null) {
-					try {
-						fProjectConfiguration = ConfigurationManager.getManager().getProjectConfiguration(project);
-					}
-					catch (InvocationTargetException e) {
-						Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
-					}
-				}
-			}
-		}
-
-		return fProjectConfiguration;
 	}
 
 	/**
