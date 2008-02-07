@@ -35,12 +35,14 @@ public class CMNamedNodeMapImpl implements CMNamedNodeMap
   }
 
   public CMNamedNodeMapImpl(CMNamedNodeMap initialContentsMap) {
-	  super();
-		int length = initialContentsMap.getLength();
-		for (int j = 0; j < length; j++) {
-			put(initialContentsMap.item(j));
+		super();
+		if (initialContentsMap != null) {
+			int length = initialContentsMap.getLength();
+			for (int j = 0; j < length; j++) {
+				put(initialContentsMap.item(j));
+			}
 		}
-  }
+	}
   /**
    * getLength method
    * @return int
