@@ -252,9 +252,18 @@ public class TestPartitionFormatterXML extends TestCase {
 		formatAndAssertEquals("testfiles/xml/multiattributes.xml", "testfiles/xml/multiattributes-yessplit-yesalign-newfmt.xml", prefs);
 	}
 	
-	  public void testProcessingInstruction() throws UnsupportedEncodingException, IOException, CoreException
-	  {
+	public void testSpaceBeforeEmptyCloseTag() throws UnsupportedEncodingException, IOException, CoreException {
+		// Bug 195264
+		XMLFormattingPreferences prefs = new XMLFormattingPreferences();
+		prefs.setSpaceBeforeEmptyCloseTag(false);
+		formatAndAssertEquals("testfiles/xml/xml-empty-tag-space.xml", "testfiles/xml/xml-empty-tag-space-none-newfmt.xml", prefs);
+		
+		prefs.setSpaceBeforeEmptyCloseTag(true);
+		formatAndAssertEquals("testfiles/xml/xml-empty-tag-space.xml", "testfiles/xml/xml-empty-tag-space-newfmt.xml", prefs);
+	}
+	
+	public void testProcessingInstruction() throws UnsupportedEncodingException, IOException, CoreException {
 	    // BUG198297
-	    formatAndAssertEquals("testfiles/xml/processinginstruction.xml", "testfiles/xml/processinginstruction-fmt.xml");
-	  }
+		formatAndAssertEquals("testfiles/xml/processinginstruction.xml", "testfiles/xml/processinginstruction-fmt.xml");
+	}
 }
