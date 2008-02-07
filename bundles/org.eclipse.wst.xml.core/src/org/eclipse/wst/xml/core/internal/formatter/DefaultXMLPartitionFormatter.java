@@ -142,15 +142,13 @@ public class DefaultXMLPartitionFormatter {
 				DOMRegion domRegion = new DOMRegion();
 				domRegion.documentRegion = currentRegion;
 				domRegion.domNode = currentDOMNode;
-
-				// determine parent constraint information by trying to
-				// determine child constraint for parent node
-				DOMRegion parentDOMRegion = new DOMRegion();
-				parentDOMRegion.domNode = (IDOMNode) currentDOMNode.getParentNode();
-				parentDOMRegion.documentRegion = parentDOMRegion.domNode.getFirstStructuredDocumentRegion();
-				XMLFormattingConstraints parentConstraints = new XMLFormattingConstraints();
-				updateFormattingConstraints(null, null, parentConstraints, parentDOMRegion);
-
+				
+				XMLFormattingConstraints parentConstraints = getRegionConstraints(currentDOMNode);
+				
+				/* if the whitespace strategy is declared as default, get it from the preferences */
+				if(parentConstraints.getWhitespaceStrategy() == XMLFormattingConstraints.DEFAULT)
+					parentConstraints.setWhitespaceStrategy(preferences.getElementWhitespaceStrategy());
+				
 				// TODO: initialize indentLevel
 				// initialize available line width
 				int lineWidth = getFormattingPreferences().getMaxLineWidth();
@@ -172,6 +170,75 @@ public class DefaultXMLPartitionFormatter {
 		return edit;
 	}
 
+	/**
+	 * Determines the formatting constraints for a specified node based on
+	 * its ancestors' formatting. In particular, if any ancestor node either
+	 * explicitly defines whitespace preservation or ignorance, that
+	 * whitespace strategy should be used for <code>currentNode</code> and 
+	 * all of its descendants.
+	 * 
+	 * @param currentNode the node to investigate the ancestry of to determine
+	 * formatting constraints
+	 * 
+	 * @return formatting constraints defined by an ancestor
+	 */
+	private XMLFormattingConstraints getRegionConstraints(IDOMNode currentNode) {
+		IDOMNode iterator = currentNode;
+		XMLFormattingConstraints result = new XMLFormattingConstraints();
+		DOMRegion region = new DOMRegion();
+		XMLFormattingConstraints parentConstraints = new XMLFormattingConstraints();
+		boolean parent = true;
+		
+		/* Iterate through the ancestry to find if any explicit whitespace strategy has
+		 * been defined
+		 */
+		while(iterator != null && iterator.getNodeType() != Node.DOCUMENT_NODE) {
+			iterator = (IDOMNode) iterator.getParentNode();
+			region.domNode = iterator;
+			region.documentRegion = iterator.getFirstStructuredDocumentRegion();
+			
+			updateFormattingConstraints(null, null, result, region);
+			
+			/* If this is the parent of the current node, keep the constraints
+			 * in case no other constraints are identified
+			 */
+			if(parent) {
+				parentConstraints.copyConstraints(result);
+				parent = false;
+			}
+			
+			/* A parent who has defined a specific whitespace strategy was found */
+			if(XMLFormattingConstraints.PRESERVE == result.getWhitespaceStrategy() || XMLFormattingConstraints.DEFAULT == result.getWhitespaceStrategy())
+				return result;
+		}
+		
+		return parentConstraints;
+	}
+//	private XMLFormattingConstraints getRegionConstraints(IDOMNode currentNode) {
+//		IDOMNode iterator = (IDOMNode) currentNode.getParentNode();
+//		XMLFormattingConstraints result = new XMLFormattingConstraints();
+//		DOMRegion region = new DOMRegion();
+//		
+//		/* Iterate through the ancestry to find if any explicit whitespace strategy has
+//		 * been defined
+//		 */
+//		while(iterator != null && iterator.getNodeType() != Node.DOCUMENT_NODE) {
+
+//			region.domNode = iterator;
+//			region.documentRegion = iterator.getFirstStructuredDocumentRegion();
+//			
+//			updateFormattingConstraints(null, null, result, region);
+//			
+//			/* A parent who has defined a specific whitespace strategy was found */
+//			if(XMLFormattingConstraints.PRESERVE == result.getWhitespaceStrategy() || XMLFormattingConstraints.DEFAULT == result.getWhitespaceStrategy())
+//				return result;
+//			
+//			iterator = (IDOMNode) iterator.getParentNode();
+//		}
+//		
+//		return null;
+//	}
+	
 	/**
 	 * Formats the given xml content region
 	 * 
@@ -398,6 +465,9 @@ public class DefaultXMLPartitionFormatter {
 		XMLFormattingConstraints childrenConstraints = new XMLFormattingConstraints();
 		updateFormattingConstraints(parentConstraints, thisConstraints, childrenConstraints, currentDOMRegion);
 
+		if(childrenConstraints.getWhitespaceStrategy() == XMLFormattingConstraints.DEFAULT)
+			childrenConstraints.setWhitespaceStrategy((new XMLFormattingPreferences()).getElementWhitespaceStrategy());
+			
 		String whitespaceStrategy = thisConstraints.getWhitespaceStrategy();
 		String indentStrategy = thisConstraints.getIndentStrategy();
 		int availableLineWidth = thisConstraints.getAvailableLineWidth();
@@ -1163,8 +1233,8 @@ public class DefaultXMLPartitionFormatter {
 						}
 						else {
 							// xml:space was found but it was not collapse, so
-							// just null
-							childConstraints.setWhitespaceStrategy(null);
+							// use default whitespace strategy
+							childConstraints.setWhitespaceStrategy(XMLFormattingConstraints.DEFAULT);
 						}
 					}
 					else {
@@ -1176,7 +1246,7 @@ public class DefaultXMLPartitionFormatter {
 						boolean textNodeFound = false;
 						// BUG214516 - If the parent constraint is to preserve whitespace, child constraints should
 						// still reflect the parent constraints
-						while (index < length && !textNodeFound && !XMLFormattingConstraints.PRESERVE.equals(parentConstraints.getWhitespaceStrategy())) {
+						while (index < length && !textNodeFound && parentConstraints != null && !XMLFormattingConstraints.PRESERVE.equals(parentConstraints.getWhitespaceStrategy())) {
 							Node childNode = nodeList.item(index);
 							if (childNode.getNodeType() == Node.TEXT_NODE) {
 								textNodeFound = !((IDOMText) childNode).isElementContentWhitespace();
@@ -1207,10 +1277,10 @@ public class DefaultXMLPartitionFormatter {
 							// follow whitespace strategy preference for
 							// pcdata content
 							int contentType = elementDeclaration.getContentType();
-							if (contentType == CMElementDeclaration.PCDATA && !XMLFormattingConstraints.PRESERVE.equals(parentConstraints.getWhitespaceStrategy())) {
+							if (contentType == CMElementDeclaration.PCDATA && parentConstraints != null && !XMLFormattingConstraints.PRESERVE.equals(parentConstraints.getWhitespaceStrategy())) {
 								childConstraints.setWhitespaceStrategy(preferences.getPCDataWhitespaceStrategy());
 							}
-							else if (contentType == CMElementDeclaration.ELEMENT && !XMLFormattingConstraints.PRESERVE.equals(parentConstraints.getWhitespaceStrategy())) {
+							else if (contentType == CMElementDeclaration.ELEMENT && parentConstraints != null && !XMLFormattingConstraints.PRESERVE.equals(parentConstraints.getWhitespaceStrategy())) {
 								childConstraints.setWhitespaceStrategy(XMLFormattingConstraints.IGNORE);
 								childConstraints.setIndentStrategy(XMLFormattingConstraints.INDENT);
 								childConstraints.setIsWhitespaceStrategyAHint(true);
@@ -1249,11 +1319,15 @@ public class DefaultXMLPartitionFormatter {
 										if(PRESERVE.equals(defaultValue))
 											childConstraints.setWhitespaceStrategy(XMLFormattingConstraints.PRESERVE);
 										else
-											childConstraints.setWhitespaceStrategy(null);
+											childConstraints.setWhitespaceStrategy(XMLFormattingConstraints.DEFAULT);
 									}
 									// If the node has no attributes, inherit the parents whitespace strategy
-									else
-										childConstraints.setWhitespaceStrategy(parentConstraints.getWhitespaceStrategy());
+									else {
+										if(parentConstraints != null)
+											childConstraints.setWhitespaceStrategy(parentConstraints.getWhitespaceStrategy());
+										else
+											childConstraints.setWhitespaceStrategy(null);
+									}
 								}
 							}
 						}
