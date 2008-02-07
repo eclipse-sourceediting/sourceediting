@@ -61,6 +61,8 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 	private Spinner fIndentationSize;
 	private Button fPreservePCDATAContent;
 	private Button fAlignEndBracket;
+	// BUG195264 - Support for removing/adding a space before empty close tags
+	private Button fSpaceBeforeEmptyCloseTag;
 
 	// grammar constraints
 	protected Button fUseInferredGrammar;
@@ -122,7 +124,9 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		((GridData) fPreservePCDATAContent.getLayoutData()).horizontalSpan = 2;
 		fClearAllBlankLines = createCheckBox(formattingGroup, XMLUIMessages.Clear_all_blank_lines_UI_);
 		((GridData) fClearAllBlankLines.getLayoutData()).horizontalSpan = 2;
-
+		fSpaceBeforeEmptyCloseTag = createCheckBox(formattingGroup, XMLUIMessages.Space_before_empty_close_tag);
+		((GridData) fSpaceBeforeEmptyCloseTag.getLayoutData()).horizontalSpan = 2;
+		
 		fIndentUsingTabs = createRadioButton(formattingGroup, XMLUIMessages.Indent_using_tabs);
 		((GridData) fIndentUsingTabs.getLayoutData()).horizontalSpan = 2;
 
@@ -214,7 +218,8 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		fAlignEndBracket.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.ALIGN_END_BRACKET));
 		fClearAllBlankLines.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
 		fPreservePCDATAContent.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.PRESERVE_CDATACONTENT));
-
+		fSpaceBeforeEmptyCloseTag.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.SPACE_BEFORE_EMPTY_CLOSE_TAG));
+		
 		if (XMLCorePreferenceNames.TAB.equals(getModelPreferences().getString(XMLCorePreferenceNames.INDENTATION_CHAR))) {
 			fIndentUsingTabs.setSelection(true);
 			fIndentUsingSpaces.setSelection(false);
@@ -262,7 +267,9 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		fAlignEndBracket.setSelection(getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.ALIGN_END_BRACKET));
 		fClearAllBlankLines.setSelection(getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
 		fPreservePCDATAContent.setSelection(getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.PRESERVE_CDATACONTENT));
-
+		// BUG195264 - Support for removing/adding a space before empty close tags
+		fSpaceBeforeEmptyCloseTag.setSelection(getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.SPACE_BEFORE_EMPTY_CLOSE_TAG));
+		
 		if (XMLCorePreferenceNames.TAB.equals(getModelPreferences().getDefaultString(XMLCorePreferenceNames.INDENTATION_CHAR))) {
 			fIndentUsingTabs.setSelection(true);
 			fIndentUsingSpaces.setSelection(false);
@@ -322,7 +329,9 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		getModelPreferences().setValue(XMLCorePreferenceNames.ALIGN_END_BRACKET, fAlignEndBracket.getSelection());
 		getModelPreferences().setValue(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES, fClearAllBlankLines.getSelection());
 		getModelPreferences().setValue(XMLCorePreferenceNames.PRESERVE_CDATACONTENT, fPreservePCDATAContent.getSelection());
-
+		// BUG195264 - Support for removing/adding a space before empty close tags
+		getModelPreferences().setValue(XMLCorePreferenceNames.SPACE_BEFORE_EMPTY_CLOSE_TAG, fSpaceBeforeEmptyCloseTag.getSelection());
+		
 		if (fIndentUsingTabs.getSelection()) {
 			getModelPreferences().setValue(XMLCorePreferenceNames.INDENTATION_CHAR, XMLCorePreferenceNames.TAB);
 		}

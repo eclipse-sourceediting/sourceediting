@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,7 +42,8 @@ public class XMLFormattingPreferences {
 			setMaxLineWidth(preferences.getInt(XMLCorePreferenceNames.LINE_WIDTH));
 			setIndentMultipleAttributes(preferences.getBoolean(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
 			setAlignFinalBracket(preferences.getBoolean(XMLCorePreferenceNames.ALIGN_END_BRACKET));
-
+			setSpaceBeforeEmptyCloseTag(preferences.getBoolean(XMLCorePreferenceNames.SPACE_BEFORE_EMPTY_CLOSE_TAG));
+			
 			boolean preservepcdata = preferences.getBoolean(XMLCorePreferenceNames.PRESERVE_CDATACONTENT);
 			if (preservepcdata)
 				fPCDataWhitespaceStrategy = XMLFormattingPreferences.PRESERVE;
@@ -75,7 +76,7 @@ public class XMLFormattingPreferences {
 	public boolean getSpaceBeforeEmptyCloseTag() {
 		return fSpaceBeforeEmptyCloseTag;
 	}
-
+	
 	public boolean getIndentMultipleAttributes() {
 		return fIndentMultipleAttributes;
 	}
@@ -98,6 +99,10 @@ public class XMLFormattingPreferences {
 
 	public String getElementWhitespaceStrategy() {
 		return fElementWhitespaceStrategy;
+	}
+	
+	public void setSpaceBeforeEmptyCloseTag(boolean spaceBeforeEmptyCloseTag) {
+		fSpaceBeforeEmptyCloseTag = spaceBeforeEmptyCloseTag;
 	}
 
 	public void setIndentMultipleAttributes(boolean indentMultipleAttributes) {

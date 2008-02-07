@@ -801,7 +801,8 @@ public class DefaultXMLPartitionFormatter {
 							deleteTrailingSpaces(textEdit, currentTextRegion, currentDocumentRegion);
 							availableLineWidth -= (currentTextRegion.getTextLength() + 2);
 						}
-						else {
+						// insert a space and collapse ONLY IF it's specified
+						else if (oneSpaceInTagName) {
 							insertSpaceAndCollapse(textEdit, currentDocumentRegion, availableLineWidth, currentTextRegion);
 							availableLineWidth -= (currentTextRegion.getTextLength() + 3);
 						}
@@ -1229,12 +1230,17 @@ public class DefaultXMLPartitionFormatter {
 										// it
 										// out.
 										
-										//BUG214516 - Fixed NPE that was causing document formatting to fail if
-										// an xml:space="preserve" attribute was found
+										//BUG214516/196544 - Fixed NPE that was caused by an attr having
+										// a null attr type
 										String defaultValue = null;
-										
-										if(attributeDeclaration.getAttrType() != null)
-											defaultValue = attributeDeclaration.getAttrType().getImpliedValue();
+										CMDataType attrType = attributeDeclaration.getAttrType();
+										if(attrType != null) {
+											if((attrType.getImpliedValueKind() != CMDataType.IMPLIED_VALUE_NONE) && attrType.getImpliedValue() != null)
+												defaultValue = attrType.getImpliedValue();
+											else if ((attrType.getEnumeratedValues() != null) && (attrType.getEnumeratedValues().length > 0)) {
+												defaultValue = attrType.getEnumeratedValues()[0];
+											}
+										}
 										
 										// xml:space="preserve" means preserve
 										// space,

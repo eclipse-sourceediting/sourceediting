@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2008 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
@@ -225,6 +225,7 @@ public class XMLUIMessages extends NLS {
 	public static String Split_multiple_attributes;
 	public static String Align_final_bracket;
 	public static String Preserve_PCDATA_Content;
+	public static String Space_before_empty_close_tag;
 	public static String Indent_using_tabs;
 	public static String Indent_using_spaces;
 	public static String Indentation_size;

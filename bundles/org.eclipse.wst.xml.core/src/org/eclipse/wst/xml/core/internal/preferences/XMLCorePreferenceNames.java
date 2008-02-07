@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -180,4 +180,13 @@ public class XMLCorePreferenceNames {
 	 * </p>
 	 */
 	public static final String ALIGN_END_BRACKET = "alignEndBracket";//$NON-NLS-1$
+	
+	/**
+	 * Indicates if an empty close tag should have a space inserted before
+	 * closing.
+	 * <p>
+	 * Value is of type <code>Boolean</code>
+	 * </p>
+	 */
+	public static final String SPACE_BEFORE_EMPTY_CLOSE_TAG = "spaceBeforeEmptyCloseTag";//$NON-NLS-1$
 }
