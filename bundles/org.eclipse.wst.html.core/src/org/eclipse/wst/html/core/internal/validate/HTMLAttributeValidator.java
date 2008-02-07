@@ -12,6 +12,8 @@ package org.eclipse.wst.html.core.internal.validate;
 
 
 
+import java.util.List;
+
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
@@ -20,6 +22,10 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -89,6 +95,16 @@ public class HTMLAttributeValidator extends PrimeValidator {
 		if (edec == null)
 			return;
 		CMNamedNodeMap declarations = edec.getAttributes();
+
+		CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(declarations);
+		List nodes = ModelQueryUtil.getModelQuery(target.getOwnerDocument()).getAvailableContent((Element) node, edec, ModelQuery.INCLUDE_ATTRIBUTES);
+		for (int k = 0; k < nodes.size(); k++) {
+			CMNode cmnode = (CMNode) nodes.get(k);
+			if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
+				allAttributes.put(cmnode);
+			}
+		}
+		declarations = allAttributes;
 
 		NamedNodeMap attrs = target.getAttributes();
 		for (int i = 0; i < attrs.getLength(); i++) {

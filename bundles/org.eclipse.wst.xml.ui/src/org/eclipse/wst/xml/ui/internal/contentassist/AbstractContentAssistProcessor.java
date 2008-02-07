@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,6 +49,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMGroup;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNodeList;
+import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQueryAction;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;
@@ -127,6 +128,19 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		CMElementDeclaration elementDecl = getCMElementDeclaration(node);
 		if (elementDecl != null) {
 			CMNamedNodeMap attributes = elementDecl.getAttributes();
+			
+			CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attributes);
+			if (node.getNodeType() == Node.ELEMENT_NODE) {
+				List nodes = ModelQueryUtil.getModelQuery(node.getOwnerDocument()).getAvailableContent((Element) node, elementDecl, ModelQuery.INCLUDE_ATTRIBUTES);
+				for (int k = 0; k < nodes.size(); k++) {
+					CMNode cmnode = (CMNode) nodes.get(k);
+					if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
+						allAttributes.put(cmnode);
+					}
+				}
+			}
+			attributes = allAttributes;
+
 			String matchString = contentAssistRequest.getMatchString();
 
 			// check whether an attribute really exists for the replacement
@@ -246,6 +260,19 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			// declaration for the attribute otherwise
 			if (elementDecl != null) {
 				CMNamedNodeMap attributes = elementDecl.getAttributes();
+
+				CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attributes);
+				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					List nodes = ModelQueryUtil.getModelQuery(node.getOwnerDocument()).getAvailableContent((Element) node, elementDecl, ModelQuery.INCLUDE_ATTRIBUTES);
+					for (int k = 0; k < nodes.size(); k++) {
+						CMNode cmnode = (CMNode) nodes.get(k);
+						if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
+							allAttributes.put(cmnode);
+						}
+					}
+				}
+				attributes = allAttributes;
+
 				String noprefixName = DOMNamespaceHelper.getUnprefixedName(attributeName);
 				if (attributes != null) {
 					attrDecl = (CMAttributeDeclaration) attributes.getNamedItem(noprefixName);
@@ -1133,6 +1160,17 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				if (beginsWith(cmnodeName, elementMatchString)) {
 					if (cmnode.getNodeType() == CMNode.ELEMENT_DECLARATION) {
 						cmattrMap = ((CMElementDeclaration) cmnode).getAttributes();
+
+						CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(cmattrMap);
+						List nodes = ModelQueryUtil.getModelQuery(node.getOwnerDocument()).getAvailableContent((Element) node, (CMElementDeclaration) cmnode, ModelQuery.INCLUDE_ATTRIBUTES);
+						for (int k = 0; k < nodes.size(); k++) {
+							CMNode adnode = (CMNode) nodes.get(k);
+							if (adnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
+								allAttributes.put(adnode);
+							}
+						}
+						cmattrMap = allAttributes;
+						
 						// iterate possible attributes from a cmnode in
 						// proposal list
 						for (int k = 0; (cmattrMap != null) && (k < cmattrMap.getLength()); k++) {

@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.views.contentoutline;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
@@ -47,6 +49,9 @@ import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
@@ -136,7 +141,19 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 							while ((i < attributes.getLength()) && (idTypedAttribute == null)) {
 								Node attr = attributes.item(i);
 								String attrName = attr.getNodeName();
-								CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) elementDecl.getAttributes().getNamedItem(attrName);
+								CMNamedNodeMap attributeDeclarationMap = elementDecl.getAttributes();
+								
+								CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attributeDeclarationMap);
+								List nodes = ModelQueryUtil.getModelQuery(node.getOwnerDocument()).getAvailableContent(element, elementDecl, ModelQuery.INCLUDE_ATTRIBUTES);
+								for (int k = 0; k < nodes.size(); k++) {
+									CMNode cmnode = (CMNode) nodes.get(k);
+									if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
+										allAttributes.put(cmnode);
+									}
+								}
+								attributeDeclarationMap = allAttributes;
+
+								CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) attributeDeclarationMap.getNamedItem(attrName);
 								if (attrDecl != null) {
 									if ((attrDecl.getAttrType() != null) && (CMDataType.ID.equals(attrDecl.getAttrType().getDataTypeName()))) {
 										idTypedAttribute = attr;

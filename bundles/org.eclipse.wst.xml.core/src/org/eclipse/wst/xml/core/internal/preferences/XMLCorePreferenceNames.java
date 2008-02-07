@@ -138,6 +138,7 @@ public class XMLCorePreferenceNames {
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
+	 * @deprecated - no longer used
 	 */
 	public static final String CONVERT_EOL_CODES = "convertEOLCodes";//$NON-NLS-1$
 

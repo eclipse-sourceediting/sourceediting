@@ -18,6 +18,7 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -26,6 +27,10 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.IXMLCharEntity;
 import org.eclipse.wst.xml.core.internal.provisional.IXMLNamespace;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
@@ -93,6 +98,17 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		if (elementDecl == null)
 			return null;
 		CMNamedNodeMap attributes = elementDecl.getAttributes();
+		CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attributes);
+		List nodes = ModelQueryUtil.getModelQuery(getOwnerDocument()).getAvailableContent(getOwnerElement(), elementDecl, ModelQuery.INCLUDE_ATTRIBUTES);
+		for (int k = 0; k < nodes.size(); k++) {
+			CMNode cmnode = (CMNode) nodes.get(k);
+			if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
+				allAttributes.put(cmnode);
+			}
+		}
+		attributes = allAttributes;
+		
+
 		if (attributes == null)
 			return null;
 		return (CMAttributeDeclaration) attributes.getNamedItem(getName());

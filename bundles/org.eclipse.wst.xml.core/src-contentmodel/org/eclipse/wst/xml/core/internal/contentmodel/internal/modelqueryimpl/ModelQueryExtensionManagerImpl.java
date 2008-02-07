@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import java.util.List;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.extension.ModelQueryExtension;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.extension.ModelQueryExtensionManager;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -61,29 +62,42 @@ public class ModelQueryExtensionManagerImpl implements ModelQueryExtensionManage
 
   public void filterAvailableElementContent(List cmnodes, Element element, CMElementDeclaration ed)
   {
+	  filterAvailableElementContent(cmnodes, element, ed, ModelQuery.INCLUDE_CHILD_NODES);
+  }
+
+  public void filterAvailableElementContent(List cmnodes, Element element, CMElementDeclaration ed, int includeOptions)
+  {
     String contentTypeId = getContentTypeId(element);
     String parentNamespace = element.getNamespaceURI();
 
 	List modelQueryExtensions = modelQueryExtensionRegistry.getApplicableExtensions(contentTypeId, parentNamespace);
-	
-    for (Iterator j = cmnodes.iterator(); j.hasNext(); )
-    {
-      CMNode cmNode = (CMNode)j.next();  
-      String namespace = getNamespace(cmNode);
-      String name = cmNode.getNodeName();
-      
-      boolean include = true;
-      for(int k = 0; k < modelQueryExtensions.size() && include; k++) {
+	if((includeOptions & ModelQuery.INCLUDE_CHILD_NODES) > 0)
+	{
+      for (Iterator j = cmnodes.iterator(); j.hasNext(); )
       {
-          ModelQueryExtension extension = (ModelQueryExtension)modelQueryExtensions.get(k);
-          include = extension.isApplicableChildElement(element, namespace, name);
-          if (!include)
-		  {
-            // remove the cmNode from the list
-            j.remove();
+        CMNode cmNode = (CMNode)j.next();  
+        String namespace = getNamespace(cmNode);
+        String name = cmNode.getNodeName();
+      
+        boolean include = true;
+        for(int k = 0; k < modelQueryExtensions.size() && include; k++) {
+        {
+            ModelQueryExtension extension = (ModelQueryExtension)modelQueryExtensions.get(k);
+            include = extension.isApplicableChildElement(element, namespace, name);
+            if (!include)
+            {
+              // remove the cmNode from the list
+              j.remove();
+            }
           }
         }
       }
+    }
+    // add MQE-provided content
+    for(int k = 0; k < modelQueryExtensions.size(); k++)
+    {
+        ModelQueryExtension extension = (ModelQueryExtension)modelQueryExtensions.get(k);
+        cmnodes.addAll(Arrays.asList(extension.getAvailableElementContent(element, parentNamespace, includeOptions)));
     }
   }
   

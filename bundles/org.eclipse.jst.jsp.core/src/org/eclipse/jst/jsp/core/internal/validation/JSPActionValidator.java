@@ -38,6 +38,8 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
@@ -244,6 +246,18 @@ public class JSPActionValidator extends JSPValidator {
 				CMElementDeclaration cmElement = query.getCMElementDeclaration(element);
 				if (cmElement != null) {
 					CMNamedNodeMap cmAttributes = cmElement.getAttributes();
+					
+					CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(cmAttributes);
+					if (cmElement != null) {
+						List nodes = query.getAvailableContent(element, cmElement, ModelQuery.INCLUDE_ATTRIBUTES);
+						for (int k = 0; k < nodes.size(); k++) {
+							CMNode cmnode = (CMNode) nodes.get(k);
+							if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
+								allAttributes.put(cmnode);
+							}
+						}
+					}
+					cmAttributes = allAttributes;
 
 					boolean foundjspattribute = checkUnknownAttributes(element, cmAttributes, reporter, file, model.getStructuredDocument(), documentRegion);
 					// required attributes could be hidden in jsp regions in

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,12 +12,14 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.contentmodel.modelquery.extension;
 
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 public abstract class ModelQueryExtension
 {  
   protected static final String[] EMPTY_STRING_ARRAY = {};
+  protected static final CMNode[] EMPTY_CMNODE_ARRAY = {};
   
   public String[] getAttributeValues(Element ownerElement, String namespace, String name)
   {
@@ -32,5 +34,10 @@ public abstract class ModelQueryExtension
   public boolean isApplicableChildElement(Node parentNode, String namespace, String name)
   {
     return true;
+  }
+  
+  public CMNode[] getAvailableElementContent(Element parentElement, String namespace, int includeOptions) 
+  {
+	  return EMPTY_CMNODE_ARRAY;
   }
 }

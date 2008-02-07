@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,8 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -137,6 +139,17 @@ public class XMLQuickAssistProcessor implements IQuickAssistProcessor {
 			CMElementDeclaration elementDecl = modelQuery.getCMElementDeclaration((Element) node);
 			if (elementDecl != null) {
 				CMNamedNodeMap attrMap = elementDecl.getAttributes();
+
+				CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attrMap);
+				List nodes = ModelQueryUtil.getModelQuery(node.getOwnerDocument()).getAvailableContent((Element) node, elementDecl, ModelQuery.INCLUDE_ATTRIBUTES);
+				for (int k = 0; k < nodes.size(); k++) {
+					CMNode cmnode = (CMNode) nodes.get(k);
+					if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
+						allAttributes.put(cmnode);
+					}
+				}
+				attrMap = allAttributes;
+				
 				Iterator it = attrMap.iterator();
 				CMAttributeDeclaration attr = null;
 				while (it.hasNext()) {

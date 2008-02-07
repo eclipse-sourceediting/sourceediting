@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,6 +35,9 @@ import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
@@ -490,7 +493,18 @@ public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 
 		// determine if attribute value is of type URI
 		if (cmElement != null) {
-			CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) cmElement.getAttributes().getNamedItem(attrName);
+			CMNamedNodeMap attrDecls = cmElement.getAttributes();
+			CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attrDecls);
+			List nodes = ModelQueryUtil.getModelQuery(attr.getOwnerDocument()).getAvailableContent(attr.getOwnerElement(), cmElement, ModelQuery.INCLUDE_ATTRIBUTES);
+			for (int k = 0; k < nodes.size(); k++) {
+				CMNode cmnode = (CMNode) nodes.get(k);
+				if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
+					allAttributes.put(cmnode);
+				}
+			}
+			attrDecls = allAttributes;
+
+			CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) attrDecls.getNamedItem(attrName);
 			if ((attrDecl != null) && (attrDecl.getAttrType() != null) && (CMDataType.URI.equals(attrDecl.getAttrType().getDataTypeName()))) {
 				return true;
 			}

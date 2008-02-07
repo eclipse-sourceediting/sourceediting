@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,8 @@
 package org.eclipse.wst.xml.ui.internal.taginfo;
 
 
+
+import java.util.List;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
@@ -30,6 +32,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
@@ -116,7 +119,7 @@ public class XMLTagInfoHoverProcessor extends AbstractHoverProcessor {
 	protected String computeTagAttNameHelp(IDOMNode xmlnode, IDOMNode parentNode, IStructuredDocumentRegion flatNode, ITextRegion region) {
 		CMElementDeclaration elementDecl = getCMElementDeclaration(xmlnode);
 		String attName = flatNode.getText(region);
-		CMAttributeDeclaration attDecl = getCMAttributeDeclaration(elementDecl, attName);
+		CMAttributeDeclaration attDecl = getCMAttributeDeclaration(xmlnode, elementDecl, attName);
 		return getAdditionalInfo(elementDecl, attDecl);
 	}
 
@@ -129,7 +132,7 @@ public class XMLTagInfoHoverProcessor extends AbstractHoverProcessor {
 		ITextRegion attrNameRegion = getAttrNameRegion(xmlnode, region);
 
 		String attName = flatNode.getText(attrNameRegion);
-		CMAttributeDeclaration attDecl = getCMAttributeDeclaration(elementDecl, attName);
+		CMAttributeDeclaration attDecl = getCMAttributeDeclaration(xmlnode, elementDecl, attName);
 		return getAdditionalInfo(elementDecl, attDecl);
 	}
 
@@ -194,11 +197,22 @@ public class XMLTagInfoHoverProcessor extends AbstractHoverProcessor {
 	 * Retreives CMAttributeDeclaration indicated by attribute name within
 	 * elementDecl
 	 */
-	protected CMAttributeDeclaration getCMAttributeDeclaration(CMElementDeclaration elementDecl, String attName) {
+	protected CMAttributeDeclaration getCMAttributeDeclaration(IDOMNode node, CMElementDeclaration elementDecl, String attName) {
 		CMAttributeDeclaration attrDecl = null;
 
 		if (elementDecl != null) {
 			CMNamedNodeMap attributes = elementDecl.getAttributes();
+			
+			CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attributes);
+			List nodes = ModelQueryUtil.getModelQuery(node.getOwnerDocument()).getAvailableContent((Element) node, elementDecl, ModelQuery.INCLUDE_ATTRIBUTES);
+			for (int k = 0; k < nodes.size(); k++) {
+				CMNode cmnode = (CMNode) nodes.get(k);
+				if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
+					allAttributes.put(cmnode);
+				}
+			}
+			attributes = allAttributes;
+
 			String noprefixName = DOMNamespaceHelper.getUnprefixedName(attName);
 			if (attributes != null) {
 				attrDecl = (CMAttributeDeclaration) attributes.getNamedItem(noprefixName);

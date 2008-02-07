@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,8 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
@@ -249,7 +251,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		// the displayName MUST be set
 		EnumeratedStringPropertyDescriptor descriptor = new EnumeratedStringPropertyDescriptor(attrDecl.getNodeName(), attrDecl.getNodeName(), _getValidFixedStrings(attrDecl, helper));
 		descriptor.setCategory(getCategory(attrDecl));
-		descriptor.setDescription(DOMNamespaceHelper.computeName(attrDecl,fNode,null));
+		descriptor.setDescription(DOMNamespaceHelper.computeName(attrDecl, fNode, null));
 		return descriptor;
 	}
 
@@ -287,6 +289,15 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		CMElementDeclaration ed = getDeclaration();
 		if (ed != null) {
 			attrMap = ed.getAttributes();
+			CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attrMap);
+			List nodes = ModelQueryUtil.getModelQuery(fNode.getOwnerDocument()).getAvailableContent((Element) fNode, ed, ModelQuery.INCLUDE_ATTRIBUTES);
+			for (int k = 0; k < nodes.size(); k++) {
+				CMNode cmnode = (CMNode) nodes.get(k);
+				if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
+					allAttributes.put(cmnode);
+				}
+			}
+			attrMap = allAttributes;
 		}
 
 		List descriptorList = new ArrayList();
@@ -345,11 +356,31 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 				if (!names.contains(attrName)) {
 					IPropertyDescriptor holdDescriptor = createPropertyDescriptor(attrDecl);
 					if (holdDescriptor != null) {
+						names.add(attrName);
 						descriptorList.add(holdDescriptor);
 					}
 				}
 			}
 		}
+
+		// add MQE-based descriptors
+		if (ed != null && fNode.getNodeType() == Node.ELEMENT_NODE) {
+			List nodes = ModelQueryUtil.getModelQuery(fNode.getOwnerDocument()).getAvailableContent((Element) fNode, ed, ModelQuery.INCLUDE_ATTRIBUTES);
+			for (int i = 0; i < nodes.size(); i++) {
+				CMNode node = (CMNode) nodes.get(i);
+				if (node.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
+					attrDecl = (CMAttributeDeclaration) node;
+					String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
+					if (!names.contains(attrName)) {
+						IPropertyDescriptor holdDescriptor = createPropertyDescriptor(attrDecl);
+						if (holdDescriptor != null) {
+							descriptorList.add(holdDescriptor);
+						}
+					}
+				}
+			}
+		}
+
 
 		IPropertyDescriptor[] descriptors = new IPropertyDescriptor[descriptorList.size()];
 		for (int i = 0; i < descriptors.length; i++) {
@@ -359,7 +390,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 	}
 
 	private IPropertyDescriptor createTextPropertyDescriptor(CMAttributeDeclaration attrDecl) {
-		String attrName = DOMNamespaceHelper.computeName(attrDecl,fNode,null);
+		String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
 		TextPropertyDescriptor descriptor = new TextPropertyDescriptor(attrName, attrName);
 		descriptor.setCategory(getCategory(attrDecl));
 		descriptor.setDescription(attrName);
@@ -477,6 +508,15 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		CMElementDeclaration ed = getDeclaration();
 		if (ed != null) {
 			attrDecls = ed.getAttributes();
+			CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attrDecls);
+			List nodes = ModelQueryUtil.getModelQuery(fNode.getOwnerDocument()).getAvailableContent((Element) fNode, ed, ModelQuery.INCLUDE_ATTRIBUTES);
+			for (int k = 0; k < nodes.size(); k++) {
+				CMNode cmnode = (CMNode) nodes.get(k);
+				if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
+					allAttributes.put(cmnode);
+				}
+			}
+			attrDecls = allAttributes;
 		}
 
 		if (attrDecls != null) {
@@ -543,6 +583,15 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		CMElementDeclaration ed = getDeclaration();
 		if (ed != null) {
 			attrDecls = ed.getAttributes();
+			CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attrDecls);
+			List nodes = ModelQueryUtil.getModelQuery(fNode.getOwnerDocument()).getAvailableContent((Element) fNode, ed, ModelQuery.INCLUDE_ATTRIBUTES);
+			for (int k = 0; k < nodes.size(); k++) {
+				CMNode cmnode = (CMNode) nodes.get(k);
+				if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
+					allAttributes.put(cmnode);
+				}
+			}
+			attrDecls = allAttributes;
 		}
 
 		NamedNodeMap attrMap = fNode.getAttributes();
@@ -654,6 +703,15 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		CMNamedNodeMap attrMap = null;
 		if (ed != null) {
 			attrMap = ed.getAttributes();
+			CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attrMap);
+			List nodes = ModelQueryUtil.getModelQuery(fNode.getOwnerDocument()).getAvailableContent((Element) fNode, ed, ModelQuery.INCLUDE_ATTRIBUTES);
+			for (int k = 0; k < nodes.size(); k++) {
+				CMNode cmnode = (CMNode) nodes.get(k);
+				if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
+					allAttributes.put(cmnode);
+				}
+			}
+			attrMap = allAttributes;
 		}
 		// Update exiting descriptors; not added to the final list here
 		if (attrMap != null) {
