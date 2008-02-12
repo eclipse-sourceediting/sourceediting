@@ -462,25 +462,11 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
     }
   }
 
-  /**
-   * Returns <code>true</code> if the command stack is dirty
-   * 
-   * @see org.eclipse.ui.ISaveablePart#isDirty()
-   */
-  public boolean isDirty()
-  {
-    if (getCommandStack().isDirty())
-      return true;
-    else
-      return super.isDirty();
-  }
-
   public StructuredTextEditor getTextEditor()
   {
     return structuredTextEditor;
   }
- 
-  
+
   protected Composite createGraphPageComposite()
   {
     Composite parent = new Composite(getContainer(), SWT.NONE);    
