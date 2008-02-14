@@ -562,11 +562,11 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 	public String getLabel(Node parent, CMNode cmnode) {
 		String result = "?" + cmnode + "?"; //$NON-NLS-1$ //$NON-NLS-2$
 		if (cmnode != null) {
-			result = (String) cmnode.getProperty("name"); //$NON-NLS-1$
+			result = cmnode.getNodeName();
 			if(result == null) {
 				result = (String) cmnode.getProperty("description"); //$NON-NLS-1$
 			}
-			if (result == null) {
+			if (result == null || result.length() == 0) {
 				if (cmnode.getNodeType() == CMNode.GROUP) {
 					CMDescriptionBuilder descriptionBuilder = new CMDescriptionBuilder();
 					result = descriptionBuilder.buildDescription(cmnode);
