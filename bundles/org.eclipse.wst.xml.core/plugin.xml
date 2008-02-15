@@ -230,7 +230,7 @@
             class="org.eclipse.wst.xml.core.internal.validation.eclipse.Validator"
             manual="true"
             sourceid="org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidatorForXML"
-            version="2">
+            version="3">
          <include>
             <rules>
                <contentType id="org.eclipse.core.runtime.xml"></contentType>
@@ -243,6 +243,9 @@
             <rules>
 				<projectNature id="org.eclipse.jst.j2ee.ejb.EJBNature"/>
 				<projectNature id="org.eclipse.jst.j2ee.EARNature"/>
+    			<file caseSensitive="true" name=".project" type="file"/>
+    			<file caseSensitive="true" name=".classpath" type="file"/>
+    			<file caseSensitive="true" name=".settings"  type="folder"/>
             </rules>
          </exclude>
       </validator>
