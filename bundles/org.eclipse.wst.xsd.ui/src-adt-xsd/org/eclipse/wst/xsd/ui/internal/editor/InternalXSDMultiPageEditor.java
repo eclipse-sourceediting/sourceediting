@@ -29,6 +29,7 @@ import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.PrintAction;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -42,6 +43,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.search.ui.text.ISearchEditorAccess;
+import org.eclipse.search.ui.text.Match;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -401,7 +404,34 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     else if (type == ProductCustomizationProvider.class)
     {
       return XSDEditorPlugin.getPlugin().getProductCustomizationProvider();
-    }  
+    }
+    else if (type == ISearchEditorAccess.class)
+    {
+      return new ISearchEditorAccess()
+      {
+        public IDocument getDocument(Match match)
+        {
+          IDocument document = null;
+          ITextEditor textEditor = getTextEditor();
+          if (textEditor != null)
+          {
+            document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
+          }
+          return document;
+        }
+
+        public IAnnotationModel getAnnotationModel(Match match)
+        {
+          IAnnotationModel annoModel = null;
+          ITextEditor textEditor = getTextEditor();
+          if (textEditor != null)
+          {
+            annoModel = textEditor.getDocumentProvider().getAnnotationModel(textEditor.getEditorInput());
+          }
+          return annoModel;
+        }
+      };
+    }
     return super.getAdapter(type);
   }
 

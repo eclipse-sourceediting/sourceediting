@@ -1839,7 +1839,16 @@ public class XSDImpl
      */
     public String getSubstitutionGroupValue()
     {
-      return getResolvedXSDElementDeclaration().getElement().getAttribute(XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE);
+    	XSDElementDeclaration xsdElementDeclaration = getResolvedXSDElementDeclaration();
+    	if(xsdElementDeclaration != null)
+    	{
+    		Element element = xsdElementDeclaration.getElement();
+    		if(element != null)
+    		{
+    			return element.getAttribute(XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE);
+    		}
+    	}
+      return "";
     }
     
     

@@ -31,6 +31,7 @@ import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.jface.text.contentassist.IContextInformationExtension;
 import org.eclipse.jface.text.contentassist.IContextInformationPresenter;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.swt.graphics.Image;
@@ -45,7 +46,7 @@ import org.eclipse.wst.sse.ui.internal.IReleasable;
  */
 class CompoundContentAssistProcessor implements IContentAssistProcessor, ISubjectControlContentAssistProcessor {
 
-	private static class WrappedContextInformation implements IContextInformation {
+	private static class WrappedContextInformation implements IContextInformation, IContextInformationExtension {
 		private IContextInformation fInfo;
 		private IContentAssistProcessor fProcessor;
 
@@ -102,6 +103,13 @@ class CompoundContentAssistProcessor implements IContentAssistProcessor, ISubjec
 
 		IContextInformation getContextInformation() {
 			return fInfo;
+		}
+
+		public int getContextInformationPosition() {
+			int position = -1;
+			if (fInfo instanceof IContextInformationExtension)
+				position = ((IContextInformationExtension)fInfo).getContextInformationPosition();
+			return position;
 		}
 	}
 
@@ -230,6 +238,7 @@ class CompoundContentAssistProcessor implements IContentAssistProcessor, ISubjec
 	}
 
 	private final Set fProcessors = new LinkedHashSet();
+	private String fErrorMessage;
 
 	/**
 	 * Creates a new instance.
@@ -284,12 +293,22 @@ class CompoundContentAssistProcessor implements IContentAssistProcessor, ISubjec
 	 *      int)
 	 */
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int documentOffset) {
+		fErrorMessage = null;
 		List ret = new LinkedList();
 		for (Iterator it = fProcessors.iterator(); it.hasNext();) {
 			IContentAssistProcessor p = (IContentAssistProcessor) it.next();
 			ICompletionProposal[] proposals = p.computeCompletionProposals(viewer, documentOffset);
-			if (proposals != null)
+			if (proposals != null && proposals.length > 0) {
 				ret.addAll(Arrays.asList(proposals));
+				fErrorMessage = null; // Hide previous errors
+			} else {
+				if (fErrorMessage == null && ret.isEmpty()) {
+					String errorMessage = p.getErrorMessage();
+					if (errorMessage != null) {
+						fErrorMessage = errorMessage;
+					}
+				}
+			}
 		}
 		return (ICompletionProposal[]) ret.toArray(new ICompletionProposal[ret.size()]);
 	}
@@ -305,13 +324,23 @@ class CompoundContentAssistProcessor implements IContentAssistProcessor, ISubjec
 	 *      int)
 	 */
 	public IContextInformation[] computeContextInformation(ITextViewer viewer, int documentOffset) {
+		fErrorMessage = null;
 		List ret = new LinkedList();
 		for (Iterator it = fProcessors.iterator(); it.hasNext();) {
 			IContentAssistProcessor p = (IContentAssistProcessor) it.next();
 			IContextInformation[] informations = p.computeContextInformation(viewer, documentOffset);
-			if (informations != null)
+			if (informations != null && informations.length > 0) {
 				for (int i = 0; i < informations.length; i++)
 					ret.add(new WrappedContextInformation(informations[i], p));
+				fErrorMessage = null; // Hide previous errors
+			} else {
+				if (fErrorMessage == null && ret.isEmpty()) {
+					String errorMessage = p.getErrorMessage();
+					if (errorMessage != null) {
+						fErrorMessage = errorMessage;
+					}
+				}
+			}
 		}
 		return (IContextInformation[]) ret.toArray(new IContextInformation[ret.size()]);
 	}
@@ -361,21 +390,15 @@ class CompoundContentAssistProcessor implements IContentAssistProcessor, ISubjec
 	}
 
 	/**
-	 * Returns the first non- <code>null</code> error message of any
-	 * contained processor, or <code>null</code> if no processor has an
+	 * Returns the error message of one of
+	 * contained processor if any, or <code>null</code> if no processor has an
 	 * error message.
 	 * 
 	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getErrorMessage()
 	 * @return {@inheritDoc}
 	 */
 	public String getErrorMessage() {
-		for (Iterator it = fProcessors.iterator(); it.hasNext();) {
-			IContentAssistProcessor p = (IContentAssistProcessor) it.next();
-			String err = p.getErrorMessage();
-			if (err != null)
-				return err;
-		}
-		return null;
+		return fErrorMessage;
 	}
 
 	/**
@@ -433,14 +456,24 @@ class CompoundContentAssistProcessor implements IContentAssistProcessor, ISubjec
 	 *      int)
 	 */
 	public ICompletionProposal[] computeCompletionProposals(IContentAssistSubjectControl contentAssistSubjectControl, int documentOffset) {
+		fErrorMessage = null;
 		List ret = new LinkedList();
 		for (Iterator it = fProcessors.iterator(); it.hasNext();) {
 			Object o = it.next();
 			if (o instanceof ISubjectControlContentAssistProcessor) {
 				ISubjectControlContentAssistProcessor p = (ISubjectControlContentAssistProcessor) o;
 				ICompletionProposal[] proposals = p.computeCompletionProposals(contentAssistSubjectControl, documentOffset);
-				if (proposals != null)
+				if (proposals != null && proposals.length > 0) {
 					ret.addAll(Arrays.asList(proposals));
+					fErrorMessage = null; // Hide previous errors
+				} else {
+					if (fErrorMessage == null && ret.isEmpty()) {
+						String errorMessage = p.getErrorMessage();
+						if (errorMessage != null) {
+							fErrorMessage = errorMessage;
+						}
+					}
+				}
 			}
 		}
 
@@ -458,15 +491,25 @@ class CompoundContentAssistProcessor implements IContentAssistProcessor, ISubjec
 	 *      int)
 	 */
 	public IContextInformation[] computeContextInformation(IContentAssistSubjectControl contentAssistSubjectControl, int documentOffset) {
+		fErrorMessage = null;
 		List ret = new LinkedList();
 		for (Iterator it = fProcessors.iterator(); it.hasNext();) {
 			Object o = it.next();
 			if (o instanceof ISubjectControlContentAssistProcessor) {
 				ISubjectControlContentAssistProcessor p = (ISubjectControlContentAssistProcessor) o;
 				IContextInformation[] informations = p.computeContextInformation(contentAssistSubjectControl, documentOffset);
-				if (informations != null)
+				if (informations != null && informations.length > 0) {
 					for (int i = 0; i < informations.length; i++)
 						ret.add(new WrappedContextInformation(informations[i], p));
+					fErrorMessage = null; // Hide previous errors
+				} else {
+					if (fErrorMessage == null && ret.isEmpty()) {
+						String errorMessage = p.getErrorMessage();
+						if (errorMessage != null) {
+							fErrorMessage = errorMessage;
+						}
+					}
+				}
 			}
 		}
 		return (IContextInformation[]) ret.toArray(new IContextInformation[ret.size()]);

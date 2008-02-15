@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ package org.eclipse.wst.xml.ui.internal.contentassist;
 import java.util.HashMap;
 
 import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.jface.text.contentassist.IContextInformationExtension;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.ui.internal.util.Assert;
 
@@ -25,7 +26,7 @@ import org.eclipse.wst.sse.ui.internal.util.Assert;
  * 
  * @author pavery
  */
-public class AttributeContextInformation implements IContextInformation {
+public class AttributeContextInformation implements IContextInformation, IContextInformationExtension {
 	private HashMap fAttr2RangeMap;
 	/** The name of the context */
 	private String fContextDisplayString;
@@ -33,7 +34,7 @@ public class AttributeContextInformation implements IContextInformation {
 	private Image fImage;
 	/** The information to be displayed */
 	private String fInformationDisplayString;
-	private int fPosition;
+	private int fPosition = -1;
 
 	/**
 	 * Creates a new context information with an image.

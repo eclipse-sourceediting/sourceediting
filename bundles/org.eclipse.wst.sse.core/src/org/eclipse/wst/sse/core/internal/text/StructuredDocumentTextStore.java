@@ -122,8 +122,8 @@ public class StructuredDocumentTextStore implements ITextStore, CharSequence, IR
 	private boolean regionMatches(int offset, String stringToCompare) {
 		boolean result = true;
 		int stringOffset = 0;
-		int len = offset + stringToCompare.length();
-		for (int i = offset; i < len; i++) {
+		int end = offset + stringToCompare.length();
+		for (int i = offset; i < end; i++) {
 			if (charAt(i) != stringToCompare.charAt(stringOffset++)) {
 				result = false;
 				break;
@@ -148,8 +148,8 @@ public class StructuredDocumentTextStore implements ITextStore, CharSequence, IR
 	private boolean regionMatchesIgnoreCase(int offset, String stringToCompare) {
 		boolean result = true;
 		int stringOffset = 0;
-		int len = stringToCompare.length();
-		for (int i = offset; i < len; i++) {
+		int end = offset + stringToCompare.length();
+		for (int i = offset; i < end; i++) {
 			if (!matchesIgnoreCase(charAt(i), stringToCompare.charAt(stringOffset++))) {
 				result = false;
 				break;

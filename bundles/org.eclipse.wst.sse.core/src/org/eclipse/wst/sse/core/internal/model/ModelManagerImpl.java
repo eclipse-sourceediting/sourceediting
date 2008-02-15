@@ -401,9 +401,24 @@ public class ModelManagerImpl implements IModelManager {
 	private void _incrCount(SharedObject sharedObject, ReadEditType type) {
 		if (type == READ) {
 			sharedObject.referenceCountForRead++;
+			FileBufferModelManager.getInstance().connect(sharedObject.theSharedModel.getStructuredDocument());
 		}
 		else if (type == EDIT) {
 			sharedObject.referenceCountForEdit++;
+			FileBufferModelManager.getInstance().connect(sharedObject.theSharedModel.getStructuredDocument());
+		}
+		else
+			throw new IllegalArgumentException();
+	}
+
+	private void _decrCount(SharedObject sharedObject, ReadEditType type) {
+		if (type == READ) {
+			sharedObject.referenceCountForRead--;
+			FileBufferModelManager.getInstance().disconnect(sharedObject.theSharedModel.getStructuredDocument());
+		}
+		else if (type == EDIT) {
+			sharedObject.referenceCountForEdit--;
+			FileBufferModelManager.getInstance().disconnect(sharedObject.theSharedModel.getStructuredDocument());
 		}
 		else
 			throw new IllegalArgumentException();
@@ -412,9 +427,11 @@ public class ModelManagerImpl implements IModelManager {
 	private void _initCount(SharedObject sharedObject, ReadEditType type) {
 		if (type == READ) {
 			sharedObject.referenceCountForRead = 1;
+			FileBufferModelManager.getInstance().connect(sharedObject.theSharedModel.getStructuredDocument());
 		}
 		else if (type == EDIT) {
 			sharedObject.referenceCountForEdit = 1;
+			FileBufferModelManager.getInstance().connect(sharedObject.theSharedModel.getStructuredDocument());
 		}
 		else
 			throw new IllegalArgumentException();
@@ -918,7 +935,7 @@ public class ModelManagerImpl implements IModelManager {
 			// if shared object is in our cache, then simply increment its ref
 			// count,
 			// and return the object.
-			sharedObject.referenceCountForEdit++;
+			_incrCount(sharedObject, EDIT);
 			result = sharedObject.theSharedModel;
 			trace("got existing model for Edit: ", id); //$NON-NLS-1$
 			trace("   incremented referenceCountForEdit ", id, sharedObject.referenceCountForEdit); //$NON-NLS-1$
@@ -971,7 +988,7 @@ public class ModelManagerImpl implements IModelManager {
 			// if shared object is in our cache, then simply increment its ref
 			// count,
 			// and return the object.
-			sharedObject.referenceCountForRead++;
+			_incrCount(sharedObject, READ);
 			result = sharedObject.theSharedModel;
 		}
 		return result;
@@ -1393,7 +1410,7 @@ public class ModelManagerImpl implements IModelManager {
 
 
 			if (sharedObject != null) {
-				sharedObject.referenceCountForEdit--;
+				_decrCount(sharedObject, EDIT);
 				if ((sharedObject.referenceCountForRead == 0) && (sharedObject.referenceCountForEdit == 0)) {
 					discardModel(id, sharedObject);
 				}
@@ -1489,7 +1506,7 @@ public class ModelManagerImpl implements IModelManager {
 		}
 
 		if (sharedObject != null) {
-			sharedObject.referenceCountForRead--;
+			_decrCount(sharedObject, READ);
 			if ((sharedObject.referenceCountForRead == 0) && (sharedObject.referenceCountForEdit == 0)) {
 				discardModel(id, sharedObject);
 			}

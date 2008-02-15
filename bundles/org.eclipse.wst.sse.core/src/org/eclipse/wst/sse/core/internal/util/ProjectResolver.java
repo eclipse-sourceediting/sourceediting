@@ -201,7 +201,10 @@ public class ProjectResolver implements URIResolver {
 	}
 
 	protected String getRootLocationString() {
-		String location = null;
+		if (fProject == null)
+			return null;
+
+		String location = null;		
 		if (fProject.getLocation() != null) {
 			location = fProject.getLocation().toString();
 		}

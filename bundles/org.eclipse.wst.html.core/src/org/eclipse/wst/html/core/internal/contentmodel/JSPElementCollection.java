@@ -411,7 +411,7 @@ class JSPElementCollection extends DeclCollection implements JSP11Namespace.Elem
 			declarations.putNamedItem(ATTR_NAME_FILE, adec);
 		}
 
-		private void createForDirTaglib() {
+		void createForDirTaglib() {
 			// ("uri" URI REQUIRED)
 			AttrDecl adec = new AttrDecl(ATTR_NAME_URI);
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.URI);

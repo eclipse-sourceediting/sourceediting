@@ -10,20 +10,18 @@
  *******************************************************************************/
 package org.eclipse.wst.css.core.internal.formatter;
 
-
-
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
 import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-
 
 /**
  * 
@@ -54,36 +52,51 @@ public class StyleDeclarationFormatter extends DefaultCSSSourceFormatter {
 			return;
 
 		if (start > 0 && start < end) { // format source
-			IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
-			// get meaning regions
-			CompoundRegion[] regions = null;
-			if (exceptFor == null)
-				regions = getRegionsWithoutWhiteSpaces(structuredDocument, new FormatRegion(start, end - start), stgy);
-			else {
-				String pickupType = CSSRegionContexts.CSS_DECLARATION_DELIMITER;
-				if (prev == null || child == null)
-					pickupType = null;
-				regions = getRegions(structuredDocument, new FormatRegion(start, end - start), exceptFor, pickupType);
-			}
-			// extract source
-			for (int i = 0; i < regions.length; i++) {
-				appendSpaceBefore(node, regions[i], source);
-				source.append(decoratedRegion(regions[i], 0, stgy)); // must
-				// be comments
+			ICSSModel cssModel = node.getOwnerDocument().getModel();
+			// BUG202615 - it is possible to have a style declaration with no
+			// model associated with it
+			if (cssModel != null) {
+				IStructuredDocument structuredDocument = cssModel.getStructuredDocument();
+				if (structuredDocument != null) {
+					// get meaning regions
+					CompoundRegion[] regions = null;
+					if (exceptFor == null)
+						regions = getRegionsWithoutWhiteSpaces(structuredDocument, new FormatRegion(start, end - start), stgy);
+					else {
+						String pickupType = CSSRegionContexts.CSS_DECLARATION_DELIMITER;
+						if (prev == null || child == null)
+							pickupType = null;
+						regions = getRegions(structuredDocument, new FormatRegion(start, end - start), exceptFor, pickupType);
+					}
+					// extract source
+					for (int i = 0; i < regions.length; i++) {
+						appendSpaceBefore(node, regions[i], source);
+						source.append(decoratedRegion(regions[i], 0, stgy)); // must
+						// be comments
+					}
+				}
 			}
 		} else if (prev != null && child != null) { // generate source :
 			// between two declarations
 			// BUG93037-properties view adds extra ; when add new property
 			boolean semicolonFound = false;
-			IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
-			int prevStart = (prev != null) ? ((IndexedRegion) prev).getStartOffset() : 0;
-			int prevEnd = (prev != null) ? ((IndexedRegion) prev).getEndOffset() : 0;
-			CompoundRegion[] regions = getRegionsWithoutWhiteSpaces(structuredDocument, new FormatRegion(prevStart, prevEnd - prevStart), stgy);
-			int i = regions.length-1;
-			while (i >= 0 && !semicolonFound) {
-				if (regions[i].getType() == CSSRegionContexts.CSS_DECLARATION_DELIMITER)
-					semicolonFound = true;
-				--i;
+
+			ICSSModel cssModel = node.getOwnerDocument().getModel();
+			// BUG202615 - it is possible to have a style declaration with no
+			// model associated with it
+			if (cssModel != null) {
+				IStructuredDocument structuredDocument = cssModel.getStructuredDocument();
+				if (structuredDocument != null) {
+					int prevStart = (prev != null) ? ((IndexedRegion) prev).getStartOffset() : 0;
+					int prevEnd = (prev != null) ? ((IndexedRegion) prev).getEndOffset() : 0;
+					CompoundRegion[] regions = getRegionsWithoutWhiteSpaces(structuredDocument, new FormatRegion(prevStart, prevEnd - prevStart), stgy);
+					int i = regions.length - 1;
+					while (i >= 0 && !semicolonFound) {
+						if (regions[i].getType() == CSSRegionContexts.CSS_DECLARATION_DELIMITER)
+							semicolonFound = true;
+						--i;
+					}
+				}
 			}
 			if (!semicolonFound)
 				source.append(";");//$NON-NLS-1$
@@ -91,13 +104,27 @@ public class StyleDeclarationFormatter extends DefaultCSSSourceFormatter {
 			// declaration
 			org.eclipse.wst.css.core.internal.util.RegionIterator it = null;
 			if (end > 0) {
-				IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
-				it = new org.eclipse.wst.css.core.internal.util.RegionIterator(structuredDocument, end - 1);
+				ICSSModel cssModel = node.getOwnerDocument().getModel();
+				// BUG202615 - it is possible to have a style declaration with
+				// no model associated with it
+				if (cssModel != null) {
+					IStructuredDocument structuredDocument = cssModel.getStructuredDocument();
+					if (structuredDocument != null) {
+						it = new org.eclipse.wst.css.core.internal.util.RegionIterator(structuredDocument, end - 1);
+					}
+				}
 			} else {
 				int pos = getChildInsertPos(node);
 				if (pos >= 0) {
-					IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
-					it = new org.eclipse.wst.css.core.internal.util.RegionIterator(structuredDocument, pos - 1);
+					ICSSModel cssModel = node.getOwnerDocument().getModel();
+					// BUG202615 - it is possible to have a style declaration
+					// with no model associated with it
+					if (cssModel != null) {
+						IStructuredDocument structuredDocument = cssModel.getStructuredDocument();
+						if (structuredDocument != null) {
+							it = new org.eclipse.wst.css.core.internal.util.RegionIterator(structuredDocument, pos - 1);
+						}
+					}
 				}
 			}
 			if (it != null) {
@@ -118,13 +145,27 @@ public class StyleDeclarationFormatter extends DefaultCSSSourceFormatter {
 			// declaration
 			org.eclipse.wst.css.core.internal.util.RegionIterator it = null;
 			if (start > 0) {
-				IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
-				it = new org.eclipse.wst.css.core.internal.util.RegionIterator(structuredDocument, start);
+				ICSSModel cssModel = node.getOwnerDocument().getModel();
+				// BUG202615 - it is possible to have a style declaration with
+				// no model associated with it
+				if (cssModel != null) {
+					IStructuredDocument structuredDocument = cssModel.getStructuredDocument();
+					if (structuredDocument != null) {
+						it = new org.eclipse.wst.css.core.internal.util.RegionIterator(structuredDocument, start);
+					}
+				}
 			} else {
 				int pos = getChildInsertPos(node);
 				if (pos >= 0) {
-					IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
-					it = new org.eclipse.wst.css.core.internal.util.RegionIterator(structuredDocument, pos);
+					ICSSModel cssModel = node.getOwnerDocument().getModel();
+					// BUG202615 - it is possible to have a style declaration
+					// with no model associated with it
+					if (cssModel != null) {
+						IStructuredDocument structuredDocument = cssModel.getStructuredDocument();
+						if (structuredDocument != null) {
+							it = new org.eclipse.wst.css.core.internal.util.RegionIterator(structuredDocument, pos);
+						}
+					}
 				}
 			}
 			if (it != null) {
@@ -148,9 +189,16 @@ public class StyleDeclarationFormatter extends DefaultCSSSourceFormatter {
 				int pos = getChildInsertPos(node);
 				CompoundRegion toAppendRegion = null;
 				if (pos >= 0) {
-					IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
-					IStructuredDocumentRegion flatNode = structuredDocument.getRegionAtCharacterOffset(pos);
-					toAppendRegion = new CompoundRegion(flatNode, flatNode.getRegionAtCharacterOffset(pos));
+					ICSSModel cssModel = node.getOwnerDocument().getModel();
+					// BUG202615 - it is possible to have a style declaration
+					// with no model associated with it
+					if (cssModel != null) {
+						IStructuredDocument structuredDocument = cssModel.getStructuredDocument();
+						if (structuredDocument != null) {
+							IStructuredDocumentRegion flatNode = structuredDocument.getRegionAtCharacterOffset(pos);
+							toAppendRegion = new CompoundRegion(flatNode, flatNode.getRegionAtCharacterOffset(pos));
+						}
+					}
 				}
 				appendDelimBefore(node.getParentNode(), toAppendRegion, source);
 			}
@@ -170,22 +218,30 @@ public class StyleDeclarationFormatter extends DefaultCSSSourceFormatter {
 	protected void formatBefore(ICSSNode node, ICSSNode child, IRegion region, String toAppend, StringBuffer source) {
 		CSSCleanupStrategy stgy = getCleanupStrategy(node);
 
-		IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
-		CompoundRegion[] regions = getRegionsWithoutWhiteSpaces(structuredDocument, region, stgy);
-		CompoundRegion[] outside = getOutsideRegions(structuredDocument, region);
+		ICSSModel cssModel = node.getOwnerDocument().getModel();
+		// BUG202615 - it is possible to have a style declaration
+		// with no model associated with it
+		if (cssModel != null) {
+			IStructuredDocument structuredDocument = cssModel.getStructuredDocument();
+			if (structuredDocument != null) {
+				CompoundRegion[] regions = getRegionsWithoutWhiteSpaces(structuredDocument, region, stgy);
+				CompoundRegion[] outside = getOutsideRegions(structuredDocument, region);
 
-		for (int i = 0; i < regions.length; i++) {
-			if (i != 0 || needS(outside[0]))
-				appendSpaceBefore(node, regions[i], source);
-			source.append(decoratedRegion(regions[i], 0, stgy)); // must be
-			// comments
-		}
-		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
-		if (needS(outside[1])) {
-			if (((IndexedRegion) child).getStartOffset() == region.getOffset() + region.getLength() && preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_ONE_PER_LINE) && (node.getOwnerDocument() != node || !preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR))) {
-				appendDelimBefore(node, null, source);
-			} else
-				appendSpaceBefore(node, toAppend, source);
+				for (int i = 0; i < regions.length; i++) {
+					if (i != 0 || needS(outside[0]))
+						appendSpaceBefore(node, regions[i], source);
+					source.append(decoratedRegion(regions[i], 0, stgy)); // must
+																			// be
+																			// comments
+				}
+				Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
+				if (needS(outside[1])) {
+					if (((IndexedRegion) child).getStartOffset() == region.getOffset() + region.getLength() && preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_ONE_PER_LINE) && (node.getOwnerDocument() != node || !preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR))) {
+						appendDelimBefore(node, null, source);
+					} else
+						appendSpaceBefore(node, toAppend, source);
+				}
+			}
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -115,13 +115,15 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 		// performance enhancement: using child.getNextSibling() rather than
 		// nodeList(item) for O(n) vs. O(n*n)
 		//
-		Node node = (Node) object;
 		ArrayList v = new ArrayList();
+		if(object instanceof Node) {
+		Node node = (Node) object;
 		for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
 			Node n = child;
 			if (n.getNodeType() != Node.TEXT_NODE) {
 				v.add(n);
 			}
+		}
 		}
 		return v.toArray();
 	}
@@ -138,7 +140,9 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 	 * Fetches the label image specific to this object instance.
 	 */
 	public Image getLabelImage(Object node) {
-		Image image = CMImageUtil.getImage(CMImageUtil.getDeclaration((Node) node));
+		Image image = null;
+		if(node instanceof Node) {
+		image = CMImageUtil.getImage(CMImageUtil.getDeclaration((Node) node));
 		if ((image == null) && (JFaceResources.getImageRegistry() != null)) {
 			ImageRegistry imageRegistry = JFaceResources.getImageRegistry();
 			String nodeName = getNodeName(node);
@@ -149,6 +153,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 					imageRegistry.put(nodeName, image);
 				}
 			}
+		}
 		}
 		return image;
 	}
@@ -162,19 +167,24 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 
 	private String getNodeName(Object object) {
 		StringBuffer nodeName = new StringBuffer();
+		if(object instanceof Node) {
 		Node node = (Node) object;
 		nodeName.append(node.getNodeName());
 
 		if (node.getNodeType() == Node.DOCUMENT_TYPE_NODE) {
 			nodeName.insert(0, "DOCTYPE:"); //$NON-NLS-1$
 		}
+		}
 		return nodeName.toString();
 	}
 
 
 	public Object getParent(Object object) {
+		if(object instanceof Node) {
 		Node node = (Node) object;
 		return node.getParentNode();
+		}
+		return null;
 	}
 
 	private synchronized RefreshStructureJob getRefreshJob() {
@@ -189,11 +199,13 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 		// (pa) 20021217
 		// cmvc defect 235554 > use child.getNextSibling() instead of
 		// nodeList(item) for O(n) vs. O(n*n)
+		if(object instanceof Node) {
 		Node node = (Node) object;
 		for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
 			if (child.getNodeType() != Node.TEXT_NODE) {
 				return true;
 			}
+		}
 		}
 		return false;
 	}
