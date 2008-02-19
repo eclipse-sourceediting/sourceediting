@@ -12,7 +12,6 @@ package org.eclipse.wst.web.ui.internal.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.wst.javascript.ui.internal.wizard.NewJSWizard;
 
 public class OpenJSWizardAction extends AbstractOpenWizardAction implements
 		IWorkbenchWindowActionDelegate
@@ -20,7 +19,7 @@ public class OpenJSWizardAction extends AbstractOpenWizardAction implements
 
 	public void run( IAction action )
 	{
-		openWizardDialog( new NewJSWizard() );
+		openWizardDialog( new org.eclipse.wst.jsdt.internal.ui.wizards.NewJSWizard() );
 	}
 
 }
