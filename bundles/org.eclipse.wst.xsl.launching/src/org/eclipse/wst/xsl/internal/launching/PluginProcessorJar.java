@@ -11,6 +11,8 @@
 package org.eclipse.wst.xsl.internal.launching;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.FileLocator;
@@ -33,14 +35,31 @@ public class PluginProcessorJar implements IProcessorJar
 
 	public URL asURL()
 	{
-		Bundle bundle = Platform.getBundle(pluginId);
-		IPath jarPath = new Path("/" + path);
 		URL url = null;
 		try
 		{
-			url = FileLocator.find(bundle, jarPath, null);
-			if (url != null)
+			// FIXME very clumsy way to get location orbit jar file
+			// There is surely a better way, but I can'd find it.
+			if (path == null)
+			{
+				url = Platform.getBundle(pluginId).getEntry("/");
 				url = FileLocator.resolve(url);
+				String s = url.getPath();
+				if (s.endsWith("!/"))
+				{
+					s = s.substring(0,s.length()-2);
+				}
+				System.out.println(s);
+				url = new URL(s);
+			}
+			else
+			{
+				Bundle bundle = Platform.getBundle(pluginId);
+				IPath jarPath = new Path("/" + path);
+				url = FileLocator.find(bundle, jarPath, null);
+				if (url != null)
+					url = FileLocator.resolve(url);
+			}
 		}
 		catch (IOException e)
 		{

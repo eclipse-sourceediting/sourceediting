@@ -24,7 +24,7 @@
    <extension
          point="org.eclipse.wst.xsl.launching.processor">
       <processor
-            classpath="xalan2.7.0.jar;serializer2.7.0.jar"
+            classpath="${eclipse_orbit:org.apache.xalan}"
             id="org.eclipse.wst.xsl.launching.xalan.2_7_0"
             label="%processor.label.1"
             processorTypeId="org.eclipse.wst.xsl.xalan.processorType"

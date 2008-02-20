@@ -10,8 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.launching;
 
+
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
 import org.eclipse.wst.xsl.internal.launching.PluginProcessorJar;
+import org.eclipse.wst.xsl.internal.launching.Utils;
 
 public class ProcessorInstall implements IProcessorInstall
 {
@@ -89,7 +93,25 @@ public class ProcessorInstall implements IProcessorInstall
 		for (int i = 0; i < jarstring.length; i++)
 		{
 			String jar = jarstring[i];
-			jars[i] = new PluginProcessorJar(bundleId, new Path(jar));
+			try
+			{
+				if (jar.startsWith("${eclipse_orbit:") && jar.endsWith("}"))
+				{
+					jar = jar.substring("${eclipse_orbit:".length());
+					jar = jar.substring(0,jar.length()-1);
+					//jar = Utils.getFileLocation(jar,"");
+					jars[i] = new PluginProcessorJar(jar, null);
+				}
+				else
+				{
+					jar = Utils.getFileLocation(bundleId,jar);
+					jars[i] = new PluginProcessorJar(bundleId, new Path(jar));
+				}
+			}
+			catch (CoreException e)
+			{
+				LaunchingPlugin.log(e);
+			}
 		}
 		return jars;
 	}

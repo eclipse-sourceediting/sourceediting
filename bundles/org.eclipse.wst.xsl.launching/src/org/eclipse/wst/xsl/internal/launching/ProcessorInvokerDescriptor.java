@@ -10,18 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.launching;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.xsl.launching.IProcessorInvoker;
 
 public class ProcessorInvokerDescriptor implements IProcessorInvoker
@@ -46,7 +39,7 @@ public class ProcessorInvokerDescriptor implements IProcessorInvoker
 		try {
 			// if in dev mode, use the bin dir
 			if (Platform.inDevelopmentMode())
-				entries.add(getFileLocation(bundleId, "/bin"));
+				entries.add(Utils.getFileLocation(bundleId, "/bin"));
 			for (int i=0;i <classpath.length;i++) 
 			{
 				String string = classpath[i];
@@ -55,11 +48,11 @@ public class ProcessorInvokerDescriptor implements IProcessorInvoker
 				{
 					string = string.substring("${eclipse_orbit:".length());
 					string = string.substring(0,string.length()-1);
-					entry = getFileLocation(string,"");
+					entry = Utils.getFileLocation(string,"");
 				}
 				else
 				{
-					entry = getFileLocation(bundleId,string);
+					entry = Utils.getFileLocation(bundleId,string);
 				}
 				if (entry!=null)
 					entries.add(entry);
@@ -84,31 +77,4 @@ public class ProcessorInvokerDescriptor implements IProcessorInvoker
 	{
 		return id;
 	}
-	
-	private static URL getURL(String bundleId, String path)
-	{
-		return FileLocator.find(Platform.getBundle(bundleId), new Path(path), null);
-	}
-
-	static String getFileLocation(String bundleId, String path) throws CoreException
-	{
-		String location = null;
-		try
-		{
-			URL url = getURL(bundleId, path);
-			if (url != null)
-			{
-				URL fileUrl = FileLocator.toFileURL(url);
-				File file = new File(fileUrl.getFile());
-				location = file.getAbsolutePath();
-//				location = null;
-			}
-		}
-		catch (IOException e)
-		{
-			throw new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.ERROR, "Error determining jar file location: " + path + " from bundle: " + bundleId, e));
-		} 
-		return location;
-	}
-
 }

@@ -32,4 +32,14 @@
     	</resolverExtension>
 	</extension>
 
+   <extension
+         id="problem"
+         name="XSL Problem"
+         point="org.eclipse.core.resources.markers">
+		<super type="org.eclipse.core.resources.problemmarker"/>
+		<super type="org.eclipse.core.resources.textmarker"/>
+		<persistent value="true"/>
+		<attribute name="columnNumber"/>
+   </extension>
+
 </plugin>
