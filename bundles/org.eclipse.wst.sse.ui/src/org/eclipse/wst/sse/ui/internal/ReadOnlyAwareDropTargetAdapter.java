@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ package org.eclipse.wst.sse.ui.internal;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 
@@ -36,7 +37,8 @@ public class ReadOnlyAwareDropTargetAdapter extends ExtendedEditorDropTargetAdap
 	public void drop(DropTargetEvent event) {
 		IDocument document = getTextViewer().getDocument();
 		if (document instanceof IStructuredDocument) {
-			if (((IStructuredDocument) document).containsReadOnly(getDropOffset(event), 0)) {
+			Point range = getTextViewer().getSelectedRange();
+			if (((IStructuredDocument) document).containsReadOnly(range.x, range.y)) {
 				event.operations = DND.DROP_NONE;
 				event.detail = DND.DROP_NONE;
 				getTextViewer().getTextWidget().redraw();
