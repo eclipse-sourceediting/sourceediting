@@ -392,7 +392,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 
 							// xml:space="preserve" means preserve space,
 							// everything else means back to default.
-							if (defaultValue.compareTo(PRESERVE) == 0)
+							if (PRESERVE.compareTo(defaultValue) == 0)
 								formatContraints.setInPreserveSpaceElement(true);
 							else
 								formatContraints.setInPreserveSpaceElement(false);
