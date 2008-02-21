@@ -70,7 +70,7 @@
     <project-facet id="wst.web">
       <label>%SIMPLE_WEB_LABEL</label>
       <description>%SIMPLE_WEB_DESCRIPTION</description>
-      <icon>icons/full/obj16/webstatic_deploy.gif</icon>
+      <property name="hide.version" value="true"/>
     </project-facet>
 
     <project-facet-version facet="wst.web" version="1.0">

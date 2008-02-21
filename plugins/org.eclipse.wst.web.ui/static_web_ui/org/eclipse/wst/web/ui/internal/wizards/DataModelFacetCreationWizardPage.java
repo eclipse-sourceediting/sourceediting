@@ -12,6 +12,7 @@ package org.eclipse.wst.web.ui.internal.wizards;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -43,6 +44,7 @@ import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPa
 import org.eclipse.wst.common.frameworks.internal.operations.IProjectCreationPropertiesNew;
 import org.eclipse.wst.common.frameworks.internal.ui.NewProjectGroup;
 import org.eclipse.wst.common.project.facet.core.IFacetedProjectWorkingCopy;
+import org.eclipse.wst.common.project.facet.core.IPreset;
 import org.eclipse.wst.common.project.facet.core.IProjectFacet;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
@@ -51,6 +53,9 @@ import org.eclipse.wst.common.project.facet.core.events.IFacetedProjectListener;
 import org.eclipse.wst.common.project.facet.core.events.IProjectFacetsChangedEvent;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
 import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
+import org.eclipse.wst.common.project.facet.core.util.AbstractFilter;
+import org.eclipse.wst.common.project.facet.core.util.FilterEvent;
+import org.eclipse.wst.common.project.facet.core.util.IFilter;
 import org.eclipse.wst.common.project.facet.ui.ModifyFacetedProjectWizard;
 import org.eclipse.wst.common.project.facet.ui.PresetSelectionPanel;
 import org.eclipse.wst.project.facet.ProductManager;
@@ -64,6 +69,25 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 	
 	protected IProjectFacet primaryProjectFacet = null;
 	protected Combo primaryVersionCombo = null;
+	
+	protected Set<IProjectFacetVersion> getFacetConfiguration( final IProjectFacetVersion primaryFacetVersion )
+	{
+	    final Set<IProjectFacetVersion> config = new HashSet<IProjectFacetVersion>();
+	    
+	    for( IProjectFacet fixedFacet : this.fpjwc.getFixedProjectFacets() )
+	    {
+	        if( fixedFacet == primaryFacetVersion.getProjectFacet() )
+	        {
+	            config.add( primaryFacetVersion );
+	        }
+	        else
+	        {
+	            config.add( this.fpjwc.getHighestAvailableVersion( fixedFacet ) );
+	        }
+	    }
+	    
+	    return config;
+	}
 	
 	private static final String[] VALIDATION_PROPERTIES = 
 	{
@@ -113,24 +137,17 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
         primaryVersionCombo.setLayoutData( gdhfill() );
         updatePrimaryVersions();
         
-        primaryVersionCombo.addModifyListener(new ModifyListener(){
-			public void modifyText(ModifyEvent e) {
-				int selectedIndex = primaryVersionCombo.getSelectionIndex();
-				//this block updates the underlying model when the user changes the combo
-				if(selectedIndex != -1){
-					String versionString = primaryVersionCombo.getItem(selectedIndex);
-					SortedSet<IProjectFacetVersion> availableVersions = fpjwc.getAvailableVersions(primaryProjectFacet);
-					IProjectFacetVersion selectedVersion = null;
-					for(Iterator <IProjectFacetVersion> iterator = availableVersions.iterator(); iterator.hasNext() && null == selectedVersion;){
-						IProjectFacetVersion next = iterator.next();
-						if(versionString.equals(next.getVersionString())){
-							selectedVersion = next;
-							fpjwc.changeProjectFacetVersion(selectedVersion);
-						}
-					}
-				}
-			}
-        });
+        primaryVersionCombo.addSelectionListener
+        (
+            new SelectionAdapter()
+            {
+                @Override
+                public void widgetSelected( final SelectionEvent e )
+                {
+                    handlePrimaryFacetVersionSelectedEvent();
+                }
+            }
+        );
         
         fpjwc.addListener(new IFacetedProjectListener() {
 			public void handleEvent(IFacetedProjectEvent event) {
@@ -174,6 +191,44 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
         	
         }, IFacetedProjectEvent.Type.PROJECT_FACETS_CHANGED, IFacetedProjectEvent.Type.PRIMARY_RUNTIME_CHANGED);
 	}
+	
+	protected IProjectFacet getPrimaryFacet()
+	{
+	    return this.primaryProjectFacet;
+	}
+	
+	protected IProjectFacetVersion getPrimaryFacetVersion()
+	{
+	    IProjectFacetVersion fv = null;
+	    
+	    if( this.primaryProjectFacet.getVersions().size() > 1 )
+	    {
+            final int selectedIndex = this.primaryVersionCombo.getSelectionIndex();
+    
+            if( selectedIndex != -1 )
+            {
+                final String fvstr = this.primaryVersionCombo.getItem( selectedIndex );
+                fv = this.primaryProjectFacet.getVersion( fvstr );
+            }
+	    }
+	    else
+	    {
+	        fv = this.primaryProjectFacet.getDefaultVersion();
+	    }
+        
+        return fv;
+	}
+	
+	protected void handlePrimaryFacetVersionSelectedEvent()
+	{
+	    final IProjectFacetVersion fv = getPrimaryFacetVersion();
+
+        if( fv != null )
+        {
+            final Set<IProjectFacetVersion> facets = getFacetConfiguration( fv );
+            this.fpjwc.setProjectFacets( facets );
+        }
+	}
 
 	protected void updatePrimaryVersions(){
 		IProjectFacetVersion selectedVersion = fpjwc.getProjectFacetVersion(primaryProjectFacet);
@@ -209,8 +264,45 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 	protected void createPresetPanel(Composite top) {
 		final IFacetedProjectWorkingCopy fpjwc
             = ( (ModifyFacetedProjectWizard) getWizard() ).getFacetedProjectWorkingCopy();
+		
+		final IFilter<IPreset> filter = new AbstractFilter<IPreset>()
+		{
+		    {
+		        fpjwc.addListener
+		        (
+		            new IFacetedProjectListener()
+		            {
+                        public void handleEvent( final IFacetedProjectEvent event )
+                        {
+                            handleProjectFacetsChangedEvent( (IProjectFacetsChangedEvent) event );
+                        }
+		            }, 
+		            IFacetedProjectEvent.Type.PROJECT_FACETS_CHANGED 
+		        );
+		    }
+		    
+            public boolean check( final IPreset preset )
+            {
+                final IProjectFacetVersion primaryFacetVersion = getPrimaryFacetVersion();
+                return preset.getProjectFacets().contains( primaryFacetVersion );
+            }
+            
+            private void handleProjectFacetsChangedEvent( final IProjectFacetsChangedEvent event )
+            {
+                for( IProjectFacetVersion fv : event.getFacetsWithChangedVersions() )
+                {
+                    if( fv.getProjectFacet() == getPrimaryFacet() )
+                    {
+                        final IFilterEvent<IPreset> filterEvent
+                            = new FilterEvent<IPreset>( this, IFilterEvent.Type.FILTER_CHANGED );
+                        
+                        notifyListeners( filterEvent );
+                    }
+                }
+            }
+		};
 
-        final PresetSelectionPanel ppanel = new PresetSelectionPanel( top, fpjwc );
+        final PresetSelectionPanel ppanel = new PresetSelectionPanel( top, fpjwc, filter );
         
         ppanel.setLayoutData( gdhfill() );
 	}

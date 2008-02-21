@@ -49,6 +49,7 @@ import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.IFacetedProjectTemplate;
 import org.eclipse.wst.common.project.facet.core.IFacetedProjectWorkingCopy;
 import org.eclipse.wst.common.project.facet.core.IPreset;
+import org.eclipse.wst.common.project.facet.core.IProjectFacet;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 import org.eclipse.wst.common.project.facet.core.events.IFacetedProjectEvent;
 import org.eclipse.wst.common.project.facet.core.events.IFacetedProjectListener;
@@ -234,11 +235,26 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
     {
         final IFacetedProjectWorkingCopy dm = getFacetedProjectWorkingCopy();
 
-        dm.setTargetedRuntimes( Collections.EMPTY_SET );
-        dm.setDefaultFacetsForRuntime( runtime );
-        
+        dm.setTargetedRuntimes( Collections.<IRuntime>emptySet() );
+
         if( runtime != null )
         {
+            final Set<IProjectFacetVersion> minFacets = new HashSet<IProjectFacetVersion>();
+
+            try
+            {
+                for( IProjectFacet f : dm.getFixedProjectFacets() )
+                {
+                    minFacets.add( f.getLatestSupportedVersion( runtime ) );
+                }
+            }
+            catch( CoreException e )
+            {
+                throw new RuntimeException( e );
+            }
+            
+            dm.setProjectFacets( minFacets );
+            
             dm.setTargetedRuntimes( Collections.singleton( runtime ) );
         }
         
