@@ -1,15 +1,15 @@
 @echo on
 
 rem The following variables need to be set/specified for each "development machine"
-set PATH=%PATH%;D:\JDKs\j2sdk1.4.2_03\bin
-set WORKSPACE_LOCATION=D:\builds\Workspaces\RC2
+set PATH=%PATH%;D:\JDKs\ibm-java2-sdk-50-win-i386\bin
+set WORKSPACE_LOCATION=D:\builds\Workspaces\newWTPpurehead
 set JFLEX_LIB_LOCATION=D:\DevTimeSupport\JFlex-1.4\lib
 
 rem The following variables differ from project to project, but should be otherwise constant
 set MAIN_NAME=XML10Names
 
-set PROJECT_SRC=\org.eclipse.wst.sse.core.xml\src\
-set PACKAGE_DIR=com\ibm\sse\model\xml\internal\parser\
+set PROJECT_SRC=\org.eclipse.wst.xml.core\src\
+set PACKAGE_DIR=org\eclipse\wst\xml\core\internal\parser\
 
 
 rem Given the above "framework" and the command themselves, these variables should never need to be modified
