@@ -15,7 +15,7 @@
     <view
           category="org.eclipse.wst.xml"
           class="org.eclipse.wst.xml.xpath.internal.ui.views.XPathView"
-          id="org.eclipse.wst.xml.internal.ui.views.XPathView"
+          id="org.eclipse.wst.xml.views.XPathView"
           name="%xpathViewName"/>
  </extension>
    

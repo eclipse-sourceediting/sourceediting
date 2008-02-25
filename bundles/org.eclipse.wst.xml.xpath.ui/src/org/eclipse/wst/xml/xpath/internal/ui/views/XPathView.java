@@ -447,15 +447,18 @@ public class XPathView extends ViewPart
     public void init(IViewSite site, IMemento memento) throws PartInitException
     {
     	sheetMap = new HashMap<Integer,String>();
-        IMemento[] sheets = memento.getChildren("Sheet");
-        if(sheets!=null)
-        {
-        	currentSheet = memento.getInteger("CurrentSheet");
-        	for (IMemento sheet : sheets)
-			{
-        		sheetMap.put(sheet.getInteger("Index"), sheet.getString("XPath"));
-			}
-        }
+    	if (memento != null)
+    	{
+	        IMemento[] sheets = memento.getChildren("Sheet");
+	        if(sheets!=null)
+	        {
+	        	currentSheet = memento.getInteger("CurrentSheet");
+	        	for (IMemento sheet : sheets)
+				{
+	        		sheetMap.put(sheet.getInteger("Index"), sheet.getString("XPath"));
+				}
+	        }
+    	}
     	super.init(site, memento);
     }
 
