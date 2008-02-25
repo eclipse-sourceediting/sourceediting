@@ -77,34 +77,37 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 		
 		public void handleDebugEvents(DebugEvent[] events)
 		{
-			for (DebugEvent debugEvent : events)
+			if (launch.getProcesses().length > 0)
 			{
-				if (debugEvent.getSource() == launch.getProcesses()[0] && debugEvent.getKind() == DebugEvent.TERMINATE)
+				for (DebugEvent debugEvent : events)
 				{
-					// remove self as listener
-					DebugPlugin.getDefault().removeDebugEventListener(this);
-					File file = launchHelper.getTarget();
-					IFile ifile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(file.getAbsolutePath()));
-					if (ifile != null)
-					{// refresh this workspace file..
-						try
-						{
-							ifile.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor(){
-								@Override
-								public void done()
-								{
-									openFileIfRequired();
-								}
-							});
-						}
-						catch (CoreException e)
-						{
-							LaunchingPlugin.log(e);
-						}
-					}
-					else
+					if (debugEvent.getSource() == launch.getProcesses()[0] && debugEvent.getKind() == DebugEvent.TERMINATE)
 					{
-						openFileIfRequired();
+						// remove self as listener
+						DebugPlugin.getDefault().removeDebugEventListener(this);
+						File file = launchHelper.getTarget();
+						IFile ifile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(file.getAbsolutePath()));
+						if (ifile != null)
+						{// refresh this workspace file..
+							try
+							{
+								ifile.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor(){
+									@Override
+									public void done()
+									{
+										openFileIfRequired();
+									}
+								});
+							}
+							catch (CoreException e)
+							{
+								LaunchingPlugin.log(e);
+							}
+						}
+						else
+						{
+							openFileIfRequired();
+						}
 					}
 				}
 			}

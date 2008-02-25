@@ -45,6 +45,7 @@ public class XMLPerspectiveFactory implements IPerspectiveFactory {
 		// Add Outline to the bottom-left
 		IFolderLayout bottomLeft = 
 			layout.createFolder("bottom-left", IPageLayout.BOTTOM, (float) 0.50, "left");
+		bottomLeft.addView("org.eclipse.wst.xml.views.XPathView");
 		bottomLeft.addView("org.eclipse.wst.xml.xpath.ui.views.XPathNavigator");
 		
 		IFolderLayout bottom = layout.createFolder("bottom", IPageLayout.BOTTOM, (float) 0.75, editorArea);
@@ -71,7 +72,7 @@ public class XMLPerspectiveFactory implements IPerspectiveFactory {
         layout.addShowViewShortcut(IPageLayout.ID_OUTLINE);
         layout.addShowViewShortcut(IPageLayout.ID_PROBLEM_VIEW);
         layout.addShowViewShortcut(IConsoleConstants.ID_CONSOLE_VIEW);
-        layout.addShowViewShortcut(" org.eclipse.wst.common.snippets.internal.ui.SnippetsView");
+        layout.addShowViewShortcut("org.eclipse.wst.common.snippets.internal.ui.SnippetsView");
 	}
 	
 	private void addShortCutPerspective(IPageLayout layout) {
