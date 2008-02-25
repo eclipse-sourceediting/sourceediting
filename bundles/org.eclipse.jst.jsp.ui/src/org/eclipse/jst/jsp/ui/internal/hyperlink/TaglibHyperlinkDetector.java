@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -33,6 +34,7 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMElementDeclarationImpl;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TaglibTracker;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP11TLDNames;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
 import org.eclipse.jst.jsp.core.taglib.ITLDRecord;
@@ -45,15 +47,21 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMNodeWrapper;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
+import org.w3c.dom.EntityReference;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Detects hyperlinks for taglibs.
@@ -61,9 +69,74 @@ import org.w3c.dom.Node;
 public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 	private final String HTTP_PROTOCOL = "http://";//$NON-NLS-1$
 	private final String JAR_PROTOCOL = "jar:file:";//$NON-NLS-1$
-	//private String URN_TAGDIR = "urn:jsptagdir:";
+	// private String URN_TAGDIR = "urn:jsptagdir:";
 	private String URN_TLD = "urn:jsptld:";
 	private String XMLNS = "xmlns:"; //$NON-NLS-1$ 
+	
+	static final int TAG = 1;
+	static final int ATTRIBUTE = 2;
+	
+	static IRegion findDefinition(IDOMModel model, String searchName, int searchType) {
+		NodeList declarations = null;
+		if (searchType == TAG)
+			declarations = model.getDocument().getElementsByTagNameNS("*", JSP11TLDNames.TAG);
+		else if (searchType == ATTRIBUTE)
+			declarations = model.getDocument().getElementsByTagNameNS("*", JSP11TLDNames.ATTRIBUTE);
+		if (declarations == null || declarations.getLength() == 0) {
+			if (searchType == TAG)
+				declarations = model.getDocument().getElementsByTagName(JSP11TLDNames.TAG);
+			else if (searchType == ATTRIBUTE)
+				declarations = model.getDocument().getElementsByTagName(JSP11TLDNames.ATTRIBUTE);
+		}
+		for (int i = 0; i < declarations.getLength(); i++) {
+			NodeList names = model.getDocument().getElementsByTagName(JSP11TLDNames.NAME);
+			for (int j = 0; j < names.getLength(); j++) {
+				String name = getContainedText(names.item(j));
+				if (searchName.compareTo(name) == 0) {
+					int start = -1;
+					int end = -1;
+					Node caret = names.item(j).getFirstChild();
+					if (caret != null) {
+						start = ((IDOMNode) caret).getStartOffset();
+					}
+					while (caret != null) {
+						end = ((IDOMNode) caret).getEndOffset();
+						caret = caret.getNextSibling();
+					}
+					if (start > 0) {
+						return new Region(start, end - start);
+					}
+				}
+			}
+		}
+
+		return null;
+	}
+
+	private static String getContainedText(Node parent) {
+		NodeList children = parent.getChildNodes();
+		if (children.getLength() == 1) {
+			return children.item(0).getNodeValue().trim();
+		}
+		StringBuffer s = new StringBuffer();
+		Node child = parent.getFirstChild();
+		while (child != null) {
+			if (child.getNodeType() == Node.ENTITY_REFERENCE_NODE) {
+				String reference = ((EntityReference) child).getNodeValue();
+				if (reference == null && child.getNodeName() != null) {
+					reference = "&" + child.getNodeName() + ";"; //$NON-NLS-1$ //$NON-NLS-2$
+				}
+				if (reference != null) {
+					s.append(reference.trim());
+				}
+			}
+			else {
+				s.append(child.getNodeValue().trim());
+			}
+			child = child.getNextSibling();
+		}
+		return s.toString().trim();
+	}
 
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 		IHyperlink hyperlink = null;
@@ -79,10 +152,13 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 						Node currentNode = getCurrentNode(doc, region.getOffset());
 						if (currentNode != null && currentNode.getNodeType() == Node.ELEMENT_NODE) {
 							if (JSP11Namespace.ElementName.DIRECTIVE_TAGLIB.equalsIgnoreCase(currentNode.getNodeName())) {
+								/**
+								 * The taglib directive itself
+								 */
 								// get the uri attribute
-								Attr taglibNode = ((Element) currentNode).getAttributeNode(JSP11Namespace.ATTR_NAME_URI);
-								if (taglibNode != null) {
-									ITaglibRecord reference = TaglibIndex.resolve(getBaseLocationForTaglib(doc), taglibNode.getValue(), false);
+								Attr taglibURINode = ((Element) currentNode).getAttributeNode(JSP11Namespace.ATTR_NAME_URI);
+								if (taglibURINode != null) {
+									ITaglibRecord reference = TaglibIndex.resolve(getBaseLocationForTaglib(doc), taglibURINode.getValue(), false);
 									// when using a tagdir
 									// (ITaglibRecord.TAGDIR),
 									// there's nothing to link to
@@ -92,20 +168,27 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 											case (ITaglibRecord.TLD) : {
 												ITLDRecord record = (ITLDRecord) reference;
 												String uriString = record.getPath().toString();
-												IRegion hyperlinkRegion = getHyperlinkRegion(taglibNode);
-												hyperlink = createHyperlink(uriString, hyperlinkRegion, doc, taglibNode);
+												IRegion hyperlinkRegion = getHyperlinkRegion(taglibURINode, region);
+												if (hyperlinkRegion != null) {
+													hyperlink = createHyperlink(uriString, hyperlinkRegion, doc, null);
+												}
 											}
 												break;
 											case (ITaglibRecord.JAR) :
 											case (ITaglibRecord.URL) : {
-												IRegion hyperlinkRegion = getHyperlinkRegion(taglibNode);
-												hyperlink = new TaglibJarUriHyperlink(hyperlinkRegion, reference);
+												IRegion hyperlinkRegion = getHyperlinkRegion(taglibURINode, region);
+												if (hyperlinkRegion != null) {
+													hyperlink = new TaglibJarUriHyperlink(hyperlinkRegion, reference);
+												}
 											}
 										}
 									}
 								}
 							}
 							else if (JSP12Namespace.ElementName.ROOT.equalsIgnoreCase(currentNode.getNodeName())) {
+								/**
+								 * The jsp:root element
+								 */
 								NamedNodeMap attrs = currentNode.getAttributes();
 								for (int i = 0; i < attrs.getLength(); i++) {
 									Attr attr = (Attr) attrs.item(i);
@@ -124,14 +207,18 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 												case (ITaglibRecord.TLD) : {
 													ITLDRecord record = (ITLDRecord) reference;
 													String uriString = record.getPath().toString();
-													IRegion hyperlinkRegion = getHyperlinkRegion(attr);
-													hyperlink = createHyperlink(uriString, hyperlinkRegion, doc, attr);
+													IRegion hyperlinkRegion = getHyperlinkRegion(attr, region);
+													if (hyperlinkRegion != null) {
+														hyperlink = createHyperlink(uriString, hyperlinkRegion, doc, null);
+													}
 												}
 													break;
 												case (ITaglibRecord.JAR) :
 												case (ITaglibRecord.URL) : {
-													IRegion hyperlinkRegion = getHyperlinkRegion(attr);
-													hyperlink = new TaglibJarUriHyperlink(hyperlinkRegion, reference);
+													IRegion hyperlinkRegion = getHyperlinkRegion(attr, region);
+													if (hyperlinkRegion != null) {
+														hyperlink = new TaglibJarUriHyperlink(hyperlinkRegion, reference);
+													}
 												}
 											}
 										}
@@ -139,7 +226,9 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 								}
 							}
 							else {
-								// custom tag to its TLD or tag file
+								/**
+								 * Hyperlink custom tag to its TLD or tag file
+								 */
 								TLDCMDocumentManager documentManager = TaglibController.getTLDCMDocumentManager(doc);
 								if (documentManager != null) {
 									List documentTrackers = documentManager.getCMDocumentTrackers(currentNode.getPrefix(), region.getOffset());
@@ -150,8 +239,10 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 											decl = (CMElementDeclaration) ((CMNodeWrapper) decl).getOriginNode();
 											if (decl instanceof CMElementDeclarationImpl) {
 												String base = ((CMElementDeclarationImpl) decl).getLocationString();
-												IRegion hyperlinkRegion = getHyperlinkRegion(currentNode);
-												hyperlink = createHyperlink(base, hyperlinkRegion, doc, currentNode);
+												IRegion hyperlinkRegion = getHyperlinkRegion(currentNode, region);
+												if (hyperlinkRegion != null) {
+													hyperlink = createHyperlink(base, hyperlinkRegion, doc, currentNode);
+												}
 											}
 										}
 									}
@@ -195,7 +286,7 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	// the below methods were copied from URIHyperlinkDetector
 
-	private IRegion getHyperlinkRegion(Node node) {
+	private IRegion getHyperlinkRegion(Node node, IRegion boundingRegion) {
 		IRegion hyperRegion = null;
 
 		if (node != null) {
@@ -222,30 +313,58 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 				}
 			}
 			if (nodeType == Node.ELEMENT_NODE) {
-				// handle doc type node
+				// Handle doc type node
 				IDOMNode docNode = (IDOMNode) node;
-				hyperRegion = new Region(docNode.getStartOffset(), docNode.getFirstStructuredDocumentRegion().getTextLength());
+				hyperRegion = getNameRegion(docNode.getFirstStructuredDocumentRegion());
+				if (hyperRegion == null) {
+					hyperRegion = new Region(docNode.getStartOffset(), docNode.getFirstStructuredDocumentRegion().getTextLength());
+				}
 			}
 		}
-		return hyperRegion;
+		/**
+		 * Only return a hyperlink region that overlaps the search region.
+		 * This will help us to not underline areas not under the cursor.
+		 */
+		if (hyperRegion != null && intersects(hyperRegion, boundingRegion))
+			return hyperRegion;
+		return null;
 	}
 
-	/**
-	 * Returns an IFile from the given uri.
-	 * 
-	 * @param fileString
-	 *            workspace-relative path to an existing file in the workspace
-	 * @return returns existing IFile
-	 */
-	private IFile getFile(String fileString) {
-		/*
-		 * Note at this point, fileString is already guaranteed to be pointing
-		 * to an existing file in the workspace, so we can just call getFile.
-		 */
-		IPath path = new Path(fileString);
-		if (path.segmentCount() > 1) {
-			return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+	private boolean intersects(IRegion hyperlinkRegion, IRegion detectionRegion) {
+		int hyperLinkStart = hyperlinkRegion.getOffset();
+		int hyperLinkEnd = hyperlinkRegion.getOffset() + hyperlinkRegion.getLength();
+		int detectionStart = detectionRegion.getOffset();
+		int detectionEnd = detectionRegion.getOffset() + detectionRegion.getLength();
+		return (hyperLinkStart <= detectionStart && detectionStart < hyperLinkEnd) || (hyperLinkStart <= detectionEnd && detectionEnd < hyperLinkEnd);// ||
+		// (startOffset2
+		// <=
+		// startOffset1
+		// &&
+		// startOffset1
+		// <=
+		// endOffset2)
+		// ||
+		// (startOffset2
+		// <=
+		// endOffset2
+		// &&
+		// endOffset2
+		// <=
+		// endOffset2);
+	}
+
+	private IRegion getNameRegion(ITextRegionCollection containerRegion) {
+		ITextRegionList regions = containerRegion.getRegions();
+		ITextRegion nameRegion = null;
+		for (int i = 0; i < regions.size(); i++) {
+			ITextRegion r = regions.get(i);
+			if (r.getType() == DOMRegionContext.XML_TAG_NAME) {
+				nameRegion = r;
+				break;
+			}
 		}
+		if (nameRegion != null)
+			return new Region(containerRegion.getStartOffset(nameRegion), nameRegion.getTextLength());
 		return null;
 	}
 
@@ -260,9 +379,6 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 		IHyperlink link = null;
 
 		if (uriString != null) {
-			// try to locate the file in the workspace
-			IFile file = getFile(uriString);
-
 			String temp = uriString.toLowerCase();
 			if (temp.startsWith(HTTP_PROTOCOL)) {
 				// this is a URLHyperlink since this is a web address
@@ -271,18 +387,28 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 			else if (temp.startsWith(JAR_PROTOCOL)) {
 				// this is a URLFileHyperlink since this is a local address
 				try {
-					link = new URLFileHyperlink(hyperlinkRegion, new URL(uriString));
+					link = new URLFileRegionHyperlink(hyperlinkRegion, TAG, node.getLocalName(), new URL(uriString));
 				}
 				catch (MalformedURLException e) {
 					Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 				}
 			}
-			else if (file != null && file.isAccessible()) {
-				// this is a WorkspaceFileHyperlink since file exists in
-				// workspace
-				link = new WorkspaceFileHyperlink(hyperlinkRegion, file);
-			}
 			else {
+				// try to locate the file in the workspace
+				IPath path = new Path(uriString);
+				if (path.segmentCount() > 1) {
+					IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+					if (file.getType() == IResource.FILE && file.isAccessible()) {
+						if (node != null) {
+							link = new TLDFileHyperlink(file, TAG, node.getLocalName(), hyperlinkRegion);
+						}
+						else {
+							link = new WorkspaceFileHyperlink(hyperlinkRegion, file);
+						}
+					}
+				}
+			}
+			if (link == null) {
 				// this is an ExternalFileHyperlink since file does not exist
 				// in workspace
 				File externalFile = new File(uriString);
