@@ -16,6 +16,8 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.progress.IProgressConstants;
+import org.eclipse.wst.project.facet.IProductConstants;
+import org.eclipse.wst.project.facet.ProductManager;
 
 public class WebDevelopmentPerspective implements IPerspectiveFactory {
 
@@ -28,9 +30,17 @@ public class WebDevelopmentPerspective implements IPerspectiveFactory {
 	protected static final String BOTTOM_LOCATION = "bottom"; //$NON-NLS-N$
 
 	// view id's
-	protected static final String ID_PROJECT_EXPLORER = "org.eclipse.ui.navigator.ProjectExplorer"; //$NON-NLS-N$
+	protected static String ID_PROJECT_EXPLORER = "org.eclipse.ui.navigator.ProjectExplorer"; //$NON-NLS-N$
 	protected static final String ID_SERVER = "org.eclipse.wst.server.ui.ServersView";
 	protected static String ID_WST_SNIPPETS_VIEW = "org.eclipse.wst.common.snippets.internal.ui.SnippetsView"; //$NON-NLS-1$
+
+	public WebDevelopmentPerspective() {
+		super();
+		//If preference exists for alternate view, replace.
+		String viewerID = ProductManager.getProperty(IProductConstants.ID_PERSPECTIVE_HIERARCHY_VIEW);
+		if (viewerID != null)
+			ID_PROJECT_EXPLORER = viewerID;
+	}
 
 	/*
 	 *____ ________________ _____

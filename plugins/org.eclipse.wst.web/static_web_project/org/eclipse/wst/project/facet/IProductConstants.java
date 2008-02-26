@@ -31,6 +31,7 @@ public interface IProductConstants {
 	public static final String ADD_TO_EAR_BY_DEFAULT = "addToEarByDefault"; //$NON-NLS-1$
 	public static final String OUTPUT_FOLDER = "outputFolder"; //$NON-NLS-1$
 	public static final String USE_SINGLE_ROOT_STRUCTURE = "useSingleRootStructure"; //$NON-NLS-1$
+	public static final String ID_PERSPECTIVE_HIERARCHY_VIEW = "idPerspectiveHierarchyView"; //$NON-NLS-1$
 	
 	/**
      * Alters the final perspective used by the following new project wizards
