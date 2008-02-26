@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,6 +32,7 @@ public interface StructuredTextEditorActionConstants {
 	public final static String ACTION_NAME_STRUCTURE_SELECT_PREVIOUS = "StructureSelectPrevious";//$NON-NLS-1$
 	public final static String ACTION_NAME_TOGGLE_COMMENT = "ToggleComment";//$NON-NLS-1$
 	public final static String ACTION_NAME_UNCOMMENT = "Uncomment";//$NON-NLS-1$
+	public final static String ACTION_NAME_GOTO_MATCHING_BRACKET = "GotoMatchingBracket";//$NON-NLS-1$
 
 	/**
 	 * @deprecated use UNDERSCORE instead

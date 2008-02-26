@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,19 @@
 package org.eclipse.wst.sse.ui.internal.actions;
 
 
+
+/*******************************************************************************
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     
+ *******************************************************************************/
 
 /**
  * Defines the definitions ids for editor actions.
@@ -38,4 +51,7 @@ public interface ActionDefinitionIds {
 	public final static String TOGGLE_COMMENT = "org.eclipse.wst.sse.ui.toggle.comment";//$NON-NLS-1$
 	public final static String TOGGLE_BREAKPOINTS = "org.eclipse.wst.sse.ui.breakpoints.toggle";//$NON-NLS-1$
 	public final static String UNCOMMENT = "org.eclipse.wst.sse.ui.uncomment";//$NON-NLS-1$
+
+	// registered command IDs, so we pick up the declared key bindings
+	public static final String GOTO_MATCHING_BRACKET= "org.eclipse.wst.sse.ui.goto.matching.bracket"; //$NON-NLS-1$
 }

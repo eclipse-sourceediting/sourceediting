@@ -56,6 +56,8 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITextViewerExtension;
 import org.eclipse.jface.text.ITextViewerExtension2;
+import org.eclipse.jface.text.ITextViewerExtension5;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
@@ -193,6 +195,21 @@ import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
  */
 
 public class StructuredTextEditor extends TextEditor {
+	/**
+	 * Based on org.eclipse.jdt.internal.ui.javaeditor.GotoMatchingBracketAction
+	 */
+	private class GotoMatchingBracketAction extends Action {
+		GotoMatchingBracketAction() {
+			super(SSEUIMessages.GotoMatchingBracket_label);
+			setEnabled(true);
+			// PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IHelpContextIds.GOTO_MATCHING_BRACKET_ACTION);
+		}
+
+		public void run() {
+			gotoMatchingBracket();
+		}
+	}
+
 	private class InternalModelStateListener implements IModelStateListener {
 		public void modelAboutToBeChanged(IStructuredModel model) {
 			if (getTextViewer() != null) {
@@ -1388,6 +1405,10 @@ public class StructuredTextEditor extends TextEditor {
 
 		computeAndSetDoubleClickAction();
 
+		action= new GotoMatchingBracketAction();
+		action.setActionDefinitionId(ActionDefinitionIds.GOTO_MATCHING_BRACKET);
+		setAction(StructuredTextEditorActionConstants.ACTION_NAME_GOTO_MATCHING_BRACKET, action);
+
 		fShowPropertiesAction = new ShowPropertiesAction();
 		fFoldingGroup = new FoldingActionGroup(this, getSourceViewer());
 	}
@@ -1522,6 +1543,11 @@ public class StructuredTextEditor extends TextEditor {
 		}
 		if (!allIds.contains(IPageLayout.ID_OUTLINE)) {
 			allIds.add(IPageLayout.ID_OUTLINE);
+		}
+		// Copied from org.eclipse.ui.navigator.resources.ProjectExplorer.VIEW_ID
+		String PE_VIEW_ID = "org.eclipse.ui.navigator.ProjectExplorer"; //$NON-NLS-1$
+		if (!allIds.contains(PE_VIEW_ID)) {
+			allIds.add(PE_VIEW_ID);
 		}
 		return (String[]) allIds.toArray(new String[0]);
 	}
@@ -2204,6 +2230,70 @@ public class StructuredTextEditor extends TextEditor {
 		return (StructuredTextViewer) getSourceViewer();
 	}
 
+	/**
+	 * Jumps to the matching bracket.
+	 */
+	void gotoMatchingBracket() {
+		ICharacterPairMatcher matcher = createCharacterPairMatcher();
+		if (matcher == null)
+			return;
+
+		ISourceViewer sourceViewer = getSourceViewer();
+		IDocument document = sourceViewer.getDocument();
+		if (document == null)
+			return;
+
+		IRegion selection = getSignedSelection(sourceViewer);
+
+		int selectionLength = Math.abs(selection.getLength());
+		if (selectionLength > 1) {
+			setStatusLineErrorMessage(SSEUIMessages.GotoMatchingBracket_error_invalidSelection);
+			sourceViewer.getTextWidget().getDisplay().beep();
+			return;
+		}
+
+		int sourceCaretOffset = selection.getOffset() + selection.getLength();
+		IRegion region = matcher.match(document, sourceCaretOffset);
+		if (region == null) {
+			setStatusLineErrorMessage(SSEUIMessages.GotoMatchingBracket_error_noMatchingBracket);
+			sourceViewer.getTextWidget().getDisplay().beep();
+			return;
+		}
+
+		int offset = region.getOffset();
+		int length = region.getLength();
+
+		if (length < 1)
+			return;
+
+		int anchor = matcher.getAnchor();
+		// http://dev.eclipse.org/bugs/show_bug.cgi?id=34195
+		int targetOffset = (ICharacterPairMatcher.RIGHT == anchor) ? offset + 1 : offset + length;
+
+		boolean visible = false;
+		if (sourceViewer instanceof ITextViewerExtension5) {
+			ITextViewerExtension5 extension = (ITextViewerExtension5) sourceViewer;
+			visible = (extension.modelOffset2WidgetOffset(targetOffset) > -1);
+		}
+		else {
+			IRegion visibleRegion = sourceViewer.getVisibleRegion();
+			// http://dev.eclipse.org/bugs/show_bug.cgi?id=34195
+			visible = (targetOffset >= visibleRegion.getOffset() && targetOffset <= visibleRegion.getOffset() + visibleRegion.getLength());
+		}
+
+		if (!visible) {
+			setStatusLineErrorMessage(SSEUIMessages.GotoMatchingBracket_error_bracketOutsideSelectedElement);
+			sourceViewer.getTextWidget().getDisplay().beep();
+			return;
+		}
+
+		if (selection.getLength() < 0)
+			targetOffset -= selection.getLength();
+
+		sourceViewer.setSelectedRange(targetOffset, selection.getLength());
+		sourceViewer.revealRange(targetOffset, selection.getLength());
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -3240,6 +3330,31 @@ public class StructuredTextEditor extends TextEditor {
 				statusLineManager.setMessage(image, text);
 			}
 		}
+	}
+
+	/**
+	 * Returns the signed current selection.
+	 * The length will be negative if the resulting selection
+	 * is right-to-left (RtoL).
+	 * <p>
+	 * The selection offset is model based.
+	 * </p>
+	 *
+	 * @param sourceViewer the source viewer
+	 * @return a region denoting the current signed selection, for a resulting RtoL selections length is < 0
+	 */
+	IRegion getSignedSelection(ISourceViewer sourceViewer) {
+		StyledText text= sourceViewer.getTextWidget();
+		Point selection= text.getSelectionRange();
+
+		if (text.getCaretOffset() == selection.x) {
+			selection.x= selection.x + selection.y;
+			selection.y= -selection.y;
+		}
+
+		selection.x= widgetOffset2ModelOffset(sourceViewer, selection.x);
+
+		return new Region(selection.x, selection.y);
 	}
 
 	protected SourceViewerDecorationSupport getSourceViewerDecorationSupport(ISourceViewer viewer) {

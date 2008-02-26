@@ -591,4 +591,35 @@
        </description>
     </wizard>
  </extension>
+
+	<extension point="org.eclipse.ui.commands">
+		<!-- Navigate commands -->
+		<command
+			name="%ActionDefinition.nextSibling.name"
+			description="%ActionDefinition.nextSibling.description"
+			categoryId="org.eclipse.ui.category.edit"
+			id="org.eclipse.wst.xml.ui.nextSibling">
+		</command>
+		<command
+			name="%ActionDefinition.previousSibling.name"
+			description="%ActionDefinition.previousSibling.description"
+			categoryId="org.eclipse.ui.category.edit"
+			id="org.eclipse.wst.xml.ui.previousSibling">
+		</command>
+	</extension>
+
+	<extension point="org.eclipse.ui.bindings">
+	    <!--  win32:  M1=CTRL, M2=SHIFT, M3=ALT -->
+		<!-- Navigate commands -->
+		<key
+			sequence="M1+M2+ARROW_UP"
+			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			commandId="org.eclipse.wst.xml.ui.previousSibling"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key
+			sequence="M1+M2+ARROW_DOWN"
+			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			commandId="org.eclipse.wst.xml.ui.nextSibling"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+	</extension>
 </plugin>

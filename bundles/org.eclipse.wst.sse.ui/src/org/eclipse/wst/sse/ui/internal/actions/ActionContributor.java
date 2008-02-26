@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -81,6 +81,8 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 	protected RetargetTextEditorAction fToggleInsertModeAction;
 	protected GroupMarker fToolbarAdditionsGroupMarker = null;
 	protected Separator fToolbarSeparator = null;
+	
+	protected RetargetTextEditorAction fGotoMatchingBracketAction = null;
 
 	public ActionContributor() {
 		super();
@@ -132,6 +134,9 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 		fNextAnnotation = new GotoAnnotationAction("Next_annotation", true); //$NON-NLS-1$
 		fNextAnnotation.setActionDefinitionId("org.eclipse.ui.navigate.next"); //$NON-NLS-1$
 
+		fGotoMatchingBracketAction = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_GOTO_MATCHING_BRACKET + StructuredTextEditorActionConstants.UNDERSCORE);
+		fGotoMatchingBracketAction.setActionDefinitionId(ActionDefinitionIds.GOTO_MATCHING_BRACKET);
+
 		// Read action extensions.
 		ExtendedEditorActionBuilder builder = new ExtendedEditorActionBuilder();
 		extendedContributor = builder.readActionExtensions(getExtensionIDs());
@@ -174,6 +179,11 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 			sourceMenu.add(fRemoveBlockComment);
 			sourceMenu.add(fShiftRight);
 			sourceMenu.add(fShiftLeft);
+		}
+		
+		IMenuManager gotoMenu = menu.findMenuUsingPath(IWorkbenchActionConstants.GO_TO);
+		if (gotoMenu != null) {
+			gotoMenu.add(fGotoMatchingBracketAction);
 		}
 	}
 
@@ -331,6 +341,7 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 		// CMVC 249017 for JavaEditor consistancy
 		fPreviousAnnotation.setEditor(textEditor);
 		fNextAnnotation.setEditor(textEditor);
+		fGotoMatchingBracketAction.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_GOTO_MATCHING_BRACKET));
 
 		fToggleInsertModeAction.setAction(getAction(textEditor, ITextEditorActionConstants.TOGGLE_INSERT_MODE));
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,8 @@ import org.w3c.dom.Node;
  * @author nsd
  */
 public class CMImageUtil {
+
+	public static String SMALL_ICON_URL = "small-icon"; //$NON-NLS-1$
 
 	public static CMNode getDeclaration(Node node) {
 		CMNode decl = null;
@@ -69,7 +71,7 @@ public class CMImageUtil {
 			return null;
 		}
 		// cache CM-specified images with the XML UI plugin
-		String imageURLString = (String) cmnode.getProperty("small-icon"); //$NON-NLS-1$
+		String imageURLString = (String) cmnode.getProperty(SMALL_ICON_URL);
 		ImageDescriptor descriptor = null;
 		if ((imageURLString != null) && (imageURLString.length() > 0)) {
 			descriptor = XMLUIPlugin.getInstance().getImageRegistry().getDescriptor(imageURLString);

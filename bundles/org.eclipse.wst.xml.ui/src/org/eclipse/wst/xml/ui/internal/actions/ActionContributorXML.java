@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.ResourceBundle;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -52,6 +53,8 @@ public class ActionContributorXML extends ActionContributor {
 	protected RetargetTextEditorAction fOpenFileAction = null; // open file
 
 	protected RetargetTextEditorAction fUncomment = null;
+	private SiblingNavigationAction fPreviousSibling;
+	private SiblingNavigationAction fNextSibling;
 
 	public ActionContributorXML() {
 		super();
@@ -77,6 +80,11 @@ public class ActionContributorXML extends ActionContributor {
 
 		fFindOccurrences = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fFindOccurrences.setActionDefinitionId(ActionDefinitionIds.FIND_OCCURRENCES);
+
+		fPreviousSibling = new SiblingNavigationAction(resourceBundle, "previousSibling_", null, false);
+		fPreviousSibling.setActionDefinitionId("org.eclipse.wst.xml.ui.previousSibling");
+		fNextSibling = new SiblingNavigationAction(resourceBundle, "nextSibling_", null, true);
+		fNextSibling.setActionDefinitionId("org.eclipse.wst.xml.ui.nextSibling");
 	}
 
 	protected void addToMenu(IMenuManager menu) {
@@ -116,6 +124,14 @@ public class ActionContributorXML extends ActionContributor {
 		if (navigateMenu != null) {
 			navigateMenu.appendToGroup(IWorkbenchActionConstants.OPEN_EXT, fCommandsSeparator);
 			navigateMenu.appendToGroup(IWorkbenchActionConstants.OPEN_EXT, fOpenFileAction);
+
+			IMenuManager gotoGroup = navigateMenu.findMenuUsingPath(IWorkbenchActionConstants.GO_TO);
+			if (gotoGroup != null) {
+				gotoGroup.add(fGotoMatchingBracketAction);
+				gotoGroup.add(new Separator());
+				gotoGroup.add(fPreviousSibling);
+				gotoGroup.add(fNextSibling);
+			}
 		}
 	}
 
@@ -160,6 +176,14 @@ public class ActionContributorXML extends ActionContributor {
 		fOpenFileAction.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE));
 
 		fFindOccurrences.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_FIND_OCCURRENCES));
+
+		fPreviousSibling.setEditor(textEditor);
+		fNextSibling.setEditor(textEditor);
+		
+		if (actionBars != null) {
+			actionBars.setGlobalActionHandler(fPreviousSibling.getActionDefinitionId(), fPreviousSibling);
+			actionBars.setGlobalActionHandler(fNextSibling.getActionDefinitionId(), fNextSibling);
+		}
 	}
 
 	/*
