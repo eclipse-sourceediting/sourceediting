@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -96,26 +96,16 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 
 		if (xmlMenu == null) {
 			xmlMenu = new MenuManager(XMLEditorMessages.XMLTableTreeActionBarContributor_0, "org.eclipse.core.runtime.xml.design.xmlmenu"); //$NON-NLS-1$
-			bars.getMenuManager().insertBefore(IWorkbenchActionConstants.M_WINDOW, xmlMenu);
+			// For RCP usage
+			if (bars.getMenuManager().find(IWorkbenchActionConstants.M_WINDOW) != null) {
+				bars.getMenuManager().insertBefore(IWorkbenchActionConstants.M_WINDOW, xmlMenu);
+			}
 		}
 		else {
 			removeContributions(xmlMenu);
 		}
 
 		tbm.add(new Separator("DESIGN_VIEWER_SEPARATOR_1_ID")); //$NON-NLS-1$
-
-		// ValidateXMLAction
-		//                        
-		// ugly hack ... we don't contribute the generic XML validator if we
-		// already
-		// have a DAD validator contribution (in the case of the DAD editor).
-		// This hack will be removed when defect 212448 is fixed.
-		//
-		// if (tbm.find("validate.dad.validateDAD") == null) {
-		// validateXMLAction = new ValidateXMLAction();
-		// tbm.add(validateXMLAction);
-		// xmlMenu.add(validateXMLAction);
-		// }
 
 		// ToggleEditModeAction
 		//           
