@@ -1388,7 +1388,11 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			setErrorMessage(UNKNOWN_CONTEXT);
 		}
 
-		if (contentAssistRequest.getProposals().size() == 0) {
+		/* 
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=123892
+		 * Only set this error message if nothing else was already set 
+		 **/
+		if (contentAssistRequest.getProposals().size() == 0 && getErrorMessage() == null) {
 			setErrorMessage(UNKNOWN_CONTEXT);
 		}
 
