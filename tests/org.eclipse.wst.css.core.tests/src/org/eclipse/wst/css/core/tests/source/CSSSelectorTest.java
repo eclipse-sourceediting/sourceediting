@@ -47,21 +47,23 @@ public class CSSSelectorTest extends TestCase {
 		checkSimpleSelector(item, "H3", false, 0, 0, 0, 0);
 	}
 
+	// see 214416 Dot char is not escaped in XML10Names.jFlex
+	// for complications leading to this test being changed.
 	public void testSelector02() {
 		ICSSSelectorList list = createSelectorList("H\\\\, H\\1, H3");
-		checkSelectorList(list, "H\\\\, H\\1, H3", 3, 0);
+		checkSelectorList(list, "H\\\\, H\\1, H3", 3, 2);
 
 		ICSSSelector selector;
 		ICSSSelectorItem item;
 
 		selector = list.getSelector(0);
-		checkSelector(selector, "H\\\\", 1, 1, 0);
+		checkSelector(selector, "H\\\\", 1, 1, 1);
 
 		item = selector.getItem(0);
 		checkSimpleSelector(item, "H\\\\", false, 0, 0, 0, 0);
 
 		selector = list.getSelector(1);
-		checkSelector(selector, "H\\1", 1, 1, 0);
+		checkSelector(selector, "H\\1", 1, 1, 1);
 
 		item = selector.getItem(0);
 		checkSimpleSelector(item, "H\\1", false, 0, 0, 0, 0);
