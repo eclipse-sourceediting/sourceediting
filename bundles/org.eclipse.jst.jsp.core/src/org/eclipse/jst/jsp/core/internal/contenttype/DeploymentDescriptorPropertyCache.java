@@ -609,7 +609,7 @@ public final class DeploymentDescriptorPropertyCache {
 		super();
 	}
 
-	private void _parseDocument(IFile file, Float[] version, List groupList, SubProgressMonitor subMonitor, Document document) {
+	private void _parseDocument(IPath path, Float[] version, List groupList, SubProgressMonitor subMonitor, Document document) {
 		Element webapp = document.getDocumentElement();
 		if (webapp != null) {
 			if (webapp.getTagName().equals(WEB_APP_ELEMENT_NAME) || webapp.getNodeName().endsWith(WEB_APP_ELEMENT_LOCAL_NAME)) {
@@ -628,7 +628,7 @@ public final class DeploymentDescriptorPropertyCache {
 		int length = propertyGroupElements.getLength();
 		subMonitor.beginTask("Reading Property Groups", length);
 		for (int i = 0; i < length; i++) {
-			PropertyGroup group = PropertyGroup.createFrom(file.getFullPath(), propertyGroupElements.item(i), i);
+			PropertyGroup group = PropertyGroup.createFrom(path, propertyGroupElements.item(i), i);
 			subMonitor.worked(1);
 			if (group != null) {
 				groupList.add(group);
@@ -665,8 +665,10 @@ public final class DeploymentDescriptorPropertyCache {
 	 * parse the specified resource using Xerces, and if that fails, use the
 	 * SSE XML parser to find the property groups.
 	 */
-	private DeploymentDescriptor fetchDescriptor(IFile file, IProgressMonitor monitor) {
+	private DeploymentDescriptor fetchDescriptor(IPath path, IProgressMonitor monitor) {
 		monitor.beginTask("Reading Deployment Descriptor", 3);
+		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+
 		PropertyGroup groups[] = null;
 
 		IStructuredModel model = null;
@@ -675,14 +677,14 @@ public final class DeploymentDescriptorPropertyCache {
 		SubProgressMonitor subMonitor = new SubProgressMonitor(monitor, 2);
 		DocumentBuilder builder = CommonXML.getDocumentBuilder(false);
 		builder.setEntityResolver(getEntityResolver());
-		builder.setErrorHandler(getErrorHandler(file.getFullPath()));
+		builder.setErrorHandler(getErrorHandler(path));
 		try {			
 			InputSource inputSource = new InputSource();
-			String s = FileContentCache.getInstance().getContents(file.getFullPath());
+			String s = FileContentCache.getInstance().getContents(path);
 			inputSource.setCharacterStream(new StringReader(s));
-			inputSource.setSystemId(file.getFullPath().toString());
+			inputSource.setSystemId(path.toString());
 			Document document = builder.parse(inputSource);
-			_parseDocument(file, version, groupList, subMonitor, document);
+			_parseDocument(path, version, groupList, subMonitor, document);
 		}
 		catch (SAXException e1) {
 			/* encountered a fatal parsing error, try our own parser */
@@ -696,7 +698,7 @@ public final class DeploymentDescriptorPropertyCache {
 				monitor.worked(1);
 				if (model instanceof IDOMModel) {
 					IDOMDocument document = ((IDOMModel) model).getDocument();
-					_parseDocument(file, version, groupList, subMonitor, document);
+					_parseDocument(path, version, groupList, subMonitor, document);
 				}
 			}
 			catch (Exception e) {
@@ -725,7 +727,7 @@ public final class DeploymentDescriptorPropertyCache {
 		deploymentDescriptor.groups = groups;
 		deploymentDescriptor.version = version[0];
 		monitor.done();
-		fDeploymentDescriptors.put(file.getFullPath(), new SoftReference(deploymentDescriptor));
+		fDeploymentDescriptors.put(path, new SoftReference(deploymentDescriptor));
 		return deploymentDescriptor;
 	}
 
@@ -771,7 +773,7 @@ public final class DeploymentDescriptorPropertyCache {
 				DeploymentDescriptor descriptor = null;
 
 				if (descriptorHolder == null || ((descriptor = (DeploymentDescriptor) descriptorHolder.get()) == null) || (descriptor.modificationStamp == IResource.NULL_STAMP) || (descriptor.modificationStamp != webxmlFile.getModificationStamp())) {
-					descriptor = fetchDescriptor(webxmlFile, new NullProgressMonitor());
+					descriptor = fetchDescriptor(webxmlPath, new NullProgressMonitor());
 				}
 
 				if (descriptor.version != null) {
@@ -809,7 +811,7 @@ public final class DeploymentDescriptorPropertyCache {
 		DeploymentDescriptor descriptor = null;
 
 		if (descriptorHolder == null || ((descriptor = (DeploymentDescriptor) descriptorHolder.get()) == null) || (descriptor.modificationStamp == IResource.NULL_STAMP) || (descriptor.modificationStamp != webxmlFile.getModificationStamp())) {
-			descriptor = fetchDescriptor(webxmlFile, new NullProgressMonitor());
+			descriptor = fetchDescriptor(webxmlPath, new NullProgressMonitor());
 		}
 
 		for (int i = 0; i < descriptor.groups.length; i++) {
