@@ -606,6 +606,12 @@
 			categoryId="org.eclipse.ui.category.edit"
 			id="org.eclipse.wst.xml.ui.previousSibling">
 		</command>
+		<command
+			name="%ActionDefinition.gotoMatchingTag.name"
+			description="%ActionDefinition.gotoMatchingTag.description"
+			categoryId="org.eclipse.ui.category.edit"
+			id="org.eclipse.wst.xml.ui.gotoMatchingTag">
+		</command>
 	</extension>
 
 	<extension point="org.eclipse.ui.bindings">
@@ -620,6 +626,11 @@
 			sequence="M1+M2+ARROW_DOWN"
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.xml.ui.nextSibling"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key
+			sequence="M1+M2+,"
+			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			commandId="org.eclipse.wst.xml.ui.gotoMatchingTag"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 	</extension>
 </plugin>

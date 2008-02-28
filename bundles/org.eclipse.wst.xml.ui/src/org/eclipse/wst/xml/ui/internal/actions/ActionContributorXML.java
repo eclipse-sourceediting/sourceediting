@@ -55,6 +55,7 @@ public class ActionContributorXML extends ActionContributor {
 	protected RetargetTextEditorAction fUncomment = null;
 	private SiblingNavigationAction fPreviousSibling;
 	private SiblingNavigationAction fNextSibling;
+	private GoToMatchingTagAction fGoToMatchingTagAction;
 
 	public ActionContributorXML() {
 		super();
@@ -82,9 +83,8 @@ public class ActionContributorXML extends ActionContributor {
 		fFindOccurrences.setActionDefinitionId(ActionDefinitionIds.FIND_OCCURRENCES);
 
 		fPreviousSibling = new SiblingNavigationAction(resourceBundle, "previousSibling_", null, false);
-		fPreviousSibling.setActionDefinitionId("org.eclipse.wst.xml.ui.previousSibling");
 		fNextSibling = new SiblingNavigationAction(resourceBundle, "nextSibling_", null, true);
-		fNextSibling.setActionDefinitionId("org.eclipse.wst.xml.ui.nextSibling");
+		fGoToMatchingTagAction = new GoToMatchingTagAction(resourceBundle, "gotoMatchingTag_", null);
 	}
 
 	protected void addToMenu(IMenuManager menu) {
@@ -128,6 +128,7 @@ public class ActionContributorXML extends ActionContributor {
 			IMenuManager gotoGroup = navigateMenu.findMenuUsingPath(IWorkbenchActionConstants.GO_TO);
 			if (gotoGroup != null) {
 				gotoGroup.add(fGotoMatchingBracketAction);
+				gotoGroup.add(fGoToMatchingTagAction);
 				gotoGroup.add(new Separator());
 				gotoGroup.add(fPreviousSibling);
 				gotoGroup.add(fNextSibling);
@@ -179,10 +180,12 @@ public class ActionContributorXML extends ActionContributor {
 
 		fPreviousSibling.setEditor(textEditor);
 		fNextSibling.setEditor(textEditor);
-		
+		fGoToMatchingTagAction.setEditor(textEditor);
+
 		if (actionBars != null) {
-			actionBars.setGlobalActionHandler(fPreviousSibling.getActionDefinitionId(), fPreviousSibling);
-			actionBars.setGlobalActionHandler(fNextSibling.getActionDefinitionId(), fNextSibling);
+			actionBars.setGlobalActionHandler("org.eclipse.wst.xml.ui.previousSibling", fPreviousSibling);
+			actionBars.setGlobalActionHandler("org.eclipse.wst.xml.ui.nextSibling", fNextSibling);
+			actionBars.setGlobalActionHandler("org.eclipse.wst.xml.ui.gotoMatchingTag", fGoToMatchingTagAction);
 		}
 	}
 
