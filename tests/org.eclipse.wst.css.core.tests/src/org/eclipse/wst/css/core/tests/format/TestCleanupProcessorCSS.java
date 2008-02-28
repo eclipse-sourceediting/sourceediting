@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -137,6 +137,33 @@ public class TestCleanupProcessorCSS extends TestCase {
 		currentStrategy.setQuoteValues(false);
 
 		cleanupAndAssertEquals("testfiles/bug166909-urlcase.css", "testfiles/bug166909-urlcase-cleaned.css");
+
+		currentStrategy.setIdentCase(oldCaseIdentifier);
+		currentStrategy.setPropNameCase(oldCasePropertyName);
+		currentStrategy.setPropValueCase(oldCasePropertyValue);
+		currentStrategy.setSelectorTagCase(oldCaseSelector);
+		currentStrategy.setFormatSource(oldFormatSource);
+		currentStrategy.setQuoteValues(oldFormatQuote);
+	}
+	
+	public void testBug218993NoFormatCleanup() throws UnsupportedEncodingException, IOException, CoreException {
+		// set up cleanup preferences for this test
+		CSSCleanupStrategy currentStrategy = CSSCleanupStrategyImpl.getInstance();
+		short oldCaseIdentifier = currentStrategy.getIdentCase();
+		short oldCasePropertyName = currentStrategy.getPropNameCase();
+		short oldCasePropertyValue = currentStrategy.getPropValueCase();
+		short oldCaseSelector = currentStrategy.getSelectorTagCase();
+		boolean oldFormatSource = currentStrategy.isFormatSource();
+		boolean oldFormatQuote = currentStrategy.isQuoteValues();
+
+		currentStrategy.setIdentCase(CSSCleanupStrategy.LOWER);
+		currentStrategy.setPropNameCase(CSSCleanupStrategy.LOWER);
+		currentStrategy.setPropValueCase(CSSCleanupStrategy.LOWER);
+		currentStrategy.setSelectorTagCase(CSSCleanupStrategy.LOWER);
+		currentStrategy.setFormatSource(false);
+		currentStrategy.setQuoteValues(false);
+
+		cleanupAndAssertEquals("testfiles/bug218993-noformat.css", "testfiles/bug218993-noformat-cleaned.css");
 
 		currentStrategy.setIdentCase(oldCaseIdentifier);
 		currentStrategy.setPropNameCase(oldCasePropertyName);
