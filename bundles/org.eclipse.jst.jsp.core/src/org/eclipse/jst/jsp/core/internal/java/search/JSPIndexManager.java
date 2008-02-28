@@ -33,6 +33,8 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.core.index.Index;
 import org.eclipse.jdt.internal.core.search.indexing.IndexManager;
@@ -257,15 +259,19 @@ public class JSPIndexManager {
 						setCanceledState();
 						return Status.CANCEL_STATUS;
 					}
+					IFile file = filesToBeProcessed[lastFileCursor];
 					try {
-						ss.addJspFile(filesToBeProcessed[lastFileCursor]);
-						// JSP Indexer processing n files
-						processingNFiles = NLS.bind(JSPCoreMessages.JSPIndexManager_2, new String[]{Integer.toString((filesToBeProcessed.length - lastFileCursor))});
-						monitor.subTask(processingNFiles + " - " + filesToBeProcessed[lastFileCursor].getName()); //$NON-NLS-1$
-						monitor.worked(1);
+						IJavaProject project = JavaCore.create(file.getProject());
+						if (project.exists()) {
+							ss.addJspFile(file);
+							// JSP Indexer processing n files
+							processingNFiles = NLS.bind(JSPCoreMessages.JSPIndexManager_2, new String[]{Integer.toString((filesToBeProcessed.length - lastFileCursor))});
+							monitor.subTask(processingNFiles + " - " + file.getName()); //$NON-NLS-1$
+							monitor.worked(1);
 
-						if (DEBUG) {
-							System.out.println("JSPIndexManager Job added file: " + filesToBeProcessed[lastFileCursor].getName()); //$NON-NLS-1$
+							if (DEBUG) {
+								System.out.println("JSPIndexManager Job added file: " + file.getName()); //$NON-NLS-1$
+							}
 						}
 					}
 					catch (Exception e) {
@@ -283,7 +289,7 @@ public class JSPIndexManager {
 						// and only log a certain amt of the same one,
 						// otherwise skip it.
 						if (!frameworkIsShuttingDown()) {
-							String filename = filesToBeProcessed[lastFileCursor] != null ? filesToBeProcessed[lastFileCursor].getFullPath().toString() : ""; //$NON-NLS-1$
+							String filename = file != null ? file.getFullPath().toString() : ""; //$NON-NLS-1$
 							Logger.logException("JSPIndexer problem indexing:" + filename, e); //$NON-NLS-1$
 						}
 					}

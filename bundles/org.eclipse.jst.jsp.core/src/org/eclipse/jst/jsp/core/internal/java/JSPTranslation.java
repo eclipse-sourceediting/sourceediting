@@ -84,6 +84,7 @@ public class JSPTranslation implements IJSPTranslation {
 	private byte[] fLock = null;
 	private String fMangledName;
 	private String fJspName;
+	private List fTranslationProblems;
 
 	public JSPTranslation(IJavaProject javaProj, JSPTranslator translator) {
 
@@ -102,6 +103,7 @@ public class JSPTranslation implements IJSPTranslation {
 			fJava2JspUseBeanMap = translator.getJava2JspUseBeanRanges();
 			fJava2JspIndirectMap = translator.getJava2JspIndirectRanges();
 			fELProblems = translator.getELProblems();
+			fTranslationProblems = translator.getTranslationProblems();
 		}
 	}
 	
@@ -499,7 +501,15 @@ public class JSPTranslation implements IJSPTranslation {
 	 */
 	public List getProblems() {
 		List problems = getProblemRequestor().getCollectedProblems();
-		return problems != null ? problems : new ArrayList();
+		if (problems != null) {
+			if (fTranslationProblems.isEmpty()) {
+				return problems;
+			}
+			List combinedProblems = new ArrayList(problems);
+			combinedProblems.addAll(fTranslationProblems);
+			return combinedProblems;
+		}
+		return fTranslationProblems;
 	}
 	
 	/**

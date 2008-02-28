@@ -171,11 +171,13 @@ public class JSPActionValidator extends JSPValidator {
 
 			// add all taglib prefixes
 			TLDCMDocumentManager manager = TaglibController.getTLDCMDocumentManager(document);
-			List trackers = manager.getTaglibTrackers();
-			for (Iterator it = trackers.iterator(); it.hasNext();) {
-				TaglibTracker tracker = (TaglibTracker) it.next();
-				String prefix = tracker.getPrefix();
-				fTaglibPrefixes.add(prefix);
+			if (manager != null) {
+				List trackers = manager.getTaglibTrackers();
+				for (Iterator it = trackers.iterator(); it.hasNext();) {
+					TaglibTracker tracker = (TaglibTracker) it.next();
+					String prefix = tracker.getPrefix();
+					fTaglibPrefixes.add(prefix);
+				}
 			}
 		}
 		return fTaglibPrefixes;
@@ -246,7 +248,7 @@ public class JSPActionValidator extends JSPValidator {
 				CMElementDeclaration cmElement = query.getCMElementDeclaration(element);
 				if (cmElement != null) {
 					CMNamedNodeMap cmAttributes = cmElement.getAttributes();
-					
+
 					CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(cmAttributes);
 					if (cmElement != null) {
 						List nodes = query.getAvailableContent(element, cmElement, ModelQuery.INCLUDE_ATTRIBUTES);
@@ -265,7 +267,7 @@ public class JSPActionValidator extends JSPValidator {
 					// missing required attributes
 					if (!foundjspattribute)
 						checkRequiredAttributes(element, cmAttributes, reporter, file, model.getStructuredDocument(), documentRegion);
-					
+
 					checkNonEmptyInlineTag(element, cmElement, reporter, file, model.getStructuredDocument());
 				}
 			}

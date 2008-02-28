@@ -62,8 +62,10 @@ public class JSPDirectiveValidator extends JSPValidator {
 	private int fSeverityTaglibMissingPrefix = IMessage.HIGH_SEVERITY;
 	private int fSeverityTaglibMissingURI = IMessage.HIGH_SEVERITY;
 	private int fSeverityTaglibUnresolvableURI = IMessage.HIGH_SEVERITY;
+	private int fSeverityTagdirUnresolvableURI = IMessage.HIGH_SEVERITY;
 
 	private HashMap fTaglibPrefixesInUse = new HashMap();
+
 
 	public JSPDirectiveValidator() {
 		initReservedPrefixes();
@@ -267,6 +269,19 @@ public class JSPDirectiveValidator extends JSPValidator {
 					// tagdir specified but empty string
 					String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_3, JSP20Namespace.ATTR_NAME_TAGDIR);
 					LocalizedMessage message = new LocalizedMessage(fSeverityTaglibMissingURI, msgText, file);
+					int start = documentRegion.getStartOffset(tagdirValueRegion);
+					int length = tagdirValueRegion.getTextLength();
+					int lineNo = sDoc.getLineOfOffset(start);
+					message.setLineNo(lineNo);
+					message.setOffset(start);
+					message.setLength(length);
+
+					reporter.addMessage(fMessageOriginator, message);
+				}
+				else if(TaglibIndex.resolve(file.getFullPath().toString(), tagdir, false) == null && fSeverityTagdirUnresolvableURI != NO_SEVERITY) {
+					// URI specified but does not resolve
+					String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_1, tagdir);
+					LocalizedMessage message = new LocalizedMessage(fSeverityTaglibUnresolvableURI, msgText, file);
 					int start = documentRegion.getStartOffset(tagdirValueRegion);
 					int length = tagdirValueRegion.getTextLength();
 					int lineNo = sDoc.getLineOfOffset(start);

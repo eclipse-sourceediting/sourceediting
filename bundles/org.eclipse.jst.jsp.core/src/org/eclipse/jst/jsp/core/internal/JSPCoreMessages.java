@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,6 +38,9 @@ public class JSPCoreMessages extends NLS {
 	public static String JSPFContentPropertiesManager_Updating;
 	public static String JSPFContentPropertiesManager_Problems_Updating;
 	public static String JSPBatchValidator_0;
+	public static String TaglibHelper_0;
+	public static String TaglibHelper_1;
+	public static String TaglibHelper_2;
 	
 	/**
 	 * @deprecated

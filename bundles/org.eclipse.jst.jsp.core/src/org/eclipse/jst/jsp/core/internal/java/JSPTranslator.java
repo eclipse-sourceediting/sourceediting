@@ -124,6 +124,7 @@ public class JSPTranslator {
 	String fSuperclass = null;
 
 	private String fTryCatchStart = ENDL + "try {" + ENDL; //$NON-NLS-1$
+	private List fTranslationProblems = new ArrayList();
 	private String fTryCatchEnd = " } catch (java.lang.Exception e) {} " + ENDL; //$NON-NLS-1$
 
 	/** fSourcePosition = position in JSP source */
@@ -716,6 +717,10 @@ public class JSPTranslator {
 
 		return fResult;
 	}
+	
+	public List getTranslationProblems() {
+		return fTranslationProblems;
+	}
 
 	/**
 	 * Only valid after a configure(...), translate(...) or
@@ -750,6 +755,7 @@ public class JSPTranslator {
 		String decl = ""; //$NON-NLS-1$
 		if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_TAG_OPEN)) {
 			TaglibVariable[] taglibVars = helper.getTaglibVariables(tagToAdd, getStructuredDocument(), customTag);
+			fTranslationProblems.addAll(helper.getProblems(f.getFullPath()));
 			/*
 			 * These loops are duplicated intentionally to keep the nesting
 			 * scoped variables from interfering with the others

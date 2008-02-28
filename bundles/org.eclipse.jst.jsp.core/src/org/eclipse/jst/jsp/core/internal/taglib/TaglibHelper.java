@@ -14,10 +14,12 @@ package org.eclipse.jst.jsp.core.internal.taglib;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.jsp.tagext.TagAttributeInfo;
@@ -41,6 +43,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
@@ -48,6 +51,7 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TaglibTracker;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDAttributeDeclaration;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDVariable;
+import org.eclipse.jst.jsp.core.internal.java.IJSPProblem;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -62,6 +66,8 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMNodeWrapper;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
+
+import com.ibm.icu.text.MessageFormat;
 
 /**
  * This class helps find TaglibVariables in a JSP file.
@@ -79,16 +85,16 @@ public class TaglibHelper {
 
 	private IProject fProject = null;
 	private TaglibClassLoader fLoader = null;
-	private Collection fValidationMessages = null;
 
 	private Set fProjectEntries = null;
+	private Map fTranslationProblems = null;
 	private Set fContainerEntries = null;
 
 	public TaglibHelper(IProject project) {
 		setProject(project);
 		fProjectEntries = new HashSet();
 		fContainerEntries = new HashSet();
-		fValidationMessages = new HashSet();
+		fTranslationProblems = new HashMap();
 	}
 
 	/**
@@ -103,7 +109,7 @@ public class TaglibHelper {
 	public TaglibVariable[] getTaglibVariables(String tagToAdd, IStructuredDocument structuredDoc, ITextRegionCollection customTag) {
 
 		List results = new ArrayList();
-		fValidationMessages.clear();
+		List problems = new ArrayList();
 		ModelQuery mq = getModelQuery(structuredDoc);
 		if (mq != null) {
 			TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(structuredDoc);
@@ -142,10 +148,15 @@ public class TaglibHelper {
 						String uri = ((TaglibTracker) doc).getURI();
 						String prefix = ((TaglibTracker) doc).getPrefix();
 						// only for 1.1 taglibs
-						addTEIVariables(customTag, results, (TLDElementDeclaration) node, prefix, uri);
+						addTEIVariables(structuredDoc, customTag, results, (TLDElementDeclaration) node, prefix, uri, problems);
 					}
 				}
 			}
+		}
+
+		IPath location = TaglibController.getLocation(structuredDoc);
+		if (location != null) {
+			fTranslationProblems.put(location, problems);
 		}
 
 		return (TaglibVariable[]) results.toArray(new TaglibVariable[results.size()]);
@@ -164,9 +175,9 @@ public class TaglibHelper {
 		Iterator it = list.iterator();
 		while (it.hasNext()) {
 			TLDVariable var = (TLDVariable) it.next();
-			if(!var.getDeclare())
+			if (!var.getDeclare())
 				continue;
-			
+
 			String varName = var.getNameGiven();
 			if (varName == null) {
 				// 2.0
@@ -214,7 +225,7 @@ public class TaglibHelper {
 	 * @param uri
 	 *            URI where the tld can be found
 	 */
-	private void addTEIVariables(ITextRegionCollection customTag, List results, TLDElementDeclaration decl, String prefix, String uri) {
+	private void addTEIVariables(IStructuredDocument document, ITextRegionCollection customTag, List results, TLDElementDeclaration decl, String prefix, String uri, List problems) {
 		String teiClassname = decl.getTeiclass();
 		if (teiClassname == null || teiClassname.length() == 0)
 			return;
@@ -239,13 +250,17 @@ public class TaglibHelper {
 
 						// add to results
 						TagData td = new TagData(tagDataTable);
-						if (!tei.isValid(td)) {
-							ValidationMessage[] messages = tei.validate(td);
+
+						ValidationMessage[] messages = tei.validate(td);
+						if (messages != null && messages.length > 0) {
 							for (int i = 0; i < messages.length; i++) {
-								fValidationMessages.add(messages[i]);
-								// Logger.log(Logger.WARNING_DEBUG, decl.getElementName() + "@" + customTag.getStartOffset() + " [" + messages[i].getId() + "] : " + messages[i].getMessage());
+								Object createdProblem = createValidationMessageProblem(document, customTag, messages[i]);
+								if (createdProblem != null) {
+									problems.add(createdProblem);
+								}
 							}
 						}
+
 						VariableInfo[] vInfos = tei.getVariableInfo(td);
 						if (vInfos != null) {
 							for (int i = 0; i < vInfos.length; i++) {
@@ -257,11 +272,20 @@ public class TaglibHelper {
 			}
 		}
 		catch (ClassNotFoundException e) {
+			Object createdProblem = createTEIProblem(document, customTag, teiClassname, IJSPProblem.TEIClassNotFound, JSPCoreMessages.TaglibHelper_0);
+			if (createdProblem != null) {
+				problems.add(createdProblem);
+			}
 			// TEI class wasn't on classpath
 			if (DEBUG)
 				logException(teiClassname, e);
 		}
 		catch (InstantiationException e) {
+			Object createdProblem = createTEIProblem(document, customTag, teiClassname, IJSPProblem.TEIClassNotInstantiated, JSPCoreMessages.TaglibHelper_1);
+			if (createdProblem != null) {
+				problems.add(createdProblem);
+			}
+			// TEI class couldn't be instantiated
 			if (DEBUG)
 				logException(teiClassname, e);
 		}
@@ -275,6 +299,10 @@ public class TaglibHelper {
 				logException(teiClassname, e);
 		}
 		catch (Exception e) {
+			Object createdProblem = createTEIProblem(document, customTag, teiClassname, IJSPProblem.TEIClassMisc, JSPCoreMessages.TaglibHelper_2);
+			if (createdProblem != null) {
+				problems.add(createdProblem);
+			}
 			// this is 3rd party code, need to catch all exceptions
 			if (DEBUG)
 				logException(teiClassname, e);
@@ -287,6 +315,180 @@ public class TaglibHelper {
 		finally {
 			// Thread.currentThread().setContextClassLoader(oldLoader);
 		}
+	}
+
+	/**
+	 * @param customTag
+	 * @param teiClass
+	 * @return
+	 */
+	private Object createTEIProblem(final IStructuredDocument document, final ITextRegionCollection customTag, final String teiClassname, final int problemID, final String messageKey) {
+		final int start;
+		if (customTag.getNumberOfRegions() > 1) {
+			start = customTag.getStartOffset(customTag.getRegions().get(1));
+		}
+		else {
+			start = customTag.getStartOffset();
+		}
+
+		final int end;
+		if (customTag.getNumberOfRegions() > 1) {
+			end = customTag.getTextEndOffset(customTag.getRegions().get(1)) - 1;
+		}
+		else {
+			end = customTag.getTextEndOffset();
+		}
+
+		final int line = document.getLineOfOffset(start);
+
+		final char[] name;
+		IPath location = TaglibController.getLocation(document);
+		if (location == null) {
+			name = new char[0];
+		}
+		else {
+			name = location.toString().toCharArray();
+		}
+
+		/*
+		 * Note: these problems would result in translation errors on the
+		 * server, so the severity is not meant to be controllable
+		 */
+		return new IJSPProblem() {
+			public void setSourceStart(int sourceStart) {
+			}
+
+			public void setSourceLineNumber(int lineNumber) {
+			}
+
+			public void setSourceEnd(int sourceEnd) {
+			}
+
+			public boolean isWarning() {
+				return false;
+			}
+
+			public boolean isError() {
+				return true;
+			}
+
+			public int getSourceStart() {
+				return start;
+			}
+
+			public int getSourceLineNumber() {
+				return line;
+			}
+
+			public int getSourceEnd() {
+				return end;
+			}
+
+			public char[] getOriginatingFileName() {
+				return name;
+			}
+
+			public String getMessage() {
+				return MessageFormat.format(messageKey, new String[]{teiClassname});
+			}
+
+			public int getID() {
+				return problemID;
+			}
+
+			public String[] getArguments() {
+				return new String[0];
+			}
+
+			public int getEID() {
+				return problemID;
+			}
+		};
+	}
+
+	/**
+	 * @param customTag
+	 * @param validationMessage
+	 * @return
+	 */
+	private Object createValidationMessageProblem(final IStructuredDocument document, final ITextRegionCollection customTag, final ValidationMessage validationMessage) {
+		final int start;
+		if (customTag.getNumberOfRegions() > 1) {
+			start = customTag.getStartOffset(customTag.getRegions().get(1));
+		}
+		else {
+			start = customTag.getStartOffset();
+		}
+
+		final int end;
+		if (customTag.getNumberOfRegions() > 1) {
+			end = customTag.getTextEndOffset(customTag.getRegions().get(1)) - 1;
+		}
+		else {
+			end = customTag.getTextEndOffset();
+		}
+
+		final int line = document.getLineOfOffset(start);
+
+		final char[] name;
+		IPath location = TaglibController.getLocation(document);
+		if (location == null) {
+			name = new char[0];
+		}
+		else {
+			name = location.toString().toCharArray();
+		}
+
+		return new IJSPProblem() {
+			public void setSourceStart(int sourceStart) {
+			}
+
+			public void setSourceLineNumber(int lineNumber) {
+			}
+
+			public void setSourceEnd(int sourceEnd) {
+			}
+
+			public boolean isWarning() {
+				return false;
+			}
+
+			public boolean isError() {
+				return true;
+			}
+
+			public int getSourceStart() {
+				return start;
+			}
+
+			public int getSourceLineNumber() {
+				return line;
+			}
+
+			public int getSourceEnd() {
+				return end;
+			}
+
+			public char[] getOriginatingFileName() {
+				return name;
+			}
+
+			public String getMessage() {
+				return validationMessage.getId() + ":" + validationMessage.getMessage();
+			}
+
+			public int getID() {
+				return IJSPProblem.TEIValidationMessage;
+			}
+
+			public String[] getArguments() {
+				return new String[0];
+			}
+
+			public int getEID() {
+				return IJSPProblem.TEIValidationMessage;
+			}
+		};
 	}
 
 	/**
@@ -623,7 +825,11 @@ public class TaglibHelper {
 		fProject = p;
 	}
 
-	Collection getValidationMessages() {
-		return fValidationMessages;
+	/**
+	 * @param path
+	 * @return
+	 */
+	public Collection getProblems(IPath path) {
+		return (Collection) fTranslationProblems.remove(path);
 	}
 }

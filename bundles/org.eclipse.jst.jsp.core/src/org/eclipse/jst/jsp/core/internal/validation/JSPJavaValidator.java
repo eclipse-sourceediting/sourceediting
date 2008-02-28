@@ -21,6 +21,7 @@ import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.jst.jsp.core.internal.java.IJSPProblem;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
@@ -102,8 +103,12 @@ public class JSPJavaValidator extends JSPValidator {
 	private IMessage createMessageFromProblem(IProblem problem, IFile f, IJSPTranslation translation, IStructuredDocument structuredDoc) {
 
 		int sev = problem.isError() ? IMessage.HIGH_SEVERITY : IMessage.NORMAL_SEVERITY;
-		int sourceStart = translation.getJspOffset(problem.getSourceStart());
-		int sourceEnd = translation.getJspOffset(problem.getSourceEnd());
+		int sourceStart = problem.getSourceStart();
+		int sourceEnd = problem.getSourceEnd();
+		if (!((problem instanceof IJSPProblem) && (((IJSPProblem) problem).getEID() & IJSPProblem.F_PROBLEM_ID_LITERAL) != 0)) {
+			sourceStart = translation.getJspOffset(problem.getSourceStart());
+			sourceEnd = translation.getJspOffset(problem.getSourceEnd());
+		}
 		if (sourceStart == -1) {
 			int problemID = problem.getID();
 			/*
