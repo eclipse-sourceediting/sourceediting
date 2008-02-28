@@ -261,7 +261,12 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 		if (isFormat())
 			return region.getText();
 
-		String text = region.getText();
+		String text = null;
+		if (!stgy.isFormatSource())
+			text = region.getFullText();
+		else
+			text = region.getText();
+		
 		if (region.getType() == CSSRegionContexts.CSS_STRING || region.getType() == CSSRegionContexts.CSS_URI)
 			return decoratedRegion(region, 0, stgy);
 
@@ -290,7 +295,12 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 		if (isFormat())
 			return region.getText();
 
-		String text = region.getText();
+		String text = null;
+		if (!stgy.isFormatSource())
+			text = region.getFullText();
+		else
+			text = region.getText();
+		
 		if (region.getType() == CSSRegionContexts.CSS_STRING || region.getType() == CSSRegionContexts.CSS_URI)
 			return decoratedRegion(region, 1, stgy);
 		if (isCleanup()) {
@@ -318,7 +328,12 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 		if (isFormat())
 			return region.getText();
 
-		String text = region.getText();
+		String text = null;
+		if (!stgy.isFormatSource())
+			text = region.getFullText();
+		else
+			text = region.getText();
+		
 		String type = region.getType();
 		if (type == CSSRegionContexts.CSS_STRING || type == CSSRegionContexts.CSS_URI || type == CSSRegionContexts.CSS_DECLARATION_VALUE_URI)
 			return decoratedRegion(region, 2, stgy);
@@ -345,7 +360,13 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 			return region.getText();
 
 		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
-		String text = region.getText();
+
+		String text = null;
+		if (!stgy.isFormatSource())
+			text = region.getFullText();
+		else
+			text = region.getText();
+		
 		String regionType = region.getType();
 		if (regionType == CSSRegionContexts.CSS_URI || regionType == CSSRegionContexts.CSS_DECLARATION_VALUE_URI) {
 			String uri = CSSLinkConverter.stripFunc(text);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,10 +38,15 @@ public class DeclContainerFormatter extends DefaultCSSSourceFormatter {
 	 * @return java.lang.String
 	 */
 	protected String decoratedSelectorRegion(CompoundRegion region, CompoundRegion prevRegion, CSSCleanupStrategy stgy) {
-		String text = region.getText();
 		if (isFormat())
-			return text;
-
+			return region.getText();
+		
+		String text = null;
+		if (!stgy.isFormatSource())
+			text = region.getFullText();
+		else
+			text = region.getText();
+		
 		String type = region.getType();
 		if (type == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_NAME || type == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_VALUE || type == CSSRegionContexts.CSS_SELECTOR_CLASS || type == CSSRegionContexts.CSS_SELECTOR_ELEMENT_NAME || type == CSSRegionContexts.CSS_SELECTOR_ID || type == CSSRegionContexts.CSS_SELECTOR_PSEUDO) {
 			short selCase = stgy.getSelectorTagCase();
