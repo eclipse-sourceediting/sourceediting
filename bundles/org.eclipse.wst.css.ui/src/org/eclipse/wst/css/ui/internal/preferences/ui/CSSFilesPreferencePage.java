@@ -38,7 +38,6 @@ public class CSSFilesPreferencePage extends XMLFilesPreferencePage {
 
 	protected Control createContents(Composite parent) {
 		Composite scrolledComposite = createScrolledComposite(parent);
-		createContentsForCreatingOrSavingGroup(scrolledComposite);
 		createContentsForCreatingGroup(scrolledComposite);
 
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(scrolledComposite, IHelpContextIds.CSS_PREFWEBX_FILES_HELPID);
@@ -53,19 +52,16 @@ public class CSSFilesPreferencePage extends XMLFilesPreferencePage {
 	}
 	
 	protected void initializeValues() {
-		initializeValuesForCreatingOrSavingGroup();
 		initializeValuesForCreatingGroup();
 	}
 	
 	protected void performDefaults() {
-		performDefaultsForCreatingOrSavingGroup();
 		performDefaultsForCreatingGroup();
 
         updateApplyButton();
 	}
 	
 	protected void storeValues() {
-		storeValuesForCreatingOrSavingGroup();
 		storeValuesForCreatingGroup();
 	}
 }

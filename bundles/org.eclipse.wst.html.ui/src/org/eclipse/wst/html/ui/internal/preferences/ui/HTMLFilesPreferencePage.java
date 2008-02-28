@@ -54,7 +54,6 @@ public class HTMLFilesPreferencePage extends XMLFilesPreferencePage {
 	 */
 	protected Control createContents(Composite parent) {
 		Composite scrolledComposite = createScrolledComposite(parent);
-		createContentsForCreatingOrSavingGroup(scrolledComposite);
 		createContentsForCreatingGroup(scrolledComposite);
 		createContentsForLoadingGroup(scrolledComposite);
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
@@ -41,8 +40,6 @@ import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
 public class XMLFilesPreferencePage extends AbstractPreferencePage {
 	protected EncodingSettings fEncodingSettings = null;
 
-	protected Combo fEndOfLineCode = null;
-	private Vector fEOLCodes = null;
 	private Combo fDefaultSuffix = null;
 	private List fValidExtensions = null;
 	private Button fWarnNoGrammar = null;
@@ -50,7 +47,6 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 	protected Control createContents(Composite parent) {
 		Composite composite = (Composite) super.createContents(parent);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IHelpContextIds.XML_PREFWEBX_FILES_HELPID);
-		createContentsForCreatingOrSavingGroup(composite);
 		createContentsForCreatingGroup(composite);
 		createContentsForValidatingGroup(composite);
 
@@ -76,19 +72,6 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 		((GridData) label.getLayoutData()).horizontalSpan = 2;
 		fEncodingSettings = new EncodingSettings(creatingGroup, XMLUIMessages.Encoding);
 		((GridData) fEncodingSettings.getLayoutData()).horizontalSpan = 2;
-	}
-
-	protected void createContentsForCreatingOrSavingGroup(Composite parent) {
-		Group creatingOrSavingGroup = createGroup(parent, 2);
-		creatingOrSavingGroup.setText(XMLUIMessages.Creating_or_saving_files);
-
-		Label label = createLabel(creatingOrSavingGroup, XMLUIMessages.End_of_line_code_desc);
-		((GridData) label.getLayoutData()).horizontalSpan = 2;
-		((GridData) label.getLayoutData()).grabExcessHorizontalSpace = true;
-
-		createLabel(creatingOrSavingGroup, XMLUIMessages.End_of_line_code);
-		fEndOfLineCode = createDropDownBox(creatingOrSavingGroup);
-		populateLineDelimiters();
 	}
 
 	protected void createContentsForValidatingGroup(Composite parent) {
@@ -131,19 +114,6 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 		return fValidExtensions;
 	}
 
-	/**
-	 * Return the currently selected line delimiter preference
-	 * 
-	 * @return a line delimiter constant from CommonEncodingPreferenceNames
-	 */
-	private String getCurrentEOLCode() {
-		int i = fEndOfLineCode.getSelectionIndex();
-		if (i >= 0) {
-			return (String) (fEOLCodes.elementAt(i));
-		}
-		return ""; //$NON-NLS-1$
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -154,7 +124,6 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 	}
 
 	protected void initializeValues() {
-		initializeValuesForCreatingOrSavingGroup();
 		initializeValuesForCreatingGroup();
 		initializeValuesForValidatingGroup();
 	}
@@ -168,17 +137,6 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 		fEncodingSettings.setIANATag(encoding);
 	}
 
-	protected void initializeValuesForCreatingOrSavingGroup() {
-		String endOfLineCode = getModelPreferences().getString(CommonEncodingPreferenceNames.END_OF_LINE_CODE);
-
-		if (endOfLineCode.length() > 0) {
-			setCurrentEOLCode(endOfLineCode);
-		}
-		else {
-			setCurrentEOLCode(CommonEncodingPreferenceNames.NO_TRANSLATION);
-		}
-	}
-
 	protected void initializeValuesForValidatingGroup() {
 		boolean warnNoGrammarButtonSelected = getModelPreferences().getBoolean(XMLCorePreferenceNames.WARN_NO_GRAMMAR);
 
@@ -189,7 +147,6 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 	}
 
 	protected void performDefaults() {
-		performDefaultsForCreatingOrSavingGroup();
 		performDefaultsForCreatingGroup();
 		performDefaultsForValidatingGroup();
 
@@ -204,17 +161,6 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 
 		fEncodingSettings.setIANATag(encoding);
 		// fEncodingSettings.resetToDefaultEncoding();
-	}
-
-	protected void performDefaultsForCreatingOrSavingGroup() {
-		String endOfLineCode = getModelPreferences().getDefaultString(CommonEncodingPreferenceNames.END_OF_LINE_CODE);
-
-		if (endOfLineCode.length() > 0) {
-			setCurrentEOLCode(endOfLineCode);
-		}
-		else {
-			setCurrentEOLCode(CommonEncodingPreferenceNames.NO_TRANSLATION);
-		}
 	}
 
 	protected void performDefaultsForValidatingGroup() {
@@ -233,42 +179,7 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 		return result;
 	}
 
-	/**
-	 * Populates the vector containing the line delimiter to display string
-	 * mapping and the combobox displaying line delimiters
-	 */
-	private void populateLineDelimiters() {
-		fEOLCodes = new Vector();
-		fEndOfLineCode.add(XMLUIMessages.EOL_Unix);
-		fEOLCodes.add(CommonEncodingPreferenceNames.LF);
-
-		fEndOfLineCode.add(XMLUIMessages.EOL_Mac);
-		fEOLCodes.add(CommonEncodingPreferenceNames.CR);
-
-		fEndOfLineCode.add(XMLUIMessages.EOL_Windows);
-		fEOLCodes.add(CommonEncodingPreferenceNames.CRLF);
-
-		fEndOfLineCode.add(XMLUIMessages.EOL_NoTranslation);
-		fEOLCodes.add(CommonEncodingPreferenceNames.NO_TRANSLATION);
-	}
-
-	/**
-	 * Select the line delimiter in the eol combobox
-	 * 
-	 */
-	private void setCurrentEOLCode(String eolCode) {
-		// Clear the current selection.
-		fEndOfLineCode.clearSelection();
-		fEndOfLineCode.deselectAll();
-
-		int i = fEOLCodes.indexOf(eolCode);
-		if (i >= 0) {
-			fEndOfLineCode.select(i);
-		}
-	}
-
 	protected void storeValues() {
-		storeValuesForCreatingOrSavingGroup();
 		storeValuesForCreatingGroup();
 		storeValuesForValidatingGroup();
 	}
@@ -278,11 +189,6 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 		getModelPreferences().setValue(XMLCorePreferenceNames.DEFAULT_EXTENSION, suffix);
 
 		getModelPreferences().setValue(CommonEncodingPreferenceNames.OUTPUT_CODESET, fEncodingSettings.getIANATag());
-	}
-
-	protected void storeValuesForCreatingOrSavingGroup() {
-		String eolCode = getCurrentEOLCode();
-		getModelPreferences().setValue(CommonEncodingPreferenceNames.END_OF_LINE_CODE, eolCode);
 	}
 
 	protected void storeValuesForValidatingGroup() {

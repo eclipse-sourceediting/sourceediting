@@ -21,12 +21,15 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -47,6 +50,7 @@ import org.eclipse.wst.dtd.ui.internal.Logger;
 import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImageHelper;
 import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImages;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 
 public class NewDTDWizard extends Wizard implements INewWizard {
 	private WizardNewFileCreationPage fNewFilePage;
@@ -95,6 +99,14 @@ public class NewDTDWizard extends Wizard implements INewWizard {
 			fValidExtensions = new ArrayList(Arrays.asList(type.getFileSpecs(IContentType.FILE_EXTENSION_SPEC)));
 		}
 		return fValidExtensions;
+	}
+
+	private String applyLineDelimiter(IFile file, String text) {
+		String lineDelimiter = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, System.getProperty("line.separator"), new IScopeContext[] {new ProjectScope(file.getProject()), new InstanceScope() });//$NON-NLS-1$
+		String convertedText = StringUtils.replace(text, "\r\n", "\n");
+		convertedText = StringUtils.replace(convertedText, "\r", "\n");
+		convertedText = StringUtils.replace(convertedText, "\n", lineDelimiter);
+		return convertedText;
 	}
 
 	/**
@@ -213,6 +225,7 @@ public class NewDTDWizard extends Wizard implements INewWizard {
 			// put template contents into file
 			String templateString = fNewFileTemplatesPage.getTemplateString();
 			if (templateString != null) {
+				templateString = applyLineDelimiter(file, templateString);
 				// determine the encoding for the new file
 				Preferences preference = DTDCorePlugin.getInstance().getPluginPreferences();
 				String charSet = preference.getString(CommonEncodingPreferenceNames.OUTPUT_CODESET);

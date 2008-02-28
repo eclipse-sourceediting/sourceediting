@@ -22,6 +22,9 @@ import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentRewriteSession;
 import org.eclipse.jface.text.DocumentRewriteSessionType;
@@ -31,10 +34,8 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.Logger;
-import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 
@@ -300,30 +301,6 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 							IStructuredFormatProcessor formatProcessor = getFormatProcessor();
 							formatProcessor.formatModel(structuredModel);
 						}
-
-						// convert EOL codes
-						if (getConvertEOLCodesPreference(structuredModel)) {
-							IDocument document = structuredModel.getStructuredDocument();
-							String endOfLineCode = getEOLCodePreference(structuredModel);
-							String endOfLineCodeString = null;
-							if (endOfLineCode.compareTo(CommonEncodingPreferenceNames.LF) == 0)
-								endOfLineCodeString = CommonEncodingPreferenceNames.STRING_LF;
-							else if (endOfLineCode.compareTo(CommonEncodingPreferenceNames.CR) == 0)
-								endOfLineCodeString = CommonEncodingPreferenceNames.STRING_CR;
-							else if (endOfLineCode.compareTo(CommonEncodingPreferenceNames.CRLF) == 0)
-								endOfLineCodeString = CommonEncodingPreferenceNames.STRING_CRLF;
-							if (endOfLineCodeString != null) {
-								convertLineDelimiters(document, endOfLineCodeString);
-								// DMW: 8/24/2002 setting line delimiter in
-								// document allows
-								// subsequent editing to insert the same line
-								// delimiter.
-								if (document instanceof IStructuredDocument) {
-									((IStructuredDocument) document).setLineDelimiter(endOfLineCodeString);
-								}
-								structuredModel.setDirtyState(true);
-							}
-						}
 					}
 					finally {
 						// we need two finally's, just in case first fails
@@ -444,7 +421,8 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 
 	protected String getEOLCodePreference(IStructuredModel structuredModel) {
 
-		String eolCode = System.getProperty("line.separator"); //$NON-NLS-1$
+		IScopeContext[] scopeContext = new IScopeContext[]{new InstanceScope()};
+		String eolCode = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, null, scopeContext);
 
 		IStructuredCleanupHandler cleanupHandler = getCleanupHandler((Node) structuredModel.getIndexedRegion(0));
 		if (cleanupHandler != null) {

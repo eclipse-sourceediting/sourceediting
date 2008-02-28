@@ -23,14 +23,18 @@ import java.util.Vector;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
@@ -113,6 +117,14 @@ public class NewXMLGenerator {
 
 		return cmDocument;
 	}
+	
+	private String applyLineDelimiter(IFile file, String text) {
+		String lineDelimiter = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, System.getProperty("line.separator"), new IScopeContext[] {new ProjectScope(file.getProject()), new InstanceScope() });//$NON-NLS-1$
+		String convertedText = StringUtils.replace(text, "\r\n", "\n");
+		convertedText = StringUtils.replace(convertedText, "\r", "\n");
+		convertedText = StringUtils.replace(convertedText, "\n", lineDelimiter);
+		return convertedText;
+	}
 
 	/**
 	 * @deprecated use createTemplateXMLDocument(IFile, String) instead
@@ -129,6 +141,7 @@ public class NewXMLGenerator {
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 	
 			PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, charSet));
+			contents = applyLineDelimiter(newFile, contents);
 			writer.println(contents);
 			writer.flush();
 			outputStream.close();
@@ -164,7 +177,10 @@ public class NewXMLGenerator {
 		String charset = newFile.getCharset();
 		ByteArrayOutputStream outputStream = createXMLDocument(xmlFileName, charset);
 
-		ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+		String contents = outputStream.toString(charset);
+		contents = applyLineDelimiter(newFile, contents);
+
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(contents.getBytes(charset));
 		newFile.setContents(inputStream, true, true, null);
 		inputStream.close();
 	}

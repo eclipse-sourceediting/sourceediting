@@ -23,14 +23,17 @@ public class CommonEncodingPreferenceNames {
 
 	/**
 	 * Constant to be used when referring to CR/MAC line delimiter
+	 * @deprecated - no longer used
 	 */
 	public static final String CR = "EOL_Mac"; //$NON-NLS-1$
 	/**
 	 * Constant to be used when referring to CRLF/WINDOWS line delimiter
+	 * @deprecated - no longer used
 	 */
 	public static final String CRLF = "EOL_Windows"; //$NON-NLS-1$
 	/**
 	 * The end-of-line character(s) to use.
+	 * @deprecated - no longer used
 	 */
 	public static final String END_OF_LINE_CODE = "endOfLineCode";//$NON-NLS-1$
 	/**
@@ -40,10 +43,12 @@ public class CommonEncodingPreferenceNames {
 
 	/**
 	 * Constant to be used when referring to LF/UNIX line delimiter
+	 * @deprecated - no longer used
 	 */
 	public static final String LF = "EOL_Unix"; //$NON-NLS-1$
 	/**
 	 * Constant to be used when referring to No translation of line delimiters
+	 * @deprecated - no longer used
 	 */
 	public static final String NO_TRANSLATION = ""; //$NON-NLS-1$
 	/**
@@ -53,16 +58,19 @@ public class CommonEncodingPreferenceNames {
 
 	/**
 	 * String representation of CR/MAC line delimiter
+	 * @deprecated - no longer used
 	 */
 	public static final String STRING_CR = "\r";//$NON-NLS-1$
 
 	/**
 	 * String representation of CRLF/WINDOWS line delimiter
+	 * @deprecated - no longer used
 	 */
 	public static final String STRING_CRLF = "\r\n";//$NON-NLS-1$
 
 	/**
 	 * String representation of LF/UNIX line delimiter
+	 * @deprecated - no longer used
 	 */
 	public static final String STRING_LF = "\n";//$NON-NLS-1$
 

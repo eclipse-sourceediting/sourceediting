@@ -15,7 +15,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -32,6 +36,7 @@ import org.eclipse.wst.html.ui.internal.Logger;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImageHelper;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImages;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 
 public class NewHTMLWizard extends Wizard implements INewWizard {
 	
@@ -47,6 +52,14 @@ public class NewHTMLWizard extends Wizard implements INewWizard {
 
 		fNewFileTemplatesPage = new NewHTMLTemplatesWizardPage();
 		addPage(fNewFileTemplatesPage);
+	}
+	
+	private String applyLineDelimiter(IFile file, String text) {
+		String lineDelimiter = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, System.getProperty("line.separator"), new IScopeContext[] {new ProjectScope(file.getProject()), new InstanceScope() });//$NON-NLS-1$
+		String convertedText = StringUtils.replace(text, "\r\n", "\n");
+		convertedText = StringUtils.replace(convertedText, "\r", "\n");
+		convertedText = StringUtils.replace(convertedText, "\n", lineDelimiter);
+		return convertedText;
 	}
 
 	public void init(IWorkbench aWorkbench, IStructuredSelection aSelection) {
@@ -94,6 +107,7 @@ public class NewHTMLWizard extends Wizard implements INewWizard {
 			// put template contents into file
 			String templateString = fNewFileTemplatesPage.getTemplateString();
 			if (templateString != null) {
+				templateString = applyLineDelimiter(file, templateString);
 				// determine the encoding for the new file
 				Preferences preference = HTMLCorePlugin.getDefault().getPluginPreferences();
 				String charSet = preference.getString(CommonEncodingPreferenceNames.OUTPUT_CODESET);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPartitioningException;
 import org.eclipse.jface.text.BadPositionCategoryException;
@@ -299,17 +301,11 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	private byte[] listenerLock = new byte[0];
 	private NullDocumentEvent NULL_DOCUMENT_EVENT;
 
-	//
 	/**
-	 * in case preferred delimiter is not set, we'll assume the platform
-	 * default Note: it is not final static to make sure it won't be inlined
-	 * by compiler.
+	 * Theoretically, a document can contain mixed line delimiters, but the
+	 * user's preference is usually to be internally consistent.
 	 */
-	private final String PlatformLineDelimiter = System.getProperty("line.separator"); //$NON-NLS-1$
-	/**
-	 * theoretically, a document can contain mixed line delimiters
-	 */
-	private String preferedDelimiter;
+	private String fInitialLineDelimiter;
 	private final String READ_ONLY_REGIONS_CATEGORY = "_READ_ONLY_REGIONS_CATEGORY_"; //$NON-NLS-1$
 	/**
 	 * Current rewrite session, or none if not presently rewriting.
@@ -1320,28 +1316,35 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * @see org.eclipse.jface.text.IDocumentExtension4#getDefaultLineDelimiter()
 	 */
 	public String getDefaultLineDelimiter() {
-		// specific preferred line delimiter
-		if (preferedDelimiter != null)
-			return preferedDelimiter;
+		
+		String lineDelimiter= null;
+		
+		try {
+			lineDelimiter= getLineDelimiter(0);
+		} catch (BadLocationException x) {
+		}
+	
+		if (lineDelimiter != null)
+			return lineDelimiter;
 
+		if (fInitialLineDelimiter != null)
+			return fInitialLineDelimiter;
 
-		// no line delimiter has been used so just use platform's default
-		String lineDelimiter = null;
-		String sysLineDelimiter = PlatformLineDelimiter;
-		String[] delimiters = getLegalLineDelimiters();
+		String sysLineDelimiter= System.getProperty("line.separator"); //$NON-NLS-1$
+		String[] delimiters= getLegalLineDelimiters();
 		Assert.isTrue(delimiters.length > 0);
-		for (int i = 0; i < delimiters.length; i++) {
+		for (int i= 0; i < delimiters.length; i++) {
 			if (delimiters[i].equals(sysLineDelimiter)) {
-				lineDelimiter = sysLineDelimiter;
+				lineDelimiter= sysLineDelimiter;
 				break;
 			}
 		}
-
-		// no platform default so just use first legal delimiter
+		
 		if (lineDelimiter == null)
-			lineDelimiter = delimiters[0];
-
+			lineDelimiter= delimiters[0];
+	
 		return lineDelimiter;
+		
 	}
 
 	/**
@@ -2530,16 +2533,16 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * 
 	 * @see org.eclipse.jface.text.IDocumentExtension4#setInitialLineDelimiter(java.lang.String)
 	 */
-	public void setInitialLineDelimiter(String delimiter) {
+	public void setInitialLineDelimiter(String lineDelimiter) {
 		// make sure our preferred delimiter is
 		// one of the legal ones
-		if (Utilities.containsString(getLegalLineDelimiters(), delimiter)) {
-			preferedDelimiter = delimiter;
+		if (Utilities.containsString(getLegalLineDelimiters(), lineDelimiter)) {
+			fInitialLineDelimiter= lineDelimiter;
 		}
 		else {
 			if (Logger.DEBUG_DOCUMENT)
 				Logger.log(Logger.INFO, "Attempt to set linedelimiter to non-legal delimiter"); //$NON-NLS-1$ //$NON-NLS-2$
-			preferedDelimiter = PlatformLineDelimiter;
+			fInitialLineDelimiter = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR, System.getProperty("line.separator"), new IScopeContext[] { new InstanceScope() });//$NON-NLS-1$
 		}
 	}
 
