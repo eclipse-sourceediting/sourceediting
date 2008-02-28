@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,6 @@ package org.eclipse.wst.sse.ui.internal.preferences.ui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.Platform;
@@ -57,6 +56,8 @@ import org.eclipse.wst.sse.core.internal.tasks.TaskTagPreferenceKeys;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 
+import com.ibm.icu.util.StringTokenizer;
+
 class MainTab implements IPreferenceTab {
 	public class TaskTagDialog extends Dialog {
 		public TaskTag taskTag = null;
@@ -89,7 +90,7 @@ class MainTab implements IPreferenceTab {
 			Label label = new Label(composite, SWT.NONE);
 			label.setText(SSEUIMessages.TaskTagPreferenceTab_6); //$NON-NLS-1$
 			label.setLayoutData(new GridData());
-			tagText = new Text(composite, SWT.NONE);
+			tagText = new Text(composite, SWT.BORDER);
 			tagText.setText(taskTag != null ? taskTag.getTag() : ""); //$NON-NLS-1$
 			tagText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			tagText.addModifyListener(new ModifyListener() {
