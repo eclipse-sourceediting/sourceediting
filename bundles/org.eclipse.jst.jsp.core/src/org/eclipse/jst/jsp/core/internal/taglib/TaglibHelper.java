@@ -474,7 +474,7 @@ public class TaglibHelper {
 			}
 
 			public String getMessage() {
-				return validationMessage.getId() + ":" + validationMessage.getMessage();
+				return validationMessage.getMessage();
 			}
 
 			public int getID() {
