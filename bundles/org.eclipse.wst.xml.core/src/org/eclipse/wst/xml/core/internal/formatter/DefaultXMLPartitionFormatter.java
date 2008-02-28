@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.formatter;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -31,6 +33,10 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
@@ -1293,6 +1299,17 @@ public class DefaultXMLPartitionFormatter {
 								else {
 									// look for xml:space in content model
 									CMNamedNodeMap cmAttributes = elementDeclaration.getAttributes();
+
+									CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(cmAttributes);
+										List nodes = ModelQueryUtil.getModelQuery(currentNode.getOwnerDocument()).getAvailableContent((Element) currentNode, elementDeclaration, ModelQuery.INCLUDE_ATTRIBUTES);
+										for (int k = 0; k < nodes.size(); k++) {
+											CMNode cmnode = (CMNode) nodes.get(k);
+											if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
+												allAttributes.put(cmnode);
+											}
+										}
+									cmAttributes = allAttributes;
+									
 									// Check implied values from the DTD way.
 									CMAttributeDeclaration attributeDeclaration = (CMAttributeDeclaration) cmAttributes.getNamedItem(XML_SPACE);
 									if (attributeDeclaration != null) {
