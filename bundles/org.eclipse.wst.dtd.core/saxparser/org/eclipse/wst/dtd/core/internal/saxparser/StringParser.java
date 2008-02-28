@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -57,6 +57,14 @@ public class StringParser {
 		else {
 			fMostRecentChar = fData.charAt(fCurrentOffset);
 		}
+		return fMostRecentChar;
+	}
+	
+	public int loadPreviousChar() {
+		if (--fCurrentOffset < 0) 
+			fMostRecentChar = -1;
+		else
+			fMostRecentChar = fData.charAt(fCurrentOffset);
 		return fMostRecentChar;
 	}
 
@@ -165,6 +173,34 @@ public class StringParser {
 			}
 			ch = loadNextChar();
 		}
+	}
+	
+	/**
+	 * skips to the last occurrence of the specified character.
+	 * if <code>skipPastChar</code> is true, the parser is
+	 * incremented past the last occurrence of the character.
+	 * This method starts at the end of the character data, and
+	 * moves backwards to find the last occurrence of the character
+	 */
+	public void skipToLastOfChar(char chr, boolean skipPastChar) {
+		int ch = -1;
+		
+		// Move the cursor to the end offset to scan backwards.
+		fCurrentOffset = fEndOffset;
+		
+		do {
+			ch = loadPreviousChar();
+			
+			if(ch == -1)
+				return;
+			
+			if (ch == chr) {
+				if(skipPastChar)
+					loadNextChar();
+				return;
+			}
+			
+		} while(true);
 	}
 
 	//

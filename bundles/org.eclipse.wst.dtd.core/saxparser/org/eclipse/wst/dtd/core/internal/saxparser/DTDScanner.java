@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -843,7 +843,9 @@ public class DTDScanner {
 
 		char qchar = single ? '\'' : '\"';
 		int sOffset = sp.getCurrentOffset();
-		sp.skipToChar(qchar, true);
+		//BUG 203494 - Skip to the last occurrence of the qchar that way
+		// all characters between are obtained
+		sp.skipToLastOfChar(qchar, true);
 		int len = sp.getCurrentOffset() - sOffset - 1;
 		if (len == 0)
 			value = ""; //$NON-NLS-1$

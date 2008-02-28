@@ -212,7 +212,10 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 							proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), attrDecl.getNodeName().length() + 2, attrImage,
 							// if the value isn't empty (no empty set of
 										// quotes), show it
-										(showValues && (proposedText.indexOf("\"\"") < 0)) ? proposedText : getRequiredName(node, attrDecl), //$NON-NLS-1$
+							// BUG 203494, content strings may have "", but not be empty
+							// An empty string is when there's no content between double quotes
+							// and there is no single quote that may be encasing a double quote
+										(showValues && (proposedText.lastIndexOf('\"') - proposedText.indexOf('\"') ==  1 && proposedText.indexOf('\'') == -1)) ? getRequiredName(node, attrDecl) : proposedText,
 										null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_NAME + isRequired);
 						}
 						contentAssistRequest.addProposal(proposal);

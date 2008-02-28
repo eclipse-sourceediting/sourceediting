@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -72,21 +72,31 @@ public class XMLContentModelGenerator extends AbstractContentModelGenerator {
 		// attribute name
 		String attributeName = getRequiredName(ownerNode, attrDecl);
 		CMDataType attrType = attrDecl.getAttrType();
+		String defaultValue = null;
 		// = sign
-		buffer.append(attributeName + "=\""); //$NON-NLS-1$
+		buffer.append(attributeName + "="); //$NON-NLS-1$
 		// attribute value
 		if (attrType != null) {
 			// insert any value that is implied
 			if ((attrType.getImpliedValueKind() != CMDataType.IMPLIED_VALUE_NONE) && (attrType.getImpliedValue() != null)) {
-				buffer.append(attrType.getImpliedValue());
+				defaultValue = attrType.getImpliedValue();
 			}
 			// otherwise, if an enumerated list of values exists, use the
 			// first value
 			else if ((attrType.getEnumeratedValues() != null) && (attrType.getEnumeratedValues().length > 0)) {
-				buffer.append(attrType.getEnumeratedValues()[0]);
+				defaultValue = attrType.getEnumeratedValues()[0];
 			}
 		}
-		buffer.append("\""); //$NON-NLS-1$
+		
+		char attrQuote = '\"';
+		// Found a double quote, wrap the attribute in single quotes
+		if(defaultValue != null && defaultValue.indexOf(attrQuote) >= 0) {
+			attrQuote = '\'';
+		}
+		
+		buffer.append(attrQuote);
+		buffer.append(((defaultValue != null) ? defaultValue : "")); //$NON-NLS-1$
+		buffer.append(attrQuote);
 		return;
 	}
 
