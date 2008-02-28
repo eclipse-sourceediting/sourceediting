@@ -251,6 +251,13 @@ public class TaglibHelper {
 						// add to results
 						TagData td = new TagData(tagDataTable);
 
+						VariableInfo[] vInfos = tei.getVariableInfo(td);
+						if (vInfos != null) {
+							for (int i = 0; i < vInfos.length; i++) {
+								results.add(new TaglibVariable(vInfos[i].getClassName(), vInfos[i].getVarName(), vInfos[i].getScope(), decl.getDescription()));
+							}
+						}
+
 						ValidationMessage[] messages = tei.validate(td);
 						if (messages != null && messages.length > 0) {
 							for (int i = 0; i < messages.length; i++) {
@@ -258,13 +265,6 @@ public class TaglibHelper {
 								if (createdProblem != null) {
 									problems.add(createdProblem);
 								}
-							}
-						}
-
-						VariableInfo[] vInfos = tei.getVariableInfo(td);
-						if (vInfos != null) {
-							for (int i = 0; i < vInfos.length; i++) {
-								results.add(new TaglibVariable(vInfos[i].getClassName(), vInfos[i].getVarName(), vInfos[i].getScope(), decl.getDescription()));
 							}
 						}
 					}
