@@ -63,18 +63,23 @@ class GoToMatchingTagAction extends TextEditorAction {
 					o = ((Attr) o).getOwnerElement();
 				}
 
+				int targetOffset = -1;
 				if (o instanceof IDOMNode) {
 					IDOMNode node = (IDOMNode) o;
 					if (node.getStartStructuredDocumentRegion().containsOffset(offset)) {
 						matchRegion = ((IDOMNode) o).getEndStructuredDocumentRegion();
+						if (matchRegion != null)
+							targetOffset = matchRegion.getStartOffset() + 2;
 					}
 					else if (node.getEndStructuredDocumentRegion().containsOffset(offset)) {
 						matchRegion = ((IDOMNode) o).getStartStructuredDocumentRegion();
+						if (matchRegion != null)
+							targetOffset = matchRegion.getStartOffset() + 1;
 					}
 				}
 
-				if (matchRegion != null) {
-					getTextEditor().getSelectionProvider().setSelection(new TextSelection(matchRegion.getStartOffset(), matchRegion.getTextLength()));
+				if (targetOffset >= 0) {
+					getTextEditor().getSelectionProvider().setSelection(new TextSelection(targetOffset, 0));
 				}
 			}
 		}

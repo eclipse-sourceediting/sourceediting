@@ -183,9 +183,13 @@ public class ActionContributorXML extends ActionContributor {
 		fGoToMatchingTagAction.setEditor(textEditor);
 
 		if (actionBars != null) {
+			fPreviousSibling.setActionDefinitionId("org.eclipse.wst.xml.ui.previousSibling");
 			actionBars.setGlobalActionHandler("org.eclipse.wst.xml.ui.previousSibling", fPreviousSibling);
+			fNextSibling.setActionDefinitionId("org.eclipse.wst.xml.ui.nextSibling");
 			actionBars.setGlobalActionHandler("org.eclipse.wst.xml.ui.nextSibling", fNextSibling);
+			fGoToMatchingTagAction.setActionDefinitionId("org.eclipse.wst.xml.ui.gotoMatchingTag");
 			actionBars.setGlobalActionHandler("org.eclipse.wst.xml.ui.gotoMatchingTag", fGoToMatchingTagAction);
+			actionBars.updateActionBars();
 		}
 	}
 

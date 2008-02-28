@@ -628,7 +628,7 @@
 			commandId="org.eclipse.wst.xml.ui.nextSibling"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 		<key
-			sequence="M1+M2+,"
+			sequence="M1+M2+&gt;"
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.xml.ui.gotoMatchingTag"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
