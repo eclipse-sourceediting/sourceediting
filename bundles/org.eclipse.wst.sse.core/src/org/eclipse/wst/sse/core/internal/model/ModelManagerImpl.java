@@ -1041,6 +1041,10 @@ public class ModelManagerImpl implements IModelManager {
 		IStructuredModel result = null;
 		
 		SYNC.acquire();
+		/**
+		 * While a good check in theory, it's possible for an event fired to
+		 * cause a listener to access a method that calls this one.
+		 */
 		//Assert.isTrue(SYNC.getDepth()==1, "depth not equal to 1");
 		// let's see if we already have it in our cache
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);

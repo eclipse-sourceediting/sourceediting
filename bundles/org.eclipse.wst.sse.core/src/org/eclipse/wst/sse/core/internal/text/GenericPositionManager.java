@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,10 @@ import org.eclipse.jface.text.IPositionUpdater;
 import org.eclipse.jface.text.Position;
 import org.eclipse.wst.sse.core.internal.util.Assert;
 
-
+/**
+ * Based on the Position management methods from
+ * org.eclipse.jface.text.AbstractDocument
+ */
 
 public class GenericPositionManager {
 	private CharSequence fCharSequence;
@@ -41,14 +44,14 @@ public class GenericPositionManager {
 
 	/**
 	 * don't allow instantiation with out document pointer
-	 *  
+	 * 
 	 */
 	private GenericPositionManager() {
 		super();
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public GenericPositionManager(CharSequence charSequence) {
 		this();
@@ -64,7 +67,8 @@ public class GenericPositionManager {
 	public void addPosition(Position position) throws BadLocationException {
 		try {
 			addPosition(IDocument.DEFAULT_CATEGORY, position);
-		} catch (BadPositionCategoryException e) {
+		}
+		catch (BadPositionCategoryException e) {
 		}
 	}
 
@@ -173,12 +177,14 @@ public class GenericPositionManager {
 					right = left;
 				else
 					right = mid - 1;
-			} else if (offset > p.getOffset()) {
+			}
+			else if (offset > p.getOffset()) {
 				if (right == mid)
 					left = right;
 				else
 					left = mid + 1;
-			} else if (offset == p.getOffset()) {
+			}
+			else if (offset == p.getOffset()) {
 				left = right = mid;
 			}
 
@@ -189,7 +195,8 @@ public class GenericPositionManager {
 		if (offset > p.getOffset()) {
 			// append to the end
 			pos++;
-		} else {
+		}
+		else {
 			// entry will became the first of all entries with the same
 			// offset
 			do {
@@ -197,7 +204,8 @@ public class GenericPositionManager {
 				if (pos < 0)
 					break;
 				p = (Position) positions.get(pos);
-			} while (offset == p.getOffset());
+			}
+			while (offset == p.getOffset());
 			++pos;
 		}
 
@@ -321,7 +329,8 @@ public class GenericPositionManager {
 	public void removePosition(Position position) {
 		try {
 			removePosition(IDocument.DEFAULT_CATEGORY, position);
-		} catch (BadPositionCategoryException e) {
+		}
+		catch (BadPositionCategoryException e) {
 		}
 	}
 
@@ -398,4 +407,3 @@ public class GenericPositionManager {
 
 
 }
-
