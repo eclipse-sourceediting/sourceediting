@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -597,7 +597,7 @@ public final class TaglibIndex {
 				 * new workspace)
 				 */
 				if (DIRTY.equalsIgnoreCase(getState())) {
-					Logger.log(Logger.ERROR, "A workspace crash was detected. The previous session did not exit normally. Not using saved taglib indexes"); //$NON-NLS-3$
+					Logger.log(Logger.ERROR, "A workspace crash was detected. The previous session did not exit normally. Not using saved taglib indexes."); //$NON-NLS-3$
 					removeIndexes(false);
 				}
 

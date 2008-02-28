@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,7 @@ public interface PageDirectiveAdapter extends INodeAdapter {
 
 	/**
 	 * This method is to give this adapter a chance to use
-	 * the AdapterFactores from the EmbeddedTypeHandler
+	 * the AdapterFactories from the EmbeddedTypeHandler
 	 * to adapt the node. Its to be used by JSPAwareAdapterFactories
 	 * to (potentially) adapt nodes from the embedded content type.
 	 */
