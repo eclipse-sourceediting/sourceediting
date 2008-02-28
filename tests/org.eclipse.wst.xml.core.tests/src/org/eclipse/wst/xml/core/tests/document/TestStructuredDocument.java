@@ -414,13 +414,16 @@ public class TestStructuredDocument extends TestCase {
 		}
 	}
 
-	public void testGetDetectedLineDelimiter() throws IOException, CoreException {
-		String platformDelimiter = System.getProperty("line.separator");
+	/*
+	 * Verify that the first delimiter is \r\n regardless of
+	 * preferences or platform
+	 */
+	public void testGetDetectedLineDelimiter() throws IOException, CoreException, BadLocationException {
 		IStructuredModel model = getTestModel();
 		try {
 			IStructuredDocument sDoc = model.getStructuredDocument();
 			String delim = sDoc.getLineDelimiter();
-			assertEquals("wrong preferred line delmiter", platformDelimiter, delim);
+			assertEquals("wrong preferred line delmiter", "\r\n", delim);
 		}
 		finally {
 			if (model != null) {
