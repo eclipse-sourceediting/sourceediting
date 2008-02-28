@@ -538,9 +538,8 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 		}
 
 		IStructuredDocumentRegion prev = structuredDocumentRegion.getPrevious();
-		if ((prev != null) && !prev.isDeleted()) {
-			String prevText = prev.getFullText();
-			if ((prev.getType() == DOMRegionContext.XML_CONTENT) && prevText.endsWith(" ")) { //$NON-NLS-1$
+		if ((prev != null) && prev.getStartOffset() == 0) {
+			if (prev.getType() == DOMRegionContext.XML_CONTENT) {
 				String messageText = XMLUIMessages.ReconcileStepForMarkup_5;
 				int start = prev.getStartOffset();
 				int length = prev.getLength();
