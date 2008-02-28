@@ -227,12 +227,12 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				includedFile = StringUtils.strip(includedFile).trim();
 				IPath filePath = null;
 				if (getIncludes().isEmpty())
-					filePath = FacetModuleCoreSupport.resolve(TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation(), includedFile);
+					filePath = FacetModuleCoreSupport.resolve(TaglibController.getLocation(TLDCMDocumentManager.this), includedFile);
 				else
 					filePath = FacetModuleCoreSupport.resolve((IPath) getIncludes().peek(), includedFile);
 
 				// check for "loops"
-				if (filePath != null && !getIncludes().contains(filePath) && !filePath.equals(TaglibController.getFileBuffer(TLDCMDocumentManager.this).getLocation())) {
+				if (filePath != null && !getIncludes().contains(filePath) && !filePath.equals(TaglibController.getLocation(TLDCMDocumentManager.this))) {
 					/*
 					 * Prevent slow performance when editing scriptlet part of
 					 * the JSP by only processing includes if they've been
@@ -869,7 +869,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			path = (IPath) getIncludes().peek();
 		}
 		else {
-			path = TaglibController.getFileBuffer(this).getLocation();
+			path = TaglibController.getLocation(this);
 		}
 
 		return path;

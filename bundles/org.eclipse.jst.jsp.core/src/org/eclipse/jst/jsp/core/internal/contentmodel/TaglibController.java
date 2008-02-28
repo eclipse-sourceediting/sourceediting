@@ -19,9 +19,11 @@ import java.util.Map;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.IDocumentSetupParticipant;
+import org.eclipse.core.filebuffers.IDocumentSetupParticipantExtension;
 import org.eclipse.core.filebuffers.IFileBuffer;
 import org.eclipse.core.filebuffers.IFileBufferListener;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.filebuffers.LocationKind;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
@@ -47,11 +49,13 @@ import org.eclipse.wst.sse.core.internal.util.Assert;
  * 
  * TODO: Remove the reparse penalty.
  */
-public class TaglibController implements IDocumentSetupParticipant {
+public class TaglibController implements IDocumentSetupParticipant, IDocumentSetupParticipantExtension {
 
 	class DocumentInfo implements ITaglibIndexListener {
 		IStructuredDocument document;
 		ITextFileBuffer textFileBuffer;
+		IPath location;
+		LocationKind locationKind;
 		TLDCMDocumentManager tldDocumentManager;
 
 		public void indexChanged(ITaglibIndexDelta delta) {
@@ -115,17 +119,30 @@ public class TaglibController implements IDocumentSetupParticipant {
 						return;
 				}
 				Assert.isTrue(document instanceof IStructuredDocument, getClass().getName() + " SetupParticipant was called for non-IStructuredDocument"); //$NON-NLS-1$
-				DocumentInfo info = new DocumentInfo();
-				info.document = (IStructuredDocument) document;
-				info.textFileBuffer = (ITextFileBuffer) buffer;
-				info.tldDocumentManager = new TLDCMDocumentManager();
-				info.tldDocumentManager.setSourceParser((JSPSourceParser) info.document.getParser());
+
+				DocumentInfo info = null;
 				synchronized (_instance.fDocumentMap) {
-					_instance.fDocumentMap.put(document, info);
+					info = (DocumentInfo) _instance.fDocumentMap.get(document);
 				}
-				TaglibIndex.addTaglibIndexListener(info);
-				if (document instanceof BasicStructuredDocument) {
-					((BasicStructuredDocument) document).reparse(this);
+				if (info != null) {
+					// remember the buffer now
+					info.textFileBuffer = (ITextFileBuffer) buffer;
+				}
+				else {
+					info = new DocumentInfo();
+					info.document = (IStructuredDocument) document;
+					info.textFileBuffer = (ITextFileBuffer) buffer;
+					info.location = buffer.getLocation();
+					info.locationKind = LocationKind.NORMALIZE;
+					info.tldDocumentManager = new TLDCMDocumentManager();
+					info.tldDocumentManager.setSourceParser((JSPSourceParser) info.document.getParser());
+					synchronized (_instance.fDocumentMap) {
+						_instance.fDocumentMap.put(document, info);
+					}
+					TaglibIndex.addTaglibIndexListener(info);
+					if (document instanceof BasicStructuredDocument && document.getLength() > 0) {
+						((BasicStructuredDocument) document).reparse(this);
+					}
 				}
 			}
 		}
@@ -145,11 +162,11 @@ public class TaglibController implements IDocumentSetupParticipant {
 			}
 			DocumentInfo info = null;
 			synchronized (fDocumentMap) {
-				Object[] keys = fDocumentMap.keySet().toArray();
-				for (int i = 0; i < keys.length; i++) {
-					info = (DocumentInfo) fDocumentMap.get(keys[i]);
+				Map.Entry[] entries = (Map.Entry[]) fDocumentMap.entrySet().toArray(new Map.Entry[fDocumentMap.size()]);
+				for (int i = 0; i < entries.length; i++) {
+					info = (DocumentInfo) entries[i].getValue();
 					if (info != null && info.textFileBuffer.equals(buffer)) {
-						fDocumentMap.remove(keys[i]);
+						fDocumentMap.remove(entries[i].getKey());
 						break;
 					}
 				}
@@ -217,11 +234,11 @@ public class TaglibController implements IDocumentSetupParticipant {
 	static TaglibController _instance = null;
 	static private boolean fIsShutdown = false;
 
-	public static ITextFileBuffer getFileBuffer(IDocument document) {
+	public static IPath getLocation(IDocument document) {
 		synchronized (_instance.fDocumentMap) {
 			DocumentInfo info = (DocumentInfo) _instance.fDocumentMap.get(document);
 			if (info != null)
-				return info.textFileBuffer;
+				return info.location;
 			return null;
 		}
 	}
@@ -230,25 +247,25 @@ public class TaglibController implements IDocumentSetupParticipant {
 	 * @param manager
 	 * @return
 	 */
-	public static ITextFileBuffer getFileBuffer(TLDCMDocumentManager manager) {
+	public static IPath getLocation(TLDCMDocumentManager manager) {
 		// if _instance is null, we are already shutting donw
 		if (_instance == null)
 			return null;
 
-		ITextFileBuffer buffer = null;
+		IPath location = null;
 		synchronized (_instance.fDocumentMap) {
 			Iterator docInfos = _instance.fDocumentMap.values().iterator();
-			while (docInfos.hasNext() && buffer == null) {
+			while (docInfos.hasNext() && location == null) {
 				DocumentInfo info = (DocumentInfo) docInfos.next();
 				if (info.tldDocumentManager.equals(manager))
-					buffer = info.textFileBuffer;
+					location = info.location;
 			}
 		}
-		return buffer;
+		return location;
 	}
 
 	public static TLDCMDocumentManager getTLDCMDocumentManager(IDocument document) {
-		// if _instance is null, we are already shutting donw
+		// if _instance is null, we are already shutting down
 		if (_instance == null)
 			return null;
 		synchronized (_instance.fDocumentMap) {
@@ -314,5 +331,37 @@ public class TaglibController implements IDocumentSetupParticipant {
 		synchronized (_instance.fJSPdocuments) {
 			_instance.fJSPdocuments.add(document);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.core.filebuffers.IDocumentSetupParticipantExtension#setup(org.eclipse.jface.text.IDocument,
+	 *      org.eclipse.core.runtime.IPath,
+	 *      org.eclipse.core.filebuffers.LocationKind)
+	 */
+	public void setup(IDocument document, IPath location, LocationKind locationKind) {
+		// if we've already shutdown, just ignore
+		if (isShutdown())
+			return;
+		// reference the shared instance's documents directly
+		synchronized (_instance.fJSPdocuments) {
+			_instance.fJSPdocuments.add(document);
+		}
+
+		DocumentInfo info = new DocumentInfo();
+		info.document = (IStructuredDocument) document;
+		info.textFileBuffer = null; // will be supplied later
+		info.location = location;
+		info.locationKind = locationKind;
+		info.tldDocumentManager = new TLDCMDocumentManager();
+		synchronized (_instance.fDocumentMap) {
+			_instance.fDocumentMap.put(document, info);
+		}
+		info.tldDocumentManager.setSourceParser((JSPSourceParser) info.document.getParser());
+		if (document instanceof BasicStructuredDocument && document.getLength() > 0) {
+			((BasicStructuredDocument) document).reparse(this);
+		}
+		TaglibIndex.addTaglibIndexListener(info);
 	}
 }
