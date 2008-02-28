@@ -2267,8 +2267,9 @@ public class StructuredTextEditor extends TextEditor {
 			return;
 
 		int anchor = matcher.getAnchor();
-		// http://dev.eclipse.org/bugs/show_bug.cgi?id=34195
-		int targetOffset = (ICharacterPairMatcher.RIGHT == anchor) ? offset + 1 : offset + length;
+
+		// go to after the match if matching to the right
+		int targetOffset = (ICharacterPairMatcher.RIGHT == anchor) ? offset : offset + length;
 
 		boolean visible = false;
 		if (sourceViewer instanceof ITextViewerExtension5) {
