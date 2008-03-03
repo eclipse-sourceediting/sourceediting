@@ -843,7 +843,10 @@ public class TaglibHelper {
 	 */
 	public void setProject(IProject p) {
 		fProject = p;
-		fJavaProject = JavaCore.create(p);
+		IJavaProject javaProject = JavaCore.create(p);
+		if (javaProject.exists()) {
+			fJavaProject = javaProject;
+		}
 	}
 
 	/**
