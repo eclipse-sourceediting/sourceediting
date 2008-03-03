@@ -21,7 +21,13 @@ public abstract class ModelQueryExtension
   protected static final String[] EMPTY_STRING_ARRAY = {};
   protected static final CMNode[] EMPTY_CMNODE_ARRAY = {};
   
-  public String[] getAttributeValues(Element ownerElement, String namespace, String name)
+  /**
+ * @param ownerElement - the owner element
+ * @param namespace - the active namespace
+ * @param name - the name of an attribute node
+ * @return valid values for the given attribute
+ */
+public String[] getAttributeValues(Element ownerElement, String namespace, String name)
   {
     return EMPTY_STRING_ARRAY;
   }
@@ -31,12 +37,24 @@ public abstract class ModelQueryExtension
     return EMPTY_STRING_ARRAY;
   }
   
-  public boolean isApplicableChildElement(Node parentNode, String namespace, String name)
+  /**
+ * @param parentNode
+ * @param namespace
+ * @param name
+ * @return whether a child element of the given parentNode is valid given the active namespace
+ */
+public boolean isApplicableChildElement(Node parentNode, String namespace, String name)
   {
     return true;
   }
   
-  public CMNode[] getAvailableElementContent(Element parentElement, String namespace, int includeOptions) 
+  /**
+ * @param parentElement - the parent Element when asking for children, the owner Element when asking for attributes 
+ * @param namespace - the active namespace
+ * @param includeOptions - ModelQuery.INCLUDE_ATTRIBUTES or ModelQuery.INCLUDE_CHILD_NODES
+ * @return additional valid CMAttributeDeclarations or CMElementDeclarations 
+ */
+public CMNode[] getAvailableElementContent(Element parentElement, String namespace, int includeOptions) 
   {
 	  return EMPTY_CMNODE_ARRAY;
   }

@@ -50,6 +50,9 @@ import org.eclipse.wst.sse.core.internal.tasks.TaskTagPreferenceKeys;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
+/**
+ * Based loosley on org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage
+ */
 abstract class PropertyPreferencePage extends PropertyPage implements IWorkbenchPreferencePage {
 	private static final boolean _debugPreferences = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/preferences-properties")); //$NON-NLS-1$ //$NON-NLS-2$
 	/*
