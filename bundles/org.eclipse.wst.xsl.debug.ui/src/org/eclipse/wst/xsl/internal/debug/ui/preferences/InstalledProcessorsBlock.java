@@ -144,7 +144,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 		fTable.setLinesVisible(true);
 
 		TableColumn column1 = new TableColumn(fTable, SWT.NONE);
-		column1.setWidth(180);
+		column1.setWidth(150);
 		column1.setResizable(true);
 		column1.setText("Name");
 		column1.addSelectionListener(new SelectionAdapter()
@@ -157,7 +157,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 		});
 
 		TableColumn column2 = new TableColumn(fTable, SWT.NONE);
-		column2.setWidth(100);
+		column2.setWidth(80);
 		column2.setResizable(true);
 		column2.setText("Type");
 		column2.addSelectionListener(new SelectionAdapter()
@@ -183,7 +183,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 		});
 
 		TableColumn column4 = new TableColumn(fTable, SWT.NONE);
-		column4.setWidth(110);
+		column4.setWidth(150);
 		column4.setResizable(true);
 		column4.setText("Debugger");
 		column4.addSelectionListener(new SelectionAdapter()

@@ -90,12 +90,12 @@ public class FeaturesBlock extends AbstractTableBlock
 		c1.setText("Feature");
 
 		TableColumn c2 = new TableColumn(table, SWT.NONE);
-		c2.setWidth(50);
+		c2.setWidth(100);
 		c2.setResizable(true);
 		c2.setText("Type");
 
 		TableColumn c3 = new TableColumn(table, SWT.NONE);
-		c3.setWidth(250);
+		c3.setWidth(200);
 		c3.setResizable(true);
 		c3.setText("Value");
 
