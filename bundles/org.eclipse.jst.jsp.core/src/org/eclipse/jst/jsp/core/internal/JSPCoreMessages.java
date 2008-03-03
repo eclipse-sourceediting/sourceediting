@@ -41,6 +41,7 @@ public class JSPCoreMessages extends NLS {
 	public static String TaglibHelper_0;
 	public static String TaglibHelper_1;
 	public static String TaglibHelper_2;
+	public static String TaglibHelper_3;
 	
 	/**
 	 * @deprecated
