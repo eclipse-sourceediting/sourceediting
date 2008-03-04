@@ -237,6 +237,18 @@
                <contentType id="org.eclipse.wst.xml.core.xmlsource"></contentType>
                <contentType id="org.eclipse.wst.xml.core.xslsource"></contentType>
                <contentType id="org.eclipse.jst.jsp.core.tldsource"></contentType>
+               <fileext
+                     caseSensitive="false"
+                     ext="xml">
+               </fileext>
+               <fileext
+                     caseSensitive="false"
+                     ext="gph">
+               </fileext>
+               <fileext
+                     caseSensitive="false"
+                     ext="wdo-connections">
+               </fileext>
             </rules>
          </include>
          <exclude>
