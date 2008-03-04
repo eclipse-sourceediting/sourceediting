@@ -12,7 +12,10 @@ package org.eclipse.wst.html.core.internal.validate;
 
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -96,7 +99,23 @@ public class HTMLAttributeValidator extends PrimeValidator {
 			return;
 		CMNamedNodeMap declarations = edec.getAttributes();
 
-		CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(declarations);
+		CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(declarations) {
+			private final Map caseInsensitive = new HashMap();
+
+			public CMNode getNamedItem(String name) {
+				CMNode node = super.getNamedItem(name);
+				if (node == null) {
+					node = (CMNode) caseInsensitive.get(name.toLowerCase(Locale.US));
+				}
+				return node;
+			}
+
+			public void put(CMNode cmNode) {
+				super.put(cmNode);
+				caseInsensitive.put(cmNode.getNodeName().toLowerCase(Locale.US), cmNode);
+			}
+		};
+
 		List nodes = ModelQueryUtil.getModelQuery(target.getOwnerDocument()).getAvailableContent((Element) node, edec, ModelQuery.INCLUDE_ATTRIBUTES);
 		for (int k = 0; k < nodes.size(); k++) {
 			CMNode cmnode = (CMNode) nodes.get(k);
