@@ -14,7 +14,7 @@ import org.eclipse.wst.jsdt.core.IJsGlobalScopeContainer;
 import org.eclipse.wst.jsdt.core.IClasspathEntry;
 import org.eclipse.wst.jsdt.core.IJavaProject;
 import org.eclipse.wst.jsdt.core.compiler.libraries.LibraryLocation;
-import org.eclipse.wst.jsdt.internal.ui.IJsGlobalScopeContainerInitialzerExtension;
+import org.eclipse.wst.jsdt.internal.ui.IJsGlobalScopeContainerInitializerExtension;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsNameManglerUtil;
 import org.eclipse.wst.jsdt.web.core.internal.java.WebRootFinder;
 import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
@@ -23,7 +23,7 @@ import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
  * @author childsb
  * 
  */
-public class WebProjectJsGlobalScopeContainerInitializer extends JsGlobalScopeContainerInitializer implements IJsGlobalScopeContainerInitialzerExtension {
+public class WebProjectJsGlobalScopeContainerInitializer extends JsGlobalScopeContainerInitializer implements IJsGlobalScopeContainerInitializerExtension {
 	private static final String CONTAINER_DESCRIPTION = Messages.getString("WebProjectJsGlobalScopeContainerInitializer.0"); //$NON-NLS-1$
 	
 	public static final char[] LIB_NAME = {'b','r','o','w','s','e','r','W','i','n','d','o','w','.','j','s'};

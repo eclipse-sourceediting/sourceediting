@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-   <extension-point id="domTypeResolver" name="%extension-point.name.0" schema="schema/domTypeResolver.exsd"/>
+   
    <!-- Install Handler for web JSDT.. Pigybacks on wst.web facet-->
    <extension point="org.eclipse.wst.common.project.facet.core.facets">
    
@@ -99,11 +99,6 @@
 			</run>
 		</validator>
 	</extension>
- <extension
-       point="org.eclipse.wst.jsdt.web.core.domTypeResolver">
-       
-       <typeResolver class="org.eclipse.wst.jsdt.web.core.text.HTMLBaseElementResolution"/>
-        
- </extension>
+
 	
 </plugin>

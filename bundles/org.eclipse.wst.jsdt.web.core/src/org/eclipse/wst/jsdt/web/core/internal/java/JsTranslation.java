@@ -311,6 +311,14 @@ public class JsTranslation implements IJsTranslation {
 		return translator.getJsText();
 	}
 	
+	public Position[] getScriptPositions() {
+		return translator.getHtmlLocations();
+	}
+	
+	public void insertScript(int offset, String text, boolean force) {
+		
+	}
+	
 	public String getMangledName() {
 		return this.mangledName;
 	}
