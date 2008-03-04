@@ -100,19 +100,25 @@ public class HTMLAttributeValidator extends PrimeValidator {
 		CMNamedNodeMap declarations = edec.getAttributes();
 
 		CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(declarations) {
-			private final Map caseInsensitive = new HashMap();
+			private Map caseInsensitive;
+			
+			private Map getCaseInsensitiveMap() {
+				if(caseInsensitive == null)
+					caseInsensitive = new HashMap();
+				return caseInsensitive;
+			}
 
 			public CMNode getNamedItem(String name) {
 				CMNode node = super.getNamedItem(name);
 				if (node == null) {
-					node = (CMNode) caseInsensitive.get(name.toLowerCase(Locale.US));
+					node = (CMNode) getCaseInsensitiveMap().get(name.toLowerCase(Locale.US));
 				}
 				return node;
 			}
 
 			public void put(CMNode cmNode) {
 				super.put(cmNode);
-				caseInsensitive.put(cmNode.getNodeName().toLowerCase(Locale.US), cmNode);
+				getCaseInsensitiveMap().put(cmNode.getNodeName().toLowerCase(Locale.US), cmNode);
 			}
 		};
 

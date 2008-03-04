@@ -14,8 +14,11 @@ package org.eclipse.wst.xml.ui.internal.contentassist;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -264,7 +267,28 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			if (elementDecl != null) {
 				CMNamedNodeMap attributes = elementDecl.getAttributes();
 
-				CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attributes);
+				CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attributes) {
+					private Map caseInsensitive;
+					
+					private Map getCaseInsensitiveMap() {
+						if(caseInsensitive == null)
+							caseInsensitive = new HashMap();
+						return caseInsensitive;
+					}
+
+					public CMNode getNamedItem(String name) {
+						CMNode node = super.getNamedItem(name);
+						if (node == null) {
+							node = (CMNode) getCaseInsensitiveMap().get(name.toLowerCase(Locale.US));
+						}
+						return node;
+					}
+
+					public void put(CMNode cmNode) {
+						super.put(cmNode);
+						getCaseInsensitiveMap().put(cmNode.getNodeName().toLowerCase(Locale.US), cmNode);
+					}
+				};
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
 					List nodes = ModelQueryUtil.getModelQuery(node.getOwnerDocument()).getAvailableContent((Element) node, elementDecl, ModelQuery.INCLUDE_ATTRIBUTES);
 					for (int k = 0; k < nodes.size(); k++) {
