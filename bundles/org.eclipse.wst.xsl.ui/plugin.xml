@@ -15,10 +15,17 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="org.eclipse.wst.xml.internal.perspective.XMLPerspectiveFactory"
+            class="org.eclipse.wst.xsl.internal.perspective.XMLPerspectiveFactory"
             icon="icons/XMLFile.gif"
             id="org.eclipse.wst.xsl.ui.perspective"
             name="%perspectiveName">
       </perspective>
+   </extension>
+   <extension
+         point="org.eclipse.wst.sse.ui.editorConfiguration">
+      <sourceViewerConfiguration
+            class="org.eclipse.wst.xsl.internal.ui.StructuredTextViewerConfigurationXSL"
+            target="org.eclipse.wst.xml.core.xslsource">
+      </sourceViewerConfiguration>
    </extension>
 </plugin>

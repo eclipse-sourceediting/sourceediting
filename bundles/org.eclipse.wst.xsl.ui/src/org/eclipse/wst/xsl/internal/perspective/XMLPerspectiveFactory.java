@@ -9,7 +9,7 @@
  *     David Carver - bug 213883 - initial api 
  *******************************************************************************/
 
-package org.eclipse.wst.xml.internal.perspective;
+package org.eclipse.wst.xsl.internal.perspective;
 
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
@@ -19,8 +19,19 @@ import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.ui.navigator.resources.ProjectExplorer;
 
 
+/**
+ * @author dcarver
+ *
+ */
 public class XMLPerspectiveFactory implements IPerspectiveFactory {
 
+    /**
+     * Creates the initial layout.  This is what the layout is reset to
+     * when the Reset Perspective is selected.   It takes as input a
+     * IPageLayout object.
+     *
+     * @param layout 
+     */
 	public void createInitialLayout(IPageLayout layout) {
 		// Get the Editor Area
 		String editorArea = layout.getEditorArea();
@@ -65,6 +76,15 @@ public class XMLPerspectiveFactory implements IPerspectiveFactory {
 		
 	}
 	
+	/**
+	 * Adds View short cuts to the XML Perspective.  The short cuts added are:
+	 * XPath Navigator
+	 * ProjectExplorer
+	 * Navigator
+	 * Problems View
+	 * Console View 
+	 * @param layout
+	 */
 	private void addShortCutViews(IPageLayout layout) {
         layout.addShowViewShortcut("org.eclipse.wst.xml.xpath.ui.views.XPathNavigator");
 		layout.addShowViewShortcut(ProjectExplorer.VIEW_ID);

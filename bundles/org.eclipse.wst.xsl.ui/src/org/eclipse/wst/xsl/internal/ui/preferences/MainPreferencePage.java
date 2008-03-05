@@ -21,14 +21,25 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+/**
+ * 
+ *
+ */
 public class MainPreferencePage extends PreferencePage implements IWorkbenchPreferencePage
 {
+	/**
+	 * MainPreferncePage is the constructor for the XSL Preference Page
+	 */
 	public MainPreferencePage()
 	{
 		super();
 		noDefaultAndApplyButton();
 	}
 
+	/** 
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+	 */
 	public void init(IWorkbench workbench)
 	{
 	}
@@ -80,6 +91,10 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		return ancestor;
 	}
 
+	/** 
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
+	 */
 	@Override
 	public boolean performOk()
 	{

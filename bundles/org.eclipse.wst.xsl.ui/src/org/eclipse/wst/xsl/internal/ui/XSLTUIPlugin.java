@@ -20,7 +20,9 @@ import org.osgi.framework.BundleContext;
  */
 public class XSLTUIPlugin extends AbstractUIPlugin {
 
-	// The plug-in ID
+	/**
+	 * The Plugin ID 
+	 */
 	public static final String PLUGIN_ID = "org.eclipse.wst.xsl.launch";
 
 	// The shared instance
@@ -32,7 +34,7 @@ public class XSLTUIPlugin extends AbstractUIPlugin {
 	public XSLTUIPlugin() {
 	}
 
-	/*
+	/**
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
@@ -41,7 +43,7 @@ public class XSLTUIPlugin extends AbstractUIPlugin {
 		plugin = this;
 	}
 
-	/*
+	/**
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
