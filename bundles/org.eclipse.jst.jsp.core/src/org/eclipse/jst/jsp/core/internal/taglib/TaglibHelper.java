@@ -239,7 +239,7 @@ public class TaglibHelper {
 	 */
 	private void addTEIVariables(IStructuredDocument document, ITextRegionCollection customTag, List results, TLDElementDeclaration decl, String prefix, String uri, List problems) {
 		String teiClassname = decl.getTeiclass();
-		if (teiClassname == null || teiClassname.length() == 0)
+		if (teiClassname == null || teiClassname.length() == 0 || fJavaProject == null)
 			return;
 
 		TaglibClassLoader loader = getClassloader();
@@ -288,7 +288,7 @@ public class TaglibHelper {
 			if (createdProblem != null) {
 				problems.add(createdProblem);
 			}
-			// TEI class wasn't on classpath
+			// TEI class wasn't on build path
 			if (DEBUG)
 				logException(teiClassname, e);
 		}
@@ -305,11 +305,11 @@ public class TaglibHelper {
 			if (DEBUG)
 				logException(teiClassname, e);
 		}
-		catch (ClassCastException e) {
-			// TEI class wasn't really a subclass of TagExtraInfo
-			if (DEBUG)
-				logException(teiClassname, e);
-		}
+		//catch (ClassCastException e) {
+		//	// TEI class wasn't really a subclass of TagExtraInfo
+		//	if (DEBUG)
+		//		logException(teiClassname, e);
+		//}
 		catch (Exception e) {
 			Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TEIClassMisc, JSPCoreMessages.TaglibHelper_2, teiClassname, true);
 			if (createdProblem != null) {
@@ -335,6 +335,8 @@ public class TaglibHelper {
 	 * @return
 	 */
 	private Object createJSPProblem(final IStructuredDocument document, final ITextRegionCollection customTag, final int problemID, final String messageKey, final String argument, boolean preferVars) {
+		final String tagname = customTag.getText(customTag.getRegions().get(1));
+
 		final int start;
 		if (customTag.getNumberOfRegions() > 1) {
 			start = customTag.getStartOffset(customTag.getRegions().get(1));
@@ -401,7 +403,7 @@ public class TaglibHelper {
 			}
 
 			public String getMessage() {
-				return MessageFormat.format(messageKey, new String[]{argument});
+				return MessageFormat.format(messageKey, new String[]{tagname, argument});
 			}
 
 			public int getID() {
@@ -859,21 +861,19 @@ public class TaglibHelper {
 
 	private void validateTagClass(IStructuredDocument document, ITextRegionCollection customTag, TLDElementDeclaration decl, List problems) {
 		String tagClassname = decl.getTagclass();
+		IType tagClass = null;
 		if (tagClassname != null && tagClassname.length() > 0 && fJavaProject != null) {
-			IType tagClass = null;
 			try {
 				tagClass = fJavaProject.findType(tagClassname, new NullProgressMonitor());
 			}
 			catch (JavaModelException e) {
 				Logger.logException(e);
 			}
-			finally {
-				if (tagClass == null) {
-					Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TagClassNotFound, JSPCoreMessages.TaglibHelper_3, tagClassname, false);
-					if (createdProblem != null) {
-						problems.add(createdProblem);
-					}
-				}
+		}
+		if (tagClass == null) {
+			Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TagClassNotFound, JSPCoreMessages.TaglibHelper_3, tagClassname, false);
+			if (createdProblem != null) {
+				problems.add(createdProblem);
 			}
 		}
 	}
