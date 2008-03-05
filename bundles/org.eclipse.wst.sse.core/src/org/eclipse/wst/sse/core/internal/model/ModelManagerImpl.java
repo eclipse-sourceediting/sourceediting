@@ -1876,30 +1876,35 @@ public class ModelManagerImpl implements IModelManager {
 			SYNC.release();
 			sharedObject.waitForLoadAttempt();
 			
-			synchronized(sharedObject) {
-				// sync here on to prevent a dispose from yanking the model from us!
-				boolean saved = false;
-				// if this model was based on a File Buffer and we're writing back
-				// to the same location, use the buffer to do the writing
-				if (FileBufferModelManager.getInstance().isExistingBuffer(sharedObject.theSharedModel.getStructuredDocument())) {
-					ITextFileBuffer buffer = FileBufferModelManager.getInstance().getBuffer(sharedObject.theSharedModel.getStructuredDocument());
-					IPath fileLocation = FileBuffers.normalizeLocation(iFile.getFullPath());
-					if (fileLocation.equals(buffer.getLocation())) {
-						buffer.commit(new NullProgressMonitor(), true);
-						saved = true;
-					}
+			/**
+			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=221610
+			 * 
+			 * Sync removed from here to prevent deadlock. Although the model
+			 * instance may disappear or be made invalid while the save is
+			 * happening, the document itself still has the contents we're
+			 * trying to save. Simultaneous saves should be throttled by
+			 * resource locking without our intervention.
+			 */
+			boolean saved = false;
+			// if this model was based on a File Buffer and we're writing back
+			// to the same location, use the buffer to do the writing
+			if (FileBufferModelManager.getInstance().isExistingBuffer(sharedObject.theSharedModel.getStructuredDocument())) {
+				ITextFileBuffer buffer = FileBufferModelManager.getInstance().getBuffer(sharedObject.theSharedModel.getStructuredDocument());
+				IPath fileLocation = FileBuffers.normalizeLocation(iFile.getFullPath());
+				if (fileLocation.equals(buffer.getLocation())) {
+					buffer.commit(new NullProgressMonitor(), true);
+					saved = true;
 				}
-				if (!saved) {
-					IStructuredModel model = sharedObject.theSharedModel;
-					IStructuredDocument document = model.getStructuredDocument();
-					saveStructuredDocument(document, iFile, encodingRule);
-					trace("saving model", id); //$NON-NLS-1$
-				}
-				sharedObject.theSharedModel.setDirtyState(false);
-				sharedObject.theSharedModel.setNewState(false);
-			}	
-		}
-	
+			}
+			if (!saved) {
+				IStructuredModel model = sharedObject.theSharedModel;
+				IStructuredDocument document = model.getStructuredDocument();
+				saveStructuredDocument(document, iFile, encodingRule);
+				trace("saving model", id); //$NON-NLS-1$
+			}
+			sharedObject.theSharedModel.setDirtyState(false);
+			sharedObject.theSharedModel.setNewState(false);
+		}	
 	}
 
 	/**
