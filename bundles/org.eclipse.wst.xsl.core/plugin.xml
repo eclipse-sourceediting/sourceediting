@@ -55,5 +55,14 @@
 		<persistent value="true"/>
 		<attribute name="columnNumber"/>
    </extension>
+   <extension
+         point="org.eclipse.ant.core.antTasks">
+      <antTask
+            class="org.eclipse.wst.xsl.core.internal.ant.XIncludeTask"
+            headless="true"
+            library="lib/xinclude.jar"
+            name="xsl.xinclude">
+      </antTask>
+   </extension>
 
 </plugin>
