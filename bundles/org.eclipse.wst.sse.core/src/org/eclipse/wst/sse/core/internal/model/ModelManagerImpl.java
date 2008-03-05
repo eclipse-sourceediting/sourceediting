@@ -1930,23 +1930,32 @@ public class ModelManagerImpl implements IModelManager {
 		else {
 			SYNC.release();
 			sharedObject.waitForLoadAttempt();
-			synchronized(sharedObject) {
-				// if this model was based on a File Buffer and we're writing back
-				// to the same location, use the buffer to do the writing
-				if (FileBufferModelManager.getInstance().isExistingBuffer(sharedObject.theSharedModel.getStructuredDocument())) {
-					ITextFileBuffer buffer = FileBufferModelManager.getInstance().getBuffer(sharedObject.theSharedModel.getStructuredDocument());
-					buffer.commit(new NullProgressMonitor(), true);
-				}
-				else {
-					IFile iFile = getFileFor(sharedObject.theSharedModel);
-					IStructuredModel model = sharedObject.theSharedModel;
-					IStructuredDocument document = model.getStructuredDocument();
-					saveStructuredDocument(document, iFile);
-					trace("saving model", id); //$NON-NLS-1$
-				}
-				sharedObject.theSharedModel.setDirtyState(false);
-				sharedObject.theSharedModel.setNewState(false);
+			/**
+			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=221610
+			 * 
+			 * Sync removed from here to prevent deadlock. Although the model
+			 * instance may disappear or be made invalid while the save is
+			 * happening, the document itself still has the contents we're
+			 * trying to save. Simultaneous saves should be throttled by
+			 * resource locking without our intervention.
+			 */
+			/*
+			 * if this model was based on a File Buffer and we're writing back
+			 * to the same location, use the buffer to do the writing
+			 */
+			if (FileBufferModelManager.getInstance().isExistingBuffer(sharedObject.theSharedModel.getStructuredDocument())) {
+				ITextFileBuffer buffer = FileBufferModelManager.getInstance().getBuffer(sharedObject.theSharedModel.getStructuredDocument());
+				buffer.commit(new NullProgressMonitor(), true);
 			}
+			else {
+				IFile iFile = getFileFor(sharedObject.theSharedModel);
+				IStructuredModel model = sharedObject.theSharedModel;
+				IStructuredDocument document = model.getStructuredDocument();
+				saveStructuredDocument(document, iFile);
+				trace("saving model", id); //$NON-NLS-1$
+			}
+			sharedObject.theSharedModel.setDirtyState(false);
+			sharedObject.theSharedModel.setNewState(false);
 		}
 	}
 
