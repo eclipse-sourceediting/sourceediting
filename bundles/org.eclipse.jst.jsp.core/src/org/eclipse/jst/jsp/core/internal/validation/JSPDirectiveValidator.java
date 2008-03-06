@@ -18,8 +18,14 @@ import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
@@ -63,8 +69,10 @@ public class JSPDirectiveValidator extends JSPValidator {
 	private int fSeverityTaglibMissingURI = IMessage.HIGH_SEVERITY;
 	private int fSeverityTaglibUnresolvableURI = IMessage.HIGH_SEVERITY;
 	private int fSeverityTagdirUnresolvableURI = IMessage.HIGH_SEVERITY;
+	private int fSeveritySuperClassNotFound = IMessage.HIGH_SEVERITY;
 
 	private HashMap fTaglibPrefixesInUse = new HashMap();
+	IJavaProject fProject = null;
 
 
 	public JSPDirectiveValidator() {
@@ -125,6 +133,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 	}
 
 	protected void performValidation(IFile f, IReporter reporter, IStructuredDocument sDoc) {
+		setProject(f.getProject());
 		/*
 		 * when validating an entire file need to clear dupes or else you're
 		 * comparing between files
@@ -148,6 +157,19 @@ public class JSPDirectiveValidator extends JSPValidator {
 
 		fPrefixValueRegionToDocumentRegionMap.clear();
 		fTaglibPrefixesInUse.clear();
+		setProject(null);
+	}
+
+	/**
+	 * @param project
+	 */
+	private void setProject(IProject project) {
+		if (project != null) {
+			fProject = JavaCore.create(project);
+		}
+		else {
+			fProject = null;
+		}
 	}
 
 	private void processDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion) {
@@ -159,8 +181,48 @@ public class JSPDirectiveValidator extends JSPValidator {
 		else if (directiveName.equals("include")) { //$NON-NLS-1$
 			processIncludeDirective(reporter, file, sDoc, documentRegion);
 		}
-		// else if (directiveName.equals("page")) { //$NON-NLS-1$
-		// }
+		else if (directiveName.equals("page")) { //$NON-NLS-1$
+			processPageDirective(reporter, file, sDoc, documentRegion);
+		}
+	}
+
+	/**
+	 * @param reporter
+	 * @param file
+	 * @param doc
+	 * @param documentRegion
+	 */
+	private void processPageDirective(IReporter reporter, IFile file, IStructuredDocument doc, IStructuredDocumentRegion documentRegion) {
+		ITextRegion superclassValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_EXTENDS);
+		if (superclassValueRegion != null) {
+			// file specified
+			String superclassName = documentRegion.getText(superclassValueRegion);
+			superclassName = StringUtils.stripQuotes(superclassName);
+
+			IType superClass = null;
+			if (superclassName != null && superclassName.length() > 0 && fProject != null && fProject.exists()) {
+				try {
+					superClass = fProject.findType(superclassName.trim(), new NullProgressMonitor());
+				}
+				catch (JavaModelException e) {
+					Logger.logException(e);
+				}
+			}
+
+			if (superClass == null && fSeveritySuperClassNotFound != NO_SEVERITY) {
+				// file value is specified but empty
+				String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_8, superclassName);
+				LocalizedMessage message = new LocalizedMessage(fSeveritySuperClassNotFound, msgText, file);
+				int start = documentRegion.getStartOffset(superclassValueRegion);
+				int length = superclassValueRegion.getTextLength();
+				int lineNo = doc.getLineOfOffset(start);
+				message.setLineNo(lineNo);
+				message.setOffset(start);
+				message.setLength(length);
+
+				reporter.addMessage(fMessageOriginator, message);
+			}
+		}
 	}
 
 	private void processIncludeDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion) {
@@ -241,6 +303,8 @@ public class JSPDirectiveValidator extends JSPValidator {
 						message.setOffset(start);
 						message.setLength(length);
 
+						message.setAttribute("PROBLEM_ID", new Integer(611));
+
 						reporter.addMessage(fMessageOriginator, message);
 					}
 				}
@@ -278,7 +342,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 
 					reporter.addMessage(fMessageOriginator, message);
 				}
-				else if(TaglibIndex.resolve(file.getFullPath().toString(), tagdir, false) == null && fSeverityTagdirUnresolvableURI != NO_SEVERITY) {
+				else if (TaglibIndex.resolve(file.getFullPath().toString(), tagdir, false) == null && fSeverityTagdirUnresolvableURI != NO_SEVERITY) {
 					// URI specified but does not resolve
 					String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_1, tagdir);
 					LocalizedMessage message = new LocalizedMessage(fSeverityTaglibUnresolvableURI, msgText, file);
