@@ -97,13 +97,13 @@ public class DocumentProvider {
 		}
 		catch (SAXException e) {
 			// parsing exception, notify the user?
-			Logger.log(Logger.WARNING, "SAXException while reading descriptor " + _getFileName() + " " + e); //$NON-NLS-1$ //$NON-NLS-2$
+			Logger.log(Logger.WARNING_DEBUG, "SAXException while reading descriptor " + _getFileName() + " " + e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		catch (FileNotFoundException e) {
 			// NOT an "exceptional case"; do not Log
 		}
 		catch (IOException e) {
-			Logger.log(Logger.WARNING, "IOException while reading descriptor " + _getFileName() + " " + e); //$NON-NLS-1$ //$NON-NLS-2$
+			Logger.log(Logger.WARNING_DEBUG, "IOException while reading descriptor " + _getFileName() + " " + e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		finally {
 			if (is != null) {
