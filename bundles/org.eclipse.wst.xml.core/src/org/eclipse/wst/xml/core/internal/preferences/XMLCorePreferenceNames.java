@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver - STAR - [205989] - [validation] validate XML after XInclude resolution
  *******************************************************************************/
 
 package org.eclipse.wst.xml.core.internal.preferences;
@@ -163,6 +164,17 @@ public class XMLCorePreferenceNames {
 	 * 
 	 */
 	public static final String WARN_NO_GRAMMAR = "warnNoGrammar";//$NON-NLS-1$
+
+ 	/**
+	 * Indicates whether or not xincludes should be processed before
+	 * validation.
+	 * <p>
+	 * Value is of type <code>boolean</code>.<br />
+	 * Possible values: {TRUE, FALSE}
+	 * </p>
+	 * 
+	 */
+	public static final String USE_XINCLUDE = "xinclude";//$NON-NLS-1$
 
 	/**
 	 * Indicates if all whitespace in tags with CDATA content should be

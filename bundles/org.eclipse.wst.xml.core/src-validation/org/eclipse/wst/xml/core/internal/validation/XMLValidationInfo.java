@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver - STAR - [205989] - [validation] validate XML after XInclude resolution
  *******************************************************************************/
 
 package org.eclipse.wst.xml.core.internal.validation;
@@ -14,6 +15,8 @@ package org.eclipse.wst.xml.core.internal.validation;
 import java.util.Stack;
 
 import org.apache.xerces.xni.XMLLocator;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationInfo;
 import org.eclipse.wst.xml.core.internal.validation.errorcustomization.ErrorCustomizationManager;
 
@@ -186,5 +189,8 @@ public void setMessageArguments(Object[] messageArguments) {
 	  }
 	  return errorCustomizationManager;
   }
-
+  
+  public boolean isUseXInclude() {
+	  return XMLCorePlugin.getDefault().getPluginPreferences().getBoolean(XMLCorePreferenceNames.USE_XINCLUDE);
+  }
 }

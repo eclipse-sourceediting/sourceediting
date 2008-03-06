@@ -6,7 +6,8 @@
  * 
  * Contributors: 
  * IBM - Initial API and implementation
- * Benjamin Muskalla, b.muskalla@gmx.net - [158660] character entities should have their own syntax highlighting preference 
+ * Benjamin Muskalla, b.muskalla@gmx.net - [158660] character entities should have their own syntax highlighting preference
+ * David Carver - STAR - [205989] - [validation] validate XML after XInclude resolution
  **********************************************************************/
 package org.eclipse.wst.xml.ui.internal;
 
@@ -291,7 +292,7 @@ public class XMLUIMessages extends NLS {
 	public static String nextSibling_description;
 	public static String previousSibling_label;
 	public static String previousSibling_description;
-
+	public static String Use_XInclude;
 
 
 	static {

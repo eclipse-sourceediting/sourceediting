@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver - STAR - [205989] - [validation] validate XML after XInclude resolution
  *******************************************************************************/
 
 package org.eclipse.wst.xml.core.internal.validation;
@@ -28,7 +29,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.xerces.impl.XMLErrorReporter;
-import org.apache.xerces.parsers.StandardParserConfiguration;
+import org.apache.xerces.impl.msg.XMLMessageFormatter;
+import org.apache.xerces.parsers.XIncludeAwareParserConfiguration;
 import org.apache.xerces.xni.Augmentations;
 import org.apache.xerces.xni.NamespaceContext;
 import org.apache.xerces.xni.QName;
@@ -119,7 +121,7 @@ public class XMLValidator
     try
     {
       Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-      StandardParserConfiguration configuration = new MyStandardParserConfiguration(valinfo);
+      MyStandardParserConfiguration configuration = new MyStandardParserConfiguration(valinfo);
       reader = new org.apache.xerces.parsers.SAXParser(configuration)
       {
     	private XMLLocator locator = null;
@@ -157,6 +159,7 @@ public class XMLValidator
       reader.setFeature("http://xml.org/sax/features/namespaces", valinfo.isNamespaceEncountered());               //$NON-NLS-1$
       reader.setFeature("http://xml.org/sax/features/validation", valinfo.isGrammarEncountered());  //$NON-NLS-1$
       reader.setFeature("http://apache.org/xml/features/validation/schema", valinfo.isGrammarEncountered()); //$NON-NLS-1$
+   	  reader.setFeature("http://apache.org/xml/features/xinclude", valinfo.isUseXInclude()); //$NON-NLS-1$      
       reader.setContentHandler(new DefaultHandler()
       {
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -177,7 +180,7 @@ public class XMLValidator
     } 
     catch(Exception e)
     { 
-      //TODO: log error message;
+      Logger.logException(e);
       //e.printStackTrace();
     }
     finally
@@ -565,11 +568,11 @@ public class XMLValidator
   }
 
   /**
-   * A StandardParserConfiguration that creates an error reporter which can ignore
+   * A XIncludeAwareParserConfiguration that creates an error reporter which can ignore
    * DTD error messages for DTD's with no elements defined.
    */
 
-  protected class MyStandardParserConfiguration extends StandardParserConfiguration
+  protected class MyStandardParserConfiguration extends XIncludeAwareParserConfiguration
   {
   	XMLValidationInfo valinfo = null;
     List reportedExceptions = new ArrayList(); 
@@ -582,6 +585,17 @@ public class XMLValidator
   	public MyStandardParserConfiguration(XMLValidationInfo valinfo)
   	{
   	  this.valinfo = valinfo;
+  	  
+  	  XMLErrorReporter errorReporter = createErrorReporter();
+      if (errorReporter.getMessageFormatter(XMLMessageFormatter.XML_DOMAIN) == null) {
+          XMLMessageFormatter xmft = new XMLMessageFormatter();
+          errorReporter.putMessageFormatter(XMLMessageFormatter.XML_DOMAIN, xmft);
+          errorReporter.putMessageFormatter(XMLMessageFormatter.XMLNS_DOMAIN, xmft);
+      }  	  
+      fErrorReporter = errorReporter;
+	  setProperty(ERROR_REPORTER, errorReporter);
+	  fCommonComponents.remove(fErrorReporter);
+	  fCommonComponents.add(fErrorReporter);
   	}
 
     /* (non-Javadoc)

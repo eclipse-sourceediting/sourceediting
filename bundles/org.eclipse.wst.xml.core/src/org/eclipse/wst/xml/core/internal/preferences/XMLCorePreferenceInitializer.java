@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver - STAR - [205989] - [validation] validate XML after XInclude resolution
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.preferences;
 
@@ -56,5 +57,6 @@ public class XMLCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		node.put(XMLCorePreferenceNames.DEFAULT_EXTENSION, "xml"); //$NON-NLS-1$
 
 		node.putBoolean(XMLCorePreferenceNames.WARN_NO_GRAMMAR, true);
+		node.putBoolean(XMLCorePreferenceNames.USE_XINCLUDE, false);
 	}
 }

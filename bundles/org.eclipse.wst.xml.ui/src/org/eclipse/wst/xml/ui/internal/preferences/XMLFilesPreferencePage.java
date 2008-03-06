@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     David Carver - STAR - [205989] - [validation] validate XML after XInclude resolution
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.preferences;
@@ -43,6 +44,7 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 	private Combo fDefaultSuffix = null;
 	private List fValidExtensions = null;
 	private Button fWarnNoGrammar = null;
+	private Button fUseXinclude = null;
 
 	protected Control createContents(Composite parent) {
 		Composite composite = (Composite) super.createContents(parent);
@@ -75,11 +77,14 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 	}
 
 	protected void createContentsForValidatingGroup(Composite parent) {
-		Group validatingGroup = createGroup(parent, 2);
+		Group validatingGroup = createGroup(parent, 1);
 		validatingGroup.setText(XMLUIMessages.Validating_files);
 
 		if (fWarnNoGrammar == null) {
 			fWarnNoGrammar = createCheckBox(validatingGroup, XMLUIMessages.Warn_no_grammar_specified);
+		}
+		if (fUseXinclude == null) {
+			fUseXinclude = createCheckBox(validatingGroup, XMLUIMessages.Use_XInclude);
 		}
 	}
 
@@ -139,10 +144,13 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 
 	protected void initializeValuesForValidatingGroup() {
 		boolean warnNoGrammarButtonSelected = getModelPreferences().getBoolean(XMLCorePreferenceNames.WARN_NO_GRAMMAR);
-
+		boolean useXIncludeButtonSelected = getModelPreferences().getBoolean(XMLCorePreferenceNames.USE_XINCLUDE);
 
 		if (fWarnNoGrammar != null) {
 			fWarnNoGrammar.setSelection(warnNoGrammarButtonSelected);
+		}
+		if (fUseXinclude != null) {
+			fUseXinclude.setSelection(useXIncludeButtonSelected);
 		}
 	}
 
@@ -165,9 +173,13 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 
 	protected void performDefaultsForValidatingGroup() {
 		boolean warnNoGrammarButtonSelected = getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.WARN_NO_GRAMMAR);
-
+		boolean useXIncludeButtonSelected = getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.USE_XINCLUDE);
+		
 		if (fWarnNoGrammar != null) {
 			fWarnNoGrammar.setSelection(warnNoGrammarButtonSelected);
+		}
+		if (fUseXinclude != null) {
+			fUseXinclude.setSelection(useXIncludeButtonSelected);
 		}
 	}
 
@@ -195,6 +207,10 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 		if (fWarnNoGrammar != null) {
 			boolean warnNoGrammarButtonSelected = fWarnNoGrammar.getSelection();
 			getModelPreferences().setValue(XMLCorePreferenceNames.WARN_NO_GRAMMAR, warnNoGrammarButtonSelected);
+		}
+		if (fUseXinclude != null) {
+			boolean useXIncludeButtonSelected = fUseXinclude.getSelection();
+			getModelPreferences().setValue(XMLCorePreferenceNames.USE_XINCLUDE, useXIncludeButtonSelected);
 		}
 	}
 

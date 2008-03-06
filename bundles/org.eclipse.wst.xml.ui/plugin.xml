@@ -615,10 +615,19 @@
 	</extension>
 
 	<extension point="org.eclipse.ui.bindings">
-	    <!--  win32:  M1=CTRL, M2=SHIFT, M3=ALT -->
-		<!-- Navigate commands -->
+      <!--  win32:  M1=CTRL,    M2=SHIFT, M3=ALT, M4=-
+            carbon: M1=COMMAND, M2=SHIFT, M3=ALT, M4=CTRL
+            gtk: ? 
+      -->
+      <!-- Navigate commands -->
 		<key
 			sequence="M1+M2+ARROW_UP"
+			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			commandId="org.eclipse.wst.xml.ui.previousSibling"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key
+			platform="carbon"
+			sequence="CTRL+SHIFT+ARROW_UP"
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.xml.ui.previousSibling"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
@@ -628,9 +637,22 @@
 			commandId="org.eclipse.wst.xml.ui.nextSibling"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 		<key
+			platform="carbon"
+			sequence="CTRL+SHIFT+ARROW_DOWN"
+			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			commandId="org.eclipse.wst.xml.ui.nextSibling"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key
 			sequence="M1+M2+&gt;"
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.xml.ui.gotoMatchingTag"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key
+			platform="carbon"
+			sequence="CTRL+SHIFT+&gt;"
+			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			commandId="org.eclipse.wst.xml.ui.gotoMatchingTag"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+			
 	</extension>
 </plugin>

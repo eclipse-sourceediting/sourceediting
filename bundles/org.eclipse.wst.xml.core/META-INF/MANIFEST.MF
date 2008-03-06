@@ -70,5 +70,5 @@ Require-Bundle: org.apache.xerces;bundle-version="[2.8.0,3.0.0)";visibility:=ree
  org.eclipse.wst.common.emfworkbench.integration;bundle-version="[1.1.0,1.2.0)";resolution:=optional,
  org.eclipse.wst.common.core;bundle-version="[1.1.0,1.2.0)",
  com.ibm.icu;bundle-version="[3.4.4,4.0.0)"
-Eclipse-LazyStart: true; exceptions="org.eclipse.wst.xml.core.internal.contenttype"
+Bundle-ActivationPolicy: lazy; exclude:="org.eclipse.wst.xml.core.internal.contenttype"
 Bundle-RequiredExecutionEnvironment: J2SE-1.4
