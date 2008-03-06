@@ -202,6 +202,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 	
 	public void translate() {
 		//setCurrentNode(fStructuredDocument.getFirstStructuredDocumentRegion());
+		
 		synchronized(finished) {
 			while (getCurrentNode() != null && !isCanceled()) {
 				// System.out.println("Translator Looking at Node
@@ -242,13 +243,15 @@ public class JsTranslator extends Job implements IDocumentListener{
 					advanceNextNode();
 				}
 			} // end while loop
+			if(compUnitBuff!=null) compUnitBuff.setContents(fScriptText.toString());
 		}
 		finishedTranslation();
+	
 	}
 	
 	private void finishedTranslation() {
 		cleanupXmlQuotes();
-		if(compUnitBuff!=null) compUnitBuff.setContents(fScriptText.toString());
+	
 	}
 	
 	public void translateInlineJSNode(IStructuredDocumentRegion container) {
