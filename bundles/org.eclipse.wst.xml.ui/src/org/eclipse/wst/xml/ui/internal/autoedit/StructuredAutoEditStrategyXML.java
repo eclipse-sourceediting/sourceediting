@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -52,6 +52,7 @@ public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
 				if (command.text != null) {
 					smartInsertForComment(command, document, model);
 					smartInsertForEndTag(command, document, model);
+					smartRemoveEndTag(command, document, model);
 				}
 			}
 		}
@@ -68,6 +69,32 @@ public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
 
 	private boolean isDocumentNode(IDOMNode node) {
 		return ((node != null) && (node.getNodeType() == Node.DOCUMENT_NODE));
+	}
+
+	/**
+	 * Attempts to clean up an end-tag if a start-tag is converted into an empty-element
+	 * tag (e.g., <node />) and the original element was empty.
+	 * 
+	 * @param command the document command describing the change
+	 * @param document the document that will be changed
+	 * @param model the model based on the document
+	 */
+	private void smartRemoveEndTag(DocumentCommand command, IDocument document, IStructuredModel model) {
+		try {
+			// An opening tag is now a self-terminated end-tag
+			if ("/".equals(command.text) && ">".equals(document.get(command.offset, 1))) { //$NON-NLS-1$ //$NON-NLS-2$
+				IDOMNode node = (IDOMNode) model.getIndexedRegion(command.offset);
+				if (node != null && !node.hasChildNodes()) {
+					IStructuredDocumentRegion region = node.getEndStructuredDocumentRegion();
+
+					if (region != null && region.isEnded())
+						document.replace(region.getStartOffset(), region.getLength(), ""); //$NON-NLS-1$
+				}
+			}
+		}
+		catch (BadLocationException e) {
+			Logger.logException(e);
+		}
 	}
 
 	private void smartInsertForComment(DocumentCommand command, IDocument document, IStructuredModel model) {
