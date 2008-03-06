@@ -24,9 +24,8 @@ import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.ISourceReference;
 import org.eclipse.wst.jsdt.core.JavaModelException;
 import org.eclipse.wst.jsdt.internal.core.JavaElement;
-import org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation;
-import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapter;
+import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -144,7 +143,7 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 		if (region != null && textViewer != null) {
 			IDocument document = textViewer.getDocument();
 			// check and make sure this is a valid Java type
-			JsTranslation jspTranslation = getJSPTranslation(document);
+			IJsTranslation jspTranslation = getJSPTranslation(document);
 			if (jspTranslation != null) {
 				// check if we are in JSP Java content
 				// check that we are not in indirect Java content (like
@@ -197,8 +196,8 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 	 * 
 	 * @return JSPTranslation if one exists, null otherwise
 	 */
-	private JsTranslation getJSPTranslation(IDocument document) {
-		JsTranslation translation = null;
+	private IJsTranslation getJSPTranslation(IDocument document) {
+		IJsTranslation translation = null;
 		IDOMModel xmlModel = null;
 		try {
 			xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(document);

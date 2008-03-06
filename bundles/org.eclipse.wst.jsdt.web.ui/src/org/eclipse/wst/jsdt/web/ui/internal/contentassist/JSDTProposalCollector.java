@@ -12,7 +12,8 @@ import org.eclipse.wst.jsdt.core.Signature;
 import org.eclipse.wst.jsdt.ui.text.java.CompletionProposalCollector;
 import org.eclipse.wst.jsdt.ui.text.java.CompletionProposalComparator;
 import org.eclipse.wst.jsdt.ui.text.java.IJavaCompletionProposal;
-import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
+import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
+
 
 /**
  * Passed into ICodeComplete#codeComplete(int offset, CompletionRequestor
@@ -27,7 +28,7 @@ public class JSDTProposalCollector extends CompletionProposalCollector {
 		return CompletionProposalCollector.TYPE_TRIGGERS;
 	}
 	private Comparator fComparator;
-	private JsTranslation fTranslation;
+	private IJsTranslation fTranslation;
 	
 // public List getGeneratedFunctionNames(){
 // if(fGeneratedFunctionNames==null){
@@ -35,7 +36,7 @@ public class JSDTProposalCollector extends CompletionProposalCollector {
 // }
 // return fGeneratedFunctionNames;
 // }
-	public JSDTProposalCollector(JsTranslation translation) {
+	public JSDTProposalCollector(IJsTranslation translation) {
 		super(translation.getCompilationUnit());
 		if (translation == null) {
 			throw new IllegalArgumentException("JSPTranslation cannot be null"); //$NON-NLS-1$
@@ -209,7 +210,7 @@ public class JSDTProposalCollector extends CompletionProposalCollector {
 		return (JSDTCompletionProposal[]) results.toArray(new JSDTCompletionProposal[results.size()]);
 	}
 	
-	public JsTranslation getTranslation() {
+	public IJsTranslation getTranslation() {
 		return fTranslation;
 	}
 }

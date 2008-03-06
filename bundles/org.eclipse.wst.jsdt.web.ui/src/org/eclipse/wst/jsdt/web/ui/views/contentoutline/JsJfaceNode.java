@@ -9,9 +9,9 @@ import org.eclipse.wst.jsdt.core.JavaModelException;
 import org.eclipse.wst.jsdt.internal.core.JavaElement;
 import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
-import org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation;
-import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
+
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapter;
+import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.AbstractNotifier;
@@ -144,7 +144,7 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 		 * since this may become 'stale' we need to rediscover our element every
 		 * time we're asked
 		 */
-		JsTranslation tran = getTranslation();
+		IJsTranslation tran = getTranslation();
 		int startOffset = getStartOffset();
 		int endOffset = getLength();
 		if (typeName != null) {
@@ -223,7 +223,7 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 	
 
 	
-	public JsTranslation getTranslation() {
+	public IJsTranslation getTranslation() {
 		IStructuredModel model = null;
 		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IDOMDocument xmlDoc = null;

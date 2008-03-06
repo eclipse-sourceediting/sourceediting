@@ -6,9 +6,9 @@ import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
 import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
-import org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation;
-import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
+
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapter;
+import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -67,7 +67,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		int endOffset = 0;
 		int type = node.getNodeType();
 		IJavaElement[] result = null;
-		JsTranslation translation = null;
+		IJsTranslation translation = null;
 		if (node.getNodeType() == Node.TEXT_NODE && (node instanceof NodeImpl)) {
 			startOffset = ((NodeImpl) node).getStartOffset();
 			endOffset = ((NodeImpl) node).getEndOffset();
@@ -120,7 +120,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		return super.getParent(element);
 	}
 	
-	private JsTranslation getTranslation(Node node) {
+	private IJsTranslation getTranslation(Node node) {
 		IStructuredModel model = null;
 		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IDOMDocument xmlDoc = null;

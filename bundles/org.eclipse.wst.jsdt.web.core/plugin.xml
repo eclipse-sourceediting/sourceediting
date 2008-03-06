@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
+   <extension-point id="javascriptPreProcessor" name="%extension-point.name.0" schema="schema/javascriptPreProcessor.exsd"/>
+   
+   <extension point="org.eclipse.wst.jsdt.web.core.javascriptPreProcessor">
+   		<javascriptPreProcessor
+   			class="org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation"
+   			priority="1" />
+   </extension>
    
    <!-- Install Handler for web JSDT.. Pigybacks on wst.web facet-->
    <extension point="org.eclipse.wst.common.project.facet.core.facets">

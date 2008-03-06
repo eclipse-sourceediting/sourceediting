@@ -11,8 +11,8 @@
 package org.eclipse.wst.jsdt.web.ui.internal.registry;
 
 import org.eclipse.wst.html.core.internal.modelhandler.ModelHandlerForHTML;
-import org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapterFactory;
+import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.ui.views.contentoutline.JFaceNodeAdapterFactoryForJSDT;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;

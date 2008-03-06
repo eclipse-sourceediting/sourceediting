@@ -10,11 +10,17 @@ Export-Package: org.eclipse.wst.jsdt.web.core.internal;x-friends:="org.eclipse.w
  org.eclipse.wst.jsdt.web.core.internal.java;x-friends:="org.eclipse.wst.jsdt.web.ui",
  org.eclipse.wst.jsdt.web.core.internal.java.search;x-friends:="org.eclipse.wst.jsdt.web.ui",
  org.eclipse.wst.jsdt.web.core.internal.modelhandler;x-friends:="org.eclipse.wst.jsdt.web.ui",
- org.eclipse.wst.jsdt.web.core.internal.project,
+ org.eclipse.wst.jsdt.web.core.internal.project;
+  uses:="org.eclipse.wst.common.project.facet.core,
+   org.eclipse.wst.jsdt.internal.core,
+   org.eclipse.wst.jsdt.core,
+   org.eclipse.core.resources,
+   org.eclipse.core.runtime",
  org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype;x-friends:="org.eclipse.wst.jsdt.web.ui",
  org.eclipse.wst.jsdt.web.core.internal.provisional.text;x-friends:="org.eclipse.wst.jsdt.web.ui",
  org.eclipse.wst.jsdt.web.core.internal.tasks;x-friends:="org.eclipse.wst.jsdt.web.ui",
  org.eclipse.wst.jsdt.web.core.internal.validation;x-friends:="org.eclipse.wst.jsdt.web.ui",
+ org.eclipse.wst.jsdt.web.core.javascript;uses:="org.eclipse.jface.text,org.eclipse.wst.jsdt.core",
  org.eclipse.wst.jsdt.web.core.text
 Require-Bundle: com.ibm.icu;bundle-version="[3.4.4,4.0.0)",
  org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",

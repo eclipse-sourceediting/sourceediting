@@ -32,11 +32,9 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 /**
- * Translates a JSP document into a HttpServlet. Keeps two way mapping from java
- * translation to the original JSP source, which can be obtained through
- * getJava2JspRanges() and getJsp2JavaRanges().
+ * Translates a JSP/HTML document into its JavaScript pieces. 
  * 
- * @author pavery
+ * @author childsb
  */
 public class JsTranslator extends Job implements IDocumentListener{
 	

@@ -19,9 +19,9 @@ import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.JavaModelException;
 import org.eclipse.wst.jsdt.ui.JavaElementLabels;
 import org.eclipse.wst.jsdt.ui.JavadocContentAccess;
-import org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation;
-import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
+
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapter;
+import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.taginfo.AbstractHoverProcessor;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
@@ -97,7 +97,7 @@ public class JSDTHoverProcessor extends AbstractHoverProcessor {
 				IDOMDocument xmlDoc = xmlModel.getDocument();
 				JsTranslationAdapter adapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 				if (adapter != null) {
-					JsTranslation translation = adapter.getJSPTranslation(true);
+					IJsTranslation translation = adapter.getJSPTranslation(true);
 					IJavaElement[] result = translation.getElementsFromJsRange(hoverRegion.getOffset(), hoverRegion.getOffset() + hoverRegion.getLength());
 // Vector filteredResults = new Vector();
 // List badFunctions = translation.getGeneratedFunctionNames();

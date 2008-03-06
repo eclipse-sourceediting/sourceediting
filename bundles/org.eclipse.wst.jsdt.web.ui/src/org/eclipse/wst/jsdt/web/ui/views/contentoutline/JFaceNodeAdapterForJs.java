@@ -17,9 +17,9 @@ import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
 import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
 import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
-import org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapter;
+import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
@@ -211,6 +211,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 				// TODO Auto-generated catch block
 				ex.printStackTrace();
 				result = new Object[0];
+				lazyCu=null;
 			}
 			
 			//translation = getTranslation(node);
@@ -292,7 +293,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		return lazyCu;
 	}
 	
-	private JsTranslation getTranslation(Node node) {
+	private IJsTranslation getTranslation(Node node) {
 		IStructuredModel model = null;
 		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IDOMDocument xmlDoc = null;

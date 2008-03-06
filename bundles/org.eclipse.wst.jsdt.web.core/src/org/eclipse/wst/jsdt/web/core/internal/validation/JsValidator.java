@@ -29,10 +29,10 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.wst.jsdt.core.compiler.IProblem;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
-import org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation;
-import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
+
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapterFactory;
+import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -116,7 +116,7 @@ public class JsValidator implements IValidator{
 	 * @return message representation of the problem, or null if it could not
 	 *         create one
 	 */
-	private IMessage createMessageFromProblem(IProblem problem, IFile f, JsTranslation translation, IStructuredDocument structuredDoc) {
+	private IMessage createMessageFromProblem(IProblem problem, IFile f, IJsTranslation translation, IStructuredDocument structuredDoc) {
 		int sourceStart = problem.getSourceStart();
 		int sourceEnd = problem.getSourceEnd();
 		if (sourceStart == -1) {
@@ -140,7 +140,7 @@ public class JsValidator implements IValidator{
 			IDOMDocument xmlDoc = domModel.getDocument();
 			JsTranslationAdapter translationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 			//translationAdapter.resourceChanged();
-			JsTranslation translation = translationAdapter.getJSPTranslation(false);
+			IJsTranslation translation = translationAdapter.getJSPTranslation(false);
 			if (!reporter.isCancelled()) {
 				translation.setProblemCollectingActive(true);
 				translation.reconcileCompilationUnit();

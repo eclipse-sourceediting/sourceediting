@@ -15,12 +15,16 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.jsdt.core.IJavaProject;
 import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -35,10 +39,13 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 
 	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation")); //$NON-NLS-1$  //$NON-NLS-2$
 	private IStructuredDocument fHtmlDocument = null;
-	private JsTranslation fJSPTranslation = null;
+	private IJsTranslation fJSPTranslation = null;
 	private NullProgressMonitor fTranslationMonitor = null;
 	private String baseLocation;
 	private boolean listenForChanges=false;
+	private static final String PRIORITY_ATTRIB = "priority";
+	private static final String CLASS_ATTRIB = "class";
+	private IJsTranslation fTranslationElement;
 	
 	public JsTranslationAdapter(IDOMModel xmlModel) {
 		fHtmlDocument = xmlModel.getStructuredDocument();
@@ -73,12 +80,33 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 	 * 
 	 * @return a JSPTranslationExtension
 	 */
-	public JsTranslation getJSPTranslation(boolean listenForChanges) {
+	public IJsTranslation getJSPTranslation(boolean listenForChanges) {
 		if (fJSPTranslation == null || (!this.listenForChanges && listenForChanges)) {
-			
 			if(fJSPTranslation!=null) fJSPTranslation.release();
-			
-			fJSPTranslation = new JsTranslation(fHtmlDocument, getJavaProject(),listenForChanges);
+			if(fTranslationElement==null) {
+				/* load the translation factory from the extension point */
+				try {
+					IExtensionRegistry registry = Platform.getExtensionRegistry();
+				    IExtensionPoint extensionPoint =  registry.getExtensionPoint("org.eclipse.wst.jsdt.web.core.javascriptPreProcessor");
+				    IConfigurationElement points[] = extensionPoint.getConfigurationElements();
+				 //   int[] priorities = new int[points.length];
+				   
+				    int highestPriorityValue = -1;
+				    int highestPriorityIndex = -1;
+				    
+				    for(int i = 0;i < points.length;i++){
+				    	String priority = points[i].getAttribute(PRIORITY_ATTRIB);
+				    	int value = Integer.parseInt(priority);
+				    	if(value>highestPriorityIndex) highestPriorityIndex = i;
+				       
+				    }
+				    fTranslationElement = (IJsTranslation)points[highestPriorityIndex].createExecutableExtension("class");
+				}catch(Exception e) {
+					System.out.println(e);
+				}
+			}
+			//fJSPTranslation = new JsTranslation(fHtmlDocument, getJavaProject(),listenForChanges);
+			fJSPTranslation = fTranslationElement.getInstance(fHtmlDocument, getJavaProject(), listenForChanges);
 			this.listenForChanges=listenForChanges;
 		}
 		shouldListenForChanges(listenForChanges);

@@ -20,10 +20,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.jsdt.core.search.SearchParticipant;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
-import org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation;
-import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
+
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapterFactory;
+import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.exceptions.UnsupportedCharsetExceptionWithDetail;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -74,7 +74,7 @@ public class JsSearchDocument {
 	 */
 	public char[] getCharContents() {
 		if (fCachedCharContents == null || isDirty()) {
-			JsTranslation trans = getJSPTranslation();
+			IJsTranslation trans = getJSPTranslation();
 			fCachedCharContents = trans != null ? trans.getJsText().toCharArray() : new char[0];
 			fCUPath = trans.getJavaPath();
 		}
@@ -114,8 +114,8 @@ public class JsSearchDocument {
 	 * @return the JSPTranslation for the jsp file, or null if it's an
 	 *         unsupported file.
 	 */
-	public final JsTranslation getJSPTranslation() {
-		JsTranslation translation = null;
+	public final IJsTranslation getJSPTranslation() {
+		IJsTranslation translation = null;
 		IFile jspFile = getFile();
 		if (!JsSearchSupport.isJsp(jspFile)) {
 			return translation;
@@ -167,7 +167,7 @@ public class JsSearchDocument {
 		// caching the path since it's expensive to get translation
 		// important that isDirty() check is second to cache modification stamp
 		if (this.fCUPath == null || isDirty() || this.fCUPath == UNKNOWN_PATH) {
-			JsTranslation trans = getJSPTranslation();
+			IJsTranslation trans = getJSPTranslation();
 			if (trans != null) {
 				try {
 					this.fCUPath = trans.getJavaPath();

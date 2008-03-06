@@ -25,9 +25,9 @@ import org.eclipse.wst.jsdt.core.JavaModelException;
 import org.eclipse.wst.jsdt.core.formatter.CodeFormatter;
 import org.eclipse.wst.jsdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.wst.jsdt.internal.formatter.DefaultCodeFormatter;
-import org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation;
-import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
+
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapter;
+import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
@@ -77,7 +77,7 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 			try {
 				// JSPTranslationUtil translationUtil = new
 				// JSPTranslationUtil(document);
-				JsTranslation translation = getTranslation(document);
+				IJsTranslation translation = getTranslation(document);
 				ICompilationUnit cu = translation.getCompilationUnit();
 				if (cu != null) {
 					String cuSource = cu.getSource();
@@ -164,8 +164,8 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 		return options;
 	}
 	
-	public JsTranslation getTranslation(IStructuredDocument document) {
-		JsTranslation tran = null;
+	public IJsTranslation getTranslation(IStructuredDocument document) {
+		IJsTranslation tran = null;
 		IDOMModel xmlModel = null;
 		try {
 			xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(document);

@@ -3,21 +3,21 @@ package org.eclipse.wst.jsdt.web.ui.internal.contentassist;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.wst.jsdt.ui.text.java.JavaContentAssistInvocationContext;
-import org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation;
-import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
+
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapter;
+import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 public class JSDTContetAssistInvocationContext extends JavaContentAssistInvocationContext {
 	public static JSDTContetAssistInvocationContext getInstance(ITextViewer viewer, int offset, JSDTProposalCollector theCollector) {
-		JsTranslation tran = JSDTContetAssistInvocationContext.getJSPTranslation(viewer);
+		IJsTranslation tran = JSDTContetAssistInvocationContext.getJSPTranslation(viewer);
 		return new JSDTContetAssistInvocationContext(viewer, offset, theCollector);
 	}
 	
-	private static JsTranslation getJSPTranslation(ITextViewer viewer) {
-		JsTranslation fTranslation = null;
+	private static IJsTranslation getJSPTranslation(ITextViewer viewer) {
+		IJsTranslation fTranslation = null;
 		
 		IDOMModel xmlModel = null;
 		try {

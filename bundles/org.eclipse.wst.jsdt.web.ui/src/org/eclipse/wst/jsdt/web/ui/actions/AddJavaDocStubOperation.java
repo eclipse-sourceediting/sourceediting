@@ -14,7 +14,8 @@ import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.wst.jsdt.core.ICompilationUnit;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.web.core.internal.java.DocumentChangeListenerToTextEdit;
-import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
+import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
+
 import org.eclipse.wst.jsdt.web.ui.views.contentoutline.JsJfaceNode;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -76,7 +77,7 @@ public class AddJavaDocStubOperation extends org.eclipse.wst.jsdt.internal.corex
 	
 	protected IDocument getJavaDocumentFromNode() {
 		if (copy == null) {
-			JsTranslation tran = node.getTranslation();
+			IJsTranslation tran = node.getTranslation();
 			copy = new Document(tran.getJsText());
 			textEditListener = new DocumentChangeListenerToTextEdit();
 			copy.addDocumentListener(textEditListener);

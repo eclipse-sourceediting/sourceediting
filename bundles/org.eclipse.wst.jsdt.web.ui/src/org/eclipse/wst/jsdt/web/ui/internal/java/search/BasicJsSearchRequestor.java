@@ -19,9 +19,10 @@ import org.eclipse.wst.jsdt.core.search.SearchDocument;
 import org.eclipse.wst.jsdt.core.search.SearchMatch;
 import org.eclipse.wst.jsdt.core.search.SearchParticipant;
 import org.eclipse.wst.jsdt.core.search.SearchRequestor;
-import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
+
 import org.eclipse.wst.jsdt.web.core.internal.java.search.JSDTSearchDocumentDelegate;
 import org.eclipse.wst.jsdt.web.core.internal.java.search.JsSearchSupport;
+import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 
 /**
  * Accepts matches from JSPSearchSupport.search(...) request. Adapts the results
@@ -54,7 +55,7 @@ public class BasicJsSearchRequestor extends SearchRequestor {
 			JSDTSearchDocumentDelegate javaSearchDoc = (JSDTSearchDocumentDelegate) searchDoc;
 			int jspStart = match.getOffset();
 			int jspEnd = match.getOffset() + match.getLength();
-			JsTranslation trans = javaSearchDoc.getJspTranslation();
+			IJsTranslation trans = javaSearchDoc.getJspTranslation();
 			String jspText = trans.getHtmlText();
 			String javaText = javaSearchDoc.getJavaText();
 			if (BasicJsSearchRequestor.DEBUG) {

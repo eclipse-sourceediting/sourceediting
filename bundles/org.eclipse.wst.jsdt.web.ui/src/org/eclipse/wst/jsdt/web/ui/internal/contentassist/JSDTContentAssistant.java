@@ -5,9 +5,9 @@ import java.util.Vector;
 
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation;
-import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
+
 import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapter;
+import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -57,7 +57,7 @@ public class JSDTContentAssistant extends AbstractContentAssistProcessor {
 		}
 		return fContentAssistProcessor;
 	}
-	private JsTranslation getJSPTranslation(ITextViewer viewer, int offset) {
+	private IJsTranslation getJSPTranslation(ITextViewer viewer, int offset) {
 		IDOMModel xmlModel = null;
 		try {
 			xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
@@ -80,7 +80,7 @@ public class JSDTContentAssistant extends AbstractContentAssistProcessor {
 	}
 	
 	protected JSDTProposalCollector getProposalCollector(ITextViewer viewer, int offset) {
-		JsTranslation tran = getJSPTranslation(viewer, offset);
+		IJsTranslation tran = getJSPTranslation(viewer, offset);
 		return new JSDTProposalCollector(tran);
 	}
 	
