@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.eclipse.wst.xsl.internal.ui;
+package org.eclipse.wst.xsl.internal.ui.contentassist;
 
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;

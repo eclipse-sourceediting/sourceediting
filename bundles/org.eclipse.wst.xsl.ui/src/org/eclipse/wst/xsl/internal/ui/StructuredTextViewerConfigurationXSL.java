@@ -7,6 +7,7 @@ import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 import org.eclipse.wst.xml.ui.internal.contentassist.NoRegionContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
+import org.eclipse.wst.xsl.internal.ui.contentassist.XSLContentAssistProcessor;
 import org.apache.xpath.compiler.FunctionTable;
 import org.apache.xpath.compiler.Compiler;
 

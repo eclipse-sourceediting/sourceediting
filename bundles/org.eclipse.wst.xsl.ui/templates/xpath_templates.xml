@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+	<template id="org.eclipse.wst.xslt.templates.xpath.last"
+		autoinsert="true" context="xsl_xpath" deleted="false"
+		description="The last function returns a number equal to the context size from the expression evaluation context."
+		enabled="true" name="last()">last()</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.postion"
+		autoinsert="true" context="xsl_xpath" deleted="false"
+		description="The position function returns a number equal to the context position from the expression evaluation context."
+		enabled="true" name="position()">position()</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.count"
+	          autoinsert="true" context="xml_xpath" deleted="false"
+	          description=""
+	          enabled="true" name="count(node-set)">count(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.id"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description="The id function selects elements by their unique ID. When the argument to id is of type node-set, then the result is the union of the result of applying id to the string-value of each of the nodes in the argument node-set. When the argument to id is of any other type, the argument is converted to a string as if by a call to the string function; the string is split into a whitespace-separated list of tokens (whitespace is any sequence of characters matching the production S); the result is a node-set containing the elements in the same document as the context node that have a unique ID equal to any of the tokens in the list."
+	          enabled="true" name="id(node-set)">id(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.local_name"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description="The local-name function returns the local part of the expanded-name of the node in the argument node-set that is first in document order. If the argument node-set is empty or the first node has no expanded-name, an empty string is returned. If the argument is omitted, it defaults to a node-set with the context node as its only member."
+	          enabled="true" name="local-name(node-set)">local-name(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.namespace_uri"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description="The namespace-uri function returns the namespace URI of the expanded-name of the node in the argument node-set that is first in document order. If the argument node-set is empty, the first node has no expanded-name, or the namespace URI of the expanded-name is null, an empty string is returned. If the argument is omitted, it defaults to a node-set with the context node as its only member."
+	          enabled="true" name="namespace_uri(node-set)">namespace_uri(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.name"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description="The name function returns a string containing a QName representing the expanded-name of the node in the argument node-set that is first in document order. The QName must represent the expanded-name with respect to the namespace declarations in effect on the node whose expanded-name is being represented. Typically, this will be the QName that occurred in the XML source. This need not be the case if there are namespace declarations in effect on the node that associate multiple prefixes with the same namespace. However, an implementation may include information about the original prefix in its representation of nodes; in this case, an implementation can ensure that the returned string is always the same as the QName used in the XML source. If the argument node-set is empty or the first node has no expanded-name, an empty string is returned. If the argument it omitted, it defaults to a node-set with the context node as its only member."
+	          enabled="true" name="name(node-set)">name(${cursor})</template>
+	          
+	          
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.addition"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Addition"
+	          enabled="true" name="+">+ ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.subtraction"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Subtraction"
+	          enabled="true" name="-">- ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.multiplication"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Multiplication"
+	          enabled="true" name="*">* ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.division"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Division"
+	          enabled="true" name="div">div ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.equal"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Equal"
+	          enabled="true" name="=">= ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.notequal"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Not Equal"
+	          enabled="true" name="!=">!= ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.lessthan"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Less Than"
+	          enabled="true" name="&lt;">&amp;lt; ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.lessthanorequal"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Less Than or equal to"
+	          enabled="true" name="&lt;">&amp;lt;= ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.greaterthan"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Greater than"
+	          enabled="true" name=">">> ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.greaterthanorequal"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Greater than or equal to"
+	          enabled="true" name=">=">>= ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.or"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="or"
+	          enabled="true" name="or">or ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.and"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="and"
+	          enabled="true" name="and">and ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.string"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Modulus (division remainder)"
+	          enabled="true" name="mod">mod ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.ornodes"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Computes two node sets. i.e. //book | //cd"
+	          enabled="true" name="|">| ${cursor}</template>
+	          
+</templates>

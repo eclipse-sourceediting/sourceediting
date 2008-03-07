@@ -1,4 +1,4 @@
-package org.eclipse.wst.xsl.internal.ui;
+package org.eclipse.wst.xsl.internal.ui.contentassist;
 
 import org.apache.xpath.compiler.Keywords;
 import org.apache.xpath.functions.Function;

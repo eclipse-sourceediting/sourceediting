@@ -2,7 +2,29 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension point="org.eclipse.ui.editors.templates">
+  <contextType
+        class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+        id="xsl_xpath"
+        name="xpath">
+  </contextType>
+  <contextType
+        class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+        id="xpath_operator"
+        name="operator">
+  </contextType>
 		<include file="templates/file_templates.xml"/>
+  <include
+        file="templates/xpath_templates.xml">
+  </include>
+  <template
+        autoinsert="true"
+        contextTypeId="xml_attribute_value"
+        id="org.eclipse.wst.xslt.templates.xpath.last&quot;"
+        name="last()">
+     <pattern>
+        pattern body text
+     </pattern>
+  </template>
     </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
@@ -11,6 +33,15 @@
 	        class="org.eclipse.wst.xsl.internal.ui.preferences.MainPreferencePage"
 	        id="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
 	        name="%page.name.0"/>
+  <page
+        category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
+        class="org.eclipse.wst.xsl.internal.ui.preferences.XSLTemplatePreference"
+        id="org.eclipse.wst.xsl.ui.XPath"
+        name="XPath Templates">
+     <keywordReference
+           id="org.eclipse.wst.xsl.ui.templates">
+     </keywordReference>
+  </page>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">

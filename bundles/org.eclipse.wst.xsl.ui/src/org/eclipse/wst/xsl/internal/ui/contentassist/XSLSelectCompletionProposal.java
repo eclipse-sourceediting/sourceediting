@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.eclipse.wst.xsl.internal.ui;
+package org.eclipse.wst.xsl.internal.ui.contentassist;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.BadLocationException;
