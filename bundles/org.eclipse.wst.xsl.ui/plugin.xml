@@ -16,15 +16,9 @@
   <include
         file="templates/xpath_templates.xml">
   </include>
-  <template
-        autoinsert="true"
-        contextTypeId="xml_attribute_value"
-        id="org.eclipse.wst.xslt.templates.xpath.last&quot;"
-        name="last()">
-     <pattern>
-        pattern body text
-     </pattern>
-  </template>
+  <include
+        file="templates/xpath_operator_templates.xml">
+  </include>
     </extension>
    <extension
          point="org.eclipse.ui.preferencePages">

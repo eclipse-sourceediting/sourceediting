@@ -28,63 +28,53 @@
 	          autoinsert="true" context="xsl_xpath" deleted="false"
 	          description="The name function returns a string containing a QName representing the expanded-name of the node in the argument node-set that is first in document order. The QName must represent the expanded-name with respect to the namespace declarations in effect on the node whose expanded-name is being represented. Typically, this will be the QName that occurred in the XML source. This need not be the case if there are namespace declarations in effect on the node that associate multiple prefixes with the same namespace. However, an implementation may include information about the original prefix in its representation of nodes; in this case, an implementation can ensure that the returned string is always the same as the QName used in the XML source. If the argument node-set is empty or the first node has no expanded-name, an empty string is returned. If the argument it omitted, it defaults to a node-set with the context node as its only member."
 	          enabled="true" name="name(node-set)">name(${cursor})</template>
-	          
-	          
-	<template id="org.eclipse.wst.xslt.templates.xpath.operator.addition"
-	          autoinsert="true" context="xpath_operator" deleted="false"
-	          description="Addition"
-	          enabled="true" name="+">+ ${cursor}</template>
-	<template id="org.eclipse.wst.xslt.templates.xpath.operator.subtraction"
-	          autoinsert="true" context="xpath_operator" deleted="false"
-	          description="Subtraction"
-	          enabled="true" name="-">- ${cursor}</template>
-	<template id="org.eclipse.wst.xslt.templates.xpath.operator.multiplication"
-	          autoinsert="true" context="xpath_operator" deleted="false"
-	          description="Multiplication"
-	          enabled="true" name="*">* ${cursor}</template>
-	<template id="org.eclipse.wst.xslt.templates.xpath.operator.division"
-	          autoinsert="true" context="xpath_operator" deleted="false"
-	          description="Division"
-	          enabled="true" name="div">div ${cursor}</template>
-	<template id="org.eclipse.wst.xslt.templates.xpath.operator.equal"
-	          autoinsert="true" context="xpath_operator" deleted="false"
-	          description="Equal"
-	          enabled="true" name="=">= ${cursor}</template>
-	<template id="org.eclipse.wst.xslt.templates.xpath.operator.notequal"
-	          autoinsert="true" context="xpath_operator" deleted="false"
-	          description="Not Equal"
-	          enabled="true" name="!=">!= ${cursor}</template>
-	<template id="org.eclipse.wst.xslt.templates.xpath.operator.lessthan"
-	          autoinsert="true" context="xpath_operator" deleted="false"
-	          description="Less Than"
-	          enabled="true" name="&lt;">&amp;lt; ${cursor}</template>
-	<template id="org.eclipse.wst.xslt.templates.xpath.operator.lessthanorequal"
-	          autoinsert="true" context="xpath_operator" deleted="false"
-	          description="Less Than or equal to"
-	          enabled="true" name="&lt;">&amp;lt;= ${cursor}</template>
-	<template id="org.eclipse.wst.xslt.templates.xpath.operator.greaterthan"
-	          autoinsert="true" context="xpath_operator" deleted="false"
-	          description="Greater than"
-	          enabled="true" name=">">> ${cursor}</template>
-	<template id="org.eclipse.wst.xslt.templates.xpath.operator.greaterthanorequal"
-	          autoinsert="true" context="xpath_operator" deleted="false"
-	          description="Greater than or equal to"
-	          enabled="true" name=">=">>= ${cursor}</template>
-	<template id="org.eclipse.wst.xslt.templates.xpath.operator.or"
-	          autoinsert="true" context="xpath_operator" deleted="false"
-	          description="or"
-	          enabled="true" name="or">or ${cursor}</template>
-	<template id="org.eclipse.wst.xslt.templates.xpath.operator.and"
-	          autoinsert="true" context="xpath_operator" deleted="false"
-	          description="and"
-	          enabled="true" name="and">and ${cursor}</template>
 	<template id="org.eclipse.wst.xslt.templates.xpath.string"
-	          autoinsert="true" context="xpath_operator" deleted="false"
-	          description="Modulus (division remainder)"
-	          enabled="true" name="mod">mod ${cursor}</template>
-	<template id="org.eclipse.wst.xslt.templates.xpath.operator.ornodes"
-	          autoinsert="true" context="xpath_operator" deleted="false"
-	          description="Computes two node sets. i.e. //book | //cd"
-	          enabled="true" name="|">| ${cursor}</template>
-	          
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description="Returns the string value of the argument. The argument could be a number, boolean, or node-set"
+	          enabled="true" name="string(arg)">string(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.concat"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description="The concat function returns the concatenation of its arguments."
+	          enabled="true" name="concat(string, string, string*)">concat(${cursor}, )</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.startswith"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description="The starts-with function returns true if the first argument string starts with the second argument string, and otherwise returns false."
+	          enabled="true" name="starts-with(arg, arg)">starts-with(${cursor}, )</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.contains"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description="The contains function returns true if the first argument string contains the second argument string, and otherwise returns false."
+	          enabled="true" name="contains(string, string)">contains(${cursor}, )</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.substringbefore"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The substring-before function returns the substring of the first argument string that precedes the first occurrence of the second argument string in the first argument string, or the empty string if the first argument string does not contain the second argument string. For example, substring-before("1999/04/01","/") returns 1999.'
+	          enabled="true" name="substring-before(string, string)">substring-before(${cursor}, )</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.substringafter"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The substring-after function returns the substring of the first argument string that follows the first occurrence of the second argument string in the first argument string, or the empty string if the first argument string does not contain the second argument string. For example, substring-after("1999/04/01","/") returns 04/01, and substring-after("1999/04/01","19") returns 99/04/01.'
+	          enabled="true" name="substring-after(string, string)">substring-after(${cursor}, )</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.substring"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The substring function returns the substring of the first argument starting at the position specified in the second argument with length specified in the third argument. For example, substring("12345",2,3) returns "234". If the third argument is not specified, it returns the substring starting at the position specified in the second argument and continuing to the end of the string. For example, substring("12345",2) returns "2345".'
+	          enabled="true" name="substring(string, number, number?)">substring(${cursor}, )</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.stringlength"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The string-length returns the number of characters in the string. If the argument is omitted, it defaults to the context node converted to a string, in other words the string-value of the context node.'
+	          enabled="true" name="string-length(string?)">string-length(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.normalizespace"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The normalize-space function returns the argument string with whitespace normalized by stripping leading and trailing whitespace and replacing sequences of whitespace characters by a single space. Whitespace characters are the same as those allowed by the S production in XML. If the argument is omitted, it defaults to the context node converted to a string, in other words the string-value of the context node.'
+	          enabled="true" name="normalize-space(string?)">normalize-space(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.translate"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The normalize-space function returns the argument string with whitespace normalized by stripping leading and trailing whitespace and replacing sequences of whitespace characters by a single space. Whitespace characters are the same as those allowed by the S production in XML. If the argument is omitted, it defaults to the context node converted to a string, in other words the string-value of the context node.'
+	          enabled="true" name="translate(string, string, string)">translate(${cursor}, , )</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.boolean"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='Returns a boolean value for a number, string, or node-set'
+	          enabled="true" name="boolean(arg)">boolean(${cursor})</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.not"
+	          autoinsert="true" context="xsl_xpath" deleted="false"
+	          description='The not function returns true if its argument is false, and false otherwise.'
+	          enabled="true" name="not(boolean)">not(${cursor})</template>
+  
 </templates>
