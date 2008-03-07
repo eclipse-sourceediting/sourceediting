@@ -137,15 +137,19 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 	}
 	
 	/**
-	 * Returns the template context type registry for the xml plugin.
+	 * Returns the template context type registry for the xsl plugin.
 	 * 
-	 * @return the template context type registry for the xml plugin
+	 * @return the template context type registry for the xsl plugin
 	 */
 	public ContextTypeRegistry getTemplateContextRegistry() {
 		if (fContextTypeRegistry == null) {
 			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
 			registry.addContextType("xsl_xpath");
 			registry.addContextType("xpath_operator");
+			registry.addContextType("xpath_axis");
+			registry.addContextType("exslt_function");
+			registry.addContextType("xpath_2");
+			registry.addContextType("extension_function");
 			fContextTypeRegistry = registry;
 		}
 

@@ -4,6 +4,16 @@
    <extension point="org.eclipse.ui.editors.templates">
   <contextType
         class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+        id="xpath_axis"
+        name="axis">
+  </contextType>
+  <contextType
+        class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+        id="exslt_function"
+        name="exslt">
+  </contextType>
+  <contextType
+        class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
         id="xsl_xpath"
         name="xpath">
   </contextType>
@@ -29,11 +39,9 @@
   <include
         file="templates/xpath_operator_templates.xml">
   </include>
-  <contextType
-        class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
-        id="exslt_function"
-        name="exslt">
-  </contextType>
+  <include
+        file="templates/xpath_axis_templates.xml">
+  </include>
     </extension>
    <extension
          point="org.eclipse.ui.preferencePages">

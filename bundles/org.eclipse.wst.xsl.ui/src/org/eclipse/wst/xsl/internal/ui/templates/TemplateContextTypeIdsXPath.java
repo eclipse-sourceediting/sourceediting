@@ -33,7 +33,7 @@ public class TemplateContextTypeIdsXPath {
 	}
 	
 	private static String getAXIS() {
-		return "xsl_axis"; //$NON-NLS-1$
+		return "xpath_axis"; //$NON-NLS-1$
 	}
 	
 
