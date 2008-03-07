@@ -9,8 +9,18 @@
   </contextType>
   <contextType
         class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+        id="xpath_2"
+        name="xpath 2.0">
+  </contextType>
+  <contextType
+        class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
         id="xpath_operator"
         name="operator">
+  </contextType>
+  <contextType
+        class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+        id="extension_function"
+        name="custom">
   </contextType>
 		<include file="templates/file_templates.xml"/>
   <include
@@ -19,6 +29,11 @@
   <include
         file="templates/xpath_operator_templates.xml">
   </include>
+  <contextType
+        class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+        id="exslt_function"
+        name="exslt">
+  </contextType>
     </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
