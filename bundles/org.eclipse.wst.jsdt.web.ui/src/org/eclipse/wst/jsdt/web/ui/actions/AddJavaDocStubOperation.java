@@ -13,7 +13,7 @@ import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.wst.jsdt.core.ICompilationUnit;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.web.core.internal.java.DocumentChangeListenerToTextEdit;
+import org.eclipse.wst.jsdt.web.core.javascript.DocumentChangeListenerToTextEdit;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 
 import org.eclipse.wst.jsdt.web.ui.views.contentoutline.JsJfaceNode;

@@ -15,8 +15,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.wst.jsdt.core.IMethod;
-import org.eclipse.wst.jsdt.web.core.internal.java.search.JsSearchScope;
-import org.eclipse.wst.jsdt.web.core.internal.java.search.JsSearchSupport;
+import org.eclipse.wst.jsdt.web.core.javascript.search.JsSearchScope;
+import org.eclipse.wst.jsdt.web.core.javascript.search.JsSearchSupport;
 import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 
 /**

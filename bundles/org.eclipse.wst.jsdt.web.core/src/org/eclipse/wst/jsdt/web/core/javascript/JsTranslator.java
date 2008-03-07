@@ -8,10 +8,10 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.jsdt.web.core.internal.java;
+package org.eclipse.wst.jsdt.web.core.javascript;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.DocumentEvent;
-import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.Position;
 import org.eclipse.wst.jsdt.core.IBuffer;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -36,7 +35,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  * 
  * @author childsb
  */
-public class JsTranslator extends Job implements IDocumentListener{
+public class JsTranslator extends Job implements IJsTranslator{
 	
 	private static final boolean DEBUG;
 	private static final boolean DEBUG_SAVE_OUTPUT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslationstodisk")); //$NON-NLS-1$  //$NON-NLS-2$
@@ -56,35 +55,52 @@ public class JsTranslator extends Job implements IDocumentListener{
 	private IStructuredDocument fStructuredDocument = null;
 	private ArrayList importLocationsInHtml = new ArrayList();
 	/* use java script by default */
-	private boolean isGlobalJs = true;
+	private boolean fIsGlobalJs = true;
 	private ArrayList rawImports = new ArrayList(); // traslated
 	private ArrayList scriptLocationInHtml = new ArrayList();
 	private int scriptOffset = 0;
-	private byte[] fLock = new byte[0];
-	private byte[] finished = new byte[0];
-	private IBuffer compUnitBuff;
+	
+	protected byte[] fLock = new byte[0];
+	protected byte[] finished = new byte[0];
+	
+	private IBuffer fCompUnitBuff;
 	private boolean cancelParse = false;
 	private int missingEndTagRegionStart = -1;
 	private static final boolean ADD_SEMICOLON_AT_INLINE=true;
 	
+	protected boolean isGlobalJs() {
+		return fIsGlobalJs;
+	}
+	
+	protected IBuffer getCompUnitBuffer() {
+		return fCompUnitBuff;
+	}
+	
+	protected StringBuffer getScriptTextBuffer() {
+		return fScriptText;
+	}
 	
 	
-	private void advanceNextNode() {
+	protected void setIsGlobalJs(boolean value) {
+		this.fIsGlobalJs = value;
+	}
+	
+	protected void advanceNextNode() {
 		setCurrentNode(getCurrentNode().getNext());
 	}
 	
-	private void cleanupXmlQuotes() {
+	protected void cleanupXmlQuotes() {
 		if(REMOVE_XML_COMMENT) {
 			int index = -1;
 			int replaceLength  = XML_COMMENT_START.length();
 			while((index = fScriptText.indexOf(XML_COMMENT_START, index)) > -1) {
-				fScriptText.replace(index, index + replaceLength, new String(getPad(replaceLength)));
+				fScriptText.replace(index, index + replaceLength, new String(Util.getPad(replaceLength)));
 			}
 			
 			index = -1;
 			replaceLength  = XML_COMMENT_END.length();
 			while((index = fScriptText.indexOf(XML_COMMENT_END, index)) > -1) {
-				fScriptText.replace(index, index + replaceLength, new String(getPad(replaceLength)));
+				fScriptText.replace(index, index + replaceLength, new String(Util.getPad(replaceLength)));
 			}
 		}
 	}
@@ -102,7 +118,11 @@ public class JsTranslator extends Job implements IDocumentListener{
 		schedule();
 		reset();
 	}
-		
+	
+	public JsTranslator() {
+		super("JavaScript Translation");
+	}
+	
 	public JsTranslator(IStructuredDocument document, 	String fileName, boolean listenForChanges) {
 		super("JavaScript translation for : "  + fileName); //$NON-NLS-1$
 		fStructuredDocument = document;
@@ -115,46 +135,63 @@ public class JsTranslator extends Job implements IDocumentListener{
 		reset();
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#getJsText()
+	 */
 	public String getJsText() {
 		synchronized(finished) {
 			return fScriptText.toString();
 		}
 	}
 	
-	final public IStructuredDocumentRegion getCurrentNode() {
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#getCurrentNode()
+	 */
+	protected final IStructuredDocumentRegion getCurrentNode() {
+		
 		return fCurrentNode;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#setBuffer(org.eclipse.wst.jsdt.core.IBuffer)
+	 */
 	public void setBuffer(IBuffer buffer) {
-		compUnitBuff = buffer;
+		fCompUnitBuff = buffer;
 		synchronized(finished) {
-			compUnitBuff.setContents(fScriptText.toString());
+			fCompUnitBuff.setContents(fScriptText.toString());
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#getHtmlLocations()
+	 */
 	public Position[] getHtmlLocations() {
 		synchronized(finished) {
 			return (Position[]) scriptLocationInHtml.toArray(new Position[scriptLocationInHtml.size()]);
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#getMissingEndTagRegionStart()
+	 */
 	public int getMissingEndTagRegionStart() {
 		return missingEndTagRegionStart;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#getImportHtmlRanges()
+	 */
 	public Position[] getImportHtmlRanges() {
 		synchronized(finished) {
 			return (Position[]) importLocationsInHtml.toArray(new Position[importLocationsInHtml.size()]);
 		}
 	}
 	
-	private char[] getPad(int numberOfChars) {
-		if(numberOfChars < 0) return new char[0];
-		final char[] spaceArray = new char[numberOfChars];
-		Arrays.fill(spaceArray, ' ');
-		return spaceArray;
-	}
+
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#getRawImports()
+	 */
 	public String[] getRawImports() {
 		synchronized(finished) {
 			return (String[]) this.rawImports.toArray(new String[rawImports.size()]);
@@ -168,14 +205,14 @@ public class JsTranslator extends Job implements IDocumentListener{
 	 * @return the status of the translator's progrss monitor, false if the
 	 *         monitor is null
 	 */
-	private boolean isCanceled() {
+	protected boolean isCanceled() {
 		return cancelParse;
 	}
 	
 	/**
 	 * Reinitialize some fields
 	 */
-	private void reset() {
+	protected void reset() {
 		synchronized(fLock) {
 			scriptOffset = 0;
 			// reset progress monitor
@@ -192,12 +229,15 @@ public class JsTranslator extends Job implements IDocumentListener{
 
 
 	
-	private IStructuredDocumentRegion setCurrentNode(IStructuredDocumentRegion currentNode) {
+	protected IStructuredDocumentRegion setCurrentNode(IStructuredDocumentRegion currentNode) {
 		synchronized(fLock) {
 			return this.fCurrentNode = currentNode;
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#translate()
+	 */
 	public void translate() {
 		//setCurrentNode(fStructuredDocument.getFirstStructuredDocumentRegion());
 		
@@ -217,7 +257,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 						 * language=javascripttype <script src=''> global js type.
 						 * <script> (global js type)
 						 */
-						if (NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("type")) || NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("language")) || isGlobalJs) { //$NON-NLS-1$ //$NON-NLS-2$
+						if (NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("type")) || NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("language")) || isGlobalJs()) { //$NON-NLS-1$ //$NON-NLS-2$
 							if (nh.containsAttribute(new String[] { "src" })) { //$NON-NLS-1$
 								// Handle import
 								translateScriptImportNode(getCurrentNode());
@@ -234,24 +274,27 @@ public class JsTranslator extends Job implements IDocumentListener{
 						translateInlineJSNode(getCurrentNode());
 					} else if (nh.nameEquals("META") && nh.attrEquals("http-equiv", "Content-Script-Type") && nh.containsAttribute(new String[] { "content" })) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 						// <META http-equiv="Content-Script-Type" content="type">
-						isGlobalJs = NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("content")); //$NON-NLS-1$
+						setIsGlobalJs( NodeHelper.isInArray(JsDataTypes.JSVALIDDATATYPES, nh.getAttributeValue("content"))); //$NON-NLS-1$
 					} // End big if of JS types
 				}
 				if (getCurrentNode() != null) {
 					advanceNextNode();
 				}
 			} // end while loop
-			if(compUnitBuff!=null) compUnitBuff.setContents(fScriptText.toString());
+			if(getCompUnitBuffer()!=null) getCompUnitBuffer().setContents(fScriptText.toString());
 		}
 		finishedTranslation();
 	
 	}
 	
-	private void finishedTranslation() {
+	protected void finishedTranslation() {
 		cleanupXmlQuotes();
 	
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#translateInlineJSNode(org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion)
+	 */
 	public void translateInlineJSNode(IStructuredDocumentRegion container) {
 		// System.out
 		// .println("JSPTranslator.translateInlineJSNode Entered
@@ -310,7 +353,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 							Position inHtml = new Position(valStartOffset, rawText.length());
 							scriptLocationInHtml.add(inHtml);
 							/* need to pad the script text with spaces */
-							char[] spaces = getPad(valStartOffset - scriptOffset);
+							char[] spaces = Util.getPad(valStartOffset - scriptOffset);
 							fScriptText.append(spaces);
 							fScriptText.append(rawText);
 							scriptOffset = fScriptText.length();
@@ -321,6 +364,9 @@ public class JsTranslator extends Job implements IDocumentListener{
 		}
 	
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#translateJSNode(org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion)
+	 */
 	public void translateJSNode(IStructuredDocumentRegion container) {
 		ITextRegionCollection containerRegion = container;
 		Iterator regions = containerRegion.getRegions().iterator();
@@ -328,7 +374,7 @@ public class JsTranslator extends Job implements IDocumentListener{
 		
 		if(container==null) return;
 		
-		char[] spaces = getPad(container.getStartOffset() - scriptOffset);
+		char[] spaces = Util.getPad(container.getStartOffset() - scriptOffset);
 		fScriptText.append(spaces);
 		scriptOffset = container.getStartOffset();
 	
@@ -354,11 +400,11 @@ public class JsTranslator extends Job implements IDocumentListener{
 				// regionLength);
 				Position inHtml = new Position(scriptStart, scriptTextEnd);
 				scriptLocationInHtml.add(inHtml);
-				spaces = getPad(scriptStart - scriptOffset);
+				spaces = Util.getPad(scriptStart - scriptOffset);
 				fScriptText.append(spaces); 	
 				// fJsToHTMLRanges.put(inScript, inHtml);
 				if(isBlockRegion) {
-					spaces = getPad(regionLength);
+					spaces = Util.getPad(regionLength);
 					fScriptText.append(spaces); 	
 				}else {
 					fScriptText.append(regionText);
@@ -383,6 +429,9 @@ public class JsTranslator extends Job implements IDocumentListener{
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#translateScriptImportNode(org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion)
+	 */
 	public void translateScriptImportNode(IStructuredDocumentRegion region) {
 		NodeHelper nh = new NodeHelper(region);
 		String importName = nh.getAttributeValue("src"); //$NON-NLS-1$
@@ -398,6 +447,9 @@ public class JsTranslator extends Job implements IDocumentListener{
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
 	 */
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)
+	 */
 	public void documentAboutToBeChanged(DocumentEvent event) {
 		cancelParse = true;
 		
@@ -406,19 +458,23 @@ public class JsTranslator extends Job implements IDocumentListener{
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.text.IDocumentListener#documentChanged(org.eclipse.jface.text.DocumentEvent)
 	 */
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#documentChanged(org.eclipse.jface.text.DocumentEvent)
+	 */
 	public void documentChanged(DocumentEvent event) {
 		reset();
-		
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	protected IStatus run(IProgressMonitor monitor) {
-	
 		return Status.OK_STATUS;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#release()
+	 */
 	public void release() {
 		fStructuredDocument.removeDocumentListener(this);
 	}

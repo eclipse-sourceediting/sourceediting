@@ -11,7 +11,7 @@
 package org.eclipse.wst.jsdt.web.core.internal;
 
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.wst.jsdt.web.core.internal.java.search.JsIndexManager;
+import org.eclipse.wst.jsdt.web.core.javascript.search.JsIndexManager;
 import org.osgi.framework.BundleContext;
 
 /**

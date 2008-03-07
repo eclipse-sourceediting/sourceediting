@@ -30,9 +30,9 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.wst.jsdt.core.compiler.IProblem;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 
-import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapter;
-import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapterFactory;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
+import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
+import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapterFactory;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;

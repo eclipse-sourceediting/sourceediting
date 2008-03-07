@@ -14,7 +14,7 @@ import java.text.MessageFormat;
 
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.core.search.SearchMatch;
-import org.eclipse.wst.jsdt.web.core.internal.java.search.JSDTSearchDocumentDelegate;
+import org.eclipse.wst.jsdt.web.core.javascript.search.JSDTSearchDocumentDelegate;
 import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 
 /**

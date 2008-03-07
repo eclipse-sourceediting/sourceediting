@@ -1,4 +1,4 @@
-package org.eclipse.wst.jsdt.web.core.internal.java;
+package org.eclipse.wst.jsdt.web.core.javascript;
 
 
 import org.eclipse.wst.html.core.text.IHTMLPartitions;

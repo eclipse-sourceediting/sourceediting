@@ -20,7 +20,7 @@ import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WordRule;
-import org.eclipse.wst.jsdt.web.core.internal.java.JsDataTypes;
+import org.eclipse.wst.jsdt.web.core.javascript.JsDataTypes;
 
 /**
  * A Java code scanner.

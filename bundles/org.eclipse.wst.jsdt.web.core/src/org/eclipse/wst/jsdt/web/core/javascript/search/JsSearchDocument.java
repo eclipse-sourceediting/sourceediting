@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.jsdt.web.core.internal.java.search;
+package org.eclipse.wst.jsdt.web.core.javascript.search;
 
 import java.io.IOException;
 
@@ -21,9 +21,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.jsdt.core.search.SearchParticipant;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 
-import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapter;
-import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapterFactory;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
+import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
+import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapterFactory;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.exceptions.UnsupportedCharsetExceptionWithDetail;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;

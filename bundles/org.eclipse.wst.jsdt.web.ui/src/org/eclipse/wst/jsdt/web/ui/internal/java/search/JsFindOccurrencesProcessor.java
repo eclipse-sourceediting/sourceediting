@@ -17,8 +17,8 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.wst.jsdt.core.IJavaElement;
 
-import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
+import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.core.text.IJsPartitions;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;

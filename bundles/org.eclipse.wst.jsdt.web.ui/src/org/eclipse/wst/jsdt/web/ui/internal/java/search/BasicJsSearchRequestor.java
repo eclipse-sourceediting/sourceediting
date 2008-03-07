@@ -20,9 +20,9 @@ import org.eclipse.wst.jsdt.core.search.SearchMatch;
 import org.eclipse.wst.jsdt.core.search.SearchParticipant;
 import org.eclipse.wst.jsdt.core.search.SearchRequestor;
 
-import org.eclipse.wst.jsdt.web.core.internal.java.search.JSDTSearchDocumentDelegate;
-import org.eclipse.wst.jsdt.web.core.internal.java.search.JsSearchSupport;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
+import org.eclipse.wst.jsdt.web.core.javascript.search.JSDTSearchDocumentDelegate;
+import org.eclipse.wst.jsdt.web.core.javascript.search.JsSearchSupport;
 
 /**
  * Accepts matches from JSPSearchSupport.search(...) request. Adapts the results

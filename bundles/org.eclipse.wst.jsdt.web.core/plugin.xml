@@ -3,13 +3,52 @@
 <plugin>
    <extension-point id="javascriptPreProcessor" name="%extension-point.name.0" schema="schema/javascriptPreProcessor.exsd"/>
    
+   
+   
+   
+   
+   <!-- Full blown JSDT FACET -->
+  
+   <extension point="org.eclipse.wst.common.project.facet.core.facets">
+	    <category id="jsdt.category">
+	    <label>JavaScript Development Toolkit</label>
+	    <description>Enables advanced JavaScript support.</description>
+	  </category>
+   
+   		<project-facet id="wst.jsdt.web">
+			<label>JavaScript Toolkit</label>
+	  	 	<description>Adds advanced JavaScript editing support.</description>
+	  	 	
+	  	  	<default-version version="1.0"/>
+		</project-facet>
+	
+		<project-facet-version facet="wst.jsdt.web" version="1.0">
+		</project-facet-version>
+	
+		<action facet="wst.jsdt.web" type="install" id="wst.jsdt.web.install" version="1.0">
+	   		<delegate class="org.eclipse.wst.jsdt.web.core.internal.project.JsNatureInstaller"/>
+		</action>
+	
+		<action facet="wst.jsdt.web" type="uninstall" id="wst.jsdt.web.uninstall" version="1.0">
+			<delegate class="org.eclipse.wst.jsdt.web.core.internal.project.JsNatureUninstaller"/>
+		</action>
+	
+	</extension>
+	
+   
+   
+   
+   
+   
+   
    <extension point="org.eclipse.wst.jsdt.web.core.javascriptPreProcessor">
    		<javascriptPreProcessor
-   			class="org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation"
+   			class="org.eclipse.wst.jsdt.web.core.javascript.JsTranslation"
    			priority="1" />
    </extension>
    
    <!-- Install Handler for web JSDT.. Pigybacks on wst.web facet-->
+  
    <extension point="org.eclipse.wst.common.project.facet.core.facets">
    
 		<event-handler facet="wst.web" type="POST_INSTALL" version="[1.0">

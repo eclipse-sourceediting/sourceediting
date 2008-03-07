@@ -22,8 +22,8 @@ import org.eclipse.wst.jsdt.ui.search.IQueryParticipant;
 import org.eclipse.wst.jsdt.ui.search.ISearchRequestor;
 import org.eclipse.wst.jsdt.ui.search.PatternQuerySpecification;
 import org.eclipse.wst.jsdt.ui.search.QuerySpecification;
-import org.eclipse.wst.jsdt.web.core.internal.java.search.JsSearchScope;
-import org.eclipse.wst.jsdt.web.core.internal.java.search.JsSearchSupport;
+import org.eclipse.wst.jsdt.web.core.javascript.search.JsSearchScope;
+import org.eclipse.wst.jsdt.web.core.javascript.search.JsSearchSupport;
 import org.eclipse.wst.jsdt.web.ui.internal.java.search.JsSearchRequestor;
 
 /**

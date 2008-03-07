@@ -17,8 +17,8 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.wst.jsdt.core.IJavaElement;
 import org.eclipse.wst.jsdt.core.search.SearchDocument;
-import org.eclipse.wst.jsdt.web.core.internal.java.search.JsSearchScope;
-import org.eclipse.wst.jsdt.web.core.internal.java.search.JsSearchSupport;
+import org.eclipse.wst.jsdt.web.core.javascript.search.JsSearchScope;
+import org.eclipse.wst.jsdt.web.core.javascript.search.JsSearchSupport;
 import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 import org.eclipse.wst.sse.ui.internal.search.BasicSearchQuery;
 

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.jsdt.web.core.internal.java;
+package org.eclipse.wst.jsdt.web.core.javascript;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -43,7 +43,6 @@ import org.eclipse.wst.jsdt.internal.core.DocumentContextFragmentRoot;
 import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
-import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -71,22 +70,33 @@ public class JsTranslation implements IJsTranslation {
 	private static final String SUPER_TYPE_NAME = "Window"; //$NON-NLS-1$
 	private static final String SUPER_TYPE_LIBRARY = "org.eclipse.wst.jsdt.launching.baseBrowserLibrary"; //$NON-NLS-1$
 
-	private JsTranslator translator;
+	private IJsTranslator fTranslator;
 
 	private String mangledName;
+	private boolean listenForChanges;
 
 	public JsTranslation() {
 		/* do nothing */
 	}
+	
+	public IJsTranslator getTranslator() {
+		if(fTranslator!=null) {
+			return fTranslator;
+		}
+		
+		fTranslator = new JsTranslator(fHtmlDocument, fModelBaseLocation, listenForChanges);
+		return this.fTranslator;
+	}
+	
+
 	
 	private JsTranslation(IStructuredDocument htmlDocument, IJavaProject javaProj, boolean listenForChanges) {
 		fLock = new byte[0];
 		fJavaProject = javaProj;
 		fHtmlDocument = htmlDocument;
 		setBaseLocation();
-		translator = new JsTranslator(htmlDocument, fModelBaseLocation, listenForChanges);
 		mangledName = createMangledName();
-		// this.listenForChanges=listenForChanges;
+		this.listenForChanges=listenForChanges;
 	}
 
 	public IJsTranslation getInstance(IStructuredDocument htmlDocument, IJavaProject javaProj, boolean listenForChanges) {
@@ -107,12 +117,12 @@ public class JsTranslation implements IJsTranslation {
 			// ((IContainer)getJavaProject().getResource()).findMember(
 			// WebRootFinder.getWebContentFolder(fJavaProject.getProject()));
 			fDocumentScope = new DocumentContextFragmentRoot(fJavaProject, getFile(), WebRootFinder.getWebContentFolder(fJavaProject.getProject()), WebRootFinder.getServerContextRoot(fJavaProject.getProject()), JsWebNature.VIRTUAL_SCOPE_ENTRY);
-			fDocumentScope.setIncludedFiles(translator.getRawImports());
+			fDocumentScope.setIncludedFiles(getTranslator().getRawImports());
 			return fDocumentScope;
 		}
 
 		if (reset)
-			fDocumentScope.setIncludedFiles(translator.getRawImports());
+			fDocumentScope.setIncludedFiles(getTranslator().getRawImports());
 		return fDocumentScope;
 	}
 
@@ -148,7 +158,7 @@ public class JsTranslation implements IJsTranslation {
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation#getMissingTagStart()
 	 */
 	public int getMissingTagStart() {
-		return translator.getMissingEndTagRegionStart();
+		return getTranslator().getMissingEndTagRegionStart();
 	}
 
 	private String getWebRoot() {
@@ -181,7 +191,7 @@ public class JsTranslation implements IJsTranslation {
 			buffer = null;
 		}
 		if (buffer != null) {
-			translator.setBuffer(buffer);
+			getTranslator().setBuffer(buffer);
 		}
 		return cu;
 	}
@@ -339,14 +349,14 @@ public class JsTranslation implements IJsTranslation {
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation#getJsText()
 	 */
 	public String getJsText() {
-		return translator.getJsText();
+		return getTranslator().getJsText();
 	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation#getScriptPositions()
 	 */
 	public Position[] getScriptPositions() {
-		return translator.getHtmlLocations();
+		return getTranslator().getHtmlLocations();
 	}
 
 	/* (non-Javadoc)
@@ -461,7 +471,7 @@ public class JsTranslation implements IJsTranslation {
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation#ifOffsetInImportNode(int)
 	 */
 	public boolean ifOffsetInImportNode(int offset) {
-		Position[] importRanges = translator.getImportHtmlRanges();
+		Position[] importRanges = getTranslator().getImportHtmlRanges();
 		for (int i = 0; i < importRanges.length; i++) {
 			if (importRanges[i].includes(offset)) {
 				return true;
@@ -498,8 +508,8 @@ public class JsTranslation implements IJsTranslation {
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation#release()
 	 */
 	public void release() {
-		if (translator != null)
-			translator.release();
+		if (getTranslator() != null)
+			getTranslator().release();
 		synchronized (fLock) {
 			if (fCompilationUnit != null) {
 				try {

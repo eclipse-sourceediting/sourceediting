@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.jsdt.web.core.internal.java.search;
+package org.eclipse.wst.jsdt.web.core.javascript.search;
 
 import java.io.File;
 import java.util.zip.CRC32;
@@ -39,8 +39,8 @@ import org.eclipse.wst.jsdt.internal.core.JavaModelManager;
 import org.eclipse.wst.jsdt.web.core.internal.JsCoreMessages;
 import org.eclipse.wst.jsdt.web.core.internal.JsCorePlugin;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
-import org.eclipse.wst.jsdt.web.core.internal.java.JsNameManglerUtil;
 import org.eclipse.wst.jsdt.web.core.internal.validation.Util;
+import org.eclipse.wst.jsdt.web.core.javascript.JsNameManglerUtil;
 
 /**
  * Central access to java indexing and search. All contact between JDT indexing

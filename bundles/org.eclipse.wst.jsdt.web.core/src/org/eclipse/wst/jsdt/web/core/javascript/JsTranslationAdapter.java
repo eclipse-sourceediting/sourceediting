@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.jsdt.web.core.internal.java;
+package org.eclipse.wst.jsdt.web.core.javascript;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.jsdt.core.IJavaProject;
 import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -97,7 +96,10 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 				    for(int i = 0;i < points.length;i++){
 				    	String priority = points[i].getAttribute(PRIORITY_ATTRIB);
 				    	int value = Integer.parseInt(priority);
-				    	if(value>highestPriorityIndex) highestPriorityIndex = i;
+				    	if(value>highestPriorityValue) {
+				    		highestPriorityIndex = i;
+				    		highestPriorityValue = value;
+				    	}
 				       
 				    }
 				    fTranslationElement = (IJsTranslation)points[highestPriorityIndex].createExecutableExtension("class");

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.jsdt.web.core.internal.java.search;
+package org.eclipse.wst.jsdt.web.core.javascript.search;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -15,9 +15,9 @@ import org.eclipse.wst.jsdt.core.IClasspathEntry;
 import org.eclipse.wst.jsdt.core.IJavaProject;
 import org.eclipse.wst.jsdt.core.compiler.libraries.LibraryLocation;
 import org.eclipse.wst.jsdt.internal.ui.IJsGlobalScopeContainerInitializerExtension;
-import org.eclipse.wst.jsdt.web.core.internal.java.JsNameManglerUtil;
-import org.eclipse.wst.jsdt.web.core.internal.java.WebRootFinder;
 import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
+import org.eclipse.wst.jsdt.web.core.javascript.JsNameManglerUtil;
+import org.eclipse.wst.jsdt.web.core.javascript.WebRootFinder;
 
 /**
  * @author childsb
