@@ -25,6 +25,7 @@ import org.eclipse.jface.text.Region;
 
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateCompletionProcessor;
@@ -182,5 +183,15 @@ class XPathTemplateCompletionProcessor extends TemplateCompletionProcessor {
 		return null;
 	}
 	
-	
+	/**
+	 * 
+	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getCompletionProposalAutoActivationCharacters()
+	 */
+	@Override
+	public char[] getCompletionProposalAutoActivationCharacters() {
+		char apostrophe = '\'';
+		char quote = '"';
+		char[] autoProposal = {apostrophe, quote};
+		return autoProposal;
+	}	
 }
