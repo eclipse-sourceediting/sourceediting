@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     David Carver - STAR - initial API and implementation
+ *******************************************************************************/
+
 package org.eclipse.wst.xsl.internal;
 
 import java.io.IOException;
@@ -6,7 +17,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.ui.PlatformUI;
@@ -14,10 +24,6 @@ import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
-import org.eclipse.wst.xml.ui.internal.Logger;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
-import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
-import org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeIdsXML;
 
 /**
  * XSLUIPlugin
@@ -26,6 +32,11 @@ import org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeIdsXML;
  */
 public class XSLUIPlugin extends AbstractUIPlugin {
 	
+	/**
+	 * 
+	 */
+	public static final String ID = null;
+
 	/**
 	 * A Singleton Instance of this plugin.
 	 */
@@ -155,4 +166,5 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 
 		return fContextTypeRegistry;
 	}
+	
 }

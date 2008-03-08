@@ -29,5 +29,4 @@ Export-Package: org.eclipse.wst.xsl.internal;x-internal:=true,
  org.eclipse.wst.xsl.internal.perspective;x-internal:=true,
  org.eclipse.wst.xsl.internal.ui;x-internal:=true,
  org.eclipse.wst.xsl.internal.ui.contentassist;x-internal:=true,
- org.eclipse.wst.xsl.internal.ui.preferences;x-internal:=true,
- org.eclipse.wst.xsl.internal.xpath.rules;x-internal:=true
+ org.eclipse.wst.xsl.internal.ui.preferences;x-internal:=true

@@ -3,7 +3,22 @@
  */
 package org.eclipse.wst.xsl.internal.ui.contentassist;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.eclipse.core.resources.IResource;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.templates.Template;
+import org.eclipse.jface.text.templates.TemplateContext;
+import org.eclipse.jface.text.templates.TemplateException;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
@@ -12,15 +27,24 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
+import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
+import org.eclipse.wst.xsl.internal.XSLUIPlugin;
+import org.eclipse.wst.xsl.internal.ui.templates.TemplateContextTypeIdsXPath;
 
 /**
  * @author dcarver
  *
  */
 @SuppressWarnings("restriction")
-public class XSLContentAssistProcessor extends XMLContentAssistProcessor {
+public class XSLContentAssistProcessor extends XMLContentAssistProcessor implements IPropertyChangeListener {
 
 	private String xslNamespace = "http://www.w3.org/1999/XSL/Transform";
+	
+	protected IPreferenceStore fPreferenceStore = null;
+	protected IResource fResource = null;
+	private XPathTemplateCompletionProcessor fTemplateProcessor = null;
+	private List fTemplateContexts = new ArrayList();
+	
 	/**
 	 * 
 	 */
@@ -39,7 +63,6 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor {
 	@Override
 	protected void addAttributeValueProposals(
 			ContentAssistRequest contentAssistRequest) {
-		super.addAttributeValueProposals(contentAssistRequest);
 		IDOMNode node = (IDOMNode)contentAssistRequest.getNode();
         String namespace = DOMNamespaceHelper.getNamespaceURI(node);
 		String nodeName = DOMNamespaceHelper.getUnprefixedName(node.getNodeName());
@@ -51,21 +74,68 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor {
 				if (attributeName.equals("select")) {
 					if (nodeName.equals("param") ||
 						nodeName.equals("variable")){
-						addXPath(contentAssistRequest);
+						addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.AXIS);
+						addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.XPATH);
 					}
 				}
 			}
-			
-//			if (node.getParentNode().getNodeName().equalsIgnoreCase("template")){
-//			
-//	}
-//	
-//	if (node.getParentNode().getNodeName().equalsIgnoreCase("call-template")){
-//		
-//	}
-			
+		}
+		super.addAttributeValueProposals(contentAssistRequest);
+	}
+	
+	
+	/**
+	 * Adds templates to the list of proposals
+	 * 
+	 * @param contentAssistRequest
+	 * @param context
+	 */
+	private void addTemplates(ContentAssistRequest contentAssistRequest, String context) {
+		addTemplates(contentAssistRequest, context, contentAssistRequest.getReplacementBeginPosition());
+	}
+
+	/**
+	 * Adds templates to the list of proposals
+	 * 
+	 * @param contentAssistRequest
+	 * @param context
+	 * @param startOffset
+	 */
+	private void addTemplates(ContentAssistRequest contentAssistRequest, String context, int startOffset) {
+		if (contentAssistRequest == null) {
+			return;
+		}
+
+		// if already adding template proposals for a certain context type, do
+		// not add again
+		if (!fTemplateContexts.contains(context)) {
+			fTemplateContexts.add(context);
+			boolean useProposalList = !contentAssistRequest.shouldSeparate();
+
+			if (getTemplateCompletionProcessor() != null) {
+				getTemplateCompletionProcessor().setContextType(context);
+				ICompletionProposal[] proposals = getTemplateCompletionProcessor().computeCompletionProposals(fTextViewer, startOffset);
+				for (int i = 0; i < proposals.length; ++i) {
+					if (useProposalList) {
+						contentAssistRequest.addProposal(proposals[i]);
+					}
+					else {
+						contentAssistRequest.addMacro(proposals[i]);
+					}
+				}
+			}
 		}
 	}
+	
+
+
+	private XPathTemplateCompletionProcessor getTemplateCompletionProcessor() {
+		if (fTemplateProcessor == null) {
+			fTemplateProcessor = new XPathTemplateCompletionProcessor();
+		}
+		return fTemplateProcessor;
+	}
+
 	
 	private String getAttributeName(ContentAssistRequest contentAssistRequest) {
 		// Find the attribute region and name for which this position should
@@ -91,18 +161,35 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor {
 		return attributeName;
 	}
 	
+	protected IPreferenceStore getPreferenceStore() {
+		if (fPreferenceStore == null) {
+			fPreferenceStore = XSLUIPlugin.getDefault().getPreferenceStore();
+		}
+		return fPreferenceStore;
+	}
+	
 	/**
-	 * Adds a list of XPath 1.0 proposals.
-	 * @param contentAssistRequest
+	 * @param event 
+	 * 
 	 */
-    private void addXPath(ContentAssistRequest contentAssistRequest) {
-    	XPathFunctions xpathFunctions = new XPathFunctions();
-    	for (int proposalcnt = 0; proposalcnt < xpathFunctions.size(); proposalcnt++ ) {
-    		String functionName = xpathFunctions.getFunctionName(proposalcnt);
-    		if (functionName != null) {
-            	ICompletionProposal proposal = new XSLSelectCompletionProposal(functionName + "()", contentAssistRequest.getStartOffset() + 1, contentAssistRequest.getReplacementLength() - 1, contentAssistRequest.getStartOffset() + 1);
-    	    	contentAssistRequest.addProposal(proposal);
-    		}
-    	}
-    }
+	public void propertyChange(PropertyChangeEvent event) {
+		String property = event.getProperty();
+
+		if ((property.compareTo(XMLUIPreferenceNames.AUTO_PROPOSE) == 0) || (property.compareTo(XMLUIPreferenceNames.AUTO_PROPOSE_CODE) == 0)) {
+			reinit();
+		}
+	}
+	
+	protected void reinit() {
+		String key = XMLUIPreferenceNames.AUTO_PROPOSE;
+		boolean doAuto = getPreferenceStore().getBoolean(key);
+		if (doAuto) {
+			key = XMLUIPreferenceNames.AUTO_PROPOSE_CODE;
+			completionProposalAutoActivationCharacters = getPreferenceStore().getString(key).toCharArray();
+		}
+		else {
+			completionProposalAutoActivationCharacters = null;
+		}
+	}
+	
 }
