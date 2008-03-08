@@ -1,19 +1,17 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *     David Carver - STAR - bug 213849 - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.internal;
+package org.eclipse.wst.xsl.ui.internal.util;
 
 /**
- * Bundle of most images used by the XML Source Editor plug-in.
+ * Bundle of most images used by the XSL Plugins
  */
 public class XSLPluginImages {
 

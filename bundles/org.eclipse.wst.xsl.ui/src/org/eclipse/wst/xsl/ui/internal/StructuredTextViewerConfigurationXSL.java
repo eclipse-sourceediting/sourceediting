@@ -1,4 +1,15 @@
-package org.eclipse.wst.xsl.internal.ui;
+/*******************************************************************************
+ * Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     David Carver - STAR - bug 213849 - initial API and implementation
+ *******************************************************************************/
+
+package org.eclipse.wst.xsl.ui.internal;
 
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -6,10 +17,7 @@ import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 import org.eclipse.wst.xml.ui.internal.contentassist.NoRegionContentAssistProcessor;
-import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
-import org.eclipse.wst.xsl.internal.ui.contentassist.XSLContentAssistProcessor;
-import org.apache.xpath.compiler.FunctionTable;
-import org.apache.xpath.compiler.Compiler;
+import org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistProcessor;
 
 /**
  * StructuredTextViewerConfigurationXSL implements content assistance
@@ -18,6 +26,7 @@ import org.apache.xpath.compiler.Compiler;
  * @author dcarver
  *
  */
+@SuppressWarnings({ "restriction"})
 public class StructuredTextViewerConfigurationXSL extends
 		StructuredTextViewerConfigurationXML {
 
@@ -31,7 +40,6 @@ public class StructuredTextViewerConfigurationXSL extends
 	/**
 	 *  Return the processors for the current content type.
 	 */
-	@SuppressWarnings("restriction")
 	@Override
 	protected IContentAssistProcessor[] getContentAssistProcessors(
 			ISourceViewer sourceViewer, String partitionType) {

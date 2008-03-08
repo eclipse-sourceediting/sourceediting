@@ -10,7 +10,7 @@
  *     David Carver - STAR - renaming package to follow wst naming.
  *******************************************************************************/
 
-package org.eclipse.wst.xsl.internal.ui;
+package org.eclipse.wst.xsl.ui.internal;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -23,7 +23,7 @@ public class XSLTUIPlugin extends AbstractUIPlugin {
 	/**
 	 * The Plugin ID 
 	 */
-	public static final String PLUGIN_ID = "org.eclipse.wst.xsl.launch";
+	public static final String PLUGIN_ID = "org.eclipse.wst.xsl.ui";
 
 	// The shared instance
 	private static XSLTUIPlugin plugin;

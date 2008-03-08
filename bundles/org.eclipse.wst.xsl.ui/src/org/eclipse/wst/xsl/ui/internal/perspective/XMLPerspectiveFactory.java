@@ -9,7 +9,7 @@
  *     David Carver - bug 213883 - initial api 
  *******************************************************************************/
 
-package org.eclipse.wst.xsl.internal.perspective;
+package org.eclipse.wst.xsl.ui.internal.perspective;
 
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;

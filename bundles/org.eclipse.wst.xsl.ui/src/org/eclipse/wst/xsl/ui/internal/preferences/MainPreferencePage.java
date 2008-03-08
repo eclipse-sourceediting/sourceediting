@@ -10,7 +10,7 @@
  *     David Carver - STAR - bug 213853 - Moved main preference page out of
  *                                        debug ui and into XSL ui.
  *******************************************************************************/
-package org.eclipse.wst.xsl.internal.ui.preferences;
+package org.eclipse.wst.xsl.ui.internal.preferences;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;

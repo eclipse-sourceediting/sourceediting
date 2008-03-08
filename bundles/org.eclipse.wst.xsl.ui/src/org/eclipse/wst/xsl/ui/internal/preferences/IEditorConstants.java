@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.internal.ui.preferences;
+package org.eclipse.wst.xsl.ui.internal.preferences;
 
 /**
  * 

@@ -1,16 +1,19 @@
 /*******************************************************************************
- * Copyright (c) 2008 David Carver and others.
+ * Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     David Carver - initial API and implementation
+ *     David Carver - STAR - bug 213849 - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.internal.ui.templates;
+
+package org.eclipse.wst.xsl.ui.internal.templates;
 
 /**
+ * This class contains the names and values for the XSL ContenxtTypes for
+ * the XPath completion proposals.
  * 
  * @author dcarver
  *
@@ -38,6 +41,16 @@ public class TemplateContextTypeIdsXPath {
 	 * TODO: Add Javadoc
 	 */
 	public static final String EXSLT = getEXSLT();
+	
+	/**
+	 * TODO: Add Javadoc
+	 */
+	public static final String OPERATOR = getOperator();
+	
+	/**
+	 * TODO: Add Javadoc
+	 */
+	public static final String CUSTOM = getCustom();
 
 
 	private static String getXPath() {
@@ -63,6 +76,4 @@ public class TemplateContextTypeIdsXPath {
 	private static String getCustom() {
 		return "extension_function"; //$NON-NLS-1$
 	}
-	
-
 }

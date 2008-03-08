@@ -1,22 +1,23 @@
-/**
- * 
- */
-package org.eclipse.wst.xsl.internal.ui.contentassist;
+/*******************************************************************************
+ * Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     David Carver - STAR - bug 213849 - initial API and implementation
+ *     
+ *******************************************************************************/
+package org.eclipse.wst.xsl.ui.internal.contentassist;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.jface.text.templates.Template;
-import org.eclipse.jface.text.templates.TemplateContext;
-import org.eclipse.jface.text.templates.TemplateException;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -28,25 +29,34 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
-import org.eclipse.wst.xsl.internal.XSLUIPlugin;
-import org.eclipse.wst.xsl.internal.ui.templates.TemplateContextTypeIdsXPath;
+import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
+import org.eclipse.wst.xsl.ui.internal.templates.TemplateContextTypeIdsXPath;
 
 /**
- * @author dcarver
+ * The XSL Content Assist Processor provides content assistance for various attributes
+ * values within the XSL Editor.   This includes support for xpaths on select statements
+ * as well as on
+ * @author David Carver
  *
  */
 @SuppressWarnings("restriction")
 public class XSLContentAssistProcessor extends XMLContentAssistProcessor implements IPropertyChangeListener {
+
+	private static final String ELEMENT_VARIABLE = "variable";
+
+	private static final String ELEMENT_PARAM = "param";
+
+	private static final String ATTR_SELECT = "select";
 
 	private String xslNamespace = "http://www.w3.org/1999/XSL/Transform";
 	
 	protected IPreferenceStore fPreferenceStore = null;
 	protected IResource fResource = null;
 	private XPathTemplateCompletionProcessor fTemplateProcessor = null;
-	private List fTemplateContexts = new ArrayList();
+	private List<String> fTemplateContexts = new ArrayList<String>();
 	
 	/**
-	 * 
+	 * Constructor 
 	 */
 	public XSLContentAssistProcessor() {
 		super();
@@ -55,7 +65,7 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 	
 	/**
 	 * Adds Attribute proposals based on the element and the attribute
-	 * where the content proposal was instatiated.
+	 * where the content proposal was instantiated.
 	 * 
 	 * @param contentAssistRequest Content Assist Request that initiated the proposal request
 	 * 
@@ -71,9 +81,9 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 		if (attributeName != null) {
 			// Current node belongs in the XSL Namespace
 			if (namespace.equals(this.xslNamespace)) {
-				if (attributeName.equals("select")) {
-					if (nodeName.equals("param") ||
-						nodeName.equals("variable")){
+				if (attributeName.equals(ATTR_SELECT)) {
+					if (nodeName.equals(ELEMENT_PARAM) ||
+						nodeName.equals(ELEMENT_VARIABLE)){
 						addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.AXIS);
 						addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.XPATH);
 					}
@@ -161,12 +171,38 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 		return attributeName;
 	}
 	
+	protected ContentAssistRequest computeCompletionProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode treeNode, IDOMNode xmlnode) {
+		return super.computeCompletionProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
+	}
+	
+	
+	/**
+	 * TODO: Add Javadoc
+	 * @param textViewer 
+	 * @param documentPosition 
+	 * @return 
+	 * 
+	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractContentAssistProcessor#computeCompletionProposals(org.eclipse.jface.text.ITextViewer,
+	 *      int)
+	 */
+	public ICompletionProposal[] computeCompletionProposals(ITextViewer textViewer, int documentPosition) {
+		fTemplateContexts.clear();
+		return super.computeCompletionProposals(textViewer, documentPosition);
+	}
+	
+	
 	protected IPreferenceStore getPreferenceStore() {
 		if (fPreferenceStore == null) {
 			fPreferenceStore = XSLUIPlugin.getDefault().getPreferenceStore();
 		}
 		return fPreferenceStore;
 	}
+	
+	
+	protected void init() {
+		getPreferenceStore().addPropertyChangeListener(this);
+		reinit();
+	}	
 	
 	/**
 	 * @param event 

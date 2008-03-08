@@ -6,10 +6,10 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     David Carver - STAR - initial API and implementation
+ *     David Carver - STAR - bug 213849 - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.wst.xsl.internal;
+package org.eclipse.wst.xsl.ui.internal;
 
 import java.io.IOException;
 
