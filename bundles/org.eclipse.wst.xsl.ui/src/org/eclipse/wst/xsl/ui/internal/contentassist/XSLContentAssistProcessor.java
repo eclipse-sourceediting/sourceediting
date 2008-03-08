@@ -43,10 +43,13 @@ import org.eclipse.wst.xsl.ui.internal.templates.TemplateContextTypeIdsXPath;
 public class XSLContentAssistProcessor extends XMLContentAssistProcessor implements IPropertyChangeListener {
 
 	private static final String ELEMENT_VARIABLE = "variable";
-
 	private static final String ELEMENT_PARAM = "param";
+	private static final String ELEMENT_COPYOF = "copy-of";
+	private static final String ELEMENT_WITHPARM = "with-parm";
+	private static final String ELEMENT_APPLYTEMPLATE = "apply-templates";
 
 	private static final String ATTR_SELECT = "select";
+	private static final String ATTR_TEST = "test";
 
 	private String xslNamespace = "http://www.w3.org/1999/XSL/Transform";
 	
@@ -73,24 +76,39 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 	@Override
 	protected void addAttributeValueProposals(
 			ContentAssistRequest contentAssistRequest) {
+		// Make sure to handle any existing Content Assist based on Attributes
+		// for XML content.
+		super.addAttributeValueProposals(contentAssistRequest);
 		IDOMNode node = (IDOMNode)contentAssistRequest.getNode();
         String namespace = DOMNamespaceHelper.getNamespaceURI(node);
 		String nodeName = DOMNamespaceHelper.getUnprefixedName(node.getNodeName());
 		String attributeName = getAttributeName(contentAssistRequest);
 		
 		if (attributeName != null) {
-			// Current node belongs in the XSL Namespace
+			// Current node belongs in the XSL Namespace.  We only want to do this
+			// for the namespace.  Regardless of what the prefix is set too.
 			if (namespace.equals(this.xslNamespace)) {
+				// Note that this really should be the cursor position, so that the contents can be inserted
+				// starting at the cursor position.
+				int offset = contentAssistRequest.getStartOffset() + 1;
 				if (attributeName.equals(ATTR_SELECT)) {
-					if (nodeName.equals(ELEMENT_PARAM) ||
-						nodeName.equals(ELEMENT_VARIABLE)){
-						addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.AXIS);
-						addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.XPATH);
-					}
+					
+					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.AXIS, offset);
+					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.XPATH, offset);
+					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.CUSTOM, offset);
+					// Need to add special handling for variables.  Should query the
+					// current document and provide a list of variables from param and variable
+					// elements.   This should be limited to both the local scope and the
+					// global variables.
+					
+				} else if (attributeName.equals(ATTR_TEST)) {
+					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.OPERATOR);
+					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.AXIS, offset);
+					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.XPATH, offset);
+					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.CUSTOM, offset);
 				}
 			}
 		}
-		super.addAttributeValueProposals(contentAssistRequest);
 	}
 	
 	
