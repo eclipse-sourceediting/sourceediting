@@ -193,5 +193,7 @@ class XPathTemplateCompletionProcessor extends TemplateCompletionProcessor {
 		char quote = '"';
 		char[] autoProposal = {apostrophe, quote};
 		return autoProposal;
-	}	
+	}
+	
+	
 }
