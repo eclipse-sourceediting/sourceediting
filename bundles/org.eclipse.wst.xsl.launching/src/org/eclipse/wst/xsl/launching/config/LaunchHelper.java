@@ -130,7 +130,7 @@ public class LaunchHelper
 				for (Iterator<?> iterator = lt.getParameters().iterator(); iterator.hasNext();)
 				{
 					LaunchAttribute att = (LaunchAttribute) iterator.next();
-					tdef.addParameter(new TypedValue(att.uri, att.type, att.value));
+					tdef.addParameter(new TypedValue(att.uri, att.type, att.getResolvedValue()));
 				}
 				// set the output props for the LAST transform only
 				if (!iter.hasNext())

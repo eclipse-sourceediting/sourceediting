@@ -11,8 +11,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.sse.core,
  org.apache.xalan;bundle-version="2.7.0",
  org.apache.ant;bundle-version="1.7.0";resolution:=optional,
- org.eclipse.ant.core;bundle-version="3.1.300"
-Eclipse-LazyStart: true
+ org.eclipse.ant.core;bundle-version="3.1.300",
+ org.eclipse.wst.validation;bundle-version="1.1.103"
+Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: .
 Bundle-Localization: plugin

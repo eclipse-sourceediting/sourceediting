@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.launching.config;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.variables.VariablesPlugin;
+
 public class LaunchAttribute
 {
 	public static final String TYPE_SUFFIX = ".TYPE";
@@ -37,6 +40,11 @@ public class LaunchAttribute
 	public void setValue(String value)
 	{
 		this.value = value;
+	}
+	
+	public String getResolvedValue() throws CoreException
+	{
+		return VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(value);
 	}
 
 	@Override
