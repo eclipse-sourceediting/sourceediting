@@ -12,18 +12,38 @@
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.apache.xpath.NodeSet;
+import org.apache.xpath.XPathAPI;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.internal.Workbench;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
@@ -31,6 +51,15 @@ import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 import org.eclipse.wst.xsl.ui.internal.templates.TemplateContextTypeIdsXPath;
+import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper;
+import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.xpath.XPathException;
 
 /**
  * The XSL Content Assist Processor provides content assistance for various attributes
@@ -39,27 +68,48 @@ import org.eclipse.wst.xsl.ui.internal.templates.TemplateContextTypeIdsXPath;
  * @author David Carver
  *
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings("restriction") //$NON-NLS-1$
 public class XSLContentAssistProcessor extends XMLContentAssistProcessor implements IPropertyChangeListener {
 
-	private static final String ELEMENT_VARIABLE = "variable";
-	private static final String ELEMENT_PARAM = "param";
-	private static final String ELEMENT_COPYOF = "copy-of";
-	private static final String ELEMENT_WITHPARM = "with-parm";
-	private static final String ELEMENT_APPLYTEMPLATE = "apply-templates";
+	private static final String ATTR_SELECT = "select"; //$NON-NLS-1$
+	private static final String ATTR_TEST = "test"; //$NON-NLS-1$
+	private static final String ATTR_MATCH = "match"; //$NON-NLS-1$
+	/**
+	 * Retireve all global variables in the stylesheet.
+	 */
+	private static final String XPATH_GLOBAL_VARIABLES = "/xsl:stylesheet/xsl:variable";
+	
+	/**
+	 * Retrieve all global parameters in the stylesheet.
+	 */
+	private static final String XPATH_GLOBAL_PARAMS = "/xsl:stylesheet/xsl:param";
+	
+	/**
+	 * Limit selection of variables to those that are in the local scope.
+	 */
+	private static final String XPATH_LOCAL_VARIABLES = "ancestor::xsl:template/descendant::xsl:variable";
+	
+	/**
+	 * Limit selection of params to those that are in the local scope.
+	 */
+	private static final String XPATH_LOCAL_PARAMS = "ancestor::xsl:template/descendant::xsl:param";
 
-	private static final String ATTR_SELECT = "select";
-	private static final String ATTR_TEST = "test";
-
-	private String xslNamespace = "http://www.w3.org/1999/XSL/Transform";
+	/**
+	 * XSL Namespace.  We rely on the namespace not the prefix for identification.
+	 */
+	private String xslNamespace = "http://www.w3.org/1999/XSL/Transform"; //$NON-NLS-1$
 	
 	protected IPreferenceStore fPreferenceStore = null;
 	protected IResource fResource = null;
 	private XPathTemplateCompletionProcessor fTemplateProcessor = null;
 	private List<String> fTemplateContexts = new ArrayList<String>();
+	private static final byte[] XPATH_LOCK = new byte[0];
 	
 	/**
-	 * Constructor 
+	 * The XSL Content Assist Processor handles XSL specific functionality for
+	 * content assistance.   It leverages several XPath selection variables
+	 * to help with the selection of elements and template names.
+	 * 
 	 */
 	public XSLContentAssistProcessor() {
 		super();
@@ -81,36 +131,94 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 		super.addAttributeValueProposals(contentAssistRequest);
 		IDOMNode node = (IDOMNode)contentAssistRequest.getNode();
         String namespace = DOMNamespaceHelper.getNamespaceURI(node);
+        
 		String nodeName = DOMNamespaceHelper.getUnprefixedName(node.getNodeName());
 		String attributeName = getAttributeName(contentAssistRequest);
+		
+		// Retrieve the Editor so that we may get a w3c DOM representation of the document.
+		IEditorPart editor = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		IStructuredModel model = this.getEditorModel(editor);
+		Document document = (Document) model.getAdapter(Document.class);
+		Element rootElement = (IDOMElement) document.getDocumentElement();
 		
 		if (attributeName != null) {
 			// Current node belongs in the XSL Namespace.  We only want to do this
 			// for the namespace.  Regardless of what the prefix is set too.
 			if (namespace.equals(this.xslNamespace)) {
-				// Note that this really should be the cursor position, so that the contents can be inserted
-				// starting at the cursor position.
+				// Adjust the offset so we don't overwrite the " due to the 
+				// fact that SSE includes " in the value region for attributes.
 				int offset = contentAssistRequest.getStartOffset() + 1;
-				if (attributeName.equals(ATTR_SELECT)) {
-					
-					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.AXIS, offset);
-					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.XPATH, offset);
-					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.CUSTOM, offset);
-					// Need to add special handling for variables.  Should query the
-					// current document and provide a list of variables from param and variable
-					// elements.   This should be limited to both the local scope and the
-					// global variables.
-					
-				} else if (attributeName.equals(ATTR_TEST)) {
-					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.OPERATOR);
+				if (attributeName.equals(ATTR_SELECT) ||
+						attributeName.equals(ATTR_TEST)) {
+					addGlobalProposals(rootElement, contentAssistRequest, offset);
+					addLocalProposals(node, contentAssistRequest, offset);
+				}
+				
+				// Add the common XPath proposals to Select, Test, and Match attributes that
+				// appear in the xsl namespace.
+				if (attributeName.equals(ATTR_SELECT) ||
+					attributeName.equals(ATTR_TEST) ||
+					attributeName.equals(ATTR_MATCH)) {
 					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.AXIS, offset);
 					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.XPATH, offset);
 					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.CUSTOM, offset);
 				}
+
+				// Operators like And, Or, greater than, are more likely to be used in test statements
+				if (attributeName.equals(ATTR_TEST)) {
+					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.OPERATOR);
+				}
+				
+				// <xsl:template match=""/> can make use of the global elements defined
+				if (attributeName.equals(ATTR_MATCH)) {
+					addGlobalProposals(rootElement, contentAssistRequest, offset);
+				}
+								
 			}
 		}
 	}
+
+	private void addLocalProposals(Node xpathnode,
+			ContentAssistRequest contentAssistRequest, int offset) {
+		addvariablesProposals(XPATH_LOCAL_VARIABLES, xpathnode, contentAssistRequest, offset);
+		addvariablesProposals(XPATH_LOCAL_PARAMS, xpathnode, contentAssistRequest, offset);
+	}
+
+	private void addGlobalProposals(Node xpathnode,
+			ContentAssistRequest contentAssistRequest, int offset) {
+		addvariablesProposals(XPATH_GLOBAL_VARIABLES, xpathnode, contentAssistRequest, offset);
+		addvariablesProposals(XPATH_GLOBAL_PARAMS, xpathnode, contentAssistRequest, offset);
+	}
 	
+	/**
+	 * addvariableProposals adds Parameter and Variables as proposals.  This information is
+	 * selected based on the XPath statement that is sent to it and the input Node passed.
+	 * It uses a custom composer to XSL Variable proposal.
+	 * @param xpath
+	 * @param xpathnode
+	 * @param contentAssistRequest
+	 * @param offset
+	 */
+	private void addvariablesProposals(String xpath, Node xpathnode, ContentAssistRequest contentAssistRequest, int offset) {
+		synchronized (XPATH_LOCK)
+		{
+			try {
+				NodeList nodes =  XPathAPI.selectNodeList(xpathnode, xpath);
+				if (nodes != null && nodes.getLength() > 0) {
+				   for (int nodecnt = 0; nodecnt < nodes.getLength(); nodecnt++) {
+						Node node = nodes.item(nodecnt);
+						String variableName = "$" + node.getAttributes().getNamedItem("name").getNodeValue();
+						contentAssistRequest.getReplacementLength();
+						XSLVariableCustomCompletionProposal proposal = new XSLVariableCustomCompletionProposal(variableName, offset, 0, variableName.length() + 1, XSLPluginImageHelper.getInstance().getImage(XSLPluginImages.IMG_VARIABLES), variableName, null, null, 0);
+						contentAssistRequest.addProposal(proposal);
+				   }
+				}
+				
+			} catch (TransformerException ex) {
+				XSLUIPlugin.log(ex);
+			}
+		}
+	}
 	
 	/**
 	 * Adds templates to the list of proposals
@@ -123,7 +231,7 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 	}
 
 	/**
-	 * Adds templates to the list of proposals
+	 * Adds XPath related templates to the list of proposals
 	 * 
 	 * @param contentAssistRequest
 	 * @param context
@@ -164,7 +272,11 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 		return fTemplateProcessor;
 	}
 
-	
+	/**
+	 * Gets the attribute name that the content assist was triggered on.
+	 * @param contentAssistRequest
+	 * @return
+	 */
 	private String getAttributeName(ContentAssistRequest contentAssistRequest) {
 		// Find the attribute region and name for which this position should
 		// have a value proposed
@@ -244,6 +356,10 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 		else {
 			completionProposalAutoActivationCharacters = null;
 		}
-	}
+	}	
 	
+	private IStructuredModel getEditorModel(IEditorPart editor)
+	{
+		return (IStructuredModel) editor.getAdapter(IStructuredModel.class);
+	}	
 }

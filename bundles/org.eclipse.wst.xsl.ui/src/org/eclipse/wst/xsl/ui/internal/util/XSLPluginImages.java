@@ -23,6 +23,12 @@ public class XSLPluginImages {
 	/**
 	 * Path to the XPATH Images used for Content Assist
 	 */
-	public static final String IMG_XPATH_AXIS = "icons/full/directional.gif"; //$NON-NLS-1$	
+	public static final String IMG_XPATH_AXIS = "icons/full/directional.gif"; //$NON-NLS-1$
+	
+	/**
+	 * Path to the XPATH Images used for Content Assist
+	 */
+	public static final String IMG_VARIABLES = "icons/full/variable.gif"; //$NON-NLS-1$	
+
 	
 }

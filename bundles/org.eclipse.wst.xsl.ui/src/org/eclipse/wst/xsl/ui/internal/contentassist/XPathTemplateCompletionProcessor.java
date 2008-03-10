@@ -66,7 +66,7 @@ class XPathTemplateCompletionProcessor extends TemplateCompletionProcessor {
 
 
 	protected ICompletionProposal createProposal(Template template, TemplateContext context, IRegion region, int relevance) {
-		return new CustomTemplateProposal(template, context, region, getImage(template), relevance);
+		return new XPathCustomTemplateProposal(template, context, region, getImage(template), relevance);
 	}
 
 	protected TemplateContextType getContextType(ITextViewer viewer, IRegion region) {
@@ -183,17 +183,17 @@ class XPathTemplateCompletionProcessor extends TemplateCompletionProcessor {
 		return null;
 	}
 	
-	/**
-	 * 
-	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getCompletionProposalAutoActivationCharacters()
-	 */
-	@Override
-	public char[] getCompletionProposalAutoActivationCharacters() {
-		char apostrophe = '\'';
-		char quote = '"';
-		char[] autoProposal = {apostrophe, quote};
-		return autoProposal;
-	}
+//	/**
+//	 * 
+//	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getCompletionProposalAutoActivationCharacters()
+//	 */
+//	@Override
+//	public char[] getCompletionProposalAutoActivationCharacters() {
+//		char apostrophe = '\'';
+//		char quote = '"';
+//		char[] autoProposal = {apostrophe, quote};
+//		return autoProposal;
+//	}
 	
 	
 }

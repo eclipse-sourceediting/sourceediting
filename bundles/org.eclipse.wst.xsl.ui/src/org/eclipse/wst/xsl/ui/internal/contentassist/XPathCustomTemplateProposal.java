@@ -41,7 +41,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceCompletionProposa
  * fit for an HTML viewer (by escaping characters)
  */
 @SuppressWarnings("restriction")
-class CustomTemplateProposal extends TemplateProposal implements IRelevanceCompletionProposal {
+class XPathCustomTemplateProposal extends TemplateProposal implements IRelevanceCompletionProposal {
 	// copies of this class exist in:
 	// org.eclipse.jst.jsp.ui.internal.contentassist
 	// org.eclipse.wst.html.ui.internal.contentassist
@@ -56,7 +56,7 @@ class CustomTemplateProposal extends TemplateProposal implements IRelevanceCompl
 	private InclusivePositionUpdater fUpdater;
 
 	
-	public CustomTemplateProposal(Template template, TemplateContext context, IRegion region, Image image, int relevance) {
+	public XPathCustomTemplateProposal(Template template, TemplateContext context, IRegion region, Image image, int relevance) {
 		super(template, context, region, image, relevance);
 		
 			Assert.isNotNull(template);
