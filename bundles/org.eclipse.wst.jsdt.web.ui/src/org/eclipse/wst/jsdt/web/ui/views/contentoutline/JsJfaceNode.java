@@ -88,8 +88,6 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 	
 	
 	public boolean contains(int testPosition) {
-		// TODO Auto-generated method stub
-		System.out.println(Messages.getString("JsJfaceNode.0")); //$NON-NLS-1$
 		return false;
 	}
 	
