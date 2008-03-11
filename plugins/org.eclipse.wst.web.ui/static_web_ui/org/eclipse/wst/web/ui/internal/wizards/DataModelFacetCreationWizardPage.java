@@ -523,7 +523,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 				if (!mruRuntimes.isEmpty()) {
 					for (int i = 0; i < mruRuntimes.size() && !runtimeSet; i++) {
 						for (int j = 0; j < descriptors.length-1 && !runtimeSet; j++) {
-							if (mruRuntimes.get(i).equals(descriptors[j].getPropertyDescription())) {
+							if (mruRuntimes.get(i).equals(((IRuntime)descriptors[j].getPropertyValue()).getName())) {
 								model.setProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME, descriptors[j].getPropertyValue());
 								runtimeSet = true;
 							}
