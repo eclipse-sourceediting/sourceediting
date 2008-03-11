@@ -152,12 +152,9 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 				if (attributeName.equals(ATTR_TEST)) {
 					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.OPERATOR);
 				}
+				// Match attributes probably need to get a listing of all available elements from the
+				// content model by namespace so that those values can be added as possible content assistance
 				
-				// <xsl:template match=""/> can make use of the global elements defined
-				if (attributeName.equals(ATTR_MATCH)) {
-					addGlobalProposals(rootElement, contentAssistRequest, offset);
-				}
-								
 			}
 		}
 	}
