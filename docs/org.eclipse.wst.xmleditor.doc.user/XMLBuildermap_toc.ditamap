@@ -1,60 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
+ "map.dtd">
 <map collection-type="sequence" title="Developing XML files">
-<topicref href="topics/cworkXML.dita" linking="sourceonly" navtitle="Working with XML files"><?Pub Caret1?>
+<topicref href="topics/cworkXML.dita" linking="sourceonly" navtitle="Working with XML files">
+<anchor id="xml_post_cworkXML"/>
 <topicref href="topics/ccreatxm.dita" navtitle="Creating XML files">
+<anchor id="xml_post_ccreatxm"/>
 <topicref href="topics/tcretxml.dita" id="xmlcretxml" navtitle="Creating empty XML files">
 </topicref>
+<anchor id="xml_post_tcretxml"/>
 <topicref href="topics/tcrexdtd.dita" navtitle="Generating XML files from DTDs">
 </topicref>
+<anchor id="xml_post_tcrexdtd"/>
 <topicref href="topics/tcrexxsd.dita" navtitle="Generating XML files from XML schemas">
 </topicref>
-</topicref>
+<anchor id="xml_post_tcrexxsd"/></topicref>
 <topicref href="topics/rlimitations_slushXML.dita" navtitle="Limitations of XML Editor"
 toc="no"></topicref>
+<anchor id="xml_post_rlimitations_slushXML"/>
 <topicref href="topics/txedttag.dita" navtitle="Editing XML files">
+<anchor id="xml_post_txedttag"/>
 <topicref href="topics/cwxmledt.dita" navtitle="XML editor">
+<anchor id="xml_post_cwxmledt"/>
 <topicref href="topics/txprefs.dita" navtitle="Defining XML editor preferences">
+<anchor id="xml_post_txprefs"/>
 <topicref href="topics/ttaghilt.dita" id="taghilt" navtitle="Setting source highlighting styles">
 </topicref>
+<anchor id="xml_post_ttaghilt"/>
 <topicref href="topics/tedtenc.dita" navtitle="Specifying XML default encoding line delimiters">
+<anchor id="xml_post_tedtenc"/>
 <topicref href="topics/cxmlenc.dita" navtitle="XML and HTML encodings"></topicref>
-</topicref>
+<anchor id="xml_post_cxmlenc"/></topicref>
 <topicref href="topics/tsugstrat.dita" navtitle="Setting the XML source suggestion strategy used by content assist">
 </topicref>
-</topicref>
+<anchor id="xml_post_tsugstrat"/></topicref>
 </topicref>
 <topicref href="topics/txedtdes.dita" id="txedtdes" linking="none" navtitle="Editing in the Design view">
+<anchor id="xml_post_txedtdes"/>
 <topicref href="topics/tedtdoc.dita" id="tedtdoc" navtitle="Editing DOCTYPE declarations">
 </topicref>
+<anchor id="xml_post_tedtdoc"/>
 <topicref href="topics/tedtsch.dita" id="tedtsch" navtitle="Editing namespace information">
 </topicref>
+<anchor id="xml_post_tedtsch"/>
 <topicref href="topics/tedtproc.dita" id="tedtproc" navtitle="Editing XML processing instructions">
 </topicref>
-</topicref>
+<anchor id="xml_post_tedtproc"/></topicref>
 <topicref href="topics/txedtsrc.dita" id="txedsrc" linking="none" navtitle="Editing in the Source view">
+<anchor id="xml_post_txedtsrc"/>
 <topicref href="topics/twcdast.dita" navtitle="Using XML content assist">
 </topicref>
+<anchor id="xml_post_twcdast"/>
 <topicref href="topics/twmacro.dita" id="twmacro" navtitle="Working with XML templates">
 </topicref>
-</topicref>
+<anchor id="xml_post_twmacro"/></topicref>
 <topicref href="topics/tedtcnst.dita" id="tedtcnt" navtitle="Editing with DTD or XML schema constraints">
 </topicref>
+<anchor id="xml_post_tedtcnst"/>
 <topicref href="topics/txsityp.dita" navtitle="Using xsi:type"></topicref>
+<anchor id="xml_post_txsityp"/>
 <topicref href="topics/rextctn.dita" id="rextctn" navtitle="Editing XML documents with multiple namespaces">
 </topicref>
-</topicref>
+<anchor id="xml_post_rextctn"/></topicref>
 <topicref href="topics/twxvalid.dita" id="xmlvalid" navtitle="Validating XML files">
 </topicref>
+<anchor id="xml_post_twxvalid"/>
 <topicref href="topics/cxmlcat.dita" linking="none" navtitle="XML file associations with DTDs and XML schemas">
+<anchor id="xml_post_cxmlcat"/>
 <topicref href="topics/txmlcat.dita" id="txmlcat" navtitle="Adding entries to the XML Catalog">
 </topicref>
+<anchor id="xml_post_txmlcat"/>
 <topicref href="topics/tedtgram.dita" id="tedtgram" navtitle="Updating XML files with changes made to DTDs and schemas">
 </topicref>
-</topicref>
+<anchor id="xml_post_tedtgram"/></topicref>
 <topicref href="topics/rxmlbicons.dita" id="ricons" navtitle="Icons used in the XML editor">
 </topicref>
-</topicref>
+<anchor id="xml_post_rxmlbicons"/></topicref>
 </map>
-<?Pub *0000003143?>

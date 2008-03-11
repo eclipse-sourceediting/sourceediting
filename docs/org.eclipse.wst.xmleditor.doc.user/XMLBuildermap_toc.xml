@@ -4,39 +4,67 @@
 
 <toc label="Developing XML files" topic="topics/cworkXML.html">
 <topic label="Working with XML files" href="topics/cworkXML.html">
+<anchor id="xml_post_cworkXML"/>
 <topic label="Creating XML files" href="topics/ccreatxm.html">
+<anchor id="xml_post_ccreatxm"/>
 <topic label="Creating XML files" href="topics/tcretxml.html"/>
+<anchor id="xml_post_tcretxml"/>
 <topic label="Generating XML files from DTDs" href="topics/tcrexdtd.html"/>
+<anchor id="xml_post_tcrexdtd"/>
 <topic label="Generating XML files from XML schemas" href="topics/tcrexxsd.html"/>
+<anchor id="xml_post_tcrexxsd"/>
 </topic>
+<anchor id="xml_post_rlimitations_slushXML"/>
 <topic label="Editing XML files" href="topics/txedttag.html">
+<anchor id="xml_post_txedttag"/>
 <topic label="XML editor" href="topics/cwxmledt.html">
+<anchor id="xml_post_cwxmledt"/>
 <topic label="Defining XML editor preferences" href="topics/txprefs.html">
+<anchor id="xml_post_txprefs"/>
 <topic label="Setting source highlighting styles" href="topics/ttaghilt.html"/>
+<anchor id="xml_post_ttaghilt"/>
 <topic label="Specifying XML default encoding line delimiters" href="topics/tedtenc.html">
+<anchor id="xml_post_tedtenc"/>
 <topic label="XML and HTML encodings" href="topics/cxmlenc.html"/>
+<anchor id="xml_post_cxmlenc"/>
 </topic>
 <topic label="Setting the XML source suggestion strategy used by content assist" href="topics/tsugstrat.html"/>
+<anchor id="xml_post_tsugstrat"/>
 </topic>
 </topic>
 <topic label="Editing in the Design view" href="topics/txedtdes.html">
+<anchor id="xml_post_txedtdes"/>
 <topic label="Editing DOCTYPE declarations" href="topics/tedtdoc.html"/>
+<anchor id="xml_post_tedtdoc"/>
 <topic label="Editing namespace information" href="topics/tedtsch.html"/>
+<anchor id="xml_post_tedtsch"/>
 <topic label="Editing XML processing instructions" href="topics/tedtproc.html"/>
+<anchor id="xml_post_tedtproc"/>
 </topic>
 <topic label="Editing in the Source view" href="topics/txedtsrc.html">
+<anchor id="xml_post_txedtsrc"/>
 <topic label="Using XML content assist" href="topics/twcdast.html"/>
+<anchor id="xml_post_twcdast"/>
 <topic label="Working with XML templates" href="topics/twmacro.html"/>
+<anchor id="xml_post_twmacro"/>
 </topic>
 <topic label="Editing with DTD or XML schema constraints" href="topics/tedtcnst.html"/>
+<anchor id="xml_post_tedtcnst"/>
 <topic label="Using xsi:type" href="topics/txsityp.html"/>
+<anchor id="xml_post_txsityp"/>
 <topic label="Editing XML documents with multiple namespaces" href="topics/rextctn.html"/>
+<anchor id="xml_post_rextctn"/>
 </topic>
 <topic label="Validating XML files" href="topics/twxvalid.html"/>
+<anchor id="xml_post_twxvalid"/>
 <topic label="XML file associations with DTDs and XML schemas" href="topics/cxmlcat.html">
+<anchor id="xml_post_cxmlcat"/>
 <topic label="Adding entries to the XML Catalog" href="topics/txmlcat.html"/>
+<anchor id="xml_post_txmlcat"/>
 <topic label="Updating XML files with changes made to DTDs and schemas" href="topics/tedtgram.html"/>
+<anchor id="xml_post_tedtgram"/>
 </topic>
 <topic label="Icons used in the XML editor" href="topics/rxmlbicons.html"/>
+<anchor id="xml_post_rxmlbicons"/>
 </topic>
 </toc>
