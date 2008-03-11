@@ -21,7 +21,8 @@
 	ChangeLog:
 	2006-04-05 Arthur Ryman <ryman@ca.ibm.com>
 	- Created.
-
+	2008-01-09 Kate Price <katep@ca.ibm.com>
+	- modified for new DITA-OT version
 -->
 <project name="eclipsehelp" default="all">
 
@@ -46,12 +47,12 @@
 			<property name="args.copycss" value="no" />
 			<property name="args.csspath" value="org.eclipse.wst.doc.user" />
 			<property name="args.eclipse.provider" value="Eclipse.org" />
-			<property name="args.eclipse.version" value="1.5.0" />
-			<property name="args.input" location="XSDLeditorrel.ditamap" />    		
+			<property name="args.eclipse.version" value="3.3.0" />
+			<property name="args.input" location="XSDeditormap_toc.ditamap" />    		
 			<property name="clean.temp" value="true" />
 			<property name="dita.extname" value=".dita" />
 			<property name="dita.temp.dir" location="temp" />
-			<property name="output.dir" location=".." />
+			<property name="output.dir" location="" />
 			<property name="transtype" value="eclipsehelp" />
 		</ant>
 		<copy file="myplugin.xml" tofile="plugin.xml" overwrite="yes" />

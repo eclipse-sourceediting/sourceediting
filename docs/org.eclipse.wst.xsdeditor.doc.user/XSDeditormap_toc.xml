@@ -4,36 +4,65 @@
 
 <toc label="XML schemas" topic="topics/cworkXSD.html">
 <topic label="Working with XML schemas" href="topics/cworkXSD.html">
+<anchor id="xsd_post_cworkXSD"/>
 <topic label="Creating XML schemas" href="topics/tcxmlsch.html"/>
+<anchor id="xsd_post_tcxmlsch"/>
+<anchor id="xsd_post_rlimitations_slushXSD"/>
 <topic label="Importing XML schemas" href="topics/timpschm.html"/>
+<anchor id="xsd_post_timpschm"/>
 <topic label="Navigating XML schemas" href="topics/tnavsrc.html"/>
+<anchor id="xsd_post_tnavsrc"/>
 <topic label="Refactoring in XML Schema Files" href="topics/trefactrXSD.html"/>
+<anchor id="xsd_post_trefactr"/>
 <topic label="Editing XML schema file preferences" href="topics/tedtpref.html"/>
+<anchor id="xsd_post_teditpref"/>
 <topic label="Editing XML schema properties" href="topics/tedtschm.html">
+<anchor id="xsd_post_teditschm"/>
 <topic label="XML schema editor" href="topics/cxmlsced.html"/>
+<anchor id="xsd_post_cxmlsced"/>
 <topic label="Adding attribute groups" href="topics/taddagrp.html"/>
+<anchor id="xsd_post_taddgrp"/>
 <topic label="Adding complex types" href="topics/taddcmxt.html"/>
+<anchor id="xsd_post_taddcmxt"/>
 <topic label="Adding content models" href="topics/taddcmod.html">
+<anchor id="xsd_post_taddcmod"/>
 <topic label="Adding an any element" href="topics/taddanye.html"/>
+<anchor id="xsd_post_taddanye"/>
 <topic label="Adding elements" href="topics/taddelm.html"/>
+<anchor id="xsd_post_taddelm"/>
 <topic label="Adding element references" href="topics/taddelmr.html"/>
+<anchor id="xsd_post_taddelmr"/>
 <topic label="Adding group references" href="topics/taddgrpr.html"/>
+<anchor id="xsd_post_taddgrpr"/>
 </topic>
 <topic label="Adding global attributes" href="topics/taddglba.html"/>
+<anchor id="xsd_post_taddglba"/>
 <topic label="Adding global elements" href="topics/taddglem.html"/>
+<anchor id="xsd_post_taddglem"/>
 <topic label="Adding groups" href="topics/taddgrup.html"/>
+<anchor id="xsd_post_taddgrup"/>
 <topic label="Adding import elements" href="topics/taddimpt.html"/>
+<anchor id="xsd_post_taddimpt"/>
 <topic label="Adding include elements" href="topics/taddincl.html"/>
+<anchor id="xsd_post_taddincl"/>
 <topic label="Adding redefine elements" href="topics/taddrdfn.html"/>
+<anchor id="xsd_post_taddrdfn"/>
 <topic label="Adding simple types" href="topics/taddsmpt.html">
+<anchor id="xsd_post_taddsmpt"/>
 <topic label="Adding pattern facets to simple types" href="topics/taddreg.html"/>
+<anchor id="xsd_post_taddreg"/>
 </topic>
 </topic>
 <topic label="Icons used in the XML schema editor" href="topics/rxsdicons.html"/>
+<anchor id="xsd_post_rxsdicons"/>
 <topic label="Deleting XML schema components" href="topics/tdelscmp.html">
+<anchor id="xsd_post_tdelscmp"/>
 <topic label="Referential integrity in the XML schema editor" href="topics/rrefintg.html"/>
+<anchor id="xsd_post_rrefintg"/>
 </topic>
 <topic label="Validating XML schemas" href="topics/tvdtschm.html"/>
+<anchor id="xsd_post_tvtschm"/>
 <topic label="XML namespaces" href="topics/rnmspc.html"/>
+<anchor id="xsd_post_rnmspc"/>
 </topic>
 </toc>

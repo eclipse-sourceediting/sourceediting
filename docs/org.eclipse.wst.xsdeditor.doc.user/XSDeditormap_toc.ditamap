@@ -1,57 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
  "map.dtd">
 <map collection-type="sequence" id="wstxsdtoc" title="XML schemas">
 <topicref href="topics/cworkXSD.dita" linking="sourceonly" navtitle="Working with XML schemas (XSDs)">
+<anchor id="xsd_post_cworkXSD"/>
 <topicref href="topics/tcxmlsch.dita" navtitle="Creating XML schemas"></topicref>
+<anchor id="xsd_post_tcxmlsch"/>
 <topicref href="topics/rlimitations_slushXSD.dita" navtitle="XSD Slush file"
 toc="no"></topicref>
+<anchor id="xsd_post_rlimitations_slushXSD"/>
 <topicref href="topics/timpschm.dita" navtitle="Importing an XML schema">
 </topicref>
+<anchor id="xsd_post_timpschm"/>
 <topicref href="topics/tnavsrc.dita" navtitle="Navigating XML schemas"></topicref>
+<anchor id="xsd_post_tnavsrc"/>
 <topicref href="topics/trefactrXSD.dita" navtitle="Refactoring in XML Schemas">
 </topicref>
+<anchor id="xsd_post_trefactr"/>
 <topicref href="topics/tedtpref.dita" navtitle="Editing XML schema  editor preferences">
 </topicref>
+<anchor id="xsd_post_teditpref"/>
 <topicref href="topics/tedtschm.dita" linking="none" navtitle="Editing XML schema properties">
+<anchor id="xsd_post_teditschm"/>
 <topicref href="topics/cxmlsced.dita" id="xsdconcepts" navtitle="XML schema editor">
 </topicref>
+<anchor id="xsd_post_cxmlsced"/>
 <topicref href="topics/taddagrp.dita" navtitle="Adding an attribute group">
 </topicref>
+<anchor id="xsd_post_taddgrp"/>
 <topicref href="topics/taddcmxt.dita" navtitle="Adding a complex type"></topicref>
+<anchor id="xsd_post_taddcmxt"/>
 <topicref href="topics/taddcmod.dita" navtitle="Adding a content model">
+<anchor id="xsd_post_taddcmod"/>
 <topicref href="topics/taddanye.dita" navtitle="Adding an any element"></topicref>
+<anchor id="xsd_post_taddanye"/>
 <topicref href="topics/taddelm.dita" navtitle="Adding an element"></topicref>
+<anchor id="xsd_post_taddelm"/>
 <topicref href="topics/taddelmr.dita" navtitle="Adding an element reference">
 </topicref>
+<anchor id="xsd_post_taddelmr"/>
 <topicref href="topics/taddgrpr.dita" navtitle="Adding a group reference">
 </topicref>
-</topicref>
+<anchor id="xsd_post_taddgrpr"/></topicref>
 <topicref href="topics/taddglba.dita" navtitle="Adding a global attribute">
 </topicref>
+<anchor id="xsd_post_taddglba"/>
 <topicref href="topics/taddglem.dita" navtitle="Adding a global element">
 </topicref>
+<anchor id="xsd_post_taddglem"/>
 <topicref href="topics/taddgrup.dita" navtitle="Adding a group"></topicref>
+<anchor id="xsd_post_taddgrup"/>
 <topicref href="topics/taddimpt.dita" navtitle="Adding an import element">
 </topicref>
+<anchor id="xsd_post_taddimpt"/>
 <topicref href="topics/taddincl.dita" navtitle="Adding an include element">
 </topicref>
+<anchor id="xsd_post_taddincl"/>
 <topicref href="topics/taddrdfn.dita" navtitle="Adding a redefine element">
 </topicref>
+<anchor id="xsd_post_taddrdfn"/>
 <topicref href="topics/taddsmpt.dita" navtitle="Adding a simple type">
+<anchor id="xsd_post_taddsmpt"/>
 <topicref href="topics/taddreg.dita" navtitle="Adding a pattern facet to a simple type">
 </topicref>
-</topicref>
+<anchor id="xsd_post_taddreg"/></topicref>
 </topicref>
 <topicref href="topics/rxsdicons.dita" id="xsdicons" navtitle="Icons used in the XML schema editor">
 </topicref>
+<anchor id="xsd_post_rxsdicons"/>
 <topicref href="topics/tdelscmp.dita" navtitle="Deleting XML schema components">
+<anchor id="xsd_post_tdelscmp"/>
 <topicref href="topics/rrefintg.dita" navtitle="Referential integrity in the XML schema editor">
 </topicref>
-</topicref>
+<anchor id="xsd_post_rrefintg"/></topicref>
 <topicref href="topics/tvdtschm.dita" navtitle="Validating an XML schema">
 </topicref>
+<anchor id="xsd_post_tvtschm"/>
 <topicref href="topics/rnmspc.dita" navtitle="XML namespaces"></topicref>
-</topicref>
+<anchor id="xsd_post_rnmspc"/></topicref>
 </map>
