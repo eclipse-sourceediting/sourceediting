@@ -4,13 +4,21 @@
 
 <toc label="DTD Editor" topic="topics/cworkdtds.html">
 <topic label="Working with DTDs" href="topics/cworkdtds.html">
+<anchor id="dtd_post_cworkdtds"/>
 <topic label="Creating DTDs" href="topics/tcretdtd.html">
+<anchor id="dtd_post_tcretdtd"/>
 <topic label="Document type definitions (DTDs) - overview" href="topics/cdtdover.html"/>
+<anchor id="dtd_post_cdtdover"/>
 <topic label="Setting source highlighting styles" href="topics/tedtsrcst.html"/>
+<anchor id="dtd_post_ctedtsrcst"/>
 <topic label="Working with DTD templates" href="topics/tdtemplt.html"/>
+<anchor id="dtd_post_tdtemplt"/>
 </topic>
 <topic label="Importing DTDs" href="topics/timptdtd.html"/>
+<anchor id="dtd_post_timptdtd"/>
 <topic label="Validating DTDs" href="topics/tvaldtd.html"/>
+<anchor id="dtd_post_tvaldtd"/>
 <topic label="Icons used in the DTD editor" href="topics/rdtdicons.html"/>
+<anchor id="dtd_post_rdtdicons"/>
 </topic>
 </toc>

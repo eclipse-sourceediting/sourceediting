@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
+ "map.dtd">
 <map collection-type="sequence" title="DTD Editor">
 <topicref href="topics/cworkdtds.dita" navtitle="Working with DTDs" type="concept">
+<anchor id="dtd_post_cworkdtds"/>
 <topicref href="topics/tcretdtd.dita" linking="normal" navtitle="Creating DTDs"
 type="task">
+<anchor id="dtd_post_tcretdtd"/>
 <topicref href="topics/cdtdover.dita" linking="sourceonly" navtitle="Document type definition - Overview"
 type="concept"></topicref>
+<anchor id="dtd_post_cdtdover"/>
 <topicref href="topics/tedtsrcst.dita" linking="sourceonly" navtitle="Setting source highlighting styles"
 type="task"></topicref>
+<anchor id="dtd_post_ctedtsrcst"/>
 <topicref href="topics/tdtemplt.dita" linking="sourceonly" navtitle="Working with DTD templates"
 type="task"></topicref>
-</topicref>
+<anchor id="dtd_post_tdtemplt"/></topicref>
 <topicref href="topics/timptdtd.dita" navtitle="Importing DTDs" type="task">
 </topicref>
+<anchor id="dtd_post_timptdtd"/>
 <topicref href="topics/tvaldtd.dita" navtitle="Validating DTDs" type="task">
 </topicref>
+<anchor id="dtd_post_tvaldtd"/>
 <topicref href="topics/rdtdicons.dita" navtitle="Icons used in the DTD editor"
 type="reference"></topicref>
-</topicref>
+<anchor id="dtd_post_rdtdicons"/></topicref>
 </map>
