@@ -243,7 +243,7 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 			ResourceSetWorkbenchEditSynchronizer synchronizer = (ResourceSetWorkbenchEditSynchronizer) ((ProjectResourceSet) resource.getResourceSet()).getSynchronizer();
 			IFile aFile = WorkbenchResourceHelper.getFile(resource);
 			try {
-				synchronizer.preSave(aFile);
+				synchronizer.preSave(aFile, resource);
 				xmlModel.save(aFile);
 			}
 			catch (CoreException ex) {
@@ -414,7 +414,7 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 			IProject proj = WorkbenchResourceHelper.getProject(resource);
 			ResourceSetWorkbenchEditSynchronizer synchronizer = (ResourceSetWorkbenchEditSynchronizer) ((ProjectResourceSet) WorkbenchResourceHelperBase.getResourceSet(proj)).getSynchronizer();
 			IFile aFile = WorkbenchResourceHelper.getFile(resource);
-			synchronizer.preSave(aFile);
+			synchronizer.preSave(aFile, resource);
 		}
 		if (isDirty)
 			resource.setModified(true);
@@ -456,7 +456,7 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 			if (event.getType() == ModelLifecycleEvent.MODEL_SAVED) {
 				ResourceSetWorkbenchEditSynchronizer synchronizer = (ResourceSetWorkbenchEditSynchronizer) ((ProjectResourceSet) resource.getResourceSet()).getSynchronizer();
 				IFile aFile = WorkbenchResourceHelper.getFile(resource);
-				synchronizer.preSave(aFile);
+				synchronizer.preSave(aFile, resource);
 			}
 		}
 	}
