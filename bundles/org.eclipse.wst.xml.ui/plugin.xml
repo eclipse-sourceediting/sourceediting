@@ -387,6 +387,31 @@
 		</validator>
 	</extension>
 	
+   <extension point="org.eclipse.ui.editors.annotationTypes">
+      <type name="org.eclipse.wst.xml.ui.matching.tag"/>
+   </extension>
+   <extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
+      <specification
+      		includeOnPreferencePage="false"
+            colorPreferenceValue="212,212,212"
+            annotationType="org.eclipse.wst.xml.ui.matching.tag"
+            colorPreferenceKey="matchingTagIndicationColor"
+            presentationLayer="4"
+            label="%MatchingTagPreference.label"
+            icon="icons/full/obj16/tag-generic.gif"
+            textPreferenceValue="false"
+            textPreferenceKey="matchingTagIndication"
+            highlightPreferenceKey="matchingTagHighlight"
+            highlightPreferenceValue="true"
+            verticalRulerPreferenceKey="matchingTagVerticalRuler"
+            verticalRulerPreferenceValue="false"
+            overviewRulerPreferenceKey="matchingTagIndicationInOverviewRuler"
+            overviewRulerPreferenceValue="true"
+            textStylePreferenceKey="matchingTagTextStyle"
+			textStylePreferenceValue="NONE">
+      </specification>
+   </extension>
+
 	<!--======================================================================================-->
 	<!-- Document provider for ExternalFileEditorInput                                        -->
 	<!--======================================================================================-->
