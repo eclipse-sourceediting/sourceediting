@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -562,11 +562,12 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 	public String getLabel(Node parent, CMNode cmnode) {
 		String result = "?" + cmnode + "?"; //$NON-NLS-1$ //$NON-NLS-2$
 		if (cmnode != null) {
-			result = (String) cmnode.getProperty("name"); //$NON-NLS-1$
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=155800
+			result = cmnode.getNodeName();
 			if(result == null) {
 				result = (String) cmnode.getProperty("description"); //$NON-NLS-1$
 			}
-			if (result == null) {
+			if (result == null || result.length() == 0) {
 				if (cmnode.getNodeType() == CMNode.GROUP) {
 					CMDescriptionBuilder descriptionBuilder = new CMDescriptionBuilder();
 					result = descriptionBuilder.buildDescription(cmnode);
