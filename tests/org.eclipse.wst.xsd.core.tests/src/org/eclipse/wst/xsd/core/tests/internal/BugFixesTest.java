@@ -100,6 +100,8 @@ public class BugFixesTest extends BaseTestCase
   {
     String vxmlSchemaURI = locateFileUsingCatalog("http://www.w3.org/TR/voicexml20/vxml.xsd");
     
+    // See bug 206138
+    
     // Two ways to test this.
     // First way. Call findTypesDerivedFrom from XSDImpl.
     
@@ -117,7 +119,11 @@ public class BugFixesTest extends BaseTestCase
           foundDesiredType = true;
           List<XSDTypeDefinition> list = XSDImpl.findTypesDerivedFrom(complexType);
           int size = list.size();
-          assertTrue(size == 1);  // if we got something back, then great, there was no out of stack error
+          // assertTrue(size == 1);  // if we got something back, then great, there was no out of stack error
+          assertTrue(size >= 0);
+          // Because of bug 203048, there is a change in behaviour to redefined types.  
+          // The complex type named speaker is no longer circular.   In terms of this junit, the value returned is not relevant
+          // since we just want some length back (i.e. there was no crash from a stack overflow).
           break;
         }
       }
@@ -142,7 +148,11 @@ public class BugFixesTest extends BaseTestCase
       {
         CMNamedNodeMap attributes = element.getAttributes();
         assertNotNull(attributes);
-        assertTrue(attributes.getLength() == 3);  // if we got something back, then great, there was no out of stack error
+        // assertTrue(attributes.getLength() == 3);  // if we got something back, then great, there was no out of stack error
+        // Because of bug 203048, there is a change in behaviour to redefined types.  
+        // The complex type named speaker is no longer circular.   In terms of this junit, the value returned is not relevant
+        // since we just want some length back (i.e. there was no crash from a stack overflow).
+        assertTrue(attributes.getLength() >= 0);
         foundDesiredElement = true;
         break;
       }
