@@ -18,6 +18,7 @@ public class DTDCoreTestSuite extends TestSuite {
 	public DTDCoreTestSuite() {
 		super("DTD Core TestSuite");
 		addTest(new TestSuite(VerifyPlugin.class));
+		addTest(new TestSuite(DTDParserTest.class));
 	}
 	public static Test suite() {
 		return new DTDCoreTestSuite();
