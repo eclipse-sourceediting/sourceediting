@@ -30,8 +30,8 @@ public class DTDCoreTestsPlugin extends Plugin {
 	 * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
-		super.start(context);
 		plugin = this;
+		super.start(context);
 	}
 
 	/*

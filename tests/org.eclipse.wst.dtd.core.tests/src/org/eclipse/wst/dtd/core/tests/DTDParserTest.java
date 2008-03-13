@@ -17,7 +17,6 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.dtd.core.internal.emf.DTDElement;
 import org.eclipse.wst.dtd.core.internal.emf.DTDFile;
 import org.eclipse.wst.dtd.core.internal.emf.util.DTDUtil;
@@ -29,7 +28,9 @@ public class DTDParserTest extends TestCase {
 
 	public void testMultipleCommentParsing() throws IOException {
 		DTDUtil util = new DTDUtil();
-		URL bundleURL = FileLocator.find(DTDCoreTestsPlugin.getDefault().getBundle(), new Path("resources/dtdParserTest/sample.dtd"), null);
+		String sampleDTDpath = "/resources/dtdParserTest/sample.dtd";
+		URL bundleURL = DTDCoreTestsPlugin.getDefault().getBundle().getEntry(sampleDTDpath);
+		assertNotNull(sampleDTDpath + " not found in bundle", bundleURL);
 		// Do not rely on Common URI Resolver to find the contents
 		URL fileURL = FileLocator.toFileURL(bundleURL);
 		util.parse(fileURL.toExternalForm());
