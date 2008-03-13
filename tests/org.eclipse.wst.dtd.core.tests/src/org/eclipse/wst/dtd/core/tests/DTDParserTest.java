@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.core.tests;
 
+import java.io.IOException;
 import java.net.URL;
 
 import junit.framework.TestCase;
@@ -23,26 +24,22 @@ import org.eclipse.wst.dtd.core.internal.emf.util.DTDUtil;
 import org.eclipse.wst.dtd.core.tests.internal.DTDCoreTestsPlugin;
 
 public class DTDParserTest extends TestCase {
-	
+
 	private static final String UNEXPECTED_FILE_CONTENTS = "Unexpected file contents";
-	
-	public void testMultipleCommentParsing() {
-	    DTDUtil util = new DTDUtil();
-	    URL fileURL = FileLocator.find(DTDCoreTestsPlugin.getDefault().getBundle(), new Path("resources/dtdParserTest/sample.dtd"), null);
-	    util.parse(fileURL.toExternalForm());
-	    DTDFile dtdFile = util.getDTDFile();
-	    if(dtdFile.getDTDContent().size() == 1) {
-		    Object object = dtdFile.getDTDContent().get(0);
-		    if(object instanceof DTDElement) {
-		    	DTDElement dtdElement = (DTDElement)object;
-		    	String comment = dtdElement.getComment();
-		    	assertEquals(" line one \n line two ", comment);
-		    } else {
-		    	fail(UNEXPECTED_FILE_CONTENTS);	
-		    }
-	    }else {
-	    	fail(UNEXPECTED_FILE_CONTENTS);
-	    }
+
+	public void testMultipleCommentParsing() throws IOException {
+		DTDUtil util = new DTDUtil();
+		URL bundleURL = FileLocator.find(DTDCoreTestsPlugin.getDefault().getBundle(), new Path("resources/dtdParserTest/sample.dtd"), null);
+		// Do not rely on Common URI Resolver to find the contents
+		URL fileURL = FileLocator.toFileURL(bundleURL);
+		util.parse(fileURL.toExternalForm());
+		DTDFile dtdFile = util.getDTDFile();
+		assertEquals(UNEXPECTED_FILE_CONTENTS, 1, dtdFile.getDTDContent().size());
+		Object object = dtdFile.getDTDContent().get(0);
+		assertTrue(UNEXPECTED_FILE_CONTENTS, object instanceof DTDElement);
+		DTDElement dtdElement = (DTDElement) object;
+		String comment = dtdElement.getComment();
+		assertEquals("Comment value was not as expected", " line one \n line two ", comment);
 
 	}
 
