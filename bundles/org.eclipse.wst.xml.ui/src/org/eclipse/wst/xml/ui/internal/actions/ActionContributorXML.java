@@ -210,5 +210,9 @@ public class ActionContributorXML extends ActionContributor {
 		fFormatActiveElements.setEnabled(enabled);
 		fOpenFileAction.setEnabled(enabled);
 		fFindOccurrences.setEnabled(enabled);
+		
+		fGotoMatchingBracketAction.setEnabled(enabled);
+		fPreviousSibling.setEnabled(enabled);
+		fNextSibling.setEnabled(enabled);
 	}
 }

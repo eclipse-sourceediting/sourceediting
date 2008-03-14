@@ -105,6 +105,6 @@ class SiblingNavigationAction extends TextEditorAction {
 	 * @see org.eclipse.ui.texteditor.TextEditorAction#update()
 	 */
 	public void update() {
-		setEnabled(true);
+
 	}
 }

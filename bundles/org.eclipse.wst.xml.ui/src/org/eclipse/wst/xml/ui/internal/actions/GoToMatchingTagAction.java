@@ -42,7 +42,7 @@ import org.w3c.dom.Node;
 
 /**
  * Moves the cursor to the end tag if it is in a start tag, and vice versa.
- * Also updates the matching tag annotation using the active editor.
+ * Also updates the matching tag annotation in the active editor.
  * 
  * @author nitin
  * 
@@ -55,12 +55,9 @@ class GoToMatchingTagAction extends TextEditorAction {
 		}
 	}
 
-	/**
-	 * 
-	 */
-	private static final String ANNOTATION_TYPE = "org.eclipse.wst.xml.ui.matching.tag";
+	private static final String ANNOTATION_TYPE = "org.eclipse.wst.xml.ui.matching.tag"; //$NON-NLS-1$
 	private ISelectionChangedListener fUpdateListener = null;
-	boolean DEBUG = false;
+	static final boolean DEBUG = false;
 
 	/**
 	 * @param bundle
@@ -77,36 +74,51 @@ class GoToMatchingTagAction extends TextEditorAction {
 		ITextEditor textEditor = getTextEditor();
 		if (textEditor == null) {
 			if (DEBUG) {
-				System.out.println("no editor");
+				System.out.println("no editor"); //$NON-NLS-1$
 			}
 			return;
 		}
 		IDocumentProvider documentProvider = textEditor.getDocumentProvider();
 		if (documentProvider == null) {
 			if (DEBUG) {
-				System.out.println("no document provider");
+				System.out.println("no document provider"); //$NON-NLS-1$
 			}
 			return;
 		}
 		IAnnotationModel annotationModel = documentProvider.getAnnotationModel(textEditor.getEditorInput());
 		if (annotationModel == null) {
 			if (DEBUG) {
-				System.out.println("no annotation model");
+				System.out.println("no annotation model"); //$NON-NLS-1$
 			}
 			return;
 		}
 
 		Iterator annotationIterator = annotationModel.getAnnotationIterator();
+		List oldAnnotations = new ArrayList();
 		while (annotationIterator.hasNext()) {
 			Annotation annotation = (Annotation) annotationIterator.next();
 			if (ANNOTATION_TYPE.equals(annotation.getType())) {
 				annotation.markDeleted(true);
-				annotationIterator.remove();
+				/**
+				 * Sometimes it is supported, sometime's it is not. Confusing.
+				 */
+				try {
+					annotationIterator.remove();
+				}
+				catch (UnsupportedOperationException e) {
+					oldAnnotations.add(annotation);
+				}
 				if (DEBUG) {
-					System.out.println("removed " + annotation);
+					System.out.println("removed " + annotation); //$NON-NLS-1$
 				}
 				if (!allMatching)
 					break;
+			}
+		}
+		if (!oldAnnotations.isEmpty()) {
+			int size = oldAnnotations.size();
+			for (int i = 0; i < size; i++) {
+				annotationModel.removeAnnotation((Annotation) oldAnnotations.get(i));
 			}
 		}
 	}
@@ -192,21 +204,21 @@ class GoToMatchingTagAction extends TextEditorAction {
 		ITextEditor textEditor = getTextEditor();
 		if (textEditor == null) {
 			if (DEBUG) {
-				System.out.println("no editor");
+				System.out.println("no editor"); //$NON-NLS-1$
 			}
 			return;
 		}
 		IDocumentProvider documentProvider = textEditor.getDocumentProvider();
 		if (documentProvider == null) {
 			if (DEBUG) {
-				System.out.println("no document provider");
+				System.out.println("no document provider"); //$NON-NLS-1$
 			}
 			return;
 		}
 		IAnnotationModel annotationModel = documentProvider.getAnnotationModel(textEditor.getEditorInput());
 		if (annotationModel == null || !(annotationModel instanceof IAnnotationModelExtension)) {
 			if (DEBUG) {
-				System.out.println("no annotation model");
+				System.out.println("no annotation model"); //$NON-NLS-1$
 			}
 			return;
 		}
@@ -218,7 +230,7 @@ class GoToMatchingTagAction extends TextEditorAction {
 			if (ANNOTATION_TYPE.equals(annotation.getType())) {
 				annotation.markDeleted(true);
 				if (DEBUG) {
-					System.out.println("removing " + annotation);
+					System.out.println("removing " + annotation); //$NON-NLS-1$
 				}
 				oldAnnotations.add(annotation);
 			}
@@ -270,14 +282,14 @@ class GoToMatchingTagAction extends TextEditorAction {
 					annotation.setType(ANNOTATION_TYPE);
 					newAnnotations.put(annotation, pStart);
 					if (DEBUG) {
-						System.out.println("adding " + annotation);
+						System.out.println("adding " + annotation); //$NON-NLS-1$
 					}
 
 					annotation = new Annotation(false);
 					annotation.setType(ANNOTATION_TYPE);
 					newAnnotations.put(annotation, pEnd);
 					if (DEBUG) {
-						System.out.println("adding " + annotation);
+						System.out.println("adding " + annotation); //$NON-NLS-1$
 					}
 				}
 			}
