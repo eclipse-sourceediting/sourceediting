@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.docbook.org/xsd/4.5/docbook.xsd">
+	<title>XSL Editing</title>
+	<para>
+      The XSL Tooling plugins extend the ability of the Web Standard Tools XML
+      editor.  This extension adds specific support and functionality for working
+      with and debugging XSL files. 
+    </para>
+	<section>
+		<title>Content Assist</title>
+		<para>
+		    XSL Tooling extends the existing content assistance support of the XML
+		    Editor to provide content assistance for several XSL namespace attributes.
+		    The content assistance provided covers the available XPath statements as
+		    defined in the XPath Tempalates preference page.
+		</para>
+		<para>
+			The elements and attributes that have content assist available are as follows:
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+				    <emphasis role="bold">template</emphasis> - The template element has several content assist
+				    options available for the <emphasis>match</emphasis>, <emphasis>name</emphasis>, and 
+				    <emphasis>mode</emphasis> attributes.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold">variable</emphasis> and <emphasis
+					role="bold">param</emphasis> - The variable and param elements have content assist
+					for xpath, axis, parmaters and variables that have already been predefined when using the optional
+					<emphasis>select</emphasis> attribute.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold">if</emphasis> and <emphasis role="bold">when</emphasis> - The
+					if and when elements have content assist for the <emphasis>test</emphasis> attribute.
+					This content assistance is available for all paramaters and variables that are in
+					scope, as well as any available xpath or axis statement.
+				</para>
+			</listitem>
+			<listitem>
+			    <para>
+			    	<emphasis role="bold">apply-template</emphasis> - The apply template has content
+			    	assistance for both the <emphasis>mode</emphasis> and <emphasis>select</emphasis>
+			    	attributes. 
+			    </para>
+			</listitem>
+		</itemizedlist>
+	</section>
+</chapter>
