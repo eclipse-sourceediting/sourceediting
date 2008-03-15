@@ -10,90 +10,70 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.validation.eclipse;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.validation.ValidationResult;
-import org.eclipse.wst.validation.ValidationState;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.validation.internal.provisional.core.IMessage;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator;
 import org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext;
+import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
+import org.eclipse.wst.xsl.core.XSLCorePlugin;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidator;
 
 public class Validator extends AbstractNestedValidator {
-	// protected HashMap xsdConfigurations = new HashMap();
-
-	// protected void setupValidation(NestedValidatorContext context) {
-	// XSLValidationConfiguration configuration = new
-	// XSLValidationConfiguration();
-	// xsdConfigurations.put(context, configuration);
-	//
-	// super.setupValidation(context);
-	// }
-
-	// protected void teardownValidation(NestedValidatorContext context) {
-	// xsdConfigurations.remove(context);
-	//
-	// super.teardownValidation(context);
-	// }
 
 	public Validator() {
 		System.out.println("Validator ctor");
 	}
 
+	private IDOMModel getModelForResource(IFile file) throws IOException,
+			CoreException {
+		IStructuredModel model = null;
+		IModelManager manager = StructuredModelManager.getModelManager();
+		model = manager.getModelForRead(file);
+		return model instanceof IDOMModel ? (IDOMModel) model : null;
+	}
+
 	public ValidationReport validate(String uri, InputStream inputstream,
 			NestedValidatorContext context) {
-		XSLValidator validator = XSLValidator.getInstance();
-
-		
-//		IStructuredModel model = null;
-//		IModelManager manager = StructuredModelManager.getModelManager();
-//
-//		try {
-//			model = manager.getModelForRead(file);
-//			// TODO.. HTML validator tries again to get a model a 2nd way
-//		}
-//		catch (Exception e) {
-//			// e.printStackTrace();
-//		}
-//
-//		return model instanceof IDOMModel ? (IDOMModel) model : null;
-
-		
-		
-		// XSLValidationConfiguration configuration =
-		// (XSLValidationConfiguration) xsdConfigurations
-		// .get(context);
-
 		ValidationReport valreport = null;
-
-		// valreport = validator.validate(uri, inputstream, configuration);
-
+		try {
+			IFile[] files = ResourcesPlugin.getWorkspace().getRoot()
+					.findFilesForLocationURI(new URI(uri));
+			if (files.length > 0) {
+				IFile xslFile = files[0];
+				IDOMModel model = getModelForResource(xslFile);
+				if (model != null)
+					valreport = XSLValidator.getInstance().validate(uri,
+							xslFile, model.getDocument());
+			}
+		} catch (URISyntaxException e) {
+			XSLCorePlugin.log(e);
+		} catch (IOException e) {
+			XSLCorePlugin.log(e);
+		} catch (CoreException e) {
+			XSLCorePlugin.log(e);
+		}
 		return valreport;
 	}
 
-	@Override
-	public ValidationResult validate(IResource resource, int kind,
-			ValidationState state, IProgressMonitor monitor) {
-		// TODO Auto-generated method stub
-		return super.validate(resource, kind, state, monitor);
+	// TODO whats this for?
+	protected void addInfoToMessage(ValidationMessage validationMessage,
+			IMessage message) {
+		String key = validationMessage.getKey();
+		message.setAttribute(COLUMN_NUMBER_ATTRIBUTE, new Integer(
+				validationMessage.getColumnNumber()));
+		message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "hello");
+		message.setAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE, "world");
 	}
-
-	// protected void addInfoToMessage(ValidationMessage validationMessage,
-	// IMessage message) {
-	// String key = validationMessage.getKey();
-	// if (key != null) {
-	// XSLMessageInfoHelper messageInfoHelper = new XSLMessageInfoHelper();
-	// String[] messageInfo = messageInfoHelper.createMessageInfo(key,
-	// validationMessage.getMessage());
-	//
-	// message.setAttribute(COLUMN_NUMBER_ATTRIBUTE, new Integer(
-	// validationMessage.getColumnNumber()));
-	// message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE,
-	// messageInfo[0]);
-	// message.setAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE,
-	// messageInfo[1]);
-	// }
-	// }
 }

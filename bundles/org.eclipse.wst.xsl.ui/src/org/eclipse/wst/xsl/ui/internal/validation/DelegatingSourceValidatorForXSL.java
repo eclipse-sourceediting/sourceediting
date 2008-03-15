@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.validation;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.validation.ValidationFramework;
 import org.eclipse.wst.validation.Validator;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
@@ -24,7 +23,7 @@ public class DelegatingSourceValidatorForXSL extends DelegatingSourceValidator {
 	private final static String Id = "org.eclipse.wst.xsl.core.xsl";
 
 	private Validator _validator;
-	
+
 	/**
 	 * Constructor
 	 */
@@ -42,14 +41,5 @@ public class DelegatingSourceValidatorForXSL extends DelegatingSourceValidator {
 		if (v == null)
 			return null;
 		return v.asIValidator();
-	}
-
-	protected boolean isDelegateValidatorEnabled(IFile file) {
-		Validator v = getValidator();
-		if (v == null)
-			return false;
-		if (!v.shouldValidate(file, false, false))
-			return false;
-		return v.isBuildValidation() || v.isManualValidation();
 	}
 }
