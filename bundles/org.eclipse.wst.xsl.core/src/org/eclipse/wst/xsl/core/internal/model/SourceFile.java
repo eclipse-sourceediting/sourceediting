@@ -23,16 +23,13 @@ public class SourceFile
 	private static final int IMPORT = 2;
 	
 	final IFile file;
-	final Map<IFile, SourceFile> sourceFiles;
 	final List<Include> includes = new ArrayList<Include>();
 	final List<Template> namedTemplates = new ArrayList<Template>();
 	final List<Template> calledTemplates = new ArrayList<Template>();
 
-	public SourceFile(Map<IFile, SourceFile> sourceFiles, IFile file)
+	public SourceFile(IFile file)
 	{
 		this.file = file;
-		this.sourceFiles = sourceFiles;
-		sourceFiles.put(file,this);
 	}
 
 	public void addInclude(Include include)
@@ -59,12 +56,7 @@ public class SourceFile
 	{
 		return file;
 	}
-
-	public Map<IFile, SourceFile> getSourceFiles()
-	{
-		return sourceFiles;
-	}
-
+	
 	public List<Include> getIncludes()
 	{
 		return includes;
@@ -114,11 +106,11 @@ public class SourceFile
 				}
 			}			
 		}
-		for (Include include : includes)
+	/*	for (Include include : includes)
 		{
 			// for includes, just add all templates
 			SourceFile sf = include.getSourceFile();
 			sf.calculateTemplates(templateMap,include.getType());
-		}		
+		}	*/	
 	}
 }

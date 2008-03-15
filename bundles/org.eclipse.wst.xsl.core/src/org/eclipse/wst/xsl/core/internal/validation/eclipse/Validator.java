@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.validation.eclipse;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -18,11 +17,7 @@ import java.net.URISyntaxException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator;
 import org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
@@ -36,30 +31,15 @@ public class Validator extends AbstractNestedValidator {
 		System.out.println("Validator ctor");
 	}
 
-	private IDOMModel getModelForResource(IFile file) throws IOException,
-			CoreException {
-		IStructuredModel model = null;
-		IModelManager manager = StructuredModelManager.getModelManager();
-		model = manager.getModelForRead(file);
-		return model instanceof IDOMModel ? (IDOMModel) model : null;
-	}
-
-	public ValidationReport validate(String uri, InputStream inputstream,
-			NestedValidatorContext context) {
+	public ValidationReport validate(String uri, InputStream inputstream, NestedValidatorContext context) {
 		ValidationReport valreport = null;
 		try {
-			IFile[] files = ResourcesPlugin.getWorkspace().getRoot()
-					.findFilesForLocationURI(new URI(uri));
+			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(new URI(uri));
 			if (files.length > 0) {
 				IFile xslFile = files[0];
-				IDOMModel model = getModelForResource(xslFile);
-				if (model != null)
-					valreport = XSLValidator.getInstance().validate(uri,
-							xslFile, model.getDocument());
+				valreport = XSLValidator.getInstance().validate(uri, xslFile);
 			}
 		} catch (URISyntaxException e) {
-			XSLCorePlugin.log(e);
-		} catch (IOException e) {
 			XSLCorePlugin.log(e);
 		} catch (CoreException e) {
 			XSLCorePlugin.log(e);
@@ -67,12 +47,10 @@ public class Validator extends AbstractNestedValidator {
 		return valreport;
 	}
 
-	// TODO whats this for?
-	protected void addInfoToMessage(ValidationMessage validationMessage,
-			IMessage message) {
+	// TODO which attributes to set
+	protected void addInfoToMessage(ValidationMessage validationMessage, IMessage message) {
 		String key = validationMessage.getKey();
-		message.setAttribute(COLUMN_NUMBER_ATTRIBUTE, new Integer(
-				validationMessage.getColumnNumber()));
+		message.setAttribute(COLUMN_NUMBER_ATTRIBUTE, new Integer(validationMessage.getColumnNumber()));
 		message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "hello");
 		message.setAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE, "world");
 	}

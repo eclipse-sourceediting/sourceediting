@@ -32,11 +32,10 @@ public class Include extends SourceArtifact
 		return type;
 	}
 	
-	public SourceFile getSourceFile()
+/*	public SourceFile getSourceFile()
 	{
 		// TODO this depends on the project settings and URIResolver
-		// TODO if we are in a Java src folder, and we are using RELATIVE file:// as the href, then we conclude its an error! 
 		IFile includedFile = parentSourceFile.getFile().getProject().getFile(new Path("xsl/"+href));
 		return parentSourceFile.sourceFiles.get(includedFile);
-	}
+	} */
 }
