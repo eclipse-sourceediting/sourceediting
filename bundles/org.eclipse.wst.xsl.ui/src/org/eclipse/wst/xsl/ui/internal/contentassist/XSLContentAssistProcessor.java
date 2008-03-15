@@ -48,7 +48,7 @@ import org.w3c.dom.NodeList;
 /**
  * The XSL Content Assist Processor provides content assistance for various attributes
  * values within the XSL Editor.   This includes support for xpaths on select statements
- * as well as on
+ * as well as on test and match attributes.
  * @author David Carver
  *
  */
