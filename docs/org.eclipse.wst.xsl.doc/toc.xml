@@ -1,10 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?NLS TYPE="org.eclipse.help.toc"?>
-<toc label="XSL Tooling" topic="html/toc.html">
-   <anchor id="XSLBegin"/>
-   <topic href="html/preferences/xslpreferences.html" label="XSL Preferences">
-      <anchor id="xslpreferences"/>
-      <topic href="html/preferences/xsloutputproperties.html" label="Output Properties"/>
-      <topic href="html/preferences/xslprocessors.html" label="XSL Processors"/>
-   </topic>
+<toc topic="html/preferences/xslpreferences.html" label="XSL Tooling Preferences">
+	<topic href="html/preferences/xslpreferences.html#XSLFeatures"
+		label="Features"></topic>
+	<topic href="html/preferences/xslprocessors.html" label="Installed Processors"></topic>
+	<topic href="html/preferences/xsloutputproperties.html" label="Output Properties"></topic>
 </toc>
