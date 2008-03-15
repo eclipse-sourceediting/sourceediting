@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter id="XSLPreferences" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://www.docbook.org/xsd/4.5/docbook.xsd">
+	<?dbhtml filename="xslpreferences.html" ?>
 	<title>XSL Tooling Preferences</title>
 	<para>
 		The XSL Preference pages has several sub sections.  Each of these allow for configuration
@@ -10,11 +11,12 @@
    </para>
 	<mediaobject>
 		<imageobject>
-			<imagedata align="center" fileref="images/preferences/xslpreferences.png"
+			<imagedata align="center" fileref="../images/preferences/xslpreferences.png"
 				format="PNG" />
 		</imageobject>
 	</mediaobject>
 	<section id="XSLFeatures">
+		<?dbhtml filename="xslfeatures.html" ?>
 		<title>Features</title>
 		<para>
    			The XSL Features preference page allows for the configuration of features for a particular
@@ -25,7 +27,7 @@
 		<mediaobject>
 			<imageobject>
 				<imagedata align="center" format="PNG"
-					fileref="images/preferences/xslfeatures.png" />
+					fileref="../images/preferences/xslfeatures.png" />
 			</imageobject>
 		</mediaobject>
 		<para>
@@ -41,6 +43,7 @@
    		</para>
 	</section>
 	<section id="XSLProcessors">
+		<?dbhtml filename="xslprocessors.html" ?>
 		<title>Installed Processors</title>
 		<para>
   			The installed processors page lets you pick which of the installed XSLT processors will be used
@@ -49,11 +52,12 @@
       	</para>
       	<mediaobject>
       	   <imageobject>
-      	   		<imagedata align="center" fileref="images/preferences/xsl_InstalledProcessors.png" format="PNG"/>
+      	   		<imagedata align="center" fileref="../images/preferences/xsl_InstalledProcessors.png" format="PNG"/>
       	   </imageobject>
       	</mediaobject>
 	</section>
 	<section id="XSLOutputProperties">
+		<?dbhtml filename="xsloutputproperties.html" ?>
 		<title>Output Properties</title>
 		<para>
 			The various xsl processors support a wide variety of processor specific tweaks.  However there
@@ -63,7 +67,7 @@
 		</para>
 		<mediaobject>
 		    <imageobject>
-		    	<imagedata align="center" fileref="images/preferences/xsl_outputproperties.png" format="PNG"/>
+		    	<imagedata align="center" fileref="../images/preferences/xsl_outputproperties.png" format="PNG"/>
 		    </imageobject>
 		</mediaobject>
 		<para>

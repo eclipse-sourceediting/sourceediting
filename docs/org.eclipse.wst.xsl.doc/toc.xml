@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
-
-<toc label="Sample Table of Contents" topic="html/toc.html">
-   <topic label="Getting Started">
-      <anchor id="gettingstarted"/>
-   </topic>
-   <topic label="Reference">
-      <anchor id="reference"/>
-   </topic>
-   <topic label="Samples">
-      <anchor id="samples"/>
+<toc label="XSL Tooling" topic="html/toc.html">
+   <anchor id="XSLBegin"/>
+   <topic href="html/preferences/xslpreferences.html" label="XSL Preferences">
+      <anchor id="xslpreferences"/>
+      <topic href="html/preferences/xsloutputproperties.html" label="Output Properties"/>
+      <topic href="html/preferences/xslprocessors.html" label="XSL Processors"/>
    </topic>
 </toc>
