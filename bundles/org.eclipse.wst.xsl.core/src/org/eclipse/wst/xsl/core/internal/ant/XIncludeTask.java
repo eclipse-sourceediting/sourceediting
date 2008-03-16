@@ -20,27 +20,40 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.eclipse.wst.xsl.core.internal.xinclude.XIncluder;
 
+/**
+ * TODO: Add Java Doc
+ * @author Lars Vogel
+ *
+ */
 public class XIncludeTask extends Task {
 	private String inFile;
 
 	private String outFile;
 
+	/**
+	 * TODO: Add JavaDoc 
+	 * @param inFile
+	 */
 	public void setIn(String inFile) {
-		log("Setting the output File to: " + inFile, Project.MSG_VERBOSE);
+		log(Messages.XIncludeTask_0 + inFile, Project.MSG_VERBOSE);
 		this.inFile = inFile;
 	}
 
+	/**
+	 * TODO: Add JavaDoc
+	 * @param outFile
+	 */
 	public void setOut(String outFile) {
-		log("Setting the output File to: " + outFile, Project.MSG_VERBOSE);
+		log(Messages.XIncludeTask_1 + outFile, Project.MSG_VERBOSE);
 		this.outFile = outFile;
 	}
 
 	public void execute() {
 		validate();
-		log("Executing the XIncludeTask", Project.MSG_VERBOSE);
+		log(Messages.XIncludeTask_2, Project.MSG_VERBOSE);
 		File file = new File(inFile);
 		if (!file.exists()) {
-			throw new BuildException("Specified Inputfile does not exists "
+			throw new BuildException(Messages.XIncludeTask_3
 					+ inFile);
 		}
 		// We will check if the file exists, if not we will try to create the
@@ -48,11 +61,11 @@ public class XIncludeTask extends Task {
 		File fileout = new File(outFile);
 		File dir = new File(fileout.getParent());
 		if (!dir.exists()) {
-			log("Creating the output directory " + dir.getAbsolutePath());
+			log(Messages.XIncludeTask_4 + dir.getAbsolutePath());
 
 			Boolean success = (new File(dir.getAbsolutePath())).mkdirs();
 			if (!success) {
-				throw new BuildException("Could not create outputfile"
+				throw new BuildException(Messages.XIncludeTask_5
 						+ outFile);
 			}
 		}
@@ -60,13 +73,13 @@ public class XIncludeTask extends Task {
 		// Assumption that all the included files are part of the input file
 		// directory
 		if (checkmodified(inFile, outFile)) {
-			log("Changes detected. Creating a new output file",
+			log(Messages.XIncludeTask_6,
 					Project.MSG_INFO);
 			XIncluder la = new XIncluder();
 			try {
 				la.extractXMLFile(inFile, outFile);
 			} catch (Exception e) {
-				throw new BuildException("Problems with accessing the files."
+				throw new BuildException(Messages.XIncludeTask_7
 						+ e.getMessage());
 			}
 		}
@@ -86,6 +99,12 @@ public class XIncludeTask extends Task {
 		return false;
 	}
 
+	/**
+	 * TODO: Add JavaDoc
+	 * @param directory
+	 * @param recurse
+	 * @return
+	 */
 	public Collection<File> listFiles(File directory, boolean recurse) {
 		// List of files / directories
 		Vector<File> files = new Vector<File>();
@@ -111,10 +130,10 @@ public class XIncludeTask extends Task {
 
 	private void validate() {
 		if (inFile == null) {
-			throw new BuildException("Please specify inputfile ");
+			throw new BuildException(Messages.XIncludeTask_8);
 		}
 		if (outFile == null) {
-			throw new BuildException("Please specify outputfile ");
+			throw new BuildException(Messages.XIncludeTask_9);
 		}
 	}
 }

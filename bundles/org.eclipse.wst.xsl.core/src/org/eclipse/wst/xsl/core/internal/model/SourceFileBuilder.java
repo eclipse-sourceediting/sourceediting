@@ -25,35 +25,49 @@ import org.eclipse.wst.xsl.core.XSLCorePlugin;
 import org.w3c.dom.Attr;
 import org.w3c.dom.NodeList;
 
+/**
+ * TODO: Add Javadoc
+ * @author Doug Satchwell
+ *
+ */
 public class SourceFileBuilder {
 	private XPathExpression xpathInclude;
 	private XPathExpression xpathImport;
 	private XPathExpression xpathTemplate;
 	private XPathExpression xpathCallTemplate;
 
+	/**
+	 * TODO: Add Javadoc
+	 */
 	public SourceFileBuilder() {
 		XPath xpath = XPathFactory.newInstance().newXPath();
 		xpath.setNamespaceContext(new NamespaceContext() {
 
-			@Override
+			/**
+			 * TODO: Add Javadoc
+			 */
 			public String getNamespaceURI(String arg0) {
-				if ("xsl".equals(arg0))
+				if ("xsl".equals(arg0)) //$NON-NLS-1$
 					return XSLCorePlugin.XSLT_NS;
 				return null;
 			}
 
-			@Override
+			/**
+			 * TODO: Add Javadoc
+			 */
 			public String getPrefix(String arg0) {
 				if (XSLCorePlugin.XSLT_NS.equals(arg0))
-					return "xsl";
+					return "xsl"; //$NON-NLS-1$
 				return null;
 			}
 
-			@Override
+			/**
+			 * TODO: Add Javadoc
+			 */
 			public Iterator getPrefixes(String arg0) {
 				if (XSLCorePlugin.XSLT_NS.equals(arg0)) {
 					List list = new ArrayList();
-					list.add("xsl");
+					list.add("xsl"); //$NON-NLS-1$
 					return list.iterator();
 				}
 				return null;
@@ -61,17 +75,17 @@ public class SourceFileBuilder {
 
 		});
 		try {
-			xpathInclude = xpath.compile("/xsl:stylesheet/xsl:include");
-			xpathImport = xpath.compile("/xsl:stylesheet/xsl:import");
-			xpathTemplate = xpath.compile("/xsl:stylesheet/xsl:template");
-			xpathCallTemplate = xpath.compile("/xsl:stylesheet/xsl:template//xsl:call-template");
+			xpathInclude = xpath.compile("/xsl:stylesheet/xsl:include"); //$NON-NLS-1$
+			xpathImport = xpath.compile("/xsl:stylesheet/xsl:import"); //$NON-NLS-1$
+			xpathTemplate = xpath.compile("/xsl:stylesheet/xsl:template"); //$NON-NLS-1$
+			xpathCallTemplate = xpath.compile("/xsl:stylesheet/xsl:template//xsl:call-template"); //$NON-NLS-1$
 		} catch (XPathExpressionException e) {
 			XSLCorePlugin.log(e);
 		}
 	}
 
 	/**
-	 * 
+	 * TODO: Add Javadoc
 	 * @param file
 	 * @return a source file, or null if creation failed
 	 */
@@ -102,7 +116,7 @@ public class SourceFileBuilder {
 			NodeList includeNodes = (NodeList) xpathInclude.evaluate(document,XPathConstants.NODESET);
 			for (int i = 0; i < includeNodes.getLength(); i++) {
 				IDOMNode node = (IDOMNode) includeNodes.item(i);
-				Attr att = (Attr) node.getAttributes().getNamedItem("href");
+				Attr att = (Attr) node.getAttributes().getNamedItem("href"); //$NON-NLS-1$
 				String href = att == null ? null : att.getValue();
 				Include inc = new Include(sf, href, Include.INCLUDE);
 				configure(node, inc, document.getStructuredDocument());
@@ -111,7 +125,7 @@ public class SourceFileBuilder {
 			NodeList importNodes = (NodeList) xpathImport.evaluate(document,XPathConstants.NODESET);
 			for (int i = 0; i < importNodes.getLength(); i++) {
 				IDOMNode node = (IDOMNode) importNodes.item(i);
-				Attr att = (Attr) node.getAttributes().getNamedItem("href");
+				Attr att = (Attr) node.getAttributes().getNamedItem("href"); //$NON-NLS-1$
 				String href = att == null ? null : att.getValue();
 				Include inc = new Include(sf, href, Include.IMPORT);
 				configure(node, inc, document.getStructuredDocument());
@@ -120,7 +134,7 @@ public class SourceFileBuilder {
 			NodeList templateNodes = (NodeList) xpathTemplate.evaluate(document, XPathConstants.NODESET);
 			for (int i = 0; i < templateNodes.getLength(); i++) {
 				IDOMNode node = (IDOMNode) templateNodes.item(i);
-				Attr att = (Attr) node.getAttributes().getNamedItem("name");
+				Attr att = (Attr) node.getAttributes().getNamedItem("name"); //$NON-NLS-1$
 				String name = att == null ? null : att.getValue();
 				if (name != null) {
 					Template template = new Template(sf, name);

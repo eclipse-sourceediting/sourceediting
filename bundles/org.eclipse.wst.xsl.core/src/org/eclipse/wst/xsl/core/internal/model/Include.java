@@ -13,13 +13,30 @@ package org.eclipse.wst.xsl.core.internal.model;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
 
+/**
+ * @author Doug Satchwell
+ *
+ */
 public class Include extends SourceArtifact
 {
+	/**
+	 * TODO: Add JavaDoc
+	 */
 	public static final int INCLUDE = 1;
+	
+	/**
+	 * TODO: Add JavaDoc
+	 */
 	public static final int IMPORT = 2;
 	private final String href;
 	private final int type;
 	
+	/**
+	 * TODO: Add JavaDoc
+	 * @param parentSourceFile
+	 * @param href
+	 * @param type
+	 */
 	public Include(SourceFile parentSourceFile, String href, int type)
 	{
 		super(parentSourceFile);
@@ -27,6 +44,10 @@ public class Include extends SourceArtifact
 		this.type = type;
 	}
 	
+	/**
+	 * TODO: Add Javadoc
+	 * @return
+	 */
 	public int getType()
 	{
 		return type;

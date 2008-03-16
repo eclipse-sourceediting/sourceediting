@@ -17,13 +17,25 @@ import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.model.SourceFile;
 
+/**
+ * TODO: Add Javadoc
+ * @author Doug Satchwell
+ *
+ */
 public class XSLValidator {
 	private static XSLValidator instance;
 
 	private XSLValidator() {
-		System.out.println("XSLValidator ctor");
+		System.out.println(Messages.XSLValidator_0);
 	}
 
+	/**
+	 * TODO: Add Javadoc
+	 * @param uri
+	 * @param xslFile
+	 * @return
+	 * @throws CoreException
+	 */
 	public ValidationReport validate(String uri, IFile xslFile) throws CoreException {
 		SourceFile sourceFile = XSLCore.getInstance().buildSourceFile(xslFile);
 		ValidationInfo valinfo = new ValidationInfo(uri);
@@ -146,7 +158,12 @@ public class XSLValidator {
 		}
 		return found;
 	}	
-*/	
+*/
+	
+	/**
+	 * TODO: Add Javadoc
+	 * @return
+	 */
 	public static XSLValidator getInstance() {
 		if (instance == null)
 			instance = new XSLValidator();

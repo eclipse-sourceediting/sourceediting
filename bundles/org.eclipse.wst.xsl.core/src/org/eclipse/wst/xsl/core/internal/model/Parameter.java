@@ -10,12 +10,23 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.model;
 
+/**
+ * TODO: Add JavaDoc
+ * @author Dough Satchwell
+ *
+ */
 public class Parameter extends SourceArtifact
 {
 	final String name;
 	final String select;
 	boolean value;
 
+	/**
+	 * TODO: Add JavaDoc
+	 * @param sf
+	 * @param name
+	 * @param select
+	 */
 	public Parameter(SourceFile sf, String name, String select)
 	{
 		super(sf);
@@ -24,21 +35,37 @@ public class Parameter extends SourceArtifact
 		value = select != null;
 	}
 
+	/**
+	 * TODO: Add JavaDoc
+	 * @param b
+	 */
 	public void setValue(boolean b)
 	{
 		value = b;
 	}
 
+	/**
+	 * TODO: add JavaDoc
+	 * @return
+	 */
 	public String getName()
 	{
 		return name;
 	}
 
+	/**
+	 * TODO: Add JavaDoc
+	 * @return
+	 */
 	public String getSelect()
 	{
 		return select;
 	}
 
+	/**
+	 * TODO: Add JavaDoc
+	 * @return
+	 */
 	public boolean isValue()
 	{
 		return value;

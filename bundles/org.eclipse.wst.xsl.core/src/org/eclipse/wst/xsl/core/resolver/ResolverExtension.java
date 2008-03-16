@@ -31,6 +31,11 @@ import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+/**
+ * TODO: Javadoc
+ * @author Jesper Steen Moeller
+ *
+ */
 public class ResolverExtension implements URIResolverExtension {
 	
 	private static final Double DEFAULT_XSLT_VERSION = 1.0;
@@ -43,6 +48,9 @@ public class ResolverExtension implements URIResolverExtension {
 	private static final String XSLT_TEMPLATE = "template"; //$NON-NLS-1$
 	private static final String XSLT_VERSION = "version"; //$NON-NLS-1$
 	
+	/**
+	 * TODO: Add Javadoc
+	 */
 	public ResolverExtension() {		
 	}
 

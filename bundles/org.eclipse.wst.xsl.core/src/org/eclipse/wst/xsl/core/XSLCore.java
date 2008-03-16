@@ -17,6 +17,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.xsl.core.internal.model.SourceFile;
 import org.eclipse.wst.xsl.core.internal.model.SourceFileBuilder;
 
+/**
+ * TODO: Add JavaDoc
+ */
 public class XSLCore
 {
 	private static XSLCore instance; 
@@ -52,7 +55,11 @@ public class XSLCore
 		return sourceFile;
 	}
 	
-	public static synchronized XSLCore getInstance()
+	/**
+	 * TODO: Add JavaDoc
+	 * @return An Instances of XSLCore
+	 */
+public static synchronized XSLCore getInstance()
 	{
 		if (instance == null)
 			instance = new XSLCore();

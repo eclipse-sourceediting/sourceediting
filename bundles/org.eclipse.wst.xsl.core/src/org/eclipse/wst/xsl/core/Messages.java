@@ -6,22 +6,36 @@
  * 
  * Contributors: 
  * IBM - Initial API and implementation
- * Jesper Steen Møller - adapted from org.eclipse.core.internal.content
+ * Jesper Steen Mï¿½ller - adapted from org.eclipse.core.internal.content
  **********************************************************************/
 package org.eclipse.wst.xsl.core;
 
 import org.eclipse.osgi.util.NLS;
 
+/**
+ * @author Jesper Steen
+ *
+ */
 // Runtime plugin message catalog
+
 public class Messages extends NLS {
 
 	private static final String BUNDLE_NAME = "org.eclipse.wst.xsl.core.messages"; //$NON-NLS-1$
 
+	/**
+	 * TODO: Add JavaDoc
+	 */
 	// Content type manager
 	public static String XSLCorePlugin_parserConfiguration;
 
+	/**
+	 * TODO: Add JavaDoc
+	 */
 	public static String XSLCorePlugin_badInitializationData;
 
+	/**
+	 * TODO: Add JavaDoc
+	 */
 	public static String XSLCorePlugin_coreError;
 
 	static {
@@ -29,6 +43,9 @@ public class Messages extends NLS {
 		reloadMessages();
 	}
 
+	/**
+	 * TODO: Add JavaDoc
+	 */
 	public static void reloadMessages() {
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}

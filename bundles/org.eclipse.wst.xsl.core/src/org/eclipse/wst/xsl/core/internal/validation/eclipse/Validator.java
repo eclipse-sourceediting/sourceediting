@@ -25,8 +25,16 @@ import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.eclipse.wst.xsl.core.XSLCorePlugin;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidator;
 
+/**
+ * TODO: Add Javadoc
+ * @author Doug Satchwell
+ *
+ */
 public class Validator extends AbstractNestedValidator {
 
+	/**
+	 * TODO: Add Javadoc
+	 */
 	public Validator() {
 		System.out.println("Validator ctor");
 	}

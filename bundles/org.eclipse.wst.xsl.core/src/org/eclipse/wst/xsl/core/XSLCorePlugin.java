@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2008 Jesper Steen Møller and others
+ * Copyright (c) 2008 Jesper Steen Mï¿½ller and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- * Jesper Steen Møller - XSL core plugin
+ * Jesper Steen Mï¿½ller - XSL core plugin
  *******************************************************************************/
 
 package org.eclipse.wst.xsl.core;
@@ -26,8 +26,14 @@ import org.osgi.util.tracker.ServiceTracker;
 public class XSLCorePlugin extends Plugin {
 
 	// The plug-in ID
+	/**
+	 * TODO: Add JavaDoc
+	 */
 	public static final String PLUGIN_ID = "org.eclipse.wst.xsl.core"; //$NON-NLS-1$
 
+	/**
+	 * TODO: Add JavaDoc
+	 */
 	public static final String XSLT_NS = "http://www.w3.org/1999/XSL/Transform"; //$NON-NLS-1$
 	
 	// The shared instance
@@ -71,9 +77,10 @@ public class XSLCorePlugin extends Plugin {
 		return plugin;
 	}
 	
-	/*
+	/**
 	 * Return the registered SAX parser factory or null if one
-	 * does not exist.
+	 * does not exist.	 * @return
+	 * @return returns a SAXParserFactory
 	 */
 	public SAXParserFactory getFactory() {
 		if (parserTracker == null) {

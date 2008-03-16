@@ -8,6 +8,7 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
 		<accessrules>
 			<accessrule kind="accessible" pattern="*org/eclipse/wst/xsl/**"/>
+			<accessrule kind="accessible" pattern="**/validation/**"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>

@@ -18,7 +18,14 @@ package org.eclipse.wst.xsl.core.internal.validation;
  * specific parsers.)
  */
 public class XSLValidationConfiguration {
+	/**
+	 * TODO: Add Java Doc
+	 */
 	public static String HONOUR_ALL_SCHEMA_LOCATIONS = "HONOUR_ALL_SCHEMA_LOCATIONS"; //$NON-NLS-1$
+	
+	/**
+	 * TODO: Add Javadoc
+	 */
 	public static String FULL_SCHEMA_CONFORMANCE = "FULL_SCHEMA_CONFORMANCE"; //$NON-NLS-1$
 	private boolean honour_all_schema_locations = false;
 	private boolean fullSchemaConformance = true;
@@ -30,8 +37,7 @@ public class XSLValidationConfiguration {
 	 *            The feature to set.
 	 * @param value
 	 *            The value to set for the feature.
-	 * @throws An
-	 *             exception is thrown if the feature is not recognized.
+	 * @throws Exception An exception is thrown if the feature is not recognized.
 	 */
 	public void setFeature(String feature, boolean value) throws Exception {
 		if (HONOUR_ALL_SCHEMA_LOCATIONS.equals(feature))
@@ -50,8 +56,7 @@ public class XSLValidationConfiguration {
 	 * @param feature
 	 *            The feature for which to retrieve the value.
 	 * @return The feature's value, true or false.
-	 * @throws An
-	 *             exception is thrown if the feature is not recognized.
+	 * @throws Exception An exception is thrown if the feature is not recognized.
 	 */
 	public boolean getFeature(String feature) throws Exception {
 		if (HONOUR_ALL_SCHEMA_LOCATIONS.equals(feature))

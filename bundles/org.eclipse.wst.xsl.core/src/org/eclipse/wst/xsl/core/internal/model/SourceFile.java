@@ -17,6 +17,11 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 
+/**
+ * TODO: Add Javadoc
+ * @author Doug Satchwell
+ *
+ */
 public class SourceFile
 {
 	private static final int INCLUDE = 1;
@@ -27,51 +32,90 @@ public class SourceFile
 	final List<Template> namedTemplates = new ArrayList<Template>();
 	final List<Template> calledTemplates = new ArrayList<Template>();
 
+	/**
+	 * TODO: Add Javadoc
+	 * @param file
+	 */
 	public SourceFile(IFile file)
 	{
 		this.file = file;
 	}
 
+	/**
+	 * TODO: Add Javadoc
+	 * @param include
+	 */
 	public void addInclude(Include include)
 	{
 		includes.add(include);
 	}
 
+	/**
+	 * TODO: Add Javadoc
+	 * @param include
+	 */
 	public void addImport(Include include)
 	{
 		includes.add(include);
 	}
 
+	/**
+	 * TODO: Add Javadoc
+	 * @param template
+	 */
 	public void addNamedTemplate(Template template)
 	{
 		namedTemplates.add(template);
 	}
 
+	/**
+	 * TODO: Add Javadoc
+	 * @param template
+	 */
 	public void addCalledTemplate(Template template)
 	{
 		calledTemplates.add(template);
 	}
 	
+	/**
+	 * TODO: Add Javadoc
+	 * @return
+	 */
 	public IFile getFile()
 	{
 		return file;
 	}
 	
+	/**
+	 * TODO: Add Javadoc
+	 * @return
+	 */
 	public List<Include> getIncludes()
 	{
 		return includes;
 	}
 
+	/**
+	 * @return
+	 */
 	public List<Template> getNamedTemplates()
 	{
 		return namedTemplates;
 	}
 
+	/**
+	 * TODO: Add Javadoc
+	 * @return
+	 */
 	public List<Template> getCalledTemplates()
 	{
 		return calledTemplates;
 	}
 
+	/**
+	 * TODO: Add Javadoc
+	 * @return
+	 */
 	public Map<String,List<Template>> calculateTemplates()
 	{
 		Map<String,List<Template>> templateMap = new HashMap<String,List<Template>>();

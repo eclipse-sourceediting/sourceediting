@@ -25,8 +25,19 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 
+/**
+ * TODO: Add Javadoc
+ * @author Lars Vogel
+ *
+ */
 public class XIncluder {
 
+	/**
+	 * TODO: Add Javadoc
+	 * @param in
+	 * @param out
+	 * @throws Exception
+	 */
 	public void extractXMLFile(String in, String out) throws Exception {
 		Document document = null;
 		File file;
@@ -46,9 +57,9 @@ public class XIncluder {
 		// TODO: This should be read from the input file and not hardcoded
 		// here
 		transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC,
-				"-//OASIS//DTD DocBook XML V4.5//EN");
+				"-//OASIS//DTD DocBook XML V4.5//EN"); //$NON-NLS-1$
 		transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,
-				"../../docbook-xml-4.5/docbookx.dtd");
+				"../../docbook-xml-4.5/docbookx.dtd"); //$NON-NLS-1$
 
 		DOMSource source = new DOMSource(document);
 		FileOutputStream os = new FileOutputStream(new File(out));

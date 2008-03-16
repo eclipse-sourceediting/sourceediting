@@ -6,7 +6,7 @@
  * 
  * Contributors: 
  * IBM - Initial API and implementation
- * Jesper Steen Møller - adapted from org.eclipse.core.internal.content
+ * Jesper Steen Mï¿½ller - adapted from org.eclipse.core.internal.content
  **********************************************************************/
 
 package org.eclipse.wst.xsl.core.resolver;
@@ -59,6 +59,9 @@ public final class XSLVersionHandler extends DefaultHandler implements LexicalHa
 	 */
 	private String versionAttribute = null;
 
+	/**
+	 * TODO: Add Javadoc
+	 */
 	public XSLVersionHandler() {
 	}
 
@@ -133,10 +136,22 @@ public final class XSLVersionHandler extends DefaultHandler implements LexicalHa
 		// Not interested.
 	}
 
+	/**
+	 * TODO: Add Javadoc
+	 * @return
+	 */
 	public String getVersionAttribute() {
 		return versionAttribute;
 	}
 
+	/**
+	 * TODO: Add Javadoc
+	 * @param contents
+	 * @return
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 * @throws SAXException
+	 */
 	public boolean parseContents(InputSource contents) throws IOException, ParserConfigurationException, SAXException {
 		// Parse the file into we have what we need (or an error occurs).
 		try {
@@ -191,7 +206,7 @@ public final class XSLVersionHandler extends DefaultHandler implements LexicalHa
 		if (uri.equals(XSLCorePlugin.XSLT_NS) && (XSLT_TEMPLATE.equals(elementName) || XSLT_STYLESHEET.equals(elementName))) {
 			versionAttribute = attributes.getValue(XSLT_VERSION);
 		} else {
-			versionAttribute = "";
+			versionAttribute = ""; //$NON-NLS-1$
 		}
 		throw new StopParsingException();
 	}
