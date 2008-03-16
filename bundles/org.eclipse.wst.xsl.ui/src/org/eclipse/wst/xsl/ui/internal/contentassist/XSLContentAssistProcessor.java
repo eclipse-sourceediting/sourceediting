@@ -311,7 +311,7 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 	
 	
 	protected void init() {
-		getPreferenceStore().addPropertyChangeListener(this);
+		super.getPreferenceStore().addPropertyChangeListener(this);
 		reinit();
 	}	
 	
@@ -329,10 +329,10 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 	
 	protected void reinit() {
 		String key = XMLUIPreferenceNames.AUTO_PROPOSE;
-		boolean doAuto = getPreferenceStore().getBoolean(key);
+		boolean doAuto = super.getPreferenceStore().getBoolean(key);
 		if (doAuto) {
 			key = XMLUIPreferenceNames.AUTO_PROPOSE_CODE;
-			completionProposalAutoActivationCharacters = getPreferenceStore().getString(key).toCharArray();
+			completionProposalAutoActivationCharacters = super.getPreferenceStore().getString(key).toCharArray();
 		}
 		else {
 			completionProposalAutoActivationCharacters = null;
@@ -342,5 +342,5 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 	private IStructuredModel getEditorModel(IEditorPart editor)
 	{
 		return (IStructuredModel) editor.getAdapter(IStructuredModel.class);
-	}	
+	}
 }
