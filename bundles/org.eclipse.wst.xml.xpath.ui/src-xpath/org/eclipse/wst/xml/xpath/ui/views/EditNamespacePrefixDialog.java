@@ -77,7 +77,7 @@ public class EditNamespacePrefixDialog extends Dialog implements UpdateListener 
 		errorMessageLabel.setText(errorMessage != null ? errorMessage : ""); //$NON-NLS-1$
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") //$NON-NLS-1$
 	public void updateOccured(Object object, Object arg) {
 		updateErrorMessage((List<NamespaceInfo>) arg);
 	}

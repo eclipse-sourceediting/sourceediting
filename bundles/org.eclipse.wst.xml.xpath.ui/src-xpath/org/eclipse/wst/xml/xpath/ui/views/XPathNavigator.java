@@ -691,7 +691,7 @@ public class XPathNavigator extends ViewPart
         documents.setSelection( selection);
     }
 
-	@SuppressWarnings( "unchecked")
+	@SuppressWarnings( "unchecked") //$NON-NLS-1$
 	private List<NamespaceInfo> createNamespaceInfo(Document document) {
 		List<NamespaceInfo> info = namespaceInfo.get(document);
 		if (info == null) {

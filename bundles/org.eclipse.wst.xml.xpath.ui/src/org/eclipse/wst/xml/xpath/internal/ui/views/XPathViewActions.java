@@ -78,7 +78,7 @@ class XPathViewActions
 
 		public CollapseTreeAction(TreeViewer viewer)
 		{
-			super("Collapse All", AS_PUSH_BUTTON);
+			super(Messages.XPathViewActions_0, AS_PUSH_BUTTON);
 			setImageDescriptor(COLLAPSE_E);
 			setDisabledImageDescriptor(COLLAPSE_D);
 			setToolTipText(getText());
@@ -95,7 +95,7 @@ class XPathViewActions
 	{
 		public ToggleLinkAction()
 		{
-			super("Link with Editor", AS_CHECK_BOX);
+			super(Messages.XPathViewActions_1, AS_CHECK_BOX);
 			setToolTipText(getText());
 			setDisabledImageDescriptor(SYNCED_D);
 			setImageDescriptor(SYNCED_E);

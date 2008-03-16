@@ -98,7 +98,7 @@ public class XPathView extends ViewPart
 	private Text locationText;
 	private XPathViewActions xpathViewActions;
 	private IPostSelectionProvider selectionProvider = new SelectionProvider();
-	private String location = "";
+	private String location = ""; //$NON-NLS-1$
 	private String message;
 	private boolean expressionValid = true;
 	private Integer currentSheet = Integer.valueOf(0);
@@ -122,7 +122,7 @@ public class XPathView extends ViewPart
 		comp.setLayoutData(new GridData(SWT.FILL,SWT.NONE,true,false));
 		
 		Label label = new Label(comp, SWT.NONE);
-		label.setText("XPath expression:");
+		label.setText(Messages.XPathView_1);
 
 		this.text = new Text(comp, SWT.BORDER);
 		
@@ -164,7 +164,7 @@ public class XPathView extends ViewPart
 		{
 			CTabItem item = new CTabItem(folder, SWT.NONE, i);
 		//	item.setControl(comp);
-			item.setText("Sheet "+(i+1));
+			item.setText(Messages.XPathView_2+(i+1));
 		}
 		folder.setSelection(currentSheet);
 		pageChange(currentSheet);
@@ -208,7 +208,7 @@ public class XPathView extends ViewPart
 		if (exp != null)
 			text.setText(exp);
 		else
-			text.setText("/");
+			text.setText("/"); //$NON-NLS-1$
 	}
 
 	public void createActions()
@@ -253,7 +253,7 @@ public class XPathView extends ViewPart
 			{
 				case Node.ATTRIBUTE_NODE:
 					sb.insert(0, node.getNodeName());
-					sb.insert(0, "@");
+					sb.insert(0, "@"); //$NON-NLS-1$
 					break;
 				case Node.ELEMENT_NODE:
 					Node sibling = node;
@@ -266,7 +266,7 @@ public class XPathView extends ViewPart
 						}
 					}
 					if (position > 1)
-						sb.insert(0, "[" + position + "]");
+						sb.insert(0, "[" + position + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 					else
 					{
 						sibling = node;
@@ -281,11 +281,11 @@ public class XPathView extends ViewPart
 						}
 						if (following)
 						{
-							sb.insert(0, "[1]");
+							sb.insert(0, "[1]"); //$NON-NLS-1$
 						}
 					}
 					sb.insert(0, node.getNodeName());
-					sb.insert(0, "/");
+					sb.insert(0, Messages.XPathView_8);
 					break;
 			}
 			node = node.getParentNode();
@@ -310,7 +310,7 @@ public class XPathView extends ViewPart
 				if (e.getCause()!=null)
 					message = e.getCause().getMessage();
 				else
-					message = "Invalid XPath expression";
+					message = "Invalid XPath expression"; //$NON-NLS-1$
 			}
 			if (expressionValid != valid)
 			{
@@ -336,7 +336,7 @@ public class XPathView extends ViewPart
 	{
 		if (expressionValid)
 		{
-			locationText.setText("Location: "+location);				
+			locationText.setText(Messages.XPathView_0+location);				
 			locationText.setForeground(null);
 		}
 		else
@@ -396,7 +396,7 @@ public class XPathView extends ViewPart
 		return (IStructuredModel) editor.getAdapter(IStructuredModel.class);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") //$NON-NLS-1$
 	public Object getAdapter(Class key)
 	{
 		Object adapter = null;
@@ -433,12 +433,12 @@ public class XPathView extends ViewPart
     public void saveState(IMemento memento)
     {
     	sheetMap.put(currentSheet, text.getText());
-    	memento.putInteger("CurrentSheet", currentSheet);
+    	memento.putInteger("CurrentSheet", currentSheet); //$NON-NLS-1$
     	for (Map.Entry<Integer,String> entry : sheetMap.entrySet())
 		{
-    		IMemento child = memento.createChild("Sheet");
-    		child.putInteger("Index", entry.getKey());
-    		child.putString("XPath", entry.getValue());
+    		IMemento child = memento.createChild("Sheet"); //$NON-NLS-1$
+    		child.putInteger("Index", entry.getKey()); //$NON-NLS-1$
+    		child.putString("XPath", entry.getValue()); //$NON-NLS-1$
 		}
         super.saveState( memento);
     }
@@ -449,13 +449,13 @@ public class XPathView extends ViewPart
     	sheetMap = new HashMap<Integer,String>();
     	if (memento != null)
     	{
-	        IMemento[] sheets = memento.getChildren("Sheet");
+	        IMemento[] sheets = memento.getChildren("Sheet"); //$NON-NLS-1$
 	        if(sheets!=null)
 	        {
-	        	currentSheet = memento.getInteger("CurrentSheet");
+	        	currentSheet = memento.getInteger("CurrentSheet"); //$NON-NLS-1$
 	        	for (IMemento sheet : sheets)
 				{
-	        		sheetMap.put(sheet.getInteger("Index"), sheet.getString("XPath"));
+	        		sheetMap.put(sheet.getInteger("Index"), sheet.getString("XPath")); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 	        }
     	}

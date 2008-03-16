@@ -90,7 +90,7 @@ public class XPathComputer
 	{
 		this.path = XPathFactory.newInstance().newXPath();
 		Document doc = (Document) model.getAdapter(Document.class);
-		Assert.isNotNull(doc, "IStructuredModel did not adapt to a Document");
+		Assert.isNotNull(doc, Messages.XPathComputer_0);
 
 		Element rootEl = doc.getDocumentElement();
 		if (rootEl != null)
@@ -114,7 +114,7 @@ public class XPathComputer
 					return null;
 				}
 
-				@SuppressWarnings("unchecked")
+				@SuppressWarnings("unchecked") //$NON-NLS-1$
 				public Iterator getPrefixes(String arg0)
 				{
 					List<String> vals = new ArrayList<String>(1);
@@ -157,9 +157,9 @@ public class XPathComputer
 		for (int i = 0; i < attrs.getLength(); i++)
 		{
 			Attr att = (Attr) attrs.item(i);
-			if ("xmlns".equals(att.getNodeName()))
-				namespaces.put("", att.getNodeValue());
-			else if ("xmlns".equals(att.getPrefix()))
+			if ("xmlns".equals(att.getNodeName())) //$NON-NLS-1$
+				namespaces.put("", att.getNodeValue()); //$NON-NLS-1$
+			else if ("xmlns".equals(att.getPrefix())) //$NON-NLS-1$
 				namespaces.put(att.getLocalName(), att.getNodeValue());
 		}
 
@@ -185,7 +185,7 @@ public class XPathComputer
 		{
 			xps[0] = expression;
 		}
-		Job refresh = new Job("Refreshing XPath View")
+		Job refresh = new Job(Messages.XPathComputer_5)
 		{
 			@Override
 			protected IStatus run(IProgressMonitor monitor)
