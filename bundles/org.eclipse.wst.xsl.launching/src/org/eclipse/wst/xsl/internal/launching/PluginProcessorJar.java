@@ -42,10 +42,10 @@ public class PluginProcessorJar implements IProcessorJar
 			// There is surely a better way, but I can'd find it.
 			if (path == null)
 			{
-				url = Platform.getBundle(pluginId).getEntry("/");
+				url = Platform.getBundle(pluginId).getEntry("/"); //$NON-NLS-1$
 				url = FileLocator.resolve(url);
 				String s = url.getPath();
-				if (s.endsWith("!/"))
+				if (s.endsWith("!/")) //$NON-NLS-1$
 				{
 					s = s.substring(0,s.length()-2);
 				}
@@ -55,7 +55,7 @@ public class PluginProcessorJar implements IProcessorJar
 			else
 			{
 				Bundle bundle = Platform.getBundle(pluginId);
-				IPath jarPath = new Path("/" + path);
+				IPath jarPath = new Path("/" + path); //$NON-NLS-1$
 				url = FileLocator.find(bundle, jarPath, null);
 				if (url != null)
 					url = FileLocator.resolve(url);
@@ -76,6 +76,6 @@ public class PluginProcessorJar implements IProcessorJar
 	@Override
 	public String toString()
 	{
-		return "Plugin " + pluginId + ", path " + path;
+		return "Plugin " + pluginId + Messages.getString("PluginProcessorJar.0") + path; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

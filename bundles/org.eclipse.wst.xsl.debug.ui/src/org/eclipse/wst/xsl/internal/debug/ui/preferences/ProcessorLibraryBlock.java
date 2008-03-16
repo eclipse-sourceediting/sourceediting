@@ -59,9 +59,9 @@ import org.eclipse.wst.xsl.launching.XSLTRuntime;
 
 public class ProcessorLibraryBlock implements SelectionListener, ISelectionChangedListener
 {
-	protected static final String LAST_PATH_SETTING = "LAST_PATH_SETTING";
-	protected static final String LAST_WORKSPACE_PATH_SETTING = "LAST_WORKSPACE_PATH_SETTING";
-	protected static final String DIALOG_SETTINGS_PREFIX = "ProcessorLibraryBlock";
+	protected static final String LAST_PATH_SETTING = "LAST_PATH_SETTING"; //$NON-NLS-1$
+	protected static final String LAST_WORKSPACE_PATH_SETTING = "LAST_WORKSPACE_PATH_SETTING"; //$NON-NLS-1$
+	protected static final String DIALOG_SETTINGS_PREFIX = "ProcessorLibraryBlock"; //$NON-NLS-1$
 	protected InstallStandin install;
 	protected IProcessorType installType;
 	protected AddProcessorDialog addDialog = null;
@@ -76,19 +76,19 @@ public class ProcessorLibraryBlock implements SelectionListener, ISelectionChang
 		{
 			if (selection.length == 0)
 			{
-				return new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null);
+				return new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
 			}
 			for (Object element : selection)
 			{
 				if (element instanceof IFolder)
-					return new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null);
+					return new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
 				else if (element instanceof IFile)
 				{
 					// IFile file = (IFile) selection[i];
 					// TODO check that the file is not already on the classpath
 				}
 			}
-			return new Status(IStatus.OK, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null);
+			return new Status(IStatus.OK, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
 		}
 	};
 
@@ -175,7 +175,7 @@ public class ProcessorLibraryBlock implements SelectionListener, ISelectionChang
 		IStatus status = Status.OK_STATUS;
 		if (install != null && install.getProcessorJars().length == 0)
 		{
-			status = new Status(IStatus.INFO, XSLDebugUIPlugin.PLUGIN_ID, 0, "One or more jar files must be specified", null);
+			status = new Status(IStatus.INFO, XSLDebugUIPlugin.PLUGIN_ID, 0, ProcessorMessages.ProcessorLibraryBlock_6, null);
 		}
 		addDialog.setSystemLibraryStatus(status);
 		addDialog.updateStatusLine();
@@ -224,12 +224,12 @@ public class ProcessorLibraryBlock implements SelectionListener, ISelectionChang
 		String lastUsedPath = dialogSettings.get(LAST_PATH_SETTING);
 		if (lastUsedPath == null)
 		{
-			lastUsedPath = "";
+			lastUsedPath = ""; //$NON-NLS-1$
 		}
 		FileDialog dialog = new FileDialog(tableViewer.getControl().getShell(), SWT.MULTI);
 		dialog.setText(ProcessorMessages.ProcessorLibraryBlock_FileDialog_Title);
 		dialog.setFilterExtensions(new String[]
-		{ "*.jar;*.zip" });
+		{ "*.jar;*.zip" }); //$NON-NLS-1$
 		dialog.setFilterPath(lastUsedPath);
 		String res = dialog.open();
 		if (res == null)
@@ -284,7 +284,7 @@ public class ProcessorLibraryBlock implements SelectionListener, ISelectionChang
 					String extension = file.getFileExtension();
 					if (extension == null)
 						return false;
-					return extension.equals("jar");
+					return extension.equals("jar"); //$NON-NLS-1$
 				}
 				return false;
 			}

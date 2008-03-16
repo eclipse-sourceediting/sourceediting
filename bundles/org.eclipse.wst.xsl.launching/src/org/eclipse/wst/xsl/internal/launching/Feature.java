@@ -48,9 +48,9 @@ public class Feature implements IFeature, Comparable<Object>
 		IStatus status = null;
 		if (TYPE_BOOLEAN.equals(type))
 		{
-			boolean valid = "true".equals(value) || "false".equals(value);
+			boolean valid = "true".equals(value) || "false".equals(value); //$NON-NLS-1$ //$NON-NLS-2$
 			if (!valid)
-				status = new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, 0, "Valid values are 'true' or 'false'", null);
+				status = new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, 0, Messages.getString("Feature.2"), null); //$NON-NLS-1$
 		}
 		else if (TYPE_INT.equals(type))
 		{
@@ -60,7 +60,7 @@ public class Feature implements IFeature, Comparable<Object>
 			}
 			catch (NumberFormatException e)
 			{
-				status = new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, 0, "Value must be an integer", null);
+				status = new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, 0, Messages.getString("Feature.1"), null); //$NON-NLS-1$
 			}
 		}
 		else if (TYPE_DOUBLE.equals(type))
@@ -71,7 +71,7 @@ public class Feature implements IFeature, Comparable<Object>
 			}
 			catch (NumberFormatException e)
 			{
-				status = new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, 0, "Value must be a double", null);
+				status = new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, 0, Messages.getString("Feature.0"), null); //$NON-NLS-1$
 			}
 		}
 		else if (TYPE_FLOAT.equals(type))
@@ -82,7 +82,7 @@ public class Feature implements IFeature, Comparable<Object>
 			}
 			catch (NumberFormatException e)
 			{
-				status = new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, 0, "Value must be a float", null);
+				status = new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, 0, Messages.getString("Feature.5"), null); //$NON-NLS-1$
 			}
 		}
 		else if (TYPE_CLASS.equals(type) || TYPE_OBJECT.equals(type))

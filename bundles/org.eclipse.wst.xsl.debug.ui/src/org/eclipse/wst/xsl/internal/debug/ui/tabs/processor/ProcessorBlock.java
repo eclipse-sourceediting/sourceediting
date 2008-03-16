@@ -64,10 +64,10 @@ public class ProcessorBlock extends AbstractLaunchConfigurationTab
 		group.setLayout(new GridLayout(2, false));
 		group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		group.setFont(font);
-		group.setText("XSLT Processor");
+		group.setText(ProcessorMessages.ProcessorBlock_0);
 
 		usePreferencesRadio = new Button(group, SWT.RADIO);
-		usePreferencesRadio.setText("Use processor from preferences");
+		usePreferencesRadio.setText(ProcessorMessages.ProcessorBlock_1);
 		usePreferencesRadio.addSelectionListener(new SelectionAdapter()
 		{
 			@Override
@@ -79,7 +79,7 @@ public class ProcessorBlock extends AbstractLaunchConfigurationTab
 		});
 
 		alterPreferencesButton = new Button(group, SWT.PUSH);
-		alterPreferencesButton.setText("Change preferences...");
+		alterPreferencesButton.setText(ProcessorMessages.ProcessorBlock_2);
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_END);
 		gd.widthHint = 150;
 		alterPreferencesButton.setLayoutData(gd);
@@ -89,12 +89,12 @@ public class ProcessorBlock extends AbstractLaunchConfigurationTab
 			public void widgetSelected(SelectionEvent e)
 			{
 				IPreferencePage page = new ProcessorsPreferencePage();
-				showPrefPage("org.eclipse.wst.xslt.launching.ui.preferences.ProcessorPreferencePage", page);
+				showPrefPage("org.eclipse.wst.xslt.launching.ui.preferences.ProcessorPreferencePage", page); //$NON-NLS-1$
 			}
 		});
 
 		overridePreferencesRadio = new Button(group, SWT.RADIO);
-		overridePreferencesRadio.setText("Use specific processor");
+		overridePreferencesRadio.setText(ProcessorMessages.ProcessorBlock_4);
 		overridePreferencesRadio.addSelectionListener(new SelectionAdapter()
 		{
 			@Override
@@ -116,7 +116,7 @@ public class ProcessorBlock extends AbstractLaunchConfigurationTab
 			public void widgetSelected(SelectionEvent e)
 			{
 				IPreferencePage page = new ProcessorsPreferencePage();
-				showPrefPage("org.eclipse.wst.xslt.launching.ui.preferences.ProcessorPreferencePage", page);
+				showPrefPage("org.eclipse.wst.xslt.launching.ui.preferences.ProcessorPreferencePage", page); //$NON-NLS-1$
 			}
 		});
 
@@ -131,7 +131,7 @@ public class ProcessorBlock extends AbstractLaunchConfigurationTab
 		settingsComp.setFont(font);
 
 		Label label = new Label(settingsComp, SWT.NONE);
-		label.setText("Processor:");
+		label.setText(ProcessorMessages.ProcessorBlock_6);
 		runCombo = new Combo(settingsComp, SWT.READ_ONLY | SWT.SINGLE);
 		runCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		runComboViewer = new ComboViewer(runCombo);
@@ -180,7 +180,7 @@ public class ProcessorBlock extends AbstractLaunchConfigurationTab
 
 	public String getName()
 	{
-		return "Processor";
+		return ProcessorMessages.ProcessorBlock_7;
 	}
 
 	public void initializeFrom(ILaunchConfiguration configuration)

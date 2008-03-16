@@ -71,7 +71,7 @@ public class XSLLineBreakpointAdapter implements IToggleBreakpointsTarget
 			{
 				String extension = resource.getFileExtension();
 				// TODO handle other file extensions/content types
-				if (extension != null && extension.equalsIgnoreCase("xsl"))
+				if (extension != null && extension.equalsIgnoreCase("xsl")) //$NON-NLS-1$
 				{
 					return editorPart;
 				}

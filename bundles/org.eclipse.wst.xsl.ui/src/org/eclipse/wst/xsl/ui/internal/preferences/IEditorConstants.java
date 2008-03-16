@@ -25,7 +25,7 @@ package org.eclipse.wst.xsl.ui.internal.preferences;
  * 
  */
 
-@SuppressWarnings("nls")
+@SuppressWarnings("nls") //$NON-NLS-1$
 public interface IEditorConstants {
 	
 	/** General Boolean Expression Type */
@@ -41,12 +41,12 @@ public interface IEditorConstants {
 	public static final String ET_UNSIGNED_INT = "unsignedInt"; //$NON-NLS-1$
 		
 	/** Any expression type */
-	public static final String ET_ANY = "any"; 
+	public static final String ET_ANY = "any";  //$NON-NLS-1$
 	
 	/** A Boolean expression within a jointCondition */
-	public static final String ET_JOIN = "joinCondition/boolean" ;
+	public static final String ET_JOIN = "joinCondition/boolean" ; //$NON-NLS-1$
 
 	/** A Boolean expression within a transitionCondition */
-	public static final String ET_TRANSITION = "transitionCondition/boolean" ;
+	public static final String ET_TRANSITION = "transitionCondition/boolean" ; //$NON-NLS-1$
 
 }

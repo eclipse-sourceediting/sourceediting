@@ -39,16 +39,16 @@ public class ProcessorInvokerDescriptor implements IProcessorInvoker
 		try {
 			// if in dev mode, use the bin dir
 			if (Platform.inDevelopmentMode())
-				entries.add(Utils.getFileLocation(bundleId, "/bin"));
+				entries.add(Utils.getFileLocation(bundleId, "/bin")); //$NON-NLS-1$
 			for (int i=0;i <classpath.length;i++) 
 			{
 				String string = classpath[i];
 				String entry;
-				if (string.startsWith("${eclipse_orbit:") && string.endsWith("}"))
+				if (string.startsWith("${eclipse_orbit:") && string.endsWith("}")) //$NON-NLS-1$ //$NON-NLS-2$
 				{
-					string = string.substring("${eclipse_orbit:".length());
+					string = string.substring("${eclipse_orbit:".length()); //$NON-NLS-1$
 					string = string.substring(0,string.length()-1);
-					entry = Utils.getFileLocation(string,"");
+					entry = Utils.getFileLocation(string,""); //$NON-NLS-1$
 				}
 				else
 				{

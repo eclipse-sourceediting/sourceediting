@@ -41,7 +41,7 @@ public class XSLModelPresentation extends LabelProvider implements IDebugModelPr
 			if (var.getScope().equals(XSLVariable.LOCAL_SCOPE))
 			{
 				if (localImg == null)
-					localImg = XSLDebugUIPlugin.getImageDescriptor("/icons/localvariable_obj.gif").createImage();
+					localImg = XSLDebugUIPlugin.getImageDescriptor("/icons/localvariable_obj.gif").createImage(); //$NON-NLS-1$
 				return localImg;
 			}
 		}
@@ -64,7 +64,7 @@ public class XSLModelPresentation extends LabelProvider implements IDebugModelPr
 
 	public void computeDetail(IValue value, IValueDetailListener listener)
 	{
-		String detail = "";
+		String detail = ""; //$NON-NLS-1$
 		try
 		{
 			detail = value.getValueString();

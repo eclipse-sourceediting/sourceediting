@@ -78,7 +78,7 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 	protected boolean required;
 	protected String defaultOutputFile;
 	protected String outputFile;
-	protected String fileLabel = "File:";
+	protected String fileLabel = Messages.getString("ResourceSelectionBlock.0"); //$NON-NLS-1$
 
 	private final ISelectionStatusValidator validator = new ISelectionStatusValidator()
 	{
@@ -86,16 +86,16 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 		{
 			if (selection.length == 0)
 			{
-				return new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null); 
+				return new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null);  //$NON-NLS-1$
 			}
 			for (int i = 0; i < selection.length; i++)
 			{
 				if (resourceType == IResource.FOLDER && !(selection[i] instanceof IFolder))
-					return new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null); 
+					return new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null);  //$NON-NLS-1$
 				else if (resourceType == IResource.FILE && !(selection[i] instanceof IFile))
-					return new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null); 
+					return new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null);  //$NON-NLS-1$
 			}
-			return new Status(IStatus.OK, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null); 
+			return new Status(IStatus.OK, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null);  //$NON-NLS-1$
 		}
 	};
 
@@ -254,11 +254,11 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 	{
 		if (useDefault)
 		{
-			resourceText.setText(defaultOutputFile == null ? "" : defaultOutputFile);
+			resourceText.setText(defaultOutputFile == null ? "" : defaultOutputFile); //$NON-NLS-1$
 		}
 		else
 		{
-			resourceText.setText(outputFile == null ? "" : outputFile);
+			resourceText.setText(outputFile == null ? "" : outputFile); //$NON-NLS-1$
 		}
 		resourceText.setEnabled(!useDefault);
 		fFileSystemButton.setEnabled(!useDefault);
@@ -279,7 +279,7 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 		{
 			DirectoryDialog dialog = new DirectoryDialog(getShell());
 			dialog.setMessage(getMessage(DIRECTORY_DIALOG_MESSAGE));
-			if (!currentWorkingDir.trim().equals(""))
+			if (!currentWorkingDir.trim().equals("")) //$NON-NLS-1$
 			{
 				File path = new File(currentWorkingDir);
 				if (path.exists())
@@ -292,7 +292,7 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 		else
 		{
 			FileDialog dialog = new FileDialog(getShell());
-			if (!currentWorkingDir.trim().equals(""))
+			if (!currentWorkingDir.trim().equals("")) //$NON-NLS-1$
 			{
 				File path = new File(currentWorkingDir);
 				if (path.exists())
@@ -307,7 +307,7 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 				for (int i = 0; i < fileExtensions.length; i++)
 				{
 					String ext = fileExtensions[i];
-					filterExtensions[i] = "*." + ext;
+					filterExtensions[i] = "*." + ext; //$NON-NLS-1$
 				}
 				dialog.setFilterExtensions(filterExtensions);
 			}
@@ -328,7 +328,7 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 	{
 		IPath path = openWorkspaceResourceDialog();
 		if (path != null)
-			setText("${workspace_loc:" + path.toString() + "}");  
+			setText("${workspace_loc:" + path.toString() + "}");   //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	protected IPath openWorkspaceResourceDialog()
@@ -395,7 +395,7 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 		{
 			IResource res = null;
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-			if (path.startsWith("${workspace_loc:")) 
+			if (path.startsWith("${workspace_loc:"))  //$NON-NLS-1$
 			{
 				IStringVariableManager manager = VariablesPlugin.getDefault().getStringVariableManager();
 				try
@@ -451,7 +451,7 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 		setMessage(null);
 		// if variables are present, we cannot resolve the directory
 		String workingDirPath = getText();
-		if (workingDirPath.indexOf("${") >= 0)
+		if (workingDirPath.indexOf("${") >= 0) //$NON-NLS-1$
 		{
 			IStringVariableManager manager = VariablesPlugin.getDefault().getStringVariableManager();
 			try

@@ -40,7 +40,7 @@ public class URIResolverBlock2 extends AbstractLaunchConfigurationTab
 	private Button customRadio;
 	private Text customText;
 	private final ResolverType[] resolverTypes = new ResolverType[]
-	{ new ResolverType("N/A", "Working Directory (default)"), new ResolverType("org.eclipse.wst.some.resolver.type.1", "Stylesheet") };
+	{ new ResolverType(Messages.getString("URIResolverBlock2.0"), Messages.getString("URIResolverBlock2.1")), new ResolverType("org.eclipse.wst.some.resolver.type.1", Messages.getString("URIResolverBlock2.3")) }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	private Button defaultRadio;
 	private Combo combo;
 
@@ -59,7 +59,7 @@ public class URIResolverBlock2 extends AbstractLaunchConfigurationTab
 		setControl(group);
 
 		defaultRadio = new Button(group, SWT.RADIO);
-		defaultRadio.setText("Resolve relative to:");
+		defaultRadio.setText(Messages.getString("URIResolverBlock2.4")); //$NON-NLS-1$
 		defaultRadio.setFont(font);
 		defaultRadio.addSelectionListener(new SelectionAdapter()
 		{
@@ -111,7 +111,7 @@ public class URIResolverBlock2 extends AbstractLaunchConfigurationTab
 		});
 
 		customRadio = new Button(group, SWT.RADIO);
-		customRadio.setText("Use custom URI resolver (Note: class must be included on classpath)");
+		customRadio.setText(Messages.getString("URIResolverBlock2.5")); //$NON-NLS-1$
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		customRadio.setLayoutData(gd);
 		gd.horizontalSpan = 2;
@@ -138,7 +138,7 @@ public class URIResolverBlock2 extends AbstractLaunchConfigurationTab
 		textComp.setFont(font);
 
 		Label label = new Label(textComp, SWT.NONE);
-		label.setText("Class:");
+		label.setText(Messages.getString("URIResolverBlock2.6")); //$NON-NLS-1$
 
 		customText = new Text(textComp, SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -156,7 +156,7 @@ public class URIResolverBlock2 extends AbstractLaunchConfigurationTab
 
 	public String getName()
 	{
-		return "URI Resolver";
+		return Messages.getString("URIResolverBlock2.7"); //$NON-NLS-1$
 	}
 
 	@Override
@@ -165,7 +165,7 @@ public class URIResolverBlock2 extends AbstractLaunchConfigurationTab
 		String text = customText.getText();
 		if (customRadio.getSelection() && (text == null || text.length() == 0))
 		{
-			setErrorMessage("Missing URI Resolver class name");
+			setErrorMessage(Messages.getString("URIResolverBlock2.8")); //$NON-NLS-1$
 			return false;
 		}
 		return super.isValid(launchConfig);

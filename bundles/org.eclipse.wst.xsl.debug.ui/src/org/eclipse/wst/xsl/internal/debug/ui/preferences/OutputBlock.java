@@ -72,12 +72,12 @@ public class OutputBlock extends AbstractTableBlock
 		TableColumn c1 = new TableColumn(table, SWT.NONE);
 		c1.setWidth(450);
 		c1.setResizable(true);
-		c1.setText("Property");
+		c1.setText(Messages.getString("OutputBlock.0")); //$NON-NLS-1$
 
 		TableColumn c2 = new TableColumn(table, SWT.NONE);
 		c2.setWidth(150);
 		c2.setResizable(true);
-		c2.setText("Value");
+		c2.setText(Messages.getString("OutputBlock.1")); //$NON-NLS-1$
 
 		tViewer = new TableViewer(table);
 		tViewer.setContentProvider(new IStructuredContentProvider()
@@ -117,7 +117,7 @@ public class OutputBlock extends AbstractTableBlock
 					case 1:
 						return (String) properties.get(prop.getURI());
 				}
-				return "!!";
+				return "!!"; //$NON-NLS-1$
 			}
 
 			public void addListener(ILabelProviderListener listener)
@@ -139,26 +139,26 @@ public class OutputBlock extends AbstractTableBlock
 
 		});
 		tViewer.setColumnProperties(new String[]
-		{ "name", "value" });
+		{ Messages.getString("OutputBlock.2"), Messages.getString("OutputBlock.4") }); //$NON-NLS-1$ //$NON-NLS-2$
 		tViewer.setCellModifier(new ICellModifier()
 		{
 			public boolean canModify(Object element, String property)
 			{
-				return "value".equals(property);
+				return Messages.getString("OutputBlock.5").equals(property); //$NON-NLS-1$
 			}
 
 			public Object getValue(Object element, String property)
 			{
 				IOutputProperty prop = (IOutputProperty) element;
 				String value = (String) properties.get(prop.getURI());
-				return value == null ? "" : value;
+				return value == null ? "" : value; //$NON-NLS-1$
 			}
 
 			public void modify(Object element, String property, Object value)
 			{
 				Item item = (Item) element;
 				IOutputProperty prop = (IOutputProperty) item.getData();
-				if (value == null || "".equals(value))
+				if (value == null || "".equals(value)) //$NON-NLS-1$
 					properties.remove(prop.getURI());
 				else
 					properties.put(prop.getURI(), value);

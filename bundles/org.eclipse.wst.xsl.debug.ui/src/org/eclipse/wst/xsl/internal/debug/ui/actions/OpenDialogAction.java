@@ -16,7 +16,7 @@ import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
 
 public class OpenDialogAction extends AbstractStylesheetAction
 {
-	protected static final String LAST_PATH_SETTING = "LAST_PATH_SETTING";
+	protected static final String LAST_PATH_SETTING = "LAST_PATH_SETTING"; //$NON-NLS-1$
 	private String fPrefix = null;
 
 	public OpenDialogAction(String label, StylesheetViewer viewer, String dialogSettingsPrefix)
@@ -32,12 +32,12 @@ public class OpenDialogAction extends AbstractStylesheetAction
 
 	protected String getDialogSetting(String settingName)
 	{
-		return getDialogSettings().get(getDialogSettingsPrefix() + "." + settingName);
+		return getDialogSettings().get(getDialogSettingsPrefix() + "." + settingName); //$NON-NLS-1$
 	}
 
 	protected void setDialogSetting(String settingName, String value)
 	{
-		getDialogSettings().put(getDialogSettingsPrefix() + "." + settingName, value);
+		getDialogSettings().put(getDialogSettingsPrefix() + "." + settingName, value); //$NON-NLS-1$
 	}
 
 	protected IDialogSettings getDialogSettings()

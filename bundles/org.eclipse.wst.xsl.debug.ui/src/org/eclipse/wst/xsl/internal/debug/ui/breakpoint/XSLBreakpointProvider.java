@@ -52,7 +52,7 @@ public class XSLBreakpointProvider implements IBreakpointProvider, IExecutableEx
 					IBreakpoint point = new XSLLineBreakpoint(res, editorLineNumber, pos, pos);
 					if (point == null)
 					{
-						status = new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, IStatus.ERROR, "unsupported input type", null);
+						status = new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, IStatus.ERROR, Messages.XSLBreakpointProvider_0, null);
 					}
 					else
 					{
@@ -73,13 +73,13 @@ public class XSLBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				IBreakpoint point = new XSLLineBreakpoint(res, editorLineNumber, pos, pos);
 				if (point == null)
 				{
-					status = new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, IStatus.ERROR, "unsupported input type", null);
+					status = new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, IStatus.ERROR, Messages.XSLBreakpointProvider_0, null);
 				}
 			}
 		}
 		if (status == null)
 		{
-			status = new Status(IStatus.OK, XSLDebugUIPlugin.PLUGIN_ID, IStatus.OK, "JSPUIMessages.OK", null);
+			status = new Status(IStatus.OK, XSLDebugUIPlugin.PLUGIN_ID, IStatus.OK, "JSPUIMessages.OK", null); //$NON-NLS-1$
 		}
 		return status;
 	}
@@ -115,7 +115,7 @@ public class XSLBreakpointProvider implements IBreakpointProvider, IExecutableEx
 				String lineText = idoc.get(startOffset, endOffset - startOffset).trim();
 
 				// blank lines or PI's cannot have breakpoints
-				if (lineText.trim().equals("") || lineText.startsWith("<?"))
+				if (lineText.trim().equals("") || lineText.startsWith("<?")) //$NON-NLS-1$ //$NON-NLS-2$
 				{
 					result = -1;
 				}

@@ -57,13 +57,13 @@ public class ProcessorPreferences
 	public String getAsXML() throws ParserConfigurationException, IOException, TransformerException
 	{
 		Document doc = PreferenceUtil.getDocument();
-		Element config = doc.createElement("processorSettings"); 
+		Element config = doc.createElement("processorSettings");  //$NON-NLS-1$
 		doc.appendChild(config);
 
 		// Set the defaultVM attribute on the top-level node
 		if (defaultProcessorId != null)
 		{
-			config.setAttribute("defaultProcessor", defaultProcessorId); 
+			config.setAttribute("defaultProcessor", defaultProcessorId);  //$NON-NLS-1$
 		}
 
 		for (Iterator<IProcessorInstall> iter = processors.iterator(); iter.hasNext();)
@@ -88,11 +88,11 @@ public class ProcessorPreferences
 		Element config = doc.getDocumentElement();
 
 		// Populate the default VM-related fields
-		prefs.setDefaultProcessorId(config.getAttribute("defaultProcessor"));
+		prefs.setDefaultProcessorId(config.getAttribute("defaultProcessor")); //$NON-NLS-1$
 
 		List<IProcessorInstall> processors = new ArrayList<IProcessorInstall>();
 		// Traverse the parsed structure and populate the VMType to VM Map
-		Element[] processorEls = PreferenceUtil.getChildElements(config, "processor");
+		Element[] processorEls = PreferenceUtil.getChildElements(config, "processor"); //$NON-NLS-1$
 		for (int i = 0; i < processorEls.length; ++i)
 		{
 			IProcessorInstall processor = elementAsInstall(processorEls[i]);
@@ -106,14 +106,14 @@ public class ProcessorPreferences
 
 	private static IProcessorInstall elementAsInstall(Element parent)
 	{
-		String id = parent.getAttribute("id");
-		String label = parent.getAttribute("label");
-		String typeId = parent.getAttribute("type");
-		String supports = parent.getAttribute("supports");
-		String debuggerId = parent.getAttribute("debuggerId");
+		String id = parent.getAttribute("id"); //$NON-NLS-1$
+		String label = parent.getAttribute("label"); //$NON-NLS-1$
+		String typeId = parent.getAttribute("type"); //$NON-NLS-1$
+		String supports = parent.getAttribute("supports"); //$NON-NLS-1$
+		String debuggerId = parent.getAttribute("debuggerId"); //$NON-NLS-1$
 
 		IProcessorJar[] jars = null;
-		Element[] jarsEls = PreferenceUtil.getChildElements(parent, "jars");
+		Element[] jarsEls = PreferenceUtil.getChildElements(parent, "jars"); //$NON-NLS-1$
 		if (jarsEls.length == 1)
 		{
 			jars = elementAsJars(jarsEls[0]);
@@ -124,19 +124,19 @@ public class ProcessorPreferences
 
 	private static Element installAsElement(Document doc, IProcessorInstall install)
 	{
-		Element element = doc.createElement("processor");
-		element.setAttribute("id", install.getId());
-		element.setAttribute("label", install.getName());
-		element.setAttribute("type", install.getProcessorType().getId());
-		element.setAttribute("supports", install.getSupports());
-		element.setAttribute("debuggerId", install.getDebugger() != null ? install.getDebugger().getId() : null);
+		Element element = doc.createElement("processor"); //$NON-NLS-1$
+		element.setAttribute("id", install.getId()); //$NON-NLS-1$
+		element.setAttribute("label", install.getName()); //$NON-NLS-1$
+		element.setAttribute("type", install.getProcessorType().getId()); //$NON-NLS-1$
+		element.setAttribute("supports", install.getSupports()); //$NON-NLS-1$
+		element.setAttribute("debuggerId", install.getDebugger() != null ? install.getDebugger().getId() : null); //$NON-NLS-1$
 		element.appendChild(jarsAsElement(doc, install.getProcessorJars()));
 		return element;
 	}
 
 	private static IProcessorJar[] elementAsJars(Element element)
 	{
-		Element[] jarEls = PreferenceUtil.getChildElements(element, "jar");
+		Element[] jarEls = PreferenceUtil.getChildElements(element, "jar"); //$NON-NLS-1$
 		List<ProcessorJar> jars = new ArrayList<ProcessorJar>(jarEls.length);
 		for (Element jarEl : jarEls)
 		{
@@ -152,12 +152,12 @@ public class ProcessorPreferences
 
 	private static Element jarsAsElement(Document doc, IProcessorJar[] jars)
 	{
-		Element jarsEl = doc.createElement("jars"); 
+		Element jarsEl = doc.createElement("jars");  //$NON-NLS-1$
 		for (IProcessorJar jar : jars)
 		{
 			if (jar != null && jar.getPath() != null)
 			{
-				Element jarEl = doc.createElement("jar");
+				Element jarEl = doc.createElement("jar"); //$NON-NLS-1$
 				Text text = doc.createTextNode(jar.getPath().toPortableString());
 				jarEl.appendChild(text);
 				jarsEl.appendChild(jarEl);

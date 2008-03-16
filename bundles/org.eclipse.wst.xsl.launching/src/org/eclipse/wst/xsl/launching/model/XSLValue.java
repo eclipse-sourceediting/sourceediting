@@ -34,8 +34,8 @@ public class XSLValue extends XSLDebugElement implements IValue
 
 	public String getValueString() throws DebugException
 	{
-		if ("string".equals(type))
-			return "'"+fValue+"'";
+		if ("string".equals(type)) //$NON-NLS-1$
+			return "'"+fValue+"'"; //$NON-NLS-1$ //$NON-NLS-2$
 		return fValue;
 	}
 

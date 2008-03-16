@@ -58,7 +58,7 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 	/**
 	 * The plugin id for this plugin.
 	 */
-	static public String PLUGIN_ID = "org.eclipse.wst.xsl.ui";
+	static public String PLUGIN_ID = "org.eclipse.wst.xsl.ui"; //$NON-NLS-1$
 	/**
 	 * Constructor Class
 	 */
@@ -136,7 +136,7 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 	 */
 	public TemplateStore getTemplateStore() {
 		if (fTemplateStore == null) {
-			fTemplateStore = new ContributionTemplateStore(getTemplateContextRegistry(), getPreferenceStore(), "org.eclipse.wst.xsl.ui.xpath_custom_templates");
+			fTemplateStore = new ContributionTemplateStore(getTemplateContextRegistry(), getPreferenceStore(), "org.eclipse.wst.xsl.ui.xpath_custom_templates"); //$NON-NLS-1$
 			try {
 				fTemplateStore.load();
 			}
@@ -155,12 +155,12 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 	public ContextTypeRegistry getTemplateContextRegistry() {
 		if (fContextTypeRegistry == null) {
 			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
-			registry.addContextType("xsl_xpath");
-			registry.addContextType("xpath_operator");
-			registry.addContextType("xpath_axis");
-			registry.addContextType("exslt_function");
-			registry.addContextType("xpath_2");
-			registry.addContextType("extension_function");
+			registry.addContextType("xsl_xpath"); //$NON-NLS-1$
+			registry.addContextType("xpath_operator"); //$NON-NLS-1$
+			registry.addContextType("xpath_axis"); //$NON-NLS-1$
+			registry.addContextType("exslt_function"); //$NON-NLS-1$
+			registry.addContextType("xpath_2"); //$NON-NLS-1$
+			registry.addContextType("extension_function"); //$NON-NLS-1$
 			fContextTypeRegistry = registry;
 		}
 

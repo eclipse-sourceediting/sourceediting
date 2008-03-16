@@ -23,43 +23,43 @@ public interface IFeature
 	 * Constant for features of type <code>string</code>
 	 * @see #getType()
 	 */
-	String TYPE_STRING = "string";
+	String TYPE_STRING = "string"; //$NON-NLS-1$
 	
 	/**
 	 * Constant for features of type <code>boolean</code>
 	 * @see #getType()
 	 */
-	String TYPE_BOOLEAN = "boolean";
+	String TYPE_BOOLEAN = "boolean"; //$NON-NLS-1$
 	
 	/**
 	 * Constant for features of type <code>int</code>
 	 * @see #getType()
 	 */
-	String TYPE_INT = "int";
+	String TYPE_INT = "int"; //$NON-NLS-1$
 	
 	/**
 	 * Constant for features of type <code>double</code>
 	 * @see #getType()
 	 */
-	String TYPE_DOUBLE = "double";
+	String TYPE_DOUBLE = "double"; //$NON-NLS-1$
 	
 	/**
 	 * Constant for features of type <code>float</code>
 	 * @see #getType()
 	 */
-	String TYPE_FLOAT = "float";
+	String TYPE_FLOAT = "float"; //$NON-NLS-1$
 	
 	/**
 	 * Constant for features of type <code>class</code>
 	 * @see #getType()
 	 */
-	String TYPE_CLASS = "class";
+	String TYPE_CLASS = "class"; //$NON-NLS-1$
 	
 	/**
 	 * Constant for features of type <code>object</code>
 	 * @see #getType()
 	 */
-	String TYPE_OBJECT = "object";
+	String TYPE_OBJECT = "object"; //$NON-NLS-1$
 
 	/**
 	 * Get the URI for this feature

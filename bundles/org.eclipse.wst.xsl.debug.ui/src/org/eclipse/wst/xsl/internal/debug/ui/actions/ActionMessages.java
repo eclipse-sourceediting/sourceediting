@@ -14,7 +14,7 @@ import org.eclipse.osgi.util.NLS;
 
 public final class ActionMessages extends NLS
 {
-	private static final String BUNDLE_NAME = "org.eclipse.wst.xsl.internal.debug.ui.actions.ActionMessages";
+	private static final String BUNDLE_NAME = "org.eclipse.wst.xsl.internal.debug.ui.actions.ActionMessages"; //$NON-NLS-1$
 
 	public static String RemoveAction_Text;
 

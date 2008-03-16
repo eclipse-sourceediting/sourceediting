@@ -55,7 +55,7 @@ public class XSLProcessorTab extends XSLLaunchConfigurationTab
 
 	public String getName()
 	{
-		return "Processor";
+		return Messages.getString("XSLProcessorTab.0"); //$NON-NLS-1$
 	}
 
 	@Override

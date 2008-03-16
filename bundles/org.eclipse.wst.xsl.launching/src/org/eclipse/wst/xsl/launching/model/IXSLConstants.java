@@ -13,7 +13,7 @@ package org.eclipse.wst.xsl.launching.model;
 public interface IXSLConstants
 {
 
-	public static final String ID_XSL_DEBUG_MODEL = "org.eclipse.wst.xsl.launching.XSLDebugModel";
-	public static final String MARKER_ID = "org.eclipse.wst.xsl.launching.xslLineBreakpointMarker";
+	public static final String ID_XSL_DEBUG_MODEL = "org.eclipse.wst.xsl.launching.XSLDebugModel"; //$NON-NLS-1$
+	public static final String MARKER_ID = "org.eclipse.wst.xsl.launching.xslLineBreakpointMarker"; //$NON-NLS-1$
 
 }

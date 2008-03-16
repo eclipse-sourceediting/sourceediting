@@ -38,11 +38,11 @@ import org.eclipse.wst.xsl.internal.launching.registry.ProcessorTypeRegistry;
 
 public class XSLTRuntime
 {
-	public static final String PREF_PROCESSOR_XML = "PREF_PROCESSOR_XML";
-	public static final String PREF_FEATURE_XML = "PREF_FEATURE_XML";
-	public static final String PREF_OUTPUT_PROPERTIES_XML = "PREF_OUTPUT_PROPERTIES_XML";
-	public static final String JRE_DEFAULT_PROCESSOR_ID = "org.eclipse.wst.xsl.launching.jre.default";
-	public static final String JRE_DEFAULT_PROCESSOR_TYPE_ID = "org.eclipse.wst.xsl.launching.processorType.jreDefault";
+	public static final String PREF_PROCESSOR_XML = "PREF_PROCESSOR_XML"; //$NON-NLS-1$
+	public static final String PREF_FEATURE_XML = "PREF_FEATURE_XML"; //$NON-NLS-1$
+	public static final String PREF_OUTPUT_PROPERTIES_XML = "PREF_OUTPUT_PROPERTIES_XML"; //$NON-NLS-1$
+	public static final String JRE_DEFAULT_PROCESSOR_ID = "org.eclipse.wst.xsl.launching.jre.default"; //$NON-NLS-1$
+	public static final String JRE_DEFAULT_PROCESSOR_TYPE_ID = "org.eclipse.wst.xsl.launching.processorType.jreDefault"; //$NON-NLS-1$
 
 	private static byte[] NEXT_ID_LOCK = new byte[0];
 	private static byte[] REGISTRY_LOCK = new byte[0];
@@ -215,7 +215,7 @@ public class XSLTRuntime
 			return;
 		try
 		{
-			monitor.beginTask("Saving features...", 100);
+			monitor.beginTask(Messages.getString("XSLTRuntime.5"), 100); //$NON-NLS-1$
 			FeaturePreferences prefs = new FeaturePreferences();
 			Map<String,Map<String,String>> typeIdFeatures = new HashMap<String,Map<String,String>>(typeFeatures.size());
 			for (IProcessorType type : typeFeatures.keySet())
@@ -237,7 +237,7 @@ public class XSLTRuntime
 		}
 		catch (Exception e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR,LaunchingPlugin.PLUGIN_ID,"Failed to save feature preferences",e));
+			throw new CoreException(new Status(IStatus.ERROR,LaunchingPlugin.PLUGIN_ID,Messages.getString("XSLTRuntime.6"),e)); //$NON-NLS-1$
 		}
 		finally
 		{
@@ -251,7 +251,7 @@ public class XSLTRuntime
 			return;
 		try
 		{
-			monitor.beginTask("Saving properties...", 100);
+			monitor.beginTask(Messages.getString("XSLTRuntime.7"), 100); //$NON-NLS-1$
 			OutputPropertyPreferences prefs = new OutputPropertyPreferences();
 			for (IProcessorType type : typeProperties.keySet())
 			{
@@ -270,7 +270,7 @@ public class XSLTRuntime
 		}
 		catch (Exception e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR,LaunchingPlugin.PLUGIN_ID,"Failed to save output property preferences",e));
+			throw new CoreException(new Status(IStatus.ERROR,LaunchingPlugin.PLUGIN_ID,Messages.getString("XSLTRuntime.8"),e)); //$NON-NLS-1$
 		}
 		finally
 		{
@@ -284,7 +284,7 @@ public class XSLTRuntime
 			return;
 		try
 		{
-			monitor.beginTask("Saving processors...", 100);
+			monitor.beginTask(Messages.getString("XSLTRuntime.9"), 100); //$NON-NLS-1$
 			ProcessorPreferences prefs = new ProcessorPreferences();
 			if (defaultInstall != null)
 				prefs.setDefaultProcessorId(defaultInstall.getId());
@@ -302,7 +302,7 @@ public class XSLTRuntime
 		}
 		catch (Exception e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR,LaunchingPlugin.PLUGIN_ID,"Failed to save process preferences",e));
+			throw new CoreException(new Status(IStatus.ERROR,LaunchingPlugin.PLUGIN_ID,Messages.getString("XSLTRuntime.10"),e)); //$NON-NLS-1$
 		}
 		finally
 		{
@@ -314,11 +314,11 @@ public class XSLTRuntime
 	{
 		Properties props = new Properties();
 		if (JRE_DEFAULT_PROCESSOR_TYPE_ID.equals(typeId))
-			props.put("indent", "yes");
+			props.put("indent", "yes"); //$NON-NLS-1$ //$NON-NLS-2$
 		else if (XSLLaunchConfigurationConstants.XALAN_TYPE_ID.equals(typeId))
-			props.put("{http://xml.apache.org/xslt}indent-amount", "4");
+			props.put("{http://xml.apache.org/xslt}indent-amount", "4"); //$NON-NLS-1$ //$NON-NLS-2$
 		else if (XSLLaunchConfigurationConstants.SAXONB_TYPE_ID.equals(typeId))
-			props.put("{http://saxon.sf.net/}indent-spaces", "4");
+			props.put("{http://saxon.sf.net/}indent-spaces", "4"); //$NON-NLS-1$ //$NON-NLS-2$
 		return props;
 	}
 	
@@ -331,7 +331,7 @@ public class XSLTRuntime
 		IContentType[] types = contentTypeManager.findContentTypesFor(file.getName());
 		for (IContentType contentType : types)
 		{
-			if (contentType.isKindOf(contentTypeManager.getContentType("org.eclipse.core.runtime.xml")) || contentType.isKindOf(contentTypeManager.getContentType("org.eclipse.wst.xml.core.xmlsource")))
+			if (contentType.isKindOf(contentTypeManager.getContentType("org.eclipse.core.runtime.xml")) || contentType.isKindOf(contentTypeManager.getContentType("org.eclipse.wst.xml.core.xmlsource"))) //$NON-NLS-1$ //$NON-NLS-2$
 			{
 				return true;
 			}
@@ -348,7 +348,7 @@ public class XSLTRuntime
 		IContentType[] types = contentTypeManager.findContentTypesFor(file.getName());
 		for (IContentType contentType : types)
 		{
-			if (contentType.isKindOf(contentTypeManager.getContentType("org.eclipse.wst.xml.core.xslsource")))
+			if (contentType.isKindOf(contentTypeManager.getContentType("org.eclipse.wst.xml.core.xslsource"))) //$NON-NLS-1$
 			{
 				return true;
 			}

@@ -26,8 +26,8 @@ import org.w3c.dom.NodeList;
 
 public class LaunchTransform
 {
-	public static final String RESOURCE_TYPE = "resource";
-	public static final String EXTERNAL_TYPE = "external";
+	public static final String RESOURCE_TYPE = "resource"; //$NON-NLS-1$
+	public static final String EXTERNAL_TYPE = "external"; //$NON-NLS-1$
 
 	private final String stylesheet;
 	private final String pathType;
@@ -106,20 +106,20 @@ public class LaunchTransform
 
 	public Element asXML(Document doc)
 	{
-		Element tdefEl = doc.createElement("Transform");
-		tdefEl.setAttribute("path", stylesheet);
-		tdefEl.setAttribute("pathType", pathType);
+		Element tdefEl = doc.createElement("Transform"); //$NON-NLS-1$
+		tdefEl.setAttribute("path", stylesheet); //$NON-NLS-1$
+		tdefEl.setAttribute("pathType", pathType); //$NON-NLS-1$
 		if (resolver != null)
-			tdefEl.setAttribute("uriResolver", resolver);
-		Element paramsEl = doc.createElement("Parameters");
+			tdefEl.setAttribute("uriResolver", resolver); //$NON-NLS-1$
+		Element paramsEl = doc.createElement("Parameters"); //$NON-NLS-1$
 		tdefEl.appendChild(paramsEl);
 		for (Iterator<LaunchAttribute> iter = parameters.iterator(); iter.hasNext();)
 		{
 			LaunchAttribute param = (LaunchAttribute) iter.next();
-			Element propEl = doc.createElement("Parameter");
-			propEl.setAttribute("name", param.uri);
-			propEl.setAttribute("type", param.type);
-			propEl.setAttribute("value", param.value);
+			Element propEl = doc.createElement("Parameter"); //$NON-NLS-1$
+			propEl.setAttribute("name", param.uri); //$NON-NLS-1$
+			propEl.setAttribute("type", param.type); //$NON-NLS-1$
+			propEl.setAttribute("value", param.value); //$NON-NLS-1$
 			paramsEl.appendChild(propEl);
 		}
 		return tdefEl;
@@ -127,22 +127,22 @@ public class LaunchTransform
 
 	public static LaunchTransform fromXML(Element transformEl)
 	{
-		String path = transformEl.getAttribute("path");
-		String pathType = transformEl.getAttribute("pathType");
+		String path = transformEl.getAttribute("path"); //$NON-NLS-1$
+		String pathType = transformEl.getAttribute("pathType"); //$NON-NLS-1$
 
 		LaunchTransform tdef = new LaunchTransform(path, pathType);
 
-		String uriResolver = transformEl.getAttribute("uriResolver");
+		String uriResolver = transformEl.getAttribute("uriResolver"); //$NON-NLS-1$
 		tdef.setResolver(uriResolver);
 
-		Element paramsEl = (Element) transformEl.getElementsByTagName("Parameters").item(0);
-		NodeList paramEls = paramsEl.getElementsByTagName("Parameter");
+		Element paramsEl = (Element) transformEl.getElementsByTagName("Parameters").item(0); //$NON-NLS-1$
+		NodeList paramEls = paramsEl.getElementsByTagName("Parameter"); //$NON-NLS-1$
 		for (int i = 0; i < paramEls.getLength(); i++)
 		{
 			Element paramEl = (Element) paramEls.item(i);
-			String name = paramEl.getAttribute("name");
-			String type = paramEl.getAttribute("type");
-			String value = paramEl.getAttribute("value");
+			String name = paramEl.getAttribute("name"); //$NON-NLS-1$
+			String type = paramEl.getAttribute("type"); //$NON-NLS-1$
+			String value = paramEl.getAttribute("value"); //$NON-NLS-1$
 			tdef.addParameter(new LaunchAttribute(name, type, value));
 		}
 

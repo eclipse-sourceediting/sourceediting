@@ -17,12 +17,12 @@ import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
 
 public class ProcessorTypeRegistryReader extends AbstractRegistryReader
 {
-	public static final String TAG_processorType = "processorType";
-	public static final String ATT_ID = "id";
-	public static final String ATT_LABEL = "label";
-	public static final String ATT_TRANSFORMER_FACTORY_NAME = "transformerFactory";
-	public static final String ATT_OUTPUT_PROPERTIES = "outputProperties";
-	public static final String ATT_FEATURE_PROPERTIES = "featureProperties";
+	public static final String TAG_processorType = "processorType"; //$NON-NLS-1$
+	public static final String ATT_ID = "id"; //$NON-NLS-1$
+	public static final String ATT_LABEL = "label"; //$NON-NLS-1$
+	public static final String ATT_TRANSFORMER_FACTORY_NAME = "transformerFactory"; //$NON-NLS-1$
+	public static final String ATT_OUTPUT_PROPERTIES = "outputProperties"; //$NON-NLS-1$
+	public static final String ATT_FEATURE_PROPERTIES = "featureProperties"; //$NON-NLS-1$
 
 	private ProcessorTypeRegistry registry;
 
@@ -75,6 +75,6 @@ public class ProcessorTypeRegistryReader extends AbstractRegistryReader
 	{
 		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 		this.registry = registry;
-		readRegistry(extensionRegistry, LaunchingPlugin.PLUGIN_ID, "processorType");
+		readRegistry(extensionRegistry, LaunchingPlugin.PLUGIN_ID, "processorType"); //$NON-NLS-1$
 	}
 }

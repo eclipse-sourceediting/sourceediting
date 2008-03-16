@@ -61,22 +61,22 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 	/**
 	 * Retireve all global variables in the stylesheet.
 	 */
-	private static final String XPATH_GLOBAL_VARIABLES = "/xsl:stylesheet/xsl:variable";
+	private static final String XPATH_GLOBAL_VARIABLES = "/xsl:stylesheet/xsl:variable"; //$NON-NLS-1$
 	
 	/**
 	 * Retrieve all global parameters in the stylesheet.
 	 */
-	private static final String XPATH_GLOBAL_PARAMS = "/xsl:stylesheet/xsl:param";
+	private static final String XPATH_GLOBAL_PARAMS = "/xsl:stylesheet/xsl:param"; //$NON-NLS-1$
 	
 	/**
 	 * Limit selection of variables to those that are in the local scope.
 	 */
-	private static final String XPATH_LOCAL_VARIABLES = "ancestor::xsl:template/descendant::xsl:variable";
+	private static final String XPATH_LOCAL_VARIABLES = "ancestor::xsl:template/descendant::xsl:variable"; //$NON-NLS-1$
 	
 	/**
 	 * Limit selection of params to those that are in the local scope.
 	 */
-	private static final String XPATH_LOCAL_PARAMS = "ancestor::xsl:template/descendant::xsl:param";
+	private static final String XPATH_LOCAL_PARAMS = "ancestor::xsl:template/descendant::xsl:param"; //$NON-NLS-1$
 
 	/**
 	 * XSL Namespace.  We rely on the namespace not the prefix for identification.
@@ -188,7 +188,7 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 				if (nodes != null && nodes.getLength() > 0) {
 				   for (int nodecnt = 0; nodecnt < nodes.getLength(); nodecnt++) {
 						Node node = nodes.item(nodecnt);
-						String variableName = "$" + node.getAttributes().getNamedItem("name").getNodeValue();
+						String variableName = "$" + node.getAttributes().getNamedItem("name").getNodeValue(); //$NON-NLS-1$ //$NON-NLS-2$
 						contentAssistRequest.getReplacementLength();
 						XSLVariableCustomCompletionProposal proposal = new XSLVariableCustomCompletionProposal(variableName, offset, 0, variableName.length() + 1, XSLPluginImageHelper.getInstance().getImage(XSLPluginImages.IMG_VARIABLES), variableName, null, null, 0);
 						contentAssistRequest.addProposal(proposal);

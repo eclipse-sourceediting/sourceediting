@@ -39,7 +39,7 @@ import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 
 public class MultipleInputDialog extends Dialog
 {
-	protected static final String FIELD_NAME = "FIELD_NAME";
+	protected static final String FIELD_NAME = "FIELD_NAME"; //$NON-NLS-1$
 	protected static final int TEXT = 100;
 	protected static final int BROWSE = 101;
 	protected static final int VARIABLE = 102;
@@ -170,7 +170,7 @@ public class MultipleInputDialog extends Dialog
 				@Override
 				public boolean validate()
 				{
-					return !text.getText().equals("");
+					return !text.getText().equals(""); //$NON-NLS-1$
 				}
 			});
 			text.addModifyListener(new ModifyListener()
@@ -219,7 +219,7 @@ public class MultipleInputDialog extends Dialog
 				@Override
 				public boolean validate()
 				{
-					return !text.getText().equals("");
+					return !text.getText().equals(""); //$NON-NLS-1$
 				}
 			});
 
@@ -342,7 +342,7 @@ public class MultipleInputDialog extends Dialog
 
 	private String getDialogSettingsSectionName()
 	{
-		return XSLDebugUIPlugin.PLUGIN_ID + ".MULTIPLE_INPUT_DIALOG";
+		return XSLDebugUIPlugin.PLUGIN_ID + ".MULTIPLE_INPUT_DIALOG"; //$NON-NLS-1$
 	}
 
 	@Override

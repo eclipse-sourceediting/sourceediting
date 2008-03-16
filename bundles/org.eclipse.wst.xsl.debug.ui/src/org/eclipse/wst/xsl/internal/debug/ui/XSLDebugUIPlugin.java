@@ -25,7 +25,7 @@ public class XSLDebugUIPlugin extends AbstractUIPlugin
 {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.wst.xsl.debug.ui";
+	public static final String PLUGIN_ID = "org.eclipse.wst.xsl.debug.ui"; //$NON-NLS-1$
 
 	// The shared instance
 	private static XSLDebugUIPlugin plugin;
@@ -114,7 +114,7 @@ public class XSLDebugUIPlugin extends AbstractUIPlugin
 
 	public static void log(Exception e)
 	{
-		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, 0, "", e));
+		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, 0, "", e)); //$NON-NLS-1$
 	}
 
 	public static void log(CoreException e)

@@ -29,7 +29,7 @@ public class ParametersLabelProvider implements ITableLabelProvider
 			case 2:
 				return p.value;
 		}
-		return "!";
+		return "!"; //$NON-NLS-1$
 	}
 
 	public Image getColumnImage(Object element, int columnIndex)

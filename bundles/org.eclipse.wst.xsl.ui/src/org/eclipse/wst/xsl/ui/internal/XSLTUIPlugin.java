@@ -23,7 +23,7 @@ public class XSLTUIPlugin extends AbstractUIPlugin {
 	/**
 	 * The Plugin ID 
 	 */
-	public static final String PLUGIN_ID = "org.eclipse.wst.xsl.ui";
+	public static final String PLUGIN_ID = "org.eclipse.wst.xsl.ui"; //$NON-NLS-1$
 
 	// The shared instance
 	private static XSLTUIPlugin plugin;

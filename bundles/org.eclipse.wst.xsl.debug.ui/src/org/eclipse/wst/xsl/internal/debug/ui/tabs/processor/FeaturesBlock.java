@@ -114,7 +114,7 @@ public class FeaturesBlock extends AbstractTableBlock
 		useFeaturesFromPreferencesRadio = new Button(group, SWT.RADIO);
 		gd = new GridData(SWT.LEFT, SWT.CENTER, false, false);
 		useFeaturesFromPreferencesRadio.setLayoutData(gd);
-		useFeaturesFromPreferencesRadio.setText("Use features from preferences");
+		useFeaturesFromPreferencesRadio.setText(Messages.getString("FeaturesBlock.0")); //$NON-NLS-1$
 		useFeaturesFromPreferencesRadio.addSelectionListener(new SelectionListener()
 		{
 
@@ -130,7 +130,7 @@ public class FeaturesBlock extends AbstractTableBlock
 		});
 
 		changePreferences = new Button(group, SWT.PUSH);
-		changePreferences.setText("Change Preferences...");
+		changePreferences.setText(Messages.getString("FeaturesBlock.1")); //$NON-NLS-1$
 		gd = new GridData(SWT.RIGHT, SWT.CENTER, false, false);
 		changePreferences.setLayoutData(gd);
 		changePreferences.addSelectionListener(new SelectionAdapter()
@@ -139,7 +139,7 @@ public class FeaturesBlock extends AbstractTableBlock
 			public void widgetSelected(SelectionEvent e)
 			{
 				IPreferencePage page = new FeaturesPreferencePage();
-				XSLDebugUIPlugin.showPreferencePage("org.eclipse.wst.xsl.debug.ui.page1", page);
+				XSLDebugUIPlugin.showPreferencePage("org.eclipse.wst.xsl.debug.ui.page1", page); //$NON-NLS-1$
 				// now refresh everything
 				handleUseFeaturesFromPreferences(true);
 				// tViewer.refresh();
@@ -149,7 +149,7 @@ public class FeaturesBlock extends AbstractTableBlock
 		useSpecificFeaturesRadio = new Button(group, SWT.RADIO);
 		gd = new GridData(SWT.LEFT, SWT.CENTER, false, false);
 		useSpecificFeaturesRadio.setLayoutData(gd);
-		useSpecificFeaturesRadio.setText("Use specific features");
+		useSpecificFeaturesRadio.setText(Messages.getString("FeaturesBlock.3")); //$NON-NLS-1$
 		useSpecificFeaturesRadio.addSelectionListener(new SelectionListener()
 		{
 
@@ -178,17 +178,17 @@ public class FeaturesBlock extends AbstractTableBlock
 		TableColumn c1 = new TableColumn(table, SWT.NONE);
 		c1.setWidth(150);
 		c1.setResizable(true);
-		c1.setText("Feature");
+		c1.setText(Messages.getString("FeaturesBlock.4")); //$NON-NLS-1$
 
 		TableColumn c2 = new TableColumn(table, SWT.NONE);
 		c2.setWidth(50);
 		c2.setResizable(true);
-		c2.setText("Type");
+		c2.setText(Messages.getString("FeaturesBlock.5")); //$NON-NLS-1$
 
 		TableColumn c3 = new TableColumn(table, SWT.NONE);
 		c3.setWidth(250);
 		c3.setResizable(true);
-		c3.setText("Value");
+		c3.setText(Messages.getString("FeaturesBlock.6")); //$NON-NLS-1$
 
 		tViewer = new TableViewer(table);
 		tViewer.setContentProvider(new IStructuredContentProvider()
@@ -229,9 +229,9 @@ public class FeaturesBlock extends AbstractTableBlock
 						return tv.type;
 					case 2:
 						String value = tv.value;
-						return value == null ? "" : value;
+						return value == null ? "" : value; //$NON-NLS-1$
 				}
-				return "!!";
+				return "!!"; //$NON-NLS-1$
 			}
 
 			private String removeURI(String uri)
@@ -261,25 +261,25 @@ public class FeaturesBlock extends AbstractTableBlock
 
 		});
 		tViewer.setColumnProperties(new String[]
-		{ "name", "type", "value" });
+		{ Messages.getString("FeaturesBlock.9"), Messages.getString("FeaturesBlock.10"), Messages.getString("FeaturesBlock.11") }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		tViewer.setCellModifier(new ICellModifier()
 		{
 			public boolean canModify(Object element, String property)
 			{
-				return "value".equals(property);
+				return Messages.getString("FeaturesBlock.12").equals(property); //$NON-NLS-1$
 			}
 
 			public Object getValue(Object element, String property)
 			{
 				LaunchAttribute tv = (LaunchAttribute) element;
-				return tv.value == null ? "" : tv.value;
+				return tv.value == null ? "" : tv.value; //$NON-NLS-1$
 			}
 
 			public void modify(Object element, String property, Object value)
 			{
 				Item item = (Item) element;
 				LaunchAttribute tv = (LaunchAttribute) item.getData();
-				if (value == null || "".equals(value))
+				if (value == null || "".equals(value)) //$NON-NLS-1$
 					launchFeatures.removeFeature(tv.uri);
 				else
 					tv.setValue((String) value);
@@ -357,7 +357,7 @@ public class FeaturesBlock extends AbstractTableBlock
 					}
 					text = feature == null ? null : feature.getDescription();
 				}
-				descriptionText.setText(text == null ? "" : text);
+				descriptionText.setText(text == null ? "" : text); //$NON-NLS-1$
 			}
 		});
 
@@ -438,7 +438,7 @@ public class FeaturesBlock extends AbstractTableBlock
 
 	public String getName()
 	{
-		return "Processor Features";
+		return Messages.getString("FeaturesBlock.16"); //$NON-NLS-1$
 	}
 
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)

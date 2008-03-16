@@ -64,7 +64,7 @@ public class LaunchFeatures
 	{
 		Document doc = PreferenceUtil.getDocument();
 
-		Element featuresEl = doc.createElement("Features");
+		Element featuresEl = doc.createElement("Features"); //$NON-NLS-1$
 		doc.appendChild(featuresEl);
 
 		for (Iterator<LaunchAttribute> iter = features.iterator(); iter.hasNext();)
@@ -72,10 +72,10 @@ public class LaunchFeatures
 			LaunchAttribute feature = (LaunchAttribute) iter.next();
 			if (feature.value == null)
 				continue;
-			Element featureEl = doc.createElement("Feature");
-			featureEl.setAttribute("name", feature.uri);
-			featureEl.setAttribute("type", feature.type);
-			featureEl.setAttribute("value", feature.value);
+			Element featureEl = doc.createElement("Feature"); //$NON-NLS-1$
+			featureEl.setAttribute("name", feature.uri); //$NON-NLS-1$
+			featureEl.setAttribute("type", feature.type); //$NON-NLS-1$
+			featureEl.setAttribute("value", feature.value); //$NON-NLS-1$
 			featuresEl.appendChild(featureEl);
 		}
 
@@ -90,13 +90,13 @@ public class LaunchFeatures
 
 		Element featuresEl = doc.getDocumentElement();
 
-		NodeList featureEls = featuresEl.getElementsByTagName("Feature");
+		NodeList featureEls = featuresEl.getElementsByTagName("Feature"); //$NON-NLS-1$
 		for (int i = 0; i < featureEls.getLength(); i++)
 		{
 			Element featureEl = (Element) featureEls.item(i);
-			String name = featureEl.getAttribute("name");
-			String type = featureEl.getAttribute("type");
-			String value = featureEl.getAttribute("value");
+			String name = featureEl.getAttribute("name"); //$NON-NLS-1$
+			String type = featureEl.getAttribute("type"); //$NON-NLS-1$
+			String value = featureEl.getAttribute("value"); //$NON-NLS-1$
 			pdef.addFeature(new LaunchAttribute(name, type, value));
 		}
 

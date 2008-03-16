@@ -53,7 +53,7 @@ import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages;
  * @see org.eclipse.wst.xml.ui.
  * @since 0.5M6
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings("restriction") //$NON-NLS-1$
 class XPathTemplateCompletionProcessor extends TemplateCompletionProcessor {
 	private static final class ProposalComparator implements Comparator {
 		public int compare(Object o1, Object o2) {

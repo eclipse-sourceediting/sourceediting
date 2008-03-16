@@ -56,7 +56,7 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		ancestor.setLayout(layout);
 
 		Label label = new Label(ancestor, SWT.NONE);
-		label.setText("Expand the tree to set preferences ");
+		label.setText(Messages.getString("MainPreferencePage.0")); //$NON-NLS-1$
 
 		// Label label = new Label(ancestor,SWT.NONE);
 		// label.setText("Resolve URI's relative to:");

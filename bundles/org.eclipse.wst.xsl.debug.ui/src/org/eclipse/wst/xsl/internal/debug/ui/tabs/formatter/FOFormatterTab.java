@@ -87,7 +87,7 @@ public class FOFormatterTab extends XSLLaunchConfigurationTab
 
 	public String getName()
 	{
-		return "Formatter";
+		return "Formatter"; //$NON-NLS-1$
 	}
 
 	protected void handleSelectionChanged()

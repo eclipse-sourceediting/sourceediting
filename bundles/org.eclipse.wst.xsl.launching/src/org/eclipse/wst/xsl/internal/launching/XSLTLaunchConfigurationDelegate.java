@@ -217,8 +217,8 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 						IProcessorInstall processor = XSLTRuntime.getProcessor(debuggingInstallId);
 
 						IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-						result[0] = MessageDialog.openQuestion(dw.getShell(), "XSLT Processor Debugger", "The " + install.getName() + " XSLT processor does not support debugging.\n"
-								+ "Would you like to debug using the default " + processor.getName() + " processor instead?");
+						result[0] = MessageDialog.openQuestion(dw.getShell(), Messages.getString("XSLTLaunchConfigurationDelegate.0"), Messages.getString("XSLTLaunchConfigurationDelegate.1") + install.getName() + Messages.getString("XSLTLaunchConfigurationDelegate.2") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								+ Messages.getString("XSLTLaunchConfigurationDelegate.3") + processor.getName() + Messages.getString("XSLTLaunchConfigurationDelegate.4")); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 				});
 				return result[0];
@@ -238,11 +238,11 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 
 	private File getLaunchConfigFile()
 	{
-		IPath launchPath = Platform.getStateLocation(LaunchingPlugin.getDefault().getBundle()).append("launch");
+		IPath launchPath = Platform.getStateLocation(LaunchingPlugin.getDefault().getBundle()).append(Messages.getString("XSLTLaunchConfigurationDelegate.5")); //$NON-NLS-1$
 		File launchDir = launchPath.toFile();
 		if (!launchDir.exists())
 			launchDir.mkdir();
-		File featuresFile = new File(launchDir, "launch.xml");
+		File featuresFile = new File(launchDir, Messages.getString("XSLTLaunchConfigurationDelegate.6")); //$NON-NLS-1$
 		return featuresFile;
 	}
 
@@ -262,7 +262,7 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 	{
 		String invokerId = configuration.getAttribute(XSLLaunchConfigurationConstants.INVOKER_DESCRIPTOR, (String) null);
 		if (invokerId == null)
-			invokerId = "org.eclipse.wst.xsl.launching.jaxp.invoke";
+			invokerId = "org.eclipse.wst.xsl.launching.jaxp.invoke"; //$NON-NLS-1$
 		return XSLTRuntime.getProcessorInvoker(invokerId);
 	}
 
@@ -276,7 +276,7 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 		}
 		else
 		{
-			String processorId = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_PROCESSOR, "");
+			String processorId = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_PROCESSOR, ""); //$NON-NLS-1$
 			install = XSLTRuntime.getProcessor(processorId);
 		}
 		if (mode.equals(ILaunchManager.DEBUG_MODE) && install.getDebugger() == null)
@@ -291,8 +291,8 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 	public String getMainTypeName(ILaunchConfiguration configuration) throws CoreException
 	{
 		if (ILaunchManager.DEBUG_MODE.equals(mode))
-			return "org.eclipse.wst.xsl.debugger.DebugRunner";
-		return "org.eclipse.wst.xsl.invoker.Main";
+			return "org.eclipse.wst.xsl.debugger.DebugRunner"; //$NON-NLS-1$
+		return "org.eclipse.wst.xsl.invoker.Main"; //$NON-NLS-1$
 	}
 
 	@Override
@@ -304,12 +304,12 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 
 		StringBuffer sb = new StringBuffer();
 		sb.append(clazz);
-		sb.append(" ");
-		sb.append("\"" + getLaunchConfigFile().getAbsolutePath() + "\"");
-		sb.append(" ");
-		sb.append("\"" + launchHelper.getSource() + "\"");
-		sb.append(" ");
-		sb.append("\"" + launchHelper.getTarget().getAbsolutePath() + "\"");
+		sb.append(" "); //$NON-NLS-1$
+		sb.append("\"" + getLaunchConfigFile().getAbsolutePath() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+		sb.append(" "); //$NON-NLS-1$
+		sb.append("\"" + launchHelper.getSource() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+		sb.append(" "); //$NON-NLS-1$
+		sb.append("\"" + launchHelper.getTarget().getAbsolutePath() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
 		if (ILaunchManager.DEBUG_MODE.equals(mode))
 		{
 			IProcessorInstall install = getProcessorInstall(configuration, mode);
@@ -317,8 +317,8 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 			{
 				IDebugger debugger = install.getDebugger();
 				String className = debugger.getClassName();
-				sb.append(" -debug ").append(className).append(" ");
-				sb.append(launchHelper.getRequestPort()).append(" ").append(launchHelper.getEventPort());
+				sb.append(" -debug ").append(className).append(" "); //$NON-NLS-1$ //$NON-NLS-2$
+				sb.append(launchHelper.getRequestPort()).append(" ").append(launchHelper.getEventPort()); //$NON-NLS-1$
 			}
 		}
 
@@ -387,22 +387,22 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 			{
 				URL entry = jars[i].asURL();
 				if (entry == null)
-					throw new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.ERROR, "Could not locate jar file " + jars[i], null));
-				File file = new File(tempDir, "END_" + i + ".jar");
+					throw new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.getString("XSLTLaunchConfigurationDelegate.23") + jars[i], null)); //$NON-NLS-1$
+				File file = new File(tempDir, "END_" + i + ".jar"); //$NON-NLS-1$ //$NON-NLS-2$
 				moveFile(entry, file);
 			}
 			// add the endorsed dir
-			vmargs += " -Djava.endorsed.dirs=\"" + tempDir.getAbsolutePath() + "\"";
+			vmargs += " -Djava.endorsed.dirs=\"" + tempDir.getAbsolutePath() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 			String tfactory = install.getProcessorType().getTransformerFactoryName();
 			if (tfactory != null)
-				vmargs += " -Djavax.xml.transform.TransformerFactory=" + install.getProcessorType().getTransformerFactoryName();
+				vmargs += " -Djavax.xml.transform.TransformerFactory=" + install.getProcessorType().getTransformerFactoryName(); //$NON-NLS-1$
 		}
 		return vmargs;
 	}
 
 	private File getEndorsedDir()
 	{
-		IPath tempLocation = Platform.getStateLocation(LaunchingPlugin.getDefault().getBundle()).append("endorsed");
+		IPath tempLocation = Platform.getStateLocation(LaunchingPlugin.getDefault().getBundle()).append("endorsed"); //$NON-NLS-1$
 		return tempLocation.toFile();
 	}
 
@@ -426,7 +426,7 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 		}
 		catch (IOException e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.ERROR, "Error copying url " + src + " to " + target, e));
+			throw new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.getString("XSLTLaunchConfigurationDelegate.7") + src + Messages.getString("XSLTLaunchConfigurationDelegate.31") + target, e)); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		finally
 		{

@@ -88,7 +88,7 @@ public class ProcessorDetailsDialog extends Dialog
 	 */
 	protected String getDialogSettingsSectionName()
 	{
-		return "XSL_DETAILS_DIALOG_SECTION";
+		return "XSL_DETAILS_DIALOG_SECTION"; //$NON-NLS-1$
 	}
 
 	@Override

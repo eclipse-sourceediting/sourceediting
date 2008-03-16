@@ -44,7 +44,7 @@ public class XSLStackFrame extends XSLDebugElement implements IStackFrame
 	private void init(String data,IXSLDebugTarget debugTarget)
 	{
 
-		String[] strings = data.split("\\|");
+		String[] strings = data.split("\\|"); //$NON-NLS-1$
 		String fileName = strings[0];
 		try
 		{
@@ -59,12 +59,12 @@ public class XSLStackFrame extends XSLDebugElement implements IStackFrame
 			String safename = strings[3];
 
 			int theIndex;
-			while ((theIndex = safename.indexOf("%@_PIPE_@%")) != -1)
+			while ((theIndex = safename.indexOf("%@_PIPE_@%")) != -1) //$NON-NLS-1$
 			{
-				safename = safename.substring(0, theIndex) + "|" + safename.substring(theIndex + "%@_PIPE_@%".length(), safename.length());
+				safename = safename.substring(0, theIndex) + "|" + safename.substring(theIndex + "%@_PIPE_@%".length(), safename.length()); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
-			name = p.lastSegment() + " " + safename;
+			name = p.lastSegment() + " " + safename; //$NON-NLS-1$
 			
 			variables = new XSLVariable[strings.length-4];
 			for (int i=0;i<variables.length;i++)
@@ -119,7 +119,7 @@ public class XSLStackFrame extends XSLDebugElement implements IStackFrame
 
 	public String getName() throws DebugException
 	{
-		return name + " line: " + lineNumber;
+		return name + Messages.getString("XSLStackFrame.5") + lineNumber; //$NON-NLS-1$
 	}
 
 	public IRegisterGroup[] getRegisterGroups() throws DebugException

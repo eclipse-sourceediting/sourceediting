@@ -17,9 +17,9 @@ import org.eclipse.debug.core.model.IVariable;
 
 public class XSLVariable extends XSLDebugElement implements IVariable
 {
-	public static final String LOCAL_SCOPE = "L";
-	public static final String TUNNEL_SCOPE = "T";
-	public static final String GLOBAL_SCOPE = "G";
+	public static final String LOCAL_SCOPE = "L"; //$NON-NLS-1$
+	public static final String TUNNEL_SCOPE = "T"; //$NON-NLS-1$
+	public static final String GLOBAL_SCOPE = "G"; //$NON-NLS-1$
 
 	private final int id;
 	private String fName;
@@ -55,8 +55,8 @@ public class XSLVariable extends XSLDebugElement implements IVariable
 	public String getReferenceTypeName() throws DebugException
 	{
 		if (GLOBAL_SCOPE.equals(scope))
-			return "global";
-		return "local";
+			return "global"; //$NON-NLS-1$
+		return "local"; //$NON-NLS-1$
 	}
 
 	public boolean hasValueChanged() throws DebugException

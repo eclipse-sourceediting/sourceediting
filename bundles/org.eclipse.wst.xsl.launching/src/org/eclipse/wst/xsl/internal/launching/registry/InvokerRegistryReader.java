@@ -18,10 +18,10 @@ import org.eclipse.wst.xsl.internal.launching.ProcessorInvokerDescriptor;
 
 public class InvokerRegistryReader extends AbstractRegistryReader
 {
-	public static final String TAG_INVOKE = "invoker";
-	public static final String ATT_ID = "id";
-	public static final String ATT_CLASS = "class";
-	public static final String ATT_CLASSPATH = "classpath";
+	public static final String TAG_INVOKE = "invoker"; //$NON-NLS-1$
+	public static final String ATT_ID = "id"; //$NON-NLS-1$
+	public static final String ATT_CLASS = "class"; //$NON-NLS-1$
+	public static final String ATT_CLASSPATH = "classpath"; //$NON-NLS-1$
 
 	private InvokerRegistry registry;
 
@@ -52,7 +52,7 @@ public class InvokerRegistryReader extends AbstractRegistryReader
 			return true;
 		}
 
-		String[] entries = classpath.split(";");
+		String[] entries = classpath.split(";"); //$NON-NLS-1$
 		for (int i = 0; i < entries.length; i++)
 		{
 			String string = entries[i];
@@ -74,6 +74,6 @@ public class InvokerRegistryReader extends AbstractRegistryReader
 	{
 		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 		this.registry = registry;
-		readRegistry(extensionRegistry, LaunchingPlugin.PLUGIN_ID, "invoke");
+		readRegistry(extensionRegistry, LaunchingPlugin.PLUGIN_ID, "invoke"); //$NON-NLS-1$
 	}
 }

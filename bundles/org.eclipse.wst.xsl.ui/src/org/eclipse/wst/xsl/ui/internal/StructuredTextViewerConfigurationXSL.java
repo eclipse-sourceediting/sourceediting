@@ -26,7 +26,7 @@ import org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistProcessor;
  * @author dcarver
  *
  */
-@SuppressWarnings({ "restriction"})
+@SuppressWarnings({ "restriction"}) //$NON-NLS-1$
 public class StructuredTextViewerConfigurationXSL extends
 		StructuredTextViewerConfigurationXML {
 

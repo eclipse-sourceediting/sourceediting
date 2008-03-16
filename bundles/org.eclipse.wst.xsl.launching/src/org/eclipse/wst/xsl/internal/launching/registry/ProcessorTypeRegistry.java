@@ -33,8 +33,8 @@ import org.eclipse.wst.xsl.launching.XSLTRuntime;
 
 public class ProcessorTypeRegistry
 {
-	protected static final String DESC_SUFFIX = ".DESC";
-	protected static final String TYPE_SUFFIX = ".TYPE";
+	protected static final String DESC_SUFFIX = ".DESC"; //$NON-NLS-1$
+	protected static final String TYPE_SUFFIX = ".TYPE"; //$NON-NLS-1$
 
 	private final List<IConfigurationElement> elements = new ArrayList<IConfigurationElement>();
 	private IProcessorType[] installTypes;

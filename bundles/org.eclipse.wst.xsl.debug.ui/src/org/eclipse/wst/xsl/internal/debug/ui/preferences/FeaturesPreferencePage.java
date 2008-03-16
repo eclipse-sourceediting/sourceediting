@@ -53,8 +53,8 @@ public class FeaturesPreferencePage extends PreferencePage implements IWorkbench
 	{
 		super();
 		// only used when page is shown programatically
-		setTitle("Processor Features");
-		setDescription("Set default values for installed processor types");
+		setTitle(Messages.getString("FeaturesPreferencePage.0")); //$NON-NLS-1$
+		setDescription(Messages.getString("FeaturesPreferencePage.1")); //$NON-NLS-1$
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class FeaturesPreferencePage extends PreferencePage implements IWorkbench
 
 		Label label = new Label(parent, SWT.NULL);
 		GridData gd = new GridData(SWT.NONE, SWT.CENTER, false, false);
-		label.setText("Processor Type: ");
+		label.setText(Messages.getString("FeaturesPreferencePage.2")); //$NON-NLS-1$
 		label.setLayoutData(gd);
 
 		Combo combo = new Combo(parent, SWT.READ_ONLY | SWT.SINGLE);

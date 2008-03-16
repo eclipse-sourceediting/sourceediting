@@ -68,7 +68,7 @@ public class WorkingDirectoryBlock extends ResourceSelectionBlock
 			case WORKSPACE_DIALOG_TITLE:
 				return ProcessorMessages.WorkingDirectoryBlock_WORKSPACE_DIALOG_TITLE;
 		}
-		return "" + type;
+		return "" + type; //$NON-NLS-1$
 	}
 
 	@Override
@@ -84,7 +84,7 @@ public class WorkingDirectoryBlock extends ResourceSelectionBlock
 		gd.horizontalSpan = 2;
 		specificFileComp.setLayoutData(gd);
 
-		useDefaultCheckButton = createRadioButton(specificFileComp, "Default:");
+		useDefaultCheckButton = createRadioButton(specificFileComp, ProcessorMessages.WorkingDirectoryBlock_1);
 		useDefaultCheckButton.addSelectionListener(widgetListener);
 
 		defaultText = new Text(specificFileComp, SWT.SINGLE | SWT.BORDER);
@@ -93,7 +93,7 @@ public class WorkingDirectoryBlock extends ResourceSelectionBlock
 		defaultText.setFont(parent.getFont());
 		defaultText.setEnabled(false);
 
-		useSpecificButton = createRadioButton(specificFileComp, "Other:");
+		useSpecificButton = createRadioButton(specificFileComp, ProcessorMessages.WorkingDirectoryBlock_2);
 
 		resourceText = new Text(specificFileComp, SWT.SINGLE | SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -109,7 +109,7 @@ public class WorkingDirectoryBlock extends ResourceSelectionBlock
 
 	public String getName()
 	{
-		return "Working Directory";
+		return ProcessorMessages.WorkingDirectoryBlock_3;
 	}
 
 	public void initializeFrom(ILaunchConfiguration configuration)
@@ -128,7 +128,7 @@ public class WorkingDirectoryBlock extends ResourceSelectionBlock
 			resourceText.setEnabled(!useDefault);
 
 			if (useDefault)
-				outputFile = "";
+				outputFile = ""; //$NON-NLS-1$
 
 			updateResourceText(useDefault);
 		}
@@ -168,13 +168,13 @@ public class WorkingDirectoryBlock extends ResourceSelectionBlock
 		catch (CoreException ce)
 		{
 		}
-		defaultWorkingDir = System.getProperty("user.dir");
+		defaultWorkingDir = System.getProperty("user.dir"); //$NON-NLS-1$
 	}
 
 	private Path getPath(String inputFile)
 	{
 		Path path = null;
-		if (inputFile.indexOf("${") >= 0)
+		if (inputFile.indexOf("${") >= 0) //$NON-NLS-1$
 		{
 			IStringVariableManager manager = VariablesPlugin.getDefault().getStringVariableManager();
 			try

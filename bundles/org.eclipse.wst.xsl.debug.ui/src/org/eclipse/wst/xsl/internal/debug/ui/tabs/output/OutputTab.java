@@ -44,7 +44,7 @@ public class OutputTab extends XSLLaunchConfigurationTab
 		outputFileBlock.createControl(comp);
 
 		Group group = new Group(comp, SWT.NULL);
-		group.setText("Output Properties");
+		group.setText(Messages.OutputTab_0);
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		group.setLayoutData(gd);
 		layout = new GridLayout(2, false);
@@ -55,6 +55,6 @@ public class OutputTab extends XSLLaunchConfigurationTab
 
 	public String getName()
 	{
-		return "Output";
+		return Messages.OutputTab_1;
 	}
 }

@@ -96,7 +96,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 		usePropertiesFromPreferencesRadio = new Button(parent, SWT.RADIO);
 		GridData gd = new GridData(SWT.LEFT, SWT.CENTER, false, false);
 		usePropertiesFromPreferencesRadio.setLayoutData(gd);
-		usePropertiesFromPreferencesRadio.setText("Use properties from preferences");
+		usePropertiesFromPreferencesRadio.setText(Messages.OutputPropertiesBlock_0);
 		usePropertiesFromPreferencesRadio.addSelectionListener(new SelectionListener()
 		{
 
@@ -112,7 +112,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 		});
 
 		changePreferences = new Button(parent, SWT.PUSH);
-		changePreferences.setText("Change Preferences...");
+		changePreferences.setText(Messages.OutputPropertiesBlock_1);
 		gd = new GridData(SWT.RIGHT, SWT.CENTER, false, false);
 		changePreferences.setLayoutData(gd);
 		changePreferences.addSelectionListener(new SelectionAdapter()
@@ -121,7 +121,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 			public void widgetSelected(SelectionEvent e)
 			{
 				IPreferencePage page = new OutputPreferencePage();
-				XSLDebugUIPlugin.showPreferencePage("org.eclipse.wst.xsl.debug.ui.output", page);
+				XSLDebugUIPlugin.showPreferencePage("org.eclipse.wst.xsl.debug.ui.output", page); //$NON-NLS-1$
 				handleUsePropertiesFromPreferences(true);
 			}
 		});
@@ -129,7 +129,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 		useSpecificPropertiesRadio = new Button(parent, SWT.RADIO);
 		gd = new GridData(SWT.LEFT, SWT.CENTER, false, false);
 		useSpecificPropertiesRadio.setLayoutData(gd);
-		useSpecificPropertiesRadio.setText("Use specific properties");
+		useSpecificPropertiesRadio.setText(Messages.OutputPropertiesBlock_3);
 		useSpecificPropertiesRadio.addSelectionListener(new SelectionListener()
 		{
 
@@ -160,12 +160,12 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 		TableColumn c1 = new TableColumn(table, SWT.NONE);
 		c1.setWidth(150);
 		c1.setResizable(true);
-		c1.setText("Property");
+		c1.setText(Messages.OutputPropertiesBlock_4);
 
 		TableColumn c2 = new TableColumn(table, SWT.NONE);
 		c2.setWidth(250);
 		c2.setResizable(true);
-		c2.setText("Value");
+		c2.setText(Messages.OutputPropertiesBlock_5);
 
 		tViewer = new TableViewer(table);
 		tViewer.setContentProvider(new IStructuredContentProvider()
@@ -203,7 +203,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 					case 1:
 						return launchProperties.getProperty(prop);
 				}
-				return "!!";
+				return "!!"; //$NON-NLS-1$
 			}
 
 			public void addListener(ILabelProviderListener listener)
@@ -225,12 +225,12 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 
 		});
 		tViewer.setColumnProperties(new String[]
-		{ "property", "value" });
+		{ Messages.OutputPropertiesBlock_7, Messages.OutputPropertiesBlock_8 });
 		tViewer.setCellModifier(new ICellModifier()
 		{
 			public boolean canModify(Object element, String property)
 			{
-				if (!"value".equals(property))
+				if (!Messages.OutputPropertiesBlock_9.equals(property))
 					return false;
 				return true;
 			}
@@ -239,14 +239,14 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 			{
 				String prop = (String) element;
 				String value = launchProperties.getProperty(prop);
-				return value == null ? "" : value;
+				return value == null ? "" : value; //$NON-NLS-1$
 			}
 
 			public void modify(Object element, String property, Object value)
 			{
 				Item item = (Item) element;
 				String prop = (String) item.getData();
-				if (value == null || "".equals(value))
+				if (value == null || "".equals(value)) //$NON-NLS-1$
 					launchProperties.removeProperty(prop);
 				else
 					launchProperties.setProperty(prop, (String) value);
@@ -290,7 +290,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 						}
 					}
 				}
-				descriptionText.setText(text == null ? "" : text);
+				descriptionText.setText(text == null ? "" : text); //$NON-NLS-1$
 			}
 		});
 
@@ -339,7 +339,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 
 	public String getName()
 	{
-		return "Output Properties";
+		return Messages.OutputPropertiesBlock_13;
 	}
 
 	private LaunchProperties initializeFeaturesFromPreferences()

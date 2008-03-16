@@ -48,7 +48,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer
 			xml = outputPrefs.getAsXML();
 			node.put(XSLTRuntime.PREF_OUTPUT_PROPERTIES_XML, xml);
 
-			node.put(XSLLaunchConfigurationConstants.ATTR_DEFAULT_DEBUGGING_INSTALL_ID, "org.eclipse.wst.xsl.launching.xalan.2_7_0");
+			node.put(XSLLaunchConfigurationConstants.ATTR_DEFAULT_DEBUGGING_INSTALL_ID, "org.eclipse.wst.xsl.launching.xalan.2_7_0"); //$NON-NLS-1$
 		}
 		catch (ParserConfigurationException e)
 		{

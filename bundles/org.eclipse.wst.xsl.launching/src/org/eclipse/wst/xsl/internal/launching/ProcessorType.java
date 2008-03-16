@@ -29,8 +29,8 @@ import org.eclipse.wst.xsl.launching.XSLTRuntime;
 
 public class ProcessorType implements IProcessorType
 {
-	private static final String DESC_SUFFIX = ".DESC";
-	private static final String TYPE_SUFFIX = ".TYPE";
+	private static final String DESC_SUFFIX = ".DESC"; //$NON-NLS-1$
+	private static final String TYPE_SUFFIX = ".TYPE"; //$NON-NLS-1$
 
 	private final String id;
 	private final String name;
@@ -133,8 +133,8 @@ public class ProcessorType implements IProcessorType
 					}
 					else
 					{
-						LaunchingPlugin.log(new CoreException(new Status(IStatus.WARNING, LaunchingPlugin.PLUGIN_ID, "Output properties file " + outputPropertiesURL
-								+ " not configured properly for key " + key)));
+						LaunchingPlugin.log(new CoreException(new Status(IStatus.WARNING, LaunchingPlugin.PLUGIN_ID, Messages.getString("ProcessorType.2") + outputPropertiesURL //$NON-NLS-1$
+								+ Messages.getString("ProcessorType.3") + key))); //$NON-NLS-1$
 					}
 				}
 			}
@@ -185,8 +185,8 @@ public class ProcessorType implements IProcessorType
 					}
 					else
 					{
-						LaunchingPlugin.log(new CoreException(new Status(IStatus.WARNING, LaunchingPlugin.PLUGIN_ID, "Feature properties file " + featurePropertiesURL
-								+ " not configured properly for key " + key)));
+						LaunchingPlugin.log(new CoreException(new Status(IStatus.WARNING, LaunchingPlugin.PLUGIN_ID, Messages.getString("ProcessorType.4") + featurePropertiesURL //$NON-NLS-1$
+								+ Messages.getString("ProcessorType.5") + key))); //$NON-NLS-1$
 					}
 				}
 			}

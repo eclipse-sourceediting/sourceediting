@@ -146,7 +146,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 				gd.verticalIndent = 5;
 				gd.widthHint = 380;
 				label.setLayoutData(gd);
-				label.setText("Select an input file for the transformation");
+				label.setText(Messages.getString("XSLLaunchShortcut.0")); //$NON-NLS-1$
 				
 				inputFileBlock.createControl(comp);
 				return comp;
@@ -166,7 +166,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 		};
 		dialog.setHelpAvailable(false);
 		dialog.setStatusLineAboveButtons(true);
-		dialog.setTitle("Input File");
+		dialog.setTitle(Messages.getString("XSLLaunchShortcut.1")); //$NON-NLS-1$
 		dialog.open();
 	}
 
@@ -275,8 +275,8 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 		IDebugModelPresentation labelProvider = DebugUITools.newDebugModelPresentation();
 		ElementListSelectionDialog dialog = new ElementListSelectionDialog(getShell(), labelProvider);
 		dialog.setElements(configList.toArray());
-		dialog.setTitle("Select a Launch Configuration");
-		dialog.setMessage("&Select existing configuration:");
+		dialog.setTitle(Messages.getString("XSLLaunchShortcut.2")); //$NON-NLS-1$
+		dialog.setMessage("&Select existing configuration:"); //$NON-NLS-1$
 		dialog.setMultipleSelection(false);
 		int result = dialog.open();
 		labelProvider.dispose();
@@ -295,7 +295,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 			ILaunchConfigurationType configType = getConfigurationType();
 			ILaunchConfigurationWorkingCopy wc = configType.newInstance(null, getLaunchManager().generateUniqueLaunchConfigurationNameFrom(xmlFilePath.lastSegment()));
 			if (xmlFile != null)
-				wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, "${workspace_loc:" + xmlFile.getFullPath().toPortableString()+"}");
+				wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, "${workspace_loc:" + xmlFile.getFullPath().toPortableString()+"}"); //$NON-NLS-1$ //$NON-NLS-2$
 			else
 				wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, xmlFilePath.toPortableString());
 			wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_USE_FEATURES_FROM_PREFERENCES, true);
@@ -315,7 +315,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 		}
 		catch (CoreException exception)
 		{
-			MessageDialog.openError(getShell(), "Error", exception.getStatus().getMessage());
+			MessageDialog.openError(getShell(), Messages.getString("XSLLaunchShortcut.6"), exception.getStatus().getMessage()); //$NON-NLS-1$
 		}
 		return config;
 	}

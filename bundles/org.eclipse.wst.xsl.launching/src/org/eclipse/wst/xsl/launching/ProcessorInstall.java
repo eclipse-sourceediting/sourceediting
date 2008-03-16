@@ -88,16 +88,16 @@ public class ProcessorInstall implements IProcessorInstall
 		IProcessorJar[] jars;
 		if (classpath == null)
 			return new IProcessorJar[0];
-		String[] jarstring = classpath.split(";");
+		String[] jarstring = classpath.split(";"); //$NON-NLS-1$
 		jars = new IProcessorJar[jarstring.length];
 		for (int i = 0; i < jarstring.length; i++)
 		{
 			String jar = jarstring[i];
 			try
 			{
-				if (jar.startsWith("${eclipse_orbit:") && jar.endsWith("}"))
+				if (jar.startsWith("${eclipse_orbit:") && jar.endsWith("}")) //$NON-NLS-1$ //$NON-NLS-2$
 				{
-					jar = jar.substring("${eclipse_orbit:".length());
+					jar = jar.substring("${eclipse_orbit:".length()); //$NON-NLS-1$
 					jar = jar.substring(0,jar.length()-1);
 					//jar = Utils.getFileLocation(jar,"");
 					jars[i] = new PluginProcessorJar(jar, null);

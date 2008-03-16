@@ -20,7 +20,7 @@ import org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidator;
  * 
  */
 public class DelegatingSourceValidatorForXSL extends DelegatingSourceValidator {
-	private final static String Id = "org.eclipse.wst.xsl.core.xsl";
+	private final static String Id = "org.eclipse.wst.xsl.core.xsl"; //$NON-NLS-1$
 
 	private Validator _validator;
 

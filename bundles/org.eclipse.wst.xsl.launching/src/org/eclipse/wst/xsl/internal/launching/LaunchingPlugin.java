@@ -23,7 +23,7 @@ public class LaunchingPlugin extends Plugin
 {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.wst.xsl.launching";
+	public static final String PLUGIN_ID = "org.eclipse.wst.xsl.launching"; //$NON-NLS-1$
 
 	// The shared instance
 	private static LaunchingPlugin plugin;
@@ -61,7 +61,7 @@ public class LaunchingPlugin extends Plugin
 
 	public static void log(Exception e)
 	{
-		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, 0, "", e));
+		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, 0, "", e)); //$NON-NLS-1$
 	}
 
 	public static void log(CoreException e)

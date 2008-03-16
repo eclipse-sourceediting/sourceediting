@@ -73,17 +73,17 @@ public class LaunchPipeline
 		try
 		{
 			Document doc = PreferenceUtil.getDocument();
-			Element rootEl = doc.createElement("Pipeline");
+			Element rootEl = doc.createElement("Pipeline"); //$NON-NLS-1$
 			doc.appendChild(rootEl);
 
-			Element opEl = doc.createElement("OutputProperties");
+			Element opEl = doc.createElement("OutputProperties"); //$NON-NLS-1$
 			rootEl.appendChild(opEl);
 			for (Object element : outputProperties.entrySet())
 			{
 				Map.Entry entry = (Map.Entry) element;
-				Element propEl = doc.createElement("Property");
-				propEl.setAttribute("name", (String) entry.getKey());
-				propEl.setAttribute("value", (String) entry.getValue());
+				Element propEl = doc.createElement("Property"); //$NON-NLS-1$
+				propEl.setAttribute("name", (String) entry.getKey()); //$NON-NLS-1$
+				propEl.setAttribute("value", (String) entry.getValue()); //$NON-NLS-1$
 				opEl.appendChild(propEl);
 			}
 
@@ -123,20 +123,20 @@ public class LaunchPipeline
 
 		Element rootEl = doc.getDocumentElement();
 
-		Element opEl = (Element) rootEl.getElementsByTagName("OutputProperties").item(0);
+		Element opEl = (Element) rootEl.getElementsByTagName("OutputProperties").item(0); //$NON-NLS-1$
 		if (opEl != null)
 		{
-			NodeList propEls = opEl.getElementsByTagName("Property");
+			NodeList propEls = opEl.getElementsByTagName("Property"); //$NON-NLS-1$
 			for (int i = 0; i < propEls.getLength(); i++)
 			{
 				Element propEl = (Element) propEls.item(i);
-				String name = propEl.getAttribute("name");
-				String value = propEl.getAttribute("value");
+				String name = propEl.getAttribute("name"); //$NON-NLS-1$
+				String value = propEl.getAttribute("value"); //$NON-NLS-1$
 				pdef.addOutputProperty(name, value);
 			}
 		}
 
-		NodeList transformEls = rootEl.getElementsByTagName("Transform");
+		NodeList transformEls = rootEl.getElementsByTagName("Transform"); //$NON-NLS-1$
 		for (int i = 0; i < transformEls.getLength(); i++)
 		{
 			Element transformEl = (Element) transformEls.item(i);

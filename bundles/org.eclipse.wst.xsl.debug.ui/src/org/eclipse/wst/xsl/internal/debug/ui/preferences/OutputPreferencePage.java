@@ -56,8 +56,8 @@ public class OutputPreferencePage extends PreferencePage implements IWorkbenchPr
 	public OutputPreferencePage()
 	{
 		super();
-		setTitle("Output Properties");
-		setDescription("Set output properties that will be used by default for all transformations");
+		setTitle(Messages.getString("OutputPreferencePage.0")); //$NON-NLS-1$
+		setDescription(Messages.getString("OutputPreferencePage.1")); //$NON-NLS-1$
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class OutputPreferencePage extends PreferencePage implements IWorkbenchPr
 		parent.setLayout(layout);
 
 		Group group = new Group(parent, SWT.NONE);
-		group.setText("Standard Properties");
+		group.setText(Messages.getString("OutputPreferencePage.2")); //$NON-NLS-1$
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.heightHint = 150;
 		gd.widthHint = 450;
@@ -86,14 +86,14 @@ public class OutputPreferencePage extends PreferencePage implements IWorkbenchPr
 				String text = null;
 				if (selection != null && selection.getFirstElement() != null)
 					text = ((IOutputProperty) selection.getFirstElement()).getDescription();
-				descriptionText.setText(text == null ? "" : text);
+				descriptionText.setText(text == null ? "" : text); //$NON-NLS-1$
 			}
 		});
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		standardOutputBlock.getControl().setLayoutData(gd);
 
 		group = new Group(parent, SWT.NONE);
-		group.setText("Processor-Specific Properties");
+		group.setText(Messages.getString("OutputPreferencePage.4")); //$NON-NLS-1$
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.horizontalSpan = 2;
 		group.setLayoutData(gd);
@@ -101,7 +101,7 @@ public class OutputPreferencePage extends PreferencePage implements IWorkbenchPr
 
 		Label label = new Label(group, SWT.NULL);
 		gd = new GridData(SWT.NONE, SWT.CENTER, false, false);
-		label.setText("Processor Type:");
+		label.setText(Messages.getString("OutputPreferencePage.5")); //$NON-NLS-1$
 		label.setLayoutData(gd);
 
 		Combo combo = new Combo(group, SWT.READ_ONLY | SWT.SINGLE);
@@ -192,7 +192,7 @@ public class OutputPreferencePage extends PreferencePage implements IWorkbenchPr
 				{
 					text = ((IOutputProperty) selection.getFirstElement()).getDescription();
 				}
-				descriptionText.setText(text == null ? "" : text);
+				descriptionText.setText(text == null ? "" : text); //$NON-NLS-1$
 			}
 		});
 

@@ -17,13 +17,13 @@ import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
 
 public class ProcessorRegistryReader extends AbstractRegistryReader
 {
-	public static final String TAG_processor = "processor";
-	public static final String ATT_ID = "id";
-	public static final String ATT_LABEL = "label";
-	public static final String ATT_TYPE_ID = "processorTypeId";
-	public static final String ATT_DEBUGGER_ID = "debuggerId";
-	public static final String ATT_CLASSPATH = "classpath";
-	public static final String ATT_SUPPORTS = "supports";
+	public static final String TAG_processor = "processor"; //$NON-NLS-1$
+	public static final String ATT_ID = "id"; //$NON-NLS-1$
+	public static final String ATT_LABEL = "label"; //$NON-NLS-1$
+	public static final String ATT_TYPE_ID = "processorTypeId"; //$NON-NLS-1$
+	public static final String ATT_DEBUGGER_ID = "debuggerId"; //$NON-NLS-1$
+	public static final String ATT_CLASSPATH = "classpath"; //$NON-NLS-1$
+	public static final String ATT_SUPPORTS = "supports"; //$NON-NLS-1$
 
 	private ProcessorRegistry registry;
 
@@ -85,6 +85,6 @@ public class ProcessorRegistryReader extends AbstractRegistryReader
 	{
 		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 		this.registry = registry;
-		readRegistry(extensionRegistry, LaunchingPlugin.PLUGIN_ID, "processor");
+		readRegistry(extensionRegistry, LaunchingPlugin.PLUGIN_ID, "processor"); //$NON-NLS-1$
 	}
 }

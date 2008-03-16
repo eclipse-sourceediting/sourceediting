@@ -192,7 +192,7 @@ public class XSLMainTab extends XSLLaunchConfigurationTab
 	{
 		for (IResource resource : context)
 		{
-			if (resource instanceof IFile && ("xml".equalsIgnoreCase(resource.getFileExtension()) || "xhtml".equalsIgnoreCase(resource.getFileExtension())))
+			if (resource instanceof IFile && ("xml".equalsIgnoreCase(resource.getFileExtension()) || "xhtml".equalsIgnoreCase(resource.getFileExtension()))) //$NON-NLS-1$ //$NON-NLS-2$
 				return (IFile) resource;
 		}
 		return null;
@@ -203,7 +203,7 @@ public class XSLMainTab extends XSLLaunchConfigurationTab
 		List<IResource> stylesheets = new ArrayList<IResource>();
 		for (IResource resource : context)
 		{
-			if (resource instanceof IFile && "xsl".equalsIgnoreCase(resource.getFileExtension()))
+			if (resource instanceof IFile && "xsl".equalsIgnoreCase(resource.getFileExtension())) //$NON-NLS-1$
 				stylesheets.add(resource);
 		}
 		return (IFile[]) stylesheets.toArray(new IFile[0]);

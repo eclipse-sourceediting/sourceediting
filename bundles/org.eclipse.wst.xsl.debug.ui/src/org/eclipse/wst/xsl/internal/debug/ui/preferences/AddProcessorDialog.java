@@ -77,7 +77,7 @@ public class AddProcessorDialog extends StatusDialog
 		if (install == null)
 		{
 			adding = true;
-			standin = new InstallStandin(XSLTRuntime.createUniqueProcessorId(selectedProcessorType), "", selectedProcessorType.getId(), null, new IProcessorJar[0]);
+			standin = new InstallStandin(XSLTRuntime.createUniqueProcessorId(selectedProcessorType), "", selectedProcessorType.getId(), null, new IProcessorJar[0]); //$NON-NLS-1$
 		}
 		else
 		{
@@ -141,19 +141,19 @@ public class AddProcessorDialog extends StatusDialog
 		});
 
 		label = new Label(parent, SWT.NONE);
-		label.setText("Supported versions:");
+		label.setText(ProcessorMessages.AddProcessorDialog_1);
 		supportsVerson10Checkbox = new Button(parent, SWT.CHECK);
 		gd = new GridData();
 		gd.horizontalSpan = 2;
 		supportsVerson10Checkbox.setLayoutData(gd);
-		supportsVerson10Checkbox.setText("XSLT 1.0");
+		supportsVerson10Checkbox.setText("XSLT 1.0"); //$NON-NLS-1$
 
 		label = new Label(parent, SWT.NONE);
 		supportsVerson20Checkbox = new Button(parent, SWT.CHECK);
 		gd = new GridData();
 		gd.horizontalSpan = 2;
 		supportsVerson20Checkbox.setLayoutData(gd);
-		supportsVerson20Checkbox.setText("XSLT 2.0");
+		supportsVerson20Checkbox.setText("XSLT 2.0"); //$NON-NLS-1$
 	}
 
 	protected void createFieldListeners()
@@ -265,7 +265,7 @@ public class AddProcessorDialog extends StatusDialog
 		processorTypeField.setInput(processorTypes);
 		if (adding)
 		{
-			processorNameField.setText("");
+			processorNameField.setText(""); //$NON-NLS-1$
 			processorTypeField.setSelection(new StructuredSelection(processorTypes[0]));
 			supportsVerson10Checkbox.setSelection(true);
 			fLibraryBlock.initializeFrom(standinProcessor, selectedProcessorType);
@@ -276,8 +276,8 @@ public class AddProcessorDialog extends StatusDialog
 			processorTypeField.setSelection(new StructuredSelection(standinProcessor.getProcessorType()));
 			processorNameField.setText(standinProcessor.getName());
 
-			supportsVerson10Checkbox.setSelection(standinProcessor.supports("1.0"));
-			supportsVerson20Checkbox.setSelection(standinProcessor.supports("2.0"));
+			supportsVerson10Checkbox.setSelection(standinProcessor.supports("1.0")); //$NON-NLS-1$
+			supportsVerson20Checkbox.setSelection(standinProcessor.supports("2.0")); //$NON-NLS-1$
 			fLibraryBlock.initializeFrom(standinProcessor, selectedProcessorType);
 		}
 		setProcessorNameStatus(validateProcessorName());
@@ -317,7 +317,7 @@ public class AddProcessorDialog extends StatusDialog
 	{
 		IStatus status = Status.OK_STATUS;
 		if (!supportsVerson10Checkbox.getSelection() && !supportsVerson20Checkbox.getSelection())
-			status = new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, IStatus.OK, "Processor must support at least one XSLT version", null);
+			status = new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, IStatus.OK, ProcessorMessages.AddProcessorDialog_7, null);
 		return status;
 	}
 
@@ -369,15 +369,15 @@ public class AddProcessorDialog extends StatusDialog
 				processor.setDebuggerId(element.getId());
 		}
 
-		String supports = "";
+		String supports = ""; //$NON-NLS-1$
 		if (supportsVerson10Checkbox.getSelection())
 		{
-			supports += "1.0";
+			supports += "1.0"; //$NON-NLS-1$
 			if (supportsVerson20Checkbox.getSelection())
-				supports += ",";
+				supports += ","; //$NON-NLS-1$
 		}
 		if (supportsVerson20Checkbox.getSelection())
-			supports += "2.0";
+			supports += "2.0"; //$NON-NLS-1$
 		processor.setSupports(supports);
 		fLibraryBlock.performApply(processor);
 	}
@@ -386,7 +386,7 @@ public class AddProcessorDialog extends StatusDialog
 	{
 		if (path == null || path.length() == 0)
 		{
-			return new File("");
+			return new File(""); //$NON-NLS-1$
 		}
 		return new File(path).getAbsoluteFile();
 	}
@@ -427,7 +427,7 @@ public class AddProcessorDialog extends StatusDialog
 
 	protected String getDialogSettingsSectionName()
 	{
-		return "ADD_PROCESSOR_DIALOG_SECTION";
+		return "ADD_PROCESSOR_DIALOG_SECTION"; //$NON-NLS-1$
 	}
 
 	@Override

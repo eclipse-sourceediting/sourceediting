@@ -41,7 +41,7 @@ public class InputFileBlock extends ResourceSelectionBlock
 	@Override
 	protected String[] getFileExtensions()
 	{
-		IContentType contentType = contentTypeManager.getContentType("org.eclipse.wst.xml.core.xmlsource");
+		IContentType contentType = contentTypeManager.getContentType("org.eclipse.wst.xml.core.xmlsource"); //$NON-NLS-1$
 		String[] xmlContentTypes = contentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 		
 		return xmlContentTypes;
@@ -49,9 +49,9 @@ public class InputFileBlock extends ResourceSelectionBlock
 
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
 	{
-		String path = "";
+		String path = ""; //$NON-NLS-1$
 		if (defaultFile != null)
-			path = VariablesPlugin.getDefault().getStringVariableManager().generateVariableExpression("workspace_loc", defaultFile.getFullPath().toPortableString());
+			path = VariablesPlugin.getDefault().getStringVariableManager().generateVariableExpression("workspace_loc", defaultFile.getFullPath().toPortableString()); //$NON-NLS-1$
 		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, path);
 	}
 
@@ -93,7 +93,7 @@ public class InputFileBlock extends ResourceSelectionBlock
 	{
 		IPath path = null;
 		String workingDirPath = getText();
-		if (workingDirPath.indexOf("${") >= 0)
+		if (workingDirPath.indexOf("${") >= 0) //$NON-NLS-1$
 		{
 			IStringVariableManager manager = VariablesPlugin.getDefault().getStringVariableManager();
 			try
@@ -139,7 +139,7 @@ public class InputFileBlock extends ResourceSelectionBlock
 			case WORKSPACE_DIALOG_TITLE:
 				return MainTabMessages.InputFileBlock_WORKSPACE_DIALOG_TITLE;
 		}
-		return "" + type;
+		return "" + type; //$NON-NLS-1$
 	}
 
 	@Override

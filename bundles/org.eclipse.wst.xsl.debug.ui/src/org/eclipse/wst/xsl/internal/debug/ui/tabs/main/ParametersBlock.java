@@ -110,7 +110,7 @@ public class ParametersBlock extends AbstractTableBlock
 		TableColumn column1 = new TableColumn(fTable, SWT.NONE);
 		column1.setWidth(150);
 		column1.setResizable(true);
-		column1.setText("Name");
+		column1.setText(Messages.getString("ParametersBlock.0")); //$NON-NLS-1$
 		column1.addSelectionListener(new SelectionAdapter()
 		{
 			@Override
@@ -123,7 +123,7 @@ public class ParametersBlock extends AbstractTableBlock
 		TableColumn column2 = new TableColumn(fTable, SWT.NONE);
 		column2.setWidth(50);
 		column2.setResizable(true);
-		column2.setText("Type");
+		column2.setText(Messages.getString("ParametersBlock.1")); //$NON-NLS-1$
 		column2.addSelectionListener(new SelectionAdapter()
 		{
 			@Override
@@ -136,7 +136,7 @@ public class ParametersBlock extends AbstractTableBlock
 		TableColumn column3 = new TableColumn(fTable, SWT.NONE);
 		column3.setWidth(150);
 		column3.setResizable(true);
-		column3.setText("Value");
+		column3.setText(Messages.getString("ParametersBlock.2")); //$NON-NLS-1$
 		column3.addSelectionListener(new SelectionAdapter()
 		{
 			@Override
@@ -159,7 +159,7 @@ public class ParametersBlock extends AbstractTableBlock
 		});
 
 		parametersViewer.setColumnProperties(new String[]
-		{ "name", "type", "value" });
+		{ Messages.getString("ParametersBlock.3"), Messages.getString("ParametersBlock.4"), Messages.getString("ParametersBlock.5") }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		final String[] types = new String[]
 		{ LaunchAttribute.TYPE_STRING, LaunchAttribute.TYPE_BOOLEAN, LaunchAttribute.TYPE_INT, LaunchAttribute.TYPE_DOUBLE, LaunchAttribute.TYPE_FLOAT, LaunchAttribute.TYPE_OBJECT,
 				LaunchAttribute.TYPE_CLASS, };
@@ -172,13 +172,13 @@ public class ParametersBlock extends AbstractTableBlock
 		{
 			public boolean canModify(Object element, String property)
 			{
-				return "type".equals(property) || "value".equals(property);
+				return Messages.getString("ParametersBlock.6").equals(property) || Messages.getString("ParametersBlock.7").equals(property); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 			public Object getValue(Object element, String property)
 			{
 				LaunchAttribute att = (LaunchAttribute) element;
-				if ("type".equals(property))
+				if (Messages.getString("ParametersBlock.8").equals(property)) //$NON-NLS-1$
 				{
 					for (int i = 0; i < types.length; i++)
 					{
@@ -188,19 +188,19 @@ public class ParametersBlock extends AbstractTableBlock
 					}
 					return null;
 				}
-				return att.value == null ? "" : att.value;
+				return att.value == null ? "" : att.value; //$NON-NLS-1$
 			}
 
 			public void modify(Object element, String property, Object value)
 			{
 				Item item = (Item) element;
 				LaunchAttribute att = (LaunchAttribute) item.getData();
-				if ("type".equals(property))
+				if (Messages.getString("ParametersBlock.10").equals(property)) //$NON-NLS-1$
 				{
 					Integer v = (Integer) value;
 					att.type = types[v.intValue()];
 				}
-				else if ("value".equals(property))
+				else if (Messages.getString("ParametersBlock.11").equals(property)) //$NON-NLS-1$
 					att.value = (String) value;
 				parametersViewer.update(att, null);
 				updateLaunchConfigurationDialog();
@@ -267,7 +267,7 @@ public class ParametersBlock extends AbstractTableBlock
 
 	public String getName()
 	{
-		return "Transformation Parameters";
+		return Messages.getString("ParametersBlock.9"); //$NON-NLS-1$
 	}
 
 	public void initializeFrom(ILaunchConfiguration configuration)

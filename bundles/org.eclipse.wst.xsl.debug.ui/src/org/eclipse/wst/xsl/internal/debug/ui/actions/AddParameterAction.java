@@ -43,7 +43,7 @@ public class AddParameterAction extends AbstractParameterAction
 			int type = dialog.getIntValue(typelabel);
 			String value = dialog.getStringValue(variableslabel);
 			LaunchAttribute parameter = null;
-			if (value != null && value.indexOf("${") > -1)
+			if (value != null && value.indexOf("${") > -1) //$NON-NLS-1$
 				parameter = new LaunchAttribute(name, types[type], value);
 			else
 				parameter = new LaunchAttribute(name, types[type], value);

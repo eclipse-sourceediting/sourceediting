@@ -50,10 +50,10 @@ public class DebuggerDescriptor implements IDebugger
 		{
 			// in dev, add the bin dir
 			if (Platform.inDevelopmentMode())
-				entries.add(Utils.getFileLocation(bundleId, "/bin"));
+				entries.add(Utils.getFileLocation(bundleId, "/bin")); //$NON-NLS-1$
 			for (String jar : classpath)
 			{
-				String entry = Utils.getFileLocation(bundleId, "/" + jar);
+				String entry = Utils.getFileLocation(bundleId, "/" + jar); //$NON-NLS-1$
 				if (entry!=null)
 					entries.add(entry);
 			}

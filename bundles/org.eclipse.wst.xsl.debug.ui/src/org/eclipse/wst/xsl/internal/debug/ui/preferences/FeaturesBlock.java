@@ -87,17 +87,17 @@ public class FeaturesBlock extends AbstractTableBlock
 		TableColumn c1 = new TableColumn(table, SWT.NONE);
 		c1.setWidth(150);
 		c1.setResizable(true);
-		c1.setText("Feature");
+		c1.setText(Messages.getString("FeaturesBlock.0")); //$NON-NLS-1$
 
 		TableColumn c2 = new TableColumn(table, SWT.NONE);
 		c2.setWidth(100);
 		c2.setResizable(true);
-		c2.setText("Type");
+		c2.setText(Messages.getString("FeaturesBlock.1")); //$NON-NLS-1$
 
 		TableColumn c3 = new TableColumn(table, SWT.NONE);
 		c3.setWidth(200);
 		c3.setResizable(true);
-		c3.setText("Value");
+		c3.setText(Messages.getString("FeaturesBlock.2")); //$NON-NLS-1$
 
 		tViewer = new TableViewer(table);
 		tViewer.setContentProvider(new IStructuredContentProvider()
@@ -138,9 +138,9 @@ public class FeaturesBlock extends AbstractTableBlock
 						return feature.getType();
 					case 2:
 						String value = (String) featureValues.get(feature.getURI());
-						return value == null ? "" : value;
+						return value == null ? "" : value; //$NON-NLS-1$
 				}
-				return "!!";
+				return "!!"; //$NON-NLS-1$
 			}
 
 			private String removeURI(String uri)
@@ -170,27 +170,27 @@ public class FeaturesBlock extends AbstractTableBlock
 
 		});
 		tViewer.setColumnProperties(new String[]
-		{ "name", "type", "value" });
+		{ Messages.getString("FeaturesBlock.5"), Messages.getString("FeaturesBlock.6"), Messages.getString("FeaturesBlock.7") }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		final String[] valid = new String[]{null};
 		tViewer.setCellModifier(new ICellModifier()
 		{
 			public boolean canModify(Object element, String property)
 			{
-				return "value".equals(property);
+				return Messages.getString("FeaturesBlock.8").equals(property); //$NON-NLS-1$
 			}
 
 			public Object getValue(Object element, String property)
 			{
 				IFeature feature = (IFeature) element;
 				String value = (String) featureValues.get(feature.getURI());
-				return value == null ? "" : value;
+				return value == null ? "" : value; //$NON-NLS-1$
 			}
 
 			public void modify(Object element, String property, Object value)
 			{
 				Item item = (Item) element;
 				IFeature feature = (IFeature) item.getData();
-				if (value == null || "".equals(value))
+				if (value == null || "".equals(value)) //$NON-NLS-1$
 					featureValues.remove(feature.getURI());
 				else
 					featureValues.put(feature.getURI(), (String)value);				
@@ -218,7 +218,7 @@ public class FeaturesBlock extends AbstractTableBlock
 				IStructuredSelection sel = (IStructuredSelection) tViewer.getSelection();
 				IFeature feature = (IFeature) sel.getFirstElement();
 				IStatus validStatus = feature.validateValue((String) value);
-				if (value == null || "".equals(value))
+				if (value == null || "".equals(value)) //$NON-NLS-1$
 					valid[0] = null;
 				else if (validStatus != null && validStatus.getSeverity() == IStatus.ERROR)
 					valid[0] = validStatus.getMessage();
@@ -240,7 +240,7 @@ public class FeaturesBlock extends AbstractTableBlock
 				String text = null;
 				if (selection != null && selection.getFirstElement() != null)
 					text = ((IFeature) selection.getFirstElement()).getDescription();
-				descriptionText.setText(text == null ? "" : text);
+				descriptionText.setText(text == null ? "" : text); //$NON-NLS-1$
 			}
 		});
 

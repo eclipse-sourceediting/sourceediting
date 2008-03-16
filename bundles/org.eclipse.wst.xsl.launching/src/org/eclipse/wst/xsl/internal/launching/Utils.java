@@ -29,7 +29,7 @@ public class Utils
 		}
 		catch (IOException e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.ERROR, "Error determining jar file location: " + path + " from bundle: " + bundleId, e));
+			throw new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.getString("Utils.0") + path + Messages.getString("Utils.1") + bundleId, e)); //$NON-NLS-1$ //$NON-NLS-2$
 		} 
 		return location;
 	}

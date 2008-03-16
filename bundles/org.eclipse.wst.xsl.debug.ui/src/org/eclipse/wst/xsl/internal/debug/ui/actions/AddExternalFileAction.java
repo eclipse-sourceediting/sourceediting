@@ -31,12 +31,12 @@ public class AddExternalFileAction extends OpenDialogAction
 		String lastUsedPath = getDialogSetting(LAST_PATH_SETTING);
 		if (lastUsedPath == null)
 		{
-			lastUsedPath = "";
+			lastUsedPath = ""; //$NON-NLS-1$
 		}
 		FileDialog dialog = new FileDialog(getShell(), SWT.MULTI);
 		dialog.setText(ActionMessages.AddExternalFileAction_Selection_3);
 		dialog.setFilterPath(lastUsedPath);
-		dialog.setFilterExtensions(new String[]{ "*.xsl" });
+		dialog.setFilterExtensions(new String[]{ "*.xsl" }); //$NON-NLS-1$
 		String res = dialog.open();
 		if (res == null)
 		{

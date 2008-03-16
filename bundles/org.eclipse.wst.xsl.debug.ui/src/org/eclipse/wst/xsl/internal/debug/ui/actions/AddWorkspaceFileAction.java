@@ -38,16 +38,16 @@ public class AddWorkspaceFileAction extends AbstractStylesheetAction
 		{
 			if (selection.length == 0)
 			{
-				return new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null);
+				return new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
 			}
 			for (int i = 0; i < selection.length; i++)
 			{
 				if (!(selection[i] instanceof IFile))
 				{
-					return new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null);
+					return new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
 				}
 			}
-			return new Status(IStatus.OK, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null);
+			return new Status(IStatus.OK, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null); //$NON-NLS-1$
 		}
 	};
 
@@ -78,7 +78,7 @@ public class AddWorkspaceFileAction extends AbstractStylesheetAction
 					return true;
 				IFile file = (IFile) element;
 				String fileExt = file.getFileExtension();
-				if (fileExt != null && fileExt.equalsIgnoreCase("xsl"))
+				if (fileExt != null && fileExt.equalsIgnoreCase("xsl")) //$NON-NLS-1$
 				{
 					return true;
 				}

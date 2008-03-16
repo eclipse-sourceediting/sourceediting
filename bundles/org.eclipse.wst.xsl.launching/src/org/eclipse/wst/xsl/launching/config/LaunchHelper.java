@@ -153,19 +153,19 @@ public class LaunchHelper
 		}
 		catch (FileNotFoundException e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.ERROR, "File not found", e));
+			throw new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.getString("LaunchHelper.0"), e)); //$NON-NLS-1$
 		}
 		catch (IOException e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.ERROR, "IO Exception", e));
+			throw new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.getString("LaunchHelper.1"), e)); //$NON-NLS-1$
 		}
 		catch (ParserConfigurationException e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.ERROR, "ParserConfigurationException", e));
+			throw new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.ERROR, "ParserConfigurationException", e)); //$NON-NLS-1$
 		}
 		catch (TransformerException e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.ERROR, "TransformerException", e));
+			throw new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.ERROR, "TransformerException", e)); //$NON-NLS-1$
 		}
 		finally
 		{
@@ -331,7 +331,7 @@ public class LaunchHelper
 			// TODO: where is the default output file? And must share this with
 			// the value displayed in the UI.
 			outputFile = (IPath) sourceFile.clone();
-			outputFile = outputFile.addFileExtension("out").addFileExtension("xml");
+			outputFile = outputFile.addFileExtension("out").addFileExtension("xml"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return outputFile.toFile();
 	}
@@ -351,7 +351,7 @@ public class LaunchHelper
 		boolean useDefaultProcessor = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_PROCESSOR, true);
 		if (useDefaultProcessor)
 			return XSLTRuntime.getDefaultProcessor();
-		String processorId = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_PROCESSOR, "");
+		String processorId = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_PROCESSOR, ""); //$NON-NLS-1$
 		IProcessorInstall processor = XSLTRuntime.getProcessor(processorId);
 		return processor;
 	}

@@ -39,7 +39,7 @@ public class FeaturePreferences
 	public String getAsXML() throws ParserConfigurationException, IOException, TransformerException
 	{
 		Document doc = PreferenceUtil.getDocument();
-		Element config = doc.createElement("featurePreferences"); 
+		Element config = doc.createElement("featurePreferences");  //$NON-NLS-1$
 		doc.appendChild(config);
 		
 		for (String typeId : typeFeatures.keySet())
@@ -63,7 +63,7 @@ public class FeaturePreferences
 		Element config = doc.getDocumentElement();
 
 		Map<String, Map<String, String>> typeFeatures = new HashMap<String, Map<String, String>>();
-		Element[] processorTypeEls = PreferenceUtil.getChildElements(config, "processorType");
+		Element[] processorTypeEls = PreferenceUtil.getChildElements(config, "processorType"); //$NON-NLS-1$
 		for (int i = 0; i < processorTypeEls.length; ++i)
 		{
 			Element processorTypeEl = processorTypeEls[i];
@@ -79,25 +79,25 @@ public class FeaturePreferences
 
 	private static String elementAsType(Element parent)
 	{
-		String id = parent.getAttribute("id");
+		String id = parent.getAttribute("id"); //$NON-NLS-1$
 		return id;
 	}
 
 	private static Element typeAsElement(Document doc, String type)
 	{
-		Element element = doc.createElement("processorType");
-		element.setAttribute("id", type);
+		Element element = doc.createElement("processorType"); //$NON-NLS-1$
+		element.setAttribute("id", type); //$NON-NLS-1$
 		return element;
 	}
 
 	private static Map<String, String> elementAsFeatureValues(Element element)
 	{
-		Element[] featureEls = PreferenceUtil.getChildElements(element, "feature");
+		Element[] featureEls = PreferenceUtil.getChildElements(element, "feature"); //$NON-NLS-1$
 		Map<String, String> featureValues = new HashMap<String, String>(featureEls.length);
 		for (Element featureEl : featureEls)
 		{
-			String uri = featureEl.getAttribute("uri");
-			String value = featureEl.getAttribute("value");
+			String uri = featureEl.getAttribute("uri"); //$NON-NLS-1$
+			String value = featureEl.getAttribute("value"); //$NON-NLS-1$
 			featureValues.put(uri, value);
 		}
 		return featureValues;
@@ -111,9 +111,9 @@ public class FeaturePreferences
 			{
 				String uri = (String) entry2.getKey();
 				String value = (String) entry2.getValue();
-				Element element = doc.createElement("feature");
-				element.setAttribute("uri", uri);
-				element.setAttribute("value", value);
+				Element element = doc.createElement("feature"); //$NON-NLS-1$
+				element.setAttribute("uri", uri); //$NON-NLS-1$
+				element.setAttribute("value", value); //$NON-NLS-1$
 				featuresEl.appendChild(element);
 			}
 		}

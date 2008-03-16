@@ -60,14 +60,14 @@ public class PreferenceUtil
 
 		TransformerFactory factory = TransformerFactory.newInstance();
 		Transformer transformer = factory.newTransformer();
-		transformer.setOutputProperty(OutputKeys.METHOD, "xml"); 
-		transformer.setOutputProperty(OutputKeys.INDENT, "yes"); 
+		transformer.setOutputProperty(OutputKeys.METHOD, "xml");  //$NON-NLS-1$
+		transformer.setOutputProperty(OutputKeys.INDENT, "yes");  //$NON-NLS-1$
 
 		DOMSource source = new DOMSource(doc);
 		StreamResult outputTarget = new StreamResult(s);
 		transformer.transform(source, outputTarget);
 
-		return s.toString("UTF8"); 			
+		return s.toString("UTF8"); 			 //$NON-NLS-1$
 	}
 
 	public static Element[] getChildElements(Element parent, String name)

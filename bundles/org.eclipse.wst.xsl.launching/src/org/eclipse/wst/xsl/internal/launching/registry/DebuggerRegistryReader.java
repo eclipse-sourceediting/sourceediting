@@ -18,12 +18,12 @@ import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
 
 public class DebuggerRegistryReader extends AbstractRegistryReader
 {
-	public static final String TAG_DEBUGGER = "debugger";
-	public static final String ATT_ID = "id";
-	public static final String ATT_CLASSNAME = "className";
-	public static final String ATT_CLASSPATH = "classpath";
-	public static final String ATT_NAME = "name";
-	public static final String ATT_PROCESSOR_TYPE_ID = "processorTypeId";
+	public static final String TAG_DEBUGGER = "debugger"; //$NON-NLS-1$
+	public static final String ATT_ID = "id"; //$NON-NLS-1$
+	public static final String ATT_CLASSNAME = "className"; //$NON-NLS-1$
+	public static final String ATT_CLASSPATH = "classpath"; //$NON-NLS-1$
+	public static final String ATT_NAME = "name"; //$NON-NLS-1$
+	public static final String ATT_PROCESSOR_TYPE_ID = "processorTypeId"; //$NON-NLS-1$
 
 	private DebuggerRegistry registry;
 
@@ -54,7 +54,7 @@ public class DebuggerRegistryReader extends AbstractRegistryReader
 			return true;
 		}
 
-		String[] entries = classpath.split(";");
+		String[] entries = classpath.split(";"); //$NON-NLS-1$
 		for (int i = 0; i < entries.length; i++)
 		{
 			String string = entries[i];
@@ -90,6 +90,6 @@ public class DebuggerRegistryReader extends AbstractRegistryReader
 	{
 		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 		this.registry = registry;
-		readRegistry(extensionRegistry, LaunchingPlugin.PLUGIN_ID, "debugger");
+		readRegistry(extensionRegistry, LaunchingPlugin.PLUGIN_ID, "debugger"); //$NON-NLS-1$
 	}
 }

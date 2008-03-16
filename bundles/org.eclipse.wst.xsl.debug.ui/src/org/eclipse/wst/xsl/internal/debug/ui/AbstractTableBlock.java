@@ -38,9 +38,9 @@ public abstract class AbstractTableBlock extends AbstractLaunchConfigurationTab
 		int columnCount = getTable().getColumnCount();
 		for (int i = 0; i < columnCount; i++)
 		{
-			getDialogSettings().put(getQualifier() + ".columnWidth" + i, getTable().getColumn(i).getWidth());
+			getDialogSettings().put(getQualifier() + ".columnWidth" + i, getTable().getColumn(i).getWidth()); //$NON-NLS-1$
 		}
-		getDialogSettings().put(getQualifier() + ".sortColumn", fSortColumn);
+		getDialogSettings().put(getQualifier() + ".sortColumn", fSortColumn); //$NON-NLS-1$
 	}
 
 	/**
@@ -55,7 +55,7 @@ public abstract class AbstractTableBlock extends AbstractLaunchConfigurationTab
 		int col = 0;
 		try
 		{
-			col = getDialogSettings().getInt(getQualifier() + ".sortColumn");
+			col = getDialogSettings().getInt(getQualifier() + ".sortColumn"); //$NON-NLS-1$
 		}
 		catch (NumberFormatException e)
 		{
@@ -72,7 +72,7 @@ public abstract class AbstractTableBlock extends AbstractLaunchConfigurationTab
 			int width = -1;
 			try
 			{
-				width = settings.getInt(qualifier + ".columnWidth" + i);
+				width = settings.getInt(qualifier + ".columnWidth" + i); //$NON-NLS-1$
 			}
 			catch (NumberFormatException e)
 			{

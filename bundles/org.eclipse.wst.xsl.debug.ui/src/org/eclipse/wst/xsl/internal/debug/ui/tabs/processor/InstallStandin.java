@@ -24,6 +24,6 @@ public class InstallStandin extends ProcessorInstall
 
 	public InstallStandin(String id, String name, String typeId, String debuggerId, IProcessorJar[] jars)
 	{
-		super(id, name, typeId, jars, debuggerId, "", false);
+		super(id, name, typeId, jars, debuggerId, "", false); //$NON-NLS-1$
 	}
 }

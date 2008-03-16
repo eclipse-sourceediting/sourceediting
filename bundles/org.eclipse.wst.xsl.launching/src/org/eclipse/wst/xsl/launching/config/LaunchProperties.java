@@ -53,7 +53,7 @@ public class LaunchProperties
 	{
 		Document doc = PreferenceUtil.getDocument();
 
-		Element featuresEl = doc.createElement("Properties");
+		Element featuresEl = doc.createElement("Properties"); //$NON-NLS-1$
 		doc.appendChild(featuresEl);
 
 		for (Iterator<?> iter = properties.entrySet().iterator(); iter.hasNext();)
@@ -63,9 +63,9 @@ public class LaunchProperties
 			String value = (String) entry.getValue();
 			if (value == null)
 				continue;
-			Element featureEl = doc.createElement("Property");
-			featureEl.setAttribute("name", name);
-			featureEl.setAttribute("value", value);
+			Element featureEl = doc.createElement("Property"); //$NON-NLS-1$
+			featureEl.setAttribute("name", name); //$NON-NLS-1$
+			featureEl.setAttribute("value", value); //$NON-NLS-1$
 			featuresEl.appendChild(featureEl);
 		}
 
@@ -80,12 +80,12 @@ public class LaunchProperties
 
 		Element featuresEl = doc.getDocumentElement();
 
-		NodeList featureEls = featuresEl.getElementsByTagName("Property");
+		NodeList featureEls = featuresEl.getElementsByTagName("Property"); //$NON-NLS-1$
 		for (int i = 0; i < featureEls.getLength(); i++)
 		{
 			Element featureEl = (Element) featureEls.item(i);
-			String name = featureEl.getAttribute("name");
-			String value = featureEl.getAttribute("value");
+			String name = featureEl.getAttribute("name"); //$NON-NLS-1$
+			String value = featureEl.getAttribute("value"); //$NON-NLS-1$
 			pdef.setProperty(name, value);
 		}
 

@@ -32,7 +32,7 @@ public class ControlAccessibleListener extends AccessibleAdapter
 	public static void addListener(Control comp, String name)
 	{
 		// strip mnemonic
-		String[] strs = name.split("&");
+		String[] strs = name.split("&"); //$NON-NLS-1$
 		StringBuffer stripped = new StringBuffer();
 		for (String element : strs)
 		{

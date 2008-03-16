@@ -64,7 +64,7 @@ public class URIResolverBlock extends ResourceSelectionBlock
 			case WORKSPACE_DIALOG_TITLE:
 				return ProcessorMessages.URIResolverBlock_WORKSPACE_DIALOG_TITLE;
 		}
-		return "" + type;
+		return "" + type; //$NON-NLS-1$
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class URIResolverBlock extends ResourceSelectionBlock
 
 	public String getName()
 	{
-		return "URI Resolver";
+		return ProcessorMessages.URIResolverBlock_3;
 	}
 
 	public void initializeFrom(ILaunchConfiguration configuration)
@@ -113,19 +113,19 @@ public class URIResolverBlock extends ResourceSelectionBlock
 			}
 		};
 
-		workingDirRelativeRadio = createRadioButton(specificFileComp, "Relative to working directory");
+		workingDirRelativeRadio = createRadioButton(specificFileComp, ProcessorMessages.URIResolverBlock_5);
 		gd = new GridData();
 		gd.horizontalSpan = 2;
 		workingDirRelativeRadio.setLayoutData(gd);
 		workingDirRelativeRadio.addSelectionListener(listener);
 
-		stylesheetRelativeRadio = createRadioButton(specificFileComp, "Relative to (1st) stylesheet");
+		stylesheetRelativeRadio = createRadioButton(specificFileComp, ProcessorMessages.URIResolverBlock_6);
 		gd = new GridData();
 		gd.horizontalSpan = 2;
 		stylesheetRelativeRadio.setLayoutData(gd);
 		stylesheetRelativeRadio.addSelectionListener(listener);
 
-		otherRadio = createRadioButton(specificFileComp, "Specific Location:");
+		otherRadio = createRadioButton(specificFileComp, ProcessorMessages.URIResolverBlock_8);
 		gd = new GridData();
 		gd.horizontalSpan = 1;
 		otherRadio.setLayoutData(gd);
@@ -144,11 +144,11 @@ public class URIResolverBlock extends ResourceSelectionBlock
 	{
 		if (useDefault)
 		{
-			resourceText.setText(defaultOutputFile == null ? "" : defaultOutputFile);
+			resourceText.setText(defaultOutputFile == null ? "" : defaultOutputFile); //$NON-NLS-1$
 		}
 		else
 		{
-			resourceText.setText(outputFile == null ? "" : outputFile);
+			resourceText.setText(outputFile == null ? "" : outputFile); //$NON-NLS-1$
 		}
 		updateEnablement(useDefault);
 	}

@@ -25,31 +25,31 @@ import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
 
 public abstract class AbstractRegistryReader
 {
-	public static final String ATT_CLASS = "class";
-	public static final String TAG_DESCRIPTION = "description";
+	public static final String ATT_CLASS = "class"; //$NON-NLS-1$
+	public static final String TAG_DESCRIPTION = "description"; //$NON-NLS-1$
 
 	protected static void logError(IConfigurationElement element, String text)
 	{
 		IExtension extension = element.getDeclaringExtension();
 		StringBuffer buf = new StringBuffer();
-		buf.append("Plugin " + extension.getNamespaceIdentifier() + ", extension " + extension.getExtensionPointUniqueIdentifier());
-		buf.append("\n" + text);
+		buf.append("Plugin " + extension.getNamespaceIdentifier() + Messages.getString("AbstractRegistryReader.3") + extension.getExtensionPointUniqueIdentifier()); //$NON-NLS-1$ //$NON-NLS-2$
+		buf.append("\n" + text); //$NON-NLS-1$
 		LaunchingPlugin.log(new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.OK, buf.toString(), null)));
 	}
 
 	protected static void logMissingAttribute(IConfigurationElement element, String attributeName)
 	{
-		logError(element, "Required attribute '" + attributeName + "' not defined");
+		logError(element, Messages.getString("AbstractRegistryReader.5") + attributeName + Messages.getString("AbstractRegistryReader.6")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	protected static void logMissingElement(IConfigurationElement element, String elementName)
 	{
-		logError(element, "Required sub element '" + elementName + "' not defined");
+		logError(element, Messages.getString("AbstractRegistryReader.7") + elementName + Messages.getString("AbstractRegistryReader.8")); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	protected static void logUnknownElement(IConfigurationElement element)
 	{
-		logError(element, "Unknown extension tag found: " + element.getName());
+		logError(element, Messages.getString("AbstractRegistryReader.9") + element.getName()); //$NON-NLS-1$
 	}
 
 	public static IExtension[] orderExtensions(IExtension[] extensions)
@@ -108,7 +108,7 @@ public abstract class AbstractRegistryReader
 		{
 			return children[0].getValue();
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public static String getClassValue(IConfigurationElement configElement, String classAttributeName)

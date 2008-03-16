@@ -14,7 +14,7 @@ import org.eclipse.osgi.util.NLS;
 
 public final class RendererTabMessages extends NLS
 {
-	private static final String BUNDLE_NAME = "org.eclipse.wst.xsl.internal.debug.ui.tabs.renderer.RendererTabMessages";
+	private static final String BUNDLE_NAME = "org.eclipse.wst.xsl.internal.debug.ui.tabs.renderer.RendererTabMessages"; //$NON-NLS-1$
 
 	public static String XSLFOComboBlock_XSLFOGroupTitle;
 

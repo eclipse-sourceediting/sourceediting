@@ -41,13 +41,13 @@ public class StylesheetLabelProvider extends LabelProvider
 		catch (CoreException e)
 		{
 			return MessageFormat.format(MainTabMessages.StylesheetEntryLabelProvider_Invalid_path, new String[]
-			{ "null" });
+			{ "null" }); //$NON-NLS-1$
 		}
 
 		if (path == null)
 		{
 			return MessageFormat.format(MainTabMessages.StylesheetEntryLabelProvider_Invalid_path, new String[]
-			{ "null" });
+			{ "null" }); //$NON-NLS-1$
 		}
 		else if (!path.isAbsolute() || !path.isValidPath(path.toString()))
 		{
@@ -60,7 +60,7 @@ public class StylesheetLabelProvider extends LabelProvider
 		if (segments.length > 0)
 		{
 			displayPath.append(segments[segments.length - 1]);
-			displayPath.append(" - ");
+			displayPath.append(" - "); //$NON-NLS-1$
 			String device = path.getDevice();
 			if (device != null)
 			{
@@ -76,6 +76,6 @@ public class StylesheetLabelProvider extends LabelProvider
 		{
 			displayPath.append(path.toString());
 		}
-		return (index + 1) + ") " + displayPath.toString();
+		return (index + 1) + ") " + displayPath.toString(); //$NON-NLS-1$
 	}
 }

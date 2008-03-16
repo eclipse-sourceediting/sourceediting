@@ -30,11 +30,11 @@ import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
 
 public class OutputFileBlock extends ResourceSelectionBlock
 {
-	public static final String OUTPUT_METHOD_DEFAULT = "<Default>";
-	public static final String OUTPUT_METHOD_XML = "xml";
-	public static final String OUTPUT_METHOD_XHTML = "xhtml";
-	public static final String OUTPUT_METHOD_HTML = "html";
-	public static final String OUTPUT_METHOD_TEXT = "text";
+	public static final String OUTPUT_METHOD_DEFAULT = "<Default>"; //$NON-NLS-1$
+	public static final String OUTPUT_METHOD_XML = "xml"; //$NON-NLS-1$
+	public static final String OUTPUT_METHOD_XHTML = "xhtml"; //$NON-NLS-1$
+	public static final String OUTPUT_METHOD_HTML = "html"; //$NON-NLS-1$
+	public static final String OUTPUT_METHOD_TEXT = "text"; //$NON-NLS-1$
 
 	public static final String[] OUTPUT_METHODS = new String[]
 	{ OUTPUT_METHOD_DEFAULT, OUTPUT_METHOD_XML, OUTPUT_METHOD_XHTML, OUTPUT_METHOD_HTML, OUTPUT_METHOD_TEXT };
@@ -61,7 +61,7 @@ public class OutputFileBlock extends ResourceSelectionBlock
 			case GROUP_NAME:
 				return getName();
 			case USE_DEFAULT_RADIO:
-				return "Use default location";
+				return MainTabMessages.OutputFileBlock_0;
 			case USE_OTHER_RADIO:
 				return MainTabMessages.OutputFOFileBlock_OTHER_RADIO;
 			case DIRECTORY_DIALOG_MESSAGE:
@@ -77,7 +77,7 @@ public class OutputFileBlock extends ResourceSelectionBlock
 			case WORKSPACE_DIALOG_TITLE:
 				return MainTabMessages.OutputFOFileBlock_WORKSPACE_DIALOG_TITLE;
 		}
-		return "" + type;
+		return "" + type; //$NON-NLS-1$
 	}
 
 	@Override
@@ -105,7 +105,7 @@ public class OutputFileBlock extends ResourceSelectionBlock
 		// methodViewer.setSelection(new StructuredSelection("xml"), true);
 		// formatViewer.setSelection(new StructuredSelection("<none>"), true);
 
-		fileLabel = "Location:";
+		fileLabel = MainTabMessages.OutputFileBlock_7;
 		createCheckboxAndText(parent);
 		createButtons(parent);
 	}
@@ -113,7 +113,7 @@ public class OutputFileBlock extends ResourceSelectionBlock
 	@Override
 	protected void createButtons(Composite parent)
 	{
-		openFileCheckButton = createCheckButton(parent, "Open file on completion");
+		openFileCheckButton = createCheckButton(parent, MainTabMessages.OutputFileBlock_8);
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gd.horizontalSpan = 1;
 		openFileCheckButton.setLayoutData(gd);
@@ -152,7 +152,7 @@ public class OutputFileBlock extends ResourceSelectionBlock
 
 	public String getName()
 	{
-		return "Output File";
+		return MainTabMessages.OutputFileBlock_9;
 	}
 
 	public void initializeFrom(ILaunchConfiguration configuration)
@@ -163,7 +163,7 @@ public class OutputFileBlock extends ResourceSelectionBlock
 			// methodViewer.setSelection(new StructuredSelection(outputMethod),
 			// true);
 
-			inputFilename = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, "");
+			inputFilename = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, ""); //$NON-NLS-1$
 			// String renderTo =
 			// configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_RENDER_TO,
 			// "");
@@ -207,7 +207,7 @@ public class OutputFileBlock extends ResourceSelectionBlock
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
 	{
 		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_OUTPUT_FILE, true);
-		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FILE, "");
+		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FILE, ""); //$NON-NLS-1$
 		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_METHOD, (String) null);
 		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OPEN_FILE, true);
 	}
@@ -224,9 +224,9 @@ public class OutputFileBlock extends ResourceSelectionBlock
 		int index = inputFilename.lastIndexOf('.');
 		if (index != -1)
 			file = inputFilename.substring(0, index);
-		file += ".out." + method;
-		if (inputFilename.trim().endsWith("}"))
-			file += "}";
+		file += ".out." + method; //$NON-NLS-1$
+		if (inputFilename.trim().endsWith("}")) //$NON-NLS-1$
+			file += "}"; //$NON-NLS-1$
 
 		defaultOutputFile = file;
 

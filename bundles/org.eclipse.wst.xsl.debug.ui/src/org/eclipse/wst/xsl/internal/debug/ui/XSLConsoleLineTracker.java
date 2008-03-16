@@ -63,7 +63,7 @@ public class XSLConsoleLineTracker implements IConsoleLineTracker
 		try
 		{
 			String launchTypeId = console.getProcess().getLaunch().getLaunchConfiguration().getType().getIdentifier();
-			this.enabled = "org.eclipse.wst.xsl.launching.launchConfigurationType".equals(launchTypeId);
+			this.enabled = "org.eclipse.wst.xsl.launching.launchConfigurationType".equals(launchTypeId); //$NON-NLS-1$
 		}
 		catch (CoreException e)
 		{
@@ -155,7 +155,7 @@ public class XSLConsoleLineTracker implements IConsoleLineTracker
 			{
 				return;
 			}
-			if ("file".equals(url.getProtocol()))
+			if ("file".equals(url.getProtocol())) //$NON-NLS-1$
 			{
 				String path = URLDecoder.decode(url.getPath());
 				Path fExternalPath = new Path(path);

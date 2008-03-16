@@ -18,7 +18,7 @@ public class RendererConfigurationBlock extends ResourceSelectionBlock
 {
 	public String getName()
 	{
-		return "Configuration";
+		return Messages.getString("RendererConfigurationBlock.0"); //$NON-NLS-1$
 	}
 
 	public void initializeFrom(ILaunchConfiguration configuration)
@@ -36,7 +36,7 @@ public class RendererConfigurationBlock extends ResourceSelectionBlock
 	@Override
 	protected String getMessage(int type)
 	{
-		return "" + type;
+		return "" + type; //$NON-NLS-1$
 	}
 
 	@Override

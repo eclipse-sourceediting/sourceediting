@@ -20,7 +20,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 public class XSLBreakpointAdapterFactory implements IAdapterFactory
 {
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") //$NON-NLS-1$
 	public Object getAdapter(Object adaptableObject, Class adapterType)
 	{
 		if (adaptableObject instanceof ITextEditor)
@@ -30,7 +30,7 @@ public class XSLBreakpointAdapterFactory implements IAdapterFactory
 			if (resource != null)
 			{
 				String extension = resource.getFileExtension();
-				if (extension != null && extension.equalsIgnoreCase("xsl"))
+				if (extension != null && extension.equalsIgnoreCase("xsl")) //$NON-NLS-1$
 				{
 					return new XSLLineBreakpointAdapter();
 				}
@@ -39,7 +39,7 @@ public class XSLBreakpointAdapterFactory implements IAdapterFactory
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") //$NON-NLS-1$
 	public Class[] getAdapterList()
 	{
 		return new Class[]

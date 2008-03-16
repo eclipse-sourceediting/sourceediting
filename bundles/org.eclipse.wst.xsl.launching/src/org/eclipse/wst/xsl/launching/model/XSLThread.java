@@ -71,7 +71,7 @@ public class XSLThread extends XSLDebugElement implements IThread
 
 	public String getName() throws DebugException
 	{
-		return "Thread[1]";
+		return "Thread[1]"; //$NON-NLS-1$
 	}
 
 	public IBreakpoint[] getBreakpoints()

@@ -15,16 +15,16 @@ import org.eclipse.core.variables.VariablesPlugin;
 
 public class LaunchAttribute
 {
-	public static final String TYPE_SUFFIX = ".TYPE";
-	public static final String VALUE_SUFFIX = ".VALUE";
+	public static final String TYPE_SUFFIX = ".TYPE"; //$NON-NLS-1$
+	public static final String VALUE_SUFFIX = ".VALUE"; //$NON-NLS-1$
 
-	public static final String TYPE_STRING = "string";
-	public static final String TYPE_BOOLEAN = "boolean";
-	public static final String TYPE_INT = "int";
-	public static final String TYPE_DOUBLE = "double";
-	public static final String TYPE_FLOAT = "float";
-	public static final String TYPE_CLASS = "class";
-	public static final String TYPE_OBJECT = "object";
+	public static final String TYPE_STRING = "string"; //$NON-NLS-1$
+	public static final String TYPE_BOOLEAN = "boolean"; //$NON-NLS-1$
+	public static final String TYPE_INT = "int"; //$NON-NLS-1$
+	public static final String TYPE_DOUBLE = "double"; //$NON-NLS-1$
+	public static final String TYPE_FLOAT = "float"; //$NON-NLS-1$
+	public static final String TYPE_CLASS = "class"; //$NON-NLS-1$
+	public static final String TYPE_OBJECT = "object"; //$NON-NLS-1$
 
 	public final String uri;
 	public String type;

@@ -36,8 +36,8 @@ public class ProcessorsPreferencePage extends PreferencePage implements IWorkben
 	{
 		super();
 		// only used when page is shown programatically
-		setTitle("Java XSLT Processors");
-		setDescription("Add, remove or edit XSLT processor definitions.\nBy default, the checked Processor is used for all transformations.");
+		setTitle(Messages.getString("ProcessorsPreferencePage.0")); //$NON-NLS-1$
+		setDescription(Messages.getString("ProcessorsPreferencePage.1")); //$NON-NLS-1$
 	}
 
 	public void init(IWorkbench workbench)
@@ -75,7 +75,7 @@ public class ProcessorsPreferencePage extends PreferencePage implements IWorkben
 				if (install == null)
 				{
 					setValid(false);
-					setErrorMessage("Select a default XSLT Processor");
+					setErrorMessage(Messages.getString("ProcessorsPreferencePage.2")); //$NON-NLS-1$
 				}
 				else
 				{

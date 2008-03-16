@@ -40,7 +40,7 @@ public class OutputPropertyPreferences
 	public String getAsXML() throws ParserConfigurationException, IOException, TransformerException
 	{
 		Document doc = PreferenceUtil.getDocument();
-		Element config = doc.createElement("outputPropertyPreferences");
+		Element config = doc.createElement("outputPropertyPreferences"); //$NON-NLS-1$
 		doc.appendChild(config);
 
 		for (String type : typeProperties.keySet())
@@ -63,7 +63,7 @@ public class OutputPropertyPreferences
 		Document doc = PreferenceUtil.getDocument(inputStream);
 		Element config = doc.getDocumentElement();
 
-		Element[] processorTypeEls = PreferenceUtil.getChildElements(config, "processorType");
+		Element[] processorTypeEls = PreferenceUtil.getChildElements(config, "processorType"); //$NON-NLS-1$
 		for (int i = 0; i < processorTypeEls.length; ++i)
 		{
 			Element processorTypeEl = processorTypeEls[i];
@@ -77,25 +77,25 @@ public class OutputPropertyPreferences
 
 	private static String elementAsType(Element parent)
 	{
-		String id = parent.getAttribute("id");
+		String id = parent.getAttribute("id"); //$NON-NLS-1$
 		return id;
 	}
 
 	private static Element typeAsElement(Document doc, String type)
 	{
-		Element element = doc.createElement("processorType");
-		element.setAttribute("id", type);
+		Element element = doc.createElement("processorType"); //$NON-NLS-1$
+		element.setAttribute("id", type); //$NON-NLS-1$
 		return element;
 	}
 
 	private static Properties elementAsPropertyValues(Element element)
 	{
-		Element[] propertyEls = PreferenceUtil.getChildElements(element, "property");
+		Element[] propertyEls = PreferenceUtil.getChildElements(element, "property"); //$NON-NLS-1$
 		Properties propertyValues = new Properties();
 		for (Element featureEl : propertyEls)
 		{
-			String name = featureEl.getAttribute("name");
-			String value = featureEl.getAttribute("value");
+			String name = featureEl.getAttribute("name"); //$NON-NLS-1$
+			String value = featureEl.getAttribute("value"); //$NON-NLS-1$
 			propertyValues.put(name, value);
 		}
 		return propertyValues;
@@ -109,9 +109,9 @@ public class OutputPropertyPreferences
 			{
 				String name = (String) entry2.getKey();
 				String value = (String) entry2.getValue();
-				Element element = doc.createElement("property");
-				element.setAttribute("name", name);
-				element.setAttribute("value", value);
+				Element element = doc.createElement("property"); //$NON-NLS-1$
+				element.setAttribute("name", name); //$NON-NLS-1$
+				element.setAttribute("value", value); //$NON-NLS-1$
 				featuresEl.appendChild(element);
 			}
 		}

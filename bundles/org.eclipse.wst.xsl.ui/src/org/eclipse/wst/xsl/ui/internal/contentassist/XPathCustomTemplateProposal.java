@@ -40,7 +40,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceCompletionProposa
  * Purpose of this class is to make the additional proposal info into content
  * fit for an HTML viewer (by escaping characters)
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings("restriction") //$NON-NLS-1$
 class XPathCustomTemplateProposal extends TemplateProposal implements IRelevanceCompletionProposal {
 	// copies of this class exist in:
 	// org.eclipse.jst.jsp.ui.internal.contentassist
@@ -70,7 +70,7 @@ class XPathCustomTemplateProposal extends TemplateProposal implements IRelevance
 	}
 
 	public String getAdditionalProposalInfo() {
-		String additionalInfo = "Description:\r\n" + fTemplate.getDescription(); 
+		String additionalInfo = Messages.getString("XPathCustomTemplateProposal.1") + fTemplate.getDescription();  //$NON-NLS-1$
 		return additionalInfo;
 	}
 	

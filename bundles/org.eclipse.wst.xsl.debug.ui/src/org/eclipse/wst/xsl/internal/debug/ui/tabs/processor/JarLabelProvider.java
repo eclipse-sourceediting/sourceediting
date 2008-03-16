@@ -21,6 +21,6 @@ public class JarLabelProvider extends LabelProvider
 	{
 		IProcessorJar jar = (IProcessorJar) element;
 		IPath path = jar.getPath();
-		return path.lastSegment() + " - " + path.removeLastSegments(1).toOSString() + "";
+		return path.lastSegment() + " - " + path.removeLastSegments(1).toOSString() + ""; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

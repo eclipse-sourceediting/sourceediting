@@ -47,32 +47,32 @@ public class XMLPerspectiveFactory implements IPerspectiveFactory {
 		
 		// Add the various views
 		IFolderLayout left =
-        layout.createFolder("left", IPageLayout.LEFT, (float) 0.26, editorArea);
+        layout.createFolder("left", IPageLayout.LEFT, (float) 0.26, editorArea); //$NON-NLS-1$
 		left.addView(ProjectExplorer.VIEW_ID);
 		
-		IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, (float) 0.75, editorArea);
+		IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, (float) 0.75, editorArea); //$NON-NLS-1$
 		right.addView(IPageLayout.ID_OUTLINE);
 		
 		// Add Outline to the bottom-left
 		IFolderLayout bottomLeft = 
-			layout.createFolder("bottom-left", IPageLayout.BOTTOM, (float) 0.50, "left");
-		bottomLeft.addView("org.eclipse.wst.xml.views.XPathView");
-		bottomLeft.addView("org.eclipse.wst.xml.xpath.ui.views.XPathNavigator");
+			layout.createFolder("bottom-left", IPageLayout.BOTTOM, (float) 0.50, "left"); //$NON-NLS-1$ //$NON-NLS-2$
+		bottomLeft.addView("org.eclipse.wst.xml.views.XPathView"); //$NON-NLS-1$
+		bottomLeft.addView("org.eclipse.wst.xml.xpath.ui.views.XPathNavigator"); //$NON-NLS-1$
 		
-		IFolderLayout bottom = layout.createFolder("bottom", IPageLayout.BOTTOM, (float) 0.75, editorArea);
+		IFolderLayout bottom = layout.createFolder("bottom", IPageLayout.BOTTOM, (float) 0.75, editorArea); //$NON-NLS-1$
 		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
 		bottom.addView(IPageLayout.ID_PROP_SHEET);
 		bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
-		bottom.addView("org.eclipse.wst.common.snippets.internal.ui.SnippetsView");
+		bottom.addView("org.eclipse.wst.common.snippets.internal.ui.SnippetsView"); //$NON-NLS-1$
 		
-		layout.addNewWizardShortcut("org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard");
-		layout.addNewWizardShortcut("org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard");
-		layout.addNewWizardShortcut("org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard");
-		layout.addNewWizardShortcut("org.eclipse.wst.wsdl.ui");
-		layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.project");
-		layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.folder");
+		layout.addNewWizardShortcut("org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard"); //$NON-NLS-1$
+		layout.addNewWizardShortcut("org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard"); //$NON-NLS-1$
+		layout.addNewWizardShortcut("org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard"); //$NON-NLS-1$
+		layout.addNewWizardShortcut("org.eclipse.wst.wsdl.ui"); //$NON-NLS-1$
+		layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.project"); //$NON-NLS-1$
+		layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.folder"); //$NON-NLS-1$
 		
-		layout.addPerspectiveShortcut("org.eclipse.debug.ui.DebugPerspective");
+		layout.addPerspectiveShortcut("org.eclipse.debug.ui.DebugPerspective"); //$NON-NLS-1$
 		
 	}
 	
@@ -86,13 +86,13 @@ public class XMLPerspectiveFactory implements IPerspectiveFactory {
 	 * @param layout
 	 */
 	private void addShortCutViews(IPageLayout layout) {
-        layout.addShowViewShortcut("org.eclipse.wst.xml.xpath.ui.views.XPathNavigator");
+        layout.addShowViewShortcut("org.eclipse.wst.xml.xpath.ui.views.XPathNavigator"); //$NON-NLS-1$
 		layout.addShowViewShortcut(ProjectExplorer.VIEW_ID);
 		layout.addShowViewShortcut(IPageLayout.ID_RES_NAV);
         layout.addShowViewShortcut(IPageLayout.ID_OUTLINE);
         layout.addShowViewShortcut(IPageLayout.ID_PROBLEM_VIEW);
         layout.addShowViewShortcut(IConsoleConstants.ID_CONSOLE_VIEW);
-        layout.addShowViewShortcut("org.eclipse.wst.common.snippets.internal.ui.SnippetsView");
+        layout.addShowViewShortcut("org.eclipse.wst.common.snippets.internal.ui.SnippetsView"); //$NON-NLS-1$
 	}
 	
 	private void addShortCutPerspective(IPageLayout layout) {

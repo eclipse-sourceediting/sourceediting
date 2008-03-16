@@ -97,7 +97,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget
 			}
 			catch (IOException e)
 			{
-				abort("Unable to connect to debugger", e);
+				abort(Messages.getString("XSLDebugTarget.0"), e); //$NON-NLS-1$
 			}
 			this.thread = new XSLThread(this);
 			this.threads = new IThread[]{ thread };
@@ -125,7 +125,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget
 				break;
 			try
 			{
-				socket = new Socket("localhost",port);
+				socket = new Socket(Messages.getString("XSLDebugTarget.1"),port); //$NON-NLS-1$
 			}
 			catch (ConnectException e)
 			{}
@@ -141,7 +141,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget
 			{}
 		}
 		if (socket == null && !process.isTerminated())
-			throw new CoreException(new Status(Status.ERROR, LaunchingPlugin.PLUGIN_ID, "Could not connect to socket "+port+" after "+CONNECT_ATTEMPTS+" attempts"));
+			throw new CoreException(new Status(Status.ERROR, LaunchingPlugin.PLUGIN_ID, Messages.getString("XSLDebugTarget.2")+port+Messages.getString("XSLDebugTarget.3")+CONNECT_ATTEMPTS+Messages.getString("XSLDebugTarget.4"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return socket;
 	}
 
@@ -168,7 +168,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget
 			{
 				IProcessorInstall install = XSLTLaunchConfigurationDelegate.getProcessorInstall(getLaunch().getLaunchConfiguration(), ILaunchManager.DEBUG_MODE);
 				String type = install.getProcessorType().getLabel();
-				name = type + " [" + install.getName() + "]";
+				name = type + " [" + install.getName() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			catch (CoreException e)
 			{
@@ -284,7 +284,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget
 						if (marker != null)
 						{
 							URL file = marker.getResource().getLocation().toFile().toURI().toURL();
-							sendRequest(DebugConstants.REQUEST_ADD_BREAKPOINT + " " + file + " " + lb.getLineNumber());
+							sendRequest(DebugConstants.REQUEST_ADD_BREAKPOINT + " " + file + " " + lb.getLineNumber()); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 					}
 					catch (CoreException e)
@@ -314,7 +314,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget
 				if (marker != null)
 				{
 					URL file = marker.getResource().getLocation().toFile().toURI().toURL();
-					sendRequest(DebugConstants.REQUEST_REMOVE_BREAKPOINT + " " + file + " " + lb.getLineNumber());
+					sendRequest(DebugConstants.REQUEST_REMOVE_BREAKPOINT + " " + file + " " + lb.getLineNumber()); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 			catch (CoreException e)
@@ -425,7 +425,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget
 			{
 				stale = false;
 				String framesData = sendRequest(DebugConstants.REQUEST_STACK);
-				String[] frames = framesData.split("\\$\\$\\$");
+				String[] frames = framesData.split("\\$\\$\\$"); //$NON-NLS-1$
 				IStackFrame[] sf = new IStackFrame[frames.length];
 				List<IStackFrame> currentFrames = Arrays.asList(stackFramesCache);
 				for (int i = 0; i < frames.length; i++)
@@ -530,8 +530,8 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget
 			if (var == null)
 			{
 				var = new XSLVariable(this,varId);
-				String res = sendRequest(DebugConstants.REQUEST_VARIABLE + " " + varId);
-				String[] data = res.split("&");
+				String res = sendRequest(DebugConstants.REQUEST_VARIABLE + " " + varId); //$NON-NLS-1$
+				String[] data = res.split("&"); //$NON-NLS-1$
 				var.setScope(data[0]);
 				var.setName(data[1]);
 				variableMapCache.put(varId,var);
@@ -549,21 +549,21 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget
 			{
 				if (isSuspended())
 				{
-					String res = sendRequest(DebugConstants.REQUEST_VALUE + " " + variable.getId());
-					String[] data = res.split("&");
+					String res = sendRequest(DebugConstants.REQUEST_VALUE + " " + variable.getId()); //$NON-NLS-1$
+					String[] data = res.split("&"); //$NON-NLS-1$
 					String type = data[0];
 					String theval;
 					if (data.length > 1)
 						theval = data[1];
 					else
-						theval = "";
+						theval = ""; //$NON-NLS-1$
 					value = new XSLValue(this, type, theval);
 					valueMapCache.put(variable, value);
 				}
 				else
 				{
 					// anything as long as not null!
-					value = new XSLValue(this, "G", "");
+					value = new XSLValue(this, "G", ""); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 			return value;
@@ -586,7 +586,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget
 			}
 			catch (IOException e)
 			{
-				abort("Request failed: " + request, e);
+				abort(Messages.getString("XSLDebugTarget.19") + request, e); //$NON-NLS-1$
 			}
 		}
 		return response;
@@ -631,14 +631,14 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget
 
 		public EventDispatchJob()
 		{
-			super("Event Dispatch");
+			super(Messages.getString("XSLDebugTarget.20")); //$NON-NLS-1$
 			setSystem(true);
 		}
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor)
 		{
-			String event = "";
+			String event = ""; //$NON-NLS-1$
 			while (!isTerminated() && event != null)
 			{
 				try
@@ -648,11 +648,11 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget
 					{
 						thread.setBreakpoints(null);
 						thread.setStepping(false);
-						if (event.equals("ready"))
+						if (event.equals("ready")) //$NON-NLS-1$
 						{
 							ready();
 						}
-						else if (event.equals("stopped"))
+						else if (event.equals("stopped")) //$NON-NLS-1$
 						{
 							try
 							{
@@ -662,18 +662,18 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget
 							{
 							}
 						}
-						else if (event.equals("terminated"))
+						else if (event.equals("terminated")) //$NON-NLS-1$
 						{
 							terminated();
 						}
-						else if (event.startsWith("resumed"))
+						else if (event.startsWith("resumed")) //$NON-NLS-1$
 						{
-							if (event.endsWith("step"))
+							if (event.endsWith("step")) //$NON-NLS-1$
 							{
 								thread.setStepping(true);
 								resumed(DebugEvent.STEP_OVER);
 							}
-							else if (event.endsWith("client"))
+							else if (event.endsWith("client")) //$NON-NLS-1$
 							{
 								resumed(DebugEvent.CLIENT_REQUEST);
 							}
@@ -683,19 +683,19 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget
 								// " + event);
 							}
 						}
-						else if (event.startsWith("suspended"))
+						else if (event.startsWith("suspended")) //$NON-NLS-1$
 						{
 							// clear down the frames so that they are re-fetched
 							ressetStackFramesCache();
-							if (event.endsWith("client"))
+							if (event.endsWith("client")) //$NON-NLS-1$
 							{
 								suspended(DebugEvent.CLIENT_REQUEST);
 							}
-							else if (event.endsWith("step"))
+							else if (event.endsWith("step")) //$NON-NLS-1$
 							{
 								suspended(DebugEvent.STEP_END);
 							}
-							else if (event.indexOf("breakpoint") >= 0)
+							else if (event.indexOf("breakpoint") >= 0) //$NON-NLS-1$
 							{
 								breakpointHit(event);
 							}
