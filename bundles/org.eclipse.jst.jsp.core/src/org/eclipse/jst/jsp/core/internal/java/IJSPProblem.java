@@ -10,10 +10,11 @@ public interface IJSPProblem extends IProblem {
 	int TEIValidationMessage = F_PROBLEM_ID_LITERAL + 2;
 	int TEIClassNotInstantiated = F_PROBLEM_ID_LITERAL + 3;
 	int TEIClassMisc = F_PROBLEM_ID_LITERAL + 10;
+	
 	int TagClassNotFound = F_PROBLEM_ID_LITERAL + 101;
 	
 	/**
-	 * @return
+	 * @return the ID of this JSP problem
 	 */
 	int getEID();
 

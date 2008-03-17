@@ -470,11 +470,11 @@ public class TaglibHelper {
 			}
 
 			public boolean isWarning() {
-				return false;
+				return true;
 			}
 
 			public boolean isError() {
-				return true;
+				return false;
 			}
 
 			public int getSourceStart() {
@@ -498,7 +498,7 @@ public class TaglibHelper {
 			}
 
 			public int getID() {
-				return IJSPProblem.TEIValidationMessage;
+				return getEID();
 			}
 
 			public String[] getArguments() {

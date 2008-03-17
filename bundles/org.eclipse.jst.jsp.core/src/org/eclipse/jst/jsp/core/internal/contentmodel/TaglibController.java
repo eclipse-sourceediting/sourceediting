@@ -165,7 +165,13 @@ public class TaglibController implements IDocumentSetupParticipant, IDocumentSet
 				Map.Entry[] entries = (Map.Entry[]) fDocumentMap.entrySet().toArray(new Map.Entry[fDocumentMap.size()]);
 				for (int i = 0; i < entries.length; i++) {
 					info = (DocumentInfo) entries[i].getValue();
-					if (info != null && info.textFileBuffer.equals(buffer)) {
+					/**
+					 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=222137
+					 * 
+					 * Might be null if setup() has been called but
+					 * bufferCreated() has not, yet.
+					 */
+					if (info != null && info.textFileBuffer != null && info.textFileBuffer.equals(buffer)) {
 						fDocumentMap.remove(entries[i].getKey());
 						break;
 					}

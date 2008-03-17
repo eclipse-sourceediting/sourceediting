@@ -183,7 +183,7 @@ public final class JSPBatchValidator implements IValidatorJob, IExecutableExtens
 				currentFile = wsRoot.getFile(new Path(uris[i]));
 				if (currentFile != null && currentFile.exists()) {
 					if (shouldValidate(currentFile) && fragmentCheck(currentFile)) {
-						Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, "" + (i + 1) + "/" + uris.length + " - " + currentFile.getFullPath().toString().substring(1));
+						Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, currentFile.getFullPath().toString().substring(1));
 						reporter.displaySubtask(this, message);
 						validateFile(currentFile, reporter);
 					}
@@ -213,7 +213,7 @@ public final class JSPBatchValidator implements IValidatorJob, IExecutableExtens
 				for (int i = 0; i < files.length && !reporter.isCancelled(); i++) {
 					if (shouldValidate(files[i]) && fragmentCheck(files[i])) {
 
-						message = new LocalizedMessage(IMessage.LOW_SEVERITY, "" + (i + 1) + "/" + files.length + " - " + files[i].getFullPath().toString().substring(1));
+						message = new LocalizedMessage(IMessage.LOW_SEVERITY, files[i].getFullPath().toString().substring(1));
 						reporter.displaySubtask(this, message);
 
 						validateFile(files[i], reporter);
