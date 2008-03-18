@@ -19,21 +19,24 @@ import org.eclipse.core.resources.IFile;
 
 /**
  * TODO: Add Javadoc
+ * 
  * @author Doug Satchwell
- *
+ * 
  */
 public class SourceFile
 {
 	private static final int INCLUDE = 1;
 	private static final int IMPORT = 2;
-	
+
 	final IFile file;
 	final List<Include> includes = new ArrayList<Include>();
 	final List<Template> namedTemplates = new ArrayList<Template>();
 	final List<Template> calledTemplates = new ArrayList<Template>();
+	final List<Variable> globalVariables = new ArrayList<Variable>();
 
 	/**
 	 * TODO: Add Javadoc
+	 * 
 	 * @param file
 	 */
 	public SourceFile(IFile file)
@@ -43,6 +46,7 @@ public class SourceFile
 
 	/**
 	 * TODO: Add Javadoc
+	 * 
 	 * @param include
 	 */
 	public void addInclude(Include include)
@@ -52,6 +56,7 @@ public class SourceFile
 
 	/**
 	 * TODO: Add Javadoc
+	 * 
 	 * @param include
 	 */
 	public void addImport(Include include)
@@ -61,6 +66,7 @@ public class SourceFile
 
 	/**
 	 * TODO: Add Javadoc
+	 * 
 	 * @param template
 	 */
 	public void addNamedTemplate(Template template)
@@ -70,24 +76,27 @@ public class SourceFile
 
 	/**
 	 * TODO: Add Javadoc
+	 * 
 	 * @param template
 	 */
 	public void addCalledTemplate(Template template)
 	{
 		calledTemplates.add(template);
 	}
-	
+
 	/**
 	 * TODO: Add Javadoc
+	 * 
 	 * @return
 	 */
 	public IFile getFile()
 	{
 		return file;
 	}
-	
+
 	/**
 	 * TODO: Add Javadoc
+	 * 
 	 * @return
 	 */
 	public List<Include> getIncludes()
@@ -105,6 +114,7 @@ public class SourceFile
 
 	/**
 	 * TODO: Add Javadoc
+	 * 
 	 * @return
 	 */
 	public List<Template> getCalledTemplates()
@@ -114,16 +124,17 @@ public class SourceFile
 
 	/**
 	 * TODO: Add Javadoc
+	 * 
 	 * @return
 	 */
-	public Map<String,List<Template>> calculateTemplates()
+	public Map<String, List<Template>> calculateTemplates()
 	{
-		Map<String,List<Template>> templateMap = new HashMap<String,List<Template>>();
-		calculateTemplates(templateMap,INCLUDE);
+		Map<String, List<Template>> templateMap = new HashMap<String, List<Template>>();
+		calculateTemplates(templateMap, INCLUDE);
 		return templateMap;
 	}
-	
-	private void calculateTemplates(Map<String,List<Template>> templateMap, int type)
+
+	private void calculateTemplates(Map<String, List<Template>> templateMap, int type)
 	{
 		if (type == INCLUDE)
 		{// add all named templates
@@ -148,19 +159,25 @@ public class SourceFile
 					list.add(template);
 					templateMap.put(template.name, list);
 				}
-			}			
+			}
 		}
 		for (Include include : includes)
 		{
 			// for includes, just add all templates
 			SourceFile sf = include.findIncludedSourceFile();
 			if (sf != null)
-				sf.calculateTemplates(templateMap,include.getType());
-		}	
+				sf.calculateTemplates(templateMap, include.getType());
+		}
 	}
-	
+
+	public void addGlobalVariable(Variable var)
+	{
+		globalVariables.add(var);
+	}
+
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return file.getProjectRelativePath().toString();
 	}
 }

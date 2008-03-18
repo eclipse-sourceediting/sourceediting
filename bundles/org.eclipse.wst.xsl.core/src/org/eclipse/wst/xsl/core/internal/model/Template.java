@@ -21,17 +21,21 @@ import java.util.List;
 public class Template extends SourceArtifact
 {
 	final String name;
+	final String match;
+	final List<Variable> variables = new ArrayList<Variable>();
 	final List<Parameter> parameters = new ArrayList<Parameter>();
 	
 	/**
 	 * TODO: Add Javadoc
 	 * @param sourceFile
 	 * @param name
+	 * @param match 
 	 */
-	public Template(SourceFile sourceFile, String name)
+	public Template(SourceFile sourceFile, String name, String match)
 	{
 		super(sourceFile);
 		this.name = name;
+		this.match = match;
 	}
 	
 	/**
@@ -43,6 +47,11 @@ public class Template extends SourceArtifact
 		parameters.add(parameter);
 	}
 	
+	public void addVariable(Variable var)
+	{
+		variables.add(var);
+	}
+
 	/**
 	 * TODO: Add Javadoc
 	 * @return
@@ -50,6 +59,11 @@ public class Template extends SourceArtifact
 	public String getName()
 	{
 		return name;
+	}
+	
+	public String getMatch()
+	{
+		return match;
 	}
 	
 	/**

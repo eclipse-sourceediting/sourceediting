@@ -10,26 +10,30 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.model;
 
-/**
- * TODO: Add JavaDoc
- * @author Doug Satchwell
- */
-public class Parameter extends Variable
-{
-	boolean value;
 
-	public Parameter(SourceFile sf, String name, String select)
+/**
+ * @author Doug Satchwell
+ * 
+ */
+public class Variable extends SourceArtifact
+{
+	final String name;
+	final String select;
+
+	public Variable(SourceFile parentSourceFile, String name, String select)
 	{
-		super(sf,name,select);
+		super(parentSourceFile);
+		this.name = name;
+		this.select = select;
 	}
 
-	public boolean isValue()
+	public String getName()
 	{
-		return select != null;
+		return name;
 	}
 	
-	@Override
-	public String toString() {
-		return "Parameter "+super.toString()+" name="+name+", select="+select;
+	public String getSelect()
+	{
+		return select;
 	}
 }

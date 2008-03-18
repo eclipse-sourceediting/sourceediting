@@ -82,5 +82,15 @@
          </include>
       </validator>
    </extension>
+   
+   <extension
+         point="org.eclipse.wst.validation.referencialFileValidator">
+      <referencialFileValidator
+            id="org.eclipse.wst.xsl.core.referencialFileValidator1">
+         <run
+               class="org.eclipse.wst.xsl.core.internal.validation.XSLReferencialFileValidator">
+         </run>
+      </referencialFileValidator>
+   </extension>
 
 </plugin>

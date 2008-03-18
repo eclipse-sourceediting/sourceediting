@@ -24,19 +24,22 @@ import org.eclipse.wst.xsl.core.internal.model.SourceFileBuilder;
  */
 public class XSLCore
 {
-	private static XSLCore instance; 
+	private static XSLCore instance;
 	private SourceFileBuilder builder;
 	private Map<IFile, SourceFile> sourceFiles = new HashMap<IFile, SourceFile>();
-	
+
 	private XSLCore()
 	{
-		try {
+		try
+		{
 			builder = new SourceFileBuilder();
-		} catch (XPathExpressionException e) {
+		}
+		catch (XPathExpressionException e)
+		{
 			XSLCorePlugin.log(e);
 		}
 	}
-	
+
 	/**
 	 * Get the cached sourceFile, or build it if it has not yet been built.
 	 * 
@@ -57,17 +60,19 @@ public class XSLCore
 	 * @param file
 	 * @return
 	 */
-	public synchronized SourceFile buildSourceFile(IFile file) {
+	public synchronized SourceFile buildSourceFile(IFile file)
+	{
 		SourceFile sourceFile = builder.buildSourceFile(file);
 		sourceFiles.put(file, sourceFile);
 		return sourceFile;
 	}
-	
+
 	/**
 	 * TODO: Add JavaDoc
+	 * 
 	 * @return An Instances of XSLCore
 	 */
-public static synchronized XSLCore getInstance()
+	public static synchronized XSLCore getInstance()
 	{
 		if (instance == null)
 			instance = new XSLCore();
