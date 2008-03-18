@@ -64,6 +64,13 @@
             name="xsl.xinclude">
       </antTask>
    </extension>
+   <!-- Extra Classpath -->
+   <extension
+         point="org.eclipse.ant.core.extraClasspathEntries">
+      <extraClasspathEntry
+            library="lib/xinclude.jar">
+      </extraClasspathEntry>
+   </extension>
 
    <extension id="xsl" name="%XSL.Validator.Name" point="org.eclipse.wst.validation.validatorV2">
       <validator
