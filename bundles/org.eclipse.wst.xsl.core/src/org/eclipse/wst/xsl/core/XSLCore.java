@@ -13,6 +13,8 @@ package org.eclipse.wst.xsl.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.xpath.XPathExpressionException;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.xsl.core.internal.model.SourceFile;
 import org.eclipse.wst.xsl.core.internal.model.SourceFileBuilder;
@@ -23,11 +25,17 @@ import org.eclipse.wst.xsl.core.internal.model.SourceFileBuilder;
 public class XSLCore
 {
 	private static XSLCore instance; 
-	private SourceFileBuilder builder = new SourceFileBuilder();
+	private SourceFileBuilder builder;
 	private Map<IFile, SourceFile> sourceFiles = new HashMap<IFile, SourceFile>();
 	
 	private XSLCore()
-	{}
+	{
+		try {
+			builder = new SourceFileBuilder();
+		} catch (XPathExpressionException e) {
+			XSLCorePlugin.log(e);
+		}
+	}
 	
 	/**
 	 * Get the cached sourceFile, or build it if it has not yet been built.

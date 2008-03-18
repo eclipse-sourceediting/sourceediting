@@ -59,7 +59,7 @@ public class Validator extends AbstractNestedValidator {
 	protected void addInfoToMessage(ValidationMessage validationMessage, IMessage message) {
 		String key = validationMessage.getKey();
 		message.setAttribute(COLUMN_NUMBER_ATTRIBUTE, new Integer(validationMessage.getColumnNumber()));
-		message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "hello");
-		message.setAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE, "world");
+		message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "ATTRIBUTE_NAME"); // whether to squiggle the element, attribute or text
+		message.setAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE, "name"); // name of attribute to underline
 	}
 }

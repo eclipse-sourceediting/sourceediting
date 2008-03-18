@@ -12,6 +12,7 @@ package org.eclipse.wst.xsl.core.internal.model;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.wst.xsl.core.XSLCore;
 
 /**
  * @author Doug Satchwell
@@ -53,10 +54,22 @@ public class Include extends SourceArtifact
 		return type;
 	}
 	
-/*	public SourceFile getSourceFile()
+	/**
+	 * @return
+	 */
+	public String getHref() {
+		return href;
+	}
+	
+	/**
+	 * Gets the included file as a source file, if possible
+	 * 
+	 * @return the included sourcefile, or null if none exists
+	 */
+	public SourceFile findIncludedSourceFile()
 	{
 		// TODO this depends on the project settings and URIResolver
-		IFile includedFile = parentSourceFile.getFile().getProject().getFile(new Path("xsl/"+href));
-		return parentSourceFile.sourceFiles.get(includedFile);
-	} */
+		IFile includedFile = sourceFile.getFile().getProject().getFile(new Path(href));
+		return XSLCore.getInstance().getSourceFile(includedFile);
+	} 
 }

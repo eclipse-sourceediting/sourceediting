@@ -150,11 +150,12 @@ public class SourceFile
 				}
 			}			
 		}
-	/*	for (Include include : includes)
+		for (Include include : includes)
 		{
 			// for includes, just add all templates
-			SourceFile sf = include.getSourceFile();
-			sf.calculateTemplates(templateMap,include.getType());
-		}	*/	
+			SourceFile sf = include.findIncludedSourceFile();
+			if (sf != null)
+				sf.calculateTemplates(templateMap,include.getType());
+		}	
 	}
 }
