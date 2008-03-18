@@ -31,14 +31,7 @@ import org.eclipse.wst.xsl.core.internal.validation.XSLValidator;
  *
  */
 public class Validator extends AbstractNestedValidator {
-
-	/**
-	 * TODO: Add Javadoc
-	 */
-	public Validator() {
-		System.out.println("Validator ctor");
-	}
-
+	
 	public ValidationReport validate(String uri, InputStream inputstream, NestedValidatorContext context) {
 		ValidationReport valreport = null;
 		try {
@@ -57,9 +50,13 @@ public class Validator extends AbstractNestedValidator {
 
 	// TODO which attributes to set
 	protected void addInfoToMessage(ValidationMessage validationMessage, IMessage message) {
+		// The value constants are kept in DelegatingSourceValidator!
+
+		// TODO select attribute or element squiggling depending on type of error
 		String key = validationMessage.getKey();
+		message.setAttribute("ERROR_SIDE", "ERROR_SIDE_RIGHT");
 		message.setAttribute(COLUMN_NUMBER_ATTRIBUTE, new Integer(validationMessage.getColumnNumber()));
-		message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "ATTRIBUTE_NAME"); // whether to squiggle the element, attribute or text
-		message.setAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE, "name"); // name of attribute to underline
+		message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "START_TAG"); // whether to squiggle the element, attribute or text
+	//	message.setAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE, "name"); // name of attribute to underline
 	}
 }

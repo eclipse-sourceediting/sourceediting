@@ -47,4 +47,9 @@ public class SourceArtifact extends PlatformObject
 	{
 		return columnNumber;
 	}
+	
+	@Override
+	public String toString() {
+		return "file="+sourceFile+", line="+lineNumber+", col="+columnNumber;
+	}
 }

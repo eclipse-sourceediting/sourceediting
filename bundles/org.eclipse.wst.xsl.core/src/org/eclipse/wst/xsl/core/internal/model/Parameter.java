@@ -70,4 +70,9 @@ public class Parameter extends SourceArtifact
 	{
 		return value;
 	}
+	
+	@Override
+	public String toString() {
+		return "Parameter "+super.toString()+" name="+name+", select="+select;
+	}
 }

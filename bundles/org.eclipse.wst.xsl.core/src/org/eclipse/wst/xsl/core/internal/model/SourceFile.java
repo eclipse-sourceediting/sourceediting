@@ -158,4 +158,9 @@ public class SourceFile
 				sf.calculateTemplates(templateMap,include.getType());
 		}	
 	}
+	
+	@Override
+	public String toString() {
+		return file.getProjectRelativePath().toString();
+	}
 }

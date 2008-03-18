@@ -130,10 +130,10 @@ public class SourceFileBuilder {
 					
 					NodeList paramNodes = (NodeList)xpathTemplateParam.evaluate(node, XPathConstants.NODESET);
 					for (int j = 0; j < nodes.getLength(); j++) {
-						IDOMNode paramNode = (IDOMNode) nodes.item(j);
-						att = (Attr) node.getAttributes().getNamedItem("name");
+						IDOMNode paramNode = (IDOMNode) paramNodes.item(j);
+						att = (Attr) paramNode.getAttributes().getNamedItem("name");
 						String paramName = att == null ? null : att.getValue();
-						att = (Attr) node.getAttributes().getNamedItem("select");
+						att = (Attr) paramNode.getAttributes().getNamedItem("select");
 						String paramSelect = att == null ? null : att.getValue();
 						Parameter parameter = new Parameter(sf,paramName,paramSelect);
 						configure(paramNode, parameter, document.getStructuredDocument());
@@ -153,10 +153,10 @@ public class SourceFileBuilder {
 
 					NodeList paramNodes = (NodeList)xpathCallTemplateParam.evaluate(node, XPathConstants.NODESET);
 					for (int j = 0; j < nodes.getLength(); j++) {
-						IDOMNode paramNode = (IDOMNode) nodes.item(j);
-						att = (Attr) node.getAttributes().getNamedItem("name");
+						IDOMNode paramNode = (IDOMNode) paramNodes.item(j);
+						att = (Attr) paramNode.getAttributes().getNamedItem("name");
 						String paramName = att == null ? null : att.getValue();
-						att = (Attr) node.getAttributes().getNamedItem("select");
+						att = (Attr) paramNode.getAttributes().getNamedItem("select");
 						String paramSelect = att == null ? null : att.getValue();
 						Parameter parameter = new Parameter(sf,paramName,paramSelect);
 						configure(paramNode, parameter, document.getStructuredDocument());

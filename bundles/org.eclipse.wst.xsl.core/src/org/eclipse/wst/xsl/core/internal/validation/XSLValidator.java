@@ -36,7 +36,6 @@ public class XSLValidator {
 	private static XSLValidator instance;
 
 	private XSLValidator() {
-		System.out.println(Messages.XSLValidator_0);
 	}
 
 	/**
@@ -90,22 +89,25 @@ public class XSLValidator {
 						{
 							found = true;								
 							if (REPORT_EMPTY_PARAM_PREF > IMarker.SEVERITY_INFO && !namedTemplateParam.isValue() && !calledTemplateParam.isValue())
-								createMarker(valinfo,calledTemplateParam,REPORT_EMPTY_PARAM_PREF,"Parameter does not have default value: "+calledTemplateParam.getName());
+								createMarker(valinfo,calledTemplateParam,REPORT_EMPTY_PARAM_PREF,"Parameter "+calledTemplateParam.getName()+" does not have default value");
 							break;
 						}
 					}
 					if (!found)
-						createMarker(valinfo,calledTemplateParam,IMarker.SEVERITY_ERROR,"Parameter does not exist: "+calledTemplateParam.getName());
+						createMarker(valinfo,calledTemplateParam,IMarker.SEVERITY_ERROR,"Parameter "+calledTemplateParam.getName()+" does not exist");
 				}
 				if (REPORT_MISSING_PARAM_PREF > IMarker.SEVERITY_INFO)
 				{
 					for (Parameter namedTemplateParam : namedTemplate.getParameters())
 					{
+						System.out.println("named:"+namedTemplateParam);
+						
 						if (!namedTemplateParam.isValue())
 						{
 							boolean found = false;
 							for (Parameter calledTemplateParam : calledTemplate.getParameters())
 							{
+								System.out.println("called:"+calledTemplateParam);
 								if (calledTemplateParam.getName().equals(namedTemplateParam.getName()))
 								{
 									found = true;
@@ -159,8 +161,8 @@ public class XSLValidator {
 	}
 	
 	private void createMarker(ValidationInfo valinfo, SourceArtifact sourceArt, int severity, String message) {
-		int line = sourceArt.getLineNumber();
-		int col = sourceArt.getColumnNumber();
+		int line = sourceArt.getLineNumber()+1;
+		int col = sourceArt.getColumnNumber()+1;
 		String uri = sourceArt.getSourceFile().getFile().getLocationURI().toString();
 		switch(severity)
 		{
