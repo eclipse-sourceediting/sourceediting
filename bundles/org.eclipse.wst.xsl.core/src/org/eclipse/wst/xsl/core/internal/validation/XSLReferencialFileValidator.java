@@ -12,7 +12,6 @@ public class XSLReferencialFileValidator implements ReferencialFileValidator {
 		System.out.println("XSLReferencialFileValidator ctor");
 	}
 	
-	@Override
 	public List<IFile> getReferencedFile(List inputFiles) {
 		return new ArrayList<IFile>();
 	}

@@ -52,7 +52,6 @@ public class SourceFileBuilder
 		xpath.setNamespaceContext(new NamespaceContext()
 		{
 
-			@Override
 			public String getNamespaceURI(String arg0)
 			{
 				if ("xsl".equals(arg0)) //$NON-NLS-1$
@@ -60,7 +59,6 @@ public class SourceFileBuilder
 				return null;
 			}
 
-			@Override
 			public String getPrefix(String arg0)
 			{
 				if (XSLCorePlugin.XSLT_NS.equals(arg0))
@@ -68,7 +66,6 @@ public class SourceFileBuilder
 				return null;
 			}
 
-			@Override
 			public Iterator<String> getPrefixes(String arg0)
 			{
 				if (XSLCorePlugin.XSLT_NS.equals(arg0))
