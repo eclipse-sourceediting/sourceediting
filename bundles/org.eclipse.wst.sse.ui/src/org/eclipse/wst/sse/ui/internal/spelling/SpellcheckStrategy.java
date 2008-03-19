@@ -35,7 +35,6 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector;
-import org.eclipse.ui.texteditor.spelling.SpellingAnnotation;
 import org.eclipse.ui.texteditor.spelling.SpellingContext;
 import org.eclipse.ui.texteditor.spelling.SpellingProblem;
 import org.eclipse.ui.texteditor.spelling.SpellingService;
@@ -77,49 +76,17 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		List annotations = new ArrayList();
 
 		public void accept(SpellingProblem problem) {
-			if (!isInterestingProblem(problem))
-				return;
-//			TemporaryAnnotation annotation = new TemporaryAnnotation(new Position(problem.getOffset(), problem.getLength()), TemporaryAnnotation.ANNOT_WARNING, problem.getMessage(), fReconcileAnnotationKey);
-			TemporaryAnnotation annotation = new TemporaryAnnotation(new Position(problem.getOffset(), problem.getLength()), SpellingAnnotation.TYPE, problem.getMessage(), fReconcileAnnotationKey);
+			if (isInterestingProblem(problem)) {
+				TemporaryAnnotation annotation = new TemporaryAnnotation(new Position(problem.getOffset(), problem.getLength()), TemporaryAnnotation.ANNOT_WARNING, problem.getMessage(), fReconcileAnnotationKey);
 
-			SpellingQuickAssistProcessor quickAssistProcessor = new SpellingQuickAssistProcessor();
-			quickAssistProcessor.setSpellingProblem(problem);
-			annotation.setAdditionalFixInfo(quickAssistProcessor);
-			annotations.add(annotation);
-			if (_DEBUG_SPELLING_PROBLEMS) {
-				Logger.log(Logger.INFO, problem.getMessage());
-			}
-		}
-
-		/**
-		 * Judge whether a spelling problem is "interesting". Accept any
-		 * regions that are explictly allowed, and since valid prose areas are
-		 * rarely in a complicated document region, accept any document region
-		 * with more than one text region and reject any document regions
-		 * containing foreign text regions.
-		 * 
-		 * @param problem
-		 *            a SpellingProblem
-		 * @return whether the collector should accept the given
-		 *         SpellingProblem
-		 */
-		private boolean isInterestingProblem(SpellingProblem problem) {
-			IDocument document = getDocument();
-			if (document instanceof IStructuredDocument) {
-				IStructuredDocumentRegion documentRegion = ((IStructuredDocument) document).getRegionAtCharacterOffset(problem.getOffset());
-				if (documentRegion != null) {
-					ITextRegion textRegion = documentRegion.getRegionAtCharacterOffset(problem.getOffset());
-					if (textRegion != null && isSupportedContext(textRegion.getType())) {
-						return true;
-					}
-					if (documentRegion.getFirstRegion() instanceof ForeignRegion)
-						return false;
-					if (documentRegion.getRegions().size() == 1)
-						return true;
-					return false;
+				SpellingQuickAssistProcessor quickAssistProcessor = new SpellingQuickAssistProcessor();
+				quickAssistProcessor.setSpellingProblem(problem);
+				annotation.setAdditionalFixInfo(quickAssistProcessor);
+				annotations.add(annotation);
+				if (_DEBUG_SPELLING_PROBLEMS) {
+					Logger.log(Logger.INFO, problem.getMessage());
 				}
 			}
-			return true;
 		}
 
 		public void beginCollecting() {
@@ -161,7 +128,8 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 	private SpellingContext fSpellingContext;
 
 	private String[] fSupportedTextRegionContexts;
-	private IReconcileStep fSpellingStep = new StructuredReconcileStep() {};
+	private IReconcileStep fSpellingStep = new StructuredReconcileStep() {
+	};
 
 	public SpellcheckStrategy(ISourceViewer viewer, String contentTypeId) {
 		super(viewer);
@@ -228,6 +196,37 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		return (TemporaryAnnotation[]) toRemove.toArray(new TemporaryAnnotation[toRemove.size()]);
 	}
 
+	/**
+	 * Judge whether a spelling problem is "interesting". Accept any regions
+	 * that are explicitly allowed, and since valid prose areas are rarely in
+	 * a complicated document region, accept any document region with more
+	 * than one text region and reject any document regions containing foreign
+	 * text regions.
+	 * 
+	 * @param problem
+	 *            a SpellingProblem
+	 * @return whether the collector should accept the given SpellingProblem
+	 */
+	protected boolean isInterestingProblem(SpellingProblem problem) {
+		IDocument document = getDocument();
+		if (document instanceof IStructuredDocument) {
+			IStructuredDocumentRegion documentRegion = ((IStructuredDocument) document).getRegionAtCharacterOffset(problem.getOffset());
+			if (documentRegion != null) {
+				ITextRegion textRegion = documentRegion.getRegionAtCharacterOffset(problem.getOffset());
+				if (textRegion != null && isSupportedContext(textRegion.getType())) {
+					return true;
+				}
+				if (documentRegion.getFirstRegion() instanceof ForeignRegion)
+					return false;
+				if (documentRegion.getRegions().size() == 1)
+					return true;
+				return false;
+			}
+		}
+		return true;
+	}
+
+
 	private boolean isSupportedContext(String type) {
 		boolean isSupported = false;
 		if (fSupportedTextRegionContexts.length > 0) {
@@ -287,7 +286,7 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		TemporaryAnnotation[] annotationsToRemove;
 		Annotation[] annotationsToAdd;
 		annotationsToRemove = getSpellingAnnotationsToRemove(regionToBeChecked);
-		
+
 		if (_DEBUG_SPELLING_PROBLEMS) {
 			Logger.log(Logger.INFO, "Spell checking [" + regionToBeChecked.getOffset() + "-" + (regionToBeChecked.getOffset() + regionToBeChecked.getLength()) + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
