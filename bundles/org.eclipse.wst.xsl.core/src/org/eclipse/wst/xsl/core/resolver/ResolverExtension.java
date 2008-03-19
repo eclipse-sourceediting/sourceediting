@@ -24,6 +24,7 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.Messages;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.w3c.dom.Document;
@@ -58,7 +59,7 @@ public class ResolverExtension implements URIResolverExtension {
 			String systemId) {
 
 		// Is someone looking for "our" schema?
-		if (! XSLCorePlugin.XSLT_NS.equals(publicId)) {
+		if (! XSLCore.XSL_NAMESPACE_URI.equals(publicId)) {
 			// Not this time, return right away
 			return null;
 		}

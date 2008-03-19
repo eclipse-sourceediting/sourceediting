@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import javax.xml.parsers.*;
 
+import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.xml.sax.*;
 import org.xml.sax.ext.LexicalHandler;
@@ -203,7 +204,7 @@ public final class XSLVersionHandler extends DefaultHandler implements LexicalHa
 	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
 	public final void startElement(final String uri, final String elementName, final String qualifiedName, final Attributes attributes) throws SAXException {
-		if (uri.equals(XSLCorePlugin.XSLT_NS) && (XSLT_TEMPLATE.equals(elementName) || XSLT_STYLESHEET.equals(elementName))) {
+		if (uri.equals(XSLCore.XSL_NAMESPACE_URI) && (XSLT_TEMPLATE.equals(elementName) || XSLT_STYLESHEET.equals(elementName))) {
 			versionAttribute = attributes.getValue(XSLT_VERSION);
 		} else {
 			versionAttribute = ""; //$NON-NLS-1$

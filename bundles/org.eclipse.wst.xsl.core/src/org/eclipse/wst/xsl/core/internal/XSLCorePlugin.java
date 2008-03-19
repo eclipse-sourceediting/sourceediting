@@ -30,11 +30,6 @@ public class XSLCorePlugin extends Plugin {
 	 * TODO: Add JavaDoc
 	 */
 	public static final String PLUGIN_ID = "org.eclipse.wst.xsl.core"; //$NON-NLS-1$
-
-	/**
-	 * TODO: Add JavaDoc
-	 */
-	public static final String XSLT_NS = "http://www.w3.org/1999/XSL/Transform"; //$NON-NLS-1$
 	
 	// The shared instance
 	private static XSLCorePlugin plugin;

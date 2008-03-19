@@ -25,6 +25,8 @@ import org.eclipse.wst.xsl.core.internal.model.SourceFileBuilder;
  */
 public class XSLCore
 {
+	public static final String XSL_NAMESPACE_URI = "http://www.w3.org/1999/XSL/Transform";
+	
 	private static XSLCore instance;
 	private SourceFileBuilder builder;
 	private Map<IFile, SourceFile> sourceFiles = new HashMap<IFile, SourceFile>();

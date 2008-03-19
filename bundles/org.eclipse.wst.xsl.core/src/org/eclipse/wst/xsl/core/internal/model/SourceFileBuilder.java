@@ -31,6 +31,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.w3c.dom.Attr;
 import org.w3c.dom.NodeList;
@@ -55,20 +56,20 @@ public class SourceFileBuilder
 			public String getNamespaceURI(String arg0)
 			{
 				if ("xsl".equals(arg0)) //$NON-NLS-1$
-					return XSLCorePlugin.XSLT_NS;
+					return XSLCore.XSL_NAMESPACE_URI;
 				return null;
 			}
 
 			public String getPrefix(String arg0)
 			{
-				if (XSLCorePlugin.XSLT_NS.equals(arg0))
+				if (XSLCore.XSL_NAMESPACE_URI.equals(arg0))
 					return "xsl"; //$NON-NLS-1$
 				return null;
 			}
 
 			public Iterator<String> getPrefixes(String arg0)
 			{
-				if (XSLCorePlugin.XSLT_NS.equals(arg0))
+				if (XSLCore.XSL_NAMESPACE_URI.equals(arg0))
 				{
 					List<String> list = new ArrayList<String>();
 					list.add("xsl"); //$NON-NLS-1$

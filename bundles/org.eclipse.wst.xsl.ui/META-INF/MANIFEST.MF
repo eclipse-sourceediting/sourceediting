@@ -22,12 +22,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.xsl.core,
  org.eclipse.xsd;bundle-version="2.4.0",
  org.eclipse.ui.workbench.texteditor,
- org.eclipse.wst.validation;bundle-version="1.1.103"
+ org.eclipse.wst.validation;bundle-version="1.1.103",
+ org.eclipse.ui.ide;bundle-version="3.4.0"
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.eclipse.wst.xsl.ui.internal;x-internal:=true,
- org.eclipse.wst.xsl.ui.internal.contentassist;x-internal:=true,
- org.eclipse.wst.xsl.ui.internal.perspective;x-internal:=true,
- org.eclipse.wst.xsl.ui.internal.preferences;x-internal:=true,
- org.eclipse.wst.xsl.ui.internal.templates;x-internal:=true,
- org.eclipse.wst.xsl.ui.internal.util;x-internal:=true

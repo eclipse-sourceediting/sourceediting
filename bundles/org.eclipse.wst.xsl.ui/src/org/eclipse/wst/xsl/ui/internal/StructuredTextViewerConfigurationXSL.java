@@ -12,46 +12,62 @@
 package org.eclipse.wst.xsl.ui.internal;
 
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 import org.eclipse.wst.xml.ui.internal.contentassist.NoRegionContentAssistProcessor;
 import org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistProcessor;
+import org.eclipse.wst.xsl.ui.internal.editor.XSLHyperlinkDetector;
 
 /**
- * StructuredTextViewerConfigurationXSL implements content assistance
- * for attributes and other XPath related functionality.
+ * StructuredTextViewerConfigurationXSL implements content assistance for
+ * attributes and other XPath related functionality.
  * 
  * @author dcarver
- *
+ * 
  */
-@SuppressWarnings({ "restriction"}) //$NON-NLS-1$
-public class StructuredTextViewerConfigurationXSL extends
-		StructuredTextViewerConfigurationXML {
+public class StructuredTextViewerConfigurationXSL extends StructuredTextViewerConfigurationXML
+{
 
 	/**
 	 * Configuration for XSL Content Types
 	 */
-	public StructuredTextViewerConfigurationXSL() {
+	public StructuredTextViewerConfigurationXSL()
+	{
 		super();
 	}
 
 	/**
-	 *  Return the processors for the current content type.
+	 * Return the processors for the current content type.
 	 */
 	@Override
-	protected IContentAssistProcessor[] getContentAssistProcessors(
-			ISourceViewer sourceViewer, String partitionType) {
+	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType)
+	{
 		IContentAssistProcessor[] processors = null;
 
-		if ((partitionType == IStructuredPartitions.DEFAULT_PARTITION) || (partitionType == IXMLPartitions.XML_DEFAULT)) {
-			processors = new IContentAssistProcessor[]{new XSLContentAssistProcessor()};
+		if ((partitionType == IStructuredPartitions.DEFAULT_PARTITION) || (partitionType == IXMLPartitions.XML_DEFAULT))
+		{
+			processors = new IContentAssistProcessor[] { new XSLContentAssistProcessor() };
 		}
-		else if (partitionType == IStructuredPartitions.UNKNOWN_PARTITION) {
-			processors = new IContentAssistProcessor[]{new NoRegionContentAssistProcessor()};
+		else if (partitionType == IStructuredPartitions.UNKNOWN_PARTITION)
+		{
+			processors = new IContentAssistProcessor[] { new NoRegionContentAssistProcessor() };
 		}
 		return processors;
 	}
-	
+
+	@Override
+	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer)
+	{
+		if (sourceViewer == null || !fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
+			return null;
+		IHyperlinkDetector[] superDetectors = super.getHyperlinkDetectors(sourceViewer);
+		IHyperlinkDetector[] allDetectors = new IHyperlinkDetector[superDetectors.length + 1];
+		allDetectors[0] = new XSLHyperlinkDetector();
+		System.arraycopy(superDetectors, 0, allDetectors, 1, superDetectors.length);
+		return allDetectors;
+	}
 }
