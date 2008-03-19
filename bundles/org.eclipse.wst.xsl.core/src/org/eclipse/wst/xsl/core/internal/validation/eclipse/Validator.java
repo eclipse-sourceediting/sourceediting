@@ -22,7 +22,7 @@ import org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator
 import org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
-import org.eclipse.wst.xsl.core.XSLCorePlugin;
+import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidator;
 
 /**

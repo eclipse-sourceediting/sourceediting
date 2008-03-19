@@ -8,7 +8,7 @@
  * IBM - Initial API and implementation
  * Jesper Steen M�ller - adapted from org.eclipse.core.internal.content
  **********************************************************************/
-package org.eclipse.wst.xsl.core;
+package org.eclipse.wst.xsl.core.internal;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -20,7 +20,7 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
 
-	private static final String BUNDLE_NAME = "org.eclipse.wst.xsl.core.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.wst.xsl.core.internal.messages"; //$NON-NLS-1$
 
 	/**
 	 * TODO: Add JavaDoc

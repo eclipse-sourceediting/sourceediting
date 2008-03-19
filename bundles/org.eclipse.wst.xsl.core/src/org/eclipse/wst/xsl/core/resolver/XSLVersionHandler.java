@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import javax.xml.parsers.*;
 
-import org.eclipse.wst.xsl.core.XSLCorePlugin;
+import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.xml.sax.*;
 import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.DefaultHandler;

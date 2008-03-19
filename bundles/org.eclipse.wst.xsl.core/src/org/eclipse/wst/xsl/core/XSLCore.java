@@ -16,6 +16,7 @@ import java.util.Map;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.eclipse.wst.xsl.core.internal.model.SourceFile;
 import org.eclipse.wst.xsl.core.internal.model.SourceFileBuilder;
 

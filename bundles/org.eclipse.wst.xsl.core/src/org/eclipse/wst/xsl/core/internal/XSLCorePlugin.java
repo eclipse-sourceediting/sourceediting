@@ -9,7 +9,7 @@
  * Jesper Steen M�ller - XSL core plugin
  *******************************************************************************/
 
-package org.eclipse.wst.xsl.core;
+package org.eclipse.wst.xsl.core.internal;
 
 import javax.xml.parsers.SAXParserFactory;
 

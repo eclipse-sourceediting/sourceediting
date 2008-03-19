@@ -31,7 +31,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
-import org.eclipse.wst.xsl.core.XSLCorePlugin;
+import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.w3c.dom.Attr;
 import org.w3c.dom.NodeList;
 
