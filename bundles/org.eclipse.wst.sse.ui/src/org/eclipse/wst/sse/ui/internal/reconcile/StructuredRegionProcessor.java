@@ -251,6 +251,9 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 				}
 				super.process(createDirtyRegion(start, end - start, DirtyRegion.INSERT));
 			}
+			else {
+				super.process(dirtyRegion);
+			}
 		}
 		finally {
 			if (sModel != null)

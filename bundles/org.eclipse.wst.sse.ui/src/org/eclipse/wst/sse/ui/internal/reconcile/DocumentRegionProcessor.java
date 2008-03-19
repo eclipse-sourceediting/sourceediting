@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.reconcile;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,12 +39,12 @@ import org.eclipse.wst.sse.ui.internal.spelling.SpellcheckStrategy;
  */
 public class DocumentRegionProcessor extends DirtyRegionProcessor {
 
-	private static final boolean DEBUG_VALIDATORS = Boolean.TRUE.toString().equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerValidators"));	//$NON-NLS-1$
+	private static final boolean DEBUG_VALIDATORS = Boolean.TRUE.toString().equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerValidators")); //$NON-NLS-1$
 
 	/**
 	 * A strategy to use the defined default Spelling service.
 	 */
-	private SpellcheckStrategy fSpellcheckStrategy;
+	private IReconcilingStrategy fSpellcheckStrategy;
 
 	/**
 	 * The strategy that runs validators contributed via
@@ -78,16 +78,9 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 
 		String contentTypeId = null;
 
-		// pa_TODO it would be nice to be able to get filename from
-		// IDocument...
-		// because it seems that getting content type from input stream
-		// isn't all that accurate (eg. w/ a javascript file)
-
-		// IContentType ct =
-		// Platform.getContentTypeManager().findContentTypeFor("test.js");
 		IContentType ct = null;
 		try {
-			IContentDescription desc = Platform.getContentTypeManager().getDescriptionFor(new ByteArrayInputStream(doc.get().getBytes()), null, IContentDescription.ALL);
+			IContentDescription desc = Platform.getContentTypeManager().getDescriptionFor(new StringReader(doc.get()), null, IContentDescription.ALL);
 			if (desc != null) {
 				ct = desc.getContentType();
 				if (ct != null)
@@ -100,7 +93,7 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 		return contentTypeId;
 	}
 
-	protected final StructuredTextReconcilingStrategy getSpellcheckStrategy() {
+	protected IReconcilingStrategy getSpellcheckStrategy() {
 		if (fSpellcheckStrategy == null) {
 			String contentTypeId = getContentType(getDocument());
 			if (contentTypeId != null) {
@@ -108,7 +101,6 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 					ISourceViewer viewer = (ISourceViewer) getTextViewer();
 					fSpellcheckStrategy = new SpellcheckStrategy(viewer, contentTypeId);
 					fSpellcheckStrategy.setDocument(getDocument());
-					fSpellcheckStrategy.setDocumentPartitioning(getDocumentPartitioning());
 				}
 			}
 		}
@@ -200,7 +192,7 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 			fSpellcheckStrategy.setDocument(doc);
 		}
 	}
-	 
+
 	protected void setEntireDocumentDirty(IDocument document) {
 		super.setEntireDocumentDirty(document);
 
@@ -220,7 +212,7 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 			}
 		}
 	}
-	
+
 	/**
 	 * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#uninstall()
 	 */
