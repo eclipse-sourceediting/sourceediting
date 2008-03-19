@@ -16,4 +16,16 @@ public class Util {
 		Arrays.fill(spaceArray, ' ');
 		return spaceArray;
 	}
+	
+	public static String removeAll(String source, char remove) {
+		
+		String newString = "";
+		
+		char[] oldStringArray = source.toCharArray();
+		
+		for(int i = 0;i<oldStringArray.length;i++) {
+			if(oldStringArray[i]!=remove) newString+=oldStringArray[i];
+		}
+		return newString;
+	}
 }

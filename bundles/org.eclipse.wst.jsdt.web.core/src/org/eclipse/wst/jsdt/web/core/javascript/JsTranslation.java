@@ -63,17 +63,17 @@ public class JsTranslation implements IJsTranslation {
 	private IJavaProject fJavaProject = null;
 	private byte[] fLock = null;
 	private IProgressMonitor fProgressMonitor = null;
-	private IStructuredDocument fHtmlDocument;
-	private String fModelBaseLocation;
+	protected IStructuredDocument fHtmlDocument;
+	protected String fModelBaseLocation;
 
 
 	private static final String SUPER_TYPE_NAME = "Window"; //$NON-NLS-1$
 	private static final String SUPER_TYPE_LIBRARY = "org.eclipse.wst.jsdt.launching.baseBrowserLibrary"; //$NON-NLS-1$
 
-	private IJsTranslator fTranslator;
+	protected IJsTranslator fTranslator;
 
 	private String mangledName;
-	private boolean listenForChanges;
+	protected boolean listenForChanges;
 
 	public JsTranslation() {
 		/* do nothing */
@@ -90,7 +90,7 @@ public class JsTranslation implements IJsTranslation {
 	
 
 	
-	private JsTranslation(IStructuredDocument htmlDocument, IJavaProject javaProj, boolean listenForChanges) {
+	protected JsTranslation(IStructuredDocument htmlDocument, IJavaProject javaProj, boolean listenForChanges) {
 		fLock = new byte[0];
 		fJavaProject = javaProj;
 		fHtmlDocument = htmlDocument;

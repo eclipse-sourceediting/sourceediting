@@ -37,13 +37,13 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  */
 public class JsTranslator extends Job implements IJsTranslator{
 	
-	private static final boolean DEBUG;
+	protected static final boolean DEBUG;
 	private static final boolean DEBUG_SAVE_OUTPUT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslationstodisk")); //$NON-NLS-1$  //$NON-NLS-2$
-	public static final String ENDL = "\n"; //$NON-NLS-1$
+	protected static final String ENDL = "\n"; //$NON-NLS-1$
 	
-	public static final boolean REMOVE_XML_COMMENT = true;
-	public static final String XML_COMMENT_START = "<!--"; //$NON-NLS-1$
-	public static final String XML_COMMENT_END = "-->"; //$NON-NLS-1$
+	protected static final boolean REMOVE_XML_COMMENT = true;
+	protected static final String XML_COMMENT_START = "<!--"; //$NON-NLS-1$
+	protected static final String XML_COMMENT_END = "-->"; //$NON-NLS-1$
 	
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspjavamapping"); //$NON-NLS-1$
@@ -51,22 +51,22 @@ public class JsTranslator extends Job implements IJsTranslator{
 	}
 
 	private IStructuredDocumentRegion fCurrentNode;
-	private StringBuffer fScriptText = new StringBuffer();
-	private IStructuredDocument fStructuredDocument = null;
-	private ArrayList importLocationsInHtml = new ArrayList();
+	protected StringBuffer fScriptText = new StringBuffer();
+	protected IStructuredDocument fStructuredDocument = null;
+	protected ArrayList importLocationsInHtml = new ArrayList();
 	/* use java script by default */
-	private boolean fIsGlobalJs = true;
-	private ArrayList rawImports = new ArrayList(); // traslated
-	private ArrayList scriptLocationInHtml = new ArrayList();
-	private int scriptOffset = 0;
+	protected boolean fIsGlobalJs = true;
+	protected ArrayList rawImports = new ArrayList(); // traslated
+	protected ArrayList scriptLocationInHtml = new ArrayList();
+	protected int scriptOffset = 0;
 	
 	protected byte[] fLock = new byte[0];
 	protected byte[] finished = new byte[0];
 	
-	private IBuffer fCompUnitBuff;
-	private boolean cancelParse = false;
-	private int missingEndTagRegionStart = -1;
-	private static final boolean ADD_SEMICOLON_AT_INLINE=true;
+	protected IBuffer fCompUnitBuff;
+	protected boolean cancelParse = false;
+	protected int missingEndTagRegionStart = -1;
+	protected static final boolean ADD_SEMICOLON_AT_INLINE=true;
 	
 	protected boolean isGlobalJs() {
 		return fIsGlobalJs;
