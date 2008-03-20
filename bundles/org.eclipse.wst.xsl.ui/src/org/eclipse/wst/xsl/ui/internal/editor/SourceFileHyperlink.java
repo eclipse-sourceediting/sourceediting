@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.editor;
 
+import java.io.IOException;
+
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -21,14 +24,20 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.xsl.core.internal.model.SourceArtifact;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
+import org.eclipse.wst.xsl.core.internal.model.XSLAttribute;
+import org.eclipse.wst.xsl.core.internal.model.XSLElement;
+import org.eclipse.wst.xsl.core.internal.model.XSLNode;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 
 class SourceFileHyperlink implements IHyperlink
 {
 	private IRegion hyperLinkRegion;
 	private IFile linkedFile;
-	private SourceArtifact sourceArtifact;
+	private XSLNode sourceArtifact;
 
 	public SourceFileHyperlink(IRegion hyperLinkRegion, IFile linkedFile)
 	{
@@ -36,11 +45,11 @@ class SourceFileHyperlink implements IHyperlink
 		this.linkedFile = linkedFile;
 	}
 
-	public SourceFileHyperlink(IRegion hyperLinkRegion, IFile linkedFile, SourceArtifact sourceArtifact)
+	public SourceFileHyperlink(IRegion hyperLinkRegion, IFile linkedFile, XSLNode node)
 	{
 		this.hyperLinkRegion = hyperLinkRegion;
 		this.linkedFile = linkedFile;
-		this.sourceArtifact = sourceArtifact;
+		this.sourceArtifact = node;
 	}
 
 	public IRegion getHyperlinkRegion()
@@ -74,8 +83,10 @@ class SourceFileHyperlink implements IHyperlink
 					IDocument openedDocument = (IDocument)editor.getAdapter(IDocument.class);
 					if (openedDocument != null)
 					{
-						IRegion lineRegion = openedDocument.getLineInformation(sourceArtifact.getLineNumber()-1);
-						textEditor.setHighlightRange(lineRegion.getOffset(), 0, true);
+						int lineOffset = openedDocument.getLineOffset(sourceArtifact.getLineNumber());
+						int offset = lineOffset + sourceArtifact.getColumnNumber();
+						//textEditor.selectAndReveal(offset, sourceArtifact.getLength());
+						textEditor.setHighlightRange(offset, sourceArtifact.getLength(), true);
 					}
 				}
 			}
