@@ -12,8 +12,10 @@ package org.eclipse.wst.xsl.core.internal.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 
@@ -23,7 +25,7 @@ import org.eclipse.core.resources.IFile;
  * @author Doug Satchwell
  * 
  */
-public class SourceFile
+public class Stylesheet
 {
 	private static final int INCLUDE = 1;
 	private static final int IMPORT = 2;
@@ -39,7 +41,7 @@ public class SourceFile
 	 * 
 	 * @param file
 	 */
-	public SourceFile(IFile file)
+	public Stylesheet(IFile file)
 	{
 		this.file = file;
 	}
@@ -130,21 +132,22 @@ public class SourceFile
 	public Map<String, List<Template>> calculateTemplates()
 	{
 		Map<String, List<Template>> templateMap = new HashMap<String, List<Template>>();
-		calculateTemplates(templateMap, INCLUDE);
+		Set<Stylesheet> files = new HashSet<Stylesheet>();
+		calculateTemplates(files,templateMap, INCLUDE);
 		return templateMap;
 	}
 
-	private void calculateTemplates(Map<String, List<Template>> templateMap, int type)
+	private void calculateTemplates(Set<Stylesheet> stylesheets, Map<String, List<Template>> templateMap, int type)
 	{
 		if (type == INCLUDE)
 		{// add all named templates
 			for (Template template : namedTemplates)
 			{
-				List<Template> list = templateMap.get(template.name);
+				List<Template> list = templateMap.get(template.getName());
 				if (list == null)
 				{
 					list = new ArrayList<Template>();
-					templateMap.put(template.name, list);
+					templateMap.put(template.getName(), list);
 				}
 				list.add(template);
 			}
@@ -153,20 +156,28 @@ public class SourceFile
 		{
 			for (Template template : namedTemplates)
 			{// only add if not over-ridden
-				if (!templateMap.containsKey(template.name))
+				if (!templateMap.containsKey(template.getName()))
 				{
 					List<Template> list = new ArrayList<Template>();
 					list.add(template);
-					templateMap.put(template.name, list);
+					templateMap.put(template.getName(), list);
 				}
 			}
 		}
 		for (Include include : includes)
 		{
 			// for includes, just add all templates
-			SourceFile sf = include.findIncludedSourceFile();
-			if (sf != null)
-				sf.calculateTemplates(templateMap, include.getType());
+			Stylesheet stylesheet = include.findIncludedStylesheet();
+			if (stylesheet != null)
+			{
+				// TODO may need to be more intelligent for imports?
+				// ensure we don't use the same stylesheet more than once (prevents circular reference problems)
+				if (!stylesheets.contains(stylesheet))
+				{
+					stylesheets.add(stylesheet);
+					stylesheet.calculateTemplates(stylesheets, templateMap, include.getNodeType());
+				}
+			}
 		}
 	}
 

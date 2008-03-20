@@ -17,8 +17,8 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
-import org.eclipse.wst.xsl.core.internal.model.SourceFile;
-import org.eclipse.wst.xsl.core.internal.model.SourceFileBuilder;
+import org.eclipse.wst.xsl.core.internal.model.Stylesheet;
+import org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder;
 
 /**
  * TODO: Add JavaDoc
@@ -28,14 +28,14 @@ public class XSLCore
 	public static final String XSL_NAMESPACE_URI = "http://www.w3.org/1999/XSL/Transform";
 	
 	private static XSLCore instance;
-	private SourceFileBuilder builder;
-	private Map<IFile, SourceFile> sourceFiles = new HashMap<IFile, SourceFile>();
+	private StylesheetBuilder builder;
+	private Map<IFile, Stylesheet> stylesheets = new HashMap<IFile, Stylesheet>();
 
 	private XSLCore()
 	{
 		try
 		{
-			builder = new SourceFileBuilder();
+			builder = new StylesheetBuilder();
 		}
 		catch (XPathExpressionException e)
 		{
@@ -44,17 +44,17 @@ public class XSLCore
 	}
 
 	/**
-	 * Get the cached sourceFile, or build it if it has not yet been built.
+	 * Get the cached stylesheet, or build it if it has not yet been built.
 	 * 
 	 * @param file
 	 * @return source file, or null if could not be built
 	 */
-	public synchronized SourceFile getSourceFile(IFile file)
+	public synchronized Stylesheet getStylesheet(IFile file)
 	{
-		SourceFile sourceFile = sourceFiles.get(file);
-		if (sourceFile == null)
-			sourceFile = buildSourceFile(file);
-		return sourceFile;
+		Stylesheet stylesheet = stylesheets.get(file);
+		if (stylesheet == null)
+			stylesheet = buildStylesheet(file);
+		return stylesheet;
 	}
 
 	/**
@@ -63,11 +63,11 @@ public class XSLCore
 	 * @param file
 	 * @return
 	 */
-	public synchronized SourceFile buildSourceFile(IFile file)
+	public synchronized Stylesheet buildStylesheet(IFile file)
 	{
-		SourceFile sourceFile = builder.buildSourceFile(file);
-		sourceFiles.put(file, sourceFile);
-		return sourceFile;
+		Stylesheet stylesheet = builder.buildSourceFile(file);
+		stylesheets.put(file, stylesheet);
+		return stylesheet;
 	}
 
 	/**

@@ -13,12 +13,13 @@ package org.eclipse.wst.xsl.core.internal.model;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.xsl.core.XSLCore;
+import org.eclipse.wst.xsl.core.model.IIncludeVisitor;
 
 /**
  * @author Doug Satchwell
  *
  */
-public class Include extends SourceArtifact
+public class Include extends XSLElement
 {
 	/**
 	 * TODO: Add JavaDoc
@@ -29,19 +30,17 @@ public class Include extends SourceArtifact
 	 * TODO: Add JavaDoc
 	 */
 	public static final int IMPORT = 2;
-	private final String href;
 	private final int type;
 	
 	/**
 	 * TODO: Add JavaDoc
-	 * @param parentSourceFile
+	 * @param stylesheet
 	 * @param href
 	 * @param type
 	 */
-	public Include(SourceFile parentSourceFile, String href, int type)
+	public Include(Stylesheet stylesheet, int type)
 	{
-		super(parentSourceFile);
-		this.href = href;
+		super(stylesheet);
 		this.type = type;
 	}
 	
@@ -49,7 +48,7 @@ public class Include extends SourceArtifact
 	 * TODO: Add Javadoc
 	 * @return
 	 */
-	public int getType()
+	public int getIncludeType()
 	{
 		return type;
 	}
@@ -58,18 +57,37 @@ public class Include extends SourceArtifact
 	 * @return
 	 */
 	public String getHref() {
-		return href;
+		return getAttributeValue("href");
 	}
 	
+	public void accept(IIncludeVisitor visitor)
+	{
+		boolean carryOn = visitor.visit(this);
+		if (carryOn)
+		{
+			Stylesheet sf = findIncludedStylesheet();
+			if (sf != null)
+			{
+				for (Include include : sf.getIncludes())
+				{
+					include.accept(visitor);
+				}
+			}
+		}
+	}
+
 	/**
 	 * Gets the included file as a source file, if possible
 	 * 
-	 * @return the included sourcefile, or null if none exists
+	 * @return the included stylesheet, or null if none exists
 	 */
-	public SourceFile findIncludedSourceFile()
+	public Stylesheet findIncludedStylesheet()
 	{
 		// TODO this depends on the project settings and URIResolver
-		IFile includedFile = sourceFile.getFile().getProject().getFile(new Path(href));
-		return XSLCore.getInstance().getSourceFile(includedFile);
+		String href = getHref();
+		if (href == null)
+			return null;
+		IFile includedFile = stylesheet.getFile().getProject().getFile(new Path(href));
+		return XSLCore.getInstance().getStylesheet(includedFile);
 	} 
 }

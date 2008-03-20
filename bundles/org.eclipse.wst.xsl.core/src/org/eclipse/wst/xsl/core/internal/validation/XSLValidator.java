@@ -18,14 +18,13 @@ import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.wst.xml.core.internal.validation.core.ValidationInfo;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.model.Include;
 import org.eclipse.wst.xsl.core.internal.model.Parameter;
-import org.eclipse.wst.xsl.core.internal.model.SourceArtifact;
-import org.eclipse.wst.xsl.core.internal.model.SourceFile;
+import org.eclipse.wst.xsl.core.internal.model.Stylesheet;
 import org.eclipse.wst.xsl.core.internal.model.Template;
+import org.eclipse.wst.xsl.core.internal.model.XSLNode;
 
 /**
  * TODO: Add Javadoc
@@ -46,13 +45,13 @@ public class XSLValidator {
 	 * @throws CoreException
 	 */
 	public ValidationReport validate(String uri, IFile xslFile) throws CoreException {
-		SourceFile sourceFile = XSLCore.getInstance().buildSourceFile(xslFile);
-		ValidationInfo valinfo = new ValidationInfo(uri);
-		calculateProblems(sourceFile,valinfo);
-		return valinfo;
+		Stylesheet stylesheet = XSLCore.getInstance().buildStylesheet(xslFile);
+		XSLValidationReport report = new XSLValidationReport(stylesheet);
+		calculateProblems(stylesheet,report);
+		return report;
 	}
 
-	private void calculateProblems(SourceFile sf, ValidationInfo valinfo) throws CoreException
+	private void calculateProblems(Stylesheet sf, XSLValidationReport report) throws CoreException
 	{
 		// TODO these need to be real preferences
 		int REPORT_EMPTY_PARAM_PREF = IMarker.SEVERITY_WARNING;
@@ -60,14 +59,38 @@ public class XSLValidator {
 
 		Map<String,List<Template>> templateMap = sf.calculateTemplates();
 		
-		// check for includes that don't exist
+		// includes
+		boolean circularReference = false;
+		Set<IFile> files = new HashSet<IFile>();
 		for (Include include : sf.getIncludes()) {
-			SourceFile includedSource = include.findIncludedSourceFile();
+			Stylesheet includedSource = include.findIncludedStylesheet();
 			if (includedSource == null)
+			{ // included file does not exist
+				createMarker(report,include.getAttribute("href"),IMarker.SEVERITY_ERROR,"Missing include: "+include.getHref());
+			}
+			else if (includedSource == include.getStylesheet())
+			{ // stylesheet including itself!
+				createMarker(report,include.getAttribute("href"),IMarker.SEVERITY_ERROR,"A stylesheet must not include itself");
+				circularReference = true;
+			}
+			else
 			{
-				createMarker(valinfo,include,IMarker.SEVERITY_ERROR,"Missing include: "+include.getHref());
+				IFile file = includedSource.getFile();
+				if (file != null)
+				{
+					if (files.contains(file))
+					{// same file included more than once
+						createMarker(report,include.getAttribute("href"),IMarker.SEVERITY_ERROR,"Stylesheet included multiple times: "+include.getHref());
+					}
+					else
+						files.add(file);
+				}
 			}
 		}
+		
+		// if we have a circular reference, it may be dangerous to continue (most likely the below code will go into an infinite loop)
+		if (circularReference)
+			return;
 		
 		// check for missing called templates
 		for (Template calledTemplate : sf.getCalledTemplates())
@@ -75,7 +98,7 @@ public class XSLValidator {
 			List<Template> templateList = templateMap.get(calledTemplate.getName());
 			if (templateList == null)
 			{
-				createMarker(valinfo,calledTemplate,IMarker.SEVERITY_ERROR,"Missing template: "+calledTemplate.getName());
+				createMarker(report,calledTemplate,IMarker.SEVERITY_ERROR,"Missing template: "+calledTemplate.getName());
 			}
 			else if (templateList.size() == 1)
 			{
@@ -89,25 +112,22 @@ public class XSLValidator {
 						{
 							found = true;								
 							if (REPORT_EMPTY_PARAM_PREF > IMarker.SEVERITY_INFO && !namedTemplateParam.isValue() && !calledTemplateParam.isValue())
-								createMarker(valinfo,calledTemplateParam,REPORT_EMPTY_PARAM_PREF,"Parameter "+calledTemplateParam.getName()+" does not have default value");
+								createMarker(report,calledTemplateParam,REPORT_EMPTY_PARAM_PREF,"Parameter "+calledTemplateParam.getName()+" does not have default value");
 							break;
 						}
 					}
 					if (!found)
-						createMarker(valinfo,calledTemplateParam,IMarker.SEVERITY_ERROR,"Parameter "+calledTemplateParam.getName()+" does not exist");
+						createMarker(report,calledTemplateParam,IMarker.SEVERITY_ERROR,"Parameter "+calledTemplateParam.getName()+" does not exist");
 				}
 				if (REPORT_MISSING_PARAM_PREF > IMarker.SEVERITY_INFO)
 				{
 					for (Parameter namedTemplateParam : namedTemplate.getParameters())
 					{
-						System.out.println("named:"+namedTemplateParam);
-						
 						if (!namedTemplateParam.isValue())
 						{
 							boolean found = false;
 							for (Parameter calledTemplateParam : calledTemplate.getParameters())
 							{
-								System.out.println("called:"+calledTemplateParam);
 								if (calledTemplateParam.getName().equals(namedTemplateParam.getName()))
 								{
 									found = true;
@@ -115,83 +135,88 @@ public class XSLValidator {
 								}
 							}
 							if (!found)
-								createMarker(valinfo,calledTemplate,REPORT_MISSING_PARAM_PREF,"Missing parameter: "+namedTemplateParam.getName());
+								createMarker(report,calledTemplate,REPORT_MISSING_PARAM_PREF,"Missing parameter: "+namedTemplateParam.getName());
 						}
 					}
 				}
 			}
 		}
+		
 		// check for duplicate templates
-		Set<Include> includesWithConflictingTemplates = new HashSet<Include>();
+		final Set<Include> includesWithConflictingTemplates = new HashSet<Include>();
 		for (Map.Entry<String, List<Template>> entry : templateMap.entrySet())
 		{
 			List<Template> templateList = entry.getValue();
-			//System.out.println("------------------------------------");
-			//System.out.println(entry.getKey());
-			//System.out.println("------------------------------------");
-			//for (Template template : templateList)
-			//{
-			//	System.out.println(template.getParentSourceFile().getFile());
-			//}
 			if(templateList.size() > 1)
 			{ // more than one template with the same name exists
-				for (Template template : templateList)
+				for (final Template template : templateList)
 				{
-					if (template.getSourceFile().equals(sf))
+					if (template.getStylesheet().equals(sf))
 					{// duplicate template exists in this source file
-						createMarker(valinfo,template,IMarker.SEVERITY_ERROR,"Duplicate template: "+template.getName());
+						createMarker(report,template,IMarker.SEVERITY_ERROR,"Duplicate template: "+template.getName());
 					}
 					else
 					{// duplicate template exists in imported templates
-/*						for (Include include : sf.getIncludes())
+						for (final Include include : sf.getIncludes())
 						{
-							if (recurse(include.getSourceFile().getIncludes(),template))
-							{
-								includesWithConflictingTemplates.add(include);
-							}
+							// include.findIncludedSourceFile();
+//							include.getSourceFile().accept(new IStylesheetVisitor(){
+//
+//								@Override
+//								public boolean visit(SourceFile stylesheet)
+//								{
+//									List<Template> templates = stylesheet.getNamedTemplates();
+//									for (Template importedTemplate : templates)
+//									{
+//										if (importedTemplate.conflictsWith(template))
+//										{
+//											includesWithConflictingTemplates.add(include);
+//										}
+//									}
+//									return true;
+//								}		
+//							});
 						}
-*/					}
+					}
 				}
 			}
 		}
 		for (Include include : includesWithConflictingTemplates)
 		{
-			createMarker(valinfo,include,IMarker.SEVERITY_ERROR,"Conflicting includes: "+include.getSourceFile().getFile());
-		}
-	}
-	
-	private void createMarker(ValidationInfo valinfo, SourceArtifact sourceArt, int severity, String message) {
-		int line = sourceArt.getLineNumber()+1;
-		int col = sourceArt.getColumnNumber()+1;
-		String uri = sourceArt.getSourceFile().getFile().getLocationURI().toString();
-		switch(severity)
-		{
-			case IMarker.SEVERITY_ERROR:
-				valinfo.addError(message, line, col, uri);
-			case IMarker.SEVERITY_WARNING:
-				valinfo.addWarning(message, line, col, uri);
+			createMarker(report,include,IMarker.SEVERITY_ERROR,"Conflicting includes: "+include.getStylesheet().getFile());
 		}
 	}
 
-	/*	private boolean recurse(List<Include> includes, Template template) throws CoreException
-	{
-		boolean found = false;
-		for (Include include : includes)
+//	private boolean recurse(List<Include> includes, Template template) throws CoreException
+//	{
+//		boolean found = false;
+//		for (Include include : includes)
+//		{
+//			if (include.getSourceFile().getNamedTemplates().contains(template))
+//			{
+//				found = true;
+//			}
+//			else
+//			{
+//				found = recurse(include.getSourceFile().getIncludes(),template);
+//			}
+//			if (found)
+//				break;
+//		}
+//		return found;
+//	}	
+	
+	private void createMarker(XSLValidationReport report, XSLNode xslNode, int severity, String message) {
+		switch(severity)
 		{
-			if (include.getParentSourceFile().getNamedTemplates().contains(template))
-			{
-				found = true;
-			}
-			else
-			{
-				found = recurse(include.getSourceFile().getIncludes(),template);
-			}
-			if (found)
+			case IMarker.SEVERITY_ERROR:
+				report.addError(xslNode,message);
+				break;
+			case IMarker.SEVERITY_WARNING:
+				report.addWarning(xslNode,message);
 				break;
 		}
-		return found;
-	}	
-*/
+	}
 	
 	/**
 	 * TODO: Add Javadoc

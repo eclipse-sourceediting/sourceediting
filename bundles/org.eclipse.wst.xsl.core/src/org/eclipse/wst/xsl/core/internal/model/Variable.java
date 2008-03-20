@@ -15,25 +15,20 @@ package org.eclipse.wst.xsl.core.internal.model;
  * @author Doug Satchwell
  * 
  */
-public class Variable extends SourceArtifact
+public class Variable extends XSLElement
 {
-	final String name;
-	final String select;
-
-	public Variable(SourceFile parentSourceFile, String name, String select)
+	public Variable(Stylesheet stylesheet)
 	{
-		super(parentSourceFile);
-		this.name = name;
-		this.select = select;
+		super(stylesheet);
 	}
 
 	public String getName()
 	{
-		return name;
+		return getAttributeValue("name");
 	}
 	
 	public String getSelect()
 	{
-		return select;
+		return getAttributeValue("select");
 	}
 }

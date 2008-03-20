@@ -11,16 +11,24 @@
 package org.eclipse.wst.xsl.core.internal.model;
 
 import org.eclipse.core.runtime.PlatformObject;
+import org.w3c.dom.Node;
 
-public class SourceArtifact extends PlatformObject
+public abstract class XSLNode extends PlatformObject
 {
-	final SourceFile sourceFile;
+	public static final short ELEMENT_NODE = Node.ELEMENT_NODE;
+	public static final short ATTRIBUTE_NODE = Node.ATTRIBUTE_NODE;
+	
+	final Stylesheet stylesheet;
 	int lineNumber;
 	int columnNumber;
+	private int offset;
+	private int length;
+	private short type;
 	
-	public SourceArtifact(SourceFile parentSourceFile)
+	public XSLNode(Stylesheet stylesheet, short type)
 	{
-		this.sourceFile = parentSourceFile;
+		this.stylesheet = stylesheet;
+		this.type = type;
 	}
 
 	public void setLineNumber(int lineNumber)
@@ -33,9 +41,9 @@ public class SourceArtifact extends PlatformObject
 		this.columnNumber = columnNumber;
 	}
 
-	public SourceFile getSourceFile()
+	public Stylesheet getStylesheet()
 	{
-		return sourceFile;
+		return stylesheet;
 	}
 
 	public int getLineNumber()
@@ -47,9 +55,34 @@ public class SourceArtifact extends PlatformObject
 	{
 		return columnNumber;
 	}
+
+	public void setOffset(int offset)
+	{
+		this.offset = offset;
+	}
+	
+	public int getOffset()
+	{
+		return offset;
+	}
+
+	public void setLength(int length)
+	{
+		this.length = length;
+	}
+	
+	public int getLength()
+	{
+		return length;
+	}
+	
+	public short getNodeType()
+	{
+		return type;
+	}
 	
 	@Override
 	public String toString() {
-		return "file="+sourceFile+", line="+lineNumber+", col="+columnNumber;
+		return "file="+stylesheet+", line="+lineNumber+", col="+columnNumber;
 	}
 }

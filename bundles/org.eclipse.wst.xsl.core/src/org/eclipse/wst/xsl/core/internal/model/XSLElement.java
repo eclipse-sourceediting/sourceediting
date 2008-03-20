@@ -10,24 +10,31 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.model;
 
-/**
- * TODO: Add JavaDoc
- * @author Doug Satchwell
- */
-public class Parameter extends Variable
-{
-	public Parameter(Stylesheet sf)
-	{
-		super(sf);
-	}
+import java.util.HashMap;
+import java.util.Map;
 
-	public boolean isValue()
+public abstract class XSLElement extends XSLNode
+{
+	Map<String, XSLAttribute> attributes = new HashMap<String, XSLAttribute>();
+	
+	public XSLElement(Stylesheet stylesheet)
 	{
-		return getAttributeValue("select") != null;
+		super(stylesheet, XSLNode.ELEMENT_NODE);
 	}
 	
-//	@Override
-//	public String toString() {
-//		return "Parameter "+super.toString()+" name="+name+", select="+select;
-//	}
+	public void setAttribute(XSLAttribute attribute)
+	{
+		attributes.put(attribute.name, attribute);
+	}
+	
+	public XSLAttribute getAttribute(String name)
+	{
+		return attributes.get(name);
+	}
+
+	public String getAttributeValue(String name)
+	{
+		XSLAttribute attribute = attributes.get(name);
+		return attribute == null ? null : attribute.getValue();
+	}
 }
