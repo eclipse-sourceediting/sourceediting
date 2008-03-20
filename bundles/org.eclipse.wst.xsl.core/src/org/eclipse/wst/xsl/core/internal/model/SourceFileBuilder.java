@@ -179,6 +179,7 @@ public class SourceFileBuilder
 					String paramName = att == null ? null : att.getValue();
 					att = (Attr) paramNode.getAttributes().getNamedItem("select");
 					String paramSelect = att == null ? null : att.getValue();
+					
 					Parameter parameter = new Parameter(sf, paramName, paramSelect);
 					configure(paramNode, parameter, document.getStructuredDocument());
 					template.addParameter(parameter);
@@ -193,12 +194,14 @@ public class SourceFileBuilder
 		for (int i = 0; i < nodes.getLength(); i++)
 		{
 			IDOMNode node = (IDOMNode) nodes.item(i);
-			Attr att = (Attr) node.getAttributes().getNamedItem("name");
+			Attr att = (Attr) node.getAttributes().getNamedItem("name"); //$NON-NLS-1$
 			String name = att == null ? null : att.getValue();
-			att = (Attr) node.getAttributes().getNamedItem("match");
+			att = (Attr) node.getAttributes().getNamedItem("match"); //$NON-NLS-1$
 			String match = att == null ? null : att.getValue();
+			att = (Attr) node.getAttributes().getNamedItem("mode"); //$NON-NLS-1$
+			String mode = att == null ? null : att.getNodeValue();
 			
-			Template template = new Template(sf, name, match);
+			Template template = new Template(sf, name, match, mode);
 			configure(node, template, document.getStructuredDocument());
 			sf.addNamedTemplate(template);
 

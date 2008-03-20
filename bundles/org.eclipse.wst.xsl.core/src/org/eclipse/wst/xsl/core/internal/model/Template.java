@@ -22,6 +22,7 @@ public class Template extends SourceArtifact
 {
 	final String name;
 	final String match;
+	final String mode;
 	final List<Variable> variables = new ArrayList<Variable>();
 	final List<Parameter> parameters = new ArrayList<Parameter>();
 	
@@ -36,7 +37,24 @@ public class Template extends SourceArtifact
 		super(sourceFile);
 		this.name = name;
 		this.match = match;
+		this.mode = null;
 	}
+	
+	/**
+	 * TODO: Add Javadoc
+	 * @param sourceFile
+	 * @param name
+	 * @param match 
+	 * @param mode
+	 */
+	public Template(SourceFile sourceFile, String name, String match, String mode)
+	{
+		super(sourceFile);
+		this.name = name;
+		this.match = match;
+		this.mode = mode;
+	}
+	
 	
 	/**
 	 * TODO: Add Javadoc

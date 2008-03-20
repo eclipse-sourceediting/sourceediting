@@ -10,6 +10,8 @@
 		<accessrules>
 			<accessrule kind="accessible" pattern="*org/eclipse/wst/xsl/**"/>
 			<accessrule kind="accessible" pattern="**/validation/**"/>
+			<accessrule kind="accessible" pattern="**/sse/**"/>
+			<accessrule kind="accessible" pattern="**/xml/**"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>

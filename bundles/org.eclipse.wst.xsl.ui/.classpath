@@ -11,6 +11,7 @@
 			<accessrule kind="accessible" pattern="**/xsl/core/**"/>
 			<accessrule kind="accessible" pattern="**/xml/**"/>
 			<accessrule kind="accessible" pattern="**/sse/**"/>
+			<accessrule kind="accessible" pattern="**/validation/**"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
