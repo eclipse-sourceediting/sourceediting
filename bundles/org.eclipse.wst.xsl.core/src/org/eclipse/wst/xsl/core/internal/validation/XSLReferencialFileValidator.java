@@ -16,10 +16,18 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.validation.internal.operations.ReferencialFileValidator;
 
+/**
+ * TODO: Add Javadoc
+ * @author Doug Satchwell
+ *
+ */
 public class XSLReferencialFileValidator implements ReferencialFileValidator {
 
+	/**
+	 * TODO: Add Javadoc
+	 */
 	public XSLReferencialFileValidator() {
-		System.out.println("XSLReferencialFileValidator ctor");
+		System.out.println("XSLReferencialFileValidator"); //$NON-NLS-1$
 	}
 	
 	public List<IFile> getReferencedFile(List inputFiles) {

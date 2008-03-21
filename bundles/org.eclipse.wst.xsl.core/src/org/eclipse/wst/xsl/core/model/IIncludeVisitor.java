@@ -12,7 +12,16 @@ package org.eclipse.wst.xsl.core.model;
 
 import org.eclipse.wst.xsl.core.internal.model.Include;
 
+/**
+ * @author Doug Satchwell
+ *
+ */
 public interface IIncludeVisitor
 {
+	/**
+	 * TODO: Add JavaDoc
+	 * @param include
+	 * @return
+	 */
 	boolean visit(Include include);
 }

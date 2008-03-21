@@ -44,6 +44,10 @@ public class Template extends XSLElement
 		parameters.add(parameter);
 	}
 	
+	/**
+	 * TODO: Add Javadoc
+	 * @param var
+	 */
 	public void addVariable(Variable var)
 	{
 		variables.add(var);
@@ -55,17 +59,25 @@ public class Template extends XSLElement
 	 */
 	public String getName()
 	{
-		return getAttributeValue("name");
+		return getAttributeValue("name"); //$NON-NLS-1$
 	}
 	
+	/**
+	 * TODO: Add Javadoc
+	 * @return
+	 */
 	public String getMatch()
 	{
-		return getAttributeValue("match");
+		return getAttributeValue("match"); //$NON-NLS-1$
 	}
 	
+	/**
+	 * TODO: Add Javadoc
+	 * @return
+	 */
 	public String getMode()
 	{
-		return getAttributeValue("mode");
+		return getAttributeValue("mode"); //$NON-NLS-1$
 	}
 	
 	/**

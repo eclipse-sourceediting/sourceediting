@@ -13,25 +13,48 @@ package org.eclipse.wst.xsl.core.internal.model;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * TODO: Add Javadoc
+ * @author Doug Satchwell
+ *
+ */
 public abstract class XSLElement extends XSLNode
 {
 	Map<String, XSLAttribute> attributes = new HashMap<String, XSLAttribute>();
 	
+	/**
+	 * TODO: Add Javadoc
+	 * @param stylesheet
+	 */
 	public XSLElement(Stylesheet stylesheet)
 	{
 		super(stylesheet, XSLNode.ELEMENT_NODE);
 	}
 	
+	/**
+	 * TODO: Add Javadoc
+	 * @param attribute
+	 */
 	public void setAttribute(XSLAttribute attribute)
 	{
 		attributes.put(attribute.name, attribute);
 	}
 	
+	/**
+	 * TODO: Add Javadoc
+	 * @param name
+	 * @return
+	 */
 	public XSLAttribute getAttribute(String name)
 	{
 		return attributes.get(name);
 	}
 
+	/**
+	 * TODO: Add Javadoc
+	 * @param name
+	 * @return
+	 */
 	public String getAttributeValue(String name)
 	{
 		XSLAttribute attribute = attributes.get(name);

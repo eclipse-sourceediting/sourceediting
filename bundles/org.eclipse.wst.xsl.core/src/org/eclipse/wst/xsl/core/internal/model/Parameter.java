@@ -16,14 +16,22 @@ package org.eclipse.wst.xsl.core.internal.model;
  */
 public class Parameter extends Variable
 {
+	/**
+	 * TODO: Add Javadoc
+	 * @param sf
+	 */
 	public Parameter(Stylesheet sf)
 	{
 		super(sf);
 	}
 
+	/**
+	 * TODO: Add Javadoc
+	 * @return
+	 */
 	public boolean isValue()
 	{
-		return getAttributeValue("select") != null;
+		return getAttributeValue("select") != null; //$NON-NLS-1$
 	}
 	
 //	@Override

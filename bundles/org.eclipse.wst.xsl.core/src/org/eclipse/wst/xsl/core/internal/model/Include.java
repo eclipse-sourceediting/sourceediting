@@ -54,12 +54,17 @@ public class Include extends XSLElement
 	}
 	
 	/**
+	 * TODO: Add Javadoc
 	 * @return
 	 */
 	public String getHref() {
-		return getAttributeValue("href");
+		return getAttributeValue("href"); //$NON-NLS-1$
 	}
 	
+	/**
+	 * TODO: Add Javadoc
+	 * @param visitor
+	 */
 	public void accept(IIncludeVisitor visitor)
 	{
 		boolean carryOn = visitor.visit(this);

@@ -10,11 +10,22 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.model;
 
+/**
+ * TODO: Add Javadoc
+ * @author Doug Satchwell
+ *
+ */
 public class XSLAttribute extends XSLNode
 {
 	final String name;
 	final String value;
 
+	/**
+	 * TODO: Add Javadoc
+	 * @param element
+	 * @param name
+	 * @param value
+	 */
 	public XSLAttribute(XSLElement element, String name, String value)
 	{
 		super(element.getStylesheet(), XSLNode.ATTRIBUTE_NODE);
@@ -22,11 +33,19 @@ public class XSLAttribute extends XSLNode
 		this.value = value;
 	}
 	
+	/**
+	 * TODO: Add Javadoc
+	 * @return
+	 */
 	public String getName()
 	{
 		return name;
 	}
 	
+	/**
+	 * TODO: Add Javadoc
+	 * @return
+	 */
 	public String getValue()
 	{
 		return value;

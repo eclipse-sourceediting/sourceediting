@@ -34,11 +34,14 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
-import org.w3c.dom.Attr;
 import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * TODO: Add Javadoc
+ * @author dcarver
+ *
+ */
 public class StylesheetBuilder
 {
 	private final XPathExpression xpathInclude;
@@ -50,6 +53,10 @@ public class StylesheetBuilder
 	private final XPathExpression xpathCallTemplate;
 	private final XPathExpression xpathCallTemplateParam;
 
+	/**
+	 * TODO: Add Javadoc
+	 * @throws XPathExpressionException
+	 */
 	public StylesheetBuilder() throws XPathExpressionException
 	{
 		XPath xpath = XPathFactory.newInstance().newXPath();
@@ -93,7 +100,7 @@ public class StylesheetBuilder
 	}
 
 	/**
-	 * 
+	 * TODO: Add Javadoc
 	 * @param file
 	 * @return a source file, or null if creation failed
 	 */

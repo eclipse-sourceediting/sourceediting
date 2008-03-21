@@ -181,6 +181,10 @@ public class Stylesheet
 		}
 	}
 
+	/**
+	 * TODO: Add Javadoc
+	 * @param var
+	 */
 	public void addGlobalVariable(Variable var)
 	{
 		globalVariables.add(var);

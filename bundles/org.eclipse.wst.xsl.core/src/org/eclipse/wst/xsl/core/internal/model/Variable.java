@@ -17,18 +17,30 @@ package org.eclipse.wst.xsl.core.internal.model;
  */
 public class Variable extends XSLElement
 {
+	/**
+	 * TODO: Add Javadoc
+	 * @param stylesheet
+	 */
 	public Variable(Stylesheet stylesheet)
 	{
 		super(stylesheet);
 	}
 
+	/**
+	 * TODO: Add Javadoc
+	 * @return
+	 */
 	public String getName()
 	{
-		return getAttributeValue("name");
+		return getAttributeValue("name"); //$NON-NLS-1$
 	}
 	
+	/**
+	 * TODO: Add Javadoc
+	 * @return
+	 */
 	public String getSelect()
 	{
-		return getAttributeValue("select");
+		return getAttributeValue("select"); //$NON-NLS-1$
 	}
 }
