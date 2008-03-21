@@ -62,26 +62,34 @@ public class XSLValidationReport implements ValidationReport
 		messages.add(message);
 	}
 
-	@Override
+	/**
+	 * TODO: Add Java Doc
+	 */
 	public String getFileURI()
 	{
 		return stylesheet.getFile().getLocationURI().toString();
 	}
 
-	@Override
+	/**
+	 * TODO: Add Javadoc
+	 */
 	public HashMap getNestedMessages()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	/**
+	 * TODO: Add Javadoc
+	 */
 	public ValidationMessage[] getValidationMessages()
 	{
 		return messages.toArray(new ValidationMessage[0]);
 	}
 
-	@Override
+	/**
+	 * TODO: Add Javadoc
+	 */
 	public boolean isValid()
 	{
 		return valid;
