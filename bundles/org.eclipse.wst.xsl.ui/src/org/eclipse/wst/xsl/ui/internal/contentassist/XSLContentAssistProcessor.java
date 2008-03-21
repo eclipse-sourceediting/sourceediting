@@ -116,7 +116,7 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 		IDOMNode node = (IDOMNode)contentAssistRequest.getNode();
         String namespace = DOMNamespaceHelper.getNamespaceURI(node);
         
-		String nodeName = DOMNamespaceHelper.getUnprefixedName(node.getNodeName());
+		//String nodeName = DOMNamespaceHelper.getUnprefixedName(node.getNodeName());
 		String attributeName = getAttributeName(contentAssistRequest);
 		
 		// Retrieve the Editor so that we may get a w3c DOM representation of the document.

@@ -21,7 +21,6 @@ import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
  * @author dcarver
  *
  */
-@SuppressWarnings("restriction") //$NON-NLS-1$
 public class XSLTemplatePreferencePage extends XMLTemplatePreferencePage {
 
 	/**

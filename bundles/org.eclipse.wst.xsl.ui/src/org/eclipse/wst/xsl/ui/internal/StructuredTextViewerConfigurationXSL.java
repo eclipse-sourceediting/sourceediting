@@ -59,6 +59,9 @@ public class StructuredTextViewerConfigurationXSL extends StructuredTextViewerCo
 		return processors;
 	}
 
+	/** (non-Javadoc)
+	 * @see org.eclipse.ui.editors.text.TextSourceViewerConfiguration#getHyperlinkDetectors(org.eclipse.jface.text.source.ISourceViewer)
+	 */
 	@Override
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer)
 	{

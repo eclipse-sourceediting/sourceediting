@@ -18,7 +18,6 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 
 
@@ -28,7 +27,7 @@ import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
  * NOTE: For internal use only. For images used externally, please use the
  * Shared***ImageHelper class instead.
  * 
- * @author amywu
+ * @author david carver based on work by amywu
  */
 public class XSLPluginImageHelper {
 	private static XSLPluginImageHelper instance = null;
@@ -46,6 +45,7 @@ public class XSLPluginImageHelper {
 	}
 
 	// save a descriptor for each image
+	@SuppressWarnings("unchecked")
 	private HashMap fImageDescRegistry = null;
 	private final String PLUGINID = XSLUIPlugin.PLUGIN_ID;
 
@@ -81,6 +81,7 @@ public class XSLPluginImageHelper {
 	 * @return ImageDescriptor image descriptor for imageFilePath or default
 	 *         "missing" image descriptor if resource could not be found
 	 */
+	@SuppressWarnings("unchecked")
 	private ImageDescriptor createImageDescriptor(String imageFilePath) {
 		ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(PLUGINID, imageFilePath);
 		if (imageDescriptor != null) {
@@ -142,6 +143,7 @@ public class XSLPluginImageHelper {
 	 * 
 	 * @return HashMap - image descriptor registry for this plugin
 	 */
+	@SuppressWarnings("unchecked")
 	private HashMap getImageDescriptorRegistry() {
 		if (fImageDescRegistry == null) {
 			fImageDescRegistry = new HashMap();

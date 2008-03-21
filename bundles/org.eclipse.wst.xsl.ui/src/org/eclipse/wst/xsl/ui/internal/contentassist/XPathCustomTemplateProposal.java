@@ -20,7 +20,6 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.jface.text.link.ILinkedModeListener;
 import org.eclipse.jface.text.link.LinkedModeModel;
 import org.eclipse.jface.text.link.LinkedModeUI;
 import org.eclipse.jface.text.link.LinkedPosition;
@@ -40,7 +39,6 @@ import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceCompletionProposa
  * Purpose of this class is to make the additional proposal info into content
  * fit for an HTML viewer (by escaping characters)
  */
-@SuppressWarnings("restriction") //$NON-NLS-1$
 class XPathCustomTemplateProposal extends TemplateProposal implements IRelevanceCompletionProposal {
 	// copies of this class exist in:
 	// org.eclipse.jst.jsp.ui.internal.contentassist
@@ -50,6 +48,7 @@ class XPathCustomTemplateProposal extends TemplateProposal implements IRelevance
 
 	private String fDisplayString = null;
 	private final Template fTemplate;
+	@SuppressWarnings("unused")
 	private IRegion fSelectedRegion; // initialized by apply()
 	private final TemplateContext fContext;
 	private IRegion fRegion; 
@@ -98,7 +97,7 @@ class XPathCustomTemplateProposal extends TemplateProposal implements IRelevance
 		try {
 			fContext.setReadOnly(false);
 			int start;
-			int oldReplaceOffset= getReplaceOffset();
+			//int oldReplaceOffset= getReplaceOffset();
 			TemplateBuffer templateBuffer = fContext.evaluate(fTemplate);
 
 			start = offset;
@@ -180,26 +179,26 @@ class XPathCustomTemplateProposal extends TemplateProposal implements IRelevance
 		return first;
 	}
 	
-	private void ensurePositionCategoryInstalled(final IDocument document, LinkedModeModel model) {
-		if (!document.containsPositionCategory(getCategory())) {
-			document.addPositionCategory(getCategory());
-			fUpdater= new InclusivePositionUpdater(getCategory());
-			document.addPositionUpdater(fUpdater);
-
-			model.addLinkingListener(new ILinkedModeListener() {
-
-				/*
-				 * @see org.eclipse.jface.text.link.ILinkedModeListener#left(org.eclipse.jface.text.link.LinkedModeModel, int)
-				 */
-				public void left(LinkedModeModel environment, int flags) {
-					ensurePositionCategoryRemoved(document);
-				}
-
-				public void suspend(LinkedModeModel environment) {}
-				public void resume(LinkedModeModel environment, int flags) {}
-			});
-		}
-	}
+//	private void ensurePositionCategoryInstalled(final IDocument document, LinkedModeModel model) {
+//		if (!document.containsPositionCategory(getCategory())) {
+//			document.addPositionCategory(getCategory());
+//			fUpdater= new InclusivePositionUpdater(getCategory());
+//			document.addPositionUpdater(fUpdater);
+//
+//			model.addLinkingListener(new ILinkedModeListener() {
+//
+//				/*
+//				 * @see org.eclipse.jface.text.link.ILinkedModeListener#left(org.eclipse.jface.text.link.LinkedModeModel, int)
+//				 */
+//				public void left(LinkedModeModel environment, int flags) {
+//					ensurePositionCategoryRemoved(document);
+//				}
+//
+//				public void suspend(LinkedModeModel environment) {}
+//				public void resume(LinkedModeModel environment, int flags) {}
+//			});
+//		}
+//	}
 
 	private void ensurePositionCategoryRemoved(IDocument document) {
 		if (document.containsPositionCategory(getCategory())) {
