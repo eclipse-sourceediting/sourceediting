@@ -171,11 +171,17 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 		
 //		IJavaDebugTarget javaTarget = (IJavaDebugTarget)launch.getDebugTarget();
 //		launch.removeDebugTarget(javaTarget);
+		
+		IDebugTarget javaTarget = launch.getDebugTarget();
 		IDebugTarget xslTarget = new XSLDebugTarget(launch, launch.getProcesses()[0], launchHelper);
+		
+		// remove java as the primary target and make xsl the primary target
+		launch.removeDebugTarget(javaTarget);
 		launch.addDebugTarget(xslTarget);
+		// add this here to make java the non-primary target
+	//	launch.addDebugTarget(javaTarget);
 		
 	//	launch.addDebugTarget(new JavaXSLDebugTarget(launch, launch.getProcesses()[0], launchHelper, javaTarget));
-	//	launch.addDebugTarget(new JavaXSLDebugTarget(launch, launch.getProcesses()[0], launchHelper,javaTarget));
 	}
 
 	/**
