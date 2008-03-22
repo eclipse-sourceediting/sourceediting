@@ -122,9 +122,13 @@
 	<extension point="org.eclipse.wst.sse.ui.breakpoint">
 		<breakpointContribution
 			id="org.eclipse.wst.xsl.debug.ui.providers">
-			<provider contentTypes="org.eclipse.wst.xml.core.xslsource,org.eclipse.wst.xml.core.xmlsource,org.eclipse.core.runtime.xml"
-				class="org.eclipse.wst.xsl.internal.debug.ui.breakpoint.XSLBreakpointProvider:*xsl,*xslt,*xml"
+			<provider contentTypes="org.eclipse.wst.xml.core.xslsource"
+				class="org.eclipse.wst.xsl.internal.debug.ui.breakpoint.XSLBreakpointProvider:*xsl,*xslt"
 				id="org.eclipse.wst.xsl.debug.ui.XSLBreakpointProvider" />
+				<!-- TODO add this back in when we can do something with breakpoints on XML files -->
+<!--			<provider contentTypes="org.eclipse.wst.xml.core.xslsource,org.eclipse.wst.xml.core.xmlsource,org.eclipse.core.runtime.xml"
+				class="org.eclipse.wst.xsl.internal.debug.ui.breakpoint.XSLBreakpointProvider:*xsl,*xslt,*xml"
+				id="org.eclipse.wst.xsl.debug.ui.XSLBreakpointProvider" /> -->
 		</breakpointContribution>
 	</extension>
 
