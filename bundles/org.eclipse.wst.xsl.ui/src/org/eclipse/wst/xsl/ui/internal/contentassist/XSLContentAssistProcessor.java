@@ -206,6 +206,13 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 					contentAssistRequest.getReplacementBeginPosition());
 			addLocalProposals(node, contentAssistRequest, contentAssistRequest
 					.getReplacementBeginPosition());
+			addTemplates(contentAssistRequest,
+					TemplateContextTypeIdsXPath.AXIS, offset);
+			addTemplates(contentAssistRequest,
+					TemplateContextTypeIdsXPath.XPATH, offset);
+			addTemplates(contentAssistRequest,
+					TemplateContextTypeIdsXPath.CUSTOM, offset);
+			
 		}
 	}
 
