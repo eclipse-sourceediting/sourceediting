@@ -46,14 +46,16 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * The XSL Content Assist Processor provides content assistance for various attributes
- * values within the XSL Editor.   This includes support for xpaths on select statements
- * as well as on test and match attributes.
+ * The XSL Content Assist Processor provides content assistance for various
+ * attributes values within the XSL Editor. This includes support for xpaths on
+ * select statements as well as on test and match attributes.
+ * 
  * @author David Carver
- *
+ * 
  */
-@SuppressWarnings("restriction") //$NON-NLS-1$
-public class XSLContentAssistProcessor extends XMLContentAssistProcessor implements IPropertyChangeListener {
+@SuppressWarnings("restriction")//$NON-NLS-1$
+public class XSLContentAssistProcessor extends XMLContentAssistProcessor
+		implements IPropertyChangeListener {
 
 	private static final String ATTR_SELECT = "select"; //$NON-NLS-1$
 	private static final String ATTR_TEST = "test"; //$NON-NLS-1$
@@ -62,49 +64,50 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 	 * Retireve all global variables in the stylesheet.
 	 */
 	private static final String XPATH_GLOBAL_VARIABLES = "/xsl:stylesheet/xsl:variable"; //$NON-NLS-1$
-	
+
 	/**
 	 * Retrieve all global parameters in the stylesheet.
 	 */
 	private static final String XPATH_GLOBAL_PARAMS = "/xsl:stylesheet/xsl:param"; //$NON-NLS-1$
-	
+
 	/**
 	 * Limit selection of variables to those that are in the local scope.
 	 */
 	private static final String XPATH_LOCAL_VARIABLES = "ancestor::xsl:template/descendant::xsl:variable"; //$NON-NLS-1$
-	
+
 	/**
 	 * Limit selection of params to those that are in the local scope.
 	 */
 	private static final String XPATH_LOCAL_PARAMS = "ancestor::xsl:template/descendant::xsl:param"; //$NON-NLS-1$
 
 	/**
-	 * XSL Namespace.  We rely on the namespace not the prefix for identification.
+	 * XSL Namespace. We rely on the namespace not the prefix for
+	 * identification.
 	 */
 	private String xslNamespace = "http://www.w3.org/1999/XSL/Transform"; //$NON-NLS-1$
-	
+
 	protected IPreferenceStore fPreferenceStore = null;
 	protected IResource fResource = null;
 	private XPathTemplateCompletionProcessor fTemplateProcessor = null;
 	private List<String> fTemplateContexts = new ArrayList<String>();
 	private static final byte[] XPATH_LOCK = new byte[0];
-	
+
 	/**
 	 * The XSL Content Assist Processor handles XSL specific functionality for
-	 * content assistance.   It leverages several XPath selection variables
-	 * to help with the selection of elements and template names.
+	 * content assistance. It leverages several XPath selection variables to
+	 * help with the selection of elements and template names.
 	 * 
 	 */
 	public XSLContentAssistProcessor() {
 		super();
 	}
-	
-	
+
 	/**
-	 * Adds Attribute proposals based on the element and the attribute
-	 * where the content proposal was instantiated.
+	 * Adds Attribute proposals based on the element and the attribute where the
+	 * content proposal was instantiated.
 	 * 
-	 * @param contentAssistRequest Content Assist Request that initiated the proposal request
+	 * @param contentAssistRequest
+	 *            Content Assist Request that initiated the proposal request
 	 * 
 	 */
 	@Override
@@ -113,102 +116,175 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 		// Make sure to handle any existing Content Assist based on Attributes
 		// for XML content.
 		super.addAttributeValueProposals(contentAssistRequest);
-		IDOMNode node = (IDOMNode)contentAssistRequest.getNode();
-        String namespace = DOMNamespaceHelper.getNamespaceURI(node);
-        
-		//String nodeName = DOMNamespaceHelper.getUnprefixedName(node.getNodeName());
+		IDOMNode node = (IDOMNode) contentAssistRequest.getNode();
+		String namespace = DOMNamespaceHelper.getNamespaceURI(node);
+
+		// String nodeName =
+		// DOMNamespaceHelper.getUnprefixedName(node.getNodeName());
 		String attributeName = getAttributeName(contentAssistRequest);
-		
-		// Retrieve the Editor so that we may get a w3c DOM representation of the document.
-		IEditorPart editor = Workbench.getInstance().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+
+		// Retrieve the Editor so that we may get a w3c DOM representation of
+		// the document.
+		IEditorPart editor = Workbench.getInstance().getActiveWorkbenchWindow()
+				.getActivePage().getActiveEditor();
 		IStructuredModel model = this.getEditorModel(editor);
 		Document document = (Document) model.getAdapter(Document.class);
 		Element rootElement = (IDOMElement) document.getDocumentElement();
-		
-		if (attributeName != null) {
-			// Current node belongs in the XSL Namespace.  We only want to do this
-			// for the namespace.  Regardless of what the prefix is set too.
-			if (namespace.equals(this.xslNamespace)) {
-				// Adjust the offset so we don't overwrite the " due to the 
-				// fact that SSE includes " in the value region for attributes.
-				int offset = contentAssistRequest.getStartOffset() + 1;
-				if (attributeName.equals(ATTR_SELECT) ||
-						attributeName.equals(ATTR_TEST)) {
-					addGlobalProposals(rootElement, contentAssistRequest, offset);
-					addLocalProposals(node, contentAssistRequest, offset);
-				}
-				
-				// Add the common XPath proposals to Select, Test, and Match attributes that
-				// appear in the xsl namespace.
-				if (attributeName.equals(ATTR_SELECT) ||
-					attributeName.equals(ATTR_TEST) ||
-					attributeName.equals(ATTR_MATCH)) {
-					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.AXIS, offset);
-					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.XPATH, offset);
-					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.CUSTOM, offset);
-				}
 
-				// Operators like And, Or, greater than, are more likely to be used in test statements
-				if (attributeName.equals(ATTR_TEST)) {
-					addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.OPERATOR);
+		if (attributeName != null) {
+			int offset = contentAssistRequest.getStartOffset() + 1;
+
+			// Check and see if we are dealing with a non XML namespace request.
+			// If so then
+			// allow content assistance if the text contains { which signals
+			// that a value-of
+			// replacement should be done in an attribute.
+			addAttributeValueOfProposals(contentAssistRequest, node, namespace,
+					rootElement, offset);
+
+			// Current node belongs in the XSL Namespace. We only want to do
+			// this
+			// for the namespace. Regardless of what the prefix is set too.
+			if (namespace != null) {
+				if (namespace.equals(this.xslNamespace)) {
+					// Adjust the offset so we don't overwrite the " due to the
+					// fact that SSE includes " in the value region for
+					// attributes.
+					if (attributeName.equals(ATTR_SELECT)
+							|| attributeName.equals(ATTR_TEST)) {
+						addGlobalProposals(rootElement, contentAssistRequest,
+								offset);
+						addLocalProposals(node, contentAssistRequest, offset);
+						addTemplates(contentAssistRequest,
+								TemplateContextTypeIdsXPath.AXIS, offset);
+						addTemplates(contentAssistRequest,
+								TemplateContextTypeIdsXPath.XPATH, offset);
+						addTemplates(contentAssistRequest,
+								TemplateContextTypeIdsXPath.CUSTOM, offset);
+					}
+
+					// Add the common XPath proposals to Select, Test, and Match
+					// attributes that
+					// appear in the xsl namespace.
+					if (attributeName.equals(ATTR_SELECT)
+							|| attributeName.equals(ATTR_TEST)
+							|| attributeName.equals(ATTR_MATCH)) {
+						addTemplates(contentAssistRequest,
+								TemplateContextTypeIdsXPath.AXIS, offset);
+						addTemplates(contentAssistRequest,
+								TemplateContextTypeIdsXPath.XPATH, offset);
+						addTemplates(contentAssistRequest,
+								TemplateContextTypeIdsXPath.CUSTOM, offset);
+					}
+
+					// Operators like And, Or, greater than, are more likely to
+					// be used in test statements
+					if (attributeName.equals(ATTR_TEST)) {
+						addTemplates(contentAssistRequest,
+								TemplateContextTypeIdsXPath.OPERATOR);
+					}
+
+					// Match attributes probably need to get a listing of all
+					// available elements from the
+					// content model by namespace so that those values can be
+					// added as possible content assistance
+
 				}
-				// Match attributes probably need to get a listing of all available elements from the
-				// content model by namespace so that those values can be added as possible content assistance
-				
 			}
+		}
+	}
+
+	private void addAttributeValueOfProposals(
+			ContentAssistRequest contentAssistRequest, IDOMNode node,
+			String namespace, Element rootElement, int offset) {
+		if (contentAssistRequest.getMatchString().contains("{")) {
+			// Need to relook at Variable proposal code to make sure that the
+			// curspor position doesn't replace
+			// the entire contents. This should work the same way as teh
+			// template proposals.
+			addGlobalProposals(rootElement, contentAssistRequest,
+					contentAssistRequest.getReplacementBeginPosition());
+			addLocalProposals(node, contentAssistRequest, contentAssistRequest
+					.getReplacementBeginPosition());
 		}
 	}
 
 	private void addLocalProposals(Node xpathnode,
 			ContentAssistRequest contentAssistRequest, int offset) {
-		addvariablesProposals(XPATH_LOCAL_VARIABLES, xpathnode, contentAssistRequest, offset);
-		addvariablesProposals(XPATH_LOCAL_PARAMS, xpathnode, contentAssistRequest, offset);
+		addvariablesProposals(XPATH_LOCAL_VARIABLES, xpathnode,
+				contentAssistRequest, offset);
+		addvariablesProposals(XPATH_LOCAL_PARAMS, xpathnode,
+				contentAssistRequest, offset);
 	}
 
 	private void addGlobalProposals(Node xpathnode,
 			ContentAssistRequest contentAssistRequest, int offset) {
-		addvariablesProposals(XPATH_GLOBAL_VARIABLES, xpathnode, contentAssistRequest, offset);
-		addvariablesProposals(XPATH_GLOBAL_PARAMS, xpathnode, contentAssistRequest, offset);
+		addvariablesProposals(XPATH_GLOBAL_VARIABLES, xpathnode,
+				contentAssistRequest, offset);
+		addvariablesProposals(XPATH_GLOBAL_PARAMS, xpathnode,
+				contentAssistRequest, offset);
 	}
-	
+
 	/**
-	 * addvariableProposals adds Parameter and Variables as proposals.  This information is
-	 * selected based on the XPath statement that is sent to it and the input Node passed.
-	 * It uses a custom composer to XSL Variable proposal.
+	 * addvariableProposals adds Parameter and Variables as proposals. This
+	 * information is selected based on the XPath statement that is sent to it
+	 * and the input Node passed. It uses a custom composer to XSL Variable
+	 * proposal.
+	 * 
 	 * @param xpath
 	 * @param xpathnode
 	 * @param contentAssistRequest
 	 * @param offset
 	 */
-	private void addvariablesProposals(String xpath, Node xpathnode, ContentAssistRequest contentAssistRequest, int offset) {
-		synchronized (XPATH_LOCK)
-		{
+	private void addvariablesProposals(String xpath, Node xpathnode,
+			ContentAssistRequest contentAssistRequest, int offset) {
+		synchronized (XPATH_LOCK) {
 			try {
-				NodeList nodes =  XPathAPI.selectNodeList(xpathnode, xpath);
+				NodeList nodes = XPathAPI.selectNodeList(xpathnode, xpath);
+				
+			
+				// Get the current cursor position, this is not the same as the offset
+				// Since content assist assumes you want to replace everything, you need to calculate
+				// where the cursor should end up.  This is helpful for when the PrositionBasedCompletionProposal
+				// is called later to apply the request item.
+				int currentCursorPosition = fTextViewer.getTextWidget().getCaretOffset();
+				int startOffset = offset;
+				// Calculate the length from the beginning to current cursor position.
+				int startLength = currentCursorPosition - startOffset;
+				
+				
 				if (nodes != null && nodes.getLength() > 0) {
-				   for (int nodecnt = 0; nodecnt < nodes.getLength(); nodecnt++) {
+					for (int nodecnt = 0; nodecnt < nodes.getLength(); nodecnt++) {
 						Node node = nodes.item(nodecnt);
 						String variableName = "$" + node.getAttributes().getNamedItem("name").getNodeValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						contentAssistRequest.getReplacementLength();
-						XSLVariableCustomCompletionProposal proposal = new XSLVariableCustomCompletionProposal(variableName, offset, 0, variableName.length() + 1, XSLPluginImageHelper.getInstance().getImage(XSLPluginImages.IMG_VARIABLES), variableName, null, null, 0);
+						
+						// The cursor position is calculated based on the length of the string to the current position
+						// plus the length of the text that will be inserted.
+						XSLVariableCustomCompletionProposal proposal = new XSLVariableCustomCompletionProposal(
+								variableName, offset, 0, startLength + variableName.length(),
+								XSLPluginImageHelper.getInstance().getImage(
+										XSLPluginImages.IMG_VARIABLES),
+								variableName, null, null, 0);
 						contentAssistRequest.addProposal(proposal);
-				   }
+					}
 				}
-				
+
 			} catch (TransformerException ex) {
 				XSLUIPlugin.log(ex);
 			}
 		}
 	}
-	
+
 	/**
 	 * Adds templates to the list of proposals
 	 * 
 	 * @param contentAssistRequest
 	 * @param context
 	 */
-	private void addTemplates(ContentAssistRequest contentAssistRequest, String context) {
-		addTemplates(contentAssistRequest, context, contentAssistRequest.getReplacementBeginPosition());
+	private void addTemplates(ContentAssistRequest contentAssistRequest,
+			String context) {
+		addTemplates(contentAssistRequest, context, contentAssistRequest
+				.getReplacementBeginPosition());
 	}
 
 	/**
@@ -218,7 +294,8 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 	 * @param context
 	 * @param startOffset
 	 */
-	private void addTemplates(ContentAssistRequest contentAssistRequest, String context, int startOffset) {
+	private void addTemplates(ContentAssistRequest contentAssistRequest,
+			String context, int startOffset) {
 		if (contentAssistRequest == null) {
 			return;
 		}
@@ -231,20 +308,18 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 
 			if (getTemplateCompletionProcessor() != null) {
 				getTemplateCompletionProcessor().setContextType(context);
-				ICompletionProposal[] proposals = getTemplateCompletionProcessor().computeCompletionProposals(fTextViewer, startOffset);
+				ICompletionProposal[] proposals = getTemplateCompletionProcessor()
+						.computeCompletionProposals(fTextViewer, startOffset);
 				for (int i = 0; i < proposals.length; ++i) {
 					if (useProposalList) {
 						contentAssistRequest.addProposal(proposals[i]);
-					}
-					else {
+					} else {
 						contentAssistRequest.addMacro(proposals[i]);
 					}
 				}
 			}
 		}
 	}
-	
-
 
 	private XPathTemplateCompletionProcessor getTemplateCompletionProcessor() {
 		if (fTemplateProcessor == null) {
@@ -255,6 +330,7 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 
 	/**
 	 * Gets the attribute name that the content assist was triggered on.
+	 * 
 	 * @param contentAssistRequest
 	 * @return
 	 */
@@ -262,12 +338,13 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 		// Find the attribute region and name for which this position should
 		// have a value proposed
 		String attributeName = null;
-		IDOMNode node = (IDOMNode)contentAssistRequest.getNode();
-		IStructuredDocumentRegion open = node.getFirstStructuredDocumentRegion();
+		IDOMNode node = (IDOMNode) contentAssistRequest.getNode();
+		IStructuredDocumentRegion open = node
+				.getFirstStructuredDocumentRegion();
 		ITextRegionList openRegions = open.getRegions();
 		int i = openRegions.indexOf(contentAssistRequest.getRegion());
 		if (i >= 0) {
-			
+
 			ITextRegion nameRegion = null;
 			while (i >= 0) {
 				nameRegion = openRegions.get(i--);
@@ -275,72 +352,74 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor impleme
 					break;
 				}
 			}
-			
+
 			// String attributeName = nameRegion.getText();
 			attributeName = open.getText(nameRegion);
 		}
 		return attributeName;
 	}
-	
-	protected ContentAssistRequest computeCompletionProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode treeNode, IDOMNode xmlnode) {
-		return super.computeCompletionProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
+
+	protected ContentAssistRequest computeCompletionProposals(
+			int documentPosition, String matchString,
+			ITextRegion completionRegion, IDOMNode treeNode, IDOMNode xmlnode) {
+		return super.computeCompletionProposals(documentPosition, matchString,
+				completionRegion, treeNode, xmlnode);
 	}
-	
-	
+
 	/**
 	 * TODO: Add Javadoc
-	 * @param textViewer 
-	 * @param documentPosition 
-	 * @return 
+	 * 
+	 * @param textViewer
+	 * @param documentPosition
+	 * @return
 	 * 
 	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractContentAssistProcessor#computeCompletionProposals(org.eclipse.jface.text.ITextViewer,
 	 *      int)
 	 */
-	public ICompletionProposal[] computeCompletionProposals(ITextViewer textViewer, int documentPosition) {
+	public ICompletionProposal[] computeCompletionProposals(
+			ITextViewer textViewer, int documentPosition) {
 		fTemplateContexts.clear();
 		return super.computeCompletionProposals(textViewer, documentPosition);
 	}
-	
-	
+
 	protected IPreferenceStore getPreferenceStore() {
 		if (fPreferenceStore == null) {
 			fPreferenceStore = XSLUIPlugin.getDefault().getPreferenceStore();
 		}
 		return fPreferenceStore;
 	}
-	
-	
+
 	protected void init() {
 		super.getPreferenceStore().addPropertyChangeListener(this);
 		reinit();
-	}	
-	
+	}
+
 	/**
-	 * @param event 
+	 * @param event
 	 * 
 	 */
 	public void propertyChange(PropertyChangeEvent event) {
 		String property = event.getProperty();
 
-		if ((property.compareTo(XMLUIPreferenceNames.AUTO_PROPOSE) == 0) || (property.compareTo(XMLUIPreferenceNames.AUTO_PROPOSE_CODE) == 0)) {
+		if ((property.compareTo(XMLUIPreferenceNames.AUTO_PROPOSE) == 0)
+				|| (property.compareTo(XMLUIPreferenceNames.AUTO_PROPOSE_CODE) == 0)) {
 			reinit();
 		}
 	}
-	
+
 	protected void reinit() {
 		String key = XMLUIPreferenceNames.AUTO_PROPOSE;
 		boolean doAuto = super.getPreferenceStore().getBoolean(key);
 		if (doAuto) {
 			key = XMLUIPreferenceNames.AUTO_PROPOSE_CODE;
-			completionProposalAutoActivationCharacters = super.getPreferenceStore().getString(key).toCharArray();
-		}
-		else {
+			completionProposalAutoActivationCharacters = super
+					.getPreferenceStore().getString(key).toCharArray();
+		} else {
 			completionProposalAutoActivationCharacters = null;
 		}
-	}	
-	
-	private IStructuredModel getEditorModel(IEditorPart editor)
-	{
+	}
+
+	private IStructuredModel getEditorModel(IEditorPart editor) {
 		return (IStructuredModel) editor.getAdapter(IStructuredModel.class);
 	}
 }

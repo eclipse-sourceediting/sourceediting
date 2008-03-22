@@ -11,8 +11,12 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 
 /**
@@ -67,5 +71,24 @@ public class XSLVariableCustomCompletionProposal extends CustomCompletionProposa
 				additionalProposalInfo, relevance);
 		// TODO Auto-generated constructor stub
 	}
-
+	
+	/** 
+	 * Create a positional based Proposal and replace the text at that position.
+	 * @see org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal#apply(org.eclipse.jface.text.ITextViewer, char, int, int)
+	 */
+	@Override
+	public void apply(ITextViewer viewer, char trigger, int stateMask,
+			int offset) {
+		// TODO Auto-generated method stub
+//		super.apply(viewer, trigger, stateMask, offset);
+		IStructuredDocument document = (IStructuredDocument)viewer.getDocument();
+		Position position = new Position(offset);
+	    int currentPosition =  getCursorPosition();
+	    int startOffset = document.getRegionAtCharacterOffset(offset).getStart();
+	    int existingLength = offset - startOffset;
+	    
+		PositionBasedCompletionProposal proposal = 
+			new PositionBasedCompletionProposal(getReplacementString(), position, existingLength + getReplacementString().length());
+		proposal.apply(document);
+	}
 }
