@@ -12,10 +12,10 @@
 	<property name="base.dir" value="${htmldir}"/>
 
 	<target name="create-doc">
-		<xslt force="true" style="${docbookdir}/eclipse33.xsl" in="${docbooksource}/preferences/preferences.xml" out="test.xml">
+		<xslt force="true" style="${docbookdir}/eclipse33.xsl" in="${docbooksource}/xslhelpcombined.dbk" out="test.xml">
 			<factory name="${xalan}" />
 			<param name="manifest" expression="1"/>
-			<param name="base.dir" expression="${htmldir}/preferences/"/>
+			<param name="base.dir" expression="${htmldir}/"/>
 			<param name="create.plugin.xml" expression="0"/>
 			<param name="chunker.output.indent" expression="yes"/>
 			<param name="navig.showtitles" expression="0"/>

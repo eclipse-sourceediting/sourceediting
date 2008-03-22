@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://www.docbook.org/xsd/4.5/docbook.xsd">
+	<?dbhtml filename="editor/xsleditor.html" ?>
 	<title>XSL Editing</title>
 	<para>
       The XSL Tooling plugins extend the ability of the Web Standard Tools XML
       editor.  This extension adds specific support and functionality for working
       with and debugging XSL files. 
     </para>
+    <section>
+    	<?dbhtml filename="editor/xsleditor_validation.html" ?>
+    	<title>Validation</title>
+    	<para>
+    		The XSL extensions for the eclipse XML editor include as you type validation for XSL specific features.  This includes not
+    		only the ability to syntax check the grammar, but to also to validate specific XSL specification rules.  Grammar validation will
+    		be triggered based on the version attribute for the style sheet that is being edited.   Valid version numbers are 1.0, and 2.0.
+    		Currently XSLT 1.1 which was a transitional specification is not supported for editing.
+    	</para>
+    </section>
 	<section>
+		<?dbhtml filename="editor/xsleditor_validation.html" ?>
 		<title>Content Assist</title>
 		<para>
 		    XSL Tooling extends the existing content assistance support of the XML
 		    Editor to provide content assistance for several XSL namespace attributes.
 		    The content assistance provided covers the available XPath statements as
-		    defined in the XPath Tempalates preference page.
+		    defined in the <emphasis>XPath Templates</emphasis> preference page.
 		</para>
 		<para>
 			The elements and attributes that have content assist available are as follows:
@@ -25,6 +37,9 @@
 				    options available for the <emphasis>match</emphasis>, <emphasis>name</emphasis>, and 
 				    <emphasis>mode</emphasis> attributes.
 				</para>
+				<para>
+					Add image showing template completion.
+				</para>
 			</listitem>
 			<listitem>
 				<para>
@@ -33,6 +48,10 @@
 					for xpath, axis, parmaters and variables that have already been predefined when using the optional
 					<emphasis>select</emphasis> attribute.
 				</para>
+				<para>
+					Add image showing variable completion.
+				</para>
+				
 			</listitem>
 			<listitem>
 				<para>
@@ -41,6 +60,9 @@
 					This content assistance is available for all paramaters and variables that are in
 					scope, as well as any available xpath or axis statement.
 				</para>
+				<para>
+					Add image showing test completion.
+				</para>
 			</listitem>
 			<listitem>
 			    <para>
@@ -48,7 +70,36 @@
 			    	assistance for both the <emphasis>mode</emphasis> and <emphasis>select</emphasis>
 			    	attributes. 
 			    </para>
+				<para>
+					Add image showing apply-template completion.
+				</para>
 			</listitem>
 		</itemizedlist>
+		<important>
+			<title>XPath 2.0 Support</title>
+			<para>
+				Currently XPath 2.0 is not supported directly.  However, a user can add this support if they need it by
+				adding the missing XPath functions to the XPath Templates.
+			</para>
+		</important>
+	</section>
+	<section>
+		<?dbhtml filename="editor/xsleditor_templates.html" ?>
+		<title>Templates</title>
+		<para>
+			Specific XSL code completion templates can be added to the XML editor's Templates.   This allows a user
+			to define specific markup completion templates that are commonly used.   In addition, the XPath Templates page
+			can be enhanced to allow commonly used XPath templates to be included, in addition to those installed by default.
+			This allows a user the ability to add custom extension functions for XSLT that may be processor specific.  Adopters
+			may also use the standard template extension point to add additional functionality.
+		</para>
+		<section>
+			<?dbhtml filename="editor/xsleditor_xpathtemplates.html" ?>
+			<title>XPath Templates</title>
+			<para>
+				The XSL XPath Templates preference page allows for a user or adopter to add specific xpath extensions so that
+				they show up in the content assistance.   See the XPath Templates documentation for more information.
+			</para>
+		</section>
 	</section>
 </chapter>

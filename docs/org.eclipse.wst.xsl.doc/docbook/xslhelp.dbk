@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book id="Book1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.docbook.org/xsd/4.5/docbook.xsd">
+  <bookinfo>
+      <title>XSL Tooling User Documentation</title>
+      <author>
+         <firstname>David</firstname>
+         <surname>Carver</surname>
+      </author>
+      <copyright>
+         <year>2008</year>
+         <holder>Eclipse Foundation and others</holder>
+      </copyright>
+   </bookinfo>
+   <xinclude xmlns="http://www.w3.org/2001/XInclude" href="editor/editor.xml"/>
+   <xinclude xmlns="http://www.w3.org/2001/XInclude" href="launching/launching.xml"/>
+   <xinclude xmlns="http://www.w3.org/2001/XInclude" href="preferences/preferences.xml"/>
+</book>
+
