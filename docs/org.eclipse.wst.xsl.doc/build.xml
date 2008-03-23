@@ -15,7 +15,7 @@
 		<xsl.xinclude in="${docbooksource}/xslhelp.dbk" out="${docbooksource}/xslhelpcombined.dbk"/>
 	</target>
 
-	<target name="create-doc">
+	<target name="create-doc" depends="merge">
 
 		<xslt force="true" style="${docbookdir}/eclipse33.xsl" in="${docbooksource}/xslhelpcombined.dbk" out="test.xml">
 			<factory name="${xalan}" />

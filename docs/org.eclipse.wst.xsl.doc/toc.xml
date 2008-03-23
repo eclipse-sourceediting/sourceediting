@@ -1,12 +1,13 @@
 <toc topic="html/index.html" label="XSL Tooling User Documentation">
 	<topic href="html/editor/xsleditor.html" label="XSL Editing">
-		<topic href="html/editor/xsleditor.html#N1001B" label="Validation"></topic>
+		<topic href="html/editor/xsleditor.html#N1001D" label="Validation"></topic>
 		<topic href="html/editor/xsleditor_validation.html" label="Content Assist"></topic>
 		<topic href="html/editor/xsleditor_templates.html" label="Templates">
-			<topic href="html/editor/xsleditor_templates.html#N10079"
+			<topic href="html/editor/xsleditor_templates.html#N1007B"
 				label="XPath Templates"></topic>
 		</topic>
 	</topic>
+	<topic href="html/ch02.html" label=""></topic>
 	<topic href="html/preferences/xslpreferences.html" label="XSL Tooling Preferences">
 		<topic href="html/preferences/xslpreferences.html#XSLFeatures"
 			label="Features"></topic>
