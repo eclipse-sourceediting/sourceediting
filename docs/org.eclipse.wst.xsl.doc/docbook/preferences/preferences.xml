@@ -75,4 +75,80 @@
 			specific features.
 		</para>
 	</section>
+	<section id="XPathTemplates">
+		<?dbhtml filename="preferences/xpathtemplates.html" ?>
+		<title>XPath Templates</title>
+		<para>
+		    XPath template proposal is supported by the XSL Tooling project through the
+		    built in template functionality of eclipse.   Users and Adopters can add
+		    their own specific xpath extensions for processor specific extensions.  An
+		    example would be to add the EXSLT extensions for proposal support.
+		</para>
+		<mediaobject>
+		    <imageobject>
+		        <objectinfo>
+		           <title>XPath Templates</title>
+		        </objectinfo>
+		    	<imagedata align="center" fileref="../images/preferences/XPathTemplates.png" format="PNG"/>
+		    </imageobject>
+		</mediaobject>
+		<para>
+		   The following content types are available:
+		</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">axis</emphasis> - an XPath navigation axis statement.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold">exslt</emphasis> - An XPath statement that is defined by
+					the <ulink url="http://www.exslt.org/">EXSLT</ulink> library.  Xalan and most
+					other processors have built in support for the EXSLT library.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold">xpath</emphasis> - Represents an XPATH 1.0 function.  These
+					are functions as defined by the XPath 1.0 specification.
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold">xpath 2.0</emphasis> - Represents an XPath 2.0 function.
+					<emphasis>Note: That currently XSL Tooling only ships with templates defined for XPath 1.0 .</emphasis>
+				</para>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold">operator</emphasis> - An xpath logical operator like AND, OR, etc.
+				</para>
+			</listitem>
+		</itemizedlist>
+		<section id="XPathTemplateNew">
+		   <?dbhtml filename="preferences/xpathtemplatenew.html" ?>
+		   <title>Creating New Templates</title>
+		   <!-- TODO: Create Additional information on creating new templates-->
+		   <para>
+		      Add documentation about creating new templates.
+		   </para>
+		</section>
+		<section id="XPathImport">
+		   <?dbhtml filename="preferences/xpathimport.html" ?>
+		   <title>Import XPath Templates</title>
+		   <para>
+		      Add documentation about importing new templates.
+		   </para>
+		</section>
+		<section id="XPathExport">
+		   <?dbhtml filename="preferences/xpathexport.html" ?>
+		   <title>Import XPath Templates</title>
+		   <para>
+		      Add documentation about importing new templates.
+		   </para>
+		</section>
+		
+	</section>
+	
 </chapter>

@@ -8,7 +8,7 @@
       editor.  This extension adds specific support and functionality for working
       with and debugging XSL files. 
     </para>
-    <section>
+    <section id="Validation">
     	<?dbhtml filename="editor/xsleditor_validation.html" ?>
     	<title>Validation</title>
     	<para>
@@ -18,8 +18,8 @@
     		Currently XSLT 1.1 which was a transitional specification is not supported for editing.
     	</para>
     </section>
-	<section>
-		<?dbhtml filename="editor/xsleditor_validation.html" ?>
+	<section id="ContentAssist">
+		<?dbhtml filename="editor/xsleditor_contentassist.html" ?>
 		<title>Content Assist</title>
 		<para>
 		    XSL Tooling extends the existing content assistance support of the XML
@@ -50,8 +50,7 @@
 				</para>
 				<para>
 					Add image showing variable completion.
-				</para>
-				
+				</para>	
 			</listitem>
 			<listitem>
 				<para>
@@ -83,7 +82,7 @@
 			</para>
 		</important>
 	</section>
-	<section>
+	<section id="XSLEditorTemplates">
 		<?dbhtml filename="editor/xsleditor_templates.html" ?>
 		<title>Templates</title>
 		<para>
@@ -101,5 +100,12 @@
 				they show up in the content assistance.   See the XPath Templates documentation for more information.
 			</para>
 		</section>
+	</section>
+	<section id="XSLEditorDebugging">
+	   <?dbhtml filename="editor/xsleditor_debugging.html" ?>
+		<title>XSL Debugging</title>
+		<para>
+			TODO: Add XSL Debugging documentation.
+		</para>
 	</section>
 </chapter>

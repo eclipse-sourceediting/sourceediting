@@ -12,8 +12,10 @@
          <holder>Eclipse Foundation and others</holder>
       </copyright>
    </bookinfo>
+   <xi:include href="general/general.xml"/>
    <xi:include href="editor/editor.xml"/>
    <xi:include href="launching/launching.xml"/>
    <xi:include href="preferences/preferences.xml"/>
+   <xi:include href="samples/samples.xml"/>
 </book>
 

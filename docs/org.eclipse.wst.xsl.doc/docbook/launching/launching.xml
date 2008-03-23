@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../docbook.xsd">
-   
+<chapter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.docbook.org/xsd/4.5/docbook.xsd">
+	<?dbhtml filename="launching/launching.html" ?>
+	<title>XSL Launching and Debugging</title>
+	<para>
+		The XSL Tooling adds support for XSL Launch and Debugging configurations.
+		These allow you to setup XSL configurations for various jobs, and to also
+		debug xsl stylsheet transformations.	
+	</para>
+	<section id="XSLLaunch">
+		<?dbhtml filename="launching/xsllaunching.html" ?>
+		<title>XSL Launching</title>
+		<para>
+	       This is a place holder until some actual documentation can be written.
+	    </para>
+	</section>
+	<section id="XSLDebug">
+	    <?dbhtml filename="launching/debuglaunching.html" ?>
+		<title>Launch Debugging</title>
+		<para>
+	   		This is a place holder until some actual documentation can be written.
+	   </para>
+	</section>
 </chapter>
-

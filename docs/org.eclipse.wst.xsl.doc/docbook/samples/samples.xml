@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.docbook.org/xsd/4.5/docbook.xsd"
+	xmlns:xi="http://www.w3.org/2001/XInclude">
+	<?dbhtml filename="samples/samples.html" ?>
+	<title>XSL Tooling Samples</title>
+	<para>This section contains several samples and references to sample projects.</para>
+	<section id="EclipseHelp">
+		<?dbhtml filename="samples/eclipsehelp.html" ?>
+		<title>Eclipse Help</title>
+		<para></para>
+		<section id="DocbookEclipseHelp">
+			<?dbhtml filename="samples/docbookhelp.html" ?>
+			<title>Creating Eclipse Help with Docbook and XSL Tooling</title>
+			<para>
+				This tutorial assumes that you have knowledge of Docbook, ANT, and the
+				ability to setup ANT build scripts.
+			</para>
+			<para>
+				To Do write up the rest of the tutorial.
+			</para>
+		</section>
+		<section id="DITAEclipseHelp">
+			<?dbhtml filename="samples/ditahelp.html" ?>
+			<title>Creating Eclipse Help with DITA and XSL Tooling</title>
+			<para>
+				This tutorial assumes that you have knowledge of DITA, ANT, and the
+				ability to setup ANT build scripts.
+			</para>
+			<para>
+				To Do write up the rest of the tutorial.
+			</para>
+		</section>
+	</section>
+</chapter>
