@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<book id="Book1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.docbook.org/xsd/4.5/docbook.xsd">
+<book id="Book1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.docbook.org/xsd/4.5/docbook.xsd"
+	  xmlns:xi="http://www.w3.org/2001/XInclude">
   <bookinfo>
       <title>XSL Tooling User Documentation</title>
       <author>
@@ -11,8 +12,8 @@
          <holder>Eclipse Foundation and others</holder>
       </copyright>
    </bookinfo>
-   <xinclude xmlns="http://www.w3.org/2001/XInclude" href="editor/editor.xml"/>
-   <xinclude xmlns="http://www.w3.org/2001/XInclude" href="launching/launching.xml"/>
-   <xinclude xmlns="http://www.w3.org/2001/XInclude" href="preferences/preferences.xml"/>
+   <xi:xinclude href="editor/editor.xml"/>
+   <xi:xinclude href="launching/launching.xml"/>
+   <xi:xinclude href="preferences/preferences.xml"/>
 </book>
 
