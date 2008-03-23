@@ -8,6 +8,9 @@
 * Contributors:
 * Lars Vogel - Lars.Vogel@gmail.com - initial API and implementation
 * David Carver - STAR - bug 217919 - renamed to XIncluder from MyXIncluder
+*                                    Added feature call to make sure we get
+*                                    an XInclude aware configuration.  Also
+*                                    removed Docbook DTD hard coding.
 *******************************************************************************/
 
 package org.eclipse.wst.xsl.core.internal.xinclude;
@@ -17,7 +20,6 @@ import java.io.FileOutputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -26,16 +28,18 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 
 /**
- * TODO: Add Javadoc
+ * XIncluder will read an XML file, that has elements from the XInclude
+ * namespace and follows the W3C XInclude specification (http://www.w3.org/TR/xinclude/).
+ * It will output a merged file.
  * @author Lars Vogel
  *
  */
 public class XIncluder {
 
 	/**
-	 * TODO: Add Javadoc
-	 * @param in
-	 * @param out
+	 * extracXMLFile merges the files referenced by xinclude include elements.
+	 * @param in  The full path to the input XML file
+	 * @param out The full path to the merged XML file
 	 * @throws Exception
 	 */
 	public void extractXMLFile(String in, String out) throws Exception {
@@ -45,22 +49,22 @@ public class XIncluder {
 		file = new File(in);
 		file.getAbsolutePath();
 		file.lastModified();
-
+		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		
+		// Make sure we are getting a configuration that is XInclude Aware
+		dbf.setAttribute("http://apache.org/xml/features/xinclude", true); //$NON-NLS-1$
 		dbf.setXIncludeAware(true);
 		dbf.setNamespaceAware(true);
+
+		
 		DocumentBuilder dom = dbf.newDocumentBuilder();
 		document = dom.parse(file);
+		
 		// ---- Use a XSLT transformer for writing the new XML file ----
 		Transformer transformer = TransformerFactory.newInstance()
 				.newTransformer();
-		// TODO: This should be read from the input file and not hardcoded
-		// here
-		transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC,
-				"-//OASIS//DTD DocBook XML V4.5//EN"); //$NON-NLS-1$
-		transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,
-				"../../docbook-xml-4.5/docbookx.dtd"); //$NON-NLS-1$
-
+		
 		DOMSource source = new DOMSource(document);
 		FileOutputStream os = new FileOutputStream(new File(out));
 		StreamResult result = new StreamResult(os);

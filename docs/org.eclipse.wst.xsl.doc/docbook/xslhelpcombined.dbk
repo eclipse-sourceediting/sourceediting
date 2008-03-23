@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "../../docbook-xml-4.5/docbookx.dtd">
+<book xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Book1" xsi:noNamespaceSchemaLocation="http://www.docbook.org/xsd/4.5/docbook.xsd">
+  <bookinfo>
+      <title>XSL Tooling User Documentation</title>
+      <author>
+         <firstname>David</firstname>
+         <surname>Carver</surname>
+      </author>
+      <copyright>
+         <year>2008</year>
+         <holder>Eclipse Foundation and others</holder>
+      </copyright>
+   </bookinfo>
+   <xi:xinclude href="editor/editor.xml"/>
+   <xi:xinclude href="launching/launching.xml"/>
+   <xi:xinclude href="preferences/preferences.xml"/>
+</book>
