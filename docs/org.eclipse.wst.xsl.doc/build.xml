@@ -12,6 +12,7 @@
 	<property name="base.dir" value="${htmldir}"/>
 
 	<target name="create-doc">
+
 		<xslt force="true" style="${docbookdir}/eclipse33.xsl" in="${docbooksource}/xslhelpcombined.dbk" out="test.xml">
 			<factory name="${xalan}" />
 			<param name="manifest" expression="1"/>
