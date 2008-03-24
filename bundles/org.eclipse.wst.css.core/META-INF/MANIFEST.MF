@@ -35,11 +35,11 @@ Export-Package: org.eclipse.wst.css.core.internal;x-friends:="org.eclipse.wst.cs
  org.eclipse.wst.css.core.internal.util;x-friends:="org.eclipse.wst.css.ui",
  org.eclipse.wst.css.core.internal.util.declaration;x-internal:=true,
  org.eclipse.wst.css.core.text
-Require-Bundle: org.apache.xerces;visibility:=reexport;bundle-version="[2.8.0,3.0.0)", 
- org.eclipse.wst.xml.core;bundle-version="[1.1.0,1.2.0)",
- org.eclipse.wst.sse.core;bundle-version="[1.1.0,1.2.0)",
- org.eclipse.core.runtime;bundle-version="[3.2.0,4.0.0)",
- org.eclipse.core.resources;bundle-version="[3.2.0,4.0.0)",
- com.ibm.icu;bundle-version="[3.4.4,4.0.0)"
-Eclipse-LazyStart: true; exceptions="org.eclipse.wst.css.core.internal.contenttype"
+Require-Bundle: org.apache.xerces;bundle-version="[2.9.0,3.0.0)";visibility:=reexport,
+ org.eclipse.wst.xml.core;bundle-version="[1.1.300,1.2.0)",
+ org.eclipse.wst.sse.core;bundle-version="[1.1.300,1.2.0)",
+ org.eclipse.core.runtime;bundle-version="[3.4.0,4.0.0)",
+ org.eclipse.core.resources;bundle-version="[3.4.0,4.0.0)",
+ com.ibm.icu;bundle-version="[3.8.1,4.0.0)"
+Bundle-ActivationPolicy: lazy;exclude:="org.eclipse.wst.css.core.internal.contenttype"
 Bundle-RequiredExecutionEnvironment: J2SE-1.4
