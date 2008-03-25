@@ -461,7 +461,7 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator, IExecutab
 				continue;
 
 			if (reporter != null) {
-				Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, "" + (i+1) + "/" + deltaArray.length + " - " + delta.substring(1));
+				Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, delta.substring(1));
 				reporter.displaySubtask(this, message);
 			}
 
