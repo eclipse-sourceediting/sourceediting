@@ -1007,13 +1007,13 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			case (ITaglibRecord.JAR) : {
 				IJarRecord record = (IJarRecord) reference;
 				document = (CMDocumentImpl) buildCMDocumentFromJar(record.getLocation().toString());
-				document.setLocationString("jar:file:" + record.getLocation().toString() + "!META-INF/taglib.tld");
+				document.setLocationString("jar:file:" + record.getLocation().toString() + "!/META-INF/taglib.tld");
 				if (document.getSmallIcon() != null) {
-					String iconPath = URIHelper.normalize(((TLDDocument) document).getSmallIcon(), record.getLocation().toString() + "!META-INF/", "/"); //$NON-NLS-1$ //$NON-NLS-2$
+					String iconPath = URIHelper.normalize(((TLDDocument) document).getSmallIcon(), record.getLocation().toString() + "!/META-INF/", "/"); //$NON-NLS-1$ //$NON-NLS-2$
 					document.setProperty(JSP12TLDNames.SMALL_ICON, "jar:file:" + iconPath); //$NON-NLS-1$
 				}
 				if (document.getLargeIcon() != null) {
-					String iconPath = URIHelper.normalize(((TLDDocument) document).getLargeIcon(), record.getLocation().toString() + "!META-INF/", "/"); //$NON-NLS-1$ //$NON-NLS-2$
+					String iconPath = URIHelper.normalize(((TLDDocument) document).getLargeIcon(), record.getLocation().toString() + "!/META-INF/", "/"); //$NON-NLS-1$ //$NON-NLS-2$
 					document.setProperty(JSP12TLDNames.LARGE_ICON, "jar:file:" + iconPath); //$NON-NLS-1$
 				}
 				if (document != null && document.getElements().getLength() == 0) {
