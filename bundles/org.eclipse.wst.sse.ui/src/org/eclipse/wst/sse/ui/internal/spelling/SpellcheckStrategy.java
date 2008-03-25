@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -136,13 +137,21 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		fContentTypeId = contentTypeId;
 
 		fSpellingContext = new SpellingContext();
-		fSpellingContext.setContentType(Platform.getContentTypeManager().getContentType(fContentTypeId));
+		IContentType contentType = Platform.getContentTypeManager().getContentType(fContentTypeId);
+		fSpellingContext.setContentType(contentType);
 		fReconcileAnnotationKey = new ReconcileAnnotationKey(fSpellingStep, KEY_CONTENT_TYPE, ReconcileAnnotationKey.PARTIAL);
 
-		String[] textRegionContexts = ExtendedConfigurationBuilder.getInstance().getDefinitions(EXTENDED_BUILDER_TYPE_CONTEXTS, fContentTypeId);
+		/**
+		 * Inherit spelling region rules
+		 */
 		List contexts = new ArrayList();
-		for (int i = 0; i < textRegionContexts.length; i++) {
-			contexts.addAll(Arrays.asList(StringUtils.unpack(textRegionContexts[i])));
+		IContentType testType = contentType;
+		while (testType != null) {
+			String[] textRegionContexts = ExtendedConfigurationBuilder.getInstance().getDefinitions(EXTENDED_BUILDER_TYPE_CONTEXTS, testType.getId());
+			for (int j = 0; j < textRegionContexts.length; j++) {
+				contexts.addAll(Arrays.asList(StringUtils.unpack(textRegionContexts[j])));
+			}
+			testType = testType.getBaseType();
 		}
 		fSupportedTextRegionContexts = (String[]) contexts.toArray(new String[contexts.size()]);
 
