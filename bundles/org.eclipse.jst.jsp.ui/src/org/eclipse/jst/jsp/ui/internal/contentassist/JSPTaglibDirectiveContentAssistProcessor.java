@@ -343,7 +343,7 @@ public class JSPTaglibDirectiveContentAssistProcessor extends JSPDummyContentAss
 									String prefix = StringUtils.replace(dir, "/", "-");
 
 									Image image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ATTRIBUTE);
-									CustomCompletionProposal proposal = new CustomCompletionProposal("\"" + prefix + "\"", start, length, prefix.length() + 2, image, prefix, null, descriptor.getDescription(), IRelevanceConstants.R_NONE);
+									CustomCompletionProposal proposal = new CustomCompletionProposal("\"" + prefix + "\"", start, length, prefix.length() + 2, image, prefix, null, null, IRelevanceConstants.R_NONE);
 									contentAssistRequest.addProposal(proposal);
 								}
 							}
