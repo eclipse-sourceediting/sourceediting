@@ -16,6 +16,9 @@ import org.eclipse.swt.graphics.FontMetrics;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Control;
 
+/**
+ * Based on org.eclipse.jdt.internal.ui.util.PixelConverter
+ */
 public class PixelConverter {
 	
 	private final FontMetrics fFontMetrics;
