@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,17 +10,184 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.validate;
 
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.html.core.internal.HTMLCoreMessages;
+import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.Logger;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
+import org.eclipse.wst.sse.core.internal.validate.ErrorInfo;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.w3c.dom.Node;
 
-class MessageFactory implements ErrorState {
+public class MessageFactory implements ErrorState {
 
 
+	private static Map fPreferences = new HashMap();
+	private static IProject fProject;
+	
+	public MessageFactory() {
+		init();
+	}
+	
+	public MessageFactory(IProject project) {
+		fProject = project;
+		init();
+	}
+	
+	protected Preferences getModelPreferences() {
+		return HTMLCorePlugin.getDefault().getPluginPreferences();
+	}
+	
+	/**
+	 * Creates a packet for the error table based on the state, message, and the
+	 * severity defined in the preference store. This packet, in addition to
+	 * being added to the error table, is also placed in a map based on the
+	 * supplied preference key
+	 * 
+	 * @param key the preference key for the error severity
+	 * @param errorTable the error table to store the packet information in
+	 * @param state the error state
+	 * @param msg the message for the error
+	 */
+	private void mapToKey(String key, ErrorTable errorTable, int state, String msg) {
+		boolean useProject = false;
+		IEclipsePreferences prefs = null;
+		
+		if (fProject != null) {
+			prefs = new ProjectScope(fProject).getNode(HTMLCorePlugin.getDefault().getBundle().getSymbolicName());
+			useProject = prefs.getBoolean(HTMLCorePreferenceNames.USE_PROJECT_SETTINGS, false);
+		}
+		
+		int severity = ValidationMessage.WARNING;
+		if(useProject)
+			severity = prefs.getInt(key, ValidationMessage.WARNING);
+		else
+			severity = new InstanceScope().getNode(HTMLCorePlugin.getDefault().getBundle().getSymbolicName()).getInt(key, ValidationMessage.WARNING);
+			
+		ErrorTable.Packet packet = errorTable.put(state, msg, severity);
+		fPreferences.put(key, packet);
+	}
+	
+	private void init() {
+		for (int i = 0; i < NodeType.MAX_TYPE; i++) {
+			errTables[i] = new ErrorTable();
+		}
+		// NOTE: The severities are just stub.  They must be reviewed.
+		// -- 8/30/2001
+
+		// attribute error map
+		ErrorTable attrTable = errTables[NodeType.ATTRIBUTE];// short hand
+		attrTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
+		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_UNDEFINED_NAME, attrTable, UNDEFINED_NAME_ERROR, MSG_UNDEFINED_ATTR_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_UNDEFINED_VALUE, attrTable, UNDEFINED_VALUE_ERROR, MSG_UNDEFINED_VALUE_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_NAME_MISMATCH, attrTable, MISMATCHED_ERROR, MSG_MISMATCHED_ATTR_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_INVALID_NAME, attrTable, INVALID_NAME_ERROR, MSG_INVALID_ATTR_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_INVALID_VALUE, attrTable, INVALID_ATTR_ERROR, MSG_ATTR_NO_VALUE_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_DUPLICATE, attrTable, DUPLICATE_ERROR, MSG_DUPLICATE_ATTR_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_MISMATCH, attrTable, MISMATCHED_VALUE_ERROR, MSG_MISMATCHED_ATTR_VALUE_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_UNCLOSED, attrTable, UNCLOSED_ATTR_VALUE, MSG_UNCLOSED_ATTR_VALUE_ERROR);
+		//attrTable.put(UNDEFINED_NAME_ERROR, MSG_UNDEFINED_ATTR_ERROR, ValidationMessage.WARNING);
+		//attrTable.put(UNDEFINED_VALUE_ERROR, MSG_UNDEFINED_VALUE_ERROR, ValidationMessage.WARNING);
+		//attrTable.put(MISMATCHED_ERROR, MSG_MISMATCHED_ATTR_ERROR, ValidationMessage.WARNING);
+		//attrTable.put(INVALID_NAME_ERROR, MSG_INVALID_ATTR_ERROR, ValidationMessage.WARNING);
+		//attrTable.put(INVALID_ATTR_ERROR, MSG_ATTR_NO_VALUE_ERROR, ValidationMessage.WARNING);
+		//attrTable.put(DUPLICATE_ERROR, MSG_DUPLICATE_ATTR_ERROR, ValidationMessage.WARNING);
+		//attrTable.put(MISMATCHED_VALUE_ERROR, MSG_MISMATCHED_ATTR_VALUE_ERROR, ValidationMessage.ERROR);
+		//<<D210422
+		//attrTable.put(UNCLOSED_ATTR_VALUE, MSG_UNCLOSED_ATTR_VALUE_ERROR, ValidationMessage.WARNING);
+		//D210422
+		// element error map
+		ErrorTable elemTable = errTables[NodeType.ELEMENT];// short hand
+		elemTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
+		mapToKey(HTMLCorePreferenceNames.ELEM_UNKNOWN_NAME, elemTable, UNDEFINED_NAME_ERROR, MSG_UNDEFINED_TAG_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ELEM_INVALID_NAME, elemTable, INVALID_NAME_ERROR, MSG_INVALID_TAG_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ELEM_START_INVALID_CASE, elemTable, MISMATCHED_ERROR, MSG_MISMATCHED_TAG_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ELEM_END_INVALID_CASE, elemTable, MISMATCHED_END_TAG_ERROR, MSG_MISMATCHED_TAG_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ELEM_MISSING_START, elemTable, MISSING_START_TAG_ERROR, MSG_MISSING_START_TAG_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ELEM_MISSING_END, elemTable, MISSING_END_TAG_ERROR, MSG_MISSING_END_TAG_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ELEM_UNNECESSARY_END, elemTable, UNNECESSARY_END_TAG_ERROR, MSG_UNNECESSARY_END_TAG_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ELEM_INVALID_DIRECTIVE, elemTable, INVALID_DIRECTIVE_ERROR, MSG_INVALID_DIRECTIVE_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ELEM_INVALID_CONTENT, elemTable, INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ELEM_DUPLICATE, elemTable, DUPLICATE_ERROR, MSG_DUPLICATE_TAG_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ELEM_COEXISTENCE, elemTable, COEXISTENCE_ERROR, MSG_INVALID_CONTENT_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ELEM_UNCLOSED_START_TAG, elemTable, UNCLOSED_TAG_ERROR, MSG_UNCLOSED_START_TAG_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ELEM_UNCLOSED_END_TAG, elemTable, UNCLOSED_END_TAG_ERROR, MSG_UNCLOSED_END_TAG_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ELEM_INVALID_EMPTY_TAG, elemTable, INVALID_EMPTY_ELEMENT_TAG, MSG_INVALID_EMPTY_ELEMENT_TAG);
+		//elemTable.put(UNDEFINED_NAME_ERROR, MSG_UNDEFINED_TAG_ERROR, ValidationMessage.WARNING);
+		//elemTable.put(INVALID_NAME_ERROR, MSG_INVALID_TAG_ERROR, ValidationMessage.ERROR);
+		//elemTable.put(MISMATCHED_ERROR, MSG_MISMATCHED_TAG_ERROR, ValidationMessage.WARNING);
+		//elemTable.put(MISMATCHED_END_TAG_ERROR, MSG_MISMATCHED_TAG_ERROR, ValidationMessage.ERROR);
+		//elemTable.put(MISSING_START_TAG_ERROR, MSG_MISSING_START_TAG_ERROR, ValidationMessage.ERROR);
+		//elemTable.put(MISSING_END_TAG_ERROR, MSG_MISSING_END_TAG_ERROR, ValidationMessage.WARNING);
+		//elemTable.put(UNNECESSARY_END_TAG_ERROR, MSG_UNNECESSARY_END_TAG_ERROR, ValidationMessage.WARNING);
+		//elemTable.put(INVALID_DIRECTIVE_ERROR, MSG_INVALID_DIRECTIVE_ERROR, ValidationMessage.ERROR);
+		//elemTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
+		//elemTable.put(DUPLICATE_ERROR, MSG_DUPLICATE_TAG_ERROR, ValidationMessage.WARNING);
+		//elemTable.put(COEXISTENCE_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
+		//elemTable.put(UNCLOSED_TAG_ERROR, MSG_UNCLOSED_START_TAG_ERROR, ValidationMessage.ERROR);
+		//elemTable.put(UNCLOSED_END_TAG_ERROR, MSG_UNCLOSED_END_TAG_ERROR, ValidationMessage.ERROR);
+		//elemTable.put(INVALID_EMPTY_ELEMENT_TAG, MSG_INVALID_EMPTY_ELEMENT_TAG, ValidationMessage.WARNING);
+
+		// document type error map
+		ErrorTable docTable = errTables[NodeType.DOCUMENT_TYPE];// short hand
+		docTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
+		mapToKey(HTMLCorePreferenceNames.DOC_DUPLICATE, docTable, DUPLICATE_ERROR, MSG_DUPLICATE_TAG_ERROR);
+		mapToKey(HTMLCorePreferenceNames.DOC_INVALID_CONTENT, docTable, INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR);
+		mapToKey(HTMLCorePreferenceNames.DOC_DOCTYPE_UNCLOSED, docTable, UNCLOSED_TAG_ERROR, MSG_UNCLOSED_DOCTYPE_ERROR);
+		//docTable.put(DUPLICATE_ERROR, MSG_DUPLICATE_TAG_ERROR, ValidationMessage.ERROR);
+		//docTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
+		//docTable.put(UNCLOSED_TAG_ERROR, MSG_UNCLOSED_DOCTYPE_ERROR, ValidationMessage.ERROR);
+
+		// text error map
+		ErrorTable textTable = errTables[NodeType.TEXT];
+		textTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
+		mapToKey(HTMLCorePreferenceNames.TEXT_INVALID_CONTENT, textTable, INVALID_CONTENT_ERROR, MSG_INVALID_TEXT_ERROR);
+		mapToKey(HTMLCorePreferenceNames.TEXT_INVALID_CHAR, textTable, INVALID_CHAR_ERROR, MSG_INVALID_CHAR_ERROR);
+		//textTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_TEXT_ERROR, ValidationMessage.WARNING);
+		//textTable.put(INVALID_CHAR_ERROR, MSG_INVALID_CHAR_ERROR, ValidationMessage.WARNING);
+
+		// comment error map
+		ErrorTable commTable = errTables[NodeType.COMMENT];
+		commTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
+		mapToKey(HTMLCorePreferenceNames.COMMENT_INVALID_CONTENT, commTable, INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR);
+		mapToKey(HTMLCorePreferenceNames.COMMENT_UNCLOSED, commTable, UNCLOSED_TAG_ERROR, MSG_UNCLOSED_COMMENT_ERROR);
+		//commTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
+		//commTable.put(UNCLOSED_TAG_ERROR, MSG_UNCLOSED_COMMENT_ERROR, ValidationMessage.ERROR);
+
+		// cdata section error map
+		ErrorTable cdatTable = errTables[NodeType.CDATA_SECTION];
+		cdatTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
+		mapToKey(HTMLCorePreferenceNames.CDATA_INVALID_CONTENT, cdatTable, INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR);
+		mapToKey(HTMLCorePreferenceNames.CDATA_UNCLOSED, cdatTable, UNCLOSED_TAG_ERROR, MSG_UNCLOSED_CDATA_SECTION_ERROR);
+		//cdatTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
+		//cdatTable.put(UNCLOSED_TAG_ERROR, MSG_UNCLOSED_CDATA_SECTION_ERROR, ValidationMessage.ERROR);
+
+		// processing instruction error map
+		ErrorTable piTable = errTables[NodeType.PROCESSING_INSTRUCTION];
+		piTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
+		mapToKey(HTMLCorePreferenceNames.PI_INVALID_CONTENT, piTable, INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR);
+		mapToKey(HTMLCorePreferenceNames.PI_UNCLOSED, piTable, UNCLOSED_TAG_ERROR, MSG_UNCLOSED_PI_ERROR);
+		//piTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
+		//piTable.put(UNCLOSED_TAG_ERROR, MSG_UNCLOSED_PI_ERROR, ValidationMessage.ERROR);
+
+		// entity reference error map
+		ErrorTable erTable = errTables[NodeType.ENTITY_REFERENCE];
+		erTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
+		mapToKey(HTMLCorePreferenceNames.REF_UNDEFINED, erTable, UNDEFINED_NAME_ERROR, MSG_UNDEFINED_TAG_ERROR);
+		mapToKey(HTMLCorePreferenceNames.REF_INVALID_CONTENT, erTable, INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR);
+		//erTable.put(UNDEFINED_NAME_ERROR, MSG_UNDEFINED_TAG_ERROR, ValidationMessage.WARNING);
+		//erTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
+	}
+	
 	private static class ErrorTable {
 		private class Packet {
 			public Packet(String msg, int severity) {
@@ -43,9 +210,10 @@ class MessageFactory implements ErrorState {
 		public ErrorTable() {
 		}
 
-		public void put(int state, String msg, int severity) {
+		public Packet put(int state, String msg, int severity) {
 			Packet packet = new Packet(msg, severity);
 			map.put(new Integer(state), packet);
+			return packet;
 		}
 
 		public String getMessage(int state) {
@@ -107,91 +275,91 @@ class MessageFactory implements ErrorState {
 	private static final String MSG_UNCLOSED_ATTR_VALUE_ERROR = HTMLCoreMessages._ERROR_Attribute_value___0___not_closed__1;
 	private static ErrorTable[] errTables = new ErrorTable[NodeType.MAX_TYPE];
 
-	static {
-		for (int i = 0; i < NodeType.MAX_TYPE; i++) {
-			errTables[i] = new ErrorTable();
-		}
-		// NOTE: The severities are just stub.  They must be reviewed.
-		// -- 8/30/2001
-
-		// attribute error map
-		ErrorTable attrTable = errTables[NodeType.ATTRIBUTE];// short hand
-		attrTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
-		attrTable.put(UNDEFINED_NAME_ERROR, MSG_UNDEFINED_ATTR_ERROR, ValidationMessage.WARNING);
-		attrTable.put(UNDEFINED_VALUE_ERROR, MSG_UNDEFINED_VALUE_ERROR, ValidationMessage.WARNING);
-		attrTable.put(MISMATCHED_ERROR, MSG_MISMATCHED_ATTR_ERROR, ValidationMessage.WARNING);
-		attrTable.put(INVALID_NAME_ERROR, MSG_INVALID_ATTR_ERROR, ValidationMessage.WARNING);
-		attrTable.put(INVALID_ATTR_ERROR, MSG_ATTR_NO_VALUE_ERROR, ValidationMessage.WARNING);
-		attrTable.put(DUPLICATE_ERROR, MSG_DUPLICATE_ATTR_ERROR, ValidationMessage.WARNING);
-		attrTable.put(MISMATCHED_VALUE_ERROR, MSG_MISMATCHED_ATTR_VALUE_ERROR, ValidationMessage.ERROR);
-		//<<D210422
-		attrTable.put(UNCLOSED_ATTR_VALUE, MSG_UNCLOSED_ATTR_VALUE_ERROR, ValidationMessage.WARNING);
-		//D210422
-		// element error map
-		ErrorTable elemTable = errTables[NodeType.ELEMENT];// short hand
-		elemTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
-		elemTable.put(UNDEFINED_NAME_ERROR, MSG_UNDEFINED_TAG_ERROR, ValidationMessage.WARNING);
-		elemTable.put(INVALID_NAME_ERROR, MSG_INVALID_TAG_ERROR, ValidationMessage.ERROR);
-		elemTable.put(MISMATCHED_ERROR, MSG_MISMATCHED_TAG_ERROR, ValidationMessage.WARNING);
-		elemTable.put(MISMATCHED_END_TAG_ERROR, MSG_MISMATCHED_TAG_ERROR, ValidationMessage.ERROR);
-		elemTable.put(MISSING_START_TAG_ERROR, MSG_MISSING_START_TAG_ERROR, ValidationMessage.ERROR);
-		elemTable.put(MISSING_END_TAG_ERROR, MSG_MISSING_END_TAG_ERROR, ValidationMessage.WARNING);
-		elemTable.put(UNNECESSARY_END_TAG_ERROR, MSG_UNNECESSARY_END_TAG_ERROR, ValidationMessage.WARNING);
-		elemTable.put(INVALID_DIRECTIVE_ERROR, MSG_INVALID_DIRECTIVE_ERROR, ValidationMessage.ERROR);
-		elemTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
-		elemTable.put(DUPLICATE_ERROR, MSG_DUPLICATE_TAG_ERROR, ValidationMessage.WARNING);
-		elemTable.put(COEXISTENCE_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
-		elemTable.put(UNCLOSED_TAG_ERROR, MSG_UNCLOSED_START_TAG_ERROR, ValidationMessage.ERROR);
-		elemTable.put(UNCLOSED_END_TAG_ERROR, MSG_UNCLOSED_END_TAG_ERROR, ValidationMessage.ERROR);
-		elemTable.put(INVALID_EMPTY_ELEMENT_TAG, MSG_INVALID_EMPTY_ELEMENT_TAG, ValidationMessage.WARNING);
-
-		// document type error map
-		ErrorTable docTable = errTables[NodeType.DOCUMENT_TYPE];// short hand
-		docTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
-		docTable.put(DUPLICATE_ERROR, MSG_DUPLICATE_TAG_ERROR, ValidationMessage.ERROR);
-		docTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
-		docTable.put(UNCLOSED_TAG_ERROR, MSG_UNCLOSED_DOCTYPE_ERROR, ValidationMessage.ERROR);
-
-		// text error map
-		ErrorTable textTable = errTables[NodeType.TEXT];
-		textTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
-		textTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_TEXT_ERROR, ValidationMessage.WARNING);
-		textTable.put(INVALID_CHAR_ERROR, MSG_INVALID_CHAR_ERROR, ValidationMessage.WARNING);
-
-		// comment error map
-		ErrorTable commTable = errTables[NodeType.COMMENT];
-		commTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
-		commTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
-		commTable.put(UNCLOSED_TAG_ERROR, MSG_UNCLOSED_COMMENT_ERROR, ValidationMessage.ERROR);
-
-		// cdata section error map
-		ErrorTable cdatTable = errTables[NodeType.CDATA_SECTION];
-		cdatTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
-		cdatTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
-		cdatTable.put(UNCLOSED_TAG_ERROR, MSG_UNCLOSED_CDATA_SECTION_ERROR, ValidationMessage.ERROR);
-
-		// processing instruction error map
-		ErrorTable piTable = errTables[NodeType.PROCESSING_INSTRUCTION];
-		piTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
-		piTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
-		piTable.put(UNCLOSED_TAG_ERROR, MSG_UNCLOSED_PI_ERROR, ValidationMessage.ERROR);
-
-		// entity reference error map
-		ErrorTable erTable = errTables[NodeType.ENTITY_REFERENCE];
-		erTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
-		erTable.put(UNDEFINED_NAME_ERROR, MSG_UNDEFINED_TAG_ERROR, ValidationMessage.WARNING);
-		erTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
-	}
+//	static {
+//		for (int i = 0; i < NodeType.MAX_TYPE; i++) {
+//			errTables[i] = new ErrorTable();
+//		}
+//		// NOTE: The severities are just stub.  They must be reviewed.
+//		// -- 8/30/2001
+//
+//		// attribute error map
+//		ErrorTable attrTable = errTables[NodeType.ATTRIBUTE];// short hand
+//		attrTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
+//		attrTable.put(UNDEFINED_NAME_ERROR, MSG_UNDEFINED_ATTR_ERROR, ValidationMessage.WARNING);
+//		attrTable.put(UNDEFINED_VALUE_ERROR, MSG_UNDEFINED_VALUE_ERROR, ValidationMessage.WARNING);
+//		attrTable.put(MISMATCHED_ERROR, MSG_MISMATCHED_ATTR_ERROR, ValidationMessage.WARNING);
+//		attrTable.put(INVALID_NAME_ERROR, MSG_INVALID_ATTR_ERROR, ValidationMessage.WARNING);
+//		attrTable.put(INVALID_ATTR_ERROR, MSG_ATTR_NO_VALUE_ERROR, ValidationMessage.WARNING);
+//		attrTable.put(DUPLICATE_ERROR, MSG_DUPLICATE_ATTR_ERROR, ValidationMessage.WARNING);
+//		attrTable.put(MISMATCHED_VALUE_ERROR, MSG_MISMATCHED_ATTR_VALUE_ERROR, ValidationMessage.ERROR);
+//		//<<D210422
+//		attrTable.put(UNCLOSED_ATTR_VALUE, MSG_UNCLOSED_ATTR_VALUE_ERROR, ValidationMessage.WARNING);
+//		//D210422
+//		// element error map
+//		ErrorTable elemTable = errTables[NodeType.ELEMENT];// short hand
+//		elemTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
+//		elemTable.put(UNDEFINED_NAME_ERROR, MSG_UNDEFINED_TAG_ERROR, ValidationMessage.WARNING);
+//		elemTable.put(INVALID_NAME_ERROR, MSG_INVALID_TAG_ERROR, ValidationMessage.ERROR);
+//		elemTable.put(MISMATCHED_ERROR, MSG_MISMATCHED_TAG_ERROR, ValidationMessage.WARNING);
+//		elemTable.put(MISMATCHED_END_TAG_ERROR, MSG_MISMATCHED_TAG_ERROR, ValidationMessage.ERROR);
+//		elemTable.put(MISSING_START_TAG_ERROR, MSG_MISSING_START_TAG_ERROR, ValidationMessage.ERROR);
+//		elemTable.put(MISSING_END_TAG_ERROR, MSG_MISSING_END_TAG_ERROR, ValidationMessage.WARNING);
+//		elemTable.put(UNNECESSARY_END_TAG_ERROR, MSG_UNNECESSARY_END_TAG_ERROR, ValidationMessage.WARNING);
+//		elemTable.put(INVALID_DIRECTIVE_ERROR, MSG_INVALID_DIRECTIVE_ERROR, ValidationMessage.ERROR);
+//		elemTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
+//		elemTable.put(DUPLICATE_ERROR, MSG_DUPLICATE_TAG_ERROR, ValidationMessage.WARNING);
+//		elemTable.put(COEXISTENCE_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
+//		elemTable.put(UNCLOSED_TAG_ERROR, MSG_UNCLOSED_START_TAG_ERROR, ValidationMessage.ERROR);
+//		elemTable.put(UNCLOSED_END_TAG_ERROR, MSG_UNCLOSED_END_TAG_ERROR, ValidationMessage.ERROR);
+//		elemTable.put(INVALID_EMPTY_ELEMENT_TAG, MSG_INVALID_EMPTY_ELEMENT_TAG, ValidationMessage.WARNING);
+//
+//		// document type error map
+//		ErrorTable docTable = errTables[NodeType.DOCUMENT_TYPE];// short hand
+//		docTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
+//		docTable.put(DUPLICATE_ERROR, MSG_DUPLICATE_TAG_ERROR, ValidationMessage.ERROR);
+//		docTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
+//		docTable.put(UNCLOSED_TAG_ERROR, MSG_UNCLOSED_DOCTYPE_ERROR, ValidationMessage.ERROR);
+//
+//		// text error map
+//		ErrorTable textTable = errTables[NodeType.TEXT];
+//		textTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
+//		textTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_TEXT_ERROR, ValidationMessage.WARNING);
+//		textTable.put(INVALID_CHAR_ERROR, MSG_INVALID_CHAR_ERROR, ValidationMessage.WARNING);
+//
+//		// comment error map
+//		ErrorTable commTable = errTables[NodeType.COMMENT];
+//		commTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
+//		commTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
+//		commTable.put(UNCLOSED_TAG_ERROR, MSG_UNCLOSED_COMMENT_ERROR, ValidationMessage.ERROR);
+//
+//		// cdata section error map
+//		ErrorTable cdatTable = errTables[NodeType.CDATA_SECTION];
+//		cdatTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
+//		cdatTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
+//		cdatTable.put(UNCLOSED_TAG_ERROR, MSG_UNCLOSED_CDATA_SECTION_ERROR, ValidationMessage.ERROR);
+//
+//		// processing instruction error map
+//		ErrorTable piTable = errTables[NodeType.PROCESSING_INSTRUCTION];
+//		piTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
+//		piTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
+//		piTable.put(UNCLOSED_TAG_ERROR, MSG_UNCLOSED_PI_ERROR, ValidationMessage.ERROR);
+//
+//		// entity reference error map
+//		ErrorTable erTable = errTables[NodeType.ENTITY_REFERENCE];
+//		erTable.put(NONE_ERROR, MSG_NO_ERROR, 0);
+//		erTable.put(UNDEFINED_NAME_ERROR, MSG_UNDEFINED_TAG_ERROR, ValidationMessage.WARNING);
+//		erTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
+//	}
 
 	/**
 	 */
-	public static ValidationMessage createMessage(ErrorInfo info) {
+	public ValidationMessage createMessage(ErrorInfo info) {
 		String errorMsg = getErrorMessage(info);
 		int errorSeverity = getErrorSeverity(info);
 		return new ValidationMessage(errorMsg, info.getOffset(), info.getLength(), errorSeverity);
 	}
 
-	private static String getErrorMessage(ErrorInfo info) {
+	private String getErrorMessage(ErrorInfo info) {
 		ErrorTable tab = getErrorTable(info.getTargetType());
 		if (tab == null)
 			return MSG_UNKNOWN_ERROR;
@@ -211,14 +379,14 @@ class MessageFactory implements ErrorState {
 
 	/**
 	 */
-	private static int getErrorSeverity(ErrorInfo info) {
+	private int getErrorSeverity(ErrorInfo info) {
 		ErrorTable tab = getErrorTable(info.getTargetType());
 		if (tab == null)
 			return 0;
 		return tab.getSeverity(info.getState());
 	}
 
-	private static ErrorTable getErrorTable(short nodetype) {
+	private ErrorTable getErrorTable(short nodetype) {
 		ErrorTable tab = null;
 		switch (nodetype) {
 			case Node.ATTRIBUTE_NODE :

@@ -61,7 +61,7 @@ public class HTMLElementAncestorValidator extends PrimeValidator {
 			if (pdec != null) { // prohibited element is found in ancestors.
 				Segment errorSeg = FMUtil.getSegment((IDOMNode) node, FMUtil.SEG_START_TAG);
 				if (errorSeg != null)
-					reporter.report(MessageFactory.createMessage(new ErrorInfoImpl(ErrorState.INVALID_CONTENT_ERROR, errorSeg, target)));
+					reporter.report(new ErrorInfoImpl(ErrorState.INVALID_CONTENT_ERROR, errorSeg, target));
 				break; // If one prohibited ancestor is found, it's enough.
 			}
 			parent = SMUtil.getParentElement(parent);

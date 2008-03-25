@@ -125,7 +125,7 @@ public class HTMLUIMessages extends NLS {
 	public static String SyntaxColoringPage_4;
 	public static String SyntaxColoringPage_5;
 	public static String SyntaxColoringPage_6;
-
+	
 	// below are possibly unused strings that may be deleted
 	public static String HTMLFilesPreferencePage_1;
 	public static String HTMLFilesPreferencePage_2;
@@ -133,4 +133,60 @@ public class HTMLUIMessages extends NLS {
 	// above are possibly unused strings that may be deleted
 	public static String EmptyFilePreferencePage_0;
 	public static String _UI_STRUCTURED_TEXT_EDITOR_PREFS_LINK;
+	
+	// below are the strings for the validation page
+	public static String Validation_description;
+	public static String Validation_Warning;
+	public static String Validation_Error;
+	public static String Validation_Ignore;
+	public static String Expandable_label_attributes;
+	public static String Expandable_label_elements;
+	public static String Expandable_label_document_type;
+	public static String Expandable_label_text;
+	public static String Expandable_label_comment;
+	public static String Expandable_label_cdata;
+	public static String Expandable_label_pi;
+	public static String Expandable_label_entity_ref;
+	
+	public static String HTMLValidationPreferencePage_0;
+	public static String HTMLValidationPreferencePage_1;
+	public static String HTMLValidationPreferencePage_10;
+	public static String HTMLValidationPreferencePage_11;
+	public static String HTMLValidationPreferencePage_12;
+	public static String HTMLValidationPreferencePage_13;
+	public static String HTMLValidationPreferencePage_14;
+	public static String HTMLValidationPreferencePage_15;
+	public static String HTMLValidationPreferencePage_16;
+	public static String HTMLValidationPreferencePage_17;
+	public static String HTMLValidationPreferencePage_18;
+	public static String HTMLValidationPreferencePage_19;
+	public static String HTMLValidationPreferencePage_2;
+	public static String HTMLValidationPreferencePage_20;
+	public static String HTMLValidationPreferencePage_21;
+	public static String HTMLValidationPreferencePage_22;
+	public static String HTMLValidationPreferencePage_23;
+	public static String HTMLValidationPreferencePage_24;
+	public static String HTMLValidationPreferencePage_25;
+	public static String HTMLValidationPreferencePage_26;
+	public static String HTMLValidationPreferencePage_27;
+	public static String HTMLValidationPreferencePage_28;
+	public static String HTMLValidationPreferencePage_29;
+	public static String HTMLValidationPreferencePage_3;
+	public static String HTMLValidationPreferencePage_30;
+	public static String HTMLValidationPreferencePage_31;
+	public static String HTMLValidationPreferencePage_32;
+	public static String HTMLValidationPreferencePage_33;
+	public static String HTMLValidationPreferencePage_34;
+	public static String HTMLValidationPreferencePage_4;
+	public static String HTMLValidationPreferencePage_5;
+	public static String HTMLValidationPreferencePage_6;
+	public static String HTMLValidationPreferencePage_7;
+	public static String HTMLValidationPreferencePage_8;
+	public static String HTMLValidationPreferencePage_9;
+	
+	// Validation
+	public static String Validation_Title;
+	public static String Validation_Workspace;
+	public static String Validation_Project;
+	public static String Validation_jobName;
 }

@@ -14,6 +14,7 @@ package org.eclipse.wst.sse.core.internal.validate;
 
 
 
+
 /**
  */
 public interface ValidationReporter {
@@ -21,4 +22,7 @@ public interface ValidationReporter {
 	/**
 	 */
 	void report(ValidationMessage message);
+	
+	void report(ErrorInfo info);
+	
 }

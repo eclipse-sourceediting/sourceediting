@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,8 +13,10 @@ package org.eclipse.wst.html.internal.validation;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.wst.html.core.internal.validate.MessageFactory;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.validate.ErrorInfo;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.sse.core.internal.validate.ValidationReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
@@ -28,7 +30,8 @@ public class HTMLValidationReporter implements ValidationReporter {
 	private IFile file = null;
 	private IStructuredModel model = null;
 	private HTMLValidationResult result = null;
-
+	private MessageFactory fFactory = null;
+	
 	/**
 	 */
 	public HTMLValidationReporter(IValidator owner, IReporter reporter, IFile file, IStructuredModel model) {
@@ -37,6 +40,7 @@ public class HTMLValidationReporter implements ValidationReporter {
 		this.reporter = reporter;
 		this.file = file;
 		this.model = model;
+		fFactory = new MessageFactory(file != null ? file.getProject() : null);
 	}
 
 	/**
@@ -76,7 +80,7 @@ public class HTMLValidationReporter implements ValidationReporter {
 	/**
 	 */
 	public void report(ValidationMessage message) {
-		if (message == null)
+		if (message == null || message.getSeverity() == ValidationMessage.IGNORE)
 			return;
 		IMessage mes = translateMessage(message);
 
@@ -118,8 +122,11 @@ public class HTMLValidationReporter implements ValidationReporter {
 				severity = IMessage.NORMAL_SEVERITY;
 				result.addWarning();
 				break;
-			default :
+			case ValidationMessage.INFORMATION :
 				result.addInformation();
+				break;
+			default :
+//				result.addInformation();
 				break;
 		}
 
@@ -135,5 +142,9 @@ public class HTMLValidationReporter implements ValidationReporter {
 		}
 
 		return mes;
+	}
+
+	public void report(ErrorInfo info) {
+		report(fFactory.createMessage(info));
 	}
 }

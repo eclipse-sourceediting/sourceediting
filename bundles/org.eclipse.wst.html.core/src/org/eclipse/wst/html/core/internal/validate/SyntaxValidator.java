@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.sse.core.internal.validate.ErrorInfo;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.document.InvalidCharacterException;
 import org.eclipse.wst.xml.core.internal.document.SourceValidator;
@@ -170,7 +171,7 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 	private void reportCorruptedEndTagError(ElementInfo info) {
 		String hint = getEndTagFullText(info);
 		TagErrorInfoImpl error = new TagErrorInfoImpl(UNDEFINED_NAME_ERROR, info.endTag, hint);
-		this.reporter.report(MessageFactory.createMessage(error));
+		this.reporter.report(error);
 	}
 
 	private void validateTags(ElementInfo info) {
@@ -275,7 +276,7 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 			startTagName = getTagName(info.startTag);
 			if (!declared.equals(startTagName)) {
 				TagErrorInfoImpl error = new TagErrorInfoImpl(MISMATCHED_ERROR, info.startTag, startTagName);
-				this.reporter.report(MessageFactory.createMessage(error));
+				this.reporter.report(error);
 			}
 		}
 		// end tag
@@ -284,7 +285,7 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 			if (!info.hasStartTag || (!endTagName.equals(startTagName))) {
 				if (!declared.equals(endTagName)) {
 					TagErrorInfoImpl error = new TagErrorInfoImpl(MISMATCHED_ERROR, info.endTag, endTagName);
-					this.reporter.report(MessageFactory.createMessage(error));
+					this.reporter.report(error);
 				}
 			}
 		}
@@ -340,6 +341,6 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 
 	private void report(int state, Segment errorSeg, Node node) {
 		ErrorInfo info = new ErrorInfoImpl(state, errorSeg, node);
-		reporter.report(MessageFactory.createMessage(info));
+		reporter.report(info);
 	}
 }

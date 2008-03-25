@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.validate;
 
+import org.eclipse.wst.sse.core.internal.validate.ErrorInfo;
+
 abstract class AbstractErrorInfo implements ErrorInfo, ErrorState {
 
 

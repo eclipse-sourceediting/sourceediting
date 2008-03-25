@@ -174,7 +174,7 @@ public class HTMLElementContentValidator extends PrimeValidator {
 		if (error != ErrorState.NONE_ERROR) {
 			Segment errorSeg = FMUtil.getSegment((IDOMNode) child, segType);
 			if (errorSeg != null)
-				reporter.report(MessageFactory.createMessage(new ErrorInfoImpl(error, errorSeg, child)));
+				reporter.report(new ErrorInfoImpl(error, errorSeg, child));
 		}
 	}
 }

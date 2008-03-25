@@ -244,7 +244,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 			if (state != ErrorState.NONE_ERROR) {
 				Segment seg = getErrorSegment((IDOMNode) a, rgnType);
 				if (seg != null)
-					reporter.report(MessageFactory.createMessage(new ErrorInfoImpl(state, seg, a)));
+					reporter.report(new ErrorInfoImpl(state, seg, a));
 			}
 		}
 	}

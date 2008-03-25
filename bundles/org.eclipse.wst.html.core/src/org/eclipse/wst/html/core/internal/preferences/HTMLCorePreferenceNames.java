@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -229,4 +229,49 @@ public class HTMLCorePreferenceNames {
 	 * @see #ATTR_NAME_CASE
 	 */
 	public static final int UPPER = 2;
+	
+	public static final String USE_PROJECT_SETTINGS = "use-project-settings";//$NON-NLS-1$
+	
+	public static final String ATTRIBUTE_UNDEFINED_NAME = "attrUndefName";//$NON-NLS-1$
+	public static final String ATTRIBUTE_UNDEFINED_VALUE = "attrUndefValue";//$NON-NLS-1$
+	public static final String ATTRIBUTE_NAME_MISMATCH = "attrNameMismatch";//$NON-NLS-1$
+	public static final String ATTRIBUTE_INVALID_NAME = "attrInvalidName";//$NON-NLS-1$
+	public static final String ATTRIBUTE_INVALID_VALUE = "attrInvalidValue";//$NON-NLS-1$
+	public static final String ATTRIBUTE_DUPLICATE = "attrDuplicate";//$NON-NLS-1$
+	public static final String ATTRIBUTE_VALUE_MISMATCH = "attrValueMismatch";//$NON-NLS-1$
+	public static final String ATTRIBUTE_VALUE_UNCLOSED = "attrValueUnclosed";//$NON-NLS-1$
+	
+	public static final String ELEM_UNKNOWN_NAME = "elemUnknownName";//$NON-NLS-1$
+	public static final String ELEM_INVALID_NAME = "elemInvalidName";//$NON-NLS-1$
+	public static final String ELEM_START_INVALID_CASE = "elemStartInvalidCase";//$NON-NLS-1$
+	public static final String ELEM_END_INVALID_CASE = "elemEndInvalidCase";//$NON-NLS-1$
+	public static final String ELEM_MISSING_START = "elemMissingStart";//$NON-NLS-1$
+	public static final String ELEM_MISSING_END = "elemMissingEnd";//$NON-NLS-1$
+	public static final String ELEM_UNNECESSARY_END = "elemUnnecessaryEnd";//$NON-NLS-1$
+	public static final String ELEM_INVALID_DIRECTIVE = "elemInvalidDirective";//$NON-NLS-1$
+	public static final String ELEM_INVALID_CONTENT = "elemInvalidContent";//$NON-NLS-1$
+	public static final String ELEM_DUPLICATE = "elemDuplicate";//$NON-NLS-1$
+	public static final String ELEM_COEXISTENCE = "elemCoexistence";//$NON-NLS-1$
+	public static final String ELEM_UNCLOSED_START_TAG = "elemUnclosedStartTag";//$NON-NLS-1$
+	public static final String ELEM_UNCLOSED_END_TAG = "elemUnclosedEndTag";//$NON-NLS-1$
+	public static final String ELEM_INVALID_EMPTY_TAG = "elemInvalidEmptyTag";//$NON-NLS-1$
+	
+	public static final String DOC_DUPLICATE = "docDuplicateTag";//$NON-NLS-1$
+	public static final String DOC_INVALID_CONTENT = "docInvalidContent";//$NON-NLS-1$
+	public static final String DOC_DOCTYPE_UNCLOSED = "docDoctypeUnclosed";//$NON-NLS-1$
+	
+	public static final String TEXT_INVALID_CONTENT = "docInvalidContent";//$NON-NLS-1$
+	public static final String TEXT_INVALID_CHAR = "docInvalidChar";//$NON-NLS-1$
+	
+	public static final String COMMENT_INVALID_CONTENT = "commentInvalidContent";//$NON-NLS-1$
+	public static final String COMMENT_UNCLOSED = "commentUnclosed";//$NON-NLS-1$
+	
+	public static final String CDATA_INVALID_CONTENT = "cdataInvalidContent";//$NON-NLS-1$
+	public static final String CDATA_UNCLOSED = "cdataUnclosed";//$NON-NLS-1$
+	
+	public static final String PI_INVALID_CONTENT = "piInvalidContent";//$NON-NLS-1$
+	public static final String PI_UNCLOSED = "piUnclosed";//$NON-NLS-1$
+	
+	public static final String REF_INVALID_CONTENT = "refInvalidContent";//$NON-NLS-1$
+	public static final String REF_UNDEFINED = "piUndefined";//$NON-NLS-1$
 }

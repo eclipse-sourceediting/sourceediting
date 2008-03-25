@@ -52,7 +52,7 @@
 			target="org.eclipse.wst.html.HTML_DEFAULT, org.eclipse.wst.html.HTML_DECLARATION" />
 		<provisionalDefinition
 			type="preferencepages"
-			value="org.eclipse.wst.html.ui.preferences.html, org.eclipse.wst.html.ui.preferences.source, org.eclipse.wst.html.ui.preferences.templates, org.eclipse.wst.html.ui.preferences.styles"
+			value="org.eclipse.wst.html.ui.preferences.html, org.eclipse.wst.html.ui.preferences.source, org.eclipse.wst.html.ui.preferences.templates, org.eclipse.wst.html.ui.preferences.styles,org.eclipse.wst.html.ui.preferences.validation"
 			target="org.eclipse.wst.html.core.htmlsource" />
 		<provisionalDefinition
 			type="spellingregions"
@@ -107,6 +107,14 @@
 			id="org.eclipse.wst.html.ui.preferences.styles">
 			<keywordReference id="org.eclipse.wst.html.ui.styles"/>
 		</page>
+		<page
+			name="%HTML_Validation"
+			category="org.eclipse.wst.html.ui.preferences.html"
+			class="org.eclipse.wst.html.ui.internal.preferences.ui.HTMLValidationPreferencePage"
+			id="org.eclipse.wst.html.ui.preferences.validation">
+			<keywordReference id="org.eclipse.wst.html.ui.styles"/>
+		</page>
+		
 	</extension>
 	<!-- Web content settings -->
 	<extension point="org.eclipse.ui.propertyPages">
@@ -162,6 +170,17 @@
 				</and> 
 			</enabledWhen>
          	<keywordReference id="org.eclipse.wst.html.ui.webcontent"/>
+		</page>
+		<page
+			name="%HTML_Property_validation"
+			class="org.eclipse.wst.html.ui.internal.preferences.ui.HTMLValidationPreferencePage"
+			id="org.eclipse.wst.html.ui.propertyPage.project"
+			category="ValidationPropertiesPage">
+			<enabledWhen>
+				<adapt type="org.eclipse.core.resources.IProject">
+					
+				</adapt>
+			</enabledWhen>
 		</page>
 	</extension>
 	

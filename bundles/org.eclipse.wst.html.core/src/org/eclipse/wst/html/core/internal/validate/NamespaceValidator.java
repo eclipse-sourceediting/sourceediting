@@ -43,7 +43,7 @@ public class NamespaceValidator extends PrimeValidator implements ErrorState {
 				// report unknown tag error.
 				Segment errorSeg = FMUtil.getSegment(e, FMUtil.SEG_START_TAG);
 				if (errorSeg != null)
-					reporter.report(MessageFactory.createMessage(new ErrorInfoImpl(UNDEFINED_NAME_ERROR, errorSeg, e)));
+					reporter.report(new ErrorInfoImpl(UNDEFINED_NAME_ERROR, errorSeg, e));
 			}
 		}
 		// (2) check prefix of each attr 
@@ -63,7 +63,7 @@ public class NamespaceValidator extends PrimeValidator implements ErrorState {
 						continue;
 					int a_offset = a.getNameRegionStartOffset();
 					int a_length = a.getNameRegion().getLength();
-					reporter.report(MessageFactory.createMessage(new ErrorInfoImpl(UNDEFINED_NAME_ERROR, new Segment(a_offset, a_length), a)));
+					reporter.report(new ErrorInfoImpl(UNDEFINED_NAME_ERROR, new Segment(a_offset, a_length), a));
 				}
 			}
 		}

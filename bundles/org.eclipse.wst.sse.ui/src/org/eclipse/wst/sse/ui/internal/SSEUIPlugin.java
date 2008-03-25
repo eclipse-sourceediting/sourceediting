@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,9 @@ package org.eclipse.wst.sse.ui.internal;
 
 
 
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.forms.FormColors;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.sse.core.internal.tasks.TaskScanningScheduler;
 import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryRegistry;
@@ -27,6 +30,8 @@ public class SSEUIPlugin extends AbstractUIPlugin {
 	public final static String ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
 
 	static SSEUIPlugin instance = null;
+	
+	private FormToolkit fDialogsFormToolkit;
 
 	public static SSEUIPlugin getDefault() {
 		return instance;
@@ -71,6 +76,16 @@ public class SSEUIPlugin extends AbstractUIPlugin {
 		if (scan == null || !scan.equalsIgnoreCase("off")) { //$NON-NLS-1$
 			TaskScanningScheduler.startup();
 		}
+	}
+	
+	public FormToolkit getDialogsFormToolkit() {
+		if (fDialogsFormToolkit == null) {
+			FormColors colors= new FormColors(Display.getCurrent());
+			colors.setBackground(null);
+			colors.setForeground(null);	
+			fDialogsFormToolkit= new FormToolkit(colors);
+		}
+		return fDialogsFormToolkit;
 	}
 
 	public void stop(BundleContext context) throws Exception {

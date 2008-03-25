@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.sse.core.internal.encoding.CommonCharsetNames;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
+import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 
 /**
  * Sets default values for HTML Core preferences
@@ -60,5 +61,64 @@ public class HTMLCorePreferenceInitializer extends AbstractPreferenceInitializer
 		// this could be made smarter by actually looking up the content
 		// type's valid extensions
 		node.put(HTMLCorePreferenceNames.DEFAULT_EXTENSION, "html"); //$NON-NLS-1$
+		
+		initializeValidationPreferences(node);
+	}
+	
+	/**
+	 * Initializes the default validation preferences
+	 * @param node the Eclipse preference node
+	 */
+	private void initializeValidationPreferences(IEclipsePreferences node) {
+		// Attributes
+		node.putInt(HTMLCorePreferenceNames.ATTRIBUTE_UNDEFINED_NAME, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.ATTRIBUTE_UNDEFINED_VALUE, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.ATTRIBUTE_NAME_MISMATCH, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.ATTRIBUTE_INVALID_NAME, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.ATTRIBUTE_INVALID_VALUE, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.ATTRIBUTE_DUPLICATE, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_MISMATCH, ValidationMessage.ERROR);
+		node.putInt(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_UNCLOSED, ValidationMessage.WARNING);
+		
+		// Elements
+		node.putInt(HTMLCorePreferenceNames.ELEM_UNKNOWN_NAME, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.ELEM_INVALID_NAME, ValidationMessage.ERROR);
+		node.putInt(HTMLCorePreferenceNames.ELEM_START_INVALID_CASE, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.ELEM_END_INVALID_CASE, ValidationMessage.ERROR);
+		node.putInt(HTMLCorePreferenceNames.ELEM_MISSING_START, ValidationMessage.ERROR);
+		node.putInt(HTMLCorePreferenceNames.ELEM_MISSING_END, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.ELEM_UNNECESSARY_END, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.ELEM_INVALID_DIRECTIVE, ValidationMessage.ERROR);
+		node.putInt(HTMLCorePreferenceNames.ELEM_INVALID_CONTENT, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.ELEM_DUPLICATE, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.ELEM_COEXISTENCE, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.ELEM_UNCLOSED_START_TAG, ValidationMessage.ERROR);
+		node.putInt(HTMLCorePreferenceNames.ELEM_UNCLOSED_END_TAG, ValidationMessage.ERROR);
+		node.putInt(HTMLCorePreferenceNames.ELEM_INVALID_EMPTY_TAG, ValidationMessage.WARNING);
+		
+		// DOCTYPE
+		node.putInt(HTMLCorePreferenceNames.DOC_DUPLICATE, ValidationMessage.ERROR);
+		node.putInt(HTMLCorePreferenceNames.DOC_INVALID_CONTENT, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.DOC_DOCTYPE_UNCLOSED, ValidationMessage.ERROR);
+		
+		// Text
+		node.putInt(HTMLCorePreferenceNames.TEXT_INVALID_CONTENT, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.TEXT_INVALID_CHAR, ValidationMessage.WARNING);
+		
+		// Comment
+		node.putInt(HTMLCorePreferenceNames.COMMENT_INVALID_CONTENT, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.COMMENT_UNCLOSED, ValidationMessage.ERROR);
+		
+		// CDATA
+		node.putInt(HTMLCorePreferenceNames.CDATA_INVALID_CONTENT, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.CDATA_UNCLOSED, ValidationMessage.ERROR);
+		
+		// Processing Instructions
+		node.putInt(HTMLCorePreferenceNames.PI_INVALID_CONTENT, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.PI_UNCLOSED, ValidationMessage.ERROR);
+		
+		// Entity Reference
+		node.putInt(HTMLCorePreferenceNames.REF_UNDEFINED, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.REF_INVALID_CONTENT, ValidationMessage.WARNING);
 	}
 }

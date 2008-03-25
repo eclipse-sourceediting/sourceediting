@@ -117,7 +117,7 @@ public class HTMLDocumentContentValidator extends PrimeValidator {
 					// report error (duplicate)
 					Segment errorSeg = FMUtil.getSegment((IDOMNode) html, FMUtil.SEG_START_TAG);
 					if (errorSeg != null)
-						reporter.report(MessageFactory.createMessage(new ErrorInfoImpl(ErrorState.DUPLICATE_ERROR, errorSeg, html)));
+						reporter.report(new ErrorInfoImpl(ErrorState.DUPLICATE_ERROR, errorSeg, html));
 				}
 			}
 		}
@@ -188,7 +188,7 @@ public class HTMLDocumentContentValidator extends PrimeValidator {
 			if (error != ErrorState.NONE_ERROR) {
 				Segment errorSeg = FMUtil.getSegment(child, segType);
 				if (errorSeg != null)
-					reporter.report(MessageFactory.createMessage(new ErrorInfoImpl(error, errorSeg, child)));
+					reporter.report(new ErrorInfoImpl(error, errorSeg, child));
 			}
 		}
 	}
