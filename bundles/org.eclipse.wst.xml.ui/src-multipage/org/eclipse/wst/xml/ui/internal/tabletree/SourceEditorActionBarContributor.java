@@ -86,7 +86,7 @@ public class SourceEditorActionBarContributor extends MultiPageEditorActionBarCo
 	public final void contributeToMenu(IMenuManager menu) {
 		super.contributeToMenu(menu);
 
-		addToMenu(menu);
+		//addToMenu(menu);
 
 		if (extendedContributor != null) {
 			extendedContributor.contributeToMenu(menu);

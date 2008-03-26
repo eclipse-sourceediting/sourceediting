@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.0"?>
+<?eclipse version="3.3"?>
 <plugin>
 
 	<extension-point id="catalogFileType" name="%XML_Catalog_File_Type_Extension_Point.name" schema="schema/catalogFileType.exsd"/>
@@ -260,6 +260,7 @@
 	<!-- =============================================================================== -->
 	<!-- Allow the 'New XML' wizard to be accessed via the 'Generate' menu on a XSD file -->
 	<!-- =============================================================================== -->
+<!--
 	<extension point="org.eclipse.ui.popupMenus">
 		<objectContribution
 			objectClass="org.eclipse.core.resources.IFile"
@@ -280,10 +281,12 @@
 			</action>
 		</objectContribution>
 	</extension>
+-->
 
 	<!-- =============================================================================== -->
 	<!-- Allow the 'New XML' wizard to be accessed via the 'Generate' menu on a DTD file -->
 	<!-- =============================================================================== -->
+<!--	
 	<extension point="org.eclipse.ui.popupMenus">
 		<objectContribution
 			objectClass="org.eclipse.core.resources.IFile"
@@ -304,6 +307,7 @@
 			</action>
 		</objectContribution>
 	</extension>
+-->
 
 	<!-- =============================================================================== -->
 	<!-- Contribute a New->Example... entry for Editing and Validating XML files         -->
@@ -423,7 +427,7 @@
 		</provider>
 	</extension>
 
-
+	<!-- To Do: migrate this to the org.eclipse.ui.menus popup: format -->
 	<extension point="org.eclipse.ui.popupMenus">
 		<viewerContribution
 			targetID="org.eclipse.core.runtime.xml.source.RulerContext"
@@ -473,7 +477,7 @@
 		</objectContribution>
 	</extension>
 
-	
+<!--	
 	<extension point="org.eclipse.ui.editorActions">
 		<editorContribution
 			id="org.eclipse.core.runtime.xml.source.editorActions"
@@ -566,6 +570,8 @@
                id="org.eclipse.ui.texteditor.SelectRulerAction"/>
         </editorContribution>
 	</extension>
+-->
+
 	<extension
 		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
 		<target
@@ -680,4 +686,444 @@
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 			
 	</extension>
+	
+<!--
+   This section contains the new org.eclipse.ui.menus extions points and command handler
+   definitions.
+ -->
+ 
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="menu:sourceMenuId?after=sourceBegin">
+			<command commandId="org.eclipse.wst.sse.ui.toggle.comment"
+			         id="ToggleComment"
+			         style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
+				</visibleWhen>
+			</command>
+			<command commandId="org.eclipse.wst.sse.ui.add.block.comment"
+			         id="AddBlockComment"
+			         style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
+				</visibleWhen>
+			</command>
+			<command commandId="org.eclipse.wst.sse.ui.remove.block.comment"
+			         id="RemoveBlockComment"
+			         style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+
+		<menuContribution locationURI="menu:sourceMenuId?after=shiftBegin">
+			<command commandId="org.eclipse.ui.edit.text.shiftLeft"
+			         id="ShiftLeft"
+			         style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
+				</visibleWhen>
+			</command>
+			<command commandId="org.eclipse.ui.edit.text.shiftRight"
+                     id="ShiftRight"
+                     style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+
+		<menuContribution locationURI="menu:sourceMenuId?after=shiftEnd">
+	        <command
+		           commandId="org.eclipse.wst.sse.ui.cleanup.document"
+		           id="CleanupDocument"
+		           style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+				</visibleWhen>
+		    </command>
+			<command commandId="org.eclipse.wst.sse.ui.format.document" id="FormatDocument" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+				</visibleWhen>
+			</command>
+			<command commandId="org.eclipse.wst.sse.ui.format.active.elements" id="FormatElements" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+		<menuContribution locationURI="menu:org.eclipse.search.menu?after=additions">
+			<command commandId="org.eclipse.wst.sse.ui.search.find.occurrences" id="OccurencesFile" style="push">
+			   <visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+		
+	    <menuContribution locationURI="menu:edit?after=additions">
+	       <command commandId="org.eclipse.ui.edit.text.toggleInsertMode" id="ToggleInsertMode" label="%SmartInsert_label" style="toggle">
+			   <visibleWhen checkEnabled="false">
+				   <reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
+			   </visibleWhen>
+	       </command>
+		</menuContribution>
+		
+       <menuContribution
+           locationURI="menu:org.eclipse.ui.main.menu?before=window">
+        <menu
+              id="org.eclipse.wst.xml.ui.designMenuId"
+              label="%DesignMenu_name">
+           <separator
+                 name="designStart">
+           </separator>
+           <command
+                 commandId="org.eclipse.wst.xml.ui.disable.grammar.constraints"
+                 icon="icons/full/etool16/constrainon.gif"
+                 id="ToggleGrammarConstraints"
+                 style="push">
+                 <visibleWhen checkEnabled="false">
+                    <and>
+                       <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+                       <not>
+                         <reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
+                       </not>
+                    </and>
+                 </visibleWhen>
+           </command>
+           <command
+                 commandId="org.eclipse.wst.xml.ui.reload.dependecies"
+                 icon="icons/full/etool16/rldgrmr.gif"
+                 id="ReloadDependencies"
+                 style="push">
+                 <visibleWhen checkEnabled="false">
+                    <and>
+                       <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+                       <not>
+                         <reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
+                       </not>
+                    </and>
+                 </visibleWhen>
+           </command>
+           <separator
+                 name="expand"
+                 visible="true">
+           </separator>
+           
+           <command
+                 commandId="sed.tabletree.expandAll"
+                 icon="icons/full/etool16/expand_all.gif"
+                 id="ExpandAll"
+                 style="push">
+                 <visibleWhen checkEnabled="false">
+                    <and>
+                       <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+                       <not>
+                         <reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
+                       </not>
+                    </and>
+                 </visibleWhen>
+           </command>
+           <command
+                 commandId="sed.tabletree.collapseAll"
+                 icon="icons/full/etool16/collapse_all.gif"
+                 id="CollapseAll"
+                 style="push">
+                 <visibleWhen checkEnabled="false">
+                    <and>
+                       <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+                       <not>
+                         <reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
+                       </not>
+                    </and>
+                 </visibleWhen>
+           </command>
+           
+           <separator
+                 name="additions"
+                 visible="true">
+           </separator>
+           <separator
+                 name="designEnd"
+                 visible="false">
+           </separator>
+        </menu>
+     </menuContribution>
+     
+     <menuContribution
+           locationURI="popup:sourcePopupMenuId?after=sourceBegin">
+			<command commandId="org.eclipse.wst.sse.ui.toggle.comment" id="ToggleComment" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
+				</visibleWhen>
+			</command>
+			<command commandId="org.eclipse.wst.sse.ui.add.block.comment" id="AddBlockComment" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
+				</visibleWhen>
+			</command>
+			<command commandId="org.eclipse.wst.sse.ui.remove.block.comment" id="RemoveBlockComment" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
+				</visibleWhen>
+			</command>
+			<separator name="format" visible="true"></separator>
+			<command
+		           commandId="org.eclipse.wst.sse.ui.cleanup.document"
+		           id="CleanupDocument"
+		           style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"></reference>
+				</visibleWhen>
+		    </command>
+			<command commandId="org.eclipse.wst.sse.ui.format.document" id="FormatDocument" mnemonic="%Format_mnemonic" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"></reference>
+				</visibleWhen>
+			</command>
+			<command commandId="org.eclipse.wst.sse.ui.format.active.elements" id="FormatElements" mnemonic="%FormatElements_mnemonic" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
+				</visibleWhen>
+			</command>
+     </menuContribution>
+     		
+     <menuContribution
+           locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+        <menu
+              id="generateMenuId"
+              label="%genMenuLabel">
+	        <command
+	              commandId="org.eclipse.wst.sse.ui.generate.xml"
+	              id="GenerateXML"
+	              style="push">
+	           <visibleWhen checkEnabled="false">
+	              <or>
+					<iterate>
+						<adapt
+							type="org.eclipse.core.resources.IFile">
+							<test
+								property="org.eclipse.core.resources.contentTypeId"
+                    			value="org.eclipse.wst.xsd.core.xsdsource">
+							</test>
+						</adapt>
+					</iterate>
+					<iterate>
+						<adapt
+							type="org.eclipse.core.resources.IFile">
+							<test
+								property="org.eclipse.core.resources.contentTypeId"
+                    			value="org.eclipse.wst.dtd.core.dtdsource">
+							</test>
+						</adapt>
+					</iterate>
+				 </or>	
+	           </visibleWhen>
+	        </command>
+        </menu>
+     </menuContribution>
+     
+     <menuContribution
+           locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+        <toolbar
+              id="org.eclipse.wst.xml.ui.design.DesignToolBar">
+           <separator
+                 name="sed.tabletree.separator.1"
+                 visible="true">
+           </separator>
+           <command
+                 commandId="org.eclipse.wst.xml.ui.disable.grammar.constraints"
+                 icon="icons/full/etool16/constrainon.gif"
+                 id="ToggleGrammarConstraints"
+                 style="push"
+                 tooltip="%Constraints_name">
+	           <visibleWhen
+	                 checkEnabled="false">
+	              <reference
+	                    definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition">
+	              </reference>
+	           </visibleWhen>
+           </command>
+           <command
+                 commandId="org.eclipse.wst.xml.ui.reload.dependecies"
+                 icon="icons/full/etool16/rldgrmr.gif"
+                 id="ReloadDependencies"
+                 style="push">
+	           <visibleWhen
+	                 checkEnabled="false">
+	              <reference
+	                    definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition">
+	              </reference>
+	           </visibleWhen>
+           </command>
+           <separator
+                 name="sed.tabletree.separator.2"
+                 visible="true">
+           </separator>
+           <command
+                 commandId="sed.tabletree.expandAll"
+                 icon="icons/full/etool16/expand_all.gif"
+                 id="ExpandAll"
+                 style="push">
+	           <visibleWhen
+	                 checkEnabled="false">
+	              <reference
+	                    definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition">
+	              </reference>
+	           </visibleWhen>
+           </command>
+           <command
+                 commandId="sed.tabletree.collapseAll"
+                 icon="icons/full/etool16/collapse_all.gif"
+                 id="CollapseAll"
+                 style="push">
+	           <visibleWhen
+	                 checkEnabled="false">
+	              <reference
+	                    definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition">
+	              </reference>
+	           </visibleWhen>
+           </command>
+        </toolbar>
+     </menuContribution>
+	</extension>
+	
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.xml.ui.xmlSourceContributions.definition">
+			<with variable="activeEditorId">
+				<equals value="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"></equals>
+			</with>
+		</definition>
+	</extension>
+    <extension
+       point="org.eclipse.ui.handlers">
+       <handler
+             class="org.eclipse.wst.xml.ui.internal.handlers.CleanupdocumentHandler"
+             commandId="org.eclipse.wst.sse.ui.cleanup.document">
+          <activeWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </activeWhen>
+          <enabledWhen>
+             <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </enabledWhen>
+       </handler>
+       <handler
+             class="org.eclipse.wst.xml.ui.internal.handlers.ToggleCommentHandler"
+             commandId="org.eclipse.wst.sse.ui.toggle.comment">
+          <activeWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </activeWhen>
+          <enabledWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </enabledWhen>
+       </handler>
+       <handler
+             class="org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler"
+             commandId="org.eclipse.wst.sse.ui.add.block.comment">
+          <activeWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </activeWhen>
+          <enabledWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </enabledWhen>
+       </handler>
+       <handler
+             class="org.eclipse.wst.xml.ui.internal.handlers.RemoveBlockCommentHandler"
+             commandId="org.eclipse.wst.sse.ui.remove.block.comment">
+          <activeWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </activeWhen>
+          <enabledWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </enabledWhen>
+       </handler>
+       <handler
+             class="org.eclipse.wst.xml.ui.internal.handlers.XMLFindOccurencesHandler"
+             commandId="org.eclipse.wst.sse.ui.search.find.occurrences">
+          <activeWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </activeWhen>
+          <enabledWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </enabledWhen>
+       </handler>
+       <handler
+             class="org.eclipse.wst.xml.ui.internal.handlers.ReloadDependenciesHandler"
+             commandId="org.eclipse.wst.xml.ui.reload.dependecies">
+          <activeWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </activeWhen>
+          <enabledWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </enabledWhen>
+       </handler>
+       <handler
+             class="org.eclipse.wst.xml.ui.internal.handlers.ToggleEditModeHandler"
+             commandId="org.eclipse.wst.xml.ui.disable.grammar.constraints">
+          <activeWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </activeWhen>
+          <enabledWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </enabledWhen>
+       </handler>
+       <handler
+             class="org.eclipse.wst.xml.ui.internal.wizards.NewXMLHandler"
+             commandId="org.eclipse.wst.sse.ui.generate.xml">
+       </handler>
+       <handler
+             class="org.eclipse.wst.xml.ui.internal.handlers.ExpandAllHandler"
+             commandId="sed.tabletree.expandAll">
+             <activeWhen>
+                 <not>
+		            <with variable="activeContexts">
+			           <iterate operator="or">
+			              <equals value="org.eclipse.wst.sse.ui.structuredTextEditorScope"/>
+			           </iterate>
+		            </with>
+                 </not>
+             </activeWhen>
+       </handler>
+       <handler
+             class="org.eclipse.wst.xml.ui.internal.handlers.CollapseAllHandler"
+             commandId="sed.tabletree.collapseAll">
+             <activeWhen>
+                 <not>
+		            <with variable="activeContexts">
+			           <iterate operator="or">
+			              <equals value="org.eclipse.wst.sse.ui.structuredTextEditorScope"/>
+			           </iterate>
+		            </with>
+                 </not>
+             </activeWhen>
+       </handler>
+    </extension>
+    
+    <extension
+       point="org.eclipse.ui.commands">
+	    <command
+	          id="org.eclipse.wst.sse.ui.generate.xml"
+	          name="%_UI_ACTION_CREATE_XML">
+	    </command>
+	    <command
+	          description="%ReloadDependencies_description"
+	          id="org.eclipse.wst.xml.ui.reload.dependecies"
+	          name="%ReloadDependencies_name">
+	    </command>
+	    <command
+	          description="%Constraints_description"
+	          id="org.eclipse.wst.xml.ui.disable.grammar.constraints"
+	          name="%Constraints_name">
+	    </command>
+	    <command
+	          id="sed.tabletree.expandAll"
+	          name="%ExpandAll_name">
+	    </command>
+	    <command
+	          id="sed.tabletree.collapseAll"
+	          name="%CollapseAll_name">
+	    </command>
+	</extension> 
+
 </plugin>

@@ -8,15 +8,17 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     David Carver/STAR - [212330] can't contribute to the XML or any SSE based menu
  *     
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.actions;
+
+//import java.util.ResourceBundle;
 
 import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -24,14 +26,9 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.editors.text.TextEditorActionContributor;
-import org.eclipse.ui.ide.IDEActionFactory;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.ui.texteditor.ITextEditorActionConstants;
-import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.ITextEditorExtension;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 import org.eclipse.wst.sse.ui.internal.ExtendedEditorActionBuilder;
@@ -88,7 +85,7 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 		super();
 
 		ResourceBundle resourceBundle = SSEUIMessages.getResourceBundle();
-
+/*
 		fCommandsSeparator = new Separator();
 
 		// edit commands
@@ -133,21 +130,21 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 
 		fNextAnnotation = new GotoAnnotationAction("Next_annotation", true); //$NON-NLS-1$
 		fNextAnnotation.setActionDefinitionId("org.eclipse.ui.navigate.next"); //$NON-NLS-1$
-
+*/
 		fGotoMatchingBracketAction = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_GOTO_MATCHING_BRACKET + StructuredTextEditorActionConstants.UNDERSCORE);
 		fGotoMatchingBracketAction.setActionDefinitionId(ActionDefinitionIds.GOTO_MATCHING_BRACKET);
 
 		// Read action extensions.
 		ExtendedEditorActionBuilder builder = new ExtendedEditorActionBuilder();
 		extendedContributor = builder.readActionExtensions(getExtensionIDs());
-
+/*
 		fMenuAdditionsGroupMarker = new GroupMarker(StructuredTextEditorActionConstants.GROUP_NAME_MENU_ADDITIONS);
 		fToolbarSeparator = new Separator();
 		fToolbarAdditionsGroupMarker = new GroupMarker(StructuredTextEditorActionConstants.GROUP_NAME_TOOLBAR_ADDITIONS);
 
 		fToggleInsertModeAction = new RetargetTextEditorAction(resourceBundle, "Editor.ToggleInsertMode.", IAction.AS_CHECK_BOX); //$NON-NLS-1$
 		fToggleInsertModeAction.setActionDefinitionId(ITextEditorActionDefinitionIds.TOGGLE_INSERT_MODE);
-
+*/
 		if (_showDebugStatus) {
 			fDebugStatusOffset = new OffsetStatusLineContributionItem(StructuredTextEditorActionConstants.STATUS_CATEGORY_OFFSET, true, 20);
 		}
@@ -155,7 +152,7 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 
 	protected void addToMenu(IMenuManager menu) {
 		// edit commands
-		IMenuManager editMenu = menu.findMenuUsingPath(IWorkbenchActionConstants.M_EDIT);
+/*		IMenuManager editMenu = menu.findMenuUsingPath(IWorkbenchActionConstants.M_EDIT);
 		if (editMenu != null) {
 			editMenu.add(fCommandsSeparator);
 			editMenu.add(fToggleInsertModeAction);
@@ -185,6 +182,7 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 		if (gotoMenu != null) {
 			gotoMenu.add(fGotoMatchingBracketAction);
 		}
+*/
 	}
 
 	protected void addToPopupMenu(IMenuManager menu) {
@@ -198,18 +196,18 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 	}
 
 	protected void addToToolBar(IToolBarManager toolBarManager) {
-		toolBarManager.add(fToolbarSeparator);
+/*		toolBarManager.add(fToolbarSeparator);
 		toolBarManager.add(fToolbarAdditionsGroupMarker);
-	}
+*/	}
 
 	/**
 	 * @see org.eclipse.ui.part.EditorActionBarContributor#contributeToMenu(IMenuManager)
 	 */
 	public void contributeToMenu(IMenuManager menu) {
 		super.contributeToMenu(menu);
-
+/*
 		addToMenu(menu);
-
+*/
 		if (extendedContributor != null) {
 			extendedContributor.contributeToMenu(menu);
 		}
@@ -221,9 +219,9 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 	 * @see org.eclipse.wst.sse.ui.extension.IPopupMenuContributor#contributeToPopupMenu(org.eclipse.jface.action.IMenuManager)
 	 */
 	public void contributeToPopupMenu(IMenuManager menu) {
-
+/*
 		addToPopupMenu(menu);
-
+*/
 		if (extendedContributor != null) {
 			extendedContributor.contributeToPopupMenu(menu);
 		}
@@ -250,8 +248,8 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 	public void contributeToToolBar(IToolBarManager toolBarManager) {
 		super.contributeToToolBar(toolBarManager);
 
-		addToToolBar(toolBarManager);
-
+/*		addToToolBar(toolBarManager);
+*/
 		if (extendedContributor != null) {
 			extendedContributor.contributeToToolBar(toolBarManager);
 		}
@@ -312,7 +310,7 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 
 		ITextEditor textEditor = getTextEditor(activeEditor);
 
-		IActionBars actionBars = getActionBars();
+/*		IActionBars actionBars = getActionBars();
 		if (actionBars != null) {
 			actionBars.setGlobalActionHandler(ITextEditorActionDefinitionIds.GOTO_NEXT_ANNOTATION, fNextAnnotation);
 			actionBars.setGlobalActionHandler(ITextEditorActionDefinitionIds.GOTO_PREVIOUS_ANNOTATION, fPreviousAnnotation);
@@ -344,7 +342,7 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 		fGotoMatchingBracketAction.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_GOTO_MATCHING_BRACKET));
 
 		fToggleInsertModeAction.setAction(getAction(textEditor, ITextEditorActionConstants.TOGGLE_INSERT_MODE));
-
+*/
 		if (extendedContributor != null) {
 			extendedContributor.setActiveEditor(activeEditor);
 		}
@@ -361,18 +359,21 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 	 * @see org.eclipse.wst.sse.ui.ISourceViewerActionBarContributor#setViewerSpecificContributionsEnabled(boolean)
 	 */
 	public void setViewerSpecificContributionsEnabled(boolean enabled) {
-		fShiftRight.setEnabled(enabled);
+/*		fShiftRight.setEnabled(enabled);
 		fShiftLeft.setEnabled(enabled);
 		fNextAnnotation.setEnabled(enabled);
 		fPreviousAnnotation.setEnabled(enabled);
-
+*/
 		/*
 		 * fComment.setEnabled(enabled); fUncomment.setEnabled(enabled);
 		 */
+/*		
 		fToggleComment.setEnabled(enabled);
 		fAddBlockComment.setEnabled(enabled);
 		fRemoveBlockComment.setEnabled(enabled);
+*/		
 		// convert line delimiters are not source viewer-specific
+		
 	}
 
 	/*

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.0"?>
+<?eclipse version="3.3"?>
 <plugin>
 
 	<extension-point
@@ -380,7 +380,8 @@
 			id="org.eclipse.wst.sse.ui.StructuredTextEditor">
 		</editor>
 	</extension>
-	<extension point="org.eclipse.ui.popupMenus">
+	
+<!--	<extension point="org.eclipse.ui.popupMenus">
 		<objectContribution
 			objectClass="org.eclipse.core.resources.IContainer"
 			id="org.eclipse.wst.sse.ui.actions.ContainerSourceActions">
@@ -416,6 +417,8 @@
 			</action>
 		</objectContribution>
    	</extension>
+   	-->
+   <!--
    <extension
          point="org.eclipse.ui.editorActions">
       <editorContribution
@@ -436,7 +439,8 @@
          </action>
       </editorContribution>
    </extension>
-
+   -->
+   
 	<!--================================================================================================-->
 	<!-- contribute a SearchResultViewPage for Occurrences in file                                      -->
 	<!--================================================================================================-->
@@ -460,4 +464,81 @@
 		id="sourcevalidation"
 		name="%Source_Validation_Extension_Point.name"
 		schema="schema/org.eclipse.wst.sse.ui.sourcevalidation.exsd" />
+		
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=edit">
+			<menu id="sourceMenuId" label="%Source"></menu>
+		</menuContribution>
+		<menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=sourceMenuId">
+			<menu id="refactorMenuId" label="%Refactor"></menu>
+		</menuContribution>
+		<menuContribution locationURI="menu:sourceMenuId">
+			<separator name="sourceBegin" visible="false"></separator>
+			<separator name="shiftBegin" visible="true"></separator>
+			<separator name="shiftEnd" visible="true"></separator>
+			<separator name="additions" visible="true"></separator>
+			<separator name="sourceEnd" visible="false"></separator>	
+		</menuContribution>
+		<menuContribution locationURI="popup:org.eclipse.wst.sse.ui.StructuredTextEditor.EditorContext?before=additions">
+		    <menu id="sourcePopupMenuId" label="%Source">
+				<separator name="sourceBegin" visible="false"></separator>
+				<separator name="additions" visible="true"></separator>
+				<separator name="sourceEnd" visible="false"></separator>	
+		    </menu>
+		    <menu id="refactorPopupMenuId" label="%Refactor">
+		    
+		    </menu>
+		</menuContribution>
+     <menuContribution
+           locationURI="popup:org.eclipse.ui.popup.any?after=additions">
+        <menu
+              id="sourceMenuId"
+              label="%Source">
+	        <command
+	              commandId="org.eclipse.wst.sse.ui.format"
+	              id="sourceFormat"
+	              style="push">
+	           <visibleWhen checkEnabled="false">
+	              <or>
+					<iterate>
+						<adapt
+							type="org.eclipse.core.resources.IContainer">
+						</adapt>
+					</iterate>
+					<iterate>
+						<adapt
+							type="org.eclipse.core.resources.IFile">
+						</adapt>
+					</iterate>
+				 </or>	
+	           </visibleWhen>
+	        </command>
+        </menu>
+     </menuContribution>
+	</extension>
+	<extension
+       point="org.eclipse.ui.commands">
+	    <command
+	          id="org.eclipse.wst.sse.ui.format"
+	          name="%command.format.document.name">
+	    </command>
+	</extension>
+	<extension
+       point="org.eclipse.ui.handlers">
+       <handler 
+             class="org.eclipse.wst.sse.ui.internal.handlers.FormatHandler"
+             commandId="org.eclipse.wst.sse.ui.format">
+       </handler>
+	</extension>
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.sse.ui.sseActiveContext.definition">
+            <with variable="activeContexts">
+	           <iterate operator="or">
+	              <equals value="org.eclipse.wst.sse.ui.structuredTextEditorScope"/>
+	           </iterate>
+            </with>
+		</definition>
+	</extension>
+	
 </plugin>
+

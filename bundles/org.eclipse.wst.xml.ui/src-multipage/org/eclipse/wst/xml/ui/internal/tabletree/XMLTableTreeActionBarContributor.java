@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver - bug 212330 - migrate to org.eclipse.ui.menus extension point
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.tabletree;
 
@@ -14,14 +15,14 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionManager;
 import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
+//import org.eclipse.jface.action.IToolBarManager;
+//import org.eclipse.jface.action.MenuManager;
+//import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IWorkbenchActionConstants;
+//import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -62,7 +63,7 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 	}
 
 	protected void removeContributions(IContributionManager manager) {
-		try {
+/*		try {
 			doRemove(manager, DESIGN_VIEWER_SEPARATOR_1_ID);
 			doRemove(manager, DESIGN_VIEWER_SEPARATOR_2_ID);
 			doRemove(manager, VALIDATE_XML_ID);
@@ -73,26 +74,27 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 		}
 		catch (Exception e) {
 		}
+*/		
 	}
 
 	protected void doRemove(IContributionManager manager, String id) {
-		try {
+/*		try {
 			if (manager.find(id) != null) {
 				manager.remove(id);
 			}
 		}
 		catch (Exception e) {
 		}
-	}
+*/	}
 
 	public void init(IActionBars bars, IWorkbenchPage page) {
 		init(bars);
 	}
 
 	public void init(IActionBars bars) {
-		IToolBarManager tbm = bars.getToolBarManager();
+//		IToolBarManager tbm = bars.getToolBarManager();
 
-		IMenuManager xmlMenu = bars.getMenuManager().findMenuUsingPath("org.eclipse.core.runtime.xml.design.xmlmenu"); //$NON-NLS-1$
+/*		IMenuManager xmlMenu = bars.getMenuManager().findMenuUsingPath("org.eclipse.core.runtime.xml.design.xmlmenu"); //$NON-NLS-1$
 
 		if (xmlMenu == null) {
 			xmlMenu = new MenuManager(XMLEditorMessages.XMLTableTreeActionBarContributor_0, "org.eclipse.core.runtime.xml.design.xmlmenu"); //$NON-NLS-1$
@@ -106,26 +108,26 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 		}
 
 		tbm.add(new Separator("DESIGN_VIEWER_SEPARATOR_1_ID")); //$NON-NLS-1$
-
+*/
 		// ToggleEditModeAction
 		//           
-		toggleAction = new ToggleEditModeAction();
+/*		toggleAction = new ToggleEditModeAction();
 		toggleAction.setId(TOGGLE_EDIT_MODE_ID);
 		xmlMenu.add(toggleAction);
 		tbm.add(toggleAction);
-
+*/
 		// ReloadGrammarAction
 		//
-		reloadGrammarAction = new ReloadGrammarAction();
+/*		reloadGrammarAction = new ReloadGrammarAction();
 		reloadGrammarAction.setId(RELOAD_GRAMMAR_ID);
 		tbm.add(reloadGrammarAction);
 		xmlMenu.add(reloadGrammarAction);
 
 		xmlMenu.add(new Separator());
-
+*/
 		// ExpandCollapseAction
 		//
-		xmlMenuExpandAction = new ViewerExpandCollapseAction(true);
+/*		xmlMenuExpandAction = new ViewerExpandCollapseAction(true);
 		xmlMenuExpandAction.setId(EXPAND_ALL_ID);
 		xmlMenuExpandAction.setText(XMLEditorMessages.XMLTableTreeActionBarContributor_1);
 		xmlMenu.add(xmlMenuExpandAction);
@@ -135,6 +137,7 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 		xmlMenuCollapseAction.setId(EXPAND_ALL_ID);
 		xmlMenuCollapseAction.setText(XMLEditorMessages.XMLTableTreeActionBarContributor_2);
 		xmlMenu.add(xmlMenuCollapseAction);
+*/		
 	}
 
 	protected void addActionWithId(IMenuManager menuManager, Action action, String id) {
@@ -143,7 +146,7 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 	}
 
 	public void initViewerSpecificContributions(IActionBars bars) {
-		IToolBarManager tbm = bars.getToolBarManager();
+/*		IToolBarManager tbm = bars.getToolBarManager();
 		tbm.add(new Separator(DESIGN_VIEWER_SEPARATOR_2_ID));
 
 		expandAction = new ViewerExpandCollapseAction(true);
@@ -153,10 +156,11 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 		collapseAction = new ViewerExpandCollapseAction(false);
 		collapseAction.setId(COLLAPSE_ALL_ID);
 		tbm.add(collapseAction);
+*/		
 	}
 
 	public void setViewerSpecificContributionsEnabled(boolean enabled) {
-		if (expandAction != null) {
+/*		if (expandAction != null) {
 			expandAction.setEnabled(enabled);
 			xmlMenuExpandAction.setEnabled(enabled);
 		}
@@ -165,13 +169,14 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 			collapseAction.setEnabled(enabled);
 			xmlMenuCollapseAction.setEnabled(enabled);
 		}
+*/		
 	}
 
 	public void setActiveEditor(IEditorPart targetEditor) {
 		editorPart = targetEditor;
 
-		IStructuredModel model = getModelForEditorPart(targetEditor);
-		reloadGrammarAction.setModel(model);
+//		IStructuredModel model = getModelForEditorPart(targetEditor);
+/*		reloadGrammarAction.setModel(model);
 		toggleAction.setModelQuery(ModelQueryUtil.getModelQuery(model));
 
 		XMLTableTreeViewer tableTreeViewer = getTableTreeViewerForEditorPart(editorPart);
@@ -182,7 +187,7 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 			xmlMenuExpandAction.setViewer(tableTreeViewer);
 			xmlMenuCollapseAction.setViewer(tableTreeViewer);
 		}
-
+*/
 		if (editorPart instanceof XMLMultiPageEditorPart) {
 			IWorkbenchPartSite site = editorPart.getSite();
 			if (site instanceof IEditorSite) {

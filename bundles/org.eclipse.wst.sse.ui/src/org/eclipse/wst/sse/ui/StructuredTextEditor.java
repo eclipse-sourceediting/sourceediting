@@ -105,6 +105,7 @@ import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.ITextEditorHelpContextIds;
 import org.eclipse.ui.editors.text.TextEditor;
@@ -1145,16 +1146,16 @@ public class StructuredTextEditor extends TextEditor {
 	protected void addContextMenuActions(IMenuManager menu) {
 		// Only offer actions that affect the text if the viewer allows
 		// modification and supports any of these operations
-		IAction formatAll = getAction(StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_DOCUMENT);
-		IAction formatSelection = getAction(StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_ACTIVE_ELEMENTS);
-		IAction cleanupAll = getAction(StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT);
-		boolean enableFormatMenu = (formatAll != null && formatAll.isEnabled()) || (formatSelection != null && formatSelection.isEnabled()) || (cleanupAll != null && cleanupAll.isEnabled());
-
-		if (getSourceViewer().isEditable() && enableFormatMenu) {
-			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_DOCUMENT);
-			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_ACTIVE_ELEMENTS);
-			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT);
-		}
+//		IAction formatAll = getAction(StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_DOCUMENT);
+//		IAction formatSelection = getAction(StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_ACTIVE_ELEMENTS);
+//		IAction cleanupAll = getAction(StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT);
+//		boolean enableFormatMenu = (formatAll != null && formatAll.isEnabled()) || (formatSelection != null && formatSelection.isEnabled()) || (cleanupAll != null && cleanupAll.isEnabled());
+//
+//		if (getSourceViewer().isEditable() && enableFormatMenu) {
+//			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_DOCUMENT);
+//			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_ACTIVE_ELEMENTS);
+//			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT);
+//		}
 
 		// Some Design editors (DTD) rely on this view for their own uses
 		menu.appendToGroup(IWorkbenchActionConstants.GROUP_ADD, fShowPropertiesAction);
@@ -1466,6 +1467,9 @@ public class StructuredTextEditor extends TextEditor {
 	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
 	public void createPartControl(Composite parent) {
+		IContextService contextService = (IContextService) getSite().getService(IContextService.class);
+		contextService.activateContext("org.eclipse.wst.sse.ui.structuredTextEditorScope");
+		
 		if (getSourceViewerConfiguration() == null) {
 			ConfigurationAndTarget cat = createSourceViewerConfiguration();
 			fViewerConfigurationTargetId = cat.getTargetId();
