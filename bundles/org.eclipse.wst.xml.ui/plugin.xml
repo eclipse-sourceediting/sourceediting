@@ -396,7 +396,7 @@
    </extension>
    <extension point="org.eclipse.ui.editors.markerAnnotationSpecification">
       <specification
-      		includeOnPreferencePage="false"
+      		includeOnPreferencePage="true"
             colorPreferenceValue="212,212,212"
             annotationType="org.eclipse.wst.xml.ui.matching.tag"
             colorPreferenceKey="matchingTagIndicationColor"
