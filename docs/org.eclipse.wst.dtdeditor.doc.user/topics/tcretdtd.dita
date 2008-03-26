@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<?Pub Inc?>
 <task id="tcretdtd" xml:lang="en-us">
 <title>Creating DTDs</title>
 <titlealts>
@@ -12,18 +14,18 @@ it manually, adding declarations that define elements, attributes, entities,
 and notations, and how they can be used for any XML files that reference the
 DTD file.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>DTD<indexterm>creating</indexterm></indexterm>
-</keywords>
+<keywords><indexterm>DTD<indexterm>creating</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context><p></p><p>The following instructions were written for the Resource
-perspective, but they will also work in many other perspectives.</p><p>Follow
-these steps to create a new DTD:</p></context>
+perspective, but they will also work in many other perspectives.</p><p>To
+create a new DTD, complete the following steps:</p></context>
 <steps>
-<step><cmd>If necessary, create a project to contain the DTD.</cmd></step>
-<step><cmd>In the workbench, select <menucascade><uicontrol>File</uicontrol>
-<uicontrol>New</uicontrol><uicontrol>Other</uicontrol><uicontrol>XML</uicontrol>
-<uicontrol> DTD</uicontrol></menucascade> and click <uicontrol>Next</uicontrol>. </cmd>
+<step><cmd>Create a project to contain the DTD if needed<?Pub Caret?>.</cmd>
+</step>
+<step><cmd>In the workbench, click <menucascade><uicontrol>File</uicontrol>
+<uicontrol>New</uicontrol><uicontrol>Other</uicontrol></menucascade> and select <menucascade>
+<uicontrol>XML</uicontrol><uicontrol> DTD</uicontrol></menucascade>. Click <uicontrol>Next</uicontrol>. </cmd>
 </step>
 <step><cmd>Select the project or folder that will contain the DTD.</cmd></step>
 <step><cmd>In the <uicontrol>File name</uicontrol> field, type the name of
@@ -31,9 +33,9 @@ the DTD, for example <userinput>MyDTD.dtd</userinput>.</cmd><info>The name
 of your DTD file must end with the extension <userinput>.dtd</userinput></info>
 </step>
 <step><cmd>Click <uicontrol>Next</uicontrol>.</cmd></step>
-<step><cmd>You can use a DTD template as the basis for your new DTD file.
-To do so, click the <uicontrol>Use DTD Template</uicontrol> check box, and
-select the template you want to use.</cmd></step>
+<step importance="optional"><cmd>You can use a DTD template as the basis for
+your new DTD file. To do so, click the <uicontrol>Use DTD Template</uicontrol> check
+box, and select the template you want to use.</cmd></step>
 <step><cmd>Click <uicontrol>Finish</uicontrol>.</cmd></step>
 </steps>
 <result><p>The DTD appears in the Navigator view and automatically, by default,
@@ -43,3 +45,4 @@ file, and want to later re-open it in the DTD editor, double-click it in the
 Navigator view.</p></result>
 </taskbody>
 </task>
+<?Pub *0000002420?>

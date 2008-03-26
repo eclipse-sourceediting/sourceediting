@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="twmacro" xml:lang="en-us">
 <title>Working with DTD templates</title>
 <titlealts>
@@ -12,17 +13,16 @@ a certain piece of code you want to reuse several times, and you do not want
 to write it out every time.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>DTD<indexterm>creating templates</indexterm></indexterm>
-<indexterm>templates<indexterm>DTD</indexterm></indexterm>
-</keywords>
+<indexterm>templates<indexterm>DTD</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
-<context><p>To create a new DTD template follow these steps:</p></context>
+<context><p>To create a new DTD template, complete the following steps:</p></context>
 <steps>
 <step><cmd>Click <menucascade><uicontrol>Window</uicontrol><uicontrol>Preferences</uicontrol>
-<uicontrol>Web and XML</uicontrol><uicontrol>DTD Files</uicontrol><uicontrol>DTD
-Templates</uicontrol></menucascade>.</cmd></step>
-<step><cmd>Click <uicontrol>New</uicontrol> if you want to create a completely
-new template.</cmd></step>
+<uicontrol>Web and XML</uicontrol><uicontrol>DTD Files</uicontrol><uicontrol>Templates</uicontrol>
+</menucascade>.</cmd></step>
+<step><cmd>Click <uicontrol>New</uicontrol> in the templates prefereces.</cmd>
+</step>
 <step><cmd>Supply a new template <uicontrol>Name</uicontrol> and <uicontrol>Description</uicontrol>.</cmd>
 </step>
 <step><cmd>Specify the <uicontrol>Context</uicontrol> for the template.</cmd>
@@ -31,16 +31,17 @@ list when content assist is requested. </info></step>
 <step><cmd>Specify the <uicontrol>Pattern</uicontrol> for your template using
 the appropriate tags, attributes, or attribute values to be inserted by content
 assist.</cmd></step>
-<step><cmd>If you want to insert a variable, click the <uicontrol>Insert Variable</uicontrol> button
-and select the variable to be inserted. </cmd><info>For example, the <b>date</b> variable
-indicates the current date will be inserted. </info></step>
+<step importance="optional"><cmd>To insert a variable, click the <uicontrol>Insert
+Variable</uicontrol> button and select a variable. </cmd><info>For example,
+the <uicontrol>date</uicontrol> variable indicates the current date will be
+inserted. </info></step>
 <step><cmd>Click <uicontrol>Apply</uicontrol> and then <uicontrol>OK</uicontrol> to
 save your changes.</cmd></step>
 </steps>
 <postreq>You can edit, remove, import, or export a template by using the same
 preferences page. <p>If you have a template that you do not want to remove,
 but you no longer want the template to appear in the DTD templates list when
-you create a file, go to the<b> DTD Templates</b> preferences page and clear
-its check box.</p></postreq>
+you create a file, clear its checkbox in the templates table<?Pub Caret?>.</p></postreq>
 </taskbody>
 </task>
+<?Pub *0000002424?>

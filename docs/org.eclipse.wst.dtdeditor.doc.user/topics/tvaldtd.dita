@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="tvaldtd" xml:lang="en-us">
 <title>Validating DTDs</title>
 <titlealts>
@@ -9,30 +10,25 @@
 <shortdesc>Validating a DTD file lets you verify that it is well formed and
 does not contain any errors.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>DTD<indexterm>validating</indexterm></indexterm>
-</keywords>
+<keywords><indexterm>DTD<indexterm>validating</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context><p>The following instructions were written for the Resource perspective,
 but they will also work in many other perspectives.&nbsp;</p><p>To validate
-a DTD, follow these steps:</p></context>
-<steps>
-<step><cmd>In the Navigator view, right-click the DTD and click <menucascade>
-<uicontrol>Validate DTD File</uicontrol></menucascade>.</cmd></step>
-</steps>
-<result>A dialog opens, indicating if the DTD file was successfully validated
-or not. If the file is invalid, any errors will appear in the Problems view. &nbsp;<p><b>Note</b>:
-If you receive an error message indicating that the Problems view is full,
-you can increase the number of error messages allowed by selecting <menucascade>
-<uicontrol>Properties</uicontrol><uicontrol>Validation</uicontrol></menucascade> from
-the project's pop-up menu and specifying the maximum number of error messages
-allowed. You might have to select the <uicontrol>Override validation preferences</uicontrol> check
-box in order to enable the <uicontrol>Maximum number of validation messages</uicontrol> field</p><p>You
-can set up project's properties so that different types of project resources
-are automatically validated when you save them. From a project's pop-up menu
-select  <uicontrol>Properties</uicontrol>, then select <uicontrol>Validation</uicontrol>.
-Any validators you can run against your&nbsp;project will be listed in the
-Validation page.&nbsp;</p></result>
+a DTD, right-click the DTD in the Navigator view and click <menucascade><uicontrol>Validate
+DTD File</uicontrol></menucascade>. A dialog opens, indicating if the DTD
+file was successfully validated or not. If the file is invalid, any errors
+will appear in the Problems view. &nbsp;</p></context>
+<result><note>If you receive an error message indicating that the Problems
+view is full, you can increase the number of error messages allowed in the
+view. Click <menucascade><uicontrol>Window</uicontrol><uicontrol>Preferences</uicontrol>
+</menucascade> and select <menucascade><uicontrol>General</uicontrol><uicontrol>Markers</uicontrol>
+</menucascade>. On this preferences page you can increase or decrease the
+number of visible items in the problems view. </note><p>You can set up a project's
+properties so that different types of project resources are automatically
+validated when you save them. Right click on the project, click <uicontrol>Properties</uicontrol>,
+and select <uicontrol>Validation</uicontrol>. Any validators you can run against
+your&nbsp;project<?Pub Caret?> will be listed in the Validation page.&nbsp;</p></result>
 </taskbody>
 <related-links>
 <link href="../../org.eclipse.jst.j2ee.doc.user/topics/tjval.dita" scope="peer">
@@ -40,3 +36,4 @@ Validation page.&nbsp;</p></result>
 </link>
 </related-links>
 </task>
+<?Pub *0000002030?>
