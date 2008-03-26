@@ -536,11 +536,14 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
     RootEditPart root = new RootEditPart();
     ZoomManager zoomManager = root.getZoomManager();
     
-    List zoomLevels = new ArrayList(3);
-    zoomLevels.add(ZoomManager.FIT_ALL);
-    zoomLevels.add(ZoomManager.FIT_WIDTH);
-    zoomLevels.add(ZoomManager.FIT_HEIGHT);
-    zoomManager.setZoomLevelContributions(zoomLevels);
+    List zoomLevelContributions = new ArrayList(3);
+    zoomLevelContributions.add(ZoomManager.FIT_ALL);
+    zoomLevelContributions.add(ZoomManager.FIT_WIDTH);
+    zoomLevelContributions.add(ZoomManager.FIT_HEIGHT);
+    zoomManager.setZoomLevelContributions(zoomLevelContributions);
+
+    double[] zoomLevels = {.10, .25, .5, .75, 1.0, 1.25, 1.5, 2.0, 2.5, 3, 4, 5};
+    zoomManager.setZoomLevels(zoomLevels);
 
     IAction zoomIn = new ZoomInAction(zoomManager);
     IAction zoomOut = new ZoomOutAction(zoomManager);
