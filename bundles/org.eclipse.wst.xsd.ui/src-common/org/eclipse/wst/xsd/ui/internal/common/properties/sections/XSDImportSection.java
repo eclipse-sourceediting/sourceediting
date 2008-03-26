@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,6 +40,7 @@ import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.wst.xsd.ui.internal.wizards.XSDSelectIncludeFileWizard;
 import org.eclipse.xsd.XSDImport;
 import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.impl.XSDImportImpl;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 
@@ -353,6 +354,18 @@ public class XSDImportSection extends SchemaLocationSection
       {
         prefixText.setText("");
         namespaceText.setText("");
+      }
+      
+      // See https://bugs.eclipse.org/bugs/show_bug.cgi?id=155885
+      // Need to import otherwise the external schema is never
+      // resolved.  One problem is that the schema location is still null,
+      // so the set types dialog will show types that belong to that schema
+      // with a null schema location.  This should load resource 
+      // into the resource set
+      if (input instanceof XSDImportImpl)  // redundant
+      {
+        XSDImportImpl xsdImportImpl = (XSDImportImpl) input;
+        xsdImportImpl.importSchema();
       }
     }
     refresh();
