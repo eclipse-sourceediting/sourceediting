@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,5 +38,9 @@
 <template name="%Templates.jspvariabledirective.name" description="%Templates.jspvariabledirective.desc" id="org.eclipse.jst.jsp.ui.templates.jspvariabledirective" context="jsp_tag" enabled="true">%Templates.jspvariabledirective.content</template>
 
 <template name="%Templates.jspattributedirective.name" description="%Templates.jspattributedirective.desc" id="org.eclipse.jst.jsp.ui.templates.jspattributedirective" context="jsp_tag" enabled="true">%Templates.jspattributedirective.content</template>
+
+<template name="%Templates.simpletag.name" description="%Templates.simpletag.desc" id="org.eclipse.jst.jsp.ui.templates.simpletag" context="tag_new" enabled="true">%Templates.simpletag.content</template>
+
+<template name="%Templates.simpletagx.name" description="%Templates.simpletagx.desc" id="org.eclipse.jst.jsp.ui.templates.simpletagx" context="tag_new" enabled="true">%Templates.simpletagx.content</template>
 
 </templates>

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -62,6 +62,9 @@ public class JSPUIMessages extends NLS {
 	public static String _UI_WIZARD_NEW_TITLE;
 	public static String _UI_WIZARD_NEW_HEADING;
 	public static String _UI_WIZARD_NEW_DESCRIPTION;
+	public static String _UI_WIZARD_TAG_NEW_TITLE;
+	public static String _UI_WIZARD_TAG_NEW_HEADING;
+	public static String _UI_WIZARD_TAG_NEW_DESCRIPTION;
 	public static String _ERROR_FILENAME_MUST_END_JSP;
 	public static String _WARNING_FILE_MUST_BE_INSIDE_JAVA_PROJECT;
 	public static String _WARNING_FOLDER_MUST_BE_INSIDE_WEB_CONTENT;
@@ -73,6 +76,13 @@ public class JSPUIMessages extends NLS {
 	public static String NewJSPTemplatesWizardPage_4;
 	public static String NewJSPTemplatesWizardPage_5;
 	public static String NewJSPTemplatesWizardPage_6;
+	public static String NewTagTemplatesWizardPage_0;
+	public static String NewTagTemplatesWizardPage_1;
+	public static String NewTagTemplatesWizardPage_2;
+	public static String NewTagTemplatesWizardPage_3;
+	public static String NewTagTemplatesWizardPage_4;
+	public static String NewTagTemplatesWizardPage_5;
+	public static String NewTagTemplatesWizardPage_6;
 	public static String ToggleComment_label; // resource bundle
 	public static String ToggleComment_tooltip; // resource bundle
 	public static String ToggleComment_description; // resource bundle
@@ -113,4 +123,47 @@ public class JSPUIMessages extends NLS {
 	public static String SyntaxColoringPage_5;
 	public static String SyntaxColoringPage_6;
 	public static String _UI_STRUCTURED_TEXT_EDITOR_PREFS_LINK;
+	public static String JSPValidationPreferencePage_0;
+
+	// below are the strings for the validation page
+	public static String Validation_description;
+	public static String Validation_Warning;
+	public static String Validation_Error;
+	public static String Validation_Ignore;
+
+	public static String VALIDATION_HEADER_DIRECTIVE;
+	public static String VALIDATION_DIRECTIVE_TAGLIB_DUPLICATE_PREFIXES_DIFFERENT_URIS;
+	public static String VALIDATION_DIRECTIVE_TAGLIB_DUPLICATE_PREFIXES_SAME_URIS;
+	public static String VALIDATION_DIRECTIVE_TAGLIB_MISSING_PREFIX;
+	public static String VALIDATION_DIRECTIVE_TAGLIB_MISSING_URI_OR_TAGDIR;
+	public static String VALIDATION_DIRECTIVE_TAGLIB_UNRESOLVABLE_URI_OR_TAGDIR;
+	public static String VALIDATION_DIRECTIVE_PAGE_SUPERCLASS_NOT_FOUND;
+	public static String VALIDATION_DIRECTIVE_INCLUDE_NO_FILE_SPECIFIED;
+	public static String VALIDATION_DIRECTIVE_INCLUDE_FILE_NOT_FOUND;
+	
+	public static String VALIDATION_HEADER_JAVA;
+	public static String VALIDATION_JAVA_LOCAL_VARIABLE_NEVER_USED;
+	public static String VALIDATION_JAVA_ARGUMENT_IS_NEVER_USED;
+	public static String VALIDATION_JAVA_NULL_LOCAL_VARIABLE_REFERENCE;
+	public static String VALIDATION_JAVA_POTENTIAL_NULL_LOCAL_VARIABLE_REFERENCE;
+	public static String VALIDATION_JAVA_UNUSED_IMPORT;
+
+	public static String VALIDATION_HEADER_EL;
+	public static String VALIDATION_EL_SYNTAX;
+	public static String VALIDATION_EL_LEXER;
+
+	public static String VALIDATION_HEADER_CUSTOM_ACTIONS;
+	public static String VALIDATION_ACTIONS_SEVERITY_MISSING_REQUIRED_ATTRIBUTE;
+	public static String VALIDATION_ACTIONS_SEVERITY_UNKNOWN_ATTRIBUTE;
+	public static String VALIDATION_ACTIONS_SEVERITY_NON_EMPTY_INLINE_TAG;
+	public static String VALIDATION_TRANSLATION_TEI_VALIDATION_MESSAGE;
+	public static String VALIDATION_TRANSLATION_TEI_CLASS_NOT_FOUND;
+	public static String VALIDATION_TRANSLATION_TEI_CLASS_NOT_INSTANTIATED;
+	public static String VALIDATION_TRANSLATION_TEI_CLASS_RUNTIME_EXCEPTION;
+	public static String VALIDATION_TRANSLATION_TAG_HANDLER_CLASS_NOT_FOUND;
+
+	public static String VALIDATION_HEADER_STANDARD_ACTIONS;
+	public static String VALIDATION_TRANSLATION_USEBEAN_INVALID_ID;
+	public static String VALIDATION_TRANSLATION_USBEAN_MISSING_TYPE_INFO;
+	public static String VALIDATION_TRANSLATION_USEBEAN_AMBIGUOUS_TYPE_INFO;
 }

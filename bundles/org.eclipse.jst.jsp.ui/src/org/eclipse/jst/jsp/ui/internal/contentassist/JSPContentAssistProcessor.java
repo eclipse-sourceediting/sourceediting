@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -177,7 +177,12 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 	}
 
 	protected void addEmptyDocumentProposals(ContentAssistRequest contentAssistRequest) {
-		addTemplates(contentAssistRequest, TemplateContextTypeIdsJSP.NEW);
+		if (ContentTypeIdForJSP.ContentTypeID_JSPTAG.equals(((IDOMNode) contentAssistRequest.getNode()).getModel().getContentTypeIdentifier())) {
+			addTemplates(contentAssistRequest, TemplateContextTypeIdsJSP.NEW_TAG);
+		}
+		else {
+			addTemplates(contentAssistRequest, TemplateContextTypeIdsJSP.NEW);
+		}
 
 		super.addEmptyDocumentProposals(contentAssistRequest);
 		addTagInsertionProposals(contentAssistRequest, 0);

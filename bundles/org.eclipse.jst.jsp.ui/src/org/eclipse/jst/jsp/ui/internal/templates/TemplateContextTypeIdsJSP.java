@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,8 @@ public class TemplateContextTypeIdsJSP {
 	public static final String NEW = getNew();
 
 	public static final String TAG = getTag();
+
+	public static final String NEW_TAG = "tag_new";
 
 	private static String getAll() {
 		return getPrefix() + "_all"; //$NON-NLS-1$

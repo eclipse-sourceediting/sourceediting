@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,4 +45,5 @@ public class JSPEditorPluginImages {
     public static final String LOCAL_VARIABLE_OBJ = "icons/full/obj16/localvariable_obj.gif"; //$NON-NLS-1$
     
     public static final String IMG_OBJ_WIZBAN_NEWJSPFILE = "icons/full/wizban/newjspfile_wiz.png"; //$NON-NLS-1$
+    public static final String IMG_OBJ_WIZBAN_NEWTAGFILE = "icons/full/wizban/newjspfile_wiz.png"; //$NON-NLS-1$
 }
