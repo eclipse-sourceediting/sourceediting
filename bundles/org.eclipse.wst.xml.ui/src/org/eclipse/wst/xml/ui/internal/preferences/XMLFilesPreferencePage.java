@@ -22,15 +22,20 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
@@ -43,8 +48,23 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 
 	private Combo fDefaultSuffix = null;
 	private List fValidExtensions = null;
-	private Button fWarnNoGrammar = null;
+	private Combo fIndicateNoGrammar = null;
 	private Button fUseXinclude = null;
+
+	/**
+	 * @param parent 
+	 * @return
+	 */
+	private Combo createCombo(Composite parent, String[] items) {
+		Combo combo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
+		combo.setItems(items);
+
+		//GridData
+		GridData data = new GridData(SWT.FILL, SWT.CENTER, true, true);
+		combo.setLayoutData(data);
+
+		return combo;
+	}
 
 	protected Control createContents(Composite parent) {
 		Composite composite = (Composite) super.createContents(parent);
@@ -77,15 +97,30 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 	}
 
 	protected void createContentsForValidatingGroup(Composite parent) {
-		Group validatingGroup = createGroup(parent, 1);
+		Group validatingGroup = createGroup(parent, 2);
+		((GridLayout) validatingGroup.getLayout()).makeColumnsEqualWidth = false;
 		validatingGroup.setText(XMLUIMessages.Validating_files);
 
-		if (fWarnNoGrammar == null) {
-			fWarnNoGrammar = createCheckBox(validatingGroup, XMLUIMessages.Warn_no_grammar_specified);
+		if (fIndicateNoGrammar == null) {
+			createTextLabel(validatingGroup, XMLUIMessages.Indicate_no_grammar_specified);
+			fIndicateNoGrammar = createCombo(validatingGroup, StringUtils.unpack(XMLUIMessages.Indicate_no_grammar_specified_severities));
 		}
 		if (fUseXinclude == null) {
 			fUseXinclude = createCheckBox(validatingGroup, XMLUIMessages.Use_XInclude);
 		}
+		
+		new Label(validatingGroup, SWT.NONE).setLayoutData(new GridData());
+	}
+
+	private Text createTextLabel(Composite parent, String text) {
+		Text label = new Text(parent, SWT.LEFT | SWT.READ_ONLY);
+		label.setText(text);
+
+		// GridData
+		GridData data = new GridData(SWT.FILL, SWT.CENTER, false, true);
+		label.setLayoutData(data);
+
+		return label;
 	}
 
 	public void dispose() {
@@ -143,11 +178,12 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 	}
 
 	protected void initializeValuesForValidatingGroup() {
-		boolean warnNoGrammarButtonSelected = getModelPreferences().getBoolean(XMLCorePreferenceNames.WARN_NO_GRAMMAR);
+		int indicateNoGrammarButtonSelected = getModelPreferences().getInt(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR);
 		boolean useXIncludeButtonSelected = getModelPreferences().getBoolean(XMLCorePreferenceNames.USE_XINCLUDE);
 
-		if (fWarnNoGrammar != null) {
-			fWarnNoGrammar.setSelection(warnNoGrammarButtonSelected);
+		if (fIndicateNoGrammar != null) {
+			fIndicateNoGrammar.setSelection(new Point(indicateNoGrammarButtonSelected, 2 - indicateNoGrammarButtonSelected));
+			fIndicateNoGrammar.setText(StringUtils.unpack(XMLUIMessages.Indicate_no_grammar_specified_severities)[indicateNoGrammarButtonSelected]);
 		}
 		if (fUseXinclude != null) {
 			fUseXinclude.setSelection(useXIncludeButtonSelected);
@@ -172,11 +208,12 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 	}
 
 	protected void performDefaultsForValidatingGroup() {
-		boolean warnNoGrammarButtonSelected = getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.WARN_NO_GRAMMAR);
+		int indicateNoGrammarButtonSelected = getModelPreferences().getDefaultInt(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR);
 		boolean useXIncludeButtonSelected = getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.USE_XINCLUDE);
 		
-		if (fWarnNoGrammar != null) {
-			fWarnNoGrammar.setSelection(warnNoGrammarButtonSelected);
+		if (fIndicateNoGrammar != null) {
+			fIndicateNoGrammar.setSelection(new Point(indicateNoGrammarButtonSelected, 2 - indicateNoGrammarButtonSelected));
+			fIndicateNoGrammar.setText(StringUtils.unpack(XMLUIMessages.Indicate_no_grammar_specified_severities)[indicateNoGrammarButtonSelected]);
 		}
 		if (fUseXinclude != null) {
 			fUseXinclude.setSelection(useXIncludeButtonSelected);
@@ -204,9 +241,9 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 	}
 
 	protected void storeValuesForValidatingGroup() {
-		if (fWarnNoGrammar != null) {
-			boolean warnNoGrammarButtonSelected = fWarnNoGrammar.getSelection();
-			getModelPreferences().setValue(XMLCorePreferenceNames.WARN_NO_GRAMMAR, warnNoGrammarButtonSelected);
+		if (fIndicateNoGrammar != null) {
+			int warnNoGrammarButtonSelected = 2 - fIndicateNoGrammar.getSelectionIndex();
+			getModelPreferences().setValue(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, warnNoGrammarButtonSelected);
 		}
 		if (fUseXinclude != null) {
 			boolean useXIncludeButtonSelected = fUseXinclude.getSelection();

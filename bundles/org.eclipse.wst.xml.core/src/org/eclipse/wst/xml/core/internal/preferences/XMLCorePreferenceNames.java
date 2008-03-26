@@ -161,9 +161,19 @@ public class XMLCorePreferenceNames {
 	 * Value is of type <code>boolean</code>.<br />
 	 * Possible values: {TRUE, FALSE}
 	 * </p>
-	 * 
+	 * @deprecated
 	 */
 	public static final String WARN_NO_GRAMMAR = "warnNoGrammar";//$NON-NLS-1$
+	
+	/**
+	 * Indicates whether or not a message should be produced when validating a
+	 * file that specifies not grammar.
+	 * <p>
+	 * Value is of type <code>integer</code>.<br />
+	 * Possible values: {0, 1, 2} (none, warning, error)
+	 * </p>
+	 */
+	public static final String INDICATE_NO_GRAMMAR = "indicateNoGrammar";//$NON-NLS-1$
 
  	/**
 	 * Indicates whether or not xincludes should be processed before

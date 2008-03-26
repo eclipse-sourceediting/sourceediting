@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -277,10 +277,13 @@ public class XMLValidator
         InputSource inputSource = new InputSource(uri);
         inputSource.setCharacterStream(reader2);
         reader.parse(inputSource);   
-        if(configuration.getFeature(XMLValidationConfiguration.WARN_NO_GRAMMAR) && 
+        if(configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR) > 0 && 
         		valinfo.isValid() && !helper.isGrammarEncountered)
         {
-          valinfo.addWarning(XMLValidationMessages._WARN_NO_GRAMMAR, 1, 0, uri, NO_GRAMMAR_FOUND, null);
+          if(configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR) == 1)
+            valinfo.addWarning(XMLValidationMessages._WARN_NO_GRAMMAR, 1, 0, uri, NO_GRAMMAR_FOUND, null);
+          else // 2
+              valinfo.addError(XMLValidationMessages._WARN_NO_GRAMMAR, 1, 0, uri, NO_GRAMMAR_FOUND, null);
         }
     }
     catch (SAXParseException saxParseException)

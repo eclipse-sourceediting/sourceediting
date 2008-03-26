@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,7 @@ import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 
 public class Validator extends AbstractNestedValidator
 {
-  protected boolean warnNoGrammar = false;
+  protected int indicateNoGrammar = 0;
   
   /**
    * Set any preferences for XML validation.
@@ -35,7 +35,7 @@ public class Validator extends AbstractNestedValidator
   protected void setupValidation(NestedValidatorContext context) 
   {
 	super.setupValidation(context);
-	warnNoGrammar = XMLCorePlugin.getDefault().getPluginPreferences().getBoolean(XMLCorePreferenceNames.WARN_NO_GRAMMAR);
+	indicateNoGrammar = XMLCorePlugin.getDefault().getPluginPreferences().getInt(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR);
   }
 
   /* (non-Javadoc)
@@ -48,7 +48,7 @@ public class Validator extends AbstractNestedValidator
 	XMLValidationConfiguration configuration = new XMLValidationConfiguration();
 	try
 	{
-	  configuration.setFeature(XMLValidationConfiguration.WARN_NO_GRAMMAR, warnNoGrammar);
+	  configuration.setFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR, indicateNoGrammar);
 	}
 	catch(Exception e)
 	{
