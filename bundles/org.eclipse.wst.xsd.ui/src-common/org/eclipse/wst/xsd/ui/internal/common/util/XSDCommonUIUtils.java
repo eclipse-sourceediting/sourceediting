@@ -16,6 +16,9 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.DecorationOverlayIcon;
+import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -515,6 +518,36 @@ public class XSDCommonUIUtils
       }
     }
     return attrs;
+  }
+
+  public static Image getImageWithErrorOverlay(XSDConcreteComponent input, Image baseImage, boolean isReadOnly)
+  {
+    Image extensionImage = getUpdatedImage(input, baseImage, isReadOnly);
+    ImageDescriptor errorOverlay = XSDEditorPlugin.getImageDescriptor("icons/ovr16/error_ovr.gif");  //$NON-NLS-1$
+    if (baseImage == extensionImage)
+    {
+      String imageName = input.getClass().getName() + "_error_" + isReadOnly;
+      Image newImage = XSDEditorPlugin.getDefault().getImageRegistry().get(imageName);
+      if (newImage == null)
+      {
+        DecorationOverlayIcon ovr = new DecorationOverlayIcon(baseImage, errorOverlay, IDecoration.TOP_LEFT);
+        newImage = ovr.createImage();
+        XSDEditorPlugin.getDefault().getImageRegistry().put(imageName, newImage);
+      }
+      return newImage;
+    }
+    else
+    {
+      String imageName = input.getClass().getName() + "_extension_error_" + isReadOnly;
+      Image newImage = XSDEditorPlugin.getDefault().getImageRegistry().get(imageName);
+      if (newImage == null)
+      {
+        DecorationOverlayIcon ovr = new DecorationOverlayIcon(extensionImage, errorOverlay, IDecoration.TOP_LEFT);
+        newImage = ovr.createImage();
+        XSDEditorPlugin.getDefault().getImageRegistry().put(imageName, newImage);
+      }
+      return newImage;
+    }
   }
 
 }
