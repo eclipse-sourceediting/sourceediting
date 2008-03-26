@@ -13,6 +13,7 @@ package org.eclipse.wst.xml.core.internal.validation.eclipse;
 
 import java.io.InputStream;
 
+import org.eclipse.wst.validation.ValidationResult;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
@@ -42,30 +43,35 @@ public class Validator extends AbstractNestedValidator
    * @see org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator#validate(java.lang.String, java.io.InputStream, org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext)
    */
   public ValidationReport validate(String uri, InputStream inputstream, NestedValidatorContext context)
-  {  
-	XMLValidator validator = XMLValidator.getInstance();
+  {
+    return validate(uri, inputstream, context, null);
+  }
 
-	XMLValidationConfiguration configuration = new XMLValidationConfiguration();
-	try
-	{
-	  configuration.setFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR, indicateNoGrammar);
-	}
-	catch(Exception e)
-	{
-	  // TODO: Unable to set the preference. Log this problem.
-	}
-	
-	XMLValidationReport valreport = null;
-	if (inputstream != null)
-	{
-	  valreport = validator.validate(uri, inputstream, configuration);
-	}
-	else
-	{
-	  valreport = validator.validate(uri, null, configuration);
-	}
-		        
-	return valreport;
+  public ValidationReport validate(String uri, InputStream inputstream, NestedValidatorContext context, ValidationResult result)
+  {
+    XMLValidator validator = XMLValidator.getInstance();
+
+    XMLValidationConfiguration configuration = new XMLValidationConfiguration();
+    try
+    {
+      configuration.setFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR, indicateNoGrammar);
+    }
+    catch(Exception e)
+    {
+      // TODO: Unable to set the preference. Log this problem.
+    }
+    
+    XMLValidationReport valreport = null;
+    if (inputstream != null)
+    {
+      valreport = validator.validate(uri, inputstream, configuration, result);
+    }
+    else
+    {
+      valreport = validator.validate(uri, null, configuration, result);
+    }
+              
+    return valreport;
   }
 	  
   /**

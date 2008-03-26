@@ -40,8 +40,15 @@ import org.apache.xerces.xni.XMLResourceIdentifier;
 import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xni.parser.XMLEntityResolver;
 import org.apache.xerces.xni.parser.XMLInputSource;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
+import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.validation.ValidationResult;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.validation.core.LazyURLInputStream;
 import org.xml.sax.Attributes;
@@ -249,6 +256,26 @@ public class XMLValidator
    */
   public XMLValidationReport validate(String uri, InputStream inputStream, XMLValidationConfiguration configuration)
   {
+    return validate(uri, inputStream, configuration, null);  
+  }
+ 
+  /**
+   * Validate the inputStream
+   * 
+   * @param uri 
+   *    The URI of the file to validate.
+   * @param inputstream
+   *    The inputStream of the file to validate
+   * @param configuration
+   *    A configuration for this validation session.
+   * @param result
+   *    The validation result
+   * @return 
+   *    Returns an XML validation report.
+   */
+  public XMLValidationReport validate(String uri, InputStream inputStream, XMLValidationConfiguration configuration, ValidationResult result)
+  {
+    String grammarFile = "";
     Reader reader1 = null; // Used for the preparse.
     Reader reader2 = null; // Used for validation parse.
     
@@ -285,6 +312,11 @@ public class XMLValidator
           else // 2
               valinfo.addError(XMLValidationMessages._WARN_NO_GRAMMAR, 1, 0, uri, NO_GRAMMAR_FOUND, null);
         }
+
+        if (helper.isDTDEncountered)
+          grammarFile = entityResolver.getLocation();
+        else
+          grammarFile = helper.schemaLocationString;
     }
     catch (SAXParseException saxParseException)
     {
@@ -299,7 +331,25 @@ public class XMLValidator
     {  
     	Logger.logException(exception.getLocalizedMessage(), exception);
     }
-     
+
+    // Now set up the dependencies
+    // Wrap with try catch so that if something wrong happens, validation can
+    // still proceed as before
+    if (result != null)
+    {
+      try
+      {
+        IResource resource = getWorkspaceFileFromLocation(grammarFile);
+        ArrayList resources = new ArrayList();
+        if (resource != null)
+          resources.add(resource);
+        result.setDependsOn((IResource [])resources.toArray(new IResource [0]));
+      }
+      catch (Exception e)
+      {
+        Logger.logException(e.getLocalizedMessage(), e);
+      }
+    }
     
     return valinfo;
        
@@ -368,8 +418,8 @@ public class XMLValidator
   protected class MyEntityResolver implements XMLEntityResolver 
   {
     private URIResolver uriResolver;
-    
-    
+    private String resolvedDTDLocation;
+   
     /**
      * Constructor.
      * 
@@ -387,13 +437,23 @@ public class XMLValidator
     {
       try
       {
-        return _internalResolveEntity(uriResolver, rid);
+        XMLInputSource inputSource = _internalResolveEntity(uriResolver, rid);
+        if (inputSource != null)
+        {
+          resolvedDTDLocation = inputSource.getSystemId();
+        }
+        return inputSource;
       }
       catch(IOException e)
       {
         //e.printStackTrace();   
       }      
       return null;
+    }
+   
+    public String getLocation()
+    {
+      return resolvedDTDLocation;
     }
   }
   
@@ -677,5 +737,20 @@ public class XMLValidator
     { 
       return this.columnNo;
     } 
+  }
+  
+  protected IResource getWorkspaceFileFromLocation(String location)
+  {
+    if (location == null) return null;
+    IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    // To canonicalize the EMF URI
+    IPath canonicalForm = new Path(location);
+    // Need to convert to absolute location...
+    IPath pathLocation = new Path(URIHelper.removeProtocol(canonicalForm.toString()));
+    // ...to find the resource file that is in the workspace
+    IResource resourceFile = workspace.getRoot().getFileForLocation(pathLocation);
+    // If the resource is resolved to a file from http, or a file outside
+    // the workspace, then we will just ignore it.
+    return resourceFile;
   }
 }

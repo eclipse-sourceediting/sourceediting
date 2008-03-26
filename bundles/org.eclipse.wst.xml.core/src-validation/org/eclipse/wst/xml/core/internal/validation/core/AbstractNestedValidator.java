@@ -71,7 +71,7 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
 		setupValidation(nestedcontext);
 		IFile file = null;
 		if (resource instanceof IFile)file = (IFile)resource;
-		if (file != null)validate(file, null, reporter, nestedcontext);
+		if (file != null)validate(file, null, result, reporter, nestedcontext);
 		teardownValidation(nestedcontext);
 	    return result;
   }
@@ -102,11 +102,11 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
 	    	// called from a source other than the validation framework such as an editor.
 	        if (context.loadModel(GET_INPUTSTREAM) instanceof InputStream) //$NON-NLS-1$
 	        {
-	          validate(file, (InputStream)context.loadModel(GET_INPUTSTREAM), reporter, nestedcontext); //do we need the fileName?  what is int ruleGroup? //$NON-NLS-1$
+	          validate(file, (InputStream)context.loadModel(GET_INPUTSTREAM), null, reporter, nestedcontext); //do we need the fileName?  what is int ruleGroup? //$NON-NLS-1$
 	        }
 	        else
 	        {
-	    	  validate(file, null, reporter, nestedcontext);
+	    	  validate(file, null, null, reporter, nestedcontext);
 	        }
 	      }
 	    }
@@ -124,7 +124,7 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
         IFile file = (IFile) iter.next();
         if(shouldValidate(file))
         {
-	      validate(file, null, reporter, nestedcontext);
+	      validate(file, null, null, reporter, nestedcontext);
         }
       }
     }
@@ -230,12 +230,13 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
    * @param inputstream 
    * 		An InputStream that represents the file. The InputStream may be null
    * 		in which case the files should be validated from the IFile.
+   * @param result - The validation result
    * @param reporter 
    * 		The reporter with which to report validation messages.
    * @param context
    * 		The context of the current validation.
    */
-  private void validate(IFile file, InputStream inputstream, IReporter reporter, NestedValidatorContext context)
+  private void validate(IFile file, InputStream inputstream, ValidationResult result, IReporter reporter, NestedValidatorContext context)
   {  
 	Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, file.getFullPath().toString());
     reporter.displaySubtask(this, message);
@@ -253,7 +254,12 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
 	String uri = createURIForFilePath(locationString);
 
 	clearMarkers(file, this, reporter);
-	ValidationReport valreport = validate(uri, inputstream, context);
+	
+	ValidationReport valreport = null;
+	if (result == null)
+	  valreport = validate(uri, inputstream, context);
+	else
+	  valreport = validate(uri, inputstream, context, result);
 	
 	createMarkers(file, valreport.getValidationMessages(), reporter);
 	        
@@ -282,7 +288,24 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
    * 		A validation report summarizing the validation.
    */
   public abstract ValidationReport validate(String uri, InputStream inputstream, NestedValidatorContext context);
-	  
+  
+  /**
+   * Validate the given file and use the reporter for the validation messages.
+   * Clients should override this method with their specific validation logic.
+   * This method should now be used instead of the abstract version.
+   * Design decision to not make this abstract.
+   * 
+   * @param uri
+   * @param inputstream
+   * @param context
+   * @param result
+   * @return
+   */
+  public ValidationReport validate(String uri, InputStream inputstream, NestedValidatorContext context, ValidationResult result)
+  {
+    return validate(uri, inputstream, context);
+  }
+
   /**
    * This method clears all the markers on the given IFile for a specified
    * validator.
