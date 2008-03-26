@@ -168,17 +168,17 @@ public class ValidatorTest extends TestCase
   {
 	// Test that the default preference is disabled.
 	validator.setupValidation(null);
-	assertTrue("The default warn no grammar preference is not false.", validator.getWarnNoGrammarPreference());
+	assertNotSame("The default warn no grammar preference is not enabled.", new Integer(0), new Integer(validator.getIndicateNoGrammarPreference()));
 	
 	// Test that the preference is read when disabled.
-	XMLCorePlugin.getDefault().getPluginPreferences().setValue(XMLCorePreferenceNames.WARN_NO_GRAMMAR, false);
+	XMLCorePlugin.getDefault().getPluginPreferences().setValue(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, 0);
 	validator.setupValidation(null);
-	assertFalse("The warn no grammar preference is not false when the preference is set to false.", validator.getWarnNoGrammarPreference());
+	assertEquals("The warn no grammar preference is not ignore when the preference is set to ignore.", 0, validator.getIndicateNoGrammarPreference());
 
 	// Test that the preference is read when enabled.
-	XMLCorePlugin.getDefault().getPluginPreferences().setValue(XMLCorePreferenceNames.WARN_NO_GRAMMAR, true);
+	XMLCorePlugin.getDefault().getPluginPreferences().setValue(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, 2);
 	validator.setupValidation(null);
-	assertTrue("The warn no grammar preference is not true when the preference is set to true.", validator.getWarnNoGrammarPreference());
+	assertEquals("The warn no grammar preference is not error when the preference is set to error.", 2, validator.getIndicateNoGrammarPreference());
 	
   }
 

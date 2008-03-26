@@ -151,6 +151,7 @@ public class BugFixesTest extends BaseTestCase
 	try
 	{
 	  configuration.setFeature(XMLValidationConfiguration.WARN_NO_GRAMMAR, true);
+	  configuration.setFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR, 1);
 	}
 	catch(Exception e)
 	{
@@ -160,6 +161,7 @@ public class BugFixesTest extends BaseTestCase
 	try
 	{
 	  configuration.setFeature(XMLValidationConfiguration.WARN_NO_GRAMMAR, false);
+	  configuration.setFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR, 0);
 	}
 	catch(Exception e)
 	{

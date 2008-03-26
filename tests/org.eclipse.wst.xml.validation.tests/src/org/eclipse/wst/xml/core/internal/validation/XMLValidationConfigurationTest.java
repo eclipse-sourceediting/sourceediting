@@ -127,4 +127,18 @@ public class XMLValidationConfigurationTest extends TestCase
 	}
   }
   
+  /**
+   * Test the default setting of the WARN_NO_GRAMMAR feature.
+   */
+  public void testIndicateNoGrammarFeatureDefault()
+  {
+	try
+	{
+		assertEquals("The INDICATE_NO_GRAMMAR feature is not set by default to Ignore.", 1, configuration.getIntFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR));
+	}
+	catch(Exception e)
+	{
+	  fail("Unable to set read the WARN_NO_GRAMMAR feature: " + e);
+	}
+  }
 }

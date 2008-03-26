@@ -46,6 +46,7 @@ public class BaseTestCase extends TestCase
     try
     {
       configuration.setFeature(XMLValidationConfiguration.WARN_NO_GRAMMAR, false);
+	  configuration.setFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR, 0);
     }
     catch(Exception e)
     {

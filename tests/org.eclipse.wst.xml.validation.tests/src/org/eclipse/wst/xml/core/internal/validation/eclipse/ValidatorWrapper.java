@@ -41,8 +41,8 @@ public class ValidatorWrapper extends Validator
    * 
    * @return The warn no grammar preference.
    */
-  public boolean getWarnNoGrammarPreference()
+  public int getIndicateNoGrammarPreference()
   {
-	return warnNoGrammar;
+	return indicateNoGrammar;
   }
 }
