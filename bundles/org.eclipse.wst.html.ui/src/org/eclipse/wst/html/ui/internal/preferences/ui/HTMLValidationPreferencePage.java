@@ -324,7 +324,7 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 	}
 
 	protected String getPropertyPageID() {
-		return "org.eclipse.wst.html.ui.propertyPage.project";//$NON-NLS-1$
+		return "org.eclipse.wst.html.ui.propertyPage.project.validation";//$NON-NLS-1$
 	}
 
 	public void init(IWorkbench workbench) {

@@ -112,7 +112,6 @@
 			category="org.eclipse.wst.html.ui.preferences.html"
 			class="org.eclipse.wst.html.ui.internal.preferences.ui.HTMLValidationPreferencePage"
 			id="org.eclipse.wst.html.ui.preferences.validation">
-			<keywordReference id="org.eclipse.wst.html.ui.styles"/>
 		</page>
 		
 	</extension>
@@ -174,7 +173,7 @@
 		<page
 			name="%HTML_Property_validation"
 			class="org.eclipse.wst.html.ui.internal.preferences.ui.HTMLValidationPreferencePage"
-			id="org.eclipse.wst.html.ui.propertyPage.project"
+			id="org.eclipse.wst.html.ui.propertyPage.project.validation"
 			category="ValidationPropertiesPage">
 			<enabledWhen>
 				<adapt type="org.eclipse.core.resources.IProject">
