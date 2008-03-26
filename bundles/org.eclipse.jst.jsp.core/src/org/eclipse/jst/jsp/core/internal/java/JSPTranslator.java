@@ -42,8 +42,14 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
@@ -81,6 +87,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
+import com.ibm.icu.text.MessageFormat;
 import com.ibm.icu.util.StringTokenizer;
 
 /**
@@ -382,6 +389,66 @@ public class JSPTranslator {
 			classname = JSP2ServletNameUtil.mangle(jspFile.getFullPath().toString());
 		}
 		return classname;
+	}
+
+	private IJSPProblem createJSPProblem(final int problemEID, final int problemID, final String message, final int start, final int end) {
+		final int line = fStructuredDocument.getLineOfOffset(start);
+		final char[] classname = fClassname.toCharArray();
+
+		/*
+		 * Note: these problems would result in translation errors on the
+		 * server, so the severity is not meant to be controllable
+		 */
+		return new IJSPProblem() {
+			public void setSourceStart(int sourceStart) {
+			}
+
+			public void setSourceLineNumber(int lineNumber) {
+			}
+
+			public void setSourceEnd(int sourceEnd) {
+			}
+
+			public boolean isWarning() {
+				return false;
+			}
+
+			public boolean isError() {
+				return true;
+			}
+
+			public int getSourceStart() {
+				return start;
+			}
+
+			public int getSourceLineNumber() {
+				return line;
+			}
+
+			public int getSourceEnd() {
+				return end;
+			}
+
+			public char[] getOriginatingFileName() {
+				return classname;
+			}
+
+			public String getMessage() {
+				return message;
+			}
+
+			public int getID() {
+				return problemID;
+			}
+
+			public String[] getArguments() {
+				return new String[0];
+			}
+
+			public int getEID() {
+				return problemEID;
+			}
+		};
 	}
 
 	public void setClassname(String classname) {
@@ -850,7 +917,8 @@ public class JSPTranslator {
 		if (fTagToVariableMap == null) {
 			fTagToVariableMap = new StackMap();
 		}
-
+		fTranslationProblems.clear();
+		
 		setCurrentNode(new ZeroStructuredDocumentRegion(fStructuredDocument, 0));
 		translatePreludes();
 
@@ -2266,9 +2334,14 @@ public class JSPTranslator {
 		Position javaTypeRange = new Position(fOffsetInUserCode, type.length());
 		Position javaIdRange = new Position(fOffsetInUserCode + type.length() + 1, id.length());
 		Position javaClassRange = new Position(fOffsetInUserCode + type.length() + 1 + id.length() + 7, 0);
-		if (className.length() >= 4) {
+		/*
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=212242 - Check for
+		 * the existence of '(' first.
+		 */
+		int parenPos = -1;
+		if (className.length() >= 4 && (parenPos = className.indexOf('(')) >= 0) {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=86132
-			int classNameLength = className.substring(0, className.indexOf('(')).length();
+			int classNameLength = className.substring(0, parenPos).length();
 			javaClassRange = new Position(fOffsetInUserCode + type.length() + 1 + id.length() + 7, classNameLength);
 		}
 
@@ -2508,9 +2581,15 @@ public class JSPTranslator {
 		ITextRegion r = null;
 		String attrName = null;
 		String attrValue = null;
+		ITextRegion attrRegion = null;
 		String id = null;
+		ITextRegion idRegion = null;
 		String type = null;
+		ITextRegion typeRegion = null;
 		String className = null;
+		ITextRegion classnameRegion = null;
+		String beanName = null;
+		ITextRegion beanNameRegion = null;
 
 		Iterator regions = container.getRegions().iterator();
 		while (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && (r.getType() != DOMRegionContext.XML_TAG_CLOSE || r.getType() != DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
@@ -2528,29 +2607,99 @@ public class JSPTranslator {
 			}
 			// (pa) might need different logic here if we wanna support more
 			if (attrName != null && attrValue != null) {
-				if (attrName.equals("id")) //$NON-NLS-1$
+				if (attrName.equals("id")) {//$NON-NLS-1$
 					id = attrValue;
-				else if (attrName.equals("class")) //$NON-NLS-1$
+					idRegion = r;
+				}
+				else if (attrName.equals("class")) {//$NON-NLS-1$
 					className = attrValue;
-				else if (attrName.equals("type")) //$NON-NLS-1$
+					classnameRegion = r;
+				}
+				else if (attrName.equals("type")) {//$NON-NLS-1$
 					type = attrValue;
+					typeRegion = r;
+				}
+								else if (attrName.equals("beanName")) { //$NON-NLS-1$
+					beanName = attrValue;
+					beanNameRegion = attrRegion;
+				}
 			}
-
 		}
-		// has id w/ type and/or classname
-		// Type id = new Classname();
-		// or
-		// Type id = null; // if there is no classname
-		if (id != null && (type != null || className != null)) {
-			if (type == null)
-				type = className;
-			String prefix = type + " " + id + " = "; //$NON-NLS-1$ //$NON-NLS-2$
-			String suffix = "null;" + ENDL; //$NON-NLS-1$
-			if (className != null)
-				suffix = "new " + className + "();" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$
+				
+				if (id != null) {
+			// The id is not a valid Java identifier
+			if (!isValidJavaIdentifier(id)) {
+				Object problem = createJSPProblem(IJSPProblem.UseBeanInvalidID, IProblem.ParsingErrorInvalidToken, MessageFormat.format(JSPCoreMessages.JSPTranslator_0, new String[]{id}), container.getStartOffset(idRegion), container.getTextEndOffset(idRegion) - 1);
+				fTranslationProblems.add(problem);
+			}
+			// No Type information is provided
+			if ((type == null && className == null) || (type == null && beanName != null)) {
+				Object problem = createJSPProblem(IJSPProblem.UseBeanMissingTypeInfo, IProblem.UndefinedType, MessageFormat.format(JSPCoreMessages.JSPTranslator_3, new String[]{id}), container.getStartOffset(idRegion), container.getTextEndOffset(idRegion) - 1);
+				fTranslationProblems.add(problem);
+			}
+			// Cannot specify both a class and a beanName
+			if (className != null && beanName != null) {
+				Object problem = createJSPProblem(IJSPProblem.UseBeanAmbiguousType, IProblem.AmbiguousType, JSPCoreMessages.JSPTranslator_2, container.getStartOffset(beanNameRegion), container.getTextEndOffset(beanNameRegion) - 1);
+				fTranslationProblems.add(problem);
+			}
+			// Only have a class or a beanName at this point, and potentially
+			// a type
+			// has id w/ type and/or classname/beanName
+			// Type id = new Classname/Beanname();
+			// or
+			// Type id = null; // if there is no classname or beanname
+			else if ((type != null || className != null)) {
+				if (type == null) {
+					type = className;
+					typeRegion = classnameRegion;
+				}
 
-			appendToBuffer(prefix + suffix, fUserCode, true, fCurrentNode);
+				if (!isTypeFound(type)) {
+					Object problem = createJSPProblem(IJSPProblem.F_PROBLEM_ID_LITERAL, IProblem.UndefinedType, MessageFormat.format(JSPCoreMessages.JSPTranslator_1, new String[]{type}), container.getStartOffset(typeRegion), container.getTextEndOffset(typeRegion) - 1);
+					fTranslationProblems.add(problem);
+				}
+				else {
+					String prefix = type + " " + id + " = "; //$NON-NLS-1$ //$NON-NLS-2$
+					String suffix = "null;" + ENDL; //$NON-NLS-1$
+					if (className != null)
+						suffix = "new " + className + "();" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$
+					else if (beanName != null)
+						suffix = "(" + type + ") java.beans.Beans.instantiate(getClass().getClassLoader(), \"" + beanName + "\");" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					appendToBuffer(prefix + suffix, fUserCode, true, fCurrentNode);
+				}
+			}
 		}
+	}
+	
+	/**
+	 * @param type
+	 * @return
+	 */
+	private boolean isTypeFound(String typeName) {
+		IType type = null;
+		IProject project = getFile().getProject();
+		try {
+			IJavaProject p = JavaCore.create(project);
+			if (p.exists()) {
+				type = p.findType(typeName);
+				return type != null && type.exists();
+			}
+		}
+		catch (JavaModelException e) {
+			// Not a Java Project
+		}
+		return true;
+	}
+
+	private boolean isValidJavaIdentifier(String id) {
+		char[] idChars = id.toCharArray();
+		if (idChars.length < 1)
+			return false;
+		boolean isValid = Character.isJavaIdentifierStart(idChars[0]);
+		for (int i = 1; i < idChars.length; i++) {
+			isValid = isValid && Character.isJavaIdentifierPart(idChars[i]);
+		}
+		return isValid;
 	}
 
 	final public int getCursorPosition() {
