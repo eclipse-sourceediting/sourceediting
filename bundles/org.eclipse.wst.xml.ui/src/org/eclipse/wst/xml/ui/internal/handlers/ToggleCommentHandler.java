@@ -21,49 +21,51 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
-import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 
 public class ToggleCommentHandler extends CommentHandler implements IHandler {
-	
 	public ToggleCommentHandler() {
-		// TODO Auto-generated constructor stub
 		super();
 	}
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		
-		fEditor = HandlerUtil.getActiveEditor(event);
-		
-		if (fEditor instanceof XMLMultiPageEditorPart) {
-			final ITextEditor textEditor = (ITextEditor) fEditor.getAdapter(ITextEditor.class);
-			fEditor = textEditor;
+		IEditorPart editor = HandlerUtil.getActiveEditor(event);
+		ITextEditor textEditor = null;
+		if (editor instanceof ITextEditor)
+			textEditor = (ITextEditor) editor;
+		else {
+			Object o = editor.getAdapter(ITextEditor.class);
+			if (o != null)
+				textEditor = (ITextEditor) o;
+		}
+		if (textEditor != null) {
 			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 			if (document != null) {
 				// get current text selection
-				ITextSelection textSelection = getCurrentSelection();
+				ITextSelection textSelection = getCurrentSelection(textEditor);
 				if (textSelection.isEmpty()) {
 					return null;
 				}
 
-				processAction(document, textSelection);
+				processAction(textEditor, document, textSelection);
 			}
 		}
 		return null;
 	}
 
-	void processAction(IDocument document, ITextSelection textSelection) {
+	void processAction(ITextEditor textEditor, IDocument document, ITextSelection textSelection) {
 		// get text selection lines info
 		int selectionStartLine = textSelection.getStartLine();
 		int selectionEndLine = textSelection.getEndLine();
 		try {
-		int selectionEndLineOffset = document.getLineOffset(selectionEndLine);
-		int selectionEndOffset = textSelection.getOffset() + textSelection.getLength();
+			int selectionEndLineOffset = document.getLineOffset(selectionEndLine);
+			int selectionEndOffset = textSelection.getOffset() + textSelection.getLength();
 
 			// adjust selection end line
 			if ((selectionEndLine > selectionStartLine) && (selectionEndLineOffset == selectionEndOffset)) {
@@ -89,12 +91,12 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 			}
 		}
 		catch (BadLocationException e) {
-		Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 		}
 
 		processAction(document, selectionStartLine, selectionEndLine);
 
-		updateCurrentSelection(selectionPosition, document, updateStartOffset);
+		updateCurrentSelection(textEditor, selectionPosition, document, updateStartOffset);
 	}
 
 	private void processAction(IDocument document, int selectionStartLine, int selectionEndLine) {
@@ -170,24 +172,22 @@ public class ToggleCommentHandler extends CommentHandler implements IHandler {
 			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 		}
 	}
-	
-	private void updateCurrentSelection(Position selectionPosition, IDocument document, boolean updateStartOffset) {
-		if (fEditor instanceof ITextEditor) {
-			// update the selection if text selection changed
-			if (selectionPosition != null) {
-				ITextSelection selection = null;
-				if (updateStartOffset) {
-					selection = new TextSelection(document, selectionPosition.getOffset() - OPEN_COMMENT.length(), selectionPosition.getLength() + OPEN_COMMENT.length());
-				}
-  			    else {
-					selection = new TextSelection(document, selectionPosition.getOffset(), selectionPosition.getLength());
-				}
-				ISelectionProvider provider = ((ITextEditor) fEditor).getSelectionProvider();
-				if (provider != null) {
-					provider.setSelection(selection);
-				}
-				document.removePosition(selectionPosition);
+
+	private void updateCurrentSelection(ITextEditor textEditor, Position selectionPosition, IDocument document, boolean updateStartOffset) {
+		// update the selection if text selection changed
+		if (selectionPosition != null) {
+			ITextSelection selection = null;
+			if (updateStartOffset) {
+				selection = new TextSelection(document, selectionPosition.getOffset() - OPEN_COMMENT.length(), selectionPosition.getLength() + OPEN_COMMENT.length());
 			}
+			else {
+				selection = new TextSelection(document, selectionPosition.getOffset(), selectionPosition.getLength());
+			}
+			ISelectionProvider provider = textEditor.getSelectionProvider();
+			if (provider != null) {
+				provider.setSelection(selection);
+			}
+			document.removePosition(selectionPosition);
 		}
-	}	
+	}
 }

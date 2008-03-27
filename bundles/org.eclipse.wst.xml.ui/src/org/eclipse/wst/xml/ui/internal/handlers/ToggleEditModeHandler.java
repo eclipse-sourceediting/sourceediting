@@ -18,6 +18,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.commands.IElementUpdater;
@@ -25,13 +26,12 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.menus.UIElement;
 import org.eclipse.ui.services.IServiceScopes;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.tabletree.XMLEditorMessages;
-import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 import org.eclipse.wst.xml.ui.internal.util.SharedXMLEditorPluginImageHelper;
 
 public class ToggleEditModeHandler extends AbstractHandler implements IElementUpdater {
@@ -45,24 +45,42 @@ public class ToggleEditModeHandler extends AbstractHandler implements IElementUp
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IEditorPart editor = HandlerUtil.getActiveEditor(event);
-		IStructuredModel model = getModelForEditorPart(editor);
-		
-		modelQuery = ModelQueryUtil.getModelQuery(model);
-		
-		if (modelQuery != null) {
-			int newState = getNextState(modelQuery.getEditMode());
-			modelQuery.setEditMode(newState);
-			
-			// Force a Refresh on this command so that the image can be updated.
-			ICommandService commandService = (ICommandService) HandlerUtil.getActiveWorkbenchWindow(event).getService(ICommandService.class);
-			Map filter = new HashMap();
-			filter.put(IServiceScopes.WINDOW_SCOPE, HandlerUtil.getActiveWorkbenchWindow(event));
-			commandService.refreshElements(event.getCommand().getId(), filter);
+		ITextEditor textEditor = null;
+		if (editor instanceof ITextEditor)
+			textEditor = (ITextEditor) editor;
+		else {
+			Object o = editor.getAdapter(ITextEditor.class);
+			if (o != null)
+				textEditor = (ITextEditor) o;
 		}
-		
+		if (textEditor != null) {
+			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
+			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+			if (model != null) {
+				try {
+					modelQuery = ModelQueryUtil.getModelQuery(model);
+				}
+				finally {
+					model.releaseFromRead();
+				}
+				if (modelQuery != null) {
+					int newState = getNextState(modelQuery.getEditMode());
+					modelQuery.setEditMode(newState);
+
+					// Force a Refresh on this command so that the image can
+					// be
+					// updated.
+					ICommandService commandService = (ICommandService) HandlerUtil.getActiveWorkbenchWindow(event).getService(ICommandService.class);
+					Map filter = new HashMap();
+					filter.put(IServiceScopes.WINDOW_SCOPE, HandlerUtil.getActiveWorkbenchWindow(event));
+					commandService.refreshElements(event.getCommand().getId(), filter);
+				}
+			}
+		}
+
 		return null;
 	}
-	
+
 	public int getNextState(int editMode) {
 		int result = -1;
 		if (editMode == ModelQuery.EDIT_MODE_CONSTRAINED_STRICT) {
@@ -73,40 +91,47 @@ public class ToggleEditModeHandler extends AbstractHandler implements IElementUp
 		}
 		return result;
 	}
-	
-	
-	// Handlers that need to interact with the ui that the command came from need to use implement this method.
+
+
+	// Handlers that need to interact with the ui that the command came from
+	// need to use implement this method.
 	public void updateElement(UIElement element, Map parameters) {
 		IEditorPart editor = XMLUIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-		IStructuredModel model = getModelForEditorPart(editor);
-		modelQuery = ModelQueryUtil.getModelQuery(model);
-		
-		if (modelQuery != null) {
-			setAppearanceForEditMode(modelQuery.getEditMode(), element);
+		ITextEditor textEditor = null;
+		if (editor instanceof ITextEditor)
+			textEditor = (ITextEditor) editor;
+		else {
+			Object o = editor.getAdapter(ITextEditor.class);
+			if (o != null)
+				textEditor = (ITextEditor) o;
 		}
+		if (textEditor != null) {
+			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
+			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+			if (model != null) {
+				try {
+					modelQuery = ModelQueryUtil.getModelQuery(model);
+				}
+				finally {
+					model.releaseFromRead();
+				}
+				if (modelQuery != null) {
+					setAppearanceForEditMode(modelQuery.getEditMode(), element);
+				}
+			}
+		}
+	}
 
-		
-	}	
-	
 	public void setAppearanceForEditMode(int editMode, UIElement element) {
 		if (editMode == ModelQuery.EDIT_MODE_CONSTRAINED_STRICT) {
 			element.setTooltip(XMLEditorMessages.XMLTableTreeActionBarContributor_3);
 			element.setText(XMLEditorMessages.XMLTableTreeActionBarContributor_4);
 			element.setIcon(onImage);
 		}
-	else {
+		else {
 			element.setTooltip(XMLEditorMessages.XMLTableTreeActionBarContributor_5);
 			element.setText(XMLEditorMessages.XMLTableTreeActionBarContributor_6);
 			element.setIcon(offImage);
 		}
-	}
-
-	protected IStructuredModel getModelForEditorPart(IEditorPart targetEditor) {
-		IStructuredModel result = null;
-		if (targetEditor instanceof XMLMultiPageEditorPart) {
-			StructuredTextEditor textEditor = (StructuredTextEditor) targetEditor.getAdapter(ITextEditor.class);
-			result = (textEditor != null) ? textEditor.getModel() : null;
-		}
-		return result;
 	}
 }

@@ -25,59 +25,56 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.xml.ui.internal.Logger;
-import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 
 public class CommentHandler extends AbstractHandler implements IHandler {
-	
-
 	static final String CLOSE_COMMENT = "-->"; //$NON-NLS-1$
 	static final String OPEN_COMMENT = "<!--"; //$NON-NLS-1$
 
-	IEditorPart fEditor;
-	
 	public CommentHandler() {
 		super();
 	}
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		
-		fEditor = HandlerUtil.getActiveEditor(event);
-		
-		if (fEditor instanceof XMLMultiPageEditorPart) {
-			final ITextEditor textEditor = (ITextEditor) fEditor.getAdapter(ITextEditor.class);
-			fEditor = textEditor;
+		IEditorPart editor = HandlerUtil.getActiveEditor(event);
+		ITextEditor textEditor = null;
+		if (editor instanceof ITextEditor)
+			textEditor = (ITextEditor) editor;
+		else {
+			Object o = editor.getAdapter(ITextEditor.class);
+			if (o != null)
+				textEditor = (ITextEditor) o;
+		}
+		if (textEditor != null) {
 			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 			if (document != null) {
 				// get current text selection
-				ITextSelection textSelection = getCurrentSelection();
+				ITextSelection textSelection = getCurrentSelection(textEditor);
 				if (textSelection.isEmpty()) {
 					return null;
 				}
 
-				processAction(document, textSelection);
+				processAction(textEditor, document, textSelection);
 			}
 		}
-	
+
 		return null;
 	}
 
-	protected ITextSelection getCurrentSelection() {
-		if (fEditor instanceof ITextEditor) {
-			ISelectionProvider provider = ((ITextEditor) fEditor).getSelectionProvider();
-			if (provider != null) {
-				ISelection selection = provider.getSelection();
-				if (selection instanceof ITextSelection) {
-					return (ITextSelection) selection;
-				}
+	protected ITextSelection getCurrentSelection(ITextEditor textEditor) {
+		ISelectionProvider provider = textEditor.getSelectionProvider();
+		if (provider != null) {
+			ISelection selection = provider.getSelection();
+			if (selection instanceof ITextSelection) {
+				return (ITextSelection) selection;
 			}
 		}
 		return TextSelection.emptySelection();
 	}
-	
-	void processAction(IDocument document, ITextSelection textSelection) {
+
+	void processAction(ITextEditor textEditor, IDocument document, ITextSelection textSelection) {
 		// Implementations to over ride.
 	}
-	
+
 	protected void removeOpenCloseComments(IDocument document, int offset, int length) {
 		try {
 			int adjusted_length = length;

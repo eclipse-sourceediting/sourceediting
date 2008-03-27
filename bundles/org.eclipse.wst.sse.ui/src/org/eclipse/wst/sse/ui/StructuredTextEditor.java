@@ -25,6 +25,10 @@ import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -109,6 +113,7 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.ITextEditorHelpContextIds;
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
@@ -196,18 +201,10 @@ import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
  */
 
 public class StructuredTextEditor extends TextEditor {
-	/**
-	 * Based on org.eclipse.jdt.internal.ui.javaeditor.GotoMatchingBracketAction
-	 */
-	private class GotoMatchingBracketAction extends Action {
-		GotoMatchingBracketAction() {
-			super(SSEUIMessages.GotoMatchingBracket_label);
-			setEnabled(true);
-			// PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IHelpContextIds.GOTO_MATCHING_BRACKET_ACTION);
-		}
-
-		public void run() {
+	private class GotoMatchingBracketHandler extends AbstractHandler {
+		public Object execute(ExecutionEvent arg0) throws ExecutionException {
 			gotoMatchingBracket();
+			return null;
 		}
 	}
 
@@ -1406,9 +1403,9 @@ public class StructuredTextEditor extends TextEditor {
 
 		computeAndSetDoubleClickAction();
 
-		action= new GotoMatchingBracketAction();
-		action.setActionDefinitionId(ActionDefinitionIds.GOTO_MATCHING_BRACKET);
-		setAction(StructuredTextEditorActionConstants.ACTION_NAME_GOTO_MATCHING_BRACKET, action);
+		IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+		IHandler handler = new GotoMatchingBracketHandler();
+		handlerService.activateHandler(ActionDefinitionIds.GOTO_MATCHING_BRACKET, handler);
 
 		fShowPropertiesAction = new ShowPropertiesAction();
 		fFoldingGroup = new FoldingActionGroup(this, getSourceViewer());
@@ -1468,7 +1465,7 @@ public class StructuredTextEditor extends TextEditor {
 	 */
 	public void createPartControl(Composite parent) {
 		IContextService contextService = (IContextService) getSite().getService(IContextService.class);
-		contextService.activateContext("org.eclipse.wst.sse.ui.structuredTextEditorScope");
+		contextService.activateContext(EDITOR_KEYBINDING_SCOPE_ID);
 		
 		if (getSourceViewerConfiguration() == null) {
 			ConfigurationAndTarget cat = createSourceViewerConfiguration();

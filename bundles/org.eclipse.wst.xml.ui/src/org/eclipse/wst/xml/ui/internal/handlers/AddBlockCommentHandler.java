@@ -15,6 +15,7 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
@@ -27,8 +28,8 @@ public class AddBlockCommentHandler extends CommentHandler implements IHandler {
 	public AddBlockCommentHandler() {
 		super();
 	}
-	
-	void processAction(IDocument document, ITextSelection textSelection) {
+
+	void processAction(ITextEditor textEditor, IDocument document, ITextSelection textSelection) {
 		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
 		if (model != null) {
 			try {
@@ -44,7 +45,7 @@ public class AddBlockCommentHandler extends CommentHandler implements IHandler {
 				if (selectionEndIndexedRegion == null) {
 					return;
 				}
-				
+
 				int openCommentOffset = selectionStartIndexedRegion.getStartOffset();
 				int closeCommentOffset = selectionEndIndexedRegion.getEndOffset() + OPEN_COMMENT.length();
 
@@ -59,7 +60,7 @@ public class AddBlockCommentHandler extends CommentHandler implements IHandler {
 					document.replace(openCommentOffset, 0, OPEN_COMMENT);
 					document.replace(closeCommentOffset, 0, CLOSE_COMMENT);
 					super.removeOpenCloseComments(document, openCommentOffset + OPEN_COMMENT.length(), closeCommentOffset - openCommentOffset - CLOSE_COMMENT.length());
-				} 
+				}
 				catch (BadLocationException e) {
 					Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 				}

@@ -754,22 +754,67 @@
 				</visibleWhen>
 			</command>
 		</menuContribution>
-		<menuContribution locationURI="menu:org.eclipse.search.menu?after=additions">
+		<!-- Unable to contribute to Search menu at the moment due to bug 213385 -->
+<!--
+		<menuContribution locationURI="menu:org.eclipse.search.menu">
+-->
+		<menuContribution locationURI="menu:sourceMenuId?after=additions">
 			<command commandId="org.eclipse.wst.sse.ui.search.find.occurrences" id="OccurencesFile" style="push">
 			   <visibleWhen checkEnabled="false">
 					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
 				</visibleWhen>
 			</command>
 		</menuContribution>
-		
 	    <menuContribution locationURI="menu:edit?after=additions">
 	       <command commandId="org.eclipse.ui.edit.text.toggleInsertMode" id="ToggleInsertMode" label="%SmartInsert_label" style="toggle">
 			   <visibleWhen checkEnabled="false">
 				   <reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
 			   </visibleWhen>
+	       </command>	       
+		</menuContribution>
+	    <menuContribution locationURI="menu:expandSelectionToMenuId">
+	       <command commandId="org.eclipse.wst.sse.ui.structure.select.enclosing" id="org.eclipse.wst.sse.ui.structure.select.enclosing" label="%StructureSelectEnclosing_label" style="push">
+			   <visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
+				</visibleWhen>
+	       </command>	       
+	       <command commandId="org.eclipse.wst.sse.ui.structure.select.next" id="org.eclipse.wst.sse.ui.structure.select.next" label="%StructureSelectNext_label" style="push">
+			   <visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
+				</visibleWhen>
+	       </command>
+	       <command commandId="org.eclipse.wst.sse.ui.structure.select.previous" id="org.eclipse.wst.sse.ui.structure.select.previous" label="%StructureSelectPrevious_label" style="push">
+			   <visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
+				</visibleWhen>
+	       </command>
+	       <command commandId="org.eclipse.wst.sse.ui.structure.select.last" id="org.eclipse.wst.sse.ui.structure.select.last" label="%StructureSelectHistory_label" style="push">
+			   <visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
+				</visibleWhen>
 	       </command>
 		</menuContribution>
-		
+	    <menuContribution locationURI="menu:goTo?after=matchingEnd">
+<!--		
+	       <command commandId="org.eclipse.wst.xml.ui.gotoMatchingTag" id="GoToMatchingTag" label="%GoToMatchingTag_label" style="push">
+			   <visibleWhen checkEnabled="false">
+				   <reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
+			   </visibleWhen>
+	       </command>
+-->		
+	       <separator name="goToSiblingsBegin" visible="true"></separator>
+	       <command commandId="org.eclipse.wst.xml.ui.nextSibling" id="GoToNextSibling" label="%ActionDefinition.nextSibling.name" style="push">
+			   <visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
+				</visibleWhen>
+	       </command>
+	       <command commandId="org.eclipse.wst.xml.ui.previousSibling" id="GoToPreviousSibling" label="%ActionDefinition.previousSibling.name" style="push">
+			   <visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
+				</visibleWhen>
+	       </command>
+	       <separator name="goToSiblingsEnd" visible="false"></separator>
+		</menuContribution>
        <menuContribution
            locationURI="menu:org.eclipse.ui.main.menu?before=window">
         <menu
@@ -850,7 +895,6 @@
            </separator>
         </menu>
      </menuContribution>
-     
      <menuContribution
            locationURI="popup:sourcePopupMenuId?after=sourceBegin">
 			<command commandId="org.eclipse.wst.sse.ui.toggle.comment" id="ToggleComment" style="push">
@@ -991,9 +1035,16 @@
 	
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.eclipse.wst.xml.ui.xmlSourceContributions.definition">
-			<with variable="activeEditorId">
-				<equals value="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"></equals>
-			</with>
+			<or>
+				<with variable="activeEditorId">
+					<equals value="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"></equals>
+				</with>
+	            <with variable="activeContexts">
+		           <iterate operator="or">
+		              <equals value="org.eclipse.core.runtime.xml"/>
+		           </iterate>
+	            </with>
+			</or>
 		</definition>
 	</extension>
     <extension
@@ -1039,8 +1090,80 @@
           </enabledWhen>
        </handler>
        <handler
+             class="org.eclipse.wst.xml.ui.internal.handlers.StructuredSelectEnclosingXMLHandler"
+             commandId="org.eclipse.wst.sse.ui.structure.select.enclosing">
+          <activeWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </activeWhen>
+          <enabledWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </enabledWhen>
+       </handler>
+       <handler
+             class="org.eclipse.wst.xml.ui.internal.handlers.StructuredSelectNextXMLHandler"
+             commandId="org.eclipse.wst.sse.ui.structure.select.next">
+          <activeWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </activeWhen>
+          <enabledWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </enabledWhen>
+       </handler>
+       <handler
+             class="org.eclipse.wst.xml.ui.internal.handlers.StructuredSelectPreviousXMLHandler"
+             commandId="org.eclipse.wst.sse.ui.structure.select.previous">
+          <activeWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </activeWhen>
+          <enabledWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </enabledWhen>
+       </handler>
+       <handler
+             class="org.eclipse.wst.sse.ui.internal.handlers.StructuredSelectHistoryHandler"
+             commandId="org.eclipse.wst.sse.ui.structure.select.last">
+          <activeWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </activeWhen>
+          <enabledWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </enabledWhen>
+       </handler>
+       <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.XMLFindOccurencesHandler"
              commandId="org.eclipse.wst.sse.ui.search.find.occurrences">
+          <activeWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </activeWhen>
+          <enabledWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </enabledWhen>
+       </handler>
+<!--
+       <handler
+             class="org.eclipse.wst.xml.ui.internal.handlers.GoToMatchingTagHandler"
+             commandId="org.eclipse.wst.xml.ui.gotoMatchingTag">
+          <activeWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </activeWhen>
+          <enabledWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </enabledWhen>
+       </handler>
+-->
+       <handler
+             class="org.eclipse.wst.xml.ui.internal.handlers.NextSiblingNavigationHandler"
+             commandId="org.eclipse.wst.xml.ui.nextSibling">
+          <activeWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </activeWhen>
+          <enabledWhen>
+              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+          </enabledWhen>
+       </handler>
+       <handler
+             class="org.eclipse.wst.xml.ui.internal.handlers.PreviousSiblingNavigationHandler"
+             commandId="org.eclipse.wst.xml.ui.previousSibling">
           <activeWhen>
               <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
           </activeWhen>

@@ -15,23 +15,22 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.CMDocumentLoader;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.InferredGrammarBuildingCMDocumentLoader;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
-import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 import org.w3c.dom.Document;
 
-public class ReloadDependenciesHandler extends AbstractHandler implements
-		IHandler {
+public class ReloadDependenciesHandler extends AbstractHandler implements IHandler {
 	protected IStructuredModel model;
-	
+
 	/**
 	 * 
 	 */
@@ -39,27 +38,41 @@ public class ReloadDependenciesHandler extends AbstractHandler implements
 		// TODO Auto-generated constructor stub
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.core.commands.AbstractHandler#execute(org.eclipse.core.commands.ExecutionEvent)
 	 */
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		IEditorPart fEditor = HandlerUtil.getActiveEditor(event);
-
-		if (fEditor instanceof XMLMultiPageEditorPart) {
-			StructuredTextEditor textEditor = (StructuredTextEditor) fEditor.getAdapter(ITextEditor.class);
-			model = (textEditor != null) ? textEditor.getModel() : null;
+		IEditorPart editor = HandlerUtil.getActiveEditor(event);
+		ITextEditor textEditor = null;
+		if (editor instanceof ITextEditor)
+			textEditor = (ITextEditor) editor;
+		else {
+			Object o = editor.getAdapter(ITextEditor.class);
+			if (o != null)
+				textEditor = (ITextEditor) o;
 		}
-		
-		if (model != null) {
-			ModelQuery modelQuery = ModelQueryUtil.getModelQuery(model);
-			Document document = ((IDOMModel) model).getDocument();
-			if ((modelQuery != null) && (modelQuery.getCMDocumentManager() != null)) {
-				modelQuery.getCMDocumentManager().getCMDocumentCache().clear();
-				// TODO... need to figure out how to access the
-				// DOMObserver via ModelQuery
-				// ...why?
-				CMDocumentLoader loader = new InferredGrammarBuildingCMDocumentLoader(document, modelQuery);
-				loader.loadCMDocuments();
+		if (textEditor != null) {
+			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
+			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+			if (model != null) {
+				ModelQuery modelQuery = null;
+				try {
+					modelQuery = ModelQueryUtil.getModelQuery(model);
+				}
+				finally {
+					model.releaseFromRead();
+				}
+				Document domDocument = ((IDOMModel) model).getDocument();
+				if ((modelQuery != null) && (modelQuery.getCMDocumentManager() != null)) {
+					modelQuery.getCMDocumentManager().getCMDocumentCache().clear();
+					// TODO... need to figure out how to access the
+					// DOMObserver via ModelQuery
+					// ...why?
+					CMDocumentLoader loader = new InferredGrammarBuildingCMDocumentLoader(domDocument, modelQuery);
+					loader.loadCMDocuments();
+				}
 			}
 		}
 		return null;

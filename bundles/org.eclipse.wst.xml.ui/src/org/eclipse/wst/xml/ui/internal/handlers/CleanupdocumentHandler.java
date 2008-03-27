@@ -29,24 +29,27 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.xml.core.internal.cleanup.CleanupProcessorXML;
 import org.eclipse.wst.xml.ui.internal.actions.CleanupDialogXML;
-import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 
 public class CleanupdocumentHandler extends AbstractHandler implements IHandler {
-	
-	private IEditorPart fEditor;
 	private IStructuredCleanupProcessor fCleanupProcessor;
-	
+
 	public void dispose() {
 		// nulling out just in case
-		fEditor = null;
 		fCleanupProcessor = null;
 	}
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		fEditor = HandlerUtil.getActiveEditor(event);
-		
-		if (fEditor instanceof XMLMultiPageEditorPart) {
-			final ITextEditor editor = (ITextEditor) fEditor.getAdapter(ITextEditor.class);
+		IEditorPart editor = HandlerUtil.getActiveEditor(event);
+		ITextEditor textEditor = null;
+		if (editor instanceof ITextEditor)
+			textEditor = (ITextEditor) editor;
+		else {
+			Object o = editor.getAdapter(ITextEditor.class);
+			if (o != null)
+				textEditor = (ITextEditor) o;
+		}
+		if (textEditor != null) {
+			final ITextEditor finalTextEditor = textEditor;
 			Dialog cleanupDialog = new CleanupDialogXML(editor.getSite().getShell());
 			if (cleanupDialog.open() == Window.OK) {
 				// setup runnable
@@ -56,7 +59,7 @@ public class CleanupdocumentHandler extends AbstractHandler implements IHandler 
 						if (cleanupProcessor != null) {
 							IStructuredModel model = null;
 							try {
-								model = StructuredModelManager.getModelManager().getExistingModelForEdit(editor.getDocumentProvider().getDocument(editor.getEditorInput()));
+								model = StructuredModelManager.getModelManager().getExistingModelForEdit(finalTextEditor.getDocumentProvider().getDocument(finalTextEditor.getEditorInput()));
 								if (model != null) {
 									cleanupProcessor.cleanupModel(model);
 								}
@@ -73,10 +76,10 @@ public class CleanupdocumentHandler extends AbstractHandler implements IHandler 
 				// TODO: make independent of 'model'.
 				IStructuredModel model = null;
 				try {
-					model = StructuredModelManager.getModelManager().getExistingModelForEdit(editor.getDocumentProvider().getDocument(editor.getEditorInput()));
+					model = StructuredModelManager.getModelManager().getExistingModelForEdit(textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput()));
 					if (model != null) {
 						// begin recording
-						ITextSelection selection = (ITextSelection) editor.getSelectionProvider().getSelection();
+						ITextSelection selection = (ITextSelection) textEditor.getSelectionProvider().getSelection();
 						model.beginRecording(this, SSEUIMessages.Cleanup_Document_UI_, SSEUIMessages.Cleanup_Document_UI_, selection.getOffset(), selection.getLength());
 
 						// tell the model that we are about to make a big
@@ -84,7 +87,7 @@ public class CleanupdocumentHandler extends AbstractHandler implements IHandler 
 						model.aboutToChangeModel();
 
 						// run
-						BusyIndicator.showWhile(fEditor.getEditorSite().getWorkbenchWindow().getShell().getDisplay(), runnable);
+						BusyIndicator.showWhile(textEditor.getEditorSite().getWorkbenchWindow().getShell().getDisplay(), runnable);
 					}
 				}
 				finally {
@@ -95,22 +98,22 @@ public class CleanupdocumentHandler extends AbstractHandler implements IHandler 
 						model.changedModel();
 
 						// end recording
-						ITextSelection selection = (ITextSelection) editor.getSelectionProvider().getSelection();
+						ITextSelection selection = (ITextSelection) textEditor.getSelectionProvider().getSelection();
 						model.endRecording(this, selection.getOffset(), selection.getLength());
 						model.releaseFromEdit();
 					}
 				}
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	IStructuredCleanupProcessor getCleanupProcessor() {
 		if (fCleanupProcessor == null) {
 			fCleanupProcessor = new CleanupProcessorXML();
 		}
 
 		return fCleanupProcessor;
-	}	
+	}
 }

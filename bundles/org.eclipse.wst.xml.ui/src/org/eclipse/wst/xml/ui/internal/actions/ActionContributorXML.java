@@ -53,8 +53,6 @@ public class ActionContributorXML extends ActionContributor {
 	protected RetargetTextEditorAction fOpenFileAction = null; // open file
 
 	protected RetargetTextEditorAction fUncomment = null;
-	private SiblingNavigationAction fPreviousSibling;
-	private SiblingNavigationAction fNextSibling;
 	private GoToMatchingTagAction fGoToMatchingTagAction;
 
 	public ActionContributorXML() {
@@ -82,8 +80,6 @@ public class ActionContributorXML extends ActionContributor {
 		fFindOccurrences = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fFindOccurrences.setActionDefinitionId(ActionDefinitionIds.FIND_OCCURRENCES);
 
-		fPreviousSibling = new SiblingNavigationAction(resourceBundle, "previousSibling_", null, false);
-		fNextSibling = new SiblingNavigationAction(resourceBundle, "nextSibling_", null, true);
 		fGoToMatchingTagAction = new GoToMatchingTagAction(resourceBundle, "gotoMatchingTag_", null);
 	}
 
@@ -130,8 +126,6 @@ public class ActionContributorXML extends ActionContributor {
 				gotoGroup.add(fGotoMatchingBracketAction);
 				gotoGroup.add(fGoToMatchingTagAction);
 				gotoGroup.add(new Separator());
-				gotoGroup.add(fPreviousSibling);
-				gotoGroup.add(fNextSibling);
 			}
 		}
 	}
@@ -178,15 +172,9 @@ public class ActionContributorXML extends ActionContributor {
 
 		fFindOccurrences.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_FIND_OCCURRENCES));
 
-		fPreviousSibling.setEditor(textEditor);
-		fNextSibling.setEditor(textEditor);
 		fGoToMatchingTagAction.setEditor(textEditor);
 
 		if (actionBars != null) {
-			fPreviousSibling.setActionDefinitionId("org.eclipse.wst.xml.ui.previousSibling");
-			actionBars.setGlobalActionHandler("org.eclipse.wst.xml.ui.previousSibling", fPreviousSibling);
-			fNextSibling.setActionDefinitionId("org.eclipse.wst.xml.ui.nextSibling");
-			actionBars.setGlobalActionHandler("org.eclipse.wst.xml.ui.nextSibling", fNextSibling);
 			fGoToMatchingTagAction.setActionDefinitionId("org.eclipse.wst.xml.ui.gotoMatchingTag");
 			actionBars.setGlobalActionHandler("org.eclipse.wst.xml.ui.gotoMatchingTag", fGoToMatchingTagAction);
 			actionBars.updateActionBars();
@@ -213,7 +201,5 @@ public class ActionContributorXML extends ActionContributor {
 
 		fGoToMatchingTagAction.setEnabled(enabled);
 		fGotoMatchingBracketAction.setEnabled(enabled);
-		fPreviousSibling.setEnabled(enabled);
-		fNextSibling.setEnabled(enabled);
 	}
 }

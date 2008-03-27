@@ -15,6 +15,7 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
@@ -24,15 +25,15 @@ import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 /**
  * @author dcarver
- *
+ * 
  */
 public class RemoveBlockCommentHandler extends CommentHandler implements IHandler {
 
 	public RemoveBlockCommentHandler() {
 		super();
 	}
-	
-	void processAction(IDocument document, ITextSelection textSelection) {
+
+	void processAction(ITextEditor textEditor, IDocument document, ITextSelection textSelection) {
 		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
 		if (model != null) {
 			try {

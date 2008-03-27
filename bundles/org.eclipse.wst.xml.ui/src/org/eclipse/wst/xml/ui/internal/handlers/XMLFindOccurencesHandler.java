@@ -34,24 +34,27 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.search.FindOccurrencesProcessor;
 import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
 import org.eclipse.wst.xml.ui.internal.search.XMLFindOccurrencesProcessor;
-import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 
 public class XMLFindOccurencesHandler extends AbstractHandler implements IHandler {
-	
-	private IEditorPart fEditor;
 	private List fProcessors;
-	
+
 	public void dispose() {
-		// nulling out just in case
-		fEditor = null;
 	}
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		fEditor = HandlerUtil.getActiveEditor(event);
+		IEditorPart editor = HandlerUtil.getActiveEditor(event);
+		ITextEditor textEditor = null;
 		boolean okay = false;
-		
-		if (fEditor instanceof XMLMultiPageEditorPart) {
-			final ITextEditor textEditor = (ITextEditor) fEditor.getAdapter(ITextEditor.class);
+
+		if (editor instanceof ITextEditor)
+			textEditor = (ITextEditor) editor;
+		else {
+			Object o = editor.getAdapter(ITextEditor.class);
+			if (o != null)
+				textEditor = (ITextEditor) o;
+		}
+
+		if (textEditor != null) {
 			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 			if (document != null) {
 				ITextSelection textSelection = getTextSelection(textEditor);
@@ -73,10 +76,10 @@ public class XMLFindOccurencesHandler extends AbstractHandler implements IHandle
 			PlatformStatusLineUtil.displayErrorMessage(errorMessage);
 			PlatformStatusLineUtil.addOneTimeClearListener();
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
 	 * Get the appropriate find occurrences processor
 	 * 
@@ -122,7 +125,7 @@ public class XMLFindOccurencesHandler extends AbstractHandler implements IHandle
 		}
 		return textSelection;
 	}
-	
+
 	protected List getProcessors() {
 		if (fProcessors == null) {
 			fProcessors = new ArrayList();
