@@ -216,10 +216,12 @@ public class XSDSimpleTypeSection extends RefactoringSection
       if (simpleTypeName != null)
       {
         nameText.setText(simpleTypeName);
+        nameText.setEditable(true);
       }
       else
       {
-        nameText.setText("**anonymous**"); //$NON-NLS-1$
+        nameText.setText("**anonymous**"); //$NON-NLS-1$);
+        nameText.setEditable(false);
       }
       
       String variety = st.getVariety().getName();
@@ -654,6 +656,9 @@ public class XSDSimpleTypeSection extends RefactoringSection
   {
     if (event.widget == nameText)
     {
+      if (!nameText.getEditable())
+        return;
+
       String newValue = nameText.getText().trim();
       if (input instanceof XSDNamedComponent)
       {
