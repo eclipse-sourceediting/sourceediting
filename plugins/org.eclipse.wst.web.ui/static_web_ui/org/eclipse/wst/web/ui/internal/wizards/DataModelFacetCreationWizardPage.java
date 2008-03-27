@@ -160,7 +160,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 						if(next.getProjectFacet().equals(primaryProjectFacet)){
 							foundComboVersion = true;
 							final IProjectFacetVersion selectedVersion = next;
-							Display.getDefault().syncExec(new Runnable(){
+							Display.getDefault().asyncExec(new Runnable(){
 								public void run() {
 									String selectedText = primaryVersionCombo.getItem(primaryVersionCombo.getSelectionIndex());
 									if(!selectedText.equals(selectedVersion.getVersionString())){
@@ -179,7 +179,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 					}
 				} else if(event.getType() == IFacetedProjectEvent.Type.PRIMARY_RUNTIME_CHANGED){
 					//this block updates the items in the combo when the runtime changes
-					Display.getDefault().syncExec(new Runnable(){
+					Display.getDefault().asyncExec(new Runnable(){
 						public void run() {
 							updatePrimaryVersions();
 						}
