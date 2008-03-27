@@ -14,15 +14,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
-import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.quickassist.IQuickAssistInvocationContext;
 import org.eclipse.jface.text.quickassist.IQuickAssistProcessor;
+import org.eclipse.jface.text.quickassist.IQuickFixableAnnotation;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
+import org.eclipse.jface.text.source.IAnnotationModelExtension2;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.TextInvocationContext;
+import org.eclipse.wst.sse.ui.StructuredTextInvocationContext;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 
 /**
@@ -35,11 +37,9 @@ public class SourceValidationQuickAssistProcessor implements IQuickAssistProcess
 	}
 
 	public boolean canFix(Annotation annotation) {
-		if (annotation instanceof TemporaryAnnotation) {
-			Object fixInfo = ((TemporaryAnnotation) annotation).getAdditionalFixInfo();
-			if (fixInfo instanceof IQuickAssistProcessor) {
-				return ((IQuickAssistProcessor) fixInfo).canFix(annotation);
-			}
+
+		if (annotation instanceof IQuickFixableAnnotation) {
+			return ((IQuickFixableAnnotation) annotation).isQuickFixable();
 		}
 		return false;
 	}
@@ -47,53 +47,61 @@ public class SourceValidationQuickAssistProcessor implements IQuickAssistProcess
 	public ICompletionProposal[] computeQuickAssistProposals(IQuickAssistInvocationContext quickAssistContext) {
 		ISourceViewer viewer = quickAssistContext.getSourceViewer();
 		int documentOffset = quickAssistContext.getOffset();
-
 		int length = viewer != null ? viewer.getSelectedRange().y : 0;
-		TextInvocationContext context = new TextInvocationContext(viewer, documentOffset, length);
-
 
 		IAnnotationModel model = viewer.getAnnotationModel();
 		if (model == null)
 			return null;
 
-		List proposals = computeProposals(context, model);
-		if (proposals.isEmpty())
-			return null;
+		List allProposals = new ArrayList();
+		if (model instanceof IAnnotationModelExtension2) {
+			Iterator iter = ((IAnnotationModelExtension2) model).getAnnotationIterator(documentOffset, length, true, true);
+			while (iter.hasNext()) {
+				List processors = new ArrayList();
+				Annotation anno = (Annotation) iter.next();
+				if (canFix(anno)) {
+					// first check to see if annotation already has a quick
+					// fix processor attached to it
+					if (anno instanceof TemporaryAnnotation) {
+						Object o = ((TemporaryAnnotation) anno).getAdditionalFixInfo();
+						if (o instanceof IQuickAssistProcessor) {
+							processors.add(o);
+						}
+					}
 
-		return (ICompletionProposal[]) proposals.toArray(new ICompletionProposal[proposals.size()]);
-	}
+					// get all relevant quick fixes for this annotation
+					QuickFixRegistry registry = QuickFixRegistry.getInstance();
+					processors.addAll(Arrays.asList(registry.getQuickFixProcessors(anno)));
 
-	private boolean isAtPosition(int offset, Position pos) {
-		return (pos != null) && (offset >= pos.getOffset() && offset <= (pos.getOffset() + pos.getLength()));
-	}
+					// set up context
+					Map attributes = null;
+					if (anno instanceof TemporaryAnnotation)
+						attributes = ((TemporaryAnnotation) anno).getAttributes();
+					StructuredTextInvocationContext sseContext = new StructuredTextInvocationContext(viewer, documentOffset, length, attributes);
 
-	private List computeProposals(IQuickAssistInvocationContext context, IAnnotationModel model) {
-		int offset = context.getOffset();
-		ArrayList proposalsList = new ArrayList();
-		Iterator iter = model.getAnnotationIterator();
-		while (iter.hasNext()) {
-			Annotation annotation = (Annotation) iter.next();
-			// canFix will verify annotation is instanceof TemporaryAnnotation
-			// so if true, we can assume it is
-			if (canFix(annotation)) {
-				Position pos = model.getPosition(annotation);
-				if (isAtPosition(offset, pos)) {
-					context = new TextInvocationContext(context.getSourceViewer(), pos.getOffset(), pos.getLength());
-					collectProposals(annotation, context, proposalsList);
+					// call each processor
+					for (int i = 0; i < processors.size(); ++i) {
+						List proposals = new ArrayList();
+						collectProposals((IQuickAssistProcessor) processors.get(i), anno, sseContext, proposals);
+
+						if (proposals.size() > 0)
+							allProposals.addAll(proposals);
+					}
+
 				}
 			}
 		}
-		return proposalsList;
+
+		if (allProposals.isEmpty())
+			return null;
+
+		return (ICompletionProposal[]) allProposals.toArray(new ICompletionProposal[allProposals.size()]);
 	}
 
-	private void collectProposals(Annotation annotation, IQuickAssistInvocationContext invocationContext, List proposalsList) {
-		TemporaryAnnotation temporaryAnno = (TemporaryAnnotation) annotation;
-		Object fixInfo = temporaryAnno.getAdditionalFixInfo();
-		if (fixInfo instanceof IQuickAssistProcessor) {
-			ICompletionProposal[] proposals = ((IQuickAssistProcessor) fixInfo).computeQuickAssistProposals(invocationContext);
-			if (proposals != null && proposals.length > 0) {
-				proposalsList.addAll(Arrays.asList(proposals));
-			}
+	private void collectProposals(IQuickAssistProcessor processor, Annotation annotation, IQuickAssistInvocationContext invocationContext, List proposalsList) {
+		ICompletionProposal[] proposals = processor.computeQuickAssistProposals(invocationContext);
+		if (proposals != null && proposals.length > 0) {
+			proposalsList.addAll(Arrays.asList(proposals));
 		}
 	}
 

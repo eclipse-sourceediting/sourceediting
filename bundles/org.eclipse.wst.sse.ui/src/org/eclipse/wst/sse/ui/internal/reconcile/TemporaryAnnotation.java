@@ -12,7 +12,10 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.reconcile;
 
+import java.util.Map;
+
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.quickassist.IQuickFixableAnnotation;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationAccessExtension;
@@ -33,7 +36,7 @@ import org.eclipse.wst.sse.ui.internal.ITemporaryAnnotation;
  * An implementation of ITemporaryAnnotation @
  * @author pavery
  */
-public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotation, IReconcileResult, IAnnotationPresentation {
+public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotation, IReconcileResult, IAnnotationPresentation, IQuickFixableAnnotation {
 	// remember to change these if it changes in the extension point
 	// may need a different home for them in the future, but they're here for
 	// now
@@ -74,6 +77,9 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
 
 	private Object fKey = null;
 	private Position fPosition = null;
+	private Map fAttributes = null;
+	private boolean fIsQuickFixable = false;
+	private boolean fIsQuickFixableStateSet = false;
 
 	private int fProblemID;
 
@@ -209,6 +215,7 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
 	 */
 	public void setAdditionalFixInfo(Object info) {
 		fAdditionalFixInfo = info;
+		setQuickFixable(true);
 	}
 
     public int getLayer() {
@@ -226,5 +233,26 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
     
 	public String toString() {
 		return "" + fPosition.getOffset() + ':' + fPosition.getLength() + ": " + getText(); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+	
+	public Map getAttributes() {
+		return fAttributes;
+	}
+	
+	public void setAttributes(Map attributes) {
+		fAttributes = attributes;
+	}
+	
+	public boolean isQuickFixable() {
+		return fIsQuickFixable;
+	}
+	
+	public void setQuickFixable(boolean state) {
+		fIsQuickFixable = state;
+		fIsQuickFixableStateSet = true;
+	}
+	
+	public boolean isQuickFixableStateSet() {
+		return fIsQuickFixableStateSet;
 	}
 }

@@ -464,7 +464,11 @@
 		id="sourcevalidation"
 		name="%Source_Validation_Extension_Point.name"
 		schema="schema/org.eclipse.wst.sse.ui.sourcevalidation.exsd" />
-		
+	<extension-point 
+		id="quickFixProcessor" 
+		name="%quickFixProcessor" 
+		schema="schema/quickFixProcessor.exsd"/>
+ 
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution locationURI="menu:org.eclipse.ui.main.menu?after=edit">
 			<menu id="sourceMenuId" label="%Source"></menu>

@@ -161,6 +161,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 					extraInfo = validationMessage.getAttribute(QUICKASSISTPROCESSOR);
 				}
 				annotation.setAdditionalFixInfo(extraInfo);
+				annotation.setAttributes(validationMessage.getAttributes());
 				annotations.add(annotation);
 			}
 		}
