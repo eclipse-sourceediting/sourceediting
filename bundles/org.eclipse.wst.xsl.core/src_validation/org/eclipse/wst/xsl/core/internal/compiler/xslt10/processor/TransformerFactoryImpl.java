@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: TransformerFactoryImpl.java,v 1.1 2008/03/27 01:08:55 dacarver Exp $
+ * $Id: TransformerFactoryImpl.java,v 1.2 2008/03/27 05:14:52 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.processor;
 
@@ -88,7 +88,7 @@ public class TransformerFactoryImpl extends SAXTransformerFactory
    * <code>org.apache.xpath.functions.FuncSystemProperty.XSLT_PROPERTIES</code>
    */
   public static final String XSLT_PROPERTIES =
-    "org/apache/xalan/res/XSLTInfo.properties";
+    "org/apache/xalan/res/XSLTInfo.properties"; //$NON-NLS-1$
 
   /**
    * <p>State of secure processing feature.</p>
@@ -105,17 +105,22 @@ public class TransformerFactoryImpl extends SAXTransformerFactory
 
   /** Static string to be used for incremental feature */
   public static final String FEATURE_INCREMENTAL =
-                             "http://xml.apache.org/xalan/features/incremental";
+                             "http://xml.apache.org/xalan/features/incremental"; //$NON-NLS-1$
 
   /** Static string to be used for optimize feature */
   public static final String FEATURE_OPTIMIZE =
-                             "http://xml.apache.org/xalan/features/optimize";
+                             "http://xml.apache.org/xalan/features/optimize"; //$NON-NLS-1$
 
   /** Static string to be used for source_location feature */
   public static final String FEATURE_SOURCE_LOCATION =
                              XalanProperties.SOURCE_LOCATION;
 
-  public javax.xml.transform.Templates processFromNode(Node node)
+  /**
+ * @param node
+ * @return
+ * @throws TransformerConfigurationException
+ */
+public javax.xml.transform.Templates processFromNode(Node node)
           throws TransformerConfigurationException
   {
 
@@ -960,6 +965,7 @@ public class TransformerFactoryImpl extends SAXTransformerFactory
         try
         {
           m_errorListener.fatalError(new TransformerException(e));
+          e.printStackTrace();
           return null;
         }
         catch (TransformerConfigurationException ex1)

@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemCopyOf.java,v 1.1 2008/03/27 01:08:53 dacarver Exp $
+ * $Id: ElemCopyOf.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -39,7 +39,7 @@ import org.apache.xml.dtm.DTMIterator;
 import org.apache.xml.dtm.ref.DTMTreeWalker;
 import org.apache.xalan.serialize.SerializerUtils;
 import org.apache.xml.serializer.SerializationHandler;
-import org.apache.xpath.XPath;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.xpath.XPath;
 import org.apache.xpath.XPathContext;
 import org.apache.xpath.objects.XObject;
 

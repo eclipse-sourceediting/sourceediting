@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: FuncDocument.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: FuncDocument.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -301,6 +301,7 @@ public class FuncDocument extends Function2Args
       {
         throwable =
           ((org.apache.xml.utils.WrappedRuntimeException) throwable).getException();
+        error(xctxt, throwable.getMessage(), null);
       }
 
       if ((throwable instanceof NullPointerException)

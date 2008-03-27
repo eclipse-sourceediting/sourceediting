@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ProcessorLRE.java,v 1.1 2008/03/27 01:08:55 dacarver Exp $
+ * $Id: ProcessorLRE.java,v 1.2 2008/03/27 05:14:51 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.processor;
 
@@ -46,7 +46,7 @@ import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.Stylesheet;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.StylesheetRoot;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.XMLNSDecl;
 import org.apache.xml.utils.SAXSourceLocator;
-import org.apache.xpath.XPath;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.xpath.XPath;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;

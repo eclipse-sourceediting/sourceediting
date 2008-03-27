@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemValueOf.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: ElemValueOf.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -36,7 +36,7 @@ import org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer.Transformer
 import org.apache.xml.dtm.DTM;
 import org.apache.xml.serializer.SerializationHandler;
 import org.apache.xpath.Expression;
-import org.apache.xpath.XPath;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.xpath.XPath;
 import org.apache.xpath.XPathContext;
 import org.apache.xpath.objects.XObject;
 import org.xml.sax.SAXException;

@@ -25,14 +25,14 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemVariablePsuedo.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: ElemVariablePsuedo.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
 import javax.xml.transform.TransformerException;
 
 import org.apache.xalan.transformer.TransformerImpl;
-import org.apache.xpath.XPath;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.xpath.XPath;
 
 public class ElemVariablePsuedo extends ElemVariable
 {

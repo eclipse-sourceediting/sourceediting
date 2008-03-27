@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: StylesheetHandler.java,v 1.1 2008/03/27 01:08:55 dacarver Exp $
+ * $Id: StylesheetHandler.java,v 1.2 2008/03/27 05:14:52 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.processor;
 
@@ -53,7 +53,7 @@ import org.apache.xml.utils.NodeConsumer;
 import org.apache.xml.utils.PrefixResolver;
 import org.apache.xml.utils.SAXSourceLocator;
 import org.apache.xml.utils.XMLCharacterRecognizer;
-import org.apache.xpath.XPath;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.xpath.XPath;
 import org.apache.xpath.compiler.FunctionTable;
 import org.apache.xpath.functions.Function;
 
@@ -371,7 +371,7 @@ public class StylesheetHandler extends DefaultHandler
    * @throws org.xml.sax.SAXException if the element is not allowed in the
    * found position in the stylesheet.
    */
-  protected XSLTElementProcessor getProcessorFor(
+  public XSLTElementProcessor getProcessorFor(
           String uri, String localName, String rawName)
             throws org.xml.sax.SAXException
   {
@@ -558,7 +558,7 @@ public class StylesheetHandler extends DefaultHandler
    *
    * @throws org.xml.sax.SAXException
    */
-  private void flushCharacters() throws org.xml.sax.SAXException
+  public void flushCharacters() throws org.xml.sax.SAXException
   {
 
     XSLTElementProcessor elemProcessor = getCurrentProcessor();
@@ -775,7 +775,7 @@ public class StylesheetHandler extends DefaultHandler
     //
     // %REVIEW%: We need a better PI architecture
     
-    String prefix="",ns="", localName=target;
+    String prefix="",ns="", localName=target;  //$NON-NLS-1$//$NON-NLS-2$
     int colon=target.indexOf(':');
     if(colon>=0)
     {
@@ -793,15 +793,15 @@ public class StylesheetHandler extends DefaultHandler
       // it binds the prefix, I'm going to make this sloppy for
       // testing purposes.
       if(
-        "xalan-doc-cache-off".equals(target) ||
-        "xalan:doc-cache-off".equals(target) ||
-	   ("doc-cache-off".equals(localName) &&
-	    ns.equals("org.apache.xalan.xslt.extensions.Redirect") )
+        "xalan-doc-cache-off".equals(target) || //$NON-NLS-1$
+        "xalan:doc-cache-off".equals(target) || //$NON-NLS-1$
+	   ("doc-cache-off".equals(localName) && //$NON-NLS-1$
+	    ns.equals("org.apache.xalan.xslt.extensions.Redirect") ) //$NON-NLS-1$
 	 )
       {
 	if(!(m_elems.peek() instanceof ElemForEach))
           throw new TransformerException
-	    ("xalan:doc-cache-off not allowed here!", 
+	    ("xalan:doc-cache-off not allowed here!",  //$NON-NLS-1$
 	     getLocator());
         ElemForEach elem = (ElemForEach)m_elems.peek();
 
@@ -884,7 +884,7 @@ public class StylesheetHandler extends DefaultHandler
    * @throws RuntimeException if the condition is not true.
    * @xsl.usage internal
    */
-  private void assertion(boolean condition, String msg) throws RuntimeException
+  public void assertion(boolean condition, String msg) throws RuntimeException
   {
     if (!condition)
       throw new RuntimeException(msg);
@@ -903,7 +903,7 @@ public class StylesheetHandler extends DefaultHandler
    * method chooses to flag this condition as an error.
    * @xsl.usage internal
    */
-  protected void error(String msg, Exception e)
+  public void error(String msg, Exception e)
           throws org.xml.sax.SAXException
   {
 
@@ -1319,7 +1319,7 @@ public class StylesheetHandler extends DefaultHandler
    * Get the current ElemTemplateElement at the top of the stack.
    * @return Valid ElemTemplateElement, which may be null.
    */
-  protected ElemTemplateElement getElemTemplateElement()
+  public ElemTemplateElement getElemTemplateElement()
   {
 
     try
@@ -1340,7 +1340,7 @@ public class StylesheetHandler extends DefaultHandler
   /**
    * Returns the next m_docOrderCount number and increments the number for future use.
    */
-  protected int nextUid()
+  public int nextUid()
   {
     return m_docOrderCount++;
   }
@@ -1353,7 +1353,7 @@ public class StylesheetHandler extends DefaultHandler
    * @param elem Should be a non-null reference to the intended current
    * template element.
    */
-  protected void pushElemTemplateElement(ElemTemplateElement elem)
+  public void pushElemTemplateElement(ElemTemplateElement elem)
   {
 
     if (elem.getUid() == -1)
@@ -1366,7 +1366,7 @@ public class StylesheetHandler extends DefaultHandler
    * Get the current XSLTElementProcessor from the top of the stack.
    * @return the ElemTemplateElement which was popped.
    */
-  protected ElemTemplateElement popElemTemplateElement()
+  public ElemTemplateElement popElemTemplateElement()
   {
     return (ElemTemplateElement) m_elems.pop();
   }
@@ -1385,7 +1385,7 @@ public class StylesheetHandler extends DefaultHandler
    * @see <a href="http://www.w3.org/TR/xslt#base-uri">
    * Section 3.2 Base URI of XSLT specification.</a>
    */
-  protected void pushBaseIndentifier(String baseID)
+  public void pushBaseIndentifier(String baseID)
   {
 
     if (null != baseID)
@@ -1410,7 +1410,7 @@ public class StylesheetHandler extends DefaultHandler
    * Pop a base URI from the stack.
    * @return baseIdentifier.
    */
-  protected String popBaseIndentifier()
+  public String popBaseIndentifier()
   {
     return (String) m_baseIdentifiers.pop();
   }
@@ -1480,7 +1480,7 @@ public class StylesheetHandler extends DefaultHandler
    * @param hrefUrl non-null reference to the URL for the current imported
    * stylesheet.
    */
-  protected void pushImportURL(String hrefUrl)
+  public void pushImportURL(String hrefUrl)
   {
     m_importStack.push(hrefUrl);
   }
@@ -1493,7 +1493,7 @@ public class StylesheetHandler extends DefaultHandler
    *
    * @return true if the URL is on the import stack.
    */
-  protected boolean importStackContains(String hrefUrl)
+  public boolean importStackContains(String hrefUrl)
   {
     return stackContains(m_importStack, hrefUrl);
   }
@@ -1503,7 +1503,7 @@ public class StylesheetHandler extends DefaultHandler
    *
    * @return non-null reference to the import URL that was popped.
    */
-  protected String popImportURL()
+  public String popImportURL()
   {
     return (String) m_importStack.pop();
   }
@@ -1515,12 +1515,12 @@ public class StylesheetHandler extends DefaultHandler
   private boolean warnedAboutOldXSLTNamespace = false;
 
   /** Stack of NamespaceSupport objects. */
-  Stack m_nsSupportStack = new Stack();
+  private Stack m_nsSupportStack = new Stack();
 
   /**
    * Push a new NamespaceSupport instance.
    */
-  protected void pushNewNamespaceSupport()
+  public void pushNewNamespaceSupport()
   {
     m_nsSupportStack.push(new NamespaceSupport2());
   }
@@ -1529,7 +1529,7 @@ public class StylesheetHandler extends DefaultHandler
    * Pop the current NamespaceSupport object.
    *
    */
-  protected void popNamespaceSupport()
+  public void popNamespaceSupport()
   {
     m_nsSupportStack.pop();
   }
@@ -1540,7 +1540,7 @@ public class StylesheetHandler extends DefaultHandler
    * @return a non-null reference to the current NamespaceSupport object,
    * which is the top of the namespace support stack.
    */
-  protected NamespaceSupport getNamespaceSupport()
+  public NamespaceSupport getNamespaceSupport()
   {
     return (NamespaceSupport) m_nsSupportStack.peek();
   }
@@ -1594,7 +1594,7 @@ public class StylesheetHandler extends DefaultHandler
   /**
    * Pop boolean value from the spacePreserve stack.
    */
-  protected void popSpaceHandling()
+  public void popSpaceHandling()
   {
     m_spacePreserveStack.pop();
   }
@@ -1604,7 +1604,7 @@ public class StylesheetHandler extends DefaultHandler
    * 
    * @param b true if space should be preserved, false otherwise.
    */
-  protected void pushSpaceHandling(boolean b)
+  public void pushSpaceHandling(boolean b)
     throws org.xml.sax.SAXParseException
   {
     m_spacePreserveStack.push(b);
@@ -1616,7 +1616,7 @@ public class StylesheetHandler extends DefaultHandler
    * 
    * @param attrs list of attributes that were passed to startElement.
    */
-  protected void pushSpaceHandling(Attributes attrs)
+  public void pushSpaceHandling(Attributes attrs)
     throws org.xml.sax.SAXParseException
   {    
     String value = attrs.getValue("xml:space");
@@ -1649,7 +1649,7 @@ public class StylesheetHandler extends DefaultHandler
     }
   }
   
-  private double getElemVersion()
+  public double getElemVersion()
   {
     ElemTemplateElement elem = getElemTemplateElement();
     double version = -1; 

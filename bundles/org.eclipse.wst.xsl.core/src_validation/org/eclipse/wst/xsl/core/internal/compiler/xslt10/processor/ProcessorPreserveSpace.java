@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ProcessorPreserveSpace.java,v 1.1 2008/03/27 01:08:55 dacarver Exp $
+ * $Id: ProcessorPreserveSpace.java,v 1.2 2008/03/27 05:14:52 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.processor;
 
@@ -34,7 +34,7 @@ import java.util.Vector;
 
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.Stylesheet;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.WhiteSpaceInfo;
-import org.apache.xpath.XPath;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.xpath.XPath;
 
 import org.xml.sax.Attributes;
 

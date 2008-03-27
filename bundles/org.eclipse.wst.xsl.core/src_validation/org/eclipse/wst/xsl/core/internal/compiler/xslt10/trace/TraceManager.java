@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: TraceManager.java,v 1.1 2008/03/27 01:08:57 dacarver Exp $
+ * $Id: TraceManager.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.trace;
 
@@ -35,7 +35,7 @@ import java.util.Vector;
 
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemTemplateElement;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer.TransformerImpl;
-import org.apache.xpath.XPath;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.xpath.XPath;
 import org.apache.xpath.objects.XObject;
 import org.w3c.dom.Node;
 

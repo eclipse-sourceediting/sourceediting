@@ -26,44 +26,44 @@
  * limitations under the License.
  */
 /*
- * $Id: XSLTSchema.java,v 1.1 2008/03/27 01:08:55 dacarver Exp $
+ * $Id: XSLTSchema.java,v 1.2 2008/03/27 05:14:52 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.processor;
 
 import java.util.Hashtable;
 
-import org.apache.xalan.templates.Constants;
-import org.apache.xalan.templates.ElemApplyImport;
-import org.apache.xalan.templates.ElemApplyTemplates;
-import org.apache.xalan.templates.ElemAttribute;
-import org.apache.xalan.templates.ElemCallTemplate;
-import org.apache.xalan.templates.ElemChoose;
-import org.apache.xalan.templates.ElemComment;
-import org.apache.xalan.templates.ElemCopy;
-import org.apache.xalan.templates.ElemCopyOf;
-import org.apache.xalan.templates.ElemElement;
-import org.apache.xalan.templates.ElemExsltFuncResult;
-import org.apache.xalan.templates.ElemExsltFunction;
-import org.apache.xalan.templates.ElemExtensionDecl;
-import org.apache.xalan.templates.ElemExtensionScript;
-import org.apache.xalan.templates.ElemFallback;
-import org.apache.xalan.templates.ElemForEach;
-import org.apache.xalan.templates.ElemIf;
-import org.apache.xalan.templates.ElemLiteralResult;
-import org.apache.xalan.templates.ElemMessage;
-import org.apache.xalan.templates.ElemNumber;
-import org.apache.xalan.templates.ElemOtherwise;
-import org.apache.xalan.templates.ElemPI;
-import org.apache.xalan.templates.ElemParam;
-import org.apache.xalan.templates.ElemSort;
-import org.apache.xalan.templates.ElemTemplate;
-import org.apache.xalan.templates.ElemText;
-import org.apache.xalan.templates.ElemTextLiteral;
-import org.apache.xalan.templates.ElemUnknown;
-import org.apache.xalan.templates.ElemValueOf;
-import org.apache.xalan.templates.ElemVariable;
-import org.apache.xalan.templates.ElemWhen;
-import org.apache.xalan.templates.ElemWithParam;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.Constants;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemApplyImport;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemApplyTemplates;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemAttribute;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemCallTemplate;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemChoose;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemComment;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemCopy;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemCopyOf;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemElement;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemExsltFuncResult;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemExsltFunction;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemExtensionDecl;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemExtensionScript;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemFallback;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemForEach;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemIf;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemLiteralResult;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemMessage;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemNumber;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemOtherwise;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemPI;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemParam;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemSort;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemTemplate;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemText;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemTextLiteral;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemUnknown;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemValueOf;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemVariable;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemWhen;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemWithParam;
 import org.apache.xml.utils.QName;
 
 /**

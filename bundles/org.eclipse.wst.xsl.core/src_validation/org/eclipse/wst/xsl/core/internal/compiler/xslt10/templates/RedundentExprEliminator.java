@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: RedundentExprEliminator.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: RedundentExprEliminator.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -38,7 +38,7 @@ import org.apache.xml.utils.WrappedRuntimeException;
 import org.apache.xpath.Expression;
 import org.apache.xpath.ExpressionNode;
 import org.apache.xpath.ExpressionOwner;
-import org.apache.xpath.XPath;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.xpath.XPath;
 import org.apache.xpath.axes.AxesWalker;
 import org.apache.xpath.axes.FilterExprIteratorSimple;
 import org.apache.xpath.axes.FilterExprWalker;

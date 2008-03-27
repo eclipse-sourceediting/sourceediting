@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: AVT.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: AVT.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -40,7 +40,7 @@ import org.apache.xalan.res.XSLMessages;
 import org.apache.xalan.res.XSLTErrorResources;
 import org.apache.xml.utils.FastStringBuffer;
 import org.apache.xml.utils.StringBufferPool;
-import org.apache.xpath.XPath;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.xpath.XPath;
 import org.apache.xpath.XPathContext;
 
 /**

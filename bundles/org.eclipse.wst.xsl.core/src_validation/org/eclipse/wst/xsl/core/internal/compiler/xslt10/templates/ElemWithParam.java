@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemWithParam.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: ElemWithParam.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -34,7 +34,7 @@ import javax.xml.transform.TransformerException;
 import org.apache.xalan.res.XSLTErrorResources;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer.TransformerImpl;
 import org.apache.xml.utils.QName;
-import org.apache.xpath.XPath;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.xpath.XPath;
 import org.apache.xpath.XPathContext;
 import org.apache.xpath.objects.XObject;
 import org.apache.xpath.objects.XRTreeFrag;

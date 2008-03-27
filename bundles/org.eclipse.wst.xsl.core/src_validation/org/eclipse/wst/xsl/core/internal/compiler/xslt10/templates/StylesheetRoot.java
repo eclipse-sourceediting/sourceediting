@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: StylesheetRoot.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: StylesheetRoot.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -50,7 +50,7 @@ import org.apache.xml.dtm.DTM;
 import org.apache.xml.dtm.ref.ExpandedNameTable;
 import org.apache.xml.utils.IntStack;
 import org.apache.xml.utils.QName;
-import org.apache.xpath.XPath;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.xpath.XPath;
 import org.apache.xpath.XPathContext;
 
 /**

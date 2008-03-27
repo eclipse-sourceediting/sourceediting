@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemNumber.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: ElemNumber.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -52,7 +52,7 @@ import org.apache.xml.utils.res.IntArrayWrapper;
 import org.apache.xml.utils.res.LongArrayWrapper;
 import org.apache.xml.utils.res.StringArrayWrapper;
 import org.apache.xpath.NodeSetDTM;
-import org.apache.xpath.XPath;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.xpath.XPath;
 import org.apache.xpath.XPathContext;
 import org.apache.xpath.objects.XObject;
 

@@ -11,29 +11,19 @@
 package org.eclipse.wst.xsl.core.internal.validation.xalan;
 
 
-import java.io.File;
-import java.util.Properties;
-
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.ErrorListener;
-import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.sax.TransformerHandler;
-import javax.xml.transform.stream.StreamSource;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.apache.xalan.processor.TransformerFactoryImpl;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.processor.TransformerFactoryImpl;
 import org.apache.xml.utils.DefaultErrorHandler;
 
 /**
@@ -62,7 +52,7 @@ public class XSLValidator {
 		ErrorListener errorListener = new XSLValidationReport();
 
 		synchronized (XPATH_LOCK) {
-			XalanTransformerFactoryImpl transformer = new XalanTransformerFactoryImpl();
+			TransformerFactoryImpl transformer = new TransformerFactoryImpl();
 			transformer.setErrorListener(errorListener);
 
 		   try {

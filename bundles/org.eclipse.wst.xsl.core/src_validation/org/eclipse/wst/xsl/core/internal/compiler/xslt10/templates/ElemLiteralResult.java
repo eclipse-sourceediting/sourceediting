@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemLiteralResult.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: ElemLiteralResult.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -116,7 +116,7 @@ public class ElemLiteralResult extends ElemUse
       for (int i = (nAttrs - 1); i >= 0; i--)
       {
         AVT avt = (AVT) m_avts.elementAt(i);
-        avt.fixupVariables(vnames, cstate.getGlobalsSize());
+        	avt.fixupVariables(vnames, cstate.getGlobalsSize());
       } 
     }   
   }

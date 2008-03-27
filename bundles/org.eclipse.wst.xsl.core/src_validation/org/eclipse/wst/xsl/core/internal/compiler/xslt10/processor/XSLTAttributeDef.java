@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: XSLTAttributeDef.java,v 1.1 2008/03/27 01:08:55 dacarver Exp $
+ * $Id: XSLTAttributeDef.java,v 1.2 2008/03/27 05:14:52 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.processor;
 
@@ -46,7 +46,7 @@ import org.apache.xml.utils.QName;
 import org.apache.xml.utils.StringToIntTable;
 import org.apache.xml.utils.StringVector;
 import org.apache.xml.utils.XML11Char;
-import org.apache.xpath.XPath;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.xpath.XPath;
 
  
 /**

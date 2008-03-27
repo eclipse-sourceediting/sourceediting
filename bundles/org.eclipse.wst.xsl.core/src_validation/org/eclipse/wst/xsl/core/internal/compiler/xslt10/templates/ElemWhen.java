@@ -25,11 +25,11 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemWhen.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: ElemWhen.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
-import org.apache.xpath.XPath;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.xpath.XPath;
 
 /**
  * Implement xsl:when.

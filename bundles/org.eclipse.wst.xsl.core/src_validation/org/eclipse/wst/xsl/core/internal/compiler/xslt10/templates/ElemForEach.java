@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemForEach.java,v 1.1 2008/03/27 01:08:53 dacarver Exp $
+ * $Id: ElemForEach.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -41,7 +41,7 @@ import org.apache.xml.dtm.DTMManager;
 import org.apache.xml.utils.IntStack;
 import org.apache.xpath.Expression;
 import org.apache.xpath.ExpressionOwner;
-import org.apache.xpath.XPath;
+import org.eclipse.wst.xsl.core.internal.compiler.xslt10.xpath.XPath;
 import org.apache.xpath.XPathContext;
 
 import java.io.ObjectInputStream;
