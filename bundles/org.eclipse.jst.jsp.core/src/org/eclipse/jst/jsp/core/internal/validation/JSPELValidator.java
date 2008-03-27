@@ -14,13 +14,20 @@ package org.eclipse.jst.jsp.core.internal.validation;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
+import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.java.jspel.JSPELParser;
 import org.eclipse.jst.jsp.core.internal.java.jspel.ParseException;
 import org.eclipse.jst.jsp.core.internal.java.jspel.Token;
 import org.eclipse.jst.jsp.core.internal.java.jspel.TokenMgrError;
+import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -28,6 +35,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
@@ -69,7 +77,43 @@ public class JSPELValidator extends JSPValidator {
 		}
 	}
 
+	private IPreferencesService fPreferencesService = null;
+	private IScopeContext[] fScopes = null;
+
+	private void loadPreferences(IFile file) {
+		String bundleName = JSPCorePlugin.getDefault().getBundle().getSymbolicName();
+		fPreferencesService = Platform.getPreferencesService();
+		if (file != null && file.isAccessible()) {
+			ProjectScope projectScope = new ProjectScope(file.getProject());
+			if (projectScope.getNode(bundleName).getBoolean(JSPCorePreferenceNames.USE_PROJECT_SETTINGS, false)) {
+				fScopes = new IScopeContext[]{projectScope, new InstanceScope(), new DefaultScope()};
+			}
+		}
+		fScopes = new IScopeContext[]{new InstanceScope(), new DefaultScope()};
+	}
+	
+	int getMessageSeverity(String key) {
+		int sev = fPreferencesService.getInt(JSPCorePlugin.getDefault().getBundle().getSymbolicName(), key, IMessage.NORMAL_SEVERITY, fScopes);
+		switch (sev) {
+			case ValidationMessage.ERROR :
+				return IMessage.HIGH_SEVERITY;
+			case ValidationMessage.WARNING :
+				return IMessage.NORMAL_SEVERITY;
+			case ValidationMessage.INFORMATION :
+				return IMessage.LOW_SEVERITY;
+			case ValidationMessage.IGNORE :
+				return ValidationMessage.IGNORE;
+		}
+		return IMessage.NORMAL_SEVERITY;
+	}
+	
+	private void unloadPreferences() {
+		fPreferencesService = null;
+		fScopes = null;
+	}
+
 	protected void performValidation(IFile file, IReporter reporter, IStructuredDocument structuredDoc) {
+		loadPreferences(file);
 		IStructuredDocumentRegion curNode = structuredDoc.getFirstStructuredDocumentRegion();
 		while (null != curNode && !reporter.isCancelled()) {
 			if (curNode.getType() != DOMRegionContext.XML_COMMENT_TEXT && curNode.getType() != DOMRegionContext.XML_CDATA_TEXT && curNode.getType() != DOMRegionContext.UNDEFINED) {
@@ -77,6 +121,7 @@ public class JSPELValidator extends JSPValidator {
 			}
 			curNode = curNode.getNext();
 		}
+		unloadPreferences();
 	}
 
 	protected void validateRegionContainer(ITextRegionCollection container, IReporter reporter, IFile file) {
@@ -107,20 +152,26 @@ public class JSPELValidator extends JSPValidator {
 			elParser.Expression();
 		}
 		catch (ParseException e) {
-			Token curTok = e.currentToken;
-			int problemStartOffset = contentStart + curTok.beginColumn;
-			Message message = new LocalizedMessage(IMessage.NORMAL_SEVERITY, JSPCoreMessages.JSPEL_Syntax);
-			message.setOffset(problemStartOffset);
-			message.setLength(curTok.endColumn - curTok.beginColumn + 1);
-			message.setTargetObject(file);
-			reporter.addMessage(fMessageOriginator, message);
+			int sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_EL_SYNTAX);
+			if (sev != ValidationMessage.IGNORE) {
+				Token curTok = e.currentToken;
+				int problemStartOffset = contentStart + curTok.beginColumn;
+				Message message = new LocalizedMessage(sev, JSPCoreMessages.JSPEL_Syntax);
+				message.setOffset(problemStartOffset);
+				message.setLength(curTok.endColumn - curTok.beginColumn + 1);
+				message.setTargetObject(file);
+				reporter.addMessage(fMessageOriginator, message);
+			}
 		}
 		catch (TokenMgrError te) {
-			Message message = new LocalizedMessage(IMessage.NORMAL_SEVERITY, JSPCoreMessages.JSPEL_Token);
-			message.setOffset(contentStart);
-			message.setLength(contentLength);
-			message.setTargetObject(file);
-			reporter.addMessage(fMessageOriginator, message);
+			int sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_EL_LEXER);
+			if (sev != ValidationMessage.IGNORE) {
+				Message message = new LocalizedMessage(IMessage.NORMAL_SEVERITY, JSPCoreMessages.JSPEL_Token);
+				message.setOffset(contentStart);
+				message.setLength(contentLength);
+				message.setTargetObject(file);
+				reporter.addMessage(fMessageOriginator, message);
+			}
 		}
 	}
 }

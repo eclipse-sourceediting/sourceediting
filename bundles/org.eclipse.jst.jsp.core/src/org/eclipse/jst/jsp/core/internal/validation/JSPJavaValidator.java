@@ -15,11 +15,17 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.java.IJSPProblem;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
@@ -27,12 +33,14 @@ import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
 import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
+import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
@@ -42,6 +50,10 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 public class JSPJavaValidator extends JSPValidator {
 	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspvalidator")).booleanValue(); //$NON-NLS-1$
 	private IValidator fMessageOriginator;
+
+	private IPreferencesService fPreferencesService = null;
+
+	private IScopeContext[] fScopes = null;
 
 	public JSPJavaValidator() {
 		this.fMessageOriginator = this;
@@ -76,7 +88,7 @@ public class JSPJavaValidator extends JSPValidator {
 			if (region.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
 				if (getDirectiveName(region).equals("include")) { //$NON-NLS-1$
 					ITextRegion fileValueRegion = getAttributeValueRegion(region, "file"); //$NON-NLS-1$
-					if(fileValueRegion != null) {
+					if (fileValueRegion != null) {
 						m.setOffset(region.getStartOffset(fileValueRegion));
 						m.setLength(fileValueRegion.getTextLength());
 					}
@@ -101,38 +113,111 @@ public class JSPJavaValidator extends JSPValidator {
 	 *         create one
 	 */
 	private IMessage createMessageFromProblem(IProblem problem, IFile f, IJSPTranslation translation, IStructuredDocument structuredDoc) {
+		int sev = -1;
+		int sourceStart = -1;
+		int sourceEnd = -1;
 
-		int sev = problem.isError() ? IMessage.HIGH_SEVERITY : IMessage.NORMAL_SEVERITY;
-		int sourceStart = problem.getSourceStart();
-		int sourceEnd = problem.getSourceEnd();
-		if (!((problem instanceof IJSPProblem) && (((IJSPProblem) problem).getEID() & IJSPProblem.F_PROBLEM_ID_LITERAL) != 0)) {
+		if (problem instanceof IJSPProblem) {
+			sourceStart = problem.getSourceStart();
+			sourceEnd = problem.getSourceEnd();
+			switch (((IJSPProblem) problem).getEID()) {
+				case IJSPProblem.TEIClassNotFound :
+					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_TRANSLATION_TEI_CLASS_NOT_FOUND);
+					break;
+				case IJSPProblem.TEIValidationMessage :
+					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_TRANSLATION_TEI_VALIDATION_MESSAGE);
+					break;
+				case IJSPProblem.TEIClassNotInstantiated :
+					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_TRANSLATION_TEI_CLASS_NOT_INSTANTIATED);
+					break;
+				case IJSPProblem.TEIClassMisc :
+					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_TRANSLATION_TEI_CLASS_RUNTIME_EXCEPTION);
+					break;
+				case IJSPProblem.TagClassNotFound :
+					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_TRANSLATION_TAG_HANDLER_CLASS_NOT_FOUND);
+					break;
+				case IJSPProblem.UseBeanInvalidID :
+					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_TRANSLATION_USEBEAN_INVALID_ID);
+					break;
+				case IJSPProblem.UseBeanMissingTypeInfo :
+					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_TRANSLATION_USBEAN_MISSING_TYPE_INFO);
+					break;
+				case IJSPProblem.UseBeanAmbiguousType :
+					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_TRANSLATION_USEBEAN_AMBIGUOUS_TYPE_INFO);
+					break;
+				default :
+					sev = problem.isError() ? IMessage.HIGH_SEVERITY : (problem.isWarning() ? IMessage.NORMAL_SEVERITY : IMessage.LOW_SEVERITY);
+
+			}
+		}
+		else {
 			sourceStart = translation.getJspOffset(problem.getSourceStart());
 			sourceEnd = translation.getJspOffset(problem.getSourceEnd());
-		}
-		if (sourceStart == -1) {
-			int problemID = problem.getID();
-			/*
-			 * Quoting IProblem doc: "When a problem is tagged as Internal, it
-			 * means that no change other than a local source code change can
-			 * fix the corresponding problem." Assuming that our generated
-			 * code is correct, that should reduce the reported problems to
-			 * those the user can correct.
-			 */
-			if (((problemID & IProblem.Internal) != 0) && ((problemID & IProblem.Syntax) != 0) && translation instanceof JSPTranslation) {
-				// Attach to the last code scripting section
-				JSPTranslation jspTranslation = ((JSPTranslation) translation);
-				Position[] jspPositions = (Position[]) jspTranslation.getJsp2JavaMap().keySet().toArray(new Position[jspTranslation.getJsp2JavaMap().size()]);
-				for (int i = 0; i < jspPositions.length; i++) {
-					sourceStart = Math.max(sourceStart, jspPositions[i].getOffset());
+			switch (problem.getID()) {
+				case IProblem.LocalVariableIsNeverUsed : {
+					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_JAVA_LOCAL_VARIABLE_NEVER_USED);
 				}
-				IMessage m = new LocalizedMessage(sev, problem.getMessage(), f);
-				m.setOffset(sourceStart);
-				m.setLength(1);
-				return m;
+					break;
+				case IProblem.NullLocalVariableReference : {
+					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_JAVA_NULL_LOCAL_VARIABLE_REFERENCE);
+				}
+					break;
+				case IProblem.ArgumentIsNeverUsed : {
+					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_JAVA_ARGUMENT_IS_NEVER_USED);
+				}
+					break;
+				case IProblem.PotentialNullLocalVariableReference : {
+					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_JAVA_POTENTIAL_NULL_LOCAL_VARIABLE_REFERENCE);
+				}
+					break;
+				case IProblem.UnusedImport : {
+					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_JAVA_UNUSED_IMPORT);
+				}
+					break;
+
+				default : {
+					if (problem.isError()) {
+						sev = IMessage.HIGH_SEVERITY;
+					}
+					else {
+						sev = IMessage.NORMAL_SEVERITY;
+					}
+				}
+				if (sev == ValidationMessage.IGNORE) {
+					return null;
+				}
+
+				/* problems without JSP positions are in generated code */
+				if (sourceStart == -1) {
+					int problemID = problem.getID();
+					/*
+					 * Quoting IProblem doc: "When a problem is tagged as
+					 * Internal, it means that no change other than a
+					 * local source code change can fix the corresponding
+					 * problem." Assuming that our generated code is
+					 * correct, that should reduce the reported problems
+					 * to those the user can correct.
+					 */
+					if (((problemID & IProblem.Internal) != 0) && ((problemID & IProblem.Syntax) != 0) && translation instanceof JSPTranslation) {
+						// Attach to the last code scripting section
+						JSPTranslation jspTranslation = ((JSPTranslation) translation);
+						Position[] jspPositions = (Position[]) jspTranslation.getJsp2JavaMap().keySet().toArray(new Position[jspTranslation.getJsp2JavaMap().size()]);
+						for (int i = 0; i < jspPositions.length; i++) {
+							sourceStart = Math.max(sourceStart, jspPositions[i].getOffset());
+						}
+						IMessage m = new LocalizedMessage(sev, problem.getMessage(), f);
+						m.setOffset(sourceStart);
+						m.setLength(1);
+						return m;
+					}
+					else {
+						return null;
+					}
+				}
 			}
-			else {
- 				return null;
-			}
+		}
+		if (sev == ValidationMessage.IGNORE) {
+			return null;
 		}
 
 		// line number for marker starts @ 1
@@ -155,6 +240,33 @@ public class JSPJavaValidator extends JSPValidator {
 		return m;
 	}
 
+	int getMessageSeverity(String key) {
+		int sev = fPreferencesService.getInt(JSPCorePlugin.getDefault().getBundle().getSymbolicName(), key, IMessage.NORMAL_SEVERITY, fScopes);
+		switch (sev) {
+			case ValidationMessage.ERROR :
+				return IMessage.HIGH_SEVERITY;
+			case ValidationMessage.WARNING :
+				return IMessage.NORMAL_SEVERITY;
+			case ValidationMessage.INFORMATION :
+				return IMessage.LOW_SEVERITY;
+			case ValidationMessage.IGNORE :
+				return ValidationMessage.IGNORE;
+		}
+		return IMessage.NORMAL_SEVERITY;
+	}
+
+	private void loadPreferences(IFile file) {
+		String bundleName = JSPCorePlugin.getDefault().getBundle().getSymbolicName();
+		fPreferencesService = Platform.getPreferencesService();
+		if (file != null && file.isAccessible()) {
+			ProjectScope projectScope = new ProjectScope(file.getProject());
+			if (projectScope.getNode(bundleName).getBoolean(JSPCorePreferenceNames.USE_PROJECT_SETTINGS, false)) {
+				fScopes = new IScopeContext[]{projectScope, new InstanceScope(), new DefaultScope()};
+			}
+		}
+		fScopes = new IScopeContext[]{new InstanceScope(), new DefaultScope()};
+	}
+
 	void performValidation(IFile f, IReporter reporter, IStructuredModel model) {
 		if (model instanceof IDOMModel) {
 			IDOMModel domModel = (IDOMModel) model;
@@ -165,6 +277,8 @@ public class JSPJavaValidator extends JSPValidator {
 			IJSPTranslation translation = translationAdapter.getJSPTranslation();
 
 			if (!reporter.isCancelled()) {
+				loadPreferences(f);
+
 				translation.setProblemCollectingActive(true);
 				translation.reconcileCompilationUnit();
 				List problems = translation.getProblems();
@@ -176,6 +290,12 @@ public class JSPJavaValidator extends JSPValidator {
 				}
 			}
 		}
+		unloadPreferences();
+	}
+
+	private void unloadPreferences() {
+		fPreferencesService = null;
+		fScopes = null;
 	}
 
 	/**
