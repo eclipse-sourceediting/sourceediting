@@ -25,15 +25,15 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemCallTemplate.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: ElemCallTemplate.java,v 1.2 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
 import javax.xml.transform.SourceLocator;
 import javax.xml.transform.TransformerException;
 
-import org.apache.xalan.res.XSLMessages;
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.Messages;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer.TransformerImpl;
 import org.apache.xml.utils.QName;
 import org.apache.xpath.VariableStack;
@@ -138,7 +138,7 @@ public class ElemCallTemplate extends ElemForEach
 
 		if (null == m_template) {
 			String themsg =
-				XSLMessages.createMessage(
+				Messages.createMessage(
 					XSLTErrorResources.ER_ELEMTEMPLATEELEM_ERR,
 					new Object[] { m_templateName });
 

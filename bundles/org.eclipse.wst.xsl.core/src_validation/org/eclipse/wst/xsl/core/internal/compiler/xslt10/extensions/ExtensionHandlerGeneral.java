@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ExtensionHandlerGeneral.java,v 1.1 2008/03/27 01:08:58 dacarver Exp $
+ * $Id: ExtensionHandlerGeneral.java,v 1.2 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.extensions;
 
@@ -43,8 +43,8 @@ import javax.xml.transform.TransformerException;
 import org.apache.xml.res.XMLErrorResources;
 import org.apache.xml.res.XMLMessages;
 
-import org.apache.xalan.res.XSLMessages;
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.Messages;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemTemplateElement;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.Stylesheet;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer.TransformerImpl;
@@ -175,7 +175,7 @@ public class ExtensionHandlerGeneral extends ExtensionHandler
         {
           // The url is absolute.
           url = null;
-          throw new TransformerException(XSLMessages.createMessage(XSLTErrorResources.ER_COULD_NOT_FIND_EXTERN_SCRIPT, new Object[]{m_scriptSrcURL}), mue); //"src attribute not yet supported for "
+          throw new TransformerException(Messages.createMessage(XSLTErrorResources.ER_COULD_NOT_FIND_EXTERN_SCRIPT, new Object[]{m_scriptSrcURL}), mue); //"src attribute not yet supported for "
           //+ scriptLang);
         }
         else
@@ -185,7 +185,7 @@ public class ExtensionHandlerGeneral extends ExtensionHandler
           }        
           catch (java.net.MalformedURLException mue2)
           {
-            throw new TransformerException(XSLMessages.createMessage(XSLTErrorResources.ER_COULD_NOT_FIND_EXTERN_SCRIPT, new Object[]{m_scriptSrcURL}), mue2); //"src attribute not yet supported for "
+            throw new TransformerException(Messages.createMessage(XSLTErrorResources.ER_COULD_NOT_FIND_EXTERN_SCRIPT, new Object[]{m_scriptSrcURL}), mue2); //"src attribute not yet supported for "
           //+ scriptLang);
           }
         }
@@ -203,7 +203,7 @@ public class ExtensionHandlerGeneral extends ExtensionHandler
         }
         catch (IOException ioe)
         {
-          throw new TransformerException(XSLMessages.createMessage(XSLTErrorResources.ER_COULD_NOT_FIND_EXTERN_SCRIPT, new Object[]{m_scriptSrcURL}), ioe); //"src attribute not yet supported for "
+          throw new TransformerException(Messages.createMessage(XSLTErrorResources.ER_COULD_NOT_FIND_EXTERN_SCRIPT, new Object[]{m_scriptSrcURL}), ioe); //"src attribute not yet supported for "
           //+ scriptLang);
         }
       }
@@ -223,7 +223,7 @@ public class ExtensionHandlerGeneral extends ExtensionHandler
 
     if (manager == null)
     {
-      throw new TransformerException(XSLMessages.createMessage(XSLTErrorResources.ER_CANNOT_INIT_BSFMGR, null)); //"Could not initialize BSF manager");
+      throw new TransformerException(Messages.createMessage(XSLTErrorResources.ER_CANNOT_INIT_BSFMGR, null)); //"Could not initialize BSF manager");
     }
 
     try
@@ -245,7 +245,7 @@ public class ExtensionHandlerGeneral extends ExtensionHandler
     {
       e.printStackTrace();
 
-      throw new TransformerException(XSLMessages.createMessage(XSLTErrorResources.ER_CANNOT_CMPL_EXTENSN, null), e); //"Could not compile extension", e);
+      throw new TransformerException(Messages.createMessage(XSLTErrorResources.ER_CANNOT_CMPL_EXTENSN, null), e); //"Could not compile extension", e);
     }
   }
 
@@ -332,7 +332,7 @@ public class ExtensionHandlerGeneral extends ExtensionHandler
       {
 
         // Should probably make a TRaX Extension Exception.
-        throw new TransformerException(XSLMessages.createMessage(XSLTErrorResources.ER_CANNOT_CREATE_EXTENSN, new Object[]{funcName, e })); //"Could not create extension: " + funcName
+        throw new TransformerException(Messages.createMessage(XSLTErrorResources.ER_CANNOT_CREATE_EXTENSN, new Object[]{funcName, e })); //"Could not create extension: " + funcName
                                //+ " because of: " + e);
       }
     }

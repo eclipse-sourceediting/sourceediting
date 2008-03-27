@@ -25,14 +25,14 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemAttributeSet.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: ElemAttributeSet.java,v 1.2 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
 import javax.xml.transform.TransformerException;
 
-import org.apache.xalan.res.XSLMessages;
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.Messages;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer.TransformerImpl;
 import org.apache.xml.utils.QName;
 
@@ -119,7 +119,7 @@ public class ElemAttributeSet extends ElemUse
     if (transformer.isRecursiveAttrSet(this))
     {
       throw new TransformerException(
-        XSLMessages.createMessage(
+        Messages.createMessage(
           XSLTErrorResources.ER_XSLATTRSET_USED_ITSELF,
           new Object[]{ m_qname.getLocalPart() }));  //"xsl:attribute-set '"+m_qname.m_localpart+
     }

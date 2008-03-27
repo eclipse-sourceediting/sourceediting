@@ -25,16 +25,16 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemExtensionDecl.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: ElemExtensionDecl.java,v 1.2 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
 import javax.xml.transform.TransformerException;
 
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.extensions.ExtensionNamespaceSupport;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.extensions.ExtensionNamespacesManager;
-import org.apache.xalan.res.XSLMessages;
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.Messages;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer.TransformerImpl;
 import org.apache.xml.utils.StringVector;
 
@@ -214,7 +214,7 @@ public class ElemExtensionDecl extends ElemTemplateElement
     String srcURL = null;
     String scriptSrc = null;
     if (null == declNamespace)
-      throw new TransformerException(XSLMessages.createMessage(XSLTErrorResources.ER_NO_NAMESPACE_DECL, new Object[]{prefix})); 
+      throw new TransformerException(Messages.createMessage(XSLTErrorResources.ER_NO_NAMESPACE_DECL, new Object[]{prefix})); 
       //"Prefix " + prefix does not have a corresponding namespace declaration");
     for (ElemTemplateElement child = getFirstChildElem(); child != null;
           child = child.getNextSiblingElem())
@@ -242,7 +242,7 @@ public class ElemExtensionDecl extends ElemTemplateElement
     if (null == lang)
       lang = "javaclass";
     if (lang.equals("javaclass") && (scriptSrc != null))
-        throw new TransformerException(XSLMessages.createMessage(XSLTErrorResources.ER_ELEM_CONTENT_NOT_ALLOWED, new Object[]{scriptSrc})); 
+        throw new TransformerException(Messages.createMessage(XSLTErrorResources.ER_ELEM_CONTENT_NOT_ALLOWED, new Object[]{scriptSrc})); 
         //"Element content not allowed for lang=javaclass " + scriptSrc);
 
     // Register the extension namespace if it has not already been registered.

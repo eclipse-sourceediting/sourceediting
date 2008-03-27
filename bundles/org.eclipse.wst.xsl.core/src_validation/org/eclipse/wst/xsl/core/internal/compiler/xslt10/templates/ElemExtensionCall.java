@@ -25,16 +25,16 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemExtensionCall.java,v 1.1 2008/03/27 01:08:53 dacarver Exp $
+ * $Id: ElemExtensionCall.java,v 1.2 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
 import javax.xml.transform.TransformerException;
 
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.extensions.ExtensionHandler;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.extensions.ExtensionsTable;
-import org.apache.xalan.res.XSLMessages;
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.Messages;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer.TransformerImpl;
 import org.apache.xpath.XPathContext;
 import org.xml.sax.SAXException;
@@ -209,7 +209,7 @@ public class ElemExtensionCall extends ElemLiteralResult
   {
     if (transformer.getStylesheet().isSecureProcessing())
       throw new TransformerException(
-        XSLMessages.createMessage(
+        Messages.createMessage(
           XSLTErrorResources.ER_EXTENSION_ELEMENT_NOT_ALLOWED_IN_SECURE_PROCESSING,
           new Object[] {getRawName()}));
           
@@ -230,7 +230,7 @@ public class ElemExtensionCall extends ElemLiteralResult
         }
         else
         {
-	  TransformerException te = new TransformerException(XSLMessages.createMessage(
+	  TransformerException te = new TransformerException(Messages.createMessage(
 	  	XSLTErrorResources.ER_CALL_TO_EXT_FAILED, new Object[]{getNodeName()}));
 	  transformer.getErrorListener().fatalError(te);
         }

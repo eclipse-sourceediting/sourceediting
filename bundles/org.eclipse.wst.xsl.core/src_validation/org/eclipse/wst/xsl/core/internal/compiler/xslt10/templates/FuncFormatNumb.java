@@ -25,15 +25,15 @@
  * limitations under the License.
  */
 /*
- * $Id: FuncFormatNumb.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: FuncFormatNumb.java,v 1.2 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
 import javax.xml.transform.ErrorListener;
 import javax.xml.transform.TransformerException;
 
-import org.apache.xalan.res.XSLMessages;
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.Messages;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 import org.apache.xml.utils.QName;
 import org.apache.xml.utils.SAXSourceLocator;
 import org.apache.xpath.Expression;
@@ -164,7 +164,7 @@ public class FuncFormatNumb extends Function3Args
           throws javax.xml.transform.TransformerException
   {
 
-    String formattedMsg = XSLMessages.createWarning(msg, args);
+    String formattedMsg = Messages.createMessage(msg, args);
     ErrorListener errHandler = xctxt.getErrorListener();
 
     errHandler.warning(new TransformerException(formattedMsg,
@@ -192,6 +192,6 @@ public class FuncFormatNumb extends Function3Args
    * @throws WrongNumberArgsException
    */
   protected void reportWrongNumberArgs() throws WrongNumberArgsException {
-      throw new WrongNumberArgsException(XSLMessages.createMessage(XSLTErrorResources.ER_TWO_OR_THREE, null)); //"2 or 3");
+      throw new WrongNumberArgsException(Messages.createMessage(XSLTErrorResources.ER_TWO_OR_THREE, null)); //"2 or 3");
   }
 }

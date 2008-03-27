@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemLiteralResult.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
+ * $Id: ElemLiteralResult.java,v 1.3 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -34,12 +34,11 @@ import java.util.Vector;
 
 import javax.xml.transform.TransformerException;
 
-import org.apache.xalan.res.XSLMessages;
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.Messages;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer.TransformerImpl;
 import org.apache.xml.serializer.SerializationHandler;
 import org.apache.xml.utils.StringVector;
-import org.apache.xml.utils.UnImplNode;
 import org.apache.xpath.XPathContext;
 import org.xml.sax.SAXException;
 import org.w3c.dom.NamedNodeMap;
@@ -1491,7 +1490,7 @@ public class ElemLiteralResult extends ElemUse
     public void throwDOMException(short code, String msg)
     {
 
-      String themsg = XSLMessages.createMessage(msg, null);
+      String themsg = Messages.createMessage(msg, null);
 
       throw new DOMException(code, themsg);
     }

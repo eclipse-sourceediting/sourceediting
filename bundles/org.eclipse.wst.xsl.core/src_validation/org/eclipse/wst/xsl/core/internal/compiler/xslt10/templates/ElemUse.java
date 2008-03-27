@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemUse.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: ElemUse.java,v 1.2 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -33,8 +33,8 @@ import java.util.Vector;
 
 import javax.xml.transform.TransformerException;
 
-import org.apache.xalan.res.XSLMessages;
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.Messages;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 import org.apache.xalan.transformer.TransformerImpl;
 import org.apache.xml.utils.QName;
 
@@ -177,7 +177,7 @@ public class ElemUse extends ElemTemplateElement
         else 
         {
           throw new TransformerException(
-              XSLMessages.createMessage(XSLTErrorResources.ER_NO_ATTRIB_SET, 
+              Messages.createMessage(XSLTErrorResources.ER_NO_ATTRIB_SET, 
                   new Object[] {qname}),this); 
         }
       }

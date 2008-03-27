@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: AVT.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
+ * $Id: AVT.java,v 1.3 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -35,9 +35,9 @@ import java.util.Vector;
 
 import javax.xml.transform.TransformerException;
 
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.processor.StylesheetHandler;
-import org.apache.xalan.res.XSLMessages;
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.Messages;
 import org.apache.xml.utils.FastStringBuffer;
 import org.apache.xml.utils.StringBufferPool;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.xpath.XPath;
@@ -306,7 +306,7 @@ public class AVT implements java.io.Serializable, XSLTVisitable
                         {
 
                           // What's another curly doing here?
-                          error = XSLMessages.createMessage(
+                          error = Messages.createMessage(
                                                             XSLTErrorResources.ER_NO_CURLYBRACE, null);  //"Error: Can not have \"{\" within expression.";
                           
                           lookahead = null;  // breaks out of inner while loop
@@ -359,7 +359,7 @@ public class AVT implements java.io.Serializable, XSLTVisitable
               }
               catch (java.util.NoSuchElementException ex)
               {
-                error = XSLMessages.createMessage(XSLTErrorResources.ER_ILLEGAL_ATTRIBUTE_VALUE, new Object[]{ name, stringedValue }); 
+                error = Messages.createMessage(XSLTErrorResources.ER_ILLEGAL_ATTRIBUTE_VALUE, new Object[]{ name, stringedValue }); 
                 break;
               }
             }

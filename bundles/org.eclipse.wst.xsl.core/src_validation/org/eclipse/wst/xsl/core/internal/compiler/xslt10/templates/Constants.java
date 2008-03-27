@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: Constants.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: Constants.java,v 1.2 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -35,6 +35,7 @@ package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
  * Primary constants used in the TransformerImpl classes.
  * @xsl.usage advanced
  */
+@SuppressWarnings("nls")
 public class Constants extends org.apache.xml.utils.Constants
 {
 
@@ -107,7 +108,7 @@ public class Constants extends org.apache.xml.utils.Constants
    * Literals for XSL element names.  Note that there are more
    * names than IDs, because some names map to the same ID.
    */
-  public static final String       
+  public static final String
 	  ELEMNAME_ANCHOR_STRING = "anchor",
       ELEMNAME_ANY_STRING = "any",  // pattern-by-example support
       ELEMNAME_APPLY_IMPORTS_STRING = "apply-imports",

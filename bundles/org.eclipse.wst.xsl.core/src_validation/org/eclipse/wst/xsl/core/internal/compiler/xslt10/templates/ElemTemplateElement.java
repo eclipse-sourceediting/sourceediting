@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemTemplateElement.java,v 1.1 2008/03/27 01:08:53 dacarver Exp $
+ * $Id: ElemTemplateElement.java,v 1.2 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -36,8 +36,8 @@ import java.util.Vector;
 import javax.xml.transform.SourceLocator;
 import javax.xml.transform.TransformerException;
 
-import org.apache.xalan.res.XSLMessages;
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.Messages;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer.TransformerImpl;
 import org.apache.xml.serializer.SerializationHandler;
 import org.apache.xml.utils.PrefixResolver;
@@ -226,9 +226,9 @@ public class ElemTemplateElement extends UnImplNode
   public void error(String msg, Object[] args)
   {
 
-    String themsg = XSLMessages.createMessage(msg, args);
+    String themsg = Messages.createMessage(msg, args);
 
-    throw new RuntimeException(XSLMessages.createMessage(
+    throw new RuntimeException(Messages.createMessage(
                                     XSLTErrorResources.ER_ELEMTEMPLATEELEM_ERR,
                                     new Object[]{ themsg }));
   }

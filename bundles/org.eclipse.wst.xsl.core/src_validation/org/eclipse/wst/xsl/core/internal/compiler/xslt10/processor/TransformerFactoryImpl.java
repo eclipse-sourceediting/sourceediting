@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: TransformerFactoryImpl.java,v 1.2 2008/03/27 05:14:52 dacarver Exp $
+ * $Id: TransformerFactoryImpl.java,v 1.3 2008/03/27 22:45:11 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.processor;
 
@@ -646,7 +646,10 @@ public javax.xml.transform.Templates processFromNode(Node node)
    *
    * @param templates non-null reference to Templates object.
    *
-   * @return An XMLFilter object, or null if this feature is not supported.
+   * @return An XMLFilter object, or null if thi
+   * 
+   * 
+   * s feature is not supported.
    *
    * @throws TransformerConfigurationException
    */
@@ -911,6 +914,9 @@ public javax.xml.transform.Templates processFromNode(Node node)
             catch (org.xml.sax.SAXException se) {}
           }
 
+          // TODO: Look at adding a custom SaxParser here to correctly handle
+          // Location information.  This could be based off the SAX Parser Customizations done
+          // within WTP.   In fact maybe do the same inner class creation as was done there.
           javax.xml.parsers.SAXParser jaxpParser = factory.newSAXParser();
 
           reader = jaxpParser.getXMLReader();
@@ -943,6 +949,7 @@ public javax.xml.transform.Templates processFromNode(Node node)
         try
         {
           m_errorListener.fatalError(new TransformerException(se));
+          se.printStackTrace();
         }
         catch (TransformerConfigurationException ex1)
         {

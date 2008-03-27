@@ -31,13 +31,14 @@ package org.eclipse.wst.xsl.core.internal.compiler.xslt10.extensions;
 import java.util.Iterator;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
-import org.apache.xalan.res.XSLMessages;
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.Messages;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 
 /**
  * A sample implementation of NamespaceContext, with support for 
  * EXSLT extension functions and Java extension functions.
  */
+@SuppressWarnings("nls")
 public class ExtensionNamespaceContext implements NamespaceContext
 {
     public static final String EXSLT_PREFIX = "exslt";
@@ -62,7 +63,7 @@ public class ExtensionNamespaceContext implements NamespaceContext
     {
         if (prefix == null)
             throw new IllegalArgumentException(
-                XSLMessages.createMessage(
+                Messages.createMessage(
                     XSLTErrorResources.ER_NAMESPACE_CONTEXT_NULL_PREFIX, null));
         
         if (prefix.equals(XMLConstants.DEFAULT_NS_PREFIX))
@@ -96,7 +97,7 @@ public class ExtensionNamespaceContext implements NamespaceContext
     {
         if (namespace == null)
             throw new IllegalArgumentException(
-                XSLMessages.createMessage(
+                Messages.createMessage(
                     XSLTErrorResources.ER_NAMESPACE_CONTEXT_NULL_NAMESPACE, null));
         
         if (namespace.equals(XMLConstants.XML_NS_URI))

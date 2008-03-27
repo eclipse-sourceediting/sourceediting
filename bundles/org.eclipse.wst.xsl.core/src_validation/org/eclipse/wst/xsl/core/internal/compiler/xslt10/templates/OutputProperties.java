@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: OutputProperties.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: OutputProperties.java,v 1.2 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -36,8 +36,8 @@ import java.util.Vector;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerException;
 
-import org.apache.xalan.res.XSLMessages;
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.Messages;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 import org.apache.xml.serializer.OutputPropertiesFactory;
 import org.apache.xml.serializer.OutputPropertyUtils;
 import org.apache.xml.utils.FastStringBuffer;
@@ -608,7 +608,7 @@ public class OutputProperties extends ElemTemplateElement
       String key = (String) keys.nextElement();
     
       if (!isLegalPropertyKey(key))
-        throw new IllegalArgumentException(XSLMessages.createMessage(XSLTErrorResources.ER_OUTPUT_PROPERTY_NOT_RECOGNIZED, new Object[]{key})); //"output property not recognized: "
+        throw new IllegalArgumentException(Messages.createMessage(XSLTErrorResources.ER_OUTPUT_PROPERTY_NOT_RECOGNIZED, new Object[]{key})); //"output property not recognized: "
       
       Object oldValue = m_properties.get(key);
       if (null == oldValue)

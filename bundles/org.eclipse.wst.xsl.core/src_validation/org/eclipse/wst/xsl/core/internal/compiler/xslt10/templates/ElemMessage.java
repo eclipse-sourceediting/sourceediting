@@ -25,14 +25,14 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemMessage.java,v 1.1 2008/03/27 01:08:53 dacarver Exp $
+ * $Id: ElemMessage.java,v 1.2 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
 import javax.xml.transform.TransformerException;
 
-import org.apache.xalan.res.XSLMessages;
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.Messages;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer.TransformerImpl;
 
 /**
@@ -131,7 +131,7 @@ public class ElemMessage extends ElemTemplateElement
     transformer.getMsgMgr().message(this, data, m_terminate);
     
     if(m_terminate)
-      transformer.getErrorListener().fatalError(new TransformerException(XSLMessages.createMessage(XSLTErrorResources.ER_STYLESHEET_DIRECTED_TERMINATION, null))); //"Stylesheet directed termination"));
+      transformer.getErrorListener().fatalError(new TransformerException(Messages.createMessage(XSLTErrorResources.ER_STYLESHEET_DIRECTED_TERMINATION, null))); //"Stylesheet directed termination"));
     
     if (transformer.getDebug())
 	  transformer.getTraceManager().fireTraceEndEvent(this); 

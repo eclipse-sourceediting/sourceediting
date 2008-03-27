@@ -102,6 +102,7 @@ public class XSLValidationReport implements ValidationReport, ErrorListener
 		
 		ValidationMessage msg = new ValidationMessage(message, lineNumber, columnNumber);		
 		msg.setSeverity(severity);
+		exception.printStackTrace();
 		messages.add(msg);
 	}
 

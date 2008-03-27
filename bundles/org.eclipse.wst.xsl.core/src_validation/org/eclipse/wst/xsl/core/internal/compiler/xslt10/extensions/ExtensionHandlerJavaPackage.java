@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ExtensionHandlerJavaPackage.java,v 1.1 2008/03/27 01:08:58 dacarver Exp $
+ * $Id: ExtensionHandlerJavaPackage.java,v 1.2 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.extensions;
 
@@ -39,8 +39,8 @@ import java.util.Vector;
 
 import javax.xml.transform.TransformerException;
 
-import org.apache.xalan.res.XSLMessages;
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.Messages;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemTemplateElement;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.Stylesheet;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.trace.ExtensionEvent;
@@ -357,7 +357,7 @@ public class ExtensionHandlerJavaPackage extends ExtensionHandlerJava
 
         if (args.size() < 1)
         {
-          throw new TransformerException(XSLMessages.createMessage(XSLTErrorResources.ER_INSTANCE_MTHD_CALL_REQUIRES, new Object[]{funcName })); //"Instance method call to method " + funcName
+          throw new TransformerException(Messages.createMessage(XSLTErrorResources.ER_INSTANCE_MTHD_CALL_REQUIRES, new Object[]{funcName })); //"Instance method call to method " + funcName
                                     //+ " requires an Object instance as first argument");
         }
         targetObject = args.elementAt(0);
@@ -483,7 +483,7 @@ public class ExtensionHandlerJavaPackage extends ExtensionHandlerJava
         String fullName = m_className + localPart;
         int lastDot = fullName.lastIndexOf(".");
         if (lastDot < 0)
-          throw new TransformerException(XSLMessages.createMessage(XSLTErrorResources.ER_INVALID_ELEMENT_NAME, new Object[]{fullName })); //"Invalid element name specified " + fullName);
+          throw new TransformerException(Messages.createMessage(XSLTErrorResources.ER_INVALID_ELEMENT_NAME, new Object[]{fullName })); //"Invalid element name specified " + fullName);
         try
         {
           classObj = getClassForName(fullName.substring(0, lastDot));
@@ -495,7 +495,7 @@ public class ExtensionHandlerJavaPackage extends ExtensionHandlerJava
         localPart = fullName.substring(lastDot + 1);
         m = MethodResolver.getElementMethod(classObj, localPart);
         if (!Modifier.isStatic(m.getModifiers()))
-          throw new TransformerException(XSLMessages.createMessage(XSLTErrorResources.ER_ELEMENT_NAME_METHOD_STATIC, new Object[]{fullName })); //"Element name method must be static " + fullName);
+          throw new TransformerException(Messages.createMessage(XSLTErrorResources.ER_ELEMENT_NAME_METHOD_STATIC, new Object[]{fullName })); //"Element name method must be static " + fullName);
       }
       catch (Exception e)
       {

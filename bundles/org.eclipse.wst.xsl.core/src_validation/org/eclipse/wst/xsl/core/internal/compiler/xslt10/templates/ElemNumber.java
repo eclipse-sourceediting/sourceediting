@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemNumber.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
+ * $Id: ElemNumber.java,v 1.3 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -37,7 +37,7 @@ import java.util.NoSuchElementException;
 
 import javax.xml.transform.TransformerException;
 
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer.CountersTable;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer.DecimalToRoman;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer.TransformerImpl;

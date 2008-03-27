@@ -25,12 +25,13 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemVariable.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
+ * $Id: ElemVariable.java,v 1.3 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
 import javax.xml.transform.TransformerException;
 
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer.TransformerImpl;
 import org.apache.xml.utils.QName;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.xpath.XPath;
@@ -39,7 +40,6 @@ import org.apache.xpath.objects.XObject;
 import org.apache.xpath.objects.XRTreeFrag;
 import org.apache.xpath.objects.XRTreeFragSelectWrapper;
 import org.apache.xpath.objects.XString;
-import org.apache.xalan.res.XSLTErrorResources;
 
 /**
  * Implement xsl:variable.

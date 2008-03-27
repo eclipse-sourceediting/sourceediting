@@ -26,15 +26,15 @@
  * limitations under the License.
  */
 /*
- * $Id: ExtensionsTable.java,v 1.1 2008/03/27 01:08:58 dacarver Exp $
+ * $Id: ExtensionsTable.java,v 1.2 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.extensions;
 
 import java.util.Hashtable;
 import java.util.Vector;
 
-import org.apache.xalan.res.XSLMessages;
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.Messages;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.StylesheetRoot;
 import org.apache.xpath.XPathProcessorException;
 import org.apache.xpath.functions.FuncExtFunction;
@@ -196,7 +196,7 @@ public class ExtensionsTable
       }
       else
       {
-        throw new XPathProcessorException(XSLMessages.createMessage(XSLTErrorResources.ER_EXTENSION_FUNC_UNKNOWN, new Object[]{ns, funcName })); 
+        throw new XPathProcessorException(Messages.createMessage(XSLTErrorResources.ER_EXTENSION_FUNC_UNKNOWN, new Object[]{ns, funcName })); 
         //"Extension function '" + ns + ":" + funcName + "' is unknown");
       }
     }
@@ -242,7 +242,7 @@ public class ExtensionsTable
       }
       else
       {
-        throw new XPathProcessorException(XSLMessages.createMessage(XSLTErrorResources.ER_EXTENSION_FUNC_UNKNOWN, 
+        throw new XPathProcessorException(Messages.createMessage(XSLTErrorResources.ER_EXTENSION_FUNC_UNKNOWN, 
                                           new Object[]{ns, extFunction.getFunctionName()})); 
       }
     }

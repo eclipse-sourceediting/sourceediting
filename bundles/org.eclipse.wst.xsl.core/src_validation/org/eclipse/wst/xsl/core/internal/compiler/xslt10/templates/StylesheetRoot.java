@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: StylesheetRoot.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
+ * $Id: StylesheetRoot.java,v 1.3 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -40,10 +40,10 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.extensions.ExtensionNamespacesManager;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.processor.XSLTSchema;
-import org.apache.xalan.res.XSLMessages;
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.Messages;
 
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer.TransformerImpl;
 import org.apache.xml.dtm.DTM;
@@ -81,6 +81,8 @@ public class StylesheetRoot extends StylesheetComposed
      * State of the secure processing feature.
      */
     private boolean m_isSecureProcessing = false;
+    
+    private ErrorListener m_errorListener = null;
 
   /**
    * Uses an XSL stylesheet document.
@@ -92,6 +94,7 @@ public class StylesheetRoot extends StylesheetComposed
     super(null);
 
     setStylesheetRoot(this);
+    m_errorListener = errorListener;
 
     try
     {
@@ -101,7 +104,7 @@ public class StylesheetRoot extends StylesheetComposed
     }
     catch (TransformerException se)
     {
-      throw new TransformerConfigurationException(XSLMessages.createMessage(XSLTErrorResources.ER_CANNOT_INIT_DEFAULT_TEMPLATES, null), se); //"Can't init default templates!", se);
+      throw new TransformerConfigurationException(Messages.createMessage(XSLTErrorResources.ER_CANNOT_INIT_DEFAULT_TEMPLATES, null), se); //"Can't init default templates!", se);
     }
   }
 
@@ -365,12 +368,20 @@ public class StylesheetRoot extends StylesheetComposed
   void composeTemplates(ElemTemplateElement templ) throws TransformerException
   {
 
-    templ.compose(this);
+	try { 
+		templ.compose(this);
+	} catch (TransformerException ex) {
+		m_errorListener.fatalError(ex);
+	}
 
     for (ElemTemplateElement child = templ.getFirstChildElem();
             child != null; child = child.getNextSiblingElem())
     {
-      composeTemplates(child);
+      try {
+    	  composeTemplates(child);
+      } catch (TransformerException ex) {
+    	  m_errorListener.fatalError(ex);
+      }
     }
     
     templ.endCompose(this);
@@ -610,14 +621,14 @@ public class StylesheetRoot extends StylesheetComposed
       if (dfp.getName().equals(new QName("")))
       {
         // "Only one default xsl:decimal-format declaration is allowed."
-        themsg = XSLMessages.createWarning(
+        themsg = Messages.createMessage(
                           XSLTErrorResources.WG_ONE_DEFAULT_XSLDECIMALFORMAT_ALLOWED,
                           new Object[0]);
       }
       else
       {
         // "xsl:decimal-format names must be unique. Name {0} has been duplicated."
-        themsg = XSLMessages.createWarning(
+        themsg = Messages.createMessage(
                           XSLTErrorResources.WG_XSLDECIMALFORMAT_NAMES_MUST_BE_UNIQUE,
                           new Object[] {dfp.getName()});
       }

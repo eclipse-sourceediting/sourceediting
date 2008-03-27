@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: MethodResolver.java,v 1.1 2008/03/27 01:08:58 dacarver Exp $
+ * $Id: MethodResolver.java,v 1.2 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.extensions;
 
@@ -36,8 +36,8 @@ import java.lang.reflect.Modifier;
 
 import javax.xml.transform.TransformerException;
 
-import org.apache.xalan.res.XSLMessages;
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.Messages;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 import org.apache.xml.dtm.DTM;
 import org.apache.xml.dtm.DTMIterator;
 import org.apache.xml.dtm.ref.DTMNodeIterator;
@@ -363,7 +363,7 @@ public class MethodResolver
                                                                         name, 0, null));
     }
     else if (bestScoreCount > 1)
-      throw new TransformerException(XSLMessages.createMessage(XSLTErrorResources.ER_MORE_MATCH_ELEMENT, new Object[]{name})); //"More than one best match for element method " + name);
+      throw new TransformerException(Messages.createMessage(XSLTErrorResources.ER_MORE_MATCH_ELEMENT, new Object[]{name})); //"More than one best match for element method " + name);
     
     return bestMethod;
   }

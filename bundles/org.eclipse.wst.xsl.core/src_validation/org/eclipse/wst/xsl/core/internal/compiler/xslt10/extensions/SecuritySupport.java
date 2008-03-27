@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: SecuritySupport.java,v 1.1 2008/03/27 01:08:58 dacarver Exp $
+ * $Id: SecuritySupport.java,v 1.2 2008/03/27 22:45:10 dacarver Exp $
  */
 
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.extensions;
@@ -35,9 +35,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-
-import java.util.Properties;
-
 /**
  * This class is duplicated for each Xalan-Java subpackage so keep it in sync.
  * It is package private and therefore is not exposed as part of the Xalan-Java

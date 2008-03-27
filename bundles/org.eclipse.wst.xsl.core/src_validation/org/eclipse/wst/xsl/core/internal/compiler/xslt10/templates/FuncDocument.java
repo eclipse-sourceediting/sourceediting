@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: FuncDocument.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
+ * $Id: FuncDocument.java,v 1.3 2008/03/27 22:45:10 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -38,8 +38,8 @@ import javax.xml.transform.Source;
 import javax.xml.transform.SourceLocator;
 import javax.xml.transform.TransformerException;
 
-import org.apache.xalan.res.XSLMessages;
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.Messages;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 import org.apache.xml.dtm.DTM;
 import org.apache.xml.dtm.DTMIterator;
 import org.apache.xml.utils.XMLString;
@@ -400,7 +400,7 @@ public class FuncDocument extends Function2Args
           throws javax.xml.transform.TransformerException
   {
 
-    String formattedMsg = XSLMessages.createMessage(msg, args);
+    String formattedMsg = Messages.createMessage(msg, args);
     ErrorListener errHandler = xctxt.getErrorListener();
     TransformerException spe = new TransformerException(formattedMsg,
                               (SourceLocator)xctxt.getSAXLocator());
@@ -426,7 +426,7 @@ public class FuncDocument extends Function2Args
           throws javax.xml.transform.TransformerException
   {
 
-    String formattedMsg = XSLMessages.createWarning(msg, args);
+    String formattedMsg = Messages.createMessage(msg, args);
     ErrorListener errHandler = xctxt.getErrorListener();
     TransformerException spe = new TransformerException(formattedMsg,
                               (SourceLocator)xctxt.getSAXLocator());
@@ -458,7 +458,7 @@ public class FuncDocument extends Function2Args
    * @throws WrongNumberArgsException
    */
   protected void reportWrongNumberArgs() throws WrongNumberArgsException {
-      throw new WrongNumberArgsException(XSLMessages.createMessage(XSLTErrorResources.ER_ONE_OR_TWO, null)); //"1 or 2");
+      throw new WrongNumberArgsException(Messages.createMessage(XSLTErrorResources.ER_ONE_OR_TWO, null)); //"1 or 2");
   }
   
   /**

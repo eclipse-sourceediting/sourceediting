@@ -31,8 +31,8 @@ package org.eclipse.wst.xsl.core.internal.compiler.xslt10.extensions;
 import javax.xml.namespace.QName;
 import javax.xml.xpath.XPathFunction;
 import javax.xml.xpath.XPathFunctionResolver;
-import org.apache.xalan.res.XSLMessages;
-import org.apache.xalan.res.XSLTErrorResources;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.Messages;
+import org.eclipse.wst.xsl.core.compiler.xslt10.res.XSLTErrorResources;
 
 /**
  * A sample implementation of XPathFunctionResolver, with support for
@@ -47,12 +47,12 @@ public class XPathFunctionResolverImpl implements XPathFunctionResolver
     {
         if (qname == null)
             throw new NullPointerException(
-                XSLMessages.createMessage(
+                Messages.createMessage(
                     XSLTErrorResources.ER_XPATH_RESOLVER_NULL_QNAME, null));
         
         if (arity < 0)
             throw new IllegalArgumentException(
-                XSLMessages.createMessage(
+                Messages.createMessage(
                     XSLTErrorResources.ER_XPATH_RESOLVER_NEGATIVE_ARITY, null));
         
         String uri = qname.getNamespaceURI();

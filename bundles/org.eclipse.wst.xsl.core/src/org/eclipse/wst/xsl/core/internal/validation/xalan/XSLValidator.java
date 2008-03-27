@@ -60,14 +60,14 @@ public class XSLValidator {
 			    {
 			      // If so, we can safely cast.
 			      SAXTransformerFactory saxfactory = ((SAXTransformerFactory) transformer);
-			      // Create factory for SAX parser
-			      SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-			      saxParserFactory.setNamespaceAware(true);
-			      
-			      // Get a SAX parser
-			      XMLReader xmlparser = saxParserFactory.newSAXParser().getXMLReader();
-			      xmlparser.setErrorHandler(new DefaultErrorHandler());
-			      Templates compiled = saxfactory.newTemplates(new SAXSource(xmlparser, new InputSource(uri)));
+//			      // Create factory for SAX parser
+//			      SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+//			      saxParserFactory.setNamespaceAware(true);
+//			      
+//			      // Get a SAX parser
+//			      XMLReader xmlparser = saxParserFactory.newSAXParser().getXMLReader();
+//			      xmlparser.setErrorHandler(new DefaultErrorHandler());
+			      Templates compiled = saxfactory.newTemplates(new SAXSource(new InputSource(uri)));
 			    }
 		   } catch (Exception ex) {
 			   XSLCorePlugin.log(ex);
