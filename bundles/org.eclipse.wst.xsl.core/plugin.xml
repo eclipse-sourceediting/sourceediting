@@ -89,7 +89,24 @@
          </include>
       </validator>
    </extension>
-   
+<!--   <extension id="xsl" name="%XSL.Validator.Name" point="org.eclipse.wst.validation.validatorV2">
+      <validator
+            build="true"
+            class="org.eclipse.wst.xsl.core.internal.validation.eclipse.XalanValidator"
+            sourceid="org.eclipse.wst.xsl.ui.internal.validation.DelegatingSourceValidatorForXSL"
+            manual="true"
+            version="2">
+         <include>
+            <rules>
+               <fileext caseSensitive="false" ext="xsl"/>
+               <projectNature id="org.eclipse.jdt.core.javanature"/>
+ 				<contentType id="org.eclipse.wst.xml.core.xslsource"/>
+               <contentType id="org.eclipse.wst.xsl.core.xslsource"/>
+            </rules>
+         </include>
+      </validator>
+   </extension>
+-->   
    <extension
          point="org.eclipse.wst.validation.referencialFileValidator">
       <referencialFileValidator

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src_validation"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5">
 		<accessrules>
 			<accessrule kind="accessible" pattern="org/apache/xerces/**"/>
@@ -12,6 +13,7 @@
 			<accessrule kind="accessible" pattern="**/validation/**"/>
 			<accessrule kind="accessible" pattern="**/sse/**"/>
 			<accessrule kind="accessible" pattern="**/xml/**"/>
+			<accessrule kind="accessible" pattern="org/apache/xalan/**"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
