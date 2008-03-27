@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2008 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
@@ -133,6 +133,13 @@ public class HTMLUIMessages extends NLS {
 	// above are possibly unused strings that may be deleted
 	public static String EmptyFilePreferencePage_0;
 	public static String _UI_STRUCTURED_TEXT_EDITOR_PREFS_LINK;
+	
+	// HTML Typing Preferences
+	public static String HTMLTyping_Auto_Complete;
+	public static String HTMLTyping_Auto_Remove;
+	public static String HTMLTyping_Complete_Comments;
+	public static String HTMLTyping_Complete_End_Tags;
+	public static String HTMLTyping_Remove_End_Tags;
 	
 	// below are the strings for the validation page
 	public static String Validation_description;

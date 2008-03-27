@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,9 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
+import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -37,7 +39,7 @@ public class StructuredAutoEditStrategyJSP implements IAutoEditStrategy {
 
 			if (model != null) {
 				if (command.text != null) {
-					if (command.text.equals("%")) { //$NON-NLS-1$
+					if (command.text.equals("%") && isPreferenceEnabled(JSPUIPreferenceNames.TYPING_COMPLETE_SCRIPTLETS)) { //$NON-NLS-1$
 						// scriptlet - add end %>
 						IDOMNode node = (IDOMNode) model.getIndexedRegion(command.offset);
 						if (prefixedWith(document, command.offset, "<") && !node.getSource().endsWith("%>")) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -47,7 +49,7 @@ public class StructuredAutoEditStrategyJSP implements IAutoEditStrategy {
 							command.doit = false;
 						}
 					}
-					if (command.text.equals("{")) { //$NON-NLS-1$
+					if (command.text.equals("{") && isPreferenceEnabled(JSPUIPreferenceNames.TYPING_COMPLETE_EL_BRACES)) { //$NON-NLS-1$
 						IDOMNode node = (IDOMNode) model.getIndexedRegion(command.offset);
 						if ((prefixedWith(document, command.offset, "$") || prefixedWith(document, command.offset, "#")) && //$NON-NLS-1$ //$NON-NLS-2$
 									!node.getSource().endsWith("}")) { //$NON-NLS-1$ //$NON-NLS-2$
@@ -64,6 +66,10 @@ public class StructuredAutoEditStrategyJSP implements IAutoEditStrategy {
 			if (model != null)
 				model.releaseFromRead();
 		}
+	}
+	
+	private boolean isPreferenceEnabled(String key) {
+		return (key != null && JSPUIPlugin.getDefault().getPreferenceStore().getBoolean(key));
 	}
 
 	/**

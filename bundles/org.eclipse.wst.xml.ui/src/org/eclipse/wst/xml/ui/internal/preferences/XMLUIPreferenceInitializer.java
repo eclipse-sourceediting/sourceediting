@@ -122,6 +122,11 @@ public class XMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		if (template != null)
 			templateName = template.getName();
 		store.setDefault(XMLUIPreferenceNames.NEW_FILE_TEMPLATE_NAME, templateName);
+		
+		// Defaults for the Typing preference page
+		store.setDefault(XMLUIPreferenceNames.TYPING_COMPLETE_COMMENTS, true);
+		store.setDefault(XMLUIPreferenceNames.TYPING_COMPLETE_END_TAGS, true);
+		store.setDefault(XMLUIPreferenceNames.TYPING_REMOVE_END_TAGS, true);
 	}
 
 }

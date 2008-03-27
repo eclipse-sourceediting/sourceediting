@@ -22,6 +22,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorExtension3;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
+import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -61,6 +63,10 @@ public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
 		}
 	}
 
+	private boolean isPreferenceEnabled(String key) {
+		return (key != null && HTMLUIPlugin.getDefault().getPreferenceStore().getBoolean(key));
+	}
+	
 	private boolean isCommentNode(IDOMNode node) {
 		return (node != null && node instanceof IDOMElement && ((IDOMElement) node).isCommentTag());
 	}
@@ -80,7 +86,7 @@ public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
 	private void smartRemoveEndTag(DocumentCommand command, IDocument document, IStructuredModel model) {
 		try {
 			// An opening tag is now a self-terminated end-tag
-			if ("/".equals(command.text) && ">".equals(document.get(command.offset, 1))) { //$NON-NLS-1$ //$NON-NLS-2$
+			if ("/".equals(command.text) && ">".equals(document.get(command.offset, 1)) && isPreferenceEnabled(HTMLUIPreferenceNames.TYPING_REMOVE_END_TAGS)) { //$NON-NLS-1$ //$NON-NLS-2$
 				IDOMNode node = (IDOMNode) model.getIndexedRegion(command.offset);
 				if (node != null && !node.hasChildNodes()) {
 					IStructuredDocumentRegion region = node.getEndStructuredDocumentRegion();
@@ -97,7 +103,7 @@ public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
 
 	private void smartInsertForComment(DocumentCommand command, IDocument document, IStructuredModel model) {
 		try {
-			if (command.text.equals("-") && document.getLength() >= 3 && document.get(command.offset - 3, 3).equals("<!-")) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (command.text.equals("-") && document.getLength() >= 3 && document.get(command.offset - 3, 3).equals("<!-") && isPreferenceEnabled(HTMLUIPreferenceNames.TYPING_COMPLETE_COMMENTS)) { //$NON-NLS-1$ //$NON-NLS-2$
 				command.text += "  -->"; //$NON-NLS-1$
 				command.shiftsCaret = false;
 				command.caretOffset = command.offset + 2;
@@ -112,7 +118,7 @@ public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
 
 	private void smartInsertForEndTag(DocumentCommand command, IDocument document, IStructuredModel model) {
 		try {
-			if (command.text.equals("/") && document.getLength() >= 1 && document.get(command.offset - 1, 1).equals("<")) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (command.text.equals("/") && document.getLength() >= 1 && document.get(command.offset - 1, 1).equals("<") && isPreferenceEnabled(HTMLUIPreferenceNames.TYPING_COMPLETE_END_TAGS)) { //$NON-NLS-1$ //$NON-NLS-2$
 				IDOMNode parentNode = (IDOMNode) ((IDOMNode) model.getIndexedRegion(command.offset - 1)).getParentNode();
 				if (isCommentNode(parentNode)) {
 					// loop and find non comment node parent

@@ -231,6 +231,12 @@
 			id="org.eclipse.jst.jsp.ui.preferences.validation">
 			<keywordReference id="org.eclipse.jst.jsp.ui.severities"/>
 		</page>
+		<page
+			name="%JSP_Typing"
+			category="org.eclipse.wst.sse.ui.preferences.jsp.source"
+			class="org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPTypingPreferencePage"
+			id="org.eclipse.jst.jsp.ui.preferences.typing">
+		</page>
 	</extension>
 	
 	<!-- Keywords for preference and properties pages -->

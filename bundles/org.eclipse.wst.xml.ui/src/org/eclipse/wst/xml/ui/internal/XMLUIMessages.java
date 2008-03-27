@@ -266,6 +266,11 @@ public class XMLUIMessages extends NLS {
 	public static String OpenFileFromSource_tooltip; // Resource bundle
 	public static String OpenFileFromSource_description; // Resource bundle
 	public static String XMLContentOutlineConfiguration_0;
+	public static String XMLTyping_Auto_Complete;
+	public static String XMLTyping_Auto_Remove;
+	public static String XMLTyping_Complete_Comments;
+	public static String XMLTyping_Complete_End_Tags;
+	public static String XMLTyping_Remove_End_Tags;
 	public static String StructureSelectEnclosing_label;
 	public static String StructureSelectEnclosing_tooltip;
 	public static String StructureSelectEnclosing_description;

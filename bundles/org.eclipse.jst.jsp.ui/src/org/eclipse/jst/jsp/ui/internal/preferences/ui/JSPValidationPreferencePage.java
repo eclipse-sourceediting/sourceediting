@@ -129,7 +129,7 @@ public class JSPValidationPreferencePage extends AbstractValidationSettingsPage 
 		addComboBox(section, JSPUIMessages.VALIDATION_DIRECTIVE_TAGLIB_MISSING_URI_OR_TAGDIR, JSPCorePreferenceNames.VALIDATION_DIRECTIVE_TAGLIB_MISSING_URI_OR_TAGDIR, SEVERITIES, errorWarningIgnoreLabels, 0);
 		addComboBox(section, JSPUIMessages.VALIDATION_DIRECTIVE_INCLUDE_FILE_NOT_FOUND, JSPCorePreferenceNames.VALIDATION_DIRECTIVE_INCLUDE_FILE_NOT_FOUND, SEVERITIES, errorWarningIgnoreLabels, 0);
 		addComboBox(section, JSPUIMessages.VALIDATION_DIRECTIVE_INCLUDE_NO_FILE_SPECIFIED, JSPCorePreferenceNames.VALIDATION_DIRECTIVE_INCLUDE_NO_FILE_SPECIFIED, SEVERITIES, errorWarningIgnoreLabels, 0);
-		addComboBox(section, JSPUIMessages.VALIDATION_DIRECTIVE_PAGE_SUPERCLASS_NOT_FOUND, JSPCorePreferenceNames.VALIDATION_DIRECTIVE_PAGE_SUPERCLASS_NOT_FOUND, SEVERITIES, errorWarningIgnoreLabels, 0);
+//		addComboBox(section, JSPUIMessages.VALIDATION_DIRECTIVE_PAGE_SUPERCLASS_NOT_FOUND, JSPCorePreferenceNames.VALIDATION_DIRECTIVE_PAGE_SUPERCLASS_NOT_FOUND, SEVERITIES, errorWarningIgnoreLabels, 0);
 		// end directives section
 
 		// begin custom actions section

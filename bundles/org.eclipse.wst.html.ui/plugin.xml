@@ -113,7 +113,12 @@
 			class="org.eclipse.wst.html.ui.internal.preferences.ui.HTMLValidationPreferencePage"
 			id="org.eclipse.wst.html.ui.preferences.validation">
 		</page>
-		
+		<page
+			name="%HTML_Typing"
+			category="org.eclipse.wst.html.ui.preferences.source"
+			class="org.eclipse.wst.html.ui.internal.preferences.ui.HTMLTypingPreferencePage"
+			id="org.eclipse.wst.html.ui.preferences.typing">
+		</page>
 	</extension>
 	<!-- Web content settings -->
 	<extension point="org.eclipse.ui.propertyPages">

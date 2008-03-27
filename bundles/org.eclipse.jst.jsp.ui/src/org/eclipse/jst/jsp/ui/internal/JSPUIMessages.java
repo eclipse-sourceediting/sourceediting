@@ -123,6 +123,10 @@ public class JSPUIMessages extends NLS {
 	public static String SyntaxColoringPage_5;
 	public static String SyntaxColoringPage_6;
 	public static String _UI_STRUCTURED_TEXT_EDITOR_PREFS_LINK;
+	
+	public static String JSPTyping_Auto_Complete;
+	public static String JSPTyping_Complete_Scriptlets;
+	public static String JSPTyping_Complete_Braces;
 	public static String JSPValidationPreferencePage_0;
 
 	// below are the strings for the validation page

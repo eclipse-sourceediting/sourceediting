@@ -136,6 +136,12 @@
 			id="org.eclipse.wst.xml.core.ui.XMLCatalogPreferencePage">
          	<keywordReference id="org.eclipse.wst.xml.ui.xmlcatalog"/>
 		</page>
+		<page
+			name="%XML_Typing"
+			category="org.eclipse.wst.sse.ui.preferences.xml.source"
+			class="org.eclipse.wst.xml.ui.internal.preferences.XMLTypingPreferencePage"
+			id="org.eclipse.wst.sse.ui.preferences.xml.typing">
+		</page>
 	</extension>
 	
 	<!-- Keywords for preference and properties pages -->

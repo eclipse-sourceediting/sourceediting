@@ -66,6 +66,9 @@ public class JSPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		if (template != null)
 			templateName = template.getName();
 		store.setDefault(JSPUIPreferenceNames.NEW_FILE_TEMPLATE_NAME, templateName);
+		
+		store.setDefault(JSPUIPreferenceNames.TYPING_COMPLETE_EL_BRACES, true);
+		store.setDefault(JSPUIPreferenceNames.TYPING_COMPLETE_SCRIPTLETS, true);
 	}
 
 }

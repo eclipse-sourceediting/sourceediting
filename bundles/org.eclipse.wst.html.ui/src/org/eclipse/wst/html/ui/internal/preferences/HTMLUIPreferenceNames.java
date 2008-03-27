@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -62,4 +62,31 @@ public class HTMLUIPreferenceNames {
 	 * </p>
 	 */
 	public static final String NEW_FILE_TEMPLATE_NAME = "newFileTemplateName"; //$NON-NLS-1$
+	
+	/**
+	 * The key to store the option for auto-completing comments while
+	 * typing.
+	 * <p>
+	 * Value is of type <code>boolean</code>.
+	 * </p>
+	 */
+	public static final String TYPING_COMPLETE_COMMENTS = "completeComments"; //$NON-NLS-1$
+	
+	/**
+	 * The key to store the option for auto-completing end-tags after entering
+	 * <code>&lt;/</code>
+	 * <p>
+	 * Value is of type <code>boolean</code>.
+	 * </p>
+	 */
+	public static final String TYPING_COMPLETE_END_TAGS = "completeEndTags"; //$NON-NLS-1$
+	
+	/**
+	 * The key to store the option for removing an end-tag if the start tag is
+	 * converted to an empty-tag.
+	 * <p>
+	 * Value is of type <code>boolean</code>.
+	 * </p>
+	 */
+	public static final String TYPING_REMOVE_END_TAGS = "removeEndTags"; //$NON-NLS-1$
 }

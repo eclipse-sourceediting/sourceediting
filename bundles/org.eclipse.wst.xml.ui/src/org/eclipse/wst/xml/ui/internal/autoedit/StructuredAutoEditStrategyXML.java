@@ -28,6 +28,8 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.Logger;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
 import org.w3c.dom.Node;
 
 /**
@@ -62,6 +64,10 @@ public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
 			}
 		}
 	}
+	
+	private boolean isPreferenceEnabled(String key) {
+		return (key != null && XMLUIPlugin.getDefault().getPreferenceStore().getBoolean(key));
+	}
 
 	private boolean isCommentNode(IDOMNode node) {
 		return ((node != null) && (node instanceof IDOMElement) && ((IDOMElement) node).isCommentTag());
@@ -82,7 +88,7 @@ public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
 	private void smartRemoveEndTag(DocumentCommand command, IDocument document, IStructuredModel model) {
 		try {
 			// An opening tag is now a self-terminated end-tag
-			if ("/".equals(command.text) && ">".equals(document.get(command.offset, 1))) { //$NON-NLS-1$ //$NON-NLS-2$
+			if ("/".equals(command.text) && ">".equals(document.get(command.offset, 1)) && isPreferenceEnabled(XMLUIPreferenceNames.TYPING_REMOVE_END_TAGS)) { //$NON-NLS-1$ //$NON-NLS-2$
 				IDOMNode node = (IDOMNode) model.getIndexedRegion(command.offset);
 				if (node != null && !node.hasChildNodes()) {
 					IStructuredDocumentRegion region = node.getEndStructuredDocumentRegion();
@@ -99,7 +105,7 @@ public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
 
 	private void smartInsertForComment(DocumentCommand command, IDocument document, IStructuredModel model) {
 		try {
-			if (command.text.equals("-") && (document.getLength() >= 3) && document.get(command.offset - 3, 3).equals("<!-")) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (command.text.equals("-") && (document.getLength() >= 3) && document.get(command.offset - 3, 3).equals("<!-") && isPreferenceEnabled(XMLUIPreferenceNames.TYPING_COMPLETE_COMMENTS)) { //$NON-NLS-1$ //$NON-NLS-2$
 				command.text += "  -->"; //$NON-NLS-1$
 				command.shiftsCaret = false;
 				command.caretOffset = command.offset + 2;
@@ -114,7 +120,7 @@ public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
 
 	private void smartInsertForEndTag(DocumentCommand command, IDocument document, IStructuredModel model) {
 		try {
-			if (command.text.equals("/") && (document.getLength() >= 1) && document.get(command.offset - 1, 1).equals("<")) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (command.text.equals("/") && (document.getLength() >= 1) && document.get(command.offset - 1, 1).equals("<") && isPreferenceEnabled(XMLUIPreferenceNames.TYPING_COMPLETE_END_TAGS)) { //$NON-NLS-1$ //$NON-NLS-2$
 				IDOMNode parentNode = (IDOMNode) ((IDOMNode) model.getIndexedRegion(command.offset - 1)).getParentNode();
 				if (isCommentNode(parentNode)) {
 					// loop and find non comment node parent
