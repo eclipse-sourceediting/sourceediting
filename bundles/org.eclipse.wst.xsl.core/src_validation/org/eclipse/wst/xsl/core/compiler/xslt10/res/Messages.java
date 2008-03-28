@@ -1,9 +1,6 @@
 package org.eclipse.wst.xsl.core.compiler.xslt10.res;
 
 import java.util.ListResourceBundle;
-import java.util.ResourceBundle;
-
-import org.apache.xpath.res.XPATHErrorResources;
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
@@ -440,15 +437,15 @@ public class Messages extends NLS {
 	 * @return The formatted message string.
 	 */
 	public static final String createMessage(String msgKey, Object args[]) // throws
-																		// Exception
+	// Exception
 	{
 
 		String fmsg = null;
 		boolean throwex = false;
-		
+
 		ListResourceBundle resource = new XSLTErrorResources();
-		
-		String msg =  resource.getString(msgKey);
+
+		String msg = resource.getString(msgKey);
 
 		if (args != null) {
 			try {

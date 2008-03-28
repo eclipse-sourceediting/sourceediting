@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: AbsPathChecker.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: AbsPathChecker.java,v 1.2 2008/03/28 02:38:15 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -39,53 +39,58 @@ import org.apache.xpath.functions.Function;
 import org.apache.xpath.operations.Variable;
 
 /**
- * This class runs over a path expression that is assumed to be absolute, and 
+ * This class runs over a path expression that is assumed to be absolute, and
  * checks for variables and the like that may make it context dependent.
  */
-public class AbsPathChecker extends XPathVisitor
-{
+public class AbsPathChecker extends XPathVisitor {
 	private boolean m_isAbs = true;
-	
+
 	/**
-	 * Process the LocPathIterator to see if it contains variables 
-	 * or functions that may make it context dependent.
-	 * @param path LocPathIterator that is assumed to be absolute, but needs checking.
-	 * @return true if the path is confirmed to be absolute, false if it 
-	 * may contain context dependencies.
+	 * Process the LocPathIterator to see if it contains variables or functions
+	 * that may make it context dependent.
+	 * 
+	 * @param path
+	 *            LocPathIterator that is assumed to be absolute, but needs
+	 *            checking.
+	 * @return true if the path is confirmed to be absolute, false if it may
+	 *         contain context dependencies.
 	 */
-	public boolean checkAbsolute(LocPathIterator path)
-	{
+	public boolean checkAbsolute(LocPathIterator path) {
 		m_isAbs = true;
 		path.callVisitors(null, this);
 		return m_isAbs;
 	}
-	
+
 	/**
 	 * Visit a function.
-	 * @param owner The owner of the expression, to which the expression can 
-	 *              be reset if rewriting takes place.
-	 * @param func The function reference object.
+	 * 
+	 * @param owner
+	 *            The owner of the expression, to which the expression can be
+	 *            reset if rewriting takes place.
+	 * @param func
+	 *            The function reference object.
 	 * @return true if the sub expressions should be traversed.
 	 */
-	public boolean visitFunction(ExpressionOwner owner, Function func)
-	{
-		if((func instanceof FuncCurrent) ||
-		   (func instanceof FuncExtFunction))
+	@Override
+	public boolean visitFunction(ExpressionOwner owner, Function func) {
+		if ((func instanceof FuncCurrent) || (func instanceof FuncExtFunction))
 			m_isAbs = false;
 		return true;
 	}
-	
+
 	/**
 	 * Visit a variable reference.
-	 * @param owner The owner of the expression, to which the expression can 
-	 *              be reset if rewriting takes place.
-	 * @param var The variable reference object.
+	 * 
+	 * @param owner
+	 *            The owner of the expression, to which the expression can be
+	 *            reset if rewriting takes place.
+	 * @param var
+	 *            The variable reference object.
 	 * @return true if the sub expressions should be traversed.
 	 */
-	public boolean visitVariableRef(ExpressionOwner owner, Variable var)
-	{
+	@Override
+	public boolean visitVariableRef(ExpressionOwner owner, Variable var) {
 		m_isAbs = false;
 		return true;
 	}
 }
-

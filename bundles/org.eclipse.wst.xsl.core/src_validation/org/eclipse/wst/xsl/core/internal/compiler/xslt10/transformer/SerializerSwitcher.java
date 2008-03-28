@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: SerializerSwitcher.java,v 1.1 2008/03/27 01:08:56 dacarver Exp $
+ * $Id: SerializerSwitcher.java,v 1.2 2008/03/28 02:38:16 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer;
 
@@ -44,171 +44,169 @@ import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.OutputPropert
 import org.xml.sax.ContentHandler;
 
 /**
- * This is a helper class that decides if Xalan needs to switch
- * serializers, based on the first output element.
+ * This is a helper class that decides if Xalan needs to switch serializers,
+ * based on the first output element.
  */
-public class SerializerSwitcher
-{
+public class SerializerSwitcher {
 
-  /**
-   * Switch to HTML serializer if element is HTML
-   *
-   *
-   * @param transformer Non-null transformer instance
-   * @param ns Namespace URI of the element
-   * @param localName Local part of name of element
-   *
-   * @throws TransformerException
-   */
-  public static void switchSerializerIfHTML(
-          TransformerImpl transformer, String ns, String localName)
-            throws TransformerException
-  {
+	/**
+	 * Switch to HTML serializer if element is HTML
+	 * 
+	 * 
+	 * @param transformer
+	 *            Non-null transformer instance
+	 * @param ns
+	 *            Namespace URI of the element
+	 * @param localName
+	 *            Local part of name of element
+	 * 
+	 * @throws TransformerException
+	 */
+	public static void switchSerializerIfHTML(TransformerImpl transformer,
+			String ns, String localName) throws TransformerException {
 
-    if (null == transformer)
-      return;
+		if (null == transformer)
+			return;
 
-    if (((null == ns) || (ns.length() == 0))
-            && localName.equalsIgnoreCase("html"))
-    {
-      // System.out.println("transformer.getOutputPropertyNoDefault(OutputKeys.METHOD): "+
-      //              transformer.getOutputPropertyNoDefault(OutputKeys.METHOD));     
-      // Access at level of hashtable to see if the method has been set.
-      if (null != transformer.getOutputPropertyNoDefault(OutputKeys.METHOD))
-        return;
+		if (((null == ns) || (ns.length() == 0))
+				&& localName.equalsIgnoreCase("html")) {
+			// System.out.println("transformer.getOutputPropertyNoDefault(OutputKeys.METHOD):
+			// "+
+			// transformer.getOutputPropertyNoDefault(OutputKeys.METHOD));
+			// Access at level of hashtable to see if the method has been set.
+			if (null != transformer
+					.getOutputPropertyNoDefault(OutputKeys.METHOD))
+				return;
 
-      // Getting the output properties this way won't cause a clone of 
-      // the properties.
-      Properties prevProperties = transformer.getOutputFormat().getProperties();
-      
-      // We have to make sure we get an output properties with the proper 
-      // defaults for the HTML method.  The easiest way to do this is to 
-      // have the OutputProperties class do it.
-      OutputProperties htmlOutputProperties = new OutputProperties(Method.HTML);
+			// Getting the output properties this way won't cause a clone of
+			// the properties.
+			Properties prevProperties = transformer.getOutputFormat()
+					.getProperties();
 
-      htmlOutputProperties.copyFrom(prevProperties, true);
-      Properties htmlProperties = htmlOutputProperties.getProperties();
+			// We have to make sure we get an output properties with the proper
+			// defaults for the HTML method. The easiest way to do this is to
+			// have the OutputProperties class do it.
+			OutputProperties htmlOutputProperties = new OutputProperties(
+					Method.HTML);
 
-      try
-      {
-//        Serializer oldSerializer = transformer.getSerializer();
-        Serializer oldSerializer = null;
+			htmlOutputProperties.copyFrom(prevProperties, true);
+			Properties htmlProperties = htmlOutputProperties.getProperties();
 
-        if (null != oldSerializer)
-        {
-          Serializer serializer =
-            SerializerFactory.getSerializer(htmlProperties);
+			try {
+				// Serializer oldSerializer = transformer.getSerializer();
+				Serializer oldSerializer = null;
 
-          Writer writer = oldSerializer.getWriter();
+				if (null != oldSerializer) {
+					Serializer serializer = SerializerFactory
+							.getSerializer(htmlProperties);
 
-          if (null != writer)
-            serializer.setWriter(writer);
-          else
-          {
-            OutputStream os = oldSerializer.getOutputStream();
+					Writer writer = oldSerializer.getWriter();
 
-            if (null != os)
-              serializer.setOutputStream(os);
-          }
+					if (null != writer)
+						serializer.setWriter(writer);
+					else {
+						OutputStream os = oldSerializer.getOutputStream();
 
-//          transformer.setSerializer(serializer);
+						if (null != os)
+							serializer.setOutputStream(os);
+					}
 
-          ContentHandler ch = serializer.asContentHandler();
+					// transformer.setSerializer(serializer);
 
-          transformer.setContentHandler(ch);
-        }
-      }
-      catch (java.io.IOException e)
-      {
-        throw new TransformerException(e);
-      }
-    }
-  }
-  
-  /**
-   * Get the value of a property, without using the default properties.  This 
-   * can be used to test if a property has been explicitly set by the stylesheet 
-   * or user.
-   *
-   * @param name The property name, which is a fully-qualified URI.
-   *
-   * @return The value of the property, or null if not found.
-   *
-   * @throws IllegalArgumentException If the property is not supported, 
-   * and is not namespaced.
-   */
-  private static String getOutputPropertyNoDefault(String qnameString, Properties props)
-    throws IllegalArgumentException
-  {    
-    String value = (String)props.get(qnameString);
-    
-    return value;
-  }
-  
-  /**
-   * Switch to HTML serializer if element is HTML
-   *
-   *
-   * @param ns Namespace URI of the element
-   * @param localName Local part of name of element
-   *
-   * @throws TransformerException
-   * @return new contentHandler.
-   */
-  public static Serializer switchSerializerIfHTML(
-          String ns, String localName, Properties props, Serializer oldSerializer)
-            throws TransformerException
-  {
-    Serializer newSerializer = oldSerializer;
+					ContentHandler ch = serializer.asContentHandler();
 
-    if (((null == ns) || (ns.length() == 0))
-            && localName.equalsIgnoreCase("html"))
-    {
-      // System.out.println("transformer.getOutputPropertyNoDefault(OutputKeys.METHOD): "+
-      //              transformer.getOutputPropertyNoDefault(OutputKeys.METHOD));     
-      // Access at level of hashtable to see if the method has been set.
-      if (null != getOutputPropertyNoDefault(OutputKeys.METHOD, props))
-        return newSerializer;
+					transformer.setContentHandler(ch);
+				}
+			} catch (java.io.IOException e) {
+				throw new TransformerException(e);
+			}
+		}
+	}
 
-      // Getting the output properties this way won't cause a clone of 
-      // the properties.
-      Properties prevProperties = props;
-      
-      // We have to make sure we get an output properties with the proper 
-      // defaults for the HTML method.  The easiest way to do this is to 
-      // have the OutputProperties class do it.
-      OutputProperties htmlOutputProperties = new OutputProperties(Method.HTML);
+	/**
+	 * Get the value of a property, without using the default properties. This
+	 * can be used to test if a property has been explicitly set by the
+	 * stylesheet or user.
+	 * 
+	 * @param name
+	 *            The property name, which is a fully-qualified URI.
+	 * 
+	 * @return The value of the property, or null if not found.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             If the property is not supported, and is not namespaced.
+	 */
+	private static String getOutputPropertyNoDefault(String qnameString,
+			Properties props) throws IllegalArgumentException {
+		String value = (String) props.get(qnameString);
 
-      htmlOutputProperties.copyFrom(prevProperties, true);
-      Properties htmlProperties = htmlOutputProperties.getProperties();
+		return value;
+	}
 
-//      try
-      {
-        if (null != oldSerializer)
-        {
-          Serializer serializer =
-            SerializerFactory.getSerializer(htmlProperties);
+	/**
+	 * Switch to HTML serializer if element is HTML
+	 * 
+	 * 
+	 * @param ns
+	 *            Namespace URI of the element
+	 * @param localName
+	 *            Local part of name of element
+	 * 
+	 * @throws TransformerException
+	 * @return new contentHandler.
+	 */
+	public static Serializer switchSerializerIfHTML(String ns,
+			String localName, Properties props, Serializer oldSerializer)
+			throws TransformerException {
+		Serializer newSerializer = oldSerializer;
 
-          Writer writer = oldSerializer.getWriter();
+		if (((null == ns) || (ns.length() == 0))
+				&& localName.equalsIgnoreCase("html")) {
+			// System.out.println("transformer.getOutputPropertyNoDefault(OutputKeys.METHOD):
+			// "+
+			// transformer.getOutputPropertyNoDefault(OutputKeys.METHOD));
+			// Access at level of hashtable to see if the method has been set.
+			if (null != getOutputPropertyNoDefault(OutputKeys.METHOD, props))
+				return newSerializer;
 
-          if (null != writer)
-            serializer.setWriter(writer);
-          else
-          {
-            OutputStream os = serializer.getOutputStream();
+			// Getting the output properties this way won't cause a clone of
+			// the properties.
+			Properties prevProperties = props;
 
-            if (null != os)
-              serializer.setOutputStream(os);
-          }
-          newSerializer = serializer;
-        }
-      }
-//      catch (java.io.IOException e)
-//      {
-//        throw new TransformerException(e);
-//      }
-    }
-    return newSerializer;
-  }
-  
+			// We have to make sure we get an output properties with the proper
+			// defaults for the HTML method. The easiest way to do this is to
+			// have the OutputProperties class do it.
+			OutputProperties htmlOutputProperties = new OutputProperties(
+					Method.HTML);
+
+			htmlOutputProperties.copyFrom(prevProperties, true);
+			Properties htmlProperties = htmlOutputProperties.getProperties();
+
+			// try
+			{
+				if (null != oldSerializer) {
+					Serializer serializer = SerializerFactory
+							.getSerializer(htmlProperties);
+
+					Writer writer = oldSerializer.getWriter();
+
+					if (null != writer)
+						serializer.setWriter(writer);
+					else {
+						OutputStream os = serializer.getOutputStream();
+
+						if (null != os)
+							serializer.setOutputStream(os);
+					}
+					newSerializer = serializer;
+				}
+			}
+			// catch (java.io.IOException e)
+			// {
+			// throw new TransformerException(e);
+			// }
+		}
+		return newSerializer;
+	}
+
 }

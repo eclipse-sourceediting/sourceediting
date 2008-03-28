@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ExpressionVisitor.java,v 1.1 2008/03/27 01:08:58 dacarver Exp $
+ * $Id: ExpressionVisitor.java,v 1.2 2008/03/28 02:38:17 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.extensions;
 
@@ -38,55 +38,54 @@ import org.apache.xpath.functions.FuncExtFunctionAvailable;
 import org.apache.xpath.functions.Function;
 
 /**
- * When {@link org.apache.xalan.processor.StylesheetHandler} creates 
- * an {@link org.apache.xpath.XPath}, the ExpressionVisitor
- * visits the XPath expression. For any extension functions it 
- * encounters, it instructs StylesheetRoot to register the
- * extension namespace. 
+ * When {@link org.apache.xalan.processor.StylesheetHandler} creates an
+ * {@link org.apache.xpath.XPath}, the ExpressionVisitor visits the XPath
+ * expression. For any extension functions it encounters, it instructs
+ * StylesheetRoot to register the extension namespace.
  * 
- * This mechanism is required to locate extension functions
- * that may be embedded within an expression.
+ * This mechanism is required to locate extension functions that may be embedded
+ * within an expression.
  */
-public class ExpressionVisitor extends XPathVisitor
-{
-  private StylesheetRoot m_sroot;
-  
-  /**
-   * The constructor sets the StylesheetRoot variable which
-   * is used to register extension namespaces.
-   * @param sroot the StylesheetRoot that is being constructed.
-   */
-  public ExpressionVisitor (StylesheetRoot sroot)
-  {
-    m_sroot = sroot;
-  }
-  
-  /**
-   * If the function is an extension function, register the namespace.
-   * 
-   * @param owner The current XPath object that owns the expression.
-   * @param func The function currently being visited.
-   * 
-   * @return true to continue the visit in the subtree, if any.
-   */
-  public boolean visitFunction(ExpressionOwner owner, Function func)
-  {
-    if (func instanceof FuncExtFunction)
-    {
-      String namespace = ((FuncExtFunction)func).getNamespace();
-      m_sroot.getExtensionNamespacesManager().registerExtension(namespace);      
-    }
-    else if (func instanceof FuncExtFunctionAvailable)
-    {
-      String arg = ((FuncExtFunctionAvailable)func).getArg0().toString();
-      if (arg.indexOf(":") > 0)
-      {
-      	String prefix = arg.substring(0,arg.indexOf(":"));
-      	String namespace = this.m_sroot.getNamespaceForPrefix(prefix);
-      	m_sroot.getExtensionNamespacesManager().registerExtension(namespace);
-      }
-    }
-    return true;
-  }
+public class ExpressionVisitor extends XPathVisitor {
+	private StylesheetRoot m_sroot;
+
+	/**
+	 * The constructor sets the StylesheetRoot variable which is used to
+	 * register extension namespaces.
+	 * 
+	 * @param sroot
+	 *            the StylesheetRoot that is being constructed.
+	 */
+	public ExpressionVisitor(StylesheetRoot sroot) {
+		m_sroot = sroot;
+	}
+
+	/**
+	 * If the function is an extension function, register the namespace.
+	 * 
+	 * @param owner
+	 *            The current XPath object that owns the expression.
+	 * @param func
+	 *            The function currently being visited.
+	 * 
+	 * @return true to continue the visit in the subtree, if any.
+	 */
+	@Override
+	public boolean visitFunction(ExpressionOwner owner, Function func) {
+		if (func instanceof FuncExtFunction) {
+			String namespace = ((FuncExtFunction) func).getNamespace();
+			m_sroot.getExtensionNamespacesManager()
+					.registerExtension(namespace);
+		} else if (func instanceof FuncExtFunctionAvailable) {
+			String arg = ((FuncExtFunctionAvailable) func).getArg0().toString();
+			if (arg.indexOf(":") > 0) {
+				String prefix = arg.substring(0, arg.indexOf(":"));
+				String namespace = this.m_sroot.getNamespaceForPrefix(prefix);
+				m_sroot.getExtensionNamespacesManager().registerExtension(
+						namespace);
+			}
+		}
+		return true;
+	}
 
 }

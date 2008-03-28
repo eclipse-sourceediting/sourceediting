@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: SecuritySupport12.java,v 1.2 2008/03/27 22:45:10 dacarver Exp $
+ * $Id: SecuritySupport12.java,v 1.3 2008/03/28 02:38:18 dacarver Exp $
  */
 
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.extensions;
@@ -41,115 +41,119 @@ import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 
-
 /**
  * This class is duplicated for each Xalan-Java subpackage so keep it in sync.
  * It is package private and therefore is not exposed as part of the Xalan-Java
  * API.
- *
+ * 
  * Security related methods that only work on J2SE 1.2 and newer.
  */
 class SecuritySupport12 extends SecuritySupport {
 
-    ClassLoader getContextClassLoader() {
-        return (ClassLoader)
-                AccessController.doPrivileged(new PrivilegedAction() {
-            public Object run() {
-                ClassLoader cl = null;
-                try {
-                    cl = Thread.currentThread().getContextClassLoader();
-                } catch (SecurityException ex) { }
-                return cl;
-            }
-        });
-    }
+	@Override
+	ClassLoader getContextClassLoader() {
+		return (ClassLoader) AccessController
+				.doPrivileged(new PrivilegedAction() {
+					public Object run() {
+						ClassLoader cl = null;
+						try {
+							cl = Thread.currentThread().getContextClassLoader();
+						} catch (SecurityException ex) {
+						}
+						return cl;
+					}
+				});
+	}
 
-    ClassLoader getSystemClassLoader() {
-        return (ClassLoader)
-            AccessController.doPrivileged(new PrivilegedAction() {
-                public Object run() {
-                    ClassLoader cl = null;
-                    try {
-                        cl = ClassLoader.getSystemClassLoader();
-                    } catch (SecurityException ex) {}
-                    return cl;
-                }
-            });
-    }
+	@Override
+	ClassLoader getSystemClassLoader() {
+		return (ClassLoader) AccessController
+				.doPrivileged(new PrivilegedAction() {
+					public Object run() {
+						ClassLoader cl = null;
+						try {
+							cl = ClassLoader.getSystemClassLoader();
+						} catch (SecurityException ex) {
+						}
+						return cl;
+					}
+				});
+	}
 
-    ClassLoader getParentClassLoader(final ClassLoader cl) {
-        return (ClassLoader)
-            AccessController.doPrivileged(new PrivilegedAction() {
-                public Object run() {
-                    ClassLoader parent = null;
-                    try {
-                        parent = cl.getParent();
-                    } catch (SecurityException ex) {}
+	@Override
+	ClassLoader getParentClassLoader(final ClassLoader cl) {
+		return (ClassLoader) AccessController
+				.doPrivileged(new PrivilegedAction() {
+					public Object run() {
+						ClassLoader parent = null;
+						try {
+							parent = cl.getParent();
+						} catch (SecurityException ex) {
+						}
 
-                    // eliminate loops in case of the boot
-                    // ClassLoader returning itself as a parent
-                    return (parent == cl) ? null : parent;
-                }
-            });
-    }
+						// eliminate loops in case of the boot
+						// ClassLoader returning itself as a parent
+						return (parent == cl) ? null : parent;
+					}
+				});
+	}
 
-    String getSystemProperty(final String propName) {
-        return (String)
-            AccessController.doPrivileged(new PrivilegedAction() {
-                public Object run() {
-                    return System.getProperty(propName);
-                }
-            });
-    }
+	@Override
+	String getSystemProperty(final String propName) {
+		return (String) AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				return System.getProperty(propName);
+			}
+		});
+	}
 
-    FileInputStream getFileInputStream(final File file)
-        throws FileNotFoundException
-    {
-        try {
-            return (FileInputStream)
-                AccessController.doPrivileged(new PrivilegedExceptionAction() {
-                    public Object run() throws FileNotFoundException {
-                        return new FileInputStream(file);
-                    }
-                });
-        } catch (PrivilegedActionException e) {
-            throw (FileNotFoundException)e.getException();
-        }
-    }
+	@Override
+	FileInputStream getFileInputStream(final File file)
+			throws FileNotFoundException {
+		try {
+			return (FileInputStream) AccessController
+					.doPrivileged(new PrivilegedExceptionAction() {
+						public Object run() throws FileNotFoundException {
+							return new FileInputStream(file);
+						}
+					});
+		} catch (PrivilegedActionException e) {
+			throw (FileNotFoundException) e.getException();
+		}
+	}
 
-    InputStream getResourceAsStream(final ClassLoader cl,
-                                           final String name)
-    {
-        return (InputStream)
-            AccessController.doPrivileged(new PrivilegedAction() {
-                public Object run() {
-                    InputStream ris;
-                    if (cl == null) {
-                        ris = ClassLoader.getSystemResourceAsStream(name);
-                    } else {
-                        ris = cl.getResourceAsStream(name);
-                    }
-                    return ris;
-                }
-            });
-    }
-    
-    boolean getFileExists(final File f) {
-    return ((Boolean)
-            AccessController.doPrivileged(new PrivilegedAction() {
-                public Object run() {
-                    return new Boolean(f.exists());
-                }
-            })).booleanValue();
-    }
-    
-    long getLastModified(final File f) {
-    return ((Long)
-            AccessController.doPrivileged(new PrivilegedAction() {
-                public Object run() {
-                    return new Long(f.lastModified());
-                }
-            })).longValue();
-    }
-        
+	@Override
+	InputStream getResourceAsStream(final ClassLoader cl, final String name) {
+		return (InputStream) AccessController
+				.doPrivileged(new PrivilegedAction() {
+					public Object run() {
+						InputStream ris;
+						if (cl == null) {
+							ris = ClassLoader.getSystemResourceAsStream(name);
+						} else {
+							ris = cl.getResourceAsStream(name);
+						}
+						return ris;
+					}
+				});
+	}
+
+	@Override
+	boolean getFileExists(final File f) {
+		return ((Boolean) AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				return new Boolean(f.exists());
+			}
+		})).booleanValue();
+	}
+
+	@Override
+	long getLastModified(final File f) {
+		return ((Long) AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				return new Long(f.lastModified());
+			}
+		})).longValue();
+	}
+
 }

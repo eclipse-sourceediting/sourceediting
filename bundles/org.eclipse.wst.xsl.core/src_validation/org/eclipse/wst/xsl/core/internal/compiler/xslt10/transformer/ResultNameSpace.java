@@ -25,38 +25,37 @@
  * limitations under the License.
  */
 /*
- * $Id: ResultNameSpace.java,v 1.1 2008/03/27 01:08:56 dacarver Exp $
+ * $Id: ResultNameSpace.java,v 1.2 2008/03/28 02:38:16 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer;
 
 /**
- * A representation of a result namespace.  One of these will
- * be pushed on the result tree namespace stack for each
- * result tree element.
+ * A representation of a result namespace. One of these will be pushed on the
+ * result tree namespace stack for each result tree element.
+ * 
  * @xsl.usage internal
  */
-public class ResultNameSpace
-{
+public class ResultNameSpace {
 
-  /** Pointer to next ResultNameSpace          */
-  public ResultNameSpace m_next = null;
+	/** Pointer to next ResultNameSpace */
+	public ResultNameSpace m_next = null;
 
-  /** Prefix of namespace         */
-  public String m_prefix;
+	/** Prefix of namespace */
+	public String m_prefix;
 
-  /** Namespace URI          */
-  public String m_uri;  // if null, then Element namespace is empty.
+	/** Namespace URI */
+	public String m_uri; // if null, then Element namespace is empty.
 
-  /**
-   * Construct a namespace for placement on the
-   * result tree namespace stack.
-   *
-   * @param prefix of result namespace
-   * @param uri URI of result namespace
-   */
-  public ResultNameSpace(String prefix, String uri)
-  {
-    m_prefix = prefix;
-    m_uri = uri;
-  }
+	/**
+	 * Construct a namespace for placement on the result tree namespace stack.
+	 * 
+	 * @param prefix
+	 *            of result namespace
+	 * @param uri
+	 *            URI of result namespace
+	 */
+	public ResultNameSpace(String prefix, String uri) {
+		m_prefix = prefix;
+		m_uri = uri;
+	}
 }

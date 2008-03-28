@@ -26,16 +26,16 @@
  * limitations under the License.
  */
 /*
- * $Id: ProcessorStylesheetDoc.java,v 1.1 2008/03/27 01:08:55 dacarver Exp $
+ * $Id: ProcessorStylesheetDoc.java,v 1.2 2008/03/28 02:38:16 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.processor;
 
 /**
- * This class processes the xsl:stylesheet element.  At the 
- * moment, it defers all methods to it's superclass.
+ * This class processes the xsl:stylesheet element. At the moment, it defers all
+ * methods to it's superclass.
+ * 
  * @xsl.usage internal
  */
-public class ProcessorStylesheetDoc extends XSLTElementProcessor
-{
-    static final long serialVersionUID = -1661497592836231844L;
+public class ProcessorStylesheetDoc extends XSLTElementProcessor {
+	static final long serialVersionUID = -1661497592836231844L;
 }

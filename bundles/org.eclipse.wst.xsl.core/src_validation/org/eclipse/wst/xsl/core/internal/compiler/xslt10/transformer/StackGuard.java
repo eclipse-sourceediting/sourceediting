@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: StackGuard.java,v 1.1 2008/03/27 01:08:57 dacarver Exp $
+ * $Id: StackGuard.java,v 1.2 2008/03/28 02:38:16 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer;
 
@@ -40,148 +40,139 @@ import org.apache.xml.utils.ObjectStack;
 /**
  * Class to guard against recursion getting too deep.
  */
-public class StackGuard
-{
+public class StackGuard {
 
-  /**
-   * Used for infinite loop check. If the value is -1, do not
-   * check for infinite loops. Anyone who wants to enable that
-   * check should change the value of this variable to be the
-   * level of recursion that they want to check. Be careful setting
-   * this variable, if the number is too low, it may report an
-   * infinite loop situation, when there is none.
-   * Post version 1.0.0, we'll make this a runtime feature.
-   */
-  private int m_recursionLimit = -1;
-  
-  protected TransformerImpl m_transformer;
+	/**
+	 * Used for infinite loop check. If the value is -1, do not check for
+	 * infinite loops. Anyone who wants to enable that check should change the
+	 * value of this variable to be the level of recursion that they want to
+	 * check. Be careful setting this variable, if the number is too low, it may
+	 * report an infinite loop situation, when there is none. Post version
+	 * 1.0.0, we'll make this a runtime feature.
+	 */
+	private int m_recursionLimit = -1;
 
-  /**
-   * Get the recursion limit.
-   * Used for infinite loop check. If the value is -1, do not
-   * check for infinite loops. Anyone who wants to enable that
-   * check should change the value of this variable to be the
-   * level of recursion that they want to check. Be careful setting
-   * this variable, if the number is too low, it may report an
-   * infinite loop situation, when there is none.
-   * Post version 1.0.0, we'll make this a runtime feature.
-   *
-   * @return The recursion limit.
-   */
-  public int getRecursionLimit()
-  {
-    return m_recursionLimit;
-  }
+	protected TransformerImpl m_transformer;
 
-  /**
-   * Set the recursion limit.
-   * Used for infinite loop check. If the value is -1, do not
-   * check for infinite loops. Anyone who wants to enable that
-   * check should change the value of this variable to be the
-   * level of recursion that they want to check. Be careful setting
-   * this variable, if the number is too low, it may report an
-   * infinite loop situation, when there is none.
-   * Post version 1.0.0, we'll make this a runtime feature.
-   *
-   * @param limit The recursion limit.
-   */
-  public void setRecursionLimit(int limit)
-  {
-    m_recursionLimit = limit;
-  }
+	/**
+	 * Get the recursion limit. Used for infinite loop check. If the value is
+	 * -1, do not check for infinite loops. Anyone who wants to enable that
+	 * check should change the value of this variable to be the level of
+	 * recursion that they want to check. Be careful setting this variable, if
+	 * the number is too low, it may report an infinite loop situation, when
+	 * there is none. Post version 1.0.0, we'll make this a runtime feature.
+	 * 
+	 * @return The recursion limit.
+	 */
+	public int getRecursionLimit() {
+		return m_recursionLimit;
+	}
 
-  /**
-   * Constructor StackGuard
-   *
-   */
-  public StackGuard(TransformerImpl transformerImpl)
-  {
-    m_transformer = transformerImpl;
-  }
+	/**
+	 * Set the recursion limit. Used for infinite loop check. If the value is
+	 * -1, do not check for infinite loops. Anyone who wants to enable that
+	 * check should change the value of this variable to be the level of
+	 * recursion that they want to check. Be careful setting this variable, if
+	 * the number is too low, it may report an infinite loop situation, when
+	 * there is none. Post version 1.0.0, we'll make this a runtime feature.
+	 * 
+	 * @param limit
+	 *            The recursion limit.
+	 */
+	public void setRecursionLimit(int limit) {
+		m_recursionLimit = limit;
+	}
 
-  /**
-   * Overide equal method for StackGuard objects 
-   *
-   */
-  public int countLikeTemplates(ElemTemplate templ, int pos)
-  {
-  	ObjectStack elems = m_transformer.getCurrentTemplateElements();
-  	int count = 1;
-    for (int i = pos-1; i >= 0; i--)
-    {
-    	if((ElemTemplateElement)elems.elementAt(i) == templ)
-    		count++;
-    }
-	
-    return count;
-  }
+	/**
+	 * Constructor StackGuard
+	 * 
+	 */
+	public StackGuard(TransformerImpl transformerImpl) {
+		m_transformer = transformerImpl;
+	}
 
-  
-  /**
-   * Get the next named or match template down from and including 
-   * the given position.
-   * @param pos the current index position in the stack.
-   * @return null if no matched or named template found, otherwise 
-   * the next named or matched template at or below the position.
-   */
-  private ElemTemplate getNextMatchOrNamedTemplate(int pos)
-  {
-  	ObjectStack elems = m_transformer.getCurrentTemplateElements();
-    for (int i = pos; i >= 0; i--)
-    {
-    	ElemTemplateElement elem = (ElemTemplateElement) elems.elementAt(i);
-    	if(null != elem)
-    	{
-	    	if(elem.getXSLToken() == Constants.ELEMNAME_TEMPLATE)
-	    	{
-	    		return (ElemTemplate)elem;
-	    	}
-    	}
-    }
-  	return null;
-  }
+	/**
+	 * Overide equal method for StackGuard objects
+	 * 
+	 */
+	public int countLikeTemplates(ElemTemplate templ, int pos) {
+		ObjectStack elems = m_transformer.getCurrentTemplateElements();
+		int count = 1;
+		for (int i = pos - 1; i >= 0; i--) {
+			if ((ElemTemplateElement) elems.elementAt(i) == templ)
+				count++;
+		}
 
-  /**
-   * Check if we are in an infinite loop
-   *
-   * @throws TransformerException
-   */
-  public void checkForInfinateLoop() throws TransformerException
-  {
-    int nTemplates = m_transformer.getCurrentTemplateElementsCount();
-    if(nTemplates < m_recursionLimit)
-    	return;
-    	
-    if(m_recursionLimit <= 0)
-    	return;  // Safety check.
-    	
-    // loop from the top index down to the recursion limit (I don't think 
-    // there's any need to go below that).
-    for (int i = (nTemplates - 1); i >= m_recursionLimit; i--)
-    {
-    	ElemTemplate template = getNextMatchOrNamedTemplate(i);
-    	
-    	if(null == template)
-    		break;
-    		
-    	int loopCount = countLikeTemplates(template, i);
-    	
-    	if (loopCount >= m_recursionLimit)
-    	{
-    		// throw new TransformerException("Template nesting too deep. nesting = "+loopCount+
-    		//   ", template "+((null == template.getName()) ? "name = " : "match = ")+
-    		//   ((null != template.getName()) ? template.getName().toString() 
-    		//   : template.getMatch().getPatternString()));
-    		
-    		String idIs = XSLMessages.createMessage(((null != template.getName()) ? "nameIs" : "matchPatternIs"), null);
-        	Object[] msgArgs = new Object[]{ new Integer(loopCount), idIs, 
-                     ((null != template.getName()) ? template.getName().toString() 
-    		   : template.getMatch().getPatternString()) };
-        	String msg = XSLMessages.createMessage("recursionTooDeep", msgArgs);
+		return count;
+	}
 
-    		throw new TransformerException(msg);
-    	}
-    }
-  }
+	/**
+	 * Get the next named or match template down from and including the given
+	 * position.
+	 * 
+	 * @param pos
+	 *            the current index position in the stack.
+	 * @return null if no matched or named template found, otherwise the next
+	 *         named or matched template at or below the position.
+	 */
+	private ElemTemplate getNextMatchOrNamedTemplate(int pos) {
+		ObjectStack elems = m_transformer.getCurrentTemplateElements();
+		for (int i = pos; i >= 0; i--) {
+			ElemTemplateElement elem = (ElemTemplateElement) elems.elementAt(i);
+			if (null != elem) {
+				if (elem.getXSLToken() == Constants.ELEMNAME_TEMPLATE) {
+					return (ElemTemplate) elem;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Check if we are in an infinite loop
+	 * 
+	 * @throws TransformerException
+	 */
+	public void checkForInfinateLoop() throws TransformerException {
+		int nTemplates = m_transformer.getCurrentTemplateElementsCount();
+		if (nTemplates < m_recursionLimit)
+			return;
+
+		if (m_recursionLimit <= 0)
+			return; // Safety check.
+
+		// loop from the top index down to the recursion limit (I don't think
+		// there's any need to go below that).
+		for (int i = (nTemplates - 1); i >= m_recursionLimit; i--) {
+			ElemTemplate template = getNextMatchOrNamedTemplate(i);
+
+			if (null == template)
+				break;
+
+			int loopCount = countLikeTemplates(template, i);
+
+			if (loopCount >= m_recursionLimit) {
+				// throw new TransformerException("Template nesting too deep.
+				// nesting = "+loopCount+
+				// ", template "+((null == template.getName()) ? "name = " :
+				// "match = ")+
+				// ((null != template.getName()) ? template.getName().toString()
+				// : template.getMatch().getPatternString()));
+
+				String idIs = XSLMessages.createMessage(((null != template
+						.getName()) ? "nameIs" : "matchPatternIs"), null);
+				Object[] msgArgs = new Object[] {
+						new Integer(loopCount),
+						idIs,
+						((null != template.getName()) ? template.getName()
+								.toString() : template.getMatch()
+								.getPatternString()) };
+				String msg = XSLMessages.createMessage("recursionTooDeep",
+						msgArgs);
+
+				throw new TransformerException(msg);
+			}
+		}
+	}
 
 }

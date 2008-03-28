@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemAttributeSet.java,v 1.2 2008/03/27 22:45:10 dacarver Exp $
+ * $Id: ElemAttributeSet.java,v 1.3 2008/03/28 02:38:15 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -38,153 +38,154 @@ import org.apache.xml.utils.QName;
 
 /**
  * Implement xsl:attribute-set.
+ * 
  * <pre>
- * &amp;!ELEMENT xsl:attribute-set (xsl:attribute)*>
+ * &amp;!ELEMENT xsl:attribute-set (xsl:attribute)*&gt;
  * &amp;!ATTLIST xsl:attribute-set
  *   name %qname; #REQUIRED
  *   use-attribute-sets %qnames; #IMPLIED
  * &amp;
  * </pre>
- * @see <a href="http://www.w3.org/TR/xslt#attribute-sets">attribute-sets in XSLT Specification</a>
+ * 
+ * @see <a href="http://www.w3.org/TR/xslt#attribute-sets">attribute-sets in
+ *      XSLT Specification</a>
  * @xsl.usage advanced
  */
-public class ElemAttributeSet extends ElemUse
-{
-    static final long serialVersionUID = -426740318278164496L;
+public class ElemAttributeSet extends ElemUse {
+	static final long serialVersionUID = -426740318278164496L;
 
-  /**
-   * The name attribute specifies the name of the attribute set.
-   * @serial
-   */
-  public QName m_qname = null;
+	/**
+	 * The name attribute specifies the name of the attribute set.
+	 * 
+	 * @serial
+	 */
+	public QName m_qname = null;
 
-  /**
-   * Set the "name" attribute.
-   * The name attribute specifies the name of the attribute set.
-   *
-   * @param name Name attribute to set
-   */
-  public void setName(QName name)
-  {
-    m_qname = name;
-  }
+	/**
+	 * Set the "name" attribute. The name attribute specifies the name of the
+	 * attribute set.
+	 * 
+	 * @param name
+	 *            Name attribute to set
+	 */
+	public void setName(QName name) {
+		m_qname = name;
+	}
 
-  /**
-   * Get the "name" attribute.
-   * The name attribute specifies the name of the attribute set.
-   *
-   * @return The name attribute of the attribute set
-   */
-  public QName getName()
-  {
-    return m_qname;
-  }
+	/**
+	 * Get the "name" attribute. The name attribute specifies the name of the
+	 * attribute set.
+	 * 
+	 * @return The name attribute of the attribute set
+	 */
+	public QName getName() {
+		return m_qname;
+	}
 
-  /**
-   * Get an int constant identifying the type of element.
-   * @see org.apache.xalan.templates.Constants
-   *
-   * @return Token ID of the element 
-   */
-  public int getXSLToken()
-  {
-    return Constants.ELEMNAME_DEFINEATTRIBUTESET;
-  }
+	/**
+	 * Get an int constant identifying the type of element.
+	 * 
+	 * @see org.apache.xalan.templates.Constants
+	 * 
+	 * @return Token ID of the element
+	 */
+	@Override
+	public int getXSLToken() {
+		return Constants.ELEMNAME_DEFINEATTRIBUTESET;
+	}
 
-  /**
-   * Return the node name.
-   *
-   * @return The name of this element
-   */
-  public String getNodeName()
-  {
-    return Constants.ELEMNAME_ATTRIBUTESET_STRING;
-  }
+	/**
+	 * Return the node name.
+	 * 
+	 * @return The name of this element
+	 */
+	@Override
+	public String getNodeName() {
+		return Constants.ELEMNAME_ATTRIBUTESET_STRING;
+	}
 
-  /**
-   * Apply a set of attributes to the element.
-   *
-   * @param transformer non-null reference to the the current transform-time state.
-   *
-   * @throws TransformerException
-   */
-  public void execute(
-          TransformerImpl transformer)
-            throws TransformerException
-  {
+	/**
+	 * Apply a set of attributes to the element.
+	 * 
+	 * @param transformer
+	 *            non-null reference to the the current transform-time state.
+	 * 
+	 * @throws TransformerException
+	 */
+	@Override
+	public void execute(TransformerImpl transformer)
+			throws TransformerException {
 
-    if (transformer.getDebug())
-	  transformer.getTraceManager().fireTraceEvent(this);
+		if (transformer.getDebug())
+			transformer.getTraceManager().fireTraceEvent(this);
 
-    if (transformer.isRecursiveAttrSet(this))
-    {
-      throw new TransformerException(
-        Messages.createMessage(
-          XSLTErrorResources.ER_XSLATTRSET_USED_ITSELF,
-          new Object[]{ m_qname.getLocalPart() }));  //"xsl:attribute-set '"+m_qname.m_localpart+
-    }
+		if (transformer.isRecursiveAttrSet(this)) {
+			throw new TransformerException(Messages.createMessage(
+					XSLTErrorResources.ER_XSLATTRSET_USED_ITSELF,
+					new Object[] { m_qname.getLocalPart() })); // "xsl:attribute-set
+																// '"+m_qname.m_localpart+
+		}
 
-    transformer.pushElemAttributeSet(this);
-    super.execute(transformer);
+		transformer.pushElemAttributeSet(this);
+		super.execute(transformer);
 
-    ElemAttribute attr = (ElemAttribute) getFirstChildElem();
+		ElemAttribute attr = (ElemAttribute) getFirstChildElem();
 
-    while (null != attr)
-    {
-      attr.execute(transformer);
+		while (null != attr) {
+			attr.execute(transformer);
 
-      attr = (ElemAttribute) attr.getNextSiblingElem();
-    }
+			attr = (ElemAttribute) attr.getNextSiblingElem();
+		}
 
-    transformer.popElemAttributeSet();
-   
-    if (transformer.getDebug())
-	  transformer.getTraceManager().fireTraceEndEvent(this);
+		transformer.popElemAttributeSet();
 
-  }
+		if (transformer.getDebug())
+			transformer.getTraceManager().fireTraceEndEvent(this);
 
-  /**
-   * Add a child to the child list.
-   * <!ELEMENT xsl:attribute-set (xsl:attribute)*>
-   * <!ATTLIST xsl:attribute-set
-   *   name %qname; #REQUIRED
-   *   use-attribute-sets %qnames; #IMPLIED
-   * >
-   *
-   * @param newChild Child to be added to this node's list of children
-   *
-   * @return The child that was just added to the list of children
-   *
-   * @throws DOMException
-   */
-  public ElemTemplateElement appendChildElem(ElemTemplateElement newChild)
-  {
+	}
 
-    int type = ((ElemTemplateElement) newChild).getXSLToken();
+	/**
+	 * Add a child to the child list. <!ELEMENT xsl:attribute-set
+	 * (xsl:attribute)*> <!ATTLIST xsl:attribute-set name %qname; #REQUIRED
+	 * use-attribute-sets %qnames; #IMPLIED >
+	 * 
+	 * @param newChild
+	 *            Child to be added to this node's list of children
+	 * 
+	 * @return The child that was just added to the list of children
+	 * 
+	 * @throws DOMException
+	 */
+	public ElemTemplateElement appendChildElem(ElemTemplateElement newChild) {
 
-    switch (type)
-    {
-    case Constants.ELEMNAME_ATTRIBUTE :
-      break;
-    default :
-      error(XSLTErrorResources.ER_CANNOT_ADD,
-            new Object[]{ newChild.getNodeName(),
-                          this.getNodeName() });  //"Can not add " +((ElemTemplateElement)newChild).m_elemName +
+		int type = (newChild).getXSLToken();
 
-    //" to " + this.m_elemName);
-    }
+		switch (type) {
+		case Constants.ELEMNAME_ATTRIBUTE:
+			break;
+		default:
+			error(XSLTErrorResources.ER_CANNOT_ADD, new Object[] {
+					newChild.getNodeName(), this.getNodeName() }); // "Can not
+																	// add "
+																	// +((ElemTemplateElement)newChild).m_elemName
+																	// +
 
-    return super.appendChild(newChild);
-  }
+			// " to " + this.m_elemName);
+		}
 
-  /**
-   * This function is called during recomposition to
-   * control how this element is composed.
-   * @param root The root stylesheet for this transformation.
-   */
-  public void recompose(StylesheetRoot root)
-  {
-    root.recomposeAttributeSets(this);
-  }
+		return super.appendChild(newChild);
+	}
+
+	/**
+	 * This function is called during recomposition to control how this element
+	 * is composed.
+	 * 
+	 * @param root
+	 *            The root stylesheet for this transformation.
+	 */
+	@Override
+	public void recompose(StylesheetRoot root) {
+		root.recomposeAttributeSets(this);
+	}
 
 }

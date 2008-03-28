@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemElement.java,v 1.2 2008/03/27 22:45:10 dacarver Exp $
+ * $Id: ElemElement.java,v 1.3 2008/03/28 02:38:15 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -41,347 +41,343 @@ import org.xml.sax.SAXException;
 
 /**
  * Implement xsl:element
+ * 
  * <pre>
- * <!ELEMENT xsl:element %template;>
- * <!ATTLIST xsl:element
+ * &lt;!ELEMENT xsl:element %template;&gt;
+ * &lt;!ATTLIST xsl:element
  *   name %avt; #REQUIRED
  *   namespace %avt; #IMPLIED
  *   use-attribute-sets %qnames; #IMPLIED
  *   %space-att;
- * >
+ * &gt;
  * </pre>
- * @see <a href="http://www.w3.org/TR/xslt#section-Creating-Elements-with-xsl:element">XXX in XSLT Specification</a>
+ * 
+ * @see <a
+ *      href="http://www.w3.org/TR/xslt#section-Creating-Elements-with-xsl:element">XXX
+ *      in XSLT Specification</a>
  * @xsl.usage advanced
  */
-public class ElemElement extends ElemUse
-{
-    static final long serialVersionUID = -324619535592435183L;
+public class ElemElement extends ElemUse {
+	static final long serialVersionUID = -324619535592435183L;
 
-  /**
-   * The name attribute is interpreted as an attribute value template.
-   * It is an error if the string that results from instantiating the
-   * attribute value template is not a QName.
-   * @serial
-   */
-  protected AVT m_name_avt = null;
+	/**
+	 * The name attribute is interpreted as an attribute value template. It is
+	 * an error if the string that results from instantiating the attribute
+	 * value template is not a QName.
+	 * 
+	 * @serial
+	 */
+	protected AVT m_name_avt = null;
 
-  /**
-   * Set the "name" attribute.
-   * The name attribute is interpreted as an attribute value template.
-   * It is an error if the string that results from instantiating the
-   * attribute value template is not a QName.
-   *
-   * @param v Name attribute to set for this element
-   */
-  public void setName(AVT v)
-  {
-    m_name_avt = v;
-  }
+	/**
+	 * Set the "name" attribute. The name attribute is interpreted as an
+	 * attribute value template. It is an error if the string that results from
+	 * instantiating the attribute value template is not a QName.
+	 * 
+	 * @param v
+	 *            Name attribute to set for this element
+	 */
+	public void setName(AVT v) {
+		m_name_avt = v;
+	}
 
-  /**
-   * Get the "name" attribute.
-   * The name attribute is interpreted as an attribute value template.
-   * It is an error if the string that results from instantiating the
-   * attribute value template is not a QName.
-   *
-   * @return Name attribute for this element
-   */
-  public AVT getName()
-  {
-    return m_name_avt;
-  }
+	/**
+	 * Get the "name" attribute. The name attribute is interpreted as an
+	 * attribute value template. It is an error if the string that results from
+	 * instantiating the attribute value template is not a QName.
+	 * 
+	 * @return Name attribute for this element
+	 */
+	public AVT getName() {
+		return m_name_avt;
+	}
 
-  /**
-   * If the namespace attribute is present, then it also is interpreted
-   * as an attribute value template. The string that results from
-   * instantiating the attribute value template should be a URI reference.
-   * It is not an error if the string is not a syntactically legal URI reference.
-   * @serial
-   */
-  protected AVT m_namespace_avt = null;
+	/**
+	 * If the namespace attribute is present, then it also is interpreted as an
+	 * attribute value template. The string that results from instantiating the
+	 * attribute value template should be a URI reference. It is not an error if
+	 * the string is not a syntactically legal URI reference.
+	 * 
+	 * @serial
+	 */
+	protected AVT m_namespace_avt = null;
 
-  /**
-   * Set the "namespace" attribute.
-   * If the namespace attribute is present, then it also is interpreted
-   * as an attribute value template. The string that results from
-   * instantiating the attribute value template should be a URI reference.
-   * It is not an error if the string is not a syntactically legal URI reference.
-   *
-   * @param v NameSpace attribute to set for this element
-   */
-  public void setNamespace(AVT v)
-  {
-    m_namespace_avt = v;
-  }
+	/**
+	 * Set the "namespace" attribute. If the namespace attribute is present,
+	 * then it also is interpreted as an attribute value template. The string
+	 * that results from instantiating the attribute value template should be a
+	 * URI reference. It is not an error if the string is not a syntactically
+	 * legal URI reference.
+	 * 
+	 * @param v
+	 *            NameSpace attribute to set for this element
+	 */
+	public void setNamespace(AVT v) {
+		m_namespace_avt = v;
+	}
 
-  /**
-   * Get the "namespace" attribute.
-   * If the namespace attribute is present, then it also is interpreted
-   * as an attribute value template. The string that results from
-   * instantiating the attribute value template should be a URI reference.
-   * It is not an error if the string is not a syntactically legal URI reference.
-   *
-   * @return Namespace attribute for this element
-   */
-  public AVT getNamespace()
-  {
-    return m_namespace_avt;
-  }
-  
-  /**
-   * This function is called after everything else has been
-   * recomposed, and allows the template to set remaining
-   * values that may be based on some other property that
-   * depends on recomposition.
-   */
-  public void compose(StylesheetRoot sroot) throws TransformerException
-  {
-    super.compose(sroot);
-    
-    StylesheetRoot.ComposeState cstate = sroot.getComposeState();
-    java.util.Vector vnames = cstate.getVariableNames();
-    if(null != m_name_avt)
-      m_name_avt.fixupVariables(vnames, cstate.getGlobalsSize());
-    if(null != m_namespace_avt)
-      m_namespace_avt.fixupVariables(vnames, cstate.getGlobalsSize());
-  }
+	/**
+	 * Get the "namespace" attribute. If the namespace attribute is present,
+	 * then it also is interpreted as an attribute value template. The string
+	 * that results from instantiating the attribute value template should be a
+	 * URI reference. It is not an error if the string is not a syntactically
+	 * legal URI reference.
+	 * 
+	 * @return Namespace attribute for this element
+	 */
+	public AVT getNamespace() {
+		return m_namespace_avt;
+	}
 
+	/**
+	 * This function is called after everything else has been recomposed, and
+	 * allows the template to set remaining values that may be based on some
+	 * other property that depends on recomposition.
+	 */
+	@Override
+	public void compose(StylesheetRoot sroot) throws TransformerException {
+		super.compose(sroot);
 
-  /**
-   * Get an int constant identifying the type of element.
-   * @see org.apache.xalan.templates.Constants
-   *
-   * @return The token ID for this element
-   */
-  public int getXSLToken()
-  {
-    return Constants.ELEMNAME_ELEMENT;
-  }
+		StylesheetRoot.ComposeState cstate = sroot.getComposeState();
+		java.util.Vector vnames = cstate.getVariableNames();
+		if (null != m_name_avt)
+			m_name_avt.fixupVariables(vnames, cstate.getGlobalsSize());
+		if (null != m_namespace_avt)
+			m_namespace_avt.fixupVariables(vnames, cstate.getGlobalsSize());
+	}
 
-  /**
-   * Return the node name.
-   *
-   * @return This element's name 
-   */
-  public String getNodeName()
-  {
-    return Constants.ELEMNAME_ELEMENT_STRING;
-  }
-   
-  /**
-   * Resolve the namespace into a prefix.  Meant to be
-   * overidded by elemAttribute if this class is derived.
-   *
-   * @param rhandler The current result tree handler.
-   * @param prefix The probable prefix if already known.
-   * @param nodeNamespace  The namespace.
-   *
-   * @return The prefix to be used.
-   */
-  protected String resolvePrefix(SerializationHandler rhandler,
-                                 String prefix, String nodeNamespace)
-    throws TransformerException
-  {
+	/**
+	 * Get an int constant identifying the type of element.
+	 * 
+	 * @see org.apache.xalan.templates.Constants
+	 * 
+	 * @return The token ID for this element
+	 */
+	@Override
+	public int getXSLToken() {
+		return Constants.ELEMNAME_ELEMENT;
+	}
 
-//    if (null != prefix && prefix.length() == 0)
-//    {
-//      String foundPrefix = rhandler.getPrefix(nodeNamespace);
-//
-//      // System.out.println("nsPrefix: "+nsPrefix);           
-//      if (null == foundPrefix)
-//        foundPrefix = "";
-//    }
-    return prefix;
-  }
-    
-  /**
-   * Create an element in the result tree.
-   * The xsl:element element allows an element to be created with a
-   * computed name. The expanded-name of the element to be created
-   * is specified by a required name attribute and an optional namespace
-   * attribute. The content of the xsl:element element is a template
-   * for the attributes and children of the created element.
-   *
-   * @param transformer non-null reference to the the current transform-time state.
-   *
-   * @throws TransformerException
-   */
-  public void execute(
-          TransformerImpl transformer)
-            throws TransformerException
-  {
+	/**
+	 * Return the node name.
+	 * 
+	 * @return This element's name
+	 */
+	@Override
+	public String getNodeName() {
+		return Constants.ELEMNAME_ELEMENT_STRING;
+	}
 
-       if (transformer.getDebug())
-         transformer.getTraceManager().fireTraceEvent(this);
+	/**
+	 * Resolve the namespace into a prefix. Meant to be overidded by
+	 * elemAttribute if this class is derived.
+	 * 
+	 * @param rhandler
+	 *            The current result tree handler.
+	 * @param prefix
+	 *            The probable prefix if already known.
+	 * @param nodeNamespace
+	 *            The namespace.
+	 * 
+	 * @return The prefix to be used.
+	 */
+	protected String resolvePrefix(SerializationHandler rhandler,
+			String prefix, String nodeNamespace) throws TransformerException {
 
- 	SerializationHandler rhandler = transformer.getSerializationHandler();
-    XPathContext xctxt = transformer.getXPathContext();
-    int sourceNode = xctxt.getCurrentNode();
-    
-    
-    String nodeName = m_name_avt == null ? null : m_name_avt.evaluate(xctxt, sourceNode, this);
+		// if (null != prefix && prefix.length() == 0)
+		// {
+		// String foundPrefix = rhandler.getPrefix(nodeNamespace);
+		//
+		// // System.out.println("nsPrefix: "+nsPrefix);
+		// if (null == foundPrefix)
+		// foundPrefix = "";
+		// }
+		return prefix;
+	}
 
-    String prefix = null;
-    String nodeNamespace = "";
+	/**
+	 * Create an element in the result tree. The xsl:element element allows an
+	 * element to be created with a computed name. The expanded-name of the
+	 * element to be created is specified by a required name attribute and an
+	 * optional namespace attribute. The content of the xsl:element element is a
+	 * template for the attributes and children of the created element.
+	 * 
+	 * @param transformer
+	 *            non-null reference to the the current transform-time state.
+	 * 
+	 * @throws TransformerException
+	 */
+	@Override
+	public void execute(TransformerImpl transformer)
+			throws TransformerException {
 
-    // Only validate if an AVT was used.
-    if ((nodeName != null) && (!m_name_avt.isSimple()) && (!XML11Char.isXML11ValidQName(nodeName)))
-    {
-      transformer.getMsgMgr().warn(
-        this, XSLTErrorResources.WG_ILLEGAL_ATTRIBUTE_VALUE,
-        new Object[]{ Constants.ATTRNAME_NAME, nodeName });
+		if (transformer.getDebug())
+			transformer.getTraceManager().fireTraceEvent(this);
 
-      nodeName = null;
-    }
+		SerializationHandler rhandler = transformer.getSerializationHandler();
+		XPathContext xctxt = transformer.getXPathContext();
+		int sourceNode = xctxt.getCurrentNode();
 
-    else if (nodeName != null)
-    {
-      prefix = QName.getPrefixPart(nodeName);
+		String nodeName = m_name_avt == null ? null : m_name_avt.evaluate(
+				xctxt, sourceNode, this);
 
-      if (null != m_namespace_avt)
-      {
-        nodeNamespace = m_namespace_avt.evaluate(xctxt, sourceNode, this);
-        if (null == nodeNamespace || 
-            (prefix != null && prefix.length()>0 && nodeNamespace.length()== 0) )
-          transformer.getMsgMgr().error(
-              this, XSLTErrorResources.ER_NULL_URI_NAMESPACE);
-        else
-        {
-        // Determine the actual prefix that we will use for this nodeNamespace
+		String prefix = null;
+		String nodeNamespace = "";
 
-        prefix = resolvePrefix(rhandler, prefix, nodeNamespace);
-        if (null == prefix)
-          prefix = "";
+		// Only validate if an AVT was used.
+		if ((nodeName != null) && (!m_name_avt.isSimple())
+				&& (!XML11Char.isXML11ValidQName(nodeName))) {
+			transformer.getMsgMgr().warn(this,
+					XSLTErrorResources.WG_ILLEGAL_ATTRIBUTE_VALUE,
+					new Object[] { Constants.ATTRNAME_NAME, nodeName });
 
-        if (prefix.length() > 0)
-          nodeName = (prefix + ":" + QName.getLocalPart(nodeName));
-        else
-          nodeName = QName.getLocalPart(nodeName);
-        }
-      }
+			nodeName = null;
+		}
 
-      // No namespace attribute was supplied. Use the namespace declarations
-      // currently in effect for the xsl:element element.
-      else    
-      {
-        try
-        {
-          // Maybe temporary, until I get this worked out.  test: axes59
-          nodeNamespace = getNamespaceForPrefix(prefix);
+		else if (nodeName != null) {
+			prefix = QName.getPrefixPart(nodeName);
 
-          // If we get back a null nodeNamespace, that means that this prefix could
-          // not be found in the table.  This is okay only for a default namespace
-          // that has never been declared.
+			if (null != m_namespace_avt) {
+				nodeNamespace = m_namespace_avt.evaluate(xctxt, sourceNode,
+						this);
+				if (null == nodeNamespace
+						|| (prefix != null && prefix.length() > 0 && nodeNamespace
+								.length() == 0))
+					transformer.getMsgMgr().error(this,
+							XSLTErrorResources.ER_NULL_URI_NAMESPACE);
+				else {
+					// Determine the actual prefix that we will use for this
+					// nodeNamespace
 
-          if ( (null == nodeNamespace) && (prefix.length() == 0) )
-            nodeNamespace = "";
-          else if (null == nodeNamespace)
-          {
-            transformer.getMsgMgr().warn(
-              this, XSLTErrorResources.WG_COULD_NOT_RESOLVE_PREFIX,
-              new Object[]{ prefix });
+					prefix = resolvePrefix(rhandler, prefix, nodeNamespace);
+					if (null == prefix)
+						prefix = "";
 
-            nodeName = null;
-          }
+					if (prefix.length() > 0)
+						nodeName = (prefix + ":" + QName.getLocalPart(nodeName));
+					else
+						nodeName = QName.getLocalPart(nodeName);
+				}
+			}
 
-        }
-        catch (Exception ex)
-        {
-          transformer.getMsgMgr().warn(
-            this, XSLTErrorResources.WG_COULD_NOT_RESOLVE_PREFIX,
-            new Object[]{ prefix });
+			// No namespace attribute was supplied. Use the namespace
+			// declarations
+			// currently in effect for the xsl:element element.
+			else {
+				try {
+					// Maybe temporary, until I get this worked out. test:
+					// axes59
+					nodeNamespace = getNamespaceForPrefix(prefix);
 
-          nodeName = null;
-        }
-      }
-    }
+					// If we get back a null nodeNamespace, that means that this
+					// prefix could
+					// not be found in the table. This is okay only for a
+					// default namespace
+					// that has never been declared.
 
-    constructNode(nodeName, prefix, nodeNamespace, transformer);
+					if ((null == nodeNamespace) && (prefix.length() == 0))
+						nodeNamespace = "";
+					else if (null == nodeNamespace) {
+						transformer.getMsgMgr().warn(this,
+								XSLTErrorResources.WG_COULD_NOT_RESOLVE_PREFIX,
+								new Object[] { prefix });
 
-    if (transformer.getDebug())
-      transformer.getTraceManager().fireTraceEndEvent(this);
-  }
-  
-  /**
-   * Construct a node in the result tree.  This method is overloaded by 
-   * xsl:attribute. At this class level, this method creates an element.
-   * If the node is null, we instantiate only the content of the node in accordance
-   * with section 7.1.2 of the XSLT 1.0 Recommendation.
-   *
-   * @param nodeName The name of the node, which may be <code>null</code>.  If <code>null</code>,
-   *                 only the non-attribute children of this node will be processed.
-   * @param prefix The prefix for the namespace, which may be <code>null</code>.
-   *               If not <code>null</code>, this prefix will be mapped and unmapped.
-   * @param nodeNamespace The namespace of the node, which may be not be <code>null</code>.
-   * @param transformer non-null reference to the the current transform-time state.
-   *
-   * @throws TransformerException
-   */
-  void constructNode(
-          String nodeName, String prefix, String nodeNamespace, TransformerImpl transformer)
-            throws TransformerException
-  {
+						nodeName = null;
+					}
 
-    boolean shouldAddAttrs;
+				} catch (Exception ex) {
+					transformer.getMsgMgr().warn(this,
+							XSLTErrorResources.WG_COULD_NOT_RESOLVE_PREFIX,
+							new Object[] { prefix });
 
-    try
-    {
-      SerializationHandler rhandler = transformer.getResultTreeHandler();
+					nodeName = null;
+				}
+			}
+		}
 
-      if (null == nodeName)
-      {
-        shouldAddAttrs = false;
-      }
-      else
-      {
-        if (null != prefix)
-        {
-          rhandler.startPrefixMapping(prefix, nodeNamespace, true);
-        }
+		constructNode(nodeName, prefix, nodeNamespace, transformer);
 
-        rhandler.startElement(nodeNamespace, QName.getLocalPart(nodeName),
-                              nodeName);
+		if (transformer.getDebug())
+			transformer.getTraceManager().fireTraceEndEvent(this);
+	}
 
-        super.execute(transformer);
+	/**
+	 * Construct a node in the result tree. This method is overloaded by
+	 * xsl:attribute. At this class level, this method creates an element. If
+	 * the node is null, we instantiate only the content of the node in
+	 * accordance with section 7.1.2 of the XSLT 1.0 Recommendation.
+	 * 
+	 * @param nodeName
+	 *            The name of the node, which may be <code>null</code>. If
+	 *            <code>null</code>, only the non-attribute children of this
+	 *            node will be processed.
+	 * @param prefix
+	 *            The prefix for the namespace, which may be <code>null</code>.
+	 *            If not <code>null</code>, this prefix will be mapped and
+	 *            unmapped.
+	 * @param nodeNamespace
+	 *            The namespace of the node, which may be not be
+	 *            <code>null</code>.
+	 * @param transformer
+	 *            non-null reference to the the current transform-time state.
+	 * 
+	 * @throws TransformerException
+	 */
+	void constructNode(String nodeName, String prefix, String nodeNamespace,
+			TransformerImpl transformer) throws TransformerException {
 
-        shouldAddAttrs = true;
-      }
+		boolean shouldAddAttrs;
 
-      transformer.executeChildTemplates(this, shouldAddAttrs);
+		try {
+			SerializationHandler rhandler = transformer.getResultTreeHandler();
 
-      // Now end the element if name was valid
-      if (null != nodeName)
-      {
-        rhandler.endElement(nodeNamespace, QName.getLocalPart(nodeName),
-                            nodeName);
-        if (null != prefix)
-        {
-          rhandler.endPrefixMapping(prefix);
-        }
-      }
-    }
-    catch (SAXException se)
-    {
-      throw new TransformerException(se);
-    }
-  }
-  
-  /**
-   * Call the children visitors.
-   * @param visitor The visitor whose appropriate method will be called.
-   */
-  protected void callChildVisitors(XSLTVisitor visitor, boolean callAttrs)
-  {
-  	if(callAttrs)
-  	{
-  	  if(null != m_name_avt)
-  		m_name_avt.callVisitors(visitor);
-  		
-  	  if(null != m_namespace_avt)
-  		m_namespace_avt.callVisitors(visitor);
-  	}
-  		
-    super.callChildVisitors(visitor, callAttrs);
-  }
+			if (null == nodeName) {
+				shouldAddAttrs = false;
+			} else {
+				if (null != prefix) {
+					rhandler.startPrefixMapping(prefix, nodeNamespace, true);
+				}
+
+				rhandler.startElement(nodeNamespace, QName
+						.getLocalPart(nodeName), nodeName);
+
+				super.execute(transformer);
+
+				shouldAddAttrs = true;
+			}
+
+			transformer.executeChildTemplates(this, shouldAddAttrs);
+
+			// Now end the element if name was valid
+			if (null != nodeName) {
+				rhandler.endElement(nodeNamespace,
+						QName.getLocalPart(nodeName), nodeName);
+				if (null != prefix) {
+					rhandler.endPrefixMapping(prefix);
+				}
+			}
+		} catch (SAXException se) {
+			throw new TransformerException(se);
+		}
+	}
+
+	/**
+	 * Call the children visitors.
+	 * 
+	 * @param visitor
+	 *            The visitor whose appropriate method will be called.
+	 */
+	@Override
+	protected void callChildVisitors(XSLTVisitor visitor, boolean callAttrs) {
+		if (callAttrs) {
+			if (null != m_name_avt)
+				m_name_avt.callVisitors(visitor);
+
+			if (null != m_namespace_avt)
+				m_namespace_avt.callVisitors(visitor);
+		}
+
+		super.callChildVisitors(visitor, callAttrs);
+	}
 
 }

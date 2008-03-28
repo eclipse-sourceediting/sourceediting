@@ -35,6 +35,7 @@ public class XalanValidator extends AbstractNestedValidator {
 	public ValidationReport validate(String uri, InputStream inputstream, NestedValidatorContext context) {
 		ValidationReport valreport = null;
 		try {
+			uri = org.eclipse.wst.common.uriresolver.internal.util.URIEncoder.encode(uri);
 			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(new URI(uri));
 			if (files.length > 0) {
 				IFile xslFile = files[0];

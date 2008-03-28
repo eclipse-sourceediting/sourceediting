@@ -25,42 +25,45 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemOtherwise.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: ElemOtherwise.java,v 1.2 2008/03/28 02:38:15 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
-
 /**
  * Implement xsl:otherwise.
+ * 
  * <pre>
- * <!ELEMENT xsl:otherwise %template;>
- * <!ATTLIST xsl:otherwise %space-att;>
+ * &lt;!ELEMENT xsl:otherwise %template;&gt;
+ * &lt;!ATTLIST xsl:otherwise %space-att;&gt;
  * </pre>
- * @see <a href="http://www.w3.org/TR/xslt#section-Conditional-Processing-with-xsl:choose">XXX in XSLT Specification</a>
+ * 
+ * @see <a
+ *      href="http://www.w3.org/TR/xslt#section-Conditional-Processing-with-xsl:choose">XXX
+ *      in XSLT Specification</a>
  * @xsl.usage advanced
  */
-public class ElemOtherwise extends ElemTemplateElement
-{
-    static final long serialVersionUID = 1863944560970181395L;
+public class ElemOtherwise extends ElemTemplateElement {
+	static final long serialVersionUID = 1863944560970181395L;
 
-  /**
-   * Get an int constant identifying the type of element.
-   * @see org.apache.xalan.templates.Constants
-   *
-   * @return The token ID for this element
-   */
-  public int getXSLToken()
-  {
-    return Constants.ELEMNAME_OTHERWISE;
-  }
+	/**
+	 * Get an int constant identifying the type of element.
+	 * 
+	 * @see org.apache.xalan.templates.Constants
+	 * 
+	 * @return The token ID for this element
+	 */
+	@Override
+	public int getXSLToken() {
+		return Constants.ELEMNAME_OTHERWISE;
+	}
 
-  /**
-   * Return the node name.
-   *
-   * @return The element's name
-   */
-  public String getNodeName()
-  {
-    return Constants.ELEMNAME_OTHERWISE_STRING;
-  }
+	/**
+	 * Return the node name.
+	 * 
+	 * @return The element's name
+	 */
+	@Override
+	public String getNodeName() {
+		return Constants.ELEMNAME_OTHERWISE_STRING;
+	}
 }

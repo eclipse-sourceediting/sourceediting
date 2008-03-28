@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ProcessorTemplate.java,v 1.1 2008/03/27 01:08:55 dacarver Exp $
+ * $Id: ProcessorTemplate.java,v 1.2 2008/03/28 02:38:16 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.processor;
 
@@ -36,28 +36,30 @@ import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemTemplateE
 /**
  * TransformerFactory for xsl:template markup.
  */
-class ProcessorTemplate extends ProcessorTemplateElem
-{
-    static final long serialVersionUID = -8457812845473603860L;
-  
-  /**
-   * Append the current template element to the current
-   * template element, and then push it onto the current template
-   * element stack.
-   *
-   * @param handler non-null reference to current StylesheetHandler that is constructing the Templates.
-   * @param elem Must be a non-null reference to a {@link org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemTemplate} object.
-   *
-   * @throws org.xml.sax.SAXException Any SAX exception, possibly
-   *            wrapping another exception.
-   */
-  protected void appendAndPush(
-          StylesheetHandler handler, ElemTemplateElement elem)
-            throws org.xml.sax.SAXException
-  {
+class ProcessorTemplate extends ProcessorTemplateElem {
+	static final long serialVersionUID = -8457812845473603860L;
 
-    super.appendAndPush(handler, elem);
-    elem.setDOMBackPointer(handler.getOriginatingNode());
-    handler.getStylesheet().setTemplate((ElemTemplate) elem);
-  }
+	/**
+	 * Append the current template element to the current template element, and
+	 * then push it onto the current template element stack.
+	 * 
+	 * @param handler
+	 *            non-null reference to current StylesheetHandler that is
+	 *            constructing the Templates.
+	 * @param elem
+	 *            Must be a non-null reference to a
+	 *            {@link org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemTemplate}
+	 *            object.
+	 * 
+	 * @throws org.xml.sax.SAXException
+	 *             Any SAX exception, possibly wrapping another exception.
+	 */
+	@Override
+	protected void appendAndPush(StylesheetHandler handler,
+			ElemTemplateElement elem) throws org.xml.sax.SAXException {
+
+		super.appendAndPush(handler, elem);
+		elem.setDOMBackPointer(handler.getOriginatingNode());
+		handler.getStylesheet().setTemplate((ElemTemplate) elem);
+	}
 }

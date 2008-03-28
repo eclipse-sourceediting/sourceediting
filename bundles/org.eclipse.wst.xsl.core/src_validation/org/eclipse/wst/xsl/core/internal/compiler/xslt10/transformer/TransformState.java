@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: TransformState.java,v 1.1 2008/03/27 01:08:57 dacarver Exp $
+ * $Id: TransformState.java,v 1.2 2008/03/28 02:38:16 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer;
 
@@ -39,99 +39,94 @@ import org.w3c.dom.Node;
 import org.w3c.dom.traversal.NodeIterator;
 
 /**
- * This interface is meant to be used by a consumer of
- * SAX2 events produced by Xalan, and enables the consumer
- * to get information about the state of the transform.  It
- * is primarily intended as a tooling interface.  A content
- * handler can get a reference to a TransformState by implementing
- * the TransformerClient interface.  Xalan will check for
- * that interface before it calls startDocument, and, if it
- * is implemented, pass in a TransformState reference to the
+ * This interface is meant to be used by a consumer of SAX2 events produced by
+ * Xalan, and enables the consumer to get information about the state of the
+ * transform. It is primarily intended as a tooling interface. A content handler
+ * can get a reference to a TransformState by implementing the TransformerClient
+ * interface. Xalan will check for that interface before it calls startDocument,
+ * and, if it is implemented, pass in a TransformState reference to the
  * setTransformState method.
- *
- * <p>Note that the current stylesheet and root stylesheet can
- * be retrieved from the ElemTemplateElement obtained from
- * either getCurrentElement() or getCurrentTemplate().</p>
+ * 
+ * <p>
+ * Note that the current stylesheet and root stylesheet can be retrieved from
+ * the ElemTemplateElement obtained from either getCurrentElement() or
+ * getCurrentTemplate().
+ * </p>
  * 
  * This interface contains only getter methods, any setters are in the interface
  * TransformStateSetter which this interface extends.
  * 
  * @see org.apache.xml.serializer.TransformStateSetter
  */
-public interface TransformState extends TransformStateSetter
-{
+public interface TransformState extends TransformStateSetter {
 
-  /**
-   * Retrieves the stylesheet element that produced
-   * the SAX event.
-   *
-   * <p>Please note that the ElemTemplateElement returned may
-   * be in a default template, and thus may not be
-   * defined in the stylesheet.</p>
-   *
-   * @return the stylesheet element that produced the SAX event.
-   */
-  public ElemTemplateElement getCurrentElement();
+	/**
+	 * Retrieves the stylesheet element that produced the SAX event.
+	 * 
+	 * <p>
+	 * Please note that the ElemTemplateElement returned may be in a default
+	 * template, and thus may not be defined in the stylesheet.
+	 * </p>
+	 * 
+	 * @return the stylesheet element that produced the SAX event.
+	 */
+	public ElemTemplateElement getCurrentElement();
 
-  /**
-   * This method retrieves the current context node
-   * in the source tree.
-   *
-   * @return the current context node in the source tree.
-   */
-  public Node getCurrentNode();
+	/**
+	 * This method retrieves the current context node in the source tree.
+	 * 
+	 * @return the current context node in the source tree.
+	 */
+	public Node getCurrentNode();
 
-  /**
-   * This method retrieves the xsl:template
-   * that is in effect, which may be a matched template
-   * or a named template.
-   *
-   * <p>Please note that the ElemTemplate returned may
-   * be a default template, and thus may not have a template
-   * defined in the stylesheet.</p>
-   *
-   * @return the xsl:template that is in effect
-   */
-  public ElemTemplate getCurrentTemplate();
+	/**
+	 * This method retrieves the xsl:template that is in effect, which may be a
+	 * matched template or a named template.
+	 * 
+	 * <p>
+	 * Please note that the ElemTemplate returned may be a default template, and
+	 * thus may not have a template defined in the stylesheet.
+	 * </p>
+	 * 
+	 * @return the xsl:template that is in effect
+	 */
+	public ElemTemplate getCurrentTemplate();
 
-  /**
-   * This method retrieves the xsl:template
-   * that was matched.  Note that this may not be
-   * the same thing as the current template (which
-   * may be from getCurrentElement()), since a named
-   * template may be in effect.
-   *
-   * <p>Please note that the ElemTemplate returned may
-   * be a default template, and thus may not have a template
-   * defined in the stylesheet.</p>
-   *
-   * @return the xsl:template that was matched.
-   */
-  public ElemTemplate getMatchedTemplate();
+	/**
+	 * This method retrieves the xsl:template that was matched. Note that this
+	 * may not be the same thing as the current template (which may be from
+	 * getCurrentElement()), since a named template may be in effect.
+	 * 
+	 * <p>
+	 * Please note that the ElemTemplate returned may be a default template, and
+	 * thus may not have a template defined in the stylesheet.
+	 * </p>
+	 * 
+	 * @return the xsl:template that was matched.
+	 */
+	public ElemTemplate getMatchedTemplate();
 
-  /**
-   * Retrieves the node in the source tree that matched
-   * the template obtained via getMatchedTemplate().
-   *
-   * @return the node in the source tree that matched
-   * the template obtained via getMatchedTemplate().
-   */
-  public Node getMatchedNode();
+	/**
+	 * Retrieves the node in the source tree that matched the template obtained
+	 * via getMatchedTemplate().
+	 * 
+	 * @return the node in the source tree that matched the template obtained
+	 *         via getMatchedTemplate().
+	 */
+	public Node getMatchedNode();
 
-  /**
-   * Get the current context node list.
-   *
-   * @return the current context node list.
-   */
-  public NodeIterator getContextNodeList();
+	/**
+	 * Get the current context node list.
+	 * 
+	 * @return the current context node list.
+	 */
+	public NodeIterator getContextNodeList();
 
-  /**
-   * Get the TrAX Transformer object in effect.
-   *
-   * @return the TrAX Transformer object in effect.
-   */
-  public Transformer getTransformer();
-  
+	/**
+	 * Get the TrAX Transformer object in effect.
+	 * 
+	 * @return the TrAX Transformer object in effect.
+	 */
+	public Transformer getTransformer();
 
-    
 }

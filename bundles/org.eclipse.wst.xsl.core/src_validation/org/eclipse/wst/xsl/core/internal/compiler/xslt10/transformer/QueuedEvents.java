@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: QueuedEvents.java,v 1.1 2008/03/27 01:08:56 dacarver Exp $
+ * $Id: QueuedEvents.java,v 1.2 2008/03/28 02:38:16 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer;
 
@@ -33,145 +33,134 @@ import java.util.Vector;
 
 import org.apache.xml.utils.MutableAttrListImpl;
 
-
 /**
- * This class acts as a base for ResultTreeHandler, and keeps
- * queud stack events.  In truth, we don't need a stack,
- * so I may change this down the line a bit.
+ * This class acts as a base for ResultTreeHandler, and keeps queud stack
+ * events. In truth, we don't need a stack, so I may change this down the line a
+ * bit.
  */
-public abstract class QueuedEvents
-{
+public abstract class QueuedEvents {
 
-  /** The number of events queued          */
-  protected int m_eventCount = 0;
+	/** The number of events queued */
+	protected int m_eventCount = 0;
 
-  /** Queued start document          */
-  // QueuedStartDocument m_startDoc = new QueuedStartDocument();
+	/** Queued start document */
+	// QueuedStartDocument m_startDoc = new QueuedStartDocument();
+	/** Queued start element */
+	// QueuedStartElement m_startElement = new QueuedStartElement();
+	public boolean m_docPending = false;
+	protected boolean m_docEnded = false;
 
-  /** Queued start element          */
-  // QueuedStartElement m_startElement = new QueuedStartElement();
-  
-  public boolean m_docPending = false;
-  protected boolean m_docEnded = false;
-  
-  /** Flag indicating that an event is pending.  Public for 
-   *  fast access by ElemForEach.         */
-  public boolean m_elemIsPending = false;
+	/**
+	 * Flag indicating that an event is pending. Public for fast access by
+	 * ElemForEach.
+	 */
+	public boolean m_elemIsPending = false;
 
-  /** Flag indicating that an event is ended          */
-  public boolean m_elemIsEnded = false;
-  
-  /**
-   * The pending attributes.  We have to delay the call to
-   * m_flistener.startElement(name, atts) because of the
-   * xsl:attribute and xsl:copy calls.  In other words,
-   * the attributes have to be fully collected before you
-   * can call startElement.
-   */
-  protected MutableAttrListImpl m_attributes = new MutableAttrListImpl();
+	/** Flag indicating that an event is ended */
+	public boolean m_elemIsEnded = false;
 
-  /**
-   * Flag to try and get the xmlns decls to the attribute list
-   * before other attributes are added.
-   */
-  protected boolean m_nsDeclsHaveBeenAdded = false;
+	/**
+	 * The pending attributes. We have to delay the call to
+	 * m_flistener.startElement(name, atts) because of the xsl:attribute and
+	 * xsl:copy calls. In other words, the attributes have to be fully collected
+	 * before you can call startElement.
+	 */
+	protected MutableAttrListImpl m_attributes = new MutableAttrListImpl();
 
-  /**
-   * The pending element, namespace, and local name.
-   */
-  protected String m_name;
+	/**
+	 * Flag to try and get the xmlns decls to the attribute list before other
+	 * attributes are added.
+	 */
+	protected boolean m_nsDeclsHaveBeenAdded = false;
 
-  /** Namespace URL of the element          */
-  protected String m_url;
+	/**
+	 * The pending element, namespace, and local name.
+	 */
+	protected String m_name;
 
-  /** Local part of qualified name of the element           */
-  protected String m_localName;
-  
-  
-  /** Vector of namespaces for this element          */
-  protected Vector m_namespaces = null;
+	/** Namespace URL of the element */
+	protected String m_url;
 
-//  /**
-//   * Get the queued element.
-//   *
-//   * @return the queued element.
-//   */
-//  QueuedStartElement getQueuedElem()
-//  {
-//    return (m_eventCount > 1) ? m_startElement : null;
-//  }
+	/** Local part of qualified name of the element */
+	protected String m_localName;
 
-  /**
-   * To re-initialize the document and element events 
-   *
-   */
-  protected void reInitEvents()
-  {
-  }
+	/** Vector of namespaces for this element */
+	protected Vector m_namespaces = null;
 
-  /**
-   * Push document event and re-initialize events  
-   *
-   */
-  public void reset()
-  {
-    pushDocumentEvent();
-    reInitEvents();
-  }
+	// /**
+	// * Get the queued element.
+	// *
+	// * @return the queued element.
+	// */
+	// QueuedStartElement getQueuedElem()
+	// {
+	// return (m_eventCount > 1) ? m_startElement : null;
+	// }
 
-  /**
-   * Push the document event.  This never gets popped.
-   */
-  public void pushDocumentEvent()
-  {
+	/**
+	 * To re-initialize the document and element events
+	 * 
+	 */
+	protected void reInitEvents() {
+	}
 
-    // m_startDoc.setPending(true);
-    // initQSE(m_startDoc);
-    m_docPending = true;
+	/**
+	 * Push document event and re-initialize events
+	 * 
+	 */
+	public void reset() {
+		pushDocumentEvent();
+		reInitEvents();
+	}
 
-    m_eventCount++;
-  }
+	/**
+	 * Push the document event. This never gets popped.
+	 */
+	public void pushDocumentEvent() {
 
-  /**
-   * Pop element event 
-   *
-   */
-  public void popEvent()
-  {
-    m_elemIsPending = false;
-    m_attributes.clear();
+		// m_startDoc.setPending(true);
+		// initQSE(m_startDoc);
+		m_docPending = true;
 
-    m_nsDeclsHaveBeenAdded = false;
-    m_name = null;
-    m_url = null;
-    m_localName = null;
-    m_namespaces = null;
+		m_eventCount++;
+	}
 
-    m_eventCount--;
-  }
+	/**
+	 * Pop element event
+	 * 
+	 */
+	public void popEvent() {
+		m_elemIsPending = false;
+		m_attributes.clear();
 
-  /** Instance of a serializer          */
-  private org.apache.xml.serializer.Serializer m_serializer;
+		m_nsDeclsHaveBeenAdded = false;
+		m_name = null;
+		m_url = null;
+		m_localName = null;
+		m_namespaces = null;
 
-  /**
-   * This is only for use of object pooling, so that
-   * it can be reset.
-   *
-   * @param s non-null instance of a serializer 
-   */
-  public void setSerializer(org.apache.xml.serializer.Serializer s)
-  {
-    m_serializer = s;
-  }
+		m_eventCount--;
+	}
 
-  /**
-   * This is only for use of object pooling, so the that
-   * it can be reset.
-   *
-   * @return The serializer
-   */
-  public org.apache.xml.serializer.Serializer getSerializer()
-  {
-    return m_serializer;
-  }
+	/** Instance of a serializer */
+	private org.apache.xml.serializer.Serializer m_serializer;
+
+	/**
+	 * This is only for use of object pooling, so that it can be reset.
+	 * 
+	 * @param s
+	 *            non-null instance of a serializer
+	 */
+	public void setSerializer(org.apache.xml.serializer.Serializer s) {
+		m_serializer = s;
+	}
+
+	/**
+	 * This is only for use of object pooling, so the that it can be reset.
+	 * 
+	 * @return The serializer
+	 */
+	public org.apache.xml.serializer.Serializer getSerializer() {
+		return m_serializer;
+	}
 }

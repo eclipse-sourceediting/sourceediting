@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: WhitespaceInfoPaths.java,v 1.1 2008/03/27 01:08:55 dacarver Exp $
+ * $Id: WhitespaceInfoPaths.java,v 1.2 2008/03/28 02:38:16 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.processor;
 
@@ -35,58 +35,52 @@ import java.util.Vector;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.Stylesheet;
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.WhiteSpaceInfo;
 
-public class WhitespaceInfoPaths extends WhiteSpaceInfo
-{
-    static final long serialVersionUID = 5954766719577516723L;
-	
-  /**
-   * Bean property to allow setPropertiesFromAttributes to
-   * get the elements attribute.
-   */
-  private Vector m_elements;
+public class WhitespaceInfoPaths extends WhiteSpaceInfo {
+	static final long serialVersionUID = 5954766719577516723L;
 
-  /**
-   * Set from the elements attribute.  This is a list of 
-   * whitespace delimited element qualified names that specify
-   * preservation of whitespace.
-   *
-   * @param elems Should be a non-null reference to a list 
-   *              of {@link org.apache.xpath.XPath} objects.
-   */
-  public void setElements(Vector elems)
-  {
-    m_elements = elems;
-  }
+	/**
+	 * Bean property to allow setPropertiesFromAttributes to get the elements
+	 * attribute.
+	 */
+	private Vector m_elements;
 
-  /**
-   * Get the property set by setElements().  This is a list of 
-   * whitespace delimited element qualified names that specify
-   * preservation of whitespace.
-   *
-   * @return A reference to a list of {@link org.apache.xpath.XPath} objects, 
-   *         or null.
-   */
-  public Vector getElements()
-  {
-    return m_elements;
-  }
-  
-  public void clearElements()
-  {
-  	m_elements = null;
-  }
+	/**
+	 * Set from the elements attribute. This is a list of whitespace delimited
+	 * element qualified names that specify preservation of whitespace.
+	 * 
+	 * @param elems
+	 *            Should be a non-null reference to a list of
+	 *            {@link org.apache.xpath.XPath} objects.
+	 */
+	public void setElements(Vector elems) {
+		m_elements = elems;
+	}
 
- /**
-   * Constructor WhitespaceInfoPaths
-   *
-   * @param thisSheet The current stylesheet
-   */
-  public WhitespaceInfoPaths(Stylesheet thisSheet)
-  {
-  	super(thisSheet);
-  	setStylesheet(thisSheet);
-  }
+	/**
+	 * Get the property set by setElements(). This is a list of whitespace
+	 * delimited element qualified names that specify preservation of
+	 * whitespace.
+	 * 
+	 * @return A reference to a list of {@link org.apache.xpath.XPath} objects,
+	 *         or null.
+	 */
+	public Vector getElements() {
+		return m_elements;
+	}
 
+	public void clearElements() {
+		m_elements = null;
+	}
+
+	/**
+	 * Constructor WhitespaceInfoPaths
+	 * 
+	 * @param thisSheet
+	 *            The current stylesheet
+	 */
+	public WhitespaceInfoPaths(Stylesheet thisSheet) {
+		super(thisSheet);
+		setStylesheet(thisSheet);
+	}
 
 }
-

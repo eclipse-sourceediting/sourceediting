@@ -108,6 +108,7 @@ public class XSLValidationReport implements ValidationReport, ErrorListener
 
 	public void fatalError(TransformerException exception)
 			throws TransformerException {
+		exception.printStackTrace();
 		addMessage(exception, ValidationMessage.SEV_HIGH);				
 	}
 

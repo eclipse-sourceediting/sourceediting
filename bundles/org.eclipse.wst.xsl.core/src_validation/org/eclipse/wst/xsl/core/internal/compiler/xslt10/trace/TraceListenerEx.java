@@ -25,25 +25,27 @@
  * limitations under the License.
  */
 /*
- * $Id: TraceListenerEx.java,v 1.1 2008/03/27 01:08:57 dacarver Exp $
+ * $Id: TraceListenerEx.java,v 1.2 2008/03/28 02:38:17 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.trace;
 
 /**
  * Extends TraceListener but adds a SelectEnd event.
+ * 
  * @xsl.usage advanced
  */
-public interface TraceListenerEx extends TraceListener
-{
+public interface TraceListenerEx extends TraceListener {
 
-  /**
-   * Method that is called after an xsl:apply-templates or xsl:for-each 
-   * selection occurs.
-   *
-   * @param ev the generate event.
-   *
-   * @throws javax.xml.transform.TransformerException
-   */
-  public void selectEnd(EndSelectionEvent ev) throws javax.xml.transform.TransformerException;
+	/**
+	 * Method that is called after an xsl:apply-templates or xsl:for-each
+	 * selection occurs.
+	 * 
+	 * @param ev
+	 *            the generate event.
+	 * 
+	 * @throws javax.xml.transform.TransformerException
+	 */
+	public void selectEnd(EndSelectionEvent ev)
+			throws javax.xml.transform.TransformerException;
 
 }

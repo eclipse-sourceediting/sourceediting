@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemApplyImport.java,v 1.2 2008/03/27 22:45:10 dacarver Exp $
+ * $Id: ElemApplyImport.java,v 1.3 2008/03/28 02:38:15 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -38,90 +38,100 @@ import org.apache.xml.dtm.DTM;
 
 /**
  * Implement xsl:apply-imports.
+ * 
  * <pre>
- * <!ELEMENT xsl:apply-imports EMPTY>
+ * &lt;!ELEMENT xsl:apply-imports EMPTY&gt;
  * </pre>
- * @see <a href="http://www.w3.org/TR/xslt#apply-imports">apply-imports in XSLT Specification</a>
+ * 
+ * @see <a href="http://www.w3.org/TR/xslt#apply-imports">apply-imports in XSLT
+ *      Specification</a>
  * @xsl.usage advanced
  */
-public class ElemApplyImport extends ElemTemplateElement
-{
-    static final long serialVersionUID = 3764728663373024038L;
+public class ElemApplyImport extends ElemTemplateElement {
+	static final long serialVersionUID = 3764728663373024038L;
 
-  /**
-   * Get an int constant identifying the type of element.
-   * @see org.apache.xalan.templates.Constants
-   *
-   * @return Token ID for xsl:apply-imports element types
-   */
-  public int getXSLToken()
-  {
-    return Constants.ELEMNAME_APPLY_IMPORTS;
-  }
+	/**
+	 * Get an int constant identifying the type of element.
+	 * 
+	 * @see org.apache.xalan.templates.Constants
+	 * 
+	 * @return Token ID for xsl:apply-imports element types
+	 */
+	@Override
+	public int getXSLToken() {
+		return Constants.ELEMNAME_APPLY_IMPORTS;
+	}
 
-  /**
-   * Return the node name.
-   *
-   * @return Element name
-   */
-  public String getNodeName()
-  {
-    return Constants.ELEMNAME_APPLY_IMPORTS_STRING;
-  }
+	/**
+	 * Return the node name.
+	 * 
+	 * @return Element name
+	 */
+	@Override
+	public String getNodeName() {
+		return Constants.ELEMNAME_APPLY_IMPORTS_STRING;
+	}
 
-  /**
-   * Execute the xsl:apply-imports transformation.
-   *
-   * @param transformer non-null reference to the the current transform-time state.
-   *
-   * @throws TransformerException
-   */
-  public void execute(
-          TransformerImpl transformer)
-            throws TransformerException
-  {
+	/**
+	 * Execute the xsl:apply-imports transformation.
+	 * 
+	 * @param transformer
+	 *            non-null reference to the the current transform-time state.
+	 * 
+	 * @throws TransformerException
+	 */
+	@Override
+	public void execute(TransformerImpl transformer)
+			throws TransformerException {
 
-    if (transformer.currentTemplateRuleIsNull())
-    {
-      transformer.getMsgMgr().error(this,
-        XSLTErrorResources.ER_NO_APPLY_IMPORT_IN_FOR_EACH);  //"xsl:apply-imports not allowed in a xsl:for-each");
-    }
+		if (transformer.currentTemplateRuleIsNull()) {
+			transformer.getMsgMgr().error(this,
+					XSLTErrorResources.ER_NO_APPLY_IMPORT_IN_FOR_EACH); // "xsl:apply-imports
+																		// not
+																		// allowed
+																		// in a
+																		// xsl:for-each");
+		}
 
-    if (transformer.getDebug())
-      transformer.getTraceManager().fireTraceEvent(this);
+		if (transformer.getDebug())
+			transformer.getTraceManager().fireTraceEvent(this);
 
-    int sourceNode = transformer.getXPathContext().getCurrentNode();
-    if (DTM.NULL != sourceNode)
-    {
-      // supply the current templated (matched, not named)        
-      ElemTemplate matchTemplate = transformer.getMatchedTemplate();
-      transformer.applyTemplateToNode(this, matchTemplate, sourceNode);
-    }
-    else  // if(null == sourceNode)
-    {
-      transformer.getMsgMgr().error(this,
-        XSLTErrorResources.ER_NULL_SOURCENODE_APPLYIMPORTS);  //"sourceNode is null in xsl:apply-imports!");
-    }
-    if (transformer.getDebug())
-      transformer.getTraceManager().fireTraceEndEvent(this);
-  }
+		int sourceNode = transformer.getXPathContext().getCurrentNode();
+		if (DTM.NULL != sourceNode) {
+			// supply the current templated (matched, not named)
+			ElemTemplate matchTemplate = transformer.getMatchedTemplate();
+			transformer.applyTemplateToNode(this, matchTemplate, sourceNode);
+		} else // if(null == sourceNode)
+		{
+			transformer.getMsgMgr().error(this,
+					XSLTErrorResources.ER_NULL_SOURCENODE_APPLYIMPORTS); // "sourceNode
+																			// is
+																			// null
+																			// in
+																			// xsl:apply-imports!");
+		}
+		if (transformer.getDebug())
+			transformer.getTraceManager().fireTraceEndEvent(this);
+	}
 
-  /**
-   * Add a child to the child list.
-   * <!ELEMENT xsl:apply-imports EMPTY>
-   *
-   * @param newChild New element to append to this element's children list
-   *
-   * @return null, xsl:apply-Imports cannot have children 
-   */
-  public ElemTemplateElement appendChild(ElemTemplateElement newChild)
-  {
+	/**
+	 * Add a child to the child list. <!ELEMENT xsl:apply-imports EMPTY>
+	 * 
+	 * @param newChild
+	 *            New element to append to this element's children list
+	 * 
+	 * @return null, xsl:apply-Imports cannot have children
+	 */
+	@Override
+	public ElemTemplateElement appendChild(ElemTemplateElement newChild) {
 
-    error(XSLTErrorResources.ER_CANNOT_ADD,
-          new Object[]{ newChild.getNodeName(),
-                        this.getNodeName() });  //"Can not add " +((ElemTemplateElement)newChild).m_elemName +
+		error(XSLTErrorResources.ER_CANNOT_ADD, new Object[] {
+				newChild.getNodeName(), this.getNodeName() }); // "Can not add
+																// "
+																// +((ElemTemplateElement)newChild).m_elemName
+																// +
 
-    //" to " + this.m_elemName);
-    return null;
-  }
+		// " to " + this.m_elemName);
+		return null;
+	}
 }

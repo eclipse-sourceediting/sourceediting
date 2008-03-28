@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: TraceManager.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
+ * $Id: TraceManager.java,v 1.3 2008/03/28 02:38:17 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.trace;
 
@@ -40,397 +40,393 @@ import org.apache.xpath.objects.XObject;
 import org.w3c.dom.Node;
 
 /**
- * This class manages trace listeners, and acts as an
- * interface for the tracing functionality in Xalan.
+ * This class manages trace listeners, and acts as an interface for the tracing
+ * functionality in Xalan.
  */
-public class TraceManager
-{
+public class TraceManager {
 
-  /** A transformer instance */
-  private TransformerImpl m_transformer;
+	/** A transformer instance */
+	private TransformerImpl m_transformer;
 
-  /**
-   * Constructor for the trace manager.
-   *
-   * @param transformer a non-null instance of a transformer
-   */
-  public TraceManager(TransformerImpl transformer)
-  {
-    m_transformer = transformer;
-  }
+	/**
+	 * Constructor for the trace manager.
+	 * 
+	 * @param transformer
+	 *            a non-null instance of a transformer
+	 */
+	public TraceManager(TransformerImpl transformer) {
+		m_transformer = transformer;
+	}
 
-  /**
-   * List of listeners who are interested in tracing what's
-   * being generated.
-   */
-  private Vector m_traceListeners = null;
+	/**
+	 * List of listeners who are interested in tracing what's being generated.
+	 */
+	private Vector m_traceListeners = null;
 
-  /**
-   * Add a trace listener for the purposes of debugging and diagnosis.
-   * @param tl Trace listener to be added.
-   *
-   * @throws TooManyListenersException
-   */
-  public void addTraceListener(TraceListener tl)
-          throws TooManyListenersException
-  {
+	/**
+	 * Add a trace listener for the purposes of debugging and diagnosis.
+	 * 
+	 * @param tl
+	 *            Trace listener to be added.
+	 * 
+	 * @throws TooManyListenersException
+	 */
+	public void addTraceListener(TraceListener tl)
+			throws TooManyListenersException {
 
-    m_transformer.setDebug(true);
+		m_transformer.setDebug(true);
 
-    if (null == m_traceListeners)
-      m_traceListeners = new Vector();
+		if (null == m_traceListeners)
+			m_traceListeners = new Vector();
 
-    m_traceListeners.addElement(tl);
-  }
+		m_traceListeners.addElement(tl);
+	}
 
-  /**
-   * Remove a trace listener.
-   * @param tl Trace listener to be removed.
-   */
-  public void removeTraceListener(TraceListener tl)
-  {
+	/**
+	 * Remove a trace listener.
+	 * 
+	 * @param tl
+	 *            Trace listener to be removed.
+	 */
+	public void removeTraceListener(TraceListener tl) {
 
-    if (null != m_traceListeners)
-    {
-      m_traceListeners.removeElement(tl);
-      
-      // The following line added to fix the bug#5140: hasTraceListeners() returns true
-      // after adding and removing a listener.
-      // Check: if m_traceListeners is empty, then set it to NULL.
-      if (0 == m_traceListeners.size()) m_traceListeners = null;
-    }
-  }
+		if (null != m_traceListeners) {
+			m_traceListeners.removeElement(tl);
 
-  /**
-   * Fire a generate event.
-   *
-   * @param te Generate Event to fire
-   */
-  public void fireGenerateEvent(GenerateEvent te)
-  {
+			// The following line added to fix the bug#5140: hasTraceListeners()
+			// returns true
+			// after adding and removing a listener.
+			// Check: if m_traceListeners is empty, then set it to NULL.
+			if (0 == m_traceListeners.size())
+				m_traceListeners = null;
+		}
+	}
 
-    if (null != m_traceListeners)
-    {
-      int nListeners = m_traceListeners.size();
+	/**
+	 * Fire a generate event.
+	 * 
+	 * @param te
+	 *            Generate Event to fire
+	 */
+	public void fireGenerateEvent(GenerateEvent te) {
 
-      for (int i = 0; i < nListeners; i++)
-      {
-        TraceListener tl = (TraceListener) m_traceListeners.elementAt(i);
+		if (null != m_traceListeners) {
+			int nListeners = m_traceListeners.size();
 
-        tl.generated(te);
-      }
-    }
-  }
+			for (int i = 0; i < nListeners; i++) {
+				TraceListener tl = (TraceListener) m_traceListeners
+						.elementAt(i);
 
-  /**
-   * Tell if trace listeners are present.
-   *
-   * @return True if there are trace listeners
-   */
-  public boolean hasTraceListeners()
-  {
-    return (null != m_traceListeners);
-  }
+				tl.generated(te);
+			}
+		}
+	}
 
-  /**
-   * Fire a trace event.
-   *
-   * @param styleNode Stylesheet template node
-   */
-  public void fireTraceEvent(ElemTemplateElement styleNode)
-  {
+	/**
+	 * Tell if trace listeners are present.
+	 * 
+	 * @return True if there are trace listeners
+	 */
+	public boolean hasTraceListeners() {
+		return (null != m_traceListeners);
+	}
 
-    if (hasTraceListeners())
-    {
-      int sourceNode = m_transformer.getXPathContext().getCurrentNode();
-      Node source = getDOMNodeFromDTM(sourceNode);
+	/**
+	 * Fire a trace event.
+	 * 
+	 * @param styleNode
+	 *            Stylesheet template node
+	 */
+	public void fireTraceEvent(ElemTemplateElement styleNode) {
 
-      fireTraceEvent(new TracerEvent(m_transformer, source, 
-                     m_transformer.getMode(),  /*sourceNode, mode,*/
-                                     styleNode));
-    }
-  }
+		if (hasTraceListeners()) {
+			int sourceNode = m_transformer.getXPathContext().getCurrentNode();
+			Node source = getDOMNodeFromDTM(sourceNode);
 
-  /**
-   * Fire a end trace event, after all children of an element have been
-   * executed.
-   *
-   * @param styleNode Stylesheet template node
-   */
-  public void fireTraceEndEvent(ElemTemplateElement styleNode)
-  {
+			fireTraceEvent(new TracerEvent(m_transformer, source, m_transformer
+					.getMode(), /* sourceNode, mode, */
+			styleNode));
+		}
+	}
 
-    if (hasTraceListeners())
-    {
-      int sourceNode = m_transformer.getXPathContext().getCurrentNode();
-      Node source = getDOMNodeFromDTM(sourceNode);
+	/**
+	 * Fire a end trace event, after all children of an element have been
+	 * executed.
+	 * 
+	 * @param styleNode
+	 *            Stylesheet template node
+	 */
+	public void fireTraceEndEvent(ElemTemplateElement styleNode) {
 
-      fireTraceEndEvent(new TracerEvent(m_transformer, source,
-                     m_transformer.getMode(),  /*sourceNode, mode,*/
-                                     styleNode));
-    }
-  }
+		if (hasTraceListeners()) {
+			int sourceNode = m_transformer.getXPathContext().getCurrentNode();
+			Node source = getDOMNodeFromDTM(sourceNode);
 
-  /**
-   * Fire a trace event.
-   *
-   * @param te Trace event to fire
-   */
-  public void fireTraceEndEvent(TracerEvent te)
-  {
+			fireTraceEndEvent(new TracerEvent(m_transformer, source,
+					m_transformer.getMode(), /* sourceNode, mode, */
+					styleNode));
+		}
+	}
 
-    if (hasTraceListeners())
-    {
-      int nListeners = m_traceListeners.size();
+	/**
+	 * Fire a trace event.
+	 * 
+	 * @param te
+	 *            Trace event to fire
+	 */
+	public void fireTraceEndEvent(TracerEvent te) {
 
-      for (int i = 0; i < nListeners; i++)
-      {
-        TraceListener tl = (TraceListener) m_traceListeners.elementAt(i);
-        if(tl instanceof TraceListenerEx2)
-        {
-          ((TraceListenerEx2)tl).traceEnd(te);
-        }
-      }
-    }
-  }
+		if (hasTraceListeners()) {
+			int nListeners = m_traceListeners.size();
 
+			for (int i = 0; i < nListeners; i++) {
+				TraceListener tl = (TraceListener) m_traceListeners
+						.elementAt(i);
+				if (tl instanceof TraceListenerEx2) {
+					((TraceListenerEx2) tl).traceEnd(te);
+				}
+			}
+		}
+	}
 
+	/**
+	 * Fire a trace event.
+	 * 
+	 * @param te
+	 *            Trace event to fire
+	 */
+	public void fireTraceEvent(TracerEvent te) {
 
-  /**
-   * Fire a trace event.
-   *
-   * @param te Trace event to fire
-   */
-  public void fireTraceEvent(TracerEvent te)
-  {
+		if (hasTraceListeners()) {
+			int nListeners = m_traceListeners.size();
 
-    if (hasTraceListeners())
-    {
-      int nListeners = m_traceListeners.size();
+			for (int i = 0; i < nListeners; i++) {
+				TraceListener tl = (TraceListener) m_traceListeners
+						.elementAt(i);
 
-      for (int i = 0; i < nListeners; i++)
-      {
-        TraceListener tl = (TraceListener) m_traceListeners.elementAt(i);
+				tl.trace(te);
+			}
+		}
+	}
 
-        tl.trace(te);
-      }
-    }
-  }
+	/**
+	 * Fire a selection event.
+	 * 
+	 * @param sourceNode
+	 *            Current source node
+	 * @param styleNode
+	 *            node in the style tree reference for the event.
+	 * @param attributeName
+	 *            The attribute name from which the selection is made.
+	 * @param xpath
+	 *            The XPath that executed the selection.
+	 * @param selection
+	 *            The result of the selection.
+	 * 
+	 * @throws javax.xml.transform.TransformerException
+	 */
+	public void fireSelectedEvent(int sourceNode,
+			ElemTemplateElement styleNode, String attributeName, XPath xpath,
+			XObject selection) throws javax.xml.transform.TransformerException {
 
-  /**
-   * Fire a selection event.
-   *
-   * @param sourceNode Current source node
-   * @param styleNode node in the style tree reference for the event.
-   * @param attributeName The attribute name from which the selection is made.
-   * @param xpath The XPath that executed the selection.
-   * @param selection The result of the selection.
-   *
-   * @throws javax.xml.transform.TransformerException
-   */
-  public void fireSelectedEvent(
-          int sourceNode, ElemTemplateElement styleNode, String attributeName, 
-          XPath xpath, XObject selection)
-            throws javax.xml.transform.TransformerException
-  {
+		if (hasTraceListeners()) {
+			Node source = getDOMNodeFromDTM(sourceNode);
 
-    if (hasTraceListeners())
-    {
-      Node source = getDOMNodeFromDTM(sourceNode);
-        
-      fireSelectedEvent(new SelectionEvent(m_transformer, source, styleNode,
-                                           attributeName, xpath, selection));
-    }
-  }
-  
-  /**
-   * Fire a selection event.
-   *
-   * @param sourceNode Current source node
-   * @param styleNode node in the style tree reference for the event.
-   * @param attributeName The attribute name from which the selection is made.
-   * @param xpath The XPath that executed the selection.
-   * @param selection The result of the selection.
-   *
-   * @throws javax.xml.transform.TransformerException
-   */
-  public void fireSelectedEndEvent(
-          int sourceNode, ElemTemplateElement styleNode, String attributeName, 
-          XPath xpath, XObject selection)
-            throws javax.xml.transform.TransformerException
-  {
+			fireSelectedEvent(new SelectionEvent(m_transformer, source,
+					styleNode, attributeName, xpath, selection));
+		}
+	}
 
-    if (hasTraceListeners())
-    {
-      Node source = getDOMNodeFromDTM(sourceNode);
-        
-      fireSelectedEndEvent(new EndSelectionEvent(m_transformer, source, styleNode,
-                                           attributeName, xpath, selection));
-    }
-  }
-  
-  /**
-   * Fire a selection event.
-   *
-   * @param se Selection event to fire
-   *
-   * @throws javax.xml.transform.TransformerException
-   */
-  public void fireSelectedEndEvent(EndSelectionEvent se)
-          throws javax.xml.transform.TransformerException
-  {
+	/**
+	 * Fire a selection event.
+	 * 
+	 * @param sourceNode
+	 *            Current source node
+	 * @param styleNode
+	 *            node in the style tree reference for the event.
+	 * @param attributeName
+	 *            The attribute name from which the selection is made.
+	 * @param xpath
+	 *            The XPath that executed the selection.
+	 * @param selection
+	 *            The result of the selection.
+	 * 
+	 * @throws javax.xml.transform.TransformerException
+	 */
+	public void fireSelectedEndEvent(int sourceNode,
+			ElemTemplateElement styleNode, String attributeName, XPath xpath,
+			XObject selection) throws javax.xml.transform.TransformerException {
 
-    if (hasTraceListeners())
-    {
-      int nListeners = m_traceListeners.size();
+		if (hasTraceListeners()) {
+			Node source = getDOMNodeFromDTM(sourceNode);
 
-      for (int i = 0; i < nListeners; i++)
-      {
-        TraceListener tl = (TraceListener) m_traceListeners.elementAt(i);
+			fireSelectedEndEvent(new EndSelectionEvent(m_transformer, source,
+					styleNode, attributeName, xpath, selection));
+		}
+	}
 
-        if(tl instanceof TraceListenerEx)
-          ((TraceListenerEx)tl).selectEnd(se);
-      }
-    }
-  }
+	/**
+	 * Fire a selection event.
+	 * 
+	 * @param se
+	 *            Selection event to fire
+	 * 
+	 * @throws javax.xml.transform.TransformerException
+	 */
+	public void fireSelectedEndEvent(EndSelectionEvent se)
+			throws javax.xml.transform.TransformerException {
 
-  /**
-   * Fire a selection event.
-   *
-   * @param se Selection event to fire
-   *
-   * @throws javax.xml.transform.TransformerException
-   */
-  public void fireSelectedEvent(SelectionEvent se)
-          throws javax.xml.transform.TransformerException
-  {
+		if (hasTraceListeners()) {
+			int nListeners = m_traceListeners.size();
 
-    if (hasTraceListeners())
-    {
-      int nListeners = m_traceListeners.size();
+			for (int i = 0; i < nListeners; i++) {
+				TraceListener tl = (TraceListener) m_traceListeners
+						.elementAt(i);
 
-      for (int i = 0; i < nListeners; i++)
-      {
-        TraceListener tl = (TraceListener) m_traceListeners.elementAt(i);
+				if (tl instanceof TraceListenerEx)
+					((TraceListenerEx) tl).selectEnd(se);
+			}
+		}
+	}
 
-        tl.selected(se);
-      }
-    }
-  }
-  
+	/**
+	 * Fire a selection event.
+	 * 
+	 * @param se
+	 *            Selection event to fire
+	 * 
+	 * @throws javax.xml.transform.TransformerException
+	 */
+	public void fireSelectedEvent(SelectionEvent se)
+			throws javax.xml.transform.TransformerException {
 
-  /**
-   * Fire an end extension event.
-   *
-   * @see java.lang.reflect.Method#invoke
-   * 
-   * @param method The java method about to be executed
-   * @param instance The instance the method will be executed on
-   * @param arguments Parameters passed to the method.
-   */
-  public void fireExtensionEndEvent(Method method, Object instance, Object[] arguments)
-  {
-      ExtensionEvent ee = new ExtensionEvent(m_transformer, method, instance, arguments);
+		if (hasTraceListeners()) {
+			int nListeners = m_traceListeners.size();
 
-    if (hasTraceListeners())
-    {
-      int nListeners = m_traceListeners.size();
+			for (int i = 0; i < nListeners; i++) {
+				TraceListener tl = (TraceListener) m_traceListeners
+						.elementAt(i);
 
-      for (int i = 0; i < nListeners; i++)
-      {
-        TraceListener tl = (TraceListener) m_traceListeners.elementAt(i);
-        if(tl instanceof TraceListenerEx3)
-        {
-          ((TraceListenerEx3)tl).extensionEnd(ee);
-        }
-      }
-    }
-  }
+				tl.selected(se);
+			}
+		}
+	}
 
-  /**
-   * Fire an end extension event.
-   *
-   * @see java.lang.reflect.Method#invoke
-   * 
-   * @param method The java method about to be executed
-   * @param instance The instance the method will be executed on
-   * @param arguments Parameters passed to the method.
-   */
-  public void fireExtensionEvent(Method method, Object instance, Object[] arguments)
-  {
-    ExtensionEvent ee = new ExtensionEvent(m_transformer, method, instance, arguments);
+	/**
+	 * Fire an end extension event.
+	 * 
+	 * @see java.lang.reflect.Method#invoke
+	 * 
+	 * @param method
+	 *            The java method about to be executed
+	 * @param instance
+	 *            The instance the method will be executed on
+	 * @param arguments
+	 *            Parameters passed to the method.
+	 */
+	public void fireExtensionEndEvent(Method method, Object instance,
+			Object[] arguments) {
+		ExtensionEvent ee = new ExtensionEvent(m_transformer, method, instance,
+				arguments);
 
-    if (hasTraceListeners())
-    {
-      int nListeners = m_traceListeners.size();
+		if (hasTraceListeners()) {
+			int nListeners = m_traceListeners.size();
 
-      for (int i = 0; i < nListeners; i++)
-      {
-        TraceListener tl = (TraceListener) m_traceListeners.elementAt(i);
-        if(tl instanceof TraceListenerEx3)
-        {
-          ((TraceListenerEx3)tl).extension(ee);
-        }
-      }
-    }
-  }
+			for (int i = 0; i < nListeners; i++) {
+				TraceListener tl = (TraceListener) m_traceListeners
+						.elementAt(i);
+				if (tl instanceof TraceListenerEx3) {
+					((TraceListenerEx3) tl).extensionEnd(ee);
+				}
+			}
+		}
+	}
 
-  /**
-   * Fire an end extension event.
-   *
-   * @see java.lang.reflect.Method#invoke
-   * 
-   * @param ee the ExtensionEvent to fire
-   */
-  public void fireExtensionEndEvent(ExtensionEvent ee)
-  {
-    if (hasTraceListeners())
-    {
-      int nListeners = m_traceListeners.size();
+	/**
+	 * Fire an end extension event.
+	 * 
+	 * @see java.lang.reflect.Method#invoke
+	 * 
+	 * @param method
+	 *            The java method about to be executed
+	 * @param instance
+	 *            The instance the method will be executed on
+	 * @param arguments
+	 *            Parameters passed to the method.
+	 */
+	public void fireExtensionEvent(Method method, Object instance,
+			Object[] arguments) {
+		ExtensionEvent ee = new ExtensionEvent(m_transformer, method, instance,
+				arguments);
 
-      for (int i = 0; i < nListeners; i++)
-      {
-        TraceListener tl = (TraceListener) m_traceListeners.elementAt(i);
-        if(tl instanceof TraceListenerEx3)
-        {
-          ((TraceListenerEx3)tl).extensionEnd(ee);
-        }
-      }
-    }
-  }
+		if (hasTraceListeners()) {
+			int nListeners = m_traceListeners.size();
 
-  /**
-   * Fire an end extension event.
-   *
-   * @see java.lang.reflect.Method#invoke
-   * 
-   * @param ee the ExtensionEvent to fire
-   */
-  public void fireExtensionEvent(ExtensionEvent ee)
-  {    
-      
-    if (hasTraceListeners())
-    {
-      int nListeners = m_traceListeners.size();
+			for (int i = 0; i < nListeners; i++) {
+				TraceListener tl = (TraceListener) m_traceListeners
+						.elementAt(i);
+				if (tl instanceof TraceListenerEx3) {
+					((TraceListenerEx3) tl).extension(ee);
+				}
+			}
+		}
+	}
 
-      for (int i = 0; i < nListeners; i++)
-      {
-        TraceListener tl = (TraceListener) m_traceListeners.elementAt(i);
-        if(tl instanceof TraceListenerEx3)
-        {
-          ((TraceListenerEx3)tl).extension(ee);
-        }
-      }
-    }
-  }
-  
-  /**
-   * Get the DOM Node of the current XPath context, which is possibly null.
-   * @param sourceNode the handle on the node used by a DTM.
-   */
-  private Node getDOMNodeFromDTM(int sourceNode) {
-    org.apache.xml.dtm.DTM dtm = m_transformer.getXPathContext().getDTM(sourceNode);
-    final Node source = (dtm == null) ? null : dtm.getNode(sourceNode);
-    return source;
-  }
+	/**
+	 * Fire an end extension event.
+	 * 
+	 * @see java.lang.reflect.Method#invoke
+	 * 
+	 * @param ee
+	 *            the ExtensionEvent to fire
+	 */
+	public void fireExtensionEndEvent(ExtensionEvent ee) {
+		if (hasTraceListeners()) {
+			int nListeners = m_traceListeners.size();
+
+			for (int i = 0; i < nListeners; i++) {
+				TraceListener tl = (TraceListener) m_traceListeners
+						.elementAt(i);
+				if (tl instanceof TraceListenerEx3) {
+					((TraceListenerEx3) tl).extensionEnd(ee);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Fire an end extension event.
+	 * 
+	 * @see java.lang.reflect.Method#invoke
+	 * 
+	 * @param ee
+	 *            the ExtensionEvent to fire
+	 */
+	public void fireExtensionEvent(ExtensionEvent ee) {
+
+		if (hasTraceListeners()) {
+			int nListeners = m_traceListeners.size();
+
+			for (int i = 0; i < nListeners; i++) {
+				TraceListener tl = (TraceListener) m_traceListeners
+						.elementAt(i);
+				if (tl instanceof TraceListenerEx3) {
+					((TraceListenerEx3) tl).extension(ee);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Get the DOM Node of the current XPath context, which is possibly null.
+	 * 
+	 * @param sourceNode
+	 *            the handle on the node used by a DTM.
+	 */
+	private Node getDOMNodeFromDTM(int sourceNode) {
+		org.apache.xml.dtm.DTM dtm = m_transformer.getXPathContext().getDTM(
+				sourceNode);
+		final Node source = (dtm == null) ? null : dtm.getNode(sourceNode);
+		return source;
+	}
 }

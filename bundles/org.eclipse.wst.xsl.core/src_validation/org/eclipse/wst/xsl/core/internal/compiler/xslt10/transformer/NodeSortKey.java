@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: NodeSortKey.java,v 1.1 2008/03/27 01:08:56 dacarver Exp $
+ * $Id: NodeSortKey.java,v 1.2 2008/03/28 02:38:16 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer;
 
@@ -37,102 +37,107 @@ import org.apache.xpath.XPath;
 
 /**
  * Data structure for use by the NodeSorter class.
+ * 
  * @xsl.usage internal
  */
-class NodeSortKey
-{
+class NodeSortKey {
 
-  /** Select pattern for this sort key          */
-  protected XPath m_selectPat;
+	/** Select pattern for this sort key */
+	protected XPath m_selectPat;
 
-  /** Flag indicating whether to treat thee result as a number     */
-  protected boolean m_treatAsNumbers;
+	/** Flag indicating whether to treat thee result as a number */
+	protected boolean m_treatAsNumbers;
 
-  /** Flag indicating whether to sort in descending order      */
-  protected boolean m_descending;
+	/** Flag indicating whether to sort in descending order */
+	protected boolean m_descending;
 
-  /** Flag indicating by case          */
-  protected boolean m_caseOrderUpper;
+	/** Flag indicating by case */
+	protected boolean m_caseOrderUpper;
 
-  /** Collator instance          */
-  protected Collator m_col;
+	/** Collator instance */
+	protected Collator m_col;
 
-  /** Locale we're in          */
-  protected Locale m_locale;
+	/** Locale we're in */
+	protected Locale m_locale;
 
-  /** Prefix resolver to use          */
-  protected org.apache.xml.utils.PrefixResolver m_namespaceContext;
+	/** Prefix resolver to use */
+	protected org.apache.xml.utils.PrefixResolver m_namespaceContext;
 
-  /** Transformer instance          */
-  protected TransformerImpl m_processor;  // needed for error reporting.
+	/** Transformer instance */
+	protected TransformerImpl m_processor; // needed for error reporting.
 
-  /**
-   * Constructor NodeSortKey
-   *
-   *
-   * @param transformer non null transformer instance
-   * @param selectPat Select pattern for this key 
-   * @param treatAsNumbers Flag indicating whether the result will be a number
-   * @param descending Flag indicating whether to sort in descending order
-   * @param langValue Lang value to use to get locale
-   * @param caseOrderUpper Flag indicating whether case is relevant
-   * @param namespaceContext Prefix resolver
-   *
-   * @throws javax.xml.transform.TransformerException
-   */
-  public NodeSortKey(
-          TransformerImpl transformer, XPath selectPat, boolean treatAsNumbers, 
-          boolean descending, String langValue, boolean caseOrderUpper, 
-          org.apache.xml.utils.PrefixResolver namespaceContext)
-            throws javax.xml.transform.TransformerException
-  {
+	/**
+	 * Constructor NodeSortKey
+	 * 
+	 * 
+	 * @param transformer
+	 *            non null transformer instance
+	 * @param selectPat
+	 *            Select pattern for this key
+	 * @param treatAsNumbers
+	 *            Flag indicating whether the result will be a number
+	 * @param descending
+	 *            Flag indicating whether to sort in descending order
+	 * @param langValue
+	 *            Lang value to use to get locale
+	 * @param caseOrderUpper
+	 *            Flag indicating whether case is relevant
+	 * @param namespaceContext
+	 *            Prefix resolver
+	 * 
+	 * @throws javax.xml.transform.TransformerException
+	 */
+	public NodeSortKey(TransformerImpl transformer, XPath selectPat,
+			boolean treatAsNumbers, boolean descending, String langValue,
+			boolean caseOrderUpper,
+			org.apache.xml.utils.PrefixResolver namespaceContext)
+			throws javax.xml.transform.TransformerException {
 
-    m_processor = transformer;
-    m_namespaceContext = namespaceContext;
-    m_selectPat = selectPat;
-    m_treatAsNumbers = treatAsNumbers;
-    m_descending = descending;
-    m_caseOrderUpper = caseOrderUpper;
+		m_processor = transformer;
+		m_namespaceContext = namespaceContext;
+		m_selectPat = selectPat;
+		m_treatAsNumbers = treatAsNumbers;
+		m_descending = descending;
+		m_caseOrderUpper = caseOrderUpper;
 
-    if (null != langValue && m_treatAsNumbers == false)
-    {
-      // See http://nagoya.apache.org/bugzilla/show_bug.cgi?id=2851
-      // The constructor of Locale is defined as 
-      //   public Locale(String language, String country)
-      // with
-      //   language - lowercase two-letter ISO-639 code
-      //   country - uppercase two-letter ISO-3166 code
-      // a) language must be provided as a lower-case ISO-code 
-      //    instead of an upper-case code
-      // b) country must be provided as an ISO-code 
-      //    instead of a full localized country name (e.g. "France")
-      m_locale = new Locale(langValue.toLowerCase(), 
-                  Locale.getDefault().getCountry());
-                  
-      // (old, before bug report 2851).
-      //  m_locale = new Locale(langValue.toUpperCase(),
-      //                        Locale.getDefault().getDisplayCountry());                    
+		if (null != langValue && m_treatAsNumbers == false) {
+			// See http://nagoya.apache.org/bugzilla/show_bug.cgi?id=2851
+			// The constructor of Locale is defined as
+			// public Locale(String language, String country)
+			// with
+			// language - lowercase two-letter ISO-639 code
+			// country - uppercase two-letter ISO-3166 code
+			// a) language must be provided as a lower-case ISO-code
+			// instead of an upper-case code
+			// b) country must be provided as an ISO-code
+			// instead of a full localized country name (e.g. "France")
+			m_locale = new Locale(langValue.toLowerCase(), Locale.getDefault()
+					.getCountry());
 
-      if (null == m_locale)
-      {
+			// (old, before bug report 2851).
+			// m_locale = new Locale(langValue.toUpperCase(),
+			// Locale.getDefault().getDisplayCountry());
 
-        // m_processor.warn("Could not find locale for <sort xml:lang="+langValue);
-        m_locale = Locale.getDefault();
-      }
-    }
-    else
-    {
-      m_locale = Locale.getDefault();
-    }
+			if (null == m_locale) {
 
-    m_col = Collator.getInstance(m_locale);
+				// m_processor.warn("Could not find locale for <sort
+				// xml:lang="+langValue);
+				m_locale = Locale.getDefault();
+			}
+		} else {
+			m_locale = Locale.getDefault();
+		}
 
-    if (null == m_col)
-    {
-      m_processor.getMsgMgr().warn(null, XSLTErrorResources.WG_CANNOT_FIND_COLLATOR,
-                                   new Object[]{ langValue });  //"Could not find Collator for <sort xml:lang="+langValue);
+		m_col = Collator.getInstance(m_locale);
 
-      m_col = Collator.getInstance();
-    }
-  }
+		if (null == m_col) {
+			m_processor.getMsgMgr().warn(null,
+					XSLTErrorResources.WG_CANNOT_FIND_COLLATOR,
+					new Object[] { langValue }); // "Could not find Collator
+													// for <sort
+													// xml:lang="+langValue);
+
+			m_col = Collator.getInstance();
+		}
+	}
 }

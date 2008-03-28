@@ -25,144 +25,148 @@
  * limitations under the License.
  */
 /*
- * $Id: NamespaceAlias.java,v 1.1 2008/03/27 01:08:53 dacarver Exp $
+ * $Id: NamespaceAlias.java,v 1.2 2008/03/28 02:38:15 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
 /**
- * Object to hold an xsl:namespace element.
- * A stylesheet can use the xsl:namespace-alias element to declare
- * that one namespace URI is an alias for another namespace URI.
- * @see <a href="http://www.w3.org/TR/xslt#literal-result-element">literal-result-element in XSLT Specification</a>
+ * Object to hold an xsl:namespace element. A stylesheet can use the
+ * xsl:namespace-alias element to declare that one namespace URI is an alias for
+ * another namespace URI.
+ * 
+ * @see <a
+ *      href="http://www.w3.org/TR/xslt#literal-result-element">literal-result-element
+ *      in XSLT Specification</a>
  */
-public class NamespaceAlias extends ElemTemplateElement
-{
-    static final long serialVersionUID = 456173966637810718L;
-  
-  /**
-   * Constructor NamespaceAlias
-   * 
-   * @param docOrderNumber The document order number
-   *
-   */
-  public NamespaceAlias(int docOrderNumber)
-  {
-    super();
-    m_docOrderNumber = docOrderNumber;
-  }
+public class NamespaceAlias extends ElemTemplateElement {
+	static final long serialVersionUID = 456173966637810718L;
 
-  /**
-   * The "stylesheet-prefix" attribute.
-   * @serial
-   */
-  private String m_StylesheetPrefix;
+	/**
+	 * Constructor NamespaceAlias
+	 * 
+	 * @param docOrderNumber
+	 *            The document order number
+	 * 
+	 */
+	public NamespaceAlias(int docOrderNumber) {
+		super();
+		m_docOrderNumber = docOrderNumber;
+	}
 
-  /**
-   * Set the "stylesheet-prefix" attribute.
-   *
-   * @param v non-null prefix value.
-   */
-  public void setStylesheetPrefix(String v)
-  {
-    m_StylesheetPrefix = v;
-  }
+	/**
+	 * The "stylesheet-prefix" attribute.
+	 * 
+	 * @serial
+	 */
+	private String m_StylesheetPrefix;
 
-  /**
-   * Get the "stylesheet-prefix" attribute.
-   *
-   * @return non-null prefix value.
-   */
-  public String getStylesheetPrefix()
-  {
-    return m_StylesheetPrefix;
-  }
-  
-  /**
-   * The namespace in the stylesheet space.
-   * @serial
-   */
-  private String m_StylesheetNamespace;
+	/**
+	 * Set the "stylesheet-prefix" attribute.
+	 * 
+	 * @param v
+	 *            non-null prefix value.
+	 */
+	public void setStylesheetPrefix(String v) {
+		m_StylesheetPrefix = v;
+	}
 
-  /**
-   * Set the value for the stylesheet namespace.
-   *
-   * @param v non-null prefix value.
-   */
-  public void setStylesheetNamespace(String v)
-  {
-    m_StylesheetNamespace = v;
-  }
+	/**
+	 * Get the "stylesheet-prefix" attribute.
+	 * 
+	 * @return non-null prefix value.
+	 */
+	public String getStylesheetPrefix() {
+		return m_StylesheetPrefix;
+	}
 
-  /**
-   * Get the value for the stylesheet namespace.
-   *
-   * @return non-null prefix value.
-   */
-  public String getStylesheetNamespace()
-  {
-    return m_StylesheetNamespace;
-  }
+	/**
+	 * The namespace in the stylesheet space.
+	 * 
+	 * @serial
+	 */
+	private String m_StylesheetNamespace;
 
-  /**
-   * The "result-prefix" attribute.
-   * @serial
-   */
-  private String m_ResultPrefix;
+	/**
+	 * Set the value for the stylesheet namespace.
+	 * 
+	 * @param v
+	 *            non-null prefix value.
+	 */
+	public void setStylesheetNamespace(String v) {
+		m_StylesheetNamespace = v;
+	}
 
-  /**
-   * Set the "result-prefix" attribute.
-   *
-   * @param v non-null prefix value.
-   */
-  public void setResultPrefix(String v)
-  {
-    m_ResultPrefix = v;
-  }
+	/**
+	 * Get the value for the stylesheet namespace.
+	 * 
+	 * @return non-null prefix value.
+	 */
+	public String getStylesheetNamespace() {
+		return m_StylesheetNamespace;
+	}
 
-  /**
-   * Get the "result-prefix" attribute.
-   *
-   * @return non-null prefix value.
-   */
-  public String getResultPrefix()
-  {
-    return m_ResultPrefix;
-  }
-  
-  /**
-   * The result namespace.
-   * @serial
-   */
-  private String m_ResultNamespace;
+	/**
+	 * The "result-prefix" attribute.
+	 * 
+	 * @serial
+	 */
+	private String m_ResultPrefix;
 
-  /**
-   * Set the result namespace.
-   *
-   * @param v non-null namespace value
-   */
-  public void setResultNamespace(String v)
-  {
-    m_ResultNamespace = v;
-  }
+	/**
+	 * Set the "result-prefix" attribute.
+	 * 
+	 * @param v
+	 *            non-null prefix value.
+	 */
+	public void setResultPrefix(String v) {
+		m_ResultPrefix = v;
+	}
 
-  /**
-   * Get the result namespace value.
-   *
-   * @return non-null namespace value.
-   */
-  public String getResultNamespace()
-  {
-    return m_ResultNamespace;
-  }
+	/**
+	 * Get the "result-prefix" attribute.
+	 * 
+	 * @return non-null prefix value.
+	 */
+	public String getResultPrefix() {
+		return m_ResultPrefix;
+	}
 
-  /**
-   * This function is called to recompose() all of the namespace alias properties elements.
-   * 
-   * @param root The owning root stylesheet
-   */
-  public void recompose(StylesheetRoot root)
-  {
-    root.recomposeNamespaceAliases(this);
-  }
+	/**
+	 * The result namespace.
+	 * 
+	 * @serial
+	 */
+	private String m_ResultNamespace;
+
+	/**
+	 * Set the result namespace.
+	 * 
+	 * @param v
+	 *            non-null namespace value
+	 */
+	public void setResultNamespace(String v) {
+		m_ResultNamespace = v;
+	}
+
+	/**
+	 * Get the result namespace value.
+	 * 
+	 * @return non-null namespace value.
+	 */
+	public String getResultNamespace() {
+		return m_ResultNamespace;
+	}
+
+	/**
+	 * This function is called to recompose() all of the namespace alias
+	 * properties elements.
+	 * 
+	 * @param root
+	 *            The owning root stylesheet
+	 */
+	@Override
+	public void recompose(StylesheetRoot root) {
+		root.recomposeNamespaceAliases(this);
+	}
 
 }

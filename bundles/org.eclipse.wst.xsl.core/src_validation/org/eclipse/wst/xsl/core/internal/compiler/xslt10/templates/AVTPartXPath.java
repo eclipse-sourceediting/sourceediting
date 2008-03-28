@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: AVTPartXPath.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
+ * $Id: AVTPartXPath.java,v 1.3 2008/03/28 02:38:15 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -39,122 +39,133 @@ import org.apache.xpath.objects.XObject;
 
 /**
  * Simple string part of a complex AVT.
+ * 
  * @xsl.usage internal
  */
-public class AVTPartXPath extends AVTPart
-{
-    static final long serialVersionUID = -4460373807550527675L;
+public class AVTPartXPath extends AVTPart {
+	static final long serialVersionUID = -4460373807550527675L;
 
-  /**
-   * The XPath object contained in this part.
-   * @serial
-   */
-  private XPath m_xpath;
-  
-  /**
-   * This function is used to fixup variables from QNames to stack frame 
-   * indexes at stylesheet build time.
-   * @param vars List of QNames that correspond to variables.  This list 
-   * should be searched backwards for the first qualified name that 
-   * corresponds to the variable reference qname.  The position of the 
-   * QName in the vector from the start of the vector will be its position 
-   * in the stack frame (but variables above the globalsTop value will need 
-   * to be offset to the current stack frame).
-   */
-  public void fixupVariables(java.util.Vector vars, int globalsSize)
-  {
-    m_xpath.fixupVariables(vars, globalsSize);
-  }
-  
-  /**
-   * Tell if this expression or it's subexpressions can traverse outside 
-   * the current subtree.
-   * 
-   * @return true if traversal outside the context node's subtree can occur.
-   */
-   public boolean canTraverseOutsideSubtree()
-   {
-    return m_xpath.getExpression().canTraverseOutsideSubtree();
-   }
+	/**
+	 * The XPath object contained in this part.
+	 * 
+	 * @serial
+	 */
+	private XPath m_xpath;
 
-  /**
-   * Construct a simple AVT part.
-   *
-   * @param xpath Xpath section of AVT 
-   */
-  public AVTPartXPath(XPath xpath)
-  {
-    m_xpath = xpath;
-  }
+	/**
+	 * This function is used to fixup variables from QNames to stack frame
+	 * indexes at stylesheet build time.
+	 * 
+	 * @param vars
+	 *            List of QNames that correspond to variables. This list should
+	 *            be searched backwards for the first qualified name that
+	 *            corresponds to the variable reference qname. The position of
+	 *            the QName in the vector from the start of the vector will be
+	 *            its position in the stack frame (but variables above the
+	 *            globalsTop value will need to be offset to the current stack
+	 *            frame).
+	 */
+	@Override
+	public void fixupVariables(java.util.Vector vars, int globalsSize) {
+		m_xpath.fixupVariables(vars, globalsSize);
+	}
 
-  /**
-   * Construct a simple AVT part.
-   * 
-   * @param val A pure string section of an AVT.
-   * @param nsNode An object which can be used to determine the
-   * Namespace Name (URI) for any Namespace prefix used in the XPath. 
-   * Usually this is based on the context where the XPath was specified,
-   * such as a node within a Stylesheet.
-   * @param xpathProcessor XPath parser
-   * @param factory XPath factory
-   * @param liaison An XPathContext object, providing infomation specific
-   * to this invocation and this thread. Maintains SAX output state, 
-   * variables, error handler and so on, so the transformation/XPath 
-   * object itself can be simultaneously invoked from multiple threads.
-   *
-   * @throws javax.xml.transform.TransformerException
-   * TODO: Fix or remove this unused c'tor.
-   */
-  public AVTPartXPath(
-          String val, org.apache.xml.utils.PrefixResolver nsNode, 
-          XPathParser xpathProcessor, XPathFactory factory, 
-          XPathContext liaison)
-            throws javax.xml.transform.TransformerException
-  {
-    m_xpath = new XPath(val, null, nsNode, XPath.SELECT, liaison.getErrorListener());
-  }
+	/**
+	 * Tell if this expression or it's subexpressions can traverse outside the
+	 * current subtree.
+	 * 
+	 * @return true if traversal outside the context node's subtree can occur.
+	 */
+	@Override
+	public boolean canTraverseOutsideSubtree() {
+		return m_xpath.getExpression().canTraverseOutsideSubtree();
+	}
 
-  /**
-   * Get the AVT part as the original string.
-   *
-   * @return the AVT part as the original string.
-   */
-  public String getSimpleString()
-  {
-    return "{" + m_xpath.getPatternString() + "}";
-  }
+	/**
+	 * Construct a simple AVT part.
+	 * 
+	 * @param xpath
+	 *            Xpath section of AVT
+	 */
+	public AVTPartXPath(XPath xpath) {
+		m_xpath = xpath;
+	}
 
-  /**
-   * Write the value into the buffer.
-   *
-   * @param xctxt An XPathContext object, providing infomation specific
-   * to this invocation and this thread. Maintains SAX state, variables, 
-   * error handler and  so on, so the transformation/XPath object itself
-   * can be simultaneously invoked from multiple threads.
-   * @param buf Buffer to write into.
-   * @param context The current source tree context.
-   * @param nsNode The current namespace context (stylesheet tree context).
-   *
-   * @throws javax.xml.transform.TransformerException
-   */
-  public void evaluate(
-          XPathContext xctxt, FastStringBuffer buf, int context, org.apache.xml.utils.PrefixResolver nsNode)
-            throws javax.xml.transform.TransformerException
-  {
+	/**
+	 * Construct a simple AVT part.
+	 * 
+	 * @param val
+	 *            A pure string section of an AVT.
+	 * @param nsNode
+	 *            An object which can be used to determine the Namespace Name
+	 *            (URI) for any Namespace prefix used in the XPath. Usually this
+	 *            is based on the context where the XPath was specified, such as
+	 *            a node within a Stylesheet.
+	 * @param xpathProcessor
+	 *            XPath parser
+	 * @param factory
+	 *            XPath factory
+	 * @param liaison
+	 *            An XPathContext object, providing infomation specific to this
+	 *            invocation and this thread. Maintains SAX output state,
+	 *            variables, error handler and so on, so the
+	 *            transformation/XPath object itself can be simultaneously
+	 *            invoked from multiple threads.
+	 * 
+	 * @throws javax.xml.transform.TransformerException
+	 *             TODO: Fix or remove this unused c'tor.
+	 */
+	public AVTPartXPath(String val, org.apache.xml.utils.PrefixResolver nsNode,
+			XPathParser xpathProcessor, XPathFactory factory,
+			XPathContext liaison)
+			throws javax.xml.transform.TransformerException {
+		m_xpath = new XPath(val, null, nsNode, XPath.SELECT, liaison
+				.getErrorListener());
+	}
 
-    XObject xobj = m_xpath.execute(xctxt, context, nsNode);
+	/**
+	 * Get the AVT part as the original string.
+	 * 
+	 * @return the AVT part as the original string.
+	 */
+	@Override
+	public String getSimpleString() {
+		return "{" + m_xpath.getPatternString() + "}";
+	}
 
-    if (null != xobj)
-    {
-      xobj.appendToFsb(buf);
-    }
-  }
-  
-  /**
-   * @see XSLTVisitable#callVisitors(XSLTVisitor)
-   */
-  public void callVisitors(XSLTVisitor visitor)
-  {
-  	m_xpath.getExpression().callVisitors(m_xpath, visitor);
-  }
+	/**
+	 * Write the value into the buffer.
+	 * 
+	 * @param xctxt
+	 *            An XPathContext object, providing infomation specific to this
+	 *            invocation and this thread. Maintains SAX state, variables,
+	 *            error handler and so on, so the transformation/XPath object
+	 *            itself can be simultaneously invoked from multiple threads.
+	 * @param buf
+	 *            Buffer to write into.
+	 * @param context
+	 *            The current source tree context.
+	 * @param nsNode
+	 *            The current namespace context (stylesheet tree context).
+	 * 
+	 * @throws javax.xml.transform.TransformerException
+	 */
+	@Override
+	public void evaluate(XPathContext xctxt, FastStringBuffer buf, int context,
+			org.apache.xml.utils.PrefixResolver nsNode)
+			throws javax.xml.transform.TransformerException {
+
+		XObject xobj = m_xpath.execute(xctxt, context, nsNode);
+
+		if (null != xobj) {
+			xobj.appendToFsb(buf);
+		}
+	}
+
+	/**
+	 * @see XSLTVisitable#callVisitors(XSLTVisitor)
+	 */
+	public void callVisitors(XSLTVisitor visitor) {
+		m_xpath.getExpression().callVisitors(m_xpath, visitor);
+	}
 }

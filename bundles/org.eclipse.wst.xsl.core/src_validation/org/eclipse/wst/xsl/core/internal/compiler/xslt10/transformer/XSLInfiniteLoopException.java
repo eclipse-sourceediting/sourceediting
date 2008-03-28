@@ -25,34 +25,32 @@
  * limitations under the License.
  */
 /*
- * $Id: XSLInfiniteLoopException.java,v 1.1 2008/03/27 01:08:56 dacarver Exp $
+ * $Id: XSLInfiniteLoopException.java,v 1.2 2008/03/28 02:38:16 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer;
 
 /**
- * Class used to create an Infinite Loop Exception 
+ * Class used to create an Infinite Loop Exception
+ * 
  * @xsl.usage internal
  */
-public class XSLInfiniteLoopException
-{
+public class XSLInfiniteLoopException {
 
-  /**
-   * Constructor XSLInfiniteLoopException
-   *
-   */
-  public XSLInfiniteLoopException()
-  {
-    super();
-  }
+	/**
+	 * Constructor XSLInfiniteLoopException
+	 * 
+	 */
+	public XSLInfiniteLoopException() {
+		super();
+	}
 
-  /**
-   * Get Message associated with the exception
-   *
-   *
-   * @return Message associated with the exception
-   */
-  public String getMessage()
-  {
-    return "Processing Terminated.";
-  }
+	/**
+	 * Get Message associated with the exception
+	 * 
+	 * 
+	 * @return Message associated with the exception
+	 */
+	public String getMessage() {
+		return "Processing Terminated.";
+	}
 }

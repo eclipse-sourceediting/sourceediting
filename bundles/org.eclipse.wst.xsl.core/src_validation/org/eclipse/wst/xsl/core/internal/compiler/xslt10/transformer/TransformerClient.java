@@ -25,28 +25,26 @@
  * limitations under the License.
  */
 /*
- * $Id: TransformerClient.java,v 1.1 2008/03/27 01:08:56 dacarver Exp $
+ * $Id: TransformerClient.java,v 1.2 2008/03/28 02:38:16 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer;
 
 /**
- * A content handler can get a reference
- * to a TransformState by implementing
- * the TransformerClient interface.  Xalan will check for
- * that interface before it calls startDocument, and, if it
- * is implemented, pass in a TransformState reference to the
- * setTransformState method.
+ * A content handler can get a reference to a TransformState by implementing the
+ * TransformerClient interface. Xalan will check for that interface before it
+ * calls startDocument, and, if it is implemented, pass in a TransformState
+ * reference to the setTransformState method.
  */
-public interface TransformerClient
-{
+public interface TransformerClient {
 
-  /**
-   * Pass in a reference to a TransformState object, which
-   * can be used during SAX ContentHandler events to obtain
-   * information about he state of the transformation. This
-   * method will be called  before each startDocument event.
-   *
-   * @param ts A reference to a TransformState object
-   */
-  public void setTransformState(TransformState ts);
+	/**
+	 * Pass in a reference to a TransformState object, which can be used during
+	 * SAX ContentHandler events to obtain information about he state of the
+	 * transformation. This method will be called before each startDocument
+	 * event.
+	 * 
+	 * @param ts
+	 *            A reference to a TransformState object
+	 */
+	public void setTransformState(TransformState ts);
 }

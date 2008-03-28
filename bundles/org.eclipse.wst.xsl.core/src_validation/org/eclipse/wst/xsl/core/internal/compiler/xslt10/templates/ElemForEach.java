@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemForEach.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
+ * $Id: ElemForEach.java,v 1.3 2008/03/28 02:38:15 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -49,510 +49,492 @@ import java.io.IOException;
 
 /**
  * Implement xsl:for-each.
+ * 
  * <pre>
- * <!ELEMENT xsl:for-each
+ * &lt;!ELEMENT xsl:for-each
  *  (#PCDATA
  *   %instructions;
  *   %result-elements;
  *   | xsl:sort)
- * >
- *
- * <!ATTLIST xsl:for-each
+ * &gt;
+ * 
+ * &lt;!ATTLIST xsl:for-each
  *   select %expr; #REQUIRED
  *   %space-att;
- * >
+ * &gt;
  * </pre>
- * @see <a href="http://www.w3.org/TR/xslt#for-each">for-each in XSLT Specification</a>
+ * 
+ * @see <a href="http://www.w3.org/TR/xslt#for-each">for-each in XSLT
+ *      Specification</a>
  * @xsl.usage advanced
  */
-public class ElemForEach extends ElemTemplateElement implements ExpressionOwner
-{
-    static final long serialVersionUID = 6018140636363583690L;
-  /** Set true to request some basic status reports */
-  static final boolean DEBUG = false;
-  
-  /**
-   * This is set by an "xalan-doc-cache-off" pi, or the old "xalan:doc-cache-off" pi.
-   * The old form of the PI only works for XML parsers that are not namespace aware.
-   * It tells the engine that
-   * documents created in the location paths executed by this element
-   * will not be reparsed. It's set by StylesheetHandler during
-   * construction. Note that this feature applies _only_ to xsl:for-each
-   * elements in its current incarnation; a more general cache management
-   * solution is desperately needed.
-   */
-  public boolean m_doc_cache_off=false;
-  
-  /**
-   * Construct a element representing xsl:for-each.
-   */
-  public ElemForEach(){}
+public class ElemForEach extends ElemTemplateElement implements ExpressionOwner {
+	static final long serialVersionUID = 6018140636363583690L;
+	/** Set true to request some basic status reports */
+	static final boolean DEBUG = false;
 
-  /**
-   * The "select" expression.
-   * @serial
-   */
-  protected Expression m_selectExpression = null;
-  
-  
-  /**
-   * Used to fix bug#16889
-   * Store XPath away for later processing.
-   */
-  protected XPath m_xpath = null;  
+	/**
+	 * This is set by an "xalan-doc-cache-off" pi, or the old
+	 * "xalan:doc-cache-off" pi. The old form of the PI only works for XML
+	 * parsers that are not namespace aware. It tells the engine that documents
+	 * created in the location paths executed by this element will not be
+	 * reparsed. It's set by StylesheetHandler during construction. Note that
+	 * this feature applies _only_ to xsl:for-each elements in its current
+	 * incarnation; a more general cache management solution is desperately
+	 * needed.
+	 */
+	public boolean m_doc_cache_off = false;
 
-  /**
-   * Set the "select" attribute.
-   *
-   * @param xpath The XPath expression for the "select" attribute.
-   */
-  public void setSelect(XPath xpath)
-  {
-    m_selectExpression = xpath.getExpression();
-    
-    // The following line is part of the codes added to fix bug#16889
-    // Store xpath which will be needed when firing Selected Event
-    m_xpath = xpath;    
-  }
+	/**
+	 * Construct a element representing xsl:for-each.
+	 */
+	public ElemForEach() {
+	}
 
-  /**
-   * Get the "select" attribute.
-   *
-   * @return The XPath expression for the "select" attribute.
-   */
-  public Expression getSelect()
-  {
-    return m_selectExpression;
-  }
+	/**
+	 * The "select" expression.
+	 * 
+	 * @serial
+	 */
+	protected Expression m_selectExpression = null;
 
-  /**
-   * This function is called after everything else has been
-   * recomposed, and allows the template to set remaining
-   * values that may be based on some other property that
-   * depends on recomposition.
-   *
-   * NEEDSDOC @param sroot
-   *
-   * @throws TransformerException
-   */
-  public void compose(StylesheetRoot sroot) throws TransformerException
-  {
+	/**
+	 * Used to fix bug#16889 Store XPath away for later processing.
+	 */
+	protected XPath m_xpath = null;
 
-    super.compose(sroot);
+	/**
+	 * Set the "select" attribute.
+	 * 
+	 * @param xpath
+	 *            The XPath expression for the "select" attribute.
+	 */
+	public void setSelect(XPath xpath) {
+		m_selectExpression = xpath.getExpression();
 
-    int length = getSortElemCount();
+		// The following line is part of the codes added to fix bug#16889
+		// Store xpath which will be needed when firing Selected Event
+		m_xpath = xpath;
+	}
 
-    for (int i = 0; i < length; i++)
-    {
-      getSortElem(i).compose(sroot);
-    }
+	/**
+	 * Get the "select" attribute.
+	 * 
+	 * @return The XPath expression for the "select" attribute.
+	 */
+	public Expression getSelect() {
+		return m_selectExpression;
+	}
 
-    java.util.Vector vnames = sroot.getComposeState().getVariableNames();
+	/**
+	 * This function is called after everything else has been recomposed, and
+	 * allows the template to set remaining values that may be based on some
+	 * other property that depends on recomposition.
+	 * 
+	 * NEEDSDOC
+	 * 
+	 * @param sroot
+	 * 
+	 * @throws TransformerException
+	 */
+	@Override
+	public void compose(StylesheetRoot sroot) throws TransformerException {
 
-    if (null != m_selectExpression)
-      m_selectExpression.fixupVariables(
-        vnames, sroot.getComposeState().getGlobalsSize());
-    else
-    {
-      m_selectExpression =
-        getStylesheetRoot().m_selectDefault.getExpression();
-    }
-  }
-  
-  /**
-   * This after the template's children have been composed.
-   */
-  public void endCompose(StylesheetRoot sroot) throws TransformerException
-  {
-    int length = getSortElemCount();
+		super.compose(sroot);
 
-    for (int i = 0; i < length; i++)
-    {
-      getSortElem(i).endCompose(sroot);
-    }
-    
-    super.endCompose(sroot);
-  }
+		int length = getSortElemCount();
 
+		for (int i = 0; i < length; i++) {
+			getSortElem(i).compose(sroot);
+		}
 
-  //  /**
-  //   * This function is called after everything else has been
-  //   * recomposed, and allows the template to set remaining
-  //   * values that may be based on some other property that
-  //   * depends on recomposition.
-  //   *
-  //   * @throws TransformerException
-  //   */
-  //  public void compose() throws TransformerException
-  //  {
-  //
-  //    if (null == m_selectExpression)
-  //    {
-  //      m_selectExpression =
-  //        getStylesheetRoot().m_selectDefault.getExpression();
-  //    }
-  //  }
+		java.util.Vector vnames = sroot.getComposeState().getVariableNames();
 
-  /**
-   * Vector containing the xsl:sort elements associated with this element.
-   *  @serial
-   */
-  protected Vector m_sortElems = null;
+		if (null != m_selectExpression)
+			m_selectExpression.fixupVariables(vnames, sroot.getComposeState()
+					.getGlobalsSize());
+		else {
+			m_selectExpression = getStylesheetRoot().m_selectDefault
+					.getExpression();
+		}
+	}
 
-  /**
-   * Get the count xsl:sort elements associated with this element.
-   * @return The number of xsl:sort elements.
-   */
-  public int getSortElemCount()
-  {
-    return (m_sortElems == null) ? 0 : m_sortElems.size();
-  }
+	/**
+	 * This after the template's children have been composed.
+	 */
+	@Override
+	public void endCompose(StylesheetRoot sroot) throws TransformerException {
+		int length = getSortElemCount();
 
-  /**
-   * Get a xsl:sort element associated with this element.
-   *
-   * @param i Index of xsl:sort element to get
-   *
-   * @return xsl:sort element at given index
-   */
-  public ElemSort getSortElem(int i)
-  {
-    return (ElemSort) m_sortElems.elementAt(i);
-  }
+		for (int i = 0; i < length; i++) {
+			getSortElem(i).endCompose(sroot);
+		}
 
-  /**
-   * Set a xsl:sort element associated with this element.
-   *
-   * @param sortElem xsl:sort element to set
-   */
-  public void setSortElem(ElemSort sortElem)
-  {
+		super.endCompose(sroot);
+	}
 
-    if (null == m_sortElems)
-      m_sortElems = new Vector();
+	// /**
+	// * This function is called after everything else has been
+	// * recomposed, and allows the template to set remaining
+	// * values that may be based on some other property that
+	// * depends on recomposition.
+	// *
+	// * @throws TransformerException
+	// */
+	// public void compose() throws TransformerException
+	// {
+	//
+	// if (null == m_selectExpression)
+	// {
+	// m_selectExpression =
+	// getStylesheetRoot().m_selectDefault.getExpression();
+	// }
+	// }
 
-    m_sortElems.addElement(sortElem);
-  }
+	/**
+	 * Vector containing the xsl:sort elements associated with this element.
+	 * 
+	 * @serial
+	 */
+	protected Vector m_sortElems = null;
 
-  /**
-   * Get an int constant identifying the type of element.
-   * @see org.apache.xalan.templates.Constants
-   *
-   * @return The token ID for this element
-   */
-  public int getXSLToken()
-  {
-    return Constants.ELEMNAME_FOREACH;
-  }
+	/**
+	 * Get the count xsl:sort elements associated with this element.
+	 * 
+	 * @return The number of xsl:sort elements.
+	 */
+	public int getSortElemCount() {
+		return (m_sortElems == null) ? 0 : m_sortElems.size();
+	}
 
-  /**
-   * Return the node name.
-   *
-   * @return The element's name
-   */
-  public String getNodeName()
-  {
-    return Constants.ELEMNAME_FOREACH_STRING;
-  }
+	/**
+	 * Get a xsl:sort element associated with this element.
+	 * 
+	 * @param i
+	 *            Index of xsl:sort element to get
+	 * 
+	 * @return xsl:sort element at given index
+	 */
+	public ElemSort getSortElem(int i) {
+		return (ElemSort) m_sortElems.elementAt(i);
+	}
 
-  /**
-   * Execute the xsl:for-each transformation
-   *
-   * @param transformer non-null reference to the the current transform-time state.
-   *
-   * @throws TransformerException
-   */
-  public void execute(TransformerImpl transformer) throws TransformerException
-  {
+	/**
+	 * Set a xsl:sort element associated with this element.
+	 * 
+	 * @param sortElem
+	 *            xsl:sort element to set
+	 */
+	public void setSortElem(ElemSort sortElem) {
 
-    transformer.pushCurrentTemplateRuleIsNull(true);    
-    if (transformer.getDebug())
-      transformer.getTraceManager().fireTraceEvent(this);//trigger for-each element event
+		if (null == m_sortElems)
+			m_sortElems = new Vector();
 
-    try
-    {
-      transformSelectedNodes(transformer);
-    }
-    finally
-    {
-      if (transformer.getDebug())
-	    transformer.getTraceManager().fireTraceEndEvent(this); 
-      transformer.popCurrentTemplateRuleIsNull();
-    }
-  }
+		m_sortElems.addElement(sortElem);
+	}
 
-  /**
-   * Get template element associated with this
-   *
-   *
-   * @return template element associated with this (itself)
-   */
-  protected ElemTemplateElement getTemplateMatch()
-  {
-    return this;
-  }
+	/**
+	 * Get an int constant identifying the type of element.
+	 * 
+	 * @see org.apache.xalan.templates.Constants
+	 * 
+	 * @return The token ID for this element
+	 */
+	@Override
+	public int getXSLToken() {
+		return Constants.ELEMNAME_FOREACH;
+	}
 
-  /**
-   * Sort given nodes
-   *
-   *
-   * @param xctxt The XPath runtime state for the sort.
-   * @param keys Vector of sort keyx
-   * @param sourceNodes Iterator of nodes to sort
-   *
-   * @return iterator of sorted nodes
-   *
-   * @throws TransformerException
-   */
-  public DTMIterator sortNodes(
-          XPathContext xctxt, Vector keys, DTMIterator sourceNodes)
-            throws TransformerException
-  {
+	/**
+	 * Return the node name.
+	 * 
+	 * @return The element's name
+	 */
+	@Override
+	public String getNodeName() {
+		return Constants.ELEMNAME_FOREACH_STRING;
+	}
 
-    NodeSorter sorter = new NodeSorter(xctxt);
-    sourceNodes.setShouldCacheNodes(true);
-    sourceNodes.runTo(-1);
-    xctxt.pushContextNodeList(sourceNodes);
+	/**
+	 * Execute the xsl:for-each transformation
+	 * 
+	 * @param transformer
+	 *            non-null reference to the the current transform-time state.
+	 * 
+	 * @throws TransformerException
+	 */
+	@Override
+	public void execute(TransformerImpl transformer)
+			throws TransformerException {
 
-    try
-    {
-      sorter.sort(sourceNodes, keys, xctxt);
-      sourceNodes.setCurrentPos(0);
-    }
-    finally
-    {
-      xctxt.popContextNodeList();
-    }
+		transformer.pushCurrentTemplateRuleIsNull(true);
+		if (transformer.getDebug())
+			transformer.getTraceManager().fireTraceEvent(this);// trigger
+																// for-each
+																// element event
 
-    return sourceNodes;
-  }
+		try {
+			transformSelectedNodes(transformer);
+		} finally {
+			if (transformer.getDebug())
+				transformer.getTraceManager().fireTraceEndEvent(this);
+			transformer.popCurrentTemplateRuleIsNull();
+		}
+	}
 
-  /**
-   * Perform a query if needed, and call transformNode for each child.
-   *
-   * @param transformer non-null reference to the the current transform-time state.
-   *
-   * @throws TransformerException Thrown in a variety of circumstances.
-   * @xsl.usage advanced
-   */
-  public void transformSelectedNodes(TransformerImpl transformer)
-          throws TransformerException
-  {
+	/**
+	 * Get template element associated with this
+	 * 
+	 * 
+	 * @return template element associated with this (itself)
+	 */
+	protected ElemTemplateElement getTemplateMatch() {
+		return this;
+	}
 
-    final XPathContext xctxt = transformer.getXPathContext();
-    final int sourceNode = xctxt.getCurrentNode();
-    DTMIterator sourceNodes = m_selectExpression.asIterator(xctxt,
-            sourceNode);
+	/**
+	 * Sort given nodes
+	 * 
+	 * 
+	 * @param xctxt
+	 *            The XPath runtime state for the sort.
+	 * @param keys
+	 *            Vector of sort keyx
+	 * @param sourceNodes
+	 *            Iterator of nodes to sort
+	 * 
+	 * @return iterator of sorted nodes
+	 * 
+	 * @throws TransformerException
+	 */
+	public DTMIterator sortNodes(XPathContext xctxt, Vector keys,
+			DTMIterator sourceNodes) throws TransformerException {
 
-    try
-    {
+		NodeSorter sorter = new NodeSorter(xctxt);
+		sourceNodes.setShouldCacheNodes(true);
+		sourceNodes.runTo(-1);
+		xctxt.pushContextNodeList(sourceNodes);
 
-      final Vector keys = (m_sortElems == null)
-              ? null
-              : transformer.processSortKeys(this, sourceNode);
+		try {
+			sorter.sort(sourceNodes, keys, xctxt);
+			sourceNodes.setCurrentPos(0);
+		} finally {
+			xctxt.popContextNodeList();
+		}
 
-      // Sort if we need to.
-      if (null != keys)
-        sourceNodes = sortNodes(xctxt, keys, sourceNodes);
+		return sourceNodes;
+	}
 
-    if (transformer.getDebug())
-    {
+	/**
+	 * Perform a query if needed, and call transformNode for each child.
+	 * 
+	 * @param transformer
+	 *            non-null reference to the the current transform-time state.
+	 * 
+	 * @throws TransformerException
+	 *             Thrown in a variety of circumstances.
+	 * @xsl.usage advanced
+	 */
+	public void transformSelectedNodes(TransformerImpl transformer)
+			throws TransformerException {
 
-        // The original code, which is broken for bug#16889,
-        // which fails to get the original select expression in the select event. 
-        /*  transformer.getTraceManager().fireSelectedEvent(
-         *    sourceNode,
-         *            this,
-         *            "select",
-         *            new XPath(m_selectExpression),
-         *            new org.apache.xpath.objects.XNodeSet(sourceNodes));
-         */ 
+		final XPathContext xctxt = transformer.getXPathContext();
+		final int sourceNode = xctxt.getCurrentNode();
+		DTMIterator sourceNodes = m_selectExpression.asIterator(xctxt,
+				sourceNode);
 
-        // The following code fixes bug#16889
-        // Solution: Store away XPath in setSelect(Xath), and use it here.
-        // Pass m_xath, which the current node is associated with, onto the TraceManager.
-        
-        Expression expr = m_xpath.getExpression();
-        org.apache.xpath.objects.XObject xObject = expr.execute(xctxt);
-        int current = xctxt.getCurrentNode();
-        transformer.getTraceManager().fireSelectedEvent(
-            current,
-            this,
-            "select",
-            m_xpath,
-            xObject);
-    }
+		try {
 
+			final Vector keys = (m_sortElems == null) ? null : transformer
+					.processSortKeys(this, sourceNode);
 
+			// Sort if we need to.
+			if (null != keys)
+				sourceNodes = sortNodes(xctxt, keys, sourceNodes);
 
-      xctxt.pushCurrentNode(DTM.NULL);
+			if (transformer.getDebug()) {
 
-      IntStack currentNodes = xctxt.getCurrentNodeStack();
+				// The original code, which is broken for bug#16889,
+				// which fails to get the original select expression in the
+				// select event.
+				/*
+				 * transformer.getTraceManager().fireSelectedEvent( sourceNode,
+				 * this, "select", new XPath(m_selectExpression), new
+				 * org.apache.xpath.objects.XNodeSet(sourceNodes));
+				 */
 
-      xctxt.pushCurrentExpressionNode(DTM.NULL);
+				// The following code fixes bug#16889
+				// Solution: Store away XPath in setSelect(Xath), and use it
+				// here.
+				// Pass m_xath, which the current node is associated with, onto
+				// the TraceManager.
+				Expression expr = m_xpath.getExpression();
+				org.apache.xpath.objects.XObject xObject = expr.execute(xctxt);
+				int current = xctxt.getCurrentNode();
+				transformer.getTraceManager().fireSelectedEvent(current, this,
+						"select", m_xpath, xObject);
+			}
 
-      IntStack currentExpressionNodes = xctxt.getCurrentExpressionNodeStack();
+			xctxt.pushCurrentNode(DTM.NULL);
 
-      xctxt.pushSAXLocatorNull();
-      xctxt.pushContextNodeList(sourceNodes);
-      transformer.pushElemTemplateElement(null);
+			IntStack currentNodes = xctxt.getCurrentNodeStack();
 
-      // pushParams(transformer, xctxt);
-      // Should be able to get this from the iterator but there must be a bug.
-      DTM dtm = xctxt.getDTM(sourceNode);
-      int docID = sourceNode & DTMManager.IDENT_DTM_DEFAULT;
-      int child;
+			xctxt.pushCurrentExpressionNode(DTM.NULL);
 
-      while (DTM.NULL != (child = sourceNodes.nextNode()))
-      {
-        currentNodes.setTop(child);
-        currentExpressionNodes.setTop(child);
+			IntStack currentExpressionNodes = xctxt
+					.getCurrentExpressionNodeStack();
 
-        if ((child & DTMManager.IDENT_DTM_DEFAULT) != docID)
-        {
-          dtm = xctxt.getDTM(child);
-          docID = child & DTMManager.IDENT_DTM_DEFAULT;
-        }
+			xctxt.pushSAXLocatorNull();
+			xctxt.pushContextNodeList(sourceNodes);
+			transformer.pushElemTemplateElement(null);
 
-        //final int exNodeType = dtm.getExpandedTypeID(child);
-        final int nodeType = dtm.getNodeType(child); 
+			// pushParams(transformer, xctxt);
+			// Should be able to get this from the iterator but there must be a
+			// bug.
+			DTM dtm = xctxt.getDTM(sourceNode);
+			int docID = sourceNode & DTMManager.IDENT_DTM_DEFAULT;
+			int child;
 
-        // Fire a trace event for the template.
-        if (transformer.getDebug())
-        {
-           transformer.getTraceManager().fireTraceEvent(this);
-        }
+			while (DTM.NULL != (child = sourceNodes.nextNode())) {
+				currentNodes.setTop(child);
+				currentExpressionNodes.setTop(child);
 
-        // And execute the child templates.
-        // Loop through the children of the template, calling execute on 
-        // each of them.
-        for (ElemTemplateElement t = this.m_firstChild; t != null;
-             t = t.m_nextSibling)
-        {
-          xctxt.setSAXLocator(t);
-          transformer.setCurrentElement(t);
-          t.execute(transformer);
-        }
-        
-        if (transformer.getDebug())
-        {
-         // We need to make sure an old current element is not 
-          // on the stack.  See TransformerImpl#getElementCallstack.
-          transformer.setCurrentElement(null);
-          transformer.getTraceManager().fireTraceEndEvent(this);
-        }
+				if ((child & DTMManager.IDENT_DTM_DEFAULT) != docID) {
+					dtm = xctxt.getDTM(child);
+					docID = child & DTMManager.IDENT_DTM_DEFAULT;
+				}
 
+				// final int exNodeType = dtm.getExpandedTypeID(child);
+				final int nodeType = dtm.getNodeType(child);
 
-	 	// KLUGE: Implement <?xalan:doc_cache_off?> 
-	 	// ASSUMPTION: This will be set only when the XPath was indeed
-	 	// a call to the Document() function. Calling it in other
-	 	// situations is likely to fry Xalan.
-	 	//
-	 	// %REVIEW% We need a MUCH cleaner solution -- one that will
-	 	// handle cleaning up after document() and getDTM() in other
-		// contexts. The whole SourceTreeManager mechanism should probably
-	 	// be moved into DTMManager rather than being explicitly invoked in
-	 	// FuncDocument and here.
-	 	if(m_doc_cache_off)
-		{
-	 	  if(DEBUG)
-	 	    System.out.println("JJK***** CACHE RELEASE *****\n"+
-				       "\tdtm="+dtm.getDocumentBaseURI());
-	  	// NOTE: This will work because this is _NOT_ a shared DTM, and thus has
-	  	// only a single Document node. If it could ever be an RTF or other
-	 	// shared DTM, this would require substantial rework.
-	 	  xctxt.getSourceTreeManager().removeDocumentFromCache(dtm.getDocument());
-	 	  xctxt.release(dtm,false);
-	 	}
-      }
-    }
-    finally
-    {
-      if (transformer.getDebug())
-        transformer.getTraceManager().fireSelectedEndEvent(sourceNode, this,
-                "select", new XPath(m_selectExpression),
-                new org.apache.xpath.objects.XNodeSet(sourceNodes));
+				// Fire a trace event for the template.
+				if (transformer.getDebug()) {
+					transformer.getTraceManager().fireTraceEvent(this);
+				}
 
-      xctxt.popSAXLocator();
-      xctxt.popContextNodeList();
-      transformer.popElemTemplateElement();
-      xctxt.popCurrentExpressionNode();
-      xctxt.popCurrentNode();
-      sourceNodes.detach();
-    }
-  }
+				// And execute the child templates.
+				// Loop through the children of the template, calling execute on
+				// each of them.
+				for (ElemTemplateElement t = this.m_firstChild; t != null; t = t.m_nextSibling) {
+					xctxt.setSAXLocator(t);
+					transformer.setCurrentElement(t);
+					t.execute(transformer);
+				}
 
-  /**
-   * Add a child to the child list.
-   * <!ELEMENT xsl:apply-templates (xsl:sort|xsl:with-param)*>
-   * <!ATTLIST xsl:apply-templates
-   *   select %expr; "node()"
-   *   mode %qname; #IMPLIED
-   * >
-   *
-   * @param newChild Child to add to child list
-   *
-   * @return Child just added to child list
-   */
-  public ElemTemplateElement appendChild(ElemTemplateElement newChild)
-  {
+				if (transformer.getDebug()) {
+					// We need to make sure an old current element is not
+					// on the stack. See TransformerImpl#getElementCallstack.
+					transformer.setCurrentElement(null);
+					transformer.getTraceManager().fireTraceEndEvent(this);
+				}
 
-    int type = ((ElemTemplateElement) newChild).getXSLToken();
+				// KLUGE: Implement <?xalan:doc_cache_off?>
+				// ASSUMPTION: This will be set only when the XPath was indeed
+				// a call to the Document() function. Calling it in other
+				// situations is likely to fry Xalan.
+				//
+				// %REVIEW% We need a MUCH cleaner solution -- one that will
+				// handle cleaning up after document() and getDTM() in other
+				// contexts. The whole SourceTreeManager mechanism should
+				// probably
+				// be moved into DTMManager rather than being explicitly invoked
+				// in
+				// FuncDocument and here.
+				if (m_doc_cache_off) {
+					if (DEBUG)
+						System.out.println("JJK***** CACHE RELEASE *****\n"
+								+ "\tdtm=" + dtm.getDocumentBaseURI());
+					// NOTE: This will work because this is _NOT_ a shared DTM,
+					// and thus has
+					// only a single Document node. If it could ever be an RTF
+					// or other
+					// shared DTM, this would require substantial rework.
+					xctxt.getSourceTreeManager().removeDocumentFromCache(
+							dtm.getDocument());
+					xctxt.release(dtm, false);
+				}
+			}
+		} finally {
+			if (transformer.getDebug())
+				transformer.getTraceManager().fireSelectedEndEvent(sourceNode,
+						this, "select", new XPath(m_selectExpression),
+						new org.apache.xpath.objects.XNodeSet(sourceNodes));
 
-    if (Constants.ELEMNAME_SORT == type)
-    {
-      setSortElem((ElemSort) newChild);
+			xctxt.popSAXLocator();
+			xctxt.popContextNodeList();
+			transformer.popElemTemplateElement();
+			xctxt.popCurrentExpressionNode();
+			xctxt.popCurrentNode();
+			sourceNodes.detach();
+		}
+	}
 
-      return newChild;
-    }
-    else
-      return super.appendChild(newChild);
-  }
-  
-  /**
-   * Call the children visitors.
-   * @param visitor The visitor whose appropriate method will be called.
-   */
-  public void callChildVisitors(XSLTVisitor visitor, boolean callAttributes)
-  {
-  	if(callAttributes && (null != m_selectExpression))
-  		m_selectExpression.callVisitors(this, visitor);
-  		
-    int length = getSortElemCount();
+	/**
+	 * Add a child to the child list. <!ELEMENT xsl:apply-templates
+	 * (xsl:sort|xsl:with-param)*> <!ATTLIST xsl:apply-templates select %expr;
+	 * "node()" mode %qname; #IMPLIED >
+	 * 
+	 * @param newChild
+	 *            Child to add to child list
+	 * 
+	 * @return Child just added to child list
+	 */
+	@Override
+	public ElemTemplateElement appendChild(ElemTemplateElement newChild) {
 
-    for (int i = 0; i < length; i++)
-    {
-      getSortElem(i).callVisitors(visitor);
-    }
+		int type = (newChild).getXSLToken();
 
-    super.callChildVisitors(visitor, callAttributes);
-  }
+		if (Constants.ELEMNAME_SORT == type) {
+			setSortElem((ElemSort) newChild);
 
-  /**
-   * @see ExpressionOwner#getExpression()
-   */
-  public Expression getExpression()
-  {
-    return m_selectExpression;
-  }
+			return newChild;
+		} else
+			return super.appendChild(newChild);
+	}
 
-  /**
-   * @see ExpressionOwner#setExpression(Expression)
-   */
-  public void setExpression(Expression exp)
-  {
-  	exp.exprSetParent(this);
-  	m_selectExpression = exp;
-  }
+	/**
+	 * Call the children visitors.
+	 * 
+	 * @param visitor
+	 *            The visitor whose appropriate method will be called.
+	 */
+	@Override
+	public void callChildVisitors(XSLTVisitor visitor, boolean callAttributes) {
+		if (callAttributes && (null != m_selectExpression))
+			m_selectExpression.callVisitors(this, visitor);
 
-  /*
-   * to keep the binary compatibility, assign a default value for newly added
-   * globel varialbe m_xpath during deserialization of an object which was 
-   * serialized using an older version
-   */
-   private void readObject(ObjectInputStream os) throws 
-        IOException, ClassNotFoundException {
-           os.defaultReadObject();
-           m_xpath = null;
-   }
+		int length = getSortElemCount();
+
+		for (int i = 0; i < length; i++) {
+			getSortElem(i).callVisitors(visitor);
+		}
+
+		super.callChildVisitors(visitor, callAttributes);
+	}
+
+	/**
+	 * @see ExpressionOwner#getExpression()
+	 */
+	public Expression getExpression() {
+		return m_selectExpression;
+	}
+
+	/**
+	 * @see ExpressionOwner#setExpression(Expression)
+	 */
+	public void setExpression(Expression exp) {
+		exp.exprSetParent(this);
+		m_selectExpression = exp;
+	}
+
+	/*
+	 * to keep the binary compatibility, assign a default value for newly added
+	 * globel varialbe m_xpath during deserialization of an object which was
+	 * serialized using an older version
+	 */
+	private void readObject(ObjectInputStream os) throws IOException,
+			ClassNotFoundException {
+		os.defaultReadObject();
+		m_xpath = null;
+	}
 }

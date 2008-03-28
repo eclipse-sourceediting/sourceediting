@@ -25,72 +25,75 @@
  * limitations under the License.
  */
 /*
- * $Id: WhiteSpaceInfo.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
+ * $Id: WhiteSpaceInfo.java,v 1.3 2008/03/28 02:38:15 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
 import org.eclipse.wst.xsl.core.internal.compiler.xslt10.xpath.XPath;
 
 /**
- * This is used as a special "fake" template that can be
- * handled by the TemplateList to do pattern matching
- * on nodes.
+ * This is used as a special "fake" template that can be handled by the
+ * TemplateList to do pattern matching on nodes.
  */
-public class WhiteSpaceInfo extends ElemTemplate
-{
-    static final long serialVersionUID = 6389208261999943836L;
+public class WhiteSpaceInfo extends ElemTemplate {
+	static final long serialVersionUID = 6389208261999943836L;
 
-  /** Flag indicating whether whitespaces should be stripped.
-   *  @serial        */
-  private boolean m_shouldStripSpace;
+	/**
+	 * Flag indicating whether whitespaces should be stripped.
+	 * 
+	 * @serial
+	 */
+	private boolean m_shouldStripSpace;
 
-  /**
-   * Return true if this element specifies that the node that
-   * matches the match pattern should be stripped, otherwise
-   * the space should be preserved.
-   *
-   * @return value of m_shouldStripSpace flag
-   */
-  public boolean getShouldStripSpace()
-  {
-    return m_shouldStripSpace;
-  }
-  
-  /**
-   * Constructor WhiteSpaceInfo
-   * @param thisSheet The current stylesheet
-   */
-  public WhiteSpaceInfo(Stylesheet thisSheet)
-  {
-  	setStylesheet(thisSheet);
-  }
+	/**
+	 * Return true if this element specifies that the node that matches the
+	 * match pattern should be stripped, otherwise the space should be
+	 * preserved.
+	 * 
+	 * @return value of m_shouldStripSpace flag
+	 */
+	public boolean getShouldStripSpace() {
+		return m_shouldStripSpace;
+	}
 
+	/**
+	 * Constructor WhiteSpaceInfo
+	 * 
+	 * @param thisSheet
+	 *            The current stylesheet
+	 */
+	public WhiteSpaceInfo(Stylesheet thisSheet) {
+		setStylesheet(thisSheet);
+	}
 
-  /**
-   * Constructor WhiteSpaceInfo
-   *
-   *
-   * @param matchPattern Match pattern
-   * @param shouldStripSpace Flag indicating whether or not
-   * to strip whitespaces
-   * @param thisSheet The current stylesheet
-   */
-  public WhiteSpaceInfo(XPath matchPattern, boolean shouldStripSpace, Stylesheet thisSheet)
-  {
+	/**
+	 * Constructor WhiteSpaceInfo
+	 * 
+	 * 
+	 * @param matchPattern
+	 *            Match pattern
+	 * @param shouldStripSpace
+	 *            Flag indicating whether or not to strip whitespaces
+	 * @param thisSheet
+	 *            The current stylesheet
+	 */
+	public WhiteSpaceInfo(XPath matchPattern, boolean shouldStripSpace,
+			Stylesheet thisSheet) {
 
-    m_shouldStripSpace = shouldStripSpace;
+		m_shouldStripSpace = shouldStripSpace;
 
-    setMatch(matchPattern);
+		setMatch(matchPattern);
 
-    setStylesheet(thisSheet);
-  }
+		setStylesheet(thisSheet);
+	}
 
-  /**
-   * This function is called to recompose() all of the WhiteSpaceInfo elements.
-   */
-  public void recompose(StylesheetRoot root)
-  {
-    root.recomposeWhiteSpaceInfo(this);
-  }
+	/**
+	 * This function is called to recompose() all of the WhiteSpaceInfo
+	 * elements.
+	 */
+	@Override
+	public void recompose(StylesheetRoot root) {
+		root.recomposeWhiteSpaceInfo(this);
+	}
 
 }

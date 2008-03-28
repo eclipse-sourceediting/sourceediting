@@ -25,25 +25,23 @@
  * limitations under the License.
  */
 /*
- * $Id: XSLTVisitable.java,v 1.1 2008/03/27 01:08:53 dacarver Exp $
+ * $Id: XSLTVisitable.java,v 1.2 2008/03/28 02:38:15 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
 /**
- * A class that implements this interface will call a XSLTVisitor 
- * for itself and members within it's heararchy.  If the XSLTVistor's 
- * method returns false, the sub-member heararchy will not be 
- * traversed.
+ * A class that implements this interface will call a XSLTVisitor for itself and
+ * members within it's heararchy. If the XSLTVistor's method returns false, the
+ * sub-member heararchy will not be traversed.
  */
-public interface XSLTVisitable
-{
+public interface XSLTVisitable {
 	/**
-	 * This will traverse the heararchy, calling the visitor for 
-	 * each member.  If the called visitor method returns 
-	 * false, the subtree should not be called.
+	 * This will traverse the heararchy, calling the visitor for each member. If
+	 * the called visitor method returns false, the subtree should not be
+	 * called.
 	 * 
-	 * @param visitor The visitor whose appropriate method will be called.
+	 * @param visitor
+	 *            The visitor whose appropriate method will be called.
 	 */
 	public void callVisitors(XSLTVisitor visitor);
 }
-

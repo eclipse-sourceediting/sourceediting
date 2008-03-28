@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /*
- * $Id: XPath.java,v 1.1 2008/03/27 05:14:54 dacarver Exp $
+ * $Id: XPath.java,v 1.2 2008/03/28 02:38:18 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.xpath;
 
@@ -28,7 +28,6 @@ import org.apache.xalan.res.XSLMessages;
 import org.apache.xml.dtm.DTM;
 import org.apache.xml.utils.PrefixResolver;
 import org.apache.xml.utils.SAXSourceLocator;
-import org.apache.xml.utils.WrappedRuntimeException;
 import org.apache.xpath.Expression;
 import org.apache.xpath.ExpressionOwner;
 import org.apache.xpath.ExpressionNode;
@@ -37,624 +36,643 @@ import org.apache.xpath.XPathVisitor;
 import org.apache.xpath.compiler.Compiler;
 import org.apache.xpath.compiler.FunctionTable;
 import org.apache.xpath.compiler.XPathParser;
-import org.apache.xpath.functions.Function;
 import org.apache.xpath.objects.XObject;
 import org.apache.xpath.res.XPATHErrorResources;
+import org.apache.xpath.res.XPATHMessages;
 
 /**
- * The XPath class wraps an expression object and provides general services 
- * for execution of that expression.
+ * The XPath class wraps an expression object and provides general services for
+ * execution of that expression.
+ * 
  * @xsl.usage advanced
  */
-public class XPath implements Serializable, ExpressionOwner
-{
-    static final long serialVersionUID = 3976493477939110553L;
+public class XPath implements Serializable, ExpressionOwner {
+	static final long serialVersionUID = 3976493477939110553L;
 
-  /** The top of the expression tree. 
-   *  @serial */
-  private Expression m_mainExp;
-  
-  /**
-   * The function table for xpath build-in functions
-   */
-  private transient FunctionTable m_funcTable = null;
+	/**
+	 * The top of the expression tree.
+	 * 
+	 * @serial
+	 */
+	private Expression m_mainExp;
 
-  /**
-   * initial the function table
-   */
-  private void initFunctionTable(){
-  	      m_funcTable = new FunctionTable();
-  }
-  
-  private ErrorListener userErrorListener = null;
+	/**
+	 * The function table for xpath build-in functions
+	 */
+	private transient FunctionTable m_funcTable = null;
 
-  /**
-   * Get the raw Expression object that this class wraps.
-   *
-   *
-   * @return the raw Expression object, which should not normally be null.
-   */
-  public Expression getExpression()
-  {
-    return m_mainExp;
-  }
-  
-  /**
-   * This function is used to fixup variables from QNames to stack frame 
-   * indexes at stylesheet build time.
-   * @param vars List of QNames that correspond to variables.  This list 
-   * should be searched backwards for the first qualified name that 
-   * corresponds to the variable reference qname.  The position of the 
-   * QName in the vector from the start of the vector will be its position 
-   * in the stack frame (but variables above the globalsTop value will need 
-   * to be offset to the current stack frame).
-   */
-  public synchronized void fixupVariables(java.util.Vector vars, int globalsSize)
-  {
-	// Add Catch statment here
-	try {
-		m_mainExp.fixupVariables(vars, globalsSize);
-	} catch (Exception ex) {
+	/**
+	 * initial the function table
+	 */
+	private void initFunctionTable() {
+		m_funcTable = new FunctionTable();
+	}
+
+	private ErrorListener userErrorListener = null;
+
+	/**
+	 * Get the raw Expression object that this class wraps.
+	 * 
+	 * 
+	 * @return the raw Expression object, which should not normally be null.
+	 */
+	public Expression getExpression() {
+		return m_mainExp;
+	}
+
+	/**
+	 * This function is used to fixup variables from QNames to stack frame
+	 * indexes at stylesheet build time.
+	 * 
+	 * @param vars
+	 *            List of QNames that correspond to variables. This list should
+	 *            be searched backwards for the first qualified name that
+	 *            corresponds to the variable reference qname. The position of
+	 *            the QName in the vector from the start of the vector will be
+	 *            its position in the stack frame (but variables above the
+	 *            globalsTop value will need to be offset to the current stack
+	 *            frame).
+	 */
+	public synchronized void fixupVariables(java.util.Vector vars,
+			int globalsSize) {
+		// Add Catch statment here
 		try {
-			userErrorListener.error(new TransformerException(ex.getMessage(), ex));
-		} catch (Exception x) {
-			x.printStackTrace();
+			m_mainExp.fixupVariables(vars, globalsSize);
+		} catch (Exception ex) {
+			try {
+				userErrorListener.error(new TransformerException(ex
+						.getMessage(), ex));
+			} catch (Exception x) {
+				x.printStackTrace();
+			}
 		}
 	}
-  }
 
-  /**
-   * Set the raw expression object for this object.
-   *
-   *
-   * @param exp the raw Expression object, which should not normally be null.
-   */
-  public void setExpression(Expression exp)
-  {
-  	if(null != m_mainExp)
-    	exp.exprSetParent(m_mainExp.exprGetParent()); // a bit bogus
-    m_mainExp = exp;
-  }
+	/**
+	 * Set the raw expression object for this object.
+	 * 
+	 * 
+	 * @param exp
+	 *            the raw Expression object, which should not normally be null.
+	 */
+	public void setExpression(Expression exp) {
+		if (null != m_mainExp)
+			exp.exprSetParent(m_mainExp.exprGetParent()); // a bit bogus
+		m_mainExp = exp;
+	}
 
-  /**
-   * Get the SourceLocator on the expression object.
-   *
-   *
-   * @return the SourceLocator on the expression object, which may be null.
-   */
-  public SourceLocator getLocator()
-  {
-    return m_mainExp;
-  }
+	/**
+	 * Get the SourceLocator on the expression object.
+	 * 
+	 * 
+	 * @return the SourceLocator on the expression object, which may be null.
+	 */
+	public SourceLocator getLocator() {
+		return m_mainExp;
+	}
 
-//  /**
-//   * Set the SourceLocator on the expression object.
-//   *
-//   *
-//   * @param l the SourceLocator on the expression object, which may be null.
-//   */
-//  public void setLocator(SourceLocator l)
-//  {
-//    // Note potential hazards -- l may not be serializable, or may be changed
-//      // after being assigned here.
-//    m_mainExp.setSourceLocator(l);
-//  }
+	// /**
+	// * Set the SourceLocator on the expression object.
+	// *
+	// *
+	// * @param l the SourceLocator on the expression object, which may be null.
+	// */
+	// public void setLocator(SourceLocator l)
+	// {
+	// // Note potential hazards -- l may not be serializable, or may be changed
+	// // after being assigned here.
+	// m_mainExp.setSourceLocator(l);
+	// }
 
-  /** The pattern string, mainly kept around for diagnostic purposes.
-   *  @serial  */
-  String m_patternString;
+	/**
+	 * The pattern string, mainly kept around for diagnostic purposes.
+	 * 
+	 * @serial
+	 */
+	String m_patternString;
 
-  /**
-   * Return the XPath string associated with this object.
-   *
-   *
-   * @return the XPath string associated with this object.
-   */
-  public String getPatternString()
-  {
-    return m_patternString;
-  }
+	/**
+	 * Return the XPath string associated with this object.
+	 * 
+	 * 
+	 * @return the XPath string associated with this object.
+	 */
+	public String getPatternString() {
+		return m_patternString;
+	}
 
-  /** Represents a select type expression. */
-  public static final int SELECT = 0;
+	/** Represents a select type expression. */
+	public static final int SELECT = 0;
 
-  /** Represents a match type expression.  */
-  public static final int MATCH = 1;
+	/** Represents a match type expression. */
+	public static final int MATCH = 1;
 
-  /**
-   * Construct an XPath object.  
-   *
-   * (Needs review -sc) This method initializes an XPathParser/
-   * Compiler and compiles the expression.
-   * @param exprString The XPath expression.
-   * @param locator The location of the expression, may be null.
-   * @param prefixResolver A prefix resolver to use to resolve prefixes to 
-   *                       namespace URIs.
-   * @param type one of {@link #SELECT} or {@link #MATCH}.
-   * @param errorListener The error listener, or null if default should be used.
-   *
-   * @throws javax.xml.transform.TransformerException if syntax or other error.
-   */
-  public XPath(
-          String exprString, SourceLocator locator, PrefixResolver prefixResolver, int type,
-          ErrorListener errorListener)
-            throws javax.xml.transform.TransformerException
-  { 
-    initFunctionTable();     
-    if(null == errorListener)
-      errorListener = new org.apache.xml.utils.DefaultErrorHandler();
-    
-    m_patternString = exprString;
+	/**
+	 * Construct an XPath object.
+	 * 
+	 * (Needs review -sc) This method initializes an XPathParser/ Compiler and
+	 * compiles the expression.
+	 * 
+	 * @param exprString
+	 *            The XPath expression.
+	 * @param locator
+	 *            The location of the expression, may be null.
+	 * @param prefixResolver
+	 *            A prefix resolver to use to resolve prefixes to namespace
+	 *            URIs.
+	 * @param type
+	 *            one of {@link #SELECT} or {@link #MATCH}.
+	 * @param errorListener
+	 *            The error listener, or null if default should be used.
+	 * 
+	 * @throws javax.xml.transform.TransformerException
+	 *             if syntax or other error.
+	 */
+	public XPath(String exprString, SourceLocator locator,
+			PrefixResolver prefixResolver, int type, ErrorListener errorListener)
+			throws javax.xml.transform.TransformerException {
+		initFunctionTable();
+		if (null == errorListener)
+			errorListener = new org.apache.xml.utils.DefaultErrorHandler();
 
-    XPathParser parser = new XPathParser(errorListener, locator);
-    Compiler compiler = new Compiler(errorListener, locator, m_funcTable);
+		m_patternString = exprString;
 
-    if (SELECT == type)
-      parser.initXPath(compiler, exprString, prefixResolver);
-    else if (MATCH == type)
-      parser.initMatchPattern(compiler, exprString, prefixResolver);
-    else
-      throw new RuntimeException(XSLMessages.createXPATHMessage(XPATHErrorResources.ER_CANNOT_DEAL_XPATH_TYPE, new Object[]{Integer.toString(type)})); //"Can not deal with XPath type: " + type);
+		XPathParser parser = new XPathParser(errorListener, locator);
+		Compiler compiler = new Compiler(errorListener, locator, m_funcTable);
 
-    // System.out.println("----------------");
-    Expression expr = compiler.compile(0);
+		if (SELECT == type)
+			parser.initXPath(compiler, exprString, prefixResolver);
+		else if (MATCH == type)
+			parser.initMatchPattern(compiler, exprString, prefixResolver);
+		else
+			throw new RuntimeException(XPATHMessages.createXPATHMessage(
+					XPATHErrorResources.ER_CANNOT_DEAL_XPATH_TYPE,
+					new Object[] { Integer.toString(type) })); // "Can not deal
+																// with XPath
+																// type: " +
+																// type);
 
-    // System.out.println("expr: "+expr);
-    this.setExpression(expr);
-    
-    if((null != locator) && locator instanceof ExpressionNode)
-    {
-    	expr.exprSetParent((ExpressionNode)locator);
-    }
+		// System.out.println("----------------");
+		Expression expr = compiler.compile(0);
 
-  }
+		// System.out.println("expr: "+expr);
+		this.setExpression(expr);
 
-  /**
-   * Construct an XPath object.  
-   *
-   * (Needs review -sc) This method initializes an XPathParser/
-   * Compiler and compiles the expression.
-   * @param exprString The XPath expression.
-   * @param locator The location of the expression, may be null.
-   * @param prefixResolver A prefix resolver to use to resolve prefixes to 
-   *                       namespace URIs.
-   * @param type one of {@link #SELECT} or {@link #MATCH}.
-   * @param errorListener The error listener, or null if default should be used.
-   *
-   * @throws javax.xml.transform.TransformerException if syntax or other error.
-   */
-  public XPath(
-          String exprString, SourceLocator locator, 
-          PrefixResolver prefixResolver, int type,
-          ErrorListener errorListener, FunctionTable aTable)
-            throws javax.xml.transform.TransformerException
-  { 
-    m_funcTable = aTable;     
-    if(null == errorListener)
-      errorListener = new org.apache.xml.utils.DefaultErrorHandler();
-    
-    userErrorListener = errorListener;
-    
-    m_patternString = exprString;
+		if ((null != locator) && locator instanceof ExpressionNode) {
+			expr.exprSetParent((ExpressionNode) locator);
+		}
 
-    XPathParser parser = new XPathParser(errorListener, locator);
-    Compiler compiler = new Compiler(errorListener, locator, m_funcTable);
+	}
 
-    if (SELECT == type)
-      parser.initXPath(compiler, exprString, prefixResolver);
-    else if (MATCH == type)
-      parser.initMatchPattern(compiler, exprString, prefixResolver);
-    else
-      throw new RuntimeException(XSLMessages.createXPATHMessage(
-            XPATHErrorResources.ER_CANNOT_DEAL_XPATH_TYPE, 
-            new Object[]{Integer.toString(type)})); 
-            //"Can not deal with XPath type: " + type);
+	/**
+	 * Construct an XPath object.
+	 * 
+	 * (Needs review -sc) This method initializes an XPathParser/ Compiler and
+	 * compiles the expression.
+	 * 
+	 * @param exprString
+	 *            The XPath expression.
+	 * @param locator
+	 *            The location of the expression, may be null.
+	 * @param prefixResolver
+	 *            A prefix resolver to use to resolve prefixes to namespace
+	 *            URIs.
+	 * @param type
+	 *            one of {@link #SELECT} or {@link #MATCH}.
+	 * @param errorListener
+	 *            The error listener, or null if default should be used.
+	 * 
+	 * @throws javax.xml.transform.TransformerException
+	 *             if syntax or other error.
+	 */
+	public XPath(String exprString, SourceLocator locator,
+			PrefixResolver prefixResolver, int type,
+			ErrorListener errorListener, FunctionTable aTable)
+			throws javax.xml.transform.TransformerException {
+		m_funcTable = aTable;
+		if (null == errorListener)
+			errorListener = new org.apache.xml.utils.DefaultErrorHandler();
 
-    // System.out.println("----------------");
-    Expression expr = compiler.compile(0);
+		userErrorListener = errorListener;
 
-    // System.out.println("expr: "+expr);
-    this.setExpression(expr);
-    
-    if((null != locator) && locator instanceof ExpressionNode)
-    {
-    	expr.exprSetParent((ExpressionNode)locator);
-    }
+		m_patternString = exprString;
 
-  }
-  
-  /**
-   * Construct an XPath object.  
-   *
-   * (Needs review -sc) This method initializes an XPathParser/
-   * Compiler and compiles the expression.
-   * @param exprString The XPath expression.
-   * @param locator The location of the expression, may be null.
-   * @param prefixResolver A prefix resolver to use to resolve prefixes to 
-   *                       namespace URIs.
-   * @param type one of {@link #SELECT} or {@link #MATCH}.
-   *
-   * @throws javax.xml.transform.TransformerException if syntax or other error.
-   */
-  public XPath(
-          String exprString, SourceLocator locator, PrefixResolver prefixResolver, int type)
-            throws javax.xml.transform.TransformerException
-  {  
-    this(exprString, locator, prefixResolver, type, null);    
-  }
+		XPathParser parser = new XPathParser(errorListener, locator);
+		Compiler compiler = new Compiler(errorListener, locator, m_funcTable);
 
-  /**
-   * Construct an XPath object.
-   *
-   * @param expr The Expression object.
-   *
-   * @throws javax.xml.transform.TransformerException if syntax or other error.
-   */
-  public XPath(Expression expr)
-  {  
-    this.setExpression(expr);
-    initFunctionTable();   
-  }
-  
-  /**
-   * Given an expression and a context, evaluate the XPath
-   * and return the result.
-   * 
-   * @param xctxt The execution context.
-   * @param contextNode The node that "." expresses.
-   * @param namespaceContext The context in which namespaces in the
-   * XPath are supposed to be expanded.
-   *
-   * @return The result of the XPath or null if callbacks are used.
-   * @throws TransformerException thrown if
-   * the error condition is severe enough to halt processing.
-   *
-   * @throws javax.xml.transform.TransformerException
-   * @xsl.usage experimental
-   */
-  public XObject execute(
-          XPathContext xctxt, org.w3c.dom.Node contextNode, 
-          PrefixResolver namespaceContext)
-            throws javax.xml.transform.TransformerException
-  {
-    return execute(
-          xctxt, xctxt.getDTMHandleFromNode(contextNode), 
-          namespaceContext);
-  }
-  
+		if (SELECT == type)
+			parser.initXPath(compiler, exprString, prefixResolver);
+		else if (MATCH == type)
+			parser.initMatchPattern(compiler, exprString, prefixResolver);
+		else
+			throw new RuntimeException(XPATHMessages.createXPATHMessage(
+					XPATHErrorResources.ER_CANNOT_DEAL_XPATH_TYPE,
+					new Object[] { Integer.toString(type) }));
+		// "Can not deal with XPath type: " + type);
 
-  /**
-   * Given an expression and a context, evaluate the XPath
-   * and return the result.
-   * 
-   * @param xctxt The execution context.
-   * @param contextNode The node that "." expresses.
-   * @param namespaceContext The context in which namespaces in the
-   * XPath are supposed to be expanded.
-   * 
-   * @throws TransformerException thrown if the active ProblemListener decides
-   * the error condition is severe enough to halt processing.
-   *
-   * @throws javax.xml.transform.TransformerException
-   * @xsl.usage experimental
-   */
-  public XObject execute(
-          XPathContext xctxt, int contextNode, PrefixResolver namespaceContext)
-            throws javax.xml.transform.TransformerException
-  {
+		// System.out.println("----------------");
+		Expression expr = compiler.compile(0);
 
-    xctxt.pushNamespaceContext(namespaceContext);
+		// System.out.println("expr: "+expr);
+		this.setExpression(expr);
 
-    xctxt.pushCurrentNodeAndExpression(contextNode, contextNode);
+		if ((null != locator) && locator instanceof ExpressionNode) {
+			expr.exprSetParent((ExpressionNode) locator);
+		}
 
-    XObject xobj = null;
+	}
 
-    try
-    {
-      xobj = m_mainExp.execute(xctxt);
-    }
-    catch (TransformerException te)
-    {
-      te.setLocator(this.getLocator());
-      ErrorListener el = xctxt.getErrorListener();
-      if(null != el) // defensive, should never happen.
-      {
-        el.error(te);
-      }
-      else
-        throw te;
-    }
-    catch (Exception e)
-    {
-      while (e instanceof org.apache.xml.utils.WrappedRuntimeException)
-      {
-        e = ((org.apache.xml.utils.WrappedRuntimeException) e).getException();
-      }
-      // e.printStackTrace();
+	/**
+	 * Construct an XPath object.
+	 * 
+	 * (Needs review -sc) This method initializes an XPathParser/ Compiler and
+	 * compiles the expression.
+	 * 
+	 * @param exprString
+	 *            The XPath expression.
+	 * @param locator
+	 *            The location of the expression, may be null.
+	 * @param prefixResolver
+	 *            A prefix resolver to use to resolve prefixes to namespace
+	 *            URIs.
+	 * @param type
+	 *            one of {@link #SELECT} or {@link #MATCH}.
+	 * 
+	 * @throws javax.xml.transform.TransformerException
+	 *             if syntax or other error.
+	 */
+	public XPath(String exprString, SourceLocator locator,
+			PrefixResolver prefixResolver, int type)
+			throws javax.xml.transform.TransformerException {
+		this(exprString, locator, prefixResolver, type, null);
+	}
 
-      String msg = e.getMessage();
-      
-      if (msg == null || msg.length() == 0) {
-           msg = XSLMessages.createXPATHMessage(
-               XPATHErrorResources.ER_XPATH_ERROR, null);
-     
-      }  
-      TransformerException te = new TransformerException(msg,
-              getLocator(), e);
-      ErrorListener el = xctxt.getErrorListener();
-      // te.printStackTrace();
-      if(null != el) // defensive, should never happen.
-      {
-        el.fatalError(te);
-      }
-      else
-        throw te;
-    }
-    finally
-    {
-      xctxt.popNamespaceContext();
+	/**
+	 * Construct an XPath object.
+	 * 
+	 * @param expr
+	 *            The Expression object.
+	 * 
+	 * @throws javax.xml.transform.TransformerException
+	 *             if syntax or other error.
+	 */
+	public XPath(Expression expr) {
+		this.setExpression(expr);
+		initFunctionTable();
+	}
 
-      xctxt.popCurrentNodeAndExpression();
-    }
+	/**
+	 * Given an expression and a context, evaluate the XPath and return the
+	 * result.
+	 * 
+	 * @param xctxt
+	 *            The execution context.
+	 * @param contextNode
+	 *            The node that "." expresses.
+	 * @param namespaceContext
+	 *            The context in which namespaces in the XPath are supposed to
+	 *            be expanded.
+	 * 
+	 * @return The result of the XPath or null if callbacks are used.
+	 * @throws TransformerException
+	 *             thrown if the error condition is severe enough to halt
+	 *             processing.
+	 * 
+	 * @throws javax.xml.transform.TransformerException
+	 * @xsl.usage experimental
+	 */
+	public XObject execute(XPathContext xctxt, org.w3c.dom.Node contextNode,
+			PrefixResolver namespaceContext)
+			throws javax.xml.transform.TransformerException {
+		return execute(xctxt, xctxt.getDTMHandleFromNode(contextNode),
+				namespaceContext);
+	}
 
-    return xobj;
-  }
-  
-  /**
-   * Given an expression and a context, evaluate the XPath
-   * and return the result.
-   * 
-   * @param xctxt The execution context.
-   * @param contextNode The node that "." expresses.
-   * @param namespaceContext The context in which namespaces in the
-   * XPath are supposed to be expanded.
-   * 
-   * @throws TransformerException thrown if the active ProblemListener decides
-   * the error condition is severe enough to halt processing.
-   *
-   * @throws javax.xml.transform.TransformerException
-   * @xsl.usage experimental
-   */
-  public boolean bool(
-          XPathContext xctxt, int contextNode, PrefixResolver namespaceContext)
-            throws javax.xml.transform.TransformerException
-  {
+	/**
+	 * Given an expression and a context, evaluate the XPath and return the
+	 * result.
+	 * 
+	 * @param xctxt
+	 *            The execution context.
+	 * @param contextNode
+	 *            The node that "." expresses.
+	 * @param namespaceContext
+	 *            The context in which namespaces in the XPath are supposed to
+	 *            be expanded.
+	 * 
+	 * @throws TransformerException
+	 *             thrown if the active ProblemListener decides the error
+	 *             condition is severe enough to halt processing.
+	 * 
+	 * @throws javax.xml.transform.TransformerException
+	 * @xsl.usage experimental
+	 */
+	public XObject execute(XPathContext xctxt, int contextNode,
+			PrefixResolver namespaceContext)
+			throws javax.xml.transform.TransformerException {
 
-    xctxt.pushNamespaceContext(namespaceContext);
+		xctxt.pushNamespaceContext(namespaceContext);
 
-    xctxt.pushCurrentNodeAndExpression(contextNode, contextNode);
+		xctxt.pushCurrentNodeAndExpression(contextNode, contextNode);
 
-    try
-    {
-      return m_mainExp.bool(xctxt);
-    }
-    catch (TransformerException te)
-    {
-      te.setLocator(this.getLocator());
-      ErrorListener el = xctxt.getErrorListener();
-      if(null != el) // defensive, should never happen.
-      {
-        el.error(te);
-      }
-      else
-        throw te;
-    }
-    catch (Exception e)
-    {
-      while (e instanceof org.apache.xml.utils.WrappedRuntimeException)
-      {
-        e = ((org.apache.xml.utils.WrappedRuntimeException) e).getException();
-      }
-      // e.printStackTrace();
+		XObject xobj = null;
 
-      String msg = e.getMessage();
-      
-      if (msg == null || msg.length() == 0) {
-           msg = XSLMessages.createXPATHMessage(
-               XPATHErrorResources.ER_XPATH_ERROR, null);
-     
-      }        
-      
-      TransformerException te = new TransformerException(msg,
-              getLocator(), e);
-      ErrorListener el = xctxt.getErrorListener();
-      // te.printStackTrace();
-      if(null != el) // defensive, should never happen.
-      {
-        el.fatalError(te);
-      }
-      else
-        throw te;
-    }
-    finally
-    {
-      xctxt.popNamespaceContext();
+		try {
+			xobj = m_mainExp.execute(xctxt);
+		} catch (TransformerException te) {
+			te.setLocator(this.getLocator());
+			ErrorListener el = xctxt.getErrorListener();
+			if (null != el) // defensive, should never happen.
+			{
+				el.error(te);
+			} else
+				throw te;
+		} catch (Exception e) {
+			while (e instanceof org.apache.xml.utils.WrappedRuntimeException) {
+				e = ((org.apache.xml.utils.WrappedRuntimeException) e)
+						.getException();
+			}
+			// e.printStackTrace();
 
-      xctxt.popCurrentNodeAndExpression();
-    }
+			String msg = e.getMessage();
 
-    return false;
-  }
+			if (msg == null || msg.length() == 0) {
+				msg = XPATHMessages.createXPATHMessage(
+						XPATHErrorResources.ER_XPATH_ERROR, null);
 
-  /** Set to true to get diagnostic messages about the result of 
-   *  match pattern testing.  */
-  private static final boolean DEBUG_MATCHES = false;
+			}
+			TransformerException te = new TransformerException(msg,
+					getLocator(), e);
+			ErrorListener el = xctxt.getErrorListener();
+			// te.printStackTrace();
+			if (null != el) // defensive, should never happen.
+			{
+				el.fatalError(te);
+			} else
+				throw te;
+		} finally {
+			xctxt.popNamespaceContext();
 
-  /**
-   * Get the match score of the given node.
-   *
-   * @param xctxt XPath runtime context.
-   * @param context The current source tree context node.
-   * 
-   * @return score, one of {@link #MATCH_SCORE_NODETEST},
-   * {@link #MATCH_SCORE_NONE}, {@link #MATCH_SCORE_OTHER}, 
-   * or {@link #MATCH_SCORE_QNAME}.
-   *
-   * @throws javax.xml.transform.TransformerException
-   */
-  public double getMatchScore(XPathContext xctxt, int context)
-          throws javax.xml.transform.TransformerException
-  {
+			xctxt.popCurrentNodeAndExpression();
+		}
 
-    xctxt.pushCurrentNode(context);
-    xctxt.pushCurrentExpressionNode(context);
+		return xobj;
+	}
 
-    try
-    {
-      XObject score = m_mainExp.execute(xctxt);
+	/**
+	 * Given an expression and a context, evaluate the XPath and return the
+	 * result.
+	 * 
+	 * @param xctxt
+	 *            The execution context.
+	 * @param contextNode
+	 *            The node that "." expresses.
+	 * @param namespaceContext
+	 *            The context in which namespaces in the XPath are supposed to
+	 *            be expanded.
+	 * 
+	 * @throws TransformerException
+	 *             thrown if the active ProblemListener decides the error
+	 *             condition is severe enough to halt processing.
+	 * 
+	 * @throws javax.xml.transform.TransformerException
+	 * @xsl.usage experimental
+	 */
+	public boolean bool(XPathContext xctxt, int contextNode,
+			PrefixResolver namespaceContext)
+			throws javax.xml.transform.TransformerException {
 
-      if (DEBUG_MATCHES)
-      {
-        DTM dtm = xctxt.getDTM(context);
-        System.out.println("score: " + score.num() + " for "
-                           + dtm.getNodeName(context) + " for xpath "
-                           + this.getPatternString());
-      }
+		xctxt.pushNamespaceContext(namespaceContext);
 
-      return score.num();
-    }
-    finally
-    {
-      xctxt.popCurrentNode();
-      xctxt.popCurrentExpressionNode();
-    }
+		xctxt.pushCurrentNodeAndExpression(contextNode, contextNode);
 
-    // return XPath.MATCH_SCORE_NONE;
-  }
+		try {
+			return m_mainExp.bool(xctxt);
+		} catch (TransformerException te) {
+			te.setLocator(this.getLocator());
+			ErrorListener el = xctxt.getErrorListener();
+			if (null != el) // defensive, should never happen.
+			{
+				el.error(te);
+			} else
+				throw te;
+		} catch (Exception e) {
+			while (e instanceof org.apache.xml.utils.WrappedRuntimeException) {
+				e = ((org.apache.xml.utils.WrappedRuntimeException) e)
+						.getException();
+			}
+			// e.printStackTrace();
 
+			String msg = e.getMessage();
 
-  /**
-   * Warn the user of an problem.
-   *
-   * @param xctxt The XPath runtime context.
-   * @param sourceNode Not used.
-   * @param msg An error msgkey that corresponds to one of the constants found 
-   *            in {@link org.apache.xpath.res.XPATHErrorResources}, which is 
-   *            a key for a format string.
-   * @param args An array of arguments represented in the format string, which 
-   *             may be null.
-   *
-   * @throws TransformerException if the current ErrorListoner determines to 
-   *                              throw an exception.
-   */
-  public void warn(
-          XPathContext xctxt, int sourceNode, String msg, Object[] args)
-            throws javax.xml.transform.TransformerException
-  {
+			if (msg == null || msg.length() == 0) {
+				msg = XPATHMessages.createXPATHMessage(
+						XPATHErrorResources.ER_XPATH_ERROR, null);
 
-    String fmsg = XSLMessages.createXPATHWarning(msg, args);
-    ErrorListener ehandler = xctxt.getErrorListener();
+			}
 
-    if (null != ehandler)
-    {
+			TransformerException te = new TransformerException(msg,
+					getLocator(), e);
+			ErrorListener el = xctxt.getErrorListener();
+			// te.printStackTrace();
+			if (null != el) // defensive, should never happen.
+			{
+				el.fatalError(te);
+			} else
+				throw te;
+		} finally {
+			xctxt.popNamespaceContext();
 
-      // TO DO: Need to get stylesheet Locator from here.
-      ehandler.warning(new TransformerException(fmsg, (SAXSourceLocator)xctxt.getSAXLocator()));
-    }
-  }
+			xctxt.popCurrentNodeAndExpression();
+		}
 
-  /**
-   * Tell the user of an assertion error, and probably throw an
-   * exception.
-   *
-   * @param b  If false, a runtime exception will be thrown.
-   * @param msg The assertion message, which should be informative.
-   * 
-   * @throws RuntimeException if the b argument is false.
-   */
-  public void assertion(boolean b, String msg)
-  {
+		return false;
+	}
 
-    if (!b)
-    {
-      String fMsg = XSLMessages.createXPATHMessage(
-        XPATHErrorResources.ER_INCORRECT_PROGRAMMER_ASSERTION,
-        new Object[]{ msg });
+	/**
+	 * Set to true to get diagnostic messages about the result of match pattern
+	 * testing.
+	 */
+	private static final boolean DEBUG_MATCHES = false;
 
-      throw new RuntimeException(fMsg);
-    }
-  }
+	/**
+	 * Get the match score of the given node.
+	 * 
+	 * @param xctxt
+	 *            XPath runtime context.
+	 * @param context
+	 *            The current source tree context node.
+	 * 
+	 * @return score, one of {@link #MATCH_SCORE_NODETEST},
+	 *         {@link #MATCH_SCORE_NONE}, {@link #MATCH_SCORE_OTHER}, or
+	 *         {@link #MATCH_SCORE_QNAME}.
+	 * 
+	 * @throws javax.xml.transform.TransformerException
+	 */
+	public double getMatchScore(XPathContext xctxt, int context)
+			throws javax.xml.transform.TransformerException {
 
-  /**
-   * Tell the user of an error, and probably throw an
-   * exception.
-   *
-   * @param xctxt The XPath runtime context.
-   * @param sourceNode Not used.
-   * @param msg An error msgkey that corresponds to one of the constants found 
-   *            in {@link org.apache.xpath.res.XPATHErrorResources}, which is 
-   *            a key for a format string.
-   * @param args An array of arguments represented in the format string, which 
-   *             may be null.
-   *
-   * @throws TransformerException if the current ErrorListoner determines to 
-   *                              throw an exception.
-   */
-  public void error(
-          XPathContext xctxt, int sourceNode, String msg, Object[] args)
-            throws javax.xml.transform.TransformerException
-  {
+		xctxt.pushCurrentNode(context);
+		xctxt.pushCurrentExpressionNode(context);
 
-    String fmsg = XSLMessages.createXPATHMessage(msg, args);
-    ErrorListener ehandler = xctxt.getErrorListener();
+		try {
+			XObject score = m_mainExp.execute(xctxt);
 
-    if (null != ehandler)
-    {
-      ehandler.fatalError(new TransformerException(fmsg,
-                              (SAXSourceLocator)xctxt.getSAXLocator()));
-    }
-    else
-    {
-      SourceLocator slocator = xctxt.getSAXLocator();
-      System.out.println(fmsg + "; file " + slocator.getSystemId()
-                         + "; line " + slocator.getLineNumber() + "; column "
-                         + slocator.getColumnNumber());
-    }
-  }
-  
-  /**
-   * This will traverse the heararchy, calling the visitor for 
-   * each member.  If the called visitor method returns 
-   * false, the subtree should not be called.
-   * 
-   * @param owner The owner of the visitor, where that path may be 
-   *              rewritten if needed.
-   * @param visitor The visitor whose appropriate method will be called.
-   */
-  public void callVisitors(ExpressionOwner owner, XPathVisitor visitor)
-  {
-  	m_mainExp.callVisitors(this, visitor);
-  }
+			if (DEBUG_MATCHES) {
+				DTM dtm = xctxt.getDTM(context);
+				System.out.println("score: " + score.num() + " for "
+						+ dtm.getNodeName(context) + " for xpath "
+						+ this.getPatternString());
+			}
 
-  /**
-   * The match score if no match is made.
-   * @xsl.usage advanced
-   */
-  public static final double MATCH_SCORE_NONE = Double.NEGATIVE_INFINITY;
+			return score.num();
+		} finally {
+			xctxt.popCurrentNode();
+			xctxt.popCurrentExpressionNode();
+		}
 
-  /**
-   * The match score if the pattern has the form
-   * of a QName optionally preceded by an @ character.
-   * @xsl.usage advanced
-   */
-  public static final double MATCH_SCORE_QNAME = 0.0;
+		// return XPath.MATCH_SCORE_NONE;
+	}
 
-  /**
-   * The match score if the pattern pattern has the form NCName:*.
-   * @xsl.usage advanced
-   */
-  public static final double MATCH_SCORE_NSWILD = -0.25;
+	/**
+	 * Warn the user of an problem.
+	 * 
+	 * @param xctxt
+	 *            The XPath runtime context.
+	 * @param sourceNode
+	 *            Not used.
+	 * @param msg
+	 *            An error msgkey that corresponds to one of the constants found
+	 *            in {@link org.apache.xpath.res.XPATHErrorResources}, which is
+	 *            a key for a format string.
+	 * @param args
+	 *            An array of arguments represented in the format string, which
+	 *            may be null.
+	 * 
+	 * @throws TransformerException
+	 *             if the current ErrorListoner determines to throw an
+	 *             exception.
+	 */
+	public void warn(XPathContext xctxt, int sourceNode, String msg,
+			Object[] args) throws javax.xml.transform.TransformerException {
 
-  /**
-   * The match score if the pattern consists of just a NodeTest.
-   * @xsl.usage advanced
-   */
-  public static final double MATCH_SCORE_NODETEST = -0.5;
+		String fmsg = XPATHMessages.createXPATHWarning(msg, args);
+		ErrorListener ehandler = xctxt.getErrorListener();
 
-  /**
-   * The match score if the pattern consists of something
-   * other than just a NodeTest or just a qname.
-   * @xsl.usage advanced
-   */
-  public static final double MATCH_SCORE_OTHER = 0.5;
+		if (null != ehandler) {
+
+			// TO DO: Need to get stylesheet Locator from here.
+			ehandler.warning(new TransformerException(fmsg, xctxt
+					.getSAXLocator()));
+		}
+	}
+
+	/**
+	 * Tell the user of an assertion error, and probably throw an exception.
+	 * 
+	 * @param b
+	 *            If false, a runtime exception will be thrown.
+	 * @param msg
+	 *            The assertion message, which should be informative.
+	 * 
+	 * @throws RuntimeException
+	 *             if the b argument is false.
+	 */
+	public void assertion(boolean b, String msg) {
+
+		if (!b) {
+			String fMsg = XPATHMessages.createXPATHMessage(
+					XPATHErrorResources.ER_INCORRECT_PROGRAMMER_ASSERTION,
+					new Object[] { msg });
+
+			throw new RuntimeException(fMsg);
+		}
+	}
+
+	/**
+	 * Tell the user of an error, and probably throw an exception.
+	 * 
+	 * @param xctxt
+	 *            The XPath runtime context.
+	 * @param sourceNode
+	 *            Not used.
+	 * @param msg
+	 *            An error msgkey that corresponds to one of the constants found
+	 *            in {@link org.apache.xpath.res.XPATHErrorResources}, which is
+	 *            a key for a format string.
+	 * @param args
+	 *            An array of arguments represented in the format string, which
+	 *            may be null.
+	 * 
+	 * @throws TransformerException
+	 *             if the current ErrorListoner determines to throw an
+	 *             exception.
+	 */
+	public void error(XPathContext xctxt, int sourceNode, String msg,
+			Object[] args) throws javax.xml.transform.TransformerException {
+
+		String fmsg = XPATHMessages.createXPATHMessage(msg, args);
+		ErrorListener ehandler = xctxt.getErrorListener();
+
+		if (null != ehandler) {
+			ehandler.fatalError(new TransformerException(fmsg, xctxt
+					.getSAXLocator()));
+		} else {
+			SourceLocator slocator = xctxt.getSAXLocator();
+			System.out.println(fmsg + "; file " + slocator.getSystemId()
+					+ "; line " + slocator.getLineNumber() + "; column "
+					+ slocator.getColumnNumber());
+		}
+	}
+
+	/**
+	 * This will traverse the heararchy, calling the visitor for each member. If
+	 * the called visitor method returns false, the subtree should not be
+	 * called.
+	 * 
+	 * @param owner
+	 *            The owner of the visitor, where that path may be rewritten if
+	 *            needed.
+	 * @param visitor
+	 *            The visitor whose appropriate method will be called.
+	 */
+	public void callVisitors(ExpressionOwner owner, XPathVisitor visitor) {
+		m_mainExp.callVisitors(this, visitor);
+	}
+
+	/**
+	 * The match score if no match is made.
+	 * 
+	 * @xsl.usage advanced
+	 */
+	public static final double MATCH_SCORE_NONE = Double.NEGATIVE_INFINITY;
+
+	/**
+	 * The match score if the pattern has the form of a QName optionally
+	 * preceded by an @ character.
+	 * @xsl.usage advanced
+	 */
+	public static final double MATCH_SCORE_QNAME = 0.0;
+
+	/**
+	 * The match score if the pattern pattern has the form NCName:*.
+	 * 
+	 * @xsl.usage advanced
+	 */
+	public static final double MATCH_SCORE_NSWILD = -0.25;
+
+	/**
+	 * The match score if the pattern consists of just a NodeTest.
+	 * 
+	 * @xsl.usage advanced
+	 */
+	public static final double MATCH_SCORE_NODETEST = -0.5;
+
+	/**
+	 * The match score if the pattern consists of something other than just a
+	 * NodeTest or just a qname.
+	 * 
+	 * @xsl.usage advanced
+	 */
+	public static final double MATCH_SCORE_OTHER = 0.5;
 }

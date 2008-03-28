@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemCopyOf.java,v 1.3 2008/03/27 22:45:10 dacarver Exp $
+ * $Id: ElemCopyOf.java,v 1.4 2008/03/28 02:38:15 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -45,216 +45,213 @@ import org.apache.xpath.objects.XObject;
 
 /**
  * Implement xsl:copy-of.
+ * 
  * <pre>
- * <!ELEMENT xsl:copy-of EMPTY>
- * <!ATTLIST xsl:copy-of select %expr; #REQUIRED>
+ * &lt;!ELEMENT xsl:copy-of EMPTY&gt;
+ * &lt;!ATTLIST xsl:copy-of select %expr; #REQUIRED&gt;
  * </pre>
- * @see <a href="http://www.w3.org/TR/xslt#copy-of">copy-of in XSLT Specification</a>
+ * 
+ * @see <a href="http://www.w3.org/TR/xslt#copy-of">copy-of in XSLT
+ *      Specification</a>
  * @xsl.usage advanced
  */
-public class ElemCopyOf extends ElemTemplateElement
-{
-    static final long serialVersionUID = -7433828829497411127L;
+public class ElemCopyOf extends ElemTemplateElement {
+	static final long serialVersionUID = -7433828829497411127L;
 
-  /**
-   * The required select attribute contains an expression.
-   * @serial
-   */
-  public XPath m_selectExpression = null;
+	/**
+	 * The required select attribute contains an expression.
+	 * 
+	 * @serial
+	 */
+	public XPath m_selectExpression = null;
 
-  /**
-   * Set the "select" attribute.
-   * The required select attribute contains an expression.
-   *
-   * @param expr Expression for select attribute 
-   */
-  public void setSelect(XPath expr)
-  {
-    m_selectExpression = expr;
-  }
+	/**
+	 * Set the "select" attribute. The required select attribute contains an
+	 * expression.
+	 * 
+	 * @param expr
+	 *            Expression for select attribute
+	 */
+	public void setSelect(XPath expr) {
+		m_selectExpression = expr;
+	}
 
-  /**
-   * Get the "select" attribute.
-   * The required select attribute contains an expression.
-   *
-   * @return Expression for select attribute 
-   */
-  public XPath getSelect()
-  {
-    return m_selectExpression;
-  }
-  
-  /**
-   * This function is called after everything else has been
-   * recomposed, and allows the template to set remaining
-   * values that may be based on some other property that
-   * depends on recomposition.
-   */
-  public void compose(StylesheetRoot sroot) throws TransformerException
-  {
-    super.compose(sroot);
-    
-    StylesheetRoot.ComposeState cstate = sroot.getComposeState();
-    m_selectExpression.fixupVariables(cstate.getVariableNames(), cstate.getGlobalsSize());
-  }
+	/**
+	 * Get the "select" attribute. The required select attribute contains an
+	 * expression.
+	 * 
+	 * @return Expression for select attribute
+	 */
+	public XPath getSelect() {
+		return m_selectExpression;
+	}
 
-  /**
-   * Get an int constant identifying the type of element.
-   * @see org.apache.xalan.templates.Constants
-   *
-   * @return The token ID for this element
-   */
-  public int getXSLToken()
-  {
-    return Constants.ELEMNAME_COPY_OF;
-  }
+	/**
+	 * This function is called after everything else has been recomposed, and
+	 * allows the template to set remaining values that may be based on some
+	 * other property that depends on recomposition.
+	 */
+	@Override
+	public void compose(StylesheetRoot sroot) throws TransformerException {
+		super.compose(sroot);
 
-  /**
-   * Return the node name.
-   *
-   * @return The element's name
-   */
-  public String getNodeName()
-  {
-    return Constants.ELEMNAME_COPY_OF_STRING;
-  }
+		StylesheetRoot.ComposeState cstate = sroot.getComposeState();
+		m_selectExpression.fixupVariables(cstate.getVariableNames(), cstate
+				.getGlobalsSize());
+	}
 
-  /**
-   * The xsl:copy-of element can be used to insert a result tree
-   * fragment into the result tree, without first converting it to
-   * a string as xsl:value-of does (see [7.6.1 Generating Text with
-   * xsl:value-of]).
-   *
-   * @param transformer non-null reference to the the current transform-time state.
-   *
-   * @throws TransformerException
-   */
-  public void execute(
-          TransformerImpl transformer)
-            throws TransformerException
-  {
-    if (transformer.getDebug())
-    	transformer.getTraceManager().fireTraceEvent(this);
+	/**
+	 * Get an int constant identifying the type of element.
+	 * 
+	 * @see org.apache.xalan.templates.Constants
+	 * 
+	 * @return The token ID for this element
+	 */
+	@Override
+	public int getXSLToken() {
+		return Constants.ELEMNAME_COPY_OF;
+	}
 
-    try
-    {
-      XPathContext xctxt = transformer.getXPathContext();
-      int sourceNode = xctxt.getCurrentNode();
-      XObject value = m_selectExpression.execute(xctxt, sourceNode, this);
+	/**
+	 * Return the node name.
+	 * 
+	 * @return The element's name
+	 */
+	@Override
+	public String getNodeName() {
+		return Constants.ELEMNAME_COPY_OF_STRING;
+	}
 
-      if (transformer.getDebug())
-        transformer.getTraceManager().fireSelectedEvent(sourceNode, this,
-                                                        "select", m_selectExpression, value);
+	/**
+	 * The xsl:copy-of element can be used to insert a result tree fragment into
+	 * the result tree, without first converting it to a string as xsl:value-of
+	 * does (see [7.6.1 Generating Text with xsl:value-of]).
+	 * 
+	 * @param transformer
+	 *            non-null reference to the the current transform-time state.
+	 * 
+	 * @throws TransformerException
+	 */
+	@Override
+	public void execute(TransformerImpl transformer)
+			throws TransformerException {
+		if (transformer.getDebug())
+			transformer.getTraceManager().fireTraceEvent(this);
 
-      SerializationHandler handler = transformer.getSerializationHandler();
+		try {
+			XPathContext xctxt = transformer.getXPathContext();
+			int sourceNode = xctxt.getCurrentNode();
+			XObject value = m_selectExpression.execute(xctxt, sourceNode, this);
 
-      if (null != value)
-                        {
-        int type = value.getType();
-        String s;
+			if (transformer.getDebug())
+				transformer.getTraceManager().fireSelectedEvent(sourceNode,
+						this, "select", m_selectExpression, value);
 
-        switch (type)
-        {
-        case XObject.CLASS_BOOLEAN :
-        case XObject.CLASS_NUMBER :
-        case XObject.CLASS_STRING :
-          s = value.str();
+			SerializationHandler handler = transformer
+					.getSerializationHandler();
 
-          handler.characters(s.toCharArray(), 0, s.length());
-          break;
-        case XObject.CLASS_NODESET :
+			if (null != value) {
+				int type = value.getType();
+				String s;
 
-          // System.out.println(value);
-          DTMIterator nl = value.iter();
+				switch (type) {
+				case XObject.CLASS_BOOLEAN:
+				case XObject.CLASS_NUMBER:
+				case XObject.CLASS_STRING:
+					s = value.str();
 
-          // Copy the tree.
-          DTMTreeWalker tw = new TreeWalker2Result(transformer, handler);
-          int pos;
+					handler.characters(s.toCharArray(), 0, s.length());
+					break;
+				case XObject.CLASS_NODESET:
 
-          while (DTM.NULL != (pos = nl.nextNode()))
-          {
-            DTM dtm = xctxt.getDTMManager().getDTM(pos);
-            short t = dtm.getNodeType(pos);
+					// System.out.println(value);
+					DTMIterator nl = value.iter();
 
-            // If we just copy the whole document, a startDoc and endDoc get 
-            // generated, so we need to only walk the child nodes.
-            if (t == DTM.DOCUMENT_NODE)
-            {
-              for (int child = dtm.getFirstChild(pos); child != DTM.NULL;
-                   child = dtm.getNextSibling(child))
-              {
-                tw.traverse(child);
-              }
-            }
-            else if (t == DTM.ATTRIBUTE_NODE)
-            {
-              SerializerUtils.addAttribute(handler, pos);
-            }
-            else
-            {
-              tw.traverse(pos);
-            }
-          }
-          // nl.detach();
-          break;
-        case XObject.CLASS_RTREEFRAG :
-          SerializerUtils.outputResultTreeFragment(
-            handler, value, transformer.getXPathContext());
-          break;
-        default :
-          
-          s = value.str();
+					// Copy the tree.
+					DTMTreeWalker tw = new TreeWalker2Result(transformer,
+							handler);
+					int pos;
 
-          handler.characters(s.toCharArray(), 0, s.length());
-          break;
-        }
-      }
-                        
-      // I don't think we want this.  -sb
-      //  if (transformer.getDebug())
-      //  transformer.getTraceManager().fireSelectedEvent(sourceNode, this,
-      //  "endSelect", m_selectExpression, value);
+					while (DTM.NULL != (pos = nl.nextNode())) {
+						DTM dtm = xctxt.getDTMManager().getDTM(pos);
+						short t = dtm.getNodeType(pos);
 
-    }
-    catch(org.xml.sax.SAXException se)
-    {
-      throw new TransformerException(se);
-    }
-    finally
-    {
-      if (transformer.getDebug())
-        transformer.getTraceManager().fireTraceEndEvent(this);
-    }
+						// If we just copy the whole document, a startDoc and
+						// endDoc get
+						// generated, so we need to only walk the child nodes.
+						if (t == DTM.DOCUMENT_NODE) {
+							for (int child = dtm.getFirstChild(pos); child != DTM.NULL; child = dtm
+									.getNextSibling(child)) {
+								tw.traverse(child);
+							}
+						} else if (t == DTM.ATTRIBUTE_NODE) {
+							SerializerUtils.addAttribute(handler, pos);
+						} else {
+							tw.traverse(pos);
+						}
+					}
+					// nl.detach();
+					break;
+				case XObject.CLASS_RTREEFRAG:
+					SerializerUtils.outputResultTreeFragment(handler, value,
+							transformer.getXPathContext());
+					break;
+				default:
 
-  }
+					s = value.str();
 
-  /**
-   * Add a child to the child list.
-   *
-   * @param newChild Child to add to this node's child list
-   *
-   * @return Child just added to child list
-   */
-  public ElemTemplateElement appendChild(ElemTemplateElement newChild)
-  {
+					handler.characters(s.toCharArray(), 0, s.length());
+					break;
+				}
+			}
 
-    error(XSLTErrorResources.ER_CANNOT_ADD,
-          new Object[]{ newChild.getNodeName(),
-                        this.getNodeName() });  //"Can not add " +((ElemTemplateElement)newChild).m_elemName +
+			// I don't think we want this. -sb
+			// if (transformer.getDebug())
+			// transformer.getTraceManager().fireSelectedEvent(sourceNode, this,
+			// "endSelect", m_selectExpression, value);
 
-    //" to " + this.m_elemName);
-    return null;
-  }
-  
-  /**
-   * Call the children visitors.
-   * @param visitor The visitor whose appropriate method will be called.
-   */
-  protected void callChildVisitors(XSLTVisitor visitor, boolean callAttrs)
-  {
-  	if(callAttrs)
-  		m_selectExpression.getExpression().callVisitors(m_selectExpression, visitor);
-    super.callChildVisitors(visitor, callAttrs);
-  }
+		} catch (org.xml.sax.SAXException se) {
+			throw new TransformerException(se);
+		} finally {
+			if (transformer.getDebug())
+				transformer.getTraceManager().fireTraceEndEvent(this);
+		}
+
+	}
+
+	/**
+	 * Add a child to the child list.
+	 * 
+	 * @param newChild
+	 *            Child to add to this node's child list
+	 * 
+	 * @return Child just added to child list
+	 */
+	@Override
+	public ElemTemplateElement appendChild(ElemTemplateElement newChild) {
+
+		error(XSLTErrorResources.ER_CANNOT_ADD, new Object[] {
+				newChild.getNodeName(), this.getNodeName() }); // "Can not add
+																// "
+																// +((ElemTemplateElement)newChild).m_elemName
+																// +
+
+		// " to " + this.m_elemName);
+		return null;
+	}
+
+	/**
+	 * Call the children visitors.
+	 * 
+	 * @param visitor
+	 *            The visitor whose appropriate method will be called.
+	 */
+	@Override
+	protected void callChildVisitors(XSLTVisitor visitor, boolean callAttrs) {
+		if (callAttrs)
+			m_selectExpression.getExpression().callVisitors(m_selectExpression,
+					visitor);
+		super.callChildVisitors(visitor, callAttrs);
+	}
 
 }

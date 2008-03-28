@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ExpressionContext.java,v 1.1 2008/03/27 01:08:58 dacarver Exp $
+ * $Id: ExpressionContext.java,v 1.2 2008/03/28 02:38:17 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.extensions;
 
@@ -37,67 +37,73 @@ import org.w3c.dom.Node;
 import org.w3c.dom.traversal.NodeIterator;
 
 /**
- * An object that implements this interface can supply
- * information about the current XPath expression context.
+ * An object that implements this interface can supply information about the
+ * current XPath expression context.
  */
-public interface ExpressionContext
-{
+public interface ExpressionContext {
 
-  /**
-   * Get the current context node.
-   * @return The current context node.
-   */
-  public Node getContextNode();
+	/**
+	 * Get the current context node.
+	 * 
+	 * @return The current context node.
+	 */
+	public Node getContextNode();
 
-  /**
-   * Get the current context node list.
-   * @return An iterator for the current context list, as
-   * defined in XSLT.
-   */
-  public NodeIterator getContextNodes();
-  
-  /**
-   * Get the error listener.
-   * @return The registered error listener.
-   */
-  public ErrorListener getErrorListener();
+	/**
+	 * Get the current context node list.
+	 * 
+	 * @return An iterator for the current context list, as defined in XSLT.
+	 */
+	public NodeIterator getContextNodes();
 
-  /**
-   * Get the value of a node as a number.
-   * @param n Node to be converted to a number.  May be null.
-   * @return value of n as a number.
-   */
-  public double toNumber(Node n);
+	/**
+	 * Get the error listener.
+	 * 
+	 * @return The registered error listener.
+	 */
+	public ErrorListener getErrorListener();
 
-  /**
-   * Get the value of a node as a string.
-   * @param n Node to be converted to a string.  May be null.
-   * @return value of n as a string, or an empty string if n is null.
-   */
-  public String toString(Node n);
+	/**
+	 * Get the value of a node as a number.
+	 * 
+	 * @param n
+	 *            Node to be converted to a number. May be null.
+	 * @return value of n as a number.
+	 */
+	public double toNumber(Node n);
 
-  /**
-   * Get a variable based on it's qualified name.
-   *
-   * @param qname The qualified name of the variable.
-   *
-   * @return The evaluated value of the variable.
-   *
-   * @throws javax.xml.transform.TransformerException
-   */
-  public XObject getVariableOrParam(org.apache.xml.utils.QName qname)
-            throws javax.xml.transform.TransformerException;
-  
-  /**
-   * Get the XPathContext that owns this ExpressionContext.
-   * 
-   * Note: exslt:function requires the XPathContext to access
-   * the variable stack and TransformerImpl.
-   * 
-   * @return The current XPathContext.
-   * @throws javax.xml.transform.TransformerException
-   */
-  public org.apache.xpath.XPathContext getXPathContext()
-            throws javax.xml.transform.TransformerException;
+	/**
+	 * Get the value of a node as a string.
+	 * 
+	 * @param n
+	 *            Node to be converted to a string. May be null.
+	 * @return value of n as a string, or an empty string if n is null.
+	 */
+	public String toString(Node n);
+
+	/**
+	 * Get a variable based on it's qualified name.
+	 * 
+	 * @param qname
+	 *            The qualified name of the variable.
+	 * 
+	 * @return The evaluated value of the variable.
+	 * 
+	 * @throws javax.xml.transform.TransformerException
+	 */
+	public XObject getVariableOrParam(org.apache.xml.utils.QName qname)
+			throws javax.xml.transform.TransformerException;
+
+	/**
+	 * Get the XPathContext that owns this ExpressionContext.
+	 * 
+	 * Note: exslt:function requires the XPathContext to access the variable
+	 * stack and TransformerImpl.
+	 * 
+	 * @return The current XPathContext.
+	 * @throws javax.xml.transform.TransformerException
+	 */
+	public org.apache.xpath.XPathContext getXPathContext()
+			throws javax.xml.transform.TransformerException;
 
 }

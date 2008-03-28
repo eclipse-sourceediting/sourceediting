@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ProcessorText.java,v 1.1 2008/03/27 01:08:55 dacarver Exp $
+ * $Id: ProcessorText.java,v 1.2 2008/03/28 02:38:16 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.processor;
 
@@ -35,58 +35,66 @@ import org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemText;
 
 /**
  * Process xsl:text.
+ * 
  * @see <a href="http://www.w3.org/TR/xslt#dtd">XSLT DTD</a>
- * @see <a href="http://www.w3.org/TR/xslt#element-text">element-text in XSLT Specification</a>
+ * @see <a href="http://www.w3.org/TR/xslt#element-text">element-text in XSLT
+ *      Specification</a>
  */
-public class ProcessorText extends ProcessorTemplateElem
-{
-    static final long serialVersionUID = 5170229307201307523L;
+public class ProcessorText extends ProcessorTemplateElem {
+	static final long serialVersionUID = 5170229307201307523L;
 
-  /**
-   * Append the current template element to the current
-   * template element, and then push it onto the current template
-   * element stack.
-   *
-   * @param handler non-null reference to current StylesheetHandler that is constructing the Templates.
-   * @param elem non-null reference to a {@link org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemText}.
-   *
-   * @throws org.xml.sax.SAXException Any SAX exception, possibly
-   *            wrapping another exception.
-   */
-  protected void appendAndPush(
-          StylesheetHandler handler, ElemTemplateElement elem)
-            throws org.xml.sax.SAXException
-  {
+	/**
+	 * Append the current template element to the current template element, and
+	 * then push it onto the current template element stack.
+	 * 
+	 * @param handler
+	 *            non-null reference to current StylesheetHandler that is
+	 *            constructing the Templates.
+	 * @param elem
+	 *            non-null reference to a
+	 *            {@link org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates.ElemText}.
+	 * 
+	 * @throws org.xml.sax.SAXException
+	 *             Any SAX exception, possibly wrapping another exception.
+	 */
+	@Override
+	protected void appendAndPush(StylesheetHandler handler,
+			ElemTemplateElement elem) throws org.xml.sax.SAXException {
 
-    // Don't push this element onto the element stack.
-    ProcessorCharacters charProcessor =
-      (ProcessorCharacters) handler.getProcessorFor(null, "text()", "text");
+		// Don't push this element onto the element stack.
+		ProcessorCharacters charProcessor = (ProcessorCharacters) handler
+				.getProcessorFor(null, "text()", "text");
 
-    charProcessor.setXslTextElement((ElemText) elem);
+		charProcessor.setXslTextElement((ElemText) elem);
 
-    ElemTemplateElement parent = handler.getElemTemplateElement();
+		ElemTemplateElement parent = handler.getElemTemplateElement();
 
-    parent.appendChild(elem);
-    elem.setDOMBackPointer(handler.getOriginatingNode());
-  }
+		parent.appendChild(elem);
+		elem.setDOMBackPointer(handler.getOriginatingNode());
+	}
 
-  /**
-   * Receive notification of the end of an element.
-   *
-   * @param handler non-null reference to current StylesheetHandler that is constructing the Templates.
-   * @param uri The Namespace URI, or an empty string.
-   * @param localName The local name (without prefix), or empty string if not namespace processing.
-   * @param rawName The qualified name (with prefix).
-   */
-  public void endElement(
-          StylesheetHandler handler, String uri, String localName, String rawName)
-            throws org.xml.sax.SAXException
-  {
+	/**
+	 * Receive notification of the end of an element.
+	 * 
+	 * @param handler
+	 *            non-null reference to current StylesheetHandler that is
+	 *            constructing the Templates.
+	 * @param uri
+	 *            The Namespace URI, or an empty string.
+	 * @param localName
+	 *            The local name (without prefix), or empty string if not
+	 *            namespace processing.
+	 * @param rawName
+	 *            The qualified name (with prefix).
+	 */
+	@Override
+	public void endElement(StylesheetHandler handler, String uri,
+			String localName, String rawName) throws org.xml.sax.SAXException {
 
-    ProcessorCharacters charProcessor 
-      = (ProcessorCharacters) handler.getProcessorFor(null, "text()", "text");
+		ProcessorCharacters charProcessor = (ProcessorCharacters) handler
+				.getProcessorFor(null, "text()", "text");
 
-    charProcessor.setXslTextElement(null);
+		charProcessor.setXslTextElement(null);
 
-  }
+	}
 }

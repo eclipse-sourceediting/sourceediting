@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ProcessorCharacters.java,v 1.1 2008/03/27 01:08:55 dacarver Exp $
+ * $Id: ProcessorCharacters.java,v 1.2 2008/03/28 02:38:16 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.processor;
 
@@ -41,149 +41,151 @@ import org.w3c.dom.Node;
 
 /**
  * This class processes character events for a XSLT template element.
+ * 
  * @see <a href="http://www.w3.org/TR/xslt#dtd">XSLT DTD</a>
- * @see <a href="http://www.w3.org/TR/xslt#section-Creating-the-Result-Tree">section-Creating-the-Result-Tree in XSLT Specification</a>
+ * @see <a
+ *      href="http://www.w3.org/TR/xslt#section-Creating-the-Result-Tree">section-Creating-the-Result-Tree
+ *      in XSLT Specification</a>
  */
-public class ProcessorCharacters extends XSLTElementProcessor
-{
-    static final long serialVersionUID = 8632900007814162650L;
+public class ProcessorCharacters extends XSLTElementProcessor {
+	static final long serialVersionUID = 8632900007814162650L;
 
-  /**
-   * Receive notification of the start of the non-text event.  This
-   * is sent to the current processor when any non-text event occurs.
-   *
-   * @param handler non-null reference to current StylesheetHandler that is constructing the Templates.
-   */
-  public void startNonText(StylesheetHandler handler) throws org.xml.sax.SAXException
-  {
-    if (this == handler.getCurrentProcessor())
-    {
-      handler.popProcessor();
-    }
+	/**
+	 * Receive notification of the start of the non-text event. This is sent to
+	 * the current processor when any non-text event occurs.
+	 * 
+	 * @param handler
+	 *            non-null reference to current StylesheetHandler that is
+	 *            constructing the Templates.
+	 */
+	@Override
+	public void startNonText(StylesheetHandler handler)
+			throws org.xml.sax.SAXException {
+		if (this == handler.getCurrentProcessor()) {
+			handler.popProcessor();
+		}
 
-    int nChars = m_accumulator.length();
+		int nChars = m_accumulator.length();
 
-    if ((nChars > 0)
-            && ((null != m_xslTextElement)
-                ||!XMLCharacterRecognizer.isWhiteSpace(m_accumulator)) 
-                || handler.isSpacePreserve())
-    {
-      ElemTextLiteral elem = new ElemTextLiteral();
+		if ((nChars > 0)
+				&& ((null != m_xslTextElement) || !XMLCharacterRecognizer
+						.isWhiteSpace(m_accumulator))
+				|| handler.isSpacePreserve()) {
+			ElemTextLiteral elem = new ElemTextLiteral();
 
-      elem.setDOMBackPointer(m_firstBackPointer);
-      elem.setLocaterInfo(handler.getLocator());
-      try
-      {
-        elem.setPrefixes(handler.getNamespaceSupport());
-      }
-      catch(TransformerException te)
-      {
-        throw new org.xml.sax.SAXException(te);
-      }
+			elem.setDOMBackPointer(m_firstBackPointer);
+			elem.setLocaterInfo(handler.getLocator());
+			try {
+				elem.setPrefixes(handler.getNamespaceSupport());
+			} catch (TransformerException te) {
+				throw new org.xml.sax.SAXException(te);
+			}
 
-      boolean doe = (null != m_xslTextElement)
-                    ? m_xslTextElement.getDisableOutputEscaping() : false;
+			boolean doe = (null != m_xslTextElement) ? m_xslTextElement
+					.getDisableOutputEscaping() : false;
 
-      elem.setDisableOutputEscaping(doe);
-      elem.setPreserveSpace(true);
+			elem.setDisableOutputEscaping(doe);
+			elem.setPreserveSpace(true);
 
-      char[] chars = new char[nChars];
+			char[] chars = new char[nChars];
 
-      m_accumulator.getChars(0, nChars, chars, 0);
-      elem.setChars(chars);
+			m_accumulator.getChars(0, nChars, chars, 0);
+			elem.setChars(chars);
 
-      ElemTemplateElement parent = handler.getElemTemplateElement();
+			ElemTemplateElement parent = handler.getElemTemplateElement();
 
-      parent.appendChild(elem);
-    }
+			parent.appendChild(elem);
+		}
 
-    m_accumulator.setLength(0);
-    m_firstBackPointer = null;
-  }
-  
-  protected Node m_firstBackPointer = null;
+		m_accumulator.setLength(0);
+		m_firstBackPointer = null;
+	}
 
-  /**
-   * Receive notification of character data inside an element.
-   *
-   *
-   * @param handler non-null reference to current StylesheetHandler that is constructing the Templates.
-   * @param ch The characters.
-   * @param start The start position in the character array.
-   * @param length The number of characters to use from the
-   *               character array.
-   * @throws org.xml.sax.SAXException Any SAX exception, possibly
-   *            wrapping another exception.
-   * @see org.xml.sax.ContentHandler#characters
-   */
-  public void characters(
-          StylesheetHandler handler, char ch[], int start, int length)
-            throws org.xml.sax.SAXException
-  {
+	protected Node m_firstBackPointer = null;
 
-    m_accumulator.append(ch, start, length);
-    
-    if(null == m_firstBackPointer)
-      m_firstBackPointer = handler.getOriginatingNode();
+	/**
+	 * Receive notification of character data inside an element.
+	 * 
+	 * 
+	 * @param handler
+	 *            non-null reference to current StylesheetHandler that is
+	 *            constructing the Templates.
+	 * @param ch
+	 *            The characters.
+	 * @param start
+	 *            The start position in the character array.
+	 * @param length
+	 *            The number of characters to use from the character array.
+	 * @throws org.xml.sax.SAXException
+	 *             Any SAX exception, possibly wrapping another exception.
+	 * @see org.xml.sax.ContentHandler#characters
+	 */
+	@Override
+	public void characters(StylesheetHandler handler, char ch[], int start,
+			int length) throws org.xml.sax.SAXException {
 
-    // Catch all events until a non-character event.
-    if (this != handler.getCurrentProcessor())
-      handler.pushProcessor(this);
-  }
+		m_accumulator.append(ch, start, length);
 
-  /**
-   * Receive notification of the end of an element.
-   *
-   * @param handler The calling StylesheetHandler/TemplatesBuilder.
-   * @param uri The Namespace URI, or the empty string if the
-   *        element has no Namespace URI or if Namespace
-   *        processing is not being performed.
-   * @param localName The local name (without prefix), or the
-   *        empty string if Namespace processing is not being
-   *        performed.
-   * @param rawName The raw XML 1.0 name (with prefix), or the
-   *        empty string if raw names are not available.
-   * @see org.apache.xalan.processor.StylesheetHandler#startElement
-   * @see org.apache.xalan.processor.StylesheetHandler#endElement
-   * @see org.xml.sax.ContentHandler#startElement
-   * @see org.xml.sax.ContentHandler#endElement
-   * @see org.xml.sax.Attributes
-   */
-  public void endElement(
-          StylesheetHandler handler, String uri, String localName, String rawName)
-            throws org.xml.sax.SAXException
-  {
+		if (null == m_firstBackPointer)
+			m_firstBackPointer = handler.getOriginatingNode();
 
-    // Since this has been installed as the current processor, we 
-    // may get and end element event, in which case, we pop and clear 
-    // and then call the real element processor.
-    startNonText(handler);
-    handler.getCurrentProcessor().endElement(handler, uri, localName,
-                                             rawName);
-    handler.popProcessor();
-  }
+		// Catch all events until a non-character event.
+		if (this != handler.getCurrentProcessor())
+			handler.pushProcessor(this);
+	}
 
-  /**
-   * Accumulate characters, until a non-whitespace event has
-   * occured.
-   */
-  private StringBuffer m_accumulator = new StringBuffer();
+	/**
+	 * Receive notification of the end of an element.
+	 * 
+	 * @param handler
+	 *            The calling StylesheetHandler/TemplatesBuilder.
+	 * @param uri
+	 *            The Namespace URI, or the empty string if the element has no
+	 *            Namespace URI or if Namespace processing is not being
+	 *            performed.
+	 * @param localName
+	 *            The local name (without prefix), or the empty string if
+	 *            Namespace processing is not being performed.
+	 * @param rawName
+	 *            The raw XML 1.0 name (with prefix), or the empty string if raw
+	 *            names are not available.
+	 * @see org.apache.xalan.processor.StylesheetHandler#startElement
+	 * @see org.apache.xalan.processor.StylesheetHandler#endElement
+	 * @see org.xml.sax.ContentHandler#startElement
+	 * @see org.xml.sax.ContentHandler#endElement
+	 * @see org.xml.sax.Attributes
+	 */
+	@Override
+	public void endElement(StylesheetHandler handler, String uri,
+			String localName, String rawName) throws org.xml.sax.SAXException {
 
-  /**
-   * The xsl:text processor will call this to set a
-   * preserve space state.
-   */
-  private ElemText m_xslTextElement;
+		// Since this has been installed as the current processor, we
+		// may get and end element event, in which case, we pop and clear
+		// and then call the real element processor.
+		startNonText(handler);
+		handler.getCurrentProcessor().endElement(handler, uri, localName,
+				rawName);
+		handler.popProcessor();
+	}
 
-  /**
-   * Set the current setXslTextElement. The xsl:text 
-   * processor will call this to set a preserve space state.
-   *
-   * @param xslTextElement The current xslTextElement that 
-   *                       is preserving state, or null.
-   */
-  protected void setXslTextElement(ElemText xslTextElement)
-  {
-    m_xslTextElement = xslTextElement;
-  }
+	/**
+	 * Accumulate characters, until a non-whitespace event has occured.
+	 */
+	private StringBuffer m_accumulator = new StringBuffer();
+
+	/**
+	 * The xsl:text processor will call this to set a preserve space state.
+	 */
+	private ElemText m_xslTextElement;
+
+	/**
+	 * Set the current setXslTextElement. The xsl:text processor will call this
+	 * to set a preserve space state.
+	 * 
+	 * @param xslTextElement
+	 *            The current xslTextElement that is preserving state, or null.
+	 */
+	protected void setXslTextElement(ElemText xslTextElement) {
+		m_xslTextElement = xslTextElement;
+	}
 }

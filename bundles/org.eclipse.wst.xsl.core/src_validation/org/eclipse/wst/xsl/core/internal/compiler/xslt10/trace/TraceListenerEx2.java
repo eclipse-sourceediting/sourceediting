@@ -25,21 +25,22 @@
  * limitations under the License.
  */
 /*
- * $Id: TraceListenerEx2.java,v 1.1 2008/03/27 01:08:57 dacarver Exp $
+ * $Id: TraceListenerEx2.java,v 1.2 2008/03/28 02:38:17 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.trace;
 
 /**
  * Extends TraceListenerEx but adds a EndTrace event.
+ * 
  * @xsl.usage advanced
  */
-public interface TraceListenerEx2 extends TraceListenerEx
-{
-  /**
-   * Method that is called when the end of a trace event occurs.
-   * The method is blocking.  It must return before processing continues.
-   *
-   * @param ev the trace event.
-   */
-  public void traceEnd(TracerEvent ev);
+public interface TraceListenerEx2 extends TraceListenerEx {
+	/**
+	 * Method that is called when the end of a trace event occurs. The method is
+	 * blocking. It must return before processing continues.
+	 * 
+	 * @param ev
+	 *            the trace event.
+	 */
+	public void traceEnd(TracerEvent ev);
 }

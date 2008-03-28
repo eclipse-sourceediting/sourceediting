@@ -25,20 +25,17 @@
  * limitations under the License.
  */
 /*
- * $Id: XalanProperties.java,v 1.1 2008/03/27 01:08:56 dacarver Exp $
+ * $Id: XalanProperties.java,v 1.2 2008/03/28 02:38:16 dacarver Exp $
  */
 
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer;
 
 /**
- * <code>XalanProperties</code> defines the features understood by
- * Xalan.
- *
+ * <code>XalanProperties</code> defines the features understood by Xalan.
+ * 
  * @author <a href="mailto:ovidiu@cup.hp.com">Ovidiu Predescu</a>
  * @since May 23, 2001
  */
-public class XalanProperties
-{
-  public final static String SOURCE_LOCATION
-    = "http://xml.apache.org/xalan/properties/source-location";
+public class XalanProperties {
+	public final static String SOURCE_LOCATION = "http://xml.apache.org/xalan/properties/source-location";
 }

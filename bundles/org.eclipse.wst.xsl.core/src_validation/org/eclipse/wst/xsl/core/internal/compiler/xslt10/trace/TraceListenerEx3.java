@@ -25,32 +25,34 @@
  * limitations under the License.
  */
 /*
- * $Id: TraceListenerEx3.java,v 1.1 2008/03/27 01:08:57 dacarver Exp $
+ * $Id: TraceListenerEx3.java,v 1.2 2008/03/28 02:38:17 dacarver Exp $
  */
- 
+
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.trace;
 
 /**
  * Extends TraceListenerEx2 but adds extensions trace events.
+ * 
  * @xsl.usage advanced
  */
 public interface TraceListenerEx3 extends TraceListenerEx2 {
 
 	/**
-	 * Method that is called when an extension event occurs.
-	 * The method is blocking.  It must return before processing continues.
-	 *
-	 * @param ee the extension event.
+	 * Method that is called when an extension event occurs. The method is
+	 * blocking. It must return before processing continues.
+	 * 
+	 * @param ee
+	 *            the extension event.
 	 */
 	public void extension(ExtensionEvent ee);
 
 	/**
-	 * Method that is called when the end of an extension event occurs.
-	 * The method is blocking.  It must return before processing continues.
-	 *
-	 * @param ee the extension event.
+	 * Method that is called when the end of an extension event occurs. The
+	 * method is blocking. It must return before processing continues.
+	 * 
+	 * @param ee
+	 *            the extension event.
 	 */
 	public void extensionEnd(ExtensionEvent ee);
 
 }
-

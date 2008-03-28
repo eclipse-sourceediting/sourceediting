@@ -25,43 +25,47 @@
  * limitations under the License.
  */
 /*
- * $Id: TraceListener.java,v 1.1 2008/03/27 01:08:57 dacarver Exp $
+ * $Id: TraceListener.java,v 1.2 2008/03/28 02:38:17 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.trace;
 
-
 /**
- * Interface the XSL processor calls when it matches a source node, selects a set of source nodes,
- * or generates a result node.
- * If you want an object instance to be called when a trace event occurs, use the TransformerImpl setTraceListener method.
+ * Interface the XSL processor calls when it matches a source node, selects a
+ * set of source nodes, or generates a result node. If you want an object
+ * instance to be called when a trace event occurs, use the TransformerImpl
+ * setTraceListener method.
+ * 
  * @see org.apache.xalan.trace.TracerEvent
  * @see org.apache.xalan.trace.TraceManager#addTraceListener
  * @xsl.usage advanced
  */
-public interface TraceListener extends java.util.EventListener
-{
+public interface TraceListener extends java.util.EventListener {
 
-  /**
-   * Method that is called when a trace event occurs.
-   * The method is blocking.  It must return before processing continues.
-   *
-   * @param ev the trace event.
-   */
-  public void trace(TracerEvent ev);
+	/**
+	 * Method that is called when a trace event occurs. The method is blocking.
+	 * It must return before processing continues.
+	 * 
+	 * @param ev
+	 *            the trace event.
+	 */
+	public void trace(TracerEvent ev);
 
-  /**
-   * Method that is called just after the formatter listener is called.
-   *
-   * @param ev the generate event.
-   *
-   * @throws javax.xml.transform.TransformerException
-   */
-  public void selected(SelectionEvent ev) throws javax.xml.transform.TransformerException;
+	/**
+	 * Method that is called just after the formatter listener is called.
+	 * 
+	 * @param ev
+	 *            the generate event.
+	 * 
+	 * @throws javax.xml.transform.TransformerException
+	 */
+	public void selected(SelectionEvent ev)
+			throws javax.xml.transform.TransformerException;
 
-  /**
-   * Method that is called just after the formatter listener is called.
-   *
-   * @param ev the generate event.
-   */
-  public void generated(GenerateEvent ev);
+	/**
+	 * Method that is called just after the formatter listener is called.
+	 * 
+	 * @param ev
+	 *            the generate event.
+	 */
+	public void generated(GenerateEvent ev);
 }

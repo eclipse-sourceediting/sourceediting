@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ProcessorPreserveSpace.java,v 1.2 2008/03/27 05:14:52 dacarver Exp $
+ * $Id: ProcessorPreserveSpace.java,v 1.3 2008/03/28 02:38:16 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.processor;
 
@@ -40,49 +40,51 @@ import org.xml.sax.Attributes;
 
 /**
  * TransformerFactory for xsl:preserve-space markup.
+ * 
  * <pre>
- * <!ELEMENT xsl:preserve-space EMPTY>
- * <!ATTLIST xsl:preserve-space elements CDATA #REQUIRED>
+ * &lt;!ELEMENT xsl:preserve-space EMPTY&gt;
+ * &lt;!ATTLIST xsl:preserve-space elements CDATA #REQUIRED&gt;
  * </pre>
  */
-class ProcessorPreserveSpace extends XSLTElementProcessor
-{
-    static final long serialVersionUID = -5552836470051177302L;
+class ProcessorPreserveSpace extends XSLTElementProcessor {
+	static final long serialVersionUID = -5552836470051177302L;
 
-  /**
-   * Receive notification of the start of an preserve-space element.
-   *
-   * @param handler The calling StylesheetHandler/TemplatesBuilder.
-   * @param uri The Namespace URI, or the empty string if the
-   *        element has no Namespace URI or if Namespace
-   *        processing is not being performed.
-   * @param localName The local name (without prefix), or the
-   *        empty string if Namespace processing is not being
-   *        performed.
-   * @param rawName The raw XML 1.0 name (with prefix), or the
-   *        empty string if raw names are not available.
-   * @param attributes The attributes attached to the element.  If
-   *        there are no attributes, it shall be an empty
-   *        Attributes object.
-   */
-  public void startElement(
-          StylesheetHandler handler, String uri, String localName, String rawName, 
-          Attributes attributes)
-            throws org.xml.sax.SAXException
-  {
-    Stylesheet thisSheet = handler.getStylesheet();
-	WhitespaceInfoPaths paths = new WhitespaceInfoPaths(thisSheet);
-    setPropertiesFromAttributes(handler, rawName, attributes, paths);
+	/**
+	 * Receive notification of the start of an preserve-space element.
+	 * 
+	 * @param handler
+	 *            The calling StylesheetHandler/TemplatesBuilder.
+	 * @param uri
+	 *            The Namespace URI, or the empty string if the element has no
+	 *            Namespace URI or if Namespace processing is not being
+	 *            performed.
+	 * @param localName
+	 *            The local name (without prefix), or the empty string if
+	 *            Namespace processing is not being performed.
+	 * @param rawName
+	 *            The raw XML 1.0 name (with prefix), or the empty string if raw
+	 *            names are not available.
+	 * @param attributes
+	 *            The attributes attached to the element. If there are no
+	 *            attributes, it shall be an empty Attributes object.
+	 */
+	@Override
+	public void startElement(StylesheetHandler handler, String uri,
+			String localName, String rawName, Attributes attributes)
+			throws org.xml.sax.SAXException {
+		Stylesheet thisSheet = handler.getStylesheet();
+		WhitespaceInfoPaths paths = new WhitespaceInfoPaths(thisSheet);
+		setPropertiesFromAttributes(handler, rawName, attributes, paths);
 
-    Vector xpaths = paths.getElements();
+		Vector xpaths = paths.getElements();
 
-    for (int i = 0; i < xpaths.size(); i++)
-    {
-      WhiteSpaceInfo wsi = new WhiteSpaceInfo((XPath) xpaths.elementAt(i), false, thisSheet);
-      wsi.setUid(handler.nextUid());
+		for (int i = 0; i < xpaths.size(); i++) {
+			WhiteSpaceInfo wsi = new WhiteSpaceInfo(
+					(XPath) xpaths.elementAt(i), false, thisSheet);
+			wsi.setUid(handler.nextUid());
 
-      thisSheet.setPreserveSpaces(wsi);
-    }
-    paths.clearElements();
-  }
+			thisSheet.setPreserveSpaces(wsi);
+		}
+		paths.clearElements();
+	}
 }

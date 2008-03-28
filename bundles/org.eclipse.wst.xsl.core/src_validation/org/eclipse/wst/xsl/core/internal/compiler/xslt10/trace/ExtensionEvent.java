@@ -25,9 +25,9 @@
  * limitations under the License.
  */
 /*
- * $Id: ExtensionEvent.java,v 1.1 2008/03/27 01:08:57 dacarver Exp $
+ * $Id: ExtensionEvent.java,v 1.2 2008/03/28 02:38:17 dacarver Exp $
  */
- 
+
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.trace;
 
 import java.lang.reflect.Constructor;
@@ -43,28 +43,29 @@ public class ExtensionEvent {
 	public static final int DEFAULT_CONSTRUCTOR = 0;
 	public static final int METHOD = 1;
 	public static final int CONSTRUCTOR = 2;
-	
-	public final int m_callType; 
+
+	public final int m_callType;
 	public final TransformerImpl m_transformer;
 	public final Object m_method;
 	public final Object m_instance;
 	public final Object[] m_arguments;
-	
-	
-	public ExtensionEvent(TransformerImpl transformer, Method method, Object instance, Object[] arguments) {
+
+	public ExtensionEvent(TransformerImpl transformer, Method method,
+			Object instance, Object[] arguments) {
 		m_transformer = transformer;
 		m_method = method;
 		m_instance = instance;
 		m_arguments = arguments;
 		m_callType = METHOD;
-	}		
+	}
 
-	public ExtensionEvent(TransformerImpl transformer, Constructor constructor, Object[] arguments) {
+	public ExtensionEvent(TransformerImpl transformer, Constructor constructor,
+			Object[] arguments) {
 		m_transformer = transformer;
-		m_instance = null;		
+		m_instance = null;
 		m_arguments = arguments;
 		m_method = constructor;
-		m_callType = CONSTRUCTOR;		
+		m_callType = CONSTRUCTOR;
 	}
 
 	public ExtensionEvent(TransformerImpl transformer, Class clazz) {
@@ -76,4 +77,3 @@ public class ExtensionEvent {
 	}
 
 }
-

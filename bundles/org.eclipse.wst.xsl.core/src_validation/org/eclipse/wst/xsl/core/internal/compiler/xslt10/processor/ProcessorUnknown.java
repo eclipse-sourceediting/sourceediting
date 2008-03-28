@@ -26,21 +26,18 @@
  * limitations under the License.
  */
 /*
- * $Id: ProcessorUnknown.java,v 1.1 2008/03/27 01:08:55 dacarver Exp $
+ * $Id: ProcessorUnknown.java,v 1.2 2008/03/28 02:38:16 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.processor;
 
-import org.xml.sax.Attributes;
-
 /**
- * This class processes an unknown template element.  It is used both 
- * for unknown top-level elements, and for elements in the 
- * xslt namespace when the version is higher than the version 
- * of XSLT that we are set up to process.
+ * This class processes an unknown template element. It is used both for unknown
+ * top-level elements, and for elements in the xslt namespace when the version
+ * is higher than the version of XSLT that we are set up to process.
+ * 
  * @xsl.usage internal
  */
-public class ProcessorUnknown extends ProcessorLRE
-{
-    static final long serialVersionUID = 600521151487682248L;
+public class ProcessorUnknown extends ProcessorLRE {
+	static final long serialVersionUID = 600521151487682248L;
 
 }

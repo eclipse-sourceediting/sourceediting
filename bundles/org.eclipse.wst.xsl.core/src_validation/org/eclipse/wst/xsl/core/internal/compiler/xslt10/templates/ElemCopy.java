@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemCopy.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: ElemCopy.java,v 1.2 2008/03/28 02:38:15 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
@@ -40,117 +40,118 @@ import org.apache.xpath.XPathContext;
 
 /**
  * Implement xsl:copy.
+ * 
  * <pre>
- * <!ELEMENT xsl:copy %template;>
- * <!ATTLIST xsl:copy
+ * &lt;!ELEMENT xsl:copy %template;&gt;
+ * &lt;!ATTLIST xsl:copy
  *   %space-att;
  *   use-attribute-sets %qnames; #IMPLIED
- * >
+ * &gt;
  * </pre>
- * @see <a href="http://www.w3.org/TR/xslt#copying">copying in XSLT Specification</a>
+ * 
+ * @see <a href="http://www.w3.org/TR/xslt#copying">copying in XSLT
+ *      Specification</a>
  * @xsl.usage advanced
  */
-public class ElemCopy extends ElemUse
-{
-    static final long serialVersionUID = 5478580783896941384L;
+public class ElemCopy extends ElemUse {
+	static final long serialVersionUID = 5478580783896941384L;
 
-  /**
-   * Get an int constant identifying the type of element.
-   * @see org.apache.xalan.templates.Constants
-   *
-   * @return The token ID for this element 
-   */
-  public int getXSLToken()
-  {
-    return Constants.ELEMNAME_COPY;
-  }
+	/**
+	 * Get an int constant identifying the type of element.
+	 * 
+	 * @see org.apache.xalan.templates.Constants
+	 * 
+	 * @return The token ID for this element
+	 */
+	@Override
+	public int getXSLToken() {
+		return Constants.ELEMNAME_COPY;
+	}
 
-  /**
-   * Return the node name.
-   *
-   * @return This element's name
-   */
-  public String getNodeName()
-  {
-    return Constants.ELEMNAME_COPY_STRING;
-  }
+	/**
+	 * Return the node name.
+	 * 
+	 * @return This element's name
+	 */
+	@Override
+	public String getNodeName() {
+		return Constants.ELEMNAME_COPY_STRING;
+	}
 
-  /**
-   * The xsl:copy element provides an easy way of copying the current node.
-   * Executing this function creates a copy of the current node into the
-   * result tree.
-   * <p>The namespace nodes of the current node are automatically
-   * copied as well, but the attributes and children of the node are not
-   * automatically copied. The content of the xsl:copy element is a
-   * template for the attributes and children of the created node;
-   * the content is instantiated only for nodes of types that can have
-   * attributes or children (i.e. root nodes and element nodes).</p>
-   * <p>The root node is treated specially because the root node of the
-   * result tree is created implicitly. When the current node is the
-   * root node, xsl:copy will not create a root node, but will just use
-   * the content template.</p>
-   *
-   * @param transformer non-null reference to the the current transform-time state.
-   *
-   * @throws TransformerException
-   */
-  public void execute(
-          TransformerImpl transformer)
-            throws TransformerException
-  {
-                XPathContext xctxt = transformer.getXPathContext();
-      
-    try
-    {
-      int sourceNode = xctxt.getCurrentNode();
-      xctxt.pushCurrentNode(sourceNode);
-      DTM dtm = xctxt.getDTM(sourceNode);
-      short nodeType = dtm.getNodeType(sourceNode);
+	/**
+	 * The xsl:copy element provides an easy way of copying the current node.
+	 * Executing this function creates a copy of the current node into the
+	 * result tree.
+	 * <p>
+	 * The namespace nodes of the current node are automatically copied as well,
+	 * but the attributes and children of the node are not automatically copied.
+	 * The content of the xsl:copy element is a template for the attributes and
+	 * children of the created node; the content is instantiated only for nodes
+	 * of types that can have attributes or children (i.e. root nodes and
+	 * element nodes).
+	 * </p>
+	 * <p>
+	 * The root node is treated specially because the root node of the result
+	 * tree is created implicitly. When the current node is the root node,
+	 * xsl:copy will not create a root node, but will just use the content
+	 * template.
+	 * </p>
+	 * 
+	 * @param transformer
+	 *            non-null reference to the the current transform-time state.
+	 * 
+	 * @throws TransformerException
+	 */
+	@Override
+	public void execute(TransformerImpl transformer)
+			throws TransformerException {
+		XPathContext xctxt = transformer.getXPathContext();
 
-      if ((DTM.DOCUMENT_NODE != nodeType) && (DTM.DOCUMENT_FRAGMENT_NODE != nodeType))
-      {
-        SerializationHandler rthandler = transformer.getSerializationHandler();
+		try {
+			int sourceNode = xctxt.getCurrentNode();
+			xctxt.pushCurrentNode(sourceNode);
+			DTM dtm = xctxt.getDTM(sourceNode);
+			short nodeType = dtm.getNodeType(sourceNode);
 
-        if (transformer.getDebug())
-          transformer.getTraceManager().fireTraceEvent(this);
-            
-        // TODO: Process the use-attribute-sets stuff
-        ClonerToResultTree.cloneToResultTree(sourceNode, nodeType, dtm, 
-                                             rthandler, false);
+			if ((DTM.DOCUMENT_NODE != nodeType)
+					&& (DTM.DOCUMENT_FRAGMENT_NODE != nodeType)) {
+				SerializationHandler rthandler = transformer
+						.getSerializationHandler();
 
-        if (DTM.ELEMENT_NODE == nodeType)
-        {
-          super.execute(transformer);
-          SerializerUtils.processNSDecls(rthandler, sourceNode, nodeType, dtm);
-          transformer.executeChildTemplates(this, true);
-          
-          String ns = dtm.getNamespaceURI(sourceNode);
-          String localName = dtm.getLocalName(sourceNode);
-          transformer.getResultTreeHandler().endElement(ns, localName,
-                                                        dtm.getNodeName(sourceNode));
-        }
-        if (transformer.getDebug())
-		  transformer.getTraceManager().fireTraceEndEvent(this);         
-      }
-      else
-      {
-        if (transformer.getDebug())
-          transformer.getTraceManager().fireTraceEvent(this);
+				if (transformer.getDebug())
+					transformer.getTraceManager().fireTraceEvent(this);
 
-        super.execute(transformer);
-        transformer.executeChildTemplates(this, true);
+				// TODO: Process the use-attribute-sets stuff
+				ClonerToResultTree.cloneToResultTree(sourceNode, nodeType, dtm,
+						rthandler, false);
 
-        if (transformer.getDebug())
-          transformer.getTraceManager().fireTraceEndEvent(this);
-      }
-    }
-    catch(org.xml.sax.SAXException se)
-    {
-      throw new TransformerException(se);
-    }
-    finally
-    {
-      xctxt.popCurrentNode();
-    }
-  }
+				if (DTM.ELEMENT_NODE == nodeType) {
+					super.execute(transformer);
+					SerializerUtils.processNSDecls(rthandler, sourceNode,
+							nodeType, dtm);
+					transformer.executeChildTemplates(this, true);
+
+					String ns = dtm.getNamespaceURI(sourceNode);
+					String localName = dtm.getLocalName(sourceNode);
+					transformer.getResultTreeHandler().endElement(ns,
+							localName, dtm.getNodeName(sourceNode));
+				}
+				if (transformer.getDebug())
+					transformer.getTraceManager().fireTraceEndEvent(this);
+			} else {
+				if (transformer.getDebug())
+					transformer.getTraceManager().fireTraceEvent(this);
+
+				super.execute(transformer);
+				transformer.executeChildTemplates(this, true);
+
+				if (transformer.getDebug())
+					transformer.getTraceManager().fireTraceEndEvent(this);
+			}
+		} catch (org.xml.sax.SAXException se) {
+			throw new TransformerException(se);
+		} finally {
+			xctxt.popCurrentNode();
+		}
+	}
 }

@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: EndSelectionEvent.java,v 1.2 2008/03/27 05:14:53 dacarver Exp $
+ * $Id: EndSelectionEvent.java,v 1.3 2008/03/28 02:38:17 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.trace;
 
@@ -37,29 +37,34 @@ import org.apache.xpath.objects.XObject;
 import org.w3c.dom.Node;
 
 /**
- * Event triggered by completion of a xsl:for-each selection or a 
+ * Event triggered by completion of a xsl:for-each selection or a
  * xsl:apply-templates selection.
+ * 
  * @xsl.usage advanced
  */
-public class EndSelectionEvent extends SelectionEvent
-{
+public class EndSelectionEvent extends SelectionEvent {
 
-  /**
-   * Create an EndSelectionEvent.
-   * 
-   * @param processor The XSLT TransformerFactory.
-   * @param sourceNode The current context node.
-   * @param styleNode node in the style tree reference for the event.
-   * Should not be null.  That is not enforced.
-   * @param attributeName The attribute name from which the selection is made.
-   * @param xpath The XPath that executed the selection.
-   * @param selection The result of the selection.
-   */
-  public EndSelectionEvent(TransformerImpl processor, Node sourceNode,
-                        ElemTemplateElement styleNode, String attributeName,
-                        XPath xpath, XObject selection)
-  {
+	/**
+	 * Create an EndSelectionEvent.
+	 * 
+	 * @param processor
+	 *            The XSLT TransformerFactory.
+	 * @param sourceNode
+	 *            The current context node.
+	 * @param styleNode
+	 *            node in the style tree reference for the event. Should not be
+	 *            null. That is not enforced.
+	 * @param attributeName
+	 *            The attribute name from which the selection is made.
+	 * @param xpath
+	 *            The XPath that executed the selection.
+	 * @param selection
+	 *            The result of the selection.
+	 */
+	public EndSelectionEvent(TransformerImpl processor, Node sourceNode,
+			ElemTemplateElement styleNode, String attributeName, XPath xpath,
+			XObject selection) {
 
-    super(processor, sourceNode, styleNode, attributeName, xpath, selection);
-  }
+		super(processor, sourceNode, styleNode, attributeName, xpath, selection);
+	}
 }

@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: KeyIterator.java,v 1.1 2008/03/27 01:08:56 dacarver Exp $
+ * $Id: KeyIterator.java,v 1.2 2008/03/28 02:38:16 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer;
 
@@ -43,120 +43,119 @@ import org.apache.xpath.XPath;
 import org.apache.xpath.axes.OneStepIteratorForward;
 
 /**
- * This class implements an optimized iterator for 
- * "key()" patterns, matching each node to the 
- * match attribute in one or more xsl:key declarations.
+ * This class implements an optimized iterator for "key()" patterns, matching
+ * each node to the match attribute in one or more xsl:key declarations.
+ * 
  * @xsl.usage internal
  */
-public class KeyIterator extends OneStepIteratorForward
-{
-    static final long serialVersionUID = -1349109910100249661L;
+public class KeyIterator extends OneStepIteratorForward {
+	static final long serialVersionUID = -1349109910100249661L;
 
-  /** Key name.
-   *  @serial           */
-  private QName m_name;
+	/**
+	 * Key name.
+	 * 
+	 * @serial
+	 */
+	private QName m_name;
 
-  /**
-   * Get the key name from a key declaration this iterator will process
-   *
-   *
-   * @return Key name
-   */
-  public QName getName()
-  {
-    return m_name;
-  }
+	/**
+	 * Get the key name from a key declaration this iterator will process
+	 * 
+	 * 
+	 * @return Key name
+	 */
+	public QName getName() {
+		return m_name;
+	}
 
-  /** Vector of Key declarations in the stylesheet.
-   *  @serial          */
-  private Vector m_keyDeclarations;
+	/**
+	 * Vector of Key declarations in the stylesheet.
+	 * 
+	 * @serial
+	 */
+	private Vector m_keyDeclarations;
 
-  /**
-   * Get the key declarations from the stylesheet 
-   *
-   *
-   * @return Vector containing the key declarations from the stylesheet
-   */
-  public Vector getKeyDeclarations()
-  {
-    return m_keyDeclarations;
-  }
+	/**
+	 * Get the key declarations from the stylesheet
+	 * 
+	 * 
+	 * @return Vector containing the key declarations from the stylesheet
+	 */
+	public Vector getKeyDeclarations() {
+		return m_keyDeclarations;
+	}
 
-  /**
-    * Create a KeyIterator object.
-    *
-    * @throws javax.xml.transform.TransformerException
-    */
-  public KeyIterator(QName name, Vector keyDeclarations)
-  {
-    super(Axis.ALL);
-    m_keyDeclarations = keyDeclarations;
-    // m_prefixResolver = nscontext;
-    m_name = name;
-  }
+	/**
+	 * Create a KeyIterator object.
+	 * 
+	 * @throws javax.xml.transform.TransformerException
+	 */
+	public KeyIterator(QName name, Vector keyDeclarations) {
+		super(Axis.ALL);
+		m_keyDeclarations = keyDeclarations;
+		// m_prefixResolver = nscontext;
+		m_name = name;
+	}
 
-  /**
-   *  Test whether a specified node is visible in the logical view of a
-   * TreeWalker or NodeIterator. This function will be called by the
-   * implementation of TreeWalker and NodeIterator; it is not intended to
-   * be called directly from user code.
-   * 
-   * @param testNode  The node to check to see if it passes the filter or not.
-   *
-   * @return  a constant to determine whether the node is accepted,
-   *   rejected, or skipped, as defined  above .
-   */
-  public short acceptNode(int testNode)
-  {
-    boolean foundKey = false;
-    KeyIterator ki = (KeyIterator) m_lpi;
-    org.apache.xpath.XPathContext xctxt = ki.getXPathContext();
-    Vector keys = ki.getKeyDeclarations();
+	/**
+	 * Test whether a specified node is visible in the logical view of a
+	 * TreeWalker or NodeIterator. This function will be called by the
+	 * implementation of TreeWalker and NodeIterator; it is not intended to be
+	 * called directly from user code.
+	 * 
+	 * @param testNode
+	 *            The node to check to see if it passes the filter or not.
+	 * 
+	 * @return a constant to determine whether the node is accepted, rejected,
+	 *         or skipped, as defined above .
+	 */
+	@Override
+	public short acceptNode(int testNode) {
+		boolean foundKey = false;
+		KeyIterator ki = (KeyIterator) m_lpi;
+		org.apache.xpath.XPathContext xctxt = ki.getXPathContext();
+		Vector keys = ki.getKeyDeclarations();
 
-    QName name = ki.getName();
-    try
-    {
-      // System.out.println("lookupKey: "+lookupKey);
-      int nDeclarations = keys.size();
+		QName name = ki.getName();
+		try {
+			// System.out.println("lookupKey: "+lookupKey);
+			int nDeclarations = keys.size();
 
-      // Walk through each of the declarations made with xsl:key
-      for (int i = 0; i < nDeclarations; i++)
-      {
-        KeyDeclaration kd = (KeyDeclaration) keys.elementAt(i);
+			// Walk through each of the declarations made with xsl:key
+			for (int i = 0; i < nDeclarations; i++) {
+				KeyDeclaration kd = (KeyDeclaration) keys.elementAt(i);
 
-        // Only continue if the name on this key declaration
-        // matches the name on the iterator for this walker. 
-        if (!kd.getName().equals(name))
-          continue;
+				// Only continue if the name on this key declaration
+				// matches the name on the iterator for this walker.
+				if (!kd.getName().equals(name))
+					continue;
 
-        foundKey = true;
-        // xctxt.setNamespaceContext(ki.getPrefixResolver());
+				foundKey = true;
+				// xctxt.setNamespaceContext(ki.getPrefixResolver());
 
-        // See if our node matches the given key declaration according to 
-        // the match attribute on xsl:key.
-        XPath matchExpr = kd.getMatch();
-        double score = matchExpr.getMatchScore(xctxt, testNode);
+				// See if our node matches the given key declaration according
+				// to
+				// the match attribute on xsl:key.
+				XPath matchExpr = kd.getMatch();
+				double score = matchExpr.getMatchScore(xctxt, testNode);
 
-        if (score == kd.getMatch().MATCH_SCORE_NONE)
-          continue;
+				if (score == XPath.MATCH_SCORE_NONE)
+					continue;
 
-        return DTMIterator.FILTER_ACCEPT;
+				return DTMIterator.FILTER_ACCEPT;
 
-      } // end for(int i = 0; i < nDeclarations; i++)
-    }
-    catch (TransformerException se)
-    {
+			} // end for(int i = 0; i < nDeclarations; i++)
+		} catch (TransformerException se) {
 
-      // TODO: What to do?
-    }
+			// TODO: What to do?
+		}
 
-    if (!foundKey)
-      throw new RuntimeException(
-        XSLMessages.createMessage(
-          XSLTErrorResources.ER_NO_XSLKEY_DECLARATION,
-          new Object[] { name.getLocalName()}));
-          
-    return DTMIterator.FILTER_REJECT;
-  }
+		if (!foundKey)
+			throw new RuntimeException(XSLMessages.createMessage(
+					XSLTErrorResources.ER_NO_XSLKEY_DECLARATION,
+					new Object[] { name.getLocalName() }));
+
+		return DTMIterator.FILTER_REJECT;
+	}
 
 }

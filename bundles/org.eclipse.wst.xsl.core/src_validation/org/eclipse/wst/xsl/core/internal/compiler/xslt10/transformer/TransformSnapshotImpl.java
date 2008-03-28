@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 /*
- * $Id: TransformSnapshotImpl.java,v 1.1 2008/03/27 01:08:57 dacarver Exp $
+ * $Id: TransformSnapshotImpl.java,v 1.2 2008/03/28 02:38:16 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer;
 
@@ -41,214 +41,215 @@ import org.apache.xpath.XPathContext;
 
 import org.apache.xml.serializer.NamespaceMappings;
 import org.apache.xml.serializer.SerializationHandler;
+
 /**
- * This class holds a "snapshot" of it's current transformer state,
- * which can later be restored.
- *
- * This only saves state which can change over the course of the side-effect-free
- * (i.e. no extensions that call setURIResolver, etc.).
+ * This class holds a "snapshot" of it's current transformer state, which can
+ * later be restored.
  * 
- * @deprecated  It doesn't look like this code, which is for tooling, has
- * functioned propery for a while, so it doesn't look like it is being used.
+ * This only saves state which can change over the course of the
+ * side-effect-free (i.e. no extensions that call setURIResolver, etc.).
+ * 
+ * @deprecated It doesn't look like this code, which is for tooling, has
+ *             functioned propery for a while, so it doesn't look like it is
+ *             being used.
  */
-public class TransformSnapshotImpl implements TransformSnapshot
-{
+@Deprecated
+public class TransformSnapshotImpl implements TransformSnapshot {
 
-  /**
-   * The stack of Variable stack frames.
-   */
-  private VariableStack m_variableStacks;
+	/**
+	 * The stack of Variable stack frames.
+	 */
+	private VariableStack m_variableStacks;
 
-  /**
-   * The stack of <a href="http://www.w3.org/TR/xslt#dt-current-node">current node</a> objects.
-   *  Not to be confused with the current node list.  
-   */
-  private IntStack m_currentNodes;
+	/**
+	 * The stack of <a href="http://www.w3.org/TR/xslt#dt-current-node">current
+	 * node</a> objects. Not to be confused with the current node list.
+	 */
+	private IntStack m_currentNodes;
 
-  /** A stack of the current sub-expression nodes. */
-  private IntStack m_currentExpressionNodes;
+	/** A stack of the current sub-expression nodes. */
+	private IntStack m_currentExpressionNodes;
 
-  /**
-   * The current context node lists stack.
-   */
-  private Stack m_contextNodeLists;
+	/**
+	 * The current context node lists stack.
+	 */
+	private Stack m_contextNodeLists;
 
-  /**
-   * The current context node list.
-   */
-  private DTMIterator m_contextNodeList;
+	/**
+	 * The current context node list.
+	 */
+	private DTMIterator m_contextNodeList;
 
-  /**
-   * Stack of AxesIterators.
-   */
-  private Stack m_axesIteratorStack;
+	/**
+	 * Stack of AxesIterators.
+	 */
+	private Stack m_axesIteratorStack;
 
-  /**
-   * Is > 0 when we're processing a for-each.
-   */
-  private BoolStack m_currentTemplateRuleIsNull;
+	/**
+	 * Is > 0 when we're processing a for-each.
+	 */
+	private BoolStack m_currentTemplateRuleIsNull;
 
-  /**
-   * A node vector used as a stack to track the current
-   * ElemTemplateElement.  Needed for the
-   * org.apache.xalan.transformer.TransformState interface,
-   * so a tool can discover the calling template. 
-   */
-  private ObjectStack m_currentTemplateElements;
+	/**
+	 * A node vector used as a stack to track the current ElemTemplateElement.
+	 * Needed for the org.apache.xalan.transformer.TransformState interface, so
+	 * a tool can discover the calling template.
+	 */
+	private ObjectStack m_currentTemplateElements;
 
-  /**
-   * A node vector used as a stack to track the current
-   * ElemTemplate that was matched, as well as the node that
-   * was matched.  Needed for the
-   * org.apache.xalan.transformer.TransformState interface,
-   * so a tool can discover the matched template, and matched
-   * node. 
-   */
-  private Stack m_currentMatchTemplates;
+	/**
+	 * A node vector used as a stack to track the current ElemTemplate that was
+	 * matched, as well as the node that was matched. Needed for the
+	 * org.apache.xalan.transformer.TransformState interface, so a tool can
+	 * discover the matched template, and matched node.
+	 */
+	private Stack m_currentMatchTemplates;
 
-  /**
-   * A node vector used as a stack to track the current
-   * ElemTemplate that was matched, as well as the node that
-   * was matched.  Needed for the
-   * org.apache.xalan.transformer.TransformState interface,
-   * so a tool can discover the matched template, and matched
-   * node. 
-   */
-  private NodeVector m_currentMatchNodes;
+	/**
+	 * A node vector used as a stack to track the current ElemTemplate that was
+	 * matched, as well as the node that was matched. Needed for the
+	 * org.apache.xalan.transformer.TransformState interface, so a tool can
+	 * discover the matched template, and matched node.
+	 */
+	private NodeVector m_currentMatchNodes;
 
-  /**
-   * The table of counters for xsl:number support.
-   * @see ElemNumber
-   */
-  private CountersTable m_countersTable;
+	/**
+	 * The table of counters for xsl:number support.
+	 * 
+	 * @see ElemNumber
+	 */
+	private CountersTable m_countersTable;
 
-  /**
-   * Stack for the purposes of flagging infinite recursion with
-   * attribute sets.
-   */
-  private Stack m_attrSetStack;
+	/**
+	 * Stack for the purposes of flagging infinite recursion with attribute
+	 * sets.
+	 */
+	private Stack m_attrSetStack;
 
-  /** Indicate whether a namespace context was pushed */
-  boolean m_nsContextPushed;
+	/** Indicate whether a namespace context was pushed */
+	boolean m_nsContextPushed;
 
-  /**
-   * Use the SAX2 helper class to track result namespaces.
-   */
-  private NamespaceMappings m_nsSupport;
+	/**
+	 * Use the SAX2 helper class to track result namespaces.
+	 */
+	private NamespaceMappings m_nsSupport;
 
-  /** The number of events queued */
-//  int m_eventCount;
+	/** The number of events queued */
+	// int m_eventCount;
+	/**
+	 * Constructor TransformSnapshotImpl Take a snapshot of the currently
+	 * executing context.
+	 * 
+	 * @param transformer
+	 *            Non null transformer instance
+	 * @deprecated It doesn't look like this code, which is for tooling, has
+	 *             functioned propery for a while, so it doesn't look like it is
+	 *             being used.
+	 */
+	@Deprecated
+	public TransformSnapshotImpl(TransformerImpl transformer) {
 
-  /**
-   * Constructor TransformSnapshotImpl
-   * Take a snapshot of the currently executing context.
-   *
-   * @param transformer Non null transformer instance
-   * @deprecated  It doesn't look like this code, which is for tooling, has
-   * functioned propery for a while, so it doesn't look like it is being used.
-   */
-  public TransformSnapshotImpl(TransformerImpl transformer)
-  {
+		try {
 
-    try
-    {
+			// Are all these clones deep enough?
+			SerializationHandler rtf = transformer.getResultTreeHandler();
 
-      // Are all these clones deep enough?
-      SerializationHandler rtf = transformer.getResultTreeHandler();
+			{
+				// save serializer fields
+				m_nsSupport = (NamespaceMappings) rtf.getNamespaceMappings()
+						.clone();
 
-      {
-        // save serializer fields
-        m_nsSupport = (NamespaceMappings)rtf.getNamespaceMappings().clone();
-        
-        // Do other fields need to be saved/restored?
-      }
- 
-      XPathContext xpc = transformer.getXPathContext();
+				// Do other fields need to be saved/restored?
+			}
 
-      m_variableStacks = (VariableStack) xpc.getVarStack().clone();
-      m_currentNodes = (IntStack) xpc.getCurrentNodeStack().clone();
-      m_currentExpressionNodes =
-        (IntStack) xpc.getCurrentExpressionNodeStack().clone();
-      m_contextNodeLists = (Stack) xpc.getContextNodeListsStack().clone();
+			XPathContext xpc = transformer.getXPathContext();
 
-      if (!m_contextNodeLists.empty())
-        m_contextNodeList =
-          (DTMIterator) xpc.getContextNodeList().clone();
+			m_variableStacks = (VariableStack) xpc.getVarStack().clone();
+			m_currentNodes = (IntStack) xpc.getCurrentNodeStack().clone();
+			m_currentExpressionNodes = (IntStack) xpc
+					.getCurrentExpressionNodeStack().clone();
+			m_contextNodeLists = (Stack) xpc.getContextNodeListsStack().clone();
 
-      m_axesIteratorStack = (Stack) xpc.getAxesIteratorStackStacks().clone();
-      m_currentTemplateRuleIsNull =
-        (BoolStack) transformer.m_currentTemplateRuleIsNull.clone();
-      m_currentTemplateElements =
-        (ObjectStack) transformer.m_currentTemplateElements.clone();
-      m_currentMatchTemplates =
-        (Stack) transformer.m_currentMatchTemplates.clone();
-      m_currentMatchNodes =
-        (NodeVector) transformer.m_currentMatchedNodes.clone();
-      m_countersTable =
-        (CountersTable) transformer.getCountersTable().clone();
+			if (!m_contextNodeLists.empty())
+				m_contextNodeList = (DTMIterator) xpc.getContextNodeList()
+						.clone();
 
-      if (transformer.m_attrSetStack != null)
-        m_attrSetStack = (Stack) transformer.m_attrSetStack.clone();
-    }
-    catch (CloneNotSupportedException cnse)
-    {
-      throw new org.apache.xml.utils.WrappedRuntimeException(cnse);
-    }
-  }
+			m_axesIteratorStack = (Stack) xpc.getAxesIteratorStackStacks()
+					.clone();
+			m_currentTemplateRuleIsNull = (BoolStack) transformer.m_currentTemplateRuleIsNull
+					.clone();
+			m_currentTemplateElements = (ObjectStack) transformer.m_currentTemplateElements
+					.clone();
+			m_currentMatchTemplates = (Stack) transformer.m_currentMatchTemplates
+					.clone();
+			m_currentMatchNodes = (NodeVector) transformer.m_currentMatchedNodes
+					.clone();
+			m_countersTable = (CountersTable) transformer.getCountersTable()
+					.clone();
 
-  /**
-   * This will reset the stylesheet to a given execution context
-   * based on some previously taken snapshot where we can then start execution 
-   *
-   * @param transformer Non null transformer instance
-   * 
-   * @deprecated  It doesn't look like this code, which is for tooling, has
-   * functioned propery for a while, so it doesn't look like it is being used.
-   */
-  public void apply(TransformerImpl transformer)
-  {
+			if (transformer.m_attrSetStack != null)
+				m_attrSetStack = (Stack) transformer.m_attrSetStack.clone();
+		} catch (CloneNotSupportedException cnse) {
+			throw new org.apache.xml.utils.WrappedRuntimeException(cnse);
+		}
+	}
 
-    try
-    {
+	/**
+	 * This will reset the stylesheet to a given execution context based on some
+	 * previously taken snapshot where we can then start execution
+	 * 
+	 * @param transformer
+	 *            Non null transformer instance
+	 * 
+	 * @deprecated It doesn't look like this code, which is for tooling, has
+	 *             functioned propery for a while, so it doesn't look like it is
+	 *             being used.
+	 */
+	@Deprecated
+	public void apply(TransformerImpl transformer) {
 
-      // Are all these clones deep enough?
-      SerializationHandler rtf = transformer.getResultTreeHandler();
+		try {
 
-      if (rtf != null)
-      {
-        // restore serializer fields
-         rtf.setNamespaceMappings((NamespaceMappings)m_nsSupport.clone());
-      }
+			// Are all these clones deep enough?
+			SerializationHandler rtf = transformer.getResultTreeHandler();
 
-      XPathContext xpc = transformer.getXPathContext();
+			if (rtf != null) {
+				// restore serializer fields
+				rtf.setNamespaceMappings((NamespaceMappings) m_nsSupport
+						.clone());
+			}
 
-      xpc.setVarStack((VariableStack) m_variableStacks.clone());
-      xpc.setCurrentNodeStack((IntStack) m_currentNodes.clone());
-      xpc.setCurrentExpressionNodeStack(
-        (IntStack) m_currentExpressionNodes.clone());
-      xpc.setContextNodeListsStack((Stack) m_contextNodeLists.clone());
+			XPathContext xpc = transformer.getXPathContext();
 
-      if (m_contextNodeList != null)
-        xpc.pushContextNodeList((DTMIterator) m_contextNodeList.clone());
+			xpc.setVarStack((VariableStack) m_variableStacks.clone());
+			xpc.setCurrentNodeStack((IntStack) m_currentNodes.clone());
+			xpc
+					.setCurrentExpressionNodeStack((IntStack) m_currentExpressionNodes
+							.clone());
+			xpc.setContextNodeListsStack((Stack) m_contextNodeLists.clone());
 
-      xpc.setAxesIteratorStackStacks((Stack) m_axesIteratorStack.clone());
+			if (m_contextNodeList != null)
+				xpc
+						.pushContextNodeList((DTMIterator) m_contextNodeList
+								.clone());
 
-      transformer.m_currentTemplateRuleIsNull =
-        (BoolStack) m_currentTemplateRuleIsNull.clone();
-      transformer.m_currentTemplateElements =
-        (ObjectStack) m_currentTemplateElements.clone();
-      transformer.m_currentMatchTemplates =
-        (Stack) m_currentMatchTemplates.clone();
-      transformer.m_currentMatchedNodes =
-        (NodeVector) m_currentMatchNodes.clone();
-      transformer.m_countersTable = (CountersTable) m_countersTable.clone();
+			xpc.setAxesIteratorStackStacks((Stack) m_axesIteratorStack.clone());
 
-      if (m_attrSetStack != null)
-        transformer.m_attrSetStack = (Stack) m_attrSetStack.clone();
-    }
-    catch (CloneNotSupportedException cnse)
-    {
-      throw new org.apache.xml.utils.WrappedRuntimeException(cnse);
-    }
-  }
+			transformer.m_currentTemplateRuleIsNull = (BoolStack) m_currentTemplateRuleIsNull
+					.clone();
+			transformer.m_currentTemplateElements = (ObjectStack) m_currentTemplateElements
+					.clone();
+			transformer.m_currentMatchTemplates = (Stack) m_currentMatchTemplates
+					.clone();
+			transformer.m_currentMatchedNodes = (NodeVector) m_currentMatchNodes
+					.clone();
+			transformer.m_countersTable = (CountersTable) m_countersTable
+					.clone();
+
+			if (m_attrSetStack != null)
+				transformer.m_attrSetStack = (Stack) m_attrSetStack.clone();
+		} catch (CloneNotSupportedException cnse) {
+			throw new org.apache.xml.utils.WrappedRuntimeException(cnse);
+		}
+	}
 }

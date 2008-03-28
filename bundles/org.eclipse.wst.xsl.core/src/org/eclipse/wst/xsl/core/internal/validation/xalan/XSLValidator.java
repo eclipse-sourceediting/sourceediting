@@ -19,6 +19,8 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.wst.common.uriresolver.internal.URI;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.xml.sax.InputSource;
@@ -38,6 +40,7 @@ public class XSLValidator {
 	private static final byte[] XPATH_LOCK = new byte[0];
 
 	private XSLValidator() {
+
 	}
 
 	/**
@@ -49,6 +52,9 @@ public class XSLValidator {
 	 * @throws CoreException
 	 */
 	public ValidationReport validate(String uri, IFile xslFile) throws CoreException {
+		// The string that is passed in for the URI needs to be encoded to be a valid
+		// URI otherwise on those systems where spaces are significant it can't find
+		// files that have spaces in the file name.
 		ErrorListener errorListener = new XSLValidationReport();
 
 		synchronized (XPATH_LOCK) {
@@ -60,13 +66,6 @@ public class XSLValidator {
 			    {
 			      // If so, we can safely cast.
 			      SAXTransformerFactory saxfactory = ((SAXTransformerFactory) transformer);
-//			      // Create factory for SAX parser
-//			      SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-//			      saxParserFactory.setNamespaceAware(true);
-//			      
-//			      // Get a SAX parser
-//			      XMLReader xmlparser = saxParserFactory.newSAXParser().getXMLReader();
-//			      xmlparser.setErrorHandler(new DefaultErrorHandler());
 			      Templates compiled = saxfactory.newTemplates(new SAXSource(new InputSource(uri)));
 			    }
 		   } catch (Exception ex) {

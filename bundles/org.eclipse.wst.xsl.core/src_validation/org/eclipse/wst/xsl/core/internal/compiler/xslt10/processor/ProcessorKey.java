@@ -26,7 +26,7 @@
  * limitations under the License.
  */
 /*
- * $Id: ProcessorKey.java,v 1.1 2008/03/27 01:08:55 dacarver Exp $
+ * $Id: ProcessorKey.java,v 1.2 2008/03/28 02:38:16 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.processor;
 
@@ -41,127 +41,128 @@ import org.xml.sax.Attributes;
 
 /**
  * TransformerFactory for xsl:key markup.
+ * 
  * <pre>
- * <!ELEMENT xsl:key EMPTY>
- * <!ATTLIST xsl:key
+ * &lt;!ELEMENT xsl:key EMPTY&gt;
+ * &lt;!ATTLIST xsl:key
  *   name %qname; #REQUIRED
  *   match %pattern; #REQUIRED
  *   use %expr; #REQUIRED
- * >
+ * &gt;
  * </pre>
+ * 
  * @see <a href="http://www.w3.org/TR/xslt#dtd">XSLT DTD</a>
  * @see <a href="http://www.w3.org/TR/xslt#key">key in XSLT Specification</a>
  */
-class ProcessorKey extends XSLTElementProcessor
-{
-    static final long serialVersionUID = 4285205417566822979L;
+class ProcessorKey extends XSLTElementProcessor {
+	static final long serialVersionUID = 4285205417566822979L;
 
-  /**
-   * Receive notification of the start of an xsl:key element.
-   *
-   * @param handler The calling StylesheetHandler/TemplatesBuilder.
-   * @param uri The Namespace URI, or the empty string if the
-   *        element has no Namespace URI or if Namespace
-   *        processing is not being performed.
-   * @param localName The local name (without prefix), or the
-   *        empty string if Namespace processing is not being
-   *        performed.
-   * @param rawName The raw XML 1.0 name (with prefix), or the
-   *        empty string if raw names are not available.
-   * @param attributes The attributes attached to the element.  If
-   *        there are no attributes, it shall be an empty
-   *        Attributes object.
-   */
-  public void startElement(
-          StylesheetHandler handler, String uri, String localName, String rawName, Attributes attributes)
-            throws org.xml.sax.SAXException
-  {
+	/**
+	 * Receive notification of the start of an xsl:key element.
+	 * 
+	 * @param handler
+	 *            The calling StylesheetHandler/TemplatesBuilder.
+	 * @param uri
+	 *            The Namespace URI, or the empty string if the element has no
+	 *            Namespace URI or if Namespace processing is not being
+	 *            performed.
+	 * @param localName
+	 *            The local name (without prefix), or the empty string if
+	 *            Namespace processing is not being performed.
+	 * @param rawName
+	 *            The raw XML 1.0 name (with prefix), or the empty string if raw
+	 *            names are not available.
+	 * @param attributes
+	 *            The attributes attached to the element. If there are no
+	 *            attributes, it shall be an empty Attributes object.
+	 */
+	@Override
+	public void startElement(StylesheetHandler handler, String uri,
+			String localName, String rawName, Attributes attributes)
+			throws org.xml.sax.SAXException {
 
-    KeyDeclaration kd = new KeyDeclaration(handler.getStylesheet(), handler.nextUid());
+		KeyDeclaration kd = new KeyDeclaration(handler.getStylesheet(), handler
+				.nextUid());
 
-    kd.setDOMBackPointer(handler.getOriginatingNode());
-    kd.setLocaterInfo(handler.getLocator());
-    setPropertiesFromAttributes(handler, rawName, attributes, kd);
-    handler.getStylesheet().setKey(kd);
-  }
+		kd.setDOMBackPointer(handler.getOriginatingNode());
+		kd.setLocaterInfo(handler.getLocator());
+		setPropertiesFromAttributes(handler, rawName, attributes, kd);
+		handler.getStylesheet().setKey(kd);
+	}
 
-  /**
-   * Set the properties of an object from the given attribute list.
-   * @param handler The stylesheet's Content handler, needed for
-   *                error reporting.
-   * @param rawName The raw name of the owner element, needed for
-   *                error reporting.
-   * @param attributes The list of attributes.
-   * @param target The target element where the properties will be set.
-   */
-  public void setPropertiesFromAttributes(
-          StylesheetHandler handler, String rawName, Attributes attributes, 
-          ElemTemplateElement target)
-            throws org.xml.sax.SAXException
-  {
+	/**
+	 * Set the properties of an object from the given attribute list.
+	 * 
+	 * @param handler
+	 *            The stylesheet's Content handler, needed for error reporting.
+	 * @param rawName
+	 *            The raw name of the owner element, needed for error reporting.
+	 * @param attributes
+	 *            The list of attributes.
+	 * @param target
+	 *            The target element where the properties will be set.
+	 */
+	@Override
+	public void setPropertiesFromAttributes(StylesheetHandler handler,
+			String rawName, Attributes attributes, ElemTemplateElement target)
+			throws org.xml.sax.SAXException {
 
-    XSLTElementDef def = getElemDef();
+		XSLTElementDef def = getElemDef();
 
-    // Keep track of which XSLTAttributeDefs have been processed, so 
-    // I can see which default values need to be set.
-    Vector processedDefs = new Vector();
-    int nAttrs = attributes.getLength();
+		// Keep track of which XSLTAttributeDefs have been processed, so
+		// I can see which default values need to be set.
+		Vector processedDefs = new Vector();
+		int nAttrs = attributes.getLength();
 
-    for (int i = 0; i < nAttrs; i++)
-    {
-      String attrUri = attributes.getURI(i);
-      String attrLocalName = attributes.getLocalName(i);
-      XSLTAttributeDef attrDef = def.getAttributeDef(attrUri, attrLocalName);
+		for (int i = 0; i < nAttrs; i++) {
+			String attrUri = attributes.getURI(i);
+			String attrLocalName = attributes.getLocalName(i);
+			XSLTAttributeDef attrDef = def.getAttributeDef(attrUri,
+					attrLocalName);
 
-      if (null == attrDef)
-      {
+			if (null == attrDef) {
 
-        // Then barf, because this element does not allow this attribute.
-        handler.error(attributes.getQName(i)
-                      + "attribute is not allowed on the " + rawName
-                      + " element!", null);
-      }
-      else
-      {
-        String valueString = attributes.getValue(i);
+				// Then barf, because this element does not allow this
+				// attribute.
+				handler.error(attributes.getQName(i)
+						+ "attribute is not allowed on the " + rawName
+						+ " element!", null);
+			} else {
+				String valueString = attributes.getValue(i);
 
-        if (valueString.indexOf(org.apache.xpath.compiler.Keywords.FUNC_KEY_STRING
-                                + "(") >= 0)
-          handler.error(
-            XSLMessages.createMessage(
-            XSLTErrorResources.ER_INVALID_KEY_CALL, null), null);
+				if (valueString
+						.indexOf(org.apache.xpath.compiler.Keywords.FUNC_KEY_STRING
+								+ "(") >= 0)
+					handler
+							.error(XSLMessages.createMessage(
+									XSLTErrorResources.ER_INVALID_KEY_CALL,
+									null), null);
 
-        processedDefs.addElement(attrDef);
-        attrDef.setAttrValue(handler, attrUri, attrLocalName,
-                             attributes.getQName(i), attributes.getValue(i),
-                             target);
-      }
-    }
+				processedDefs.addElement(attrDef);
+				attrDef.setAttrValue(handler, attrUri, attrLocalName,
+						attributes.getQName(i), attributes.getValue(i), target);
+			}
+		}
 
-    XSLTAttributeDef[] attrDefs = def.getAttributes();
-    int nAttrDefs = attrDefs.length;
+		XSLTAttributeDef[] attrDefs = def.getAttributes();
+		int nAttrDefs = attrDefs.length;
 
-    for (int i = 0; i < nAttrDefs; i++)
-    {
-      XSLTAttributeDef attrDef = attrDefs[i];
-      String defVal = attrDef.getDefault();
+		for (int i = 0; i < nAttrDefs; i++) {
+			XSLTAttributeDef attrDef = attrDefs[i];
+			String defVal = attrDef.getDefault();
 
-      if (null != defVal)
-      {
-        if (!processedDefs.contains(attrDef))
-        {
-          attrDef.setDefAttrValue(handler, target);
-        }
-      }
+			if (null != defVal) {
+				if (!processedDefs.contains(attrDef)) {
+					attrDef.setDefAttrValue(handler, target);
+				}
+			}
 
-      if (attrDef.getRequired())
-      {
-        if (!processedDefs.contains(attrDef))
-          handler.error(
-            XSLMessages.createMessage(
-              XSLTErrorResources.ER_REQUIRES_ATTRIB, new Object[]{ rawName,
-                                                                   attrDef.getName() }), null);
-      }
-    }
-  }
+			if (attrDef.getRequired()) {
+				if (!processedDefs.contains(attrDef))
+					handler.error(XSLMessages.createMessage(
+							XSLTErrorResources.ER_REQUIRES_ATTRIB,
+							new Object[] { rawName, attrDef.getName() }), null);
+			}
+		}
+	}
 }

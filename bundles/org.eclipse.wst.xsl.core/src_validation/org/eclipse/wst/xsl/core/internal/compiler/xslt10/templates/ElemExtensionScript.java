@@ -25,88 +25,92 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemExtensionScript.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: ElemExtensionScript.java,v 1.2 2008/03/28 02:38:15 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
 /**
  * Implement Script extension element
+ * 
  * @xsl.usage internal
  */
-public class ElemExtensionScript extends ElemTemplateElement
-{
-    static final long serialVersionUID = -6995978265966057744L;
+public class ElemExtensionScript extends ElemTemplateElement {
+	static final long serialVersionUID = -6995978265966057744L;
 
-  /**
-   * Constructor ElemExtensionScript
-   *
-   */
-  public ElemExtensionScript()
-  {
+	/**
+	 * Constructor ElemExtensionScript
+	 * 
+	 */
+	public ElemExtensionScript() {
 
-    // System.out.println("ElemExtensionScript ctor");
-  }
+		// System.out.println("ElemExtensionScript ctor");
+	}
 
-  /** Language used in extension.
-   *  @serial          */
-  private String m_lang = null;
+	/**
+	 * Language used in extension.
+	 * 
+	 * @serial
+	 */
+	private String m_lang = null;
 
-  /**
-   * Set language used by extension
-   *
-   *
-   * @param v Language used by extension
-   */
-  public void setLang(String v)
-  {
-    m_lang = v;
-  }
+	/**
+	 * Set language used by extension
+	 * 
+	 * 
+	 * @param v
+	 *            Language used by extension
+	 */
+	public void setLang(String v) {
+		m_lang = v;
+	}
 
-  /**
-   * Get language used by extension
-   *
-   *
-   * @return Language used by extension
-   */
-  public String getLang()
-  {
-    return m_lang;
-  }
+	/**
+	 * Get language used by extension
+	 * 
+	 * 
+	 * @return Language used by extension
+	 */
+	public String getLang() {
+		return m_lang;
+	}
 
-  /** Extension handler.
-   *  @serial          */
-  private String m_src = null;
+	/**
+	 * Extension handler.
+	 * 
+	 * @serial
+	 */
+	private String m_src = null;
 
-  /**
-   * Set Extension handler name for this extension
-   *
-   *
-   * @param v Extension handler name to set
-   */
-  public void setSrc(String v)
-  {
-    m_src = v;
-  }
+	/**
+	 * Set Extension handler name for this extension
+	 * 
+	 * 
+	 * @param v
+	 *            Extension handler name to set
+	 */
+	public void setSrc(String v) {
+		m_src = v;
+	}
 
-  /**
-   * Get Extension handler name for this extension
-   *
-   *
-   * @return Extension handler name
-   */
-  public String getSrc()
-  {
-    return m_src;
-  }
+	/**
+	 * Get Extension handler name for this extension
+	 * 
+	 * 
+	 * @return Extension handler name
+	 */
+	public String getSrc() {
+		return m_src;
+	}
 
-  /**
-   * Get an int constant identifying the type of element.
-   * @see org.apache.xalan.templates.Constants
-   *
-   * @return The token ID for this element 
-   */
-  public int getXSLToken()
-  {
-    return Constants.ELEMNAME_EXTENSIONSCRIPT;
-  }
+	/**
+	 * Get an int constant identifying the type of element.
+	 * 
+	 * @see org.apache.xalan.templates.Constants
+	 * 
+	 * @return The token ID for this element
+	 */
+	@Override
+	public int getXSLToken() {
+		return Constants.ELEMNAME_EXTENSIONSCRIPT;
+	}
 }

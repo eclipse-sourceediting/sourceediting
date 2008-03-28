@@ -25,23 +25,23 @@
  * limitations under the License.
  */
 /*
- * $Id: ElemEmpty.java,v 1.1 2008/03/27 01:08:54 dacarver Exp $
+ * $Id: ElemEmpty.java,v 1.2 2008/03/28 02:38:15 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.templates;
 
-
 /**
- * Simple empty elem to push on the stack when nothing
- * else got pushed, so that pop() works correctly.
+ * Simple empty elem to push on the stack when nothing else got pushed, so that
+ * pop() works correctly.
+ * 
  * @xsl.usage internal
  */
-public class ElemEmpty extends ElemTemplateElement
-{
-    static final long serialVersionUID = 7544753713671472252L;
+public class ElemEmpty extends ElemTemplateElement {
+	static final long serialVersionUID = 7544753713671472252L;
 
-  /**
-   * Constructor ElemEmpty
-   *
-   */
-  public ElemEmpty(){}
+	/**
+	 * Constructor ElemEmpty
+	 * 
+	 */
+	public ElemEmpty() {
+	}
 }

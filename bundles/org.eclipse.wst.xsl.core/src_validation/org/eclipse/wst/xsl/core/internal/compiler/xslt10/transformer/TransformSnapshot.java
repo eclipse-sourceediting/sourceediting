@@ -25,18 +25,19 @@
  * limitations under the License.
  */
 /*
- * $Id: TransformSnapshot.java,v 1.1 2008/03/27 01:08:56 dacarver Exp $
+ * $Id: TransformSnapshot.java,v 1.2 2008/03/28 02:38:16 dacarver Exp $
  */
 package org.eclipse.wst.xsl.core.internal.compiler.xslt10.transformer;
 
 /**
- * This is an opaque interface that allows the transformer to return a 
+ * This is an opaque interface that allows the transformer to return a
  * "snapshot" of it's current state, which can later be restored.
  * 
  * @deprecated It doesn't look like this code, which is for tooling, has
- * functioned propery for a while, so it doesn't look like it is being used.
+ *             functioned propery for a while, so it doesn't look like it is
+ *             being used.
  */
-public interface TransformSnapshot
-{
+@Deprecated
+public interface TransformSnapshot {
 
 }
