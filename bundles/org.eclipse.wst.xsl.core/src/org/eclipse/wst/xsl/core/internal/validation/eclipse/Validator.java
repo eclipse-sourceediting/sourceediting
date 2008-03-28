@@ -26,7 +26,9 @@ import org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator
 import org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
+import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
+import org.eclipse.wst.xsl.core.internal.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.internal.model.XSLAttribute;
 import org.eclipse.wst.xsl.core.internal.model.XSLNode;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidationMessage;
@@ -42,8 +44,14 @@ public class Validator extends AbstractNestedValidator {
 	@Override
 	public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor)
 	{
+		// TODO this method is NOT being called! Why?
 		ValidationResult res = super.validate(resource, kind, state, monitor);
-		// TODO dependencies
+		if (resource.getType() == IResource.FILE)
+		{
+			StylesheetModel stylesheet = XSLCore.getInstance().getStylesheet((IFile)resource);
+			IFile[] dependencies = stylesheet.getFiles().toArray(new IFile[0]);
+			res.setDependsOn(dependencies);
+		}
 		// TODO clean project (when project == null)
 		return res;
 	}
