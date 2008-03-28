@@ -1,21 +1,18 @@
 /**
  * 
  */
-package org.eclipse.wst.jsdt.web.ui;
+package org.eclipse.wst.jsdt.web.core.internal.project;
 
 import java.net.URI;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer;
-import org.eclipse.wst.jsdt.core.IJsGlobalScopeContainer;
 import org.eclipse.wst.jsdt.core.IClasspathEntry;
 import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJsGlobalScopeContainer;
+import org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer;
 import org.eclipse.wst.jsdt.core.compiler.libraries.LibraryLocation;
-import org.eclipse.wst.jsdt.internal.ui.IJsGlobalScopeContainerInitializerExtension;
-import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
 import org.eclipse.wst.jsdt.web.core.javascript.JsNameManglerUtil;
 import org.eclipse.wst.jsdt.web.core.javascript.WebRootFinder;
 
@@ -23,7 +20,7 @@ import org.eclipse.wst.jsdt.web.core.javascript.WebRootFinder;
  * @author childsb
  * 
  */
-public class WebProjectJsGlobalScopeContainerInitializer extends JsGlobalScopeContainerInitializer implements IJsGlobalScopeContainerInitializerExtension {
+public class WebProjectJsGlobalScopeContainerInitializer extends JsGlobalScopeContainerInitializer  {
 	private static final String CONTAINER_DESCRIPTION = Messages.getString("WebProjectJsGlobalScopeContainerInitializer.0"); //$NON-NLS-1$
 	
 	public static final char[] LIB_NAME = {'b','r','o','w','s','e','r','W','i','n','d','o','w','.','j','s'};
@@ -139,12 +136,7 @@ public class WebProjectJsGlobalScopeContainerInitializer extends JsGlobalScopeCo
 	public IPath getPath() {
 		return new Path(JsWebNature.VIRTUAL_CONTAINER);
 	}
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.jsdt.internal.ui.IJsGlobalScopeContainerInitialzerExtension#getImage(org.eclipse.core.runtime.IPath, java.lang.String, org.eclipse.wst.jsdt.core.IJavaProject)
-	 */
-	public ImageDescriptor getImage(IPath containerPath, String element, IJavaProject project) {
-		return ImageDescriptor.createFromFile(this.getClass(),"web1.JPG"); //$NON-NLS-1$
-	}
+
 	public IClasspathEntry[] getClasspathEntries() {
 		
 		//IClasspathEntry entry=null;

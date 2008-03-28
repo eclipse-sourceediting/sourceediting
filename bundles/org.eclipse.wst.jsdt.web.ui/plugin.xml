@@ -688,14 +688,15 @@
 			</enablement>
 		</renameParticipant>
 
-	   
-	</extension>
-			  <extension  point="org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer">
-	      <JsGlobalScopeContainerInitializer
-	            class="org.eclipse.wst.jsdt.web.ui.WebProjectJsGlobalScopeContainerInitializer"
-	            id="org.eclipse.wst.jsdt.launching.WebProject">
-	      </JsGlobalScopeContainerInitializer>
-  	 </extension>
+	  </extension>
+  <extension point="org.eclipse.wst.jsdt.ui.JsGlobalScopeUIInitializer">
+     <JsGlobalScopeUIInitializer
+     	id="org.eclipse.wst.jsdt.launching.WebProject"
+     	class="org.eclipse.wst.jsdt.web.ui.WebProjectJsGlobalScopeUIInitializer">
+     </JsGlobalScopeUIInitializer>
+   </extension>
+
+
   	 <extension
          point="org.eclipse.ui.popupMenus">
   		<objectContribution
