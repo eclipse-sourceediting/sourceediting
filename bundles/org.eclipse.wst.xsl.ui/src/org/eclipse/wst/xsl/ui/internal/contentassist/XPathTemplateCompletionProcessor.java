@@ -86,6 +86,8 @@ class XPathTemplateCompletionProcessor extends TemplateCompletionProcessor {
 			returnImage = XSLPluginImageHelper.getInstance().getImage(XSLPluginImages.IMG_XPATH_AXIS); 
 		} else if (TemplateContextTypeIdsXPath.XPATH.equals(template.getContextTypeId())) {
 			returnImage = XSLPluginImageHelper.getInstance().getImage(XSLPluginImages.IMG_XPATH_FUNCTION);
+		} else if (TemplateContextTypeIdsXPath.OPERATOR.equals(template.getContextTypeId())) {
+			returnImage = XSLPluginImageHelper.getInstance().getImage(XSLPluginImages.IMG_OPERATOR);
 		}
 		return returnImage; 
 	}

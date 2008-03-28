@@ -30,5 +30,9 @@ public class XSLPluginImages {
 	 */
 	public static final String IMG_VARIABLES = "icons/full/variable.gif"; //$NON-NLS-1$	
 
+	/**
+	 * Path to the XPATH Images used for Content Assist
+	 */
+	public static final String IMG_OPERATOR = "icons/full/operation.gif"; //$NON-NLS-1$	
 	
 }

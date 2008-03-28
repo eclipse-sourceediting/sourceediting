@@ -21,10 +21,12 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposalExtension2;
+import org.eclipse.jface.text.contentassist.ICompletionProposalExtension3;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 
 
@@ -33,7 +35,7 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
  *
  * @since 3.0
  */
-final class PositionBasedCompletionProposal implements ICompletionProposal, ICompletionProposalExtension2 {
+public class PositionBasedCompletionProposal implements ICompletionProposal, ICompletionProposalExtension2, ICompletionProposalExtension3 {
 
 	/** The string to be displayed in the completion proposal popup */
 	private String fDisplayString;
@@ -165,6 +167,22 @@ final class PositionBasedCompletionProposal implements ICompletionProposal, ICom
 			// ignore concurrently modified document
 		}
 		return false;
+	}
+
+	public IInformationControlCreator getInformationControlCreator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public int getPrefixCompletionStart(IDocument document, int completionOffset) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public CharSequence getPrefixCompletionText(IDocument document,
+			int completionOffset) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

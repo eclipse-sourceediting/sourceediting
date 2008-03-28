@@ -166,23 +166,23 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 					// Add the common XPath proposals to Select, Test, and Match
 					// attributes that
 					// appear in the xsl namespace.
-					if (attributeName.equals(ATTR_SELECT)
-							|| attributeName.equals(ATTR_TEST)
-							|| attributeName.equals(ATTR_MATCH)) {
+					if (attributeName.equals(ATTR_MATCH)) {
 						addTemplates(contentAssistRequest,
 								TemplateContextTypeIdsXPath.AXIS, offset);
 						addTemplates(contentAssistRequest,
 								TemplateContextTypeIdsXPath.XPATH, offset);
+//						addTemplates(contentAssistRequest,
+//								TemplateContextTypeIdsXPath.OPERATOR, offset);
 						addTemplates(contentAssistRequest,
 								TemplateContextTypeIdsXPath.CUSTOM, offset);
 					}
 
 					// Operators like And, Or, greater than, are more likely to
 					// be used in test statements
-					if (attributeName.equals(ATTR_TEST)) {
-						addTemplates(contentAssistRequest,
-								TemplateContextTypeIdsXPath.OPERATOR);
-					}
+//					if (attributeName.equals(ATTR_TEST)) {
+//						addTemplates(contentAssistRequest,
+//								TemplateContextTypeIdsXPath.OPERATOR, offset);
+//					}
 
 					// Match attributes probably need to get a listing of all
 					// available elements from the

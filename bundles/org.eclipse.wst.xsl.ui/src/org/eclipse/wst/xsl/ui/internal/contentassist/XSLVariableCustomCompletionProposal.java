@@ -90,5 +90,6 @@ public class XSLVariableCustomCompletionProposal extends CustomCompletionProposa
 		PositionBasedCompletionProposal proposal = 
 			new PositionBasedCompletionProposal(getReplacementString(), position, existingLength + getReplacementString().length());
 		proposal.apply(document);
+//	    apply(document);
 	}
 }
