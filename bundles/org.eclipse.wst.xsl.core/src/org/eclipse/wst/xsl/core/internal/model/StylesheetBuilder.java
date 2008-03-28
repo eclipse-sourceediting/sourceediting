@@ -112,6 +112,7 @@ public class StylesheetBuilder
 
 	private Stylesheet build(IFile file)
 	{
+		System.out.println("Building "+file);
 		Stylesheet stylesheet = null;
 		IStructuredModel smodel = null;
 		try

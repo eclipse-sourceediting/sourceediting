@@ -113,6 +113,7 @@ public class StylesheetModel implements IIncludeVisitor
 	public boolean visit(Include include)
 	{
 		IFile file = include.getHrefAsFile();
+		System.out.println(file);
 		if (file == null || !file.exists())
 		{
 			return false;
@@ -124,7 +125,7 @@ public class StylesheetModel implements IIncludeVisitor
 		}
 		files.add(file);
 		
-		Stylesheet includedStylesheet = StylesheetBuilder.getInstance().getStylesheet(file, true);
+		Stylesheet includedStylesheet = StylesheetBuilder.getInstance().getStylesheet(file, false);
 		stylesheets.add(includedStylesheet);
 		globalVariables.addAll(includedStylesheet.globalVariables);
 		if (include.getIncludeType() == Include.INCLUDE)

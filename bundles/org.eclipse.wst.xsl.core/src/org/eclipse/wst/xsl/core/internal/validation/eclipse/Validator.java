@@ -27,6 +27,7 @@ import org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
+import org.eclipse.wst.xsl.core.internal.model.XSLAttribute;
 import org.eclipse.wst.xsl.core.internal.model.XSLNode;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidationMessage;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidator;
@@ -43,7 +44,7 @@ public class Validator extends AbstractNestedValidator {
 	{
 		ValidationResult res = super.validate(resource, kind, state, monitor);
 		// TODO dependencies
-		// TODO clean project
+		// TODO clean project (when project == null)
 		return res;
 	}
 	
@@ -63,15 +64,16 @@ public class Validator extends AbstractNestedValidator {
 		return valreport;
 	}
 
-	// TODO which attributes to set
 	protected void addInfoToMessage(ValidationMessage validationMessage, IMessage message) {
 		XSLValidationMessage msg = (XSLValidationMessage)validationMessage;
 		XSLNode node = msg.getNode();
+		// constants are defined in org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidator
 		if (node.getNodeType() == XSLNode.ATTRIBUTE_NODE)
 		{
 			message.setAttribute("ERROR_SIDE", "ERROR_SIDE_RIGHT");
 			message.setAttribute(COLUMN_NUMBER_ATTRIBUTE, new Integer(validationMessage.getColumnNumber()));
-			message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "START_TAG");  // whether to squiggle the element, attribute or text
+			message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "ATTRIBUTE_VALUE");  // whether to squiggle the element, attribute or text
+			message.setAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE, ((XSLAttribute)node).getName());
 		}
 		else if (node.getNodeType() == XSLNode.ELEMENT_NODE)
 		{
