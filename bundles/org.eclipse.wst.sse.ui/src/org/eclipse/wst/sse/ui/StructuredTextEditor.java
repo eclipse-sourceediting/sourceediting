@@ -1402,10 +1402,11 @@ public class StructuredTextEditor extends TextEditor {
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE, action);
 
 		computeAndSetDoubleClickAction();
-
-		IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+		
 		IHandler handler = new GotoMatchingBracketHandler();
-		handlerService.activateHandler(ActionDefinitionIds.GOTO_MATCHING_BRACKET, handler);
+    IHandlerService handlerService = (IHandlerService) getSite().getService(IHandlerService.class);
+    if (handlerService != null)
+      handlerService.activateHandler(ActionDefinitionIds.GOTO_MATCHING_BRACKET, handler);
 
 		fShowPropertiesAction = new ShowPropertiesAction();
 		fFoldingGroup = new FoldingActionGroup(this, getSourceViewer());
@@ -1465,7 +1466,8 @@ public class StructuredTextEditor extends TextEditor {
 	 */
 	public void createPartControl(Composite parent) {
 		IContextService contextService = (IContextService) getSite().getService(IContextService.class);
-		contextService.activateContext(EDITOR_KEYBINDING_SCOPE_ID);
+		if (contextService != null)
+		  contextService.activateContext(EDITOR_KEYBINDING_SCOPE_ID);
 		
 		if (getSourceViewerConfiguration() == null) {
 			ConfigurationAndTarget cat = createSourceViewerConfiguration();
