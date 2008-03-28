@@ -109,7 +109,6 @@ public class StylesheetModel implements IIncludeVisitor
 		return circularReference;
 	}
 			
-	@Override
 	public boolean visit(Include include)
 	{
 		IFile file = include.getHrefAsFile();
