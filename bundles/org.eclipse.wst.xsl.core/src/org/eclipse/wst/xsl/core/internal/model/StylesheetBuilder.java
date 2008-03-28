@@ -12,8 +12,10 @@ package org.eclipse.wst.xsl.core.internal.model;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPath;
@@ -39,11 +41,12 @@ import org.w3c.dom.NodeList;
 
 /**
  * TODO: Add Javadoc
- * @author dcarver
- *
+ * @author Doug Satchwell
  */
 public class StylesheetBuilder
 {
+	private static StylesheetBuilder instance;
+	private final XPathExpression xpathStylesheet;
 	private final XPathExpression xpathInclude;
 	private final XPathExpression xpathImport;
 	private final XPathExpression xpathGlobalVariable;
@@ -52,12 +55,9 @@ public class StylesheetBuilder
 	private final XPathExpression xpathTemplateVariable;
 	private final XPathExpression xpathCallTemplate;
 	private final XPathExpression xpathCallTemplateParam;
+	private final Map<IFile, Stylesheet> builtFiles = new HashMap<IFile, Stylesheet>();
 
-	/**
-	 * TODO: Add Javadoc
-	 * @throws XPathExpressionException
-	 */
-	public StylesheetBuilder() throws XPathExpressionException
+	private StylesheetBuilder() throws XPathExpressionException
 	{
 		XPath xpath = XPathFactory.newInstance().newXPath();
 		xpath.setNamespaceContext(new NamespaceContext()
@@ -89,6 +89,7 @@ public class StylesheetBuilder
 			}
 
 		});
+		xpathStylesheet = xpath.compile("/xsl:stylesheet"); //$NON-NLS-1$
 		xpathInclude = xpath.compile("/xsl:stylesheet/xsl:include"); //$NON-NLS-1$
 		xpathImport = xpath.compile("/xsl:stylesheet/xsl:import"); //$NON-NLS-1$
 		xpathGlobalVariable = xpath.compile("/xsl:stylesheet/xsl:variable"); //$NON-NLS-1$
@@ -98,13 +99,18 @@ public class StylesheetBuilder
 		xpathCallTemplate = xpath.compile("/xsl:stylesheet/xsl:template//xsl:call-template"); //$NON-NLS-1$
 		xpathCallTemplateParam = xpath.compile("xsl:with-param"); //$NON-NLS-1$
 	}
+	
+	public Stylesheet getStylesheet(IFile file, boolean force){
+		Stylesheet stylesheet = builtFiles.get(file);
+		if (stylesheet == null || force)
+		{
+			stylesheet = build(file);
+			builtFiles.put(file, stylesheet);
+		}
+		return stylesheet;
+	}
 
-	/**
-	 * TODO: Add Javadoc
-	 * @param file
-	 * @return a source file, or null if creation failed
-	 */
-	public Stylesheet buildSourceFile(IFile file)
+	private Stylesheet build(IFile file)
 	{
 		Stylesheet stylesheet = null;
 		IStructuredModel smodel = null;
@@ -139,6 +145,7 @@ public class StylesheetBuilder
 		Stylesheet sf = new Stylesheet(file);
 		try
 		{
+			evaluateStylesheet(document, sf);
 			evaluateIncludes(document, sf);
 			evaluateImports(document, sf);
 			evaluateGlobalVariables(document, sf);
@@ -150,6 +157,15 @@ public class StylesheetBuilder
 			XSLCorePlugin.log(e);
 		}
 		return sf;
+	}
+
+	private void evaluateStylesheet(IDOMDocument document, Stylesheet sf) throws XPathExpressionException
+	{
+		NodeList nodes = (NodeList) xpathStylesheet.evaluate(document, XPathConstants.NODESET);
+		if (nodes.getLength() == 1)
+		{
+			configure((IDOMNode)nodes.item(0),sf);
+		}
 	}
 
 	private void evaluateGlobalVariables(IDOMDocument document, Stylesheet sf) throws XPathExpressionException
@@ -170,20 +186,17 @@ public class StylesheetBuilder
 		for (int i = 0; i < nodes.getLength(); i++)
 		{
 			IDOMNode node = (IDOMNode) nodes.item(i);
-			Template template = new Template(sf);
+			CallTemplate template = new CallTemplate(sf);
 			configure(node, template);
-			if (template.getName() != null)
-			{
-				sf.addCalledTemplate(template);
+			sf.addCalledTemplate(template);
 
-				NodeList paramNodes = (NodeList) xpathCallTemplateParam.evaluate(node, XPathConstants.NODESET);
-				for (int j = 0; j < paramNodes.getLength(); j++)
-				{
-					IDOMNode paramNode = (IDOMNode) paramNodes.item(j);
-					Parameter parameter = new Parameter(sf);
-					configure(paramNode, parameter);
-					template.addParameter(parameter);
-				}
+			NodeList paramNodes = (NodeList) xpathCallTemplateParam.evaluate(node, XPathConstants.NODESET);
+			for (int j = 0; j < paramNodes.getLength(); j++)
+			{
+				IDOMNode paramNode = (IDOMNode) paramNodes.item(j);
+				Parameter parameter = new Parameter(sf);
+				configure(paramNode, parameter);
+				template.addParameter(parameter);
 			}
 		}
 	}
@@ -197,7 +210,7 @@ public class StylesheetBuilder
 			
 			Template template = new Template(sf);
 			configure(node, template);
-			sf.addNamedTemplate(template);
+			sf.addTemplate(template);
 
 			// params
 			NodeList paramNodes = (NodeList) xpathTemplateParam.evaluate(node, XPathConstants.NODESET);
@@ -227,9 +240,9 @@ public class StylesheetBuilder
 		for (int i = 0; i < nodes.getLength(); i++)
 		{
 			IDOMNode node = (IDOMNode) nodes.item(i);
-			Include inc = new Include(sf, Include.IMPORT);
+			Import inc = new Import(sf, Include.IMPORT);
 			configure(node, inc);
-			sf.addInclude(inc);
+			sf.addImport(inc);
 		}
 	}
 
@@ -276,4 +289,19 @@ public class StylesheetBuilder
 		}
 	}
 
+	public static synchronized StylesheetBuilder getInstance()
+	{
+		if (instance == null)
+		{
+			try
+			{
+				instance = new StylesheetBuilder();
+			}
+			catch (XPathExpressionException e)
+			{
+				XSLCorePlugin.log(e);
+			}
+		}
+		return instance;
+	}
 }

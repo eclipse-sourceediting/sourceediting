@@ -18,9 +18,8 @@ import java.util.List;
  * @author Doug Satchwell
  *
  */
-public class Template extends XSLElement
+public class CallTemplate extends XSLElement
 {
-	final List<Variable> variables = new ArrayList<Variable>();
 	final List<Parameter> parameters = new ArrayList<Parameter>();
 	
 	/**
@@ -30,7 +29,7 @@ public class Template extends XSLElement
 	 * @param match 
 	 * @param mode 
 	 */
-	public Template(Stylesheet stylesheet)
+	public CallTemplate(Stylesheet stylesheet)
 	{
 		super(stylesheet);
 	}
@@ -42,15 +41,6 @@ public class Template extends XSLElement
 	public void addParameter(Parameter parameter)
 	{
 		parameters.add(parameter);
-	}
-	
-	/**
-	 * TODO: Add Javadoc
-	 * @param var
-	 */
-	public void addVariable(Variable var)
-	{
-		variables.add(var);
 	}
 
 	/**
@@ -66,45 +56,8 @@ public class Template extends XSLElement
 	 * TODO: Add Javadoc
 	 * @return
 	 */
-	public String getMatch()
-	{
-		return getAttributeValue("match"); //$NON-NLS-1$
-	}
-	
-	/**
-	 * TODO: Add Javadoc
-	 * @return
-	 */
-	public String getMode()
-	{
-		return getAttributeValue("mode"); //$NON-NLS-1$
-	}
-	
-	/**
-	 * TODO: Add Javadoc
-	 * @return
-	 */
 	public List<Parameter> getParameters()
 	{
 		return parameters;
-	}
-
-	public boolean conflictsWith(Template includedTemplate)
-	{
-		if (includedTemplate == this)
-			return false;
-		
-		String name1 = getName();
-		String match1 = getMatch();
-		String mode1 = getMode();
-		String name2 = includedTemplate.getName();
-		String match2 = includedTemplate.getMatch();
-		String mode2 = includedTemplate.getMode();
-
-		if (name1 != null && name1.equals(name2))
-			return true;
-		if (match1 != null && match1.equals(match2) && (mode1 == null && mode2 == null || mode1 != null && mode1.equals(mode2)))
-			return true;
-		return false;
 	}
 }

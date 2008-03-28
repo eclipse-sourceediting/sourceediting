@@ -11,11 +11,7 @@
 package org.eclipse.wst.xsl.core.internal.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 
@@ -25,15 +21,13 @@ import org.eclipse.core.resources.IFile;
  * @author Doug Satchwell
  * 
  */
-public class Stylesheet
+public class Stylesheet extends XSLElement
 {
-	private static final int INCLUDE = 1;
-	private static final int IMPORT = 2;
-
 	final IFile file;
 	final List<Include> includes = new ArrayList<Include>();
-	final List<Template> namedTemplates = new ArrayList<Template>();
-	final List<Template> calledTemplates = new ArrayList<Template>();
+	final List<Import> imports = new ArrayList<Import>();
+	final List<Template> templates = new ArrayList<Template>();
+	final List<CallTemplate> calledTemplates = new ArrayList<CallTemplate>();
 	final List<Variable> globalVariables = new ArrayList<Variable>();
 
 	/**
@@ -43,7 +37,14 @@ public class Stylesheet
 	 */
 	public Stylesheet(IFile file)
 	{
+		super(null);
 		this.file = file;
+	}
+	
+	@Override
+	public Stylesheet getStylesheet()
+	{
+		return this;
 	}
 
 	/**
@@ -61,9 +62,9 @@ public class Stylesheet
 	 * 
 	 * @param include
 	 */
-	public void addImport(Include include)
+	public void addImport(Import include)
 	{
-		includes.add(include);
+		imports.add(include);
 	}
 
 	/**
@@ -71,9 +72,9 @@ public class Stylesheet
 	 * 
 	 * @param template
 	 */
-	public void addNamedTemplate(Template template)
+	public void addTemplate(Template template)
 	{
-		namedTemplates.add(template);
+		templates.add(template);
 	}
 
 	/**
@@ -81,7 +82,7 @@ public class Stylesheet
 	 * 
 	 * @param template
 	 */
-	public void addCalledTemplate(Template template)
+	public void addCalledTemplate(CallTemplate template)
 	{
 		calledTemplates.add(template);
 	}
@@ -105,13 +106,18 @@ public class Stylesheet
 	{
 		return includes;
 	}
+	
+	public List<Import> getImports()
+	{
+		return imports;
+	}
 
 	/**
 	 * @return
 	 */
-	public List<Template> getNamedTemplates()
+	public List<Template> getTemplates()
 	{
-		return namedTemplates;
+		return templates;
 	}
 
 	/**
@@ -119,67 +125,11 @@ public class Stylesheet
 	 * 
 	 * @return
 	 */
-	public List<Template> getCalledTemplates()
+	public List<CallTemplate> getCalledTemplates()
 	{
 		return calledTemplates;
 	}
 
-	/**
-	 * TODO: Add Javadoc
-	 * 
-	 * @return
-	 */
-	public Map<String, List<Template>> calculateTemplates()
-	{
-		Map<String, List<Template>> templateMap = new HashMap<String, List<Template>>();
-		Set<Stylesheet> files = new HashSet<Stylesheet>();
-		calculateTemplates(files,templateMap, INCLUDE);
-		return templateMap;
-	}
-
-	private void calculateTemplates(Set<Stylesheet> stylesheets, Map<String, List<Template>> templateMap, int type)
-	{
-		if (type == INCLUDE)
-		{// add all named templates
-			for (Template template : namedTemplates)
-			{
-				List<Template> list = templateMap.get(template.getName());
-				if (list == null)
-				{
-					list = new ArrayList<Template>();
-					templateMap.put(template.getName(), list);
-				}
-				list.add(template);
-			}
-		}
-		else if (type == IMPORT)
-		{
-			for (Template template : namedTemplates)
-			{// only add if not over-ridden
-				if (!templateMap.containsKey(template.getName()))
-				{
-					List<Template> list = new ArrayList<Template>();
-					list.add(template);
-					templateMap.put(template.getName(), list);
-				}
-			}
-		}
-		for (Include include : includes)
-		{
-			// for includes, just add all templates
-			Stylesheet stylesheet = include.findIncludedStylesheet();
-			if (stylesheet != null)
-			{
-				// TODO may need to be more intelligent for imports?
-				// ensure we don't use the same stylesheet more than once (prevents circular reference problems)
-				if (!stylesheets.contains(stylesheet))
-				{
-					stylesheets.add(stylesheet);
-					stylesheet.calculateTemplates(stylesheets, templateMap, include.getNodeType());
-				}
-			}
-		}
-	}
 
 	/**
 	 * TODO: Add Javadoc
@@ -188,11 +138,5 @@ public class Stylesheet
 	public void addGlobalVariable(Variable var)
 	{
 		globalVariables.add(var);
-	}
-
-	@Override
-	public String toString()
-	{
-		return file.getProjectRelativePath().toString();
 	}
 }

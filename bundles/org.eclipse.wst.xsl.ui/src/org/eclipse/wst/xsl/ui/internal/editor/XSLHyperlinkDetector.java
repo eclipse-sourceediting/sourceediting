@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.editor;
 
-import java.util.List;
-import java.util.Map;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
@@ -31,8 +28,7 @@ import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsl.core.XSLCore;
-import org.eclipse.wst.xsl.core.internal.model.Stylesheet;
-import org.eclipse.wst.xsl.core.internal.model.Template;
+import org.eclipse.wst.xsl.core.internal.model.StylesheetModel;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -122,10 +118,10 @@ public class XSLHyperlinkDetector extends AbstractHyperlinkDetector
 	private IHyperlink createCallTemplateHyperLink(IFile currentFile, String templateName, IRegion hyperlinkRegion)
 	{
 		IHyperlink hyperlink = null;
-		Stylesheet sf = XSLCore.getInstance().getStylesheet(currentFile);
+		StylesheetModel sf = XSLCore.getInstance().getStylesheet(currentFile);
 		if (sf != null)
 		{
-			Map<String,List<Template>> map = sf.calculateTemplates();
+/*			Map<String,List<Template>> map = sf.calculateTemplates();
 			List<Template> templates = map.get(templateName);
 			if (templates != null && templates.size()>0)
 			{
@@ -134,7 +130,7 @@ public class XSLHyperlinkDetector extends AbstractHyperlinkDetector
 //				if (attr!=null)
 					hyperlink = new SourceFileHyperlink(hyperlinkRegion,template.getStylesheet().getFile(),template);
 			}
-		}
+*/		}
 		return hyperlink;
 	}
 

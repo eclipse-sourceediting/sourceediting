@@ -30,7 +30,7 @@ public abstract class XSLNode extends PlatformObject
 	public static final short ATTRIBUTE_NODE = Node.ATTRIBUTE_NODE;
 	
 	
-	final Stylesheet stylesheet;
+	private final Stylesheet stylesheet;
 	int lineNumber;
 	int columnNumber;
 	private int offset;

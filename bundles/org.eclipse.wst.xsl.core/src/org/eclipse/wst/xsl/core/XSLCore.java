@@ -13,35 +13,28 @@ package org.eclipse.wst.xsl.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.xpath.XPathExpressionException;
-
 import org.eclipse.core.resources.IFile;
-import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
+import org.eclipse.wst.xsl.core.internal.model.Include;
 import org.eclipse.wst.xsl.core.internal.model.Stylesheet;
 import org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder;
+import org.eclipse.wst.xsl.core.internal.model.StylesheetModel;
+import org.eclipse.wst.xsl.core.internal.model.XSLAttribute;
 
 /**
  * TODO: Add JavaDoc
  */
 public class XSLCore
 {
-	public static final String XSL_NAMESPACE_URI = "http://www.w3.org/1999/XSL/Transform";
+	/**
+	 * The XSL namespace URI (= http://www.w3.org/1999/XSL/Transform)
+	 */
+	public static final String XSL_NAMESPACE_URI = "http://www.w3.org/1999/XSL/Transform"; //$NON-NLS-1$
 	
 	private static XSLCore instance;
-	private StylesheetBuilder builder;
-	private Map<IFile, Stylesheet> stylesheets = new HashMap<IFile, Stylesheet>();
+	private Map<IFile, StylesheetModel> stylesheetsComposed = new HashMap<IFile, StylesheetModel>();
 
 	private XSLCore()
-	{
-		try
-		{
-			builder = new StylesheetBuilder();
-		}
-		catch (XPathExpressionException e)
-		{
-			XSLCorePlugin.log(e);
-		}
-	}
+	{}
 
 	/**
 	 * Get the cached stylesheet, or build it if it has not yet been built.
@@ -49,9 +42,9 @@ public class XSLCore
 	 * @param file
 	 * @return source file, or null if could not be built
 	 */
-	public synchronized Stylesheet getStylesheet(IFile file)
+	public synchronized StylesheetModel getStylesheet(IFile file)
 	{
-		Stylesheet stylesheet = stylesheets.get(file);
+		StylesheetModel stylesheet = stylesheetsComposed.get(file);
 		if (stylesheet == null)
 			stylesheet = buildStylesheet(file);
 		return stylesheet;
@@ -63,11 +56,16 @@ public class XSLCore
 	 * @param file
 	 * @return
 	 */
-	public synchronized Stylesheet buildStylesheet(IFile file)
+	public synchronized StylesheetModel buildStylesheet(IFile file)
 	{
-		Stylesheet stylesheet = builder.buildSourceFile(file);
-		stylesheets.put(file, stylesheet);
-		return stylesheet;
+		Stylesheet stylesheet = StylesheetBuilder.getInstance().getStylesheet(file, true);
+		StylesheetModel stylesheetComposed = new StylesheetModel(stylesheet);			
+		// make a dummy include and visit it
+		Include inc = new Include(stylesheet,Include.INCLUDE);
+		inc.setAttribute(new XSLAttribute(inc,"href",file.getProjectRelativePath().toString()));
+		inc.accept(stylesheetComposed);
+		stylesheetsComposed.put(file, stylesheetComposed);
+		return stylesheetComposed;
 	}
 
 	/**

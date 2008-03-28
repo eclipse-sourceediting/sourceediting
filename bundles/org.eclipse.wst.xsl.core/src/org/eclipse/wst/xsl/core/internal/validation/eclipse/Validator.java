@@ -15,14 +15,20 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.wst.validation.ValidationResult;
+import org.eclipse.wst.validation.ValidationState;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator;
 import org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
+import org.eclipse.wst.xsl.core.internal.model.XSLNode;
+import org.eclipse.wst.xsl.core.internal.validation.XSLValidationMessage;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidator;
 
 /**
@@ -31,6 +37,15 @@ import org.eclipse.wst.xsl.core.internal.validation.XSLValidator;
  *
  */
 public class Validator extends AbstractNestedValidator {
+	
+	@Override
+	public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor)
+	{
+		ValidationResult res = super.validate(resource, kind, state, monitor);
+		// TODO dependencies
+		// TODO clean project
+		return res;
+	}
 	
 	public ValidationReport validate(String uri, InputStream inputstream, NestedValidatorContext context) {
 		ValidationReport valreport = null;
@@ -50,13 +65,19 @@ public class Validator extends AbstractNestedValidator {
 
 	// TODO which attributes to set
 	protected void addInfoToMessage(ValidationMessage validationMessage, IMessage message) {
-		// The value constants are kept in DelegatingSourceValidator!
-
-		// TODO select attribute or element squiggling depending on type of error
-		String key = validationMessage.getKey();
-		message.setAttribute("ERROR_SIDE", "ERROR_SIDE_RIGHT");
-		message.setAttribute(COLUMN_NUMBER_ATTRIBUTE, new Integer(validationMessage.getColumnNumber()));
-		message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "START_TAG"); // whether to squiggle the element, attribute or text
-	//	message.setAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE, "name"); // name of attribute to underline
+		XSLValidationMessage msg = (XSLValidationMessage)validationMessage;
+		XSLNode node = msg.getNode();
+		if (node.getNodeType() == XSLNode.ATTRIBUTE_NODE)
+		{
+			message.setAttribute("ERROR_SIDE", "ERROR_SIDE_RIGHT");
+			message.setAttribute(COLUMN_NUMBER_ATTRIBUTE, new Integer(validationMessage.getColumnNumber()));
+			message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "START_TAG");  // whether to squiggle the element, attribute or text
+		}
+		else if (node.getNodeType() == XSLNode.ELEMENT_NODE)
+		{
+			message.setAttribute("ERROR_SIDE", "ERROR_SIDE_RIGHT");
+			message.setAttribute(COLUMN_NUMBER_ATTRIBUTE, new Integer(validationMessage.getColumnNumber()));
+			message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "START_TAG");  // whether to squiggle the element, attribute or text
+		}
 	}
 }

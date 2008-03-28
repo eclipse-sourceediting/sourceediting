@@ -10,9 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.validation;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
@@ -20,87 +21,181 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.eclipse.wst.xsl.core.XSLCore;
+import org.eclipse.wst.xsl.core.internal.model.CallTemplate;
 import org.eclipse.wst.xsl.core.internal.model.Include;
 import org.eclipse.wst.xsl.core.internal.model.Parameter;
-import org.eclipse.wst.xsl.core.internal.model.Stylesheet;
+import org.eclipse.wst.xsl.core.internal.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.internal.model.Template;
 import org.eclipse.wst.xsl.core.internal.model.XSLNode;
 
 /**
  * TODO: Add Javadoc
+ * 
  * @author Doug Satchwell
- *
+ * 
  */
-public class XSLValidator {
+public class XSLValidator
+{
 	private static XSLValidator instance;
 
-	private XSLValidator() {
+	private XSLValidator()
+	{
 	}
 
-	/**
-	 * TODO: Add Javadoc
-	 * @param uri
-	 * @param xslFile
-	 * @return
-	 * @throws CoreException
-	 */
-	public ValidationReport validate(String uri, IFile xslFile) throws CoreException {
-		Stylesheet stylesheet = XSLCore.getInstance().buildStylesheet(xslFile);
-		XSLValidationReport report = new XSLValidationReport(stylesheet);
-		calculateProblems(stylesheet,report);
+	public ValidationReport validate(String uri, IFile xslFile) throws CoreException
+	{
+		StylesheetModel stylesheet = XSLCore.getInstance().buildStylesheet(xslFile);
+		XSLValidationReport report = new XSLValidationReport(stylesheet.getStylesheet());
+//		System.out.println("Checking: "+stylesheet.getStylesheet().getFile());
+		calculateProblems(stylesheet, report);
 		return report;
 	}
 
-	private void calculateProblems(Stylesheet sf, XSLValidationReport report) throws CoreException
+	private void calculateProblems(StylesheetModel stylesheetComposed, XSLValidationReport report) throws CoreException
+	{
+		// circular reference check
+		checkCircularRef(stylesheetComposed, report);
+		// include checks
+		checkIncludes(stylesheetComposed, report);
+		// template checks
+		checkTemplates(stylesheetComposed, report);
+		// call-template checks
+		checkCallTemplates(stylesheetComposed, report);
+		
+		// TODO a) check globals and b) apply-templates where mode does not exist
+	}
+
+	private void checkCircularRef(StylesheetModel stylesheetComposed, XSLValidationReport report)
+	{
+		if (stylesheetComposed.hasCircularReference())
+			createMarker(report, stylesheetComposed.getStylesheet(), IMarker.SEVERITY_ERROR, "Includes contain a circular reference");
+	}
+
+	private void checkIncludes(StylesheetModel stylesheetComposed, XSLValidationReport report)
+	{		
+		// includes
+		for (Include include : stylesheetComposed.getStylesheet().getIncludes())
+		{
+			IFile includedFile = include.getHrefAsFile();
+			if (includedFile == null || !includedFile.exists())
+			{ // included file does not exist
+				createMarker(report, include.getAttribute("href"), IMarker.SEVERITY_ERROR, "Missing include: " + include.getHref());
+			}
+			else if (includedFile.equals(include.getStylesheet().getFile()))
+			{ // stylesheet including itself!
+				createMarker(report, include.getAttribute("href"), IMarker.SEVERITY_ERROR, "A stylesheet must not include itself");
+			}
+		}
+		//imports
+		for (Include include : stylesheetComposed.getStylesheet().getImports())
+		{
+			IFile includedFile = include.getHrefAsFile();
+			if (includedFile == null || !includedFile.exists())
+			{ // included file does not exist
+				createMarker(report, include.getAttribute("href"), IMarker.SEVERITY_ERROR, "Missing import: " + include.getHref());
+			}
+			else if (includedFile.equals(include.getStylesheet().getFile()))
+			{ // stylesheet including itself!
+				createMarker(report, include.getAttribute("href"), IMarker.SEVERITY_ERROR, "A stylesheet must not import itself");
+			}
+		}
+	}
+
+	private void checkTemplates(StylesheetModel stylesheetComposed, XSLValidationReport report)
+	{
+		for (Template template : stylesheetComposed.getTemplates())
+		{
+			// check attributes are correct
+			if (template.getName() != null)
+			{// named template
+				if (template.getMatch() != null)
+					createMarker(report, template, IMarker.SEVERITY_ERROR, "Template cannot specify both name and match attributes");
+				if (template.getMode() != null)
+					createMarker(report, template, IMarker.SEVERITY_ERROR, "Named templates cannot specify a mode");
+				checkParameters(report, template);
+			}
+			else if (template.getMatch() != null)
+			{// match template
+				if (template.getParameters().size() != 0)
+					createMarker(report, template, IMarker.SEVERITY_ERROR, "Only named templates may have parameters");
+			}
+
+			for (Template checkTemplate : stylesheetComposed.getTemplates())
+			{
+				if (checkTemplate != template && checkTemplate.conflictsWith(template))
+				{
+					if (template.getStylesheet() == stylesheetComposed.getStylesheet() && checkTemplate.getStylesheet() == stylesheetComposed.getStylesheet())
+					{// templates in this stylesheet conflict with each other
+						createMarker(report, template, IMarker.SEVERITY_ERROR, "Template conflicts with another template in this stylesheet");
+					}
+					else if (template.getStylesheet() == stylesheetComposed.getStylesheet())
+					{// template in included stylesheet conflicts with this
+						createMarker(report, template, IMarker.SEVERITY_ERROR, "Template conflicts with an included template");
+					}
+					else
+					{// templates in included stylesheets conflict with each other
+						createMarker(report, template.getStylesheet(), IMarker.SEVERITY_ERROR, "Included templates conflict with each other");
+					}
+				}
+			}
+		}
+	}
+
+	private void checkParameters(XSLValidationReport report, Template template)
+	{
+		List<Parameter> parameters = new ArrayList<Parameter>(template.getParameters());
+		// reverse the parameters order for checking - for duplicate parameters
+		// the first one is valid
+		Collections.reverse(parameters);
+		Set<Parameter> duplicateParameters = new HashSet<Parameter>();
+		// check parameters
+		for (Parameter param : parameters)
+		{
+			if (param.getName() == null)
+			{// name is required
+				createMarker(report, param, IMarker.SEVERITY_ERROR, "Name attribute is required");
+			}
+			else if (param.getName().trim().length() == 0)
+			{// name value is required
+				createMarker(report, param, IMarker.SEVERITY_ERROR, "Name must be specified");
+			}
+			else if (duplicateParameters.contains(param))
+			{// don't recheck the parameter
+				continue;
+			}
+			else
+			{// check a parameter with the same name does not exist
+				for (Parameter checkParam : parameters)
+				{
+					if (param != checkParam)
+					{
+						if (param.getName().equals(checkParam.getName()))
+						{
+							duplicateParameters.add(checkParam);
+							createMarker(report, param, IMarker.SEVERITY_ERROR, "Parameter already defined");
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void checkCallTemplates(StylesheetModel stylesheetComposed, XSLValidationReport report)
 	{
 		// TODO these need to be real preferences
 		int REPORT_EMPTY_PARAM_PREF = IMarker.SEVERITY_WARNING;
 		int REPORT_MISSING_PARAM_PREF = IMarker.SEVERITY_ERROR;
 
-		Map<String,List<Template>> templateMap = sf.calculateTemplates();
-		
-		// includes
-		boolean circularReference = false;
-		Set<IFile> files = new HashSet<IFile>();
-		for (Include include : sf.getIncludes()) {
-			Stylesheet includedSource = include.findIncludedStylesheet();
-			if (includedSource == null)
-			{ // included file does not exist
-				createMarker(report,include.getAttribute("href"),IMarker.SEVERITY_ERROR,"Missing include: "+include.getHref());
-			}
-			else if (includedSource == include.getStylesheet())
-			{ // stylesheet including itself!
-				createMarker(report,include.getAttribute("href"),IMarker.SEVERITY_ERROR,"A stylesheet must not include itself");
-				circularReference = true;
+		for (CallTemplate calledTemplate : stylesheetComposed.getStylesheet().getCalledTemplates())
+		{
+			// get the list of templates that might be being called by this
+			// template call
+			List<Template> templateList = stylesheetComposed.getTemplatesByName(calledTemplate.getName());
+			if (templateList.size() == 0)
+			{
+				createMarker(report, calledTemplate, IMarker.SEVERITY_ERROR, "Called template '" + calledTemplate.getName() + "' is not available");
 			}
 			else
-			{
-				IFile file = includedSource.getFile();
-				if (file != null)
-				{
-					if (files.contains(file))
-					{// same file included more than once
-						createMarker(report,include.getAttribute("href"),IMarker.SEVERITY_ERROR,"Stylesheet included multiple times: "+include.getHref());
-					}
-					else
-						files.add(file);
-				}
-			}
-		}
-		
-		// if we have a circular reference, it may be dangerous to continue (most likely the below code will go into an infinite loop)
-		if (circularReference)
-			return;
-		
-		// check for missing called templates
-		for (Template calledTemplate : sf.getCalledTemplates())
-		{
-			List<Template> templateList = templateMap.get(calledTemplate.getName());
-			if (templateList == null)
-			{
-				createMarker(report,calledTemplate,IMarker.SEVERITY_ERROR,"Missing template: "+calledTemplate.getName());
-			}
-			else if (templateList.size() == 1)
 			{
 				Template namedTemplate = templateList.get(0);
 				for (Parameter calledTemplateParam : calledTemplate.getParameters())
@@ -110,14 +205,14 @@ public class XSLValidator {
 					{
 						if (calledTemplateParam.getName().equals(namedTemplateParam.getName()))
 						{
-							found = true;								
+							found = true;
 							if (REPORT_EMPTY_PARAM_PREF > IMarker.SEVERITY_INFO && !namedTemplateParam.isValue() && !calledTemplateParam.isValue())
-								createMarker(report,calledTemplateParam,REPORT_EMPTY_PARAM_PREF,"Parameter "+calledTemplateParam.getName()+" does not have default value");
+								createMarker(report, calledTemplateParam, REPORT_EMPTY_PARAM_PREF, "Parameter " + calledTemplateParam.getName() + " does not have a default value");
 							break;
 						}
 					}
 					if (!found)
-						createMarker(report,calledTemplateParam,IMarker.SEVERITY_ERROR,"Parameter "+calledTemplateParam.getName()+" does not exist");
+						createMarker(report, calledTemplateParam, IMarker.SEVERITY_ERROR, "Parameter " + calledTemplateParam.getName() + " does not exist");
 				}
 				if (REPORT_MISSING_PARAM_PREF > IMarker.SEVERITY_INFO)
 				{
@@ -135,94 +230,29 @@ public class XSLValidator {
 								}
 							}
 							if (!found)
-								createMarker(report,calledTemplate,REPORT_MISSING_PARAM_PREF,"Missing parameter: "+namedTemplateParam.getName());
+								createMarker(report, calledTemplate, REPORT_MISSING_PARAM_PREF, "Missing parameter: " + namedTemplateParam.getName());
 						}
 					}
 				}
 			}
-		}
-		
-		// check for duplicate templates
-		final Set<Include> includesWithConflictingTemplates = new HashSet<Include>();
-		for (Map.Entry<String, List<Template>> entry : templateMap.entrySet())
-		{
-			List<Template> templateList = entry.getValue();
-			if(templateList.size() > 1)
-			{ // more than one template with the same name exists
-				for (final Template template : templateList)
-				{
-					if (template.getStylesheet().equals(sf))
-					{// duplicate template exists in this source file
-						createMarker(report,template,IMarker.SEVERITY_ERROR,"Duplicate template: "+template.getName());
-					}
-					else
-					{// duplicate template exists in imported templates
-						for (final Include include : sf.getIncludes())
-						{
-							// include.findIncludedSourceFile();
-//							include.getSourceFile().accept(new IStylesheetVisitor(){
-//
-//								@Override
-//								public boolean visit(SourceFile stylesheet)
-//								{
-//									List<Template> templates = stylesheet.getNamedTemplates();
-//									for (Template importedTemplate : templates)
-//									{
-//										if (importedTemplate.conflictsWith(template))
-//										{
-//											includesWithConflictingTemplates.add(include);
-//										}
-//									}
-//									return true;
-//								}		
-//							});
-						}
-					}
-				}
-			}
-		}
-		for (Include include : includesWithConflictingTemplates)
-		{
-			createMarker(report,include,IMarker.SEVERITY_ERROR,"Conflicting includes: "+include.getStylesheet().getFile());
 		}
 	}
 
-//	private boolean recurse(List<Include> includes, Template template) throws CoreException
-//	{
-//		boolean found = false;
-//		for (Include include : includes)
-//		{
-//			if (include.getSourceFile().getNamedTemplates().contains(template))
-//			{
-//				found = true;
-//			}
-//			else
-//			{
-//				found = recurse(include.getSourceFile().getIncludes(),template);
-//			}
-//			if (found)
-//				break;
-//		}
-//		return found;
-//	}	
-	
-	private void createMarker(XSLValidationReport report, XSLNode xslNode, int severity, String message) {
-		switch(severity)
+	private void createMarker(XSLValidationReport report, XSLNode xslNode, int severity, String message)
+	{
+		switch (severity)
 		{
 			case IMarker.SEVERITY_ERROR:
-				report.addError(xslNode,message);
+				report.addError(xslNode, message);
 				break;
 			case IMarker.SEVERITY_WARNING:
-				report.addWarning(xslNode,message);
+				report.addWarning(xslNode, message);
 				break;
 		}
 	}
-	
-	/**
-	 * TODO: Add Javadoc
-	 * @return
-	 */
-	public static XSLValidator getInstance() {
+
+	public static XSLValidator getInstance()
+	{
 		if (instance == null)
 			instance = new XSLValidator();
 		return instance;

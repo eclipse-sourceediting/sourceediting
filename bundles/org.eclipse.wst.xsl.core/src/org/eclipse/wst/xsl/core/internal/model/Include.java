@@ -12,7 +12,6 @@ package org.eclipse.wst.xsl.core.internal.model;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.model.IIncludeVisitor;
 
 /**
@@ -70,10 +69,14 @@ public class Include extends XSLElement
 		boolean carryOn = visitor.visit(this);
 		if (carryOn)
 		{
-			Stylesheet sf = findIncludedStylesheet();
-			if (sf != null)
+			Stylesheet stylesheet = getStylesheet();
+			if (stylesheet != null)
 			{
-				for (Include include : sf.getIncludes())
+				for (Include include : stylesheet.getIncludes())
+				{
+					include.accept(visitor);
+				}
+				for (Import include : stylesheet.getImports())
 				{
 					include.accept(visitor);
 				}
@@ -86,13 +89,12 @@ public class Include extends XSLElement
 	 * 
 	 * @return the included stylesheet, or null if none exists
 	 */
-	public Stylesheet findIncludedStylesheet()
+	public IFile getHrefAsFile()
 	{
 		// TODO this depends on the project settings and URIResolver
 		String href = getHref();
 		if (href == null)
 			return null;
-		IFile includedFile = stylesheet.getFile().getProject().getFile(new Path(href));
-		return XSLCore.getInstance().getStylesheet(includedFile);
+		return getStylesheet().getFile().getProject().getFile(new Path(href));
 	} 
 }

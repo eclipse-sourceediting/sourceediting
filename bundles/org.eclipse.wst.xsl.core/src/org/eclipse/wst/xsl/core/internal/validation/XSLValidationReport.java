@@ -47,7 +47,7 @@ public class XSLValidationReport implements ValidationReport
 	public ValidationMessage addError(XSLNode node, String message)
 	{
 		valid = false;
-		ValidationMessage msg = new ValidationMessage(message,node.getLineNumber()+1,node.getColumnNumber()+1,getFileURI());
+		XSLValidationMessage msg = new XSLValidationMessage(message,node.getLineNumber()+1,node.getColumnNumber()+1,getFileURI());
 		msg.setSeverity(ValidationMessage.SEV_HIGH);
 		addMessage(node,msg);
 		return msg;
@@ -61,24 +61,15 @@ public class XSLValidationReport implements ValidationReport
 	 */
 	public ValidationMessage addWarning(XSLNode node, String message)
 	{
-		ValidationMessage msg = new ValidationMessage(message,node.getLineNumber()+1,node.getColumnNumber()+1,getFileURI());
+		XSLValidationMessage msg = new XSLValidationMessage(message,node.getLineNumber()+1,node.getColumnNumber()+1,getFileURI());
 		msg.setSeverity(ValidationMessage.SEV_NORMAL);
 		addMessage(node,msg);
 		return msg;
 	}
 
-	private void addMessage(XSLNode node, ValidationMessage message)
+	private void addMessage(XSLNode node, XSLValidationMessage message)
 	{
-		if (node.getNodeType() == XSLNode.ATTRIBUTE_NODE)
-		{
-//			message.setAttribute("ERROR_SIDE", "ERROR_SIDE_RIGHT");
-//			message.setAttribute(COLUMN_NUMBER_ATTRIBUTE, new Integer(validationMessage.getColumnNumber()));
-//			message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "START_TAG"); // whether to squiggle the element, attribute or text			
-		}
-		else if (node.getNodeType() == XSLNode.ELEMENT_NODE)
-		{
-			
-		}
+		message.setNode(node);
 		messages.add(message);
 	}
 
