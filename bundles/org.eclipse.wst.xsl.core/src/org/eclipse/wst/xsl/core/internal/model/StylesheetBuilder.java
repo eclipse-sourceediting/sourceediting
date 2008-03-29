@@ -86,15 +86,10 @@ public class StylesheetBuilder
 
 	private Stylesheet parseModel(IDOMModel model, IFile file)
 	{
-		long start = System.currentTimeMillis();
 		IDOMDocument document = model.getDocument();
 		Stylesheet sf = new Stylesheet(file);
-
 		StylesheetParser walker = new StylesheetParser(sf);
 		walker.walkDocument(document);
-
-		long end = System.currentTimeMillis();			
-		System.out.println("XPaths evals="+(end-start)+"ms");
 		return sf;
 	}
 
@@ -148,7 +143,8 @@ public class StylesheetBuilder
 				else if ("template".equals(elName) && elementStack.size() == 1)
 				{
 					currentTemplate = new Template(sf);
-					configure((IDOMNode)element, currentTemplate);				
+					configure((IDOMNode)element, currentTemplate);
+					sf.addTemplate(currentTemplate);
 				}
 				else if ("param".equals(elName) && elementStack.size() == 2 && currentTemplate != null)
 				{
@@ -160,6 +156,7 @@ public class StylesheetBuilder
 				{
 					currentCallTemplate = new CallTemplate(sf);
 					configure((IDOMNode)element, currentCallTemplate);				
+					sf.addCalledTemplate(currentCallTemplate);
 				}
 				else if ("with-param".equals(elName) && elementStack.size() >= 3 && currentCallTemplate != null)
 				{
