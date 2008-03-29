@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.wst.xsl_sdk.feature"
-      label="Feature Feature"
+      label="XSL SDK Feature"
       version="0.5.0.qualifier"
       provider-name="Eclipse.org">
 
@@ -25,7 +25,9 @@
    <includes
          id="org.eclipse.wst.xsl.feature"
          version="0.0.0"/>
-    <includes
+
+   <includes
          id="org.eclipse.wst.xsl.feature.source"
          version="0.0.0"/>
+
 </feature>
