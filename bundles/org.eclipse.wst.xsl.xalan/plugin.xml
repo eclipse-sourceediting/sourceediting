@@ -27,7 +27,7 @@
            bundle should be added to the class path. -->
       <processor
             classpath="${eclipse_orbit:org.apache.xalan};${eclipse_orbit:org.apache.xml.serializer}"
-            id="org.eclipse.wst.xsl.launching.xalan.2_7_0"
+            id="org.eclipse.wst.xsl.launching.xalan.processor"
             label="%processor.label.1"
             processorTypeId="org.eclipse.wst.xsl.xalan.processorType"
             debuggerId="org.eclipse.wst.xsl.xalan.debugger"
