@@ -23,8 +23,10 @@
    </extension>
    <extension
          point="org.eclipse.wst.xsl.launching.processor">
+      <!-- An adopter can specify the ${eclipse_orbit: } variable to indicate which eclipse
+           bundle should be added to the class path. -->
       <processor
-            classpath="${eclipse_orbit:org.apache.xalan}"
+            classpath="${eclipse_orbit:org.apache.xalan};${eclipse_orbit:org.apache.xml.serializer}"
             id="org.eclipse.wst.xsl.launching.xalan.2_7_0"
             label="%processor.label.1"
             processorTypeId="org.eclipse.wst.xsl.xalan.processorType"
