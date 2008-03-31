@@ -15,23 +15,39 @@ import java.util.Map;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.TextInvocationContext;
 
-/*
+/**
  * Provisional API: This class/interface is part of an interim API that is
  * still under development and expected to change significantly before
  * reaching stability. It is being made available at this early stage to
  * solicit feedback from pioneering adopters on the understanding that any
  * code that uses this API will almost certainly be broken (repeatedly) as the
  * API evolves.
+ * 
+ * This class is not intended to be instantiated by clients.
+ * 
+ * Structured Text quick assist invocation context.
  */
-public class StructuredTextInvocationContext extends TextInvocationContext {
+public final class StructuredTextInvocationContext extends TextInvocationContext {
 	private Map fAttributes;
 
+	/**
+	 * @param sourceViewer
+	 * @param offset
+	 * @param length
+	 * @param attributes
+	 */
 	public StructuredTextInvocationContext(ISourceViewer sourceViewer, int offset, int length, Map attributes) {
 		super(sourceViewer, offset, length);
 		fAttributes = attributes;
 	}
 
-	public Object getAttribute(String key) {
-		return fAttributes.get(key);
+	/**
+	 * @param attributeName
+	 * @return the value of this attribute, or <tt>null</tt> when no such
+	 *         attribute is defined or that attribute's value has been set to
+	 *         <tt>null</tt>
+	 */
+	public Object getAttribute(String attributeName) {
+		return fAttributes.get(attributeName);
 	}
 }
