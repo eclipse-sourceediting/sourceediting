@@ -48,6 +48,6 @@ public final class StructuredTextInvocationContext extends TextInvocationContext
 	 *         <tt>null</tt>
 	 */
 	public Object getAttribute(String attributeName) {
-		return fAttributes.get(attributeName);
+		return (fAttributes != null ? fAttributes.get(attributeName) : null);
 	}
 }
