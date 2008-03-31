@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,9 +37,10 @@ public class SourceValidationQuickAssistProcessor implements IQuickAssistProcess
 	}
 
 	public boolean canFix(Annotation annotation) {
-
 		if (annotation instanceof IQuickFixableAnnotation) {
-			return ((IQuickFixableAnnotation) annotation).isQuickFixable();
+			if (((IQuickFixableAnnotation) annotation).isQuickFixableStateSet()) {
+				return ((IQuickFixableAnnotation) annotation).isQuickFixable();
+			}
 		}
 		return false;
 	}
@@ -75,8 +76,9 @@ public class SourceValidationQuickAssistProcessor implements IQuickAssistProcess
 
 					// set up context
 					Map attributes = null;
-					if (anno instanceof TemporaryAnnotation)
+					if (anno instanceof TemporaryAnnotation) {
 						attributes = ((TemporaryAnnotation) anno).getAttributes();
+					}
 					StructuredTextInvocationContext sseContext = new StructuredTextInvocationContext(viewer, documentOffset, length, attributes);
 
 					// call each processor
@@ -84,8 +86,9 @@ public class SourceValidationQuickAssistProcessor implements IQuickAssistProcess
 						List proposals = new ArrayList();
 						collectProposals((IQuickAssistProcessor) processors.get(i), anno, sseContext, proposals);
 
-						if (proposals.size() > 0)
+						if (proposals.size() > 0) {
 							allProposals.addAll(proposals);
+						}
 					}
 
 				}
