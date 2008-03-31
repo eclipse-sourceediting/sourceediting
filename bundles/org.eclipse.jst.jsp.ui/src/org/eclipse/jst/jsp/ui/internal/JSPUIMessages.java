@@ -146,6 +146,7 @@ public class JSPUIMessages extends NLS {
 	public static String VALIDATION_DIRECTIVE_INCLUDE_FILE_NOT_FOUND;
 	
 	public static String VALIDATION_HEADER_JAVA;
+	public static String VALIDATION_JAVA_NOTICE;
 	public static String VALIDATION_JAVA_LOCAL_VARIABLE_NEVER_USED;
 	public static String VALIDATION_JAVA_ARGUMENT_IS_NEVER_USED;
 	public static String VALIDATION_JAVA_NULL_LOCAL_VARIABLE_REFERENCE;

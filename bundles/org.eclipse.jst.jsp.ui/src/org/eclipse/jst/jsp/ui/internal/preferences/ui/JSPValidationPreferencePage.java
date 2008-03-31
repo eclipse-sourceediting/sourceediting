@@ -30,6 +30,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.PreferenceLinkArea;
+import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ScrolledPageContent;
 import org.eclipse.wst.sse.ui.internal.util.PixelConverter;
@@ -39,6 +41,8 @@ public class JSPValidationPreferencePage extends AbstractValidationSettingsPage 
 	private static final String SETTINGS_SECTION_NAME = "JSPValidationSeverities";//$NON-NLS-1$
 
 	private static final int[] SEVERITIES = {ValidationMessage.ERROR, ValidationMessage.WARNING, ValidationMessage.IGNORE};
+
+	private static final String JAVA_SEVERITY_PAGE = "org.eclipse.jdt.ui.preferences.ProblemSeveritiesPreferencePage";
 
 	private PixelConverter fPixelConverter;
 	private Button fValidateFragments;
@@ -151,15 +155,18 @@ public class JSPValidationPreferencePage extends AbstractValidationSettingsPage 
 		addComboBox(section, JSPUIMessages.VALIDATION_TRANSLATION_USEBEAN_AMBIGUOUS_TYPE_INFO, JSPCorePreferenceNames.VALIDATION_TRANSLATION_USEBEAN_AMBIGUOUS_TYPE_INFO, SEVERITIES, errorWarningIgnoreLabels, 0);
 		// end standard actions section
 
-		// begin Java section
+		// begin Java severity override section
 		section = createStyleSectionWithContentComposite(composite, JSPUIMessages.VALIDATION_HEADER_JAVA, nColumns);
-		
-		addComboBox(section, JSPUIMessages.VALIDATION_JAVA_LOCAL_VARIABLE_NEVER_USED, JSPCorePreferenceNames.VALIDATION_JAVA_LOCAL_VARIABLE_NEVER_USED, SEVERITIES, errorWarningIgnoreLabels, 0);
-		addComboBox(section, JSPUIMessages.VALIDATION_JAVA_ARGUMENT_IS_NEVER_USED, JSPCorePreferenceNames.VALIDATION_JAVA_ARGUMENT_IS_NEVER_USED, SEVERITIES, errorWarningIgnoreLabels, 0);
-		addComboBox(section, JSPUIMessages.VALIDATION_JAVA_NULL_LOCAL_VARIABLE_REFERENCE, JSPCorePreferenceNames.VALIDATION_JAVA_NULL_LOCAL_VARIABLE_REFERENCE, SEVERITIES, errorWarningIgnoreLabels, 0);
-		addComboBox(section, JSPUIMessages.VALIDATION_JAVA_UNUSED_IMPORT, JSPCorePreferenceNames.VALIDATION_JAVA_UNUSED_IMPORT, SEVERITIES, errorWarningIgnoreLabels, 0);
-		addComboBox(section, JSPUIMessages.VALIDATION_JAVA_POTENTIAL_NULL_LOCAL_VARIABLE_REFERENCE, JSPCorePreferenceNames.VALIDATION_JAVA_POTENTIAL_NULL_LOCAL_VARIABLE_REFERENCE, SEVERITIES, errorWarningIgnoreLabels, 0);
-		// end Java section
+		if (getProject() == null) {
+			new PreferenceLinkArea(section, SWT.WRAP | SWT.MULTI | SWT.LEFT_TO_RIGHT, JAVA_SEVERITY_PAGE, JSPUIMessages.VALIDATION_JAVA_NOTICE, (IWorkbenchPreferenceContainer) getContainer(), null).getControl().setLayoutData(GridDataFactory.fillDefaults().span(2, 1).hint(150, SWT.DEFAULT).create());
+		}
+		int sectionIndent = convertWidthInCharsToPixels(2);
+		addComboBox(section, JSPUIMessages.VALIDATION_JAVA_LOCAL_VARIABLE_NEVER_USED, JSPCorePreferenceNames.VALIDATION_JAVA_LOCAL_VARIABLE_NEVER_USED, SEVERITIES, errorWarningIgnoreLabels, sectionIndent);
+		addComboBox(section, JSPUIMessages.VALIDATION_JAVA_ARGUMENT_IS_NEVER_USED, JSPCorePreferenceNames.VALIDATION_JAVA_ARGUMENT_IS_NEVER_USED, SEVERITIES, errorWarningIgnoreLabels, sectionIndent);
+		addComboBox(section, JSPUIMessages.VALIDATION_JAVA_NULL_LOCAL_VARIABLE_REFERENCE, JSPCorePreferenceNames.VALIDATION_JAVA_NULL_LOCAL_VARIABLE_REFERENCE, SEVERITIES, errorWarningIgnoreLabels, sectionIndent);
+		addComboBox(section, JSPUIMessages.VALIDATION_JAVA_UNUSED_IMPORT, JSPCorePreferenceNames.VALIDATION_JAVA_UNUSED_IMPORT, SEVERITIES, errorWarningIgnoreLabels, sectionIndent);
+		addComboBox(section, JSPUIMessages.VALIDATION_JAVA_POTENTIAL_NULL_LOCAL_VARIABLE_REFERENCE, JSPCorePreferenceNames.VALIDATION_JAVA_POTENTIAL_NULL_LOCAL_VARIABLE_REFERENCE, SEVERITIES, errorWarningIgnoreLabels, sectionIndent);
+		// end Java severity override section
 
 		// begin EL section
 		section = createStyleSectionWithContentComposite(composite, JSPUIMessages.VALIDATION_HEADER_EL, nColumns);
