@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-*******************************************************************************
+ *******************************************************************************
  * Copyright (c) 2001, 2007 - W3C, Standards for Technology in Automotive Retail,
  * and others.
  * All rights reserved. This program and the accompanying materials
@@ -15,6 +15,7 @@
  *         specification.
  *         The original version may be found at http://www.w3.org/2007/schema-for-xslt20.xsd
  *         The original W3C copyright notice is included:
+ *     David Carver - 20080330 - STAR - bug 224819 - changed procesContents from lax to skip
  *******************************************************************************
  *******************************************************************************
  * W3C® SOFTWARE NOTICE AND LICENSE
@@ -95,7 +96,7 @@ of problems processing the schema using various tools
   <xs:attribute name="extension-element-prefixes" type="xsl:prefix-list"/>
   <xs:attribute name="use-when" type="xsl:expression"/>
   <xs:attribute name="xpath-default-namespace" type="xs:anyURI"/>
-  <xs:anyAttribute namespace="##other" processContents="lax"/>
+  <xs:anyAttribute namespace="##other" processContents="skip"/>
 </xs:complexType>
 
 <xs:complexType name="versioned-element-type" mixed="true">
@@ -110,7 +111,7 @@ of problems processing the schema using various tools
 <xs:complexType name="element-only-versioned-element-type" mixed="false">
   <xs:complexContent>
     <xs:restriction base="xsl:versioned-element-type">
-      <xs:anyAttribute namespace="##other" processContents="lax"/>
+      <xs:anyAttribute namespace="##other" processContents="skip"/>
     </xs:restriction>
   </xs:complexContent>
 
@@ -1115,7 +1116,7 @@ of problems processing the schema using various tools
       <xs:simpleType>
         <xs:restriction base="xs:string"/>
       </xs:simpleType>
-      <xs:anyAttribute namespace="##other" processContents="lax"/>
+      <xs:anyAttribute namespace="##other" processContents="skip"/>
     </xs:restriction>
   </xs:simpleContent>
 </xs:complexType>
@@ -1154,7 +1155,7 @@ of problems processing the schema using various tools
               </xs:documentation>
            </xs:annotation>
       </xs:attribute>
-      <xs:anyAttribute namespace="##other" processContents="lax"/>
+      <xs:anyAttribute namespace="##other" processContents="skip"/>
     </xs:restriction>
   </xs:complexContent>
 </xs:complexType>
@@ -1176,7 +1177,7 @@ of problems processing the schema using various tools
             <xs:element ref="xsl:declaration"/>
             <xs:element ref="xsl:variable"/>
             <xs:element ref="xsl:param"/>              
-            <xs:any namespace="##other" processContents="lax"/> <!-- weaker than XSLT 1.0 -->
+            <xs:any namespace="##other" processContents="skip"/> <!-- weaker than XSLT 1.0 -->
           </xs:choice>
         </xs:sequence>
         <xs:attribute name="id" type="xs:ID">
@@ -1357,9 +1358,9 @@ of problems processing the schema using various tools
 <xs:group name="result-elements">
   <xs:choice>
     <xs:element ref="xsl:literal-result-element"/>
-    <xs:any namespace="##other" processContents="lax"/>
+    <xs:any namespace="##other" processContents="skip"/>
 
-    <xs:any namespace="##local" processContents="lax"/>
+    <xs:any namespace="##local" processContents="skip"/>
   </xs:choice>
 </xs:group>
 

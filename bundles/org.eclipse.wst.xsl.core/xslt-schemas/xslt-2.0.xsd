@@ -1,4 +1,58 @@
 <?xml version="1.0"?>
+<!-- 
+ *******************************************************************************
+ * Copyright (c) 2001, 2007 - W3C, Standards for Technology in Automotive Retail,
+ * and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     David Carver - 20080330 - STAR - bug 224819 - changed procesContents from lax to skip
+ *******************************************************************************
+*******************************************************************************
+ * W3C® SOFTWARE NOTICE AND LICENSE
+ * http://www.w3.org/Consortium/Legal/copyright-software-19980720
+ *
+ * Copyright © 1994-2002 World Wide Web Consortium, (Massachusetts Institute of
+ * Technology, Institut National de Recherche en Informatique et en Automatique,
+ * Keio University). All Rights Reserved. http://www.w3.org/Consortium/Legal/
+ *
+ * This W3C work (including software, documents, or other related items) is being
+ * provided by the copyright holders under the following license. By obtaining,
+ * using and/or copying this work, you (the licensee) agree that you have read,
+ * understood, and will comply with the following terms and conditions:
+ *
+ * Permission to use, copy, modify, and distribute this software and its
+ * documentation, with or without modification,  for any purpose and without fee
+ * or royalty is hereby granted, provided that you include the following on ALL copies
+ * of the software and documentation or portions thereof, including modifications, that
+ * you make:
+ *
+ *  1. The full text of this NOTICE in a location viewable to users of the redistributed
+ *     or derivative work.
+ *  2. Any pre-existing intellectual property disclaimers, notices, or terms and
+ *     conditions. If none exist, a short notice of the following form (hypertext is preferred, text is permitted) should be used within the body of any redistributed or derivative code: "Copyright © [$date-of-software] World Wide Web Consortium, (Massachusetts Institute of Technology, Institut National de Recherche en Informatique et en Automatique, Keio University). All Rights Reserved. http://www.w3.org/Consortium/Legal/"
+ *  3. Notice of any changes or modifications to the W3C files, including the date changes
+ *     were made. (We recommend you provide URIs to the location from which the code is
+ *     derived.)
+ *
+ * THIS SOFTWARE AND DOCUMENTATION IS PROVIDED "AS IS," AND COPYRIGHT HOLDERS MAKE NO 
+ * REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO, 
+ * WARRANTIES OF MERCHANTABILITY OR FITNESS FOR ANY PARTICULAR PURPOSE OR THAT THE USE OF
+ * THE SOFTWARE OR DOCUMENTATION WILL NOT INFRINGE ANY THIRD PARTY PATENTS, COPYRIGHTS,
+ * TRADEMARKS OR OTHER RIGHTS.
+ *
+ * COPYRIGHT HOLDERS WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL OR CONSEQUENTIAL
+ * DAMAGES ARISING OUT OF ANY USE OF THE SOFTWARE OR DOCUMENTATION.
+ *
+ * The name and trademarks of copyright holders may NOT be used in advertising or publicity
+ * pertaining to the software without specific, written prior permission. Title to copyright
+ * in this software and any associated documentation will at all times remain with copyright
+ * holders.
+ ********************************************************************************************
+ -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.w3.org/1999/XSL/Transform" elementFormDefault="qualified" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
@@ -76,7 +130,7 @@ of problems processing the schema using various tools
   <xs:attribute name="extension-element-prefixes" type="xsl:prefix-list"/>
   <xs:attribute name="use-when" type="xsl:expression"/>
   <xs:attribute name="xpath-default-namespace" type="xs:anyURI"/>
-  <xs:anyAttribute namespace="##other" processContents="lax"/>
+  <xs:anyAttribute namespace="##other" processContents="skip"/>
 </xs:complexType>
 
 <xs:complexType name="versioned-element-type" mixed="true">
@@ -90,7 +144,7 @@ of problems processing the schema using various tools
 <xs:complexType name="element-only-versioned-element-type" mixed="false">
   <xs:complexContent>
     <xs:restriction base="xsl:versioned-element-type">
-      <xs:anyAttribute namespace="##other" processContents="lax"/>
+      <xs:anyAttribute namespace="##other" processContents="skip"/>
     </xs:restriction>
   </xs:complexContent>
 </xs:complexType>
@@ -667,7 +721,7 @@ of problems processing the schema using various tools
       <xs:simpleType>
         <xs:restriction base="xs:string"/>
       </xs:simpleType>
-      <xs:anyAttribute namespace="##other" processContents="lax"/>
+      <xs:anyAttribute namespace="##other" processContents="skip"/>
     </xs:restriction>
   </xs:simpleContent>
 </xs:complexType>
@@ -686,7 +740,7 @@ of problems processing the schema using various tools
   <xs:complexContent>
     <xs:restriction base="xsl:element-only-versioned-element-type">
       <xs:attribute name="version" type="xs:decimal" use="required"/>
-      <xs:anyAttribute namespace="##other" processContents="lax"/>
+      <xs:anyAttribute namespace="##other" processContents="skip"/>
     </xs:restriction>
   </xs:complexContent>
 </xs:complexType>
@@ -701,7 +755,7 @@ of problems processing the schema using various tools
             <xs:element ref="xsl:declaration"/>
             <xs:element ref="xsl:variable"/>
             <xs:element ref="xsl:param"/>              
-            <xs:any namespace="##other" processContents="lax"/> <!-- weaker than XSLT 1.0 -->
+            <xs:any namespace="##other" processContents="skip"/> <!-- weaker than XSLT 1.0 -->
           </xs:choice>
         </xs:sequence>
         <xs:attribute name="id" type="xs:ID"/>
@@ -803,8 +857,8 @@ of problems processing the schema using various tools
 <xs:group name="result-elements">
   <xs:choice>
     <xs:element ref="xsl:literal-result-element"/>
-    <xs:any namespace="##other" processContents="lax"/>
-    <xs:any namespace="##local" processContents="lax"/>
+    <xs:any namespace="##other" processContents="skip"/>
+    <xs:any namespace="##local" processContents="skip"/>
   </xs:choice>
 </xs:group>
 
