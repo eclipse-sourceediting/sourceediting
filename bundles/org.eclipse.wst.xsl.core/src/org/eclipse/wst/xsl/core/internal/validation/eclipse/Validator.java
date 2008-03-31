@@ -36,11 +36,13 @@ import org.eclipse.wst.xsl.core.internal.validation.XSLValidator;
 
 /**
  * TODO: Add Javadoc
+ * 
  * @author Doug Satchwell
- *
+ * 
  */
-public class Validator extends AbstractNestedValidator {
-	
+public class Validator extends AbstractNestedValidator
+{
+
 	@Override
 	public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor)
 	{
@@ -48,46 +50,55 @@ public class Validator extends AbstractNestedValidator {
 		ValidationResult res = super.validate(resource, kind, state, monitor);
 		if (resource.getType() == IResource.FILE)
 		{
-			StylesheetModel stylesheet = XSLCore.getInstance().getStylesheet((IFile)resource);
+			StylesheetModel stylesheet = XSLCore.getInstance().getStylesheet((IFile) resource);
 			IFile[] dependencies = stylesheet.getFiles().toArray(new IFile[0]);
 			res.setDependsOn(dependencies);
 		}
 		// TODO clean project (when project == null)
 		return res;
 	}
-	
-	public ValidationReport validate(String uri, InputStream inputstream, NestedValidatorContext context) {
+
+	public ValidationReport validate(String uri, InputStream inputstream, NestedValidatorContext context)
+	{
 		ValidationReport valreport = null;
-		try {
+		try
+		{
 			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(new URI(uri));
-			if (files.length > 0) {
+			if (files.length > 0)
+			{
 				IFile xslFile = files[0];
 				valreport = XSLValidator.getInstance().validate(uri, xslFile);
 			}
-		} catch (URISyntaxException e) {
+		}
+		catch (URISyntaxException e)
+		{
 			XSLCorePlugin.log(e);
-		} catch (CoreException e) {
+		}
+		catch (CoreException e)
+		{
 			XSLCorePlugin.log(e);
 		}
 		return valreport;
 	}
 
-	protected void addInfoToMessage(ValidationMessage validationMessage, IMessage message) {
-		XSLValidationMessage msg = (XSLValidationMessage)validationMessage;
+	@Override
+	protected void addInfoToMessage(ValidationMessage validationMessage, IMessage message)
+	{
+		XSLValidationMessage msg = (XSLValidationMessage) validationMessage;
 		XSLNode node = msg.getNode();
 		// constants are defined in org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidator
 		if (node.getNodeType() == XSLNode.ATTRIBUTE_NODE)
 		{
 			message.setAttribute("ERROR_SIDE", "ERROR_SIDE_RIGHT");
 			message.setAttribute(COLUMN_NUMBER_ATTRIBUTE, new Integer(validationMessage.getColumnNumber()));
-			message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "ATTRIBUTE_VALUE");  // whether to squiggle the element, attribute or text
-			message.setAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE, ((XSLAttribute)node).getName());
+			message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "ATTRIBUTE_VALUE"); // whether to squiggle the element, attribute or text
+			message.setAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE, ((XSLAttribute) node).getName());
 		}
 		else if (node.getNodeType() == XSLNode.ELEMENT_NODE)
 		{
 			message.setAttribute("ERROR_SIDE", "ERROR_SIDE_RIGHT");
 			message.setAttribute(COLUMN_NUMBER_ATTRIBUTE, new Integer(validationMessage.getColumnNumber()));
-			message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "START_TAG");  // whether to squiggle the element, attribute or text
+			message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "START_TAG"); // whether to squiggle the element, attribute or text
 		}
 	}
 }

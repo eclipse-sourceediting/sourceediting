@@ -105,9 +105,10 @@ public class StylesheetBuilder
 	private static class StylesheetParser
 	{
 		private final Stylesheet sf;
-		private final Stack elementStack = new Stack();
+		private final Stack<Element> elementStack = new Stack<Element>();
 		private Template currentTemplate;
 		private CallTemplate currentCallTemplate;
+		private XSLElement parentEl;
 
 		public StylesheetParser(Stylesheet stylesheet)
 		{
@@ -123,53 +124,59 @@ public class StylesheetBuilder
 		{
 			if (XSLCore.XSL_NAMESPACE_URI.equals(element.getNamespaceURI()))
 			{
+				XSLElement xslEl;
 				String elName = element.getLocalName();
 				if ("stylesheet".equals(elName) && elementStack.size() == 0)
 				{
-					configure((IDOMNode)element, sf);
+					xslEl = sf;
 				}
 				else if ("include".equals(elName) && elementStack.size() == 1)
 				{
 					Include include = new Include(sf,Include.INCLUDE);
-					configure((IDOMNode)element, include);
 					sf.addInclude(include);
+					xslEl = include;
 				}
 				else if ("import".equals(elName) && elementStack.size() == 1)
 				{
 					Import include = new Import(sf,Include.IMPORT);
-					configure((IDOMNode)element, include);
 					sf.addImport(include);
+					xslEl = include;
 				}
 				else if ("template".equals(elName) && elementStack.size() == 1)
 				{
 					currentTemplate = new Template(sf);
-					configure((IDOMNode)element, currentTemplate);
 					sf.addTemplate(currentTemplate);
+					xslEl = currentTemplate;
 				}
 				else if ("param".equals(elName) && elementStack.size() == 2 && currentTemplate != null)
 				{
 					Parameter param = new Parameter(sf);
-					configure((IDOMNode)element, param);
 					currentTemplate.addParameter(param);
+					xslEl = param;
 				}
 				else if ("call-template".equals(elName) && elementStack.size() >= 2)
 				{
 					currentCallTemplate = new CallTemplate(sf);
-					configure((IDOMNode)element, currentCallTemplate);				
 					sf.addCalledTemplate(currentCallTemplate);
+					xslEl = currentCallTemplate;
 				}
 				else if ("with-param".equals(elName) && elementStack.size() >= 3 && currentCallTemplate != null)
 				{
 					Parameter param = new Parameter(sf);
-					configure((IDOMNode)element, param);
 					currentCallTemplate.addParameter(param);
+					xslEl = param;
 				}
 				else if ("variable".equals(elName) && elementStack.size() == 1)
 				{
 					Variable var = new Variable(sf);
-					configure((IDOMNode)element, var);
 					sf.addGlobalVariable(var);
+					xslEl = var;
 				}
+				else
+				{
+					xslEl = new XSLElement(sf);
+				}
+				configure((IDOMNode)element, xslEl);
 			}
 			elementStack.push(element);
 			NodeList childNodes = element.getChildNodes();
@@ -186,7 +193,7 @@ public class StylesheetBuilder
 			currentCallTemplate = null;
 		}
 
-		private static void configure(IDOMNode node, XSLElement element)
+		private void configure(IDOMNode node, XSLElement element)
 		{
 			setPositionInfo(node,element);
 			NamedNodeMap map = node.getAttributes();
@@ -197,6 +204,9 @@ public class StylesheetBuilder
 				setPositionInfo(attr, xslatt);
 				element.setAttribute(xslatt);
 			}
+			if (parentEl != null)
+				parentEl.addChild(element);
+			parentEl = element;
 		}
 
 		private static void setPositionInfo(IDOMNode node, XSLNode inc)

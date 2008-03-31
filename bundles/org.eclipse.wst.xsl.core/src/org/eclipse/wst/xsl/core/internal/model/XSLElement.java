@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,9 +20,10 @@ import java.util.Map;
  * @author Doug Satchwell
  *
  */
-public abstract class XSLElement extends XSLNode
+public class XSLElement extends XSLNode
 {
-	Map<String, XSLAttribute> attributes = new HashMap<String, XSLAttribute>();
+	final Map<String, XSLAttribute> attributes = new HashMap<String, XSLAttribute>();
+	final List<XSLElement> childElements = new ArrayList<XSLElement>();
 	
 	/**
 	 * TODO: Add Javadoc
@@ -50,6 +53,11 @@ public abstract class XSLElement extends XSLNode
 		return attributes.get(name);
 	}
 
+	public Map<String, XSLAttribute> getAttributes()
+	{
+		return attributes;
+	}
+	
 	/**
 	 * TODO: Add Javadoc
 	 * @param name
@@ -59,5 +67,15 @@ public abstract class XSLElement extends XSLNode
 	{
 		XSLAttribute attribute = attributes.get(name);
 		return attribute == null ? null : attribute.getValue();
+	}
+
+	public void addChild(XSLElement element)
+	{
+		childElements.add(element);
+	}
+	
+	public List<XSLElement> getChildElements()
+	{
+		return childElements;
 	}
 }

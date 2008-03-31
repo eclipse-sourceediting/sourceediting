@@ -29,6 +29,7 @@ public class Stylesheet extends XSLElement
 	final List<Template> templates = new ArrayList<Template>();
 	final List<CallTemplate> calledTemplates = new ArrayList<CallTemplate>();
 	final List<Variable> globalVariables = new ArrayList<Variable>();
+	final List<XSLElement> elements = new ArrayList<XSLElement>();
 
 	/**
 	 * TODO: Add Javadoc

@@ -16,6 +16,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
@@ -26,6 +30,8 @@ import org.eclipse.wst.xsl.core.internal.model.Include;
 import org.eclipse.wst.xsl.core.internal.model.Parameter;
 import org.eclipse.wst.xsl.core.internal.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.internal.model.Template;
+import org.eclipse.wst.xsl.core.internal.model.XSLAttribute;
+import org.eclipse.wst.xsl.core.internal.model.XSLElement;
 import org.eclipse.wst.xsl.core.internal.model.XSLNode;
 
 /**
@@ -37,6 +43,7 @@ import org.eclipse.wst.xsl.core.internal.model.XSLNode;
 public class XSLValidator
 {
 	private static XSLValidator instance;
+	private XPath xpath = XPathFactory.newInstance().newXPath();
 
 	private XSLValidator()
 	{
@@ -61,14 +68,43 @@ public class XSLValidator
 		checkTemplates(stylesheetComposed, report);
 		// call-template checks
 		checkCallTemplates(stylesheetComposed, report);
+		// call-template checks
+		checkXPaths(stylesheetComposed.getStylesheet(), report);
 		
 		// TODO a) check globals and b) apply-templates where mode does not exist
+	}
+
+	private void checkXPaths(XSLElement xslEl, XSLValidationReport report)
+	{
+		validateXPath(xslEl, report, "select");
+		validateXPath(xslEl, report, "test");
+		validateXPath(xslEl, report, "match");
+		for (XSLElement childEl : xslEl.getChildElements())
+		{
+			checkXPaths(childEl, report);
+		}
+	}
+
+	private void validateXPath(XSLElement xslEl, XSLValidationReport report, String attName)
+	{
+		XSLAttribute att = xslEl.getAttribute(attName);
+		if (att != null)
+		{
+			try
+			{
+				xpath.compile(att.getValue());
+			}
+			catch (XPathExpressionException e)
+			{
+				createMarker(report, att, IMarker.SEVERITY_ERROR, "Xpath is invalid");
+			}
+		}
 	}
 
 	private void checkCircularRef(StylesheetModel stylesheetComposed, XSLValidationReport report)
 	{
 		if (stylesheetComposed.hasCircularReference())
-			createMarker(report, stylesheetComposed.getStylesheet(), IMarker.SEVERITY_ERROR, "Includes contain a circular reference");
+			createMarker(report, stylesheetComposed.getStylesheet(), IMarker.SEVERITY_ERROR, "Included stylesheets form a circular reference");
 	}
 
 	private void checkIncludes(StylesheetModel stylesheetComposed, XSLValidationReport report)
@@ -193,7 +229,7 @@ public class XSLValidator
 			List<Template> templateList = stylesheetComposed.getTemplatesByName(calledTemplate.getName());
 			if (templateList.size() == 0)
 			{
-				createMarker(report, calledTemplate, IMarker.SEVERITY_ERROR, "Called template '" + calledTemplate.getName() + "' is not available");
+				createMarker(report, calledTemplate.getAttribute("name"), IMarker.SEVERITY_ERROR, "Named template '" + calledTemplate.getName() + "' is not available");
 			}
 			else
 			{
@@ -212,7 +248,7 @@ public class XSLValidator
 						}
 					}
 					if (!found)
-						createMarker(report, calledTemplateParam, IMarker.SEVERITY_ERROR, "Parameter " + calledTemplateParam.getName() + " does not exist");
+						createMarker(report, calledTemplateParam.getAttribute("name"), IMarker.SEVERITY_ERROR, "Parameter " + calledTemplateParam.getName() + " does not exist");
 				}
 				if (REPORT_MISSING_PARAM_PREF > IMarker.SEVERITY_INFO)
 				{
