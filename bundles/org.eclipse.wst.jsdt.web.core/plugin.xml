@@ -35,6 +35,12 @@
 	
 	</extension>
 	
+	<extension point="org.eclipse.wst.common.project.facet.core.runtimes">
+	  <supported>
+	    <facet id="wst.jsdt.web"/>
+	    <runtime-component any="true"/>
+	  </supported>
+	</extension>
    
    
    
