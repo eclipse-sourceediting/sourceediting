@@ -187,9 +187,9 @@ public class XMLCatalogEntriesView extends Composite {
 		tableViewer.refresh();// XMLCatalogTreeViewer.USER_SPECIFIED_ENTRIES_OBJECT);
 	}
 
-	protected EditCatalogEntryDialog invokeDialog(String title, ICatalogElement entry) {
+	protected EditCatalogEntryDialog invokeDialog(String title, ICatalogElement entry, ICatalog catalog) {
 		Shell shell = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
-		EditCatalogEntryDialog dialog = new EditCatalogEntryDialog(shell, entry);
+		EditCatalogEntryDialog dialog = entry != null ? new EditCatalogEntryDialog(shell, entry, catalog) : new EditCatalogEntryDialog(shell, catalog);
 		dialog.create();
 		dialog.getShell().setText(title);
 		dialog.setBlockOnOpen(true);
@@ -198,13 +198,7 @@ public class XMLCatalogEntriesView extends Composite {
 	}
 
 	protected EditCatalogEntryDialog invokeDialog(String title, ICatalog catalog) {
-		Shell shell = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
-		EditCatalogEntryDialog dialog = new EditCatalogEntryDialog(shell, catalog);
-		dialog.create();
-		dialog.getShell().setText(title);
-		dialog.setBlockOnOpen(true);
-		dialog.open();
-		return dialog;
+		return invokeDialog(title, null, catalog);
 	}
 
 
@@ -229,7 +223,7 @@ public class XMLCatalogEntriesView extends Composite {
 			ICatalogElement oldEntry = (ICatalogElement) selectedObject;
 			ICatalogElement newEntry = (ICatalogElement) ((CatalogElement) oldEntry).clone();
 
-			EditCatalogEntryDialog dialog = invokeDialog(XMLCatalogMessages.UI_LABEL_EDIT_DIALOG_TITLE, newEntry);
+			EditCatalogEntryDialog dialog = invokeDialog(XMLCatalogMessages.UI_LABEL_EDIT_DIALOG_TITLE, newEntry, workingUserCatalog);
 			if (dialog.getReturnCode() == Window.OK) {
 				// delete the old value if the 'mapFrom' has changed
 				//

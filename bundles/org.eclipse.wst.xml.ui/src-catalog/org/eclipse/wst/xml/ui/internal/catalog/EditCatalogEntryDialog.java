@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,6 +51,7 @@ import org.eclipse.ui.part.PageBook;
 import org.eclipse.wst.common.ui.internal.dialogs.SelectSingleFileDialog;
 import org.eclipse.wst.common.uriresolver.internal.URI;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogElement;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
@@ -80,6 +81,10 @@ public class EditCatalogEntryDialog extends Dialog {
 		protected Combo resourceTypeCombo;
 
 		protected Text webAddressField;
+		
+		protected String key;
+		
+		protected int type;
 
 		protected void computeErrorMessage() {
 			errorMessage = null;
@@ -270,6 +275,9 @@ public class EditCatalogEntryDialog extends Dialog {
 			errorMessageLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 			updateWidgets(null);
+			
+			key = getEntry().getKey();
+			type = getEntry().getEntryType();
 
 			return composite;
 		}
@@ -320,10 +328,72 @@ public class EditCatalogEntryDialog extends Dialog {
 		}
 
 		public void saveData() {
-			getEntry().setURI(URIUtils.convertLocationToURI(resourceLocationField.getText()));
-			getEntry().setKey(keyField.getText());
-			getEntry().setEntryType(getKeyType());
-			getEntry().setAttributeValue(ICatalogEntry.ATTR_WEB_URL, checkboxButton.getSelection() ? webAddressField.getText() : null);
+			if (validateData()) {
+				getEntry().setURI(URIUtils.convertLocationToURI(resourceLocationField.getText()));
+				getEntry().setKey(keyField.getText());
+				getEntry().setEntryType(getKeyType());
+				getEntry().setAttributeValue(ICatalogEntry.ATTR_WEB_URL, checkboxButton.getSelection() ? webAddressField.getText() : null);
+				dataSaved = true;
+			}
+			else {
+				errorMessage = XMLCatalogMessages.UI_WARNING_DUPLICATE_ENTRY;
+				errorMessageLabel.setText(errorMessage);
+				updateOKButtonState();
+				dataSaved = false;
+			}
+		}
+		
+		/**
+		 * Validates that the data entered does not conflict with an existing entry in either catalog.
+		 * @return True if validated, false otherwise.
+		 */
+		protected boolean validateData() {
+		
+			String result = null;
+			if (key == null || !key.equals(keyField.getText()) || type != getKeyType())
+			{
+				// get system catalog
+				ICatalog systemCatalog = null;			
+				ICatalog defaultCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
+				INextCatalog[] nextCatalogs = defaultCatalog.getNextCatalogs();
+				for (int i = 0; i < nextCatalogs.length; i++) {
+					INextCatalog catalog = nextCatalogs[i];
+					ICatalog referencedCatalog = catalog.getReferencedCatalog();
+					if (referencedCatalog != null) {
+						if (XMLCorePlugin.SYSTEM_CATALOG_ID.equals(referencedCatalog.getId())) {
+							systemCatalog = referencedCatalog;
+						}
+					}
+				}
+				
+				try {
+					switch( getKeyType() )
+					{
+					case ICatalogEntry.ENTRY_TYPE_PUBLIC:
+						result = catalog.resolvePublic(keyField.getText(), null);		
+						if (result == null) {
+							result = systemCatalog.resolvePublic(keyField.getText(), null);
+						}
+						break;
+					case ICatalogEntry.ENTRY_TYPE_SYSTEM:
+						result = catalog.resolveSystem(keyField.getText());
+						if (result == null) {
+							result = systemCatalog.resolveSystem(keyField.getText());
+						}
+						break;
+					case ICatalogEntry.ENTRY_TYPE_URI:
+						result = catalog.resolveURI(keyField.getText());
+						if (result == null) {
+							result = systemCatalog.resolveURI(keyField.getText());
+						}
+						break;
+					}
+				}
+				catch (Exception e) {
+				}
+			}
+			
+			return (result == null);
 		}
 
 		protected void updateKeyTypeCombo(int type) {
@@ -666,6 +736,7 @@ public class EditCatalogEntryDialog extends Dialog {
 	protected ToolBar toolBar;
 
 	protected Color color;
+	protected boolean dataSaved;
 
 	public EditCatalogEntryDialog(Shell parentShell, ICatalog aCatalog) {
 		super(parentShell);
@@ -673,9 +744,8 @@ public class EditCatalogEntryDialog extends Dialog {
 		this.catalog = aCatalog;
 	}
 
-	public EditCatalogEntryDialog(Shell parentShell, ICatalogElement catalogElement) {
-		super(parentShell);
-		setShellStyle(getShellStyle() | SWT.RESIZE);
+	public EditCatalogEntryDialog(Shell parentShell, ICatalogElement catalogElement, ICatalog aCatalog) {
+		this(parentShell, aCatalog);
 		this.fCatalogElement = catalogElement;
 		// TODO EB: fix his
 		// entry.setURI(URIHelper.removePlatformResourceProtocol(entry.getURI()));
@@ -684,6 +754,10 @@ public class EditCatalogEntryDialog extends Dialog {
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == IDialogConstants.OK_ID) {
 			selectedPage.saveData();
+			if (!dataSaved) {				
+				// do not exit edit dialog
+				return;
+			}
 		}
 		super.buttonPressed(buttonId);
 	}
