@@ -55,7 +55,7 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 	public static String PLUGIN_SPECIFIED_ENTRIES_OBJECT = XMLCatalogMessages.UI_LABEL_PLUGIN_SPECIFIED_ENTRIES;
 
 	public XMLCatalogTreeViewer(Composite parent, ICatalog workingUserCatalog, ICatalog systemCatalog) {
-		super(parent, SWT.NONE);
+		super(parent, SWT.BORDER);
 		this.fWorkingUserCatalog = workingUserCatalog;
 		this.fSystemCatalog = systemCatalog;
 

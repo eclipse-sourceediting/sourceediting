@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,6 +53,7 @@ public class XMLCatalogEntriesView extends Composite {
 		this.systemCatalog = systemCatalog;
 
 		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 2;
 		this.setLayout(gridLayout);
 
 		tableViewer = createTableViewer(this);
@@ -103,21 +104,14 @@ public class XMLCatalogEntriesView extends Composite {
 
 	protected void createButtons(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 7;
-		gridLayout.makeColumnsEqualWidth = true;
-		composite.setLayout(gridLayout);
-
 		GridData gd = new GridData();
-		gd.horizontalAlignment = GridData.FILL;
-		gd.grabExcessHorizontalSpace = true;
-		gd.horizontalSpan = 4;
-
-		Button hiddenButton = new Button(composite, SWT.NONE);
-		hiddenButton.setLayoutData(gd);
-		hiddenButton.setVisible(false);
-		hiddenButton.setEnabled(false);
+		gd.verticalAlignment = GridData.BEGINNING;
+		composite.setLayoutData(gd);
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.marginHeight = 0;
+		gridLayout.marginWidth = 0;
+		gridLayout.marginLeft = 3;
+		composite.setLayout(gridLayout);
 
 		SelectionListener selectionListener = new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -164,11 +158,21 @@ public class XMLCatalogEntriesView extends Composite {
 		gd.horizontalAlignment = GridData.FILL;
 		gd.grabExcessHorizontalSpace = true;
 		deleteButton = new Button(composite, SWT.NONE);
-		deleteButton.setText(XMLCatalogMessages.UI_BUTTON_DELETE);
+		deleteButton.setText(XMLCatalogMessages.UI_BUTTON_REMOVE);
 		// WorkbenchHelp.setHelp(deleteButton,
 		// XMLBuilderContextIds.XMLP_MAPPING_DELETE);
 		deleteButton.setLayoutData(gd);
 		deleteButton.addSelectionListener(selectionListener);
+		
+		gd = new GridData();
+		gd.horizontalAlignment = GridData.FILL;
+		gd.grabExcessHorizontalSpace = true;
+		gd.horizontalSpan = 4;
+
+		Button hiddenButton = new Button(composite, SWT.NONE);
+		hiddenButton.setLayoutData(gd);
+		hiddenButton.setVisible(false);
+		hiddenButton.setEnabled(false);
 
 		// a cruddy hack so that the PreferenceDialog doesn't close every time
 		// we press 'enter'
