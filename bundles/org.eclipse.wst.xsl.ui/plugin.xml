@@ -131,4 +131,15 @@
    </extension>
 -->	
 
+	<extension point="org.eclipse.ui.editors">
+		<editor
+			name="XSL Editor"
+			icon="$nl$/icons/full/operation.gif"
+			contributorClass="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorActionBarContributor"
+			class="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"
+			id="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart">
+			<contentTypeBinding
+				contentTypeId="org.eclipse.wst.xml.core.xslsource" />
+		</editor>
+	</extension>
  </plugin>
