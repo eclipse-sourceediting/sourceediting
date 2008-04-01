@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.model;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.model.IIncludeVisitor;
 
 /**
@@ -93,10 +93,11 @@ public class Include extends XSLElement
 	 */
 	public IFile getHrefAsFile()
 	{
-		// TODO this depends on the project settings and URIResolver
 		String href = getHref();
 		if (href == null)
 			return null;
-		return getStylesheet().getFile().getProject().getFile(new Path(href));
+		// TODO this depends on the URIResolver
+		IContainer parent = getStylesheet().getFile().getParent();
+		return parent.getFile(new Path(href));
 	} 
 }
