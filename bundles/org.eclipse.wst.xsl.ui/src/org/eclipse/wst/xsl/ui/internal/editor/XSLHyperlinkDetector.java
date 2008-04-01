@@ -111,8 +111,7 @@ public class XSLHyperlinkDetector extends AbstractHyperlinkDetector
 	private IHyperlink createIncludeHyperLink(IFile currentFile, String include, IRegion hyperlinkRegion)
 	{
 		IHyperlink hyperlink = null;
-		IPath path = new Path(include);
-		IFile linkedFile = currentFile.getProject().getFile(path);
+		IFile linkedFile = XSLCore.resolveFile(currentFile, include);
 		if (linkedFile.exists())
 			hyperlink = new SourceFileHyperlink(hyperlinkRegion,linkedFile);
 		return hyperlink;

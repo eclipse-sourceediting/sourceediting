@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.xsl.core.internal.model.Include;
 import org.eclipse.wst.xsl.core.internal.model.Stylesheet;
 import org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder;
@@ -78,5 +79,20 @@ public class XSLCore
 		if (instance == null)
 			instance = new XSLCore();
 		return instance;
+	}
+
+	/**
+	 * Locates a file for the given current file and URI.
+	 * 
+	 * @param currentFile
+	 * @param uri
+	 * @return
+	 */
+	public static IFile resolveFile(IFile currentFile, String uri)
+	{
+		if (uri == null)
+			return null;
+		// TODO depends on how we resolve URIs
+		return currentFile.getParent().getFile(new Path(uri));
 	}
 }

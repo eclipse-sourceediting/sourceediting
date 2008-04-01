@@ -13,6 +13,7 @@ package org.eclipse.wst.xsl.core.internal.model;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.model.IIncludeVisitor;
 
 /**
@@ -87,17 +88,12 @@ public class Include extends XSLElement
 	}
 
 	/**
-	 * Gets the included file as a source file, if possible
+	 * Gets the included file as a source file, if possible (returned file may be null and need not exist).
 	 * 
-	 * @return the included stylesheet, or null if none exists
+	 * @return the included file, or null
 	 */
 	public IFile getHrefAsFile()
 	{
-		String href = getHref();
-		if (href == null)
-			return null;
-		// TODO this depends on the URIResolver
-		IContainer parent = getStylesheet().getFile().getParent();
-		return parent.getFile(new Path(href));
+		return XSLCore.resolveFile(getStylesheet().getFile(), getHref());
 	} 
 }
