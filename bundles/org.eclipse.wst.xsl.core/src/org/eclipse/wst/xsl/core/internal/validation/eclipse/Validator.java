@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver - STAR - bug 224777 - fix spaces in path names in URIs.
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.validation.eclipse;
 
@@ -63,6 +64,7 @@ public class Validator extends AbstractNestedValidator
 		ValidationReport valreport = null;
 		try
 		{
+			uri = org.eclipse.wst.common.uriresolver.internal.util.URIEncoder.encode(uri);
 			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(new URI(uri));
 			if (files.length > 0)
 			{
