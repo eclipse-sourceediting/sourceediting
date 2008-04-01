@@ -52,7 +52,7 @@ public class ImportXMLCatalogPage extends WizardPage {
 		selectSingleFileView.addFilterExtensions(extensions);
 		selectSingleFileView.createControl(composite);
 		selectSingleFileView.setVisibleHelper(true);
-		setControl(parent);
+		setControl(composite);
 	}
 
 	public void createFilterControl(Composite composite) {
