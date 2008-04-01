@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.model;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.model.IIncludeVisitor;
 
@@ -39,7 +37,12 @@ public class Include extends XSLElement
 	 * @param href
 	 * @param type
 	 */
-	public Include(Stylesheet stylesheet, int type)
+	public Include(Stylesheet stylesheet)
+	{
+		this(stylesheet,INCLUDE);
+	}
+
+	protected Include(Stylesheet stylesheet, int type)
 	{
 		super(stylesheet);
 		this.type = type;
@@ -68,23 +71,20 @@ public class Include extends XSLElement
 	 */
 	public void accept(IIncludeVisitor visitor)
 	{
-		boolean carryOn = visitor.visit(this);
-		if (carryOn)
+		IFile file = getHrefAsFile();
+		if (file != null && file.exists())
 		{
-			IFile file = getHrefAsFile();
-			if (file != null && file.exists())
+			Stylesheet stylesheet = StylesheetBuilder.getInstance().getStylesheet(file, false);
+			for (Include include : stylesheet.getIncludes())
 			{
-				Stylesheet stylesheet = StylesheetBuilder.getInstance().getStylesheet(file, false);
-				for (Include include : stylesheet.getIncludes())
-				{
-					include.accept(visitor);
-				}
-				for (Import include : stylesheet.getImports())
-				{
-					include.accept(visitor);
-				}
+				include.accept(visitor);
+			}
+			for (Import include : stylesheet.getImports())
+			{
+				include.accept(visitor);
 			}
 		}
+		visitor.visit(this);
 	}
 
 	/**

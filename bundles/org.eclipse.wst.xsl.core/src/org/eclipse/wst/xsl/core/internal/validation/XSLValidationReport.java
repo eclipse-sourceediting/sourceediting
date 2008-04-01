@@ -62,7 +62,7 @@ public class XSLValidationReport implements ValidationReport
 	public ValidationMessage addWarning(XSLNode node, String message)
 	{
 		XSLValidationMessage msg = new XSLValidationMessage(message,node.getLineNumber()+1,node.getColumnNumber()+1,getFileURI());
-		msg.setSeverity(ValidationMessage.SEV_NORMAL);
+		msg.setSeverity(ValidationMessage.SEV_LOW);
 		addMessage(node,msg);
 		return msg;
 	}

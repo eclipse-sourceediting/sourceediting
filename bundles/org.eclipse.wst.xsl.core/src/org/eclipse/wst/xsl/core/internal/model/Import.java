@@ -16,8 +16,8 @@ package org.eclipse.wst.xsl.core.internal.model;
  */
 public class Import extends Include
 {
-	public Import(Stylesheet stylesheet, int type)
+	public Import(Stylesheet stylesheet)
 	{
-		super(stylesheet,INCLUDE);
+		super(stylesheet,IMPORT);
 	}
 }

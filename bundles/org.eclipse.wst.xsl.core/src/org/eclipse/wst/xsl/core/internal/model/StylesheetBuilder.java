@@ -117,7 +117,8 @@ public class StylesheetBuilder
 		
 		public void walkDocument(IDOMDocument document)
 		{
-			recurse(document.getDocumentElement());
+			if (document.getDocumentElement() != null)
+				recurse(document.getDocumentElement());
 		}
 
 		private void recurse(Element element)
@@ -132,13 +133,13 @@ public class StylesheetBuilder
 				}
 				else if ("include".equals(elName) && elementStack.size() == 1)
 				{
-					Include include = new Include(sf,Include.INCLUDE);
+					Include include = new Include(sf);
 					sf.addInclude(include);
 					xslEl = include;
 				}
 				else if ("import".equals(elName) && elementStack.size() == 1)
 				{
-					Import include = new Import(sf,Include.IMPORT);
+					Import include = new Import(sf);
 					sf.addImport(include);
 					xslEl = include;
 				}

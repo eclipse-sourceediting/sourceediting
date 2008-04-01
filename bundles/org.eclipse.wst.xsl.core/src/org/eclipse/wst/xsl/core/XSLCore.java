@@ -61,10 +61,7 @@ public class XSLCore
 	{
 		Stylesheet stylesheet = StylesheetBuilder.getInstance().getStylesheet(file, true);
 		StylesheetModel stylesheetComposed = new StylesheetModel(stylesheet);			
-		// make a dummy include and visit it
-		Include inc = new Include(stylesheet,Include.INCLUDE);
-		inc.setAttribute(new XSLAttribute(inc,"href",file.getName()));
-		inc.accept(stylesheetComposed);
+		stylesheetComposed.fix();
 		stylesheetsComposed.put(file, stylesheetComposed);
 		return stylesheetComposed;
 	}

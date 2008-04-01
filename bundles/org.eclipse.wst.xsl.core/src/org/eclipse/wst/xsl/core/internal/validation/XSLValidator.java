@@ -88,7 +88,7 @@ public class XSLValidator
 	private void validateXPath(XSLElement xslEl, XSLValidationReport report, String attName)
 	{
 		XSLAttribute att = xslEl.getAttribute(attName);
-		if (att != null)
+		if (att != null && att.getValue() != null)
 		{
 			try
 			{
@@ -97,6 +97,10 @@ public class XSLValidator
 			catch (XPathExpressionException e)
 			{
 				createMarker(report, att, IMarker.SEVERITY_ERROR, "Xpath is invalid");
+			}
+			catch (NullPointerException e)
+			{
+				// not sure why NPE is being thrown here
 			}
 		}
 	}
@@ -139,7 +143,7 @@ public class XSLValidator
 
 	private void checkTemplates(StylesheetModel stylesheetComposed, XSLValidationReport report)
 	{
-		for (Template template : stylesheetComposed.getTemplates())
+		for (Template template : stylesheetComposed.getStylesheet().getTemplates())
 		{
 			// check attributes are correct
 			if (template.getName() != null)
@@ -150,11 +154,11 @@ public class XSLValidator
 					createMarker(report, template, IMarker.SEVERITY_ERROR, "Named templates cannot specify a mode");
 				checkParameters(report, template);
 			}
-			else if (template.getMatch() != null)
-			{// match template
-				if (template.getParameters().size() != 0)
-					createMarker(report, template, IMarker.SEVERITY_ERROR, "Only named templates may have parameters");
-			}
+//			else if (template.getMatch() != null)
+//			{// match template
+//				if (template.getParameters().size() != 0)
+//					createMarker(report, template, IMarker.SEVERITY_ERROR, "Only named templates may have parameters");
+//			}
 
 			for (Template checkTemplate : stylesheetComposed.getTemplates())
 			{

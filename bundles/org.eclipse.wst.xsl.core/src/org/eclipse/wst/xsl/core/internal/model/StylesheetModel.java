@@ -12,10 +12,12 @@ package org.eclipse.wst.xsl.core.internal.model;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.model.IIncludeVisitor;
 
 /**
@@ -108,11 +110,79 @@ public class StylesheetModel implements IIncludeVisitor
 	{
 		return circularReference;
 	}
-			
+	
+	public void fix()
+	{
+		// make a dummy include and visit it
+		Include inc = new Include(stylesheet);
+		inc.setAttribute(new XSLAttribute(inc,"href",stylesheet.getFile().getName()));
+		handleInclude(inc);
+	}
+	
+	private boolean handleInclude(Include include)
+	{
+		IFile file = include.getHrefAsFile();
+		if (file == null || !file.exists())
+		{
+			return false;
+		}
+		else if (files.contains(file))
+		{
+			circularReference = true;
+			return false;				
+		}
+		files.add(file);
+		
+		Stylesheet includedStylesheet = StylesheetBuilder.getInstance().getStylesheet(file, false);
+		if (includedStylesheet == null)
+			return false;
+		stylesheets.add(includedStylesheet);
+		
+		for (Include inc : includedStylesheet.includes)
+		{
+			handleInclude(inc);
+		}
+		for (Include inc : includedStylesheet.imports)
+		{
+			handleInclude(inc);
+		}
+		
+		System.out.println("Adding includes for "+includedStylesheet.getFile());
+		if (include.getIncludeType() == Include.INCLUDE)
+		{
+			System.out.println(" INCLUDING"+includedStylesheet.getFile());
+			templates.addAll(includedStylesheet.templates);
+		}
+		else
+		{
+			System.out.println(" IMPORTING"+includedStylesheet.getFile());
+			for (Template includedTemplate : includedStylesheet.templates)
+			{
+				boolean conflicts = false;
+				for (Iterator<Template> iterator = templates.iterator(); iterator.hasNext();)
+				{
+					Template template = iterator.next();
+					if (template.conflictsWith(includedTemplate))
+					{
+						conflicts = true;
+						iterator.remove();
+						break;
+					}
+				}
+				templates.add(includedTemplate);
+			}
+		}
+		return true;
+	}
+	
+	public boolean visit(Include include)
+	{
+		return false;
+	}
+/*
 	public boolean visit(Include include)
 	{
 		IFile file = include.getHrefAsFile();
-		System.out.println(file);
 		if (file == null || !file.exists())
 		{
 			return false;
@@ -153,4 +223,5 @@ public class StylesheetModel implements IIncludeVisitor
 		}
 		return true;
 	}	
+*/
 }
