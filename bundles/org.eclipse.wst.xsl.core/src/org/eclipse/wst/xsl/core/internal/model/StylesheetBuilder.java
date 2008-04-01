@@ -62,7 +62,7 @@ public class StylesheetBuilder
 		try
 		{
 			smodel = StructuredModelManager.getModelManager().getModelForRead(file);
-			if (smodel instanceof IDOMModel)
+			if (smodel != null && smodel instanceof IDOMModel)
 			{
 				IDOMModel model = (IDOMModel) smodel;
 				stylesheet = parseModel(model, file);

@@ -125,6 +125,9 @@ public class StylesheetModel implements IIncludeVisitor
 		files.add(file);
 		
 		Stylesheet includedStylesheet = StylesheetBuilder.getInstance().getStylesheet(file, false);
+		if (includedStylesheet == null)
+			return false;
+			
 		stylesheets.add(includedStylesheet);
 		globalVariables.addAll(includedStylesheet.globalVariables);
 		if (include.getIncludeType() == Include.INCLUDE)
