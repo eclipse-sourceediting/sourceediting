@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.catalog;
 
+import java.util.Iterator;
+
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -243,34 +245,45 @@ public class XMLCatalogEntriesView extends Composite {
 
 	protected void performDelete() {
 		ISelection selection = tableViewer.getSelection();
-		Object selectedObject = (selection instanceof IStructuredSelection) ? ((IStructuredSelection) selection).getFirstElement() : null;
-
-		if (selectedObject instanceof ICatalogElement) {
-			ICatalogElement catalogElement = (ICatalogElement) selectedObject;
-			workingUserCatalog.removeCatalogElement(catalogElement);
+		if(selection instanceof IStructuredSelection) {
+			IStructuredSelection structuredSelection = (IStructuredSelection)selection;
+			Iterator iterator = structuredSelection.iterator();
+			while(iterator.hasNext()) {
+				Object selectedObject = iterator.next();
+				if (selectedObject instanceof ICatalogElement) {
+					ICatalogElement catalogElement = (ICatalogElement) selectedObject;
+					workingUserCatalog.removeCatalogElement(catalogElement);
+				}
+			}
 		}
 	}
 
 	protected void updateWidgetEnabledState() {
 		boolean isEditable = false;
 		ISelection selection = tableViewer.getSelection();
-		Object selectedObject = (selection instanceof IStructuredSelection) ? ((IStructuredSelection) selection).getFirstElement() : null;
-
-		if (selectedObject instanceof ICatalogElement) {
-			ICatalogElement[] elements = ((Catalog) workingUserCatalog).getCatalogElements();
-			// dw List entriesList = new ArrayList(elements.length);
-			for (int i = 0; i < elements.length; i++) {
-				ICatalogElement element = elements[i];
-				isEditable = selectedObject.equals(element);
-				if (isEditable) {
-					break;
+		boolean multipleSelection = false;
+		if(selection instanceof IStructuredSelection) {
+			IStructuredSelection structuredSelection = (IStructuredSelection)selection;
+			if(structuredSelection.size() > 1) {
+				multipleSelection = true;
+			}
+			Object selectedObject = structuredSelection.getFirstElement();
+			if (selectedObject instanceof ICatalogElement) {
+				ICatalogElement[] elements = ((Catalog) workingUserCatalog).getCatalogElements();
+				// dw List entriesList = new ArrayList(elements.length);
+				for (int i = 0; i < elements.length; i++) {
+					ICatalogElement element = elements[i];
+					isEditable = selectedObject.equals(element);
+					if (isEditable) {
+						break;
+					}
 				}
 			}
 		}
 
 		// if (isPageEnabled)
 		{
-			editButton.setEnabled(isEditable);
+			editButton.setEnabled(isEditable & !multipleSelection);
 			deleteButton.setEnabled(isEditable);
 		}
 	}

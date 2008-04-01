@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2007 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,7 +55,7 @@ public class XMLCatalogTreeViewer extends TreeViewer {
 	public static String PLUGIN_SPECIFIED_ENTRIES_OBJECT = XMLCatalogMessages.UI_LABEL_PLUGIN_SPECIFIED_ENTRIES;
 
 	public XMLCatalogTreeViewer(Composite parent, ICatalog workingUserCatalog, ICatalog systemCatalog) {
-		super(parent, SWT.BORDER);
+		super(parent, SWT.MULTI | SWT.BORDER);
 		this.fWorkingUserCatalog = workingUserCatalog;
 		this.fSystemCatalog = systemCatalog;
 
