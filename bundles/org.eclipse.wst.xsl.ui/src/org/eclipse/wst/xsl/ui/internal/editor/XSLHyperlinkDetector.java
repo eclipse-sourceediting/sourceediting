@@ -112,7 +112,7 @@ public class XSLHyperlinkDetector extends AbstractHyperlinkDetector
 	{
 		IHyperlink hyperlink = null;
 		IFile linkedFile = XSLCore.resolveFile(currentFile, include);
-		if (linkedFile.exists())
+		if (linkedFile != null && linkedFile.exists())
 			hyperlink = new SourceFileHyperlink(hyperlinkRegion,linkedFile);
 		return hyperlink;
 	}
