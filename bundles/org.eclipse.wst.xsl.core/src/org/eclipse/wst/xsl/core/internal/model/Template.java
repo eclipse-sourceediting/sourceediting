@@ -107,4 +107,12 @@ public class Template extends XSLElement
 			return true;
 		return false;
 	}
+	
+	@Override
+	public String toString()
+	{
+		String name = getName();
+		String match = getMatch();
+		return "file="+getStylesheet().getFile()+", name="+name+", match="+match;
+	}
 }

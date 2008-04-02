@@ -18,7 +18,6 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.xsl.core.XSLCore;
-import org.eclipse.wst.xsl.core.model.IIncludeVisitor;
 
 /**
  * The composed stylesheet, consisting of all templates and variables available 
@@ -29,7 +28,7 @@ import org.eclipse.wst.xsl.core.model.IIncludeVisitor;
  * 
  * @author Doug Satchwell
  */
-public class StylesheetModel implements IIncludeVisitor
+public class StylesheetModel
 {
 	private final Stylesheet stylesheet;
 	boolean circularReference;
@@ -113,50 +112,58 @@ public class StylesheetModel implements IIncludeVisitor
 	
 	public void fix()
 	{
-		// make a dummy include and visit it
-		Include inc = new Include(stylesheet);
-		inc.setAttribute(new XSLAttribute(inc,"href",stylesheet.getFile().getName()));
-		handleInclude(inc);
+		templates.addAll(stylesheet.templates);
+		stylesheets.add(stylesheet);
+		files.add(stylesheet.getFile());
+		for (Include inc : stylesheet.includes)
+		{
+			handleInclude(inc);
+		}
+		for (Include inc : stylesheet.imports)
+		{
+			handleInclude(inc);
+		}
 	}
 	
-	private boolean handleInclude(Include include)
+	private void handleInclude(Include include)
 	{
 		IFile file = include.getHrefAsFile();
+		
+		String type;
+		if (include.getIncludeType() == Include.INCLUDE)
+			type = " INCLUDE ";
+		else
+			type = " IMPORT  ";
+//		System.out.println(include.getStylesheet().getFile()+type+file);
+		
 		if (file == null || !file.exists())
 		{
-			return false;
+			return;
 		}
 		else if (files.contains(file))
 		{
 			circularReference = true;
-			return false;				
+			return;				
 		}
 		files.add(file);
 		
 		Stylesheet includedStylesheet = StylesheetBuilder.getInstance().getStylesheet(file, false);
 		if (includedStylesheet == null)
-			return false;
+			return;
 		stylesheets.add(includedStylesheet);
 		
-		for (Include inc : includedStylesheet.includes)
-		{
-			handleInclude(inc);
-		}
-		for (Include inc : includedStylesheet.imports)
-		{
-			handleInclude(inc);
-		}
-		
-		System.out.println("Adding includes for "+includedStylesheet.getFile());
+		StylesheetModel includedModel = XSLCore.getInstance().getStylesheet(file);
 		if (include.getIncludeType() == Include.INCLUDE)
 		{
-			System.out.println(" INCLUDING"+includedStylesheet.getFile());
-			templates.addAll(includedStylesheet.templates);
+			for (Template template : includedModel.templates)
+			{
+//				System.out.println(" INC ADD template "+template);
+				templates.add(template);
+			}
 		}
 		else
 		{
-			System.out.println(" IMPORTING"+includedStylesheet.getFile());
-			for (Template includedTemplate : includedStylesheet.templates)
+			for (Template includedTemplate : includedModel.templates)
 			{
 				boolean conflicts = false;
 				for (Iterator<Template> iterator = templates.iterator(); iterator.hasNext();)
@@ -165,63 +172,15 @@ public class StylesheetModel implements IIncludeVisitor
 					if (template.conflictsWith(includedTemplate))
 					{
 						conflicts = true;
-						iterator.remove();
-						break;
-					}
-				}
-				templates.add(includedTemplate);
-			}
-		}
-		return true;
-	}
-	
-	public boolean visit(Include include)
-	{
-		return false;
-	}
-/*
-	public boolean visit(Include include)
-	{
-		IFile file = include.getHrefAsFile();
-		if (file == null || !file.exists())
-		{
-			return false;
-		}
-		else if (files.contains(file))
-		{
-			circularReference = true;
-			return false;				
-		}
-		files.add(file);
-		
-		Stylesheet includedStylesheet = StylesheetBuilder.getInstance().getStylesheet(file, false);
-		if (includedStylesheet == null)
-			return false;
-			
-		stylesheets.add(includedStylesheet);
-		globalVariables.addAll(includedStylesheet.globalVariables);
-		if (include.getIncludeType() == Include.INCLUDE)
-		{
-			templates.addAll(includedStylesheet.templates);
-		}
-		else
-		{
-			for (Template template : includedStylesheet.templates)
-			{
-				boolean conflicts = false;
-				for (Template includedTemplate : templates)
-				{
-					if (template.conflictsWith(includedTemplate))
-					{
-						conflicts = true;
 						break;
 					}
 				}
 				if (!conflicts)
-					templates.add(template);
+				{
+//					System.out.println(" IMP ADD template "+includedTemplate);
+					templates.add(includedTemplate);
+				}
 			}
 		}
-		return true;
-	}	
-*/
+	}
 }
