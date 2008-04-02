@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,63 +11,44 @@
 package org.eclipse.wst.xsd.ui.internal.adt.design.directedit;
 
 import java.text.MessageFormat;
-import org.eclipse.jface.util.Assert;
-import org.eclipse.jface.viewers.CellEditor;
+
+import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.TypedListener;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
 
 /*
- * This is a copy of ComboBoxCellEditor.
+ * This wraps the ComboBoxCellEditor.
  * We need to apply and deactivate the combo on a single click (not on a double click like
  * the ComboBoxCellEditor).
  */
-public class ADTComboBoxCellEditor extends CellEditor
+public class ADTComboBoxCellEditor extends ComboBoxCellEditor
 {
-
-  /**
-   * The list of items to present in the combo box.
-   */
-  private String[] items;
-
-  /**
-   * The zero-based index of the selected item.
-   */
-  int selection;
-
-  /**
-   * The custom combo box control.
-   */
-  CCombo comboBox;
+  private static final int adtDefaultStyle = SWT.NONE;
 
   /**
    * Used to determine if the value should be applied to the cell.
    */
   private boolean continueApply;
-
+  private boolean isTraversing = false;
   private Object selectedValue;
-  //private Object setObject;
   private ComponentReferenceEditManager componentReferenceEditManager;
-
-  /**
-   * Default ComboBoxCellEditor style
-   */
-  private static final int defaultStyle = SWT.NONE;
-
+  
+  // This prevents the cell editor from being deactivated while handling the New or Browse selection.
+  private boolean isHandlingSelection = false;
 
   /**
    * Creates a new cell editor with a combo containing the given list of choices
@@ -82,73 +63,96 @@ public class ADTComboBoxCellEditor extends CellEditor
    */
   public ADTComboBoxCellEditor(Composite parent, String[] items, ComponentReferenceEditManager editManager)
   {
-    super(parent, defaultStyle);
+    super(parent, items, adtDefaultStyle | SWT.READ_ONLY);
     setItems(items);
     componentReferenceEditManager = editManager;
   }
 
-  /**
-   * Returns the list of choices for the combo box
-   * 
-   * @return the list of choices for the combo box
-   */
-  public String[] getItems()
+  private void removeListeners(CCombo comboBox, int event)
   {
-    return this.items;
+    Listener [] listeners = comboBox.getListeners(event);
+    int length = listeners.length;
+    for (int i = 0; i < length; i++)
+    {
+      Listener l = listeners[i];
+      if (l instanceof TypedListener)
+      {
+        TypedListener typedListener = (TypedListener)l;
+        String className = typedListener.getEventListener().getClass().getCanonicalName();
+        // It's possible that there are other typed listeners added to the CCombo.
+        // Currently there are none, but as an extra check, I want to ensure 
+        // I'm removing the ones added from the inherited class.
+        // I've tested this and I know it removes the following:
+        // org.eclipse.jface.viewers.ComboBoxCellEditor$2
+        // org.eclipse.jface.viewers.ComboBoxCellEditor$4
+        // which are indeed the ones I'm customizing
+        if (className != null && className.contains("org.eclipse.jface.viewers.ComboBoxCellEditor"))
+        {
+          comboBox.removeListener(event, l);
+        }
+      }
+    }
   }
-
-  /**
-   * Sets the list of choices for the combo box
-   * 
-   * @param items
-   *          the list of choices for the combo box
-   */
-  public void setItems(String[] items)
-  {
-    Assert.isNotNull(items);
-    this.items = items;
-    populateComboBoxItems();
-  }
-
+  
   /*
    * (non-Javadoc) Method declared on CellEditor.
    */
   protected Control createControl(Composite parent)
   {
+    CCombo comboBox = (CCombo)super.createControl(parent);
 
-    comboBox = new CCombo(parent, getStyle() | SWT.READ_ONLY);
     comboBox.setFont(parent.getFont());
 
-    comboBox.addKeyListener(new KeyAdapter()
-    {
-      // hook key pressed - see PR 14201
-      public void keyPressed(KeyEvent e)
-      {
-        keyReleaseOccured(e);
-      }
-    });
-
+    // Need to remove the listeners added from ComboBoxCellEditor
+    removeListeners(comboBox, SWT.Selection);
+    removeListeners(comboBox, SWT.DefaultSelection);
+    removeListeners(comboBox, SWT.FocusIn);
+    removeListeners(comboBox, SWT.FocusOut);
+    
+    // Now add our custom listeners
     comboBox.addSelectionListener(new SelectionAdapter()
     {
       public void widgetDefaultSelected(SelectionEvent event)
       {
-        applyEditorValueAndDeactivate();
+        // Want the same behaviour since hitting return on Browse or New should launch the dialogs,
+        // and not immediately apply the value
+//      applyEditorValueAndDeactivate();
+        widgetSelected(event);
       }
 
       public void widgetSelected(SelectionEvent event)
       {
-        Object newValue = null;
         continueApply = true;
-        selection = comboBox.getSelectionIndex();
-        String stringSelection = items[selection];
+        CCombo comboBox = getCCombo();
+        isHandlingSelection = true;
+        Object newValue = null;
 
-        if (stringSelection.equals(Messages._UI_ACTION_BROWSE))
+        try
         {
-           newValue = invokeDialog(componentReferenceEditManager.getBrowseDialog());
+          int selection = comboBox.getSelectionIndex();
+          if (isTraversing)
+          {
+            isTraversing = false;
+            return;
+          }
+
+          String[] items = getItems();
+          String stringSelection = items[selection];
+
+          if (stringSelection.equals(Messages._UI_ACTION_BROWSE))
+          {
+            continueApply = true;
+            newValue = invokeDialog(componentReferenceEditManager.getBrowseDialog());
+          }
+          else if (stringSelection.equals(Messages._UI_ACTION_NEW))
+          {
+            continueApply = true;
+            newValue = invokeDialog(componentReferenceEditManager.getNewDialog());
+          }
         }
-        else if (stringSelection.equals(Messages._UI_ACTION_NEW))
+        finally
         {
-           newValue = invokeDialog(componentReferenceEditManager.getNewDialog());
+          isHandlingSelection = false;
         }
 
         if (continueApply)
@@ -167,9 +171,7 @@ public class ADTComboBoxCellEditor extends CellEditor
           }
 
           applyEditorValueAndDeactivate();
-        }
-        else{
-        	focusLost();
+          focusLost();
         }
       }
     });
@@ -178,9 +180,9 @@ public class ADTComboBoxCellEditor extends CellEditor
     {
       public void keyTraversed(TraverseEvent e)
       {
-        if (e.detail == SWT.TRAVERSE_ESCAPE || e.detail == SWT.TRAVERSE_RETURN)
+        if (e.detail == SWT.TRAVERSE_ARROW_NEXT || e.detail == SWT.TRAVERSE_ARROW_PREVIOUS)
         {
-          e.doit = false;
+          isTraversing = true;
         }
       }
     });
@@ -189,7 +191,8 @@ public class ADTComboBoxCellEditor extends CellEditor
     {
       public void focusLost(FocusEvent e)
       {
-        ADTComboBoxCellEditor.this.focusLost();
+        if (!isHandlingSelection)
+          ADTComboBoxCellEditor.this.focusLost();
       }
     });
     return comboBox;
@@ -212,156 +215,54 @@ public class ADTComboBoxCellEditor extends CellEditor
     else
     {
       continueApply = false;
+      focusLost();
     }
 
     return newValue;
   }
-
-  /**
-   * The <code>ComboBoxCellEditor</code> implementation of this
-   * <code>CellEditor</code> framework method returns the zero-based index of
-   * the current selection.
-   * 
-   * @return the zero-based index of the current selection wrapped as an
-   *         <code>Integer</code>
-   */
-  protected Object doGetValue()
-  {
-    return new Integer(selection);
-  }
-
-  /*
-   * (non-Javadoc) Method declared on CellEditor.
-   */
-  protected void doSetFocus()
-  {
-    comboBox.setFocus();
-  }
-
-  /**
-   * The <code>ComboBoxCellEditor</code> implementation of this
-   * <code>CellEditor</code> framework method sets the minimum width of the
-   * cell. The minimum width is 10 characters if <code>comboBox</code> is not
-   * <code>null</code> or <code>disposed</code> eles it is 60 pixels to make
-   * sure the arrow button and some text is visible. The list of CCombo will be
-   * wide enough to show its longest item.
-   */
-  public LayoutData getLayoutData()
-  {
-    LayoutData layoutData = super.getLayoutData();
-    if ((comboBox == null) || comboBox.isDisposed())
-      layoutData.minimumWidth = 60;
-    else
-    {
-      // make the comboBox 10 characters wide
-      GC gc = new GC(comboBox);
-      layoutData.minimumWidth = (gc.getFontMetrics().getAverageCharWidth() * 10) + 10;
-      gc.dispose();
-    }
-    return layoutData;
-  }
-
-  /**
-   * The <code>ComboBoxCellEditor</code> implementation of this
-   * <code>CellEditor</code> framework method accepts a zero-based index of a
-   * selection.
-   * 
-   * @param value
-   *          the zero-based index of the selection wrapped as an
-   *          <code>Integer</code>
-   */
-  protected void doSetValue(Object value)
-  {
-    Assert.isTrue(comboBox != null && (value instanceof Integer));
-    selection = ((Integer) value).intValue();
-    comboBox.select(selection);
-  }
-
-  /**
-   * Updates the list of choices for the combo box for the current control.
-   */
-  private void populateComboBoxItems()
-  {
-    if (comboBox != null && items != null)
-    {
-      comboBox.removeAll();
-      for (int i = 0; i < items.length; i++)
-        comboBox.add(items[i], i);
-
-      setValueValid(true);
-      selection = 0;
-    }
-  }
-
-  /**
-   * Applies the currently selected value and deactiavates the cell editor
-   */
-  void applyEditorValueAndDeactivate()
-  {
-    // must set the selection before getting value
-    selection = comboBox.getSelectionIndex();
-    Object newValue = doGetValue();
-    markDirty();
-    boolean isValid = isCorrect(newValue);
-    setValueValid(isValid);
-    if (!isValid)
-    {
-      // try to insert the current value into the error message.
-      setErrorMessage(MessageFormat.format(getErrorMessage(), new Object[] { items[selection] }));
-    }
-    fireApplyEditorValue();
-    deactivate();
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.eclipse.jface.viewers.CellEditor#focusLost()
-   */
-  protected void focusLost()
-  {
-    if (isActivated())
-    {
-      applyEditorValueAndDeactivate();
-    }
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.eclipse.jface.viewers.CellEditor#keyReleaseOccured(org.eclipse.swt.events.KeyEvent)
-   */
-  protected void keyReleaseOccured(KeyEvent keyEvent)
-  {
-    if (keyEvent.character == '\u001b')
-    { // Escape character
-      fireCancelEditor();
-    }
-    else if (keyEvent.character == '\t')
-    { // tab key
-      applyEditorValueAndDeactivate();
-    }
-  }
-
-  //public void setSetObject(Object object)
-  //{
-  //  setObject = object;
-  //}
 
   public Object getSelectedValue()
   {
     return selectedValue;
   }
 
-  /*
-   * TODO: rmah: This should be moved to WSDLEditorPlugin.java
-   */
-//  private IEditorPart getActiveEditor()
-//  {
-//    IWorkbench workbench = XSDEditorPlugin.getDefault().getWorkbench();
-//    IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
-//    IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
-//
-//    return editorPart;
-//  }
+  protected CCombo getCCombo()
+  {
+    return (CCombo)getControl();
+  }
+  
+///////// ComboBox cell editor  
+
+  void applyEditorValueAndDeactivate()
+  {
+    // must set the selection before getting value
+    CCombo comboBox = getCCombo();
+    String[] items = getItems();
+
+    int selection = comboBox.getSelectionIndex();
+    Object newValue = doGetValue();
+    markDirty();
+    boolean isValid = isCorrect(newValue);
+    setValueValid(isValid);
+
+    if (!isValid)
+    {
+      // Only format if the 'index' is valid
+      if (items.length > 0 && selection >= 0 && selection < items.length)
+      {
+        // try to insert the current value into the error message.
+        setErrorMessage(MessageFormat.format(getErrorMessage(), new Object[] { items[selection] }));
+      }
+      else
+      {
+        // Since we don't have a valid index, assume we're using an
+        // 'edit'
+        // combo so format using its text value
+        setErrorMessage(MessageFormat.format(getErrorMessage(), new Object[] { comboBox.getText() }));
+      }
+    }
+
+    fireApplyEditorValue();
+    deactivate();
+  }
 }
