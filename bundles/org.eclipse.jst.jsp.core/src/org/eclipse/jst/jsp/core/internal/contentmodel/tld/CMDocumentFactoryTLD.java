@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,6 +35,7 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP11TLDNa
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP20TLDNames;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDDocument;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDFunction;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDInitParam;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDListener;
@@ -809,6 +810,8 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		try {
 			IStructuredDocument document = (IStructuredDocument) new ModelHandlerForJSP().getDocumentLoader().createNewStructuredDocument(tagFile);
 			IStructuredDocumentRegion documentRegion = document.getFirstStructuredDocumentRegion();
+			ed.setPath(tagFile.getFullPath().toString());
+			ed.setTagSource(TLDElementDeclaration.SOURCE_TAG_FILE);
 			while (documentRegion != null) {
 				if (documentRegion.getType().equals(DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)) {
 					if (documentRegion.getNumberOfRegions() > 2) {

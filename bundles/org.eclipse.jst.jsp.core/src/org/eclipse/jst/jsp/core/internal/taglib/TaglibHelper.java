@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -213,7 +213,8 @@ public class TaglibHelper {
 				}
 			}
 			if (varName != null) {
-				String varClass = "java.lang.String"; //$NON-NLS-1$ // the default class...
+				String varClass = "java.lang.String"; // the default
+														// class...//$NON-NLS-1$
 				if (var.getVariableClass() != null) {
 					varClass = var.getVariableClass();
 				}
@@ -273,12 +274,22 @@ public class TaglibHelper {
 						ValidationMessage[] messages = tei.validate(td);
 						if (messages != null && messages.length > 0) {
 							for (int i = 0; i < messages.length; i++) {
-								Object createdProblem = createValidationMessageProblem(document, customTag, messages[i]);
+								Object createdProblem = createValidationMessageProblem(document, customTag, messages[i].getMessage());
 								if (createdProblem != null) {
 									problems.add(createdProblem);
 								}
 							}
 						}
+					}
+				}
+				else {
+					Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TEIClassMisc, JSPCoreMessages.TaglibHelper_2, teiClassname, true);
+					if (createdProblem != null) {
+						problems.add(createdProblem);
+					}
+					// this is 3rd party code, need to catch all exceptions
+					if (DEBUG) {
+						Logger.log(Logger.WARNING, teiClassname + " is not a subclass of TaxExtraInfo"); //$NON-NLS-1$ 
 					}
 				}
 			}
@@ -305,11 +316,11 @@ public class TaglibHelper {
 			if (DEBUG)
 				logException(teiClassname, e);
 		}
-		//catch (ClassCastException e) {
-		//	// TEI class wasn't really a subclass of TagExtraInfo
-		//	if (DEBUG)
-		//		logException(teiClassname, e);
-		//}
+		// catch (ClassCastException e) {
+		// // TEI class wasn't really a subclass of TagExtraInfo
+		// if (DEBUG)
+		// logException(teiClassname, e);
+		// }
 		catch (Exception e) {
 			Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TEIClassMisc, JSPCoreMessages.TaglibHelper_2, teiClassname, true);
 			if (createdProblem != null) {
@@ -425,7 +436,7 @@ public class TaglibHelper {
 	 * @param validationMessage
 	 * @return
 	 */
-	private Object createValidationMessageProblem(final IStructuredDocument document, final ITextRegionCollection customTag, final ValidationMessage validationMessage) {
+	private Object createValidationMessageProblem(final IStructuredDocument document, final ITextRegionCollection customTag, final String validationMessage) {
 		final int start;
 		if (customTag.getNumberOfRegions() > 3) {
 			start = customTag.getStartOffset(customTag.getRegions().get(2));
@@ -494,7 +505,7 @@ public class TaglibHelper {
 			}
 
 			public String getMessage() {
-				return validationMessage.getMessage();
+				return validationMessage;
 			}
 
 			public int getID() {
@@ -584,7 +595,6 @@ public class TaglibHelper {
 						// get attr value
 						r = regions.get(i);
 						if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
-							r = regions.get(i);
 							// attributes in our document have quotes, so we
 							// need to strip them
 							attrValue = StringUtils.stripQuotes(customTag.getText(r));
@@ -595,7 +605,7 @@ public class TaglibHelper {
 			}
 		}
 
-		tagDataTable.put("jsp:id", customTag.getText(regions.get(1)) + customTag.getStartOffset());
+		tagDataTable.put("jsp:id", customTag.getText(regions.get(1)) + "_" + customTag.getStartOffset()); //$NON-NLS-1$ 
 
 		return tagDataTable;
 	}
@@ -860,6 +870,11 @@ public class TaglibHelper {
 	}
 
 	private void validateTagClass(IStructuredDocument document, ITextRegionCollection customTag, TLDElementDeclaration decl, List problems) {
+		// skip if from a tag file
+		if (TLDElementDeclaration.SOURCE_TAG_FILE.equals(decl.getProperty(TLDElementDeclaration.TAG_SOURCE))) {
+			return;
+		}
+
 		String tagClassname = decl.getTagclass();
 		IType tagClass = null;
 		if (tagClassname != null && tagClassname.length() > 0 && fJavaProject != null) {

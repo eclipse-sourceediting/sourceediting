@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,10 +38,10 @@ class TaglibHelperCache {
      */
     class Entry {
         private TaglibHelper fHelper;
-        private String fProjectPath;
+        private String fProjectName;
         
-        public Entry(String projectPath, TaglibHelper helper) {
-            setProjectPath(projectPath);
+        public Entry(String projectName, TaglibHelper helper) {
+            setProjectName(projectName);
             setHelper(helper);
         }
         public TaglibHelper getHelper() {
@@ -50,14 +50,14 @@ class TaglibHelperCache {
         public void setHelper(TaglibHelper helper) {
             fHelper = helper;
         }
-        public String getProjectPath() {
-            return fProjectPath;
+        public String getProjectName() {
+            return fProjectName;
         }
-        public void setProjectPath(String projectPath) {
-            fProjectPath = projectPath;
+        public void setProjectName(String projectName) {
+            fProjectName = projectName;
         }
         public String toString() {
-            return "Taglib Helper Entry [" + getProjectPath() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+            return "Taglib Helper Entry [" + getProjectName() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
     
@@ -83,12 +83,12 @@ class TaglibHelperCache {
     public final synchronized TaglibHelper getHelper(IProject project) {
         TaglibHelper helper = null;
         Entry entry = null;
-        String projectPath = project.getFullPath().toString();
+        String projectName = project.getName();
         int size = fHelpers.size();
         // fist check for existing
         for (int i=0; i<size; i++) {
             entry = (Entry)fHelpers.get(i);
-            if(entry.getProjectPath().equals(projectPath)) {
+            if(entry.getProjectName().equals(projectName)) {
                 // exists
                 helper = entry.getHelper();
                 // only move to front if it's not the first entry
@@ -105,23 +105,23 @@ class TaglibHelperCache {
         }
         // didn't exist
         if(helper == null) {
-            helper = createNewHelper(projectPath, project);
+            helper = createNewHelper(projectName, project);
         }
         return helper;
     }
     
     /**
-     * @param projectPath
+     * @param projectName
      * @param f
      * @param mq
      * @return
      */
-    private TaglibHelper createNewHelper(String projectPath, IProject project) {
+    private TaglibHelper createNewHelper(String projectName, IProject project) {
 
         TaglibHelper helper;
         // create
         helper = new TaglibHelper(project);
-        Entry newEntry = new Entry(projectPath, helper);
+        Entry newEntry = new Entry(projectName, helper);
         fHelpers.add(0, newEntry);
         if(DEBUG) {
         	Logger.log(Logger.INFO, "(+) TaglibHelperCache added: " + newEntry); //$NON-NLS-1$
@@ -138,12 +138,12 @@ class TaglibHelperCache {
         return helper;
     }
  
-    public final synchronized void removeHelper(String projectPath) {
+    public final synchronized void removeHelper(String projectName) {
         Entry entry = null;
         Iterator it = fHelpers.iterator();
         while(it.hasNext()) {
             entry = (Entry)it.next();
-            if(entry.getProjectPath().equals(projectPath)) {
+            if(entry.getProjectName().equals(projectName)) {
                 fHelpers.remove(entry);
                 if(DEBUG) { 
                     Logger.log(Logger.INFO, "(-) TaglibHelperCache removed: " + entry); //$NON-NLS-1$

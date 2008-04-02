@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import org.eclipse.jdt.core.ElementChangedEvent;
 import org.eclipse.jdt.core.IElementChangedListener;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaElementDelta;
+import org.eclipse.jdt.core.IJavaProject;
 
 /**
  * Manages creation and caching (ordered MRU) of TaglibHelpers.
@@ -65,7 +66,7 @@ public class TaglibHelperManager implements IElementChangedListener {
         if(delta.getElement().getElementType() == IJavaElement.JAVA_MODEL) {
             IJavaElementDelta[] changed = delta.getChangedChildren();
             for (int i = 0; i < changed.length; i++) {
-                if((changed[i].getFlags() & IJavaElementDelta.F_CLASSPATH_CHANGED) != 0) {
+                if ((changed[i].getFlags() & IJavaElementDelta.F_CLASSPATH_CHANGED) != 0 || (changed[i].getFlags() & IJavaElementDelta.F_REORDER) != 0 || (changed[i].getFlags() & IJavaElementDelta.F_RESOLVED_CLASSPATH_CHANGED) != 0) {
                     IJavaElement proj = changed[i].getElement();
                     handleClasspathChange(changed, i, proj);
                 }
@@ -79,10 +80,9 @@ public class TaglibHelperManager implements IElementChangedListener {
      * @param proj
      */
     private void handleClasspathChange(IJavaElementDelta[] changed, int i, IJavaElement proj) {
-
-        if(proj.getElementType() == IJavaElement.JAVA_PROJECT) {
-            String projectPath = proj.getPath().toString().replace('\\', '/');
-            fCache.removeHelper(projectPath);
-        }
+        if (proj.getElementType() == IJavaElement.JAVA_PROJECT) {
+			String projectName = ((IJavaProject) proj).getProject().getName();
+			fCache.removeHelper(projectName);
+		}
     }
 }

@@ -146,7 +146,7 @@ public class JSPJavaValidator extends JSPValidator {
 					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_TRANSLATION_USEBEAN_AMBIGUOUS_TYPE_INFO);
 					break;
 				default :
-					sev = problem.isError() ? IMessage.HIGH_SEVERITY : (problem.isWarning() ? IMessage.NORMAL_SEVERITY : IMessage.LOW_SEVERITY);
+					sev = problem.isError() ? IMessage.HIGH_SEVERITY : (problem.isWarning() ? IMessage.NORMAL_SEVERITY : ValidationMessage.IGNORE);
 
 			}
 		}

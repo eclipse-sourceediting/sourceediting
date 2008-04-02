@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -89,6 +89,7 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 	private String fDynamicAttributes;
 	private String fIsELIgnored;
 	private String fPageEncoding;
+	private String fTagSource;
 
 	private String fLocationString;
 	private String smallIconURL;
@@ -312,6 +313,9 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 		else if (TLDDocument.CM_KIND.equals(propertyName)) {
 			return TLDDocument.JSP_TLD;
 		}
+		else if (TLDElementDeclaration.TAG_SOURCE.equals(propertyName)) {
+			return (fTagSource != null ? fTagSource :TLDElementDeclaration.SOURCE_JSP_TLD);
+		}
 		else if (JSP12TLDNames.SMALL_ICON.equals(propertyName) || JSP12TLDNames.LARGE_ICON.equals(propertyName)) {
 			if (smallIconURL != null) {
 				return smallIconURL;
@@ -473,6 +477,15 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * 
+	 * @param newTagclass
+	 *            java.lang.String
+	 */
+	public void setTagSource(String sourceKind) {
+		fTagSource = sourceKind;
+	}
+
+	/**
+	 * 
 	 * @param newTeiclass
 	 *            java.lang.String
 	 */
@@ -499,7 +512,7 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 	 * 
 	 */
 	public boolean supports(String propertyName) {
-		return propertyName == null || propertyName.equals("tagInfo") || propertyName.equals(JSP12TLDNames.DESCRIPTION) || propertyName.equals(TLDDocument.CM_KIND) || propertyName.equals(JSP12TLDNames.SMALL_ICON) || propertyName.equals(JSP12TLDNames.LARGE_ICON);//$NON-NLS-1$ //$NON-NLS-2$
+		return propertyName == null || propertyName.equals("tagInfo") || propertyName.equals(JSP12TLDNames.DESCRIPTION) || propertyName.equals(TLDDocument.CM_KIND) || propertyName.equals(JSP12TLDNames.SMALL_ICON) || propertyName.equals(JSP12TLDNames.LARGE_ICON) || propertyName.equals(TLDElementDeclaration.TAG_SOURCE);//$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public String toString() {
