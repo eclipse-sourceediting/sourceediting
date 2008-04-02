@@ -16,6 +16,8 @@ package org.eclipse.wst.xsl.core.internal.model;
  */
 public class Parameter extends Variable
 {
+	private boolean valueSet;
+
 	/**
 	 * TODO: Add Javadoc
 	 * @param sf
@@ -24,6 +26,11 @@ public class Parameter extends Variable
 	{
 		super(sf);
 	}
+	
+	public void setValue(boolean valueSet)
+	{
+		this.valueSet = valueSet;
+	}
 
 	/**
 	 * TODO: Add Javadoc
@@ -31,7 +38,11 @@ public class Parameter extends Variable
 	 */
 	public boolean isValue()
 	{
-		return getAttributeValue("select") != null; //$NON-NLS-1$
+		if (valueSet)
+			return true;
+		if (getAttributeValue("select") != null) //$NON-NLS-1$
+			return true;
+		return false; 
 	}
 	
 //	@Override

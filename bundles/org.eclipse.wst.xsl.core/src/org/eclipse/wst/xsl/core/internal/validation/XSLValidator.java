@@ -232,7 +232,7 @@ public class XSLValidator
 			{
 				createMarker(report, calledTemplate.getAttribute("name"), IMarker.SEVERITY_ERROR, "Named template '" + calledTemplate.getName() + "' is not available");
 			}
-	/*		else
+			else
 			{
 				Template namedTemplate = templateList.get(0);
 				for (Parameter calledTemplateParam : calledTemplate.getParameters())
@@ -271,7 +271,7 @@ public class XSLValidator
 						}
 					}
 				}
-			} */
+			} 
 		}
 	}
 

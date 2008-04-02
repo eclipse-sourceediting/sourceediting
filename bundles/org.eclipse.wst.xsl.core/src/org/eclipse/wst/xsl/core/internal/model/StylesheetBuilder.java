@@ -155,6 +155,17 @@ public class StylesheetBuilder
 				else if ("param".equals(elName) && elementStack.size() == 2 && currentTemplate != null)
 				{
 					Parameter param = new Parameter(sf);
+					// determine whether param has a value
+					NodeList childNodes = element.getChildNodes();
+					for(int i=0;i<childNodes.getLength();i++)
+					{
+						Node childNode = childNodes.item(i);
+						if (childNode.getNodeType() != Node.ATTRIBUTE_NODE)
+						{
+							param.setValue(true);
+							break;
+						}
+					}
 					currentTemplate.addParameter(param);
 					xslEl = param;
 				}
@@ -167,6 +178,17 @@ public class StylesheetBuilder
 				else if ("with-param".equals(elName) && elementStack.size() >= 3 && currentCallTemplate != null)
 				{
 					Parameter param = new Parameter(sf);
+					// determine whether param has a value
+					NodeList childNodes = element.getChildNodes();
+					for(int i=0;i<childNodes.getLength();i++)
+					{
+						Node childNode = childNodes.item(i);
+						if (childNode.getNodeType() != Node.ATTRIBUTE_NODE)
+						{
+							param.setValue(true);
+							break;
+						}
+					}
 					currentCallTemplate.addParameter(param);
 					xslEl = param;
 				}
