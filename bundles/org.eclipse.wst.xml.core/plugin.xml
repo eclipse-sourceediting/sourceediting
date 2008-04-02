@@ -165,57 +165,7 @@
 	<!-- Register the XML validator with the validation 		-->
 	<!-- framework. 										    -->
 	<!-- ====================================================== -->
-<!--
- <extension
- id="xmlValidator"
-		name="%XML_Validator.name"
-       point="org.eclipse.wst.validation.validator">
-    <validator>
--->
-			<!-- There is a custom XML validator for EJBs -->
-<!--
-			<projectNature
-				include="false"
-				id="org.eclipse.jst.j2ee.ejb.EJBNature"/>
--->
-			<!-- There is a custom XML validator for EARs -->
-<!--
-			<projectNature
-				include="false"
-				id="org.eclipse.jst.j2ee.EARNature"/>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				caseSensitive="false"
-				nameFilter="*.xml">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				caseSensitive="false"
-				nameFilter="*.gph">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				caseSensitive="false"
-				nameFilter="*.wdo-connections">
-			</filter>
-         	<contentTypeBinding contentTypeId="org.eclipse.core.runtime.xml"/>
--->
-         	<!-- needed until bug 181443 is implemented -->
-<!--
-         	<contentTypeBinding contentTypeId="org.eclipse.wst.xml.core.xmlsource"/>
-         	<contentTypeBinding contentTypeId="org.eclipse.wst.xml.core.xslsource"/>
-         	<contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.tldsource"/>
-			<helper class="org.eclipse.wst.xml.core.internal.validation.core.Helper"/>
-			<run
-				async="true"
-				class="org.eclipse.wst.xml.core.internal.validation.eclipse.Validator"
-				enabled="true"
-				fullBuild="true"
-				incremental="true"/>
-         <markerId markerIdValue="org.eclipse.wst.xml.core.validationMarker"/>
-      </validator>
- </extension>
--->
+
  <extension
          id="validationMarker"
          name="%_validationMarker.name"
@@ -230,7 +180,8 @@
             class="org.eclipse.wst.xml.core.internal.validation.eclipse.Validator"
             manual="true"
             sourceid="org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidatorForXML"
-            version="3">
+            version="3"
+            markerId="org.eclipse.wst.xml.core.validationMarker">
          <include>
             <rules>
                <contentType id="org.eclipse.core.runtime.xml"></contentType>
