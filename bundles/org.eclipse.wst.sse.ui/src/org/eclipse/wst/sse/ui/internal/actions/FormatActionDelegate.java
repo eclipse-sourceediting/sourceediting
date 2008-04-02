@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,10 @@ package org.eclipse.wst.sse.ui.internal.actions;
 
 import java.io.IOException;
 
+import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.filebuffers.ITextFileBufferManager;
+import org.eclipse.core.filebuffers.LocationKind;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -27,6 +31,8 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.internal.exceptions.MalformedInputExceptionWithDetail;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
 import org.eclipse.wst.sse.ui.internal.FormatProcessorsExtensionReader;
@@ -70,6 +76,9 @@ public class FormatActionDelegate extends ResourceActionDelegate {
 	private MultiStatus fErrorStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR, SSEUIMessages.FormatActionDelegate_errorStatusMessage, null); //$NON-NLS-1$
 
 	protected void format(IProgressMonitor monitor, IFile file) {
+		if(monitor == null || monitor.isCanceled())
+			return;
+		
 		try {
 			monitor.beginTask("", 100);
 			IContentDescription contentDescription = file.getContentDescription();
@@ -96,21 +105,69 @@ public class FormatActionDelegate extends ResourceActionDelegate {
 			fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
 		}
 	}
+	
+	private Display getDisplay() {
 
-	protected void format(IProgressMonitor monitor, IResource resource) {
+		// Note: the workbench should always have a display
+		// (unless running headless), whereas Display.getCurrent()
+		// only returns the display if the currently executing thread
+		// has one.
+		if (PlatformUI.isWorkbenchRunning())
+			return PlatformUI.getWorkbench().getDisplay();
+		else
+			return null;
+	}
+
+	protected void format(final IProgressMonitor monitor, IResource resource) {
 		if (resource instanceof IFile) {
-			IFile file = (IFile) resource;
-
-			if (monitor == null || !monitor.isCanceled())
-				format(monitor, file);
+			final IFile file = (IFile) resource;
+			
+			// BUG 178598 - If the resource is shared, and it's possible to
+			// get the workbench Display, the UI thread is asked to execute the
+			// format of the file when it can
+			try {
+				ITextFileBufferManager manager= FileBuffers.getTextFileBufferManager();
+				ITextFileBuffer buffer = null;
+				
+				try {
+					if(manager != null) {
+						manager.connect(file.getFullPath(), LocationKind.IFILE, monitor);
+						buffer = manager.getTextFileBuffer(resource.getFullPath(), LocationKind.IFILE);
+					}
+					
+					if(buffer != null && buffer.isShared()) {
+						Display display = getDisplay();
+						display.syncExec(new Runnable() {
+							public void run() {
+								format(monitor, file);
+							}
+						});
+					}
+					else
+						format(monitor, file);
+				}
+				finally {
+					if(manager != null)
+						manager.disconnect(file.getFullPath(), LocationKind.IFILE, new SubProgressMonitor(monitor, 1));
+				}
+			}
+			catch(CoreException e) {
+				String message = NLS.bind(SSEUIMessages.FormatActionDelegate_4, new String[]{file.getFullPath().toString()});
+				fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
+			}
+			finally {
+				if(monitor != null)
+					monitor.done();
+			}
+			
 		} else if (resource instanceof IContainer) {
 			IContainer container = (IContainer) resource;
-
+			
 			try {
 				IResource[] members = container.members();
 				monitor.beginTask("", members.length);
 				for (int i = 0; i < members.length; i++) {
-					if (monitor == null || !monitor.isCanceled())
+					if (monitor != null && !monitor.isCanceled())
 						format(new SubProgressMonitor(monitor, 1), members[i]);
 				}
 				monitor.done();
