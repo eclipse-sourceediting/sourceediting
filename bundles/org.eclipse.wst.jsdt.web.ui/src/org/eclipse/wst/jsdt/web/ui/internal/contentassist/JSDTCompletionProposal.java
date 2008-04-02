@@ -5,6 +5,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.jsdt.internal.ui.text.java.JavaCompletionProposal;
+import org.eclipse.wst.jsdt.internal.ui.text.java.LazyJavaCompletionProposal;
 import org.eclipse.wst.jsdt.ui.text.java.IJavaCompletionProposal;
 
 /**
@@ -41,6 +42,10 @@ public class JSDTCompletionProposal extends JavaCompletionProposal implements IJ
 	 */
 	
 	public void apply(ITextViewer viewer, char trigger, int stateMask, int offset) {
+		if (this.fJavaCompletionProposal instanceof LazyJavaCompletionProposal)
+		{
+			((LazyJavaCompletionProposal)this.fJavaCompletionProposal).apply(viewer.getDocument(), trigger, offset);
+		}
 		super.apply(viewer, trigger, stateMask, offset);
 	}
 	
