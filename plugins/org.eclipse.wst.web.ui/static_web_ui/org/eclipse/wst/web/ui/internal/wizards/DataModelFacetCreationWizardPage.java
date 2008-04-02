@@ -57,8 +57,10 @@ import org.eclipse.wst.common.project.facet.core.util.IFilter;
 import org.eclipse.wst.common.project.facet.ui.ModifyFacetedProjectWizard;
 import org.eclipse.wst.common.project.facet.ui.PresetSelectionPanel;
 import org.eclipse.wst.project.facet.ProductManager;
+import org.eclipse.wst.server.core.internal.facets.FacetUtil;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.web.internal.ResourceHandler;
+import org.eclipse.wst.web.internal.facet.RuntimePresetMappingRegistry;
 
 public class DataModelFacetCreationWizardPage extends DataModelWizardPage implements IFacetProjectCreationDataModelProperties {
 
@@ -220,11 +222,26 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 	protected void handlePrimaryFacetVersionSelectedEvent()
 	{
 	    final IProjectFacetVersion fv = getPrimaryFacetVersion();
-
         if( fv != null )
         {
-            final Set<IProjectFacetVersion> facets = getFacetConfiguration( fv );
-            this.fpjwc.setProjectFacets( facets );
+        	String presetID = null;
+        	IRuntime runtime = (IRuntime)model.getProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME);
+        	if(runtime != null){
+        		org.eclipse.wst.server.core.IRuntime wstRuntime = FacetUtil.getRuntime(runtime);
+	    	    if(wstRuntime != null){
+		    	    String runtimeTypeID = wstRuntime.getRuntimeType().getId(); 
+		    	    String facetID = fv.getProjectFacet().getId();
+		    	    String facetVersionStr = fv.getVersionString();
+		    	    presetID = RuntimePresetMappingRegistry.INSTANCE.getPresetID(runtimeTypeID, facetID, facetVersionStr);
+	    	    }
+        	}
+        	
+        	if(presetID != null){
+        		this.fpjwc.setSelectedPreset(presetID);
+        	} else {
+	            final Set<IProjectFacetVersion> facets = getFacetConfiguration( fv );
+	            this.fpjwc.setProjectFacets( facets );
+        	}
         }
 	}
 
