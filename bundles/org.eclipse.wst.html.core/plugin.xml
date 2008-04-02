@@ -27,9 +27,16 @@
 		id="taskMarker"
 		name="%_taskMarker.name"
 		point="org.eclipse.core.resources.markers">
-		<super type="org.eclipse.wst.sse.core.task"/>
+		<super type="org.eclipse.core.resources.taskmarker"/>
 		<persistent value="true"/>
 	</extension>
+    <extension
+       id="validationMarker"
+        name="%_validationMarker.name"
+        point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.wst.validation.problemmarker"/>
+      <persistent value="true"/>
+    </extension>
 
 	<extension
 		point="org.eclipse.core.filebuffers.documentCreation"

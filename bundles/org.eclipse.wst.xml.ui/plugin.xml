@@ -106,7 +106,8 @@
 			class="org.eclipse.wst.xml.ui.internal.preferences.XMLFilesPreferencePage"
 			id="org.eclipse.wst.xml.ui.preferences.xml.xml">
          	<keywordReference id="org.eclipse.wst.xml.ui.files"/>
-		</page>
+         	<keywordReference id="preferenceKeywords.severities"/>
+        </page>
 		<!-- XML PREFERENCE PAGES -->
 		<page
 			name="%XML_Source.name"

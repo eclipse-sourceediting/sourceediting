@@ -205,6 +205,9 @@
 		<keyword
 			label="%preferenceKeywords.webcontent"
 			id="org.eclipse.wst.html.ui.webcontent"/>
+		<keyword
+			label="%preferenceKeywords.severities"
+			id="org.eclipse.wst.html.ui.severities"/>
     </extension>
 	
 	<!-- Editor actionsets -->
@@ -306,16 +309,9 @@
 				incremental="true"
 				enabled="true"
 				class="org.eclipse.wst.html.internal.validation.HTMLValidator"/>
-         <markerId markerIdValue="org.eclipse.wst.html.ui.validationMarker"/>
+         <markerId markerIdValue="org.eclipse.wst.html.core.validationMarker"/>
       </validator>
 	</extension>
- <extension
-         id="validationMarker"
-         name="%_validationMarker.name"
-         point="org.eclipse.core.resources.markers">
-      <super type="org.eclipse.wst.validation.problemmarker"/>
-      <persistent value="true"/>
- </extension>
 
 	<!--======================================================================================-->
 	<!-- As you type validation                                      						  -->

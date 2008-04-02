@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -49,6 +50,7 @@ import org.eclipse.wst.sse.core.utils.StringUtils;
  */
 class WorkspaceTaskScanner {
 	private static WorkspaceTaskScanner _instance = null;
+	private static final String SYNTHETIC_TASK = "org.eclipse.wst.sse.synthetic";
 
 	static synchronized WorkspaceTaskScanner getInstance() {
 		if (_instance == null) {
@@ -246,38 +248,60 @@ class WorkspaceTaskScanner {
 		}
 	}
 
-	private void replaceTaskMarkers(final IFile file, final String[] markerTypes, final Map markerAttributes[], IProgressMonitor monitor) {
+	private void replaceTaskMarkers(final IFile file, final String[] markerTypes, final Map markerAttributeMaps[], IProgressMonitor monitor) {
 		final IFile finalFile = file;
 		if (file.isAccessible()) {
 			try {
 				IWorkspaceRunnable r = new IWorkspaceRunnable() {
 					public void run(IProgressMonitor progressMonitor) throws CoreException {
+						progressMonitor.beginTask("", 2);//$NON-NLS-1$
 						try {
 							/*
 							 * Delete old Task markers (don't delete regular
 							 * Tasks since that includes user-defined ones)
 							 */
 							for (int i = 0; i < markerTypes.length; i++) {
-								file.deleteMarkers(markerTypes[i], true, IResource.DEPTH_ZERO);
+								if (IMarker.TASK.equals(markerTypes[i])) {
+									// only remove if synthetic
+									IMarker[] foundMarkers = file.findMarkers(markerTypes[i], true, IResource.DEPTH_ZERO);
+									for (int j = 0; j < foundMarkers.length; j++) {
+										if (foundMarkers[j].getAttribute(SYNTHETIC_TASK) != null) {
+											foundMarkers[j].delete();
+										}
+									}
+								}
+								else {
+									file.deleteMarkers(markerTypes[i], true, IResource.DEPTH_ZERO);
+								}
 							}
 						}
 						catch (CoreException e) {
 							Logger.logException("exception deleting old tasks", e); //$NON-NLS-1$ 
 						}
-						if (markerAttributes != null && markerAttributes.length > 0) {
+						finally {
+							progressMonitor.worked(1);
+						}
+						if (markerAttributeMaps != null && markerAttributeMaps.length > 0) {
 							if (Logger.DEBUG_TASKS) {
-								System.out.println("" + markerAttributes.length + " tasks for " + file.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
+								System.out.println("" + markerAttributeMaps.length + " tasks for " + file.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
 							}
-							for (int i = 0; i < markerAttributes.length; i++) {
-								String specifiedMarkerType = (String) markerAttributes[i].get(IMarker.TASK);
-								IMarker marker = finalFile.createMarker(specifiedMarkerType != null ? specifiedMarkerType : DEFAULT_MARKER_TYPE);
-								marker.setAttributes(markerAttributes[i]);
+							for (int i = 0; i < markerAttributeMaps.length; i++) {
+								String specifiedMarkerType = (String) markerAttributeMaps[i].get(IMarker.TASK);
+								IMarker marker = finalFile.createMarker(specifiedMarkerType);
+								marker.setAttributes(markerAttributeMaps[i]);
+								if (IMarker.TASK.equals(specifiedMarkerType)) {
+									// set to synthetic and make user editable
+									marker.setAttribute(SYNTHETIC_TASK, true);
+									marker.setAttribute(IMarker.USER_EDITABLE, Boolean.FALSE);
+								}
 							}
 						}
+						progressMonitor.worked(1);
+						progressMonitor.done();
 					}
 				};
 				if (file.isAccessible()) {
-					finalFile.getWorkspace().run(r, file, IWorkspace.AVOID_UPDATE, monitor);
+					finalFile.getWorkspace().run(r, ResourcesPlugin.getWorkspace().getRuleFactory().modifyRule(file), IWorkspace.AVOID_UPDATE, monitor);
 				}
 			}
 			catch (CoreException e1) {
@@ -335,16 +359,14 @@ class WorkspaceTaskScanner {
 			return;
 
 		// 3 "stages"
-		monitor.beginTask("", 3);
-		monitor.subTask(file.getFullPath().toString());
+		monitor.beginTask("", 8);//$NON-NLS-1$
+		monitor.subTask(file.getFullPath().toString().substring(1));
 
 		List markerAttributes = null;
 		IContentType[] types = detectContentTypes(file);
 		Set markerTypes = new HashSet(3);
 		// Always included for safety and migration
 		markerTypes.add(DEFAULT_MARKER_TYPE);
-
-		
 		monitor.worked(1);
 
 		IFileTaskScanner[] fileScanners = null;
@@ -366,8 +388,10 @@ class WorkspaceTaskScanner {
 				}
 				fileScanners = registry.getFileTaskScanners((IContentType[]) validTypes.toArray(new IContentType[validTypes.size()]));
 			}
+			monitor.worked(1);
+
 			if (fileScanners.length > 0) {
-				IProgressMonitor scannerMonitor = new SubProgressMonitor(monitor, 1, SubProgressMonitor.SUPPRESS_SUBTASK_LABEL);
+				IProgressMonitor scannerMonitor = new SubProgressMonitor(monitor, 3, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
 				scannerMonitor.beginTask("", fileScanners.length); //$NON-NLS-1$
 				for (int j = 0; fileScanners != null && j < fileScanners.length; j++) {
 					if (monitor.isCanceled())
@@ -401,20 +425,20 @@ class WorkspaceTaskScanner {
 			}
 		}
 		else {
-			monitor.worked(1);
+			monitor.worked(4);
 		}
 
 		if (monitor.isCanceled())
 			return;
 		// only update markers if we ran a scanner on this file
 		if (fileScanners != null && fileScanners.length > 0) {
-			IProgressMonitor markerUpdateMonitor = new SubProgressMonitor(monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
+			IProgressMonitor markerUpdateMonitor = new SubProgressMonitor(monitor, 3, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
 			if (markerAttributes != null) {
 				replaceTaskMarkers(file, (String[]) markerTypes.toArray(new String[markerTypes.size()]), (Map[]) markerAttributes.toArray(new Map[markerAttributes.size()]), markerUpdateMonitor);
 			}
 		}
 		else {
-			monitor.worked(1);
+			monitor.worked(3);
 		}
 		monitor.done();
 	}

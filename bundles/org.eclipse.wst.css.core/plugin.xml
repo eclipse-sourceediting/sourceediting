@@ -44,7 +44,7 @@
 		id="taskMarker"
 		name="%_taskMarker.name"
 		point="org.eclipse.core.resources.markers">
-		<super type="org.eclipse.wst.sse.core.task"/>
+		<super type="org.eclipse.core.resources.taskmarker"/>
 		<persistent value="true"/>
 	</extension>
 

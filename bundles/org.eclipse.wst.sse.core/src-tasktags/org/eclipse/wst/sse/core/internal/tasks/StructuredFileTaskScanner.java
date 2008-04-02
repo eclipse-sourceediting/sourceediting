@@ -53,7 +53,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 
 /**
- * A delegate to create IMarker.TASKs for "todos" and similiar comments.
+ * A delegate to create IMarker.TASKs for "todos" and similar comments.
  */
 public abstract class StructuredFileTaskScanner implements IFileTaskScanner, IExecutableExtension {
 	// the list of attributes for the new tasks for the current file
@@ -112,7 +112,7 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner, IEx
 		if (runtimeMarkerType != null)
 			return runtimeMarkerType;
 		
-		return IFileTaskScanner.TASK_MARKER_ID;
+		return org.eclipse.core.resources.IMarker.TASK;
 	}
 
 	private String detectCharset(IFile file) {
