@@ -56,7 +56,8 @@ public class StylesheetBuilder
 
 	private Stylesheet build(IFile file)
 	{
-		System.out.println("Building "+file);
+		System.out.println("Building "+file+"...");
+		long start = System.currentTimeMillis();
 		Stylesheet stylesheet = null;
 		IStructuredModel smodel = null;
 		try
@@ -81,6 +82,8 @@ public class StylesheetBuilder
 			if (smodel != null)
 				smodel.releaseFromRead();
 		}
+		long end = System.currentTimeMillis();
+		System.out.println("..."+file+" built in "+(end-start)+"ms");
 		return stylesheet;
 	}
 

@@ -109,6 +109,51 @@ public class Template extends XSLElement
 	}
 	
 	@Override
+	public int hashCode()
+	{
+		String name = getName();
+		if (name != null)
+		{
+			return 3 + name.hashCode();
+		}
+		String match = getMatch();
+		String mode = getMode();
+		if (match != null)
+		{
+			int hash = 3*match.hashCode();
+			if (mode != null)
+				hash += 7*mode.hashCode();
+			return 5 + hash;
+		}
+		return super.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj == null)
+			return false;
+		if (obj == this)
+			return true;
+		if (obj instanceof Template)
+		{
+			Template includedTemplate = (Template)obj;
+			String name1 = getName();
+			String match1 = getMatch();
+			String mode1 = getMode();
+			String name2 = includedTemplate.getName();
+			String match2 = includedTemplate.getMatch();
+			String mode2 = includedTemplate.getMode();
+
+			if (name1 != null && name1.equals(name2))
+				return true;
+			if (match1 != null && match1.equals(match2) && (mode1 == null && mode2 == null || mode1 != null && mode1.equals(mode2)))
+				return true;
+		}
+		return false;
+	}
+	
+	@Override
 	public String toString()
 	{
 		String name = getName();

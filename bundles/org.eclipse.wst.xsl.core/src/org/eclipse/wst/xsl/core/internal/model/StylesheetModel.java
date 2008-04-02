@@ -34,6 +34,7 @@ public class StylesheetModel
 	boolean circularReference;
 	final Set<IFile> files = new HashSet<IFile>();
 	final Set<Stylesheet> stylesheets = new HashSet<Stylesheet>();
+	final Set<Template> templateSet = new HashSet<Template>();
 	final List<Template> templates = new ArrayList<Template>();
 	final List<Variable> globalVariables = new ArrayList<Variable>();
 	
@@ -112,7 +113,10 @@ public class StylesheetModel
 	
 	public void fix()
 	{
+		System.out.println("Fixing "+stylesheet.getFile()+"...");
+		long start = System.currentTimeMillis();
 		templates.addAll(stylesheet.templates);
+		templateSet.addAll(stylesheet.templates);
 		stylesheets.add(stylesheet);
 		files.add(stylesheet.getFile());
 		for (Include inc : stylesheet.includes)
@@ -123,6 +127,8 @@ public class StylesheetModel
 		{
 			handleInclude(inc);
 		}
+		long end = System.currentTimeMillis();
+		System.out.println("..."+stylesheet.getFile()+" fixed in "+(end-start)+"ms");
 	}
 	
 	private void handleInclude(Include include)
@@ -155,30 +161,17 @@ public class StylesheetModel
 		StylesheetModel includedModel = XSLCore.getInstance().getStylesheet(file);
 		if (include.getIncludeType() == Include.INCLUDE)
 		{
-			for (Template template : includedModel.templates)
-			{
-//				System.out.println(" INC ADD template "+template);
-				templates.add(template);
-			}
+			templates.addAll(includedModel.templates);
+			templateSet.addAll(includedModel.templates);
 		}
 		else
 		{
 			for (Template includedTemplate : includedModel.templates)
 			{
-				boolean conflicts = false;
-				for (Iterator<Template> iterator = templates.iterator(); iterator.hasNext();)
+				if (!templateSet.contains(includedTemplate))
 				{
-					Template template = iterator.next();
-					if (template.conflictsWith(includedTemplate))
-					{
-						conflicts = true;
-						break;
-					}
-				}
-				if (!conflicts)
-				{
-//					System.out.println(" IMP ADD template "+includedTemplate);
 					templates.add(includedTemplate);
+					templateSet.add(includedTemplate);
 				}
 			}
 		}
