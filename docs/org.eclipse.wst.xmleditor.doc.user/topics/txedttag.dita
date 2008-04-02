@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="txedttag" xml:lang="en-us">
 <title>Editing XML files</title>
 <titlealts>
@@ -9,23 +10,22 @@
 <shortdesc>This file contains information about editing XML files.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML editor<indexterm>XML files</indexterm></indexterm>
-<indexterm>XML files<indexterm>editing</indexterm></indexterm>
-</keywords>
+<indexterm>XML files<indexterm>editing</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context><p>To open an XML file in the XML editor, right-click it in the Navigator
-view and click <menucascade><uicontrol>Open With</uicontrol><uicontrol>XML
+view and select <menucascade><uicontrol>Open With</uicontrol><uicontrol>XML
 Editor</uicontrol></menucascade>. </p><p>We recommend working in the Resource
 perspective when you are developing XML files. The views that appear by default
 in this perspective (such as the Outline view) help facilitate XML development.</p><p>The
 XML editor enables you to directly edit XML files. There are several different
 views you can use to edit your files:</p><ul>
-<li><b>Source view</b> - you can manually insert, edit, and delete elements
+<li><b>Source view</b>: you can manually insert, edit, and delete elements
 and attributes in the Source view of the XML editor. To facilitate this effort,
 you can use content assist while you are in the Source view.</li>
-<li><b>Design view</b> - you can insert, delete, and edit elements, attributes,
+<li><b>Design view</b>: you can insert, delete, and edit elements, attributes,
 comments, and processing instructions in this view.</li>
-<li><b>Outline view </b>- you can insert and delete elements attributes, comments,
+<li><b>Outline view</b>: you can insert and delete elements attributes, comments,
 and processing instructions in this view.</li>
 </ul><p>Often, you may find that you have more than one way to perform a specific
 task. For example, you have an XML file "MySchoolSubjects.xml" associated
@@ -33,14 +33,15 @@ with an XML schema file "SchoolSubjects.xsd", which list all the subjects
 taught in a school. You want to insert a new element "Math" into your file.
 You can do so in the following ways:</p><ul>
 <li>In the Outline or Design view, right-click the appropriate parent element
-and select <uicontrol>Math</uicontrol> from the <uicontrol>Add Child</uicontrol> pop-up
-menu.</li>
+and select <menucascade><uicontrol>Add Child</uicontrol><uicontrol>Math</uicontrol>
+</menucascade> or <uicontrol>New Element</uicontrol> and enter the name of
+the child element<?Pub Caret?>.</li>
 <li>In the Source view, use content assist to help you find the appropriate
 location and code for the <uicontrol>Math</uicontrol> element.</li>
 <li>In the Source view, type the code for the <uicontrol>Math</uicontrol> element
 in the file.</li>
 </ul></context>
-<postreq>The following links provide more information about the XML editor
-and editing XML files:</postreq>
+<postreq></postreq>
 </taskbody>
 </task>
+<?Pub *0000002530?>

@@ -1,34 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="tedtproc" xml:lang="en-us">
 <title>Editing XML processing instructions</title>
 <titlealts>
 <searchtitle>Editing XML processing instructions</searchtitle>
 </titlealts>
-<shortdesc>If you have instructions you want to pass along to an application
-using an XML document, you can use a processing instruction. </shortdesc>
+<shortdesc>If you have instructions you want to send to an application using
+an XML document, you can use a processing instruction. </shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML editor<indexterm>processing instructions</indexterm></indexterm>
 <indexterm>XML files<indexterm>processing instructions</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
-<context><p>The following instructions were written for the Resource perspective,
-but they will also work in many other perspectives.</p><p>To edit a processing
-instruction, follow these steps:</p></context>
-<steps>
-<step><cmd>In the Design view of the XML editor, right-click your processing
-instruction, and click <uicontrol>Edit Processing Instruction</uicontrol>.</cmd>
-</step>
-<step><cmd>The <uicontrol>Target</uicontrol> field is used to identify the
-application the instructions belongs to.</cmd></step>
-<step><cmd>The <uicontrol>Data</uicontrol> field contains the instructions.</cmd>
-</step>
-<step><cmd>Click <uicontrol>OK</uicontrol>.</cmd></step>
-</steps>
-<postreq>To create a new processing instruction, right-click in the Design
+<context><p>To create a new processing instruction, right-click in the Design
 view, and click <uicontrol>Add Child</uicontrol>, <uicontrol>Add Before</uicontrol> or <uicontrol>Add
-After</uicontrol>, then click <uicontrol>Add Processing Instruction</uicontrol>.</postreq>
+After</uicontrol>, then click <uicontrol>Add Processing Instruction</uicontrol>.</p><p>To
+edit a processing instruction in the XML editor Design view, right-click your
+processing instruction, and click <uicontrol>Edit Processing Instruction</uicontrol>.
+You can change the values in the following fields:</p><ul>
+<li>The <uicontrol>Target</uicontrol> field is used to identify the application
+the instructions belongs to.</li>
+<li>The <uicontrol>Data</uicontrol> field contains the instructions.</li>
+</ul></context>
+<postreq>Click <uicontrol>OK</uicontrol> to save your settings.<note>These<?Pub Caret?>
+instructions were written for the Resource perspective, but they will also
+work in many other perspectives.</note></postreq>
 </taskbody>
 </task>
+<?Pub *0000001650?>

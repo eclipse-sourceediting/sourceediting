@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="tedtdoc" xml:lang="en-us">
 <title>Editing DOCTYPE declarations</title>
 <titlealts>
@@ -17,24 +18,25 @@ to change the DTD file your XML file is associated with.</shortdesc>
 <taskbody>
 <context><p>The following instructions were written for the Resource perspective,
 but they will also work in many other perspectives.</p><p>To edit your DOCTYPE
-declaration, follow these steps:</p></context>
+declaration, complete the following steps:</p></context>
 <steps>
 <step><cmd>In the Design view of the XML editor, right-click <uicontrol>DOCTYPE</uicontrol> and
 click <uicontrol>Edit DOCTYPE</uicontrol>.</cmd></step>
-<step><cmd>The value in the <uicontrol>Root element name</uicontrol> field
+<step><cmd>The <?Pub Caret?>value in the <uicontrol>Root element name</uicontrol> field
 should match the root element of your XML file exactly.</cmd><info>You should
 only edit the value in this field if your root element changes.</info></step>
 <step><cmd>You can select a Public ID for any existing XML Catalog entries
 by clicking <uicontrol>Browse</uicontrol>. </cmd><info>The value in the <uicontrol>Public
 ID</uicontrol> field is the Public Identifier. It is used to associate the
-XML file (using an XML Catalog entry) with a DTD file. For more information
-on XML Catalog entries, refer to the related tasks.</info></step>
+XML file (using an XML Catalog entry) with a DTD file. For more information,
+see <xref format="html" href="txmlcat.dita" scope="peer">Adding entries to
+the XML Catalog</xref>.</info></step>
 <step><cmd>The value in the <uicontrol>System ID</uicontrol> field is the
 DTD the XML file is associated with. Type the path of the DTD file (or browse
-for it) you want the XML file associated with in this field. </cmd><info>  <b>Note</b>:
-When the XML file is processed by the XML processor, it will first try to
-use the Public ID to locate the DTD, and if this fails, it will use the System
-ID to find it.</info></step>
+for it) you want the XML file associated with in this field. </cmd><info> <note>When
+the XML file is processed by the XML processor, it will first try to use the
+Public ID to locate the DTD, and if this fails, it will use the System ID
+to find it.</note></info></step>
 <step><cmd>Click  <uicontrol>OK</uicontrol>.</cmd></step>
 </steps>
 <postreq>If you do not have a DOCTYPE declaration in your XML file, you can
@@ -42,3 +44,4 @@ right-click in the Design view and click <uicontrol>Add DTD Information</uicontr
 add one.</postreq>
 </taskbody>
 </task>
+<?Pub *0000002518?>

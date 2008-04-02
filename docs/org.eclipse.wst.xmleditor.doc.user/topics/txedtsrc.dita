@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="txedtsrc" xml:lang="en-us">
 <title>Editing in the Source view</title>
 <titlealts>
@@ -31,8 +32,8 @@ to a file for the entire editing session. For text, changes are incremented
 one character or set of selected characters at a time.</dd>
 </dlentry><dlentry>
 <dt>Content assist</dt>
-<dd>Content assist helps you finish tags and insert macros. Refer
-to the related task for more details.</dd>
+<dd>Content assist helps you finish tags and insert macros. Refer to the related
+task for more details.</dd>
 </dlentry><dlentry>
 <dt>Template</dt>
 <dd>You can access templates (using content assist) to help you quickly add
@@ -55,28 +56,18 @@ entire document or selected elements.</dd>
 <dt>"Smart" double clicking</dt>
 <dd>You can use double-click to select attribute values, attribute-value pairs,
 and entire tag sets to quickly update, copy, or remove content.</dd>
-</dlentry></dl><p>To edit an XML file in the Source view, follow these steps:</p></context>
-<steps>
-<step><cmd>Open the XML file you want to work with in the XML editor  (right-click
-the file in the Navigator view and click <uicontrol>Open With > XML Editor</uicontrol>). </cmd>
-<info>You might need to click the <uicontrol>Source</uicontrol> tab. Typically,
-all that you will need to do to open the file is to double-click it in the
-Navigator view. If this does not work, right-click it and click <uicontrol>Open
-With > XML Editor</uicontrol>.</info></step>
-<step><cmd>Edit the code as necessary, using any of the available features.</cmd>
-<info>As you move the cursor within your XML file (or select items from the
-Outline view), the node selection indicator will highlight the line numbers
-that encompass the node (for example, an element or attribute). You can use
-smart double-clicking behavior to select attribute values, attribute-value
-pairs, and entire tag sets to quickly update, copy, or remove content.</info>
-</step>
-<step><cmd>At intervals, you might wish to format individual nodes, or the
-entire XML file to restore element and attribute indentation to see nesting
-hierarchies more clearly in the file.</cmd></step>
-<step><cmd>If desired, validate and save the XML file.</cmd></step>
-</steps>
+</dlentry></dl><p>To open an XML file to edit, right-click the file in the
+Navigator view and select <uicontrol>Open With > XML Editor</uicontrol>. Click
+the <uicontrol>Source</uicontrol> to see the Source view.</p><p>Edit the code
+as necessary, using any of the available features. As you move the cursor
+within your XML file (or select items from the Outline view), the node selection
+indicator will highlight the line numbers that encompass the node (for example,
+an element or attribute). You can use smart double-clicking behavior to select
+attribute values, attribute-value pairs, and entire tag sets to quickly update,
+copy, or remove content. <?Pub Caret?>If desired, validate and save the XML
+file.</p></context>
 <result><p>Any changes you make in the Source view are also reflected in the
 Design view and the Outline view.</p></result>
 </taskbody>
 </task>
-<?Pub *0000004423?>
+<?Pub *0000003781?>

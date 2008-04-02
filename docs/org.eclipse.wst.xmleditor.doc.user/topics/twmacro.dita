@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<?Pub Inc?>
 <task id="twmacro" xml:lang="en-us">
 <title>Working with XML templates</title>
 <titlealts>
 <searchtitle>Working with XML templates</searchtitle>
 </titlealts>
-<shortdesc>XML content assist provides a comment template, a chunk of predefined
+<shortdesc>XML content assist provides a comment template, a section of predefined
 code that you can insert into a file. You may find a template useful when
 you have a certain piece of code you want to reuse several times, and you
 do not want to write it out every time.</shortdesc>
@@ -16,18 +18,18 @@ do not want to write it out every time.</shortdesc>
 </metadata></prolog>
 <taskbody>
 <context><p>You can use a default template as provided, customize that template,
-or create your own templates.</p>For example, you can work on a group of XML
-pages that should all contain a table with a specific appearance. Create a
-template that contains the tags for that table, including the appropriate
+or create your own templates.</p><p>For example, you can work on a group of
+XML pages that should all contain a table with a specific appearance. Create
+a template that contains the tags for that table, including the appropriate
 attributes and attribute values for each tag. (You can copy and paste the
 tags from a structured text editor into the template's <uicontrol>Pattern</uicontrol> field.)
 Then select the name of the template from a content assist proposal list whenever
-you want to insert your custom table into an XML file.<p>To create a new XML
-template follow these steps:</p></context>
+you want to insert your custom table into an XML file.</p><p>To create a new
+XML template, complete the following steps:</p></context>
 <steps>
 <step><cmd>Click <menucascade><uicontrol>Window</uicontrol><uicontrol>Preferences</uicontrol>
-<uicontrol>Web and XML</uicontrol><uicontrol>XML Files</uicontrol><uicontrol>XML
-Templates</uicontrol></menucascade>.</cmd></step>
+</menucascade> and select <menucascade><uicontrol>XML</uicontrol><uicontrol>XML
+Files</uicontrol><uicontrol>Templates</uicontrol></menucascade>.</cmd></step>
 <step><cmd>Click <uicontrol>New</uicontrol> if you want to create a completely
 new template.</cmd></step>
 <step><cmd>Supply a new template <uicontrol>Name</uicontrol> and <uicontrol>Description</uicontrol>.</cmd>
@@ -41,7 +43,7 @@ assist.</cmd></step>
 <step><cmd>If you want to insert a variable, click the <uicontrol>Insert Variable</uicontrol> button
 and select the variable to be inserted. </cmd><info>For example, the <b>date</b> variable
 indicates the current date will be inserted. </info></step>
-<step><cmd>Click <uicontrol>Apply</uicontrol> and then <uicontrol>OK</uicontrol> to
+<step><cmd>Click <uicontrol>OK</uicontrol> and then <uicontrol>Apply<?Pub Caret?></uicontrol> to
 save your changes.</cmd></step>
 </steps>
 <postreq>You can edit, remove, import, or export a template by using the same
@@ -49,8 +51,8 @@ preferences page. If you have modified a default template, you can restore
 it to its default value. You can also restore a removed template if you have
 not exited from the workbench since it was removed. <p>If you have a template
 that you do not want to remove but you no longer want it to appear in the
-content assist list, go to the <b>XML Templates</b> preferences page and clear
-its check box.</p></postreq>
+content assist list, clear its check box in the table on the Templates preferences
+page.</p></postreq>
 </taskbody>
 </task>
-<?Pub *0000003427?>
+<?Pub *0000003238?>

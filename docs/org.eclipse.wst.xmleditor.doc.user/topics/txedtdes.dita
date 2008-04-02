@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <?Pub Inc?>
 <task id="txedtdes" xml:lang="en-us">
 <title>Editing in the Design view</title>
@@ -17,7 +18,7 @@ that particular element.</shortdesc>
 </keywords>
 </metadata></prolog>
 <taskbody>
-<context><p> For example, the <uicontrol>Add child</uicontrol> menu item will
+<context><p>For example, the <uicontrol>Add child</uicontrol> menu item will
 list only those elements from a DTD or XML schema which would be valid children
 at that point.</p><p>When you have an XML file associated with an XML schema
 or DTD file, certain tags and rules for that file have already been established,
@@ -28,67 +29,104 @@ cannot provide prompts for specific tags, but it can provide prompts to create
 new elements and attributes.</p><p>For any XML file associated with an XML
 schema or DTD file, you can use the Design view to add any items defined in
 the XML schema or DTD (such as elements and attributes) to the XML file. You
-can also use it to add processing instructions and comments to all XML files.</p><p>For
-more information on the icons used in the Design view, refer to the related
-reference.</p><p>The following instructions were written for the Resource
-perspective, but they will also work in many other perspectives.</p><p>To
-edit an XML file in the Design view, follow these steps:</p></context>
-<steps>
-<step><cmd>Open the XML file that you want to work with in the XML editor
-(right-click the file in the Navigator view and click <uicontrol>Open With
-> XML Editor</uicontrol>). If necessary, click the <uicontrol>Design</uicontrol> tab.</cmd>
-</step>
-<step><cmd>To expand all the items in your XML file, click the <uicontrol>Expand
-All</uicontrol> toolbar button  <image href="../images/expand_all.gif"><alt>This
-graphic is the Expand All toolbar button</alt></image>.</cmd></step>
-<step><cmd>To collapse them, click the <uicontrol>Collapse All</uicontrol> toolbar
-button  <image href="../images/collapse_all.gif"><alt>This graphic is the
-Collapse All toolbar button</alt></image>.</cmd></step>
-<step><cmd>Right-click the item that you want to work with.</cmd><info>Some
+can also use it to add processing instructions and comments to all XML files.</p><p>To
+open and edit a XML file in the XML editor, right-click the file in the Navigator
+view and click <uicontrol>Open With > XML Editor</uicontrol>. If necessary,
+click the <uicontrol>Design</uicontrol> tab to open the Design view.</p><p>To
+expand all the items in your XML file, click <menucascade><uicontrol>XML</uicontrol>
+<uicontrol>Expand All</uicontrol></menucascade> <image href="../images/expand_all.gif">
+<alt>This graphic is the Expand All toolbar button</alt></image> on the toolbar.
+To collapse them, click the <menucascade><uicontrol>XML</uicontrol><uicontrol>Collapse
+A<?Pub Caret?>ll</uicontrol></menucascade> <image href="../images/collapse_all.gif">
+<alt>This graphic is the Collapse All toolbar button</alt></image> on the
+toolbar.</p><p>If you right-click the item that you want to work with, some
 or all of the following options (as applicable) will be available from the
-pop-up menu that appears:<ul>
-<li> <uicontrol>Add DTD Information</uicontrol> - Click this if you want to
-associate the XML file with a DTD.</li>
-<li> <uicontrol>Edit DOCTYPE</uicontrol> - Click this if you want to edit
-the DOCTYPE declaration. Refer to the related task for more details.</li>
-<li> <uicontrol>Edit Namespaces</uicontrol> - Click this if you want to edit
-the existing namespace information or create a new association with a namespace.
-Refer to the related task for more details.</li>
-<li> <uicontrol>Edit Processing Instruction</uicontrol> - Click this if you
-want to edit the processing instruction. Refer to the related task for more
-details.</li>
-<li> <uicontrol>Remove</uicontrol> - Click this if you want to remove the
-item that you have selected from the XML file. This option will not be available
-if the item you want to remove must exist (for example, in your DTD, you have
-declared that "One or more" of the item must always exist in your XML file,
-and the item you have selected is the only one that exists in your XML file).</li>
-<li> <uicontrol>Add Attribute</uicontrol> - Click this if you want to add
-an attribute to the element that you selected. Any attributes you are allowed
-to add to the element will be listed. After you have added the attribute to
-the XML file, you can click in the right-hand column to change the value of
-the attribute. If the attribute has set values, they will appear in a list.</li>
-<li> <uicontrol>Add Child</uicontrol> - Click this to add another element,
-a comment, or a processing instruction as a child of the parent element.</li>
-<li> <uicontrol>Add Before</uicontrol>  - Click this to add a child element,
-comment, or processing instruction that can go before the item you have selected.
-For example, if you have a parent element called "CD Collections" that can
-contain an unlimited amount of children called "CD", you could click a CD
-element and click <menucascade><uicontrol>Add Before</uicontrol><uicontrol> CD</uicontrol>
-</menucascade> , as a CD element can go before another CD element.</li>
-<li> <uicontrol>Add After</uicontrol> - Click this to add a child element,
-comment, or processing instruction that can go after the item you have selected.
-For example, if you have a parent element called "CD Collections" that can
-contain an unlimited amount of children called "CD", you could click a CD
-element and click  <menucascade><uicontrol>Add After</uicontrol><uicontrol> CD</uicontrol>
-</menucascade>, as a CD element can go after another CD element.</li>
-<li> <uicontrol>Replace With</uicontrol> - Click this if you want to replace
-one item with another. This option is not available if you turn grammar constraints
-off or if there are no valid alternatives for you to replace the item with.</li>
-</ul></info></step>
-<step><cmd>Click the appropriate option.</cmd></step>
-</steps>
+pop-up menu that appears:</p><p></p><table>
+<tgroup cols="2"><colspec colname="col1" colwidth="48*"/><colspec colname="col2"
+colwidth="150*"/>
+<thead>
+<row valign="bottom">
+<entry colname="col1">Select this</entry>
+<entry colname="col2">If you want to do this</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry colname="col1">Add DTD Information</entry>
+<entry colname="col2">Associate the XML file with a DTD.</entry>
+</row>
+<row>
+<entry colname="col1">Edit DOCTYPE</entry>
+<entry colname="col2">Edit the DOCTYPE declaration. Refer to the related task
+for more details. For more information, see <xref format="html" href="tedtdoc.dita"
+scope="peer">Editing DOCTYPE declarations</xref>.</entry>
+</row>
+<row>
+<entry colname="col1">Edit Namespaces</entry>
+<entry colname="col2">Edit the existing namespace information or create a
+new association with a namespace. Refer to the related task for more details.
+For more information, see <xref format="html" href="tedtsch.dita" scope="peer">Editing
+namespace information</xref>.</entry>
+</row>
+<row>
+<entry colname="col1">Edit Processing Instruction</entry>
+<entry colname="col2">Edit the processing instruction. Refer to the related
+task for more details. For more information, see <xref format="html" href="tedtproc.dita"
+scope="peer">Editing XML processing instructions</xref>.</entry>
+</row>
+<row>
+<entry colname="col1">Remove</entry>
+<entry colname="col2">Remove the item that you have selected from the XML
+file. If the selected item or related items are defined so that the item must
+exist in the file, this option will not be available. For example, in your
+DTD, if you have declared that "One or more" of the item must always exist
+in your XML file, and the item you have selected is the only one that exists
+in your XML file.</entry>
+</row>
+<row>
+<entry colname="col1">Add Attribute</entry>
+<entry colname="col2">Add an attribute to the element that you selected. Any
+attributes you are allowed to add to the element will be listed. After you
+have added the attribute to the XML file, you can click in the right-hand
+column to change the value of the attribute. If the attribute has set values,
+they will appear in a list.</entry>
+</row>
+<row>
+<entry colname="col1">Add Child</entry>
+<entry colname="col2">Add another element, a comment, or a processing instruction
+as a child of the parent element.</entry>
+</row>
+<row>
+<entry colname="col1">Add Before</entry>
+<entry colname="col2">Add a child element, comment, or processing instruction
+that can go before the item you have selected. For example, if you have a
+parent element called <userinput>CD Collections</userinput> that can contain
+an unlimited amount of children called <userinput>CD</userinput>, you could
+click a <userinput>CD</userinput> element and click <menucascade><uicontrol>Add
+Before</uicontrol><uicontrol> CD</uicontrol></menucascade> , as a <userinput>CD</userinput> element
+can go before another <userinput>CD</userinput> element.</entry>
+</row>
+<row>
+<entry colname="col1">Add After</entry>
+<entry colname="col2">Add a child element, comment, or processing instruction
+that can go after the item you have selected. For example, if you have a parent
+element called <userinput>CD Collections</userinput> that can contain an unlimited
+amount of children called <userinput>CD</userinput>, you could click a <userinput>CD</userinput> element
+and click  <menucascade><uicontrol>Add After</uicontrol><uicontrol> CD</uicontrol>
+</menucascade>, as a <userinput>CD</userinput> element can go after another <userinput>CD</userinput> element.</entry>
+</row>
+<row>
+<entry colname="col1">Replace With</entry>
+<entry colname="col2">Replace one item with another. This option is not available
+if you turn grammar constraints off or if there are no valid alternatives
+for you to replace the item with.</entry>
+</row>
+</tbody>
+</tgroup>
+</table></context>
 <result><p>Any changes you make in the Design view are also reflected in the
-Source view and the Outline view.</p></result>
+Source view and the Outline view.</p><note>These instructions were written
+for the Resource perspective, but they will also work in many other perspectives.</note></result>
 </taskbody>
 </task>
-<?Pub *0000005971?>
+<?Pub *0000006781?>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="txsityp" xml:lang="en-us">
 <title>Using xsi:type</title>
 <titlealts>
@@ -11,31 +12,40 @@ xsi:type support in the XML editor lets you choose between the complex type
 and any other complex types derived from it.</shortdesc>
 <taskbody>
 <context><p>The XML Schema specification allows you to derive types by extension.
-For example, you have an XML schema and you create a complex type for it called
- <userinput>Address</userinput>. You then add some basic elements to <userinput>Address</userinput>,
-such as <userinput>streetName</userinput> and <userinput>city</userinput>.</p><p>After
-this, you derive (by extension) two new complex types from  <userinput>Address</userinput> - <userinput>USAddress</userinput> and <userinput>UKAddress</userinput
-> You add a new element to <userinput>USAddress</userinput> called  <userinput>state</userinput>,
-and also a new element to <userinput>UKAddress</userinput> called <userinput>postcode</userinput>.</p><p>After
-you have done this, you create two more elements - <userinput>billTo</userinput> and <userinput>shipTo</userinput> -
-as  <systemoutput>Address</systemoutput> types.</p><p>When you create an XML
-instance document for an element such as  <systemoutput>billTo</systemoutput> or
- <userinput>Address</userinput>, an xsi:type attribute will automatically
-be added to it. For example:</p><codeblock>&lt;billTo xsi:type="ipo:Address"></codeblock><p>The
+See the following steps as an example<?Pub Caret?>:</p></context>
+<steps>
+<step><cmd>Create an XML schema and create a complex type for it called  <userinput>Address</userinput>. </cmd>
+</step>
+<step><cmd>Add some basic elements to <userinput>Address</userinput>, such
+as <userinput>streetName</userinput> and <userinput>city</userinput>.</cmd>
+</step>
+<step><cmd>Derive (by extension) two new complex types from <userinput>Address</userinput>: <userinput>USAddress</userinput> and <userinput>UKAddress</userinput
+>. </cmd></step>
+<step><cmd>Add a new element to <userinput>USAddress</userinput> called  <userinput>state</userinput>,
+and also a new element to <userinput>UKAddress</userinput> called <userinput>postcode</userinput>.</cmd>
+</step>
+<step><cmd>Create two more elements: <userinput>billTo</userinput> and <userinput>shipTo</userinput>,
+as  <systemoutput>Address</systemoutput> types.</cmd></step>
+<step><cmd>When you create an XML instance document for an element such as
+ <systemoutput>billTo</systemoutput> or  <userinput>Address</userinput>, an
+xsi:type attribute will automatically be added to it.</cmd><info>For example, <codeblock>&lt;billTo xsi:type="ipo:Address"></codeblock>The
 xsi:type attribute is used to identify derived complex types (as well as complex
-types that have been derived from).</p><p>In the Design view of the XML editor,
-a list will be available, letting you select the appropriate type definition
-(<uicontrol>Address</uicontrol>, <uicontrol>USAddress</uicontrol>, or  <uicontrol>UKAddress</uicontrol>).
-The guided editing for the content model will reflect the type definition
-that you choose. For example, if you select  <uicontrol>USAddress</uicontrol> ,
-your <codeph>billTo</codeph> element can contain a <codeph>state</codeph> element,
-but it cannot contain a <codeph>postcode</codeph> element.</p><p>The XML example
-"Editing and validating XML files" demonstrates <b>xsi:type</b> support.</p><p>For
+types that have been derived from).</info></step>
+<step><cmd>In the Design view of the XML editor, a list will be available,
+letting you select the appropriate type definition (<uicontrol>Address</uicontrol>, <uicontrol>USAddress</uicontrol>,
+or  <uicontrol>UKAddress</uicontrol>). The guided editing for the content
+model will reflect the type definition that you choose. For example, if you
+select  <uicontrol>USAddress</uicontrol> , your <codeph>billTo</codeph> element
+can contain a <codeph>state</codeph> element, but it cannot contain a <codeph>postcode</codeph> element.</cmd>
+</step>
+</steps>
+<postreq><p>The XML example "Editing and validating XML files" demonstrates <b>xsi:type</b> support.</p><p>For
 more information about xsi:type, refer to the <b>Using Derived Types in Instance
 Documents</b> section in <xref format="html" href="http://www.w3.org/TR/xmlschema-0/#UseDerivInInstDocs"
 scope="external">XML Schema Part 0: Primer.</xref></p><p>For more information
 about validation semantics when xsi:type is used, refer to the <b>Schema-Related
 Markup in Documents Being Validated</b> section in  <xref format="html" href="http://www.w3.org/TR/xmlschema-1/#xsi_type"
-scope="external">XML Schema Part 1: Structures</xref> </p></context>
+scope="external">XML Schema Part 1: Structures</xref> </p></postreq>
 </taskbody>
 </task>
+<?Pub *0000003154?>

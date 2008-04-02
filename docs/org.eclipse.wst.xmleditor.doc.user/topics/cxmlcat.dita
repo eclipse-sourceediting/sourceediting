@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
  "concept.dtd">
 <concept id="cxmlcat" xml:lang="en-us">
@@ -13,49 +13,45 @@ a valid XML file, a document must be accompanied by a DTD or an XML schema,
 and conform to all of the declarations in the DTD or the XML schema.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML catalog<indexterm>overview</indexterm></indexterm>
-<indexterm>XML files<indexterm>associations</indexterm></indexterm>
-</keywords>
+<indexterm>XML files<indexterm>associations</indexterm></indexterm></keywords>
 </metadata></prolog>
 <conbody>
 <p>There are two different ways to associate XML files with DTDs or XML schemas.</p>
 <ol>
 <li>Direct association - The XML file contains either the name of a DTD in
-its doctype declaration (for example, &lt;!DOCTYPE root-element SYSTEM " <varname>dtdfile.dtd</varname>"
->, where  <varname>dtdfile.dtd</varname> is the name of the DTD file) or it
+its doctype declaration (for example, &lt;!DOCTYPE root-element SYSTEM "<varname>dtdfile.dtd</varname>"
+>, where <varname>dtdfile.dtd</varname> is the name of the DTD file) or it
 contains the path of an XML schema in the schemaLocation attribute of the
-XML file root element (for example, &lt;xsi:schemaLocation="http://www.ibm.com
- <varname>schema.xsd</varname>">, where  <varname>schema.xsd</varname> is
-the name of the XML schema.</li>
+XML file root element (for example, &lt;xsi:schemaLocation="http://www.ibm.com/<varname>schema.xsd</varname>">,
+where  <varname>schema.xsd</varname> is the name of the XML schema.</li>
 <li>XML Catalog entry - You can register DTD and XML schema files in the XML
-Catalog and associate them with a  <varname>Key</varname> that represents
-them. You can then refer to a DTD or XML schema file  <varname>Key</varname> from
-an XML file instead of referring directly to the DTD or XML schema file. An
-XML Catalog entry contains two parts - the Key (which represents the DTD or
-XML schema) and a URI (which contains information about the DTD or XML schema
-location).</li>
+Catalog and associate them with a  Key that represents them. You can then
+refer to a DTD or XML schema file Key from an XML file instead of referring
+directly to the DTD or XML schema file. An XML Catalog entry contains two
+parts - the Key (which represents the DTD or XML schema) and a URI (which
+contains information about the DTD or XML schema location).</li>
 </ol>
 <section><title>How an association works</title><b>Associating an XML file
 with a DTD </b><p>If an XML file is associated with a DTD, a DOCTYPE tag such
 as the following one is included in the XML file:<codeblock>&lt;!DOCTYPE root-name PUBLIC "<varname>InvoiceId</varname>" "<varname>C:\mydtds\Invoice.dtd</varname
 >">
-</codeblock></p><p><varname>InvoiceId</varname> is the public identifier of
-the DTD file. It is used to associate the XML file with a DTD file (in this
-case, the DTD file is  <varname>Invoice.dtd</varname>). If the public identifier
-InvoiceId corresponds to the  <varname>Key</varname> of the XML Catalog entry
-for Invoice.dtd, then the  <varname>URI</varname> of the XML Catalog entry
-(which contains information about the location of Invoice.dtd) is used to
-locate the DTD. Otherwise, the DOCTYPE's system identifier ( <varname>"C:\mydtds\Invoice.dtd"</varname>),
+</codeblock></p><p>InvoiceId is the public identifier of the DTD file. It
+is used to associate the XML file with a DTD file (in this case, the DTD file
+is Invoice.dtd). If the public identifier InvoiceId corresponds to the Key
+of the XML Catalog entry for Invoice.dtd, then the U<?Pub Caret?>RI of the
+XML Catalog entry (which contains information about the location of Invoice.dtd)
+is used to locate the DTD. Otherwise, the DOCTYPE's system identifier ("C:\mydtds\Invoice.dtd"),
 which refers directly to the file system location of the DTD, is used to locate
-the DTD.</p><p> <b>Note</b>: You can also use a system identifier as a Key
-in an XML Catalog entry. If you use a system identifier as a Key, a DOCTYPE
-tag such as the following one is included in an XML file:</p><codeblock>&lt;!DOCTYPE Root-name SYSTEM "<varname>MyDTD.dtd</varname>"> </codeblock
-><p>where  <varname>MyDTD.dtd</varname> is the system identifier that corresponds
-to the Key of an XML Catalog entry.</p></section>
+the DTD.</p><note>You can also use a system identifier as a Key in an XML
+Catalog entry. If you use a system identifier as a Key, a DOCTYPE tag such
+as the following one is included in an XML file:</note><codeblock>&lt;!DOCTYPE Root-name SYSTEM "MyDTD.dtd"> </codeblock><p>where
+MyDTD.dtd is the system identifier that corresponds to the Key of an XML Catalog
+entry.</p></section>
 <section><b>Associating an XML file with an XML schema</b><p>If an XML file
 is associated with an XML schema, one or more schema location attributes are
 included in the XML file. The information in the schemaLocation is provided
 as a "hint" to the XML processor. The following examples show schemaLocation
-attributes.</p><p> <b>Example 1 </b><codeblock>&lt;purchaseOrder xmlns="http://www.ibm.com"
+attributes:</p><p> <b>Example 1 </b><codeblock>&lt;purchaseOrder xmlns="http://www.ibm.com"
 xsi:schemaLocation="http://www.ibm.com C:\myschemas\PurchaseOrder.xsd">
 &lt;shipTo country="US">
 ...</codeblock>    </p><p><b>Example 2 </b><codeblock>&lt;purchaseOrder xmlns="http://www.ibm.com"
@@ -90,11 +86,10 @@ your system, the workaround for this problem is to retrieve a copy of the
 DTD or XML schema (using a Web browser, for example) and save that copy on
 your local machine. Then, you can either place a local copy in the same project
 as your XML file, or use the XML Catalog to associate a public identifier
-with the DTD's (local) location.</p><p><b>Note</b>: If you have an XML file
-associated with an XML schema or DTD that is elsewhere in the network, and
-you are working on a machine disconnected from the network, you can follow
-the steps described previously if you want to use content assist or validate
-your XML file.  </p></section>
+with the DTD's (local) location.</p><note>If you have an XML file associated
+with an XML schema or DTD that is elsewhere in the network, and you are working
+on a machine disconnected from the network, you can follow the steps described
+previously if you want to use content assist or validate your XML file.  </note></section>
 <section><title>Advantages of XML Catalog entry associations</title><p>If
 you create a direct association between an XML file and an XML schema or DTD
 file, any time you change the location of the schema or DTD you have to track
@@ -102,7 +97,7 @@ down and update all of the referencing XML files with the new location of
 the DTD or schema. If, however, you associate an XML file with an XML schema
 or DTD Key, then, when you change the location of the schema or DTD, you only
 have to update the XML Catalog entry, instead of each individual XML file.</p><p>For
-example, you have a DTD called "Building.dtd", which is associated with five
+example, you have a DTD called Building.dtd, which is associated with five
 XML files - Office.xml, House.xml, Apartment.xml, Bank.xml, and PostOffice.xml.
 You move the DTD file Building.dtd to a new location. If you have a direction
 association between Building.dtd and all the XML files, you will have to update
@@ -121,3 +116,4 @@ the XML Catalog entry that was updated.</p><p>For more information, refer
 to the related tasks.</p></section>
 </conbody>
 </concept>
+<?Pub *0000008359?>

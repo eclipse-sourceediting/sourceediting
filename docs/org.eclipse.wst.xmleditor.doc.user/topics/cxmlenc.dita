@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"  "concept.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
+ "concept.dtd">
 <?Pub Inc?>
 <concept id="cxmlenc" xml:lang="en-us">
 <title>XML and HTML encodings</title>
@@ -40,17 +41,8 @@ directive in an HTML file.</p>
 <entry> <p>EUC encoding, Korean</p> </entry>
 </row>
 <row>
-<entry> <p>GB2312</p> </entry>
-<entry> <p>GBK, Simplified Chinese</p> </entry>
-</row>
-<row>
 <entry>GB18030</entry>
 <entry>National Standard, Chinese</entry>
-</row>
-<row>
-<entry>IBM864</entry>
-<entry>PC Arabic (encoding not supported by the Page Designer Design page.
-)</entry>
 </row>
 <row>
 <entry> <p>ISO-2022-JP</p> </entry>
@@ -89,12 +81,8 @@ directive in an HTML file.</p>
 <entry>Greek</entry>
 </row>
 <row>
-<entry> <p>ISO-8859-8-I</p> </entry>
-<entry> <p>Hebrew (Logical)</p> </entry>
-</row>
-<row>
 <entry> <p>ISO-8859-8</p> </entry>
-<entry> <p>Hebrew (Visual)(encoding supported, but not supported by the Page
+<entry> <p>Hebrew (Visual) (encoding supported, but not supported by the Page
 Designer Design page)</p> </entry>
 </row>
 <row>
@@ -130,13 +118,8 @@ Designer Design page)</p> </entry>
 <entry> <p>Unicode LittleEndian</p> </entry>
 </row>
 <row>
-<entry>WINDOWS-874</entry>
-<entry>Thai, <tm tmclass="special" tmowner="Microsoft Corporation" tmtype="reg"
-trademark="Microsoft">Microsoft</tm></entry>
-</row>
-<row>
-<entry> <p>WINDOWS-1252</p> </entry>
-<entry> <p>ISO Latin-1</p> </entry>
+<entry colname="COLSPEC0"><p>WINDOWS-31J<?Pub Caret?></p></entry>
+<entry colname="COLSPEC1"><p>Japanese, Windows-31J</p></entry>
 </row>
 <row>
 <entry> <p>WINDOWS-1255</p> </entry>
@@ -146,17 +129,9 @@ trademark="Microsoft">Microsoft</tm></entry>
 <entry> <p>WINDOWS-1256</p> </entry>
 <entry> <p>Arabic</p> </entry>
 </row>
-<row>
-<entry>X-EUC-JP</entry>
-<entry>EUC encoding, Japanese (alias for EUC-JP)</entry>
-</row>
-<row>
-<entry>X-SJIS</entry>
-<entry>Shift-JIS, Japanese (alias for SHIFT_JIS)</entry>
-</row>
 </tbody>
 </tgroup>
 </table>
 </conbody>
 </concept>
-<?Pub *0000003991?>
+<?Pub *0000003415?>

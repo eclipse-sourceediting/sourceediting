@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="tcrexdtd" xml:lang="en-us">
 <title>Generating XML files from DTDs</title>
 <titlealts>
@@ -13,40 +14,38 @@ your DTD, and contains at least some of the elements and attributes in your
 DTD.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML files<indexterm>generating from DTDs</indexterm></indexterm>
-<indexterm>DTD<indexterm>generating XML files</indexterm></indexterm>
-</keywords>
+<indexterm>DTD<indexterm>generating XML files</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context><p>After you have generated your XML file, you can further customize
 it in the XML editor.</p><p>The following instructions were written for the
 Resource perspective, but they will also work in many other perspectives.</p><p>To
-create an XML file from a DTD file follow these steps:</p></context>
+create an XML file from a DTD file, complete the following steps:</p></context>
 <steps>
 <step><cmd>In the Navigator view, right-click the DTD file that you want to
-work with.</cmd></step>
-<step><cmd>From its pop-up menu click <menucascade><uicontrol>Generate</uicontrol>
-<uicontrol>XML File</uicontrol></menucascade>.</cmd></step>
+work with and select <menucascade><uicontrol>Generate</uicontrol><uicontrol>XML
+File</uicontrol></menucascade>.</cmd></step>
 <step><cmd>Select a project or folder to contain the XML file and type a name
-for it.</cmd><info>The name of the file must end in <userinput>.xml</userinput>.</info>
+for the file in the <uicontrol>File Name</uicontrol> field, then click <uicontrol>Next</uicontrol>.</cmd>
+<info>The name of the file must end in <userinput>.xml</userinput>.</info>
 </step>
-<step><cmd>Click  <uicontrol>Next</uicontrol>.</cmd></step>
 <step><cmd>Select the <uicontrol>Root element</uicontrol> of the XML file.</cmd>
 <info>The root element of an XML file is the element that contains all other
 elements in that file. All the elements that you have defined in the DTD will
 be shown in the <uicontrol>Root element</uicontrol> list.</info></step>
 <step><cmd>Select from the following content options:  </cmd>
 <choices>
-<choice><uicontrol>Create optional attributes</uicontrol>. Both mandatory
+<choice><uicontrol>Create optional attributes</uicontrol>: both mandatory
 and optional attributes will be generated.</choice>
-<choice><uicontrol>Create optional elements</uicontrol>. Both mandatory and
+<choice><uicontrol>Create optional elements</uicontrol>: both mandatory and
 optional elements will be generated.</choice>
-<choice><uicontrol>Create first choice of required choice</uicontrol>. The
+<choice><uicontrol>Create first choice of required choice</uicontrol>: the
 first option of a required choice will be generated in your XML file.</choice>
-<choice><uicontrol>Fill elements and attributes with data</uicontrol>. Any
-elements and attributes generated will be filled with sample data.</choice>
+<choice><uicontrol>Fill elements and attributes with data</uicontrol>:<?Pub Caret?>
+any elements and attributes generated will be filled with sample data.</choice>
 </choices>
-<info> <p>If you do not select any of these options, then only the minimum
-amount of content required for the XML file will be created.</p></info></step>
+<info> If you do not select any of these options, then only the minimum amount
+of content required for the XML file will be created.</info></step>
 <step><cmd>Specify the <uicontrol>Public ID</uicontrol> or <uicontrol>System
 ID</uicontrol>.</cmd><info>You do not need to specify both. If you do, the
 Public ID will be used before the System ID. </info></step>
@@ -58,4 +57,4 @@ attributes, entities, and notations to the XML file, however, they must follow
 the rules established in the DTD that you used to create the XML file.</p></result>
 </taskbody>
 </task>
-<?Pub *0000003334?>
+<?Pub *0000003391?>

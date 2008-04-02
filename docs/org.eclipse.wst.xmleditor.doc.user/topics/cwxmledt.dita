@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"  "concept.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
+ "concept.dtd">
 <concept id="cwxmledt" xml:lang="en-us">
 <title>XML editor</title>
 <titlealts>
@@ -21,7 +22,7 @@ existing XML schemas</li>
 <li>Associating XML files with DTDs or XML schemas</li>
 </ul>
 <p>The XML editor has two main views - the Source view and the Design view.
-You can also use the <b>Outline</b> view to insert and delete elements.</p>
+You can also use the Outline view to insert and delete elements.</p>
 <section><title>Source view</title><p>The Source view enables you to view
 and work directly with a file's source code. Many of the XML editing features
 in the XML editor Source view are very similar to those available in the Source
@@ -30,27 +31,26 @@ such as: <ul>
 <li> Syntax highlighting, unlimited undo/redo, and user-defined templates.</li>
 <li> Content assist, which uses the information in a DTD or schema content
 model to provide a list of acceptable continuations depending on where the
-cursor is located in an XML file, or what has just been type</li>
+cursor is located in an XML file, or what has just been typed.</li>
 <li>"Smart" double-clicking behavior. If your cursor is placed in an attribute
 value, one double-click selects that value, another double click selects the
 attribute-value pair, and a third double-click selects the entire tag. This
 makes it easier to copy and paste commonly used pieces of XML.</li>
 </ul></p></section>
 <section><title>Design view</title><p>The XML editor also has a Design view.
-In it: <ul>
+This view has the following features:<ul>
 <li>The XML file is represented simultaneously as a table and a tree. This
 helps make navigation and editing easier.</li>
 <li>Content and attribute values can be edited directly in the table cells,
 while pop-up menus on the tree nodes give alternatives that are valid for
-that location.  For example, the <uicontrol>Add child</uicontrol> menu item
+that location.  For example, the <uicontrol>Add Child</uicontrol> menu item
 will list only those elements from a DTD or XML schema which would be valid
 children at that point (as long as grammar constraints are on).</li>
 </ul></p><p>The Design view is especially helpful if you are new to XML, or
 need to do form-oriented editing. For example, you could use the Create XML
 File wizard to create a template XML file for a job description form from
-a job description DTD. After those steps are completed, you would
-only have to fill in the form data using the Design view.</p><p>The following
-links provide more information about the XML editor:</p></section>
+a job description DTD. After those steps are completed, you would only have
+to fill in the form data using the Design view.</p><p></p><?Pub Caret1?></section>
 </conbody>
 </concept>
-<?Pub *0000002994?>
+<?Pub *0000002948?>

@@ -2,8 +2,8 @@
 <html lang="en-us" xml:lang="en-us">
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<meta name="copyright" content="Copyright (c) 2000, 2006 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
-<meta name="DC.rights.owner" content="(C) Copyright 2000, 2006" />
+<meta name="copyright" content="Copyright (c) 2000, 2008 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
+<meta name="DC.rights.owner" content="(C) Copyright 2000, 2008" />
 <meta content="public" name="security" />
 <meta content="index,follow" name="Robots" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
@@ -11,8 +11,8 @@
 <meta name="DC.Title" content="Editing in the Design view" />
 <meta name="abstract" content="The XML editor has a Design view, which represents the XML file simultaneously as a table and a tree. This helps make navigation and editing easier. Content and attribute values can be edited directly in the table cells, while pop-up menus on the tree elements give alternatives that are valid for that particular element." />
 <meta name="description" content="The XML editor has a Design view, which represents the XML file simultaneously as a table and a tree. This helps make navigation and editing easier. Content and attribute values can be edited directly in the table cells, while pop-up menus on the tree elements give alternatives that are valid for that particular element." />
-<meta content="XML editor, editing, in the Design view" name="DC.subject" />
-<meta content="XML editor, editing, in the Design view" name="keywords" />
+<meta content="XML editor, Design view" name="DC.subject" />
+<meta content="XML editor, Design view" name="keywords" />
 <meta scheme="URI" name="DC.Relation" content="../topics/cwxmledt.html" />
 <meta scheme="URI" name="DC.Relation" content="../topics/txedtsrc.html" />
 <meta scheme="URI" name="DC.Relation" content="../topics/cxmlcat.html" />
@@ -40,7 +40,7 @@ easier. Content and attribute values can be edited directly in the table cells,
 while pop-up menus on the tree elements give alternatives that are valid for
 that particular element.</p>
 
-<div class="section"><p> For example, the <span class="uicontrol">Add child</span> menu item will
+<div class="section"><p>For example, the <span class="uicontrol">Add child</span> menu item will
 list only those elements from a DTD or XML schema which would be valid children
 at that point.</p>
 <p>When you have an XML file associated with an XML schema
@@ -54,86 +54,140 @@ new elements and attributes.</p>
 schema or DTD file, you can use the Design view to add any items defined in
 the XML schema or DTD (such as elements and attributes) to the XML file. You
 can also use it to add processing instructions and comments to all XML files.</p>
-<p>For
-more information on the icons used in the Design view, refer to the related
-reference.</p>
-<p>The following instructions were written for the Resource
-perspective, but they will also work in many other perspectives.</p>
 <p>To
-edit an XML file in the Design view, follow these steps:</p>
-</div>
-
-<ol>
-<li class="stepexpand"><span>Open the XML file that you want to work with in the XML editor
-(right-click the file in the Navigator view and click <span class="uicontrol">Open With
-&gt; XML Editor</span>). If necessary, click the <span class="uicontrol">Design</span> tab.</span>
-</li>
-
-<li class="stepexpand"><span>To expand all the items in your XML file, click the <span class="uicontrol">Expand
-All</span> toolbar button  <img src="../images/expand_all.gif" alt="This&#10;graphic is the Expand All toolbar button" />.</span></li>
-
-<li class="stepexpand"><span>To collapse them, click the <span class="uicontrol">Collapse All</span> toolbar
-button  <img src="../images/collapse_all.gif" alt="This graphic is the&#10;Collapse All toolbar button" />.</span></li>
-
-<li class="stepexpand"><span>Right-click the item that you want to work with.</span> Some
+open and edit a XML file in the XML editor, right-click the file in the Navigator
+view and click <span class="uicontrol">Open With &gt; XML Editor</span>. If necessary,
+click the <span class="uicontrol">Design</span> tab to open the Design view.</p>
+<p>To
+expand all the items in your XML file, click <span class="menucascade"><span class="uicontrol">XML</span>
+ &gt; <span class="uicontrol">Expand All</span></span> <img src="../images/expand_all.gif" alt="This graphic is the Expand All toolbar button" /> on the toolbar.
+To collapse them, click the <span class="menucascade"><span class="uicontrol">XML</span> &gt; <span class="uicontrol">Collapse
+All</span></span> <img src="../images/collapse_all.gif" alt="This graphic is the Collapse All toolbar button" /> on the
+toolbar.</p>
+<p>If you right-click the item that you want to work with, some
 or all of the following options (as applicable) will be available from the
-pop-up menu that appears:<ul>
-<li> <span class="uicontrol">Add DTD Information</span> - Click this if you want to
-associate the XML file with a DTD.</li>
+pop-up menu that appears:</p>
+<p />
 
-<li> <span class="uicontrol">Edit DOCTYPE</span> - Click this if you want to edit
-the DOCTYPE declaration. Refer to the related task for more details.</li>
+<div class="tablenoborder"><table summary="" cellspacing="0" cellpadding="4" frame="border" border="1" rules="all">
+<thead align="left">
+<tr valign="bottom">
+<th valign="bottom" width="24.242424242424242%" id="N100D8">Select this</th>
 
-<li> <span class="uicontrol">Edit Namespaces</span> - Click this if you want to edit
-the existing namespace information or create a new association with a namespace.
-Refer to the related task for more details.</li>
+<th valign="bottom" width="75.75757575757575%" id="N100DF">If you want to do this</th>
 
-<li> <span class="uicontrol">Edit Processing Instruction</span> - Click this if you
-want to edit the processing instruction. Refer to the related task for more
-details.</li>
+</tr>
 
-<li> <span class="uicontrol">Remove</span> - Click this if you want to remove the
-item that you have selected from the XML file. This option will not be available
-if the item you want to remove must exist (for example, in your DTD, you have
-declared that "One or more" of the item must always exist in your XML file,
-and the item you have selected is the only one that exists in your XML file).</li>
+</thead>
 
-<li> <span class="uicontrol">Add Attribute</span> - Click this if you want to add
-an attribute to the element that you selected. Any attributes you are allowed
-to add to the element will be listed. After you have added the attribute to
-the XML file, you can click in the right-hand column to change the value of
-the attribute. If the attribute has set values, they will appear in a list.</li>
+<tbody>
+<tr>
+<td valign="top" width="24.242424242424242%" headers="N100D8 ">Add DTD Information</td>
 
-<li> <span class="uicontrol">Add Child</span> - Click this to add another element,
-a comment, or a processing instruction as a child of the parent element.</li>
+<td valign="top" width="75.75757575757575%" headers="N100DF ">Associate the XML file with a DTD.</td>
 
-<li> <span class="uicontrol">Add Before</span>  - Click this to add a child element,
-comment, or processing instruction that can go before the item you have selected.
-For example, if you have a parent element called "CD Collections" that can
-contain an unlimited amount of children called "CD", you could click a CD
-element and click <span class="menucascade"><span class="uicontrol">Add Before</span> &gt; <span class="uicontrol"> CD</span>
-</span> , as a CD element can go before another CD element.</li>
+</tr>
 
-<li> <span class="uicontrol">Add After</span> - Click this to add a child element,
-comment, or processing instruction that can go after the item you have selected.
-For example, if you have a parent element called "CD Collections" that can
-contain an unlimited amount of children called "CD", you could click a CD
-element and click  <span class="menucascade"><span class="uicontrol">Add After</span> &gt; <span class="uicontrol"> CD</span>
-</span>, as a CD element can go after another CD element.</li>
+<tr>
+<td valign="top" width="24.242424242424242%" headers="N100D8 ">Edit DOCTYPE</td>
 
-<li> <span class="uicontrol">Replace With</span> - Click this if you want to replace
-one item with another. This option is not available if you turn grammar constraints
-off or if there are no valid alternatives for you to replace the item with.</li>
+<td valign="top" width="75.75757575757575%" headers="N100DF ">Edit the DOCTYPE declaration. Refer to the related task
+for more details. For more information, see <a href="tedtdoc.dita">Editing DOCTYPE declarations</a>.</td>
 
-</ul>
-</li>
+</tr>
 
-<li class="stepexpand"><span>Click the appropriate option.</span></li>
+<tr>
+<td valign="top" width="24.242424242424242%" headers="N100D8 ">Edit Namespaces</td>
 
-</ol>
+<td valign="top" width="75.75757575757575%" headers="N100DF ">Edit the existing namespace information or create a
+new association with a namespace. Refer to the related task for more details.
+For more information, see <a href="tedtsch.dita">Editing namespace information</a>.</td>
+
+</tr>
+
+<tr>
+<td valign="top" width="24.242424242424242%" headers="N100D8 ">Edit Processing Instruction</td>
+
+<td valign="top" width="75.75757575757575%" headers="N100DF ">Edit the processing instruction. Refer to the related
+task for more details. For more information, see <a href="tedtproc.dita">Editing XML processing instructions</a>.</td>
+
+</tr>
+
+<tr>
+<td valign="top" width="24.242424242424242%" headers="N100D8 ">Remove</td>
+
+<td valign="top" width="75.75757575757575%" headers="N100DF ">Remove the item that you have selected from the XML
+file. If the selected item or related items are defined so that the item must
+exist in the file, this option will not be available. For example, in your
+DTD, if you have declared that "One or more" of the item must always exist
+in your XML file, and the item you have selected is the only one that exists
+in your XML file.</td>
+
+</tr>
+
+<tr>
+<td valign="top" width="24.242424242424242%" headers="N100D8 ">Add Attribute</td>
+
+<td valign="top" width="75.75757575757575%" headers="N100DF ">Add an attribute to the element that you selected. Any
+attributes you are allowed to add to the element will be listed. After you
+have added the attribute to the XML file, you can click in the right-hand
+column to change the value of the attribute. If the attribute has set values,
+they will appear in a list.</td>
+
+</tr>
+
+<tr>
+<td valign="top" width="24.242424242424242%" headers="N100D8 ">Add Child</td>
+
+<td valign="top" width="75.75757575757575%" headers="N100DF ">Add another element, a comment, or a processing instruction
+as a child of the parent element.</td>
+
+</tr>
+
+<tr>
+<td valign="top" width="24.242424242424242%" headers="N100D8 ">Add Before</td>
+
+<td valign="top" width="75.75757575757575%" headers="N100DF ">Add a child element, comment, or processing instruction
+that can go before the item you have selected. For example, if you have a
+parent element called <kbd class="userinput">CD Collections</kbd> that can contain
+an unlimited amount of children called <kbd class="userinput">CD</kbd>, you could
+click a <kbd class="userinput">CD</kbd> element and click <span class="menucascade"><span class="uicontrol">Add
+Before</span> &gt; <span class="uicontrol"> CD</span></span> , as a <kbd class="userinput">CD</kbd> element
+can go before another <kbd class="userinput">CD</kbd> element.</td>
+
+</tr>
+
+<tr>
+<td valign="top" width="24.242424242424242%" headers="N100D8 ">Add After</td>
+
+<td valign="top" width="75.75757575757575%" headers="N100DF ">Add a child element, comment, or processing instruction
+that can go after the item you have selected. For example, if you have a parent
+element called <kbd class="userinput">CD Collections</kbd> that can contain an unlimited
+amount of children called <kbd class="userinput">CD</kbd>, you could click a <kbd class="userinput">CD</kbd> element
+and click  <span class="menucascade"><span class="uicontrol">Add After</span> &gt; <span class="uicontrol"> CD</span>
+</span>, as a <kbd class="userinput">CD</kbd> element can go after another <kbd class="userinput">CD</kbd> element.</td>
+
+</tr>
+
+<tr>
+<td valign="top" width="24.242424242424242%" headers="N100D8 ">Replace With</td>
+
+<td valign="top" width="75.75757575757575%" headers="N100DF ">Replace one item with another. This option is not available
+if you turn grammar constraints off or if there are no valid alternatives
+for you to replace the item with.</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
 
 <div class="section"><p>Any changes you make in the Design view are also reflected in the
 Source view and the Outline view.</p>
+<div class="note"><span class="notetitle">Note:</span> These instructions were written
+for the Resource perspective, but they will also work in many other perspectives.</div>
 </div>
 
 </div>
@@ -146,7 +200,7 @@ Source view and the Outline view.</p>
 <div><a href="../topics/txedtsrc.html" title="You can use the Source view to view and work with a file's source code directly.">Editing in the Source view</a></div>
 <div><a href="../topics/tedtdoc.html" title="The DOCTYPE declaration in an XML file is used at the beginning of it to associate it with a DTD file. You can edit your DOCTYPE declaration to change the DTD file your XML file is associated with.">Editing DOCTYPE declarations</a></div>
 <div><a href="../topics/tedtsch.html" title="Your namespace information is used to provide various information about the XML file, such as the XML schema and namespace it is associated with. If desired, you can change the schema and namespace your XML file is associated with or add a new association. Modifying any associations can impact what content is allowed in the XML file.">Editing namespace information</a></div>
-<div><a href="../topics/tedtproc.html" title="If you have instructions you want to pass along to an application using an XML document, you can use a processing instruction.">Editing XML processing instructions</a></div>
+<div><a href="../topics/tedtproc.html" title="If you have instructions you want to send to an application using an XML document, you can use a processing instruction.">Editing XML processing instructions</a></div>
 </div>
 <div class="relref"><strong>Related reference</strong><br />
 <div><a href="../topics/rxmlbicons.html" title="The following XML editor icons appear in the Outline and Design view.">Icons used in the XML editor</a></div>

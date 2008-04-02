@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="tedtsch" xml:lang="en-us">
 <title>Editing namespace information</title>
 <titlealts>
@@ -19,7 +20,7 @@ what content is allowed in the XML file.</shortdesc>
 <taskbody>
 <context><p>The following instructions were written for the Resource perspective,
 but they will also work in many other perspectives.</p><p>To edit your schema
-information, follow these steps:</p></context>
+information, complete the following steps:</p></context>
 <steps>
 <step><cmd>In the Design view of the XML editor, right-click your root element
 and click <uicontrol>Edit Namespaces</uicontrol>.</cmd></step>
@@ -29,8 +30,9 @@ schema.</cmd><info>Select the entry you want to edit and click <uicontrol>Edit</
 <step><cmd>The value in the <uicontrol>Namespace Name</uicontrol> field is
 a namespace the XML file is associated with.</cmd><info>Your XML file should
 be associated with the same namespace(s) its XML schema is associated with.
-For more information about namespaces, refer to the related reference.</info>
-</step>
+For more information about namespaces, refer to the related reference. For
+more information, see <xref format="html" href="/../../org.eclipse.wst.xsdeditor.doc.user/topics/rnmspc.dita"
+scope="peer">XML namespaces</xref>.</info></step>
 <step><cmd>All qualified elements and attributes in the XML file associated
 with the namespace will be prefixed with the <uicontrol>Prefix</uicontrol> value.</cmd>
 </step>
@@ -42,9 +44,9 @@ view all XML schemas in the workbench and XML Catalog.</info></step>
 </step>
 </steps>
 <result><p>If you want to create a new association, click <uicontrol>Add</uicontrol> instead
-of <uicontrol>Edit</uicontrol>. You can then either click the <uicontrol>Specify
+of <uicontrol>Edit</uicontrol>. You can then either select the <uicontrol><?Pub Caret1?>Specify
 From Registered Namespace</uicontrol> radio button and select the namespace
-declarations you want to add or click the <uicontrol>Specify New Namespace</uicontrol> radio
+declarations you want to add or select the <uicontrol>Specify New Namespace</uicontrol> radio
 button and fill in the fields as necessary.</p></result>
 <postreq>If you do not have namespace information in your XML file, you can
 right-click your root element in the Design view and click <uicontrol>Edit
@@ -52,3 +54,4 @@ Namespaces</uicontrol> to add it. If you do not have a root element, you must
 create one before you can add the namespace information.</postreq>
 </taskbody>
 </task>
+<?Pub *0000003265?>

@@ -1,34 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="xmlsourcesuggestionstrategy" xml:lang="en-us">
 <title>Setting the XML source suggestion strategy used by content assist</title>
 <shortdesc>You can customize the formatting of the suggestions given by content
 assist by choosing a suggestion strategy preference. When the suggestion strategy
-is set to "Strict", suggestions that are 'strictly' grammatically valid will
-be displayed first in the list of options and highlighted by bold icons. Other
-suggestions that are applicable to this element's scope but are not grammatically
-valid, will be displayed lower in the list with de-emphasized icons. When
-the suggestion strategy is set to "Lax", all suggestions will displayed in
-the list with de-emphasized icons.</shortdesc>
+is set to Strict, suggestions that are grammatically valid will be displayed
+first in the list of options and highlighted by bold icons. Other suggestions
+that are applicable to this element's scope but are not grammatically valid
+will be displayed lower in the list with de-emphasized icons. When the suggestion
+strategy is set to Lax, all suggestions will displayed in the list with de-emphasized
+icons.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML editor<indexterm>source suggestion strategy</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
-<context>To set the suggestion strategy used by content assist:</context>
+<context>To set the suggestion strategy used by content assist, complete the
+following steps:</context>
 <steps>
-<step><cmd>From the menu bar, Click <menucascade><uicontrol>Window</uicontrol>
-<uicontrol>Preferences</uicontrol></menucascade></cmd></step>
-<step><cmd>Select <menucascade><uicontrol>Web and XML</uicontrol><uicontrol>XML
-Files</uicontrol><uicontrol>XML Source</uicontrol></menucascade>.</cmd></step>
-<step><cmd>Beside Suggestion strategy in the Content assist section, select
-the appropriate setting (for example, <uicontrol>Strict</uicontrol>).</cmd>
-</step>
+<step><cmd>Click <menucascade><uicontrol>Window</uicontrol><uicontrol>Preferences</uicontrol>
+</menucascade> and select <menucascade><uicontrol>XML</uicontrol><uicontrol>XML
+Files</uicontrol><uicontrol>Editor</uicontrol></menucascade></cmd></step>
+<step><cmd>Beside <uicontrol>Suggestion strategy</uicontrol> in the Content
+assist section, select the appropriate setting (Strict or Lax).</cmd></step><?Pub Caret?>
+<step><cmd>Click <uicontrol>Apply</uicontrol>, then <uicontrol>OK</uicontrol> to
+save your settings</cmd></step>
 </steps>
 <example><p>The following screen capture demonstrates content assist with
 the suggestion strategy set to "Strict":</p><image href="../images/suggestion.gif"
 placement="break"><alt>Example of Strict Suggestion Strategy</alt></image></example>
 </taskbody>
 </task>
-<?Pub *0000001917?>
+<?Pub *0000001950?>

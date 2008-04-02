@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <?Pub Inc?>
 <task id="txmlcat" xml:lang="en-us">
 <title>Adding entries to the XML Catalog</title>
@@ -8,10 +9,10 @@
 <searchtitle>Adding entries to the XML Catalog</searchtitle>
 </titlealts>
 <shortdesc>An XML Catalog entry contains two parts - a Key (which represents
-a DTD or XML schema) and a Uniform Resource Identifier (URI) (which contains
-information about a DTD or XML schema's location). You can place the Key in
-an XML file. When the XML processor encounters it, it will use the XML Catalog
-entry to find the location of the DTD or XML schema associated with the Key</shortdesc>
+a DTD or XML schema) and a Location (similar to a URI, which contains information
+about a DTD or XML schema's location). You can place the Key in an XML file.
+When the XML processor encounters it, it will use the XML Catalog entry to
+find the location of the DTD or XML schema associated with the Key</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML catalog<indexterm>adding entries</indexterm></indexterm>
 </keywords>
@@ -35,81 +36,69 @@ example, you could specify a rule that redirects an Internet resource reference
 (for example,  <codeph>"http://www.ibm.com/published-schemas/MySchema.xsd"</codeph>)
 so that it points to a resource on the developer's local machine (for example,
  <codeph>"file:///C:/MySchema.xsd"</codeph>). Now, instead of frequently editing
-XML documents to update the URIs (especially when there are many documents
-in your project), you only need to update a single rule in your XML Catalog.</p><p>The
-following instructions were written for the Resource perspective, but they
-will also work in many other perspectives.</p><p>To add an entry to the XML
-Catalog, follow these steps:</p></context>
+XML documents to update the URIs or locations (especially when there are many
+documents in your project), you only need to update a single rule in your
+XML Catalog.</p><p>The following instructions were written for the Resource
+perspective, but they will also work in many other perspectives.</p><p>To
+add an entry to the XML Catalog, follow these steps:</p></context>
 <steps>
 <step><cmd>Open the XML file that you want to associate with a DTD or XML
 schema.</cmd></step>
 <step><cmd>Click  <menucascade><uicontrol>Window</uicontrol><uicontrol>Preferences</uicontrol>
-<uicontrol>Web and XML</uicontrol><uicontrol>XML Catalog</uicontrol></menucascade>.</cmd>
+</menucascade> and select <menucascade><uicontrol>XML</uicontrol><uicontrol>XML
+Catalog</uicontrol></menucascade>.</cmd><info>The  <uicontrol>XML Catalog
+Entries</uicontrol> section contains a list of any user-defined and plug-in
+defined catalog entries. Select any entry to see information about it in the <uicontrol>Details</uicontrol> section.</info>
 </step>
-<step><cmd>The  <uicontrol>XML Catalog Entries</uicontrol> field contains
-a list of any user-defined and plug-in defined catalog entries.</cmd>
-<substeps>
-<substep><cmd>Select any entry to see details about it in the <uicontrol>Details</uicontrol> field. </cmd>
-</substep>
-<substep><cmd>Click <uicontrol>Add</uicontrol> to create a new catalog entry.</cmd>
-</substep>
-</substeps>
+<step><cmd>Click <uicontrol>Add</uicontrol> to create a new catalog entry.</cmd>
 </step>
-<step><cmd>In the <uicontrol>URI</uicontrol> field, type the location of the
-DTD or XML schema or browse for it.</cmd></step>
-<step><cmd>If you specified a DTD in the <uicontrol>URI</uicontrol> field,
-you can select either <uicontrol>Public ID</uicontrol> or <uicontrol>System
-ID</uicontrol> from the <uicontrol>Key Type</uicontrol> field.</cmd><info>If
-you select <uicontrol>Public ID,</uicontrol> the value you enter in the <uicontrol>Key</uicontrol> field
+<step><cmd>In the <uicontrol>Location</uicontrol> field, enter or browse for
+the location or URI of the DTD or XML schema file. This uses your computer's
+path style to describe the location of the file.</cmd></step>
+<step><cmd>Select a key type for the catalog entry from the <uicontrol>Key
+Type</uicontrol> drop down.</cmd><info>The values in this list will change
+depending on the type of file you specified in the <uicontrol>Location</uicontrol> field:<ul>
+<li>If you specified a DTD: select <uicontrol>Public ID</uicontrol>, <uicontrol>System
+ID</uicontrol>, or <uicontrol>URI</uicontrol> from the <uicontrol>Key Type</uicontrol> field.
+If you select <uicontrol>Public ID,</uicontrol> the value you enter in the <uicontrol>Key</uicontrol> field
 should be the same as the Public ID in the XML file's DOCTYPE declaration.
 If you select <uicontrol>System ID</uicontrol>, the value you enter should
-correspond to the System ID in an XML file's DOCTYPE declaration.</info></step>
-<step><cmd>If you specified an XML schema in the <uicontrol>URI</uicontrol> field,
-you can select either <uicontrol>Namespace Name</uicontrol> or  <uicontrol>Schema
-Location</uicontrol> from the <uicontrol>Key Type</uicontrol> field.</cmd>
-<info>If the schema defines a target namespace, it will automatically appear
-in the <uicontrol>Key</uicontrol> field. Otherwise, you can enter the schema
-location in the <uicontrol>Key</uicontrol> field.</info></step>
+correspond to the System ID in an XML file's DOCTYPE declaration. If you select <uicontrol>URI</uicontrol>,
+the value you enter must be a fully qualified URI.</li>
+<li>If you specified an XML schema: select either <uicontrol>Namespace Name</uicontrol> or
+ <uicontrol>Schema Location</uicontrol> from the <uicontrol>Key Type</uicontrol> field.
+If the schema defines a target namespace, it will automatically appear in
+the <uicontrol>Key</uicontrol> field. Otherwise, you can enter the schema
+location in the <uicontrol>Key</uicontrol> field.</li>
+</ul></info></step>
 <step><cmd>Select the <uicontrol>Specify alternative Web address</uicontrol> check
 box if you want to be able to specify an alternate Web address for the resource.</cmd>
 <info>This Web address is used when an XML instance is generated from this
-catalog entry.  <b>Note</b>: This option is only available if you select <uicontrol>Public
+catalog entry.<note>This option is only available if you select <uicontrol>Public
 ID</uicontrol> (for a DTD) or  <uicontrol>Namespace Name</uicontrol> (for
-a schema) in the  <uicontrol>Key type</uicontrol> field.</info></step>
+a schema) in the  <uicontrol>Key type</uicontrol> field.</note></info></step>
 <step><cmd>If you want to refer to another catalog without importing it into
 the workbench, click <uicontrol>Next Catalog</uicontrol>. Type or browse for
 the XML catalog you want to refer to. </cmd></step>
 <step><cmd>When you are done creating catalog entries, click <uicontrol>OK</uicontrol> to
-close the Add XML Catalog Entry dialog. </cmd></step>
-<step><cmd>Click <uicontrol>Advanced</uicontrol> if you want to import or
-export any XML Catalog settings.</cmd></step>
-<step><cmd>Click  <uicontrol>Export</uicontrol> if you want to persist the
-XML Catalog information. Only your user specified entries will be exported.</cmd>
-<substeps>
-<substep><cmd>You will be prompted to select a project and provide a file
-name to store your catalog entries in an .xmlcatalog file, which can be opened
-from the Navigator view. Snce your catalog entries are stored in an .xmlcatalog
-file, you can check them in and out and share them like any other project
-resource. </cmd></substep>
-<substep><cmd>Click <uicontrol>OK</uicontrol>.</cmd></substep>
-</substeps>
-</step>
-<step><cmd>Click  <uicontrol>Import</uicontrol> if you want to import an .xmlcatalog
-file. You will be prompted to select the file you want to import.</cmd>
-<substeps>
-<substep><cmd>When you import a .xmlcatalog file, any entries in it will be
-loaded into the XML Catalog (and any existing entries will be overwritten). </cmd>
-</substep>
-<substep><cmd>Click <uicontrol>OK</uicontrol>.</cmd></substep>
-</substeps>
-</step>
-<step><cmd>Click <uicontrol>OK</uicontrol> to close the Advanced XML Catalog
-Preferences dialog.</cmd></step>
+close the Add XML Catalog Entry dialog. Click <uicontrol>OK</uicontrol> again
+to save your settings.</cmd></step>
 <step><cmd>Make sure the XML file is in focus and click the <uicontrol>Reload
 dependencies</uicontrol> toolbar button. </cmd></step>
 </steps>
 <result>The XML file is now associated with the latest version of the XML
 schema or DTD.</result>
+<postreq><p>You can also export and import XML Catalog information:<?Pub Caret?> </p><p>To
+export, click <uicontrol>File > Export</uicontrol> and select <uicontrol>XML
+> XML Catalog</uicontrol>. You will be prompted to select a project and provide
+a file name to store your catalog entries in an .xmlcatalog file, which can
+be opened from the Navigator view. Since your catalog entries are stored in
+an .xmlcatalog file, you can check them in and out and share them like any
+other project resource.</p><p>To import, click <uicontrol>File > Import</uicontrol> and
+select <uicontrol>XML > XML Catalog</uicontrol>. Then specify the file that
+will be used to load the XML Catalog settings. When you import a .xmlcatalog
+file, any entries in it will be loaded into the XML Catalog (and any existing
+entries will be overwritten). </p></postreq>
 </taskbody>
 </task>
-<?Pub *0000007087?>
+<?Pub *0000006868?>

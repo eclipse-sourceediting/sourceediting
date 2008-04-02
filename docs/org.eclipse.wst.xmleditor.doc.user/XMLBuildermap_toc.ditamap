@@ -2,7 +2,7 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
  "map.dtd">
-<map collection-type="sequence" title="Developing XML files">
+<map collection-type="sequence" id="xmleditordocumentation" title="Developing XML files">
 <topicref href="topics/cworkXML.dita" linking="sourceonly" navtitle="Working with XML files">
 <anchor id="xml_post_cworkXML"/>
 <topicref href="topics/ccreatxm.dita" navtitle="Creating XML files">

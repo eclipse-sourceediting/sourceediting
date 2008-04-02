@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="txprefs" xml:lang="en-us">
@@ -9,24 +9,26 @@
 </titlealts>
 <shortdesc>You can set various preferences for the Source view of the XML
 editor such as the formatter indentation style, line wrapping rules, and content
-assist rules.  To apply the formatting styles, right-click in in the Source
-view for your XML document, and click <menucascade><uicontrol>Format</uicontrol>
+assist rules. To apply the formatting styles, right-click in the Source view
+for your XML document, and click <menucascade><uicontrol>Format</uicontrol>
 <uicontrol>Document</uicontrol></menucascade>.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML editor<indexterm>preferences</indexterm></indexterm>
-<indexterm>preferences<indexterm>XML editor</indexterm></indexterm>
-</keywords>
+<indexterm>preferences<indexterm>XML editor</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
-<context><p>To define XML preferences, perform the following steps:</p></context>
+<context><p>To define XML preferences, complete the following steps:</p></context>
 <steps>
 <step><cmd>Click  <menucascade><uicontrol>Window</uicontrol><uicontrol>Preferences</uicontrol>
-<uicontrol>Web and XML</uicontrol><uicontrol>XML Files</uicontrol><uicontrol>XML
-Source</uicontrol></menucascade>.</cmd></step>
+</menucascade> and select <menucascade><uicontrol>XML</uicontrol><uicontrol>XML
+Files</uicontrol><uicontrol>Editor</uicontrol></menucascade>.</cmd></step>
 <step><cmd>Enter a maximum width for formatted lines in the <uicontrol>Line
 width</uicontrol> field</cmd><info>The default value is 72.</info></step>
 <step><cmd>Select <uicontrol>Split multiple attributes each on a new line</uicontrol> to
 start every attribute on a new line.</cmd></step>
+<step><cmd>Select <uicontrol>Preserve whitespace in tags with PCDATA content</uicontrol> to
+prevent the editor from deleting whitespace in elements that contain parsed
+character data.</cmd></step>
 <step><cmd>If you want blank lines to be removed when the document is formatted,
 select the <uicontrol>Clear all blank lines</uicontrol> check box. </cmd>
 <info>By default, blank lines are preserved in a formatted document.</info>
@@ -38,11 +40,11 @@ prefer to use spaces, select <uicontrol>Indent using spaces</uicontrol>.</cmd>
 <step><cmd>You can also specify the <uicontrol>Indentation size</uicontrol> which
 is the number of tabs or space characters used for formatting indentation.</cmd>
 </step>
-<step><cmd>You can specify certain characters ('&lt;' is default) that will
-cause the content assist list to pop up automatically. Ensure the <uicontrol>Automatically
-make suggestions</uicontrol> check box is selected and specify the characters
-in the <uicontrol>Prompt when these characters are inserted</uicontrol> field. </cmd>
-</step>
+<step><cmd>You can specify certain characters (the default command<?Pub Caret?>
+is &lt;=) that will cause the content assist list to pop up automatically.
+Ensure the <uicontrol>Automatically make suggestions</uicontrol> check box
+is selected and specify the characters in the <uicontrol>Prompt when these
+characters are inserted</uicontrol> field. </cmd></step>
 <step><cmd>If you select <b>Strict</b> from the <b>Suggestion strategy</b> list,
 suggestions that are grammatically valid will be shown first (with bold icons)
 in the content assist list. Other suggestions that are applicable to the element
@@ -58,3 +60,4 @@ save your changes.</cmd></step>
 </steps>
 </taskbody>
 </task>
+<?Pub *0000003659?>

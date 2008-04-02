@@ -22,24 +22,20 @@ a file, the editor incrementally reinterprets your document, changing the
 highlighting, tree view, and so on. Many formation errors are easy to spot
 in the syntax highlighting, so you can easily correct obvious errors on-the-fly.
 However, there will be other cases when it will be beneficial to perform formal
-validation on your documents.</p></context>
-<steps>
-<step><cmd>You can validate your file by selecting it in the Navigator view,
-right-clicking it, and clicking <uicontrol>Validate</uicontrol>.</cmd>
-</step>
-</steps>
-<result><p>Any validation problems are indicated in the Problems view. </p></result>
-<postreq><p>In the Problems view, you can double-click on individual errors,
-and you will be taken to the invalid tag in the file, so that you can make
-corrections. </p><p><b>Note</b>: If you receive an error message indicating
-that the Problems view is full, you can increase the number of error messages
-allowed by selecting <menucascade><uicontrol>Properties</uicontrol><uicontrol>Validation</uicontrol>
-</menucascade> from the project's pop-up menu and specifying the maximum number
-of error messages allowed. You must select the <uicontrol>Override validation
-preferences</uicontrol> check box in order to be able to do this.</p><p>As
-well, you can set up a project's properties so that different types of project
-resources are automatically validated when you save them. From a project's
-pop-up menu select <uicontrol>Properties</uicontrol>, then select <uicontrol>Validation</uicontrol>.
+validation on your documents.</p><p>You can validate your file by selecting
+it in the Navigator view, right-clicking it, and clicking <uicontrol>Validate</uicontrol>.
+Any validation problems are indicated in the Problems view. You can double-click
+on individual errors, and you will be taken to the invalid tag in the file,
+so that you can make corrections.</p></context>
+<postreq><note> If you receive an error message indicating that the Problems
+view is full, you can increase the number of error messages allowed by clicking <menucascade>
+<uicontrol>Window</uicontrol><uicontrol>Preferences</uicontrol></menucascade> and
+selecting <menucascade><uicontrol>General</uicontrol><uicontrol>Markers</uicontrol>
+</menucascade>. Select the <uicontrol>Use marker limits</uicontrol> check
+box and change the number in the <uicontrol>Limit visible items per group</uicontrol> <?Pub Caret?>field.</note><p>You
+can set up a project's properties so that different types of project resources
+are automatically validated when you save them. From a project's pop-up menu,
+click <uicontrol>Properties</uicontrol>, then select <uicontrol>Validation</uicontrol>.
 Any validators you can run against your project will be listed in the Validation
 page.</p></postreq>
 </taskbody>
@@ -48,4 +44,4 @@ page.</p></postreq>
 <linktext>Validating code in enterprise applications</linktext></link>
 </related-links>
 </task>
-<?Pub *0000002727?>
+<?Pub *0000002658?>

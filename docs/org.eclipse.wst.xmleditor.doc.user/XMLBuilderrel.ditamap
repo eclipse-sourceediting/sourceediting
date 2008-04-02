@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
-<map>
-<topicgroup collection-type="family"><?Pub Caret1?>
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
+ "map.dtd">
+<map id="xmleditorreltable">
+<topicgroup collection-type="family">
 <topicref href="topics/tcretxml.dita" id="xmlcretxml" navtitle="Creating empty XML files">
 </topicref>
 <topicref href="topics/tcrexdtd.dita" navtitle="Generating XML files from DTDs">
@@ -133,4 +134,3 @@ linking="targetonly" navtitle="XML namespaces" scope="peer"></topicref>
 </topicref>
 </topicgroup>
 </map>
-<?Pub *0000006002?>

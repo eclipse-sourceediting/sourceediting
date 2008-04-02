@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<?Pub Inc?>
 <task id="ttaghilt" xml:lang="en-us">
 <title>Setting source highlighting styles</title>
 <titlealts>
@@ -14,31 +16,32 @@ the tags will be displayed in.</shortdesc>
 </keywords>
 </metadata></prolog>
 <taskbody>
-<context><p>To set highlighting styles for the XML code, follow these steps:</p></context>
+<context><p>To set highlighting styles for the XML code, complete the following
+steps:</p></context>
 <steps>
 <step><cmd>Click <menucascade><uicontrol>Window</uicontrol><uicontrol>Preferences</uicontrol>
-<uicontrol>Web and XML</uicontrol><uicontrol>XML Files</uicontrol><uicontrol> XML
-Styles</uicontrol></menucascade>.</cmd></step>
-<step><cmd>In the <uicontrol>Content type</uicontrol> list, select the source
+</menucascade> and select <menucascade><uicontrol>XML</uicontrol><uicontrol>XML
+Files</uicontrol><uicontrol> Syntax Coloring</uicontrol></menucascade>.</cmd>
+</step>
+<step><cmd>In the <uicontrol>Syntax Element</uicontrol> list, select the source
 tag type that you wish to set a highlighting style for. You can also click
-text in the sample text to specify the source tag type that you wish to set
-a highlighting style for.</cmd></step>
-<step><cmd>Click the <uicontrol>Foreground</uicontrol> box.</cmd></step>
-<step><cmd>Select the color that you want the text of the tag to appear in
-and click <uicontrol>OK</uicontrol>.</cmd></step>
-<step><cmd>Click the <uicontrol>Background</uicontrol> box.</cmd></step>
-<step><cmd>Select the color that you want to appear behind the tag and click <uicontrol>OK</uicontrol>.</cmd>
+text in the <uicontrol>Sample text</uicontrol> box to specify the source tag
+type that you wish to set a highlighting style for.</cmd></step>
+<step><cmd>Click the <uicontrol>Foreground</uicontrol> box, select the color
+that you want the text of the tag to appear in, and click <uicontrol>OK</uicontrol>.</cmd>
+</step>
+<step><cmd>Click the <uicontrol>Background</uicontrol> box, select the color
+that you want to appear behind the tag, and click <uicontrol>OK</uicontrol>.</cmd>
 </step>
 <step><cmd>Select the <uicontrol>Bold</uicontrol> check box if you want to
 make the type bold.</cmd></step>
-<step><cmd>Click <uicontrol>Restore Default</uicontrol> to set the highlighting
-styles back to their default values. If you only want to reset the value for
-a particular content type, select it in the <uicontrol>Content type </uicontrol> field,
-the click the <uicontrol>Restore Default</uicontrol> button next to it. </cmd>
-</step>
+<step><cmd> </cmd></step>
 <step><cmd>Click <uicontrol>OK</uicontrol> to save your changes.</cmd></step>
 </steps>
-<result></result>
+<result>To set the highlight<?Pub Caret?>ing styles back to their default
+values, click <uicontrol>Restore Default</uicontrol>. If you only want to
+reset the value for a particular content type, select it in the <uicontrol>Syntax
+Element</uicontrol> field, then click the <uicontrol>Restore Default</uicontrol> button.</result>
 </taskbody>
 </task>
-<?Pub *0000002262?>
+<?Pub *0000002290?>

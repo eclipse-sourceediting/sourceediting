@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="tedtcnst" xml:lang="en-us">
 <title>Editing with DTD or XML schema constraints</title>
 <titlealts>
 <searchtitle>Editing with DTD or XML schema constraints</searchtitle>
 </titlealts>
 <shortdesc>In the Design view, when you edit an XML file that has a set of
-constraints (that is, a set of rules) defined by a DTD or an XML schema, you
-can turn the constraints on and off to provide flexibility in the way you
-edit, but still maintain the validity of the document periodically.</shortdesc>
+constraints or rules defined by a DTD or an XML schema, you can turn the constraints
+on and off to provide flexibility in the way you edit, but still maintain
+the validity of the document periodically.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML editor<indexterm>editing with constraints</indexterm></indexterm>
 <indexterm>XML files<indexterm>editing with constraints</indexterm></indexterm>
@@ -25,15 +26,14 @@ options.</p><p>You might want to turn the constraints off for an XML file
 if you need more flexibility. For example, you want to try working with elements
 or attributes not permitted by the associated DTD or XML schema, without actually
 removing the association with the DTD or XML schema.</p><p>To turn the constraints
-for an XML file off, click <uicontrol>XML > Turn Grammar Constraints Off</uicontrol>.
-After you have turned the constraints off for a file, you can insert or delete
-any element or attribute regardless of the DTD or XML schema rules. You can
-create new elements or attributes that are not in the DTD or schema - these
-Design view prompts will only appear when you have turned constraints off.
-The file might not be valid, however, if you do this. </p><p>The following
-instructions were written for the Resource perspective, but they will also
-work in many other perspectives.</p><p>The following example shows what you
-can do if you turn the constraints of a DTD off:</p></context>
+for an XML file off, click <menucascade><uicontrol>XML</uicontrol><uicontrol>Turn
+Grammar Constraints Off</uicontrol></menucascade> in the toolbar. After you
+have turned the constraints off for a file, you can insert or delete any element
+or attribute regardless of the DTD or XML schema rules. You can create new
+elements or attributes that are not in the DTD or schema - these Design view
+prompts will only appear when you have turned constraints off. The file might
+not be valid, however, if you do this. </p><p>The following example shows
+what you can do if you turn the constraints of a DTD off:</p></context>
 <steps>
 <step><cmd>Open the XML file in the XML editor (right-click the file in the
 Navigator view and click <uicontrol>Open With > XML Editor</uicontrol>). </cmd>
@@ -53,10 +53,12 @@ off, the editor will allow you to.</cmd></step>
 <step><cmd>To correct the invalid document, you will have to re-add the necessary
 element, or remove the invalid tagging or value.</cmd></step>
 </steps>
-<result>If you introduce errors into your files, you must save and validate
-the file in order to see a list of the errors you have introduced. They will
-be listed in the Problems view. After you fix the errors, you must save and
-validate your file again to see if the file is now valid.</result>
+<result><?Pub Caret?><p>If you introduce errors into your files, you must
+save and validate the file in order to see a list of the errors you have introduced.
+They will be listed in the Problems view. After you fix the errors, you must
+save and validate your file again to see if the file is now valid.</p><p>These
+instructions were written for the Resource perspective, but they will also
+work in many other perspectives.</p></result>
 </taskbody>
 </task>
-<?Pub *0000003854?>
+<?Pub *0000003814?>

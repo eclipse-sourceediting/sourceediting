@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="tedtgram" xml:lang="en-us">
 <title>Updating XML files with changes made to DTDs and schemas</title>
 <titlealts>
@@ -18,17 +19,16 @@ guided editing mechanisms available in the editor, such as content assist.</shor
 <taskbody>
 <context><p>For example, you have a DTD file called "Contact.dtd" and an XML
 file called "Contact.xml" associated with it. Contact.dtd contains a root
-element called  <uicontrol>Contact</uicontrol> that can contain any of the
-following children elements:  <uicontrol>Name</uicontrol>,  <uicontrol>PostalAddress</uicontrol>,
- <uicontrol>Email</uicontrol>. If you remove the child element  <uicontrol>Email</uicontrol> from
-the DTD, you will no longer be able to add an  <uicontrol>Email</uicontrol> child
-element to your root element Contact in your Contact.xml file. This change,
-however, will not come into effect until you save your changes in the DTD
-and click <uicontrol>XML > Reload Dependencies</uicontrol> in the XML editor.
-Until you click it, you will still be able to add <uicontrol>Email</uicontrol> elements
-to Contact.xml.</p><p>This feature is very handy when you are making updates
-to both DTDs and XML schemas and XML files that are associated with DTDs and
-XML schemas.</p></context>
+element called <userinput>Contact</userinput> that can contain any of the
+following children elements:  <userinput>Name</userinput>, <userinput>PostalAddress</userinput>,<?Pub Caret?> <userinput>Email</userinput>.
+If you remove the child element  <userinput>Email</userinput> from the DTD,
+you will no longer be able to add an  <userinput>Email</userinput> child element
+to your root element Contact in your Contact.xml file. This change, however,
+will not come into effect until you save your changes in the DTD and click <uicontrol>XML
+> Reload Dependencies</uicontrol> in the XML editor. Until you click it, you
+will still be able to add <userinput>Email</userinput> elements to Contact.xml.</p><p>This
+feature is very handy when you are making updates to both DTDs and XML schemas
+and XML files that are associated with DTDs and XML schemas.</p></context>
 </taskbody>
 </task>
-<?Pub *0000002040?>
+<?Pub *0000001987?>

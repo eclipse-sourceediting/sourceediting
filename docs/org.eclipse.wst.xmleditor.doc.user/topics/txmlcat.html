@@ -2,17 +2,17 @@
 <html lang="en-us" xml:lang="en-us">
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<meta name="copyright" content="Copyright (c) 2000, 2006 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
-<meta name="DC.rights.owner" content="(C) Copyright 2000, 2006" />
+<meta name="copyright" content="Copyright (c) 2000, 2008 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
+<meta name="DC.rights.owner" content="(C) Copyright 2000, 2008" />
 <meta content="public" name="security" />
 <meta content="index,follow" name="Robots" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta content="task" name="DC.Type" />
 <meta name="DC.Title" content="Adding entries to the XML Catalog" />
-<meta name="abstract" content="An XML Catalog entry contains two parts - a Key (which represents a DTD or XML schema) and a Uniform Resource Identifier (URI) (which contains information about a DTD or XML schema's location). You can place the Key in an XML file. When the XML processor encounters it, it will use the XML Catalog entry to find the location of the DTD or XML schema associated with the Key" />
-<meta name="description" content="An XML Catalog entry contains two parts - a Key (which represents a DTD or XML schema) and a Uniform Resource Identifier (URI) (which contains information about a DTD or XML schema's location). You can place the Key in an XML file. When the XML processor encounters it, it will use the XML Catalog entry to find the location of the DTD or XML schema associated with the Key" />
-<meta content="XML catalog, adding entries, importing entries, exporting entries" name="DC.subject" />
-<meta content="XML catalog, adding entries, importing entries, exporting entries" name="keywords" />
+<meta name="abstract" content="An XML Catalog entry contains two parts - a Key (which represents a DTD or XML schema) and a Location (similar to a URI, which contains information about a DTD or XML schema's location). You can place the Key in an XML file. When the XML processor encounters it, it will use the XML Catalog entry to find the location of the DTD or XML schema associated with the Key" />
+<meta name="description" content="An XML Catalog entry contains two parts - a Key (which represents a DTD or XML schema) and a Location (similar to a URI, which contains information about a DTD or XML schema's location). You can place the Key in an XML file. When the XML processor encounters it, it will use the XML Catalog entry to find the location of the DTD or XML schema associated with the Key" />
+<meta content="XML catalog, adding entries" name="DC.subject" />
+<meta content="XML catalog, adding entries" name="keywords" />
 <meta scheme="URI" name="DC.Relation" content="../topics/cxmlcat.html" />
 <meta scheme="URI" name="DC.Relation" content="../topics/tedtcnst.html" />
 <meta scheme="URI" name="DC.Relation" content="../topics/tedtdoc.html" />
@@ -36,10 +36,10 @@
 
 
 <div><p>An XML Catalog entry contains two parts - a Key (which represents
-a DTD or XML schema) and a Uniform Resource Identifier (URI) (which contains
-information about a DTD or XML schema's location). You can place the Key in
-an XML file. When the XML processor encounters it, it will use the XML Catalog
-entry to find the location of the DTD or XML schema associated with the Key</p>
+a DTD or XML schema) and a Location (similar to a URI, which contains information
+about a DTD or XML schema's location). You can place the Key in an XML file.
+When the XML processor encounters it, it will use the XML Catalog entry to
+find the location of the DTD or XML schema associated with the Key</p>
 
 <div class="section"><p>XML Catalog entries can be used in various situations. For example,
 you are working on an XML file on your main desktop computer and point its <samp class="codeph">schemaLocation</samp> towards
@@ -60,13 +60,13 @@ example, you could specify a rule that redirects an Internet resource reference
 (for example,  <samp class="codeph">"http://www.ibm.com/published-schemas/MySchema.xsd"</samp>)
 so that it points to a resource on the developer's local machine (for example,
  <samp class="codeph">"file:///C:/MySchema.xsd"</samp>). Now, instead of frequently editing
-XML documents to update the URIs (especially when there are many documents
-in your project), you only need to update a single rule in your XML Catalog.</p>
-<p>The
-following instructions were written for the Resource perspective, but they
-will also work in many other perspectives.</p>
-<p>To add an entry to the XML
-Catalog, follow these steps:</p>
+XML documents to update the URIs or locations (especially when there are many
+documents in your project), you only need to update a single rule in your
+XML Catalog.</p>
+<p>The following instructions were written for the Resource
+perspective, but they will also work in many other perspectives.</p>
+<p>To
+add an entry to the XML Catalog, follow these steps:</p>
 </div>
 
 <ol>
@@ -74,87 +74,54 @@ Catalog, follow these steps:</p>
 schema.</span></li>
 
 <li class="stepexpand"><span>Click  <span class="menucascade"><span class="uicontrol">Window</span> &gt; <span class="uicontrol">Preferences</span>
- &gt; <span class="uicontrol">Web and XML</span> &gt; <span class="uicontrol">XML Catalog</span></span>.</span>
+</span> and select <span class="menucascade"><span class="uicontrol">XML</span> &gt; <span class="uicontrol">XML
+Catalog</span></span>.</span> The  <span class="uicontrol">XML Catalog
+Entries</span> section contains a list of any user-defined and plug-in
+defined catalog entries. Select any entry to see information about it in the <span class="uicontrol">Details</span> section.
 </li>
 
-<li class="stepexpand"><span>The  <span class="uicontrol">XML Catalog Entries</span> field contains
-a list of any user-defined and plug-in defined catalog entries.</span>
-<ol type="a">
-<li><span>Select any entry to see details about it in the <span class="uicontrol">Details</span> field. </span>
+<li class="stepexpand"><span>Click <span class="uicontrol">Add</span> to create a new catalog entry.</span>
 </li>
 
-<li><span>Click <span class="uicontrol">Add</span> to create a new catalog entry.</span>
-</li>
+<li class="stepexpand"><span>In the <span class="uicontrol">Location</span> field, enter or browse for
+the location or URI of the DTD or XML schema file. This uses your computer's
+path style to describe the location of the file.</span></li>
 
-</ol>
-
-</li>
-
-<li class="stepexpand"><span>In the <span class="uicontrol">URI</span> field, type the location of the
-DTD or XML schema or browse for it.</span></li>
-
-<li class="stepexpand"><span>If you specified a DTD in the <span class="uicontrol">URI</span> field,
-you can select either <span class="uicontrol">Public ID</span> or <span class="uicontrol">System
-ID</span> from the <span class="uicontrol">Key Type</span> field.</span> If
-you select <span class="uicontrol">Public ID,</span> the value you enter in the <span class="uicontrol">Key</span> field
+<li class="stepexpand"><span>Select a key type for the catalog entry from the <span class="uicontrol">Key
+Type</span> drop down.</span> The values in this list will change
+depending on the type of file you specified in the <span class="uicontrol">Location</span> field:<ul>
+<li>If you specified a DTD: select <span class="uicontrol">Public ID</span>, <span class="uicontrol">System
+ID</span>, or <span class="uicontrol">URI</span> from the <span class="uicontrol">Key Type</span> field.
+If you select <span class="uicontrol">Public ID,</span> the value you enter in the <span class="uicontrol">Key</span> field
 should be the same as the Public ID in the XML file's DOCTYPE declaration.
 If you select <span class="uicontrol">System ID</span>, the value you enter should
-correspond to the System ID in an XML file's DOCTYPE declaration.</li>
+correspond to the System ID in an XML file's DOCTYPE declaration. If you select <span class="uicontrol">URI</span>,
+the value you enter must be a fully qualified URI.</li>
 
-<li class="stepexpand"><span>If you specified an XML schema in the <span class="uicontrol">URI</span> field,
-you can select either <span class="uicontrol">Namespace Name</span> or  <span class="uicontrol">Schema
-Location</span> from the <span class="uicontrol">Key Type</span> field.</span>
- If the schema defines a target namespace, it will automatically appear
-in the <span class="uicontrol">Key</span> field. Otherwise, you can enter the schema
+<li>If you specified an XML schema: select either <span class="uicontrol">Namespace Name</span> or
+ <span class="uicontrol">Schema Location</span> from the <span class="uicontrol">Key Type</span> field.
+If the schema defines a target namespace, it will automatically appear in
+the <span class="uicontrol">Key</span> field. Otherwise, you can enter the schema
 location in the <span class="uicontrol">Key</span> field.</li>
+
+</ul>
+</li>
 
 <li class="stepexpand"><span>Select the <span class="uicontrol">Specify alternative Web address</span> check
 box if you want to be able to specify an alternate Web address for the resource.</span>
  This Web address is used when an XML instance is generated from this
-catalog entry.  <strong>Note</strong>: This option is only available if you select <span class="uicontrol">Public
+catalog entry.<div class="note"><span class="notetitle">Note:</span> This option is only available if you select <span class="uicontrol">Public
 ID</span> (for a DTD) or  <span class="uicontrol">Namespace Name</span> (for
-a schema) in the  <span class="uicontrol">Key type</span> field.</li>
+a schema) in the  <span class="uicontrol">Key type</span> field.</div>
+</li>
 
 <li class="stepexpand"><span>If you want to refer to another catalog without importing it into
 the workbench, click <span class="uicontrol">Next Catalog</span>. Type or browse for
 the XML catalog you want to refer to. </span></li>
 
 <li class="stepexpand"><span>When you are done creating catalog entries, click <span class="uicontrol">OK</span> to
-close the Add XML Catalog Entry dialog. </span></li>
-
-<li class="stepexpand"><span>Click <span class="uicontrol">Advanced</span> if you want to import or
-export any XML Catalog settings.</span></li>
-
-<li class="stepexpand"><span>Click  <span class="uicontrol">Export</span> if you want to persist the
-XML Catalog information. Only your user specified entries will be exported.</span>
-<ol type="a">
-<li><span>You will be prompted to select a project and provide a file
-name to store your catalog entries in an .xmlcatalog file, which can be opened
-from the Navigator view. Snce your catalog entries are stored in an .xmlcatalog
-file, you can check them in and out and share them like any other project
-resource. </span></li>
-
-<li><span>Click <span class="uicontrol">OK</span>.</span></li>
-
-</ol>
-
-</li>
-
-<li class="stepexpand"><span>Click  <span class="uicontrol">Import</span> if you want to import an .xmlcatalog
-file. You will be prompted to select the file you want to import.</span>
-<ol type="a">
-<li><span>When you import a .xmlcatalog file, any entries in it will be
-loaded into the XML Catalog (and any existing entries will be overwritten). </span>
-</li>
-
-<li><span>Click <span class="uicontrol">OK</span>.</span></li>
-
-</ol>
-
-</li>
-
-<li class="stepexpand"><span>Click <span class="uicontrol">OK</span> to close the Advanced XML Catalog
-Preferences dialog.</span></li>
+close the Add XML Catalog Entry dialog. Click <span class="uicontrol">OK</span> again
+to save your settings.</span></li>
 
 <li class="stepexpand"><span>Make sure the XML file is in focus and click the <span class="uicontrol">Reload
 dependencies</span> toolbar button. </span></li>
@@ -164,13 +131,28 @@ dependencies</span> toolbar button. </span></li>
 <div class="section">The XML file is now associated with the latest version of the XML
 schema or DTD.</div>
 
+<div class="section"><p>You can also export and import XML Catalog information: </p>
+<p>To
+export, click <span class="uicontrol">File &gt; Export</span> and select <span class="uicontrol">XML
+&gt; XML Catalog</span>. You will be prompted to select a project and provide
+a file name to store your catalog entries in an .xmlcatalog file, which can
+be opened from the Navigator view. Since your catalog entries are stored in
+an .xmlcatalog file, you can check them in and out and share them like any
+other project resource.</p>
+<p>To import, click <span class="uicontrol">File &gt; Import</span> and
+select <span class="uicontrol">XML &gt; XML Catalog</span>. Then specify the file that
+will be used to load the XML Catalog settings. When you import a .xmlcatalog
+file, any entries in it will be loaded into the XML Catalog (and any existing
+entries will be overwritten). </p>
+</div>
+
 </div>
 
 <div><div class="relconcepts"><strong>Related concepts</strong><br />
 <div><a href="../topics/cxmlcat.html" title="When an XML file is associated with a DTD or XML schema, it is bound by any structural rules contained in the DTD or XML schema. To be considered a valid XML file, a document must be accompanied by a DTD or an XML schema, and conform to all of the declarations in the DTD or the XML schema.">XML file associations with DTDs and XML schemas</a></div>
 </div>
 <div class="reltasks"><strong>Related tasks</strong><br />
-<div><a href="../topics/tedtcnst.html" title="In the Design view, when you edit an XML file that has a set of constraints (that is, a set of rules) defined by a DTD or an XML schema, you can turn the constraints on and off to provide flexibility in the way you edit, but still maintain the validity of the document periodically.">Editing with DTD or XML schema constraints</a></div>
+<div><a href="../topics/tedtcnst.html" title="In the Design view, when you edit an XML file that has a set of constraints or rules defined by a DTD or an XML schema, you can turn the constraints on and off to provide flexibility in the way you edit, but still maintain the validity of the document periodically.">Editing with DTD or XML schema constraints</a></div>
 <div><a href="../topics/tedtdoc.html" title="The DOCTYPE declaration in an XML file is used at the beginning of it to associate it with a DTD file. You can edit your DOCTYPE declaration to change the DTD file your XML file is associated with.">Editing DOCTYPE declarations</a></div>
 <div><a href="../topics/tedtgram.html" title="If you make changes to a DTD file or XML schema associated with an XML file (that is currently open), click XML &gt; Reload Dependencies to update the XML file with these changes. The changes will be reflected in the guided editing mechanisms available in the editor, such as content assist.">Updating XML files with changes made to DTDs and schemas</a></div>
 <div><a href="../topics/tedtsch.html" title="Your namespace information is used to provide various information about the XML file, such as the XML schema and namespace it is associated with. If desired, you can change the schema and namespace your XML file is associated with or add a new association. Modifying any associations can impact what content is allowed in the XML file.">Editing namespace information</a></div>

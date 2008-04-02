@@ -2,6 +2,7 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
+<?Pub Inc?>
 <task id="tcretxml" xml:lang="en-us">
 <title>Creating XML files</title>
 <titlealts>
@@ -17,23 +18,26 @@ schema file, so there are no restrictions on the kind of content it can contain.
 <taskbody>
 <context><p>The following instructions were written for the Resource perspective,
 but they will also work in many other perspectives.</p><p>To create a new
-XML file, follow these instructions:</p></context>
+XML file, complete the following steps:</p></context>
 <steps>
-<step><cmd>If necessary, create a project to contain the XML file.</cmd></step>
+<step><cmd>Create a project to contain the XML file if one does not exist
+already.</cmd></step>
 <step><cmd>In the workbench, click <menucascade><uicontrol>File</uicontrol>
-<uicontrol>New</uicontrol><uicontrol>Other</uicontrol><uicontrol>XML</uicontrol>
-<uicontrol>XML</uicontrol></menucascade> and click <uicontrol>Next</uicontrol>.</cmd>
+<uicontrol>New</uicontrol><uicontrol>Other</uicontrol></menucascade> and select <menucascade>
+<uicontrol>XML</uicontrol><uicontrol>XML</uicontrol></menucascade>. Click <uicontrol>Next</uicontrol>.</cmd>
 </step>
 <step><cmd>Select the project or folder that will contain the XML file.</cmd>
 </step>
 <step><cmd>In the <uicontrol>File name</uicontrol> field, type the name of
-the XML file, for example <userinput>MyXMLFile.xml</userinput>. The name of
-your XML file  <varname>must</varname> end in <userinput>.xml</userinput>.</cmd>
-</step>
-<step><cmd>Click <uicontrol>Next.</uicontrol></cmd></step>
-<step><cmd>Click the <uicontrol>Create XML file from an XML template</uicontrol> radio
-button.</cmd></step>
+the XML file and click <uicontrol>Next</uicontrol>. The name of your XML file
+must end in <userinput>.xml</userinput>.</cmd></step>
+<step><cmd>Select the <uicontrol>Create XML file from an XML template</uicontrol> radio
+button and click <uicontrol>Next.</uicontrol>.</cmd></step>
+<step importance="optional"><cmd>You may choose to view and edit the XML templates
+that will be used in your new XML file.</cmd></step>
 <step><cmd>Click  <uicontrol>Finish</uicontrol>.</cmd></step>
 </steps>
+<postreq><?Pub Caret?></postreq>
 </taskbody>
 </task>
+<?Pub *0000002004?>

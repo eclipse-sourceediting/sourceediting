@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<?Pub Inc?>
 <task id="tedtenc" xml:lang="en-us">
 <title>Specifying XML default encoding line delimiters</title>
 <titlealts>
@@ -10,27 +12,29 @@
 that will be used when you create or save an XML related file.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML files<indexterm>specifying line delimiters</indexterm></indexterm>
-<indexterm>line delimiters<indexterm>XML files</indexterm></indexterm>
-</keywords>
+<indexterm>line delimiters<indexterm>XML files</indexterm></indexterm></keywords>
 <keywords></keywords>
 </metadata></prolog>
 <taskbody>
-<context><p>To specify the line delimiter you want to use:</p></context>
+<context><p>To specify the line delimiter you want to use, complete the following
+steps:</p></context>
 <steps>
 <step><cmd>Click <menucascade><uicontrol>Window</uicontrol><uicontrol>Preferences</uicontrol>
-<uicontrol>Web and XML</uicontrol><uicontrol>XML Files</uicontrol></menucascade>.</cmd>
-</step>
-<step><cmd>In the <uicontrol>Line delimiter</uicontrol> list, select the operating
-system that applies to your development or deployment platform. </cmd></step>
-<step><cmd>From the <uicontrol>Encoding</uicontrol> field, specify
-the default character encoding set that is used when creating XML related
-files (DTDs, XML files, XML schemas). Changing the encoding causes any new,
-XML related files that are created from scratch to use the selected encoding.</cmd>
-</step>
+</menucascade> and select <menucascade><uicontrol>XML</uicontrol><uicontrol>XML
+Files</uicontrol></menucascade>.</cmd></step>
+<step><cmd>From the <uicontrol>Encoding</uicontrol> field, specify the default
+character encoding set that is used when creating XML related files (DTDs,
+XML files, XML schemas). Changing the encoding causes any new, XML related
+files that are created from scratch to use the selected encoding.</cmd></step>
+<step><cmd>Select <menucascade><uicontrol>General</uicontrol><uicontrol>Workspace</uicontrol>
+</menucascade> in the left pane of the Preferences window and chose either <uicontrol>Default</uicontrol> or <uicontrol>Other</uicontrol> in
+the <uicontrol>New text file line delimiter </uicontrol>section. Select the
+operating system that applies to your development or deployment platform from
+the <uicontrol>Other</uicontrol> drop down list.</cmd></step><?Pub Caret?>
 <step><cmd>Click  <uicontrol>Apply</uicontrol>, then <uicontrol>OK</uicontrol>.</cmd>
 </step>
 </steps>
 <result></result>
 </taskbody>
 </task>
-<?Pub *0000001698?>
+<?Pub *0000002002?>

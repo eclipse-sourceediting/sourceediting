@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <?Pub Inc?>
 <task id="tcrexxsd" xml:lang="en-us">
 <title>Generating XML files from XML schemas</title>
@@ -24,13 +25,13 @@ Resource perspective, but they will also work in many other perspectives.</p><p>
 generate an XML file from a schema file follow these steps:</p></context>
 <steps>
 <step><cmd>In the Navigator view, right-click the XML schema file that you
-want to work with.</cmd></step>
-<step><cmd>From its pop-up menu click <menucascade><uicontrol>Generate</uicontrol>
+want to work with and select <menucascade><uicontrol>Generate</uicontrol>
 <uicontrol>XML File</uicontrol></menucascade>.</cmd></step>
-<step><cmd>Select a project or folder to contain the XML file, type a name
-for it and click <uicontrol>Next</uicontrol>.</cmd><info>The name of the file
-must end in<systemoutput>.xml.</systemoutput> </info></step>
-<step><cmd>Click the <uicontrol>Root element</uicontrol> of the XML file.</cmd>
+<step><cmd>Select a project or folder to contain the XML file and type a name
+for the file in the <uicontrol>File Name</uicontrol> field, then click <uicontrol>Next</uicontrol>.</cmd>
+<info>The name of the file must end in <userinput>.xml</userinput>.</info>
+</step>
+<step><cmd>Select the <uicontrol>Root element</uicontrol> of the XML file.</cmd>
 <info>The root element of an XML file is the element that contains all other
 elements in that file. All of the global elements you have defined in the
 XML schema will be included in the Root element list. If you do not have any
@@ -38,48 +39,45 @@ global elements in your XML schema, you cannot create an XML file from it.</info
 </step>
 <step><cmd>Select from the following content options:</cmd>
 <choices>
-<choice><uicontrol>Create optional attributes</uicontrol>. Both mandatory
+<choice><uicontrol>Create optional attributes</uicontrol>: both mandatory
 and optional attributes will be generated.</choice>
-<choice><uicontrol>Create optional elements</uicontrol>. Both mandatory and
+<choice><uicontrol>Create optional elements</uicontrol>: both mandatory and
 optional elements will be generated.</choice>
-<choice><uicontrol>Create first choice of required choice</uicontrol>. The
+<choice><uicontrol>Create first choice of required choice</uicontrol>: the
 first option of a required choice will be generated in your XML file.</choice>
-<choice><uicontrol>Fill elements and attributes with data</uicontrol>. Any
+<choice><uicontrol>Fill elements and attributes with data</uicontrol>: any
 elements and attributes generated will be filled with sample data.</choice>
 </choices>
 <info>If you do not select any of these options, then only the minimum amount
 of content required for the XML file will be created.</info></step>
-<step><cmd>The Namespace information section contains information about the
-target namespace of the XML schema, its prefix, and the schema location.</cmd>
-<info>For more information about namespaces and namespace prefixes, refer
-to the related references.</info></step>
-<step><cmd>Select the entry you want to edit and click <uicontrol>Edit</uicontrol>.</cmd>
-</step>
-<step><cmd>The value in the <uicontrol>Namespace Name</uicontrol> field is
-the target namespace of the XML schema.</cmd><info>Your XML file should be
-associated with the same namespace as its XML schema is associated with.</info>
-</step>
-<step><cmd>All qualified elements and attributes in the XML file associated
-with the namespace will be prefixed with the <uicontrol>Prefix</uicontrol> value.</cmd>
-</step>
-<step><cmd>The  <uicontrol>Location Hint</uicontrol> field contains the location
-of the XML schema.</cmd></step>
-<step><cmd>Click <uicontrol>OK</uicontrol>, then <uicontrol>Finish</uicontrol>.</cmd>
+<step><cmd>The Namespace Information section contains information about the
+target namespace of the XML schema, its prefix, and the schema location. Select
+the entry you want to edit and click <uicontrol>Edit</uicontrol>.</cmd><info><ul>
+<li>The value in the <uicontrol>Namespace Name</uicontrol> field is the target
+namespace of the XML schema. Your XML file should be associated with the same
+namespace as its XML schema is associated with.</li>
+<li>All qualified elements and attributes in the XML file associated with
+the namespace will be prefixed with the <uicontrol>Prefix</uicontrol> value.</li>
+<li>The  <uicontrol>Location Hint</uicontrol> field contains the location
+of the XML schema.</li>
+</ul>For more information about namespaces and namespace prefixes, refer to
+the related references.</info></step>
+<step><cmd>Click <uicontrol>OK</uicontrol> and then <uicontrol>Finish</uicontrol>.</cmd>
 </step>
 </steps>
 <result><p>The XML file will contain the selected root element and any elements
 or attributes contained in the root element. It also contains information
 about the XML file namespace and location. You can now add elements and attributes
-to the XML file.</p><p><b>Note:</b> In certain cases, when an XML file is
-generated from a complex XML schema file, the XML file might not be valid.
-If this occurs, you can open the generated file in the XML editor and correct
-any errors that occur. Usually, only a few errors need to be fixed. The following
-XML schema constructs might present problems:</p><ol>
-<li>Restrictions. Sometimes restricted elements are erroneously generated. </li>
-<li>Facets: Default generated data values might not conform to complex facets
+to the XML file.</p><note>In certain cases, when an XML file is generated
+from a complex XML schema file, the XML file might not be valid. If this occurs,
+you can open the generated file in the XML editor and correct any errors that
+occur. Usually, only a few errors need to be fixed. The following XML schema
+constructs might present problems:</note><ul><?Pub Caret?>
+<li>Restrictions: sometimes restricted elements are erroneously generated. </li>
+<li>Facets: default generated data values might not conform to complex facets
 (for example, patterns).</li>
-<li>Abstract elements. abstract elements are sometimes erroneously generated.</li>
-</ol></result>
+<li>Abstract elements: abstract elements are sometimes erroneously generated.</li>
+</ul></result>
 </taskbody>
 </task>
-<?Pub *0000004757?>
+<?Pub *0000004762?>
