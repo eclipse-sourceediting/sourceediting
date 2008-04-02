@@ -16,6 +16,7 @@ import java.util.Iterator;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.wst.common.internal.emf.resource.EMF2DOMAdapter;
 import org.eclipse.wst.common.internal.emf.resource.EMF2DOMAdapterImpl;
@@ -270,25 +271,42 @@ public class EMF2DOMSSEAdapter extends EMF2DOMAdapterImpl implements INodeAdapte
 	}
 
 	protected EMF2DOMAdapter primGetExistingAdapter(Node aNode) {
-		
-		INodeNotifier sseNode = (INodeNotifier)aNode;
+		INodeNotifier sseNode = (INodeNotifier) aNode;
 		Collection adapters = sseNode.getAdapters();
-		INodeAdapter result = null;
 		for (Iterator iterator = adapters.iterator(); iterator.hasNext();) {
-			INodeAdapter a = (INodeAdapter) iterator.next();
-			if (a != null && a.isAdapterForType(EMF2DOMAdapter.ADAPTER_CLASS)) { //First Check if its an EMF2DOMAdapter
-				//Cast to EMF2DOMAdapter
-				EMF2DOMAdapter e2DAdapter = (EMF2DOMAdapter)a;
-				if (e2DAdapter.getTarget() == getTarget()) {//Now check if its the right one  (Multiple resources could be attached)
-					result = a;
-					break;
+			INodeAdapter adapter = (INodeAdapter) iterator.next();
+			// First Check if it's an EMF2DOMAdapter
+			if (adapter != null && adapter.isAdapterForType(EMF2DOMAdapter.ADAPTER_CLASS)) {
+				// Cast to EMF2DOMAdapter
+				EMF2DOMAdapter e2DAdapter = (EMF2DOMAdapter) adapter;
+				// Check if targets are the resources
+				if (getTarget() instanceof Resource) {
+					/*
+					 * Now check if it's the right one (Multiple resources
+					 * could be attached)
+					 */
+					if (e2DAdapter.getTarget() == getTarget()) {
+						return e2DAdapter;
+					}
+					else
+						continue;
+				}
+				// Check if targets are EObjects with the same resources
+				EObject myTarget = (EObject) getTarget();
+				EObject adapterTarget = (EObject) e2DAdapter.getTarget();
+				/*
+				 * Now check if it's the right one (Multiple resources could
+				 * be attached)
+				 */
+				if (adapterTarget != null && myTarget != null && adapterTarget.eResource() == myTarget.eResource()) {
+					return e2DAdapter;
 				}
 			}
 		}
-		// if we didn't find one in our list,
-		// return the null result
-		return (EMF2DOMAdapter)result;
-
+		/*
+		 * if we didn't find one in our list, return the null result
+		 */
+		return null;
 	}
 
 	protected String primGetIndentString(Node node) {
