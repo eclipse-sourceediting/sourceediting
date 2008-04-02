@@ -154,11 +154,6 @@ public class XSLValidator
 					createMarker(report, template, IMarker.SEVERITY_ERROR, "Named templates cannot specify a mode");
 				checkParameters(report, template);
 			}
-//			else if (template.getMatch() != null)
-//			{// match template
-//				if (template.getParameters().size() != 0)
-//					createMarker(report, template, IMarker.SEVERITY_ERROR, "Only named templates may have parameters");
-//			}
 
 			for (Template checkTemplate : stylesheetComposed.getTemplates())
 			{
@@ -235,7 +230,7 @@ public class XSLValidator
 			{
 				createMarker(report, calledTemplate.getAttribute("name"), IMarker.SEVERITY_ERROR, "Named template '" + calledTemplate.getName() + "' is not available");
 			}
-			else
+	/*		else
 			{
 				Template namedTemplate = templateList.get(0);
 				for (Parameter calledTemplateParam : calledTemplate.getParameters())
@@ -274,7 +269,7 @@ public class XSLValidator
 						}
 					}
 				}
-			}
+			} */
 		}
 	}
 

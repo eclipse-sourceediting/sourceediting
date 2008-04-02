@@ -190,8 +190,8 @@ public class StylesheetBuilder
 				}
 			}
 			elementStack.pop();
-			currentTemplate = null;
-			currentCallTemplate = null;
+//			currentTemplate = null;
+//			currentCallTemplate = null;
 		}
 
 		private void configure(IDOMNode node, XSLElement element)
