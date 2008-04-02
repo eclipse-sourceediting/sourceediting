@@ -60,9 +60,11 @@ public class XSLCore
 	public synchronized StylesheetModel buildStylesheet(IFile file)
 	{
 		Stylesheet stylesheet = StylesheetBuilder.getInstance().getStylesheet(file, true);
+		if (stylesheet == null)
+			return null;
 		StylesheetModel stylesheetComposed = new StylesheetModel(stylesheet);			
-		stylesheetComposed.fix();
 		stylesheetsComposed.put(file, stylesheetComposed);
+		stylesheetComposed.fix();
 		return stylesheetComposed;
 	}
 

@@ -153,12 +153,15 @@ public class StylesheetModel
 		}
 		files.add(file);
 		
-		Stylesheet includedStylesheet = StylesheetBuilder.getInstance().getStylesheet(file, false);
-		if (includedStylesheet == null)
-			return;
-		stylesheets.add(includedStylesheet);
+//		Stylesheet includedStylesheet = StylesheetBuilder.getInstance().getStylesheet(file, false);
+//		if (includedStylesheet == null)
+//			return;
+//		stylesheets.add(includedStylesheet);
 		
 		StylesheetModel includedModel = XSLCore.getInstance().getStylesheet(file);
+		if (includedModel == null)
+			return;
+		
 		if (include.getIncludeType() == Include.INCLUDE)
 		{
 			templates.addAll(includedModel.templates);
