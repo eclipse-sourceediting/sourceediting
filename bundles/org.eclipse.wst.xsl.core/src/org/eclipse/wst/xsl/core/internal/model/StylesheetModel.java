@@ -100,7 +100,7 @@ public class StylesheetModel
 		List<Template> matching = new ArrayList<Template>(templates.size());
 		for (Template template : templates)
 		{
-			if (template.conflictsWith(toMatch))
+			if (template.equals(toMatch))
 				matching.add(template);
 		}
 		return matching;
@@ -113,7 +113,7 @@ public class StylesheetModel
 	
 	public void fix()
 	{
-		System.out.println("Fixing "+stylesheet.getFile()+"...");
+//		System.out.println("Fixing "+stylesheet.getFile()+"...");
 		long start = System.currentTimeMillis();
 		templates.addAll(stylesheet.templates);
 		templateSet.addAll(stylesheet.templates);
@@ -128,7 +128,7 @@ public class StylesheetModel
 			handleInclude(inc);
 		}
 		long end = System.currentTimeMillis();
-		System.out.println("..."+stylesheet.getFile()+" fixed in "+(end-start)+"ms");
+		System.out.println("FIX "+stylesheet.getFile()+" in "+(end-start)+"ms");
 	}
 	
 	private void handleInclude(Include include)

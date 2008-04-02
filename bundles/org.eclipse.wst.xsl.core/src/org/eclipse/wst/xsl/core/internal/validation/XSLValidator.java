@@ -51,10 +51,12 @@ public class XSLValidator
 
 	public ValidationReport validate(String uri, IFile xslFile) throws CoreException
 	{
+		long start = System.currentTimeMillis();
 		StylesheetModel stylesheet = XSLCore.getInstance().buildStylesheet(xslFile);
 		XSLValidationReport report = new XSLValidationReport(stylesheet.getStylesheet());
-//		System.out.println("Checking: "+stylesheet.getStylesheet().getFile());
 		calculateProblems(stylesheet, report);
+		long end = System.currentTimeMillis();
+		System.out.println("VALIDATE "+xslFile+" in "+(end-start)+"ms");
 		return report;
 	}
 
@@ -157,7 +159,7 @@ public class XSLValidator
 
 			for (Template checkTemplate : stylesheetComposed.getTemplates())
 			{
-				if (checkTemplate != template && checkTemplate.conflictsWith(template))
+				if (checkTemplate != template && checkTemplate.equals(template))
 				{
 					if (template.getStylesheet() == stylesheetComposed.getStylesheet() && checkTemplate.getStylesheet() == stylesheetComposed.getStylesheet())
 					{// templates in this stylesheet conflict with each other
