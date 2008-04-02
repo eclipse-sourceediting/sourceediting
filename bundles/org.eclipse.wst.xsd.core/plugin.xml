@@ -56,7 +56,8 @@
             class="org.eclipse.wst.xsd.core.internal.validation.eclipse.XSDDelegatingValidator"
             manual="true"
             sourceid="org.eclipse.wst.xsd.ui.internal.validation.DelegatingSourceValidatorForXSD"
-            version="2">
+            version="2"
+            markerId="org.eclipse.xsd.diagnostic">
          <include>
             <rules>
                <fileext caseSensitive="false" ext="xsd"></fileext>
