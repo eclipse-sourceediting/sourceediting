@@ -117,8 +117,9 @@ public class RuntimePresetMappingRegistry {
 					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_FACET_VERSION);
 					continue;
 				}
-				IProjectFacetVersion facetVersion = facet.getVersion(facetVersionStr);
-				if (facetVersion == null) {
+				try {
+					facet.getVersion(facetVersionStr);
+				} catch (IllegalArgumentException e) {
 					StringBuffer validVersions = new StringBuffer(" valid versions include: ");
 					for (Iterator<IProjectFacetVersion> iterator = facet.getVersions().iterator(); iterator.hasNext();) {
 						validVersions.append(iterator.next().getVersionString());
