@@ -7,6 +7,7 @@
  *
  * Contributors:
  * Jesper Steen Moeller - XSL core plugin
+ * Doug Satchwell - bug 225304
  *******************************************************************************/
 
 package org.eclipse.wst.xsl.core.resolver;
@@ -138,7 +139,9 @@ public class ResolverExtension implements URIResolverExtension {
 					}
 				}
 			} finally {
-				model.releaseFromRead();
+				// bug 225304
+				if (model!=null)
+					model.releaseFromRead();
 			}
 		}
 		return null;
