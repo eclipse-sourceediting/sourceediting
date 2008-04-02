@@ -50,7 +50,8 @@ import org.eclipse.wst.sse.core.utils.StringUtils;
  */
 class WorkspaceTaskScanner {
 	private static WorkspaceTaskScanner _instance = null;
-	private static final String SYNTHETIC_TASK = "org.eclipse.wst.sse.synthetic";
+	static final String SYNTHETIC_TASK = "org.eclipse.wst.sse.task-synthetic";
+	static final String MODIFICATION_STAMP = "org.eclipse.wst.sse.modification-stamp";
 
 	static synchronized WorkspaceTaskScanner getInstance() {
 		if (_instance == null) {
@@ -289,10 +290,11 @@ class WorkspaceTaskScanner {
 								String specifiedMarkerType = (String) markerAttributeMaps[i].get(IMarker.TASK);
 								IMarker marker = finalFile.createMarker(specifiedMarkerType);
 								marker.setAttributes(markerAttributeMaps[i]);
+								marker.setAttribute(IMarker.USER_EDITABLE, Boolean.FALSE);
+								marker.setAttribute(MODIFICATION_STAMP, Long.toString(file.getModificationStamp()));
 								if (IMarker.TASK.equals(specifiedMarkerType)) {
 									// set to synthetic and make user editable
 									marker.setAttribute(SYNTHETIC_TASK, true);
-									marker.setAttribute(IMarker.USER_EDITABLE, Boolean.FALSE);
 								}
 							}
 						}
@@ -414,6 +416,7 @@ class WorkspaceTaskScanner {
 							if (!taskMarkerAttributes[i].containsKey(IMarker.TASK)) {
 								taskMarkerAttributes[i].put(IMarker.TASK, fileScanners[j].getMarkerType());
 							}
+							taskMarkerAttributes[i].put(IMarker.SOURCE_ID, fileScanners[j].getClass().getName());
 							markerAttributes.add(taskMarkerAttributes[i]);
 						}
 					}

@@ -86,7 +86,6 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner, IEx
 		attributes.put(IMarker.CHAR_END, new Integer(startOffset + length));
 		attributes.put(IMarker.MESSAGE, text);
 		attributes.put(IMarker.USER_EDITABLE, Boolean.FALSE);
-		attributes.put("org.eclipse.ui.part.IShowInTarget", new String[]{""}); //$NON-NLS-1$ //$NON-NLS-2$
 
 		switch (priority) {
 			case IMarker.PRIORITY_HIGH : {
@@ -105,13 +104,15 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner, IEx
 		return attributes;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.sse.core.internal.provisional.tasks.IFileTaskScanner#getMarkerType()
 	 */
 	public String getMarkerType() {
 		if (runtimeMarkerType != null)
 			return runtimeMarkerType;
-		
+
 		return org.eclipse.core.resources.IMarker.TASK;
 	}
 
@@ -289,9 +290,12 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner, IEx
 			}
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
+	 *      java.lang.String, java.lang.Object)
 	 */
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
 		if (data != null && data instanceof String) {
