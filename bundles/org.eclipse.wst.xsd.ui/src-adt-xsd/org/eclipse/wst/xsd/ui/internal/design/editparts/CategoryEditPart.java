@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,6 +44,7 @@ public class CategoryEditPart extends BaseEditPart
   Figure outerPane;
   HeadingFigure headingFigure;
   protected ScrollPane scrollpane;
+  protected int minimumHeight = 400;
 
   public int getType()
   {
@@ -129,7 +130,7 @@ public class CategoryEditPart extends BaseEditPart
         else
         {
           double factor = getZoomManager().getZoom();
-          int scaledHeight = (int)Math.round((getViewer().getControl().getBounds().height - 400) / factor); // adjust for other categories and spaces
+          int scaledHeight = (int)Math.round((getViewer().getControl().getBounds().height - minimumHeight) / factor); // adjust for other categories and spaces
           d.height = Math.max(250, scaledHeight);
         }
         d.width = Math.min(d.width, 300);
@@ -227,5 +228,10 @@ public class CategoryEditPart extends BaseEditPart
     int scrollValue = scrollpane.getVerticalScrollBar().getValue();
     int location = topLevelBounds.y + scrollValue - categoryBounds.y;
     scrollpane.scrollVerticalTo(location - categoryBounds.height / 2);
+  }
+  
+  public void setMinimumHeight(int minimumHeight)
+  {
+    this.minimumHeight = minimumHeight;
   }
 }
