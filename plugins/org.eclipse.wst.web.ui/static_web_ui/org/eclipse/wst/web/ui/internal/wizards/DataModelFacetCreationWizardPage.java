@@ -50,6 +50,7 @@ import org.eclipse.wst.common.project.facet.core.events.IFacetedProjectEvent;
 import org.eclipse.wst.common.project.facet.core.events.IFacetedProjectListener;
 import org.eclipse.wst.common.project.facet.core.events.IProjectFacetsChangedEvent;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
+import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
 import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
 import org.eclipse.wst.common.project.facet.core.util.AbstractFilter;
 import org.eclipse.wst.common.project.facet.core.util.FilterEvent;
@@ -57,7 +58,6 @@ import org.eclipse.wst.common.project.facet.core.util.IFilter;
 import org.eclipse.wst.common.project.facet.ui.ModifyFacetedProjectWizard;
 import org.eclipse.wst.common.project.facet.ui.PresetSelectionPanel;
 import org.eclipse.wst.project.facet.ProductManager;
-import org.eclipse.wst.server.core.internal.facets.FacetUtil;
 import org.eclipse.wst.server.ui.ServerUIUtil;
 import org.eclipse.wst.web.internal.ResourceHandler;
 import org.eclipse.wst.web.internal.facet.RuntimePresetMappingRegistry;
@@ -227,13 +227,14 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
         	String presetID = null;
         	IRuntime runtime = (IRuntime)model.getProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME);
         	if(runtime != null){
-        		org.eclipse.wst.server.core.IRuntime wstRuntime = FacetUtil.getRuntime(runtime);
-	    	    if(wstRuntime != null){
-		    	    String runtimeTypeID = wstRuntime.getRuntimeType().getId(); 
-		    	    String facetID = fv.getProjectFacet().getId();
-		    	    String facetVersionStr = fv.getVersionString();
-		    	    presetID = RuntimePresetMappingRegistry.INSTANCE.getPresetID(runtimeTypeID, facetID, facetVersionStr);
-	    	    }
+        		if(runtime.getRuntimeComponents().size() > 0){
+        			IRuntimeComponent runtimeComponent = runtime.getRuntimeComponents().get(0);
+        			String facetRuntimeTypeID = runtimeComponent.getRuntimeComponentType().getId();
+        			String facetRuntimeVersion = runtimeComponent.getRuntimeComponentVersion().getVersionString();
+        			String facetID = fv.getProjectFacet().getId();
+		    	    String facetVersion = fv.getVersionString();
+		    	    presetID = RuntimePresetMappingRegistry.INSTANCE.getPresetID(facetRuntimeTypeID, facetRuntimeVersion, facetID, facetVersion);	
+        		}
         	}
         	
         	if(presetID != null){

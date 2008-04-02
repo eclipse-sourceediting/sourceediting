@@ -13,7 +13,7 @@
    <element name="extension">
       <complexType>
          <sequence minOccurs="1" maxOccurs="unbounded">
-            <element ref="Mapping" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="mapping" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -42,7 +42,7 @@
       </complexType>
    </element>
 
-   <element name="Mapping">
+   <element name="mapping">
       <annotation>
          <documentation>
             Each mapping element defineds a mapping from (runtimeid, facetid, facetversion) to presetid.
@@ -56,7 +56,14 @@
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="runtimeTypeID" type="string" use="required">
+         <attribute name="facetRuntimeTypeID" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="facetRuntimeVersion" type="string" use="required">
             <annotation>
                <documentation>
                   

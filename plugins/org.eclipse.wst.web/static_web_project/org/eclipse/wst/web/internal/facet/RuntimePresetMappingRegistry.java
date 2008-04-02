@@ -1,10 +1,8 @@
 package org.eclipse.wst.web.internal.facet;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -12,17 +10,22 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.common.project.facet.core.IProjectFacet;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
+import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponentType;
+import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponentVersion;
+import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
 import org.eclipse.wst.web.internal.WSTWebPlugin;
 
 public class RuntimePresetMappingRegistry {
 
-	static final String EXTENSION_POINT = "RuntimePresetMappings";
+	static final String EXTENSION_POINT = "runtimePresetMappings";
 
-	static final String ELEMENT_MAPPING = "Mapping";
+	static final String ELEMENT_MAPPING = "mapping";
 
 	static final String ATTRIBUTE_ID = "id";
 
-	static final String ATTRIBUTE_RUNTIME_TYPE_ID = "runtimeTypeID";
+	static final String ATTRIBUTE_FACET_RUNTIME_TYPE_ID = "facetRuntimeTypeID";
+
+	static final String ATTRIBUTE_FACET_RUNTIME_VERSION = "facetRuntimeVersion";
 
 	static final String ATTRIBUTE_FACET_ID = "facetID";
 
@@ -34,12 +37,13 @@ public class RuntimePresetMappingRegistry {
 
 	private List<MappingDescriptor> descriptors = null;
 
-	public String getPresetID(String runtimeID, String facetID, String facetVersionStr) {
+	public String getPresetID(String facetRuntimeTypeID, String facetRuntimeVersion, String facetID, String facetVersion) {
 		if (descriptors == null) {
 			readDescriptors();
 		}
-		for(MappingDescriptor descriptor:descriptors){
-			if(descriptor.getRuntimeTypeID().equals(runtimeID) && descriptor.getFacetID().equals(facetID) && facetVersionStr.equals(descriptor.getFacetVersion())){
+		for (MappingDescriptor descriptor : descriptors) {
+			if (descriptor.getFacetRuntimeTypeID().equals(facetRuntimeTypeID) && descriptor.getFacetRuntimeVersion().equals(facetRuntimeVersion) && descriptor.getFacetID().equals(facetID)
+					&& descriptor.getFacetVersion().equals(facetVersion)) {
 				return descriptor.getPresetID();
 			}
 		}
@@ -60,10 +64,38 @@ public class RuntimePresetMappingRegistry {
 					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_ID);
 					continue;
 				}
-				
-				String runtimeID = element.getAttribute(ATTRIBUTE_RUNTIME_TYPE_ID);
+
+				String runtimeID = element.getAttribute(ATTRIBUTE_FACET_RUNTIME_TYPE_ID);
 				if (null == runtimeID || runtimeID.trim().length() == 0) {
-					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_RUNTIME_TYPE_ID);
+					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_FACET_RUNTIME_TYPE_ID);
+					continue;
+				}
+
+				IRuntimeComponentType runtimeType = null;
+				try {
+					runtimeType = RuntimeManager.getRuntimeComponentType(runtimeID);
+				} catch (IllegalArgumentException e) {
+					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_FACET_RUNTIME_TYPE_ID + ": " + runtimeID, e);
+					continue;
+				}
+
+				String runtimeVersionStr = element.getAttribute(ATTRIBUTE_FACET_RUNTIME_VERSION);
+				if (null == runtimeVersionStr || runtimeVersionStr.trim().length() == 0) {
+					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_FACET_RUNTIME_VERSION);
+					continue;
+				}
+				try {
+					runtimeType.getVersion(runtimeVersionStr);
+				} catch (IllegalArgumentException e) {
+					StringBuffer validVersions = new StringBuffer(" valid versions include: ");
+					for (Iterator<IRuntimeComponentVersion> iterator = runtimeType.getVersions().iterator(); iterator.hasNext();) {
+						validVersions.append(iterator.next().getVersionString());
+						if (iterator.hasNext()) {
+							validVersions.append(" ");
+						}
+					}
+					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_FACET_RUNTIME_VERSION + ": " + runtimeVersionStr
+							+ validVersions);
 					continue;
 				}
 
@@ -87,7 +119,7 @@ public class RuntimePresetMappingRegistry {
 				}
 				IProjectFacetVersion facetVersion = facet.getVersion(facetVersionStr);
 				if (facetVersion == null) {
-					StringBuffer validVersions = new StringBuffer("valid versions include: ");
+					StringBuffer validVersions = new StringBuffer(" valid versions include: ");
 					for (Iterator<IProjectFacetVersion> iterator = facet.getVersions().iterator(); iterator.hasNext();) {
 						validVersions.append(iterator.next().getVersionString());
 						if (iterator.hasNext()) {

@@ -18,10 +18,14 @@ public class MappingDescriptor {
 		return element.getAttribute(RuntimePresetMappingRegistry.ATTRIBUTE_ID);
 	}
 	
-	public String getRuntimeTypeID() {
-		return element.getAttribute(RuntimePresetMappingRegistry.ATTRIBUTE_RUNTIME_TYPE_ID);
+	public String getFacetRuntimeTypeID() {
+		return element.getAttribute(RuntimePresetMappingRegistry.ATTRIBUTE_FACET_RUNTIME_TYPE_ID);
 	}
 
+	public String getFacetRuntimeVersion() {
+		return element.getAttribute(RuntimePresetMappingRegistry.ATTRIBUTE_FACET_RUNTIME_VERSION);
+	}
+	
 	public String getFacetID() {
 		return element.getAttribute(RuntimePresetMappingRegistry.ATTRIBUTE_FACET_ID);
 	}
@@ -38,8 +42,10 @@ public class MappingDescriptor {
 		StringBuffer buff = new StringBuffer();
 		buff.append("id:");
 		buff.append(getID());
-		buff.append("runtimeTypeID:");
-		buff.append(getRuntimeTypeID());
+		buff.append(" facetRuntimeTypeID:");
+		buff.append(getFacetRuntimeTypeID());
+		buff.append(" facetRuntimeVersion:");
+		buff.append(getFacetRuntimeVersion());
 		buff.append(" facetID:");
 		buff.append(getFacetID());
 		buff.append(" facetVersion:");
