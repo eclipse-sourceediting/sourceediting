@@ -802,7 +802,7 @@ public class DefaultXMLPartitionFormatter {
 		// tag name should always be the first text region
 		if (currentType == DOMRegionContext.XML_TAG_NAME) {
 			ITextRegion nextTextRegion = textRegions.get(currentTextRegionIndex + 1);
-			String nextType = nextTextRegion.getType();
+			String nextType = (nextTextRegion != null) ? nextTextRegion.getType() : null;
 			if (nextType == DOMRegionContext.XML_TAG_CLOSE) {
 				// already at tag close
 				formatStartTagWithNoAttr(textEdit, constraints, currentDocumentRegion, previousDocumentRegion, availableLineWidth, indentStrategy, whitespaceStrategy, currentTextRegion);

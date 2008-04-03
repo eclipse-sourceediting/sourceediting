@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -143,7 +143,8 @@ public class TextNodeFormatter extends NodeFormatter {
 					// determines whether or not to allow whitespace if there
 					// is an entity or cdata before it
 					boolean allowWhitespace = true;
-					if (!Character.isWhitespace(nodeText.charAt(0))) {
+					// [206072] StringIndexOutOfBoundsException
+					if (nodeText.length() == 0 || !Character.isWhitespace(nodeText.charAt(0))) {
 						Node previousSibling = node.getPreviousSibling();
 						if (previousSibling != null && (previousSibling.getNodeType() == Node.ENTITY_REFERENCE_NODE || previousSibling.getNodeType() == Node.CDATA_SECTION_NODE))
 							allowWhitespace = false;
