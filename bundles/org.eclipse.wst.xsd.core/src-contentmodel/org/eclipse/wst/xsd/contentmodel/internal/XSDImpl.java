@@ -1937,7 +1937,16 @@ public class XSDImpl
         attribute.setCMDocument(xsiDocument);
         attribute.setPrefixQualification(true);
         attribute.setXSITypes(list);
-        map.getHashtable().put(attribute.getNodeName(), attribute);
+
+        // See https://bugs.eclipse.org/bugs/show_bug.cgi?id=225447
+        // For now, don't clobber the attribute with the same 'type' name defined in the grammar
+        // with the xsi:type attribute.  The impact of this change will be that for content assist, the non-xsi
+        // type attribute will be presented; the generated XML from XSD will have this attribute created, and
+        // not the xsi:type attribute.
+        Hashtable hashTable = map.getHashtable();
+        String name = attribute.getNodeName();
+        if (!hashTable.containsKey(name))
+          hashTable.put(name, attribute);
       }
     }
 
