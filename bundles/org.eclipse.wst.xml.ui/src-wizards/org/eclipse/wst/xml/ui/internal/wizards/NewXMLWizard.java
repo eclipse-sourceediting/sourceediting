@@ -17,6 +17,7 @@ import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.dialogs.Dialog;
@@ -745,6 +746,7 @@ public class NewXMLWizard extends NewModelWizard {
 		protected String errorMessage = null;
 		protected SelectRootElementPage parentPage;
 		protected CommonEditNamespacesDialog editNamespaces;
+		private IPath currentPath = null;
 
 		public XSDOptionsPanel(SelectRootElementPage parentPage, Composite parent) {
 			super(parent, SWT.NONE);
@@ -752,28 +754,37 @@ public class NewXMLWizard extends NewModelWizard {
 
 			setLayout(createOptionsPanelLayout());
 			setLayoutData(new GridData(GridData.FILL_BOTH));
-
-			Composite co = new Composite(this, SWT.NONE);
-			co.setLayout(new GridLayout());
-
-			if ((newFilePage != null) && (newFilePage.getContainerFullPath() != null)) {
-				// todo... this is a nasty mess. I need to revist this code.
-				//
-				String resourceURI = "platform:/resource" + newFilePage.getContainerFullPath().toString() + "/dummy"; //$NON-NLS-1$ //$NON-NLS-2$
-				String resolvedPath = URIHelper.normalize(resourceURI, null, null);
-				if (resolvedPath.startsWith("file:/")) //$NON-NLS-1$
-				{
-					resolvedPath = resolvedPath.substring(6);
-				}
-				// end nasty messs
+		}
+		
+		private CommonEditNamespacesDialog getEditNamespaces() {
+			if (editNamespaces == null) {
+				Composite co = new Composite(this, SWT.NONE);
+				co.setLayout(new GridLayout());
 				String tableTitle = XMLWizardsMessages._UI_LABEL_NAMESPACE_INFORMATION;
-				editNamespaces = new CommonEditNamespacesDialog(co, new Path(resolvedPath), tableTitle, true, true);
+				editNamespaces = new CommonEditNamespacesDialog(co, null, tableTitle, true, true);
+				this.layout();
 			}
+			return editNamespaces;
 		}
 
 		public void setNamespaceInfoList(List list) {
-			editNamespaces.setNamespaceInfoList(list);
-			editNamespaces.updateErrorMessage(list);
+			CommonEditNamespacesDialog editDialog = getEditNamespaces();
+			
+		    if (newFilePage != null) {
+		      IPath newPath = newFilePage.getContainerFullPath();
+		      if (newPath != null) {
+		        if (!newPath.equals(currentPath)) {
+	                String resourceURI = "platform:/resource" + newPath.toString() + "/dummy"; //$NON-NLS-1$ //$NON-NLS-2$
+	                String resolvedPath = URIHelper.normalize(resourceURI, null, null);
+	                resolvedPath = URIHelper.removeProtocol(resolvedPath);
+	                
+	                currentPath = new Path(resolvedPath);
+	                editDialog.setResourcePath(currentPath);
+		        }
+		      }
+		    }
+		    editDialog.setNamespaceInfoList(list);
+		    editDialog.updateErrorMessage(list);
 		}
 
 		public void updateErrorMessage(List namespaceInfoList) {
