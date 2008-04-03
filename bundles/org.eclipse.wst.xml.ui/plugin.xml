@@ -687,7 +687,7 @@
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 		<key
 			platform="carbon"
-			sequence="CTRL+SHIFT+&gt;"
+			sequence="CTRL+SHIFT+."
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.xml.ui.gotoMatchingTag"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
