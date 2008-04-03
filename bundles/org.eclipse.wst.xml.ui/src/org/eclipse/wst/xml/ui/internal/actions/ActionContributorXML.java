@@ -16,8 +16,6 @@ import java.util.ResourceBundle;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -44,6 +42,8 @@ import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
  */
 public class ActionContributorXML extends ActionContributor {
 	private static final String[] EDITOR_IDS = {"org.eclipse.core.runtime.xml.source", "org.eclipse.core.runtime.xml.source2", "org.eclipse.wst.sse.ui.StructuredTextEditor"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private static final String GO_TO_MATCHING_TAG_ID = "org.eclipse.wst.xml.ui.gotoMatchingTag"; //$NON-NLS-1$
+	
 	protected RetargetTextEditorAction fCleanupDocument = null;
 	protected RetargetTextEditorAction fComment = null;
 	protected RetargetTextEditorAction fContentAssist = null;
@@ -80,10 +80,31 @@ public class ActionContributorXML extends ActionContributor {
 		fFindOccurrences = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fFindOccurrences.setActionDefinitionId(ActionDefinitionIds.FIND_OCCURRENCES);
 
-		fGoToMatchingTagAction = new GoToMatchingTagAction(resourceBundle, "gotoMatchingTag_", null);
+		fGoToMatchingTagAction = new GoToMatchingTagAction(resourceBundle, "gotoMatchingTag_", null); //$NON-NLS-1$
+		fGoToMatchingTagAction.setActionDefinitionId(GO_TO_MATCHING_TAG_ID);
+		fGoToMatchingTagAction.setId(GO_TO_MATCHING_TAG_ID);
+	}
+	
+	/**
+	 * @see org.eclipse.ui.part.EditorActionBarContributor#contributeToMenu(IMenuManager)
+	 */
+	public void contributeToMenu(IMenuManager menu) {
+		// navigate commands
+		IMenuManager navigateMenu = menu.findMenuUsingPath(IWorkbenchActionConstants.M_NAVIGATE);
+		if (navigateMenu != null) {
+			navigateMenu.appendToGroup(IWorkbenchActionConstants.OPEN_EXT, fCommandsSeparator);
+			navigateMenu.appendToGroup(IWorkbenchActionConstants.OPEN_EXT, fOpenFileAction);
+
+			IMenuManager gotoGroup = navigateMenu.findMenuUsingPath(IWorkbenchActionConstants.GO_TO);
+			if (gotoGroup != null) {
+				gotoGroup.appendToGroup("matchingBegin", fGoToMatchingTagAction); //$NON-NLS-1$
+			}
+		}
+		super.contributeToMenu(menu);
 	}
 
 	protected void addToMenu(IMenuManager menu) {
+/*
 		// edit commands
 		IMenuManager editMenu = menu.findMenuUsingPath(IWorkbenchActionConstants.M_EDIT);
 		if (editMenu != null) {
@@ -128,6 +149,7 @@ public class ActionContributorXML extends ActionContributor {
 				gotoGroup.add(new Separator());
 			}
 		}
+*/
 	}
 
 	/*
@@ -173,11 +195,8 @@ public class ActionContributorXML extends ActionContributor {
 		fFindOccurrences.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_FIND_OCCURRENCES));
 
 		fGoToMatchingTagAction.setEditor(textEditor);
-
-		if (actionBars != null) {
-			fGoToMatchingTagAction.setActionDefinitionId("org.eclipse.wst.xml.ui.gotoMatchingTag");
-			actionBars.setGlobalActionHandler("org.eclipse.wst.xml.ui.gotoMatchingTag", fGoToMatchingTagAction);
-			actionBars.updateActionBars();
+		if (textEditor != null) {
+			textEditor.setAction(GO_TO_MATCHING_TAG_ID, fGoToMatchingTagAction);
 		}
 	}
 

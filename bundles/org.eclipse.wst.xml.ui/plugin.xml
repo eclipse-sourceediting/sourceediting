@@ -73,8 +73,69 @@
 			type="spellingregions"
 			value="XML_COMMENT_TEXT, XML_CONTENT, XML_DEFAULT"
 			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
+		<provisionalDefinition
+			type="activecontexts"
+			value="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.navigation, org.eclipse.wst.xml.cleanup, org.eclipse.wst.xml.comments, org.eclipse.wst.xml.selection, org.eclipse.wst.xml.dependencies, org.eclipse.wst.xml.grammar, org.eclipse.wst.xml.expand, org.eclipse.wst.xml.occurrences"
+        	target="org.eclipse.core.runtime.xml" />
 	</extension>
-
+	
+	<extension point="org.eclipse.ui.contexts">
+		<context
+			name="%scope.structured.text.editor.xml.name"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			description="%scope.structured.text.editor.xml.description"
+			id="org.eclipse.core.runtime.xml">
+		</context>
+		<context
+			name="%scope.structured.text.editor.xml.navigation.name"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			description="%scope.structured.text.editor.xml.navigation.description"
+			id="org.eclipse.wst.xml.navigation">
+		</context>
+		<context
+			name="%scope.structured.text.editor.xml.cleanup.name"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			description="%scope.structured.text.editor.xml.cleanup.description"
+			id="org.eclipse.wst.xml.cleanup">
+		</context>
+		<context
+			name="%scope.structured.text.editor.xml.comments.name"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			description="%scope.structured.text.editor.xml.comments.description"
+			id="org.eclipse.wst.xml.comments">
+		</context>
+		<context
+			name="%scope.structured.text.editor.xml.selection.name"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			description="%scope.structured.text.editor.xml.selection.description"
+			id="org.eclipse.wst.xml.selection">
+		</context>
+		<context
+			name="%scope.structured.text.editor.xml.dependencies.name"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			description="%scope.structured.text.editor.xml.dependencies.description"
+			id="org.eclipse.wst.xml.dependencies">
+		</context>
+		<context
+			name="%scope.structured.text.editor.xml.grammar.name"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			description="%scope.structured.text.editor.xml.grammar.description"
+			id="org.eclipse.wst.xml.grammar">
+		</context>
+		<context
+			name="%scope.structured.text.editor.xml.expand.name"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			description="%scope.structured.text.editor.xml.expand.description"
+			id="org.eclipse.wst.xml.expand">
+		</context>
+		<context
+			name="%scope.structured.text.editor.xml.occurrences.name"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			description="%scope.structured.text.editor.xml.occurrences.description"
+			id="org.eclipse.wst.xml.occurrences">
+		</context>
+	</extension>
+	
 	<extension
 		point="org.eclipse.core.filebuffers.annotationModelCreation">
 		<factory
@@ -700,107 +761,10 @@
  -->
  
 	<extension point="org.eclipse.ui.menus">
-		<menuContribution locationURI="menu:sourceMenuId?after=sourceBegin">
-			<command commandId="org.eclipse.wst.sse.ui.toggle.comment"
-			         id="ToggleComment"
-			         style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
-				</visibleWhen>
-			</command>
-			<command commandId="org.eclipse.wst.sse.ui.add.block.comment"
-			         id="AddBlockComment"
-			         style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
-				</visibleWhen>
-			</command>
-			<command commandId="org.eclipse.wst.sse.ui.remove.block.comment"
-			         id="RemoveBlockComment"
-			         style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
-				</visibleWhen>
-			</command>
-		</menuContribution>
-
-		<menuContribution locationURI="menu:sourceMenuId?after=shiftBegin">
-			<command commandId="org.eclipse.ui.edit.text.shiftLeft"
-			         id="ShiftLeft"
-			         style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
-				</visibleWhen>
-			</command>
-			<command commandId="org.eclipse.ui.edit.text.shiftRight"
-                     id="ShiftRight"
-                     style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
-				</visibleWhen>
-			</command>
-		</menuContribution>
-
-		<menuContribution locationURI="menu:sourceMenuId?after=shiftEnd">
-	        <command
-		           commandId="org.eclipse.wst.sse.ui.cleanup.document"
-		           id="CleanupDocument"
-		           style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
-				</visibleWhen>
-		    </command>
-			<command commandId="org.eclipse.wst.sse.ui.format.document" id="FormatDocument" style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
-				</visibleWhen>
-			</command>
-			<command commandId="org.eclipse.wst.sse.ui.format.active.elements" id="FormatElements" style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
-				</visibleWhen>
-			</command>
-		</menuContribution>
 		<!-- Unable to contribute to Search menu at the moment due to bug 213385 -->
 <!--
 		<menuContribution locationURI="menu:org.eclipse.search.menu">
 -->
-		<menuContribution locationURI="menu:sourceMenuId?after=additions">
-			<command commandId="org.eclipse.wst.sse.ui.search.find.occurrences" id="OccurencesFile" style="push">
-			   <visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
-				</visibleWhen>
-			</command>
-		</menuContribution>
-	    <menuContribution locationURI="menu:edit?after=additions">
-	       <command commandId="org.eclipse.ui.edit.text.toggleInsertMode" id="ToggleInsertMode" label="%SmartInsert_label" style="toggle">
-			   <visibleWhen checkEnabled="false">
-				   <reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
-			   </visibleWhen>
-	       </command>	       
-		</menuContribution>
-	    <menuContribution locationURI="menu:expandSelectionToMenuId">
-	       <command commandId="org.eclipse.wst.sse.ui.structure.select.enclosing" id="org.eclipse.wst.sse.ui.structure.select.enclosing" label="%StructureSelectEnclosing_label" style="push">
-			   <visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
-				</visibleWhen>
-	       </command>	       
-	       <command commandId="org.eclipse.wst.sse.ui.structure.select.next" id="org.eclipse.wst.sse.ui.structure.select.next" label="%StructureSelectNext_label" style="push">
-			   <visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
-				</visibleWhen>
-	       </command>
-	       <command commandId="org.eclipse.wst.sse.ui.structure.select.previous" id="org.eclipse.wst.sse.ui.structure.select.previous" label="%StructureSelectPrevious_label" style="push">
-			   <visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
-				</visibleWhen>
-	       </command>
-	       <command commandId="org.eclipse.wst.sse.ui.structure.select.last" id="org.eclipse.wst.sse.ui.structure.select.last" label="%StructureSelectHistory_label" style="push">
-			   <visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
-				</visibleWhen>
-	       </command>
-		</menuContribution>
 	    <menuContribution locationURI="menu:goTo?after=matchingEnd">
 <!--		
 	       <command commandId="org.eclipse.wst.xml.ui.gotoMatchingTag" id="GoToMatchingTag" label="%GoToMatchingTag_label" style="push">
@@ -812,12 +776,12 @@
 	       <separator name="goToSiblingsBegin" visible="true"></separator>
 	       <command commandId="org.eclipse.wst.xml.ui.nextSibling" id="GoToNextSibling" label="%ActionDefinition.nextSibling.name" style="push">
 			   <visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
+					<reference definitionId="org.eclipse.wst.xml.ui.navigation"></reference>
 				</visibleWhen>
 	       </command>
 	       <command commandId="org.eclipse.wst.xml.ui.previousSibling" id="GoToPreviousSibling" label="%ActionDefinition.previousSibling.name" style="push">
 			   <visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
+					<reference definitionId="org.eclipse.wst.xml.ui.navigation"></reference>
 				</visibleWhen>
 	       </command>
 	       <separator name="goToSiblingsEnd" visible="false"></separator>
@@ -834,10 +798,11 @@
                  commandId="org.eclipse.wst.xml.ui.disable.grammar.constraints"
                  icon="icons/full/etool16/constrainon.gif"
                  id="ToggleGrammarConstraints"
+                 mnemonic="%Constraints_mnemonic"
                  style="push">
                  <visibleWhen checkEnabled="false">
-                    <and>
-                       <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+                	 <and>
+                       <reference definitionId="org.eclipse.wst.xml.ui.grammar"/>
                        <not>
                          <reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
                        </not>
@@ -848,10 +813,11 @@
                  commandId="org.eclipse.wst.xml.ui.reload.dependecies"
                  icon="icons/full/etool16/rldgrmr.gif"
                  id="ReloadDependencies"
+                 mnemonic="%ReloadDependencies_mnemonic"
                  style="push">
                  <visibleWhen checkEnabled="false">
-                    <and>
-                       <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+                	<and>
+                       <reference definitionId="org.eclipse.wst.xml.ui.dependencies"/>
                        <not>
                          <reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
                        </not>
@@ -870,7 +836,7 @@
                  style="push">
                  <visibleWhen checkEnabled="false">
                     <and>
-                       <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+                       <reference definitionId="org.eclipse.wst.xml.ui.expand"/>
                        <not>
                          <reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
                        </not>
@@ -884,7 +850,7 @@
                  style="push">
                  <visibleWhen checkEnabled="false">
                     <and>
-                       <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+                       <reference definitionId="org.eclipse.wst.xml.ui.expand"/>
                        <not>
                          <reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"/>
                        </not>
@@ -901,43 +867,6 @@
                  visible="false">
            </separator>
         </menu>
-     </menuContribution>
-     <menuContribution
-           locationURI="popup:sourcePopupMenuId?after=sourceBegin">
-			<command commandId="org.eclipse.wst.sse.ui.toggle.comment" id="ToggleComment" style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
-				</visibleWhen>
-			</command>
-			<command commandId="org.eclipse.wst.sse.ui.add.block.comment" id="AddBlockComment" style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
-				</visibleWhen>
-			</command>
-			<command commandId="org.eclipse.wst.sse.ui.remove.block.comment" id="RemoveBlockComment" style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
-				</visibleWhen>
-			</command>
-			<separator name="format" visible="true"></separator>
-			<command
-		           commandId="org.eclipse.wst.sse.ui.cleanup.document"
-		           id="CleanupDocument"
-		           style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"></reference>
-				</visibleWhen>
-		    </command>
-			<command commandId="org.eclipse.wst.sse.ui.format.document" id="FormatDocument" mnemonic="%Format_mnemonic" style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"></reference>
-				</visibleWhen>
-			</command>
-			<command commandId="org.eclipse.wst.sse.ui.format.active.elements" id="FormatElements" mnemonic="%FormatElements_mnemonic" style="push">
-				<visibleWhen checkEnabled="false">
-					<reference definitionId="org.eclipse.wst.sse.ui.sseActiveContext.definition"></reference>
-				</visibleWhen>
-			</command>
      </menuContribution>
      		
      <menuContribution
@@ -992,7 +921,7 @@
 	           <visibleWhen
 	                 checkEnabled="false">
 	              <reference
-	                    definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition">
+	                    definitionId="org.eclipse.wst.xml.ui.grammar">
 	              </reference>
 	           </visibleWhen>
            </command>
@@ -1004,7 +933,7 @@
 	           <visibleWhen
 	                 checkEnabled="false">
 	              <reference
-	                    definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition">
+	                    definitionId="org.eclipse.wst.xml.ui.dependencies">
 	              </reference>
 	           </visibleWhen>
            </command>
@@ -1020,7 +949,7 @@
 	           <visibleWhen
 	                 checkEnabled="false">
 	              <reference
-	                    definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition">
+	                    definitionId="org.eclipse.wst.xml.ui.expand">
 	              </reference>
 	           </visibleWhen>
            </command>
@@ -1029,10 +958,10 @@
                  icon="icons/full/etool16/collapse_all.gif"
                  id="CollapseAll"
                  style="push">
-	           <visibleWhen
+	             <visibleWhen
 	                 checkEnabled="false">
 	              <reference
-	                    definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition">
+	                    definitionId="org.eclipse.wst.xml.ui.expand">
 	              </reference>
 	           </visibleWhen>
            </command>
@@ -1042,108 +971,209 @@
 	
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.eclipse.wst.xml.ui.xmlSourceContributions.definition">
+            <with variable="activeContexts">
+	           <iterate operator="or">
+	              <equals value="org.eclipse.core.runtime.xml"/>
+	           </iterate>
+            </with>
+		</definition>
+	</extension>
+	
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.xml.ui.core">
+			<with variable="activeContexts">
+				<iterate operator="or">
+					<equals value="org.eclipse.core.runtime.xml"/>
+				</iterate>
+			</with>
+		</definition>
+	</extension>
+	
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.xml.ui.occurrences">
+            <with variable="activeContexts">
+	           <iterate operator="or">
+	              <equals value="org.eclipse.wst.xml.occurrences"/>
+	           </iterate>
+            </with>
+		</definition>
+	</extension>
+	
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.xml.ui.comments">
+			<with variable="activeContexts">
+				<iterate operator="or">
+					<equals value="org.eclipse.wst.xml.comments"/>
+				</iterate>
+			</with>
+		</definition>
+	</extension>
+	
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.xml.ui.cleanup">
+			<with variable="activeContexts">
+				<iterate operator="or">
+					<equals value="org.eclipse.wst.xml.cleanup"/>
+				</iterate>
+			</with>
+		</definition>
+	</extension>
+	
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.xml.ui.navigation">
+			<with variable="activeContexts">
+				<iterate operator="or">
+					<equals value="org.eclipse.wst.xml.navigation"/>
+				</iterate>
+			</with>
+		</definition>
+	</extension>
+	
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.xml.ui.selection">
+			<with variable="activeContexts">
+				<iterate operator="or">
+					<equals value="org.eclipse.wst.xml.selection"/>
+				</iterate>
+			</with>
+		</definition>
+	</extension>
+	
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.xml.ui.dependencies">
 			<or>
 				<with variable="activeEditorId">
 					<equals value="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"></equals>
 				</with>
-	            <with variable="activeContexts">
-		           <iterate operator="or">
-		              <equals value="org.eclipse.core.runtime.xml"/>
-		           </iterate>
-	            </with>
+				<with variable="activeContexts">
+					<iterate operator="or">
+						<equals value="org.eclipse.wst.xml.dependencies"/>
+					</iterate>
+				</with>
 			</or>
 		</definition>
 	</extension>
+	
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.xml.ui.grammar">
+			<or>
+				<with variable="activeEditorId">
+					<equals value="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"></equals>
+				</with>
+				<with variable="activeContexts">
+					<iterate operator="or">
+						<equals value="org.eclipse.wst.xml.grammar"/>
+					</iterate>
+				</with>
+			</or>
+		</definition>
+	</extension>
+	
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.xml.ui.expand">
+			<or>
+				<with variable="activeEditorId">
+					<equals value="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"></equals>
+				</with>
+				<with variable="activeContexts">
+					<iterate operator="or">
+						<equals value="org.eclipse.wst.xml.expand"/>
+					</iterate>
+				</with>
+			</or>
+		</definition>
+	</extension>
+	
     <extension
        point="org.eclipse.ui.handlers">
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.CleanupdocumentHandler"
              commandId="org.eclipse.wst.sse.ui.cleanup.document">
           <activeWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+			 <reference definitionId="org.eclipse.wst.xml.ui.cleanup"/>
           </activeWhen>
           <enabledWhen>
-             <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+             <reference definitionId="org.eclipse.wst.xml.ui.cleanup"/>
           </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.ToggleCommentHandler"
              commandId="org.eclipse.wst.sse.ui.toggle.comment">
           <activeWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.comments"/>
           </activeWhen>
           <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.comments"/>
           </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.AddBlockCommentHandler"
              commandId="org.eclipse.wst.sse.ui.add.block.comment">
           <activeWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.comments"/>
           </activeWhen>
           <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.comments"/>
           </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.RemoveBlockCommentHandler"
              commandId="org.eclipse.wst.sse.ui.remove.block.comment">
           <activeWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.comments"/>
           </activeWhen>
           <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.comments"/>
           </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.StructuredSelectEnclosingXMLHandler"
              commandId="org.eclipse.wst.sse.ui.structure.select.enclosing">
           <activeWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.selection"/>
           </activeWhen>
           <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.selection"/>
           </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.StructuredSelectNextXMLHandler"
              commandId="org.eclipse.wst.sse.ui.structure.select.next">
           <activeWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.selection"/>
           </activeWhen>
           <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.selection"/>
           </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.StructuredSelectPreviousXMLHandler"
              commandId="org.eclipse.wst.sse.ui.structure.select.previous">
           <activeWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.selection"/>
           </activeWhen>
           <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.selection"/>
           </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.sse.ui.internal.handlers.StructuredSelectHistoryHandler"
              commandId="org.eclipse.wst.sse.ui.structure.select.last">
           <activeWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.selection"/>
           </activeWhen>
           <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.selection"/>
           </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.XMLFindOccurencesHandler"
              commandId="org.eclipse.wst.sse.ui.search.find.occurrences">
           <activeWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.occurrences"/>
           </activeWhen>
           <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.occurrences"/>
           </enabledWhen>
        </handler>
 <!--
@@ -1151,10 +1181,10 @@
              class="org.eclipse.wst.xml.ui.internal.handlers.GoToMatchingTagHandler"
              commandId="org.eclipse.wst.xml.ui.gotoMatchingTag">
           <activeWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.navigation"/>
           </activeWhen>
           <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.navigation"/>
           </enabledWhen>
        </handler>
 -->
@@ -1162,40 +1192,40 @@
              class="org.eclipse.wst.xml.ui.internal.handlers.NextSiblingNavigationHandler"
              commandId="org.eclipse.wst.xml.ui.nextSibling">
           <activeWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.navigation"/>
           </activeWhen>
           <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.navigation"/>
           </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.PreviousSiblingNavigationHandler"
              commandId="org.eclipse.wst.xml.ui.previousSibling">
           <activeWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.navigation"/>
           </activeWhen>
           <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.navigation"/>
           </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.ReloadDependenciesHandler"
              commandId="org.eclipse.wst.xml.ui.reload.dependecies">
           <activeWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.dependencies"/>
           </activeWhen>
           <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.dependencies"/>
           </enabledWhen>
        </handler>
        <handler
              class="org.eclipse.wst.xml.ui.internal.handlers.ToggleEditModeHandler"
              commandId="org.eclipse.wst.xml.ui.disable.grammar.constraints">
           <activeWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.grammar"/>
           </activeWhen>
           <enabledWhen>
-              <reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"/>
+              <reference definitionId="org.eclipse.wst.xml.ui.grammar"/>
           </enabledWhen>
        </handler>
        <handler

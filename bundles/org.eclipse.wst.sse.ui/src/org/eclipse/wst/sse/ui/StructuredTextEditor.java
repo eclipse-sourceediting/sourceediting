@@ -1250,6 +1250,38 @@ public class StructuredTextEditor extends TextEditor {
 			}
 		}
 	}
+	
+	private void activateContexts(IContextService service) {
+		if(service == null)
+			return;
+		
+		String[] definitions = getDefinitions(getConfigurationPoints());
+		
+		if(definitions != null) {
+			String[] contexts = null;
+			for(int i = 0; i < definitions.length; i++) {
+				contexts = StringUtils.unpack(definitions[i]);
+				for(int j = 0; j < contexts.length; j++)
+					service.activateContext(contexts[j].trim());
+			}
+		}
+		
+	}
+	
+	private String[] getDefinitions(String[] ids) {
+		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
+		String[] definitions = null;
+		
+		/* Iterate through the configuration ids until one is found that has
+		 * an activecontexts definition
+		 */
+		for(int i = 0; i < ids.length; i++) {
+			definitions = builder.getDefinitions("activecontexts", ids[i]); //$NON-NLS-1$
+			if(definitions != null && definitions.length > 0)
+				return definitions;
+		}
+		return null;
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -3012,9 +3044,12 @@ public class StructuredTextEditor extends TextEditor {
 			updateEditorContextMenuId(contentType + EDITOR_CONTEXT_MENU_SUFFIX);
 			updateRulerContextMenuId(contentType + RULER_CONTEXT_MENU_SUFFIX);
 			updateHelpContextId(contentType + "_source_HelpId"); //$NON-NLS-1$
+			
+			/* Activate the contexts defined for this editor */
+			activateContexts((IContextService) getSite().getService(IContextService.class));
 		}
 	}
-
+	
 	private void updateEncodingMemento() {
 		boolean failed = false;
 		IStructuredModel internalModel = getInternalModel();

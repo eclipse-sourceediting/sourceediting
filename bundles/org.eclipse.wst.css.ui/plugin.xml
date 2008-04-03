@@ -41,6 +41,19 @@
 			type="preferencepages"
 			value="org.eclipse.wst.css.ui.preferences.css org.eclipse.wst.sse.ui.preferences.css.source, org.eclipse.wst.css.ui.preferences.templates, org.eclipse.wst.sse.ui.preferences.css.styles"
 			target="org.eclipse.wst.css.core.csssource" />
+		<provisionalDefinition
+			type="activecontexts"
+			value="org.eclipse.wst.css.core.csssource"
+			target="org.eclipse.wst.css.core.csssource" />
+	</extension>
+	
+	<extension point="org.eclipse.ui.contexts">
+		<context
+			name="%scope.structured.text.editor.css.name"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			description="%scope.structured.text.editor.css.description"
+			id="org.eclipse.wst.css.core.csssource">
+		</context>
 	</extension>
 	
 	<extension
@@ -202,9 +215,63 @@
 		</include>
 	</extension>
 
+	<extension
+ 		point="org.eclipse.ui.handlers">
+		<handler
+			class="org.eclipse.wst.css.ui.internal.handlers.CleanupDocumentHandler"
+			commandId="org.eclipse.wst.sse.ui.cleanup.document">
+			<activeWhen>
+				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
+			</activeWhen>
+			<enabledWhen>
+				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
+			</enabledWhen>
+		</handler>
+		<handler
+			class="org.eclipse.wst.css.ui.internal.handlers.StructuredSelectEnclosingHandler"
+			commandId="org.eclipse.wst.sse.ui.structure.select.enclosing">
+			<activeWhen>
+				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
+			</activeWhen>
+			<enabledWhen>
+				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
+			</enabledWhen>
+		</handler>
+		<handler
+			class="org.eclipse.wst.css.ui.internal.handlers.StructuredSelectNextHandler"
+			commandId="org.eclipse.wst.sse.ui.structure.select.next">
+			<activeWhen>
+				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
+			</activeWhen>
+			<enabledWhen>
+				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
+			</enabledWhen>
+		</handler>
+		<handler
+			class="org.eclipse.wst.css.ui.internal.handlers.StructuredSelectPreviousHandler"
+			commandId="org.eclipse.wst.sse.ui.structure.select.previous">
+			<activeWhen>
+				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
+			</activeWhen>
+			<enabledWhen>
+				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
+			</enabledWhen>
+		</handler>
+		<!-- TODO Use the handler from SSE or XML's declaration -->
+		<handler
+			class="org.eclipse.wst.sse.ui.internal.handlers.StructuredSelectHistoryHandler"
+			commandId="org.eclipse.wst.sse.ui.structure.select.last">
+			<activeWhen>
+				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
+			</activeWhen>
+			<enabledWhen>
+				<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"/>
+			</enabledWhen>
+		</handler>
+	</extension>
 	<!-- CSS editor actions -->
 	<extension point="org.eclipse.ui.editorActions">
-		<editorContribution
+		<!--<editorContribution
 			id="org.eclipse.wst.css.core.csssource.source.editorActions"
 			targetID="org.eclipse.wst.css.core.csssource.source">
 			<action
@@ -247,7 +314,7 @@
 				class="org.eclipse.wst.sse.ui.internal.selection.StructuredSelectHistoryActionDelegate"
 				actionID="StructureSelectHistory">
 			</action>
-		</editorContribution>
+		</editorContribution>-->
         <editorContribution
             targetID="org.eclipse.wst.css.core.csssource.source"
             id="org.eclipse.wst.css.core.csssource.ruler.actions">
@@ -263,5 +330,15 @@
                actionID="RulerClick"
                id="org.eclipse.ui.texteditor.SelectRulerAction"/>
         </editorContribution>
+	</extension>
+	
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.css.ui.cssSourceContributions.definition">
+            <with variable="activeContexts">
+	           <iterate operator="or">
+	              <equals value="org.eclipse.wst.css.core.csssource"/>
+	           </iterate>
+            </with>
+		</definition>
 	</extension>
 </plugin>

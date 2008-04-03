@@ -58,6 +58,10 @@
 			type="spellingregions"
 			value="XML_COMMENT_TEXT, XML_CONTENT"
 			target="org.eclipse.wst.html.core.htmlsource" />
+		<provisionalDefinition
+			type="activecontexts"
+			value="org.eclipse.wst.html.core.htmlsource, org.eclipse.wst.html.occurrences, org.eclipse.core.runtime.xml, org.eclipse.wst.xml.navigation, org.eclipse.wst.xml.comments, org.eclipse.wst.xml.selection"
+        	target="org.eclipse.wst.html.core.htmlsource" />
 	</extension>
 	<extension
 		point="org.eclipse.core.filebuffers.annotationModelCreation">
@@ -256,6 +260,23 @@
 			translations="$nl$/templates/htmldefault-templates.properties">
 		</include>
 	</extension>
+	
+	<!-- Define the HTML Contexts -->
+	<extension point="org.eclipse.ui.contexts">
+		<context
+			name="%scope.structured.text.editor.html.name"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			description="%scope.structured.text.editor.html.description"
+			id="org.eclipse.wst.html.core.htmlsource">
+		</context>
+		<context
+			name="%scope.structured.text.editor.html.occurrences.name"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			description="%scope.structured.text.editor.html.occurrences.description"
+			id="org.eclipse.wst.html.occurrences">
+		</context>
+	</extension>
+	
 	<!-- initialize html ui preferences -->
 	<extension point="org.eclipse.core.runtime.preferences">
 		<initializer
@@ -406,7 +427,7 @@
 	</extension>
 	
 	<extension point="org.eclipse.ui.editorActions">
-		<editorContribution
+	<!--	<editorContribution
 			id="org.eclipse.wst.html.core.htmlsource.source.editorActions"
 			targetID="org.eclipse.wst.html.core.htmlsource.source">
 			<action
@@ -480,7 +501,7 @@
 				class="org.eclipse.wst.sse.ui.internal.selection.StructuredSelectHistoryActionDelegate"
 				actionID="StructureSelectHistory">
 			</action>
-		</editorContribution>
+		</editorContribution>-->
         <editorContribution
             targetID="org.eclipse.wst.html.core.htmlsource.source"
             id="org.eclipse.wst.html.core.htmlsource.ruler.actions">
@@ -497,11 +518,65 @@
                id="org.eclipse.ui.texteditor.SelectRulerAction"/>
         </editorContribution>
 	</extension>
+	
+	<extension
+       point="org.eclipse.ui.handlers">
+       <handler
+             class="org.eclipse.wst.html.ui.internal.edit.ui.CleanupDocumentHandler"
+             commandId="org.eclipse.wst.sse.ui.cleanup.document">
+             <activeWhen>
+             	<reference
+                    definitionId="org.eclipse.wst.html.ui.htmlSourceContributions.definition">
+             	</reference>
+             </activeWhen>
+             <enabledWhen>
+             	<reference
+                    definitionId="org.eclipse.wst.html.ui.htmlSourceContributions.definition">
+             	</reference>
+             </enabledWhen>
+       </handler>
+       <handler
+             class="org.eclipse.wst.html.ui.internal.handlers.HTMLFindOccurrencesHandler"
+             commandId="org.eclipse.wst.sse.ui.search.find.occurrences">
+             <activeWhen>
+             	<reference
+                    definitionId="org.eclipse.wst.html.ui.occurrences">
+             	</reference>
+             </activeWhen>
+             <enabledWhen>
+             	<reference
+                    definitionId="org.eclipse.wst.html.ui.occurrences">
+             	</reference>
+             </enabledWhen>
+       </handler>
+       
+	</extension>
+	
 	<extension
 		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
 		<target
 			id="org.eclipse.wst.html.core.htmlsource"
 			name="%HTML_Source_target_name">
 		</target>
+	</extension>
+	
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.html.ui.htmlSourceContributions.definition">
+            <with variable="activeContexts">
+	           <iterate operator="or">
+	              <equals value="org.eclipse.wst.html.core.htmlsource"/>
+	           </iterate>
+            </with>
+		</definition>
+	</extension>
+	
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.html.ui.occurrences">
+            <with variable="activeContexts">
+	           <iterate operator="or">
+	              <equals value="org.eclipse.wst.html.occurrences"/>
+	           </iterate>
+            </with>
+		</definition>
 	</extension>
 </plugin>

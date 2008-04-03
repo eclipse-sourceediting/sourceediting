@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -29,6 +30,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.editors.text.TextEditorActionContributor;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.ui.texteditor.ITextEditorActionConstants;
+import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.ITextEditorExtension;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 import org.eclipse.wst.sse.ui.internal.ExtendedEditorActionBuilder;
@@ -85,7 +88,7 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 		super();
 
 		ResourceBundle resourceBundle = SSEUIMessages.getResourceBundle();
-/*
+
 		fCommandsSeparator = new Separator();
 
 		// edit commands
@@ -130,21 +133,21 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 
 		fNextAnnotation = new GotoAnnotationAction("Next_annotation", true); //$NON-NLS-1$
 		fNextAnnotation.setActionDefinitionId("org.eclipse.ui.navigate.next"); //$NON-NLS-1$
-*/
+
 		fGotoMatchingBracketAction = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_GOTO_MATCHING_BRACKET + StructuredTextEditorActionConstants.UNDERSCORE);
 		fGotoMatchingBracketAction.setActionDefinitionId(ActionDefinitionIds.GOTO_MATCHING_BRACKET);
 
 		// Read action extensions.
 		ExtendedEditorActionBuilder builder = new ExtendedEditorActionBuilder();
 		extendedContributor = builder.readActionExtensions(getExtensionIDs());
-/*
+
 		fMenuAdditionsGroupMarker = new GroupMarker(StructuredTextEditorActionConstants.GROUP_NAME_MENU_ADDITIONS);
 		fToolbarSeparator = new Separator();
 		fToolbarAdditionsGroupMarker = new GroupMarker(StructuredTextEditorActionConstants.GROUP_NAME_TOOLBAR_ADDITIONS);
 
 		fToggleInsertModeAction = new RetargetTextEditorAction(resourceBundle, "Editor.ToggleInsertMode.", IAction.AS_CHECK_BOX); //$NON-NLS-1$
 		fToggleInsertModeAction.setActionDefinitionId(ITextEditorActionDefinitionIds.TOGGLE_INSERT_MODE);
-*/
+
 		if (_showDebugStatus) {
 			fDebugStatusOffset = new OffsetStatusLineContributionItem(StructuredTextEditorActionConstants.STATUS_CATEGORY_OFFSET, true, 20);
 		}

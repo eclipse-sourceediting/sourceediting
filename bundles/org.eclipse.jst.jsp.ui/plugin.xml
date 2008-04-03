@@ -70,6 +70,10 @@
 			type="spellingregions"
 			value="XML_COMMENT_TEXT, JSP_COMMENT_TEXT, XML_CONTENT, HTML_CONTENT"
 			target="org.eclipse.jst.jsp.core.jspsource" />
+		<provisionalDefinition
+			type="activecontexts"
+			value="org.eclipse.jst.jsp.core.jspsource, org.eclipse.jst.jsp.ui.structured.text.editor.jsp.scope, org.eclipse.wst.html.core.htmlsource, org.eclipse.core.runtime.xml, org.eclipse.wst.xml.navigation, org.eclipse.wst.xml.comments, org.eclipse.wst.xml.selection"
+        	target="org.eclipse.jst.jsp.core.jspsource" />
 	</extension>
 
 	<!--======================================================================================-->
@@ -461,9 +465,15 @@
 	<extension point="org.eclipse.ui.contexts">
 		<context
 			name="%scope.structured.text.editor.jsp.name"
-			parentId="org.eclipse.ui.textEditorScope"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			description="%scope.structured.text.editor.jsp.description"
 			id="org.eclipse.jst.jsp.ui.structured.text.editor.jsp.scope">
+		</context>
+		<context
+			name="%scope.jsp.core.jspsource.name"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			description="%scope.jsp.core.jspsource.description"
+			id="org.eclipse.jst.jsp.core.jspsource">
 		</context>
 	</extension>
 	
@@ -682,10 +692,10 @@
 	</extension>
 
 	<extension point="org.eclipse.ui.editorActions">
-		<editorContribution
+	<editorContribution
 			id="org.eclipse.jst.jsp.core.jspsource.source.editorActions"
 			targetID="org.eclipse.jst.jsp.core.jspsource.source">
-			<action
+	<!--		<action
 				id="CleanupDocument"
 				label="%CleanupDocument_label"
 				definitionId="org.eclipse.wst.sse.ui.cleanup.document"
@@ -716,8 +726,8 @@
 				tooltip="%RemoveBlockComment_tooltip"
 				class="org.eclipse.wst.xml.ui.internal.actions.RemoveBlockCommentActionXMLDelegate"
 				actionID="RemoveBlockComment">
-			</action>
-			<action
+			</action>-->
+			<!--<action
 				id="RenameElement"
 				label="%RenameElement_label"
 				definitionId="org.eclipse.jst.jsp.ui.refactor.rename"
@@ -737,8 +747,8 @@
 				definitionId="org.eclipse.wst.sse.ui.search.find.occurrences"
 				class="org.eclipse.jst.jsp.ui.internal.java.search.JSPFindOccurrencesActionDelegate"
 				actionID="FindOccurrences">
-			</action>
-			<action
+			</action>-->
+			<!--<action
 				id="StructureSelectEnclosing"
 				label="%StructureSelectEnclosing_label"
 				definitionId="org.eclipse.wst.sse.ui.structure.select.enclosing"
@@ -769,7 +779,7 @@
 				tooltip="%StructureSelectHistory_tooltip"
 				class="org.eclipse.wst.sse.ui.internal.selection.StructuredSelectHistoryActionDelegate"
 				actionID="StructureSelectHistory">
-			</action>
+			</action>-->
 		</editorContribution>
         <editorContribution
             targetID="org.eclipse.jst.jsp.core.jspsource.source"
@@ -787,6 +797,54 @@
                id="org.eclipse.ui.texteditor.SelectRulerAction"/>
         </editorContribution>
 	</extension>
+	
+	<extension
+       point="org.eclipse.ui.handlers">
+       <handler
+             class="org.eclipse.jst.jsp.ui.internal.java.refactoring.RenameElementHandler"
+             commandId="org.eclipse.jst.jsp.ui.refactor.rename">
+             <activeWhen>
+             	<reference
+                    definitionId="org.eclipse.wst.jsp.ui.jspSourceContributions.definition">
+             	</reference>
+             </activeWhen>
+             <enabledWhen>
+             	<reference
+                    definitionId="org.eclipse.wst.jsp.ui.jspSourceContributions.definition">
+             	</reference>
+             </enabledWhen>
+       </handler>
+       <handler
+             class="org.eclipse.jst.jsp.ui.internal.java.refactoring.MoveElementHandler"
+             commandId="org.eclipse.jst.jsp.ui.refactor.move">
+             <activeWhen>
+             	<reference
+                    definitionId="org.eclipse.wst.jsp.ui.jspSourceContributions.definition">
+             	</reference>
+             </activeWhen>
+             <enabledWhen>
+             	<reference
+                    definitionId="org.eclipse.wst.jsp.ui.jspSourceContributions.definition">
+             	</reference>
+             </enabledWhen>
+       </handler>
+       <handler
+             class="org.eclipse.jst.jsp.ui.internal.handlers.JSPFindOccurrencesHandler"
+             commandId="org.eclipse.wst.sse.ui.search.find.occurrences">
+             <activeWhen>
+             	<reference
+                    definitionId="org.eclipse.wst.jsp.ui.jspSourceContributions.definition">
+             	</reference>
+             </activeWhen>
+             <enabledWhen>
+             	<reference
+                    definitionId="org.eclipse.wst.jsp.ui.jspSourceContributions.definition">
+             	</reference>
+             </enabledWhen>
+       </handler>
+	</extension>
+	
+	
 	<!-- JSP Fragment Property Page -->
 	<extension point="org.eclipse.ui.propertyPages">
 		<!-- for j2ee web project -->
@@ -896,4 +954,31 @@
 			targetId="org.eclipse.jst.jsp.core.jspsource">
 		</hyperlinkDetector>
    </extension>
+   
+   <extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.jsp.ui.jspSourceContributions.definition">
+            <with variable="activeContexts">
+	           <iterate operator="or">
+	              <equals value="org.eclipse.jst.jsp.core.jspsource"/>
+	           </iterate>
+            </with>
+		</definition>
+	</extension>
+	
+	<extension point="org.eclipse.ui.menus">
+	    <menuContribution locationURI="menu:refactorMenuId">
+	       <separator name="jspRefactorBegin" visible="false"></separator>
+	       <command commandId="org.eclipse.jst.jsp.ui.refactor.rename" id="RenameElement" label="%command.jsp.refactor.rename.name" style="push">
+			   <visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.jsp.ui.jspSourceContributions.definition"></reference>
+				</visibleWhen>
+	       </command>
+	       <command commandId="org.eclipse.jst.jsp.ui.refactor.move" id="MoveElement" label="%command.jsp.refactor.move.name" style="push">
+			   <visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.jsp.ui.jspSourceContributions.definition"></reference>
+				</visibleWhen>
+	       </command>
+	       <separator name="jspRefactorBegin" visible="false"></separator>
+		</menuContribution>
+	</extension>
 </plugin>
