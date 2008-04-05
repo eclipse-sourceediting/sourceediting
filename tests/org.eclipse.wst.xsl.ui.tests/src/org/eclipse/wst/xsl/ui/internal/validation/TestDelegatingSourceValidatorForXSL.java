@@ -30,26 +30,43 @@ import org.eclipse.wst.validation.internal.operations.WorkbenchContext;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
+import org.eclipse.wst.xsl.ui.tests.UnzippedProjectTester;
 import org.eclipse.wst.xsl.ui.tests.XSLUITestsPlugin;
+import org.eclipse.wst.xsl.docbook.core.DocbookPlugin;
 
 /**
  * Test the XML delegating source validator.
  *
  */
-public class TestDelegatingSourceValidatorForXSL extends TestCase 
+public class TestDelegatingSourceValidatorForXSL extends UnzippedProjectTester 
 {
-	IValidator sourceValidator = new DelegatingSourceValidatorForXSL().getDelegateValidator();
+	DelegatingSourceValidatorForXSL sourceValidator =  new DelegatingSourceValidatorForXSL();
+	
+	public TestDelegatingSourceValidatorForXSL() {
+		
+	}
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+	}
+	
+	@Override
+	protected void tearDown() throws Exception {
+		// TODO Auto-generated method stub
+		super.tearDown();
+	}
 	
 	/**
-	 * Test that files that contain non-8bit chars are validated
-	 * correctly. i.e. Do not produce incorrect validation messages.
+	 * Test that files that the DocbookStylesheet for HTML output is valid.
+	 * i.e. Do not produce incorrect validation messages.
 	 */
-	@SuppressWarnings("restriction")
 	public void testDocbookStylesheetHTML()
 	{
-		String projName = "net.sourceforge.docbook";
+		String projName = "net.sourceforge.docbook.stylesheets";
 		String fileName1 = "docbook.xsl";
-		
+
+		String validateFilePath = projName + File.separator + "docbook-xsl-1.73.2" + File.separator + "html" + File.separator + fileName1;
+
 		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(projName);
 
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projName);
@@ -61,7 +78,6 @@ public class TestDelegatingSourceValidatorForXSL extends TestCase
 			e.printStackTrace();
 		}
 		
-		String validateFilePath = projName + File.separator + "docbook-xsl-1.73.2" + File.separator + "html" + File.separator + fileName1;
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(validateFilePath));
 		if (file != null && !file.exists()) {
 			Assert.fail("Unable to locate Docbook HTML stylesheet.");
@@ -80,6 +96,212 @@ public class TestDelegatingSourceValidatorForXSL extends TestCase
 		
 		assertFalse("Messages were reported on valid file 1.", reporter.isMessageReported());		
 	}
+	
+	/**
+	 * Test that files that the DocbookStylesheet for FO output is valid.
+	 * i.e. Do not produce incorrect validation messages.
+	 */
+	public void testDocbookStylesheetFO()
+	{
+		String projName = "net.sourceforge.docbook.stylesheets";
+		String fileName1 = "docbook.xsl";
+
+		String validateFilePath = projName + File.separator + "docbook-xsl-1.73.2" + File.separator + "fo" + File.separator + fileName1;
+
+		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(projName);
+
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projName);
+		try {
+			project.create(description, new NullProgressMonitor());
+			project.open(new NullProgressMonitor());
+		}
+		catch (CoreException e) {
+			e.printStackTrace();
+		}
+		
+		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(validateFilePath));
+		if (file != null && !file.exists()) {
+			Assert.fail("Unable to locate Docbook HTML stylesheet.");
+		}
+		WorkbenchContext context = new WorkbenchContext();
+		List fileList = new ArrayList();
+		fileList.add(File.separator + validateFilePath);
+		context.setValidationFileURIs(fileList);
+		TestReporter reporter = new TestReporter();
+		try{
+			sourceValidator.validate(context, reporter);
+		}
+		catch(ValidationException e){
+			e.printStackTrace();
+		}
+		
+		assertFalse("Messages were reported on valid file 1.", reporter.isMessageReported());		
+	}
+	
+	/**
+	 * Test that files that the DocbookStylesheet for Eclipse Help output is valid.
+	 * i.e. Do not produce incorrect validation messages.
+	 */
+	public void testDocbookStylesheetEclipse()
+	{
+		String projName = "net.sourceforge.docbook.stylesheets";
+		String fileName1 = "eclipse.xsl";
+
+		String validateFilePath = projName + File.separator + "docbook-xsl-1.73.2" + File.separator + "eclipse" + File.separator + fileName1;
+
+		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(projName);
+
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projName);
+		try {
+			project.create(description, new NullProgressMonitor());
+			project.open(new NullProgressMonitor());
+		}
+		catch (CoreException e) {
+			e.printStackTrace();
+		}
+		
+		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(validateFilePath));
+		if (file != null && !file.exists()) {
+			Assert.fail("Unable to locate Docbook HTML stylesheet.");
+		}
+		WorkbenchContext context = new WorkbenchContext();
+		List fileList = new ArrayList();
+		fileList.add(File.separator + validateFilePath);
+		context.setValidationFileURIs(fileList);
+		TestReporter reporter = new TestReporter();
+		try{
+			sourceValidator.validate(context, reporter);
+		}
+		catch(ValidationException e){
+			e.printStackTrace();
+		}
+		
+		assertFalse("Messages were reported on valid file 1.", reporter.isMessageReported());		
+	}
+	
+	/**
+	 * Test that files that the DocbookStylesheet for Eclipse Help output is valid.
+	 * i.e. Do not produce incorrect validation messages.
+	 */
+	public void testDocbookStylesheetJavaHelp()
+	{
+		String projName = "net.sourceforge.docbook.stylesheets";
+		String fileName1 = "javahelp.xsl";
+
+		String validateFilePath = projName + File.separator + "docbook-xsl-1.73.2" + File.separator + "javahelp" + File.separator + fileName1;
+
+		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(projName);
+
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projName);
+		try {
+			project.create(description, new NullProgressMonitor());
+			project.open(new NullProgressMonitor());
+		}
+		catch (CoreException e) {
+			e.printStackTrace();
+		}
+		
+		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(validateFilePath));
+		if (file != null && !file.exists()) {
+			Assert.fail("Unable to locate Docbook HTML stylesheet.");
+		}
+		WorkbenchContext context = new WorkbenchContext();
+		List fileList = new ArrayList();
+		fileList.add(File.separator + validateFilePath);
+		context.setValidationFileURIs(fileList);
+		TestReporter reporter = new TestReporter();
+		try{
+			sourceValidator.validate(context, reporter);
+		}
+		catch(ValidationException e){
+			e.printStackTrace();
+		}
+		
+		assertFalse("Messages were reported on valid " + fileName1, reporter.isMessageReported());		
+	}
+	
+	/**
+	 * Test that files that the DocbookStylesheet for Eclipse Help output is valid.
+	 * i.e. Do not produce incorrect validation messages.
+	 */
+	public void testDocbookStylesheetXHTML()
+	{
+		String projName = "net.sourceforge.docbook.stylesheets";
+		String fileName1 = "docbook.xsl";
+
+		String validateFilePath = projName + File.separator + "docbook-xsl-1.73.2" + File.separator + "xhtml" + File.separator + fileName1;
+
+		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(projName);
+
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projName);
+		try {
+			project.create(description, new NullProgressMonitor());
+			project.open(new NullProgressMonitor());
+		}
+		catch (CoreException e) {
+			e.printStackTrace();
+		}
+		
+		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(validateFilePath));
+		if (file != null && !file.exists()) {
+			Assert.fail("Unable to locate Docbook HTML stylesheet.");
+		}
+		WorkbenchContext context = new WorkbenchContext();
+		List fileList = new ArrayList();
+		fileList.add(File.separator + validateFilePath);
+		context.setValidationFileURIs(fileList);
+		TestReporter reporter = new TestReporter();
+		try{
+			sourceValidator.validate(context, reporter);
+		}
+		catch(ValidationException e){
+			e.printStackTrace();
+		}
+		
+		assertFalse("Messages were reported on valid " + fileName1, reporter.isMessageReported());		
+	}
+	
+	/**
+	 * Test that files that the DocbookStylesheet for Eclipse Help output is valid.
+	 * i.e. Do not produce incorrect validation messages.
+	 */
+	public void testDocbookStylesheetXHTMLChunk()
+	{
+		String projName = "net.sourceforge.docbook.stylesheets";
+		String fileName1 = "chunk.xsl";
+
+		String validateFilePath = projName + File.separator + "docbook-xsl-1.73.2" + File.separator + "xhtml" + File.separator + fileName1;
+
+		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(projName);
+
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projName);
+		try {
+			project.create(description, new NullProgressMonitor());
+			project.open(new NullProgressMonitor());
+		}
+		catch (CoreException e) {
+			e.printStackTrace();
+		}
+		
+		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(validateFilePath));
+		if (file != null && !file.exists()) {
+			Assert.fail("Unable to locate Docbook HTML stylesheet.");
+		}
+		WorkbenchContext context = new WorkbenchContext();
+		List fileList = new ArrayList();
+		fileList.add(File.separator + validateFilePath);
+		context.setValidationFileURIs(fileList);
+		TestReporter reporter = new TestReporter();
+		try{
+			sourceValidator.validate(context, reporter);
+		}
+		catch(ValidationException e){
+			e.printStackTrace();
+		}
+		
+		assertFalse("Messages were reported on valid " + fileName1, reporter.isMessageReported());		
+	}
+	
 	
 	private class TestReporter implements IReporter
 	{
