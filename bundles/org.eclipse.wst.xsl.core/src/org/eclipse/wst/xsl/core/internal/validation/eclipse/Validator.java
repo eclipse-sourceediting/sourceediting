@@ -44,7 +44,7 @@ import org.eclipse.wst.xsl.core.internal.validation.XSLValidator;
 public class Validator extends AbstractNestedValidator
 {
 
-	@Override
+/*	@Override
 	public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor)
 	{
 		// TODO this method is NOT being called! Why?
@@ -57,7 +57,7 @@ public class Validator extends AbstractNestedValidator
 		}
 		// TODO clean project (when project == null)
 		return res;
-	}
+	} */
 
 	public ValidationReport validate(String uri, InputStream inputstream, NestedValidatorContext context)
 	{
