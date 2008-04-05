@@ -26,3 +26,11 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.ui.ide;bundle-version="[3.4.0,4.0.0)"
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: org.eclipse.wst.xsl.ui.internal,
+ org.eclipse.wst.xsl.ui.internal.contentassist,
+ org.eclipse.wst.xsl.ui.internal.editor,
+ org.eclipse.wst.xsl.ui.internal.perspective,
+ org.eclipse.wst.xsl.ui.internal.preferences,
+ org.eclipse.wst.xsl.ui.internal.templates,
+ org.eclipse.wst.xsl.ui.internal.util,
+ org.eclipse.wst.xsl.ui.internal.validation
