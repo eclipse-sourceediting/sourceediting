@@ -32,7 +32,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.xsl.ui.tests.UnzippedProjectTester;
 import org.eclipse.wst.xsl.ui.tests.XSLUITestsPlugin;
-import org.eclipse.wst.xsl.docbook.core.DocbookPlugin;
+//import org.eclipse.wst.xsl.docbook.core.DocbookPlugin;
 
 /**
  * Test the XML delegating source validator.
@@ -312,8 +312,10 @@ public class TestDelegatingSourceValidatorForXSL extends UnzippedProjectTester
 		}
 		
 		public void addMessage(IValidator origin, IMessage message) {
-			messageReported = true;
-			
+			if (message.getSeverity() == IMessage.HIGH_SEVERITY)
+			{
+				messageReported = true;
+			}
 		}
 		
 		public boolean isMessageReported()
