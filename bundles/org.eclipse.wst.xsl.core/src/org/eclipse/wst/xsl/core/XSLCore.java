@@ -15,6 +15,9 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.wst.xsl.core.internal.model.Include;
 import org.eclipse.wst.xsl.core.internal.model.Stylesheet;
 import org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder;
@@ -93,5 +96,19 @@ public class XSLCore
 			return null;
 		// TODO depends on how we resolve URIs
 		return currentFile.getParent().getFile(new Path(uri));
+	}
+	
+	public static boolean isXSLFile(IFile file)
+	{
+		IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
+		IContentType[] types = contentTypeManager.findContentTypesFor(file.getName());
+		for (IContentType contentType : types)
+		{
+			if (contentType.isKindOf(contentTypeManager.getContentType("org.eclipse.wst.xml.core.xslsource"))) //$NON-NLS-1$
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }

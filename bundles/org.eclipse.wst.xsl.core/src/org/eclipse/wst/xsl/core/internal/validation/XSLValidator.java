@@ -53,8 +53,12 @@ public class XSLValidator
 	{
 		long start = System.currentTimeMillis();
 		StylesheetModel stylesheet = XSLCore.getInstance().buildStylesheet(xslFile);
-		XSLValidationReport report = new XSLValidationReport(stylesheet.getStylesheet());
-		calculateProblems(stylesheet, report);
+		XSLValidationReport report = null;
+		if (stylesheet!=null)
+		{
+			report = new XSLValidationReport(stylesheet.getStylesheet());
+			calculateProblems(stylesheet, report);
+		}
 		long end = System.currentTimeMillis();
 		System.out.println("VALIDATE "+xslFile+" in "+(end-start)+"ms");
 		return report;

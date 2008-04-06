@@ -14,14 +14,12 @@ package org.eclipse.wst.xsl.core.internal.validation.eclipse;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.validation.ValidationResult;
-import org.eclipse.wst.validation.ValidationState;
+import org.eclipse.wst.common.uriresolver.internal.util.URIEncoder;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator;
 import org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext;
@@ -29,7 +27,6 @@ import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
-import org.eclipse.wst.xsl.core.internal.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.internal.model.XSLAttribute;
 import org.eclipse.wst.xsl.core.internal.model.XSLNode;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidationMessage;
@@ -59,17 +56,47 @@ public class Validator extends AbstractNestedValidator
 		return res;
 	} */
 
-	public ValidationReport validate(String uri, InputStream inputstream, NestedValidatorContext context)
+	public ValidationReport validate(final String uri, InputStream inputstream, NestedValidatorContext context)
 	{
-		ValidationReport valreport = null;
+		ValidationReport valreport = new ValidationReport(){
+
+			@Override
+			public String getFileURI()
+			{
+				// TODO Auto-generated method stub
+				return uri;
+			}
+
+			@Override
+			public HashMap getNestedMessages()
+			{
+				// TODO Auto-generated method stub
+				return new HashMap();
+			}
+
+			@Override
+			public ValidationMessage[] getValidationMessages()
+			{
+				// TODO Auto-generated method stub
+				return new ValidationMessage[0];
+			}
+
+			@Override
+			public boolean isValid()
+			{
+				// TODO Auto-generated method stub
+				return true;
+			}};
 		try
 		{
-			uri = org.eclipse.wst.common.uriresolver.internal.util.URIEncoder.encode(uri);
-			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(new URI(uri));
+			String encUri = URIEncoder.encode(uri);
+			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(new URI(encUri));
 			if (files.length > 0)
 			{
 				IFile xslFile = files[0];
-				valreport = XSLValidator.getInstance().validate(uri, xslFile);
+				// FIXME this guard should be unnecessary!!
+				if (XSLCore.isXSLFile(xslFile))
+					valreport = XSLValidator.getInstance().validate(uri, xslFile);
 			}
 		}
 		catch (URISyntaxException e)
