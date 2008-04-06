@@ -115,5 +115,24 @@
          </run>
       </referencialFileValidator>
    </extension>
+   
+	<extension
+		point="org.eclipse.core.filebuffers.documentCreation"
+		id="org.eclipse.wst.xml.core.documentfactories"
+		name="%Structured_XML_Document_Factory_Extension.name">
+		<factory
+			contentTypeId="org.eclipse.wst.xml.core.xslsource"
+			class="org.eclipse.wst.sse.core.internal.filebuffers.BasicStructuredDocumentFactory" />
+	</extension>
+ 	<extension
+         point="org.eclipse.wst.sse.core.modelHandler">
+      <modelHandler
+            default="true"
+            class="org.eclipse.wst.xsl.core.internal.modelhandler.ModelHandlerForXSL"
+            associatedContentTypeId="org.eclipse.wst.xml.core.xslsource"
+            id="org.eclipse.wst.xsl.core.handler">
+      </modelHandler>
+    </extension>	
+   
 
 </plugin>

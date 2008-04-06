@@ -60,28 +60,24 @@ public class Validator extends AbstractNestedValidator
 	{
 		ValidationReport valreport = new ValidationReport(){
 
-			@Override
 			public String getFileURI()
 			{
 				// TODO Auto-generated method stub
 				return uri;
 			}
 
-			@Override
 			public HashMap getNestedMessages()
 			{
 				// TODO Auto-generated method stub
 				return new HashMap();
 			}
 
-			@Override
 			public ValidationMessage[] getValidationMessages()
 			{
 				// TODO Auto-generated method stub
 				return new ValidationMessage[0];
 			}
 
-			@Override
 			public boolean isValid()
 			{
 				// TODO Auto-generated method stub
