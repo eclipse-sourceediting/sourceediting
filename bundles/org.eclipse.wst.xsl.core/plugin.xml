@@ -82,7 +82,6 @@
          <include>
             <rules>
                <fileext caseSensitive="false" ext="xsl"/>
-               <projectNature id="org.eclipse.jdt.core.javanature"/>
  				<contentType id="org.eclipse.wst.xml.core.xslsource"/>
                <contentType id="org.eclipse.wst.xsl.core.xslsource"/>
             </rules>
