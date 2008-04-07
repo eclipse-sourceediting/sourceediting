@@ -27,7 +27,9 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -214,7 +216,7 @@ class MainTab implements IPreferenceTab {
 		gd.widthHint = sizeHint.x;
 		description.setLayoutData(gd);
 
-		valueTable = new TableViewer(composite, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL);
+		valueTable = new TableViewer(composite, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL);
 		valueTable.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 		TableColumn textColumn = new TableColumn(valueTable.getTable(), SWT.NONE, 0);
 		textColumn.setText(SSEUIMessages.TaskTagPreferenceTab_12); //$NON-NLS-1$
@@ -252,9 +254,9 @@ class MainTab implements IPreferenceTab {
 
 		final ISelectionChangedListener selectionChangedListener = new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				boolean enabledForSelection = !valueTable.getSelection().isEmpty();
-				editButton.setEnabled(enabledForSelection);
-				removeButton.setEnabled(enabledForSelection);
+				ISelection selection = valueTable.getSelection();
+				editButton.setEnabled(((IStructuredSelection) selection).size() == 1);
+				removeButton.setEnabled(!selection.isEmpty());
 			}
 		};
 		valueTable.addPostSelectionChangedListener(selectionChangedListener);
@@ -278,7 +280,7 @@ class MainTab implements IPreferenceTab {
 		removeButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				int i = valueTable.getTable().getSelectionIndex();
-				removeTag(valueTable.getTable().getSelectionIndex());
+				removeTags(valueTable.getSelection());
 				if (i >= 0 && i < fTaskTags.length) {
 					valueTable.getTable().setSelection(i);
 				}
@@ -389,12 +391,10 @@ class MainTab implements IPreferenceTab {
 	/**
 	 * @param selection
 	 */
-	private void removeTag(int i) {
-		if (i < 0) {
-			return;
-		}
+	private void removeTags(ISelection selection) {
+		IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 		List taskTags = new ArrayList(Arrays.asList(fTaskTags));
-		taskTags.remove(i);
+		taskTags.removeAll(structuredSelection.toList());
 		fTaskTags = (TaskTag[]) taskTags.toArray(new TaskTag[taskTags.size()]);
 		valueTable.setInput(fTaskTags);
 	}
