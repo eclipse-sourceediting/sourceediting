@@ -181,12 +181,12 @@ public class JSPValidator implements IValidatorJob {
 			IFile currentFile = null;
 
 			for (int i = 0; i < uris.length && !reporter.isCancelled(); i++) {
+				// might be called with just project path?
 				currentFile = wsRoot.getFile(new Path(uris[i]));
 				if (currentFile != null && currentFile.exists()) {
 					if (shouldValidate(currentFile) && fragmentCheck(currentFile)) {
 
-						int percent = (i * 100) / uris.length + 1;
-						Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, percent + "% " + uris[i]);
+						Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, uris[i]);
 						reporter.displaySubtask(this, message);
 
 						validateFile(currentFile, reporter);
