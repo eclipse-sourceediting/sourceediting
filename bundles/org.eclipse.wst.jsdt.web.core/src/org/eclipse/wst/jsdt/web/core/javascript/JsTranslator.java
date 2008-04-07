@@ -10,24 +10,39 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.core.javascript;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 import java.util.Iterator;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.Position;
 import org.eclipse.wst.jsdt.core.IBuffer;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 /**
@@ -38,7 +53,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 public class JsTranslator extends Job implements IJsTranslator{
 	
 	protected static final boolean DEBUG;
-	private static final boolean DEBUG_SAVE_OUTPUT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslationstodisk")); //$NON-NLS-1$  //$NON-NLS-2$
+	private static final boolean DEBUG_SAVE_OUTPUT = false;  //"true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslationstodisk")); //$NON-NLS-1$  //$NON-NLS-2$
 	protected static final String ENDL = "\n"; //$NON-NLS-1$
 	
 	protected static final boolean REMOVE_XML_COMMENT = true;
@@ -288,6 +303,57 @@ public class JsTranslator extends Job implements IJsTranslator{
 	}
 	
 	protected void finishedTranslation() {
+		if(DEBUG_SAVE_OUTPUT){
+			IDOMModel xmlModel = null;
+			String baseLocation = null;
+			FileOutputStream fout = null;
+			PrintStream out = null;
+			try {
+				xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(fStructuredDocument);
+				if (xmlModel == null) {
+					xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getModelForRead(fStructuredDocument);
+				}
+				baseLocation = xmlModel.getBaseLocation();
+			}
+			finally {
+				if (xmlModel != null)
+					xmlModel.releaseFromRead();
+			}
+			
+			if(baseLocation!=null){
+				IWorkspace workspace = ResourcesPlugin.getWorkspace();
+				IWorkspaceRoot root = workspace.getRoot();
+				IFile tFile = workspace.getRoot().getFile(new Path(baseLocation + ".js"));
+				File tempFile = tFile.getLocation().toFile();
+				
+				  if(tempFile.exists()){
+					  tempFile.delete();
+				  }
+				 
+				  try {
+					  tempFile.createNewFile();
+					  fout = new FileOutputStream(tempFile);
+					  out = new PrintStream(fout);
+					  out.println(fScriptText);
+					  out.close();
+				} catch (FileNotFoundException e) {
+				
+				} catch (IOException e) {
+					
+				}finally{
+					if(out!=null) out.close();
+				
+					
+				}
+				 try {
+					root.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+				} catch (CoreException e) {
+					
+				}
+			}
+			
+		}
+		
 		cleanupXmlQuotes();
 	
 	}
