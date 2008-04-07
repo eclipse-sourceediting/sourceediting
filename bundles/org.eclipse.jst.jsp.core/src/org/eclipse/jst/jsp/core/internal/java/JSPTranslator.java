@@ -18,9 +18,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.Stack;
 
 import javax.servlet.jsp.tagext.VariableInfo;
@@ -185,6 +189,7 @@ public class JSPTranslator {
 
 	/** used to avoid infinite looping include files */
 	private Stack fIncludes = null;
+	private Set fIncludedPaths = new HashSet(2);
 	private boolean fProcessIncludes = true;
 	/** mostly for helper classes, so they parse correctly */
 	private ArrayList fBlockMarkers = null;
@@ -270,6 +275,7 @@ public class JSPTranslator {
 			setClassname(className);
 			fClassHeader = "public class " + className + " extends "; //$NON-NLS-1$ //$NON-NLS-2$
 		}
+
 	}
 
 	/**
@@ -530,6 +536,7 @@ public class JSPTranslator {
 		fDeclarationRanges.clear();
 		fUserELRanges.clear();
 		fIndirectRanges.clear();
+		fIncludedPaths.clear();
 
 		fJspTextBuffer = new StringBuffer();
 
@@ -784,7 +791,7 @@ public class JSPTranslator {
 
 		return fResult;
 	}
-	
+
 	public List getTranslationProblems() {
 		return fTranslationProblems;
 	}
@@ -890,14 +897,21 @@ public class JSPTranslator {
 		IFile f = null;
 		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(getStructuredDocument());
 		try {
-			if (sModel != null)
-				f = FileBuffers.getWorkspaceFileAtLocation(new Path(sModel.getBaseLocation()));
+			if (sModel != null) {
+				Path path = new Path(sModel.getBaseLocation());
+				if (path.segmentCount() > 1) {
+					f = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+				}
+				if (f != null && f.isAccessible()) {
+					return f;
+				}
+			}
+			return null;
 		}
 		finally {
 			if (sModel != null)
 				sModel.releaseFromRead();
 		}
-		return f;
 	}
 
 	/*
@@ -918,7 +932,7 @@ public class JSPTranslator {
 			fTagToVariableMap = new StackMap();
 		}
 		fTranslationProblems.clear();
-		
+
 		setCurrentNode(new ZeroStructuredDocumentRegion(fStructuredDocument, 0));
 		translatePreludes();
 
@@ -1082,9 +1096,11 @@ public class JSPTranslator {
 					// ////////////////////////////////////////////////////////////////////////////////
 				}
 			}
-//			if (region instanceof ITextRegionCollection && ((ITextRegionCollection) region).getNumberOfRegions() > 0) {
-//				translateRegionContainer((ITextRegionCollection) region, EMBEDDED_JSP);
-//			}
+			// if (region instanceof ITextRegionCollection &&
+			// ((ITextRegionCollection) region).getNumberOfRegions() > 0) {
+			// translateRegionContainer((ITextRegionCollection) region,
+			// EMBEDDED_JSP);
+			// }
 			if (type != null && isJSP(type)) // <%, <%=, <%!, <%@
 			{
 				// translateJSPNode(region, regions, type, JSPType);
@@ -2035,6 +2051,7 @@ public class JSPTranslator {
 			IPath basePath = getModelPath();
 			if (basePath != null) {
 				String filePath = FacetModuleCoreSupport.resolve(basePath, filename).toString();
+				fIncludedPaths.add(filePath);
 
 				if (!getIncludes().contains(filePath) && !filePath.equals(basePath.toString())) {
 					getIncludes().push(filePath);
@@ -2051,6 +2068,10 @@ public class JSPTranslator {
 		if (fIncludes == null)
 			fIncludes = new Stack();
 		return fIncludes;
+	}
+
+	public Collection getIncludedPaths() {
+		return fIncludedPaths;
 	}
 
 	protected void translateExpressionString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength) {
@@ -2619,14 +2640,14 @@ public class JSPTranslator {
 					type = attrValue;
 					typeRegion = r;
 				}
-								else if (attrName.equals("beanName")) { //$NON-NLS-1$
+				else if (attrName.equals("beanName")) { //$NON-NLS-1$
 					beanName = attrValue;
 					beanNameRegion = attrRegion;
 				}
 			}
 		}
-				
-				if (id != null) {
+
+		if (id != null) {
 			// The id is not a valid Java identifier
 			if (!isValidJavaIdentifier(id)) {
 				Object problem = createJSPProblem(IJSPProblem.UseBeanInvalidID, IProblem.ParsingErrorInvalidToken, MessageFormat.format(JSPCoreMessages.JSPTranslator_0, new String[]{id}), container.getStartOffset(idRegion), container.getTextEndOffset(idRegion) - 1);
@@ -2670,7 +2691,7 @@ public class JSPTranslator {
 			}
 		}
 	}
-	
+
 	/**
 	 * @param type
 	 * @return
@@ -2681,12 +2702,23 @@ public class JSPTranslator {
 		try {
 			IJavaProject p = JavaCore.create(project);
 			if (p.exists()) {
+				if (typeName.indexOf('<') > 0 && typeName.indexOf('>') > 0) {
+					StringTokenizer toker = new StringTokenizer(typeName);
+					String generic = toker.nextToken("<");
+					String element = toker.nextToken(">");
+					IType genericType = p.findType(generic);
+					IType elementType = p.findType(element);
+					return genericType!= null && genericType.exists() && elementType!= null && elementType.exists();
+				}
 				type = p.findType(typeName);
 				return type != null && type.exists();
 			}
 		}
 		catch (JavaModelException e) {
 			// Not a Java Project
+		}
+		catch(NoSuchElementException e) {
+			// StringTokenizer failure with unsupported syntax
 		}
 		return true;
 	}

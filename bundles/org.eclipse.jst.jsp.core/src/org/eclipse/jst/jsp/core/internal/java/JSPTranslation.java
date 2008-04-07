@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.jst.jsp.core.internal.java;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -85,6 +86,7 @@ public class JSPTranslation implements IJSPTranslation {
 	private String fMangledName;
 	private String fJspName;
 	private List fTranslationProblems;
+	private Collection fIncludedPaths;
 
 	public JSPTranslation(IJavaProject javaProj, JSPTranslator translator) {
 
@@ -104,6 +106,7 @@ public class JSPTranslation implements IJSPTranslation {
 			fJava2JspIndirectMap = translator.getJava2JspIndirectRanges();
 			fELProblems = translator.getELProblems();
 			fTranslationProblems = translator.getTranslationProblems();
+			fIncludedPaths = translator.getIncludedPaths();
 		}
 	}
 	
@@ -189,6 +192,10 @@ public class JSPTranslation implements IJSPTranslation {
 		}
 
 		return result;
+	}
+		
+	public Collection getIncludedPaths() {
+		return fIncludedPaths;
 	}
 
 	/**

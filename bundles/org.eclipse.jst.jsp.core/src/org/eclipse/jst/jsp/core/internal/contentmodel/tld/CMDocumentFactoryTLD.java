@@ -700,6 +700,8 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 	}
 
 	private void loadTagXFile(final CMElementDeclarationImpl ed, IFile tagxFile, boolean allowIncludes) {
+		ed.setPath(tagxFile.getFullPath().toString());
+		ed.setTagSource(TLDElementDeclaration.SOURCE_TAG_FILE);
 		try {
 			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
 			InputSource inputSource = new InputSource(tagxFile.getFullPath().toString());
