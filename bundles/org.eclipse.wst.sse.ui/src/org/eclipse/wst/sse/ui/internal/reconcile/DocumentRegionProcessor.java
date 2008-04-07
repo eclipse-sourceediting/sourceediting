@@ -205,7 +205,10 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 			 * Process the strategies for the last known-good partitions.
 			 */
 			for (int i = 0; i < fLastPartitions.length; i++) {
-				getValidatorStrategy().reconcile(fLastPartitions[i], createDirtyRegion(fLastPartitions[i], DirtyRegion.REMOVE));
+				ValidatorStrategy validatorStrategy = getValidatorStrategy();
+				if (validatorStrategy != null) {
+					validatorStrategy.reconcile(fLastPartitions[i], createDirtyRegion(fLastPartitions[i], DirtyRegion.REMOVE));
+				}
 			}
 			if (fSpellcheckStrategy != null) {
 				fSpellcheckStrategy.reconcile(new Region(0, document.getLength()));
