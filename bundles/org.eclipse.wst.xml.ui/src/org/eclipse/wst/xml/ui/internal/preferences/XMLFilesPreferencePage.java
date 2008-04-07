@@ -32,7 +32,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.sse.core.utils.StringUtils;
@@ -102,7 +101,7 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 		validatingGroup.setText(XMLUIMessages.Validating_files);
 
 		if (fIndicateNoGrammar == null) {
-			createTextLabel(validatingGroup, XMLUIMessages.Indicate_no_grammar_specified);
+			createLabel(validatingGroup, XMLUIMessages.Indicate_no_grammar_specified);
 			fIndicateNoGrammar = createCombo(validatingGroup, StringUtils.unpack(XMLUIMessages.Indicate_no_grammar_specified_severities));
 		}
 		if (fUseXinclude == null) {
@@ -110,17 +109,6 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 		}
 		
 		new Label(validatingGroup, SWT.NONE).setLayoutData(new GridData());
-	}
-
-	private Text createTextLabel(Composite parent, String text) {
-		Text label = new Text(parent, SWT.LEFT | SWT.READ_ONLY);
-		label.setText(text);
-
-		// GridData
-		GridData data = new GridData(SWT.FILL, SWT.CENTER, false, true);
-		label.setLayoutData(data);
-
-		return label;
 	}
 
 	public void dispose() {
@@ -182,8 +170,8 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 		boolean useXIncludeButtonSelected = getModelPreferences().getBoolean(XMLCorePreferenceNames.USE_XINCLUDE);
 
 		if (fIndicateNoGrammar != null) {
-			fIndicateNoGrammar.setSelection(new Point(indicateNoGrammarButtonSelected, 2 - indicateNoGrammarButtonSelected));
-			fIndicateNoGrammar.setText(StringUtils.unpack(XMLUIMessages.Indicate_no_grammar_specified_severities)[indicateNoGrammarButtonSelected]);
+			fIndicateNoGrammar.select(2 - indicateNoGrammarButtonSelected);
+			fIndicateNoGrammar.setText(StringUtils.unpack(XMLUIMessages.Indicate_no_grammar_specified_severities)[2-indicateNoGrammarButtonSelected]);
 		}
 		if (fUseXinclude != null) {
 			fUseXinclude.setSelection(useXIncludeButtonSelected);
