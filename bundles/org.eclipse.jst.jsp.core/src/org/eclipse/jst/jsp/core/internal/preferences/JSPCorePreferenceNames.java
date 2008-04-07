@@ -12,7 +12,6 @@
 package org.eclipse.jst.jsp.core.internal.preferences;
 
 
-
 /**
  * Common preference keys used by JSP core
  */
@@ -45,7 +44,7 @@ public class JSPCorePreferenceNames {
 	 * Value is of type <code>Boolean</code>.
 	 * </p>
 	 */
-	public static final String USE_PROJECT_SETTINGS = "use-project-settings";
+	public static final String VALIDATION_USE_PROJECT_SETTINGS = "validation.use-project-settings";
 
 	/**
 	 * Validation preference keys
