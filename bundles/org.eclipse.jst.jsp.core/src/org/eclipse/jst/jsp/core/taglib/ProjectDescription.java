@@ -894,31 +894,34 @@ class ProjectDescription {
 	}
 
 	private void ensureUpTodate() {
-		LOCK.acquire();
+		try {
+			LOCK.acquire();
 
-		if (!fBuildPathIsDirty) {
-			/*
-			 * Double-check that the number of build path entries has not
-			 * changed. This should cover most cases such as when a library is
-			 * added into or removed from a container.
-			 */
-			try {
-				IJavaProject jproject = JavaCore.create(fProject);
-				if (jproject != null && jproject.exists()) {
-					IClasspathEntry[] entries = jproject.getResolvedClasspath(true);
-					fBuildPathIsDirty = (fBuildPathEntryCount != entries.length);
+			if (!fBuildPathIsDirty) {
+				/*
+				 * Double-check that the number of build path entries has not
+				 * changed. This should cover most cases such as when a
+				 * library is added into or removed from a container.
+				 */
+				try {
+					IJavaProject jproject = JavaCore.create(fProject);
+					if (jproject != null && jproject.exists()) {
+						IClasspathEntry[] entries = jproject.getResolvedClasspath(true);
+						fBuildPathIsDirty = (fBuildPathEntryCount != entries.length);
+					}
+				}
+				catch (JavaModelException e) {
+					Logger.logException(e);
 				}
 			}
-			catch (JavaModelException e) {
-				Logger.logException(e);
+			if (fBuildPathIsDirty) {
+				indexClasspath();
+				fBuildPathIsDirty = false;
 			}
 		}
-		if (fBuildPathIsDirty) {
-			indexClasspath();
-			fBuildPathIsDirty = false;
+		finally {
+			LOCK.release();
 		}
-
-		LOCK.release();
 	}
 
 	private TaglibInfo extractInfo(String basePath, InputStream tldContents) {
@@ -969,35 +972,36 @@ class ProjectDescription {
 
 	List getAvailableTaglibRecords(IPath path) {
 		ensureUpTodate();
+		Collection records = null;
+		try {
+			float jspVersion = DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(path);
+			LOCK.acquire();
 
-		float jspVersion = DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(path);
+			Collection implicitReferences = new HashSet(getImplicitReferences(path.toString()).values());
+			records = new ArrayList(fTLDReferences.size() + fTagDirReferences.size() + fJARReferences.size() + fWebXMLReferences.size());
+			records.addAll(fTLDReferences.values());
+			if (jspVersion >= 1.1) {
+				records.addAll(_getJSP11AndWebXMLJarReferences(fJARReferences.values()));
+			}
 
-		LOCK.acquire();
+			if (jspVersion >= 1.2) {
+				records.addAll(implicitReferences);
 
-		Collection implicitReferences = new HashSet(getImplicitReferences(path.toString()).values());
-		Collection records = new ArrayList(fTLDReferences.size() + fTagDirReferences.size() + fJARReferences.size() + fWebXMLReferences.size());
-		records.addAll(fTLDReferences.values());
-		if (jspVersion >= 1.1) {
-			records.addAll(_getJSP11AndWebXMLJarReferences(fJARReferences.values()));
+				Map buildPathReferences = new HashMap();
+				List projectsProcessed = new ArrayList(fClasspathProjects.size() + 1);
+				projectsProcessed.add(fProject);
+				addBuildPathReferences(buildPathReferences, projectsProcessed, false);
+				records.addAll(buildPathReferences.values());
+			}
+			if (jspVersion >= 2.0) {
+				records.addAll(fTagDirReferences.values());
+			}
+
+			records.addAll(getCatalogRecords());
 		}
-
-		if (jspVersion >= 1.2) {
-			records.addAll(implicitReferences);
-
-			Map buildPathReferences = new HashMap();
-			List projectsProcessed = new ArrayList(fClasspathProjects.size() + 1);
-			projectsProcessed.add(fProject);
-			addBuildPathReferences(buildPathReferences, projectsProcessed, false);
-			records.addAll(buildPathReferences.values());
+		finally {
+			LOCK.release();
 		}
-		if (jspVersion >= 2.0) {
-			records.addAll(fTagDirReferences.values());
-		}
-
-		records.addAll(getCatalogRecords());
-
-		LOCK.release();
-
 		return new ArrayList(records);
 	}
 
@@ -1486,114 +1490,117 @@ class ProjectDescription {
 
 		ITaglibRecord record = null;
 		String path = null;
-		float jspVersion = DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(new Path(basePath));
+		try {
+			float jspVersion = DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(new Path(basePath));
 
-		/**
-		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=196177
-		 * Support resolution in flexible projects
-		 */
-		IPath resourcePath = FacetModuleCoreSupport.resolve(new Path(basePath), reference);
-		if (resourcePath.segmentCount() > 1) {
-			if (resourcePath.toString().toLowerCase(Locale.US).endsWith(".tld")) { //$NON-NLS-1$ 
-				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(resourcePath);
-				if (file.isAccessible()) {
-					path = resourcePath.toString();
-				}
-			}
-			else if (resourcePath.toString().toLowerCase(Locale.US).endsWith(".jar")) { //$NON-NLS-1$ 
-				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(resourcePath);
-				if (file.isAccessible()) {
-					path = resourcePath.toString();
-				}
-			}
-		}
-
-		LOCK.acquire();
-
-		/**
-		 * Workaround for problem in URIHelper; uris starting with '/' are
-		 * returned as-is.
-		 */
-		if (path == null) {
-			if (reference.startsWith("/")) { //$NON-NLS-1$
-				path = getLocalRoot(basePath) + reference;
-			}
-			else {
-				path = URIHelper.normalize(reference, basePath, getLocalRoot(basePath));
-			}
-		}
-
-		// order dictated by JSP spec 2.0 section 7.2.3
-		record = (ITaglibRecord) fJARReferences.get(path);
-
-		// only if 1.1 TLD was found
-		if (jspVersion < 1.1 || (record instanceof JarRecord && !((JarRecord) record).has11TLD)) {
-			record = null;
-		}
-		if (record == null) {
-			record = (ITaglibRecord) fTLDReferences.get(path);
-		}
-		if (record == null && jspVersion >= 1.2) {
-			record = (ITaglibRecord) getImplicitReferences(basePath).get(reference);
-		}
-
-
-		if (record == null && jspVersion >= 2.0) {
-			record = (ITaglibRecord) fTagDirReferences.get(path);
-		}
-
-		if (record == null && jspVersion >= 1.2) {
-			record = (ITaglibRecord) fClasspathReferences.get(reference);
-		}
-		if (record == null && jspVersion >= 1.2) {
-			Map buildPathReferences = new HashMap();
-			List projectsProcessed = new ArrayList(fClasspathProjects.size() + 1);
-			projectsProcessed.add(fProject);
-			addBuildPathReferences(buildPathReferences, projectsProcessed, false);
-			record = (ITaglibRecord) buildPathReferences.get(reference);
-		}
-
-		// Check the XML Catalog
-		if (record == null) {
-			ICatalog catalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
-			if (catalog != null) {
-				String resolvedString = null;
-				try {
-					// Check as system reference first
-					resolvedString = catalog.resolveSystem(reference);
-					// Check as URI
-					if (resolvedString == null || resolvedString.trim().length() == 0) {
-						resolvedString = catalog.resolveURI(reference);
-					}
-					// Check as public ID
-					if (resolvedString == null || resolvedString.trim().length() == 0) {
-						resolvedString = catalog.resolvePublic(reference, basePath);
+			/**
+			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=196177 Support
+			 * resolution in flexible projects
+			 */
+			IPath resourcePath = FacetModuleCoreSupport.resolve(new Path(basePath), reference);
+			if (resourcePath.segmentCount() > 1) {
+				if (resourcePath.toString().toLowerCase(Locale.US).endsWith(".tld")) { //$NON-NLS-1$ 
+					IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(resourcePath);
+					if (file.isAccessible()) {
+						path = resourcePath.toString();
 					}
 				}
-				catch (Exception e) {
-					Logger.logException(e);
-				}
-				if (resolvedString != null && resolvedString.trim().length() > 0) {
-					record = createCatalogRecord(reference, resolvedString);
+				else if (resourcePath.toString().toLowerCase(Locale.US).endsWith(".jar")) { //$NON-NLS-1$ 
+					IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(resourcePath);
+					if (file.isAccessible()) {
+						path = resourcePath.toString();
+					}
 				}
 			}
+
+			LOCK.acquire();
+
+			/**
+			 * Workaround for problem in URIHelper; uris starting with '/' are
+			 * returned as-is.
+			 */
+			if (path == null) {
+				if (reference.startsWith("/")) { //$NON-NLS-1$
+					path = getLocalRoot(basePath) + reference;
+				}
+				else {
+					path = URIHelper.normalize(reference, basePath, getLocalRoot(basePath));
+				}
+			}
+
+			// order dictated by JSP spec 2.0 section 7.2.3
+			record = (ITaglibRecord) fJARReferences.get(path);
+
+			// only if 1.1 TLD was found
+			if (jspVersion < 1.1 || (record instanceof JarRecord && !((JarRecord) record).has11TLD)) {
+				record = null;
+			}
+			if (record == null) {
+				record = (ITaglibRecord) fTLDReferences.get(path);
+			}
+			if (record == null && jspVersion >= 1.2) {
+				record = (ITaglibRecord) getImplicitReferences(basePath).get(reference);
+			}
+
+
+			if (record == null && jspVersion >= 2.0) {
+				record = (ITaglibRecord) fTagDirReferences.get(path);
+			}
+
+			if (record == null && jspVersion >= 1.2) {
+				record = (ITaglibRecord) fClasspathReferences.get(reference);
+			}
+			if (record == null && jspVersion >= 1.2) {
+				Map buildPathReferences = new HashMap();
+				List projectsProcessed = new ArrayList(fClasspathProjects.size() + 1);
+				projectsProcessed.add(fProject);
+				addBuildPathReferences(buildPathReferences, projectsProcessed, false);
+				record = (ITaglibRecord) buildPathReferences.get(reference);
+			}
+
+			// Check the XML Catalog
+			if (record == null) {
+				ICatalog catalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
+				if (catalog != null) {
+					String resolvedString = null;
+					try {
+						// Check as system reference first
+						resolvedString = catalog.resolveSystem(reference);
+						// Check as URI
+						if (resolvedString == null || resolvedString.trim().length() == 0) {
+							resolvedString = catalog.resolveURI(reference);
+						}
+						// Check as public ID
+						if (resolvedString == null || resolvedString.trim().length() == 0) {
+							resolvedString = catalog.resolvePublic(reference, basePath);
+						}
+					}
+					catch (Exception e) {
+						Logger.logException(e);
+					}
+					if (resolvedString != null && resolvedString.trim().length() > 0) {
+						record = createCatalogRecord(reference, resolvedString);
+					}
+				}
+			}
+
+			/*
+			 * If no records were found and no local-root applies, check ALL
+			 * of the web.xml files as a fallback
+			 */
+			if (record == null && fProject.getFullPath().toString().equals(getLocalRoot(basePath))) {
+				WebXMLRecord[] webxmls = (WebXMLRecord[]) fWebXMLReferences.values().toArray(new WebXMLRecord[0]);
+				for (int i = 0; i < webxmls.length; i++) {
+					if (record != null)
+						continue;
+					record = (ITaglibRecord) getImplicitReferences(webxmls[i].path.toString()).get(reference);
+				}
+			}
+		}
+		finally {
+			LOCK.release();
 		}
 
-		/*
-		 * If no records were found and no local-root applies, check ALL
-		 * of the web.xml files as a fallback
-		 */
-		if (record == null && fProject.getFullPath().toString().equals(getLocalRoot(basePath))) {
-			WebXMLRecord[] webxmls = (WebXMLRecord[]) fWebXMLReferences.values().toArray(new WebXMLRecord[0]);
-			for (int i = 0; i < webxmls.length; i++) {
-				if (record != null)
-					continue;
-				record = (ITaglibRecord) getImplicitReferences(webxmls[i].path.toString()).get(reference);
-			}
-		}
-		
-		LOCK.release();
-				
 		return record;
 	}
 
