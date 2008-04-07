@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.preferences.ui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
@@ -38,11 +41,21 @@ import org.eclipse.wst.sse.ui.internal.util.PixelConverter;
 
 public class JSPValidationPreferencePage extends AbstractValidationSettingsPage {
 
+	/**
+	 * 
+	 */
+	private static final String PREFERENCE_NODE_QUALIFIER = JSPCorePlugin.getDefault().getBundle().getSymbolicName();
+
 	private static final String SETTINGS_SECTION_NAME = "JSPValidationSeverities";//$NON-NLS-1$
 
 	private static final int[] SEVERITIES = {ValidationMessage.ERROR, ValidationMessage.WARNING, ValidationMessage.IGNORE};
 
-	private static final String JAVA_SEVERITY_PAGE = "org.eclipse.jdt.ui.preferences.ProblemSeveritiesPreferencePage";
+	// Should equal org.eclipse.jdt.internal.ui.preferences.ProblemSeveritiesPreferencePage.PREF_ID
+	public static final String JAVA_SEVERITY_PREFERENCE_PAGE = "org.eclipse.jdt.ui.preferences.ProblemSeveritiesPreferencePage";
+	// Should equal org.eclipse.jdt.internal.ui.preferences.ProblemSeveritiesPreferencePage.PROP_ID
+	public static final String JAVA_SEVERITY_PROPERTY_PAGE = "org.eclipse.jdt.ui.propertyPages.ProblemSeveritiesPreferencePage";
+	// Should equal org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage.DATA_NO_LINK
+	public static final String DATA_NO_LINK= "PropertyAndPreferencePage.nolink"; //$NON-NLS-1$
 
 	private PixelConverter fPixelConverter;
 	private Button fValidateFragments;
@@ -158,14 +171,21 @@ public class JSPValidationPreferencePage extends AbstractValidationSettingsPage 
 		// begin Java severity override section
 		section = createStyleSectionWithContentComposite(composite, JSPUIMessages.VALIDATION_HEADER_JAVA, nColumns);
 		if (getProject() == null) {
-			new PreferenceLinkArea(section, SWT.WRAP | SWT.MULTI | SWT.LEFT_TO_RIGHT, JAVA_SEVERITY_PAGE, JSPUIMessages.VALIDATION_JAVA_NOTICE, (IWorkbenchPreferenceContainer) getContainer(), null).getControl().setLayoutData(GridDataFactory.fillDefaults().span(2, 1).hint(150, SWT.DEFAULT).create());
+			new PreferenceLinkArea(section, SWT.WRAP | SWT.MULTI | SWT.LEFT_TO_RIGHT, JAVA_SEVERITY_PREFERENCE_PAGE, JSPUIMessages.VALIDATION_JAVA_NOTICE, (IWorkbenchPreferenceContainer) getContainer(), null).getControl().setLayoutData(GridDataFactory.fillDefaults().span(2, 1).indent(0, 0).hint(150, SWT.DEFAULT).create());
+		}
+		else {
+			Map data = new HashMap();
+			data.put(DATA_NO_LINK, Boolean.TRUE);
+			new PreferenceLinkArea(section, SWT.WRAP | SWT.MULTI | SWT.LEFT_TO_RIGHT, JAVA_SEVERITY_PROPERTY_PAGE, JSPUIMessages.VALIDATION_JAVA_NOTICE, (IWorkbenchPreferenceContainer) getContainer(), data).getControl().setLayoutData(GridDataFactory.fillDefaults().span(2, 1).indent(0, 0).hint(150, SWT.DEFAULT).create());
+			// open in same shell?
+			// PreferencesUtil.createPropertyDialogOn(getShell(), getProject(), JAVA_SEVERITY_PROPERTY_PAGE, new String[] { JAVA_SEVERITY_PROPERTY_PAGE }, data).open();
 		}
 		int sectionIndent = convertWidthInCharsToPixels(2);
 		addComboBox(section, JSPUIMessages.VALIDATION_JAVA_LOCAL_VARIABLE_NEVER_USED, JSPCorePreferenceNames.VALIDATION_JAVA_LOCAL_VARIABLE_NEVER_USED, SEVERITIES, errorWarningIgnoreLabels, sectionIndent);
 		addComboBox(section, JSPUIMessages.VALIDATION_JAVA_ARGUMENT_IS_NEVER_USED, JSPCorePreferenceNames.VALIDATION_JAVA_ARGUMENT_IS_NEVER_USED, SEVERITIES, errorWarningIgnoreLabels, sectionIndent);
 		addComboBox(section, JSPUIMessages.VALIDATION_JAVA_NULL_LOCAL_VARIABLE_REFERENCE, JSPCorePreferenceNames.VALIDATION_JAVA_NULL_LOCAL_VARIABLE_REFERENCE, SEVERITIES, errorWarningIgnoreLabels, sectionIndent);
-		addComboBox(section, JSPUIMessages.VALIDATION_JAVA_UNUSED_IMPORT, JSPCorePreferenceNames.VALIDATION_JAVA_UNUSED_IMPORT, SEVERITIES, errorWarningIgnoreLabels, sectionIndent);
 		addComboBox(section, JSPUIMessages.VALIDATION_JAVA_POTENTIAL_NULL_LOCAL_VARIABLE_REFERENCE, JSPCorePreferenceNames.VALIDATION_JAVA_POTENTIAL_NULL_LOCAL_VARIABLE_REFERENCE, SEVERITIES, errorWarningIgnoreLabels, sectionIndent);
+		addComboBox(section, JSPUIMessages.VALIDATION_JAVA_UNUSED_IMPORT, JSPCorePreferenceNames.VALIDATION_JAVA_UNUSED_IMPORT, SEVERITIES, errorWarningIgnoreLabels, sectionIndent);
 		// end Java severity override section
 
 		// begin EL section
@@ -194,7 +214,7 @@ public class JSPValidationPreferencePage extends AbstractValidationSettingsPage 
 	}
 
 	protected String getPreferenceNodeQualifier() {
-		return JSPCorePlugin.getDefault().getBundle().getSymbolicName();
+		return PREFERENCE_NODE_QUALIFIER;
 	}
 
 	protected String getPreferencePageID() {
@@ -202,15 +222,11 @@ public class JSPValidationPreferencePage extends AbstractValidationSettingsPage 
 	}
 
 	protected String getProjectSettingsKey() {
-		return JSPCorePreferenceNames.USE_PROJECT_SETTINGS;
+		return JSPCorePreferenceNames.VALIDATION_USE_PROJECT_SETTINGS;
 	}
 
 	protected String getPropertyPageID() {
 		return "org.eclipse.jst.jsp.ui.propertyPage.project.validation";//$NON-NLS-1$
-	}
-
-	protected String getQualifier() {
-		return JSPCorePlugin.getDefault().getBundle().getSymbolicName();
 	}
 
 	public void init(IWorkbench workbench) {
