@@ -45,6 +45,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 public class JSPELValidator extends JSPValidator {
 	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspvalidator")).booleanValue(); //$NON-NLS-1$		
+	private static final String PREFERENCE_NODE_QUALIFIER = JSPCorePlugin.getDefault().getBundle().getSymbolicName();
 
 	private IValidator fMessageOriginator;
 
@@ -81,19 +82,19 @@ public class JSPELValidator extends JSPValidator {
 	private IScopeContext[] fScopes = null;
 
 	private void loadPreferences(IFile file) {
-		String bundleName = JSPCorePlugin.getDefault().getBundle().getSymbolicName();
+		fScopes = new IScopeContext[]{new InstanceScope(), new DefaultScope()};
+
 		fPreferencesService = Platform.getPreferencesService();
 		if (file != null && file.isAccessible()) {
 			ProjectScope projectScope = new ProjectScope(file.getProject());
-			if (projectScope.getNode(bundleName).getBoolean(JSPCorePreferenceNames.USE_PROJECT_SETTINGS, false)) {
+			if (projectScope.getNode(PREFERENCE_NODE_QUALIFIER).getBoolean(JSPCorePreferenceNames.VALIDATION_USE_PROJECT_SETTINGS, false)) {
 				fScopes = new IScopeContext[]{projectScope, new InstanceScope(), new DefaultScope()};
 			}
 		}
-		fScopes = new IScopeContext[]{new InstanceScope(), new DefaultScope()};
 	}
 	
 	int getMessageSeverity(String key) {
-		int sev = fPreferencesService.getInt(JSPCorePlugin.getDefault().getBundle().getSymbolicName(), key, IMessage.NORMAL_SEVERITY, fScopes);
+		int sev = fPreferencesService.getInt(PREFERENCE_NODE_QUALIFIER, key, IMessage.NORMAL_SEVERITY, fScopes);
 		switch (sev) {
 			case ValidationMessage.ERROR :
 				return IMessage.HIGH_SEVERITY;

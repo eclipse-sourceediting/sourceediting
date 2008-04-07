@@ -62,6 +62,11 @@ import com.ibm.icu.text.Collator;
  * values in the same file
  */
 public class JSPDirectiveValidator extends JSPValidator {
+	/**
+	 * 
+	 */
+	private static final String PREFERENCE_NODE_QUALIFIER = JSPCorePlugin.getDefault().getBundle().getSymbolicName();
+
 	private static Collator collator = Collator.getInstance(Locale.US);
 
 	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspvalidator")).booleanValue(); //$NON-NLS-1$
@@ -134,7 +139,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 	}
 
 	int getMessageSeverity(String key) {
-		int sev = fPreferencesService.getInt(JSPCorePlugin.getDefault().getBundle().getSymbolicName(), key, IMessage.NORMAL_SEVERITY, fScopes);
+		int sev = fPreferencesService.getInt(PREFERENCE_NODE_QUALIFIER, key, IMessage.NORMAL_SEVERITY, fScopes);
 		switch (sev) {
 			case ValidationMessage.ERROR :
 				return IMessage.HIGH_SEVERITY;
@@ -162,15 +167,15 @@ public class JSPDirectiveValidator extends JSPValidator {
 	}
 	
 	private void loadPreferences(IFile file) {
-		String bundleName = JSPCorePlugin.getDefault().getBundle().getSymbolicName();
+		fScopes = new IScopeContext[]{new InstanceScope(), new DefaultScope()};
+
 		fPreferencesService = Platform.getPreferencesService();
 		if (file != null && file.isAccessible()) {
 			ProjectScope projectScope = new ProjectScope(file.getProject());
-			if (projectScope.getNode(bundleName).getBoolean(JSPCorePreferenceNames.USE_PROJECT_SETTINGS, false)) {
+			if (projectScope.getNode(PREFERENCE_NODE_QUALIFIER).getBoolean(JSPCorePreferenceNames.VALIDATION_USE_PROJECT_SETTINGS, false)) {
 				fScopes = new IScopeContext[]{projectScope, new InstanceScope(), new DefaultScope()};
 			}
 		}
-		fScopes = new IScopeContext[]{new InstanceScope(), new DefaultScope()};
 
 		fSeverityIncludeFileMissing = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_DIRECTIVE_INCLUDE_FILE_NOT_FOUND);
 		fSeverityIncludeFileNotSpecified = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_DIRECTIVE_INCLUDE_NO_FILE_SPECIFIED);
@@ -532,7 +537,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 		boolean useProject = false;
 		if (project != null) {
 			fProject = JavaCore.create(project);
-			fPreferences = new ProjectScope(fProject.getProject()).getNode(JSPCorePlugin.getDefault().getBundle().getSymbolicName());
+			fPreferences = new ProjectScope(fProject.getProject()).getNode(PREFERENCE_NODE_QUALIFIER);
 			useProject = fPreferences.getBoolean(HTMLCorePreferenceNames.USE_PROJECT_SETTINGS, false);
 		}
 		else {
@@ -540,7 +545,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 		}
 
 		if (!useProject) {
-			fPreferences = new InstanceScope().getNode(JSPCorePlugin.getDefault().getBundle().getSymbolicName());
+			fPreferences = new InstanceScope().getNode(PREFERENCE_NODE_QUALIFIER);
 		}
 	}
 

@@ -64,6 +64,10 @@ import org.w3c.dom.NamedNodeMap;
  * inline jsp action tags
  */
 public class JSPActionValidator extends JSPValidator {
+	/**
+	 * 
+	 */
+	private static final String PREFERENCE_NODE_QUALIFIER = JSPCorePlugin.getDefault().getBundle().getSymbolicName();
 	private IValidator fMessageOriginator;
 	private IPreferencesService fPreferencesService = null;
 	private IScopeContext[] fScopes = null;
@@ -156,7 +160,7 @@ public class JSPActionValidator extends JSPValidator {
 	}
 
 	int getMessageSeverity(String key) {
-		int sev = fPreferencesService.getInt(JSPCorePlugin.getDefault().getBundle().getSymbolicName(), key, IMessage.NORMAL_SEVERITY, fScopes);
+		int sev = fPreferencesService.getInt(PREFERENCE_NODE_QUALIFIER, key, IMessage.NORMAL_SEVERITY, fScopes);
 		switch (sev) {
 			case ValidationMessage.ERROR :
 				return IMessage.HIGH_SEVERITY;
@@ -232,17 +236,18 @@ public class JSPActionValidator extends JSPValidator {
 		boolean result = regionType.equals(DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN) || regionType.equals(DOMJSPRegionContexts.JSP_EXPRESSION_OPEN) || regionType.equals(DOMJSPRegionContexts.JSP_DECLARATION_OPEN) || regionType.equals(DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN);
 		return result;
 	}
+
 	private void loadPreferences(IFile file) {
-		String bundleName = JSPCorePlugin.getDefault().getBundle().getSymbolicName();
+		fScopes = new IScopeContext[]{new InstanceScope(), new DefaultScope()};
+
 		fPreferencesService = Platform.getPreferencesService();
 		if (file != null && file.isAccessible()) {
 			ProjectScope projectScope = new ProjectScope(file.getProject());
-			if (projectScope.getNode(bundleName).getBoolean(JSPCorePreferenceNames.USE_PROJECT_SETTINGS, false)) {
+			if (projectScope.getNode(PREFERENCE_NODE_QUALIFIER).getBoolean(JSPCorePreferenceNames.VALIDATION_USE_PROJECT_SETTINGS, false)) {
 				fScopes = new IScopeContext[]{projectScope, new InstanceScope(), new DefaultScope()};
 			}
 		}
-		fScopes = new IScopeContext[]{new InstanceScope(), new DefaultScope()};
-		
+
 		fSeverityMissingRequiredAttribute = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_ACTIONS_SEVERITY_MISSING_REQUIRED_ATTRIBUTE);
 		fSeverityNonEmptyInlineTag = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_ACTIONS_SEVERITY_NON_EMPTY_INLINE_TAG);
 		fSeverityUnknownAttribute = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_ACTIONS_SEVERITY_UNKNOWN_ATTRIBUTE);
@@ -253,7 +258,7 @@ public class JSPActionValidator extends JSPValidator {
 		int length = model.getStructuredDocument().getLength();
 		performValidation(f, reporter, model, new Region(0, length));
 	}
-	
+
 	protected void performValidation(IFile f, IReporter reporter, IStructuredModel model, IRegion validateRegion) {
 		loadPreferences(f);
 		IStructuredDocument sDoc = model.getStructuredDocument();
@@ -282,7 +287,7 @@ public class JSPActionValidator extends JSPValidator {
 		}
 		unloadPreferences();
 	}
-	
+
 	private void processDirective(IReporter reporter, IFile file, IStructuredModel model, IStructuredDocumentRegion documentRegion) {
 		IndexedRegion ir = model.getIndexedRegion(documentRegion.getStartOffset());
 		if (ir instanceof IDOMElement) {
