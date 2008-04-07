@@ -2602,7 +2602,6 @@ public class JSPTranslator {
 		ITextRegion r = null;
 		String attrName = null;
 		String attrValue = null;
-		ITextRegion attrRegion = null;
 		String id = null;
 		ITextRegion idRegion = null;
 		String type = null;
@@ -2642,24 +2641,24 @@ public class JSPTranslator {
 				}
 				else if (attrName.equals("beanName")) { //$NON-NLS-1$
 					beanName = attrValue;
-					beanNameRegion = attrRegion;
+					beanNameRegion = r;
 				}
 			}
 		}
 
 		if (id != null) {
 			// The id is not a valid Java identifier
-			if (!isValidJavaIdentifier(id)) {
+			if (!isValidJavaIdentifier(id) && idRegion != null) {
 				Object problem = createJSPProblem(IJSPProblem.UseBeanInvalidID, IProblem.ParsingErrorInvalidToken, MessageFormat.format(JSPCoreMessages.JSPTranslator_0, new String[]{id}), container.getStartOffset(idRegion), container.getTextEndOffset(idRegion) - 1);
 				fTranslationProblems.add(problem);
 			}
 			// No Type information is provided
-			if ((type == null && className == null) || (type == null && beanName != null)) {
+			if (((type == null && className == null) || (type == null && beanName != null)) && idRegion != null) {
 				Object problem = createJSPProblem(IJSPProblem.UseBeanMissingTypeInfo, IProblem.UndefinedType, MessageFormat.format(JSPCoreMessages.JSPTranslator_3, new String[]{id}), container.getStartOffset(idRegion), container.getTextEndOffset(idRegion) - 1);
 				fTranslationProblems.add(problem);
 			}
 			// Cannot specify both a class and a beanName
-			if (className != null && beanName != null) {
+			if (className != null && beanName != null && beanNameRegion != null) {
 				Object problem = createJSPProblem(IJSPProblem.UseBeanAmbiguousType, IProblem.AmbiguousType, JSPCoreMessages.JSPTranslator_2, container.getStartOffset(beanNameRegion), container.getTextEndOffset(beanNameRegion) - 1);
 				fTranslationProblems.add(problem);
 			}
