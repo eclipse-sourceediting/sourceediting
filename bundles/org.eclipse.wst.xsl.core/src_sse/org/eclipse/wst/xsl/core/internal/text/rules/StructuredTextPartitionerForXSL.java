@@ -20,10 +20,21 @@ import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerFor
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xsl.core.internal.text.IXSLPartitions;
 
+/**
+ * Contains information specific to setting up Structured Document Partions 
+ * in XSL documents. 
+ * @author dcarver
+ *
+ */
 public class StructuredTextPartitionerForXSL extends StructuredTextPartitionerForXML implements IStructuredTextPartitioner {
 
 	private final static String[] configuredContentTypes = new String[]{IXMLPartitions.XML_DEFAULT, IXMLPartitions.XML_CDATA, IXMLPartitions.XML_PI, IXMLPartitions.XML_DECLARATION, IXMLPartitions.XML_COMMENT, IXMLPartitions.DTD_SUBSET, IXSLPartitions.XSL_XPATH};
 
+	/**
+	 * The StructuredTextPartitionerForXSL adds the necessary
+	 * Partition types to help Identify potential XPath areas.
+	 * This is also used for Line Styling and Content Assistance.
+	 */
 	public StructuredTextPartitionerForXSL() {
 		super();
 	}
@@ -32,10 +43,7 @@ public class StructuredTextPartitionerForXSL extends StructuredTextPartitionerFo
 	public String getPartitionType(ITextRegion region, int offset) {
 		String result = null;
 		if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
-			// Check to see what namespace the region falls under
-			// If the namespace
-			
-			result = IXSLPartitions.XSL_XPATH;
+					result = IXSLPartitions.XSL_XPATH;
 		} else {
 			result = super.getPartitionType(region, offset);
 		}
@@ -51,4 +59,7 @@ public class StructuredTextPartitionerForXSL extends StructuredTextPartitionerFo
 		StructuredTextPartitionerForXML instance = new StructuredTextPartitionerForXML();
 		return instance;
 	}
+	
+
+	
 }

@@ -122,7 +122,7 @@
 		name="%Structured_XML_Document_Factory_Extension.name">
 		<factory
 			contentTypeId="org.eclipse.wst.xml.core.xslsource"
-			class="org.eclipse.wst.sse.core.internal.filebuffers.BasicStructuredDocumentFactory" />
+			class="org.eclipse.wst.xsl.core.internal.filebuffers.BasicStructuredDocumentFactory" />
 	</extension>
  	<extension
          point="org.eclipse.wst.sse.core.modelHandler">
