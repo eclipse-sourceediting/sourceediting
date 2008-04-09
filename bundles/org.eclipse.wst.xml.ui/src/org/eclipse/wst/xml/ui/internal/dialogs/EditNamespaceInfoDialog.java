@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,8 @@ package org.eclipse.wst.xml.ui.internal.dialogs;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -202,7 +204,13 @@ public class EditNamespaceInfoDialog extends Dialog {
 			if (file != null) {
 				String uri = null;
 				if (resourceLocation != null) {
-					uri = URIHelper.getRelativeURI(file.getLocation(), resourceLocation);
+					IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(resourceLocation);
+					if (resource != null) {
+						IPath location = resource.getLocation();
+						if (location != null) {
+							uri = URIHelper.getRelativeURI(file.getLocation(), location);
+						}
+					}
 					grammarURI = file.getLocation().toOSString();
 				}
 				else {
