@@ -20,6 +20,7 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MultiTextEdit;
+import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -985,14 +986,16 @@ public class DefaultXMLPartitionFormatter {
 
 		// if not already correctly indented
 		if (!newLineAndIndent.equals(whitespaceRun)) {
-			// delete existing whitespace run
 			if (whitespaceRun != null) {
-				DeleteEdit deleteEdit = new DeleteEdit(indentStartOffset, whitespaceRun.length());
-				textEdit.addChild(deleteEdit);
+				// replace existing whitespace run
+				ReplaceEdit replaceEdit = new ReplaceEdit(indentStartOffset, whitespaceRun.length(), newLineAndIndent);
+				textEdit.addChild(replaceEdit);
 			}
-			// then insert correct indent
-			InsertEdit insertEdit = new InsertEdit(indentStartOffset, newLineAndIndent);
-			textEdit.addChild(insertEdit);
+			else {
+				// just insert correct indent
+				InsertEdit insertEdit = new InsertEdit(indentStartOffset, newLineAndIndent);
+				textEdit.addChild(insertEdit);
+			}
 		}
 		// update line width
 		availableLineWidth = maxAvailableLineWidth - indentString.length();
