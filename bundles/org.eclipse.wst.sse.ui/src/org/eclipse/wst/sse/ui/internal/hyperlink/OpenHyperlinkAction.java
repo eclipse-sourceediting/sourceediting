@@ -2,12 +2,14 @@ package org.eclipse.wst.sse.ui.internal.hyperlink;
 
 import java.util.ResourceBundle;
 
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.TextEditorAction;
@@ -37,21 +39,34 @@ public class OpenHyperlinkAction extends TextEditorAction {
 		}
 
 		ITextSelection textSelection = (ITextSelection) selection;
-		IRegion region = new Region(textSelection.getOffset(), textSelection.getLength());
+		final IRegion region = new Region(textSelection.getOffset(), textSelection.getLength());
 		IHyperlink hyperlink = null;
 
 		synchronized (fHyperlinkDetectors) {
 			for (int i = 0, length = fHyperlinkDetectors.length; i < length && hyperlink == null; i++) {
-				IHyperlinkDetector detector = fHyperlinkDetectors[i];
+				final IHyperlinkDetector detector = fHyperlinkDetectors[i];
 				if (detector == null)
 					continue;
 
-				IHyperlink[] hyperlinks = detector.detectHyperlinks(fTextViewer, region, false);
-				if (hyperlinks == null)
+				/* The array is final, but its contents aren't */
+				final IHyperlink[][] hyperlinks = new IHyperlink[1][];
+
+				/*
+				 * Detect from within a SafeRunnable since the list of
+				 * detectors is extensible
+				 */
+				SafeRunnable detectorRunnable = new SafeRunnable() {
+					public void run() throws Exception {
+						hyperlinks[0] = detector.detectHyperlinks(fTextViewer, region, false);
+					}
+				};
+				SafeRunner.run(detectorRunnable);
+
+				if (hyperlinks[0] == null)
 					continue;
 
 				if (hyperlinks.length > 0)
-					hyperlink = hyperlinks[0];
+					hyperlink = hyperlinks[0][0];
 			}
 		}
 		if (hyperlink != null) {
