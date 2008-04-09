@@ -151,14 +151,15 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 						// check if jsp taglib directive
 						Node currentNode = getCurrentNode(doc, region.getOffset());
 						if (currentNode != null && currentNode.getNodeType() == Node.ELEMENT_NODE) {
-							if (JSP11Namespace.ElementName.DIRECTIVE_TAGLIB.equalsIgnoreCase(currentNode.getNodeName())) {
+							String baseLocationForTaglib = getBaseLocationForTaglib(doc);
+							if (baseLocationForTaglib != null && JSP11Namespace.ElementName.DIRECTIVE_TAGLIB.equalsIgnoreCase(currentNode.getNodeName())) {
 								/**
 								 * The taglib directive itself
 								 */
 								// get the uri attribute
 								Attr taglibURINode = ((Element) currentNode).getAttributeNode(JSP11Namespace.ATTR_NAME_URI);
 								if (taglibURINode != null) {
-									ITaglibRecord reference = TaglibIndex.resolve(getBaseLocationForTaglib(doc), taglibURINode.getValue(), false);
+									ITaglibRecord reference = TaglibIndex.resolve(baseLocationForTaglib, taglibURINode.getValue(), false);
 									// when using a tagdir
 									// (ITaglibRecord.TAGDIR),
 									// there's nothing to link to
@@ -185,7 +186,7 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 									}
 								}
 							}
-							else if (JSP12Namespace.ElementName.ROOT.equalsIgnoreCase(currentNode.getNodeName())) {
+							else if (baseLocationForTaglib != null && JSP12Namespace.ElementName.ROOT.equalsIgnoreCase(currentNode.getNodeName())) {
 								/**
 								 * The jsp:root element
 								 */
@@ -197,7 +198,7 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 										if (uri.startsWith(URN_TLD)) {
 											uri = uri.substring(URN_TLD.length());
 										}
-										ITaglibRecord reference = TaglibIndex.resolve(getBaseLocationForTaglib(doc), uri, false);
+										ITaglibRecord reference = TaglibIndex.resolve(baseLocationForTaglib, uri, false);
 										// when using a tagdir
 										// (ITaglibRecord.TAGDIR),
 										// there's nothing to link to
@@ -433,9 +434,12 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 		IStructuredModel sModel = null;
 		try {
 			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-			inode = sModel.getIndexedRegion(offset);
-			if (inode == null)
-				inode = sModel.getIndexedRegion(offset - 1);
+			if (sModel != null) {
+				inode = sModel.getIndexedRegion(offset);
+				if (inode == null) {
+					inode = sModel.getIndexedRegion(offset - 1);
+				}
+			}
 		}
 		finally {
 			if (sModel != null)
