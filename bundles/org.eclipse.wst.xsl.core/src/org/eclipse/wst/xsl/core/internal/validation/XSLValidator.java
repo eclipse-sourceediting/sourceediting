@@ -49,19 +49,21 @@ public class XSLValidator
 	{
 	}
 
-	public ValidationReport validate(String uri, IFile xslFile) throws CoreException
+	public ValidationReport validate(IFile xslFile) throws CoreException
 	{
-		long start = System.currentTimeMillis();
+		XSLValidationReport report = new XSLValidationReport(xslFile.getLocationURI().toString());
+		validate(xslFile, report);
+		return report;
+	}
+
+	public void validate(IFile xslFile, XSLValidationReport report) throws CoreException
+	{
 		StylesheetModel stylesheet = XSLCore.getInstance().buildStylesheet(xslFile);
-		XSLValidationReport report = null;
+		long start = System.currentTimeMillis();
 		if (stylesheet!=null)
-		{
-			report = new XSLValidationReport(stylesheet.getStylesheet());
 			calculateProblems(stylesheet, report);
-		}
 		long end = System.currentTimeMillis();
 		System.out.println("VALIDATE "+xslFile+" in "+(end-start)+"ms");
-		return report;
 	}
 
 	private void calculateProblems(StylesheetModel stylesheetComposed, XSLValidationReport report) throws CoreException

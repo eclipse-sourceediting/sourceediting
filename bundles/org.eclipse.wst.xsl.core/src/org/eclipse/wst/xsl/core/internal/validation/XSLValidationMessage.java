@@ -31,4 +31,9 @@ public class XSLValidationMessage extends ValidationMessage
 	{
 		return node;
 	}
+	
+	public String toString()
+	{
+		return node.toString();
+	}
 }

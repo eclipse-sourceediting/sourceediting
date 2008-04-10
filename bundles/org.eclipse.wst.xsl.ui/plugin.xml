@@ -59,6 +59,12 @@
            id="org.eclipse.wst.xsl.ui.templates">
      </keywordReference>
   </page>
+  <page
+        category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
+        class="org.eclipse.wst.xsl.ui.internal.preferences.ValidationPreferencePage"
+        id="org.eclipse.wst.xsl.ui.preferences.Validation"
+        name="Validation">
+  </page>
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
@@ -143,14 +149,14 @@
 		</editor>
 	</extension>
     <!-- Editor actionsets -->
-    <extension point="org.eclipse.ui.actionSetPartAssociations">
-	  <actionSetPartAssociation
-	    targetID="org.eclipse.ui.edit.text.actionSet.annotationNavigation">
-	    <part id="org.eclipse.wst.xsl.ui.XSLEditor"/>
-	  </actionSetPartAssociation>
-	  <actionSetPartAssociation
-	    targetID="org.eclipse.ui.NavigateActionSet">
-	    <part id="org.eclipse.wst.xsl.ui.XSLEditor"/>
-	  </actionSetPartAssociation>
-    </extension>      
+      <extension point="org.eclipse.ui.actionSetPartAssociations">
+              <actionSetPartAssociation
+                      targetID="org.eclipse.ui.edit.text.actionSet.annotationNavigation">
+                      <part id="org.eclipse.wst.xsl.ui.XSLEditor"/>
+              </actionSetPartAssociation>
+              <actionSetPartAssociation
+                      targetID="org.eclipse.ui.NavigateActionSet">
+                      <part id="org.eclipse.wst.xsl.ui.XSLEditor"/>
+              </actionSetPartAssociation>
+      </extension>
  </plugin>

@@ -26,16 +26,27 @@ import org.eclipse.wst.xsl.core.internal.model.XSLNode;
 public class XSLValidationReport implements ValidationReport
 {
 	private boolean valid = true;
-	private Stylesheet stylesheet;
-	private List<ValidationMessage> messages = new ArrayList<ValidationMessage>();
+	private String uri;
+	private List<XSLValidationMessage> errors = new ArrayList<XSLValidationMessage>();
+	private List<XSLValidationMessage> warnings = new ArrayList<XSLValidationMessage>();
 
 	/**
 	 * TODO: Add Javadoc
 	 * @param stylesheet
 	 */
-	public XSLValidationReport(Stylesheet stylesheet)
+	public XSLValidationReport(String uri)
 	{
-		this.stylesheet = stylesheet;
+		this.uri = uri;
+	}
+	
+	public List<XSLValidationMessage> getErrors()
+	{
+		return errors;
+	}
+	
+	public List<XSLValidationMessage> getWarnings()
+	{
+		return warnings;
 	}
 	
 	/**
@@ -49,7 +60,8 @@ public class XSLValidationReport implements ValidationReport
 		valid = false;
 		XSLValidationMessage msg = new XSLValidationMessage(message,node.getLineNumber()+1,node.getColumnNumber()+1,getFileURI());
 		msg.setSeverity(ValidationMessage.SEV_HIGH);
-		addMessage(node,msg);
+		msg.setNode(node);
+		errors.add(msg);
 		return msg;
 	}
 	
@@ -63,14 +75,9 @@ public class XSLValidationReport implements ValidationReport
 	{
 		XSLValidationMessage msg = new XSLValidationMessage(message,node.getLineNumber()+1,node.getColumnNumber()+1,getFileURI());
 		msg.setSeverity(ValidationMessage.SEV_LOW);
-		addMessage(node,msg);
+		msg.setNode(node);
+		warnings.add(msg);
 		return msg;
-	}
-
-	private void addMessage(XSLNode node, XSLValidationMessage message)
-	{
-		message.setNode(node);
-		messages.add(message);
 	}
 
 	/**
@@ -78,7 +85,7 @@ public class XSLValidationReport implements ValidationReport
 	 */
 	public String getFileURI()
 	{
-		return stylesheet.getFile().getLocationURI().toString();
+		return uri;
 	}
 
 	/**
@@ -95,6 +102,8 @@ public class XSLValidationReport implements ValidationReport
 	 */
 	public ValidationMessage[] getValidationMessages()
 	{
+		List<ValidationMessage> messages = new ArrayList<ValidationMessage>(errors);
+		messages.addAll(warnings);
 		return messages.toArray(new ValidationMessage[0]);
 	}
 

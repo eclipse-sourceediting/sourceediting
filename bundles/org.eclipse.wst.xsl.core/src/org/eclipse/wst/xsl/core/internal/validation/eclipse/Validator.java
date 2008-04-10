@@ -60,24 +60,28 @@ public class Validator extends AbstractNestedValidator
 	{
 		ValidationReport valreport = new ValidationReport(){
 
+			@Override
 			public String getFileURI()
 			{
 				// TODO Auto-generated method stub
 				return uri;
 			}
 
+			@Override
 			public HashMap getNestedMessages()
 			{
 				// TODO Auto-generated method stub
 				return new HashMap();
 			}
 
+			@Override
 			public ValidationMessage[] getValidationMessages()
 			{
 				// TODO Auto-generated method stub
 				return new ValidationMessage[0];
 			}
 
+			@Override
 			public boolean isValid()
 			{
 				// TODO Auto-generated method stub
@@ -92,7 +96,7 @@ public class Validator extends AbstractNestedValidator
 				IFile xslFile = files[0];
 				// FIXME this guard should be unnecessary!!
 				if (XSLCore.isXSLFile(xslFile))
-					valreport = XSLValidator.getInstance().validate(uri, xslFile);
+					valreport = XSLValidator.getInstance().validate(xslFile);
 			}
 		}
 		catch (URISyntaxException e)
