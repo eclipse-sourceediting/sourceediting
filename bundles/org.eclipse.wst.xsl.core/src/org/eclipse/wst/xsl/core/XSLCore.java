@@ -33,6 +33,7 @@ public class XSLCore
 	 * The XSL namespace URI (= http://www.w3.org/1999/XSL/Transform)
 	 */
 	public static final String XSL_NAMESPACE_URI = "http://www.w3.org/1999/XSL/Transform"; //$NON-NLS-1$
+	public static final String XSL_CONTENT_TYPE = "org.eclipse.wst.xml.core.xslsource"; //$NON-NLS-1$
 	
 	private static XSLCore instance;
 	private Map<IFile, StylesheetModel> stylesheetsComposed = new HashMap<IFile, StylesheetModel>();
@@ -104,7 +105,7 @@ public class XSLCore
 		IContentType[] types = contentTypeManager.findContentTypesFor(file.getName());
 		for (IContentType contentType : types)
 		{
-			if (contentType.isKindOf(contentTypeManager.getContentType("org.eclipse.wst.xml.core.xslsource"))) //$NON-NLS-1$
+			if (contentType.isKindOf(contentTypeManager.getContentType(XSL_CONTENT_TYPE))) //$NON-NLS-1$
 			{
 				return true;
 			}
