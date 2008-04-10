@@ -60,6 +60,8 @@ public class JSPValidationPreferencePage extends AbstractValidationSettingsPage 
 	private PixelConverter fPixelConverter;
 	private Button fValidateFragments;
 
+	private boolean fOriginalValidateFragments;
+
 	public JSPValidationPreferencePage() {
 		super();
 	}
@@ -115,7 +117,8 @@ public class JSPValidationPreferencePage extends AbstractValidationSettingsPage 
 		fValidateFragments = createCheckBox(fragmentGroup, JSPUIMessages.JSPFilesPreferencePage_1);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(fValidateFragments, IHelpContextIds.JSP_PREFWEBX_FILES_HELPID);
 		IScopeContext[] contexts = createPreferenceScopes();
-		fValidateFragments.setSelection(contexts[0].getNode(getPreferenceNodeQualifier()).getBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, contexts[1].getNode(getPreferenceNodeQualifier()).getBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, true)));
+		fOriginalValidateFragments = contexts[0].getNode(getPreferenceNodeQualifier()).getBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, contexts[1].getNode(getPreferenceNodeQualifier()).getBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, true));
+		fValidateFragments.setSelection(fOriginalValidateFragments);
 	}
 
 	private Composite createValidationSection(Composite page) {
@@ -259,7 +262,7 @@ public class JSPValidationPreferencePage extends AbstractValidationSettingsPage 
 	}
 
 	protected boolean shouldRevalidateOnSettingsChange() {
-		return true;
+		return fOriginalValidateFragments != fValidateFragments.getSelection() || super.shouldRevalidateOnSettingsChange();
 	}
 
 	/*

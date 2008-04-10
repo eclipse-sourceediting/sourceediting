@@ -329,8 +329,4 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 
 	public void init(IWorkbench workbench) {
 	}
-	
-	protected boolean shouldRevalidateOnSettingsChange() {
-		return true;
-	}
 }

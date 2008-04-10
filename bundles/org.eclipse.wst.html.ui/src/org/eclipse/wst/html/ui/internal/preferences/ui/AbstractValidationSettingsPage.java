@@ -68,6 +68,7 @@ abstract class AbstractValidationSettingsPage extends PropertyPreferencePage {
 		private String fKey;
 		private int[] fSeverities;
 		private int fIndex;
+		int originalSeverity = -2;
 		
 		public ComboData(String key, int[] severities, int index) {
 			fKey = key;
@@ -108,6 +109,9 @@ abstract class AbstractValidationSettingsPage extends PropertyPreferencePage {
 			return (fIndex >= 0 && fSeverities != null && fIndex < fSeverities.length) ? fSeverities[fIndex] : -1;
 		}
 		
+		boolean isChanged() {
+			return fSeverities[fIndex] != originalSeverity;
+		}
 	}
 	
 	public AbstractValidationSettingsPage() {
@@ -174,8 +178,10 @@ abstract class AbstractValidationSettingsPage extends PropertyPreferencePage {
 		if(key != null)
 			severity = fPreferencesService.getInt(getPreferenceNodeQualifier(), key, ValidationMessage.WARNING, createPreferenceScopes());
 
-		if(severity == ValidationMessage.ERROR || severity == ValidationMessage.WARNING || severity == ValidationMessage.IGNORE)
+		if (severity == ValidationMessage.ERROR || severity == ValidationMessage.WARNING || severity == ValidationMessage.IGNORE) {
 			data.setSeverity(severity);
+			data.originalSeverity = severity;
+		}
 		
 		if(data.getIndex() >= 0)
 			comboBox.select(data.getIndex());
@@ -315,7 +321,16 @@ abstract class AbstractValidationSettingsPage extends PropertyPreferencePage {
 		}
 	}
 	
-	protected abstract boolean shouldRevalidateOnSettingsChange();
+	protected boolean shouldRevalidateOnSettingsChange() {
+		Iterator it = fCombos.iterator();
+
+		while (it.hasNext()) {
+			ComboData data = (ComboData) ((Combo) it.next()).getData();
+			if (data.isChanged())
+				return true;
+		}
+		return false;
+	}
 	
 	public boolean performOk() {
 		if(super.performOk() && shouldRevalidateOnSettingsChange()) {
@@ -335,7 +350,7 @@ abstract class AbstractValidationSettingsPage extends PropertyPreferencePage {
 					return true;
 			}
 		}
-		return false;
+		return true;
 	}
 	
 	/**
