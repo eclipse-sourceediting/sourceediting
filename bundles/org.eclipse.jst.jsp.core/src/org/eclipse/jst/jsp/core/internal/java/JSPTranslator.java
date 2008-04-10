@@ -71,6 +71,7 @@ import org.eclipse.jst.jsp.core.internal.taglib.TaglibVariable;
 import org.eclipse.jst.jsp.core.internal.util.FacetModuleCoreSupport;
 import org.eclipse.jst.jsp.core.internal.util.ZeroStructuredDocumentRegion;
 import org.eclipse.jst.jsp.core.jspel.IJSPELTranslator;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.html.core.internal.contentmodel.JSP20Namespace;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
@@ -2381,7 +2382,7 @@ public class JSPTranslator {
 			r = regions.get(j);
 			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 				attrName = jspReferenceRegion.getText(r);
-				if (regions.size() >= j + 2 && regions.get(j + 2).getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+				if (regions.size() > j + 2 && regions.get(j + 2).getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 					// get attr value
 					r = regions.get(j + 2);
 					attrValue = jspReferenceRegion.getText(r);
@@ -2613,7 +2614,6 @@ public class JSPTranslator {
 
 		Iterator regions = container.getRegions().iterator();
 		while (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && (r.getType() != DOMRegionContext.XML_TAG_CLOSE || r.getType() != DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
-
 			attrName = attrValue = null;
 			if (r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
 				attrName = container.getText(r).trim();
@@ -2654,12 +2654,13 @@ public class JSPTranslator {
 			}
 			// No Type information is provided
 			if (((type == null && className == null) || (type == null && beanName != null)) && idRegion != null) {
-				Object problem = createJSPProblem(IJSPProblem.UseBeanMissingTypeInfo, IProblem.UndefinedType, MessageFormat.format(JSPCoreMessages.JSPTranslator_3, new String[]{id}), container.getStartOffset(idRegion), container.getTextEndOffset(idRegion) - 1);
+				Object problem = createJSPProblem(IJSPProblem.UseBeanMissingTypeInfo, IProblem.UndefinedType, NLS.bind(JSPCoreMessages.JSPTranslator_3, new String[]{id}), container.getStartOffset(idRegion), container.getTextEndOffset(idRegion) - 1);
 				fTranslationProblems.add(problem);
 			}
 			// Cannot specify both a class and a beanName
 			if (className != null && beanName != null && beanNameRegion != null) {
-				Object problem = createJSPProblem(IJSPProblem.UseBeanAmbiguousType, IProblem.AmbiguousType, JSPCoreMessages.JSPTranslator_2, container.getStartOffset(beanNameRegion), container.getTextEndOffset(beanNameRegion) - 1);
+				ITextRegion nameRegion = container.getRegions().get(1);
+				Object problem = createJSPProblem(IJSPProblem.UseBeanAmbiguousType, IProblem.AmbiguousType, JSPCoreMessages.JSPTranslator_2, container.getStartOffset(nameRegion), container.getTextEndOffset(nameRegion) - 1);
 				fTranslationProblems.add(problem);
 			}
 			// Only have a class or a beanName at this point, and potentially
@@ -2668,7 +2669,7 @@ public class JSPTranslator {
 			// Type id = new Classname/Beanname();
 			// or
 			// Type id = null; // if there is no classname or beanname
-			else if ((type != null || className != null)) {
+			if ((type != null || className != null)) {
 				if (type == null) {
 					type = className;
 					typeRegion = classnameRegion;
