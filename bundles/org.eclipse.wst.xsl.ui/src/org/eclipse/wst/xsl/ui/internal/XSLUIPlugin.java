@@ -44,9 +44,13 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 	
 	/**
 	 * The template store for the xsl editor.
-	 * 
 	 */
 	private TemplateStore fTemplateStore;
+
+	/**
+	 * The template store for xpath.
+	 */
+	private TemplateStore fXPathTemplateStore;
 	
     private ScopedPreferenceStore preferenceStore;
     
@@ -54,6 +58,11 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 	 * The template context type registry for the xml editor.
 	 */
 	private ContributionContextTypeRegistry fContextTypeRegistry;
+	
+	/**
+	 * The template context type registry for xpath.
+	 */
+	private ContributionContextTypeRegistry fXPathContextTypeRegistry;
 	
 	/**
 	 * The plugin id for this plugin.
@@ -130,30 +139,68 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 	}
     
 	/**
-	 * Returns the template store for the xml editor templates.
+	 * Returns the template store for the xsl templates.
 	 * 
-	 * @return the template store for the xml editor templates
+	 * @return the template store for the xsl templates
 	 */
-	public TemplateStore getTemplateStore() {
-		if (fTemplateStore == null) {
-			fTemplateStore = new ContributionTemplateStore(getTemplateContextRegistry(), getPreferenceStore(), "org.eclipse.wst.xsl.ui.xpath_custom_templates"); //$NON-NLS-1$
-			try {
+	public TemplateStore getTemplateStore()
+	{
+		if (fTemplateStore == null)
+		{
+			fTemplateStore = new ContributionTemplateStore(getTemplateContextRegistry(), getPreferenceStore(), "org.eclipse.wst.xsl.ui.custom_templates"); //$NON-NLS-1$
+			try
+			{
 				fTemplateStore.load();
 			}
-			catch (IOException e) {
+			catch (IOException e)
+			{
 				XSLUIPlugin.log(e);
 			}
 		}
 		return fTemplateStore;
 	}
-	
+
 	/**
 	 * Returns the template context type registry for the xsl plugin.
 	 * 
 	 * @return the template context type registry for the xsl plugin
 	 */
-	public ContextTypeRegistry getTemplateContextRegistry() {
-		if (fContextTypeRegistry == null) {
+	public ContextTypeRegistry getTemplateContextRegistry()
+	{
+		if (fContextTypeRegistry == null)
+		{
+			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
+			registry.addContextType("xsl_new"); //$NON-NLS-1$
+			fContextTypeRegistry = registry;
+		}
+		return fContextTypeRegistry;
+	}
+
+	/**
+	 * Returns the template store for the xpath templates.
+	 * 
+	 * @return the template store for the xpath templates
+	 */
+	public TemplateStore getXPathTemplateStore() {
+		if (fXPathTemplateStore == null) {
+			fXPathTemplateStore = new ContributionTemplateStore(getXPathTemplateContextRegistry(), getPreferenceStore(), "org.eclipse.wst.xsl.ui.xpath_custom_templates"); //$NON-NLS-1$
+			try {
+				fXPathTemplateStore.load();
+			}
+			catch (IOException e) {
+				XSLUIPlugin.log(e);
+			}
+		}
+		return fXPathTemplateStore;
+	}
+	
+	/**
+	 * Returns the template context type registry for xpath
+	 * 
+	 * @return the template context type registry for xpath
+	 */
+	public ContextTypeRegistry getXPathTemplateContextRegistry() {
+		if (fXPathContextTypeRegistry == null) {
 			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
 			registry.addContextType("xsl_xpath"); //$NON-NLS-1$
 			registry.addContextType("xpath_operator"); //$NON-NLS-1$
@@ -161,10 +208,10 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 			registry.addContextType("exslt_function"); //$NON-NLS-1$
 			registry.addContextType("xpath_2"); //$NON-NLS-1$
 			registry.addContextType("extension_function"); //$NON-NLS-1$
-			fContextTypeRegistry = registry;
+			fXPathContextTypeRegistry = registry;
 		}
 
-		return fContextTypeRegistry;
+		return fXPathContextTypeRegistry;
 	}
 	
 }

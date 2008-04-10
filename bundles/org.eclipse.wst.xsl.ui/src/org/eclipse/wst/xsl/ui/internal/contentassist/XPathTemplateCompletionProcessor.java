@@ -93,7 +93,7 @@ class XPathTemplateCompletionProcessor extends TemplateCompletionProcessor {
 	}
 
 	private ContextTypeRegistry getTemplateContextRegistry() {
-		return XSLUIPlugin.getDefault().getTemplateContextRegistry();
+		return XSLUIPlugin.getDefault().getXPathTemplateContextRegistry();
 	}
 
 	protected Template[] getTemplates(String contextTypeId) {
@@ -108,7 +108,7 @@ class XPathTemplateCompletionProcessor extends TemplateCompletionProcessor {
 	}
 
 	private TemplateStore getTemplateStore() {
-		return XSLUIPlugin.getDefault().getTemplateStore();
+		return XSLUIPlugin.getDefault().getXPathTemplateStore();
 	}
 
 	void setContextType(String contextTypeId) {

@@ -1,118 +1,145 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension point="org.eclipse.ui.editors.templates">
-  <contextType
-        class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
-        id="xpath_axis"
-        name="axis">
-  </contextType>
-  <contextType
-        class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
-        id="exslt_function"
-        name="exslt">
-  </contextType>
-  <contextType
-        class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
-        id="xsl_xpath"
-        name="xpath">
-  </contextType>
-  <contextType
-        class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
-        id="xpath_2"
-        name="xpath 2.0">
-  </contextType>
-  <contextType
-        class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
-        id="xpath_operator"
-        name="operator">
-  </contextType>
-  <contextType
-        class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
-        id="extension_function"
-        name="custom">
-  </contextType>
-		<include file="templates/file_templates.xml"/>
-  <include
-        file="templates/xpath_templates.xml">
-  </include>
-  <include
-        file="templates/xpath_operator_templates.xml">
-  </include>
-  <include
-        file="templates/xpath_axis_templates.xml">
-  </include>
-    </extension>
-   <extension
-         point="org.eclipse.ui.preferencePages">
-		<page
-	        category="org.eclipse.wst.xml.ui.preferences.xml"
-	        class="org.eclipse.wst.xsl.ui.internal.preferences.MainPreferencePage"
-	        id="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
-	        name="%page.name.0"/>
-  <page
-        category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
-        class="org.eclipse.wst.xsl.ui.internal.preferences.XSLTemplatePreferencePage"
-        id="org.eclipse.wst.xsl.ui.XPath"
-        name="XPath Templates">
-     <keywordReference
-           id="org.eclipse.wst.xsl.ui.templates">
-     </keywordReference>
-  </page>
-  <page
-        category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
-        class="org.eclipse.wst.xsl.ui.internal.preferences.ValidationPreferencePage"
-        id="org.eclipse.wst.xsl.ui.preferences.Validation"
-        name="Validation">
-  </page>
-   </extension>
-   <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="org.eclipse.wst.xsl.ui.internal.perspective.XMLPerspectiveFactory"
-            icon="icons/XMLFile.gif"
-            id="org.eclipse.wst.xsl.ui.perspective"
-            name="%perspectiveName">
-      </perspective>
-   </extension>
-   <extension
-         point="org.eclipse.wst.sse.ui.editorConfiguration">
-      <sourceViewerConfiguration
-            class="org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL"
-            target="org.eclipse.wst.xml.core.xslsource">
-      </sourceViewerConfiguration>
-   </extension>
-   <extension
-         point="org.eclipse.wst.sse.ui.sourcevalidation">
-		<validator
-			scope="total"
+
+	<extension point="org.eclipse.ui.perspectives">
+		<perspective id="org.eclipse.wst.xsl.ui.perspective"
+			class="org.eclipse.wst.xsl.ui.internal.perspective.XMLPerspectiveFactory"
+			icon="icons/XMLFile.gif" 
+			name="%perspectiveName">
+		</perspective>
+	</extension>
+	
+	<extension point="org.eclipse.ui.editors">
+		<editor name="XSL Editor" icon="$nl$/icons/full/operation.gif"
+			contributorClass="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorActionBarContributor"
+			class="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"
+			id="org.eclipse.wst.xsl.ui.XSLEditor">
+			<contentTypeBinding contentTypeId="org.eclipse.wst.xml.core.xslsource" />
+		</editor>
+	</extension>
+	
+    <!-- Editor actionsets -->
+	<extension point="org.eclipse.ui.actionSetPartAssociations">
+		<actionSetPartAssociation
+			targetID="org.eclipse.ui.edit.text.actionSet.annotationNavigation">
+			<part id="org.eclipse.wst.xsl.ui.XSLEditor" />
+		</actionSetPartAssociation>
+		<actionSetPartAssociation targetID="org.eclipse.ui.NavigateActionSet">
+			<part id="org.eclipse.wst.xsl.ui.XSLEditor" />
+		</actionSetPartAssociation>
+	</extension>
+
+	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
+		<sourceViewerConfiguration
+			class="org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL"
+			target="org.eclipse.wst.xml.core.xslsource">
+		</sourceViewerConfiguration>
+	</extension>
+	
+	<extension point="org.eclipse.ui.newWizards">
+		<wizard category="org.eclipse.wst.XMLCategory"
+			class="org.eclipse.wst.xsl.ui.internal.wizards.NewXSLFileWizard"
+			finalPerspective="org.eclipse.wst.xsl.ui.perspective" 
+			icon="icons/full/operation.gif"
+			id="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard"
+			name="XSL" 
+			preferredPerspectives="org.eclipse.wst.xsl.ui.perspective">
+			<description>Create a new XSL Stylesheet</description>
+			<selection class="org.eclipse.core.resources.IResource">
+			</selection>
+		</wizard>
+	</extension>
+	
+	<!-- XSL templates -->
+	<extension point="org.eclipse.ui.editors.templates">
+		<contextType
+			class="org.eclipse.wst.xsl.ui.internal.templates.TemplateContextTypeXSL"
+			id="xsl_new" name="New XSL">
+		</contextType>
+		<include file="templates/file_templates.xml" />
+	</extension>
+
+	<!-- XPath templates -->
+	<extension point="org.eclipse.ui.editors.templates">
+		<contextType
+			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+			id="xpath_axis" name="axis">
+		</contextType>
+		<contextType
+			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+			id="exslt_function" name="exslt">
+		</contextType>
+		<contextType
+			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+			id="xsl_xpath" name="xpath">
+		</contextType>
+		<contextType
+			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+			id="xpath_2" name="xpath 2.0">
+		</contextType>
+		<contextType
+			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+			id="xpath_operator" name="operator">
+		</contextType>
+		<contextType
+			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+			id="extension_function" name="custom">
+		</contextType>
+		<include file="templates/xpath_templates.xml"/>
+		<include file="templates/xpath_operator_templates.xml"/>
+		<include file="templates/xpath_axis_templates.xml"/>
+	</extension>
+	
+	<extension point="org.eclipse.ui.preferencePages">
+		<page category="org.eclipse.wst.xml.ui.preferences.xml"
+			class="org.eclipse.wst.xsl.ui.internal.preferences.MainPreferencePage"
+			id="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage" 
+			name="%page.name.0" />
+		<page category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
+			class="org.eclipse.wst.xsl.ui.internal.preferences.XSLTemplatePreferencePage"
+			id="org.eclipse.wst.xsl.ui.template.preferencePage" 
+			name="Templates">
+		</page>
+		<page category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
+			class="org.eclipse.wst.xsl.ui.internal.preferences.XPathTemplatePreferencePage"
+			id="org.eclipse.wst.xsl.ui.XPath" 
+			name="XPath Templates">
+			<keywordReference id="org.eclipse.wst.xsl.ui.templates"/>
+		</page>
+		<page category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
+			class="org.eclipse.wst.xsl.ui.internal.preferences.ValidationPreferencePage"
+			id="org.eclipse.wst.xsl.ui.preferences.Validation" 
+			name="Validation">
+		</page>
+	</extension>
+	
+	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
+		<validator scope="total"
 			class="org.eclipse.wst.xsl.ui.internal.validation.DelegatingSourceValidatorForXSL"
 			id="org.eclipse.wst.xsl.ui.internal.validation.DelegatingSourceValidatorForXSL">
-			<contentTypeIdentifier
-				id="org.eclipse.wst.xml.core.xslsource">
+			<contentTypeIdentifier id="org.eclipse.wst.xml.core.xslsource">
 				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT">
 				</partitionType>
 			</contentTypeIdentifier>
-			<contentTypeIdentifier
-				id="org.eclipse.wst.xsl.core.xslsource">
+			<contentTypeIdentifier id="org.eclipse.wst.xsl.core.xslsource">
 				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT">
 				</partitionType>
 			</contentTypeIdentifier>
 		</validator>
-   </extension>
-   
-   	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
-		<validator
-			scope="partial"
+	</extension>
+
+	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
+		<validator scope="partial"
 			class="org.eclipse.wst.xsl.ui.internal.validation.XSLMarkupValidator"
 			id="org.eclipse.wst.xsl.ui.internal.validator.markupvalidator">
 			<contentTypeIdentifier id="org.eclipse.wst.xml.core.xslsource">
-				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
-				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT" />
+				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT" />
 			</contentTypeIdentifier>
 			<contentTypeIdentifier id="org.eclipse.wst.xsl.core.xslsource">
-				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
-				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT" />
+				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT" />
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
@@ -135,28 +162,23 @@
 			</contentTypeIdentifier>
 		</validator>
    </extension>
--->	
-
-	<extension point="org.eclipse.ui.editors">
-		<editor
-			name="XSL Editor"
-			icon="$nl$/icons/full/operation.gif"
-			contributorClass="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorActionBarContributor"
-			class="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"
-			id="org.eclipse.wst.xsl.ui.XSLEditor">
-			<contentTypeBinding
-				contentTypeId="org.eclipse.wst.xml.core.xslsource" />
-		</editor>
+-->
+	
+	<extension point="org.eclipse.ui.actionSets">
+		<actionSet id="org.eclipse.wst.xsl.ui.xslActionSet" label="XSL Actions">
+			<action id="org.eclipse.wst.xsl.ui.newXSLFileAction"
+				class="org.eclipse.wst.xsl.ui.internal.actions.NewXSLFileWizardDelegate"
+				icon="icons/full/operation.gif" 
+				label="New XSL File" 
+				style="push" 
+				toolbarPath="org.eclipse.wst.xsl.ui.xslActionSet" />
+			<action id="org.eclipse.wst.xsl.ui.newXSLFileAction"
+				class="org.eclipse.wst.xsl.ui.internal.actions.NewXMLFileWizardDelegate"
+				icon="icons/full/new_xml.gif" 
+				label="New XML File" 
+				style="push" 
+				toolbarPath="org.eclipse.wst.xsl.ui.xslActionSet" />
+		</actionSet>
 	</extension>
-    <!-- Editor actionsets -->
-      <extension point="org.eclipse.ui.actionSetPartAssociations">
-              <actionSetPartAssociation
-                      targetID="org.eclipse.ui.edit.text.actionSet.annotationNavigation">
-                      <part id="org.eclipse.wst.xsl.ui.XSLEditor"/>
-              </actionSetPartAssociation>
-              <actionSetPartAssociation
-                      targetID="org.eclipse.ui.NavigateActionSet">
-                      <part id="org.eclipse.wst.xsl.ui.XSLEditor"/>
-              </actionSetPartAssociation>
-      </extension>
- </plugin>
+	
+</plugin>

@@ -1,14 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-<template id="org.eclipse.wst.xslt.templates.xslt.1"
-          autoinsert="true"
-          context="xml_new"
-          deleted="false"
-          description="XSLT 1.0 conform XSLT Document Template"
-          enabled="true"
-          name="XSLT 1.0 Document">&lt;?xml version="1.0" encoding="${encoding}"?&gt;
-
-&lt;xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"&gt;
-	${cursor}
-&lt;/xsl:stylesheet&gt;</template>
+<template id="org.eclipse.wst.xslt.templates.xsl_basic"
+       name="Basic stylesheet"
+       context="xsl_new"
+       autoinsert="true"
+       deleted="false"
+       enabled="true"
+       description="Simple XSL stylesheet"><![CDATA[<?xml version="1.0" encoding="${encoding}"?>
+<xsl:stylesheet version="${xsl_version}" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template match="/">
+		${cursor}
+	</xsl:template>
+</xsl:stylesheet>
+]]>
+</template>
+<template id="org.eclipse.wst.xslt.templates.xsl_copy"
+     name="Copy stylesheet"
+     context="xsl_new"
+     autoinsert="true"
+     deleted="false"
+     enabled="true"
+     description="Copy XSL Stylesheet"><![CDATA[<?xml version="1.0" encoding="${encoding}"?>
+<xsl:stylesheet version="${xsl_version}" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<xsl:template match="/">
+		${cursor}
+	</xsl:template>
+	<!-- standard copy template -->
+	<xsl:template match="@*|node()">
+		<xsl:copy>
+			<xsl:apply-templates select="@*"/>
+			<xsl:apply-templates/>
+		</xsl:copy>
+	</xsl:template>	
+</xsl:stylesheet>
+]]>
+</template>
 </templates>
