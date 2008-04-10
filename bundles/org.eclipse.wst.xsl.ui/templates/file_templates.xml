@@ -6,24 +6,22 @@
        autoinsert="true"
        deleted="false"
        enabled="true"
-       description="Simple XSL stylesheet"><![CDATA[<?xml version="1.0" encoding="${encoding}"?>
+       description="Matches the root of the input"><![CDATA[<?xml version="1.0" encoding="${encoding}"?>
 <xsl:stylesheet version="${xsl_version}" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:template match="/">
-		${cursor}
+		<!-- TODO: Auto-generated template -->${cursor}
 	</xsl:template>
-</xsl:stylesheet>
-]]>
-</template>
+</xsl:stylesheet>]]></template>
 <template id="org.eclipse.wst.xslt.templates.xsl_copy"
      name="Copy stylesheet"
      context="xsl_new"
      autoinsert="true"
      deleted="false"
      enabled="true"
-     description="Copy XSL Stylesheet"><![CDATA[<?xml version="1.0" encoding="${encoding}"?>
+     description="Makes a copy of the input"><![CDATA[<?xml version="1.0" encoding="${encoding}"?>
 <xsl:stylesheet version="${xsl_version}" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	<xsl:template match="/">
-		${cursor}
+	<xsl:template match="${cursor}">
+		<!-- TODO: Auto-generated template -->
 	</xsl:template>
 	<!-- standard copy template -->
 	<xsl:template match="@*|node()">
@@ -32,7 +30,5 @@
 			<xsl:apply-templates/>
 		</xsl:copy>
 	</xsl:template>	
-</xsl:stylesheet>
-]]>
-</template>
+</xsl:stylesheet>]]></template>
 </templates>
