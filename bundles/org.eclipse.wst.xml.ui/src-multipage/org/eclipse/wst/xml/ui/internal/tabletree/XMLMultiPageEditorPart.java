@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others. All rights reserved. This
+ * Copyright (c) 2004, 2008 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms
  * of the Eclipse Public License v1.0 which accompanies this distribution, and
  * is available at http://www.eclipse.org/legal/epl-v10.html
@@ -443,14 +443,6 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 					if (getActivePage() != fSourcePageIndex) {
 						getTextEditor().getSelectionProvider().setSelection(event.getSelection());
 					}
-					if (fDesignViewer.equals(event.getSource())) {
-						try {
-							updateStatusLine(event.getSelection());
-						}
-						catch (Exception exception) {
-							Logger.logException(exception);
-						}						
-					}
 				}
 			});
 		}
@@ -464,6 +456,8 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 					if (getActivePage() != fSourcePageIndex) {
 						getTextEditor().getSelectionProvider().setSelection(event.getSelection());
 					}
+					/* Bug 210481 - Removed call to updateStatusLine because this is already
+					 * handled by the selection in the source page */
 				}
 			});
 		}

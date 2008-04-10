@@ -66,6 +66,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.information.InformationPresenter;
+import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.DefaultCharacterPairMatcher;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -1097,6 +1098,8 @@ public class StructuredTextEditor extends TextEditor {
 
 	private ILabelProvider fStatusLineLabelProvider;
 
+	private boolean fSelectionChangedFromGoto = false;
+	
 	/**
 	 * Creates a new Structured Text Editor.
 	 */
@@ -3349,8 +3352,21 @@ public class StructuredTextEditor extends TextEditor {
 			}
 		}
 	}
+	
+	public Annotation gotoAnnotation(boolean forward) {
+		Annotation result = super.gotoAnnotation(forward);
+		if(result != null)
+			fSelectionChangedFromGoto = true;
+		return result;
+	}
 
 	void updateStatusLine(ISelection selection) {
+		// Bug 210481 - Don't update the status line if the selection
+		// was caused by go to navigation
+		if(fSelectionChangedFromGoto) {
+			fSelectionChangedFromGoto = false;
+			return;
+		}
 		IStatusLineManager statusLineManager = getEditorSite().getActionBars().getStatusLineManager();
 		if (fStatusLineLabelProvider != null && statusLineManager != null) {
 			String text = null;
