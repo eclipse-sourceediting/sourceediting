@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,13 +33,14 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNodeList;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.ui.internal.CSSUIMessages;
+import org.eclipse.wst.sse.ui.views.properties.IPropertySourceExtension;
 import org.w3c.dom.css.CSSStyleDeclaration;
 
 /**
  * A IPropertySource implementation for a JFace viewer used to display
  * properties of CSS nodes.
  */
-public class CSSPropertySource implements IPropertySource {
+public class CSSPropertySource implements IPropertySource, IPropertySourceExtension {
 	protected ICSSNode fNode = null;
 	// for performance...
 	final static Class ADAPTER_KEY = IPropertySource.class;
@@ -334,5 +335,21 @@ public class CSSPropertySource implements IPropertySource {
 		}
 
 		return declaration;
+	}
+
+	// Bug 130039 - Implement IPropertySourceExtension
+	
+	public boolean isPropertyRemovable(Object name) {
+		return true;
+	}
+
+	public void removeProperty(Object name) {
+		if(name == null)
+			return;
+		
+		CSSStyleDeclaration declaration = getDeclarationNode();
+		
+		if(declaration != null)
+			declaration.removeProperty(name.toString());
 	}
 }
