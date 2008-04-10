@@ -8,6 +8,9 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *     David Carver - STAR - bug 224777 - fix spaces in path names in URIs.
+ *                           bug 226578 - remove extraneous @override statements
+ *                                        this was causing compilation problems
+ *                                        
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.validation.eclipse;
 
@@ -60,28 +63,24 @@ public class Validator extends AbstractNestedValidator
 	{
 		ValidationReport valreport = new ValidationReport(){
 
-			@Override
 			public String getFileURI()
 			{
 				// TODO Auto-generated method stub
 				return uri;
 			}
 
-			@Override
 			public HashMap getNestedMessages()
 			{
 				// TODO Auto-generated method stub
 				return new HashMap();
 			}
 
-			@Override
 			public ValidationMessage[] getValidationMessages()
 			{
 				// TODO Auto-generated method stub
 				return new ValidationMessage[0];
 			}
 
-			@Override
 			public boolean isValid()
 			{
 				// TODO Auto-generated method stub
