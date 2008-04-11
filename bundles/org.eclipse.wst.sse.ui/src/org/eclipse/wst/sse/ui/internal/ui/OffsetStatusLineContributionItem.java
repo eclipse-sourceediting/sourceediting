@@ -22,6 +22,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
@@ -108,6 +112,8 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
+
+import com.ibm.icu.text.NumberFormat;
 
 /**
  * @author nsd A Status Line contribution intended to display the selected
@@ -500,6 +506,35 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				gd.horizontalSpan = 2;
 				modelHandlerContentTypeLabel.setLayoutData(gd);
 				modelHandlerContentTypeLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_5 + model.getModelHandler().getAssociatedContentTypeId() + " (" + model.getModelHandler() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+				final Text counts = new Text(composite, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
+				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+				gd.horizontalSpan = 2;
+				counts.setLayoutData(gd);
+				counts.setText("Counting...");
+				counts.setEnabled(false);
+				final IStructuredModel finalModel = model;
+				final Display display = Display.getCurrent();
+				Job counter = new Job("Counting regions") {
+					protected IStatus run(IProgressMonitor monitor) {
+						IStructuredDocumentRegion[] structuredDocumentRegions = finalModel.getStructuredDocument().getStructuredDocumentRegions();
+						int length = finalModel.getStructuredDocument().getLength();
+						int regionCount = 0;
+						for (int i = 0; i < structuredDocumentRegions.length; i++) {
+							regionCount += structuredDocumentRegions[i].getNumberOfRegions();
+						}
+						NumberFormat formatter = NumberFormat.getIntegerInstance();
+						final String regioncount = "Count: " + formatter.format(structuredDocumentRegions.length) + " document regions containing " + formatter.format(regionCount) + " text regions representing " + formatter.format(length) + " characters";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						display.syncExec(new Runnable() {
+							public void run() {
+								counts.setText(regioncount);
+								counts.setEnabled(true);
+							}
+						});
+						return Status.OK_STATUS;
+					}
+				};
+				counter.schedule(1000);
 
 				Label blankRow = new Label(composite, SWT.NONE);
 				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
