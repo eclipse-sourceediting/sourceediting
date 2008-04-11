@@ -11,11 +11,16 @@
 
 package org.eclipse.wst.xsl.internal.core.tests;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import junit.framework.TestCase;
 
@@ -26,7 +31,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.resources.refresh.IRefreshMonitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
@@ -34,13 +38,19 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidationMessage;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidationReport;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidator;
 import org.eclipse.wst.xsl.core.tests.XSLCoreTestsPlugin;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /*
  * Made abstract, so won't be automatically picked up as test (since intended to be subclassed).
@@ -84,32 +94,67 @@ public abstract class AbstractValidationTest extends TestCase
 		return fTestProject.getFile(new Path(path));
 	}
 	
-	protected XSLValidationReport validate(IFile file, Set<Integer> expectedErrors, Set<Integer> expectedWarnings) throws CoreException
+	protected XSLValidationReport validate(IFile file) throws CoreException, XPathExpressionException, IOException
 	{
 		XSLValidationReport report = new XSLValidationReport(file.getLocationURI().toString());
 		XSLValidator.getInstance().validate(file,report);
 		StylesheetModel model = XSLCore.getInstance().getStylesheet(file);		
 		assertFalse("Stylesheet model is null",model == null);
-		// Simply ensure that expected errors + warnings exist at a given line number
-		validateErrors(model,report.getErrors(),new HashSet<Integer>(expectedErrors));
-		validateErrors(model,report.getWarnings(),new HashSet<Integer>(expectedWarnings));
+		Map<Integer,String> expectedErrors = calculateErrorsAndWarnings(file);
+		validateErrors(model,report,expectedErrors);
 		return report;
 	}
 	
-	private void validateErrors(StylesheetModel model, List<XSLValidationMessage> errors, Set<Integer> expectedErrors)
+	private void validateErrors(StylesheetModel model, XSLValidationReport report, Map<Integer,String> expectedErrors)
 	{
-		for (XSLValidationMessage error : errors)
+		expectedErrors = new HashMap<Integer, String>(expectedErrors);
+		for (ValidationMessage msg : report.getValidationMessages())
 		{
+			XSLValidationMessage error = (XSLValidationMessage)msg;
 			assertTrue("Error report must be for the current stylesheet only", error.getNode().getStylesheet() == model.getStylesheet());
-			assertTrue("Unxpected error at line "+error.getLineNumber()+": "+error,expectedErrors.remove(error.getLineNumber()));
+			String comment = expectedErrors.remove(error.getLineNumber());
+			assertNotNull("Unxpected error at line "+error.getLineNumber()+": "+error,comment);
+			assertFalse("Incorrect error level for error at line "+error.getLineNumber()+": "+error,comment.startsWith("ERROR") && msg.getSeverity() != ValidationMessage.SEV_HIGH);
+			assertFalse("Incorrect error level for error at line "+error.getLineNumber()+": "+error,comment.startsWith("WARN") && msg.getSeverity() == ValidationMessage.SEV_HIGH);
 		}
-		for (Integer integer : expectedErrors)
-		{
-			assertTrue("Expected error at line "+integer, false);
+		for (Map.Entry<Integer, String> entry : expectedErrors.entrySet())
+		{	
+			assertTrue("Expected error "+entry.getValue()+" at line "+entry.getKey(), false);
 		}
 	}
-
-	private static final boolean DEBUG = false;
+	
+	private Map<Integer,String> calculateErrorsAndWarnings(IFile file) throws XPathExpressionException, IOException, CoreException
+	{
+		Map<Integer,String> expectedErrors = new HashMap<Integer,String>();
+		IStructuredModel smodel = null;
+		try
+		{
+			smodel = StructuredModelManager.getModelManager().getModelForRead(file);
+			if (smodel != null && smodel instanceof IDOMModel)
+			{
+				IDOMModel model = (IDOMModel) smodel;
+				XPathExpression xp = XPathFactory.newInstance().newXPath().compile("//comment()"); 
+				NodeList nodeSet = (NodeList)xp.evaluate(model.getDocument(), XPathConstants.NODESET);
+				for (int i=0; i<nodeSet.getLength(); i++)
+				{
+					Node commentNode = nodeSet.item(i);
+					String comment = commentNode.getNodeValue().trim();
+					if (comment.startsWith("ERROR") || comment.startsWith("WARN"))
+					{
+						IDOMNode parent = (IDOMNode)commentNode.getParentNode();
+						int line = model.getStructuredDocument().getLineOfOffset(parent.getStartOffset()) + 1;
+						expectedErrors.put(line,comment);
+					}
+				}
+			}
+		}
+		finally
+		{
+			if (smodel != null)
+				smodel.releaseFromRead();
+		}
+		return expectedErrors;
+	}
 
 	private static void getAndCreateProject() throws CoreException
 	{

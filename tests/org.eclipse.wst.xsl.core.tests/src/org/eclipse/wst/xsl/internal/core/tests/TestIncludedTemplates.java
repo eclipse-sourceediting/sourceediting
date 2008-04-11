@@ -10,19 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.core.tests;
 
-import java.util.HashSet;
-import java.util.Set;
-
-
 public class TestIncludedTemplates extends AbstractValidationTest
 {
 	public void test1() throws Exception
 	{
-		Set<Integer> errors = new HashSet<Integer>();
-		errors.add(23);
-		
-		Set<Integer> warnings = new HashSet<Integer>();
-		
-		validate(getFile("style1.xsl"),errors,warnings);
+		validate(getFile("style1.xsl"));
 	}
 }
