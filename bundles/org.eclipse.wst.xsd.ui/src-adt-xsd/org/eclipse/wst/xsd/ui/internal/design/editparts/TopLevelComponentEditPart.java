@@ -116,7 +116,7 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
 
     label = new HyperLinkLabel();
     label.setOpaque(true);
-    label.setBorder(new MarginBorder(0, 2, 2, 5));
+    label.setBorder(new MarginBorder(1, 2, 2, 5));
     label.setForegroundColor(ColorConstants.black);
     labelHolder.add(label);
 
