@@ -54,6 +54,7 @@ import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDParticleContent;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
+import org.eclipse.xsd.XSDWildcard;
 import org.eclipse.xsd.util.XSDConstants;
 
 public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter implements IComplexType, IADTObjectListener
@@ -312,6 +313,9 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
         getAttributeUses((XSDAttributeGroupDefinition) obj, list);
       }
     }
+    XSDWildcard anyAttr = xsdComplexTypeDefinition.getAttributeWildcard();
+    if (anyAttr != null)
+      list.add(anyAttr);
     // get immediate XSD Model Group of this complex type
     if (xsdComplexTypeDefinition.getContent() != null)
     {
