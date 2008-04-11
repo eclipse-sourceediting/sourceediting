@@ -52,8 +52,13 @@ import org.eclipse.wst.xsl.core.tests.XSLCoreTestsPlugin;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/*
- * Made abstract, so won't be automatically picked up as test (since intended to be subclassed).
+/**
+ * An abstract class to help with the testing. 
+ * It reads an XSL file, runs the validation on it, and then parses the document looking for comment nodes where the comment starts with ERROR or WARN. 
+ * For each comment node found, it determines whether the validation found a corresponding error or warning at the given comment node parent's line number. 
+ * It also checks to make sure that no unexpected errors/warnings are found (ones that don't have comment nodes).
+ * 
+ * @author Doug Satchwell
  */
 public abstract class AbstractValidationTest extends TestCase
 {
@@ -94,6 +99,15 @@ public abstract class AbstractValidationTest extends TestCase
 		return fTestProject.getFile(new Path(path));
 	}
 	
+	/**
+	 * Validate the file
+	 * 
+	 * @param file
+	 * @return
+	 * @throws CoreException
+	 * @throws XPathExpressionException
+	 * @throws IOException
+	 */
 	protected XSLValidationReport validate(IFile file) throws CoreException, XPathExpressionException, IOException
 	{
 		XSLValidationReport report = new XSLValidationReport(file.getLocationURI().toString());
