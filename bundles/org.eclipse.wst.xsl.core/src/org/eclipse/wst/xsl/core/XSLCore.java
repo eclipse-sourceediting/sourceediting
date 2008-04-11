@@ -18,11 +18,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
-import org.eclipse.wst.xsl.core.internal.model.Include;
 import org.eclipse.wst.xsl.core.internal.model.Stylesheet;
 import org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder;
 import org.eclipse.wst.xsl.core.internal.model.StylesheetModel;
-import org.eclipse.wst.xsl.core.internal.model.XSLAttribute;
 
 /**
  * TODO: Add JavaDoc
