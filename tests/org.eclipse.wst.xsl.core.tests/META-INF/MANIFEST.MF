@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: XSL Core Tests Plug-in
+Bundle-SymbolicName: org.eclipse.wst.xsl.core.tests
+Bundle-Version: 1.0.0
+Bundle-Activator: org.eclipse.wst.xsl.core.tests.XSLCoreTestsPlugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources;bundle-version="3.4.0",
+ org.eclipse.wst.xsl.core
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Import-Package: junit.framework,
+ org.eclipse.wst.xml.core.internal.validation.core
