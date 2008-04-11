@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,11 +12,14 @@ package org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.PointList;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -29,6 +32,12 @@ public class FieldFigure extends Figure implements IFieldFigure
 {
   // TODO: put this color is some common class
   public static final Color cellColor = new Color(null, 224, 233, 246);
+
+// For fix to https://bugs.eclipse.org/bugs/show_bug.cgi?id=161940
+//  public static final Color leftOuterBorderColor = new Color(null, 253, 196, 88);
+//  public static final Color leftInnerBorderColor = new Color(null, 253, 226, 172);
+//  public static final Color rightOuterBorderColor = new Color(null, 150, 179, 224);
+//  public static final Color rightInnerBorderColor = new Color(null, 49, 106, 197);
   
   // Formatting constraints
   public static final int TOP_MARGIN = 2; // pixels
@@ -37,6 +46,8 @@ public class FieldFigure extends Figure implements IFieldFigure
   public static final int LEFT_MARGIN = 2;
   public static final int RIGHT_MARGIN = LEFT_MARGIN;
   public static final int RIGHT_SIDE_PADDING = 6;
+  
+  private boolean isSelected = false;
 
   // States requiring decorators, and their icons
   // protected static final Image errorIcon = ICON_ERROR;
@@ -49,13 +60,69 @@ public class FieldFigure extends Figure implements IFieldFigure
   protected Label typeAnnotationLabel;  // for occurrence text, or error icons
   protected Label toolTipLabel;
 
+  public void paint(Graphics graphics)
+  {
+    super.paint(graphics);
+    if (isSelected)
+    {
+      try
+      {
+        graphics.pushState();
+        
+        PointList pointList = new PointList();
+        Rectangle r1 = rowFigure.getBounds();
+        pointList.addPoint(r1.x, r1.y + 1);
+        pointList.addPoint(r1.right() - 1, r1.y + 1);
+        pointList.addPoint(r1.right() - 1, r1.bottom() - 1);
+        pointList.addPoint(r1.x, r1.bottom() - 1);
+        pointList.addPoint(r1.x, r1.y + 1);
+        graphics.drawPolyline(pointList);
+
+// For fix to https://bugs.eclipse.org/bugs/show_bug.cgi?id=161940
+//        Rectangle r1 = nameLabel.getBounds();
+//        Rectangle r2 = typeLabel.getBounds();
+//        Rectangle r3 = nameAnnotationLabel.getBounds();
+//
+//        graphics.setForegroundColor(ColorConstants.darkGray);
+//
+//        PointList pointList = new PointList();
+//
+//        pointList.addPoint(r1.right(), r1.y + 1);
+//        pointList.addPoint(r1.x, r1.y + 1);
+//        pointList.addPoint(r1.x, r1.bottom() - 1);
+//        pointList.addPoint(r1.right(), r1.bottom() - 1);
+//        graphics.drawPolyline(pointList);
+//
+//        pointList.removeAllPoints();
+//        pointList.addPoint(r3.x, r3.y + 1);
+//        pointList.addPoint(r3.right(), r3.y + 1);
+//        graphics.drawPolyline(pointList);
+//
+//        pointList.removeAllPoints();
+//        pointList.addPoint(r3.right(), r3.bottom() - 1);
+//        pointList.addPoint(r3.x, r3.bottom() - 1);
+//        graphics.drawPolyline(pointList);
+//
+//        pointList.removeAllPoints();
+//
+//        pointList.addPoint(r2.x, r2.y + 1);
+//        pointList.addPoint(r2.right() - 1, r2.y + 1);
+//        pointList.addPoint(r2.right() - 1, r2.bottom() - 1);
+//        pointList.addPoint(r2.x, r2.bottom() - 1);
+//        graphics.drawPolyline(pointList);
+      }
+      finally
+      {
+        graphics.popState();
+      }
+    }
+  }
+  
   public FieldFigure()
   {
     super();
     setLayoutManager(new ToolbarLayout());
-//    setOpaque(true);
     rowFigure = new Figure();
-//    rowFigure.setOpaque(true);
     RowLayout rowLayout = new RowLayout();
     rowFigure.setLayoutManager(rowLayout);
 
@@ -237,17 +304,17 @@ public class FieldFigure extends Figure implements IFieldFigure
   
   public void addSelectionFeedback()
   {
-    rowFigure.setBackgroundColor(cellColor); 
+    isSelected = true;
+    rowFigure.setBackgroundColor(cellColor);
   }
   
   public void removeSelectionFeedback()
   {
-    rowFigure.setBackgroundColor(getBackgroundColor());   
+    isSelected = false;
+    rowFigure.setBackgroundColor(getBackgroundColor());
   }
   
   public void refreshVisuals(Object model)
   {
-    // TODO Auto-generated method stub
-    
   }
 }

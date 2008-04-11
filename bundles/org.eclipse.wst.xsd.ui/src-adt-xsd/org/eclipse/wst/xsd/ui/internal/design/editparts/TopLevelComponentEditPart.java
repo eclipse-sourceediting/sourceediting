@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,11 +15,13 @@ import java.util.List;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
@@ -76,7 +78,35 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
 
   protected IFigure createFigure()
   {
-    Figure typeGroup = new Figure();
+    Figure typeGroup = new Figure()
+    {
+      public void paint(Graphics graphics)
+      {
+        super.paint(graphics);
+        if (isSelected)
+        {
+          try
+          {
+            graphics.pushState();
+
+            Rectangle r1 = getBounds();
+            PointList pointList = new PointList();
+
+            pointList.addPoint(r1.x, r1.y + 1);
+            pointList.addPoint(r1.right() - 1, r1.y + 1);
+            pointList.addPoint(r1.right() - 1, r1.bottom() - 1);
+            pointList.addPoint(r1.x, r1.bottom() - 1);
+            pointList.addPoint(r1.x, r1.y + 1);
+            graphics.drawPolyline(pointList);
+          }
+          finally
+          {
+            graphics.popState();
+          }
+        }
+        
+      }
+    };
     typeGroup.setLayoutManager(new ToolbarLayout());
 
     labelHolder = new Figure();
@@ -86,7 +116,7 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
 
     label = new HyperLinkLabel();
     label.setOpaque(true);
-    label.setBorder(new MarginBorder(0, 2, 2, 1));
+    label.setBorder(new MarginBorder(0, 2, 2, 5));
     label.setForegroundColor(ColorConstants.black);
     labelHolder.add(label);
 
@@ -126,11 +156,6 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
       setReselect(false);
     }
   }
-
-  // public XSDNamedComponent getXSDNamedComponent()
-  // {
-  // return (XSDNamedComponent) getModel();
-  // }
 
   public List getModelChildren()
   {
