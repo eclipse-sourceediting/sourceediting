@@ -19,7 +19,7 @@ public class TestIncludedTemplates extends AbstractValidationTest
 	public void test1() throws Exception
 	{
 		Set<Integer> errors = new HashSet<Integer>();
-		errors.add(27);
+		errors.add(23);
 		
 		Set<Integer> warnings = new HashSet<Integer>();
 		

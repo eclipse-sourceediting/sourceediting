@@ -26,6 +26,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.refresh.IRefreshMonitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
@@ -63,11 +64,14 @@ public abstract class AbstractValidationTest extends TestCase
 			{
 				String path = e.nextElement();
 				URL url = Platform.getBundle(XSLCoreTestsPlugin.PLUGIN_ID).getEntry(path);
-				url = FileLocator.resolve(url);
-				path = path.substring("projectfiles".length());
-				IFile destFile = fTestProject.getFile(path);
-				System.out.println(destFile.getLocation()+" --> "+url.toExternalForm());
-				destFile.createLink(url.toURI(), IResource.REPLACE, new NullProgressMonitor());
+				if (!url.getFile().endsWith("/"))
+				{
+					url = FileLocator.resolve(url);
+					path = path.substring("projectfiles".length());
+					IFile destFile = fTestProject.getFile(path);
+					System.out.println(destFile.getLocation()+" --> "+url.toExternalForm());
+					destFile.createLink(url.toURI(), IResource.REPLACE, new NullProgressMonitor());
+				}
 			}
 			fTestProject.refreshLocal(IResource.DEPTH_INFINITE, null);
 			fTestProjectInitialized = true;
