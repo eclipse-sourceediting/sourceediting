@@ -66,13 +66,13 @@ public class XMLPerspectiveFactory implements IPerspectiveFactory {
 		bottom.addView(IConsoleConstants.ID_CONSOLE_VIEW);
 		bottom.addView("org.eclipse.wst.common.snippets.internal.ui.SnippetsView"); //$NON-NLS-1$
 		
-		layout.addNewWizardShortcut("org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard"); //$NON-NLS-1$
+		//layout.addNewWizardShortcut("org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard"); //$NON-NLS-1$
 		layout.addNewWizardShortcut("org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard"); //$NON-NLS-1$
-		layout.addNewWizardShortcut("org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard"); //$NON-NLS-1$
-		layout.addNewWizardShortcut("org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard"); //$NON-NLS-1$
-		layout.addNewWizardShortcut("org.eclipse.wst.wsdl.ui"); //$NON-NLS-1$
-		layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.folder"); //$NON-NLS-1$
-		layout.addNewWizardShortcut("additions");
+		//layout.addNewWizardShortcut("org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard"); //$NON-NLS-1$
+		//layout.addNewWizardShortcut("org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard"); //$NON-NLS-1$
+		//layout.addNewWizardShortcut("org.eclipse.wst.wsdl.ui"); //$NON-NLS-1$
+		//layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.folder"); //$NON-NLS-1$
+		//layout.addNewWizardShortcut("additions");
 		
 		layout.addPerspectiveShortcut("org.eclipse.debug.ui.DebugPerspective"); //$NON-NLS-1$
 		

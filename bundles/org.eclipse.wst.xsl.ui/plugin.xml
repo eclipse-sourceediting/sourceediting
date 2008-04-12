@@ -19,6 +19,8 @@
 		</editor>
 	</extension>
 	
+	
+	
     <!-- Editor actionsets -->
 	<extension point="org.eclipse.ui.actionSetPartAssociations">
 		<actionSetPartAssociation
@@ -181,4 +183,25 @@
 		</actionSet>
 	</extension>
 	
+ <extension
+       point="org.eclipse.ui.perspectiveExtensions">
+    <perspectiveExtension
+          targetID="org.eclipse.wst.xsl.ui.perspective">
+       <newWizardShortcut
+             id="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard">
+       </newWizardShortcut>
+       <newWizardShortcut
+             id="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard">
+       </newWizardShortcut>
+       <newWizardShortcut
+             id="org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard">
+       </newWizardShortcut>
+       <newWizardShortcut
+             id="org.eclipse.wst.wsdl.ui">
+       </newWizardShortcut>
+       <newWizardShortcut
+             id="org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard">
+       </newWizardShortcut>
+    </perspectiveExtension>
+   </extension>	
 </plugin>
