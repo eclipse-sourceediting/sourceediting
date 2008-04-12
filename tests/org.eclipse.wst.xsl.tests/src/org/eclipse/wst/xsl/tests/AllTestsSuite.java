@@ -14,6 +14,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.wst.xsl.launching.tests.LaunchingSuite;
 import org.eclipse.wst.xsl.ui.tests.XSLUITestSuite;
+import org.eclipse.wst.xsl.core.tests.XSLCoreTestSuite;
 
 /**
  * This class specifies all the bundles of this component that provide a test
@@ -26,6 +27,7 @@ public class AllTestsSuite extends TestSuite {
 		super("All XSL Test Suites");
 		addTest(LaunchingSuite.suite());
 		addTest(XSLUITestSuite.suite());
+		addTest(XSLCoreTestSuite.suite());
 	}
 
 	/**
