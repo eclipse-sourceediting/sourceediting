@@ -203,5 +203,36 @@
              id="org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard">
        </newWizardShortcut>
     </perspectiveExtension>
-   </extension>	
+   </extension>
+	 <extension
+	       point="org.eclipse.ui.navigator.navigatorContent">
+	       <commonWizard
+	             type="new"
+	             wizardId="org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard">
+	          <enablement></enablement>
+	       </commonWizard>
+	       <commonWizard
+	             type="new"
+	             wizardId="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard">
+	          <enablement>
+	          
+	          </enablement>
+	       </commonWizard>
+	       <commonWizard
+	             type="new"
+	             wizardId="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard">
+	          <enablement></enablement>
+	       </commonWizard>
+	       <commonWizard
+	             type="new"
+	             wizardId="org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard">
+	          <enablement>
+	          </enablement>
+	       </commonWizard>
+	       <commonWizard
+	             type="new"
+	             wizardId="org.eclipse.wst.wsdl.ui">
+	          <enablement></enablement>
+	       </commonWizard>
+	 </extension>	
 </plugin>
