@@ -48,6 +48,7 @@ public class TestDelegatingSourceValidatorForXSL extends UnzippedProjectTester
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		
 	}
 	
 	@Override
