@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,32 +18,27 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
-public class TagOpenRegion implements ITextRegion {
-	static private final String fType = DOMRegionContext.XML_TAG_OPEN;
-	private int fLength;
+public class EmptyTagCloseRegion implements ITextRegion {
+	private int fLength = 2;
+	static private final byte fTextLength = 2;
+	static private final String fType = DOMRegionContext.XML_EMPTY_TAG_CLOSE;
 	private int fStart;
-	static private final byte fTextLength = 1;
 
 
-	public TagOpenRegion() {
+	public EmptyTagCloseRegion() {
 		super();
 	}
 
-	public TagOpenRegion(int start, int textLength, int length) {
-		this(start, length);
+	public EmptyTagCloseRegion(int start, int textLength, int length) {
+		super();
+		fStart = start;
+		fLength = length;
 		if (fTextLength != textLength)
 			throw new RuntimeException("invalid for this region type"); //$NON-NLS-1$
 	}
 
-	public TagOpenRegion(int start, int length) {
-		this();
-		fStart = start;
-		fLength = length;
-	}
-
 	public void adjustLength(int i) {
 		fLength += i;
-
 	}
 
 	public void adjustStart(int i) {
@@ -51,15 +46,12 @@ public class TagOpenRegion implements ITextRegion {
 
 	}
 
-
 	public void adjustTextLength(int i) {
-//		fTextLength += 1;
 		throw new RuntimeException("invalid for this region type"); //$NON-NLS-1$
 	}
 
 	public void equatePositions(ITextRegion region) {
 		fStart = region.getStart();
-		fLength = region.getLength();
 	}
 
 	public int getEnd() {

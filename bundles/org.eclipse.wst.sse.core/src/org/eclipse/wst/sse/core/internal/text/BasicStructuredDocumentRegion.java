@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,17 +32,22 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	private static final String UNDEFINED = "org.eclipse.wst.sse.core.structuredDocument.UNDEFINED"; //$NON-NLS-1$
 
 	private ITextRegionList _regions;
-	private boolean fIsDeleted = false;
-	// private String fType;
+	/**
+	 * has this region been removed from its document
+	 */
+	private static final byte MASK_IS_DELETED = 1;
+	/**
+	 * was this region terminated normally
+	 */
+	private static final byte MASK_IS_ENDED = 1 << 1;
+
+	private byte fIsDeletedOrEnded = 0;
+
 	/**
 	 * allow a pointer back to this nodes model
 	 */
 	private IStructuredDocument fParentDocument;
-	/**
-	 * was this node terminated normally
-	 */
-	// 0 == false, 1 == true
-	private byte hasEnd = 0;
+	
 	protected int fLength;
 	private IStructuredDocumentRegion next = null;
 	private IStructuredDocumentRegion previous = null;
@@ -351,7 +356,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	 * @see org.eclipse.wst.sse.core.text.IStructuredDocumentRegion#isDeleted()
 	 */
 	public boolean isDeleted() {
-		return fIsDeleted || (fParentDocument == null);
+		return (fIsDeletedOrEnded & MASK_IS_DELETED) != 0 || (fParentDocument == null);
 	}
 
 	/**
@@ -359,7 +364,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	 * @return boolean
 	 */
 	public boolean isEnded() {
-		return (hasEnd == 1);
+		return (fIsDeletedOrEnded & MASK_IS_ENDED) != 0;
 	}
 
 	public boolean sameAs(IStructuredDocumentRegion region, int shift) {
@@ -464,8 +469,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	 * @see org.eclipse.wst.sse.core.text.IStructuredDocumentRegion#setDelete(boolean)
 	 */
 	public void setDeleted(boolean isDeleted) {
-		fIsDeleted = isDeleted;
-
+		fIsDeletedOrEnded = (byte) (isDeleted ? fIsDeletedOrEnded | MASK_IS_DELETED : 0);
 	}
 
 	/**
@@ -474,12 +478,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	 *            boolean
 	 */
 	public void setEnded(boolean newHasEnd) {
-		if (newHasEnd) {
-			hasEnd = 1;
-		}
-		else {
-			hasEnd = 0;
-		}
+		fIsDeletedOrEnded = (byte) (newHasEnd ? fIsDeletedOrEnded | MASK_IS_ENDED : 0);
 	}
 
 	public void setLength(int newLength) {

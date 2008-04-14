@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,24 +18,26 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
-public class TagOpenRegion implements ITextRegion {
-	static private final String fType = DOMRegionContext.XML_TAG_OPEN;
+public class EndTagOpenRegion implements ITextRegion {
+	static private final String fType = DOMRegionContext.XML_END_TAG_OPEN;
 	private int fLength;
 	private int fStart;
-	static private final byte fTextLength = 1;
+	static private final byte fTextLength = 2;
 
 
-	public TagOpenRegion() {
+	public EndTagOpenRegion() {
 		super();
 	}
 
-	public TagOpenRegion(int start, int textLength, int length) {
-		this(start, length);
+	public EndTagOpenRegion(int start, int textLength, int length) {
+		this();
+		fStart = start;
 		if (fTextLength != textLength)
 			throw new RuntimeException("invalid for this region type"); //$NON-NLS-1$
+		fLength = length;
 	}
 
-	public TagOpenRegion(int start, int length) {
+	public EndTagOpenRegion(int start, int length) {
 		this();
 		fStart = start;
 		fLength = length;
@@ -60,6 +62,7 @@ public class TagOpenRegion implements ITextRegion {
 	public void equatePositions(ITextRegion region) {
 		fStart = region.getStart();
 		fLength = region.getLength();
+//		fTextLength = region.getTextLength();
 	}
 
 	public int getEnd() {

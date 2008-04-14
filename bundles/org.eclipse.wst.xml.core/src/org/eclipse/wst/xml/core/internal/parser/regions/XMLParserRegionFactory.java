@@ -71,8 +71,14 @@ public class XMLParserRegionFactory {
 		else if (context == DOMRegionContext.XML_TAG_OPEN) {
 			newRegion = new TagOpenRegion(start, textLength, length);
 		}
+		else if (context == DOMRegionContext.XML_END_TAG_OPEN) {
+			newRegion = new EndTagOpenRegion(start, textLength, length);
+		}
 		else if (context == DOMRegionContext.XML_TAG_CLOSE) {
 			newRegion = new TagCloseRegion(start);
+		}
+		else if (context == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
+			newRegion = new EmptyTagCloseRegion(start, textLength, length);
 		}
 		else if (context == DOMRegionContext.WHITE_SPACE) {
 			newRegion = new WhiteSpaceOnlyRegion(start, length);
