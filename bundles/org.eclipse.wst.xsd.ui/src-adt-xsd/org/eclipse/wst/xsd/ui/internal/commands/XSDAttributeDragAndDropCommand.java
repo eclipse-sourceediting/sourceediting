@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
@@ -21,6 +22,7 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.wst.xsd.ui.internal.actions.MoveXSDAttributeAction;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAttributeDeclarationAdapter;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDWildcardAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseFieldEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.CompartmentEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.ComplexTypeEditPart;
@@ -31,6 +33,7 @@ import org.eclipse.wst.xsd.ui.internal.design.editparts.XSDBaseFieldEditPart;
 import org.eclipse.wst.xsd.ui.internal.design.figures.GenericGroupFigure;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDConcreteComponent;
+import org.eclipse.xsd.XSDWildcard;
 
 public class XSDAttributeDragAndDropCommand extends BaseDragAndDropCommand
 {
@@ -43,6 +46,35 @@ public class XSDAttributeDragAndDropCommand extends BaseDragAndDropCommand
     setup();
   }
 
+  public XSDAttributeDragAndDropCommand(XSDBaseFieldEditPart itemToDrag, XSDBaseFieldEditPart leftField, XSDBaseFieldEditPart rightField, int direction)
+  {
+    super(itemToDrag.getViewer(), null); 
+    this.itemToDrag = itemToDrag;
+    canExecute = false;
+    handleKeyboardDragAndDrop(leftField, rightField, direction);
+  }
+  
+  protected void handleKeyboardDragAndDrop(XSDBaseFieldEditPart leftField, XSDBaseFieldEditPart rightField, int direction)
+  {
+    super.handleKeyboardDragAndDrop(leftField, rightField, direction);
+    if (direction == PositionConstants.NORTH)
+    {
+      if (target == null)
+      {
+        target = rightField;
+        this.location = target.getFigure().getBounds().getTop();
+      }
+      else if (!(leftField.getModel() instanceof XSDAttributeDeclarationAdapter)
+                 || leftField.getModel() instanceof XSDWildcardAdapter)
+      {
+        target = rightField;
+        this.location = target.getFigure().getBounds().getTop();
+      }
+    }
+    setup();
+  }
+
+  
   protected void setup()
   {
     canExecute = false;
@@ -74,18 +106,19 @@ public class XSDAttributeDragAndDropCommand extends BaseDragAndDropCommand
   {
     commonSetup(siblings, movingEditPart);
 
-    if (previousRefComponent instanceof XSDAttributeDeclaration && nextRefComponent instanceof XSDAttributeDeclaration)
+    if ((previousRefComponent instanceof XSDAttributeDeclaration || previousRefComponent instanceof XSDWildcard) 
+        && (nextRefComponent instanceof XSDAttributeDeclaration || nextRefComponent instanceof XSDWildcard))
     {
-      XSDConcreteComponent parent = ((XSDAttributeDeclaration) previousRefComponent).getContainer().getContainer();
+      XSDConcreteComponent parent = previousRefComponent.getContainer().getContainer();
       if (closerSibling == BELOW_IS_CLOSER)
       {
-        parent = ((XSDAttributeDeclaration) nextRefComponent).getContainer().getContainer();
+        parent = nextRefComponent.getContainer().getContainer();
       }
       action = new MoveXSDAttributeAction(parent, xsdComponentToDrag, previousRefComponent, nextRefComponent);
     }
-    else if (previousRefComponent == null && nextRefComponent instanceof XSDAttributeDeclaration)
+    else if (previousRefComponent == null && (nextRefComponent instanceof XSDAttributeDeclaration || nextRefComponent instanceof XSDWildcard))
     {
-      XSDConcreteComponent parent = ((XSDAttributeDeclaration) nextRefComponent).getContainer().getContainer();
+      XSDConcreteComponent parent = nextRefComponent.getContainer().getContainer();
       if (closerSibling == ABOVE_IS_CLOSER)
       {
         if (leftSiblingEditPart == null)
@@ -104,7 +137,7 @@ public class XSDAttributeDragAndDropCommand extends BaseDragAndDropCommand
     }
     else if (previousRefComponent instanceof XSDAttributeDeclaration && nextRefComponent == null)
     {
-      XSDConcreteComponent parent = ((XSDAttributeDeclaration) previousRefComponent).getContainer().getContainer();
+      XSDConcreteComponent parent = previousRefComponent.getContainer().getContainer();
       if (closerSibling == ABOVE_IS_CLOSER)
       {
         action = new MoveXSDAttributeAction(parent, xsdComponentToDrag, previousRefComponent, nextRefComponent);

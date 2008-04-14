@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Polyline;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.RoundedRectangle;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
@@ -413,4 +414,17 @@ public abstract class BaseDragAndDropCommand extends BaseCommand
     return new Rectangle(x, y, width, height);
   }
 
+  protected void handleKeyboardDragAndDrop(XSDBaseFieldEditPart leftField, XSDBaseFieldEditPart rightField, int direction)
+  {
+    target = leftField;
+    if (direction == PositionConstants.SOUTH)
+    {
+      if (itemToDrag == target)
+        return;
+      target = rightField;
+    }
+    this.location = null;
+    if (target != null)
+      this.location = target.getFigure().getBounds().getCenter();
+  }
 }

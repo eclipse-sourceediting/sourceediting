@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
@@ -21,6 +22,7 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.wst.xsd.ui.internal.actions.MoveXSDElementAction;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDElementDeclarationAdapter;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDWildcardAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseFieldEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.CompartmentEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.ComplexTypeEditPart;
@@ -34,6 +36,7 @@ import org.eclipse.wst.xsd.ui.internal.design.figures.GenericGroupFigure;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDModelGroup;
+import org.eclipse.xsd.XSDWildcard;
 
 
 public class XSDElementDragAndDropCommand extends BaseDragAndDropCommand
@@ -46,6 +49,34 @@ public class XSDElementDragAndDropCommand extends BaseDragAndDropCommand
     this.target = target;
     this.itemToDrag = itemToDrag;
     this.location = location;
+    setup();
+  }
+  
+  public XSDElementDragAndDropCommand(XSDBaseFieldEditPart itemToDrag, XSDBaseFieldEditPart leftField, XSDBaseFieldEditPart rightField, int direction)
+  {
+    super(itemToDrag.getViewer(), null); 
+    this.itemToDrag = itemToDrag;
+    canExecute = false;
+    handleKeyboardDragAndDrop(leftField, rightField, direction);
+  }
+  
+  protected void handleKeyboardDragAndDrop(XSDBaseFieldEditPart leftField, XSDBaseFieldEditPart rightField, int direction)
+  {
+    super.handleKeyboardDragAndDrop(leftField, rightField, direction);
+    if (direction == PositionConstants.NORTH)
+    {
+      if (target == null)
+      {
+        target = rightField;
+        this.location = target.getFigure().getBounds().getTop();
+      }
+      else if (!(leftField.getModel() instanceof XSDElementDeclarationAdapter)
+                 || leftField.getModel() instanceof XSDWildcardAdapter)
+      {
+        target = rightField;
+        this.location = target.getFigure().getBounds().getTop();
+      }
+    }
     setup();
   }
 
@@ -80,14 +111,15 @@ public class XSDElementDragAndDropCommand extends BaseDragAndDropCommand
     commonSetup(siblings, movingEditPart);
 
     // Can common this code up with XSDAttributeDragAndDropCommand... 
-    if (previousRefComponent instanceof XSDElementDeclaration && nextRefComponent instanceof XSDElementDeclaration)
+    if ((previousRefComponent instanceof XSDElementDeclaration || previousRefComponent instanceof XSDWildcard)
+        && (nextRefComponent instanceof XSDElementDeclaration || nextRefComponent instanceof XSDWildcard)) 
     {
-      XSDModelGroup modelGroup = (XSDModelGroup) ((XSDElementDeclaration) previousRefComponent).getContainer().getContainer();
+      XSDModelGroup modelGroup = (XSDModelGroup) previousRefComponent.getContainer().getContainer();
       if (parentEditPart != null)
         modelGroup = ((ModelGroupEditPart) parentEditPart).getXSDModelGroup();
       action = new MoveXSDElementAction(modelGroup, xsdComponentToDrag, previousRefComponent, nextRefComponent);
     }
-    else if (previousRefComponent == null && nextRefComponent instanceof XSDElementDeclaration)
+    else if (previousRefComponent == null && (nextRefComponent instanceof XSDElementDeclaration || nextRefComponent instanceof XSDWildcard))
     {
       if (closerSibling == ABOVE_IS_CLOSER)
       {
@@ -102,13 +134,14 @@ public class XSDElementDragAndDropCommand extends BaseDragAndDropCommand
       }
       else
       {
-        XSDModelGroup modelGroup = (XSDModelGroup) ((XSDElementDeclaration) nextRefComponent).getContainer().getContainer();
+        XSDModelGroup modelGroup = (XSDModelGroup) nextRefComponent.getContainer().getContainer();
         action = new MoveXSDElementAction(modelGroup, xsdComponentToDrag, previousRefComponent, nextRefComponent);
       }
     }
-    else if (previousRefComponent instanceof XSDElementDeclaration && nextRefComponent == null)
+    else if ((previousRefComponent instanceof XSDElementDeclaration || previousRefComponent instanceof XSDWildcard)  
+        && nextRefComponent == null)
     {
-      XSDModelGroup modelGroup = (XSDModelGroup) ((XSDElementDeclaration) previousRefComponent).getContainer().getContainer();
+      XSDModelGroup modelGroup = (XSDModelGroup)previousRefComponent.getContainer().getContainer();
       if (parentEditPart != null)
         modelGroup = ((ModelGroupEditPart) parentEditPart).getXSDModelGroup();
       if (closerSibling == ABOVE_IS_CLOSER)

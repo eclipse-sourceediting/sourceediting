@@ -75,6 +75,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewGraphicalViewer;
+import org.eclipse.wst.xsd.ui.internal.adt.design.IKeyboardDrag;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.ADTMultiPageEditor;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.EditorMode;
@@ -317,6 +318,10 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     else if (type == XSDSchema.class)
     {
       return xsdSchema;
+    }
+    else if (type == IKeyboardDrag.class)
+    {
+      return new KeyboardDragImpl();
     }
     else if (type == IContentOutlinePage.class)
     {
