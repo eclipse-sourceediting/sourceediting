@@ -213,6 +213,22 @@ public class XSLCodeCompletionTest extends UnzippedProjectTester {
     	assertTrue("Can't find XSL element proposals.", proposal.getDisplayString().equals("xsl:apply-imports"));
     }
     
+    /**
+     * Test that there are proposals available at the current position.
+     * This test is for non-xsl elements with a { to allow for content assistance
+     */
+    public void testNoAttributeProposalsAvailable() throws Exception {
+    	
+       	int lineNumber= 78;   // Starting Line Number
+    	int columnNumber= 18; // Starting Column Number
+    	int lineOffset= document.getLineOffset(lineNumber);
+    	int cursorPosition = lineOffset + columnNumber;
+ 
+    	XSLContentAssistProcessor processor = new XSLContentAssistProcessor();
+    	
+    	ICompletionProposal[] proposals = processor.computeCompletionProposals(sourceViewer, cursorPosition);
+    	assertNull("Found Proposals where there shouldn't be any.", proposals);
+    }
     
     
 }
