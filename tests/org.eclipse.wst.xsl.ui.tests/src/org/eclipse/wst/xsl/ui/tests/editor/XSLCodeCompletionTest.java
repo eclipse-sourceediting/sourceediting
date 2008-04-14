@@ -12,6 +12,8 @@
 package org.eclipse.wst.xsl.ui.tests.editor;
 
 import java.io.File;
+import java.io.IOException;
+
 import junit.framework.Assert;
 
 import org.eclipse.core.resources.IFile;
@@ -32,6 +34,8 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyExists;
+import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.xml.core.internal.encoding.XMLDocumentLoader;
@@ -71,30 +75,18 @@ public class XSLCodeCompletionTest extends UnzippedProjectTester {
 		fileName = "docbook.xsl";
 		
         // Setup the Project and File to be used during the test.
-		String xslFilePath = projectName + File.separator + "docbook-xsl-1.73.2" + File.separator + "html" + File.separator + fileName;
-		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(projectName);
-
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-		try {
-			project.create(description, new NullProgressMonitor());
-			project.open(new NullProgressMonitor());
-		}
-		catch (CoreException e) {
-			
-		}
-		
-		// Get the IFile instance 
+		String xslFilePath = setupProject();
 		file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(xslFilePath));
 		if (file != null && !file.exists()) {
 			Assert.fail("Unable to locate Docbook HTML stylesheet.");
 		}
 		
-		// Load the File into a Structured Document using the Model Manager
-		IModelManager modelManager = StructuredModelManager.getModelManager();
-		IStructuredModel model = modelManager.getNewModelForEdit(file, true);
-		document = model.getStructuredDocument();
+		loadXSLFile();
 		
-		
+		initializeSourceViewer();
+	}
+
+	protected void initializeSourceViewer() {
 		// some test environments might not have a "real" display
 		if(Display.getCurrent() != null) {
 			
@@ -116,14 +108,38 @@ public class XSLCodeCompletionTest extends UnzippedProjectTester {
 			Assert.fail("Unable to run the test as a display must be available.");
 		}
 		
-		// Setup a StructuredTextViewer for Content Assistance and proposals.
+		configureSourceViewer();
+	}
+
+	protected void configureSourceViewer() {
         sourceViewer.setDocument(document);
 		sourceViewer.configure(new StructuredTextViewerConfigurationXSL());
+	}
+
+	protected void loadXSLFile() throws ResourceAlreadyExists, ResourceInUse,
+			IOException, CoreException {
+		IModelManager modelManager = StructuredModelManager.getModelManager();
+		IStructuredModel model = modelManager.getNewModelForEdit(file, true);
+		document = model.getStructuredDocument();
+	}
+
+	protected String setupProject() {
+		String xslFilePath = projectName + File.separator + "docbook-xsl-1.73.2" + File.separator + "html" + File.separator + fileName;
+		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(projectName);
+
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+		try {
+			project.create(description, new NullProgressMonitor());
+			project.open(new NullProgressMonitor());
+		}
+		catch (CoreException e) {
+			
+		}
+		return xslFilePath;
 	}
 	
 	@Override
 	protected void tearDown() throws Exception {
-		// TODO Auto-generated method stub
 		super.tearDown();
 	}
 	
