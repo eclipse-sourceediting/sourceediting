@@ -15,6 +15,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.wst.xsl.ui.internal.validation.TestDelegatingSourceValidatorForXSL;
+import org.eclipse.wst.xsl.ui.tests.editor.XSLCodeCompletionTest;
 
 
 public class XSLUITestSuite extends TestSuite {
@@ -25,5 +26,6 @@ public class XSLUITestSuite extends TestSuite {
 	public XSLUITestSuite() {
 		super("XML UI Test Suite");
 		addTestSuite(TestDelegatingSourceValidatorForXSL.class);
+		addTestSuite(XSLCodeCompletionTest.class);
 	}
 }
