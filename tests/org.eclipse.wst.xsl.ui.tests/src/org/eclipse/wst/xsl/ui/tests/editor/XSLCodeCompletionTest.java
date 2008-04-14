@@ -131,7 +131,7 @@ public class XSLCodeCompletionTest extends UnzippedProjectTester {
     /**
      * Test that there are proposals available at the current position.
      */
-    public void testProposalsAvailable() throws Exception {
+    public void testSelectAttributeProposalsAvailable() throws Exception {
     	
        	int lineNumber= 96;   // Starting Line Number
     	int columnNumber= 29; // Starting Column Number
@@ -143,5 +143,76 @@ public class XSLCodeCompletionTest extends UnzippedProjectTester {
     	ICompletionProposal[] proposals = processor.computeCompletionProposals(sourceViewer, cursorPosition);
     	assertTrue(proposals.length >= 1);
     }
+    
+    /**
+     * Test that there are proposals available at the current position.
+     */
+    public void testTestAttributeProposalsAvailable() throws Exception {
+    	
+       	int lineNumber= 94;   // Starting Line Number
+    	int columnNumber= 19; // Starting Column Number
+    	int lineOffset= document.getLineOffset(lineNumber);
+    	int cursorPosition = lineOffset + columnNumber;
+ 
+    	XSLContentAssistProcessor processor = new XSLContentAssistProcessor();
+    	
+    	ICompletionProposal[] proposals = processor.computeCompletionProposals(sourceViewer, cursorPosition);
+    	assertTrue(proposals.length >= 1);
+    }
+    
+    /**
+     * Test that there are proposals available at the current position.
+     */
+    public void testMatchAttributeProposalsAvailable() throws Exception {
+    	
+       	int lineNumber= 112;   // Starting Line Number
+    	int columnNumber= 22; // Starting Column Number
+    	int lineOffset= document.getLineOffset(lineNumber);
+    	int cursorPosition = lineOffset + columnNumber;
+ 
+    	XSLContentAssistProcessor processor = new XSLContentAssistProcessor();
+    	
+    	ICompletionProposal[] proposals = processor.computeCompletionProposals(sourceViewer, cursorPosition);
+    	assertTrue(proposals.length >= 1);
+    }
+    
+    /**
+     * Test that there are proposals available at the current position.
+     * This test is for non-xsl elements with a { to allow for content assistance
+     */
+    public void testNonXSLAttributeProposalsAvailable() throws Exception {
+    	
+       	int lineNumber= 142;   // Starting Line Number
+    	int columnNumber= 18; // Starting Column Number
+    	int lineOffset= document.getLineOffset(lineNumber);
+    	int cursorPosition = lineOffset + columnNumber;
+ 
+    	XSLContentAssistProcessor processor = new XSLContentAssistProcessor();
+    	
+    	ICompletionProposal[] proposals = processor.computeCompletionProposals(sourceViewer, cursorPosition);
+    	assertTrue(proposals.length >= 2);
+    }
+    
+    /**
+     * Test that there are proposals available at the current position.
+     * This test is for non-xsl elements with a { to allow for content assistance
+     */
+    public void testXSLElementProposalsAvailable() throws Exception {
+    	
+       	int lineNumber= 139;   // Starting Line Number
+    	int columnNumber= 1; // Starting Column Number
+    	int lineOffset= document.getLineOffset(lineNumber);
+    	int cursorPosition = lineOffset + columnNumber;
+ 
+    	XSLContentAssistProcessor processor = new XSLContentAssistProcessor();
+    	
+    	ICompletionProposal[] proposals = processor.computeCompletionProposals(sourceViewer, cursorPosition);
+    	assertTrue(proposals.length >= 2);
+    	
+    	ICompletionProposal proposal = proposals[0];
+    	assertTrue("Can't find XSL element proposals.", proposal.getDisplayString().equals("xsl:apply-imports"));
+    }
+    
+    
     
 }
