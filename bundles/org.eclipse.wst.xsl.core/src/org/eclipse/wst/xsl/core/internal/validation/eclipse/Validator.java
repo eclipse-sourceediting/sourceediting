@@ -20,16 +20,26 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.common.uriresolver.internal.util.URIEncoder;
+import org.eclipse.wst.validation.ValidationResult;
+import org.eclipse.wst.validation.ValidationState;
+import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
+import org.eclipse.wst.validation.internal.provisional.core.IReporter;
+import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator;
 import org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
+import org.eclipse.wst.xsl.core.internal.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.internal.model.XSLAttribute;
 import org.eclipse.wst.xsl.core.internal.model.XSLNode;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidationMessage;
@@ -43,21 +53,67 @@ import org.eclipse.wst.xsl.core.internal.validation.XSLValidator;
  */
 public class Validator extends AbstractNestedValidator
 {
+	// ////////////////////////////////////////////////////////////////////////////////////////////////
+	// BUILD VALIDATION METHODS
+	// ////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*	@Override
+	private boolean asYouTypeValidation;
+
+	@Override
+	public void clean(IProject project, ValidationState state, IProgressMonitor monitor)
+	{
+		super.clean(project, state, monitor);
+		XSLCore.getInstance().clean(project,monitor);
+	}
+	
+	@Override
 	public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor)
 	{
-		// TODO this method is NOT being called! Why?
+/*		String s;
+		switch(kind)
+		{
+			case IResourceDelta.ADDED:
+				s = "added";
+				break;
+			case IResourceDelta.CHANGED:
+				s = "CHANGED";
+				break;
+			case IResourceDelta.CONTENT:
+				s = "CONTENT";
+				break;
+			case IResourceDelta.REMOVED:
+				s = "REMOVED";
+				break;
+			default:
+				s = "other";
+		}
+		System.out.println(s);
+*/		
 		ValidationResult res = super.validate(resource, kind, state, monitor);
 		if (resource.getType() == IResource.FILE)
 		{
 			StylesheetModel stylesheet = XSLCore.getInstance().getStylesheet((IFile) resource);
-			IFile[] dependencies = stylesheet.getFiles().toArray(new IFile[0]);
+			IFile[] dependencies = stylesheet.getFileDependencies().toArray(new IFile[0]);
 			res.setDependsOn(dependencies);
+//			res.setValidated(dependencies);
 		}
-		// TODO clean project (when project == null)
 		return res;
-	} */
+	} 
+
+	
+	// ////////////////////////////////////////////////////////////////////////////////////////////////
+	// AS YOU TYPE VALIDATION METHODS
+	// ////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public IStatus validateInJob(IValidationContext context, IReporter reporter) throws ValidationException
+	{
+		asYouTypeValidation = true;
+		return super.validateInJob(context, reporter);
+	}
+
+	// ////////////////////////////////////////////////////////////////////////////////////////////////
+	// COMMON METHODS
+	// ////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public ValidationReport validate(final String uri, InputStream inputstream, NestedValidatorContext context)
 	{
@@ -93,9 +149,9 @@ public class Validator extends AbstractNestedValidator
 			if (files.length > 0)
 			{
 				IFile xslFile = files[0];
-				// FIXME this guard should be unnecessary!!
+				// FIXME this guard should not be unnecessary!!
 				if (XSLCore.isXSLFile(xslFile))
-					valreport = XSLValidator.getInstance().validate(xslFile);
+					valreport = XSLValidator.getInstance().validate(xslFile,asYouTypeValidation);
 			}
 		}
 		catch (URISyntaxException e)

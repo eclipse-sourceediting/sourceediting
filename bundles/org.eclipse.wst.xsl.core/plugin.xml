@@ -78,6 +78,7 @@
             class="org.eclipse.wst.xsl.core.internal.validation.eclipse.Validator"
             sourceid="org.eclipse.wst.xsl.ui.internal.validation.DelegatingSourceValidatorForXSL"
             manual="true"
+            markerId="org.eclipse.wst.xsl.core.problem"
             version="2">
          <include>
             <rules>

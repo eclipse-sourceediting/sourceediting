@@ -11,9 +11,12 @@
 package org.eclipse.wst.xsl.core;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
@@ -68,6 +71,18 @@ public class XSLCore
 		stylesheetsComposed.put(file, stylesheetComposed);
 		stylesheetComposed.fix();
 		return stylesheetComposed;
+	}
+	
+	public synchronized void clean(IProject project, IProgressMonitor monitor)
+	{
+		for (Iterator iter = stylesheetsComposed.values().iterator(); iter.hasNext();)
+		{
+			StylesheetModel model = (StylesheetModel)iter.next();
+			if (project == null || project.equals(model.getStylesheet().getFile().getProject()))
+			{
+				iter.remove();
+			}
+		}
 	}
 
 	/**

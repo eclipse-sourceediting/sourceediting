@@ -50,12 +50,12 @@ public class StylesheetModel
 	 * Get all stylesheets in the hierarchy (including the current stylesheet)
 	 * @return
 	 */
-	public Set<Stylesheet> getStylesheets()
+	public Set<Stylesheet> getIncludedStylesheets()
 	{
 		return stylesheets;
 	}
 	
-	public Set<IFile> getFiles()
+	public Set<IFile> getFileDependencies()
 	{
 		return files;
 	}
@@ -117,8 +117,6 @@ public class StylesheetModel
 		long start = System.currentTimeMillis();
 		templates.addAll(stylesheet.templates);
 		templateSet.addAll(stylesheet.templates);
-		stylesheets.add(stylesheet);
-		files.add(stylesheet.getFile());
 		for (Include inc : stylesheet.includes)
 		{
 			handleInclude(inc);
@@ -146,21 +144,17 @@ public class StylesheetModel
 		{
 			return;
 		}
-		else if (files.contains(file))
+		else if (stylesheet.getFile().equals(file) || files.contains(file))
 		{
 			circularReference = true;
 			return;				
 		}
 		files.add(file);
 		
-//		Stylesheet includedStylesheet = StylesheetBuilder.getInstance().getStylesheet(file, false);
-//		if (includedStylesheet == null)
-//			return;
-//		stylesheets.add(includedStylesheet);
-		
 		StylesheetModel includedModel = XSLCore.getInstance().getStylesheet(file);
 		if (includedModel == null)
 			return;
+		stylesheets.add(includedModel.getStylesheet());
 		
 		if (include.getIncludeType() == Include.INCLUDE)
 		{

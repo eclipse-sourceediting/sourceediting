@@ -49,16 +49,21 @@ public class XSLValidator
 	{
 	}
 
-	public ValidationReport validate(IFile xslFile) throws CoreException
+	public ValidationReport validate(IFile xslFile, boolean forceBuild) throws CoreException
 	{
 		XSLValidationReport report = new XSLValidationReport(xslFile.getLocationURI().toString());
-		validate(xslFile, report);
+		validate(xslFile, report, forceBuild);
 		return report;
 	}
 
-	public void validate(IFile xslFile, XSLValidationReport report) throws CoreException
+	public void validate(IFile xslFile, XSLValidationReport report, boolean forceBuild) throws CoreException
 	{
-		StylesheetModel stylesheet = XSLCore.getInstance().buildStylesheet(xslFile);
+		StylesheetModel stylesheet;
+		if (forceBuild)
+			stylesheet = XSLCore.getInstance().buildStylesheet(xslFile);
+		else
+			stylesheet = XSLCore.getInstance().getStylesheet(xslFile);
+
 		long start = System.currentTimeMillis();
 		if (stylesheet!=null)
 			calculateProblems(stylesheet, report);
@@ -227,7 +232,7 @@ public class XSLValidator
 	{
 		// TODO these need to be real preferences
 		int REPORT_EMPTY_PARAM_PREF = IMarker.SEVERITY_WARNING;
-		int REPORT_MISSING_PARAM_PREF = IMarker.SEVERITY_ERROR;
+		int REPORT_MISSING_PARAM_PREF = IMarker.SEVERITY_WARNING;
 
 		for (CallTemplate calledTemplate : stylesheetComposed.getStylesheet().getCalledTemplates())
 		{
