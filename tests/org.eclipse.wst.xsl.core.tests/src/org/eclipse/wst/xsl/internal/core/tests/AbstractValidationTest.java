@@ -111,7 +111,7 @@ public abstract class AbstractValidationTest extends TestCase
 	protected XSLValidationReport validate(IFile file) throws CoreException, XPathExpressionException, IOException
 	{
 		XSLValidationReport report = new XSLValidationReport(file.getLocationURI().toString());
-		XSLValidator.getInstance().validate(file,report);
+		XSLValidator.getInstance().validate(file,report,true);
 		StylesheetModel model = XSLCore.getInstance().getStylesheet(file);		
 		assertFalse("Stylesheet model is null",model == null);
 		Map<Integer,String> expectedErrors = calculateErrorsAndWarnings(file);
