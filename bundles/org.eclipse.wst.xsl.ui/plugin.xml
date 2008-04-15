@@ -11,15 +11,16 @@
 	</extension>
 	
 	<extension point="org.eclipse.ui.editors">
-		<editor name="XSL Editor" icon="$nl$/icons/full/operation.gif"
+		<editor name="XSL Editor" 
+			icon="icons/full/operation.gif"
 			contributorClass="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorActionBarContributor"
 			class="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"
+			default="true"
+			extensions="xsl,xslt"
 			id="org.eclipse.wst.xsl.ui.XSLEditor">
 			<contentTypeBinding contentTypeId="org.eclipse.wst.xml.core.xslsource" />
 		</editor>
 	</extension>
-	
-	
 	
     <!-- Editor actionsets -->
 	<extension point="org.eclipse.ui.actionSetPartAssociations">
