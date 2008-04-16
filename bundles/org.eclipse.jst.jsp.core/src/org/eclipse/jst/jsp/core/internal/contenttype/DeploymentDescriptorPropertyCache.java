@@ -17,6 +17,7 @@ import java.io.StringReader;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -242,6 +243,13 @@ public final class DeploymentDescriptorPropertyCache {
 						if (segmentCount > 1 && path.lastSegment().equals(WEB_XML) && path.segment(segmentCount - 2).equals(WEB_INF)) {
 							getInstance().deploymentDescriptorChanged(path);
 						}
+					}
+					else if (resource.getType() == IResource.PROJECT) {
+						String name = resource.getName();
+						if(_debugResolutionCache) {
+							System.out.println("Removing DeploymentDescriptorPropertyCache resolution cache for project " + name); //$NON-NLS-1$ 
+						}
+						getInstance().resolvedMap.remove(name);
 					}
 					return true;
 				}
@@ -531,6 +539,7 @@ public final class DeploymentDescriptorPropertyCache {
 	}
 
 	private static DeploymentDescriptorPropertyCache _instance = new DeploymentDescriptorPropertyCache();
+	private static final boolean _debugResolutionCache = false;
 
 	private static final float defaultWebAppVersion = 2.4f;
 	private static String EL_IGNORED = "el-ignored";
@@ -603,7 +612,10 @@ public final class DeploymentDescriptorPropertyCache {
 
 	private IResourceChangeListener fResourceChangeListener = new ResourceChangeListener();
 
+	// for use when reading TLDs
 	private EntityResolver resolver;
+	
+	Map resolvedMap = new HashMap();
 
 	private DeploymentDescriptorPropertyCache() {
 		super();
@@ -765,7 +777,7 @@ public final class DeploymentDescriptorPropertyCache {
 	public float getJSPVersion(IPath fullPath) {
 		float version = defaultWebAppVersion;
 		/* try applicable web.xml file first */
-		IPath webxmlPath = FacetModuleCoreSupport.resolve(fullPath, SLASH_WEB_INF_WEB_XML);
+		IPath webxmlPath = getWebXMLPath(fullPath);
 		if (webxmlPath != null) {
 			IFile webxmlFile = ResourcesPlugin.getWorkspace().getRoot().getFile(webxmlPath);
 			if (webxmlFile.isAccessible()) {
@@ -799,7 +811,7 @@ public final class DeploymentDescriptorPropertyCache {
 	 */
 	public PropertyGroup[] getPropertyGroups(IPath jspFilePath) {
 		List matchingGroups = new ArrayList(1);
-		IPath webxmlPath = FacetModuleCoreSupport.resolve(jspFilePath, SLASH_WEB_INF_WEB_XML);
+		IPath webxmlPath = getWebXMLPath(jspFilePath);
 		if (webxmlPath == null)
 			return NO_PROPERTY_GROUPS;
 
@@ -827,6 +839,37 @@ public final class DeploymentDescriptorPropertyCache {
 			}
 		}
 		return (PropertyGroup[]) matchingGroups.toArray(new PropertyGroup[matchingGroups.size()]);
+	}
+
+	private IPath getWebXMLPath(IPath fullPath) {
+		/*
+		 * It can take the better part of a full second to do this, so cache
+		 * the result.
+		 */
+		IPath resolved = null;
+		Map mapForProject = null;
+		mapForProject = (Map) resolvedMap.get(fullPath.segment(0));
+		if (mapForProject != null) {
+			resolved = (IPath) mapForProject.get(fullPath);
+		}
+		else {
+			mapForProject = new HashMap();
+			resolvedMap.put(fullPath.segment(0), mapForProject);
+		}
+
+		if (resolved != null) {
+			if (_debugResolutionCache) {
+				System.out.println("DeploymentDescriptorPropertyCache resolution cache hit for " + fullPath); //$NON-NLS-1$ 
+			}
+		}
+		else {
+			if (_debugResolutionCache) {
+				System.out.println("DeploymentDescriptorPropertyCache resolution cache miss for " + fullPath); //$NON-NLS-1$ 
+			}
+			resolved = FacetModuleCoreSupport.resolve(fullPath, SLASH_WEB_INF_WEB_XML);
+			mapForProject.put(fullPath, resolved);
+		}
+		return resolved;
 	}
 
 	private void updateCacheEntry(IPath fullPath) {
