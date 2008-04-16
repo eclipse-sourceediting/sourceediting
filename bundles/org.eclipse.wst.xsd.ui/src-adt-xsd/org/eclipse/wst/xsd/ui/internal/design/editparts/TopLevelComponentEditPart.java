@@ -34,6 +34,7 @@ import org.eclipse.gef.requests.LocationRequest;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -97,6 +98,8 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
             pointList.addPoint(r1.right() - 1, r1.bottom() - 1);
             pointList.addPoint(r1.x, r1.bottom() - 1);
             pointList.addPoint(r1.x, r1.y + 1);
+            graphics.setForegroundColor(ColorConstants.lightGray);
+            graphics.setLineStyle(SWT.LINE_DOT);
             graphics.drawPolyline(pointList);
           }
           finally

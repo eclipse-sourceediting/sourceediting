@@ -22,6 +22,7 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -61,70 +62,40 @@ public class FieldFigure extends Figure implements IFieldFigure
   protected Label typeLabel;
   protected Label typeAnnotationLabel;  // for occurrence text, or error icons
   protected Label toolTipLabel;
-
-  public void paint(Graphics graphics)
-  {
-    super.paint(graphics);
-    if (isSelected)
-    {
-      try
-      {
-        graphics.pushState();
-        
-        PointList pointList = new PointList();
-        Rectangle r1 = rowFigure.getBounds();
-        pointList.addPoint(r1.x, r1.y + 1);
-        pointList.addPoint(r1.right() - 1, r1.y + 1);
-        pointList.addPoint(r1.right() - 1, r1.bottom() - 1);
-        pointList.addPoint(r1.x, r1.bottom() - 1);
-        pointList.addPoint(r1.x, r1.y + 1);
-        graphics.drawPolyline(pointList);
-
-// For fix to https://bugs.eclipse.org/bugs/show_bug.cgi?id=161940
-//        Rectangle r1 = nameLabel.getBounds();
-//        Rectangle r2 = typeLabel.getBounds();
-//        Rectangle r3 = nameAnnotationLabel.getBounds();
-//
-//        graphics.setForegroundColor(ColorConstants.darkGray);
-//
-//        PointList pointList = new PointList();
-//
-//        pointList.addPoint(r1.right(), r1.y + 1);
-//        pointList.addPoint(r1.x, r1.y + 1);
-//        pointList.addPoint(r1.x, r1.bottom() - 1);
-//        pointList.addPoint(r1.right(), r1.bottom() - 1);
-//        graphics.drawPolyline(pointList);
-//
-//        pointList.removeAllPoints();
-//        pointList.addPoint(r3.x, r3.y + 1);
-//        pointList.addPoint(r3.right(), r3.y + 1);
-//        graphics.drawPolyline(pointList);
-//
-//        pointList.removeAllPoints();
-//        pointList.addPoint(r3.right(), r3.bottom() - 1);
-//        pointList.addPoint(r3.x, r3.bottom() - 1);
-//        graphics.drawPolyline(pointList);
-//
-//        pointList.removeAllPoints();
-//
-//        pointList.addPoint(r2.x, r2.y + 1);
-//        pointList.addPoint(r2.right() - 1, r2.y + 1);
-//        pointList.addPoint(r2.right() - 1, r2.bottom() - 1);
-//        pointList.addPoint(r2.x, r2.bottom() - 1);
-//        graphics.drawPolyline(pointList);
-      }
-      finally
-      {
-        graphics.popState();
-      }
-    }
-  }
   
   public FieldFigure()
   {
     super();
     setLayoutManager(new ToolbarLayout());
-    rowFigure = new Figure();
+    rowFigure = new Figure()
+    {
+      public void paint(Graphics graphics)
+      {
+        super.paint(graphics);
+        if (isSelected)
+        {
+          try
+          {
+            graphics.pushState();
+            
+            PointList pointList = new PointList();
+            Rectangle r1 = rowFigure.getBounds();
+            pointList.addPoint(r1.x, r1.y + 1);
+            pointList.addPoint(r1.right() - 1, r1.y + 1);
+            pointList.addPoint(r1.right() - 1, r1.bottom() - 1);
+            pointList.addPoint(r1.x, r1.bottom() - 1);
+            pointList.addPoint(r1.x, r1.y + 1);
+            graphics.setForegroundColor(ColorConstants.lightGray);
+            graphics.setLineStyle(SWT.LINE_DOT);
+            graphics.drawPolyline(pointList);
+          }
+          finally
+          {
+            graphics.popState();
+          }
+        }
+      }
+    };
     RowLayout rowLayout = new RowLayout();
     rowFigure.setLayoutManager(rowLayout);
 
