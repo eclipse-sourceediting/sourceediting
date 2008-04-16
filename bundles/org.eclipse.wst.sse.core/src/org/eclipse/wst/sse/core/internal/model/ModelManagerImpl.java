@@ -667,7 +667,11 @@ public class ModelManagerImpl implements IModelManager {
 		URIResolver resolver = (URIResolver) project.getAdapter(URIResolver.class);
 		if (resolver == null)
 			resolver = new ProjectResolver(project);
-		resolver.setFileBaseLocation(file.getLocation().toString());
+		Object location = file.getLocation();
+		if (location == null)
+			location = file.getLocationURI();
+		if (location != null)
+			resolver.setFileBaseLocation(location.toString());
 		return resolver;
 	}
 
@@ -1996,7 +2000,7 @@ public class ModelManagerImpl implements IModelManager {
 	public void saveStructuredDocument(IStructuredDocument structuredDocument, IFile iFile, EncodingRule encodingRule) throws UnsupportedEncodingException, CoreException, IOException {
 		if (FileBufferModelManager.getInstance().isExistingBuffer(structuredDocument)) {
 			ITextFileBuffer buffer = FileBufferModelManager.getInstance().getBuffer(structuredDocument);
-			if (buffer.getLocation().equals(iFile.getLocation())) {
+			if (buffer.getLocation().equals(iFile.getFullPath()) || buffer.getLocation().equals(iFile.getLocation())) {
 				buffer.commit(new NullProgressMonitor(), true);
 			}
 		}
