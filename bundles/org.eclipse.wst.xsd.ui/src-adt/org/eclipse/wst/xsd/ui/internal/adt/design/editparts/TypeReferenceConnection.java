@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PolylineConnection;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
 
 public class TypeReferenceConnection extends PolylineConnection
 {
@@ -82,7 +83,22 @@ public class TypeReferenceConnection extends PolylineConnection
   {
     this.highlight = highlight;
     // Update our connection to use the correct colouring
-    setForegroundColor(highlight ? activeConnection : inactiveConnection);
+    boolean highContrast = false;
+    try
+    {
+      highContrast = Display.getDefault().getHighContrast();
+    }
+    catch (Exception e)
+    {
+    }
+    if (highContrast)
+    {
+      setForegroundColor(highlight ? ColorConstants.white : ColorConstants.lightGray);
+    }
+    else
+    {
+      setForegroundColor(highlight ? activeConnection : inactiveConnection);
+    }
     setOpaque(highlight);
   }
 }

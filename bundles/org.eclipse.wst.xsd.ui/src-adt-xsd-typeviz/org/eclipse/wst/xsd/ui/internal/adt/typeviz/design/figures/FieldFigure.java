@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Label;
@@ -23,6 +24,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.StructureEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.IFieldFigure;
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.IStructureFigure;
@@ -305,12 +307,32 @@ public class FieldFigure extends Figure implements IFieldFigure
   public void addSelectionFeedback()
   {
     isSelected = true;
+    boolean highContrast = false;
+    try
+    {
+      highContrast = Display.getDefault().getHighContrast();
+    }
+    catch (Exception e)
+    {
+    }
+    if (highContrast)
+      rowFigure.setForegroundColor(ColorConstants.black);
     rowFigure.setBackgroundColor(cellColor);
   }
   
   public void removeSelectionFeedback()
   {
     isSelected = false;
+    boolean highContrast = false;
+    try
+    {
+      highContrast = Display.getDefault().getHighContrast();
+    }
+    catch (Exception e)
+    {
+    }
+    if (highContrast)
+      rowFigure.setForegroundColor(getForegroundColor());
     rowFigure.setBackgroundColor(getBackgroundColor());
   }
   

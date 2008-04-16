@@ -206,7 +206,21 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
 
   public Color computeLabelColor()
   {
+    boolean highContrast = false;
+    try
+    {
+      highContrast = Display.getDefault().getHighContrast();
+    }
+    catch (Exception e)
+    {
+    }
+    
     Color color = ColorConstants.black;
+    if (highContrast)
+    { 
+      color = ColorConstants.white;
+    } 
+
     if (isSelected)
     {
       color = ColorConstants.black;
