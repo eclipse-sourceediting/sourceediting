@@ -197,7 +197,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 	    return this.primaryProjectFacet;
 	}
 	
-	protected IProjectFacetVersion getPrimaryFacetVersion()
+	public IProjectFacetVersion getPrimaryFacetVersion()
 	{
 	    IProjectFacetVersion fv = null;
 	    

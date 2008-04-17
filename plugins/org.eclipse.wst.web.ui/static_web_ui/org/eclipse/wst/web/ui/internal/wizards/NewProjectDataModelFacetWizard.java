@@ -54,8 +54,10 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 import org.eclipse.wst.common.project.facet.core.events.IFacetedProjectEvent;
 import org.eclipse.wst.common.project.facet.core.events.IFacetedProjectListener;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
+import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
 import org.eclipse.wst.common.project.facet.ui.ModifyFacetedProjectWizard;
 import org.eclipse.wst.web.internal.DelegateConfigurationElement;
+import org.eclipse.wst.web.internal.facet.RuntimePresetMappingRegistry;
 import org.eclipse.wst.web.ui.internal.Logger;
 import org.eclipse.wst.web.ui.internal.WSTWebUIPlugin;
 
@@ -258,9 +260,30 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
             dm.setTargetedRuntimes( Collections.singleton( runtime ) );
         }
         
-        dm.setSelectedPreset( FacetedProjectFramework.DEFAULT_CONFIGURATION_PRESET_ID );
+        String presetID = FacetedProjectFramework.DEFAULT_CONFIGURATION_PRESET_ID;
+        
+        if(beginingPages != null && beginingPages.length > 0 && beginingPages[0] instanceof DataModelFacetCreationWizardPage){
+        	DataModelFacetCreationWizardPage firstPage = (DataModelFacetCreationWizardPage)beginingPages[0];
+            final IProjectFacetVersion fv = firstPage.getPrimaryFacetVersion();
+	        if( fv != null )
+	        {
+	        	if(runtime != null){
+	        		if(runtime.getRuntimeComponents().size() > 0){
+	        			IRuntimeComponent runtimeComponent = runtime.getRuntimeComponents().get(0);
+	        			String facetRuntimeTypeID = runtimeComponent.getRuntimeComponentType().getId();
+	        			String facetRuntimeVersion = runtimeComponent.getRuntimeComponentVersion().getVersionString();
+	        			String facetID = fv.getProjectFacet().getId();
+			    	    String facetVersion = fv.getVersionString();
+			    	    presetID = RuntimePresetMappingRegistry.INSTANCE.getPresetID(facetRuntimeTypeID, facetRuntimeVersion, facetID, facetVersion);	
+	        		}
+	        	}
+	        }
+        }
+        
+        
+        dm.setSelectedPreset( presetID );
     }
-
+    
 	public String getProjectName() {
 		return model.getStringProperty(IFacetProjectCreationDataModelProperties.FACET_PROJECT_NAME);
 	}
