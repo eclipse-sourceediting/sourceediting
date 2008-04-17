@@ -236,12 +236,11 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		    	    presetID = RuntimePresetMappingRegistry.INSTANCE.getPresetID(facetRuntimeTypeID, facetRuntimeVersion, facetID, facetVersion);	
         		}
         	}
+            final Set<IProjectFacetVersion> facets = getFacetConfiguration( fv );
+            this.fpjwc.setProjectFacets( facets );
         	
         	if(presetID != null){
         		this.fpjwc.setSelectedPreset(presetID);
-        	} else {
-	            final Set<IProjectFacetVersion> facets = getFacetConfiguration( fv );
-	            this.fpjwc.setProjectFacets( facets );
         	}
         }
 	}
