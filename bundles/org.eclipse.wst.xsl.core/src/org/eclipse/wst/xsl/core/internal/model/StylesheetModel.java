@@ -133,13 +133,6 @@ public class StylesheetModel
 	{
 		IFile file = include.getHrefAsFile();
 		
-		String type;
-		if (include.getIncludeType() == Include.INCLUDE)
-			type = " INCLUDE ";
-		else
-			type = " IMPORT  ";
-//		System.out.println(include.getStylesheet().getFile()+type+file);
-		
 		if (file == null || !file.exists())
 		{
 			return;

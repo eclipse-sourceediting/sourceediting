@@ -23,8 +23,10 @@ import javax.xml.xpath.XPathFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.eclipse.wst.xsl.core.XSLCore;
+import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.eclipse.wst.xsl.core.internal.model.CallTemplate;
 import org.eclipse.wst.xsl.core.internal.model.Include;
 import org.eclipse.wst.xsl.core.internal.model.Parameter;
@@ -44,6 +46,7 @@ public class XSLValidator
 {
 	private static XSLValidator instance;
 	private XPath xpath = XPathFactory.newInstance().newXPath();
+	private int MAX_ERRORS = 100;
 
 	private XSLValidator()
 	{
@@ -66,12 +69,21 @@ public class XSLValidator
 
 		long start = System.currentTimeMillis();
 		if (stylesheet!=null)
-			calculateProblems(stylesheet, report);
+		{
+			try
+			{
+				calculateProblems(stylesheet, report);
+			}
+			catch (MaxErrorsExceededException e)
+			{
+				// do nothing
+			}
+		}
 		long end = System.currentTimeMillis();
 		System.out.println("VALIDATE "+xslFile+" in "+(end-start)+"ms");
 	}
 
-	private void calculateProblems(StylesheetModel stylesheetComposed, XSLValidationReport report) throws CoreException
+	private void calculateProblems(StylesheetModel stylesheetComposed, XSLValidationReport report) throws MaxErrorsExceededException
 	{
 		// circular reference check
 		checkCircularRef(stylesheetComposed, report);
@@ -87,7 +99,7 @@ public class XSLValidator
 		// TODO a) check globals and b) apply-templates where mode does not exist
 	}
 
-	private void checkXPaths(XSLElement xslEl, XSLValidationReport report)
+	private void checkXPaths(XSLElement xslEl, XSLValidationReport report) throws MaxErrorsExceededException
 	{
 		validateXPath(xslEl, report, "select");
 		validateXPath(xslEl, report, "test");
@@ -98,7 +110,7 @@ public class XSLValidator
 		}
 	}
 
-	private void validateXPath(XSLElement xslEl, XSLValidationReport report, String attName)
+	private void validateXPath(XSLElement xslEl, XSLValidationReport report, String attName) throws MaxErrorsExceededException
 	{
 		XSLAttribute att = xslEl.getAttribute(attName);
 		if (att != null && att.getValue() != null)
@@ -118,13 +130,13 @@ public class XSLValidator
 		}
 	}
 
-	private void checkCircularRef(StylesheetModel stylesheetComposed, XSLValidationReport report)
+	private void checkCircularRef(StylesheetModel stylesheetComposed, XSLValidationReport report) throws MaxErrorsExceededException
 	{
 		if (stylesheetComposed.hasCircularReference())
 			createMarker(report, stylesheetComposed.getStylesheet(), IMarker.SEVERITY_ERROR, "Included stylesheets form a circular reference");
 	}
 
-	private void checkIncludes(StylesheetModel stylesheetComposed, XSLValidationReport report)
+	private void checkIncludes(StylesheetModel stylesheetComposed, XSLValidationReport report) throws MaxErrorsExceededException
 	{		
 		// includes
 		for (Include include : stylesheetComposed.getStylesheet().getIncludes())
@@ -154,7 +166,7 @@ public class XSLValidator
 		}
 	}
 
-	private void checkTemplates(StylesheetModel stylesheetComposed, XSLValidationReport report)
+	private void checkTemplates(StylesheetModel stylesheetComposed, XSLValidationReport report) throws MaxErrorsExceededException
 	{
 		for (Template template : stylesheetComposed.getStylesheet().getTemplates())
 		{
@@ -189,7 +201,7 @@ public class XSLValidator
 		}
 	}
 
-	private void checkParameters(XSLValidationReport report, Template template)
+	private void checkParameters(XSLValidationReport report, Template template) throws MaxErrorsExceededException
 	{
 		List<Parameter> parameters = new ArrayList<Parameter>(template.getParameters());
 		// reverse the parameters order for checking - for duplicate parameters
@@ -228,7 +240,7 @@ public class XSLValidator
 		}
 	}
 
-	private void checkCallTemplates(StylesheetModel stylesheetComposed, XSLValidationReport report)
+	private void checkCallTemplates(StylesheetModel stylesheetComposed, XSLValidationReport report) throws MaxErrorsExceededException
 	{
 		// TODO these need to be real preferences
 		int REPORT_EMPTY_PARAM_PREF = IMarker.SEVERITY_WARNING;
@@ -260,7 +272,7 @@ public class XSLValidator
 						}
 					}
 					if (!found)
-						createMarker(report, calledTemplateParam.getAttribute("name"), IMarker.SEVERITY_ERROR, "Parameter " + calledTemplateParam.getName() + " does not exist");
+						createMarker(report, calledTemplateParam.getAttribute("name"), IMarker.SEVERITY_WARNING, "Parameter " + calledTemplateParam.getName() + " does not exist");
 				}
 				if (REPORT_MISSING_PARAM_PREF > IMarker.SEVERITY_INFO)
 				{
@@ -286,8 +298,10 @@ public class XSLValidator
 		}
 	}
 
-	private void createMarker(XSLValidationReport report, XSLNode xslNode, int severity, String message)
+	private void createMarker(XSLValidationReport report, XSLNode xslNode, int severity, String message) throws MaxErrorsExceededException
 	{
+		if (report.getErrors().size() + report.getWarnings().size() > MAX_ERRORS)
+			throw new MaxErrorsExceededException();
 		switch (severity)
 		{
 			case IMarker.SEVERITY_ERROR:
