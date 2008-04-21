@@ -71,9 +71,9 @@ public class XSDAttributeDragAndDropCommand extends BaseDragAndDropCommand
         this.location = target.getFigure().getBounds().getTop();
       }
     }
+    if (location == null) return;
     setup();
   }
-
   
   protected void setup()
   {

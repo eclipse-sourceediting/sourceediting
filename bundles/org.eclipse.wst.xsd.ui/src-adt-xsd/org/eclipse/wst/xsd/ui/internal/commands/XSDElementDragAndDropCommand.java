@@ -77,6 +77,7 @@ public class XSDElementDragAndDropCommand extends BaseDragAndDropCommand
         this.location = target.getFigure().getBounds().getTop();
       }
     }
+    if (location == null) return;
     setup();
   }
 
