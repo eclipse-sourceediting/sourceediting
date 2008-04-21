@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -53,6 +54,9 @@ import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.sse.core.internal.validate.ValidationAdapter;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ISourceValidator;
+import org.eclipse.wst.validation.AbstractValidator;
+import org.eclipse.wst.validation.ValidationResult;
+import org.eclipse.wst.validation.ValidationState;
 import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.operations.IWorkbenchContext;
@@ -66,7 +70,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Text;
 
-public class HTMLValidator implements IValidatorJob, ISourceValidator, IExecutableExtension {
+public class HTMLValidator extends AbstractValidator implements IValidatorJob, ISourceValidator, IExecutableExtension {
 	private static final String ORG_ECLIPSE_WST_HTML_CORE_HTMLSOURCE = "org.eclipse.wst.html.core.htmlsource"; //$NON-NLS-1$
 
 	static boolean shouldValidate(IFile file) {
@@ -542,5 +546,14 @@ public class HTMLValidator implements IValidatorJob, ISourceValidator, IExecutab
 				fAdditionalContentTypesIDs = StringUtils.unpack(data.toString());
 			}
 		}
+	}
+
+	public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor) {
+		if (resource.getType() != IResource.FILE)
+			return null;
+		ValidationResult result = new ValidationResult();
+		IReporter reporter = result.getReporter(monitor);
+		validateFile(null, reporter, (IFile) resource);
+		return result;
 	}
 }
