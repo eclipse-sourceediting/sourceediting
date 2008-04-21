@@ -38,4 +38,9 @@
 			class="org.eclipse.wst.sse.core.internal.preferences.PreferenceInitializer" />
 	</extension>
 
+	<extension point="org.eclipse.wst.validation.validatorGroup">
+		<group id="structuredModelGroup">
+			<listener class="org.eclipse.wst.sse.core.internal.validate.ValidatorGroupListener"/>
+		</group>
+	</extension>
 </plugin>

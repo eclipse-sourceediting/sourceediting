@@ -38,11 +38,12 @@ Export-Package: org.eclipse.wst.sse.core,
  org.eclipse.wst.sse.core.utils,
  org.eclipse.wst.sse.internal.contentproperties;x-friends:="org.eclipse.wst.dtd.core,org.eclipse.wst.dtd.ui,org.eclipse.wst.sse.ui,org.eclipse.wst.xml.core,org.eclipse.wst.xml.ui,org.eclipse.wst.xsd.core,org.eclipse.wst.xsd.ui"
 Require-Bundle: org.eclipse.core.resources;bundle-version="[3.4.0,4.0.0)",
- org.eclipse.text;visibility:=reexport;bundle-version="[3.4.0,4.0.0)",
+ org.eclipse.text;bundle-version="[3.4.0,4.0.0)";visibility:=reexport,
  org.eclipse.core.runtime;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.core.filebuffers;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.wst.common.uriresolver;bundle-version="[1.1.301,1.2.0)",
  org.eclipse.emf.common;bundle-version="[2.4.0,3.0.0)",
+ org.eclipse.wst.validation;bundle-version="[1.2.0,2.0.0)";resolution:=optional,
  com.ibm.icu;bundle-version="[3.8.1,4.0.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.4
