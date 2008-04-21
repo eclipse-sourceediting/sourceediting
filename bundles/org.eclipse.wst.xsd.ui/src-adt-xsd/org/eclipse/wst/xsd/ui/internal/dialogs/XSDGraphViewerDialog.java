@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
@@ -66,6 +67,7 @@ public class XSDGraphViewerDialog extends PopupDialog
   
   private static String X_ORIGIN = "DIALOG_X_ORIGIN"; //$NON-NLS-1$
   private static String Y_ORIGIN = "DIALOG_Y_ORIGIN"; //$NON-NLS-1$
+  private boolean isHighContrast = false;
 
   public XSDGraphViewerDialog(Shell parentShell, String titleText, String infoText, Object model, String ID)
   {
@@ -76,6 +78,13 @@ public class XSDGraphViewerDialog extends PopupDialog
     this.uniqueID = ID;
     Assert.isTrue(ID != null && ID.length() > 0);    
     moveListener = new PreviewControlListener();
+    try 
+    {
+      isHighContrast = Display.getDefault().getHighContrast();
+    }
+    catch (Exception e) {
+      // ignore 
+    }
     create();
   }
 
@@ -95,14 +104,29 @@ public class XSDGraphViewerDialog extends PopupDialog
   {
     viewer = new ScrollingGraphicalViewer();
     Composite c = new Composite(parent, SWT.NONE);
-    c.setBackground(ColorConstants.white);
+
+    if (isHighContrast)
+    {
+      c.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+    }
+    else
+    {
+      c.setBackground(ColorConstants.white);
+    }
     c.setLayout(new FillLayout());
 
     RootEditPart root = new RootEditPart();
     viewer.setRootEditPart(root);
 
     viewer.createControl(c);
-    viewer.getControl().setBackground(ColorConstants.white);
+    if (isHighContrast)
+    {
+      viewer.getControl().setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+    }
+    else
+    {
+      viewer.getControl().setBackground(ColorConstants.white);
+    }
     EditPartFactory editPartFactory = new XSDEditPartFactory(new TypeVizFigureFactory());
     viewer.setEditPartFactory(editPartFactory);
 
