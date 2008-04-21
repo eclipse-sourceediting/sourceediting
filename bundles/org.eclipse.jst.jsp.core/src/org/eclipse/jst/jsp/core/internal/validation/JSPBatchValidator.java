@@ -49,6 +49,9 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.utils.StringUtils;
+import org.eclipse.wst.validation.AbstractValidator;
+import org.eclipse.wst.validation.ValidationResult;
+import org.eclipse.wst.validation.ValidationState;
 import org.eclipse.wst.validation.internal.ConfigurationManager;
 import org.eclipse.wst.validation.internal.ProjectConfiguration;
 import org.eclipse.wst.validation.internal.ValidationRegistryReader;
@@ -64,7 +67,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidatorJob;
  * Performs JSP validation tasks for batch validation. The individual
  * validator classes will still be used for source validation.
  */
-public final class JSPBatchValidator implements IValidatorJob, IExecutableExtension {
+public final class JSPBatchValidator extends AbstractValidator implements IValidatorJob, IExecutableExtension {
 	class JSPFileVisitor implements IResourceProxyVisitor {
 
 		private List fFiles = new ArrayList();
@@ -464,5 +467,29 @@ public final class JSPBatchValidator implements IValidatorJob, IExecutableExtens
 			throw new ValidationException(new LocalizedMessage(IMessage.ERROR_AND_WARNING, e.getMessage()), e);
 		}
 		return Status.OK_STATUS;
+	}
+
+	public ValidationResult validate(final IResource resource, int kind, ValidationState state, IProgressMonitor monitor) {
+		if (resource.getType() != IResource.FILE)
+			return null;
+		ValidationResult result = new ValidationResult();
+		final IReporter reporter = result.getReporter(monitor);
+		IWorkspaceRunnable validationRunnable = new IWorkspaceRunnable() {
+			public void run(IProgressMonitor monitor) throws CoreException {
+				validateFile((IFile) resource, reporter);
+			}
+		};
+		Job currentJob = Job.getJobManager().currentJob();
+		ISchedulingRule rule = null;
+		if (currentJob != null) {
+			rule = currentJob.getRule();
+		}
+		try {
+			JavaCore.run(validationRunnable, rule, new NullProgressMonitor());
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
+		}
+		return result;
 	}
 }

@@ -24,6 +24,7 @@ import org.eclipse.core.resources.IResourceProxyVisitor;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -39,6 +40,9 @@ import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.validation.AbstractValidator;
+import org.eclipse.wst.validation.ValidationResult;
+import org.eclipse.wst.validation.ValidationState;
 import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.operations.IWorkbenchContext;
@@ -51,7 +55,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 /**
  * Performs some common JSP validation tasks
  */
-public class JSPValidator implements IValidatorJob {
+public class JSPValidator extends AbstractValidator implements IValidatorJob {
 
 	private static final String PLUGIN_ID_JSP_CORE = "org.eclipse.jst.jsp.core"; //$NON-NLS-1$
 	private IContentType fJSPFContentType = null;
@@ -235,6 +239,15 @@ public class JSPValidator implements IValidatorJob {
 	 */
 	protected void validateFile(IFile f, IReporter reporter) {
 		// subclasses should implement (for batch validation)
+	}
+
+	public ValidationResult validate(final IResource resource, int kind, ValidationState state, IProgressMonitor monitor) {
+		if (resource.getType() != IResource.FILE)
+			return null;
+		ValidationResult result = new ValidationResult();
+		final IReporter reporter = result.getReporter(monitor);
+		validateFile((IFile) resource, reporter);
+		return result;
 	}
 
 	/**

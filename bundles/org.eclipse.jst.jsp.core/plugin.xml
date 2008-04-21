@@ -180,83 +180,103 @@
 	<!--======================================================================================-->
 	<!-- JSP batch validation                                       						  -->
 	<!--======================================================================================-->
-	<extension
-		id="JSPBatchValidator"
-		name="%JSP_Syntax_Validator.name"
-		point="org.eclipse.wst.validation.validator">
-		<validator>
-			<projectNature id="org.eclipse.jdt.core.javanature" />
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jsp">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jspf">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jsf">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jsv">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jtpl">
-			</filter>
-         	<contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.jspsource"/>
-			<!-- needed until bug 181443 is implemented -->
-         	<contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.jspfragmentsource"/>
-         	<contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.tagsource"/>
-			<helper class="org.eclipse.wst.validation.internal.operations.WorkbenchContext"/>
-			<run
-				enabled="true"
-				class="org.eclipse.jst.jsp.core.internal.validation.JSPBatchValidator"/>
-         <markerId markerIdValue="org.eclipse.jst.jsp.core.validationMarker"/>
+   <extension id="JSPBatchValidator" name="%JSP_Syntax_Validator.name" point="org.eclipse.wst.validation.validatorV2">
+      <validator
+            build="true"
+            class="org.eclipse.jst.jsp.core.internal.validation.JSPBatchValidator"
+            manual="true"
+            version="1"
+            markerId="org.eclipse.jst.jsp.core.validationMarker">
+         <include>
+            <rules>
+	           <projectNature id="org.eclipse.jdt.core.javanature"/>
+            </rules>
+         </include>
+         <include>
+            <rules>
+				<contentType id="org.eclipse.jst.jsp.core.jspsource"/>
+				<!-- needed until bug 181443 is implemented -->
+				<contentType id="org.eclipse.jst.jsp.core.jspfragmentsource"/>
+				<contentType id="org.eclipse.jst.jsp.core.tagsource"/>
+               <fileext
+                     caseSensitive="false"
+                     ext="jsp">
+               </fileext>
+               <fileext
+                     caseSensitive="false"
+                     ext="jspf">
+               </fileext>
+               <fileext
+                     caseSensitive="false"
+                     ext="jsf">
+               </fileext>
+               <fileext
+                     caseSensitive="false"
+                     ext="tag">
+               </fileext>
+               <fileext
+                     caseSensitive="false"
+                     ext="tagf">
+               </fileext>
+               <fileext
+                     caseSensitive="false"
+                     ext="jsv">
+               </fileext>
+               <fileext
+                     caseSensitive="false"
+                     ext="jtpl">
+               </fileext>
+            </rules>
+         </include>
+         <group id="org.eclipse.wst.sse.core.structuredModelGroup"/>
       </validator>
-	</extension>
+   </extension>
 	
-	<extension
-		id="JSPContentValidator"
-		name="%JSP_Content_Validator.name"
-		point="org.eclipse.wst.validation.validator">
-		<validator>
-			<projectNature id="org.eclipse.jdt.core.javanature" />
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jsp">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jspf">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jsf">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jsv">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jtpl">
-			</filter>
-         	<contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.jspsource"/>			
-         	<!-- <contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.jspfragmentsource"/> -->
-         	<!-- <contentTypeBinding contentTypeId="org.eclipse.jst.jsp.core.tagsource"/> -->			
-			<helper class="org.eclipse.wst.validation.internal.operations.WorkbenchContext"/>
-			<run
-				async="true"
-				fullBuild="true"
-				incremental="true"
-				enabled="true"
-				class="org.eclipse.jst.jsp.core.internal.validation.JSPContentValidator"/>
-         <markerId markerIdValue="org.eclipse.jst.jsp.core.validationMarker"/>
-	</validator>
-	</extension>
+   <extension id="JSPContentValidator" name="%JSP_Content_Validator.name" point="org.eclipse.wst.validation.validatorV2">
+      <validator
+            build="true"
+            class="org.eclipse.jst.jsp.core.internal.validation.JSPContentValidator"
+            manual="true"
+            version="1"
+            markerId="org.eclipse.jst.jsp.core.validationMarker">
+         <include>
+            <rules>
+				<contentType id="org.eclipse.jst.jsp.core.jspsource"/>
+				<!-- needed until bug 181443 is implemented -->
+				<contentType id="org.eclipse.jst.jsp.core.jspfragmentsource"/>
+               <fileext
+                     caseSensitive="false"
+                     ext="jsp">
+               </fileext>
+               <fileext
+                     caseSensitive="false"
+                     ext="jspf">
+               </fileext>
+               <fileext
+                     caseSensitive="false"
+                     ext="jsf">
+               </fileext>
+               <fileext
+                     caseSensitive="false"
+                     ext="tag">
+               </fileext>
+               <fileext
+                     caseSensitive="false"
+                     ext="tagf">
+               </fileext>
+               <fileext
+                     caseSensitive="false"
+                     ext="jsv">
+               </fileext>
+               <fileext
+                     caseSensitive="false"
+                     ext="jtpl">
+               </fileext>
+            </rules>
+         </include>
+         <group id="org.eclipse.wst.sse.core.structuredModelGroup"/>
+      </validator>
+   </extension>
 		
     <extension
        point="org.eclipse.jst.jsp.core.elTranslator">
