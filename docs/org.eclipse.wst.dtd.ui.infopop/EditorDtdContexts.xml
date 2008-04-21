@@ -2,53 +2,79 @@
 <?NLS type="org.eclipse.help.contexts"?>
 
 <!-- /*******************************************************************************
- * Copyright (c) 2000, 2005 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/ -->
+	* Copyright (c) 2000, 2005 IBM Corporation and others.
+	* All rights reserved. This program and the accompanying materials
+	* are made available under the terms of the Eclipse Public License v1.0
+	* which accompanies this distribution, and is available at
+	* http://www.eclipse.org/legal/epl-v10.html
+	* 
+	* Contributors:
+	*     IBM Corporation - initial API and implementation
+	*******************************************************************************/ -->
+
+<!-- plugin: org.eclipse.wst.dtd.ui -->
 
 <contexts>
-<context id="csh_outer_container">
-<description/>
-</context>
-<context id="webx0020">
-<description>This page lets you specify the line delimiter and the text encoding that will be used when you create or save a document type definition (DTD) file.
+	<context id="csh_outer_container">
+		<description />
+	</context>
+	<context id="webx0020"><!-- dtd files preference page -->
+		<description>
+			This page lets you choose which suffix (<b>dtd</b>, <b>ent</b>, or <b>mod</b>) is added when a new DTD file is created.
+		</description>
+	</context>
+	<context id="webx0021"><!-- dtd styles preference page -->
+		<description>
+			This page lets you customize the syntax highlighting that the document type definition (DTD) editor does when you are editing a file.
 
-The line delimiters are Ctrl-J (UNIX), Ctrl-M (Mac), or Ctrl-M Ctrl-J (Windows).</description>
-</context>
-<context id="webx0021">
-<description>This page lets you customize the syntax highlighting that the document type definition (DTD) editor does when you are editing a file.
+			The <b>Content type</b> field contains a list of all the source types that you can select a highlighting style for. You can either select the content type that you want to work with from the drop-down list, or click text in the text sample window that corresponds to the content type for which you want to change the text highlighting.
 
-The <b>Content type</b> field contains a list of all the source types that you can select a highlighting style for. You can either select the content type that you want to work with from the drop-down list, or click text in the text sample window that corresponds to the content type for which you want to change the text highlighting.
+			The <b>Foreground</b> and <b>Background</b> push buttons open <b>Color</b> dialog boxes that allow you to specify text foreground and background colors, respectively. Select the <b>Bold</b> check box to make the specified content type appear in bold.
 
-The <b>Foreground</b> and <b>Background</b> push buttons open <b>Color</b> dialog boxes that allow you to specify text foreground and background colors, respectively. Select the <b>Bold</b> check box to make the specified content type appear in bold.
+			Click the <b>Restore Default</b> push button to set the highlighting styles back to their default values.
+		</description>
+		<topic
+			href="../org.eclipse.wst.dtdeditor.doc.user/topics/tedtsrcst.html"
+			label="Setting source highlighting styles" />
+	</context>
+	<context id="webx0022"><!-- dtd template preference page -->
+		<description>
+			Templates are a chunk of predefined code that you can insert into a DTD file when it is created.
 
-Click the <b>Restore Default</b> push button to set the highlighting styles back to their default values.</description>
-<topic href="../org.eclipse.wst.dtdeditor.doc.user/topics/tedtsrcst.html" label="Setting source highlighting styles"/>
-</context>
-<context id="webx0022">
-<description>Templates are a chunk of predefined code that you can insert into a DTD file when it is created.
+			Click <b>New</b> if you want to create a completely new template.
 
-Click <b>New</b> if you want to create a completely new template.
+			Supply a new template <b>Name</b> and <b>Description</b>. The <b>Context</b> for the template is the context in which the template is available in the proposal list when content assist is requested. Specify the <b>Pattern</b> for your template using the appropriate tags, attributes, or attribute values to be inserted by content assist.
 
-Supply a new template <b>Name</b> and <b>Description</b>. The <b>Context</b> for the template is the context in which the template is available in the proposal list when content assist is requested. Specify the <b>Pattern</b> for your template using the appropriate tags, attributes, or attribute values to be inserted by content assist.
+			If you want to insert a variable, click the <b>Insert Variable</b> button and select the variable to be inserted. For example, the <b>date</b> variable indicates the current date will be inserted.
 
-If you want to insert a variable, click the <b>Insert Variable</b> button and select the variable to be inserted. For example, the <b>date</b> variable indicates the current date will be inserted.
+			You can edit, remove, import, or export a template by using the same Preferences page.
 
-You can edit, remove, import, or export a template by using the same Preferences page.
-
-If you have a template that you do not want to remove but you no longer want it to appear in the content assist list, clear its check box in the <b>Templates</b> preferences page.</description>
-<topic href="../org.eclipse.wst.dtdeditor.doc.user/topics/tdtemplt.html" label="Working with DTD templates"/>
-<topic href="../org.eclipse.wst.dtdeditor.doc.user/topics/tcretdtd.html" label="Creating DTD files"/>
-</context>
-<context id="dtdw0010">
-<description>Click the <b>Use DTD Template</b> check box if you want to use a DTD template as the initial content in your new DTD page. A list of available DTD templates is listed - select the one you want to use. A preview of your DTD file is shown once you select a DTD template.</description>
-<topic href="../org.eclipse.wst.dtdeditor.doc.user/topics/tdtemplt.html" label="Working with DTD templates"/>
-<topic href="../org.eclipse.wst.dtdeditor.doc.user/topics/tcretdtd.html" label="Creating DTD files"/>
-</context>
+			If you have a template that you do not want to remove but you no longer want it to appear in the content assist list, clear its check box in the <b>Templates</b> preferences page.
+		</description>
+		<topic
+			href="../org.eclipse.wst.dtdeditor.doc.user/topics/tdtemplt.html"
+			label="Working with DTD templates" />
+		<topic
+			href="../org.eclipse.wst.dtdeditor.doc.user/topics/tcretdtd.html"
+			label="Creating DTD files" />
+	</context>
+	<context id=""><!-- create dtd page 1 has no id atm -->
+		<description>
+			In the <b>File name</b> field, type the name of the DTD. The name of your DTD file must end with the extension .dtd
+		</description>
+		<topic
+			href="../org.eclipse.wst.dtdeditor.doc.user/topics/tcretdtd.html"
+			label="" />
+	</context>
+	<context id="dtdw0010"><!-- dtd new file wizard page 2, page 1 has no ID -->
+		<description>
+			Click the <b>Use DTD Template</b> check box if you want to use a DTD template as the initial content in your new DTD page. A list of available DTD templates is listed - select the one you want to use. A preview of your DTD file is shown once you select a DTD template.
+		</description>
+		<topic
+			href="../org.eclipse.wst.dtdeditor.doc.user/topics/tdtemplt.html"
+			label="Working with DTD templates" />
+		<topic
+			href="../org.eclipse.wst.dtdeditor.doc.user/topics/tcretdtd.html"
+			label="Creating DTD files" />
+	</context>
 </contexts>
