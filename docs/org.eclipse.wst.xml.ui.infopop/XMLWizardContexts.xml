@@ -1,78 +1,122 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS type="org.eclipse.help.contexts"?>
 <!-- /*******************************************************************************
- * Copyright (c) 2000, 2005 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/ -->
+	* Copyright (c) 2000, 2008 IBM Corporation and others.
+	* All rights reserved. This program and the accompanying materials
+	* are made available under the terms of the Eclipse Public License v1.0
+	* which accompanies this distribution, and is available at
+	* http://www.eclipse.org/legal/epl-v10.html
+	* 
+	* Contributors:
+	*     IBM Corporation - initial API and implementation
+	*******************************************************************************/ -->
 
 <contexts>
-<context id="csh_outer_container">
-<description/>
-</context>
-<context id="xmlc0101">
-<description>Select the <b>Create XML file from a DTD file</b> radio button to create an XML file from a DTD file. The file will contain the selected root element, populated with any required elements and attributes.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexdtd.html" label="Generating XML files from DTDs"/>
-</context>
-<context id="xmlc0102">
-<description>Select the <b>Create XML file from an XML schema file</b> radio button to create an XML file from an XML schema. The file will contain the selected root element of the XML schema and any elements or attributes it contains.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexxsd.html" label="Generating XML files from XML schemas"/>
-</context>
-<context id="xmlc0103">
-<description>Select the <b>Create XML file from scratch</b> radio button if you want to create an XML file not associated with any XML schema or DTD file.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tcretxml.html" label="Creating empty XML files"/>
-</context>
-<context id="xmlc0500">
-<description>Select the <b>Select file from workbench</b> radio button if you want to create your XML file from a DTD or XML schema that is in the workbench.
+	<context id="csh_outer_container">
+		<description />
+	</context>
+	<context id="xmlc0101">
+		<description>
+			Select the <b>Create XML file from a DTD file</b> radio button to create an XML file from a DTD file. The file will contain the selected root element, populated with any required elements and attributes.
+		</description>
+		<topic
+			href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexdtd.html"
+			label="Generating XML files from DTDs" />
+	</context>
+	<context id="xmlc0102">
+		<description>
+			Select the <b>Create XML file from an XML schema file</b> radio button to create an XML file from an XML schema. The file will contain the selected root element of the XML schema and any elements or attributes it contains.
+		</description>
+		<topic
+			href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexxsd.html"
+			label="Generating XML files from XML schemas" />
+	</context>
+	<context id="xmlc0103">
+		<description>
+			Select the <b>Create XML file from scratch</b> radio button if you want to create an XML file not associated with any XML schema or DTD file.
+		</description>
+		<topic
+			href="../org.eclipse.wst.xmleditor.doc.user/topics/tcretxml.html"
+			label="Creating empty XML files" />
+	</context>
+	<context id="xmlc0500">
+		<description>
+			Select the <b>Select file from workbench</b> radio button if you want to create your XML file from a DTD or XML schema that is in the workbench.
 
-Select the <b>Select XML Catalog entry</b> radio button if you want to use a file listed in the XML Catalog to create your XML file.</description>
-</context>
-<context id="xmlc0410">
-<description>The root element of an XML file is the element that contains all other elements in that file. All elements defined in the DTD or all global elements defined in the XML schema are included in this list.
+			Select the <b>Select XML Catalog entry</b> radio button if you want to use a file listed in the XML Catalog to create your XML file.
+		</description>
+	</context>
+	<context id="xmlc0410">
+		<description>
+			The root element of an XML file is the element that contains all other elements in that file. All elements defined in the DTD or all global elements defined in the XML schema are included in this list.
 
-<b>Note</b>: If you do not have any elements in your DTD or any global elements in your XML schema, you cannot create an XML file from it.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexdtd.html" label="Generating XML files from DTDs"/>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexxsd.html" label="Generating XML files from XML schemas"/>
-</context>
-<context id="xmlc0441">
-<description>If you select this check box, both mandatory and optional attributes will be generated. If you do not select it, only mandatory attributes will be generated.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexdtd.html" label="Generating XML files from DTDs"/>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexxsd.html" label="Generating XML files from XML schemas"/>
-</context>
-<context id="xmlc0442">
-<description>If you select this check box, both the mandatory and optional elements will be generated. If you do not select it, only mandatory elements will be generated.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexdtd.html" label="Generating XML files from DTDs"/>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexxsd.html" label="Generating XML files from XML schemas"/>
-</context>
-<context id="xmlc0443">
-<description>If you select this check box, the first choice of a required choice will be generated in your XML file.
+			<b>Note</b>: If you do not have any elements in your DTD or any global elements in your XML schema, you cannot create an XML file from it.
+		</description>
+		<topic
+			href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexdtd.html"
+			label="Generating XML files from DTDs" />
+		<topic
+			href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexxsd.html"
+			label="Generating XML files from XML schemas" />
+	</context>
+	<context id="xmlc0441">
+		<description>If you select this check box, both mandatory and optional attributes will be generated. If you do not select it, only mandatory attributes will be generated.</description>
+		<topic
+			href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexdtd.html"
+			label="Generating XML files from DTDs" />
+		<topic
+			href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexxsd.html"
+			label="Generating XML files from XML schemas" />
+	</context>
+	<context id="xmlc0442">
+		<description>If you select this check box, both the mandatory and optional elements will be generated. If you do not select it, only mandatory elements will be generated.</description>
+		<topic
+			href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexdtd.html"
+			label="Generating XML files from DTDs" />
+		<topic
+			href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexxsd.html"
+			label="Generating XML files from XML schemas" />
+	</context>
+	<context id="xmlc0443">
+		<description>
+			If you select this check box, the first choice of a required choice will be generated in your XML file.
 
-For example, if you have the following code in your source file:
+			For example, if you have the following code in your source file:
 
-<b>&lt;choice&gt; &lt;element name="a" type="string&gt; &lt;element name="b" type="integer&gt; &lt;/choice&gt;</b> 
+			<b>&lt;choice&gt; &lt;element name="a" type="string&gt; &lt;element name="b" type="integer&gt; &lt;/choice&gt;</b>
 
-and you select this check box, an element such as the following will be created in your XML file:
+			and you select this check box, an element such as the following will be created in your XML file:
 
-<b>&lt;a&gt;hello&lt;/a&gt;</b> </description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexdtd.html" label="Generating XML files from DTDs"/>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexxsd.html" label="Generating XML files from XML schemas"/>
-</context>
-<context id="xmlc0444">
-<description>If you select this check box, any elements and attributes generated will be filled with sample data, such as <b>&lt;text&gt;EmptyText&lt;/text&gt;.</b> Otherwise, they will be empty - that is, <b>&lt;text&gt;&lt;/text&gt;.</b> </description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexdtd.html" label="Generating XML files from DTDs"/>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexxsd.html" label="Generating XML files from XML schemas"/>
-</context>
-<context id="xmlc0210">
-<description>The System ID value corresponds to the URI (physical location) of the DTD file. The Public ID value can refer to a DTD entry in an XML Catalog.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexdtd.html" label="Generating XML files from DTDs"/>
-</context>
-<context id="xmlc0220">
-<description>The System ID value corresponds to the URI (physical location) of the DTD file. The Public ID value can refer to a DTD entry in an XML Catalog.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexdtd.html" label="Generating XML files from DTDs"/>
-</context>
+			<b>&lt;a&gt;hello&lt;/a&gt;</b>
+		</description>
+		<topic
+			href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexdtd.html"
+			label="Generating XML files from DTDs" />
+		<topic
+			href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexxsd.html"
+			label="Generating XML files from XML schemas" />
+	</context>
+	<context id="xmlc0444">
+		<description>
+			If you select this check box, any elements and attributes generated will be filled with sample data, such as <b>&lt;text&gt;EmptyText&lt;/text&gt;.</b> Otherwise, they will be empty - that is, <b>&lt;text&gt;&lt;/text&gt;.</b>
+		</description>
+		<topic
+			href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexdtd.html"
+			label="Generating XML files from DTDs" />
+		<topic
+			href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexxsd.html"
+			label="Generating XML files from XML schemas" />
+	</context>
+	<context id="xmlc0210">
+		<description>The System ID value corresponds to the URI (physical location) of the DTD file. The Public ID value can refer to a DTD entry in an XML Catalog.</description>
+		<topic
+			href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexdtd.html"
+			label="Generating XML files from DTDs" />
+	</context>
+	<context id="xmlc0220">
+		<description>The System ID value corresponds to the URI (physical location) of the DTD file. The Public ID value can refer to a DTD entry in an XML Catalog.</description>
+		<topic
+			href="../org.eclipse.wst.xmleditor.doc.user/topics/tcrexdtd.html"
+			label="Generating XML files from DTDs" />
+	</context>
 </contexts>

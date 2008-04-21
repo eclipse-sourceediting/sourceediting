@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS type="org.eclipse.help.contexts"?>
+<!-- /*******************************************************************************
+	* Copyright (c) 2000, 2008 IBM Corporation and others.
+	* All rights reserved. This program and the accompanying materials
+	* are made available under the terms of the Eclipse Public License v1.0
+	* which accompanies this distribution, and is available at
+	* http://www.eclipse.org/legal/epl-v10.html
+	* 
+	* Contributors:
+	*     IBM Corporation - initial API and implementation
+	*******************************************************************************/ -->
+
+<!-- plugin: org.eclipse.wst.wsdl.ui -->
+
+<contexts>
+	<context id="csh_outer_container">
+		<description />
+	</context>
+	<context id=""><!-- change later, this has no id atm -->
+		<description>
+			Select the project or folder that will contain the WSDL file. In the <b>File name</b> field, type the name of the WSDL file, for example <i>NewWSDLFile.wsdl</i>. The name of your WSDL file must end in <i>.wsdl</i>.
+		</description>
+		<topic
+			href="../org.eclipse.wst.wsdl.ui.doc.user/tasks/tcrtwsdl.html"
+			label="" />
+	</context>
+	<context id="wsdlu0000">
+		<description>
+			<b>Target namespace</b> is used for the names of messages and the port type, binding and service defined in the WSDL file. The value must take the form of a valid URI (for example, http://www.mycompany.com/myservice/).
+		</description>
+		<topic
+			href="../org.eclipse.wst.wsdl.ui.doc.user/tasks/tcrtwsdl.html"
+			label="" />
+	</context>
+	<context id="wsdlu0001">
+		<description>
+			<b>Prefix</b> is the prefix associated with the target namespace.
+		</description>
+		<topic
+			href="../org.eclipse.wst.wsdl.ui.doc.user/tasks/tcrtwsdl.html"
+			label="" />
+	</context>
+	<context id="wsdlu0002">
+		<description>
+			<b>Create WSDL Skeleton</b> will generate the WSDL elements required for your service, including bindings, ports and messages. You can then modify these to meet the requirements of your Web service.
+		</description>
+		<topic
+			href="../org.eclipse.wst.wsdl.ui.doc.user/tasks/tcrtwsdl.html"
+			label="" />
+	</context>
+	<context id="wsdlu0003">
+		<description>If you have chosen to create a WSDL skeleton, select the binding options you want to use in the Protocol drop down. The options are SOAP and HTTP. Use the SOAP protocol when you want to exchange structured and typed information. Use the HTTP protocol when you want your application client to just request or update information.</description>
+		<topic
+			href="../org.eclipse.wst.wsdl.ui.doc.user/tasks/tcrtwsdl.html"
+			label="" />
+	</context>
+	<context id="wsdlu0010">
+		<description>
+			If you select SOAP you can then select the encoding style you want to use:
+			<ul>
+				<li>
+					<b>document literal</b>: Document style messages, literal encoding. Use this style of binding when you want to send SOAP messages that can be validated by an XML validator. All the data types in the SOAP message body are defined in a schema, so the WSDL parts must point to schema elements.
+				</li>
+			</ul>
+		</description>
+		<topic
+			href="../org.eclipse.wst.wsdl.ui.doc.user/tasks/tcrtwsdl.html"
+			label="" />
+	</context>
+	<context id="wsdlu0011">
+		<description>
+			<ul>
+				<li>
+					<b>rpc literal</b>: RPC style messages, literal encoding. Use this style of binding when you want to specify the operation method names in your SOAP messages so a server can dispatch the specified methods. Data types must be defined, so the WSDL parts must point to XSD types.
+				</li>
+			</ul>
+		</description>
+		<topic
+			href="../org.eclipse.wst.wsdl.ui.doc.user/tasks/tcrtwsdl.html"
+			label="" />
+	</context>
+	<context id="wsdlu0012">
+		<description>
+			<ul>
+				<li>
+					<b>rpc encoded</b>: RPC style messages and SOAP encoding. Use this style of binding when you want to encode data graphs in your SOAP messages so a server can deserialize the object data. Data types must be defined, so the WSDL parts must point to XSD types.
+				</li>
+			</ul>
+		</description>
+		<topic
+			href="../org.eclipse.wst.wsdl.ui.doc.user/tasks/tcrtwsdl.html"
+			label="" />
+	</context>
+	<context id="wsdlu0013">
+		<description>
+			If you select HTTP you can select whether to create an HTTP getter or setter:
+			<ul>
+				<li>
+					<b>HTTP GET</b>: A GET request fetches data from a Web server based on an URL value and a set of HTTP headers. Use this method when you want to retrieve information specified in the request.
+				</li>
+			</ul>
+		</description>
+		<topic
+			href="../org.eclipse.wst.wsdl.ui.doc.user/tasks/tcrtwsdl.html"
+			label="" />
+	</context>
+	<context id="wsdlu0014">
+		<description>
+			<ul>
+				<li>
+					<b>HTTP POST</b>: A POST request sends additional data to the server, specified after the URL and the headers. Use this method when you want to send data enclosed in the body of the request.
+				</li>
+			</ul>
+		</description>
+		<topic
+			href="../org.eclipse.wst.wsdl.ui.doc.user/tasks/tcrtwsdl.html"
+			label="" />
+	</context>
+</contexts>
+
+
+
+
+
+
+

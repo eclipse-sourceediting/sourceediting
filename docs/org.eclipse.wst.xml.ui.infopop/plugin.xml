@@ -17,6 +17,8 @@
        <contexts file="EditorXmlContexts2.xml" plugin ="org.eclipse.core.runtime"/>
        <contexts file="TableTree.xml" plugin ="org.eclipse.wst.xml.ui"/>
        <contexts file="XMLWizardContexts.xml" plugin ="org.eclipse.wst.xml.ui"/>
+       <contexts file="WSDLContexts.xml" plugin ="org.eclipse.wst.wsdl.ui"/>
+       <contexts file="XSDContexts.xml" plugin ="org.eclipse.wst.xsd.ui"/>
 
 </extension>
 

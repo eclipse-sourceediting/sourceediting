@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS type="org.eclipse.help.contexts"?>
+<!-- /*******************************************************************************
+	* Copyright (c) 2000, 2008 IBM Corporation and others.
+	* All rights reserved. This program and the accompanying materials
+	* are made available under the terms of the Eclipse Public License v1.0
+	* which accompanies this distribution, and is available at
+	* http://www.eclipse.org/legal/epl-v10.html
+	* 
+	* Contributors:
+	*     IBM Corporation - initial API and implementation
+	*******************************************************************************/ -->
+
+<!-- plugins: org.eclipse.ui.ide and org.eclipse.wst.xsd.ui.internal -->
+
+<contexts>
+	<context id="csh_outer_container">
+		<description />
+	</context>
+	<context id="new_file_wizard_page_context"><!-- fix this, there is no context id atm -->
+		<description>
+			Select the project or folder that will contain the XML schema. In the <b>File name</b> field, type the name of the XML schema, for example <i>MyXMLSchema.xsd</i>. The name of your XML schema must end in <i>.xsd</i>.
+		</description>
+		<topic
+			href="../org.eclipse.wst.xsdeditor.doc.user/topics/tcxmlsch.html"
+			label="Creating XML schemas" />
+	</context>
+	<context id="xsdp0010">
+		<description>
+			Select the <b>Qualify XML schema language constructs</b> check box if you want a prefix applied to all XML Schema language constructs in your XML schema.
+
+			In the <b>XML schema language constructs prefix</b> field, type the prefix you want applied to XML Schema language constructs in your XML schema. The prefix <i>xsd</i> is used by convention to denote the XML Schema namespace, but any prefix can be used. The purpose of the association is to identify the elements and simple types as belonging to the vocabulary of the XML Schema language rather than the vocabulary of the schema author.
+
+			<b>Note:</b> This prefix will not appear in any schemas that currently exist - it will only appear in new schemas you create after you type the prefix and click <b>Apply</b>. Any schemas that already exist will have the prefix specified in the schema applied to the XML schema language constructs.
+
+			You can change the <b>Default Target Namespace</b> value. The value specified in this field will be the default target namespace for any new XML schema files created.
+
+		</description>
+		<topic
+			href="../org.eclipse.wst.xsdeditor.doc.user/topics/tedtpref.html"
+			label="Editing XML schema file prefereces" />
+	</context>
+</contexts>
+
+
+
+
+
+
+

@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS type="org.eclipse.help.contexts"?>
 <!-- /*******************************************************************************
- * Copyright (c) 2000, 2005 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/ -->
+	* Copyright (c) 2000, 2008 IBM Corporation and others.
+	* All rights reserved. This program and the accompanying materials
+	* are made available under the terms of the Eclipse Public License v1.0
+	* which accompanies this distribution, and is available at
+	* http://www.eclipse.org/legal/epl-v10.html
+	* 
+	* Contributors:
+	*     IBM Corporation - initial API and implementation
+	*******************************************************************************/ -->
 <contexts>
-<context id="csh_outer_container">
-<description/>
-</context>
-<context id="xml_source_HelpId">
-<description>The XML source view lets you edit a file that is coded in the Extensible Markup Language. The editor provides many text editing features, such as content assist, user-defined templates, syntax highlighting, unlimited undo and redo, element selection and formatting, and document formatting.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtsrc.html" label="Editing in the Source view"/>
-</context>
+	<context id="csh_outer_container">
+		<description />
+	</context>
+	<context id="xml_source_HelpId">
+		<description>The XML source view lets you edit a file that is coded in the Extensible Markup Language. The editor provides many text editing features, such as content assist, user-defined templates, syntax highlighting, unlimited undo and redo, element selection and formatting, and document formatting.</description>
+		<topic
+			href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtsrc.html"
+			label="Editing in the Source view" />
+	</context>
 </contexts>

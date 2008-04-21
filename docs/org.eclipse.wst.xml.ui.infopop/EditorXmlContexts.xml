@@ -1,143 +1,193 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS type="org.eclipse.help.contexts"?>
 <!-- /*******************************************************************************
- * Copyright (c) 2000, 2005 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/ -->
+	* Copyright (c) 2000, 2008 IBM Corporation and others.
+	* All rights reserved. This program and the accompanying materials
+	* are made available under the terms of the Eclipse Public License v1.0
+	* which accompanies this distribution, and is available at
+	* http://www.eclipse.org/legal/epl-v10.html
+	* 
+	* Contributors:
+	*     IBM Corporation - initial API and implementation
+	*******************************************************************************/ -->
+<!--plugin: org.eclipse.wst.xml.ui -->
 <contexts>
-<context id="csh_outer_container">
-<description/>
-</context>
-<context id="webx0060">
-<description>This page lets you specify the line delimiter and the text encoding that will be used when you create or save an XML related file.
+	<context id="csh_outer_container">
+		<description />
+	</context>
+	<context id="webx0060"><!-- XML Files preference page  -->
+		<description>
+			<p>This page lets you specify the file suffix and text encoding that will be used when you create or save an XML related file.</p>
 
-Various development platforms use different line delimiters to indicate the start of a new line. Select the operating system that corresponds to your development or deployment platform.
+			<p>The encoding attribute is used to specify the default character encoding set that is used when creating XML related files (DTDs, XML files, XML schemas). Changing the encoding causes any new, XML related files that are created from scratch to use the selected encoding.</p>
 
-<b>Note:</b> This delimiter will not automatically be added to any documents that currently exist. It will be added only to documents that you create after you select the line delimiter type and click <b>Apply</b>, or to existing files that you open and then resave after you select the line delimiter type and click <b>Apply</b>.
+			<p>You can also set the type of message that will appear in the problems view when a resource is validated with no specified grammar.</p>
+		</description>
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tedtenc.html" label="Specifying XML default encoding and line delimiters" />
+	</context>
+	<context id="webx0061"><!-- Editor preferences page -->
+		<description>
+			<p>This page lets you specify the formatting and content assist preferences that will be used when editing an XML file.</p>
 
-The encoding attribute is used to specify the default character encoding set that is used when creating XML related files (DTDs, XML files, XML schemas). Changing the encoding causes any new, XML related files that are created from scratch to use the selected encoding.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tedtenc.html" label="Specifying XML default encoding and line delimiters"/>
-</context>
-<context id="webx0061">
-<description>This page lets you specify the formatting and content assist preferences that will be used when editing an XML file.
+			<p>Enter a maximum width in the <b>Line width</b> field to specify when a line should be broken to fit onto more than one line. This will be applied when the document is formatted.
+			</p>
+		
 
-Enter a maximum width in the <b>Line width</b> field to specify when a line should be broken to fit onto more than one line. This will be applied when the document is formatted.
+			<p>Select <b>Split multiple attributes each on a new line</b> to start every attribute on a new line when the document is formatted.
+			</p>
 
-Select <b>Split multiple attributes each on a new line</b> to start every attribute on a new line when the document is formatted.
+			<p>
+				Select <b>Clear all blank lines</b> to remove blank lines when the document is formatted.
+			</p>
 
-Select <b>Clear all blank lines</b> to remove blank lines when the document is formatted.
+			<p>
+				Select <b>Indent using tabs</b> if you want to use tab characters (\t) as the standard formatting indentation. If you prefer to use spaces, select <b>Indent using spaces</b>.
+			</p>
 
-Select <b>Indent using tabs</b> if you want to use tab characters (\t) as the standard formatting indentation.
+			<p>
+				You can also specify the <b>Indentation size</b> which is the number of tabs or space characters used for formatting indentation.
+			</p>
 
-If you prefer to use spaces, select <b>Indent using spaces</b>.
+			<p>
+				To apply these formatting styles, right-click in your XML document, and click <b>Format &gt; Document</b>.
+			</p>
 
-You can also specify the <b>Indentation size</b> which is the number of tabs or space characters used for formatting indentation.
+			<p>
+				If the <b>Automatically make suggestions</b> check box is selected, you can specify that certain characters will cause the content assist list to pop up automatically. Specify these characters in the <b>Prompt when these characters are inserted</b> field.
+			</p>
 
-To apply these formatting styles, right-click in your XML document, and click <b>Format &gt; Document</b>.
+			<p>
+				If you select <b>Strict</b> from the <b>Suggestion strategy</b> list, suggestions that are grammatically valid will be shown first (with bold icons) in the content assist list. Other suggestions that are applicable to the element scope, but not grammatically valid, will be shown below them with a de-emphasized icon. The default value for this field is <b>Lax</b>.
+			</p>
 
-If the <b>Automatically make suggestions</b> check box is selected, you can specify that certain characters will cause the content assist list to pop up automatically. Specify these characters in the <b>Prompt when these characters are inserted</b> field.
+			<p>
+				If a DTD or schema (or other model) is not specified for an XML file, selecting <b>Use inferred grammar in absence of DTD/Schema</b> allows the editor to "guess" what elements or attributes are available based on existing content.
+			</p>
+		</description>
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txprefs.html" label="Defining XML editor preferences" />
+	</context>
+	<context id="webx0062"><!-- Syntax Coloring preference page -->
+		<description>
+			<p>This page lets you customize the syntax highlighting that the XML editor does when you are editing a file.</p>
 
-If you select <b>Strict</b> from the <b>Suggestion strategy</b> list, suggestions that are grammatically valid will be shown first (with bold icons) in the content assist list. Other suggestions that are applicable to the element scope, but not grammatically valid, will be shown below them with a de-emphasized icon. The default value for this field is <b>Lax</b>.
+			<p>
+				The <b>Content type</b> field contains a list of all the source types that you can select a highlighting style for. You can either select the content type that you want to work with from the drop-down list, or click text in the text sample window that corresponds to the content type for which you want to change the text highlighting.
+			</p>
 
-If a DTD or schema (or other model) is not specified for an XML file, selecting <b>Use inferred grammar in absence of DTD/Schema</b> allows the editor to "guess" what elements or attributes are available based on existing content.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txprefs.html" label="Defining XML editor preferences"/>
-</context>
-<context id="webx0062">
-<description>This page lets you customize the syntax highlighting that the XML editor does when you are editing a file.
+			<p>
+				The <b>Foreground</b> and <b>Background</b> buttons open <b>Color</b> dialog boxes that allow you to specify text foreground and background colors, respectively. Select the <b>Bold</b> check box to make the specified content type appear in bold.
+			</p>
 
-The <b>Content type</b> field contains a list of all the source types that you can select a highlighting style for. You can either select the content type that you want to work with from the drop-down list, or click text in the text sample window that corresponds to the content type for which you want to change the text highlighting.
+			<p>
+				Click the <b>Restore Defaults</b> button to set the highlighting styles back to their default values. If you only want to reset the value for a particular content type, select it in the <b>Content type</b> field, the click the <b>Restore Default</b> button next to it.
+			</p>
+		</description>
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/ttaghilt.html" label="Setting source highlighting styles" />
+	</context>
+	<context id="webx0063"><!-- Templates preference page -->
+		<description>
+			<p>This page lets you create new templates and edit existing ones that can be used when editing an XML file. A template is a chunk of predefined code that you can insert into a file.</p>
 
-The <b>Foreground</b> and <b>Background</b> buttons open <b>Color</b> dialog boxes that allow you to specify text foreground and background colors, respectively. Select the <b>Bold</b> check box to make the specified content type appear in bold.
+			<p>Click <b>New</b> if you want to create a completely new template.
+			</p>
 
-Click the <b>Restore Defaults</b> button to set the highlighting styles back to their default values. If you only want to reset the value for a particular content type, select it in the <b>Content type</b> field, the click the <b>Restore Default</b> button next to it.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/ttaghilt.html" label="Setting source highlighting styles"/>
-</context>
-<context id="webx0063">
-<description>This page lets you create new templates and edit existing ones that can be used when editing an XML file. A template is a chunk of predefined code that you can insert into a file.
+			<p>Supply a new template <b>Name</b> and <b>Description</b>. The <b>Context</b> for the template is the context in which the template is available in the proposal list when content assist is requested. Specify the <b>Pattern</b> for your template using the appropriate tags, attributes, or attribute values to be inserted by content assist.
+			</p>
 
-Click <b>New</b> if you want to create a completely new template.
+			<p>
+				If you want to insert a variable, click the <b>Insert Variable</b> button and select the variable to be inserted. For example, the <b>date</b> variable indicates the current date will be inserted.
+			</p>
 
-Supply a new template <b>Name</b> and <b>Description</b>. The <b>Context</b> for the template is the context in which the template is available in the proposal list when content assist is requested. Specify the <b>Pattern</b> for your template using the appropriate tags, attributes, or attribute values to be inserted by content assist.
+			<p>You can edit, remove, import, or export a template by using the same Preferences page. If you have modified a default template, you can restore it to its default value. You can also restore a removed template if you have not exited from the workbench since it was removed.</p>
 
-If you want to insert a variable, click the <b>Insert Variable</b> button and select the variable to be inserted. For example, the <b>date</b> variable indicates the current date will be inserted.
+			<p>
+				If you have a template that you do not want to remove but you no longer want it to appear in the content assist list, clear its check box in the <b>Templates</b> preferences page.
+			</p>
+		</description>
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/twmacro.html" label="Working with XML templates" />
+	</context>
+	<context id="xmlm1200"><!-- doesn't exist in xml preferences -->
+		<description>
+			Cleanup options enable you to update a document so that it is well-formed and consistently formatted.
 
-You can edit, remove, import, or export a template by using the same Preferences page. If you have modified a default template, you can restore it to its default value. You can also restore a removed template if you have not exited from the workbench since it was removed.
+			The following cleanup options can be set to on or off, so that you can limit the type of cleanup performed:
 
-If you have a template that you do not want to remove but you no longer want it to appear in the content assist list, clear its check box in the <b>Templates</b> preferences page.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/twmacro.html" label="Working with XML templates"/>
-</context>
-<context id="xmlm1200">
-<description>Cleanup options enable you to update a document so that it is well-formed and consistently formatted.
+			- <b>Compress empty element tags</b>: Compress element tags with no content to one tag with an end tag delimiter (ie: change &lt;tag&gt;&lt;/tag&gt; to &lt;tag/&gt;).
 
-The following cleanup options can be set to on or off, so that you can limit the type of cleanup performed:
+			- <b>Insert required attributes</b>: Inserts any missing attributes that are required by the tag to make the element or document well-formed.
 
-- <b>Compress empty element tags</b>: Compress element tags with no content to one tag with an end tag delimiter (ie: change &lt;tag&gt;&lt;/tag&gt; to &lt;tag/&gt;).
+			- <b>Insert missing tags</b>: Completes any missing tags (such as adding an end tag) necessary to make the element or document well-formed.
 
-- <b>Insert required attributes</b>: Inserts any missing attributes that are required by the tag to make the element or document well-formed.
+			- <b>Quote attribute values</b>: Appropriately adds double- or single-quotes before and after attribute values if they are missing.
 
-- <b>Insert missing tags</b>: Completes any missing tags (such as adding an end tag) necessary to make the element or document well-formed.
+			- <b>Format source</b>: Formats the document just as the <b>Format Document</b> context menu option does, immediately after performing any other specified <b>Cleanup</b> options.
 
-- <b>Quote attribute values</b>: Appropriately adds double- or single-quotes before and after attribute values if they are missing.
+			- <b>Convert line delimiters to</b>: Converts all line delimiters in the file to the selected operating system's type.
+		</description>
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtsrc.html" label="Editing in the Source view" />
+	</context>
+	<context id="xcui0500"><!-- add new attribute dialog -->
+		<description>
+			Enter the name of the attribute in the <b>Name</b> field, then enter the value of the attribute in the <b>Value</b> field. Click <b>OK</b>. The attribute will be added to the file.
+		</description>
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view" />
+	</context>
+	<context id="xcui0010"><!--  -->
+		<description>
+			The DOCTYPE declaration in an XML file is used at the beginning of it to associate it with a DTD file. You can use the <b>Public ID</b> field to create an association using an XML Catalog entry or the <b>System ID</b> field to create an association using a file in the workbench.
+		</description>
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view" />
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tedtdoc.html" label="Editing DOCTYPE declarations" />
+	</context>
+	<context id="xcui0020"><!-- edit doctype declaration dialog -->
+		<description>This should match the name of your XML file's root element.</description>
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view" />
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tedtdoc.html" label="Editing DOCTYPE declarations" />
+	</context>
+	<context id="xcui0030"><!-- edit doctype declaration dialog -->
+		<description>The value in this field is the Public Identifier. It is used to associate the XML file (using an XML catalog entry) with a DTD file by providing a hint to the XML processor.</description>
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view" />
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tedtdoc.html" label="Editing DOCTYPE declarations" />
+	</context>
+	<context id="xcui0050"><!-- edit doctype declaration dialog -->
+		<description>The value in this field is the DTD the XML file is associated with. You can change the DTD the file is associated with by editing this field. The XML processor will try to use the Public ID to locate the DTD, and if this fails, it will use the System ID to find it.</description>
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view" />
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tedtdoc.html" label="Editing DOCTYPE declarations" />
+	</context>
+	<context id="xcui0600"><!-- add element dialog -->
+		<description>
+			Enter the name of the element in the <b>Element name</b> field, then click <b>OK</b>. The element will be added to the file.
+		</description>
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view" />
+	</context>
+	<context id="xcui0300"><!-- edit processing instruction dialog -->
+		<description>
+			A processing instruction is a syntax in XML for passing instructions along to the application using an XML document. The <b>Target</b> field is used to identify the application the instructions belongs to. The <b>Data</b> field contains the instructions.
+		</description>
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view" />
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tedtproc.html" label="Editing XML processing instructions" />
+	</context>
+	<context id="xcui0100"><!-- edit schema information (namespace declaration) dialog -->
+		<description>
+			This is a read-only dialog. Select the entry you want to edit and click <b>Edit</b>.
+		</description>
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view" />
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing your namespace information" />
+	</context>
+	<context id="xcui0200"><!-- add namespace declaration dialog -->
+		<description>
+			The value in the <b>Namespace Name</b> field is the namespace the XML file belongs to.
 
-- <b>Format source</b>: Formats the document just as the <b>Format Document</b> context menu option does, immediately after performing any other specified <b>Cleanup</b> options.
+			All qualified elements and attributes in the XML file associated with the namespace will be prefixed with the <b>Prefix</b> value.
 
-- <b>Convert line delimiters to</b>: Converts all line delimiters in the file to the selected operating system's type.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtsrc.html" label="Editing in the Source view"/>
-</context>
-<context id="xcui0500">
-<description>Enter the name of the attribute in the <b>Name</b> field, then enter the value of the attribute in the <b>Value</b> field. Click <b>OK</b>. The attribute will be added to the file.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view"/>
-</context>
-<context id="xcui0010">
-<description>The DOCTYPE declaration in an XML file is used at the beginning of it to associate it with a DTD file. You can use the <b>Public ID</b> field to create an association using an XML Catalog entry or the <b>System ID</b> field to create an association using a file in the workbench.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view"/>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tedtdoc.html" label="Editing DOCTYPE declarations"/>
-</context>
-<context id="xcui0020">
-<description>This should match the name of your XML file's root element.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view"/>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tedtdoc.html" label="Editing DOCTYPE declarations"/>
-</context>
-<context id="xcui0030">
-<description>The value in this field is the Public Identifier. It is used to associate the XML file (using an XML catalog entry) with a DTD file by providing a hint to the XML processor.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view"/>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tedtdoc.html" label="Editing DOCTYPE declarations"/>
-</context>
-<context id="xcui0050">
-<description>The value in this field is the DTD the XML file is associated with. You can change the DTD the file is associated with by editing this field. The XML processor will try to use the Public ID to locate the DTD, and if this fails, it will use the System ID to find it.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view"/>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tedtdoc.html" label="Editing DOCTYPE declarations"/>
-</context>
-<context id="xcui0600">
-<description>Enter the name of the element in the <b>Element name</b> field, then click <b>OK</b>. The element will be added to the file.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view"/>
-</context>
-<context id="xcui0300">
-<description>A processing instruction is a syntax in XML for passing instructions along to the application using an XML document. The <b>Target</b> field is used to identify the application the instructions belongs to. The <b>Data</b> field contains the instructions.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view"/>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/tedtproc.html" label="Editing XML processing instructions"/>
-</context>
-<context id="xcui0100">
-<description>This is a read-only dialog. Select the entry you want to edit and click <b>Edit</b>.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view"/>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing your namespace information"/>
-</context>
-<context id="xcui0200">
-<description>The value in the <b>Namespace Name</b> field is the namespace the XML file belongs to.
+			The <b>Location Hint</b> field contains the location of the XML schema the XML file is associated with. An XML Catalog ID or a URI can be specified in this field. You can search for the schema you want to use by clicking <b>Browse</b>. Once you select a file, the <b>Namespace Name</b> and <b>Prefix</b> fields will automatically be filled with the appropriate values from the schema (you must leave the fields blank for this to occur).
 
-All qualified elements and attributes in the XML file associated with the namespace will be prefixed with the <b>Prefix</b> value.
-
-The <b>Location Hint</b> field contains the location of the XML schema the XML file is associated with. An XML Catalog ID or a URI can be specified in this field. You can search for the schema you want to use by clicking <b>Browse</b>. Once you select a file, the <b>Namespace Name</b> and <b>Prefix</b> fields will automatically be filled with the appropriate values from the schema (you must leave the fields blank for this to occur). <b>Note</b>: If you are creating an XML file from an XML schema, you cannot change the <b>Namespace Name</b> or <b>Location Hint</b> values.</description>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view"/>
-<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing your namespace information"/>
-</context>
-<context id="xcui0400">
-<description>An XML Catalog entry contains two parts - a Key (which represents a DTD or XML schema) and a URI (which contains information about a DTD or XML schema's location). Select the catalog entry you want to associate your XML file with.</description>
-</context>
+			<b>Note</b> : If you are creating an XML file from an XML schema, you cannot change the <b>Namespace Name</b> or <b>Location Hint</b> values.
+		</description>
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing in the Design view" />
+		<topic href="../org.eclipse.wst.xmleditor.doc.user/topics/txedtdes.html" label="Editing your namespace information" />
+	</context>
+	<context id="xcui0400"><!--  -->
+		<description>An XML Catalog entry contains two parts - a Key (which represents a DTD or XML schema) and a URI (which contains information about a DTD or XML schema's location). Select the catalog entry you want to associate your XML file with.</description>
+	</context>
 </contexts>
