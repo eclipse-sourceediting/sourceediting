@@ -880,7 +880,7 @@
 	              style="push">
 	           <visibleWhen checkEnabled="false">
 	              <or>
-					<iterate>
+					<iterate ifEmpty="false">
 						<adapt
 							type="org.eclipse.core.resources.IFile">
 							<test
@@ -889,7 +889,7 @@
 							</test>
 						</adapt>
 					</iterate>
-					<iterate>
+					<iterate ifEmpty="false">
 						<adapt
 							type="org.eclipse.core.resources.IFile">
 							<test
