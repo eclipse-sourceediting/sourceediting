@@ -34,8 +34,7 @@ class JSPJavaHyperlink implements IHyperlink {
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getTypeLabel()
 	 */
 	public String getTypeLabel() {
-		// TODO Auto-generated method stub
-		return null;
+		return fElement.getPath().toString();
 	}
 
 	/*
@@ -44,8 +43,7 @@ class JSPJavaHyperlink implements IHyperlink {
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getHyperlinkText()
 	 */
 	public String getHyperlinkText() {
-		// TODO Auto-generated method stub
-		return null;
+		return fElement.getElementName();
 	}
 
 	/*

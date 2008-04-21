@@ -58,11 +58,11 @@ class TLDFileHyperlink implements IHyperlink {
 	}
 
 	public String getHyperlinkText() {
-		return fSearchName;
+		return fResource.getFullPath().toString();
 	}
 
 	public String getTypeLabel() {
-		return "TLDFileHyperlink label";
+		return null;
 	}
 
 	public void open() {

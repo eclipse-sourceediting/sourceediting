@@ -83,7 +83,6 @@ class TaglibJarHyperlink implements IHyperlink {
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getTypeLabel()
 	 */
 	public String getTypeLabel() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -93,8 +92,7 @@ class TaglibJarHyperlink implements IHyperlink {
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getHyperlinkText()
 	 */
 	public String getHyperlinkText() {
-		// TODO Auto-generated method stub
-		return null;
+		return fZipFilePath.toString();
 	}
 
 	public void open() {

@@ -34,11 +34,11 @@ class ExternalFileHyperlink implements IHyperlink {
 	}
 
 	public String getTypeLabel() {
-		return null;
+		return fHyperlinkFile.getAbsolutePath();
 	}
 
 	public String getHyperlinkText() {
-		return null;
+		return fHyperlinkFile.getName();
 	}
 
 	public void open() {

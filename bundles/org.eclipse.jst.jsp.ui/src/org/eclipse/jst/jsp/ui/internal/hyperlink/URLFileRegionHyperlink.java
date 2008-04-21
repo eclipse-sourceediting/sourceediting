@@ -165,7 +165,7 @@ class URLFileRegionHyperlink implements IHyperlink {
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getHyperlinkText()
 	 */
 	public String getHyperlinkText() {
-		return fSearchName;
+		return fURL.toString();
 	}
 
 	/*

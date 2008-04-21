@@ -52,7 +52,6 @@ class TaglibJarUriHyperlink implements IHyperlink {
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getTypeLabel()
 	 */
 	public String getTypeLabel() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -62,7 +61,18 @@ class TaglibJarUriHyperlink implements IHyperlink {
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getHyperlinkText()
 	 */
 	public String getHyperlinkText() {
-		// TODO Auto-generated method stub
+		if (fTaglibRecord != null) {
+			switch (fTaglibRecord.getRecordType()) {
+				case (ITaglibRecord.JAR) : {
+					IJarRecord record = (IJarRecord) fTaglibRecord;
+					return record.getLocation().toString();
+				}
+				case (ITaglibRecord.URL) : {
+					IURLRecord record = (IURLRecord) fTaglibRecord;
+					return record.getBaseLocation();
+				}
+			}
+		}
 		return null;
 	}
 
