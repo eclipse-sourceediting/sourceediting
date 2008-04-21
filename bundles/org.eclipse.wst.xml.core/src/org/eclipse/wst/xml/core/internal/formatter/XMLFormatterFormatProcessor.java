@@ -15,7 +15,11 @@ import java.io.IOException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.text.DocumentRewriteSession;
+import org.eclipse.jface.text.DocumentRewriteSessionType;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentExtension4;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
@@ -84,16 +88,40 @@ public class XMLFormatterFormatProcessor implements IStructuredFormatProcessor {
 	}
 
 	public void formatModel(IStructuredModel structuredModel, int start, int length) {
+		if(fProgressMonitor != null)
+			fProgressMonitor.beginTask("", 2);
+		IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
+		DocumentRewriteSession activeRewriteSession = ((IDocumentExtension4) structuredDocument).getActiveRewriteSession();
+		boolean startedRewriteSession = false;
+		if (activeRewriteSession == null) {
+			activeRewriteSession = ((IDocumentExtension4) structuredDocument).startRewriteSession(DocumentRewriteSessionType.SEQUENTIAL);
+			startedRewriteSession = true;
+		}
+		getFormatter().setProgressMonitor(new NullProgressMonitor() {
+			public boolean isCanceled() {
+				return fProgressMonitor != null && fProgressMonitor.isCanceled();
+			}
+		});
 		TextEdit edit = getFormatter().format(structuredModel, start, length);
+		if(fProgressMonitor != null)
+			fProgressMonitor.worked(1);
+		
 		try {
 			structuredModel.aboutToChangeModel();
-			edit.apply(structuredModel.getStructuredDocument());
+			edit.apply(structuredDocument);
+			if(fProgressMonitor != null)
+				fProgressMonitor.worked(1);
 		}
 		catch (Exception e) {
 			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 		}
 		finally {
+			if (startedRewriteSession && activeRewriteSession != null) {
+				((IDocumentExtension4) structuredDocument).stopRewriteSession(activeRewriteSession);
+			}
 			structuredModel.changedModel();
+			if(fProgressMonitor != null)
+				fProgressMonitor.done();
 		}
 	}
 
@@ -106,7 +134,6 @@ public class XMLFormatterFormatProcessor implements IStructuredFormatProcessor {
 
 	public void setProgressMonitor(IProgressMonitor monitor) {
 		fProgressMonitor = monitor;
-		getFormatter().setProgressMonitor(fProgressMonitor);
 	}
 
 	private DefaultXMLPartitionFormatter getFormatter() {
