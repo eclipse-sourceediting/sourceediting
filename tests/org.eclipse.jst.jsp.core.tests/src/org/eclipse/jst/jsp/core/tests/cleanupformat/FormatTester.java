@@ -13,6 +13,8 @@ package org.eclipse.jst.jsp.core.tests.cleanupformat;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import junit.framework.TestCase;
 
@@ -511,7 +513,9 @@ public class FormatTester extends TestCase {
 				fileInputStream.close();
 		}
 		catch (IOException exception) {
-			printException(exception);
+			StringWriter s = new StringWriter();
+			exception.printStackTrace(new PrintWriter(s));
+			fail(s.toString());
 		}
 
 		return inputString;
@@ -532,7 +536,9 @@ public class FormatTester extends TestCase {
 			structuredModel = fModelManager.getModelForRead(id, inputStream, null);
 		}
 		catch (Exception exception) {
-			exception.printStackTrace();
+			StringWriter s = new StringWriter();
+			exception.printStackTrace(new PrintWriter(s));
+			fail(s.toString());
 		}
 		finally {
 			try {
@@ -540,6 +546,9 @@ public class FormatTester extends TestCase {
 			}
 			catch (Exception exception) {
 				// hopeless
+				StringWriter s = new StringWriter();
+				exception.printStackTrace(new PrintWriter(s));
+				fail(s.toString());
 			}
 		}
 

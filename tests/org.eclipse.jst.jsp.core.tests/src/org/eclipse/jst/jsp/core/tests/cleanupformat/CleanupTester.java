@@ -13,6 +13,8 @@ package org.eclipse.jst.jsp.core.tests.cleanupformat;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 
 import junit.framework.TestCase;
@@ -317,6 +319,9 @@ public class CleanupTester extends TestCase {
 			}
 			catch (Exception exception) {
 				// hopeless
+				StringWriter s = new StringWriter();
+				exception.printStackTrace(new PrintWriter(s));
+				fail(s.toString());
 			}
 		}
 

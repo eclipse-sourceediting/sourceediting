@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.tests.translation;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
@@ -176,10 +179,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		assertEquals("problem markers found, " + s.toString(), 0, markers.length);
 	}
 
-	private void waitForBuildAndValidation(IProject project) throws CoreException {
-		project.build(IncrementalProjectBuilder.CLEAN_BUILD, new NullProgressMonitor());
-		project.build(IncrementalProjectBuilder.FULL_BUILD, "org.eclipse.wst.validation.validationbuilder", null, new NullProgressMonitor());
-		project.build(IncrementalProjectBuilder.FULL_BUILD, new NullProgressMonitor());
+	private void waitForBuildAndValidation() throws CoreException {
 		try {
 			ResourcesPlugin.getWorkspace().checkpoint(true);
 			Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
@@ -189,14 +189,25 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 			Job.getJobManager().beginRule(ResourcesPlugin.getWorkspace().getRoot(), null);
 		}
 		catch (InterruptedException e) {
-			e.printStackTrace();
+			StringWriter s = new StringWriter();
+			e.printStackTrace(new PrintWriter(s));
+			fail(s.toString());
 		}
 		catch (OperationCanceledException e) {
-			e.printStackTrace();
+			StringWriter s = new StringWriter();
+			e.printStackTrace(new PrintWriter(s));
+			fail(s.toString());
 		}
 		finally {
 			Job.getJobManager().endRule(ResourcesPlugin.getWorkspace().getRoot());
 		}
+	}
+	
+	private void waitForBuildAndValidation(IProject project) throws CoreException {
+		project.build(IncrementalProjectBuilder.CLEAN_BUILD, new NullProgressMonitor());
+		waitForBuildAndValidation();
+		project.build(IncrementalProjectBuilder.FULL_BUILD, new NullProgressMonitor());
+		waitForBuildAndValidation();
 	}
 
 	public void test_178443() throws Exception {

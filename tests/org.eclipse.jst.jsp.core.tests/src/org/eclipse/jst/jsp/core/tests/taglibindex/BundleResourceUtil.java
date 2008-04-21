@@ -32,8 +32,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -42,7 +44,7 @@ import org.eclipse.jst.jsp.core.tests.JSPCoreTestsPlugin;
 
 public class BundleResourceUtil {
 
-	public static void _copyBundleEntriesIntoWorkspace(final String rootEntry, final String fullTargetPath) throws CoreException {
+	public static void _copyBundleEntriesIntoWorkspace(final String rootEntry, final String fullTargetPath) throws Exception {
 		Enumeration entries = JSPCoreTestsPlugin.getDefault().getBundle().getEntryPaths(rootEntry);
 		while (entries != null && entries.hasMoreElements()) {
 			String entryPath = entries.nextElement().toString();
@@ -61,7 +63,7 @@ public class BundleResourceUtil {
 		}
 	}
 
-	public static IFile _copyBundleEntryIntoWorkspace(String entryname, String fullPath) throws CoreException {
+	public static IFile _copyBundleEntryIntoWorkspace(String entryname, String fullPath) throws Exception {
 		IFile file = null;
 		URL entry = JSPCoreTestsPlugin.getDefault().getBundle().getEntry(entryname);
 		if (entry != null) {
@@ -75,31 +77,21 @@ public class BundleResourceUtil {
 			// folder.create(true, true, null);
 			// }
 			// }
-			try {
-				byte[] b = new byte[2048];
-				InputStream input = entry.openStream();
-				ByteArrayOutputStream output = new ByteArrayOutputStream();
-				int i = -1;
-				while ((i = input.read(b)) > -1) {
-					output.write(b, 0, i);
-				}
-				file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-				if (file != null) {
-					if (!file.exists()) {
-						file.create(new ByteArrayInputStream(output.toByteArray()), true, new NullProgressMonitor());
-					}
-					else {
-						file.setContents(new ByteArrayInputStream(output.toByteArray()), true, false, new NullProgressMonitor());
-					}
-				}
+			byte[] b = new byte[2048];
+			InputStream input = entry.openStream();
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			int i = -1;
+			while ((i = input.read(b)) > -1) {
+				output.write(b, 0, i);
 			}
-			catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+			if (file != null) {
+				if (!file.exists()) {
+					file.create(new ByteArrayInputStream(output.toByteArray()), true, new NullProgressMonitor());
+				}
+				else {
+					file.setContents(new ByteArrayInputStream(output.toByteArray()), true, false, new NullProgressMonitor());
+				}
 			}
 		}
 		else {
@@ -108,21 +100,31 @@ public class BundleResourceUtil {
 		return file;
 	}
 
-	public static void copyBundleEntriesIntoWorkspace(final String rootEntry, final String fullTargetPath) throws CoreException {
+	public static void copyBundleEntriesIntoWorkspace(final String rootEntry, final String fullTargetPath) throws Exception {
 		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
-				_copyBundleEntriesIntoWorkspace(rootEntry, fullTargetPath);
+				try {
+					_copyBundleEntriesIntoWorkspace(rootEntry, fullTargetPath);
+				}
+				catch (Exception e) {
+					throw new CoreException(new Status(IStatus.ERROR, JSPCoreTestsPlugin.getDefault().getBundle().getSymbolicName(), 0, null, e));
+				}
 				ResourcesPlugin.getWorkspace().checkpoint(true);
 			}
 		};
 		ResourcesPlugin.getWorkspace().run(runnable, new NullProgressMonitor());
 	}
 
-	public static IFile copyBundleEntryIntoWorkspace(final String entryname, final String fullPath) throws CoreException {
+	public static IFile copyBundleEntryIntoWorkspace(final String entryname, final String fullPath) throws Exception {
 		final IFile file[] = new IFile[1];
 		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
-				file[0] = _copyBundleEntryIntoWorkspace(entryname, fullPath);
+				try {
+					file[0] = _copyBundleEntryIntoWorkspace(entryname, fullPath);
+				}
+				catch (Exception e) {
+					throw new CoreException(new Status(IStatus.ERROR, JSPCoreTestsPlugin.getDefault().getBundle().getSymbolicName(), 0, null, e));
+				}
 				ResourcesPlugin.getWorkspace().checkpoint(true);
 			}
 		};

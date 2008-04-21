@@ -16,6 +16,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 
 import junit.framework.TestCase;
@@ -62,7 +64,9 @@ public class TestModelWithNoFile extends TestCase {
 			model.getStructuredDocument().set("<%@taglib prefix=\"tagdependent\" uri=\"tagdependent\">\n<tagdependent:code> <<< </tagdependent:code>");
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			StringWriter s = new StringWriter();
+			e.printStackTrace(new PrintWriter(s));
+			fail(s.toString());
 		}
 		finally {
 			if (model != null) {
@@ -92,7 +96,9 @@ public class TestModelWithNoFile extends TestCase {
 			model.getStructuredDocument().set("<%@taglib prefix=\"tagdependent\" uri=\"tagdependent\">\n<tagdependent:code> <<< </tagdependent:code>");
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			StringWriter s = new StringWriter();
+			e.printStackTrace(new PrintWriter(s));
+			fail(s.toString());
 		}
 		finally {
 			if (model != null) {
@@ -119,12 +125,14 @@ public class TestModelWithNoFile extends TestCase {
 				}
 			}
 			catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				StringWriter s = new StringWriter();
+				e.printStackTrace(new PrintWriter(s));
+				fail(s.toString());
 			}
 			catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				StringWriter s = new StringWriter();
+				e.printStackTrace(new PrintWriter(s));
+				fail(s.toString());
 			}
 		}
 		return file;
@@ -145,7 +153,9 @@ public class TestModelWithNoFile extends TestCase {
 			project.open(new NullProgressMonitor());
 		}
 		catch (CoreException e) {
-			e.printStackTrace();
+			StringWriter s = new StringWriter();
+			e.printStackTrace(new PrintWriter(s));
+			fail(s.toString());
 		}
 		return project;
 	}

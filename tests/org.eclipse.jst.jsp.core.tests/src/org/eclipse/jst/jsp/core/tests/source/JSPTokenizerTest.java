@@ -14,8 +14,10 @@ package org.eclipse.jst.jsp.core.tests.source;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
+import java.io.StringWriter;
 
 import junit.framework.TestCase;
 
@@ -34,9 +36,9 @@ public class JSPTokenizerTest extends TestCase {
 			fileReader = new InputStreamReader(getClass().getResourceAsStream(filename), "utf8");
 		}
 		catch (IOException e) {
-		}
-		if (fileReader == null) {
-			fail();
+			StringWriter s = new StringWriter();
+			e.printStackTrace(new PrintWriter(s));
+			fail(s.toString());
 		}
 		BufferedReader reader = new BufferedReader(fileReader);
 		reset(reader);
@@ -65,7 +67,9 @@ public class JSPTokenizerTest extends TestCase {
 			}
 		}
 		catch (IOException e) {
-			fail(e.getMessage());
+			StringWriter s = new StringWriter();
+			e.printStackTrace(new PrintWriter(s));
+			fail(s.toString());
 		}
 	}
 
@@ -82,7 +86,9 @@ public class JSPTokenizerTest extends TestCase {
 			}
 		}
 		catch (IOException e) {
-			fail(e.getMessage());
+			StringWriter s = new StringWriter();
+			e.printStackTrace(new PrintWriter(s));
+			fail(s.toString());
 		}
 	}
 
@@ -99,7 +105,9 @@ public class JSPTokenizerTest extends TestCase {
 			}
 		}
 		catch (IOException e) {
-			fail(e.getMessage());
+			StringWriter s = new StringWriter();
+			e.printStackTrace(new PrintWriter(s));
+			fail(s.toString());
 		}
 	}
 
@@ -112,10 +120,14 @@ public class JSPTokenizerTest extends TestCase {
 			}
 		}
 		catch (IOException e) {
+			StringWriter s = new StringWriter();
+			e.printStackTrace(new PrintWriter(s));
+			fail(s.toString());
 		}
 		catch (StackOverflowError e) {
-			fail(e.getMessage());
-			return;
+			StringWriter s = new StringWriter();
+			e.printStackTrace(new PrintWriter(s));
+			fail(s.toString());
 		}
 		// success if StackOverFlowError does not occur with tokenizer.
 		assertTrue(true);

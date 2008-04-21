@@ -16,7 +16,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.Iterator;
 
@@ -268,7 +270,9 @@ public class JSPedCSSSourceParserTest extends TestCase {
 			model.getStructuredDocument().setLineDelimiter(commonEOL);//$NON-NLS-1$
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			StringWriter s = new StringWriter();
+			e.printStackTrace(new PrintWriter(s));
+			fail(s.toString());
 		}
 		return (ICSSModel) model;
 
