@@ -180,7 +180,10 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
       
       EditPart editPart = getEditPart(getRootEditPart(), selectedObject);
       if (editPart != null)
+      {
         setSelection(new StructuredSelection(editPart));
+        setFocus(editPart);
+      }
     }
   }
   

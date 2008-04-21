@@ -10,12 +10,15 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.editor;
 
+import java.util.List;
+
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.SelectionManager;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
@@ -177,11 +180,36 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
 
     return pageIndex;
   }
+  
+  /**
+   * @see org.eclipse.ui.IWorkbenchPart#setFocus()
+   */
+  public void setFocus()
+  {
+    if (getActivePage() == DESIGN_PAGE_INDEX)
+    {
+      if (graphicalViewer != null && graphicalViewer.getControl() != null)
+      {
+        List selected = graphicalViewer.getSelectedEditParts();
+        if (selected.size() > 0)
+        {
+          graphicalViewer.setFocus((EditPart)selected.get(0));
+        }
+        graphicalViewer.getControl().setFocus();
+        
+      }
+    }
+    else
+    {
+      graphicalViewer.setFocus(null);
+    }
+  }
 
   protected void pageChange(int newPageIndex)
   {
     currentPage = newPageIndex;
     super.pageChange(newPageIndex);
+    setFocus();
   }
   
   private boolean isTableOfContentsApplicable(Object graphViewInput)
@@ -200,7 +228,22 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
         floatingToolbar.refresh(isTableOfContentsApplicable(input.getFirstElement()));
       }      
     });
+    // Workaround bug 227687 An edit part's focus state is not updated properly
+    // Once this is bug is fixed, we can remove custom selection manager
+    viewer.setSelectionManager(new CustomSelectionManager());
     return viewer;
+  }
+
+  // Workaround bug 227687 An edit part's focus state is not updated properly
+  // Once this is bug is fixed, we can remove this class
+  private class CustomSelectionManager extends SelectionManager
+  {
+    public void appendSelection(EditPart editpart)
+    {
+      if (editpart != getFocus())
+        getViewer().setFocus(editpart);
+      super.appendSelection(editpart);
+    }
   }
   
   abstract public IModel buildModel();  // (IFileEditorInput editorInput);

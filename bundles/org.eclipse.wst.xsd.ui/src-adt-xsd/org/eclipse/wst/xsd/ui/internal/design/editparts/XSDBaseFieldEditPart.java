@@ -27,6 +27,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.directedit.ReferenceDirectEdit
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseFieldEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.IFieldFigure;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
+import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.FieldFigure;
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.DragAndDropEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.SelectionHandlesEditPolicyImpl;
@@ -155,5 +156,13 @@ public class XSDBaseFieldEditPart extends BaseFieldEditPart
         manager.show();
       }
     }
+  }
+  
+  public void setFocus(boolean focus)
+  {
+    super.setFocus(focus);
+    hasFocus = focus;
+    ((FieldFigure)getFigure()).hasFocus = hasFocus;
+    getFigure().repaint();
   }
 }

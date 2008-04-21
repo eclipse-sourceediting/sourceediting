@@ -19,10 +19,8 @@ import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -49,8 +47,6 @@ public class FieldFigure extends Figure implements IFieldFigure
   public static final int LEFT_MARGIN = 2;
   public static final int RIGHT_MARGIN = LEFT_MARGIN;
   public static final int RIGHT_SIDE_PADDING = 6;
-  
-  private boolean isSelected = false;
 
   // States requiring decorators, and their icons
   // protected static final Image errorIcon = ICON_ERROR;
@@ -63,39 +59,13 @@ public class FieldFigure extends Figure implements IFieldFigure
   protected Label typeAnnotationLabel;  // for occurrence text, or error icons
   protected Label toolTipLabel;
   
+  public boolean hasFocus = false;
+  
   public FieldFigure()
   {
     super();
     setLayoutManager(new ToolbarLayout());
-    rowFigure = new Figure()
-    {
-      public void paint(Graphics graphics)
-      {
-        super.paint(graphics);
-        if (isSelected)
-        {
-          try
-          {
-            graphics.pushState();
-            
-            PointList pointList = new PointList();
-            Rectangle r1 = rowFigure.getBounds();
-            pointList.addPoint(r1.x, r1.y + 1);
-            pointList.addPoint(r1.right() - 1, r1.y + 1);
-            pointList.addPoint(r1.right() - 1, r1.bottom() - 1);
-            pointList.addPoint(r1.x, r1.bottom() - 1);
-            pointList.addPoint(r1.x, r1.y + 1);
-            graphics.setForegroundColor(ColorConstants.lightGray);
-            graphics.setLineStyle(SWT.LINE_DOT);
-            graphics.drawPolyline(pointList);
-          }
-          finally
-          {
-            graphics.popState();
-          }
-        }
-      }
-    };
+    rowFigure = new Figure();
     RowLayout rowLayout = new RowLayout();
     rowFigure.setLayoutManager(rowLayout);
 
@@ -277,7 +247,6 @@ public class FieldFigure extends Figure implements IFieldFigure
   
   public void addSelectionFeedback()
   {
-    isSelected = true;
     boolean highContrast = false;
     try
     {
@@ -293,7 +262,6 @@ public class FieldFigure extends Figure implements IFieldFigure
   
   public void removeSelectionFeedback()
   {
-    isSelected = false;
     boolean highContrast = false;
     try
     {
@@ -309,5 +277,24 @@ public class FieldFigure extends Figure implements IFieldFigure
   
   public void refreshVisuals(Object model)
   {
+  }
+  
+  public void paint(Graphics graphics)
+  {
+    super.paint(graphics);
+    if (hasFocus)
+    {
+      try
+      {
+        graphics.pushState();
+        Rectangle r = getBounds();
+        graphics.setXORMode(true);
+        graphics.drawFocus(r.x, r.y + 1, r.width - 1, r.height - 2);
+      }
+      finally
+      {
+        graphics.popState();
+      }
+    }
   }
 }

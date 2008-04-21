@@ -21,7 +21,6 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
@@ -34,7 +33,6 @@ import org.eclipse.gef.requests.LocationRequest;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -84,23 +82,14 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
       public void paint(Graphics graphics)
       {
         super.paint(graphics);
-        if (isSelected)
+        if (hasFocus)
         {
           try
           {
             graphics.pushState();
-
-            Rectangle r1 = getBounds();
-            PointList pointList = new PointList();
-
-            pointList.addPoint(r1.x, r1.y + 1);
-            pointList.addPoint(r1.right() - 1, r1.y + 1);
-            pointList.addPoint(r1.right() - 1, r1.bottom() - 1);
-            pointList.addPoint(r1.x, r1.bottom() - 1);
-            pointList.addPoint(r1.x, r1.y + 1);
-            graphics.setForegroundColor(ColorConstants.lightGray);
-            graphics.setLineStyle(SWT.LINE_DOT);
-            graphics.drawPolyline(pointList);
+            Rectangle r = getBounds();
+            graphics.setXORMode(true);
+            graphics.drawFocus(r.x, r.y + 1, r.width - 1, r.height - 2);
           }
           finally
           {
@@ -421,5 +410,12 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
     if (doScroll)
       setScroll(true);
     super.setSelected(value);
+  }
+
+  public void setFocus(boolean b)
+  {
+    super.setFocus(b);
+    hasFocus = b;
+    getFigure().repaint();
   }
 }
