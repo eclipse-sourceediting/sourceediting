@@ -622,7 +622,7 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
     if (showToolBar)
     {
       toolbar = new Composite(parent, SWT.FLAT | SWT.DRAW_TRANSPARENT);
-      toolbar.setBackground(ColorConstants.white);
+      toolbar.setBackground(ColorConstants.listBackground);
       toolbar.addPaintListener(new PaintListener() {
 
         public void paintControl(PaintEvent e)
@@ -637,7 +637,7 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
       toolbar.setLayout(gridLayout);
 
       Label label = new Label(toolbar, SWT.FLAT | SWT.HORIZONTAL);
-      label.setBackground(ColorConstants.white);
+      label.setBackground(ColorConstants.listBackground);
       label.setText(Messages._UI_LABEL_VIEW);
       label.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
 

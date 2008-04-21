@@ -11,7 +11,6 @@
 package org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures;
 
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.Label;
@@ -21,6 +20,7 @@ import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -256,8 +256,14 @@ public class FieldFigure extends Figure implements IFieldFigure
     {
     }
     if (highContrast)
-      rowFigure.setForegroundColor(ColorConstants.black);
-    rowFigure.setBackgroundColor(cellColor);
+    {
+      rowFigure.setForegroundColor(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+      rowFigure.setBackgroundColor(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND));
+    }
+    else
+    {
+      rowFigure.setBackgroundColor(cellColor);
+    }
   }
   
   public void removeSelectionFeedback()
@@ -271,8 +277,14 @@ public class FieldFigure extends Figure implements IFieldFigure
     {
     }
     if (highContrast)
-      rowFigure.setForegroundColor(getForegroundColor());
-    rowFigure.setBackgroundColor(getBackgroundColor());
+    {
+      rowFigure.setForegroundColor(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND));
+      rowFigure.setBackgroundColor(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+    }
+    else
+    {
+      rowFigure.setBackgroundColor(getBackgroundColor());
+    }
   }
   
   public void refreshVisuals(Object model)

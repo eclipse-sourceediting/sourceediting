@@ -16,6 +16,7 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.PolylineConnection;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 
@@ -93,7 +94,7 @@ public class TypeReferenceConnection extends PolylineConnection
     }
     if (highContrast)
     {
-      setForegroundColor(highlight ? ColorConstants.white : ColorConstants.lightGray);
+      setForegroundColor(highlight ? Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND) : ColorConstants.lightGray);
     }
     else
     {

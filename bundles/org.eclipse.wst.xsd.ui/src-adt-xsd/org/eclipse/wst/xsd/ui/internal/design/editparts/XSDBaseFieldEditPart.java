@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.design.editparts;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAttributeDeclarationAdapter;
@@ -54,22 +55,17 @@ public class XSDBaseFieldEditPart extends BaseFieldEditPart
     figure.getNameLabel().setText(field.getName());
     figure.getTypeLabel().setText(field.getTypeName());
     figure.refreshVisuals(getModel());
-    boolean highContrast = false;
-    try
-    {
-      highContrast = Display.getDefault().getHighContrast();
-    }
-    catch (Exception e)
-    {
-    }
     if (field.isReadOnly())
     {
       figure.setForegroundColor(ColorConstants.darkGray);
     }
     else
     {
-      if (highContrast)
-        figure.setForegroundColor(ColorConstants.white);
+      if (isHighContrast)
+      {
+        figure.setForegroundColor(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND));
+        figure.setBackgroundColor(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+      }
       else
         figure.setForegroundColor(ColorConstants.black);     
     }

@@ -33,6 +33,7 @@ import org.eclipse.gef.requests.LocationRequest;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
@@ -109,7 +110,8 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
     label = new HyperLinkLabel();
     label.setOpaque(true);
     label.setBorder(new MarginBorder(1, 2, 2, 5));
-    label.setForegroundColor(ColorConstants.black);
+    if (!isHighContrast)
+      label.setForegroundColor(ColorConstants.black);
     labelHolder.add(label);
 
     return typeGroup;
@@ -198,24 +200,22 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
 
   public Color computeLabelColor()
   {
-    boolean highContrast = false;
-    try
-    {
-      highContrast = Display.getDefault().getHighContrast();
-    }
-    catch (Exception e)
-    {
-    }
-    
     Color color = ColorConstants.black;
-    if (highContrast)
+    if (isHighContrast)
     { 
-      color = ColorConstants.white;
-    } 
+      color = Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND);
+    }
 
     if (isSelected)
     {
-      color = ColorConstants.black;
+      if (isHighContrast)
+      {
+        color = ColorConstants.listBackground;
+      }
+      else
+      {
+        color = ColorConstants.black;
+      }
     }
     else if (isReadOnly)
     {
@@ -228,7 +228,14 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
   {
     isSelected = true;
 
-    labelHolder.setBackgroundColor(FieldFigure.cellColor);
+    if (isHighContrast)
+    {
+      labelHolder.setBackgroundColor(ColorConstants.listForeground);
+    }
+    else
+    {
+      labelHolder.setBackgroundColor(FieldFigure.cellColor);
+    }
     label.setForegroundColor(computeLabelColor());
     // labelHolder.setFill(true);
 

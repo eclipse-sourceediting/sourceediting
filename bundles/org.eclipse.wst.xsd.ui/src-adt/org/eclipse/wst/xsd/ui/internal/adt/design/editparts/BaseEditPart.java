@@ -22,6 +22,7 @@ import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
@@ -42,6 +43,7 @@ public abstract class BaseEditPart extends AbstractGraphicalEditPart implements 
   protected static final String[] EMPTY_ACTION_ARRAY = {};
   protected boolean isSelected = false;
   protected boolean hasFocus = false;
+  protected static boolean isHighContrast = Display.getDefault().getHighContrast();
   
   public IFigureFactory getFigureFactory()
   {

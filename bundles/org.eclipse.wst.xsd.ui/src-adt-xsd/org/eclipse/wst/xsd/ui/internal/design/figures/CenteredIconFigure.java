@@ -16,6 +16,7 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.RoundedRectangle;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.xsd.ui.internal.design.editparts.ReferenceConnection;
@@ -69,7 +70,7 @@ public class CenteredIconFigure extends RoundedRectangle
         }
         if (highContrast)
         {
-          graphics.setForegroundColor(ColorConstants.white);
+          graphics.setForegroundColor(Display.getDefault().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND));
         }
         else
         {
