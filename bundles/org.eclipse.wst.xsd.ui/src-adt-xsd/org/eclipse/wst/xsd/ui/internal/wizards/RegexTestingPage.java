@@ -14,6 +14,7 @@ package org.eclipse.wst.xsd.ui.internal.wizards;
 import java.util.regex.Pattern;
 
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.osgi.util.TextProcessor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.FontData;
@@ -116,13 +117,9 @@ public class RegexTestingPage extends WizardPage
   {
     super.setVisible(visible);
 
-    String pattern = getPatternValue();
     getFlags();
-
-    value.setText(pattern);
-    
+    value.setText(TextProcessor.process(getPatternValue()));
     updateMatchStatus();
-
     testString.setFocus();
   }
 
