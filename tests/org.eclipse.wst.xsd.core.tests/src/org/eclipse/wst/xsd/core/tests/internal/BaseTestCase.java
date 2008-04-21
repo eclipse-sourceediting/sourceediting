@@ -10,11 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.core.tests.internal;
 
+import junit.framework.TestCase;
+
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
-import org.eclipse.wst.xsd.contentmodel.internal.XSDImpl;
-
-import junit.framework.TestCase;
 
 /**
  * Base test case class which provides methods to 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/NewXMLSchema"
+	xmlns:tns="http://www.example.org/NewXMLSchema" elementFormDefault="qualified">
+	<complexType name="typeA">
+		<attribute name="type" use="required">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="X"></enumeration>
+				</restriction>
+			</simpleType>
+		</attribute>
+	</complexType>
+	<complexType name="typeB">
+	</complexType>
+	<complexType name="typeC">
+		<complexContent>
+			<extension base="tns:typeA">
+			</extension>
+		</complexContent>
+	</complexType>
+		<complexType name="typeD">
+		<complexContent>
+			<extension base="tns:typeB">
+			</extension>
+		</complexContent>
+	</complexType>
+	<element name="elementA" type="tns:typeA"></element>
+	<element name="elementB" type="tns:typeB"></element>
+</schema>

@@ -17,6 +17,8 @@ import java.util.List;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -160,4 +162,51 @@ public class BugFixesTest extends BaseTestCase
     assertTrue(foundDesiredElement);  // if we didn't even find the noinput element, then something terrible went wrong
   }
 
+  public void testXSITypeVsTypeAttr() {
+      
+    // See bug 225447
+  
+    // Load the XSD file
+    String XSD_FILE_NAME = "XSITypeTest.xsd";
+    String fileURI = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + XSD_FILE_NAME;
+    CMDocumentFactoryXSD factory = new CMDocumentFactoryXSD();
+    assertNotNull("Assert factory is not null", factory);
+    CMDocument cmDocument = factory.createCMDocument(fileURI);
+    assertNotNull("Assert CMDocument is not null", cmDocument);
+  
+    // Check and obtain the two global elements (elementA and elementB)
+    CMNamedNodeMap elements = cmDocument.getElements();
+    assertEquals(elements.getLength(), 2);
+    CMElementDeclaration cmElementDeclaration = (CMElementDeclaration)elements.item(0);
+    CMElementDeclaration cmElementDeclarationA = null;
+    CMElementDeclaration cmElementDeclarationB = null;
+    if ("elementA".equals(cmElementDeclaration.getElementName()))
+    {
+      cmElementDeclarationA = cmElementDeclaration;
+      cmElementDeclarationB = (CMElementDeclaration)elements.item(1);
+    }
+    else
+    {
+      cmElementDeclarationB = cmElementDeclaration;
+      cmElementDeclarationA = (CMElementDeclaration)elements.item(1);
+    }
+  
+    // elementA has a "type" attribute with "X" enumerated value, make sure it appears in the model
+    CMNamedNodeMap attributesA = cmElementDeclarationA.getAttributes();
+    assertEquals(attributesA.getLength(), 1);
+    CMAttributeDeclaration cmAttributeDeclarationA = (CMAttributeDeclaration)attributesA.item(0);
+    assertEquals("type", cmAttributeDeclarationA.getAttrName());
+    CMDataType attrTypeA = cmAttributeDeclarationA.getAttrType();
+    String[] enumeratedValuesA = attrTypeA.getEnumeratedValues();
+    assertEquals(1, enumeratedValuesA.length);
+    assertEquals("X", enumeratedValuesA[0]);
+  
+    // elementB does not have a "type" attribute, make sure the xsi:type appears in the model
+    CMNamedNodeMap attributesB = cmElementDeclarationB.getAttributes();
+    assertEquals(attributesB.getLength(), 1);
+    CMAttributeDeclaration cmAttributeDeclarationB = (CMAttributeDeclaration)attributesB.item(0);
+    assertEquals("type", cmAttributeDeclarationB.getAttrName());
+    CMDataType attrTypeB = cmAttributeDeclarationB.getAttrType();
+    assertEquals("typeNames", attrTypeB.getDataTypeName());
+  }
 }
