@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.util.HashMap;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
@@ -46,12 +47,15 @@ public abstract class AbstractLineStyleProvider {
 		}
 	}
 
-	private IStructuredDocument fDocument;
-	private Highlighter fHighlighter;
+	protected IStructuredDocument fDocument;
+	protected Highlighter fHighlighter;
 	private boolean fInitialized;
-	private PropertyChangeListener fPreferenceListener = new PropertyChangeListener();
+	protected PropertyChangeListener fPreferenceListener = new PropertyChangeListener();
 
-	/** Contains all text attributes pretaining to this line style provider */
+	//private ISourceViewer fSourceViewer = null;
+	protected ReconcilerHighlighter fRecHighlighter = null;
+	
+	/** Contains all text attributes pertaining to this line style provider */
 	private HashMap fTextAttributes = null;
 
 	// we keep track of LogMessage to avoid writing hundreds of messages,
@@ -116,8 +120,15 @@ public abstract class AbstractLineStyleProvider {
 		int start = flatNode.getStartOffset(region);
 		if (start < startOffset)
 			start = startOffset;
+		
+		// Base the text end offset off of the, possibly adjusted, start
+		int textEnd = start + flatNode.getText(region).length();
 		int maxOffset = startOffset + length;
-		int end = flatNode.getEndOffset(region); // use get length directly
+		
+		int end = flatNode.getEndOffset(region);
+		// Use the end of the text in the region to avoid applying background color to trailing whitespace
+		if(textEnd < end)
+			end = textEnd;
 		// instead of end-start?
 		if (end > maxOffset)
 			end = maxOffset;
@@ -175,7 +186,8 @@ public abstract class AbstractLineStyleProvider {
 
 	protected void handlePropertyChange(PropertyChangeEvent event) {
 		// force a full update of the text viewer
-		fHighlighter.refreshDisplay();
+		if(fRecHighlighter != null)
+			fRecHighlighter.refreshDisplay();
 	}
 
 	public void init(IStructuredDocument structuredDocument, Highlighter highlighter) {
@@ -187,6 +199,22 @@ public abstract class AbstractLineStyleProvider {
 
 		registerPreferenceManager();
 
+		setInitialized(true);
+	}
+	
+	public void init(IStructuredDocument structuredDocument, ISourceViewer sourceViewer) {
+		init(structuredDocument, (Highlighter) null);
+	}
+	
+	public void init(IStructuredDocument structuredDocument, ReconcilerHighlighter highlighter)	{
+		fDocument = structuredDocument;
+		fRecHighlighter = highlighter;
+		
+		if(isInitialized())
+			return;
+		
+		registerPreferenceManager();
+		
 		setInitialized(true);
 	}
 
@@ -296,7 +324,8 @@ public abstract class AbstractLineStyleProvider {
 					continue;
 
 				if (region instanceof ITextRegionCollection) {
-					handled = prepareTextRegion((ITextRegionCollection) region, partitionStartOffset, partitionLength, holdResults);
+					boolean handledCollection = (prepareTextRegion((ITextRegionCollection) region, partitionStartOffset, partitionLength, holdResults));
+					handled = (!handled) ? handledCollection : handled;
 				} else {
 
 					attr = getAttributeFor(structuredDocumentRegion, region);
@@ -337,7 +366,7 @@ public abstract class AbstractLineStyleProvider {
 		return handled;
 	}
 
-	private void registerPreferenceManager() {
+	protected void registerPreferenceManager() {
 		IPreferenceStore pref = getColorPreferences();
 		if (pref != null) {
 			pref.addPropertyChangeListener(fPreferenceListener);
@@ -363,7 +392,7 @@ public abstract class AbstractLineStyleProvider {
 		this.fInitialized = initialized;
 	}
 
-	private void unRegisterPreferenceManager() {
+	protected void unRegisterPreferenceManager() {
 		IPreferenceStore pref = getColorPreferences();
 		if (pref != null) {
 			pref.removePropertyChangeListener(fPreferenceListener);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,6 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.TextUtilities;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.dtd.core.internal.provisional.contenttype.ContentTypeIdForDTD;
@@ -34,13 +33,10 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
-import org.eclipse.wst.sse.ui.internal.provisional.style.Highlighter;
+import org.eclipse.wst.sse.ui.internal.provisional.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
-import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 
-public class LineStyleProviderForDTDSubSet implements LineStyleProvider {
-	private IStructuredDocument fDocument = null;
-	private Highlighter fHighlighter = null;
+public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider implements LineStyleProvider {
 	private IStructuredModel fInternalModel = null;
 	private LineStyleProviderForDTD fInternalProvider = null;
 	private StyleRange[] fInternalRanges;
@@ -76,10 +72,6 @@ public class LineStyleProviderForDTDSubSet implements LineStyleProvider {
 			holdResults.add(range);
 		}
 	}
-
-	private TextAttribute createTextAttribute(RGB foreground, RGB background, boolean bold) {
-		return new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, bold ? SWT.BOLD : SWT.NORMAL);
-	}
 	
 	protected TextAttribute getAttributeFor(ITextRegion region) {
 		TextAttribute ta = null;
@@ -109,11 +101,6 @@ public class LineStyleProviderForDTDSubSet implements LineStyleProvider {
 		return fInternalModel.getStructuredDocument();
 	}
 
-	public void init(IStructuredDocument document, Highlighter highlighter) {
-		fDocument = document;
-		fHighlighter = highlighter;
-	}
-	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -141,6 +128,7 @@ public class LineStyleProviderForDTDSubSet implements LineStyleProvider {
 	}
 
 	public void release() {
+		super.release();
 		if (fInternalProvider != null) {
 			fInternalProvider.release();
 		}
@@ -152,7 +140,7 @@ public class LineStyleProviderForDTDSubSet implements LineStyleProvider {
 			try {
 				ITypedRegion regions[] = TextUtilities.computePartitioning(getInternalDocument(), fPartitioning, 0, document.getLength(), false);
 				List ranges = new ArrayList();
-				fInternalProvider.init(getInternalDocument(), fHighlighter);
+				fInternalProvider.init(getInternalDocument(), fRecHighlighter);
 				for (int i = 0; i < regions.length; i++) {
 					fInternalProvider.prepareRegions(regions[i], regions[i].getOffset(), regions[i].getLength(), ranges);
 				}
@@ -162,5 +150,10 @@ public class LineStyleProviderForDTDSubSet implements LineStyleProvider {
 				fInternalRanges = new StyleRange[0];
 			}
 		}
+	}
+
+
+	protected void loadColors() {
+		fInternalProvider.loadColors();
 	}
 }

@@ -161,11 +161,10 @@ public class FormatHandler extends AbstractHandler implements IHandler {
 				IStructuredFormatProcessor formatProcessor = getFormatProcessor(contentType.getId());
 				if (formatProcessor != null && (monitor == null || !monitor.isCanceled())) {
 					String message = NLS.bind(SSEUIMessages.FormatActionDelegate_3, new String[]{file.getFullPath().toString().substring(1)});					monitor.subTask(message);
-					formatProcessor.setProgressMonitor(monitor);
+					formatProcessor.setProgressMonitor(new SubProgressMonitor(monitor, 95));
 					formatProcessor.formatFile(file);
 				}
 			}
-			monitor.worked(95);
 			monitor.done();
 		} catch (MalformedInputExceptionWithDetail e) {
 			String message = NLS.bind(SSEUIMessages.FormatActionDelegate_5, new String[]{file.getFullPath().toString()});
@@ -186,13 +185,14 @@ public class FormatHandler extends AbstractHandler implements IHandler {
 			// BUG 178598 - If the resource is shared, and it's possible to
 			// get the workbench Display, the UI thread is asked to execute the
 			// format of the file when it can
+			monitor.beginTask("", 20); //$NON-NLS-1$
 			try {
 				ITextFileBufferManager manager= FileBuffers.getTextFileBufferManager();
 				ITextFileBuffer buffer = null;
 				
 				try {
 					if(manager != null) {
-						manager.connect(file.getFullPath(), LocationKind.IFILE, monitor);
+						manager.connect(file.getFullPath(), LocationKind.IFILE, new SubProgressMonitor(monitor, 1));
 						buffer = manager.getTextFileBuffer(resource.getFullPath(), LocationKind.IFILE);
 					}
 					
@@ -201,18 +201,19 @@ public class FormatHandler extends AbstractHandler implements IHandler {
 						if (display != null) {
 							display.syncExec(new Runnable() {
 								public void run() {
-									format(monitor, file);
+									format(new SubProgressMonitor(monitor, 18), file);
 								}
 							});
 						}
 					}
 					else
-						format(monitor, file);
+						format(new SubProgressMonitor(monitor, 18), file);
 				}
 				finally {
 					if(manager != null)
 						manager.disconnect(file.getFullPath(), LocationKind.IFILE, new SubProgressMonitor(monitor, 1));
 				}
+				monitor.done();
 			}
 			catch(CoreException e) {
 				String message = NLS.bind(SSEUIMessages.FormatActionDelegate_4, new String[]{file.getFullPath().toString()});
@@ -229,7 +230,7 @@ public class FormatHandler extends AbstractHandler implements IHandler {
 
 			try {
 				IResource[] members = container.members();
-				monitor.beginTask("", members.length);
+				monitor.beginTask("", members.length); //$NON-NLS-1$
 				for (int i = 0; i < members.length; i++) {
 					if (monitor != null && !monitor.isCanceled())
 						format(new SubProgressMonitor(monitor, 1), members[i]);

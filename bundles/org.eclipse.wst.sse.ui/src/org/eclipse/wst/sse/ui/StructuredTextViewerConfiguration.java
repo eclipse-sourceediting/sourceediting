@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,6 +31,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.hyperlink.IHyperlinkPresenter;
+import org.eclipse.jface.text.hyperlink.MultipleHyperlinkPresenter;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.InformationPresenter;
@@ -56,11 +57,13 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextAnnotationHover;
 import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 import org.eclipse.wst.sse.ui.internal.correction.CompoundQuickAssistProcessor;
 import org.eclipse.wst.sse.ui.internal.derived.HTMLTextPresenter;
-import org.eclipse.wst.sse.ui.internal.hyperlink.HighlighterHyperlinkPresenter;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
+import org.eclipse.wst.sse.ui.internal.provisional.style.ReconcilerHighlighter;
+import org.eclipse.wst.sse.ui.internal.provisional.style.StructuredPresentationReconciler;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
+import org.eclipse.wst.sse.ui.internal.rules.StructuredDocumentDamagerRepairer;
 import org.eclipse.wst.sse.ui.internal.taginfo.AnnotationHoverProcessor;
 import org.eclipse.wst.sse.ui.internal.taginfo.BestMatchHover;
 import org.eclipse.wst.sse.ui.internal.taginfo.ProblemAnnotationHoverProcessor;
@@ -102,8 +105,9 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * additional auto edit strategies
 	 */
 	private final String AUTOEDITSTRATEGY = "autoeditstrategy";
-
-
+	
+	private ReconcilerHighlighter fHighlighter = null;
+	
 	/**
 	 * Creates a structured text viewer configuration.
 	 */
@@ -371,8 +375,8 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 
 	/**
 	 * Returns the hyperlink presenter for the given source viewer.<br />
-	 * Note: Clients cannot override this method because this method returns a
-	 * specially configured hyperlink presenter for the StructuredTextViewer.
+	 * Note: Clients cannot override this method, and although it's no longer
+	 * necessary, it must remain for binary compatibility.
 	 * 
 	 * @param sourceViewer
 	 *            the source viewer to be configured by this configuration
@@ -380,14 +384,10 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 *         StructuredTextViewer
 	 */
 	final public IHyperlinkPresenter getHyperlinkPresenter(ISourceViewer sourceViewer) {
-		/*
-		 * This implementation returns a hyperlink presenter that uses
-		 * Highlither instead of PresentationReconciler
-		 */
 		if (fPreferenceStore == null) {
 			return super.getHyperlinkPresenter(sourceViewer);
 		}
-		return new HighlighterHyperlinkPresenter(fPreferenceStore);
+		return new MultipleHyperlinkPresenter(fPreferenceStore);
 	}
 
 	/**
@@ -403,7 +403,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		// used by hover help
 		return new IInformationControlCreator() {
 			public IInformationControl createInformationControl(Shell parent) {
-				return new DefaultInformationControl(parent, SWT.NONE, new HTMLTextPresenter(true));
+				return new DefaultInformationControl(parent, new HTMLTextPresenter(true));
 			}
 		};
 	}
@@ -514,11 +514,27 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * @see #getLineStyleProviders(ISourceViewer, String)
 	 */
 	final public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
-		/*
-		 * This implementation returns null because StructuredTextViewer does
-		 * not use presentation reconciler
-		 */
-		return null;
+		StructuredPresentationReconciler reconciler = new StructuredPresentationReconciler();
+		reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+		
+		String[] contentTypes = getConfiguredContentTypes(sourceViewer);
+		
+		if(contentTypes != null) {
+			StructuredDocumentDamagerRepairer dr = null;
+			
+			for(int i = 0; i < contentTypes.length; i++) {
+				dr = new StructuredDocumentDamagerRepairer();
+				dr.setDocument(sourceViewer.getDocument());
+				
+				if(fHighlighter != null)
+					dr.setProvider(fHighlighter.getProvider(contentTypes[i]));
+				
+				reconciler.setDamager(dr, contentTypes[i]);
+				reconciler.setRepairer(dr, contentTypes[i]);
+			}
+		}
+		
+		return reconciler;
 	}
 
 	/*
@@ -660,5 +676,9 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		 * in StructuredTextViewer
 		 */
 		return new StructuredTextViewerUndoManager();
+	}
+	
+	public void setHighlighter(ReconcilerHighlighter highlighter) {
+		fHighlighter = highlighter;
 	}
 }

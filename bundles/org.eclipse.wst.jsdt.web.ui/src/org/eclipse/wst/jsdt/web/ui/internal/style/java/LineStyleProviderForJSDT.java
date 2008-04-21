@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,18 +11,13 @@
 package org.eclipse.wst.jsdt.web.ui.internal.style.java;
 
 import java.util.Collection;
-import java.util.HashMap;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.Document;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
-import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
@@ -32,35 +27,16 @@ import org.eclipse.wst.html.ui.internal.style.IStyleConstantsHTML;
 import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 import org.eclipse.wst.jsdt.web.ui.internal.JsUIPlugin;
 import org.eclipse.wst.jsdt.web.ui.internal.style.IStyleConstantsJs;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
-import org.eclipse.wst.sse.ui.internal.provisional.style.Highlighter;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.ui.internal.provisional.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
-import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
 
 // Note: many of the methods in this class were based on (or copied from) those
 // found in the example Java Editor
-public class LineStyleProviderForJSDT implements LineStyleProvider {
-	private class PropertyChangeListener implements IPropertyChangeListener {
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
-		 */
-		public void propertyChange(PropertyChangeEvent event) {
-			// have to do it this way so others can override the method
-			handlePropertyChange(event);
-		}
-	}
-	private IDocument fDocument;
-	private Highlighter fHighlighter;
-	private boolean fIsInitialized = false;
-	private PropertyChangeListener fPreferenceListener = new PropertyChangeListener();
+public class LineStyleProviderForJSDT extends AbstractLineStyleProvider implements LineStyleProvider {
 	/** The scanner it uses */
 	private JSDTCodeScanner fScanner;
-	/** Contains all text attributes pretaining to this line style provider */
-	private HashMap fTextAttributes = null;
 	
 	public LineStyleProviderForJSDT() {
 		super();
@@ -198,67 +174,12 @@ public class LineStyleProviderForJSDT implements LineStyleProvider {
 		presentation.add(result);
 	}
 	
-	/**
-	 * Looks up the colorKey in the preference store and adds the style
-	 * information to list of TextAttributes
-	 * 
-	 * @param colorKey
-	 */
-	private void addTextAttribute(String colorKey) {
-		if (getColorPreferences() != null) {
-			String prefString = getColorPreferences().getString(colorKey);
-			String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
-			if (stylePrefs != null) {
-				RGB foreground = ColorHelper.toRGB(stylePrefs[0]);
-				RGB background = ColorHelper.toRGB(stylePrefs[1]);
-				boolean bold = Boolean.valueOf(stylePrefs[2]).booleanValue();
-				boolean italic = Boolean.valueOf(stylePrefs[3]).booleanValue();
-				boolean strikethrough = Boolean.valueOf(stylePrefs[4]).booleanValue();
-				boolean underline = Boolean.valueOf(stylePrefs[5]).booleanValue();
-				int style = SWT.NORMAL;
-				if (bold) {
-					style = style | SWT.BOLD;
-				}
-				if (italic) {
-					style = style | SWT.ITALIC;
-				}
-				if (strikethrough) {
-					style = style | TextAttribute.STRIKETHROUGH;
-				}
-				if (underline) {
-					style = style | TextAttribute.UNDERLINE;
-				}
-				TextAttribute createTextAttribute = createTextAttribute(foreground, background, style);
-				getTextAttributes().put(colorKey, createTextAttribute);
-			}
-		}
-	}
-	
-	private TextAttribute createTextAttribute(RGB foreground, RGB background, int style) {
-		return new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, style);
-	}
-	
-	private IPreferenceStore getColorPreferences() {
+	protected IPreferenceStore getColorPreferences() {
 		return JsUIPlugin.getDefault().getPreferenceStore();
 	}
 	
 	private IPreferenceStore getJavaColorPreferences() {
 		return PreferenceConstants.getPreferenceStore();
-	}
-	
-	/**
-	 * Returns the hashtable containing all the text attributes for this line
-	 * style provider. Lazily creates a hashtable if one has not already been
-	 * created.
-	 * 
-	 * @return
-	 */
-	private HashMap getTextAttributes() {
-		if (fTextAttributes == null) {
-			fTextAttributes = new HashMap();
-			loadColors();
-		}
-		return fTextAttributes;
 	}
 	
 	/**
@@ -317,21 +238,11 @@ public class LineStyleProviderForJSDT implements LineStyleProvider {
 		}
 		if (styleKey != null || javaStyleKey != null) {
 			// force a full update of the text viewer
-			fHighlighter.refreshDisplay();
+			fRecHighlighter.refreshDisplay();
 		}
 	}
 	
-	public void init(IStructuredDocument document, Highlighter highlighter) {
-		fDocument = document;
-		fHighlighter = highlighter;
-		if (fIsInitialized) {
-			return;
-		}
-		registerPreferenceListener();
-		fIsInitialized = true;
-	}
-	
-	private void loadColors() {
+	protected void loadColors() {
 		addTextAttribute(IStyleConstantsHTML.SCRIPT_AREA_BORDER);
 		addTextAttribute(IStyleConstantsXML.TAG_ATTRIBUTE_NAME);
 		addTextAttribute(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
@@ -345,23 +256,21 @@ public class LineStyleProviderForJSDT implements LineStyleProvider {
 	
 	public boolean prepareRegions(ITypedRegion typedRegion, int ssssrequestedStart, int ssssrequestedLength, Collection holdResults) {
 		boolean result = true;
+		/* Initialize the text attributes. Also load the colors and initialize the rules of the scanner */
+		getTextAttributes();
 		try {
 			// ideally, eventually, we'll have a "virtualDocument" we can
 			// refer to, but for now ... we'll simple rescan the one region.
 			// use simple adjustment (since "sub-content" starts at 0
-			int offsetAdjustment = typedRegion.getOffset();
-			String content = fDocument.get(typedRegion.getOffset(), typedRegion.getLength());
-			IDocument document = new Document(content);
-			int lastStart = 0;
+			int lastStart = typedRegion.getOffset();
 			int length = 0;
 			IToken lastToken = Token.UNDEFINED;
-			int remainingLength = typedRegion.getLength();
-			fScanner.setRange(document, lastStart, remainingLength);
+			fScanner.setRange(getDocument(), lastStart, typedRegion.getLength());
 			while (true) {
 				IToken token = fScanner.nextToken();
 				if (token.isEOF()) {
 					if (!lastToken.isUndefined() && length != 0) {
-						addRange(holdResults, lastStart + offsetAdjustment, length, getTokenTextAttribute(lastToken));
+						addRange(holdResults, lastStart, length, getTokenTextAttribute(lastToken));
 					}
 					break;
 				}
@@ -375,7 +284,7 @@ public class LineStyleProviderForJSDT implements LineStyleProvider {
 					continue;
 				}
 				if (token != lastToken) {
-					addRange(holdResults, lastStart + offsetAdjustment, length, getTokenTextAttribute(lastToken));
+					addRange(holdResults, lastStart, length, getTokenTextAttribute(lastToken));
 					lastToken = token;
 					lastStart = fScanner.getTokenOffset();
 					length = fScanner.getTokenLength();
@@ -383,28 +292,29 @@ public class LineStyleProviderForJSDT implements LineStyleProvider {
 				}
 				length += fScanner.getTokenLength();
 			}
-		} catch (BadLocationException e) {
+		} catch (Exception e) {
 			// shouldn't happen, but we don't want it to stop other
 			// highlighting, if it does.
 			result = false;
 		}
 		return result;
 	}
+
+	protected TextAttribute getAttributeFor(ITextRegion region) {
+		return null;
+	}
 	
-	private void registerPreferenceListener() {
+	protected void registerPreferenceManager() {
 		getColorPreferences().addPropertyChangeListener(fPreferenceListener);
 		getJavaColorPreferences().addPropertyChangeListener(fPreferenceListener);
 	}
 	
 	public void release() {
-		unregisterPreferenceManager();
-		if (fTextAttributes != null) {
-			fTextAttributes.clear();
-			fTextAttributes = null;
-		}
+		super.release();
+		fScanner = null;
 	}
 	
-	private void unregisterPreferenceManager() {
+	protected void unRegisterPreferenceManager() {
 		getColorPreferences().removePropertyChangeListener(fPreferenceListener);
 		getJavaColorPreferences().removePropertyChangeListener(fPreferenceListener);
 	}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,8 +53,11 @@ import org.eclipse.wst.sse.core.internal.undo.IDocumentSelectionMediator;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.core.internal.undo.UndoDocumentEvent;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
+import org.eclipse.wst.sse.ui.internal.provisional.style.AbstractLineStyleProvider;
+import org.eclipse.wst.sse.ui.internal.provisional.style.CompatibleHighlighter;
 import org.eclipse.wst.sse.ui.internal.provisional.style.Highlighter;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
+import org.eclipse.wst.sse.ui.internal.provisional.style.ReconcilerHighlighter;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
 
@@ -81,9 +84,11 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	private final int MAX_SMALL_FORMAT_LENGTH = 1000;
 	private boolean fBackgroundupdateInProgress;
 	private StructuredContentCleanupHandler fContentCleanupHandler = null;
-	private IDocumentAdapter fDocAdapter;
+	//private IDocumentAdapter fDocAdapter;
 
 	private Highlighter fHighlighter;
+	
+	private ReconcilerHighlighter fRecHighlighter = null;
 
 	// private ViewerSelectionManager fViewerSelectionManager;
 	private SourceViewerConfiguration fConfiguration;
@@ -161,12 +166,11 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			fHighlighter = null;
 		}
 
-		// install content type independent plugins
-		if (fPresentationReconciler != null)
-			fPresentationReconciler.uninstall();
-		fPresentationReconciler = configuration.getPresentationReconciler(this);
-		if (fPresentationReconciler != null)
-			fPresentationReconciler.install(this);
+		if(fRecHighlighter != null) {
+			fRecHighlighter.uninstall();
+			fRecHighlighter = null;
+		}
+		
 
 		IReconciler newReconciler = configuration.getReconciler(this);
 
@@ -267,11 +271,11 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		int eventStateMask = configuration.getHyperlinkStateMask(this);
 		setHyperlinkDetectors(hyperlinkDetectors, eventStateMask);
 
-		// install content type specific plugins
 		String[] types = configuration.getConfiguredContentTypes(this);
 
 		// clear autoindent/autoedit strategies
 		fAutoIndentStrategies = null;
+		
 		for (int i = 0; i < types.length; i++) {
 			String t = types[i];
 			setAutoEditStrategies(configuration.getAutoEditStrategies(this, t), t);
@@ -302,10 +306,12 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 				LineStyleProvider[] providers = ((StructuredTextViewerConfiguration) configuration).getLineStyleProviders(this, t);
 				if (providers != null) {
 					for (int j = 0; j < providers.length; ++j) {
-						// delay creation of highlighter till
-						// linestyleprovider needs to be added
+						/*
+						 * Delay creation of highlighter till
+						 * linestyleprovider needs to be added.
+						 */
 						if (fHighlighter == null)
-							fHighlighter = new Highlighter();
+							fHighlighter = new CompatibleHighlighter();
 						fHighlighter.addProvider(t, providers[j]);
 					}
 				}
@@ -358,11 +364,13 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		}
 	}
 
+	/**
+	 * @deprecated - present for compatibility only
+	 */
 	protected IDocumentAdapter createDocumentAdapter() {
-
-		fDocAdapter = new StructuredDocumentToTextAdapter(getTextWidget());
-		return fDocAdapter;
+		return super.createDocumentAdapter();
 	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -620,6 +628,11 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			fHighlighter.uninstall();
 			fHighlighter = null;
 		}
+		
+		if (fRecHighlighter != null) {
+			fRecHighlighter.uninstall();
+			fRecHighlighter = null;
+		}
 		super.handleDispose();
 
 		Logger.trace("Source Editor", "StructuredTextViewer::handleDispose exit"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -798,6 +811,11 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			fHighlighter.uninstall();
 			fHighlighter = null;
 		}
+		
+		if (fRecHighlighter != null) {
+			fRecHighlighter.uninstall();
+			fRecHighlighter = null;
+		}
 
 		if (fAnnotationHover instanceof StructuredTextAnnotationHover) {
 			((StructuredTextAnnotationHover) fAnnotationHover).release();
@@ -831,9 +849,9 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 
 	private void updateHighlighter(IStructuredDocument document) {
 		boolean documentSet = false;
-
+		
 		// if highlighter has not been created yet, initialize and install it
-		if (fHighlighter == null && fConfiguration instanceof StructuredTextViewerConfiguration) {
+		if (fRecHighlighter == null && fConfiguration instanceof StructuredTextViewerConfiguration) {
 			String[] types = fConfiguration.getConfiguredContentTypes(this);
 			for (int i = 0; i < types.length; i++) {
 				String t = types[i];
@@ -842,18 +860,30 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 				LineStyleProvider[] providers = ((StructuredTextViewerConfiguration) fConfiguration).getLineStyleProviders(this, t);
 				if (providers != null) {
 					for (int j = 0; j < providers.length; ++j) {
-						// delay creation of highlighter till
-						// linestyleprovider needs to be added
-						// do not create highlighter if no valid document
-						if (fHighlighter == null)
-							fHighlighter = new Highlighter();
-						fHighlighter.addProvider(t, providers[j]);
+						
+						if(fRecHighlighter == null) {
+							fRecHighlighter = new ReconcilerHighlighter();
+							((StructuredTextViewerConfiguration) fConfiguration).setHighlighter(fRecHighlighter);
+						}
+						if (providers[j] instanceof AbstractLineStyleProvider) {
+							((AbstractLineStyleProvider) providers[j]).init(document, fRecHighlighter);
+							fRecHighlighter.addProvider(t, providers[j]);
+						}
+						else {
+							// init with compatibility instance
+							if (fHighlighter == null) {
+								fHighlighter = new CompatibleHighlighter();
+							}
+							providers[j].init(document, fHighlighter);
+							fHighlighter.addProvider(t, providers[j]);
+						}
 					}
 				}
 			}
-
-			// initialize highlighter after linestyleproviders were added
-			if (fHighlighter != null) {
+			
+			if(fRecHighlighter != null)
+				fRecHighlighter.install(this);
+			if(fHighlighter != null) {
 				fHighlighter.setDocumentPartitioning(fConfiguration.getConfiguredDocumentPartitioning(this));
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=203347
 				// make sure to set document before install
@@ -864,6 +894,14 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		}
 		if (fHighlighter != null && !documentSet)
 			fHighlighter.setDocument(document);
+		
+		// install content type independent plugins
+		if (fPresentationReconciler != null)
+			fPresentationReconciler.uninstall();
+		fPresentationReconciler = fConfiguration.getPresentationReconciler(this);
+		if (fPresentationReconciler != null)
+			fPresentationReconciler.install(this);
+
 	}
 
 	/**
