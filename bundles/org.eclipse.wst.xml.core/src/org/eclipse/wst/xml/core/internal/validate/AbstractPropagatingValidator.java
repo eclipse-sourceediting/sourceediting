@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,6 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.validate.ValidationAdapter;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 
 public abstract class AbstractPropagatingValidator extends ValidationComponent {
@@ -46,22 +45,21 @@ public abstract class AbstractPropagatingValidator extends ValidationComponent {
 			return;
 		Class clazz = validator.getClass();
 
-		NodeList children = parent.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++) {
-			Node child = children.item(i);
-			if (child == null || child.getNodeType() != Node.ELEMENT_NODE)
-				continue;
-
-			INodeNotifier notifier = (INodeNotifier) child;
-			ValidationAdapter va = (ValidationAdapter) notifier.getExistingAdapter(clazz);
-			if (va == null) {
-				notifier.addAdapter(validator);
-				va = validator;
+		Node child = parent.getFirstChild();
+		while (child != null) {
+			if (child.getNodeType() == Node.ELEMENT_NODE) {
+				INodeNotifier notifier = (INodeNotifier) child;
+				ValidationAdapter va = (ValidationAdapter) notifier.getExistingAdapter(clazz);
+				if (va == null) {
+					notifier.addAdapter(validator);
+					va = validator;
+				}
+				// bug 143213 - Can't batch validate open HTML files when
+				// as-you-type validation is enabled
+				va.setReporter(validator.getReporter());
+				va.validate((IndexedRegion) child);
 			}
-			// bug 143213 - Can't batch validate open HTML files when
-			// as-you-type validation is enabled
-			va.setReporter(validator.getReporter());
-			va.validate((IndexedRegion) child);
+			child = child.getNextSibling();
 		}
 	}
 
