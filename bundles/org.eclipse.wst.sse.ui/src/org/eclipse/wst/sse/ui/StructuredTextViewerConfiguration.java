@@ -39,6 +39,7 @@ import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
 import org.eclipse.jface.text.quickassist.QuickAssistAssistant;
 import org.eclipse.jface.text.reconciler.IReconciler;
+import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -131,24 +132,18 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	}
 
 	/**
-	 * Returns the annotation hover which will provide the information to be
-	 * shown in a hover popup window when requested for the given source
-	 * viewer.<br />
 	 * Note: Clients cannot override this method because this method returns a
-	 * specially configured Annotation Hover for the StructuredTextViewer.
+	 * specially configured Annotation Hover for the StructuredTextViewer
 	 * 
-	 * @param sourceViewer
-	 *            the source viewer to be configured by this configuration
-	 * @return an annotation hover specially configured for
-	 *         StructuredTextViewer
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.editors.text.TextSourceViewerConfiguration#getAnnotationHover(org.eclipse.jface.text.source.ISourceViewer)
 	 */
 	final public IAnnotationHover getAnnotationHover(ISourceViewer sourceViewer) {
-		/*
-		 * This implmentation returns an annotation hover that works with
-		 * StructuredTextViewer and breakpoints. Important! must remember to
-		 * release it when done with it (during viewer.unconfigure)
-		 */
-		return new StructuredTextAnnotationHover();
+		return new StructuredTextAnnotationHover() {
+			protected boolean isIncluded(Annotation annotation) {
+				return isShowInVerticalRuler(annotation);
+			}
+		};
 	}
 
 	/**
@@ -162,6 +157,9 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		return EditorUtility.getColor(rgb);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getAutoEditStrategies(org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
+	 */
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
 		List allStrategies = new ArrayList(0);
 
@@ -535,6 +533,17 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		}
 		
 		return reconciler;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.editors.text.TextSourceViewerConfiguration#getOverviewRulerAnnotationHover(org.eclipse.jface.text.source.ISourceViewer)
+	 */
+	public IAnnotationHover getOverviewRulerAnnotationHover(ISourceViewer sourceViewer) {
+		return new StructuredTextAnnotationHover(true) {
+			protected boolean isIncluded(Annotation annotation) {
+				return isShowInVerticalRuler(annotation);
+			}
+		};
 	}
 
 	/*
