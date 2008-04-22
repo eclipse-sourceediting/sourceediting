@@ -50,11 +50,10 @@
          id="problem"
          name="XSL Problem"
          point="org.eclipse.core.resources.markers">
-		<super type="org.eclipse.core.resources.problemmarker"/>
-		<super type="org.eclipse.core.resources.textmarker"/>
+		<super type="org.eclipse.wst.xml.core.validationMarker"/>
 		<persistent value="true"/>
-		<attribute name="columnNumber"/>
    </extension>
+   
    <extension
          point="org.eclipse.ant.core.antTasks">
       <antTask
@@ -88,35 +87,7 @@
             </rules>
          </include>
       </validator>
-   </extension>
-<!--   <extension id="xsl" name="%XSL.Validator.Name" point="org.eclipse.wst.validation.validatorV2">
-      <validator
-            build="true"
-            class="org.eclipse.wst.xsl.core.internal.validation.eclipse.XalanValidator"
-            sourceid="org.eclipse.wst.xsl.ui.internal.validation.DelegatingSourceValidatorForXSL"
-            manual="true"
-            version="2">
-         <include>
-            <rules>
-               <fileext caseSensitive="false" ext="xsl"/>
-               <projectNature id="org.eclipse.jdt.core.javanature"/>
- 				<contentType id="org.eclipse.wst.xml.core.xslsource"/>
-               <contentType id="org.eclipse.wst.xsl.core.xslsource"/>
-            </rules>
-         </include>
-      </validator>
-   </extension>
--->   
-   <extension
-         point="org.eclipse.wst.validation.referencialFileValidator">
-      <referencialFileValidator
-            id="org.eclipse.wst.xsl.core.referencialFileValidator1">
-         <run
-               class="org.eclipse.wst.xsl.core.internal.validation.XSLReferencialFileValidator">
-         </run>
-      </referencialFileValidator>
-   </extension>
-   
+   </extension>   
 	<extension
 		point="org.eclipse.core.filebuffers.documentCreation"
 		id="org.eclipse.wst.xml.core.documentfactories"
