@@ -149,9 +149,7 @@ public class Validator extends AbstractNestedValidator
 			if (files.length > 0)
 			{
 				IFile xslFile = files[0];
-				// FIXME this guard should not be unnecessary!!
-				if (XSLCore.isXSLFile(xslFile))
-					valreport = XSLValidator.getInstance().validate(xslFile,asYouTypeValidation);
+				valreport = XSLValidator.getInstance().validate(xslFile,asYouTypeValidation);
 			}
 		}
 		catch (URISyntaxException e)
