@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.wst.xsl.core/src"
+    modelPluginID="org.eclipse.wst.xsl.core" modelName="XPath10" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="5.0" copyrightFields="false">
+  <foreignModel>XPath10.ecore</foreignModel>
+  <genPackages prefix="XPath" basePackage="org.eclipse.wst.xsl.core.internal.model.xpath"
+      disposableProviderFactory="true" ecorePackage="XPath10.ecore#/">
+    <genClasses ecoreClass="XPath10.ecore#//XPath">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference XPath10.ecore#//XPath/components"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="XPath10.ecore#//XpathCommon">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XPath10.ecore#//XpathCommon/beginColumn"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XPath10.ecore#//XpathCommon/endColumn"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XPath10.ecore#//XpathCommon/beginLineNumber"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XPath10.ecore#//XpathCommon/endLineNumber"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="XPath10.ecore#//Component"/>
+    <nestedGenPackages prefix="DataTypes" disposableProviderFactory="true" ecorePackage="XPath10.ecore#//DataTypes">
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="XPath10.ecore#//DataTypes/DataTypes">
+        <genEnumLiterals ecoreEnumLiteral="XPath10.ecore#//DataTypes/DataTypes/nodeset"/>
+        <genEnumLiterals ecoreEnumLiteral="XPath10.ecore#//DataTypes/DataTypes/boolean"/>
+        <genEnumLiterals ecoreEnumLiteral="XPath10.ecore#//DataTypes/DataTypes/string"/>
+        <genEnumLiterals ecoreEnumLiteral="XPath10.ecore#//DataTypes/DataTypes/number"/>
+      </genEnums>
+      <genClasses ecoreClass="XPath10.ecore#//DataTypes/Variable">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XPath10.ecore#//DataTypes/Variable/name"/>
+      </genClasses>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Function" disposableProviderFactory="true" ecorePackage="XPath10.ecore#//Function">
+      <genEnums typeSafeEnumCompatible="false" ecoreEnum="XPath10.ecore#//Function/Occurrence">
+        <genEnumLiterals ecoreEnumLiteral="XPath10.ecore#//Function/Occurrence/no"/>
+        <genEnumLiterals ecoreEnumLiteral="XPath10.ecore#//Function/Occurrence/yes"/>
+      </genEnums>
+      <genClasses ecoreClass="XPath10.ecore#//Function/Function">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XPath10.ecore#//Function/Function/namespace"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XPath10.ecore#//Function/Function/prefix"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XPath10.ecore#//Function/Function/name"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XPath10.ecore#//Function/Function/returns"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference XPath10.ecore#//Function/Function/arguments"/>
+      </genClasses>
+      <genClasses ecoreClass="XPath10.ecore#//Function/Argument">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XPath10.ecore#//Function/Argument/name"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute XPath10.ecore#//Function/Argument/required"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference XPath10.ecore#//Function/Argument/componet"/>
+      </genClasses>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Keywords" disposableProviderFactory="true" ecorePackage="XPath10.ecore#//Keywords">
+      <genClasses ecoreClass="XPath10.ecore#//Keywords/Keyword"/>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Axis" disposableProviderFactory="true" ecorePackage="XPath10.ecore#//Axis">
+      <genClasses ecoreClass="XPath10.ecore#//Axis/Axis"/>
+    </nestedGenPackages>
+  </genPackages>
+</genmodel:GenModel>
