@@ -254,8 +254,8 @@ public class TestViewerConfiguration extends TestCase {
 			return;
 
 		IPresentationReconciler presentationReconciler = fConfig.getPresentationReconciler(fViewer);
-		// our default presentation reconciler is null
-		assertNull("presentation reconciler was not null", presentationReconciler);
+		// our default presentation reconciler is no longer null
+		assertNotNull("presentation reconciler was null", presentationReconciler);
 	}
 
 	public void testGetReconciler() {
