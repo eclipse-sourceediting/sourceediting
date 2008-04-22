@@ -12,7 +12,6 @@ package org.eclipse.wst.xsl.core.internal.model;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.xsl.core.XSLCore;
-import org.eclipse.wst.xsl.core.model.IIncludeVisitor;
 
 /**
  * @author Doug Satchwell
@@ -65,27 +64,6 @@ public class Include extends XSLElement
 		return getAttributeValue("href"); //$NON-NLS-1$
 	}
 	
-	/**
-	 * TODO: Add Javadoc
-	 * @param visitor
-	 */
-	public void accept(IIncludeVisitor visitor)
-	{
-		IFile file = getHrefAsFile();
-		if (file != null && file.exists())
-		{
-			Stylesheet stylesheet = StylesheetBuilder.getInstance().getStylesheet(file, false);
-			for (Include include : stylesheet.getIncludes())
-			{
-				include.accept(visitor);
-			}
-			for (Import include : stylesheet.getImports())
-			{
-				include.accept(visitor);
-			}
-		}
-		visitor.visit(this);
-	}
 
 	/**
 	 * Gets the included file as a source file, if possible (returned file may be null and need not exist).
