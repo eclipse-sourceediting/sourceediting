@@ -24,6 +24,7 @@ import org.eclipse.wst.sse.core.internal.provisional.AbstractAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
@@ -74,4 +75,12 @@ public class JsTranslationAdapterFactory extends AbstractAdapterFactory {
 		}
 		super.release();
 	}
+	
+	public static void setupAdapterFactory(IStructuredModel sm) {
+		if (sm.getFactoryRegistry().getFactoryFor(IJsTranslation.class) == null) {
+			JsTranslationAdapterFactory factory = new JsTranslationAdapterFactory();
+			sm.getFactoryRegistry().addFactory(factory);
+		}
+	}
+	
 }
