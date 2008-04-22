@@ -80,8 +80,8 @@ public class ReconcilerHighlighter {
 						else {
 							if (fCompatibleHighlighter == null) {
 								fCompatibleHighlighter = new CompatibleHighlighter();
+								fCompatibleHighlighter.install(fTextViewer);
 							}
-							fCompatibleHighlighter.install(fTextViewer);
 							result.init((IStructuredDocument) fTextViewer.getDocument(), fCompatibleHighlighter);
 						}
 					}
