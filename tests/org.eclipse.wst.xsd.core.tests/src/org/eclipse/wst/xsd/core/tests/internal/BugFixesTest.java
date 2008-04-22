@@ -161,10 +161,11 @@ public class BugFixesTest extends BaseTestCase
     }
     assertTrue(foundDesiredElement);  // if we didn't even find the noinput element, then something terrible went wrong
   }
-
-  public void testXSITypeVsTypeAttr() {
+  
+  public void testXSITypeVsTypeAttr() 
+  {
       
-    // See bug 225447
+    // See bug 225447, 225819
   
     // Load the XSD file
     String XSD_FILE_NAME = "XSITypeTest.xsd";
@@ -208,5 +209,34 @@ public class BugFixesTest extends BaseTestCase
     assertEquals("type", cmAttributeDeclarationB.getAttrName());
     CMDataType attrTypeB = cmAttributeDeclarationB.getAttrType();
     assertEquals("typeNames", attrTypeB.getDataTypeName());
+  }
+
+  public void testEnumerationsInComplexTypesWithSimpleContent()
+  {
+    // See bug 215514
+
+    // Obtain the Web Application schema
+    String vxmlSchemaURI = locateFileUsingCatalog("http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd");
+    XSDSchema xsdSchema = XSDImpl.buildXSDModel(vxmlSchemaURI);
+    assertNotNull(xsdSchema);
+
+    // The type transport-guaranteeType is defined as a complex type with simple type content
+    // It has 3 enumerated values
+    String typeName = "transport-guaranteeType";
+    for (Iterator<XSDTypeDefinition> types = xsdSchema.getTypeDefinitions().iterator(); types.hasNext();)
+    {
+      XSDTypeDefinition type = types.next();
+      if (type instanceof XSDComplexTypeDefinition)
+      {
+        XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition)type;
+        if (typeName.equals(complexType.getName()))
+        {
+          String[] enumeratedValuesForType = XSDImpl.getEnumeratedValuesForType(complexType);
+          // Ensure that the 3 enumerated values are returned
+          assertEquals(3, enumeratedValuesForType.length);
+          return;
+        }
+      }
+    }
   }
 }
