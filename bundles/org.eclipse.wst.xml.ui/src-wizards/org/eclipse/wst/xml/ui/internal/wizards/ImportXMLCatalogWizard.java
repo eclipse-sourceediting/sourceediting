@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 Standards for Technology in Automotive Retail (STAR) and
+ * Copyright (c) 2008 Standards for Technology in Automotive Retail (STAR) and
  * others. All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,6 +54,10 @@ public class ImportXMLCatalogWizard extends Wizard implements IImportWizard {
 		workingUserCatalog.addEntriesFromCatalog(userCatalog);
 	}
 	
+	public boolean canFinish() {
+		return importPage.isPageComplete();
+	}
+
 	public boolean performFinish() {
 		IFile file = importPage.getFile();
 		if (file != null) {
@@ -86,7 +90,7 @@ public class ImportXMLCatalogWizard extends Wizard implements IImportWizard {
 		importPage.setDescription(XMLWizardsMessages._UI_DIALOG_XMLCATALOG_IMPORT_DESCRIPTION);
 		importPage.setMessage(XMLCatalogMessages.UI_LABEL_IMPORT_DIALOG_MESSAGE);
 		addPage(importPage);
-		
+		importPage.setPageComplete(false);
 	}
 }
 

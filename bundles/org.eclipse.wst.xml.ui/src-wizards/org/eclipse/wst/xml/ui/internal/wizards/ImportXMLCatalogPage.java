@@ -14,7 +14,9 @@
 package org.eclipse.wst.xml.ui.internal.wizards;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -52,6 +54,11 @@ public class ImportXMLCatalogPage extends WizardPage {
 		selectSingleFileView.addFilterExtensions(extensions);
 		selectSingleFileView.createControl(composite);
 		selectSingleFileView.setVisibleHelper(true);
+		selectSingleFileView.addSelectionChangedTreeListener(new ISelectionChangedListener(){
+			public void selectionChanged(SelectionChangedEvent event) {
+				ImportXMLCatalogPage.this.setPageComplete(selectSingleFileView.getFile() != null);
+			}
+		});
 		setControl(composite);
 	}
 
