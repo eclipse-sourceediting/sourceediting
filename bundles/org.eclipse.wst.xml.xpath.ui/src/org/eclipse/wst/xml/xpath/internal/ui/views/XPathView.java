@@ -59,6 +59,7 @@ import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -247,13 +248,14 @@ public class XPathView extends ViewPart
 	private static String calculateXPathToNode(Node node)
 	{
 		StringBuffer sb = new StringBuffer();
-		while (node != null && node.getParentNode() != null)
+		while (node != null)
 		{
 			switch (node.getNodeType())
 			{
 				case Node.ATTRIBUTE_NODE:
 					sb.insert(0, node.getNodeName());
-					sb.insert(0, "@"); //$NON-NLS-1$
+					sb.insert(0, "/@"); //$NON-NLS-1$
+					node = ((Attr)node).getOwnerElement();
 					break;
 				case Node.ELEMENT_NODE:
 					Node sibling = node;
@@ -286,9 +288,11 @@ public class XPathView extends ViewPart
 					}
 					sb.insert(0, node.getNodeName());
 					sb.insert(0, Messages.XPathView_8);
+					node = node.getParentNode();
 					break;
+				default:
+					node = node.getParentNode();
 			}
-			node = node.getParentNode();
 		}
 		return sb.toString();
 	}
