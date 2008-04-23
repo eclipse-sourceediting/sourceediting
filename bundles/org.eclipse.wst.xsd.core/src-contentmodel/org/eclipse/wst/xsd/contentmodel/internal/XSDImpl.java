@@ -1151,14 +1151,16 @@ public class XSDImpl
     				} else if("http://www.w3.org/2000/xmlns".equals(info.uri)) {
     					info.prefix = "xmlns";
     				} else {
-    					int n = 1;
-    	    			if(info.prefix == null || info.prefix.equals("")) {
-    	    				info.prefix = "p";
-    	    			}
-    	    			String prefix = info.prefix;
-    	    			while(isDataInNamespaceList(namespaceList, 1, info.prefix)) {
-    	    				info.prefix = prefix + n++;
-    	    			}
+    					if(info.uri != null && info.uri != "") {
+	    					int n = 1;
+	    	    			if(info.prefix == null || info.prefix.equals("")) {
+	    	    				info.prefix = "p";
+	    	    			}
+	    	    			String prefix = info.prefix;
+	    	    			while(isDataInNamespaceList(namespaceList, 1, info.prefix)) {
+	    	    				info.prefix = prefix + n++;
+	    	    			}
+    					}
     				}
 	    			URI relative = URI.createURI(xsdSchema.getSchemaLocation(), true);
 					URI absolute = URI.createURI(schema.getSchemaLocation(), true);
