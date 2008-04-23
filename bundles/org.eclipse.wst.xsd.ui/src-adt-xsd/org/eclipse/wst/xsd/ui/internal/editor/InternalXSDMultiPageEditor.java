@@ -1291,23 +1291,29 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
         }
       }
     }
+    
+    IEditorInput editorInput = structuredTextEditor.getEditorInput();
     // perform save as
     structuredTextEditor.doSaveAs();
-
-    setInput(structuredTextEditor.getEditorInput());
-    setPartName(structuredTextEditor.getEditorInput().getName());
-    
-    getCommandStack().markSaveLocation();
-   
-    // Now do the clean up on the old document
-    if (doc != null)
+    // if saveAs cancelled then don't setInput because the input hasn't change
+    // See AbstractDecoratedTextEditor's performSaveAs
+    if (editorInput != structuredTextEditor.getEditorInput())
     {
-      // remove the adapters
-      doc.getModel().removeModelStateListener(modelAdapter.getModelReconcileAdapter());
-      doc.removeAdapter(modelAdapter.getModelReconcileAdapter());
-      doc.removeAdapter(modelAdapter);
-      modelAdapter.clear();
-      modelAdapter = null;
+      setInput(structuredTextEditor.getEditorInput());
+      setPartName(structuredTextEditor.getEditorInput().getName());
+    
+      getCommandStack().markSaveLocation();
+   
+      // Now do the clean up on the old document
+      if (doc != null)
+      {
+        // remove the adapters
+        doc.getModel().removeModelStateListener(modelAdapter.getModelReconcileAdapter());
+        doc.removeAdapter(modelAdapter.getModelReconcileAdapter());
+        doc.removeAdapter(modelAdapter);
+        modelAdapter.clear();
+        modelAdapter = null;
+      }
     }
   }
 
