@@ -12,31 +12,32 @@ package org.eclipse.wst.jsdt.web.core.javascript.search;
 
 import org.eclipse.wst.jsdt.core.search.SearchDocument;
 
+
+
 /**
  * An empty servlet, safe for Java search participation
  * 
  * @author pavery
  */
 public class NullSearchDocument extends SearchDocument {
+	
 	StringBuffer fEmptyServletBuffer = null;
 	
 	public NullSearchDocument(String documentPath) {
-		super(documentPath, new JsSearchParticipant());
+		super(documentPath, new JsSearchParticipant()); 
 		this.fEmptyServletBuffer = new StringBuffer();
 	}
-	
 	
 	public byte[] getByteContents() {
 		return this.fEmptyServletBuffer.toString().getBytes();
 	}
 	
-	
 	public char[] getCharContents() {
 		return this.fEmptyServletBuffer.toString().toCharArray();
 	}
 	
-	
 	public String getEncoding() {
 		return null;
 	}
+
 }

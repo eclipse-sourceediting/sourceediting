@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
@@ -13,14 +13,15 @@ package org.eclipse.wst.jsdt.web.core.javascript.search;
 import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.jsdt.core.search.SearchParticipant;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
-
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapterFactory;
@@ -31,23 +32,24 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
+
 /**
  * Created with a .jsp file, but should appear to be a .java file for indexing
  * and searching purposes. There are purposely few fields in this class, and
  * those fields are lightweight since it's possible for many JSP search
- * documents to exist in memory at one time (eg. after importing a project with
- * a large number of JSP files)
+ * documents to exist in memory at one time (eg. after importing a project
+ * with a large number of JSP files)
  * 
  * @author pavery
  */
 public class JsSearchDocument {
+
 	private String UNKNOWN_PATH = "**path unknown**"; //$NON-NLS-1$
-	private char[] fCachedCharContents;
-	private String fCUPath = UNKNOWN_PATH;
 	private String fJSPPathString = UNKNOWN_PATH;
-	private long fLastModifiedStamp;
+	private String fCUPath = UNKNOWN_PATH;
 	private SearchParticipant fParticipant = null;
-	
+	private long fLastModifiedStamp;
+	private char[] fCachedCharContents;
 	
 	/**
 	 * @param file
@@ -55,61 +57,40 @@ public class JsSearchDocument {
 	 * @throws CoreException
 	 */
 	public JsSearchDocument(String filePath, SearchParticipant participant) {
+
 		this.fJSPPathString = filePath;
 		this.fParticipant = participant;
 	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.core.search.SearchDocument#getByteContents()
-	 */
-	public byte[] getByteContents() {
-		// TODO Auto-generated method stub
-		return null;
+
+	public SearchParticipant getParticipant() {
+		return this.fParticipant;
 	}
-	
+
 	/**
-	 * @see org.eclipse.wst.jsdt.core.search.SearchDocument#getCharContents()
+	 * @see org.eclipse.jdt.core.search.SearchDocument#getCharContents()
 	 */
 	public char[] getCharContents() {
-		if (fCachedCharContents == null || isDirty()) {
-			IJsTranslation trans = getJSPTranslation();
-			fCachedCharContents = trans != null ? trans.getJsText().toCharArray() : new char[0];
-			fCUPath = trans.getJavaPath();
+		
+		if((fCachedCharContents == null) || isDirty()) {
+		    IJsTranslation trans = getJSPTranslation();    
+		    fCachedCharContents = trans != null ? trans.getJsText().toCharArray() : new char[0];
+		    fCUPath = trans.getJavaPath();
 		}
 		return fCachedCharContents;
 	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.jsdt.core.search.SearchDocument#getEncoding()
-	 */
-	public String getEncoding() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	public IFile getFile() {
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IPath jspPath = new Path(this.fJSPPathString);
-		IFile jspFile = root.getFile(jspPath);
-		if (!jspFile.exists()) {
-			// possibly outside workspace
-			jspFile = root.getFileForLocation(jspPath);
-		}
-		return jspFile;
-	}
-	
+
 	public String getJavaText() {
 		return new String(getCharContents());
 	}
-	
+
+	private IModelManager getModelManager() {
+		return StructuredModelManager.getModelManager();
+	}
+
 	/**
-	 * It's not recommended for clients to hold on to this JSPTranslation since
-	 * it's kind of large. If possible, hold on to the JSPSearchDocument, which
-	 * is more of a lightweight proxy.
+	 * It's not recommended for clients to hold on to this JSPTranslation
+	 * since it's kind of large. If possible, hold on to the
+	 * JSPSearchDocument, which is more of a lightweight proxy.
 	 * 
 	 * @return the JSPTranslation for the jsp file, or null if it's an
 	 *         unsupported file.
@@ -120,74 +101,120 @@ public class JsSearchDocument {
 		if (!JsSearchSupport.isJsp(jspFile)) {
 			return translation;
 		}
+
 		IStructuredModel model = null;
 		try {
 			// get existing model for read, then get document from it
-			IModelManager modelManager = StructuredModelManager.getModelManager();
+			IModelManager modelManager = getModelManager();
 			if (modelManager != null) {
-				model = modelManager.getExistingModelForRead(jspFile);
-				if(model==null)
-					model = modelManager.getModelForRead(jspFile);
+				jspFile.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
+				model = modelManager.getModelForRead(jspFile);
 			}
 			// handle unsupported
 			if (model instanceof IDOMModel) {
-				IDOMModel xmlModel = (IDOMModel) model;
-				JsTranslationAdapterFactory factory = new JsTranslationAdapterFactory();
-				xmlModel.getFactoryRegistry().addFactory(factory);
+				IDOMModel xmlModel = (IDOMModel)model;
+				setupAdapterFactory(xmlModel);
 				IDOMDocument doc = xmlModel.getDocument();
 				JsTranslationAdapter adapter = (JsTranslationAdapter) doc.getAdapterFor(IJsTranslation.class);
 				translation = adapter.getJSPTranslation(false);
 			}
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			Logger.logException(e);
-		} catch (CoreException e) {
+		}
+		catch (CoreException e) {
 			Logger.logException(e);
-		} catch (UnsupportedCharsetExceptionWithDetail e) {
+		}
+		catch (UnsupportedCharsetExceptionWithDetail e) {
 			// no need to log this. Just consider it an invalid file for our
 			// purposes.
 			// Logger.logException(e);
-		} finally {
+		}
+		finally {
 			if (model != null) {
 				model.releaseFromRead();
 			}
 		}
 		return translation;
 	}
-	
-	public SearchParticipant getParticipant() {
-		return this.fParticipant;
+
+	/**
+	 * add the factory for JSPTranslationAdapter here
+	 * 
+	 * @param sm
+	 */
+	private void setupAdapterFactory(IStructuredModel sm) {
+		JsTranslationAdapterFactory.setupAdapterFactory(sm);
 	}
-	
+
 	/**
 	 * the path to the Java compilation unit
 	 * 
-	 * @see org.eclipse.wst.jsdt.core.search.SearchDocument#getPath()
+	 * @see org.eclipse.jdt.core.search.SearchDocument#getPath()
 	 */
 	public String getPath() {
-		// caching the path since it's expensive to get translation
+	    // caching the path since it's expensive to get translation
 		// important that isDirty() check is second to cache modification stamp
-		if (this.fCUPath == null || isDirty() || this.fCUPath == UNKNOWN_PATH) {
-			IJsTranslation trans = getJSPTranslation();
-			if (trans != null) {
-				try {
-					this.fCUPath = trans.getJavaPath();
-				} catch (RuntimeException ex) {
-					// TODO Auto-generated catch block
-					ex.printStackTrace();
-				}
-				// save since it's expensive to calculate again later
-				fCachedCharContents = trans.getJsText().toCharArray();
-			}
-		}
+	    if((this.fCUPath == null) || isDirty() || (this.fCUPath == UNKNOWN_PATH)) {
+	        IJsTranslation trans = getJSPTranslation();
+	        if(trans != null) {
+	            this.fCUPath = trans.getJavaPath();
+	            // save since it's expensive to calculate again later
+	            fCachedCharContents = trans.getJsText().toCharArray();
+	        }
+	    }
 		return fCUPath != null ? fCUPath : UNKNOWN_PATH;
 	}
+
+//	public int getJspOffset(int javaOffset) {
+//		// copied from JSPTranslation
+//		int result = -1;
+//		int offsetInRange = 0;
+//		Position jspPos, javaPos = null;
+//		IJsTranslation trans = getJSPTranslation();
+//		if (trans != null) {
+//			HashMap java2jspMap = trans.getJava2JspMap();
+//
+//			// iterate all mapped java ranges
+//			Iterator it = java2jspMap.keySet().iterator();
+//			while (it.hasNext()) {
+//				javaPos = (Position) it.next();
+//				// need to count the last position as included
+//				if (!javaPos.includes(javaOffset) && !(javaPos.offset + javaPos.length == javaOffset))
+//					continue;
+//
+//				offsetInRange = javaOffset - javaPos.offset;
+//				jspPos = (Position) java2jspMap.get(javaPos);
+//
+//				if (jspPos != null)
+//					result = jspPos.offset + offsetInRange;
+//				else {
+//					Logger.log(Logger.ERROR, "jspPosition was null!" + javaOffset); //$NON-NLS-1$
+//				}
+//				break;
+//			}
+//		}
+//		return result;
+//	}
+
+	public IFile getFile() {
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IPath jspPath = new Path(this.fJSPPathString);
+		IFile jspFile = root.getFile(jspPath);
+		if (!jspFile.exists()) {
+			// possibly outside workspace
+			jspFile = root.getFileForLocation(jspPath);
+		}
+		return jspFile;
+	}
+
 	
 	private boolean isDirty() {
 		boolean modified = false;
 		IFile f = getFile();
-		if (f != null) {
+		if(f != null) {
 			long currentStamp = f.getModificationStamp();
-			if (currentStamp != fLastModifiedStamp) {
+			if(currentStamp != fLastModifiedStamp) {
 				modified = true;
 			}
 			fLastModifiedStamp = currentStamp;
@@ -196,14 +223,33 @@ public class JsSearchDocument {
 	}
 	
 	public void release() {
-	// nothing to do now since JSPTranslation is created on the fly
+		// nothing to do now since JSPTranslation is created on the fly
 	}
-	
+
 	/**
 	 * for debugging
 	 */
-	
 	public String toString() {
 		return "[JSPSearchDocument:" + this.fJSPPathString + "]"; //$NON-NLS-1$ //$NON-NLS-2$ 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jdt.core.search.SearchDocument#getEncoding()
+	 */
+	public String getEncoding() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jdt.core.search.SearchDocument#getByteContents()
+	 */
+	public byte[] getByteContents() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

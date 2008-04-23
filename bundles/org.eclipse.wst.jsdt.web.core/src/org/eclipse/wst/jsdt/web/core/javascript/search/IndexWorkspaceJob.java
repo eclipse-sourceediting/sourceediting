@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
@@ -23,68 +23,70 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-//import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.jsdt.web.core.internal.JsCoreMessages;
 import org.eclipse.wst.jsdt.web.core.internal.validation.Util;
 
 /**
- * Re-indexes the entire workspace. Ensures the JSP Index is in a stable state
- * before performing a search. (like after a crash or if previous indexing was
- * canceled)
+ * Re-indexes the entire workspace.
+ * Ensures the JSP Index is in a stable state before performing a search.
+ * (like after a crash or if previous indexing was canceled)
  * 
  * @author pavery
  */
 public class IndexWorkspaceJob extends Job {
+
 	// for debugging
 	static final boolean DEBUG;
 	static {
-		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspindexmanager"); //$NON-NLS-1$
-		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		String value= Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspindexmanager"); //$NON-NLS-1$
+		DEBUG= (value != null) && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
+	
 	/**
-	 * Visitor that retrieves jsp project paths for all jsp files in the
-	 * workspace, and adds the files to be indexed as they are encountered
+	 * Visitor that retrieves jsp project paths for all jsp files in the workspace,
+	 * and adds the files to be indexed as they are encountered
 	 */
 	private class JSPFileVisitor implements IResourceProxyVisitor {
-		private List files = new ArrayList();
+	    private List files = new ArrayList(); 
+		
 		// monitor from the Job
 		IProgressMonitor fInnerMonitor = null;
-		
 		public JSPFileVisitor(IProgressMonitor monitor) {
 			this.fInnerMonitor = monitor;
 		}
 		
-		public final IFile[] getFiles() {
-			return (IFile[]) this.files.toArray(new IFile[this.files.size()]);
-		}
-		
 		public boolean visit(IResourceProxy proxy) throws CoreException {
+			
 			// check job canceled
-			if (this.fInnerMonitor != null && this.fInnerMonitor.isCanceled()) {
+			if ((this.fInnerMonitor != null) && this.fInnerMonitor.isCanceled()) {
 				setCanceledState();
 				return false;
 			}
+			
 			// check search support canceled
-			if (JsSearchSupport.getInstance().isCanceled()) {
+			if(JsSearchSupport.getInstance().isCanceled()) {
 				setCanceledState();
 				return false;
 			}
+			
 			if (proxy.getType() == IResource.FILE) {
+				
 				// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3553
 				// check this before description
 				// check name before actually getting the file (less work)
-				if (Util.isJsType(proxy.getName())) {
+				if(Util.isJsType(proxy.getName())) {
 					IFile file = (IFile) proxy.requestResource();
-					if (file.exists()) {
-						if (IndexWorkspaceJob.DEBUG) {
+					if(file.exists()) {
+						
+						if(DEBUG) {
 							System.out.println("(+) IndexWorkspaceJob adding file: " + file.getName()); //$NON-NLS-1$
 						}
-						// this call will check the ContentTypeDescription, so
-						// don't need to do it here.
-						// JSPSearchSupport.getInstance().addJspFile(file);
+						// this call will check the ContentTypeDescription, so don't need to do it here.
+						//JSPSearchSupport.getInstance().addJspFile(file);
 						this.files.add(file);
 						this.fInnerMonitor.subTask(proxy.getName());
+						
 						// don't search deeper for files
 						return false;
 					}
@@ -92,50 +94,68 @@ public class IndexWorkspaceJob extends Job {
 			}
 			return true;
 		}
+		
+		public final IFile[] getFiles() {
+		    return (IFile[])this.files.toArray(new IFile[this.files.size()]);
+		}
 	}
+	
 	//private IContentType fContentTypeJSP = null;
 	
 	public IndexWorkspaceJob() {
-		// pa_TODO may want to say something like "Rebuilding JSP Index" to be
-		// more
-		// descriptive instead of "Updating JSP Index" since they are 2
-		// different things
+		// pa_TODO may want to say something like "Rebuilding JSP Index" to be more
+		// descriptive instead of "Updating JSP Index" since they are 2 different things
 		super(JsCoreMessages.JSPIndexManager_0);
 		setPriority(Job.LONG);
 		setSystem(true);
 	}
-	
 
+//	IContentType getJspContentType() {
+//		if(this.fContentTypeJSP == null)
+//			this.fContentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
+//		return this.fContentTypeJSP;
+//	}
 	
+	/**
+	 * @see org eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor) 
+	 * for similar method
+	 */
 	protected IStatus run(IProgressMonitor monitor) {
+		
 		IStatus status = Status.OK_STATUS;
-		if (monitor.isCanceled()) {
+		
+		if(monitor.isCanceled()) {
 			setCanceledState();
 			return Status.CANCEL_STATUS;
 		}
-		if (IndexWorkspaceJob.DEBUG) {
+		
+		if(DEBUG) {
 			System.out.println(" ^ IndexWorkspaceJob started: "); //$NON-NLS-1$
 		}
+		
 		long start = System.currentTimeMillis();
+		
 		try {
-			JSPFileVisitor visitor = new JSPFileVisitor(monitor);
-			// collect all jsp files
+		    JSPFileVisitor visitor = new JSPFileVisitor(monitor);
+		    // collect all jsp files
 			ResourcesPlugin.getWorkspace().getRoot().accept(visitor, IResource.DEPTH_INFINITE);
 			// request indexing
-			// this is pretty much like faking an entire workspace resource
-			// delta
+			// this is pretty much like faking an entire workspace resource delta
 			JsIndexManager.getInstance().indexFiles(visitor.getFiles());
-		} catch (CoreException e) {
-			if (IndexWorkspaceJob.DEBUG) {
+		}
+		catch (CoreException e) {
+			if(DEBUG) {
 				e.printStackTrace();
 			}
-		} finally {
+		}
+		finally {
 			monitor.done();
 		}
 		long finish = System.currentTimeMillis();
-		if (IndexWorkspaceJob.DEBUG) {
+		if(DEBUG) {
 			System.out.println(" ^ IndexWorkspaceJob finished\n   total time running: " + (finish - start)); //$NON-NLS-1$
 		}
+		
 		return status;
 	}
 	

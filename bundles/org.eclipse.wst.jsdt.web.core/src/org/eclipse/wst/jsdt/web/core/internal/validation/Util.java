@@ -16,6 +16,7 @@ import org.eclipse.wst.jsdt.web.core.internal.provisional.contenttype.ContentTyp
 public class Util {
 	
 	public static boolean isJsType(String fileName) {
+		if(fileName==null) return false;
 		boolean valid = false;
 		IContentType[] types =getJavascriptContentTypes();
 		int i = 0;
