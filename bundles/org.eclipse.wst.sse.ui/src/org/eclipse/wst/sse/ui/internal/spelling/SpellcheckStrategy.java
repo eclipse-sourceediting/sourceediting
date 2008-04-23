@@ -36,6 +36,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.texteditor.spelling.ISpellingProblemCollector;
+import org.eclipse.ui.texteditor.spelling.SpellingAnnotation;
 import org.eclipse.ui.texteditor.spelling.SpellingContext;
 import org.eclipse.ui.texteditor.spelling.SpellingProblem;
 import org.eclipse.ui.texteditor.spelling.SpellingService;
@@ -78,7 +79,7 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 
 		public void accept(SpellingProblem problem) {
 			if (isInterestingProblem(problem)) {
-				TemporaryAnnotation annotation = new TemporaryAnnotation(new Position(problem.getOffset(), problem.getLength()), TemporaryAnnotation.ANNOT_WARNING, problem.getMessage(), fReconcileAnnotationKey);
+				TemporaryAnnotation annotation = new TemporaryAnnotation(new Position(problem.getOffset(), problem.getLength()), SpellingAnnotation.TYPE, problem.getMessage(), fReconcileAnnotationKey);
 
 				SpellingQuickAssistProcessor quickAssistProcessor = new SpellingQuickAssistProcessor();
 				quickAssistProcessor.setSpellingProblem(problem);
