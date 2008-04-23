@@ -31,11 +31,7 @@ then click <ph><uicontrol>Next</uicontrol></ph>. </cmd></step>
 same name as the WAR file. If you accept this choice, the project will be
 created with the same servlet version as specified by the WAR file and in
 the same location. If you want to override these settings, you can click <b>New</b> and
-specify your new settings in the Dynamic Web Project wizard.</cmd><info> <p>If
-you want to import the WAR file into an existing Web project, you can select
-the project from the Web project drop-down list. Note that if you select an
-existing project, you must decide whether you want to select the setting to <b>overwrite
-existing resources without warning</b></p></info></step>
+specify your new settings in the Dynamic Web Project wizard.</cmd></step>
 <step><cmd>Click <ph><uicontrol>Finish</uicontrol></ph> to populate the Web
 project.</cmd></step>
 </steps>
