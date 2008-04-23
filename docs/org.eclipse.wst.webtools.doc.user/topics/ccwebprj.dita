@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
  "concept.dtd">
 <concept id="ccwebprj" xml:lang="en-us">
 <title>Dynamic Web projects and applications</title>
 <prolog><metadata>
-<keywords><indexterm>enterprise applications<indexterm>projects<indexterm>dynamic Web projects</indexterm></indexterm></indexterm>
-<indexterm>Web projects<indexterm>dynamic projects overview</indexterm></indexterm>
-</keywords>
+<keywords><indexterm>enterprise applications<indexterm>projects<indexterm>dynamic
+Web projects</indexterm></indexterm></indexterm><indexterm>Web projects<indexterm>dynamic
+projects overview</indexterm></indexterm></keywords>
 </metadata></prolog>
 <conbody>
 <p>There are two types of Web projects: dynamic and <xref href="ccstatic.dita"
@@ -18,7 +18,7 @@ web projects only contains static resources. When you create Web projects,
 you can include cascading style sheets and JSP tag libraries (for dynamic
 Web projects), so that you can begin development with a richer set of project
 resources.</p>
-<p>Dynamic Web projects are always imbedded in Enterprise Application projects.
+<p>Dynamic Web projects are always embedded in Enterprise Application projects.
 The wizard that you use to create a dynamic Web project will also create an
 Enterprise Application (EAR) project if it does not already exist. The wizard
 will also update the <filepath>application.xml</filepath> deployment descriptor

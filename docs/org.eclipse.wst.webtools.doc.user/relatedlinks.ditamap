@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE map PUBLIC "-//IBM//DTD DITA IBM Map//EN"
- "ibm-map.dtd">
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
+ "map.dtd">
 <map title="Web tools related links"><?Pub Caret1?>
 <reltable>
 <relheader>
