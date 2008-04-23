@@ -8,7 +8,7 @@
  *  Contributors:
  *      David Carver - initial API and implementation
  *
- * $Id: XPathImpl.java,v 1.1 2008/04/22 21:07:27 dacarver Exp $
+ * $Id: XPathImpl.java,v 1.2 2008/04/23 20:37:02 dacarver Exp $
  */
 package org.eclipse.wst.xml.xpath.core.internal.model.XPath.impl;
 
@@ -149,12 +149,9 @@ public class XPathImpl extends XpathCommonImpl implements XPath {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
 	 */
 	public void setComponents(EList<Component> components) {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		this.components = components;
 	}
 
 	/**
