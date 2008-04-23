@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
  "concept.dtd">
 <!-- ArborText, Inc., 1988-2002, v.4002 -->
@@ -14,9 +14,9 @@ create, assemble, publish, deploy and maintain dynamic, interactive Web applicat
 <conbody>
 <p>The Web development environment provides the following high-level capabilities:
  <ul>
-<li>Dynamic Web project creation, using the J2EE-defined hierarchy, or a static
-version that reduces project overhead when dynamic elements are not required.
- Static Web projects can later be converted to dynamic Web projects.<p></p></li>
+<li>Dynamic Web project creation, using the Java EE-defined hierarchy, or
+a static version that reduces project overhead when dynamic elements are not
+required.  Static Web projects can later be converted to dynamic Web projects.<p></p></li>
 <li>Creation and editing of a Web application deployment descriptor (<filepath>web.xml</filepath>)
  file<p></p></li>
 <li>JSP and HTML file creation, validation, editing, and debugging<p></p></li>

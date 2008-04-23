@@ -39,7 +39,7 @@ the packages used to include Bean information.</dd>
 create a new external tool to the list, the New External Tool wizard opens,
 so that you can define the new build tool.</dd>
 </dlentry><dlentry>
-<dt>J2EE (Dynamic Web project only)</dt>
+<dt>Java EE (Dynamic Web project only)</dt>
 <dd>Identify Web level specification and modify context root and Web content
 folder name</dd>
 </dlentry><dlentry>

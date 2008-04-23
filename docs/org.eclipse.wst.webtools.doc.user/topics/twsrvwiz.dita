@@ -8,15 +8,16 @@
 tmtype="tm" trademark="Java">Java</tm> servlets by walking you through the
 creation process and by providing you with output files that you can use or
 that you can modify for use with your Web application. The servlets can run
-on J2EE-compliant Web servers.</shortdesc>
+on Java EE-compliant Web servers.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>servlets<indexterm>creating</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context> <p>To create a servlet, complete the following steps: </p></context>
 <steps>
-<step><cmd>From the J2EE perspective, expand your  <xref href="ccwebprj.dita"
-scope="peer"><desc></desc>dynamic project</xref> in the Project Explorer view.</cmd></step>
+<step><cmd>From the Java EE perspective, expand your  <xref href="ccwebprj.dita"
+scope="peer"><desc></desc>dynamic project</xref> in the Project Explorer view.</cmd>
+</step>
 <step><cmd>Right click on the <b>Servlet</b> icon, and select <menucascade>
 <uicontrol>New</uicontrol><uicontrol>Servlet</uicontrol></menucascade> from
 the pop-up menu.</cmd><stepresult> The <uicontrol>Create Servlet</uicontrol> wizard

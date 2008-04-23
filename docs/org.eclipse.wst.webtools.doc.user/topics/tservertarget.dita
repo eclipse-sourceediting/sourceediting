@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
  "concept.dtd">
 <concept id="tservertarget" xml:lang="en-us">
 <title>Server targeting for Web applications</title>
 <prolog><metadata>
-<keywords><indexterm>servers<indexterm>targeting</indexterm></indexterm><indexterm>Web applications<indexterm>server targeting</indexterm></indexterm>
-</keywords>
+<keywords><indexterm>servers<indexterm>targeting</indexterm></indexterm><indexterm>Web
+applications<indexterm>server targeting</indexterm></indexterm></keywords>
 </metadata></prolog>
 <conbody>
-<p>To support different J2EE application servers, the J2EE tooling allows
+<p>To support different Java EE application servers, the Java EE tooling allows
 you to target a specific server during your Enterprise Application (EAR) project
 development. In most cases, a Web project must target the same server as the
 EAR project in order to deploy the Web application to the server properly. </p>

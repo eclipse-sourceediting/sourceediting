@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="twcresta" xml:lang="en-us">
@@ -17,7 +17,7 @@ that contains no dynamic elements, such as JSP files or servlets, use the <ph><u
 Static Web Project</uicontrol></ph> wizard. </p><p>To create a new static
 Web project, complete the following steps:</p></context>
 <steps>
-<step><cmd>Open the J2EE perspective </cmd><info></info></step>
+<step><cmd>Open the Java EE perspective </cmd><info></info></step>
 <step><cmd>In the Project Explorer, right click on Other Projects and select <b>New->Other->Web->Static
 Web Project</b> from the context menu. The New Static Web Project wizard starts. </cmd>
 </step>

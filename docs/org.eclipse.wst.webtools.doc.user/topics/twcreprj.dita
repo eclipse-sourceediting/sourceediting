@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <!-- ArborText, Inc., 1988-2002, v.4002-->
@@ -9,9 +9,7 @@
 in Web projects.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>Web projects<indexterm>creating dynamic projects</indexterm></indexterm>
-<indexterm>Web applications<indexterm>resources</indexterm></indexterm>
-
-</keywords>
+<indexterm>Web applications<indexterm>resources</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context> <p> Unlike with <xref href="twcresta.dita" scope="peer"><desc></desc>static</xref> Web
@@ -19,7 +17,7 @@ projects,  dynamic Web projects enable you to create resources such as JavaServe
 Pages and servlets.</p><p>To create a new dynamic Web project, complete the
 following steps:</p></context>
 <steps>
-<step><cmd>Open the J2EE perspective.</cmd></step>
+<step><cmd>Open the Java EE perspective.</cmd></step>
 <step><cmd>In the Project Explorer, right click on Dynamic Web Projects, and
 select <menucascade><uicontrol>New</uicontrol><uicontrol>Dynamic Web Project</uicontrol>
 </menucascade> from the context menu. The New Dynamic Web Project wizard starts.</cmd>

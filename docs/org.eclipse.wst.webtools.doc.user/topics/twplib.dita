@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="twplib" xml:lang="en-us">
@@ -21,9 +21,9 @@ these associations:</p> </context>
 <steps>
 <step><cmd>Right click on a Web project and select <uicontrol>Properties</uicontrol> from
 the pop-up menu.</cmd><info></info></step>
-<step><cmd>Click on <uicontrol>J2EE Module Dependencies</uicontrol></cmd>
+<step><cmd>Click on <uicontrol>Java EE Module Dependencies</uicontrol></cmd>
 </step>
-<step><cmd>Set up your associations in the J2EE Module Dependencies window</cmd>
+<step><cmd>Set up your associations in the Java EE Module Dependencies window</cmd>
 </step>
 <step><cmd>Click <ph><uicontrol>OK</uicontrol></ph> when you are done.</cmd>
 </step>
