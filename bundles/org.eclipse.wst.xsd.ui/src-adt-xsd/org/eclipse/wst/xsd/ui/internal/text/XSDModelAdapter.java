@@ -146,7 +146,7 @@ public class XSDModelAdapter implements INodeAdapter
       // attach an adapter to keep the XSD model and DOM in sync
       //
       modelReconcileAdapter = new XSDModelReconcileAdapter(document, schema);
-//      domNode.getModel().addModelStateListener(modelReconcileAdapter);
+      domNode.getModel().addModelStateListener(modelReconcileAdapter);
     }
     catch (Exception ex)
     {
