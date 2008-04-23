@@ -63,6 +63,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsd.ui.internal.adapters.CategoryAdapter;
@@ -152,6 +153,45 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
       }
     }
   }
+  
+  protected void setInputToGraphicalViewer(IDocument newDocument)
+  {
+    IStructuredModel structuredModel = null;
+    try
+    {
+      structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(newDocument);
+      
+      if (structuredModel == null)
+        structuredModel = StructuredModelManager.getModelManager().getModelForRead((IStructuredDocument)newDocument);
+
+      if ((structuredModel != null) && (structuredModel instanceof IDOMModel))
+      {
+        Document doc = ((IDOMModel) structuredModel).getDocument();
+        if (doc != null)
+        {
+          XSDModelAdapter modelAdapter = XSDModelAdapter.lookupOrCreateModelAdapter(doc);
+          if (modelAdapter != null) // Assert should not be null
+          {
+            modelAdapter.setSchema(xsdSchema);
+            xsdSchema = modelAdapter.resetSchema(doc);
+            model = (IModel) XSDAdapterFactory.getInstance().adapt(xsdSchema);
+          }
+        }
+      }
+    }
+    catch (Exception e)
+    {
+    }
+    finally
+    {
+      if (structuredModel != null)
+      {
+        structuredModel.releaseFromRead();
+      }
+    }
+  }
+  
+ 
   public IModel buildModel()
   {
     try
@@ -171,13 +211,23 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
       if (doc instanceof IStructuredDocument)
       {
         IStructuredModel model = null;
+        try
+        {
         // TODO: for StorageEditorInputs, should be forRead
-        model = StructuredModelManager.getModelManager().getExistingModelForEdit(doc);
-        if (model == null) {
-          model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) doc);
+          model = StructuredModelManager.getModelManager().getExistingModelForEdit(doc);
+          if (model == null)
+          {
+            model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) doc);
+          }
+          document = ((IDOMModel) model).getDocument();
         }
-        structuredModel = model;
-        document = ((IDOMModel)model).getDocument();
+        finally
+        {
+          if (model != null)
+          {
+            model.releaseFromEdit();
+          }
+        }
       }
       Assert.isNotNull(document);
 
@@ -256,18 +306,43 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
 
   public void dispose()
   {
-    if (structuredModel != null)
+    IStructuredModel structuredModel = null;
+    XSDModelAdapter modelAdapter = null;
+    IDOMDocument doc = null;
+    IDocument idoc = structuredTextEditor.getDocumentProvider().getDocument(getEditorInput());
+    if (idoc != null)
     {
-      structuredModel.releaseFromEdit();
-      structuredModel = null;
+      structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(idoc);
+      if ((structuredModel != null) && (structuredModel instanceof IDOMModel))
+      {
+        try
+        {
+          if ((structuredModel != null) && (structuredModel instanceof IDOMModel))
+          {
+            doc = ((IDOMModel) structuredModel).getDocument();
+            if (doc != null)
+            {
+              modelAdapter = (XSDModelAdapter) doc.getExistingAdapter(XSDModelAdapter.class);
+              if (modelAdapter != null)
+              {
+                doc.getModel().removeModelStateListener(modelAdapter.getModelReconcileAdapter());
+                doc.removeAdapter(modelAdapter.getModelReconcileAdapter());
+                doc.removeAdapter(modelAdapter);
+                modelAdapter.clear();
+                modelAdapter = null;
+              }
+            }
+          }
+        }
+        finally
+        {
+          structuredModel.releaseFromRead();
+        }
+      }
     }
-    
-    if (schemaNodeAdapter != null)
-    {
-      schemaNodeAdapter.clear();
-      schemaNodeAdapter = null;
-    }
-    
+   
+
+
     if (fOutlinePage != null)
     {
 //      if (fOutlinePage instanceof ConfigurableContentOutlinePage && fOutlineListener != null)
@@ -282,6 +357,7 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     getSelectionManager().removeSelectionChangedListener(fXSDSelectionListener);
     XSDEditorPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(xsdPreferenceStoreListener);
     xsdPreferenceStoreListener = null;
+    structuredTextEditor.dispose();
     super.dispose();
   }
 
@@ -1177,6 +1253,62 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
   protected void storeCurrentModePreference(String id)
   {
     XSDEditorPlugin.getPlugin().getPreferenceStore().setValue(DEFAULT_EDITOR_MODE_ID, id);
+  }
+
+  /* (non-Javadoc)
+   * @see org.eclipse.ui.part.EditorPart#doSaveAs()
+   */
+  public void doSaveAs()
+  {
+    // When performing a save as, the document changes.   Our model state listeners should listen
+    // to the new document.
+    
+    // First get the current document
+    IDocument currentDocument = getDocument();
+    XSDModelAdapter modelAdapter = null;
+    IDOMDocument doc = null;
+    if (currentDocument != null)
+    {
+      IStructuredModel structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(currentDocument);
+      if (structuredModel != null)
+      {
+        try
+        {
+          if ((structuredModel != null) && (structuredModel instanceof IDOMModel))
+          {
+            // Get the associated IDOMDocument model
+            doc = ((IDOMModel) structuredModel).getDocument();
+            // and now get our adapter that listens to DOM changes
+            if (doc != null)
+            {
+              modelAdapter = (XSDModelAdapter) doc.getExistingAdapter(XSDModelAdapter.class);
+            }
+          }
+        }
+        finally
+        {
+          structuredModel.releaseFromRead();
+        }
+      }
+    }
+    // perform save as
+    structuredTextEditor.doSaveAs();
+
+    setInput(structuredTextEditor.getEditorInput());
+    setPartName(structuredTextEditor.getEditorInput().getName());
+    
+    getCommandStack().markSaveLocation();
+   
+    // Now do the clean up on the old document
+    if (doc != null)
+    {
+      // remove the adapters
+      doc.getModel().removeModelStateListener(modelAdapter.getModelReconcileAdapter());
+      doc.removeAdapter(modelAdapter.getModelReconcileAdapter());
+      doc.removeAdapter(modelAdapter);
+      modelAdapter.clear();
+      modelAdapter = null;
+    }
   }
 
 }  

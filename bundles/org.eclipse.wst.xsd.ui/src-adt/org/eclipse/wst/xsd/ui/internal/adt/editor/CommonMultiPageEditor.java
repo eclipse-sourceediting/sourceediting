@@ -43,6 +43,7 @@ import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.gef.ui.parts.SelectionSynchronizer;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -176,7 +177,6 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
     setInput(structuredTextEditor.getEditorInput());
     setPartName(editor.getTitle());
     getCommandStack().markSaveLocation();
-    
   }
 
   /* (non-Javadoc)
@@ -285,6 +285,31 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
       }
     }
   }
+  
+  // Should override to set the input to the design viewer for a new document change
+  // ie. when doing a saveAs
+  protected void setInputToGraphicalViewer(IDocument newInput)
+  {
+  }
+
+  protected void setInput(IEditorInput input)
+  {
+    super.setInput(input);
+    if (graphicalViewer != null)
+    {
+      setInputToGraphicalViewer(getDocument());
+    }
+  }
+
+  protected IDocument getDocument()
+  {
+    IDocument document = null;
+    if (structuredTextEditor != null)
+    {
+      document = structuredTextEditor.getDocumentProvider().getDocument(structuredTextEditor.getEditorInput());
+    }
+    return document;
+  }
 
   /**
    * @return
@@ -385,8 +410,6 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
    */
   public void init(IEditorSite site, IEditorInput editorInput) throws PartInitException
   {
-//    if (!(editorInput instanceof IFileEditorInput))
-//      throw new PartInitException("Invalid Input: Must be IFileEditorInput"); //$NON-NLS-1$
     super.init(site, editorInput);
     
     getCommandStack().addCommandStackListener(this);

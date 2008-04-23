@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -146,7 +146,7 @@ public class XSDModelAdapter implements INodeAdapter
       // attach an adapter to keep the XSD model and DOM in sync
       //
       modelReconcileAdapter = new XSDModelReconcileAdapter(document, schema);
-      domNode.getModel().addModelStateListener(modelReconcileAdapter);
+//      domNode.getModel().addModelStateListener(modelReconcileAdapter);
     }
     catch (Exception ex)
     {
@@ -162,7 +162,29 @@ public class XSDModelAdapter implements INodeAdapter
   {     
     return createSchema(element.getOwnerDocument());
   }
-  
+
+  public XSDSchema resetSchema(Document document)
+  {
+    // The document has changed so the schema should be updated as well.
+    try
+    {
+      IDOMNode domNode = (IDOMNode)document;
+      schema.setDocument(document);
+      schema.setElement(document.getDocumentElement());
+      
+      resourceSet = XSDSchemaImpl.createResourceSet();
+      resourceSet.getAdapterFactories().add(new XSDSchemaLocationResolverAdapterFactory());                
+      resourceSet.getResources().add(schema.eResource());
+ 
+      modelReconcileAdapter = new XSDModelReconcileAdapter(document, schema);
+      domNode.getModel().addModelStateListener(modelReconcileAdapter);
+    }
+    catch (Exception ex)
+    {
+    }
+    return schema;
+  }  
+
   public static XSDModelAdapter lookupOrCreateModelAdapter(Document document)
   {
     XSDModelAdapter adapter = null;
@@ -173,12 +195,11 @@ public class XSDModelAdapter implements INodeAdapter
       if (adapter == null)
       {
         adapter = new XSDModelAdapter();
-        notifier.addAdapter(adapter);        
+        notifier.addAdapter(adapter);
       } 
     }   
     return adapter;
   }
-  
   
   public static XSDSchema lookupOrCreateSchema(final Document document)
   {    
