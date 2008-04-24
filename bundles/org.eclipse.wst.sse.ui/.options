@@ -65,3 +65,6 @@ org.eclipse.wst.sse.ui/debug/reconcilerSpelling=false
 org.eclipse.wst.sse.ui/debug/reconcilerSpelling/showProblems=false
 
 org.eclipse.wst.sse.ui/debug/reconcilerValidators=false
+
+org.eclipse.wst.sse.ui/structuredPresentationReconciler=false
+org.eclipse.wst.sse.ui/structuredPresentationReconciler/time=false

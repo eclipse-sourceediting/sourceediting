@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPositionCategoryException;
 import org.eclipse.jface.text.DefaultPositionUpdater;
@@ -61,7 +62,13 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 public class StructuredPresentationReconciler implements IPresentationReconciler, IPresentationReconcilerExtension {
 
 	/** Prefix of the name of the position category for tracking damage regions. */
-	protected final static String TRACKED_PARTITION= "__reconciler_tracked_partition"; //$NON-NLS-1$
+	final static String TRACKED_PARTITION= "__reconciler_tracked_partition"; //$NON-NLS-1$
+	
+	private final static boolean _trace = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.sse.ui/structuredPresentationReconciler")).booleanValue(); //$NON-NLS-1$
+	private final static boolean _traceTime = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.sse.ui/structuredPresentationReconciler/time")).booleanValue(); //$NON-NLS-1$
+	private static final String TRACE_PREFIX = "StructuredPresentationReconciler: ";
+	private long time0;
+	private long time1;
 
 	/**
 	 * Internal listener class.
@@ -79,17 +86,39 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 		private boolean fCachedRedrawState= true;
 
 		public void newModel(NewDocumentEvent structuredDocumentEvent) {
-			recordDamage(new Region(0, structuredDocumentEvent.getLength()), structuredDocumentEvent.getDocument());
+			if (_trace) {
+				time1 = System.currentTimeMillis();
+			}
+			int length = structuredDocumentEvent.getLength();
+			recordDamage(new Region(0, length), structuredDocumentEvent.getDocument());
+			if (_trace) {
+				System.out.println("\n" + TRACE_PREFIX + "calculated damage for NewDocumentEvent: (length=" + length + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+				System.out.flush();
+			}
+			if (_trace && _traceTime) {
+				System.out.println(TRACE_PREFIX + "calculated damage for NewDocumentEvent in " + (System.currentTimeMillis()-time1) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+				System.out.flush();
+			}
 		}
 
 		public void noChange(NoChangeEvent structuredDocumentEvent) {
+			if (_trace) {
+				time1 = System.currentTimeMillis();
+			}
 			if (structuredDocumentEvent.reason != NoChangeEvent.NO_EVENT) {
 				IRegion damage = new Region(0, structuredDocumentEvent.fDocument.getLength());
 				recordDamage(damage, structuredDocumentEvent.fDocument);
 			}
+			if (_trace && _traceTime) {
+				System.out.println("\n" + TRACE_PREFIX + "calculated damage for NoChangeEvent in " + (System.currentTimeMillis()-time1) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+				System.out.flush();
+			}
 		}
 
 		public void nodesReplaced(StructuredDocumentRegionsReplacedEvent structuredDocumentEvent) {
+			if (_trace) {
+				time1 = System.currentTimeMillis();
+			}
 			IRegion damage;
 			IStructuredDocumentRegionList newDocumentRegions = structuredDocumentEvent.getNewStructuredDocumentRegions();
 			if (newDocumentRegions.getLength() > 0) {
@@ -102,9 +131,20 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 				damage = new Region(structuredDocumentEvent.fOffset, structuredDocumentEvent.getLength());
 			}
 			recordDamage(damage, structuredDocumentEvent.fDocument);
+			if (_trace) {
+				System.out.println("\n" + TRACE_PREFIX + "calculated damage for StructuredDocumentRegionsReplacedEvent: [" + damage.getOffset() + ":" + damage.getLength() + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$
+				System.out.flush();
+			}
+			if (_trace && _traceTime) {
+				System.out.println(TRACE_PREFIX + "calculated damage for StructuredDocumentRegionsReplacedEvent in " + (System.currentTimeMillis()-time1) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+				System.out.flush();
+			}
 		}
 
 		public void regionChanged(RegionChangedEvent structuredDocumentEvent) {
+			if (_trace) {
+				time1 = System.currentTimeMillis();
+			}
 			IStructuredDocumentRegion documentRegion = structuredDocumentEvent.getStructuredDocumentRegion();
 			ITextRegion changedRegion = structuredDocumentEvent.getRegion();
 			int startOffset = documentRegion.getStartOffset(changedRegion);
@@ -112,9 +152,20 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 			IRegion damage = new Region(startOffset, length);
 
 			recordDamage(damage, structuredDocumentEvent.fDocument);
+			if (_trace) {
+				System.out.println("\n" + TRACE_PREFIX + "calculated damage for RegionChangedEvent: [" + damage.getOffset() + ":" + damage.getLength() + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$
+				System.out.flush();
+			}
+			if (_trace && _traceTime) {
+				System.out.println(TRACE_PREFIX + "calculated damage for RegionChangedEvent in " + (System.currentTimeMillis()-time1) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+				System.out.flush();
+			}
 		}
 
 		public void regionsReplaced(RegionsReplacedEvent structuredDocumentEvent) {
+			if (_trace) {
+				time1 = System.currentTimeMillis();
+			}
 			IRegion damage;
 			IStructuredDocumentRegion documentRegion = structuredDocumentEvent.getStructuredDocumentRegion();
 			ITextRegionList newRegions = structuredDocumentEvent.getNewRegions();
@@ -129,6 +180,14 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 				damage = new Region(documentRegion.getStartOffset(), documentRegion.getLength());
 			}
 			recordDamage(damage, structuredDocumentEvent.fDocument);
+			if (_trace) {
+				System.out.println("\n" + TRACE_PREFIX + "calculated damage for RegionsReplacedEvent: [" + damage.getOffset() + ":" + damage.getLength() + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$
+				System.out.flush();
+			}
+			if (_trace && _traceTime) {
+				System.out.println(TRACE_PREFIX + "calculated damage for RegionsReplacedEvent in " + (System.currentTimeMillis()-time1) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+				System.out.flush();
+			}
 		}
 		
 		/*
@@ -158,6 +217,9 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 		 * @see ITextInputListener#inputDocumenChanged(IDocument, IDocument)
 		 */
 		public void inputDocumentChanged(IDocument oldDocument, IDocument newDocument) {
+			if (_trace || _traceTime) {
+				time1 = System.currentTimeMillis();
+			}
 
 			fDocumentChanging= false;
 			fCachedRedrawState= true;
@@ -177,16 +239,28 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 				setDocumentToRepairers(newDocument);
 				processDamage(new Region(0, newDocument.getLength()), newDocument);
 			}
+			if (_trace) {
+				System.out.println(TRACE_PREFIX + "processed damage for inputDocumentChanged in " + (System.currentTimeMillis() - time1) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 		}
 
 		/*
 		 * @see IDocumentPartitioningListener#documentPartitioningChanged(IDocument)
 		 */
 		public void documentPartitioningChanged(IDocument document) {
+			if (_traceTime) {
+				time0 = System.currentTimeMillis();
+			}
 			if (!fDocumentChanging && fCachedRedrawState)
 				processDamage(new Region(0, document.getLength()), document);
 			else
 				fDocumentPartitioningChanged= true;
+			if (_trace) {
+				System.out.println(TRACE_PREFIX + "processed damage for documentPartitioningChanged [full document]"); //$NON-NLS-1$
+			}
+			if (_trace && _traceTime) {
+				System.out.println(TRACE_PREFIX + "processed damage for documentPartitioningChanged in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 		}
 
 		/*
@@ -194,11 +268,20 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 		 * @since 2.0
 		 */
 		public void documentPartitioningChanged(IDocument document, IRegion changedRegion) {
+			if (_traceTime) {
+				time0 = System.currentTimeMillis();
+			}
 			if (!fDocumentChanging && fCachedRedrawState) {
 				processDamage(new Region(changedRegion.getOffset(), changedRegion.getLength()), document);
 			} else {
 				fDocumentPartitioningChanged= true;
 				fChangedDocumentPartitions= changedRegion;
+			}
+			if (_trace) {
+				System.out.println(TRACE_PREFIX + "processed damage for documentPartitioningChanged [" + changedRegion.getOffset() + ":" + changedRegion.getLength() + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			}
+			if (_trace && _traceTime) {
+				System.out.println(TRACE_PREFIX + "processed damage for documentPartitioningChanged in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 
@@ -251,8 +334,16 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 		 */
 		public void textChanged(TextEvent e) {
 			fCachedRedrawState= e.getViewerRedrawState();
-	 		if (!fCachedRedrawState)
-	 			return;
+	 		if (!fCachedRedrawState) {
+				if (_trace) {
+					System.out.println("\n" + TRACE_PREFIX + "returned early from textChanged(TextEvent)"); //$NON-NLS-1$	 //$NON-NLS-2$	
+				}
+				return;
+			}
+			if (_trace) {
+				System.out.println("\n" + TRACE_PREFIX + "entering textChanged(TextEvent)"); //$NON-NLS-1$ //$NON-NLS-2$
+				time0 = System.currentTimeMillis();
+			}
 
 	 		IRegion damage= null;
 	 		IDocument document= null;
@@ -279,13 +370,28 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 		 		document= de.getDocument();
 		 		damage= getDamage(de, true);
 		 	}
+			if(_trace && _traceTime) {
+				System.out.println(TRACE_PREFIX + "calculated simple text damage at " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+				System.out.flush();
+			}
 
-			if (damage != null && document != null)
+			if (damage != null && document != null) {
 				processDamage(damage, document);
+				if(_trace && _traceTime) {
+					System.out.println(TRACE_PREFIX + "processed simple text damage at " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+					System.out.flush();
+				}
+			}
 
 			processRecordedDamages();
+			if(_trace && _traceTime) {
+				System.out.println(TRACE_PREFIX + "processed recorded structured text damage at " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 			fDocumentPartitioningChanged= false;
 			fChangedDocumentPartitions= null;
+			if(_trace) {
+				System.out.println(TRACE_PREFIX + "finished textChanged(TextEvent) in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 		}
 
 		/**
@@ -431,6 +537,9 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 	 * @see IPresentationReconciler#install(ITextViewer)
 	 */
 	public void install(ITextViewer viewer) {
+		if(_trace) {
+			time0 = System.currentTimeMillis();
+		}
 		Assert.isNotNull(viewer);
 
 		fViewer= viewer;
@@ -443,12 +552,18 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 				((IStructuredDocument) document).addDocumentChangedListener(fInternalListener);
 			}
 		}
+		if(_trace) {
+			System.out.println(TRACE_PREFIX + "installed to text viewer in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 	}
 
 	/*
 	 * @see IPresentationReconciler#uninstall()
 	 */
 	public void uninstall() {
+		if(_trace) {
+			time0 = System.currentTimeMillis();
+		}
 		fViewer.removeTextInputListener(fInternalListener);
 
 		IDocument document = null;
@@ -457,6 +572,9 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 		}
 		// Ensure we uninstall all listeners
 		fInternalListener.inputDocumentAboutToBeChanged(fViewer.getDocument(), null);
+		if(_trace) {
+			System.out.println(TRACE_PREFIX + "uninstalled from text viewer in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
 	}
 
 	/*

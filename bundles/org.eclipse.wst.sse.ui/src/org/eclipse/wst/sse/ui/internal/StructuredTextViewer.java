@@ -874,6 +874,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 							if (fHighlighter == null) {
 								fHighlighter = new CompatibleHighlighter();
 							}
+							Logger.log(Logger.INFO_DEBUG, "CompatibleHighlighter installing compatibility for " + providers[j].getClass()); //$NON-NLS-1$
 							providers[j].init(document, fHighlighter);
 							fHighlighter.addProvider(t, providers[j]);
 						}

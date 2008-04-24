@@ -11,6 +11,8 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.ui;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -81,6 +84,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -481,6 +485,13 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			editorInputLabel.setLayoutData(gd);
 			editorInputLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_12 + fTextEditor.getEditorInput().getClass().getName()); //$NON-NLS-1$
 
+			final Text bomLabel = new Text(composite, SWT.SINGLE | SWT.READ_ONLY);
+			gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+			gd.horizontalSpan = 2;
+			bomLabel.setLayoutData(gd);
+			bomLabel.setEnabled(false);
+			bomLabel.setText("Byte Order Mark: ");
+
 			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
 			if (model != null) {
 				Text modelIdLabel = new Text(composite, SWT.SINGLE | SWT.READ_ONLY);
@@ -529,6 +540,8 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 							public void run() {
 								counts.setText(regioncount);
 								counts.setEnabled(true);
+								bomLabel.setText("Byte Order Mark: " + getBOMText(fTextEditor.getEditorInput())); //$NON-NLS-1$
+								bomLabel.setEnabled(true);
 							}
 						});
 						return Status.OK_STATUS;
@@ -608,6 +621,52 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			}
 
 			return composite;
+		}
+
+		/**
+		 * @param editorInput
+		 * @return
+		 */
+		private String getBOMText(IEditorInput editorInput) {
+			IFile file = (IFile) editorInput.getAdapter(IFile.class);
+			String detectedBOM = "none"; //$NON-NLS-1$
+			if (file != null) {
+				InputStream s = null;
+				try {
+					s = file.getContents(true);
+					if (s != null) {
+						int b1 = s.read() & 0xFF;
+						int b2 = s.read() & 0xFF;
+						if (b1 == 0xFE && b2 == 0xFF) {
+							detectedBOM = "FE FF (UTF-16BE)"; //$NON-NLS-1$
+						}
+						else if (b1 == 0xFF && b2 == 0xFE) {
+							detectedBOM = "FF FE (UTF-16LE)"; //$NON-NLS-1$
+						}
+						else {
+							int b3 = s.read() & 0xFF;
+							if (b1 == 0xEF && b2 == 0xBB && b3 == 0xBF) {
+								detectedBOM = "EF BB BF (UTF-8)"; //$NON-NLS-1$
+							}
+						}
+					}
+				}
+				catch (Exception e) {
+					detectedBOM = e.getMessage();
+				}
+				finally {
+					if (s != null)
+						try {
+							s.close();
+						}
+						catch (IOException e) {
+						}
+				}
+			}
+			else {
+				detectedBOM = "N/A"; //$NON-NLS-1$
+			}
+			return detectedBOM;
 		}
 
 		private List getIndexedRegions(ITextSelection textSelection) {

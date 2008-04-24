@@ -15,9 +15,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
+import org.eclipse.wst.sse.ui.internal.Logger;
 
 public class ReconcilerHighlighter {
 
@@ -29,6 +31,9 @@ public class ReconcilerHighlighter {
 
 	private ITextViewer fTextViewer = null;
 
+	private final static boolean _trace = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.sse.ui/structuredPresentationReconciler")).booleanValue(); //$NON-NLS-1$
+	private final static String TRACE_PREFIX = "StructuredPresentationReconciler: "; //$NON-NLS-1$
+	private long time0;
 
 	/**
 	 * instance for older LineStyleProviders loaded by extension point,
@@ -37,8 +42,15 @@ public class ReconcilerHighlighter {
 	private CompatibleHighlighter fCompatibleHighlighter = null;
 
 	public void refreshDisplay() {
+		if (_trace) {
+			time0 = System.currentTimeMillis();
+		}
 		if (fTextViewer != null)
 			fTextViewer.invalidateTextPresentation();
+		if (_trace) {
+			System.out.println(TRACE_PREFIX + "ReconcilerHighlighter refreshDisplay took " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.flush();
+		}
 	}
 
 	/**
@@ -78,6 +90,7 @@ public class ReconcilerHighlighter {
 							((AbstractLineStyleProvider) result).init((IStructuredDocument) fTextViewer.getDocument(), this);
 						}
 						else {
+							Logger.log(Logger.INFO_DEBUG, "CompatibleHighlighter installing compatibility for " + result.getClass()); //$NON-NLS-1$
 							if (fCompatibleHighlighter == null) {
 								fCompatibleHighlighter = new CompatibleHighlighter();
 								fCompatibleHighlighter.install(fTextViewer);
