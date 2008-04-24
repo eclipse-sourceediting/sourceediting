@@ -3,6 +3,8 @@ package org.eclipse.wst.xsl.internal.core.xpath.tests;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.wst.xml.xpath.core.internal.model.XPath.XPath;
+import org.eclipse.wst.xml.xpath.core.internal.model.XPath.Axis.Axis;
+import org.eclipse.wst.xml.xpath.core.internal.model.XPath.Axis.impl.AxisFactoryImpl;
 import org.eclipse.wst.xml.xpath.core.internal.model.XPath.DataTypes.DataTypes;
 import org.eclipse.wst.xml.xpath.core.internal.model.XPath.DataTypes.Variable;
 import org.eclipse.wst.xml.xpath.core.internal.model.XPath.DataTypes.impl.DataTypesFactoryImpl;
@@ -63,14 +65,57 @@ public class TestXPathModel extends TestCase {
 		function.setReturns(DataTypes.BOOLEAN);
 		
 		Argument arg = funcFactory.createArgument();
-		arg.setName(DataTypes.STRING.getName());
+		arg.setDataType(DataTypes.STRING.getName());
 		arg.setRequired(Occurrence.YES);
 		
 		Argument[] args = { arg };
 		function.setArguments(args);
 		
 		assertEquals("Arguments not equal to 1", 1, function.getArguments().length);
+		arg = function.getArguments(0);
+		assertEquals("String argument not found.", DataTypes.STRING.getName(), arg.getDataType()); 
+	}
+	
+	public void testFunctionWithTwoRequiredOneOptional() {
+		FunctionFactory funcFactory = new FunctionFactoryImpl();
+		Function function = funcFactory.createFunction();
+		function.setName("concat");
+		function.setReturns(DataTypes.STRING);
+		
+		Argument arg = funcFactory.createArgument();
+		arg.setDataType(DataTypes.STRING.getName());
+		arg.setRequired(Occurrence.YES);
+		
+		Argument arg2 = funcFactory.createArgument();
+		arg2.setDataType(DataTypes.STRING.getName());
+		arg2.setRequired(Occurrence.YES);
+		
+		Argument arg3 = funcFactory.createArgument();
+		arg3.setDataType(DataTypes.STRING.getName());
+		arg3.setRequired(Occurrence.NO);
+		
+		
+		Argument[] args = { arg, arg2, arg3 };
+		function.setArguments(args);
+		
+		assertEquals("Arguments not equal to 3", 3, function.getArguments().length);
+		arg = function.getArguments(0);
+		assertEquals("Arg1 String argument not found.", DataTypes.STRING.getName(), arg.getDataType());
+		assertEquals("Should be required.", Occurrence.YES, arg.getRequired());
+		
+		arg = function.getArguments(1);
+		assertEquals("Arg2 String argument not found.", DataTypes.STRING.getName(), arg.getDataType());
+		assertEquals("Should be required.", Occurrence.YES, arg.getRequired());
+		
+		arg = function.getArguments(2);
+		assertEquals("Arg3 String argument not found.", DataTypes.STRING.getName(), arg.getDataType());
+		assertEquals("Should be optional.", Occurrence.NO, arg.getRequired());
 	}
 
+	public void testCreateAXIS() throws Exception {
+		Axis axis = new AxisFactoryImpl().createAxis();
+		axis.setName("following-sibling");
+		assertEquals("following-sibling", axis.getName());
+	}
 	
 }
