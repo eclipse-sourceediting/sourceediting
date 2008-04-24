@@ -46,5 +46,5 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.wst.validation;bundle-version="[1.2.0,2.0.0)";resolution:=optional,
  com.ibm.icu;bundle-version="[3.8.1,4.0.0)",
  org.eclipse.core.expressions;bundle-version="[3.4.0,4.0.0)"
-Bundle-ActivationPolicy: lazy
+Bundle-ActivationPolicy: lazy;exclude:="org.eclipse.wst.sse.core.internal.propertytester"
 Bundle-RequiredExecutionEnvironment: J2SE-1.4
