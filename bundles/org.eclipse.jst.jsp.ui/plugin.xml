@@ -981,4 +981,31 @@
 	       <separator name="jspRefactorBegin" visible="false"></separator>
 		</menuContribution>
 	</extension>
+	
+	<!-- Enable the FormatHandler for JSP Content Type -->
+	<extension point="org.eclipse.ui.handlers">
+		<handler 
+			class="org.eclipse.wst.sse.ui.internal.handlers.FormatHandler"
+			commandId="org.eclipse.wst.sse.ui.format">
+			<activeWhen>
+				<reference definitionId="org.eclipse.wst.jsp.ui.jspContentType.definition"></reference>
+			</activeWhen>
+			<enabledWhen>
+				<reference definitionId="org.eclipse.wst.jsp.ui.jspContentType.definition"></reference>
+			</enabledWhen>
+		</handler>
+	</extension>
+	
+	<!-- Set up a definition for JSP Content Types -->
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.jsp.ui.jspContentType.definition">
+			<iterate ifEmpty="false">
+				<adapt type="org.eclipse.core.resources.IFile">
+					<test property="org.eclipse.wst.sse.core.resources.contentTypeId"
+						value="org.eclipse.jst.jsp.core.jspsource"/>
+				</adapt>
+			</iterate>
+		</definition>
+	</extension>
+	
 </plugin>

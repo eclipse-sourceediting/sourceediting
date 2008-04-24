@@ -504,6 +504,7 @@
 		    </command>
 			<separator name="matchingEnd" visible="false"></separator>
 		</menuContribution>
+		<!-- Contribute a Source menu for containers -->
      <menuContribution
            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
         <menu
@@ -513,20 +514,8 @@
 	              commandId="org.eclipse.wst.sse.ui.format"
 	              id="sourceFormat"
 	              style="push">
-	           <visibleWhen checkEnabled="false">
-	              <or>
-					<iterate ifEmpty="false">
-						<adapt
-							type="org.eclipse.core.resources.IContainer">
-						</adapt>
-					</iterate>
-					<iterate ifEmpty="false">
-						<adapt
-							type="org.eclipse.core.resources.IFile">
-						</adapt>
-					</iterate>
-				 </or>	
-	           </visibleWhen>
+	           <!-- Check to make sure that the handler is enabled before making visible -->
+				<visibleWhen checkEnabled="true" />
 	        </command>
         </menu>
      </menuContribution>
@@ -694,13 +683,29 @@
 	          name="%command.format.document.name">
 	    </command>
 	</extension>
-	<extension
-       point="org.eclipse.ui.handlers">
-       <handler 
-             class="org.eclipse.wst.sse.ui.internal.handlers.FormatHandler"
-             commandId="org.eclipse.wst.sse.ui.format">
-       </handler>
+	
+	<!-- Enable the FormatHandler for Containers -->
+	<extension point="org.eclipse.ui.handlers">
+		<handler 
+			class="org.eclipse.wst.sse.ui.internal.handlers.FormatHandler"
+			commandId="org.eclipse.wst.sse.ui.format">
+			<activeWhen>
+				<iterate ifEmpty="false">
+					<adapt
+						type="org.eclipse.core.resources.IContainer">
+					</adapt>
+				</iterate>
+			</activeWhen>
+			<enabledWhen>
+				<iterate ifEmpty="false">
+					<adapt
+						type="org.eclipse.core.resources.IContainer">
+					</adapt>
+				</iterate>
+			</enabledWhen>
+		</handler>
 	</extension>
+	
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.eclipse.wst.sse.ui.sseActiveContext.definition">
             <with variable="activeContexts">

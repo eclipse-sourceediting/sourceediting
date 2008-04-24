@@ -564,4 +564,31 @@
             </with>
 		</definition>
 	</extension>
+	
+	<!-- Enable the FormatHandler for HTML Content Type -->
+	<extension point="org.eclipse.ui.handlers">
+		<handler 
+			class="org.eclipse.wst.sse.ui.internal.handlers.FormatHandler"
+			commandId="org.eclipse.wst.sse.ui.format">
+			<activeWhen>
+				<reference definitionId="org.eclipse.wst.html.ui.htmlContentType.definition"></reference>
+			</activeWhen>
+			<enabledWhen>
+				<reference definitionId="org.eclipse.wst.html.ui.htmlContentType.definition"></reference>
+			</enabledWhen>
+		</handler>
+	</extension>
+	
+	<!-- Set up a definition for HTML Content Types -->
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.html.ui.htmlContentType.definition">
+			<iterate ifEmpty="false">
+				<adapt type="org.eclipse.core.resources.IFile">
+					<test property="org.eclipse.wst.sse.core.resources.contentTypeId"
+						value="org.eclipse.wst.html.core.htmlsource"/>
+				</adapt>
+			</iterate>
+		</definition>
+	</extension>
+	
 </plugin>
