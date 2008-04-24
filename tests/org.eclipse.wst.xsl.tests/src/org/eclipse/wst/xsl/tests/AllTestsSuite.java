@@ -12,6 +12,7 @@ package org.eclipse.wst.xsl.tests;
 
 import junit.framework.TestSuite;
 
+import org.eclipse.wst.xml.xpath.core.tests.XPathCoreTests;
 import org.eclipse.wst.xsl.launching.tests.LaunchingSuite;
 import org.eclipse.wst.xsl.ui.tests.XSLUITestSuite;
 import org.eclipse.wst.xsl.core.tests.XSLCoreTestSuite;
@@ -28,6 +29,7 @@ public class AllTestsSuite extends TestSuite {
 		addTest(LaunchingSuite.suite());
 		addTest(XSLUITestSuite.suite());
 		addTest(XSLCoreTestSuite.suite());
+		addTest(XPathCoreTests.suite());
 	}
 
 	/**
