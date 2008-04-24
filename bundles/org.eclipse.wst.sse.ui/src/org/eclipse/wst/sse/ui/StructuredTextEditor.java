@@ -3413,15 +3413,10 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	protected SourceViewerDecorationSupport getSourceViewerDecorationSupport(ISourceViewer viewer) {
-		/*
-		 * Need to override this method to use special
-		 * StructuredSourceViewerDecorationSupport. See
-		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=201928
-		 */
-		if (fSourceViewerDecorationSupport == null) {
-			fSourceViewerDecorationSupport = new StructuredSourceViewerDecorationSupport(viewer, getOverviewRuler(), getAnnotationAccess(), getSharedColors());
-			configureSourceViewerDecorationSupport(fSourceViewerDecorationSupport);
-		}
-		return fSourceViewerDecorationSupport;
+		/* Removed workaround for Bug [206913] source annotations are not painting in source editors.
+		 * With the new presentation reconciler, we no longer need to force the painting. This
+		 * actually caused Bug [219776] Wrong annotation display on macs. We forced the
+		 * Squiggles strategy, even when the native problem underline was specified for annotations */
+		return super.getSourceViewerDecorationSupport(viewer);
 	}
 }
