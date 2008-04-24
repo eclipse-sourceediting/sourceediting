@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
  "concept.dtd">
 <concept id="cxmlsced" xml:lang="en-us">
@@ -8,18 +8,18 @@
 <searchtitle>XML schema editor</searchtitle>
 </titlealts>
 <shortdesc>This product provides an XML schema editor for creating, viewing,
-and validating XML schemas. XML schemas are a formal specification
-of element names that indicates which elements are allowed in an XML file,
-and in which combinations. </shortdesc>
+and validating XML schemas. XML schemas are a formal specification of element
+names that indicates which elements are allowed in an XML file, and in which
+combinations. </shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML schema editor<indexterm>overview</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <conbody>
-<p>A schema is functionally equivalent to a DTD, but is written in XML; a
-schema also provides for extended functionality such as data typing, inheritance,
+<p>A schema is functionally equivalent to a DTD, but is written in XML. A
+schema also provides extended functionality such as data typing, inheritance,
 and presentation rules.</p>
-<p>For more information on XML schema, refer to:</p>
+<p>For more information on XML schema, see the following:</p>
 <ul>
 <li> <xref format="html" href="http://www.w3.org/TR/xmlschema-0/" scope="external">http://www.w3.org/TR/xmlschema-0/</xref> </li>
 <li> <xref format="html" href="http://www.w3.org/TR/xmlschema-1/" scope="external">http://www.w3.org/TR/xmlschema-1/</xref> </li>
@@ -49,8 +49,9 @@ for the schema are available. They are in the bottom right corner:</p><ul>
 <li> (Source view only) <uicontrol>Smart Insert</uicontrol> or <uicontrol>Overwrite</uicontrol>.
 To toggle between these modes, press the <uicontrol>Insert</uicontrol> button
 on your keyboard.</li>
-<li> <uicontrol>Line</uicontrol> and <uicontrol>column</uicontrol> number. </li>
+<li> Line and column number (displayed in the format <?Pub Caret?><userinput>column
+# : line #</userinput>)</li>
 </ul></section>
 </conbody>
 </concept>
-<?Pub *0000002883?>
+<?Pub *0000002906?>

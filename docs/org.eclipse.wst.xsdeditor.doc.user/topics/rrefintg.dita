@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE reference  PUBLIC "-//OASIS//DTD DITA Reference//EN" "reference.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN"
+ "reference.dtd">
 <reference id="rrefintg" xml:lang="en-us">
 <title>Referential integrity in the XML schema editor</title>
 <titlealts>
@@ -20,7 +21,7 @@ and reference a global element. <p>For example:<codeblock>&lt;schema>
  &lt;element name="comment" type="string">
 	&lt;complexType name="Items">
 		&lt;sequence>
-				&lt;element ref="comment">
+<?Pub Caret?>				&lt;element ref="comment">
 		 &lt;/sequence>
 	 &lt;/complexType>
 &lt;/schema></codeblock></p><p>If the global element (comment) was deleted,
@@ -34,11 +35,12 @@ from the content model.</li>
 <section><title>Deleting included and imported schema</title><p>If an included
 or imported schema is deleted, you must manually reset the following type
 references as appropriate: <ul>
-<li>Global element and element's type</li>
-<li>Attribute type</li>
-<li>Complex type derivation</li>
-<li>Simple type derivation </li>
+<li>Global element and element's type.</li>
+<li>Attribute type.</li>
+<li>Complex type derivation.</li>
+<li>Simple type derivation.</li>
 </ul>They will not automatically be reset if an included or imported schema
 is deleted.</p></section>
 </refbody>
 </reference>
+<?Pub *0000002046?>

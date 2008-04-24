@@ -2,8 +2,8 @@
 <html lang="en-us" xml:lang="en-us">
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<meta name="copyright" content="Copyright (c) 2000, 2006 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
-<meta name="DC.rights.owner" content="(C) Copyright 2000, 2006" />
+<meta name="copyright" content="Copyright (c) 2000, 2008 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
+<meta name="DC.rights.owner" content="(C) Copyright 2000, 2008" />
 <meta content="public" name="security" />
 <meta content="index,follow" name="Robots" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
@@ -11,8 +11,8 @@
 <meta name="DC.Title" content="Adding content models" />
 <meta name="abstract" content="A content model is the representation of any data that can be contained inside an element, global element, complex type, or group. It is a formal description of the structure and permissible content of an element, global element, complex type, or group, which may be used to validate a document instance." />
 <meta name="description" content="A content model is the representation of any data that can be contained inside an element, global element, complex type, or group. It is a formal description of the structure and permissible content of an element, global element, complex type, or group, which may be used to validate a document instance." />
-<meta content="XML schema editor, adding, content models, XML schema files, content models, XML schema files" name="DC.subject" />
-<meta content="XML schema editor, adding, content models, XML schema files, content models, XML schema files" name="keywords" />
+<meta content="XML schema editor, content models, XML schema files" name="DC.subject" />
+<meta content="XML schema editor, content models, XML schema files" name="keywords" />
 <meta scheme="URI" name="DC.Relation" content="../topics/taddanye.html" />
 <meta scheme="URI" name="DC.Relation" content="../topics/taddelm.html" />
 <meta scheme="URI" name="DC.Relation" content="../topics/taddelmr.html" />
@@ -55,8 +55,8 @@ in the content model can appear more than once.</li>
 <p>The following instructions were written for the Resource perspective,
 but they will also work in many other perspectives.</p>
 <p>To add a content
-model to an element, global element, complex type, or group, follow these
-steps:</p>
+model to an element, global element, complex type, or group, complete the
+following steps:</p>
 </div>
 
 <ol>
@@ -76,26 +76,26 @@ cannot do both.</li>
 <li>Your group is automatically created with a sequence content model
 child. Expand it in the Outline view to see it and select it. In the Properties
 view, you can select to change it to a <span class="uicontrol">choice</span> or <span class="uicontrol">all</span> content
-model by selecting these options from the <span class="uicontrol">Kind</span> menu.</li>
+model by selecting these options from the <span class="uicontrol">Kind</span> drop-down.</li>
 
 </ul>
 
 </li>
 
-<li class="stepexpand"><span>(Optional) Select the appropriate value in the <span class="uicontrol">MinOccurs</span> field.</span>
- This is the minimum number of times the content model must appear. If
-you want the content model to be optional, select <span class="uicontrol">0</span>.
-Otherwise, select <span class="uicontrol">1</span>. </li>
+<li class="stepexpand"><strong>Optional: </strong><span>Select the appropriate value in the <span class="uicontrol">Minimum
+Occurrence</span> field.</span> This is the minimum
+number of times the content model must appear. If you want the content model
+to be optional, select <span class="uicontrol">0</span>. Otherwise, select <span class="uicontrol">1</span>. 
+</li>
 
-<li class="stepexpand"><span>(Optional) Select the appropriate value in the <span class="uicontrol">MaxOccurs</span> field.</span>
- This is the maximum number of times a content model can appear. You
-can select <span class="uicontrol">unbounded</span> to indicate there is no maximum
-number of occurrences.</li>
+<li class="stepexpand"><strong>Optional: </strong><span>Select the appropriate value in the <span class="uicontrol">Maximum
+Occurrence</span> field.</span> This is the maximum number of times
+a content model can appear. You can select <span class="uicontrol">unbounded</span> to
+indicate there is no maximum number of occurrences.</li>
 
 <li class="stepexpand"><span>Click the <span class="uicontrol">Documentation</span> tab if you want
 to provide any information about this content model.</span> The <span class="uicontrol">Documentation</span> page
-is used for human readable material, such as a description.
-</li>
+is used for human readable material, such as a description.</li>
 
 <li class="stepexpand"><span>Click the <span class="uicontrol">Extensions</span> tab if you want to
 add application information elements to your annotations of schema components.</span>
@@ -104,7 +104,7 @@ schema and add XML content to your annotations.</li>
 
 </ol>
 
-<div class="section"><p>You can add the following items to a content object model. </p>
+<div class="section"><p>You can add the following items to a content object model: </p>
 <ul>
 <li>Another content model.</li>
 

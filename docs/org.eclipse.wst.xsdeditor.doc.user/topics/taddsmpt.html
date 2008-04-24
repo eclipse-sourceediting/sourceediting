@@ -2,8 +2,8 @@
 <html lang="en-us" xml:lang="en-us">
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<meta name="copyright" content="Copyright (c) 2000, 2006 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
-<meta name="DC.rights.owner" content="(C) Copyright 2000, 2006" />
+<meta name="copyright" content="Copyright (c) 2000, 2008 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
+<meta name="DC.rights.owner" content="(C) Copyright 2000, 2008" />
 <meta content="public" name="security" />
 <meta content="index,follow" name="Robots" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
@@ -11,8 +11,8 @@
 <meta name="DC.Title" content="Adding simple types" />
 <meta name="abstract" content="Simple types are used to create derived datatypes. They provide a set of constraints on the value space (a set of values) and the lexical space (a set of valid literals) of a datatype." />
 <meta name="description" content="Simple types are used to create derived datatypes. They provide a set of constraints on the value space (a set of values) and the lexical space (a set of valid literals) of a datatype." />
-<meta content="XML schema editor, adding, simple types, XML schema files" name="DC.subject" />
-<meta content="XML schema editor, adding, simple types, XML schema files" name="keywords" />
+<meta content="XML schema editor, simple types, XML schema files" name="DC.subject" />
+<meta content="XML schema editor, simple types, XML schema files" name="keywords" />
 <meta scheme="URI" name="DC.Relation" content="../topics/taddreg.html" />
 <meta content="XHTML" name="DC.Format" />
 <meta content="taddsmpt" name="DC.Identifier" />
@@ -28,9 +28,9 @@
 
 
 
-<div><p>Simple types are used to create derived datatypes.
-They provide a set of constraints on the value space (a set of values) and
-the lexical space (a set of valid literals) of a datatype.</p>
+<div><p>Simple types are used to create derived datatypes. They provide
+a set of constraints on the value space (a set of values) and the lexical
+space (a set of valid literals) of a datatype.</p>
 
 <div class="section"><p>A simple type cannot have element content and cannot carry attributes.
 Elements that contain numbers (and strings, and dates, and so on) but do not
@@ -38,7 +38,7 @@ contain any sub-elements have a simple type.</p>
 <p>The following instructions
 were written for the Resource perspective, but they will also work in many
 other perspectives.</p>
-<p>To add a simple type:</p>
+<p>To add a simple type, complete the following steps:</p>
 </div>
 
 <ol>
@@ -57,14 +57,14 @@ Simple Type</span>.</span></li>
 
 <li class="stepexpand"><span>You can select the following options from the <span class="uicontrol">Variety</span> list:</span>
 <ul>
-<li><span class="uicontrol">atomic</span>. Atomic types are all the simple types
-built into the XML schema language.</li>
+<li><span class="uicontrol">atomic</span>: atomic types are all the
+simple types built into the XML schema language.</li>
 
-<li><span class="uicontrol">list</span>. List types are comprised of sequences
+<li><span class="uicontrol">list</span>: list types are comprised of sequences
 of atomic types. They have values that are comprised of finite-length sequences
 of atomic values. </li>
 
-<li><span class="uicontrol">union</span>. A union type enables an element or attribute
+<li><span class="uicontrol">union</span>: union types enable an element or attribute
 value to be one or more instances of one type drawn from the union of multiple
 atomic and list types.</li>
 
@@ -72,49 +72,29 @@ atomic and list types.</li>
 
 </li>
 
-<li class="stepexpand"><span>If you selected <span class="uicontrol">atomic</span> from the <span class="uicontrol">Variety</span> list,
-click <span class="uicontrol">Browse</span> <img src="../images/Browse.gif" alt="This&#10;graphic is the Browse button" /> next to the <span class="uicontrol">Base type</span> field
+<li class="stepexpand"><span>If you selected <span class="uicontrol">atomic</span> or <span class="uicontrol">list</span> from
+the <span class="uicontrol">Variety</span> drop-down, click <span class="uicontrol">Browse</span> <img src="../images/Browse.gif" alt="This graphic is the Browse button" /> next
+to the <span class="uicontrol">Base type</span> or <span class="uicontrol">Item type</span> field
 to specify a base type for the simple type.</span> The Set Type dialog
 box lists all built-in and user-defined types currently available. You can
 change the <span class="uicontrol">Scope</span> of the list by selecting one of the
 following options:<ul>
-<li><span class="uicontrol">Workspace</span>. Lists all of the types available in
+<li><span class="uicontrol">Workspace</span>: lists all of the types available in
 your workspace. </li>
 
-<li><span class="uicontrol">Enclosing Project</span>. Lists all of the types available
+<li><span class="uicontrol">Enclosing Project</span>: lists all of the types available
 in the project that contains your file. </li>
 
-<li>(Default) <span class="uicontrol">Current Resource</span>. List all of the types
+<li>(Default) <span class="uicontrol">Current Resource</span>: lists all of the types
 available in your current file.</li>
 
-<li><span class="uicontrol">Working Sets</span>. List all the types available within
+<li><span class="uicontrol">Working Sets</span>: lists all the types available within
 the selected working set.</li>
 
 </ul>
 </li>
 
-<li class="stepexpand"><span>If you selected <span class="uicontrol">list</span> from the <span class="uicontrol">Variety</span> list,
-click <span class="uicontrol">Browse</span> <img src="../images/Browse.gif" alt="This&#10;graphic is the Browse button" /> next to the <span class="uicontrol">Item type</span> field
-to specify a item type for the simple type.</span> The Set Type dialog
-box lists all built-in and user-defined types currently available. You can
-change the <span class="uicontrol">Scope</span> of the list by selecting one of the
-following options:<ul>
-<li><span class="uicontrol">Workspace</span>. Lists all of the types available in
-your workspace. </li>
-
-<li><span class="uicontrol">Enclosing Project</span>. Lists all of the types available
-in the project that contains your file. </li>
-
-<li>(Default) <span class="uicontrol">Current Resource</span>. List all of the types
-available in your current file.</li>
-
-<li><span class="uicontrol">Working Sets</span>. List all the types available within
-the selected working set.</li>
-
-</ul>
-</li>
-
-<li class="stepexpand"><span>If you selected <span class="uicontrol">union</span> from the <span class="uicontrol">Variety</span> list,
+<li class="stepexpand"><span>If you selected <span class="uicontrol">union</span> from the <span class="uicontrol">Variety</span> drop-down,
 click <span class="uicontrol">Browse</span> <img src="../images/Browse.gif" alt="This&#10;graphic is the Browse button" /> next to the <span class="uicontrol">Member types</span> field
 to specify the member types for the simple type.</span> You can select
 to add both <span class="uicontrol">Built-in simple types</span> and <span class="uicontrol">User-defined
@@ -132,10 +112,8 @@ at a time:</span> <ul>
 values</span>, select <span class="uicontrol">Enumerations</span> and click <span class="uicontrol">Add</span> and
 specify a value for the enumeration.</li>
 
-<li>To add several enumerations at one time, follow these steps:<ol type="i">
-<li>Select <span class="uicontrol">Enumerations</span>.</li>
-
-<li>Click <span class="uicontrol">Add</span>.</li>
+<li>To add several enumerations at one time:<ol type="i">
+<li>Select <span class="uicontrol">Enumerations</span> and click <span class="uicontrol">Add</span>.</li>
 
 <li>Enter the value of each enumeration. Each value must be separated by the <span class="uicontrol">Delimiter
 character</span>. For example: <samp class="codeph">First, Second</samp> will create
@@ -160,9 +138,7 @@ appear in the Properties view.</li>
 values.</span> For example, you could restrict the field to only accept
 input which follows the pattern "five digits followed by two upper-case ASCII
 letters". To set a pattern constraint:<ol type="i">
-<li>Select <span class="uicontrol">Patterns</span>.</li>
-
-<li>Click <span class="uicontrol">Add</span>.</li>
+<li>Select <span class="uicontrol">Patterns</span> and click <span class="uicontrol">Add</span>.</li>
 
 <li>Create the regular expression pattern you wish to use as your constraint
 using the <span class="uicontrol">Regular Expression</span> wizard.</li>

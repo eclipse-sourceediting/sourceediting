@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <?Pub Inc?>
@@ -18,7 +18,7 @@ such as its namespace and prefix.</shortdesc>
 <taskbody>
 <context><p>The following instructions were written for the Resource perspective,
 but they will also work in many other perspectives.</p><p>To edit an XML schema's
-properties follow these steps:</p></context>
+properties, complete the following steps:</p></context>
 <steps>
 <step><cmd>Create a new XML schema or double-click an existing schema in the
 Navigator view.</cmd><info> It will automatically open in the XML schema editor.</info>
@@ -36,7 +36,7 @@ to associate with all the elements and type definitions in a schema.</info>
 </step>
 <step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
 to provide any information about this XML schema.</cmd><info>The <uicontrol>Documentation</uicontrol> page
-is used for human readable material, such as a description.</info></step>
+is used for human readable material, such as a description.</info></step><?Pub Caret?>
 <step><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you want to
 add application information elements to your annotations of schema components.</cmd>
 <info>The <uicontrol>Extensions</uicontrol> page allows you to specify the
@@ -44,4 +44,4 @@ schema and add XML content to your annotations.</info></step>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000002389?>
+<?Pub *0000002345?>

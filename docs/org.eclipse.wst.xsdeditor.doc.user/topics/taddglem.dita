@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <?Pub Inc?>
@@ -19,7 +19,7 @@ model.</shortdesc>
 <taskbody>
 <context><p>The following instructions were written for the Resource perspective,
 but they will also work in many other perspectives.</p><p>To add a global
-element:</p></context>
+element, complete the following steps:</p></context>
 <steps>
 <step><cmd>Open your XML schema in the XML schema editor.</cmd></step>
 <step><cmd>In the Outline view, select your schema.</cmd><info>The entire
@@ -36,122 +36,44 @@ the list for more options. </p><p>The <uicontrol>Set Type</uicontrol> dialog
 box appears, and lists all built-in and user-defined types currently available.
 You can change the <uicontrol>Scope</uicontrol> of the list by selecting one
 of the following options:<ul>
-<li><uicontrol>Workspace</uicontrol>. Lists all of the types available in
+<li><uicontrol>Workspace</uicontrol>: lists all of the types available in
 your workspace. </li>
-<li><uicontrol>Enclosing Project</uicontrol>. Lists all of the types available
+<li><uicontrol>Enclosing Project</uicontrol>: lists all of the types available
 in the project that contains your file. </li>
-<li>(Default) <uicontrol>Current Resource</uicontrol>. List all of the types
+<li>(Default) <uicontrol>Current Resource</uicontrol>: list all of the types
 available in your current file.</li>
-<li><uicontrol>Working Sets</uicontrol>. List all the types available within
+<li><uicontrol>Working Sets</uicontrol>: list all the types available within
 the selected working set.</li>
 </ul></p><p>Select the type you want in the type list, then click <uicontrol>OK</uicontrol>. </p></info>
 </step>
-<step><cmd>(Optional) Click the <uicontrol>Other</uicontrol> tab.</cmd><info>In
-this page, you can specify the following various values for the global element: </info>
+<step><cmd>Click the <uicontrol>Advanced</uicontrol> tab.</cmd><info>In this
+page, you can specify the following various values for the global element: </info>
 <choices>
-<choice><uicontrol>abstract</uicontrol>. Click <b>true </b>if you want the
+<choice><uicontrol>Abstract</uicontrol>: click <b>true</b> if you want the
 global element to be abstract. When a global element is declared to be abstract,
 it cannot be used in an instance document. Instead, a member of that global
 element's substitution group must appear in the instance document.</choice>
-<choice><uicontrol>block</uicontrol>. This field determines whether the global
-element may be replaced by an element derived from it.</choice>
-<choice><uicontrol>final</uicontrol>. This field determines whether this global
-element may be derived from.</choice>
-<choice><uicontrol>fixed/default</uicontrol>. Click <uicontrol>Browse</uicontrol> and
-select <uicontrol>Fixed</uicontrol> or <uicontrol>Default</uicontrol> and
-specify an appropriate value. If you select <b>Fixed</b>, the global element
-has a fixed value, which cannot be changed. If you select <b>Default</b>,
-the element has a default value.</choice>
-<choice><uicontrol>form</uicontrol>. Use this field to indicate if the appearance
-of this global element in an instance of the XML schema (an XML file associated
-with the XML schema) must be qualified by a namespace.</choice>
-<choice><uicontrol>nillable</uicontrol>. Select <b>true</b> if you do not
-want the global element to be able to have any child elements, only attributes. </choice>
-<choice><uicontrol>substitutionGroup</uicontrol>. A substitution group allows
+<choice><uicontrol>Block</uicontrol>: determines whether the global element
+may be replaced by an element derived from it.</choice>
+<choice><uicontrol>Final</uicontrol>: determines whether this global element
+may be derived from.</choice>
+<choice><uicontrol>Substitution Group</uicontrol>: a substitution group allows
 elements to be substituted for other elements.</choice>
+<choice><uicontrol>Nillable</uicontrol>: select <b>true</b> if you do not
+want the global element to be able to have any child elements, only attributes. </choice>
 </choices>
 </step>
-<step><cmd>Click the <uicontrol>Attributes</uicontrol> tab.</cmd><info>You
-can use this page to add attributes, attribute references, attributes group
-references, and <codeph>any</codeph> attributes to your global element.</info>
-</step>
-<step><cmd>An attribute associates an attribute name with a specific type
-and value. To add an attribute, right-click in the Attributes page, and click <uicontrol>Add
-Attribute</uicontrol>.</cmd><info>You can specify the following values for
-an attribute:</info>
-<choices>
-<choice><uicontrol>fixed/default</uicontrol>. Click <uicontrol>Browse</uicontrol> and
-select <uicontrol>Fixed</uicontrol> or <uicontrol>Default</uicontrol> and
-specify an appropriate value. If you select <b>Fixed</b>, the attribute has
-a fixed value, which cannot be changed. If you select <b>Default</b>, the
-attribute has a default value.</choice>
-<choice><uicontrol>form</uicontrol>. Use this field to indicate if the appearance
-of this attribute in an instance of the XML schema must be qualified by a
-namespace.</choice>
-<choice><uicontrol>name</uicontrol>. Enter the name of the attribute.</choice>
-<choice><uicontrol>type</uicontrol>. Click <uicontrol>Browse</uicontrol> and
-select the type of the attribute. </choice>
-<choice><uicontrol>use</uicontrol>. This field indicates how an attribute
-can be used in an instance document. If you select optional, the attribute
-can appear once, but it does not have to. If you select required, the attribute
-must appear once. If you select prohibited, the attribute must not appear. <b>Note</b>:
-If you selected <uicontrol>Default</uicontrol>, you must select <b>optional</b> in
-this field, otherwise the default value will not be valid.</choice>
-</choices>
-</step>
-<step><cmd>An attribute reference provides a reference to a global attribute.
-To add an attribute reference, right-click in the Attributes page, and click <uicontrol>Add
-Attribute Ref</uicontrol>.</cmd><info>A declaration that references a global
-attribute enables the referenced attribute to appear in the instance document
-in the context of the referencing declaration. The menu option to add an attribute
-reference only appears if there are global attributes defined elsewhere in
-the document. Select the reference, then select the global attribute you want
-it to reference from the <uicontrol>ref</uicontrol> list.</info></step>
-<step><cmd>An attribute group reference provides a reference to an attribute
-group. To add an attribute group reference, right-click in the Attributes
-page, and click <uicontrol>Add Attribute Group Ref</uicontrol>.</cmd><info>A
-declaration that references an attribute group enables the referenced attribute
-group to appear in the instance document in the context of the referencing
-declaration. The menu option to add an attribute group reference only appears
-if there are attribute groups defined elsewhere in the document. Select the
-reference, then select the attribute group you want it to reference from the <uicontrol>ref</uicontrol> list.</info>
-</step>
-<step><cmd>An <codeph>any</codeph> element enables element content according
-to namespaces, and the corresponding <codeph>any</codeph> attribute element
-enables attributes to appear in elements. To add an <codeph>any</codeph> attribute,
-right-click in the Attributes page and click <uicontrol>Add Any Attribute</uicontrol>.</cmd>
-<info>You can specify the following values for an <codeph>any</codeph> attribute:</info>
-<choices>
-<choice>For a <uicontrol>namespace</uicontrol> value, you can
-select:<ul>
-<li><b>##any</b>. This allows any well-formed XML from any namespace.</li>
-<li><b>##local </b>. This allows any well-formed XML that is not declared
-to be in a namespace.</li>
-<li><b>##other</b>. This allows any well-formed XML that is not from the target
-namespace of the type being defined.</li>
-<li><b>##targetNamespace </b>. This is shorthand for the target namespace
-of the type being defined.</li>
-</ul></choice>
-<choice>For a <uicontrol>processContents</uicontrol> value, you can select:<ul>
-<li><b>skip</b>. The XML processor will not validate the attribute content
-at all.</li>
-<li><b>lax</b>. The XML processor will validate the attribute content as much
-as it can.</li>
-<li><b>strict</b>. The XML processor will validate all the attribute content.</li>
-</ul></choice>
-</choices>
-</step>
-<step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
-to provide any information about this global element.</cmd><info>The <uicontrol>Documentation</uicontrol> page
+<step><cmd>Click the <uicontrol>Documentation</uicontrol> tab to provide any
+information about this global element.</cmd><info>The <uicontrol>Documentation</uicontrol> page
 is used for human readable material, such as a description.</info></step>
-<step><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you want to
-add application information elements to your annotations of schema components.</cmd>
-<info>The <uicontrol>Extensions</uicontrol> page allows you to specify the
-schema and add XML content to your annotations.</info></step>
+<step><cmd>Click the <uicontrol>Extensions</uicontrol> tab to add application
+information elements to your annotations of schema components.</cmd><info>The <uicontrol>Extensions</uicontrol> page
+allows you to specify the schema and add XML content to your annotations.</info>
+</step><?Pub Caret?>
 </steps>
 <postreq>You can add a content model to a global element, which is the representation
 of any data that can be contained inside the global element. For more information
 about working with content models, refer to the related tasks.</postreq>
 </taskbody>
 </task>
-<?Pub *0000009579?>
+<?Pub *0000004383?>

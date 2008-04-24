@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <?Pub Inc?>
@@ -20,45 +20,46 @@ page that conforms to XHTML 1.0 syntax.</shortdesc>
 <taskbody>
 <context><p>For example:</p><p><codeblock>&lt;element name = "MyWebPage">
 &lt;complexType>
-&lt;any namespace ="http://www.w3.org/1999/xhtml>
- &lt; minOccurs="1" maxOccurs="unbounded" processContents="skip"/>
+&lt;any namespace="http://www.w3.org/1999/xhtml"
+   minOccurs="1" maxOccurs="unbounded" processContents="skip"/>
 &lt;/complexType>
 &lt;/element></codeblock></p><p>The preceding schema fragment allows a <codeph>&lt;MyWebPage></codeph> element
 to contain any well-formed XHTML data that appears in the specified namespace.</p><p>The
 following instructions were written for the Resource perspective, but they
-will also work in many other perspectives.</p><p>To add an <codeph>any</codeph> element:</p></context>
+will also work in many other perspectives.</p><p>To add an <codeph>any</codeph> element,
+complete the following steps:</p></context>
 <steps>
 <step><cmd>In the Outline view, right-click the content model that you want
 to work with and click <uicontrol>Add Any</uicontrol>. </cmd></step>
 <step><cmd>Select the new <codeph>any</codeph> element.</cmd></step>
-<step><cmd>In the Properties view of the schema editor, for a <uicontrol>namespace</uicontrol> value,
+<step><cmd>In the Properties view, for a <uicontrol>namespace</uicontrol> value,
 you can select:</cmd>
 <choices>
-<choice><b>##any</b>. This allows any well-formed XML from any namespace.</choice>
-<choice><b>##local </b>. This allows any well-formed XML that is not declared
+<choice><b>##any</b>: this allows any well-formed XML from any namespace.</choice>
+<choice><b>##local </b>: this allows any well-formed XML that is not declared
 to be in a namespace.</choice>
-<choice><b>##other </b>. This allows any well-formed XML that is not from
+<choice><b>##other </b>: this allows any well-formed XML that is not from
 the target namespace of the type being defined.</choice>
-<choice><b>##targetNamespace</b>. This is shorthand for the target namespace
+<choice><b>##targetNamespace</b>: this is shorthand for the target namespace
 of the type being defined.</choice>
 </choices>
 </step>
 <step><cmd>For a <uicontrol>processContents</uicontrol> value, you can select:</cmd>
 <choices>
-<choice><b>skip</b>. The XML processor will not validate the content at all.</choice>
-<choice><b>lax</b>. The XML processor will validate the content as much as
+<choice><b>skip</b>: the XML processor will not validate the content at all.</choice>
+<choice><b>lax</b>: the XML processor will validate the content as much as
 it can.</choice>
-<choice><b>strict</b>. The XML processor will validate all the content.</choice>
+<choice><b>strict</b>: the XML processor will validate all the content.</choice>
 </choices>
 </step>
-<step><cmd>The <uicontrol>minOccurs</uicontrol> value is the number of times
-the <codeph>any</codeph> element must appear in an instance document. You
-can select <uicontrol>0</uicontrol> if you want the element to be optional;
+<step><cmd>The <uicontrol>Minimum Occurrence</uicontrol> value is the number
+of times the <codeph>any</codeph> element must appear in an instance document.
+You can select <uicontrol>0</uicontrol> if you want the element to be optional;
 otherwise, select <uicontrol>1</uicontrol>. </cmd></step>
-<step><cmd>The <uicontrol>maxOccurs</uicontrol> value is the maximum number
-of times an <codeph>any</codeph> element can appear in an instance document.
-You can select <uicontrol>0</uicontrol>, <uicontrol>1</uicontrol>, or, to
-indicate there is no maximum number of occurrences, <uicontrol>unbounded</uicontrol>.</cmd>
+<step><cmd>The <uicontrol>Maximum Occurrence</uicontrol> value is the maximum
+number of times an <codeph>any</codeph> element can appear in an instance
+document. You can select <uicontrol>0</uicontrol>, <uicontrol>1</uicontrol>,
+or, to indicate there is no maximum number of occurrences, <uicontrol>unbounded</uicontrol>.</cmd>
 </step>
 <step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
 to provide any information about this element.</cmd><info>The <uicontrol>Documentation</uicontrol> page
@@ -68,9 +69,9 @@ add application information elements to your annotations of schema components.</
 <info>The <uicontrol>Extensions</uicontrol> page allows you to specify the
 schema and add XML content to your annotations.</info></step>
 </steps>
-<postreq><p>(c) Copyright 2001, World Wide Web (Massachusetts Institute of
-Technology, Institut National de Recherche en Informatique et en Automatique,
-Keio University).</p></postreq>
+<postreq><draft-comment>(<?Pub Caret1?>c) Copyright 2001, World Wide Web (Massachusetts
+Institute of Technology, Institut National de Recherche en Informatique et
+en Automatique, Keio University).</draft-comment></postreq>
 </taskbody>
 </task>
-<?Pub *0000004291?>
+<?Pub *0000004081?>

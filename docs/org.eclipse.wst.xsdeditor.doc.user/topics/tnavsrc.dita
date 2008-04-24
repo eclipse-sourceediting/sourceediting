@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="tnavsrc" xml:lang="en-us">
 <title>Navigating XML schemas</title>
 <titlealts>
 <searchtitle>Navigating XML schemas</searchtitle>
 </titlealts>
 <shortdesc>When you are working in the Source view, you can use F3 to navigate
-through the file by placing your cursor in the appropriate item and clicking
+through the file by placing your cursor in the appropriate item and pressing
 F3 to jump to the item it refers to. </shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML schema files<indexterm>navigating</indexterm></indexterm>
@@ -22,11 +23,12 @@ F3 to jump to the item it refers to. </shortdesc>
 <li>Attribute group references</li>
 <li>Import, include, and redefine element (the external schema will open in
 the XML schema editor. This only works with schemas in the workspace).</li>
-</ul><p>You must place your cursor exactly in the location of the reference
-(for example between the double quotes for <systemoutput>type = " "</systemoutput> or
- <systemoutput>base = " "</systemoutput>).</p><p>For example, if you place
-your cursor anywhere in the following text and click F3:</p><p> <systemoutput>&lt;element
-name="shipTo" type="po:USAddress">&lt;/element></systemoutput> </p><p>the
+<li></li>
+</ul><p>You<?Pub Caret?> must place your cursor exactly in the location of
+the reference (for example between the double quotes for <systemoutput>type
+= " "</systemoutput> or  <systemoutput>base = " "</systemoutput>).</p><p>For
+example, if you place your cursor anywhere in the following text and press
+F3:</p><p> <systemoutput>&lt;element name="shipTo" type="po:USAddress">&lt;/element></systemoutput> </p><p>the
 cursor will automatically jump to the location in the file where the type
 USAddress is defined.</p><p>Or, if you place your cursor anywhere in the following
 text and click F3:</p><p> <systemoutput>&lt;element ref="po:ContactElement">&lt;/element></systemoutput> </p><p>the
@@ -36,3 +38,4 @@ if the type you have selected is defined in another XML schema and you click
 F3, you will automatically be taken to that file.</p></context>
 </taskbody>
 </task>
+<?Pub *0000002066?>

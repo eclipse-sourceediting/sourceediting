@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <?Pub Inc?>
@@ -11,9 +11,9 @@
 <shortdesc>As schemas become larger, it is often desirable to divide their
 content among several schema documents for purposes such as ease of maintenance,
 reuse, and readability. You can use the <codeph>include</codeph> element to
-bring in definitions and declarations from the included schema
-into the current schema. The included schema must be in the same target namespace
-as the including schema. </shortdesc>
+bring in definitions and declarations from the included schema into the current
+schema. The included schema must be in the same target namespace as the including
+schema. </shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML schema editor<indexterm>include elements</indexterm></indexterm>
 <indexterm>XML schema files<indexterm>include elements</indexterm></indexterm>
@@ -22,28 +22,36 @@ as the including schema. </shortdesc>
 <taskbody>
 <context><p>The following instructions were written for the XML perspective,
 but they will also work in many other perspectives.</p><p>To add an include
-element, follow these steps:</p></context>
+element, complete the following steps:</p></context>
 <steps>
-<step><cmd>Open your XML schema in the XML schema editor.</cmd></step>
-<step><cmd>In the Outline view, select your schema.</cmd><info>The entire
-schema and its contents are displayed in the Design view.</info></step>
+<step><cmd>Open your XML schema in the XML schema editor. In the Outline view,
+select your schema.</cmd><info>The entire schema and its contents are displayed
+in the Design view.</info></step>
 <step><cmd>In the Design view, right-click in the <b>Directives</b> section
 and click <uicontrol>Add Include</uicontrol>.</cmd></step>
-<step><cmd>In the Properties view, click the <b>General</b> tab and click <uicontrol>Browse</uicontrol> <image
-href="../images/Browse.gif"><alt>This graphic is the Browse button</alt></image> to
-the right of the <uicontrol>Schema location</uicontrol> field.</cmd><info>The
-XML schema file you select must have the same namespace as the current schema.</info>
+<step><cmd>In the Properties view, click the <b>General</b> tab and click
+the <uicontrol>Browse</uicontrol> <image href="../images/Browse.gif"><alt>This
+graphic is the Browse button</alt></image> button to the right of the <uicontrol>Schema
+location</uicontrol> field.</cmd><info>The XML schema file you select must
+have the same namespace as the current schema.</info></step>
+<step><cmd>If you want to import an XML schema located in the workbench:</cmd>
+<substeps>
+<substep><cmd>Select <uicontrol>Workbench projects</uicontrol> and click <uicontrol>Next</uicontrol>. </cmd>
+</substep>
+<substep><cmd>Select the schema you want to import and click <uicontrol>Finish</uicontrol>.</cmd>
+</substep>
+</substeps>
 </step>
-<step><cmd>If you want to select an XML schema located in the workbench, select <uicontrol>Workbench
-projects</uicontrol> and click <uicontrol>Next</uicontrol>. </cmd></step>
-<step><cmd>Select the schema you want to include and click <uicontrol>Finish</uicontrol>.</cmd>
-</step>
-<step><cmd>If you want to select an XML schema located on the Web, select <uicontrol>HTTP</uicontrol> and
-click <uicontrol>Next</uicontrol>.</cmd></step>
-<step><cmd>Type the URL of the XML schema and click <uicontrol>Finish</uicontrol>.</cmd>
-<info><note> A local copy of the schema will not be stored in the workbench.
+<step><cmd>If you want to import an XML schema located on the Web:</cmd>
+<substeps>
+<substep><cmd>Select <uicontrol>HTTP</uicontrol> and click <uicontrol>Next</uicontrol>.</cmd>
+</substep>
+<substep><cmd>Type the URL of the XML schema and click <uicontrol>Finish</uicontrol>.</cmd>
+<info><note>A local copy of the schema will not be stored in the workbench.
 Every time you validate your schema, the schema's contents will be checked
-from the URL you specify.</note></info></step>
+from the URL you specify.</note></info></substep>
+</substeps>
+</step>
 <step><cmd>The XML schema editor will retrieve the location of the included
 XML schema file, and display it in the <uicontrol>Schema location</uicontrol> field.
 This field can be edited at any time to reflect the location of the XML schema
@@ -69,9 +77,9 @@ following content:</p><codeblock>&lt;complexType name="Address">
 &lt;/complexType>
 </codeblock>and you have an XML schema called PurchaseOrder.xsd that has added
 an include for Address.xsd, then when defining a new element in  PurchaseOrder,
-you can select Address as its type.  <p>(c) Copyright 2001, World Wide Web
-Consortium (Massachusetts Institute of Technology, Institut National de Recherche
-en Informatique et en Automatique, Keio University).</p></result>
+you can select Address as its type.  <draft-comment>(c) Copyright 2001, World
+Wide Web Consortium (Massachusetts Institute of Technology, Institut National
+de Recherche en Informatique et en Automatique, Keio University).</draft-comment></result>
 </taskbody>
-</task>
-<?Pub *0000004728?>
+</task><?Pub Caret?>
+<?Pub *0000004595?>

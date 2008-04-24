@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="taddgrup" xml:lang="en-us">
@@ -12,13 +12,12 @@ The content model is a representation of any data that can be grouped together
 by the group, such as elements, element references, and group references.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML schema editor<indexterm>groups</indexterm></indexterm>
-<indexterm>XML schema files<indexterm>groups</indexterm></indexterm>
-</keywords>
+<indexterm>XML schema files<indexterm>groups</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context><p></p><p>The following instructions were written for the Resource
-perspective, but they will also work in many other perspectives.</p><p>To
-add a group, follow these steps:</p></context>
+perspective, but they ws<?Pub Caret?>ill also work in many other perspectives.</p><p>To
+add a group, complete the following steps:</p></context>
 <steps>
 <step><cmd>Open your XML schema in the XML schema editor.</cmd></step>
 <step><cmd>In the Outline view, right-click <b>Groups</b>, and click <uicontrol>Add
@@ -30,15 +29,14 @@ to provide any information about this group element.</cmd><info>The <uicontrol>D
 is used for human readable material, such as a description.</info></step>
 <step><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you want to
 add application information elements to your annotations of schema components.</cmd>
-<info>The <uicontrol>Extensions</uicontrol> page allows you to
-specify the schema and add XML content to your annotations.</info></step>
+<info>The <uicontrol>Extensions</uicontrol> page allows you to specify the
+schema and add XML content to your annotations.</info></step>
 <step><cmd>In the Outline view, expand the <uicontrol>Groups</uicontrol> folder
-and your new group.</cmd></step>
-<step><cmd>Your group automatically contains a content model. </cmd><info>A
-group's content model is the representation of any data that can be contained
-inside the group. For more information about working with content models,
-refer to the related tasks.</info></step>
+and your new group.</cmd><info>Your group automatically contains a content
+model. A group's content model is the representation of any data that can
+be contained inside the group. For more information about working with content
+models, refer to the related tasks.</info></step>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000002502?>
+<?Pub *0000002232?>

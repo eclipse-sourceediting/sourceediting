@@ -17,16 +17,19 @@ the Problems view.</shortdesc>
 <taskbody>
 <context><p>The following instructions were written for the Resource perspective,
 but they will also work in many other perspectives.</p><p>To validate an XML
-schema:</p></context>
+schema, complete the following steps:</p></context>
 <steps>
 <step><cmd>Right-click your file in the Navigator view and click <uicontrol>Validate</uicontrol>.</cmd>
 </step>
 <step><cmd> If validation was not successful, you can refer to the Problems
-view to see what problems were logged. </cmd><info> <note>If you receive an
-error message indicating that the Problems view is full, you can increase
-the number of error messages allowed by selecting  <menucascade><uicontrol>Properties
-> Validation</uicontrol></menucascade> and specifying the maximum number of
-error messages allowed.</note></info></step>
+view to see what problems were logged. </cmd><info> <note> If you receive
+an error message indicating that the Problems view is full, you can increase
+the number of error messages allowed by clicking <menucascade><uicontrol>Window</uicontrol>
+<uicontrol>Preferences</uicontrol></menucascade> and selecting <menucascade>
+<uicontrol>General</uicontrol><uicontrol>Markers</uicontrol></menucascade>.
+Select the <uicontrol>Use marker limits</uicontrol> check box and change the
+number in the <uicontrol>Limit visible items per group</uicontrol> field.</note></info>
+</step>
 </steps>
 <result><p>The XML schema support in the XML schema editor is based on the
 W3C XML Schema Recommendation Specification. The XML Schema specifications
@@ -34,14 +37,15 @@ XML Schema Part 1: Structures and XML Schema Part 2: Datatypes from the W3C
 Web site are used for validation.</p><p>Certain error messages contain a reference
 to the schema constraints listed in Appendix C of the XML Schema Part 1: Structures
 document. Each constraint has a unique name that will be referenced in the
-error message. For example, if you receive an error message with this text:
- <systemoutput>ct-props-correct</systemoutput> and you searched in the Structure
-document for the text, you would find that it is for the section "Schema Component
-Constraint: Complex Type Definition Properties Correct". </p><p>You can set
-up a project's properties so that different types of project resources are
-automatically validated when you save them. From a project's pop-up menu select <uicontrol>Properties</uicontrol>,
-then select <uicontrol>Validation</uicontrol>. Any validators you can run
-against your project will be listed in the Validation page.</p></result>
+error message. For example, if you receive an error message with this text: <systemoutput>ct-props-correct</systemoutput> and
+you searched in the Structure document for the text, you would find that it
+is for the section "Schema Component Constraint: Complex Type Definition Properties
+Correct". </p><p>You can set up a project's properties so that different types
+of project resources are automatically validated when you save them (this
+is set for all resources <?Pub Caret?>by default). From a project's pop-up
+menu select <uicontrol>Properties</uicontrol>, then select <uicontrol>Validation</uicontrol>.
+Any validators you can run against your project will be listed in the Validation
+page.</p></result>
 </taskbody>
 <related-links>
 <link href="../../org.eclipse.jst.j2ee.doc.user/topics/tjval.dita" scope="peer">
@@ -57,3 +61,4 @@ Schema Part 2: Datatypes</linktext>
 </link>
 </related-links>
 </task>
+<?Pub *0000003403?>

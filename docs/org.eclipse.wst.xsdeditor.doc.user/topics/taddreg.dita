@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="taddreg" xml:lang="en-us">
@@ -18,7 +18,7 @@ which indirectly constrains the value space.</shortdesc>
 <taskbody>
 <context><p> The value of the pattern is called a regular expression. You
 can specify it using the <uicontrol>Regular Expression</uicontrol> wizard.</p><p>To
-add a pattern to a simple type:</p></context>
+add a pattern to a simple type, complete the following steps:</p></context>
 <steps>
 <step><cmd>In the Design view, select the simple type you want to work with.</cmd>
 </step>
@@ -45,8 +45,8 @@ maximum value.</choice>
 </step>
 <step><cmd>When you are finished, click <uicontrol>Next</uicontrol>.</cmd>
 </step>
-<step><cmd>(Optional) To test against the regular expression and see if a
-match occurs, enter sample text.</cmd></step>
+<step><cmd>T<?Pub Caret1?>o test against the regular expression and see if
+a match occurs, enter sample text.</cmd></step>
 <step><cmd>Click <uicontrol>Finish</uicontrol>.</cmd><stepresult> The regular
 expression will appear in the Patterns page. <note type="tip"> To edit an
 existing pattern, select it in the Patterns page and click <uicontrol>Edit</uicontrol>.
@@ -55,4 +55,4 @@ To delete an existing pattern, select it in the Patterns page and click <uicontr
 </steps>
 </taskbody>
 </task>
-<?Pub *0000002952?>
+<?Pub *0000002703?>

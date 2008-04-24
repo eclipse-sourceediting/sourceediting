@@ -2,8 +2,8 @@
 <html lang="en-us" xml:lang="en-us">
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<meta name="copyright" content="Copyright (c) 2000, 2006 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
-<meta name="DC.rights.owner" content="(C) Copyright 2000, 2006" />
+<meta name="copyright" content="Copyright (c) 2000, 2008 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
+<meta name="DC.rights.owner" content="(C) Copyright 2000, 2008" />
 <meta content="public" name="security" />
 <meta content="index,follow" name="Robots" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
@@ -11,8 +11,8 @@
 <meta name="DC.Title" content="Adding an any element" />
 <meta name="abstract" content="You can use the any element in a similar way as a DTD's ANY content model, however, it must be done in conjunction with namespaces. This enables you to include any well-formed XML content, such as an HTML Web page that conforms to XHTML 1.0 syntax." />
 <meta name="description" content="You can use the any element in a similar way as a DTD's ANY content model, however, it must be done in conjunction with namespaces. This enables you to include any well-formed XML content, such as an HTML Web page that conforms to XHTML 1.0 syntax." />
-<meta content="XML schema editor, adding, an any element, XML schema files" name="DC.subject" />
-<meta content="XML schema editor, adding, an any element, XML schema files" name="keywords" />
+<meta content="XML schema editor, adding an any element, XML schema files" name="DC.subject" />
+<meta content="XML schema editor, adding an any element, XML schema files" name="keywords" />
 <meta content="XHTML" name="DC.Format" />
 <meta content="taddanye" name="DC.Identifier" />
 <meta content="en-us" name="DC.Language" />
@@ -35,8 +35,8 @@ page that conforms to XHTML 1.0 syntax.</p>
 <div class="section"><p>For example:</p>
 <div class="p"><pre>&lt;element name = "MyWebPage"&gt;
 &lt;complexType&gt;
-&lt;any namespace ="http://www.w3.org/1999/xhtml&gt;
- &lt; minOccurs="1" maxOccurs="unbounded" processContents="skip"/&gt;
+&lt;any namespace="http://www.w3.org/1999/xhtml"
+   minOccurs="1" maxOccurs="unbounded" processContents="skip"/&gt;
 &lt;/complexType&gt;
 &lt;/element&gt;</pre>
 </div>
@@ -45,7 +45,8 @@ to contain any well-formed XHTML data that appears in the specified namespace.</
 <p>The
 following instructions were written for the Resource perspective, but they
 will also work in many other perspectives.</p>
-<p>To add an <samp class="codeph">any</samp> element:</p>
+<p>To add an <samp class="codeph">any</samp> element,
+complete the following steps:</p>
 </div>
 
 <ol>
@@ -54,18 +55,18 @@ to work with and click <span class="uicontrol">Add Any</span>. </span></li>
 
 <li class="stepexpand"><span>Select the new <samp class="codeph">any</samp> element.</span></li>
 
-<li class="stepexpand"><span>In the Properties view of the schema editor, for a <span class="uicontrol">namespace</span> value,
+<li class="stepexpand"><span>In the Properties view, for a <span class="uicontrol">namespace</span> value,
 you can select:</span>
 <ul>
-<li><strong>##any</strong>. This allows any well-formed XML from any namespace.</li>
+<li><strong>##any</strong>: this allows any well-formed XML from any namespace.</li>
 
-<li><strong>##local </strong>. This allows any well-formed XML that is not declared
+<li><strong>##local </strong>: this allows any well-formed XML that is not declared
 to be in a namespace.</li>
 
-<li><strong>##other </strong>. This allows any well-formed XML that is not from
+<li><strong>##other </strong>: this allows any well-formed XML that is not from
 the target namespace of the type being defined.</li>
 
-<li><strong>##targetNamespace</strong>. This is shorthand for the target namespace
+<li><strong>##targetNamespace</strong>: this is shorthand for the target namespace
 of the type being defined.</li>
 
 </ul>
@@ -74,26 +75,26 @@ of the type being defined.</li>
 
 <li class="stepexpand"><span>For a <span class="uicontrol">processContents</span> value, you can select:</span>
 <ul>
-<li><strong>skip</strong>. The XML processor will not validate the content at all.</li>
+<li><strong>skip</strong>: the XML processor will not validate the content at all.</li>
 
-<li><strong>lax</strong>. The XML processor will validate the content as much as
+<li><strong>lax</strong>: the XML processor will validate the content as much as
 it can.</li>
 
-<li><strong>strict</strong>. The XML processor will validate all the content.</li>
+<li><strong>strict</strong>: the XML processor will validate all the content.</li>
 
 </ul>
 
 </li>
 
-<li class="stepexpand"><span>The <span class="uicontrol">minOccurs</span> value is the number of times
-the <samp class="codeph">any</samp> element must appear in an instance document. You
-can select <span class="uicontrol">0</span> if you want the element to be optional;
+<li class="stepexpand"><span>The <span class="uicontrol">Minimum Occurrence</span> value is the number
+of times the <samp class="codeph">any</samp> element must appear in an instance document.
+You can select <span class="uicontrol">0</span> if you want the element to be optional;
 otherwise, select <span class="uicontrol">1</span>. </span></li>
 
-<li class="stepexpand"><span>The <span class="uicontrol">maxOccurs</span> value is the maximum number
-of times an <samp class="codeph">any</samp> element can appear in an instance document.
-You can select <span class="uicontrol">0</span>, <span class="uicontrol">1</span>, or, to
-indicate there is no maximum number of occurrences, <span class="uicontrol">unbounded</span>.</span>
+<li class="stepexpand"><span>The <span class="uicontrol">Maximum Occurrence</span> value is the maximum
+number of times an <samp class="codeph">any</samp> element can appear in an instance
+document. You can select <span class="uicontrol">0</span>, <span class="uicontrol">1</span>,
+or, to indicate there is no maximum number of occurrences, <span class="uicontrol">unbounded</span>.</span>
 </li>
 
 <li class="stepexpand"><span>Click the <span class="uicontrol">Documentation</span> tab if you want
@@ -107,10 +108,7 @@ schema and add XML content to your annotations.</li>
 
 </ol>
 
-<div class="section"><p>(c) Copyright 2001, World Wide Web (Massachusetts Institute of
-Technology, Institut National de Recherche en Informatique et en Automatique,
-Keio University).</p>
-</div>
+<div class="section" />
 
 </div>
 

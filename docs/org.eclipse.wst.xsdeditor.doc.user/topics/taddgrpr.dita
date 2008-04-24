@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <?Pub Inc?>
@@ -20,7 +20,7 @@ of the referencing declaration.</shortdesc>
 <context>The menu option to add a group reference only appears if there are
 groups defined elsewhere in the document.<p>The following instructions were
 written for the Resource perspective, but they will also work in many other
-perspectives.</p><p>To add a group reference, follow these steps:</p></context>
+perspectives.</p><p>To add a group reference, complete the following steps<?Pub Caret?>:</p></context>
 <steps>
 <step><cmd>In the Design view, right-click the content model you want to work
 with and select <uicontrol>Add Group Ref</uicontrol>.</cmd></step>
@@ -29,8 +29,7 @@ with and select <uicontrol>Add Group Ref</uicontrol>.</cmd></step>
 the <uicontrol>ref</uicontrol> list.</cmd></step>
 <step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
 to provide any information about this group reference.</cmd><info>The <uicontrol>Documentation</uicontrol> page
-is used for human readable material, such as a description.</info>
-</step>
+is used for human readable material, such as a description.</info></step>
 <step><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you want to
 add application information elements to your annotations of schema components.</cmd>
 <info>The <uicontrol>Extensions</uicontrol> page allows you to specify the
@@ -38,4 +37,4 @@ schema and add XML content to your annotations.</info></step>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000002277?>
+<?Pub *0000002007?>

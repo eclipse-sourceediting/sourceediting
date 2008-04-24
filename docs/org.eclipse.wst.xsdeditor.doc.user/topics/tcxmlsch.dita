@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="tcxmlsch" xml:lang="en-us">
 <title>Creating XML schemas</title>
 <titlealts>
@@ -14,12 +15,12 @@ which elements are allowed in an XML file, and in which combinations.</shortdesc
 </keywords>
 </metadata></prolog>
 <taskbody>
-<context>To create an XML schema, follow these steps:</context>
+<context>To create an XML schema, complete the following steps<?Pub Caret?>:</context>
 <steps>
 <step><cmd>Create a project to contain the XML schema.</cmd></step>
-<step><cmd>In the workbench, select  <menucascade><uicontrol>File > New >
-Other > XML > XML Schema</uicontrol></menucascade> and click <uicontrol>Next</uicontrol>.</cmd>
-</step>
+<step><cmd>In the workbench, click <menucascade><uicontrol>File > New > Other</uicontrol>
+</menucascade> and select <menucascade><uicontrol>XML > XML Schema</uicontrol>
+</menucascade>. Click <uicontrol>Next</uicontrol>.</cmd></step>
 <step><cmd>Select the project or folder that will contain the XML schema.
 In the </cmd><info><uicontrol>File name</uicontrol> field, type the name of
 the XML schema, for example <userinput>MyXMLSchema.xsd</userinput>. The name
@@ -29,3 +30,4 @@ of your XML schema must end in <systemoutput>.xsd</systemoutput>.</info></step>
 <result>The XML schema opens in the XML schema editor. </result>
 </taskbody>
 </task>
+<?Pub *0000001558?>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE reference  PUBLIC "-//OASIS//DTD DITA Reference//EN" "reference.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN"
+ "reference.dtd">
 <reference id="rnmspc" xml:lang="en-us">
 <title>XML namespaces</title>
 <titlealts>
@@ -14,8 +15,8 @@ names.</shortdesc>
 </keywords>
 </metadata></prolog>
 <refbody>
-<section>XML namespaces are defined by a W3C recommendation, dating 14 January
-1999, called <xref format="html" href="http://www.w3.org/TR/REC-xml-names/"
+<section>XML namespaces are defined by a W3C recommendation, dating 16 August
+2006, called <xref format="html" href="http://www.w3.org/TR/2006/REC-xml-names-20060816/"
 scope="external">Namespaces in XML</xref>. XML tag names should be globally
 unique, as well as short for performance reasons. In order to resolve this
 conflict, the W3C namespace recommendation defines an attribute <b>xmlns</b> which
@@ -30,11 +31,11 @@ by other business applications:</p><p><codeblock>&lt;acct:customer xmlns:acct="h
 	&lt;acct:name>Corporation&lt;/acct:name>
 	&lt;acct:order acct:ref="5566"/>
 	&lt;acct:status>invoice&lt;/acct:status>
-&lt;/acct:customer>  </codeblock> </p><p>The <i>namespace definition</i> in
-the first line assigns the namespace <i>http://www.my.com/acct-REV10</i> to
-the prefix. This prefix is used on the element names such as name in order
-to attach them to the namespace. A second application, for example, a fulfillment
-system, can assign a different namespace to its customer elements:</p><p><codeblock>&lt;ful:customer xmlns:ful="http://www.your.com/ful">
+&lt;/acct:customer>  </codeblock> </p><p>The namespace definition in the first
+line assigns the namespace http://www.my.com/acct-REV10 to the prefix. This
+prefix is used on the element names such as name in order to attach them to
+the namespace. A second application, for example, a fulfillment system, can
+assign a different namespace to its customer elements:</p><p><codeblock>&lt;ful:customer xmlns:ful="http://www.your.com/ful">
 	&lt;ful:name>Corporation&lt;/ful:name>
 	&lt;ful:order ful:ref="A98756"/>
 	&lt;ful:status>shipped&lt;/ful:status>
@@ -46,13 +47,13 @@ namespace definition:</p><p><codeblock>&lt;acct:customer xmlns="http://www.my.co
 &lt;order acct:ref="5566"/>
 &lt;status>invoice&lt;/status>
 &lt;/customer></codeblock></p><p>In this example, all tags in the customer
-record are qualified to reside in the namespace <i>http://www.my.com/acct-REV10.</i> No
-explicit prefix is needed because the default namespace is used. Note that
+record are qualified to reside in the namespace http://www.my.com/acct-REV10.
+No explicit prefix is needed because the default namespace is used. Note that
 the default namespace applies to any attributes definitions.</p></section>
 <section><title>XML schemas and namespaces</title><p>In the following XML
 schema, the default namespace for the schema is defined as the standard XML
-schema namespace <i>http://www.w3.org/2001/XMLSchem</i>a; there is also a
-schema specific namespace <i>http://www.ibm.com</i>.</p><p><codeblock>&lt;?xml version="1.0"?>
+schema namespace http://www.w3.org/2001/XMLSchema; there is also a schema
+specific namespace http://www.ibm.com.</p><p><codeblock>&lt;?xml version="1.0"?>
 &lt;schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ibm.com" xmlns:TestSchema="http://www.ibm.com">
  &lt;simpleType name="ZipCodeType">
  &lt;restriction base="integer">
@@ -99,14 +100,14 @@ and unqualified locals</title><p>The XML schema:  </p><p><codeblock>&lt;?xml ver
 &lt;/complexType>
 &lt;element name="MyAddress" type="x:AddressType">&lt;/element>
 &lt;/schema> </codeblock> </p><p>A valid XML instance document created from
-this schema looks like this. Local elements and attributes are <i>unqualified</i>.</p><p><codeblock>&lt;?xml version="1.0"?>
+this schema looks like this. Local elements and attributes are unqualified.</p><p><codeblock>&lt;?xml version="1.0"?>
 &lt;x:MyAddress xmlns:x="http://www.ibm.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ibm.com x.xsd ">
 &lt;name>Peter Smith&lt;/name>
-&lt;/x:MyAddress> </codeblock></p><p>When local elements (such as the <i>"name"</i> element)
-and attributes are unqualified in an XML file, then only the root element
-is qualified. So, in this example, the <i>"x"</i> namespace prefix is assigned
-to the root element <i>"MyAddress"</i>, associating it with the namespace <i>"http://www.ibm.com",</i> but
-the<i>"x"</i> prefix is not assigned to the local element <i>"name"</i>.</p></section>
+&lt;/x:MyAddress> </codeblock></p><p>When local elements (such as the "name"
+element) and attributes are unqualified in an XML file, then only the root
+element is qualified. So, in this example, the "x" namespace prefix is assigned
+to the root element "MyAddress", associating it with the namespace "http://www.ibm.com",
+but the"x" prefix is not assigned to the local element "name".</p></section>
 <section><title>Sample 2 - A schema with both a default and target namespace
 and qualified locals</title><p><codeblock>&lt;?xml version="1.0"?>
 &lt;schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ibm.com" xmlns:x="http://www.ibm.com" elementFormDefault="qualified">
@@ -117,25 +118,24 @@ and qualified locals</title><p><codeblock>&lt;?xml version="1.0"?>
 &lt;/complexType>
 &lt;element name="MyAddress" type="x:AddressType">&lt;/element>
  &lt;/schema>  </codeblock></p><p>A valid XML instance document created from
-this schema looks like this. Local elements and attributes are <i>qualified</i> This
+this schema looks like this. Local elements and attributes are qualified This
 is because the elementFormDefault attribute is set to qualified in the XML
 schema.</p><p><codeblock>&lt;?xml version="1.0"?>
   &lt;x:MyAddress xmlns:x="http://www.ibm.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://www.ibm.com x.xsd "> 
 &lt;x:name>Peter Smith&lt;/x:name>
- &lt;/x:MyAddress></codeblock> </p><p>In this example, the <i>"x"</i> namespace
-prefix is assigned to both the root element <i>"MyAddress"</i> and the local
-element <i>"name"</i>, associating them with the namespace <i>"http://www.ibm.com",</i>.</p></section>
+ &lt;/x:MyAddress></codeblock> </p><p>In this example, the "x" namespace prefix
+is assigned to both the root element "MyAddress" and the local element "name",
+associating them with the namespace "http://www.ibm.com",.</p></section>
 <section><title>Sample 3 - Schema with target Namespace, and explicitly defines
 xmlns:xsd</title><p>This XML schema adds this attribute:  </p><codeph>xmlns:xsd="http://www.w3.org/2001/XMLSchema </codeph><p>What
 this means is that each of the constructs that are defined by the XML schema
-language will need to be qualified with the <varname>"xsd"</varname> prefix.
-For example, xsd:complexType and  xsd:string</p><p>. Note that you can chose
-any other prefixes such as <varname>"xs"</varname> or <varname>"foobar"</varname> in
-your declaration and usage.</p><p>You can specify this prefix in the XML schema
-preferences page. For more information, refer to the related tasks.</p><p>All
-user defined types belong to the namespace  http://www.ibm.com as defined
-by the targetNamespace attribute, and the prefix is <i>"x"</i> as defined
+language will need to be qualified with the "xsd" prefix. For example, xsd:complexType
+and  xsd:string</p><p>. Note that you can chose any other prefixes such as
+"xs" or "foobar" in your declaration and usage.</p><p>You can specify this
+prefix in the XML schema preferences page. For more information, refer to
+the related tasks.</p><p>All user defined types belong to the namespace  http://www.ibm.com
+as defined by the targetNamespace attribute, and the prefix is "x" as defined
 by the xmlns:x attribute.</p><p><codeblock>&lt;?xml version="1.0"?>
 &lt;xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ibm.com" xmlns:x="http://www.ibm.com">
 &lt;xsd:complexType name="AddressType">
@@ -145,7 +145,7 @@ by the xmlns:x attribute.</p><p><codeblock>&lt;?xml version="1.0"?>
  &lt;/xsd:complexType>
  &lt;xsd:element name="MyAddress" type="x:AddressType">&lt;/xsd:element>
 &lt;/xsd:schema></codeblock> </p><p>A valid XML instance document created
-from this schema looks like this. Local elements and attributes are <i>unqualified</i>.
+from this schema looks like this. Local elements and attributes are unqualified.
 The semantics of qualification is the same as Sample 1.</p><p><codeblock>&lt;?xml version="1.0"?>
  &lt;x:MyAddress xmlns:x="http://www.ibm.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"xsi:schemaLocation="http://www.ibm.com x.xsd ">
 &lt;name>Peter Smith&lt;/name>
@@ -153,9 +153,9 @@ The semantics of qualification is the same as Sample 1.</p><p><codeblock>&lt;?xm
 <section><title>Sample 4 - Schema with undeclared target Namespace that explicitly
 defines xmlns:xsd</title><p>This XML schema has no target namespace for itself.
 In this case, it is highly recommended that all XML schema constructs be explicitly
-qualified with a prefix such as <i>"xsd"</i>. The definitions and declarations
-from this schema such as <i>AddressType</i> are referenced without namespace
-qualification since there is no namespace prefix.  </p><p><codeblock>&lt;?xml version="1.0"?>
+qualified with a prefix such as "xsd". The definitions and declarations from
+this schema such as AddressType are referenced without namespace qualification
+since there is no namespace prefix.  </p><p><codeblock>&lt;?xml version="1.0"?>
 &lt;xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 &lt;xsd:complexType name="AddressType">
 &lt;xsd:sequence>
@@ -166,7 +166,7 @@ qualification since there is no namespace prefix.  </p><p><codeblock>&lt;?xml ve
 &lt;/xsd:complexType>
 &lt;xsd:element name="MyAddress" type="AddressType">&lt;/xsd:element> 
 &lt;/xsd:schema> </codeblock></p><p>A valid XML instance document created
-from the schema looks like this. All elements are <i>unqualified</i>.</p><p><codeblock>&lt;?xml version="1.0"?>
+from the schema looks like this. All elements are unqualified.</p><p><codeblock>&lt;?xml version="1.0"?>
 &lt;MyAddress xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="x.xsd">
 &lt;name>name&lt;/name>
 &lt;/MyAddress></codeblock>  </p></section>
@@ -186,4 +186,5 @@ from the schema looks like this:</p><p><codeblock>&lt;?xml version="1.0" encodin
 &lt;name>name&lt;/name>
  &lt;/MyAddress>  </codeblock> </p></section>
 </refbody>
-</reference>
+</reference><?Pub Caret?>
+<?Pub *0000012002?>

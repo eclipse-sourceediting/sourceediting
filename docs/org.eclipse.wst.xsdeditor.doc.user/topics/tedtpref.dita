@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
 <task id="tedtpref" xml:lang="en-us">
 <title>Editing XML schema file preferences</title>
 <titlealts>
@@ -14,16 +15,18 @@ default target namespace and XML Schema language constructs prefix used.</shortd
 </keywords>
 </metadata></prolog>
 <taskbody>
-<context><p>To define XML schema file preferences, follow these steps:</p></context>
+<context><p>To define XML schema file preferences, complete the following
+steps:</p></context>
 <steps>
-<step><cmd>Select  <menucascade><uicontrol>Window > Preferences > Web and
-XML > XML Schema Files</uicontrol></menucascade>.</cmd></step>
+<step><cmd>Click <menucascade><uicontrol>Window > Preferences</uicontrol>
+</menucascade> and select <menucascade><uicontrol>XML</uicontrol><uicontrol>XML
+Schema Files</uicontrol></menucascade>.</cmd></step>
 <step><cmd>Select the <uicontrol>Qualify XML schema language constructs</uicontrol> check
 box if you want a prefix applied to all XML Schema language constructs in
 your XML schema.</cmd></step>
 <step><cmd>In the <uicontrol>XML schema language constructs prefix</uicontrol> field,
 type the prefix you want applied to XML Schema language constructs in your
-XML schema.</cmd><info> The prefix <uicontrol>xsd</uicontrol> is used by convention
+XML schema.</cmd><info>The prefix <uicontrol>xsd</uicontrol> is used by convention
 to denote the XML Schema namespace, but any prefix can be used. The purpose
 of the association is to identify the elements and simple types as belonging
 to the vocabulary of the XML Schema language rather than the vocabulary of
@@ -40,3 +43,4 @@ for any new XML schema files created.</info></step>
 <result></result>
 </taskbody>
 </task>
+<?Pub *0000002381?>

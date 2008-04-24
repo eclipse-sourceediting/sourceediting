@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="timpschm" xml:lang="en-us">
@@ -18,17 +18,35 @@ of the XML schema.</shortdesc>
 <taskbody>
 <context><p>The following instructions were written for the Resource perspective,
 but they will also work in many other perspectives.</p><p>To import an XML
-schema into the workbench:</p></context>
+schema into the workbench, complete the following steps:</p></context>
 <steps>
 <step><cmd>Click <menucascade><uicontrol>File > Import</uicontrol></menucascade>.</cmd>
 </step>
-<step><cmd>Select the import source.</cmd><info> Click <uicontrol>Next</uicontrol>.</info>
+<step><cmd>Select <menucascade><uicontrol>General</uicontrol><uicontrol>File
+System</uicontrol></menucascade> and click  <uicontrol>Next</uicontrol>.</cmd>
 </step>
-<step><cmd>Fill in the fields in the Import wizard as necessary.</cmd><info> When
-you are finished, click <uicontrol>Finish</uicontrol>.</info></step>
-</steps>
+<step><cmd>Click <uicontrol>Browse</uicontrol> on the next page of the wizard
+to select the directories from which you would like to add the XML schema.</cmd>
+</step>
+<step><cmd>In the import selection panes, use the following methods to select
+exactly the resources you want to add:  </cmd><info><ul>
+<li>Expand the hierarchies in the left pane and select or clear the checkboxes
+that represent the folders in the selected directory. Then in the right pane,
+select or clear check boxes for individual files.</li>
+<li>Click <uicontrol>Filter Types</uicontrol> to filter the current selection
+for files of a specific type.</li>
+<li>Click <uicontrol>Select All</uicontrol> to select all resources in the
+directory, then go through and deselect the ones that you do not want to add.</li>
+<li>Click <uicontrol>Deselect All</uicontrol> to deselect all resources in
+the directory, then go through and choose individual resources to add.</li>
+</ul></info></step>
+<step><cmd>In the <uicontrol>Into folder</uicontrol> field, specify the Workbench
+project or folder that will be the import destination.</cmd></step>
+<step><cmd>When you have finished specifying your import options, click <uicontrol>Finish.</uicontrol></cmd>
+</step>
+</steps><?Pub Caret1?>
 <result><p>The imported schema now appears in the Navigator view. Double-click
 it to open it in the XML schema editor.</p></result>
 </taskbody>
 </task>
-<?Pub *0000001448?>
+<?Pub *0000002616?>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <?Pub Inc?>
@@ -20,20 +20,21 @@ schema. </shortdesc>
 </metadata></prolog>
 <taskbody>
 <context><p>The imported schema can come from a different namespace than the
-current schema does.</p><p>You can add multiple import elements to an XML
-schema, however, prefixes and namespaces have to unique amongst the imported
-schemas.</p><p>The following instructions were written for the Resource perspective,
-but they will also work in many other perspectives.</p><p>To add an import
-element, follow these steps:</p></context>
+current schema does. You can add multiple import elements to an XML schema,
+however, prefixes and namespaces have to unique amongst the imported schemas.</p><p>The
+following instructions were written for the Resource perspective, but they
+will also work in many other perspectives.</p><p>To add an import element,
+complete the following steps:</p></context>
 <steps>
-<step><cmd>Open your XML schema in the XML schema editor.</cmd></step>
-<step><cmd>In the Outline view, select your schema.</cmd><info>The entire
-schema and its contents should be displayed in the Design view.</info></step>
+<step><cmd>Open your XML schema in the XML schema editor. In the Outline view,
+select your schema.</cmd><info>The entire schema and its contents should be
+displayed in the Design view.</info></step>
 <step><cmd>In the Design view, right click in the <b>Directives</b> section
 and click <uicontrol>Add Import</uicontrol>.</cmd></step>
-<step><cmd>In the Properties view, click the <b>General</b> tab and click <uicontrol>Browse</uicontrol> <image
-href="../images/Browse.gif"><alt>This graphic is the Browse button</alt></image> to
-the right of the <uicontrol>Schema location</uicontrol> field.</cmd></step>
+<step><cmd>In the Properties view, click the <b>General</b> tab and click
+the <uicontrol>Browse</uicontrol> <image href="../images/Browse.gif"><alt>This
+graphic is the Browse button</alt></image> button to the right of the <uicontrol>Schema
+location</uicontrol> field.</cmd></step>
 <step><cmd>If you want to import an XML schema located in the workbench:</cmd>
 <substeps>
 <substep><cmd>Select <uicontrol>Workbench projects</uicontrol> and click <uicontrol>Next</uicontrol>. </cmd>
@@ -67,10 +68,10 @@ schema and add XML content to your annotations.</info></step>
 </steps>
 <result><p>Once you have added an import element to your XML schema, when
 you define new elements, attributes, complex types, or simple types where
-you can specify type information, any declarations from the included schema
+you can specify type information, any declarations from the included s<?Pub Caret?>chema
 will be available in the <uicontrol>Type</uicontrol> list for the element,
 attribute, complex or simple type.</p></result>
 <postreq></postreq>
 </taskbody>
 </task>
-<?Pub *0000004340?>
+<?Pub *0000004058?>

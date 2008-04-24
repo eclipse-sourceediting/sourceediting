@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <?Pub Inc?>
@@ -19,7 +19,7 @@ or more declarations using an attribute reference.</shortdesc>
 <taskbody>
 <context><p>The following instructions were written for the Resource perspective,
 but they will also work in many other perspectives.</p><p>To add a global
-attribute:</p></context>
+attribute, complete the following steps:</p></context>
 <steps>
 <step><cmd>Open your XML schema in the XML schema editor.</cmd></step>
 <step><cmd>In the Design view, right-click in the <b>Attributes</b> section
@@ -32,14 +32,14 @@ the predefined list in the menu next to the <uicontrol>Type</uicontrol> field.</
 the list for more options. </p><p>The Set Type dialog will appear, and lists
 all built-in and user-defined types currently available. You can change the <uicontrol>Scope</uicontrol> of
 the list by selecting one of the following options:<ul>
-<li><uicontrol>Workspace</uicontrol>. Lists all of the types available in
+<li><uicontrol>Workspace</uicontrol>: lists all of the types available in
 your workspace. </li>
-<li><uicontrol>Enclosing Project</uicontrol>. Lists all of the types available
+<li><uicontrol>Enclosing Project</uicontrol>: lists all of the types available
 in the project that contains your file. </li>
-<li>(Default) <uicontrol>Current Resource</uicontrol>. List all of the types
+<li>(Default) <uicontrol>Current Resource</uicontrol>: list all of the types
 available in your current file.</li>
-<li><uicontrol>Working Sets</uicontrol>. List all the types available within
-the selected working set.</li>
+<li><uicontrol>Working Sets</uicontrol>: l<?Pub Caret?>ist all the types available
+within the selected working set.</li>
 </ul></p><p>Select the type you want in the type list, then click <uicontrol>OK</uicontrol>. </p></info>
 </step>
 <step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
@@ -52,4 +52,4 @@ schema and add XML content to your annotations.</info></step>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000003230?>
+<?Pub *0000002983?>

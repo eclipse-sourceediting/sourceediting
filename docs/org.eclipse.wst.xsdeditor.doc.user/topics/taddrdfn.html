@@ -2,8 +2,8 @@
 <html lang="en-us" xml:lang="en-us">
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<meta name="copyright" content="Copyright (c) 2000, 2006 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
-<meta name="DC.rights.owner" content="(C) Copyright 2000, 2006" />
+<meta name="copyright" content="Copyright (c) 2000, 2008 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
+<meta name="DC.rights.owner" content="(C) Copyright 2000, 2008" />
 <meta content="public" name="security" />
 <meta content="index,follow" name="Robots" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
@@ -11,8 +11,8 @@
 <meta name="DC.Title" content="Adding redefine elements" />
 <meta name="abstract" content="You can use the redefine mechanism to redefine simple and complex types, groups, and attribute groups obtained from external schema files. When you redefine a component, you are modifying its contents." />
 <meta name="description" content="You can use the redefine mechanism to redefine simple and complex types, groups, and attribute groups obtained from external schema files. When you redefine a component, you are modifying its contents." />
-<meta content="XML schema editor, adding, redefine elements, XML schema files, redefine elements, XML schema files" name="DC.subject" />
-<meta content="XML schema editor, adding, redefine elements, XML schema files, redefine elements, XML schema files" name="keywords" />
+<meta content="XML schema editor, adding redefine elements, XML schema files" name="DC.subject" />
+<meta content="XML schema editor, adding redefine elements, XML schema files" name="keywords" />
 <meta scheme="URI" name="DC.Relation" content="../topics/taddimpt.html" />
 <meta scheme="URI" name="DC.Relation" content="../topics/taddincl.html" />
 <meta scheme="URI" name="DC.Relation" content="../topics/rnmspc.html" />
@@ -41,36 +41,47 @@ also be redefined.</p>
 <p>The following instructions were written for the Resource
 perspective, but they will also work in many other perspectives.</p>
 <p>To
-add a redefine element:</p>
+add a redefine element, complete the following steps:</p>
 </div>
 
 <ol>
-<li class="stepexpand"><span>Open your XML schema in the XML schema editor.</span></li>
-
-<li class="stepexpand"><span>In the Outline view, select your schema.</span> The entire
-schema and its contents are displayed in the Design view.</li>
+<li class="stepexpand"><span>Open your XML schema in the XML schema editor. In the Outline view,
+select your schema.</span> The entire schema and its contents are displayed
+in the Design view.</li>
 
 <li class="stepexpand"><span>In the Design view, right-click in the <strong>Directives</strong> section
 and click <span class="uicontrol">Add Redefine</span>.</span></li>
 
-<li class="stepexpand"><span>In the Properties view, click the <strong>General</strong> tab and click <span class="uicontrol">Browse</span> <img src="../images/Browse.gif" alt="This graphic is the Browse button" /> to
-the right of the <span class="uicontrol">Schema location</span> field.</span>
- The XML schema file you select must have the same namespace as the current
-schema.</li>
+<li class="stepexpand"><span>In the Properties view, click the <strong>General</strong> tab and click
+the <span class="uicontrol">Browse</span> <img src="../images/Browse.gif" alt="This&#10;graphic is the Browse button" /> button to the right of the <span class="uicontrol">Schema
+location</span> field.</span> The XML schema file you select must
+have the same namespace as the current schema.</li>
 
-<li class="stepexpand"><span>If you want to select an XML schema located in the workbench, select <span class="uicontrol">Workbench
-projects</span> and click <span class="uicontrol">Next.</span></span></li>
-
-<li class="stepexpand"><span>Select the schema you want to include and click <span class="uicontrol">Finish</span>.</span>
+<li class="stepexpand"><span>If you want to import an XML schema located in the workbench:</span>
+<ol type="a">
+<li><span>Select <span class="uicontrol">Workbench projects</span> and click <span class="uicontrol">Next</span>. </span>
 </li>
 
-<li class="stepexpand"><span>If you want to select an XML schema located on the Web, select <span class="uicontrol">HTTP</span> and
-click <span class="uicontrol">Next</span>.</span></li>
+<li><span>Select the schema you want to import and click <span class="uicontrol">Finish</span>.</span>
+</li>
 
-<li class="stepexpand"><span>Type the URL of the XML schema and click <span class="uicontrol">Finish</span>.</span>
-  <div class="note"><span class="notetitle">Note:</span> A local copy of the schema will not be stored in the workbench.
+</ol>
+
+</li>
+
+<li class="stepexpand"><span>If you want to import an XML schema located on the Web:</span>
+<ol type="a">
+<li class="substepexpand"><span>Select <span class="uicontrol">HTTP</span> and click <span class="uicontrol">Next</span>.</span>
+</li>
+
+<li class="substepexpand"><span>Type the URL of the XML schema and click <span class="uicontrol">Finish</span>.</span>
+ <div class="note"><span class="notetitle">Note:</span> A local copy of the schema will not be stored in the workbench.
 Every time you validate your schema, the schema's contents will be checked
 from the URL you specify.</div>
+</li>
+
+</ol>
+
 </li>
 
 <li class="stepexpand"><span>The XML schema editor will retrieve the location of the included

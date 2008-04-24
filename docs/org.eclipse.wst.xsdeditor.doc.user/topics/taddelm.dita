@@ -13,16 +13,17 @@ establish constraining relationships between related elements and attributes,
 and control the substitution of elements.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML schema editor<indexterm>elements</indexterm></indexterm>
-<indexterm>XML schema files<indexterm>elements</indexterm></indexterm>
-</keywords>
+<indexterm>XML schema files<indexterm>elements</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context><p>The following instructions were written for the Resource perspective,
-but they will also work in many other perspectives.</p><p>To add an element:</p></context>
+but they will also work in many other perspectives.</p><p>To add an element,
+complete the following steps:</p></context>
 <steps>
 <step><cmd>To add an element, in the Design view, right-click the content
-model you want to work with and click <uicontrol>Add Element</uicontrol>.</cmd>
-<info>The element appears attached to the content model in the Design view.</info>
+model (sequence, choice, or all element) you want to work with and click <uicontrol>Add
+Element</uicontrol>.</cmd><info>The element appears attached to the content
+model in the Design view.</info>
 <substeps>
 <substep><cmd>In the Design view, select the element, and click the current
 (default) name of the element, which puts you in direct editing mode, then
@@ -32,26 +33,26 @@ and select a type from the menu. Alternately, you can select browse to invoke
 the Set Type dialog for more options.</cmd><info>The Set Type dialog lists
 all built-in and user-defined types currently available. You can change the <uicontrol>Scope</uicontrol> of
 the list by selecting one of the following options:<ul>
-<li><uicontrol>Workspace</uicontrol>. Lists all of the types available in
+<li><uicontrol>Workspace</uicontrol>: lists all of the types available in
 your workspace.</li>
-<li><uicontrol>Enclosing Project</uicontrol>. Lists all of the types available
+<li><uicontrol>Enclosing Project</uicontrol>: lists all of the types available
 in the project that contains your file.</li>
-<li>(Default) <uicontrol>Current Resource</uicontrol>. List all of the types
+<li>(Default) <uicontrol>Current Resource</uicontrol>: list all of the types
 available in your current file.</li>
-<li><uicontrol>Working Sets</uicontrol>. List all the types available within
+<li><uicontrol>Working Sets</uicontrol>: list all the types available within
 the selected working set.</li>
 </ul></info></substep>
 </substeps>
 </step>
 <step><cmd>(Optional) In the Properties view, select the appropriate value
-in the <uicontrol>MinOccurs</uicontrol> field.</cmd><info>This is the number
-of times the element can appear in an instance document. If you want the element
-to be optional, select <uicontrol>0</uicontrol>. Otherwise, select <uicontrol>1</uicontrol>. </info>
-</step>
-<step><cmd>(Optional) Select the appropriate value in the <uicontrol>MaxOccurs</uicontrol> field.</cmd>
-<info>This is the maximum number of times the element can appear in an instance
-document. Select <uicontrol>unbounded</uicontrol> to indicate there is no
-maximum number of occurrences.</info></step>
+in the <uicontrol>Minimum Occurrence</uicontrol> field.</cmd><info>This is
+the number of times the element can appear in an instance document. If you
+want the element to be optional, select <uicontrol>0</uicontrol>. Otherwise,
+select <uicontrol>1</uicontrol>. </info></step>
+<step><cmd>(Optional) Select the appropriate value in the <uicontrol>Maximum
+Occurre<?Pub Caret?>nce</uicontrol> field.</cmd><info>This is the maximum
+number of times the element can appear in an instance document. Select <uicontrol>unbounded</uicontrol> to
+indicate there is no maximum number of occurrences.</info></step>
 <step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
 to provide any information about this element.</cmd><info>The <uicontrol>Documentation</uicontrol> page
 is used for human readable material, such as a description.</info></step>
@@ -65,3 +66,4 @@ of any data that can be contained inside the element. For more information
 about working with content models, refer to the related tasks.</postreq>
 </taskbody>
 </task>
+<?Pub *0000003885?>

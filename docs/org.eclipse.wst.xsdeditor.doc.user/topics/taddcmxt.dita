@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <?Pub Inc?>
@@ -20,78 +20,37 @@ instance documents generated from or associated with your XML schema.</shortdesc
 <context><p>You can add as many complex types as you want to an XML schema.</p><p>The
 following instructions were written for the Resource perspective, but they
 will also work in many other perspectives.</p><p>To add a complex type to
-an XML schema, follow these steps:</p></context>
+an XML schema, complete the following steps:</p></context>
 <steps>
 <step><cmd>Open your XML schema in the XML schema editor.</cmd></step>
 <step><cmd>Right-click the Types category in the Design view, and click <uicontrol>Add
 Complex Type</uicontrol>.</cmd></step>
 <step><cmd>In the Properties view, type a new name for the complex type in
 the <uicontrol>Name</uicontrol> field.</cmd></step>
-<step><cmd>Click <uicontrol>Browse</uicontrol> <image href="../images/Browse.gif">
-<alt>Browse icon</alt></image> to select a base type for your complex type.</cmd>
+<step><cmd>Select <uicontrol>Browse</uicontrol> in the <uicontrol>Inherited
+From</uicontrol> drop down to select a base type for your complex type.</cmd>
 <info>You can either set a base type for your complex type, or you can add
 a content model to it (which represents any data that can be contained inside
 an element), but you cannot do both. For more information about content models,
-refer to the related tasks.</info></step>
+see <xref href="taddcmod.dita" scope="peer">Adding content models</xref>.</info>
+</step>
 <step><cmd>Select <uicontrol>restriction</uicontrol> or <uicontrol>extension</uicontrol> from
-the <uicontrol>Inherited by</uicontrol> list.</cmd><info>This specifies whether
+the <uicontrol>Inherited By</uicontrol> list.</cmd><info>This specifies whether
 your type is derived from its base type by restriction or extension.</info>
 </step>
 <step><cmd>The Design view will display the attributes within the complex
 type.</cmd><info>You can also use this view to add attributes to your complex
-type. An attribute associates an attribute name with a specific type and value.</info>
-<choices>
-<choice>To add an attribute, in the Design view, right click your complex
-type and select <uicontrol>Add Attribute</uicontrol>.<ul>
+type. An attribute associates an attribute name with a specific type and value.
+To add an attribute, in the Design view, right click your complex type and
+select <uicontrol>Add Attribute</uicontrol>.<ul>
 <li><uicontrol>name</uicontrol>. In the Design view, click the name of the
 attribute to make a change.</li>
 <li><uicontrol>type</uicontrol>. In the Design view, click the type of the
 attribute to make a change. The drop-down menu provides commonly used types.
 For more options, simply select <uicontrol>Browse</uicontrol> from the menu.</li>
-</ul></choice>
-</choices>
+</ul>For information about adding attributes, attribute references, and <userinput>any</userinput> attributes<?Pub Caret?>,
+see <xref href="taddagrp.dita" scope="peer">Adding attribute groups</xref>.</info>
 </step>
-<step><cmd>An attribute reference provides a reference to a global attribute.
-To add an attribute reference, in the Design view, right-click the complex
-type containing the element, and click <uicontrol>Add Attribute Ref</uicontrol>.</cmd>
-<info>A declaration that references a global attribute enables the referenced
-attribute to appear in the instance document in the context of the referencing
-declaration. Select the reference, then select the attribute group you want
-it to reference in the Properties view, from the<uicontrol> Ref</uicontrol> menu.</info>
-</step>
-<step><cmd>An attribute group reference provides a reference to an attribute
-group. To add an attribute group reference, in the Design view, right-click
-the complex type containing the element, and click <uicontrol>Add Attribute
-Group Ref</uicontrol>.</cmd><info>A declaration that references an attribute
-group enables the referenced attribute group to appear in the instance document
-in the context of the referencing declaration. Select the reference, then
-select the attribute group you want it to reference in the Properties view,
-from the<uicontrol> Ref</uicontrol> menu.</info></step>
-<step><cmd>An <codeph>any</codeph> element enables element content according
-to namespaces, and the corresponding <codeph>any</codeph> attribute element
-enables attributes to appear in elements. To add an <codeph>any</codeph> attribute,
-right-click in the complex type header, and click <uicontrol>Add Any Attribute</uicontrol>.</cmd>
-<info>You can specify the following values for an <codeph>any</codeph> attribute:</info>
-<choices>
-<choice>For a <uicontrol>namespace</uicontrol> value, you can
-select:<ul>
-<li><b>##any</b>. This allows any well-formed XML from any namespace.</li>
-<li><b>##local </b>. This allows any well-formed XML that is not declared
-to be in a namespace.</li>
-<li><b>##other</b>. This allows any well-formed XML that is not from the target
-namespace of the type being defined.</li>
-<li><b>##targetNamespace </b>. This is shorthand for the target namespace
-of the type being defined.</li>
-</ul></choice>
-<choice>For a <uicontrol>processContents</uicontrol> value, you can select:<ul>
-<li><b>skip</b>. The XML processor will not validate the attribute content
-at all.</li>
-<li><b>lax</b>. The XML processor will validate the attribute content as much
-as it can.</li>
-<li><b>strict</b>. The XML processor will validate all the attribute content.</li>
-</ul></choice>
-</choices>
-<info></info></step>
 <step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
 to provide any information about this complex type.</cmd><info>The <uicontrol>Documentation</uicontrol> page
 is used for human readable material, such as a description.</info></step>
@@ -102,4 +61,4 @@ schema and add XML content to your annotations.</info></step>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000006207?>
+<?Pub *0000003647?>

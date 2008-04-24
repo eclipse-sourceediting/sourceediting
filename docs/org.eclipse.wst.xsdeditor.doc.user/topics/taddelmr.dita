@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <?Pub Inc?>
@@ -20,30 +20,31 @@ declaration.</shortdesc>
 <taskbody>
 <context><p>The following instructions were written for the Resource perspective,
 but they will also work in many other perspectives.</p><p>To add an element
-reference:</p></context>
+reference, complete the following steps:</p></context>
 <steps>
-<step><cmd>In the Design view, right-click the content model you want to work
-with and click <uicontrol>Add Element Ref</uicontrol>.</cmd><stepresult>If
-no global element is defined in the document, a new global element is created
-for you, and the element reference will point to it.</stepresult></step>
+<step><cmd>In the Design view, right-click the content model (sequence, choice,
+or all element) you want to work with and click <uicontrol>Add Element Ref</uicontrol>.</cmd>
+<stepresult>If no global element is defined in the document, a new global
+element is created for you, and the element reference will point to it.</stepresult>
+</step>
 <step><cmd>Select the element reference. To specify values for an element
 reference:</cmd>
 <choices>
 <choice>Click the name of the element reference in the Design view. Enter
 the name of the element reference.</choice>
-<choice>Click the element reference type in the Design view.
-Select a type from the menu, or select <uicontrol>Browse</uicontrol> for more
-options.</choice>
+<choice>Click the element reference type in the Design view. Select a type
+from the menu, or select <uicontrol>Browse</uicontrol> for more options.</choice>
 </choices>
 </step>
-<step><cmd>(Optional) Select the appropriate value in the <uicontrol>MinOccurs</uicontrol> field.</cmd>
-<info>This is the number of times the global element referenced can appear
-in an instance document. If you want the element to be optional, select <uicontrol>0</uicontrol>.
-Otherwise, select <uicontrol>1</uicontrol>. </info></step>
-<step><cmd>(Optional) Select the appropriate value in the <uicontrol>MaxOccurs</uicontrol> field.</cmd>
-<info>This is the maximum number of times the global element referenced can
-appear. You can select <uicontrol>unbounded</uicontrol> to indicate there
-is no maximum number of occurrences.</info></step>
+<step><cmd>(Optional) Select the appropriate value in the <uicontrol>Minimum
+Occurrence</uicontrol> field.</cmd><info>This is the number of times the global
+element referenced can appear in an instance document. If you want the element
+to be optional, select <uicontrol>0</uicontrol>. Otherwise, select <uicontrol>1</uicontrol>. </info>
+</step>
+<step><cmd>(Optional) Select the appropriate value in the <uicontrol>Maximum
+Occurrence<?Pub Caret?></uicontrol> field.</cmd><info>This is the maximum
+number of times the global element referenced can appear. You can select <uicontrol>unbounded</uicontrol> to
+indicate there is no maximum number of occurrences.</info></step>
 <step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
 to provide any information about this element reference.</cmd><info>The <uicontrol>Documentation</uicontrol> page
 is used for human readable material, such as a description.</info></step>
@@ -54,4 +55,4 @@ schema and add XML content to your annotations.</info></step>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000003232?>
+<?Pub *0000003039?>
