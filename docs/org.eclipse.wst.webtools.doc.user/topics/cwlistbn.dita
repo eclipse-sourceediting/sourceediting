@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
+ "concept.dtd">
+<concept id="cwlistbn" xml:lang="en-us">
+<title>Listeners</title>
+<prolog><metadata>
+<keywords><indexterm>listeners<indexterm>overview</indexterm></indexterm>
+</keywords>
+</metadata></prolog>
+<conbody>
+<p>Listeners are new feature in the <cite>Sun
+Microsystems <tm tmclass="special" tmowner="Sun Microsystems, Inc." tmtype="tm"
+trademark="Java">Java</tm> Servlet 2.3 Specification</cite>. A listener can be used to monitor and
+react to events in a servlet's life-cycle by defining methods that get
+invoked when life-cycle events occur. Support for application level
+events is defined in the Java Servlet Specification 2.3.</p>
+<p>Application event listeners are classes that
+implement one or more of the servlet event listener interfaces. Servlet
+event listeners support notification for state changes in the
+<b>ServletContext</b> and <b>HttpSession</b> objects, specifically:
+<ul>
+	<li><b>Servlet context listeners</b> are used to manage resources or state held at a VM
+	level for the application.</li>
+	<li><b>HTTP session	listeners</b> are used to manage state or resources associated with a
+	series of requests made in a Web application from the same client or
+	user.</li>
+</ul></p>
+<p>For more information about listeners, refer to the <cite>Sun Microsystems <tm
+tmclass="special" tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="Java">Java</tm> Servlet
+2.3 Specification</cite> at <codeph>java.sun.com/products/servlet/download.html</codeph>.</p>
+</conbody>
+</concept>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
+ "concept.dtd">
+<concept id="cwfiltbn" xml:lang="en-us">
+<title>Listeners</title>
+<prolog><metadata>
+<keywords><indexterm>filters<indexterm>overview</indexterm></indexterm>
+</keywords>
+</metadata></prolog>
+<conbody>
+<p>Filters are new in the <cite>Sun Microsystems Java Servlet
+2.3 Specification</cite>. They enable you to intercept to intercept a
+request before it reaches a resource. In other words, a filter gives you
+access to the HttpServletRequest and the HttpServletResponse objects
+before they are passed on to a servlet.</p>
+<p>Filters can be very useful. For example, you can write a filter
+that records all incoming requests and logs the IP addresses of the
+computers from which the requests originate. You also can use a filter
+as an encryption and decryption device. Other uses include user
+authentication, data compression, user input validation, and so on.</p>
+<p>You also can put a set of filters in a chain. The first filter in
+the chain will be called first and then pass control to the second
+filter, and so on. Filter chaining ensures that you can write a filter
+that does a specific task but adds some functionality in another filter.</p>
+<p>When writing a filter, you basically deal with the
+following three interfaces in the javax.servlet package:
+<ul>
+	<li><b>javax.servlet.Filter:</b> represents the
+	life-cycle of the filter.</li>
+	<li><b>javax.servlet.FilterConfig:</b> represents the
+	configuration of the filter.</li>
+	<li><b>javax.servlet.FilterChain:</b> object provided by
+	the servlet container to the developer giving a view into the
+	invocation chain of a filtered request for a resource.</li>
+</ul></p>
+<p>For more information about filters, refer to the <cite>Sun Microsystems <tm
+tmclass="special" tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="Java">Java</tm> Servlet
+2.3 Specification</cite> at <codeph>java.sun.com/products/servlet/download.html</codeph>.</p>
+</conbody>
+</concept>

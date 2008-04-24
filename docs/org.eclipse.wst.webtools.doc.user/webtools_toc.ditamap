@@ -41,11 +41,19 @@
 </topicref>
 <topicref href="topics/tstylesheet.dita" navtitle="Creating cascading style sheets">
 </topicref>
+<topicref href="topics/tjcrejsp.dita" navtitle="Creating JavaServer Pages (JSP) files">
+<topicref href="topics/cpdjsps.dita" navtitle="JavaServer Pages (JSP) technology">
+</topicref>
+</topicref>
+<topicref href="topics/cwebartifact.dita" navtitle="Creating Web Artifacts">
 <topicref href="topics/twsrvwiz.dita" navtitle="Creating servlets">
 <topicref href="topics/cwservbn.dita" navtitle="Servlets"></topicref>
 </topicref>
-<topicref href="topics/tjcrejsp.dita" navtitle="Creating JavaServer Pages (JSP) files">
-<topicref href="topics/cpdjsps.dita" navtitle="JavaServer Pages (JSP) technology">
+<topicref href="topics/twlstwiz.dita" navtitle="Creating Listeners">
+<topicref href="topics/cwlistbn.dita" navtitle="Listeners"></topicref>
+</topicref>
+<topicref href="topics/twfltwiz.dita" navtitle="Creating Filters">
+<topicref href="topics/cwfiltbn.dita" navtitle="Filters"></topicref>
 </topicref>
 </topicref>
 </topicref>

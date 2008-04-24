@@ -159,7 +159,27 @@ scope="peer"></topicref>
 scope="peer"></topicref>
 </relcell>
 <relcell collection-type="family">
-<topicref href="topics/twsrvwiz.dita" navtitle="Creating servlets"></topicref>
+<topicref href="topics/twsrvwiz.dita" navtitle="Creating Servlets"></topicref>
+</relcell>
+<relcell></relcell>
+</relrow>
+<relrow>
+<relcell collection-type="family">
+<topicref href="topics/cwlistbn.dita" linking="targetonly" navtitle="Listeners"
+scope="peer"></topicref>
+</relcell>
+<relcell collection-type="family">
+<topicref href="topics/twlstwiz.dita" navtitle="Creating Listeners"></topicref>
+</relcell>
+<relcell></relcell>
+</relrow>
+<relrow>
+<relcell collection-type="family">
+<topicref href="topics/cwfiltbn.dita" linking="targetonly" navtitle="Filters"
+scope="peer"></topicref>
+</relcell>
+<relcell collection-type="family">
+<topicref href="topics/twfltwiz.dita" navtitle="Creating Filters"></topicref>
 </relcell>
 <relcell></relcell>
 </relrow>
@@ -199,6 +219,8 @@ scope="peer"></topicref>
 <topicref href="topics/twcreprj.dita" linking="targetonly" navtitle="Creating a dynamic Web project"
 scope="peer">
 <topicref href="topics/tjdetags.dita" linking="targetonly" navtitle="Creating and editing Web pages - overview">
+<topicref href="topics/cwebartifact.dita" linking="targetonly" navtitle="Creating Web Artifacts">
+</topicref>
 </topicref>
 </topicref>
 </relcell>
@@ -221,7 +243,11 @@ scope="peer">
 scope="peer"></topicref>
 <topicref href="topics/tjcrejsp.dita" linking="targetonly" navtitle="Creating JavaServer Pages (JSP) files"
 scope="peer"></topicref>
-<topicref href="topics/twsrvwiz.dita" linking="targetonly" navtitle="Creating servlets"
+<topicref href="topics/twsrvwiz.dita" linking="targetonly" navtitle="Creating Servlets"
+scope="peer"></topicref>
+<topicref href="topics/twlstwiz.dita" linking="targetonly" navtitle="Creating Listeners"
+scope="peer"></topicref>
+<topicref href="topics/twfltwiz.dita" linking="targetonly" navtitle="Creating Filters"
 scope="peer"></topicref>
 </relcell>
 <relcell></relcell>
@@ -244,6 +270,10 @@ scope="peer"></topicref>
 </topicref>
 <topicref href="topics/cwservbn.dita" linking="targetonly" navtitle="Servlets">
 </topicref>
+<topicref href="topics/cwlistvbn.dita" linking="targetonly" navtitle="Listeners">
+</topicref>
+<topicref href="topics/cwfiltbn.dita" linking="targetonly" navtitle="Filters">
+</topicref>
 </relcell>
 <relcell collection-type="family">
 <topicref href="topics/tjcrejsp.dita" linking="targetonly" navtitle="Creating JavaServer Pages (JSP) files"
@@ -254,13 +284,19 @@ scope="peer"></topicref>
 <relrow>
 <relcell collection-type="family">
 <topicref href="topics/cwservbn.dita" navtitle="Servlets"></topicref>
+<topicref href="topics/cwlistbn.dita" navtitle="Listeners"></topicref>
+<topicref href="topics/cwfiltbn.dita" navtitle="Filters"></topicref>
 <topicref href="topics/ccwtover.dita" linking="targetonly" navtitle="Web application overview">
 </topicref>
 <!-- <topicref href="topics/cwebdevelopmenttools.dita" linking="targetonly" navtitle="Web development tools">
 </topicref> -->
 </relcell>
 <relcell>
-<topicref href="topics/twsrvwiz.dita" linking="targetonly" navtitle="Creating servlets"
+<topicref href="topics/twsrvwiz.dita" linking="targetonly" navtitle="Creating Servlets"
+scope="peer"></topicref>
+<topicref href="topics/twlstwiz.dita" linking="targetonly" navtitle="Creating Listeners"
+scope="peer"></topicref>
+<topicref href="topics/twfltwiz.dita" linking="targetonly" navtitle="Creating Filters"
 scope="peer"></topicref>
 </relcell>
 <relcell></relcell>

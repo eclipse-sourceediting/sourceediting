@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
+ "task.dtd">
+<task id="twfltwiz" xml:lang="en-us">
+<title>Creating Filters</title>
+<shortdesc>The filters wizard helps you to create <tm tmclass="special" tmowner="Sun Microsystems, Inc."
+tmtype="tm" trademark="Java">Java</tm> servlet filters
+by walking you through the creation process and and by providing you with output files
+that you can use or that you can modify for use with your Web
+application. The filters can run on Java EE-compliant Web servers.</shortdesc>
+<prolog><metadata>
+<keywords><indexterm>servlets<indexterm>creating</indexterm></indexterm></keywords>
+</metadata></prolog>
+<taskbody>
+<context> <p>To create a filter, complete the following steps: </p></context>
+<<steps>
+<step><cmd>In the Java EE perspective, expand your  <xref href="ccwebprj.dita"
+scope="peer"><desc></desc>dynamic project</xref> in the Project Explorer view.</cmd></step>
+<step><cmd>Right click on the <b>Filter</b> icon, and select <menucascade>
+<uicontrol>New</uicontrol><uicontrol>Filter</uicontrol></menucascade> from
+the pop-up menu.</cmd><stepresult> The <uicontrol>Create FIlter</uicontrol> wizard
+appears.</stepresult></step>
+<step><cmd>Follow the project wizard prompts.</cmd></step>
+</steps>
+<postreq><p><b>General Information</b></p><dl><dlentry>
+<p><dt>Modifiers</dt></p>
+<dd>The <cite>Sun
+Microsystems <tm tmclass="special" tmowner="Sun Microsystems, Inc." tmtype="tm"
+trademark="Java">Java</tm> Servlet 2.3 Specification</cite> states that a
+	Servlet class must be <b>public</b> and not <b>abstract</b>. Therefore,
+	you cannot change these modifiers. The only one available for change is
+	the <b>final</b> modifier.</dd>
+</dlentry><dlentry>
+<p><dt>Interfaces</dt></p>
+<dd>There is one obligatory interface that filter classes must
+	implement: <b>javax.servlet.Filter</b>. This interface is
+	provided by javax.servlet package and is used to represent the
+	life-cycle of the filter. This interface has three methods: init,
+	doFilter and destroy. <ul>
+	<li>The <b>init</b> method is called by the servlet
+	container only once, when it finishes instantiating the filter.</li>	
+	<li>The	<b>doFilter</b> method is where the filtering is performed and is called every
+	time a user requests a resource, such as a servlet, to which the filter
+	is mapped.</li> 
+	<li>The <b>destroy</b> method is called by the servlet container to
+	tell the filter that it will be taken out of service.</li>
+	</ul> Although, that the javax.servlet.Filter interface is provided in the <b>Interfaces</b>
+	field by default, you can add additional interfaces to implement by using the <b>Add</b> button.</dd>
+</dlentry><dlentry>
+<p><dt>Interface selection dialog</dt></p>
+<dd>This dialog appears if you select to add an interface to your
+	filter. As you type the name of the interface that you are adding, a
+	list of available interfaces listed in the <b>Matching items</b> list box
+	updates dynamically to display only the interfaces that match the
+	pattern. Choose an interface to see the qualifier, and then
+	click <b>OK</b> when finished.</dd>
+</dlentry><dlentry>
+<p><dt>Filter Mappings</dt></p>	
+<dd>For a filter to intercept a request to a servlet, you must:
+	<ol>
+		<li>declare the filter with a <b>&lt;filter&gt;</b> element in
+		the deployment descriptor</li>
+		<li>map the filter to the servlet using the <b>&lt;filter-mapping&gt;</b>
+		element.</li>
+	</ol>
+	Sometimes you want a filter to work on multiple servlets. You can do
+	this by mapping a filter to a URL pattern so that any request that
+	matches that URL pattern will be filtered. All this is made
+	automatically if you use the <b>Filter Mappings</b> field.</dd>
+</dlentry><dlentry>
+<p><dt>Method stubs</dt></p>
+<dd>Because each filter must implement the javax.servlet.Filter
+	interface, the <b>Inherited abstract methods</b> option is always
+	checked and cannot be changed.</dd>
+</dlentry></dl></postreq>
+</taskbody>
+</task>

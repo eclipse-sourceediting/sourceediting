@@ -37,7 +37,7 @@ the presentation logic handled by JavaServer Pages (JSP) or HTML files, and
 the HTTP protocol handled by a servlet. <note>JSP files can be used to manage
 both the presentation and business logic for a Web application. JSP files
 use structured markup for presentation, and supply servlet model behavior
-at run time.</note></p>
+at run time.</p>
 <p>You can develop, debug, and deploy servlets, set breakpoints within servlet
 objects, and step through code to make changes that are dynamically folded
 into the running servlet on a running server, without having to restart each
