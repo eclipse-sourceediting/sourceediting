@@ -330,16 +330,20 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 				}
 				// be consistent: if there's metainfo, use *that* as the
 				// descriptor ID
+				descriptor = null;
 				if (attrDecl != null) {
-					descriptor = createPropertyDescriptor(attrDecl);
-					if (descriptor != null) {
-						names.add(attrDecl.getNodeName());
+					String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
+					if (!names.contains(attrName)) {
+						descriptor = createPropertyDescriptor(attrDecl);
+						if (descriptor != null)
+							names.add(attrName);
 					}
 				}
 				else {
-					descriptor = createDefaultPropertyDescriptor(attr.getName());
-					if (descriptor != null) {
-						names.add(attr.getName());
+					if (!names.contains(attr.getName())) {
+						descriptor = createDefaultPropertyDescriptor(attr.getName());
+						if (descriptor != null)
+							names.add(attr.getName());
 					}
 				}
 				if (descriptor != null) {
@@ -374,6 +378,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 					if (!names.contains(attrName)) {
 						IPropertyDescriptor holdDescriptor = createPropertyDescriptor(attrDecl);
 						if (holdDescriptor != null) {
+							names.add(attrName);
 							descriptorList.add(holdDescriptor);
 						}
 					}
