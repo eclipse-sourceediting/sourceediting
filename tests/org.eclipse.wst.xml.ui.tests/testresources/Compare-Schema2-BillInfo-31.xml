@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:BillInfo accountType="" ammount="0.0" date="2001-01-01" xmlns:tns="http://www.example.com/PhoneBanking" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.com/PhoneBanking Schema2.xsd ">
+  <tns:payee accountCode="" name=""/>
+</tns:BillInfo>
