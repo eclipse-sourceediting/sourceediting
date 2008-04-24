@@ -8,7 +8,7 @@
  *  Contributors:
  *      David Carver - initial API and implementation
  *
- * $Id: FunctionPackage.java,v 1.1 2008/04/22 21:07:27 dacarver Exp $
+ * $Id: FunctionPackage.java,v 1.2 2008/04/24 01:51:53 dacarver Exp $
  */
 package org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function;
 
@@ -167,13 +167,31 @@ public interface FunctionPackage extends EPackage {
 	int FUNCTION__ARGUMENTS = xpathPackage.XPATH_COMMON_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>Minimum Arguments</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION__MINIMUM_ARGUMENTS = xpathPackage.XPATH_COMMON_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Maximum Arguments</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION__MAXIMUM_ARGUMENTS = xpathPackage.XPATH_COMMON_FEATURE_COUNT + 6;
+
+	/**
 	 * The number of structural features of the '<em>Function</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_FEATURE_COUNT = xpathPackage.XPATH_COMMON_FEATURE_COUNT + 5;
+	int FUNCTION_FEATURE_COUNT = xpathPackage.XPATH_COMMON_FEATURE_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.impl.ArgumentImpl <em>Argument</em>}' class.
@@ -222,13 +240,13 @@ public interface FunctionPackage extends EPackage {
 	int ARGUMENT__END_LINE_NUMBER = xpathPackage.XPATH_COMMON__END_LINE_NUMBER;
 
 	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Data Type</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ARGUMENT__NAME = xpathPackage.XPATH_COMMON_FEATURE_COUNT + 0;
+	int ARGUMENT__DATA_TYPE = xpathPackage.XPATH_COMMON_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Required</b></em>' attribute.
@@ -334,6 +352,28 @@ public interface FunctionPackage extends EPackage {
 	EReference getFunction_Arguments();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Function#getMinimumArguments <em>Minimum Arguments</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Minimum Arguments</em>'.
+	 * @see org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Function#getMinimumArguments()
+	 * @see #getFunction()
+	 * @generated
+	 */
+	EAttribute getFunction_MinimumArguments();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Function#getMaximumArguments <em>Maximum Arguments</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Maximum Arguments</em>'.
+	 * @see org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Function#getMaximumArguments()
+	 * @see #getFunction()
+	 * @generated
+	 */
+	EAttribute getFunction_MaximumArguments();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Argument <em>Argument</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -344,15 +384,15 @@ public interface FunctionPackage extends EPackage {
 	EClass getArgument();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Argument#getName <em>Name</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Argument#getDataType <em>Data Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Argument#getName()
+	 * @return the meta object for the attribute '<em>Data Type</em>'.
+	 * @see org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Argument#getDataType()
 	 * @see #getArgument()
 	 * @generated
 	 */
-	EAttribute getArgument_Name();
+	EAttribute getArgument_DataType();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Argument#getRequired <em>Required</em>}'.
@@ -459,6 +499,22 @@ public interface FunctionPackage extends EPackage {
 		EReference FUNCTION__ARGUMENTS = eINSTANCE.getFunction_Arguments();
 
 		/**
+		 * The meta object literal for the '<em><b>Minimum Arguments</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FUNCTION__MINIMUM_ARGUMENTS = eINSTANCE.getFunction_MinimumArguments();
+
+		/**
+		 * The meta object literal for the '<em><b>Maximum Arguments</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FUNCTION__MAXIMUM_ARGUMENTS = eINSTANCE.getFunction_MaximumArguments();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.impl.ArgumentImpl <em>Argument</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -469,12 +525,12 @@ public interface FunctionPackage extends EPackage {
 		EClass ARGUMENT = eINSTANCE.getArgument();
 
 		/**
-		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Data Type</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ARGUMENT__NAME = eINSTANCE.getArgument_Name();
+		EAttribute ARGUMENT__DATA_TYPE = eINSTANCE.getArgument_DataType();
 
 		/**
 		 * The meta object literal for the '<em><b>Required</b></em>' attribute feature.

@@ -8,10 +8,11 @@
  *  Contributors:
  *      David Carver - initial API and implementation
  *
- * $Id: AxisPackageImpl.java,v 1.1 2008/04/22 21:07:29 dacarver Exp $
+ * $Id: AxisPackageImpl.java,v 1.2 2008/04/24 01:51:53 dacarver Exp $
  */
 package org.eclipse.wst.xml.xpath.core.internal.model.XPath.Axis.impl;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -154,6 +155,24 @@ public class AxisPackageImpl extends EPackageImpl implements AxisPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getAxis_Name() {
+		return (EAttribute)axisEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getAxis_Shortcut() {
+		return (EAttribute)axisEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public AxisFactory getAxisFactory() {
 		return (AxisFactory)getEFactoryInstance();
 	}
@@ -178,6 +197,8 @@ public class AxisPackageImpl extends EPackageImpl implements AxisPackage {
 
 		// Create classes and their features
 		axisEClass = createEClass(AXIS);
+		createEAttribute(axisEClass, AXIS__NAME);
+		createEAttribute(axisEClass, AXIS__SHORTCUT);
 	}
 
 	/**
@@ -216,6 +237,8 @@ public class AxisPackageImpl extends EPackageImpl implements AxisPackage {
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(axisEClass, Axis.class, "Axis", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getAxis_Name(), ecorePackage.getEString(), "name", null, 0, 1, Axis.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAxis_Shortcut(), ecorePackage.getEString(), "shortcut", null, 0, 1, Axis.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 	}
 
 } //AxisPackageImpl

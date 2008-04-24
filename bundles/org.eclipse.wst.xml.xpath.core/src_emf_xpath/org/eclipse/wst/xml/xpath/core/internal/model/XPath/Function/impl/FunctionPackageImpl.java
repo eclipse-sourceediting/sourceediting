@@ -8,7 +8,7 @@
  *  Contributors:
  *      David Carver - initial API and implementation
  *
- * $Id: FunctionPackageImpl.java,v 1.1 2008/04/22 21:07:29 dacarver Exp $
+ * $Id: FunctionPackageImpl.java,v 1.2 2008/04/24 01:51:53 dacarver Exp $
  */
 package org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.impl;
 
@@ -218,6 +218,24 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getFunction_MinimumArguments() {
+		return (EAttribute)functionEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getFunction_MaximumArguments() {
+		return (EAttribute)functionEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getArgument() {
 		return argumentEClass;
 	}
@@ -227,7 +245,7 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getArgument_Name() {
+	public EAttribute getArgument_DataType() {
 		return (EAttribute)argumentEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -292,9 +310,11 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
 		createEAttribute(functionEClass, FUNCTION__NAME);
 		createEAttribute(functionEClass, FUNCTION__RETURNS);
 		createEReference(functionEClass, FUNCTION__ARGUMENTS);
+		createEAttribute(functionEClass, FUNCTION__MINIMUM_ARGUMENTS);
+		createEAttribute(functionEClass, FUNCTION__MAXIMUM_ARGUMENTS);
 
 		argumentEClass = createEClass(ARGUMENT);
-		createEAttribute(argumentEClass, ARGUMENT__NAME);
+		createEAttribute(argumentEClass, ARGUMENT__DATA_TYPE);
 		createEAttribute(argumentEClass, ARGUMENT__REQUIRED);
 		createEReference(argumentEClass, ARGUMENT__COMPONET);
 
@@ -345,9 +365,11 @@ public class FunctionPackageImpl extends EPackageImpl implements FunctionPackage
 		initEAttribute(getFunction_Name(), ecorePackage.getEString(), "name", null, 1, 1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFunction_Returns(), theDataTypesPackage.getDataTypes(), "returns", "", 1, 1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunction_Arguments(), this.getArgument(), null, "arguments", null, 0, -1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFunction_MinimumArguments(), ecorePackage.getEInt(), "minimumArguments", null, 1, 1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFunction_MaximumArguments(), ecorePackage.getEInt(), "maximumArguments", null, 1, 1, Function.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(argumentEClass, Argument.class, "Argument", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getArgument_Name(), ecorePackage.getEString(), "name", null, 1, 1, Argument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getArgument_DataType(), ecorePackage.getEString(), "dataType", null, 1, 1, Argument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getArgument_Required(), this.getOccurrence(), "required", null, 1, 1, Argument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getArgument_Componet(), thexpathPackage.getComponent(), null, "componet", null, 0, -1, Argument.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

@@ -8,10 +8,11 @@
  *  Contributors:
  *      David Carver - initial API and implementation
  *
- * $Id: AxisPackage.java,v 1.1 2008/04/22 21:07:30 dacarver Exp $
+ * $Id: AxisPackage.java,v 1.2 2008/04/24 01:51:52 dacarver Exp $
  */
 package org.eclipse.wst.xml.xpath.core.internal.model.XPath.Axis;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -119,13 +120,31 @@ public interface AxisPackage extends EPackage {
 	int AXIS__END_LINE_NUMBER = xpathPackage.XPATH_COMMON__END_LINE_NUMBER;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AXIS__NAME = xpathPackage.XPATH_COMMON_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Shortcut</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AXIS__SHORTCUT = xpathPackage.XPATH_COMMON_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Axis</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int AXIS_FEATURE_COUNT = xpathPackage.XPATH_COMMON_FEATURE_COUNT + 0;
+	int AXIS_FEATURE_COUNT = xpathPackage.XPATH_COMMON_FEATURE_COUNT + 2;
 
 
 	/**
@@ -137,6 +156,28 @@ public interface AxisPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getAxis();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Axis.Axis#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.eclipse.wst.xml.xpath.core.internal.model.XPath.Axis.Axis#getName()
+	 * @see #getAxis()
+	 * @generated
+	 */
+	EAttribute getAxis_Name();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Axis.Axis#getShortcut <em>Shortcut</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Shortcut</em>'.
+	 * @see org.eclipse.wst.xml.xpath.core.internal.model.XPath.Axis.Axis#getShortcut()
+	 * @see #getAxis()
+	 * @generated
+	 */
+	EAttribute getAxis_Shortcut();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -169,6 +210,20 @@ public interface AxisPackage extends EPackage {
 		 * @generated
 		 */
 		EClass AXIS = eINSTANCE.getAxis();
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute AXIS__NAME = eINSTANCE.getAxis_Name();
+		/**
+		 * The meta object literal for the '<em><b>Shortcut</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute AXIS__SHORTCUT = eINSTANCE.getAxis_Shortcut();
 
 	}
 

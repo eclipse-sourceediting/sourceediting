@@ -8,10 +8,11 @@
  *  Contributors:
  *      David Carver - initial API and implementation
  *
- * $Id: KeywordsPackageImpl.java,v 1.1 2008/04/22 21:07:27 dacarver Exp $
+ * $Id: KeywordsPackageImpl.java,v 1.2 2008/04/24 01:51:53 dacarver Exp $
  */
 package org.eclipse.wst.xml.xpath.core.internal.model.XPath.Keywords.impl;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -154,6 +155,15 @@ public class KeywordsPackageImpl extends EPackageImpl implements KeywordsPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getKeyword_Name() {
+		return (EAttribute)keywordEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public KeywordsFactory getKeywordsFactory() {
 		return (KeywordsFactory)getEFactoryInstance();
 	}
@@ -178,6 +188,7 @@ public class KeywordsPackageImpl extends EPackageImpl implements KeywordsPackage
 
 		// Create classes and their features
 		keywordEClass = createEClass(KEYWORD);
+		createEAttribute(keywordEClass, KEYWORD__NAME);
 	}
 
 	/**
@@ -216,6 +227,7 @@ public class KeywordsPackageImpl extends EPackageImpl implements KeywordsPackage
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(keywordEClass, Keyword.class, "Keyword", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getKeyword_Name(), ecorePackage.getEString(), "name", null, 0, 1, Keyword.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 	}
 
 } //KeywordsPackageImpl

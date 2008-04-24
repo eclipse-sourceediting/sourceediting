@@ -8,7 +8,7 @@
  *  Contributors:
  *      David Carver - initial API and implementation
  *
- * $Id: FunctionImpl.java,v 1.1 2008/04/22 21:07:29 dacarver Exp $
+ * $Id: FunctionImpl.java,v 1.2 2008/04/24 01:51:53 dacarver Exp $
  */
 package org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.impl;
 
@@ -45,6 +45,8 @@ import org.eclipse.wst.xml.xpath.core.internal.model.XPath.impl.XpathCommonImpl;
  *   <li>{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.impl.FunctionImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.impl.FunctionImpl#getReturns <em>Returns</em>}</li>
  *   <li>{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.impl.FunctionImpl#getArgumentsList <em>Arguments</em>}</li>
+ *   <li>{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.impl.FunctionImpl#getMinimumArguments <em>Minimum Arguments</em>}</li>
+ *   <li>{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.impl.FunctionImpl#getMaximumArguments <em>Maximum Arguments</em>}</li>
  * </ul>
  * </p>
  *
@@ -157,6 +159,46 @@ public class FunctionImpl extends XpathCommonImpl implements Function {
 	 * @ordered
 	 */
 	protected static final Argument[] ARGUMENTS_EEMPTY_ARRAY = new Argument [0];
+
+	/**
+	 * The default value of the '{@link #getMinimumArguments() <em>Minimum Arguments</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMinimumArguments()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int MINIMUM_ARGUMENTS_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getMinimumArguments() <em>Minimum Arguments</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMinimumArguments()
+	 * @generated
+	 * @ordered
+	 */
+	protected int minimumArguments = MINIMUM_ARGUMENTS_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getMaximumArguments() <em>Maximum Arguments</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMaximumArguments()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int MAXIMUM_ARGUMENTS_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getMaximumArguments() <em>Maximum Arguments</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMaximumArguments()
+	 * @generated
+	 * @ordered
+	 */
+	protected int maximumArguments = MAXIMUM_ARGUMENTS_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -327,6 +369,48 @@ public class FunctionImpl extends XpathCommonImpl implements Function {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public int getMinimumArguments() {
+		return minimumArguments;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setMinimumArguments(int newMinimumArguments) {
+		int oldMinimumArguments = minimumArguments;
+		minimumArguments = newMinimumArguments;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, FunctionPackage.FUNCTION__MINIMUM_ARGUMENTS, oldMinimumArguments, minimumArguments));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getMaximumArguments() {
+		return maximumArguments;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setMaximumArguments(int newMaximumArguments) {
+		int oldMaximumArguments = maximumArguments;
+		maximumArguments = newMaximumArguments;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, FunctionPackage.FUNCTION__MAXIMUM_ARGUMENTS, oldMaximumArguments, maximumArguments));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -340,6 +424,10 @@ public class FunctionImpl extends XpathCommonImpl implements Function {
 				return getReturns();
 			case FunctionPackage.FUNCTION__ARGUMENTS:
 				return getArgumentsList();
+			case FunctionPackage.FUNCTION__MINIMUM_ARGUMENTS:
+				return new Integer(getMinimumArguments());
+			case FunctionPackage.FUNCTION__MAXIMUM_ARGUMENTS:
+				return new Integer(getMaximumArguments());
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -369,6 +457,12 @@ public class FunctionImpl extends XpathCommonImpl implements Function {
 				getArgumentsList().clear();
 				getArgumentsList().addAll((Collection<? extends Argument>)newValue);
 				return;
+			case FunctionPackage.FUNCTION__MINIMUM_ARGUMENTS:
+				setMinimumArguments(((Integer)newValue).intValue());
+				return;
+			case FunctionPackage.FUNCTION__MAXIMUM_ARGUMENTS:
+				setMaximumArguments(((Integer)newValue).intValue());
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -396,6 +490,12 @@ public class FunctionImpl extends XpathCommonImpl implements Function {
 			case FunctionPackage.FUNCTION__ARGUMENTS:
 				getArgumentsList().clear();
 				return;
+			case FunctionPackage.FUNCTION__MINIMUM_ARGUMENTS:
+				setMinimumArguments(MINIMUM_ARGUMENTS_EDEFAULT);
+				return;
+			case FunctionPackage.FUNCTION__MAXIMUM_ARGUMENTS:
+				setMaximumArguments(MAXIMUM_ARGUMENTS_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -418,6 +518,10 @@ public class FunctionImpl extends XpathCommonImpl implements Function {
 				return returns != RETURNS_EDEFAULT;
 			case FunctionPackage.FUNCTION__ARGUMENTS:
 				return arguments != null && !arguments.isEmpty();
+			case FunctionPackage.FUNCTION__MINIMUM_ARGUMENTS:
+				return minimumArguments != MINIMUM_ARGUMENTS_EDEFAULT;
+			case FunctionPackage.FUNCTION__MAXIMUM_ARGUMENTS:
+				return maximumArguments != MAXIMUM_ARGUMENTS_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -440,6 +544,10 @@ public class FunctionImpl extends XpathCommonImpl implements Function {
 		result.append(name);
 		result.append(", returns: ");
 		result.append(returns);
+		result.append(", minimumArguments: ");
+		result.append(minimumArguments);
+		result.append(", maximumArguments: ");
+		result.append(maximumArguments);
 		result.append(')');
 		return result.toString();
 	}

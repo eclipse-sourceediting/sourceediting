@@ -8,10 +8,11 @@
  *  Contributors:
  *      David Carver - initial API and implementation
  *
- * $Id: KeywordsPackage.java,v 1.1 2008/04/22 21:07:28 dacarver Exp $
+ * $Id: KeywordsPackage.java,v 1.2 2008/04/24 01:51:53 dacarver Exp $
  */
 package org.eclipse.wst.xml.xpath.core.internal.model.XPath.Keywords;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -119,13 +120,22 @@ public interface KeywordsPackage extends EPackage {
 	int KEYWORD__END_LINE_NUMBER = xpathPackage.XPATH_COMMON__END_LINE_NUMBER;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int KEYWORD__NAME = xpathPackage.XPATH_COMMON_FEATURE_COUNT + 0;
+
+	/**
 	 * The number of structural features of the '<em>Keyword</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int KEYWORD_FEATURE_COUNT = xpathPackage.XPATH_COMMON_FEATURE_COUNT + 0;
+	int KEYWORD_FEATURE_COUNT = xpathPackage.XPATH_COMMON_FEATURE_COUNT + 1;
 
 
 	/**
@@ -137,6 +147,17 @@ public interface KeywordsPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getKeyword();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Keywords.Keyword#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.eclipse.wst.xml.xpath.core.internal.model.XPath.Keywords.Keyword#getName()
+	 * @see #getKeyword()
+	 * @generated
+	 */
+	EAttribute getKeyword_Name();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -169,6 +190,13 @@ public interface KeywordsPackage extends EPackage {
 		 * @generated
 		 */
 		EClass KEYWORD = eINSTANCE.getKeyword();
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute KEYWORD__NAME = eINSTANCE.getKeyword_Name();
 
 	}
 

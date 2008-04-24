@@ -8,7 +8,7 @@
  *  Contributors:
  *      David Carver - initial API and implementation
  *
- * $Id: ArgumentImpl.java,v 1.1 2008/04/22 21:07:29 dacarver Exp $
+ * $Id: ArgumentImpl.java,v 1.2 2008/04/24 01:51:53 dacarver Exp $
  */
 package org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.impl;
 
@@ -40,7 +40,7 @@ import org.eclipse.wst.xml.xpath.core.internal.model.XPath.impl.XpathCommonImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.impl.ArgumentImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.impl.ArgumentImpl#getDataType <em>Data Type</em>}</li>
  *   <li>{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.impl.ArgumentImpl#getRequired <em>Required</em>}</li>
  *   <li>{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.impl.ArgumentImpl#getComponetList <em>Componet</em>}</li>
  * </ul>
@@ -57,24 +57,24 @@ public class ArgumentImpl extends XpathCommonImpl implements Argument {
 	public static final String copyright = " Copyright (c) 2008 Standards for Technology in Automotive Retail and others.\n All rights reserved. This program and the accompanying materials\n are made available under the terms of the Eclipse Public License v1.0\n which accompanies this distribution, and is available at\n http://www.eclipse.org/legal/epl-v10.html\n\n Contributors:\n     David Carver - initial API and implementation";
 
 	/**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * The default value of the '{@link #getDataType() <em>Data Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
+	 * @see #getDataType()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String NAME_EDEFAULT = null;
+	protected static final String DATA_TYPE_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * The cached value of the '{@link #getDataType() <em>Data Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getName()
+	 * @see #getDataType()
 	 * @generated
 	 * @ordered
 	 */
-	protected String name = NAME_EDEFAULT;
+	protected String dataType = DATA_TYPE_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getRequired() <em>Required</em>}' attribute.
@@ -140,8 +140,8 @@ public class ArgumentImpl extends XpathCommonImpl implements Argument {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getName() {
-		return name;
+	public String getDataType() {
+		return dataType;
 	}
 
 	/**
@@ -149,11 +149,11 @@ public class ArgumentImpl extends XpathCommonImpl implements Argument {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setName(String newName) {
-		String oldName = name;
-		name = newName;
+	public void setDataType(String newDataType) {
+		String oldDataType = dataType;
+		dataType = newDataType;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, FunctionPackage.ARGUMENT__NAME, oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET, FunctionPackage.ARGUMENT__DATA_TYPE, oldDataType, dataType));
 	}
 
 	/**
@@ -246,8 +246,8 @@ public class ArgumentImpl extends XpathCommonImpl implements Argument {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case FunctionPackage.ARGUMENT__NAME:
-				return getName();
+			case FunctionPackage.ARGUMENT__DATA_TYPE:
+				return getDataType();
 			case FunctionPackage.ARGUMENT__REQUIRED:
 				return getRequired();
 			case FunctionPackage.ARGUMENT__COMPONET:
@@ -265,8 +265,8 @@ public class ArgumentImpl extends XpathCommonImpl implements Argument {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case FunctionPackage.ARGUMENT__NAME:
-				setName((String)newValue);
+			case FunctionPackage.ARGUMENT__DATA_TYPE:
+				setDataType((String)newValue);
 				return;
 			case FunctionPackage.ARGUMENT__REQUIRED:
 				setRequired((Occurrence)newValue);
@@ -287,8 +287,8 @@ public class ArgumentImpl extends XpathCommonImpl implements Argument {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case FunctionPackage.ARGUMENT__NAME:
-				setName(NAME_EDEFAULT);
+			case FunctionPackage.ARGUMENT__DATA_TYPE:
+				setDataType(DATA_TYPE_EDEFAULT);
 				return;
 			case FunctionPackage.ARGUMENT__REQUIRED:
 				setRequired(REQUIRED_EDEFAULT);
@@ -308,8 +308,8 @@ public class ArgumentImpl extends XpathCommonImpl implements Argument {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case FunctionPackage.ARGUMENT__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case FunctionPackage.ARGUMENT__DATA_TYPE:
+				return DATA_TYPE_EDEFAULT == null ? dataType != null : !DATA_TYPE_EDEFAULT.equals(dataType);
 			case FunctionPackage.ARGUMENT__REQUIRED:
 				return required != REQUIRED_EDEFAULT;
 			case FunctionPackage.ARGUMENT__COMPONET:
@@ -328,8 +328,8 @@ public class ArgumentImpl extends XpathCommonImpl implements Argument {
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (name: ");
-		result.append(name);
+		result.append(" (dataType: ");
+		result.append(dataType);
 		result.append(", required: ");
 		result.append(required);
 		result.append(')');

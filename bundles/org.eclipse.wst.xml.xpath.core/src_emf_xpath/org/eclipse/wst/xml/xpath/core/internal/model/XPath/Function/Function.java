@@ -8,7 +8,7 @@
  *  Contributors:
  *      David Carver - initial API and implementation
  *
- * $Id: Function.java,v 1.1 2008/04/22 21:07:27 dacarver Exp $
+ * $Id: Function.java,v 1.2 2008/04/24 01:51:53 dacarver Exp $
  */
 package org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function;
 
@@ -33,6 +33,8 @@ import org.eclipse.wst.xml.xpath.core.internal.model.XPath.XpathCommon;
  *   <li>{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Function#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Function#getReturns <em>Returns</em>}</li>
  *   <li>{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Function#getArgumentsList <em>Arguments</em>}</li>
+ *   <li>{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Function#getMinimumArguments <em>Minimum Arguments</em>}</li>
+ *   <li>{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Function#getMaximumArguments <em>Maximum Arguments</em>}</li>
  * </ul>
  * </p>
  *
@@ -206,5 +208,57 @@ public interface Function extends XpathCommon, Component {
 	 * @generated
 	 */
 	EList<Argument> getArgumentsList();
+
+	/**
+	 * Returns the value of the '<em><b>Minimum Arguments</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Minimum Arguments</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Minimum Arguments</em>' attribute.
+	 * @see #setMinimumArguments(int)
+	 * @see org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.FunctionPackage#getFunction_MinimumArguments()
+	 * @model required="true"
+	 * @generated
+	 */
+	int getMinimumArguments();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Function#getMinimumArguments <em>Minimum Arguments</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Minimum Arguments</em>' attribute.
+	 * @see #getMinimumArguments()
+	 * @generated
+	 */
+	void setMinimumArguments(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Maximum Arguments</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Maximum Arguments</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Maximum Arguments</em>' attribute.
+	 * @see #setMaximumArguments(int)
+	 * @see org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.FunctionPackage#getFunction_MaximumArguments()
+	 * @model required="true"
+	 * @generated
+	 */
+	int getMaximumArguments();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Function#getMaximumArguments <em>Maximum Arguments</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Maximum Arguments</em>' attribute.
+	 * @see #getMaximumArguments()
+	 * @generated
+	 */
+	void setMaximumArguments(int value);
 
 } // Function

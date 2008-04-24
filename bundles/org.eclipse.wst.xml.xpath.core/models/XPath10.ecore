@@ -45,9 +45,13 @@
           eType="#//DataTypes/DataTypes" defaultValueLiteral=""/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="arguments" upperBound="-1"
           eType="#//Function/Argument"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="minimumArguments" lowerBound="1"
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="maximumArguments" lowerBound="1"
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="Argument" eSuperTypes="#//XpathCommon">
-      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1"
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" lowerBound="1"
           eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="required" lowerBound="1"
           eType="#//Function/Occurrence"/>
@@ -61,10 +65,15 @@
   </eSubpackages>
   <eSubpackages name="Keywords" nsURI="org.eclipse.wst.xml.xpath.core.internal.model.keywords"
       nsPrefix="keyw">
-    <eClassifiers xsi:type="ecore:EClass" name="Keyword" eSuperTypes="#//XpathCommon #//Component"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Keyword" eSuperTypes="#//XpathCommon #//Component">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eClassifiers>
   </eSubpackages>
   <eSubpackages name="Axis" nsURI="org.eclipse.wst.xml.xpath.core.internal.model.axis"
       nsPrefix="axis">
-    <eClassifiers xsi:type="ecore:EClass" name="Axis" eSuperTypes="#//XpathCommon #//Component"/>
+    <eClassifiers xsi:type="ecore:EClass" name="Axis" eSuperTypes="#//XpathCommon #//Component">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="shortcut" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eClassifiers>
   </eSubpackages>
 </ecore:EPackage>

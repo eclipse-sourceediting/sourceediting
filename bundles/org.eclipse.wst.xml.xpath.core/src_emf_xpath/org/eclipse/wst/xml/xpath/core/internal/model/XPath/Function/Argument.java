@@ -8,7 +8,7 @@
  *  Contributors:
  *      David Carver - initial API and implementation
  *
- * $Id: Argument.java,v 1.1 2008/04/22 21:07:27 dacarver Exp $
+ * $Id: Argument.java,v 1.2 2008/04/24 01:51:53 dacarver Exp $
  */
 package org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function;
 
@@ -25,7 +25,7 @@ import org.eclipse.wst.xml.xpath.core.internal.model.XPath.XpathCommon;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Argument#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Argument#getDataType <em>Data Type</em>}</li>
  *   <li>{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Argument#getRequired <em>Required</em>}</li>
  *   <li>{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Argument#getComponetList <em>Componet</em>}</li>
  * </ul>
@@ -44,30 +44,30 @@ public interface Argument extends XpathCommon {
 	String copyright = " Copyright (c) 2008 Standards for Technology in Automotive Retail and others.\n All rights reserved. This program and the accompanying materials\n are made available under the terms of the Eclipse Public License v1.0\n which accompanies this distribution, and is available at\n http://www.eclipse.org/legal/epl-v10.html\n\n Contributors:\n     David Carver - initial API and implementation";
 
 	/**
-	 * Returns the value of the '<em><b>Name</b></em>' attribute.
+	 * Returns the value of the '<em><b>Data Type</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Name</em>' attribute isn't clear,
+	 * If the meaning of the '<em>Data Type</em>' attribute isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Name</em>' attribute.
-	 * @see #setName(String)
-	 * @see org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.FunctionPackage#getArgument_Name()
+	 * @return the value of the '<em>Data Type</em>' attribute.
+	 * @see #setDataType(String)
+	 * @see org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.FunctionPackage#getArgument_DataType()
 	 * @model required="true"
 	 * @generated
 	 */
-	String getName();
+	String getDataType();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Argument#getName <em>Name</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.wst.xml.xpath.core.internal.model.XPath.Function.Argument#getDataType <em>Data Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Name</em>' attribute.
-	 * @see #getName()
+	 * @param value the new value of the '<em>Data Type</em>' attribute.
+	 * @see #getDataType()
 	 * @generated
 	 */
-	void setName(String value);
+	void setDataType(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Required</b></em>' attribute.
