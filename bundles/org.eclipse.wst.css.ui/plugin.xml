@@ -173,6 +173,16 @@
 			<selection class="org.eclipse.core.resources.IResource" />
 		</wizard>
 	</extension>
+	
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution locationURI="menu:edit?after=additions">
+			<command commandId="org.eclipse.ui.edit.text.contentAssist.proposals" id="CSSContentAssist" style="push">
+			   <visibleWhen checkEnabled="false">
+					<reference definitionId="org.eclipse.wst.css.ui.cssSourceContributions.definition"></reference>
+				</visibleWhen>
+			</command>
+		</menuContribution>
+	</extension>
 
 	<extension point="org.eclipse.ui.popupMenus">
 		<viewerContribution

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -299,7 +300,7 @@ public class NewXMLWizard extends NewModelWizard {
 					generator.createTemplateXMLDocument(newFile, templateString);
 				}
 
-				newFile.refreshLocal(1, null);
+				newFile.refreshLocal(IResource.DEPTH_ONE, null);
 
 				IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 				BasicNewResourceWizard.selectAndReveal(newFile, workbenchWindow);

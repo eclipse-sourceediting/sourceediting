@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
+import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.ExtendedEditorActionBuilder;
 import org.eclipse.wst.sse.ui.internal.IExtendedContributor;
@@ -27,7 +28,7 @@ public class SourceEditorActionBarContributor extends MultiPageEditorActionBarCo
 
 	protected IEditorActionBarContributor designViewerActionBarContributor = null;
 	protected IEditorActionBarContributor sourceViewerActionContributor = null;
-	protected XMLMultiPageEditorPart multiPageEditor = null;
+	protected MultiPageEditorPart multiPageEditor = null;
 
 	// EditorExtension
 	private static final String EDITOR_ID = "org.eclipse.wst.xml.ui.XMLMultiPageEditorPart"; //$NON-NLS-1$
@@ -159,8 +160,8 @@ public class SourceEditorActionBarContributor extends MultiPageEditorActionBarCo
 		// activeEditor)
 		// multiPageEditor is needed in setActivePage(IEditorPart
 		// activeEditor)
-		if (targetEditor instanceof XMLMultiPageEditorPart) {
-			multiPageEditor = (XMLMultiPageEditorPart) targetEditor;
+		if (targetEditor instanceof MultiPageEditorPart) {
+			multiPageEditor = (MultiPageEditorPart) targetEditor;
 		}
 
 		super.setActiveEditor(targetEditor);

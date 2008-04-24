@@ -868,7 +868,13 @@
            </separator>
         </menu>
      </menuContribution>
-     		
+     <menuContribution locationURI="menu:edit?after=additions">
+		<command commandId="org.eclipse.ui.edit.text.contentAssist.proposals" id="XMLContentAssist" style="push">
+		   <visibleWhen checkEnabled="false">
+				<reference definitionId="org.eclipse.wst.xml.ui.xmlSourceContributions.definition"></reference>
+			</visibleWhen>
+		</command>
+	</menuContribution>		
      <menuContribution
            locationURI="popup:org.eclipse.ui.popup.any?after=additions">
         <menu
