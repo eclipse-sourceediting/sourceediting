@@ -112,8 +112,9 @@ public class XSLCodeCompletionTest extends UnzippedProjectTester {
 	}
 
 	protected void configureSourceViewer() {
-        sourceViewer.setDocument(document);
 		sourceViewer.configure(new StructuredTextViewerConfigurationXSL());
+		
+        sourceViewer.setDocument(document);
 	}
 
 	protected void loadXSLFile() throws ResourceAlreadyExists, ResourceInUse,
