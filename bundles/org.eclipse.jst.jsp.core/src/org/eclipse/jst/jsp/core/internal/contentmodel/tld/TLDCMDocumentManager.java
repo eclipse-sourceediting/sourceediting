@@ -226,6 +226,12 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				// strip any extraneous quotes and white space
 				includedFile = StringUtils.strip(includedFile).trim();
 				IPath filePath = null;
+				/*
+				 * The resolution of the included fragment should use the file
+				 * containing the directive as the base reference, not always
+				 * the main JSP being invoked. Verified behavior with Apache
+				 * Tomcat 5.5.20.
+				 */
 				if (getIncludes().isEmpty())
 					filePath = FacetModuleCoreSupport.resolve(TaglibController.getLocation(TLDCMDocumentManager.this), includedFile);
 				else
