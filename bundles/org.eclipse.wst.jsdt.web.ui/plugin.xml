@@ -665,7 +665,7 @@
 					</iterate>
 				</with>
 				<with variable="element">
-					<instanceof value="org.eclipse.wst.jsdt.core.IMethod" />
+					<instanceof value="org.eclipse.wst.jsdt.core.IFunction" />
 
 				</with>
 			</enablement>

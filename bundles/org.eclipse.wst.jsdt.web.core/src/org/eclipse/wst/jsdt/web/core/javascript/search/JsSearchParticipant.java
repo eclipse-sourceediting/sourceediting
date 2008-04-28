@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchDocument;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.core.search.SearchParticipant;
@@ -59,7 +59,7 @@ public class JsSearchParticipant extends SearchParticipant {
 		return "Embeded JavaScript"; //$NON-NLS-1$
 	}
 
-	public IPath[] selectIndexes(SearchPattern pattern, IJavaSearchScope scope) {
+	public IPath[] selectIndexes(SearchPattern pattern, IJavaScriptSearchScope scope) {
 		JsPathIndexer indexer = new JsPathIndexer();
 		return indexer.getVisibleJspPaths(pattern, scope);
 	}
@@ -73,7 +73,7 @@ public class JsSearchParticipant extends SearchParticipant {
 		SearchEngine.getDefaultSearchParticipant().indexDocument(document, indexPath);
 	}
 
-	public void locateMatches(SearchDocument[] indexMatches, SearchPattern pattern, IJavaSearchScope scope, SearchRequestor requestor, IProgressMonitor monitor) throws CoreException {
+	public void locateMatches(SearchDocument[] indexMatches, SearchPattern pattern, IJavaScriptSearchScope scope, SearchRequestor requestor, IProgressMonitor monitor) throws CoreException {
 
 		if ((monitor != null) && monitor.isCanceled()) {
 			return;

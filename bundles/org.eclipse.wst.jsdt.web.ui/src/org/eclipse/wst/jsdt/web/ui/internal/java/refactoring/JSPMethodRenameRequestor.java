@@ -12,7 +12,7 @@ package org.eclipse.wst.jsdt.web.ui.internal.java.refactoring;
 
 import java.text.MessageFormat;
 
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.search.SearchMatch;
 import org.eclipse.wst.jsdt.web.core.javascript.search.JSDTSearchDocumentDelegate;
 import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
@@ -21,7 +21,7 @@ import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
  * @author pavery
  */
 public class JSPMethodRenameRequestor extends BasicRefactorSearchRequestor {
-	public JSPMethodRenameRequestor(IJavaElement element, String newName) {
+	public JSPMethodRenameRequestor(IJavaScriptElement element, String newName) {
 		super(element, newName);
 	}
 	

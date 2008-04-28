@@ -22,8 +22,8 @@ import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.IPackageFragment;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.ui.refactoring.RenameSupport;
@@ -42,10 +42,10 @@ public class JSPRenameElementActionDelegate implements IEditorActionDelegate, IA
 		fEditor = null;
 	}
 	
-	private IJavaElement getSelectedElement() {
-		IJavaElement element = null;
+	private IJavaScriptElement getSelectedElement() {
+		IJavaScriptElement element = null;
 		if (fEditor instanceof ITextEditor) {
-			IJavaElement[] elements = JSPJavaSelectionProvider.getSelection((ITextEditor) fEditor);
+			IJavaScriptElement[] elements = JSPJavaSelectionProvider.getSelection((ITextEditor) fEditor);
 			if (elements.length == 1) {
 				element = elements[0];
 			}
@@ -65,18 +65,18 @@ public class JSPRenameElementActionDelegate implements IEditorActionDelegate, IA
 	}
 	
 	public void run(IAction action) {
-		IJavaElement element = getSelectedElement();
+		IJavaScriptElement element = getSelectedElement();
 		if (element != null) {
 			RenameSupport renameSupport = null;
 			try {
 				switch (element.getElementType()) {
-					case IJavaElement.TYPE:
+					case IJavaScriptElement.TYPE:
 						renameSupport = RenameSupport.create((IType) element, element.getElementName(), RenameSupport.UPDATE_REFERENCES);
 					break;
-					case IJavaElement.METHOD:
-						renameSupport = RenameSupport.create((IMethod) element, element.getElementName(), RenameSupport.UPDATE_REFERENCES);
+					case IJavaScriptElement.METHOD:
+						renameSupport = RenameSupport.create((IFunction) element, element.getElementName(), RenameSupport.UPDATE_REFERENCES);
 					break;
-					case IJavaElement.PACKAGE_FRAGMENT:
+					case IJavaScriptElement.PACKAGE_FRAGMENT:
 						renameSupport = RenameSupport.create((IPackageFragment) element, element.getElementName(), RenameSupport.UPDATE_REFERENCES);
 					break;
 				}

@@ -30,8 +30,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -67,8 +67,8 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 		}
 	}
 
-	public IJavaProject getJavaProject() {
-		IJavaProject javaProject = null;
+	public IJavaScriptProject getJavaProject() {
+		IJavaScriptProject javaProject = null;
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		IPath filePath = new Path(baseLocation);
 		IProject project = null;
@@ -76,7 +76,7 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 			project = root.getProject(filePath.segment(0));
 		}
 		if (project != null) {
-			javaProject = JavaCore.create(project);
+			javaProject = JavaScriptCore.create(project);
 		}
 		
 		return javaProject;
@@ -125,7 +125,7 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 	
 	
 	private void initializeJavaPlugins() {
-		JavaCore.getPlugin();
+		JavaScriptCore.getPlugin();
 	}
 	
 	public boolean isAdapterForType(Object type) {

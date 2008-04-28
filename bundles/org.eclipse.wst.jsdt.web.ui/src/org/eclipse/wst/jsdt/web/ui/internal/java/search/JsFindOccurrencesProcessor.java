@@ -15,7 +15,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.search.ui.ISearchQuery;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
@@ -32,8 +32,8 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  * Configures a FindOccurrencesProcessor with JSP partitions and regions
  */
 public class JsFindOccurrencesProcessor extends FindOccurrencesProcessor {
-	private IJavaElement getJavaElement(IDocument document, ITextSelection textSelection) {
-		IJavaElement[] elements = getJavaElementsForCurrentSelection(document, textSelection);
+	private IJavaScriptElement getJavaElement(IDocument document, ITextSelection textSelection) {
+		IJavaScriptElement[] elements = getJavaElementsForCurrentSelection(document, textSelection);
 		return elements.length > 0 ? elements[0] : null;
 	}
 	
@@ -42,8 +42,8 @@ public class JsFindOccurrencesProcessor extends FindOccurrencesProcessor {
 	 * 
 	 * @return currently selected IJavaElements
 	 */
-	private IJavaElement[] getJavaElementsForCurrentSelection(IDocument document, ITextSelection selection) {
-		IJavaElement[] elements = new IJavaElement[0];
+	private IJavaScriptElement[] getJavaElementsForCurrentSelection(IDocument document, ITextSelection selection) {
+		IJavaScriptElement[] elements = new IJavaScriptElement[0];
 		// get JSP translation object for this viewer's document
 		IStructuredModel model = null;
 		try {

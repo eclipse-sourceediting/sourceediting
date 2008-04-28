@@ -51,7 +51,7 @@ public class JSPMoveElementActionDelegate implements IEditorActionDelegate, IAct
 	// eclipse 3.2M5
 	// public move support:
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=61817
-	// IJavaElement[] elements = getSelectedElements();
+	// IJavaScriptElement[] elements = getSelectedElements();
 	// if (elements.length > 0) {
 	//
 	// // need to check if it's movable
@@ -90,7 +90,7 @@ public class JSPMoveElementActionDelegate implements IEditorActionDelegate, IAct
 	// PlatformStatusLineUtil.clearStatusLine();
 	//
 	// }
-	// catch (JavaModelException e) {
+	// catch (JavaScriptModelException e) {
 	// Logger.logException(e);
 	// }
 	// }

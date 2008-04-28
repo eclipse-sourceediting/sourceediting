@@ -11,7 +11,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.MultiTextEdit;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.web.core.javascript.DocumentChangeListenerToTextEdit;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
@@ -67,11 +67,11 @@ public class AddJavaDocStubOperation extends org.eclipse.wst.jsdt.internal.corex
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.jsdt.internal.corext.codemanipulation.AddJavaDocStubOperation#getDocument(org.eclipse.wst.jsdt.core.ICompilationUnit,
+	 * @see org.eclipse.wst.jsdt.internal.corext.codemanipulation.AddJavaDocStubOperation#getDocument(org.eclipse.wst.jsdt.core.IJavaScriptUnit,
 	 *      org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	
-	protected IDocument getDocument(ICompilationUnit cu, IProgressMonitor monitor) throws CoreException {
+	protected IDocument getDocument(IJavaScriptUnit cu, IProgressMonitor monitor) throws CoreException {
 		return getJavaDocumentFromNode();
 	}
 	

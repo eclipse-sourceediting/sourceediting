@@ -61,7 +61,7 @@ public class JSDTContetAssistInvocationContext extends JavaContentAssistInvocati
 	public IDocument getDocument() {
 		return viewer.getDocument();
 	}
-// public ICompilationUnit getCompilationUnit() {
+// public IJavaScriptUnit getCompilationUnit() {
 // return getJSPTranslation(viewer).getCompilationUnit();
 // }
 }

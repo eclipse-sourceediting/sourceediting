@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.search.ui.ISearchResult;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.search.SearchDocument;
 import org.eclipse.wst.jsdt.web.core.javascript.search.JsSearchScope;
 import org.eclipse.wst.jsdt.web.core.javascript.search.JsSearchSupport;
@@ -23,16 +23,16 @@ import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 import org.eclipse.wst.sse.ui.internal.search.BasicSearchQuery;
 
 /**
- * Implementation of <code>ISearchQuery</code> for <code>IJavaElement</code>s
+ * Implementation of <code>ISearchQuery</code> for <code>IJavaScriptElement</code>s
  * in JSP files.
  * 
  * @author pavery
  */
 public class JsSearchQuery extends BasicSearchQuery {
-	/** the IJavaElement we are searching for in the file * */
-	private IJavaElement fElement = null;
+	/** the IJavaScriptElement we are searching for in the file * */
+	private IJavaScriptElement fElement = null;
 	
-	public JsSearchQuery(IFile file, IJavaElement element) {
+	public JsSearchQuery(IFile file, IJavaScriptElement element) {
 		super(file);
 		this.fElement = element;
 	}
@@ -84,7 +84,7 @@ public class JsSearchQuery extends BasicSearchQuery {
 		return this;
 	}
 	
-	public IJavaElement getJavaElement() {
+	public IJavaScriptElement getJavaElement() {
 		return this.fElement;
 	}
 	

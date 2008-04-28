@@ -5,7 +5,7 @@ package org.eclipse.wst.jsdt.web.ui.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 
 /**
  * @author childsb
@@ -19,7 +19,7 @@ public class FindReferencesAction extends JsElementActionProxy {
 	 */
 	
 	public Object[] getRunArgs(IAction action) {
-		IJavaElement elements[] = JsElementActionProxy.getJsElementsFromSelection(getCurrentSelection());
+		IJavaScriptElement elements[] = JsElementActionProxy.getJsElementsFromSelection(getCurrentSelection());
 		if (elements != null && elements.length > 0) {
 			return new Object[] { elements[0] };
 		}
@@ -33,7 +33,7 @@ public class FindReferencesAction extends JsElementActionProxy {
 	 */
 	
 	public Class[] getRunArgTypes() {
-		return new Class[] { IJavaElement.class };
+		return new Class[] { IJavaScriptElement.class };
 	}
 	
 	

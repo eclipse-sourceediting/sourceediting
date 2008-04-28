@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.web.core.javascript.search.JsSearchScope;
 import org.eclipse.wst.jsdt.web.core.javascript.search.JsSearchSupport;
 import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
@@ -23,7 +23,7 @@ import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
  * @author pavery
  */
 public class JSPMethodRenameChange extends Change {
-	public static Change[] createChangesFor(IMethod method, String newName) {
+	public static Change[] createChangesFor(IFunction method, String newName) {
 		JsSearchSupport support = JsSearchSupport.getInstance();
 		// should be handled by JSPIndexManager
 		// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3036

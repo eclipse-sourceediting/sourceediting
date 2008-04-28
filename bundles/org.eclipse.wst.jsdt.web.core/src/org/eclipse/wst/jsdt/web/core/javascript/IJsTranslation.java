@@ -23,9 +23,9 @@ import java.util.List;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 
@@ -36,21 +36,21 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  */
 public interface IJsTranslation {
 
-	public IJavaProject getJavaProject();
+	public IJavaScriptProject getJavaProject();
 
 	public IDocument getHtmlDocument();
 
 	public int getMissingTagStart();
 
-	public IJavaElement[] getAllElementsInJsRange(int javaPositionStart, int javaPositionEnd);
+	public IJavaScriptElement[] getAllElementsInJsRange(int javaPositionStart, int javaPositionEnd);
 
-	public ICompilationUnit getCompilationUnit();
+	public IJavaScriptUnit getCompilationUnit();
 
-	public IJavaElement[] getElementsFromJsRange(int javaPositionStart, int javaPositionEnd);
+	public IJavaScriptElement[] getElementsFromJsRange(int javaPositionStart, int javaPositionEnd);
 
 	public String getHtmlText();
 
-	public IJavaElement getJsElementAtOffset(int jsOffset);
+	public IJavaScriptElement getJsElementAtOffset(int jsOffset);
 
 	public String getJsText();
 
@@ -74,7 +74,7 @@ public interface IJsTranslation {
 	
 	public String getJavaPath();
 	
-	public IJsTranslation getInstance(IStructuredDocument htmlDocument, IJavaProject javaProj, boolean listenForChanges) ;
+	public IJsTranslation getInstance(IStructuredDocument htmlDocument, IJavaScriptProject javaProj, boolean listenForChanges) ;
 
 	public void classpathChange() ;
 }

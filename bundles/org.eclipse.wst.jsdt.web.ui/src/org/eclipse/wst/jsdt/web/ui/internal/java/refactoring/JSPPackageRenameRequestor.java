@@ -11,7 +11,7 @@
 package org.eclipse.wst.jsdt.web.ui.internal.java.refactoring;
 
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 
 /**
@@ -26,7 +26,7 @@ public class JSPPackageRenameRequestor extends BasicRefactorSearchRequestor {
 	 * @param element
 	 * @param newName
 	 */
-	public JSPPackageRenameRequestor(IJavaElement element, String newName) {
+	public JSPPackageRenameRequestor(IJavaScriptElement element, String newName) {
 		super(element, newName);
 	}
 	

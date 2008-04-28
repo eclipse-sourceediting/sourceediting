@@ -4,7 +4,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
@@ -64,7 +64,7 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
 				IJsTranslation translation = fTranslationAdapter.getJSPTranslation(true);
 				fJavaPosition = getDocumentPosition();
 				try {
-					ICompilationUnit cu = translation.getCompilationUnit();
+					IJavaScriptUnit cu = translation.getCompilationUnit();
 					// can't get java proposals w/out a compilation unit
 					// or without a valid position
 					if (cu == null || -1 == fJavaPosition) {
