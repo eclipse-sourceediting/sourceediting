@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -180,15 +181,22 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 	}
 
 	private void waitForBuildAndValidation() throws CoreException {
+		IWorkspaceRoot root = null;
 		try {
 			ResourcesPlugin.getWorkspace().checkpoint(true);
 			Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
 			Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, new NullProgressMonitor());
 			Job.getJobManager().join(ValidatorManager.VALIDATOR_JOB_FAMILY, new NullProgressMonitor());
 			Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
-			Job.getJobManager().beginRule(ResourcesPlugin.getWorkspace().getRoot(), null);
+			Job.getJobManager().beginRule(root = ResourcesPlugin.getWorkspace().getRoot(), null);
 		}
 		catch (InterruptedException e) {
+			// woken up from sleep?
+//			StringWriter s = new StringWriter();
+//			e.printStackTrace(new PrintWriter(s));
+//			fail(s.toString());
+		}
+		catch (IllegalArgumentException e) {
 			StringWriter s = new StringWriter();
 			e.printStackTrace(new PrintWriter(s));
 			fail(s.toString());
@@ -199,7 +207,9 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 			fail(s.toString());
 		}
 		finally {
-			Job.getJobManager().endRule(ResourcesPlugin.getWorkspace().getRoot());
+			if (root != null) {
+				Job.getJobManager().endRule(root);
+			}
 		}
 	}
 	
