@@ -50,7 +50,13 @@ public final class FacetModuleCoreSupport {
 				e.printStackTrace();
 		}
 		if(root == null) {
-//			root = getLocalRoot(path);
+			/*
+			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=213245
+			 * 
+			 * NPE in JSPTaglibDirectiveContentAssistProcessor with
+			 * non-faceted project
+			 */
+			root = getLocalRoot(path);
 		}
 		return root;
 	}

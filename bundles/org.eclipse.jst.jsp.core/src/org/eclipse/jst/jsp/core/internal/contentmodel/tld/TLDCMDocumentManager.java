@@ -232,13 +232,16 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				 * the main JSP being invoked. Verified behavior with Apache
 				 * Tomcat 5.5.20.
 				 */
-				if (getIncludes().isEmpty())
-					filePath = FacetModuleCoreSupport.resolve(TaglibController.getLocation(TLDCMDocumentManager.this), includedFile);
-				else
-					filePath = FacetModuleCoreSupport.resolve((IPath) getIncludes().peek(), includedFile);
+				IPath modelBaseLocation = TaglibController.getLocation(TLDCMDocumentManager.this);
+				if(modelBaseLocation != null) {
+					if (getIncludes().isEmpty())
+						filePath = FacetModuleCoreSupport.resolve(modelBaseLocation, includedFile);
+					else
+						filePath = FacetModuleCoreSupport.resolve((IPath) getIncludes().peek(), includedFile);
+				}
 
 				// check for "loops"
-				if (filePath != null && !getIncludes().contains(filePath) && !filePath.equals(TaglibController.getLocation(TLDCMDocumentManager.this))) {
+				if (filePath != null && !getIncludes().contains(filePath) && !filePath.equals(modelBaseLocation)) {
 					/*
 					 * Prevent slow performance when editing scriptlet part of
 					 * the JSP by only processing includes if they've been
@@ -288,7 +291,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 						}
 					}
 				}
-				else {
+				else if (getIncludes().contains(filePath)) {
 					if (Debug.debugTokenizer)
 						System.out.println("LOOP IN @INCLUDES FOUND: " + filePath); //$NON-NLS-1$
 				}

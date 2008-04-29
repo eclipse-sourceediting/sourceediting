@@ -2051,14 +2051,25 @@ public class JSPTranslator {
 		if (filename != null && fProcessIncludes) {
 			IPath basePath = getModelPath();
 			if (basePath != null) {
-				String filePath = FacetModuleCoreSupport.resolve(basePath, filename).toString();
-				fIncludedPaths.add(filePath);
+				/*
+				 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=227576
+				 * 
+				 * The resolution of the included fragment should use the file
+				 * containing the directive as the base reference, not always
+				 * the main JSP being invoked. Verified behavior with Apache
+				 * Tomcat 5.5.20.
+				 */
+				if (!getIncludes().isEmpty()) {
+					basePath = new Path((String) getIncludes().peek());
+				}
+				String filePathString = FacetModuleCoreSupport.resolve(basePath, filename).toString();
+				fIncludedPaths.add(filePathString);
 
-				if (!getIncludes().contains(filePath) && !filePath.equals(basePath.toString())) {
-					getIncludes().push(filePath);
+				if (!getIncludes().contains(filePathString) && !filePathString.equals(basePath.toString())) {
+					getIncludes().push(filePathString);
 					JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
 					// Should we consider preludes on this segment?
-					helper.parse(filePath);
+					helper.parse(filePathString);
 					getIncludes().pop();
 				}
 			}
