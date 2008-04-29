@@ -29,7 +29,7 @@ public class ShowHistoryAction extends JsElementActionProxy {
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
 	private IResource getHostResource(IJavaScriptElement virtualElement) {
-		IProject project = virtualElement.getJavaProject().getProject();
+		IProject project = virtualElement.getJavaScriptProject().getProject();
 		IPath path = new Path(virtualElement.getHostPath().getPath());
 		IResource host = project.getWorkspace().getRoot().findMember(path);
 		return host;

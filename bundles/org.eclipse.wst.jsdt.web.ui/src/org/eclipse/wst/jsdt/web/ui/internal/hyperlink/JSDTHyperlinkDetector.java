@@ -97,14 +97,14 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 						}
 						// linking to fields of the same compilation unit
 						else if (element.getElementType() == IJavaScriptElement.FIELD) {
-							Object cu = ((IField) element).getCompilationUnit();
+							Object cu = ((IField) element).getJavaScriptUnit();
 							if (cu != null && cu.equals(jspTranslation.getCompilationUnit())) {
 								range = ((ISourceReference) element).getSourceRange();
 							}
 						}
 						// linking to methods of the same compilation unit
 						else if (element.getElementType() == IJavaScriptElement.METHOD) {
-							Object cu = ((IFunction) element).getCompilationUnit();
+							Object cu = ((IFunction) element).getJavaScriptUnit();
 							if (cu != null && cu.equals(jspTranslation.getCompilationUnit())) {
 								range = ((ISourceReference) element).getSourceRange();
 							}

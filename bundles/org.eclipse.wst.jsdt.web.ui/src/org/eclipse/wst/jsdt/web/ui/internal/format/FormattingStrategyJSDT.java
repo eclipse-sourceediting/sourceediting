@@ -83,7 +83,7 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 					String cuSource = cu.getSource();
 					int javaStart = partition.getOffset();
 					int javaLength = partition.getLength();
-					TextEdit edit = CodeFormatterUtil.format2(CodeFormatter.K_COMPILATION_UNIT, cuSource, javaStart, javaLength, startIndentLevel, TextUtilities.getDefaultLineDelimiter(document), getPreferences());
+					TextEdit edit = CodeFormatterUtil.format2(CodeFormatter.K_JAVASCRIPT_UNIT, cuSource, javaStart, javaLength, startIndentLevel, TextUtilities.getDefaultLineDelimiter(document), getPreferences());
 					IDocument doc = new Document(translation.getJsText());
 					/* error formating the code so abort */
 					if(edit==null) return;

@@ -137,7 +137,13 @@ public class WebProjectJsGlobalScopeContainerInitializer extends JsGlobalScopeCo
 		return new Path(JsWebNature.VIRTUAL_CONTAINER);
 	}
 
+	/**
+	 * @deprecated Use {@link #getIncludepathEntries()} instead
+	 */
 	public IIncludePathEntry[] getClasspathEntries() {
+		return getIncludepathEntries();
+	}
+	public IIncludePathEntry[] getIncludepathEntries() {
 		
 		//IIncludePathEntry entry=null;
 		

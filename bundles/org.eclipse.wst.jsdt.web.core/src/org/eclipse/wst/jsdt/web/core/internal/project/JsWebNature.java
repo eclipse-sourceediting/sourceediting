@@ -137,9 +137,9 @@ public class JsWebNature implements IProjectNature {
 		try {
 			// , fOutputLocation
 			if (!hasProjectClassPathFile()) {
-				fJavaProject.setRawClasspath((IIncludePathEntry[]) classPathEntries.toArray(new IIncludePathEntry[] {}), fOutputLocation, monitor);
+				fJavaProject.setRawIncludepath((IIncludePathEntry[]) classPathEntries.toArray(new IIncludePathEntry[] {}), fOutputLocation, monitor);
 			}else{
-				fJavaProject.setRawClasspath((IIncludePathEntry[]) classPathEntries.toArray(new IIncludePathEntry[] {}), monitor);
+				fJavaProject.setRawIncludepath((IIncludePathEntry[]) classPathEntries.toArray(new IIncludePathEntry[] {}), monitor);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -173,7 +173,7 @@ public class JsWebNature implements IProjectNature {
 		}
 		// getJavaProject().removeFromBuildSpec(BUILDER_ID);
 		IPath outputLocation = getJavaProject().getOutputLocation();
-		getJavaProject().setRawClasspath((IIncludePathEntry[]) goodEntries.toArray(new IIncludePathEntry[] {}), outputLocation, monitor);
+		getJavaProject().setRawIncludepath((IIncludePathEntry[]) goodEntries.toArray(new IIncludePathEntry[] {}), outputLocation, monitor);
 		getJavaProject().deconfigure();
 		JsWebNature.removeJsNature(fCurrProject, monitor);
 		fCurrProject.refreshLocal(IResource.DEPTH_INFINITE, monitor);
@@ -194,7 +194,7 @@ public class JsWebNature implements IProjectNature {
 	private IIncludePathEntry[] getRawClassPath() {
 		JavaProject proj = new JavaProject();
 		proj.setProject(fCurrProject);
-		return proj.readRawClasspath();
+		return proj.readRawIncludepath();
 	}
 	
 	private boolean hasAValidSourcePath() {

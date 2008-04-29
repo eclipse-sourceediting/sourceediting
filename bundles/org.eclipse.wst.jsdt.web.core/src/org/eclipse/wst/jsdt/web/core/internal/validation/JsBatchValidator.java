@@ -230,7 +230,7 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 		
 		IIncludePathEntry[] entries = new IIncludePathEntry[0];
 		try {
-			entries = javaProject.getResolvedClasspath(true);
+			entries = javaProject.getResolvedIncludepath(true);
 		} catch (JavaScriptModelException ex) {
 			// May run into an exception if the project isn't jsdt.
 		}

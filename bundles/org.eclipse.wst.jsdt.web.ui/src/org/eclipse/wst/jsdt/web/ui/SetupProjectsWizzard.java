@@ -49,7 +49,7 @@ public class SetupProjectsWizzard implements IObjectActionDelegate, IActionDeleg
 						JavaProject jp = (JavaProject)JavaScriptCore.create(project);
 						IIncludePathEntry[] rawClasspath = null;
 						try {
-							rawClasspath = jp.getRawClasspath();
+							rawClasspath = jp.getRawIncludepath();
 						} catch (JavaScriptModelException ex1) {
 							// TODO Auto-generated catch block
 							ex1.printStackTrace();

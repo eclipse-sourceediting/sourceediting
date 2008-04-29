@@ -190,7 +190,7 @@ public class JsTranslation implements IJsTranslation {
 	 */
 	private IJavaScriptUnit createCompilationUnit() throws JavaScriptModelException {
 		IPackageFragmentRoot root = getDocScope(true);
-		IJavaScriptUnit cu = root.getPackageFragment("").getCompilationUnit(getMangledName() + JsDataTypes.BASE_FILE_EXTENSION).getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor()); //$NON-NLS-1$
+		IJavaScriptUnit cu = root.getPackageFragment("").getJavaScriptUnit(getMangledName() + JsDataTypes.BASE_FILE_EXTENSION).getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor()); //$NON-NLS-1$
 		IBuffer buffer;
 		try {
 			buffer = cu.getBuffer();
