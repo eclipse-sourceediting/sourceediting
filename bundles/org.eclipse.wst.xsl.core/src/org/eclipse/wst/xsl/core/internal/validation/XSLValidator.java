@@ -18,13 +18,14 @@ import java.util.Set;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
+import org.apache.xpath.jaxp.XPathFactoryImpl;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
+import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.eclipse.wst.xsl.core.internal.model.CallTemplate;
@@ -45,7 +46,7 @@ import org.eclipse.wst.xsl.core.internal.model.XSLNode;
 public class XSLValidator
 {
 	private static XSLValidator instance;
-	private XPath xpath = XPathFactory.newInstance().newXPath();
+	private XPath xpath = XPathFactoryImpl.newInstance().newXPath();
 	private int MAX_ERRORS = 100;
 
 	private XSLValidator()
@@ -117,7 +118,8 @@ public class XSLValidator
 		{
 			try
 			{
-				xpath.compile(att.getValue());
+				XSLTXPathHelper.compile(att.getValue());
+				//xpath.compile(att.getValue());
 			}
 			catch (XPathExpressionException e)
 			{
