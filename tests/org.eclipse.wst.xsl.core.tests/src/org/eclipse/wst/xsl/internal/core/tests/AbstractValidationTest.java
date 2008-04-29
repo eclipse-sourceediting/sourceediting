@@ -24,6 +24,7 @@ import javax.xml.xpath.XPathFactory;
 
 import junit.framework.TestCase;
 
+import org.apache.xpath.jaxp.XPathFactoryImpl;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -147,7 +148,7 @@ public abstract class AbstractValidationTest extends TestCase
 			if (smodel != null && smodel instanceof IDOMModel)
 			{
 				IDOMModel model = (IDOMModel) smodel;
-				XPathExpression xp = XPathFactory.newInstance().newXPath().compile("//comment()"); 
+				XPathExpression xp = XPathFactoryImpl.newInstance().newXPath().compile("//comment()"); 
 				NodeList nodeSet = (NodeList)xp.evaluate(model.getDocument(), XPathConstants.NODESET);
 				for (int i=0; i<nodeSet.getLength(); i++)
 				{
