@@ -36,6 +36,9 @@ public class KeyboardDragImpl implements IKeyboardDrag
     policy = (KeyBoardAccessibilityEditPolicy) rightElement.getEditPolicy(KeyBoardAccessibilityEditPolicy.KEY);
     EditPart leftElement = (policy != null) ? policy.getRelativeEditPart(rightElement, direction) : null;
 
+    // TODO: add support for extenders
+    if (!(movingElement instanceof XSDBaseFieldEditPart)) return;
+    
     XSDBaseFieldEditPart movingField = (XSDBaseFieldEditPart) movingElement;
     XSDBaseFieldEditPart leftField = (XSDBaseFieldEditPart) leftElement;
     XSDBaseFieldEditPart rightField = (XSDBaseFieldEditPart) rightElement;
