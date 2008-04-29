@@ -2049,7 +2049,8 @@ public class JSPTranslator {
 
 	protected void handleIncludeFile(String filename) {
 		if (filename != null && fProcessIncludes) {
-			IPath basePath = getModelPath();
+			IPath modelPath = getModelPath();
+			IPath basePath = modelPath;
 			if (basePath != null) {
 				/*
 				 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=227576
@@ -2065,7 +2066,7 @@ public class JSPTranslator {
 				String filePathString = FacetModuleCoreSupport.resolve(basePath, filename).toString();
 				fIncludedPaths.add(filePathString);
 
-				if (!getIncludes().contains(filePathString) && !filePathString.equals(basePath.toString())) {
+				if (!getIncludes().contains(filePathString) && !filePathString.equals(modelPath.toString())) {
 					getIncludes().push(filePathString);
 					JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
 					// Should we consider preludes on this segment?
