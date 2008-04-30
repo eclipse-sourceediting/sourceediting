@@ -1,14 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     David Carver - STAR - bug 213849 - initial API and implementation
- *******************************************************************************/
-
 package org.eclipse.wst.xsl.ui.internal;
 
 import java.io.IOException;
@@ -16,31 +5,18 @@ import java.io.IOException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.osgi.framework.BundleContext;
 
 /**
- * XSLUIPlugin
- * @author dcarver
- *
+ * The activator class controls the plug-in life cycle
  */
 public class XSLUIPlugin extends AbstractUIPlugin {
-	
-	/**
-	 * 
-	 */
-	public static final String ID = null;
-
-	/**
-	 * A Singleton Instance of this plugin.
-	 */
-	protected static XSLUIPlugin INSTANCE;
 	
 	/**
 	 * The template store for the xsl editor.
@@ -68,76 +44,53 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 	 * The plugin id for this plugin.
 	 */
 	static public String PLUGIN_ID = "org.eclipse.wst.xsl.ui"; //$NON-NLS-1$
+
+	// The shared instance
+	private static XSLUIPlugin plugin;
+
 	/**
-	 * Constructor Class
+	 * The constructor
 	 */
 	public XSLUIPlugin() {
-	   super();
-	   INSTANCE = this;
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+	 */
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
+		plugin = this;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+	 */
+	public void stop(BundleContext context) throws Exception {
+		plugin = null;
+		super.stop(context);
+	}
+
 	/**
-	 * Returns a default instance
-	 * @return
+	 * Returns the shared instance
+	 *
+	 * @return the shared instance
 	 */
 	public static XSLUIPlugin getDefault() {
-		if (INSTANCE == null) {
-			INSTANCE = new XSLUIPlugin();
-		}
-		return INSTANCE;
+		return plugin;
 	}
 
-	/**
-	 * TODO: Add Javadoc
-	 * @return
-	 */
-	public synchronized static XSLUIPlugin getInstance() {
-		if (INSTANCE == null) {
-			INSTANCE = new XSLUIPlugin();
-		}
-		return INSTANCE;
+	public static void log(Exception e)
+	{
+		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, 0, "", e)); //$NON-NLS-1$
 	}
-	
-	
-	
-	/**
-	 * Utility methods for logging exceptions.
-	 * 
-	 * @param e 
-	 * @param severity 
-	 */
-	public static void log(Throwable e, int severity) {
-		IStatus status = null;
-		if (e instanceof CoreException) {
-			status = ((CoreException)e).getStatus();
-		} else {
-			String m = e.getMessage();
-			status = new Status(severity, PLUGIN_ID, 0, m==null? "<no message>" : m, e); //$NON-NLS-1$
-		}
-		System.out.println(e.getClass().getName()+": "+status); //$NON-NLS-1$
-		INSTANCE.getLog().log(status);
-	}
-	
-	/**
-	 * 
-	 * @param throwable
-	 */
-	public static void log(Throwable throwable) { 
-		log(throwable, IStatus.ERROR); }	
 
-	
-	/**
-	 * TODO: Add Javadoc
-	 */
-    @Override
-	public IPreferenceStore getPreferenceStore() {
-		if (preferenceStore == null) {
-			preferenceStore = (ScopedPreferenceStore) PlatformUI
-					.getPreferenceStore();
-		}
-		return preferenceStore;
+	public static void log(CoreException e)
+	{
+		getDefault().getLog().log(e.getStatus());
 	}
-    
+
 	/**
 	 * Returns the template store for the xsl templates.
 	 * 
@@ -154,7 +107,7 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 			}
 			catch (IOException e)
 			{
-				XSLUIPlugin.log(e);
+				log(e);
 			}
 		}
 		return fTemplateStore;
@@ -188,7 +141,7 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 				fXPathTemplateStore.load();
 			}
 			catch (IOException e) {
-				XSLUIPlugin.log(e);
+				log(e);
 			}
 		}
 		return fXPathTemplateStore;
@@ -213,5 +166,4 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 
 		return fXPathContextTypeRegistry;
 	}
-	
 }

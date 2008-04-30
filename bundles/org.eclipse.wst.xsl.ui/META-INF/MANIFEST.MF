@@ -33,3 +33,4 @@ Export-Package: org.eclipse.wst.xsl.ui.internal;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.util;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.validation;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.wizards;x-internal:=true
+Bundle-ActivationPolicy: lazy

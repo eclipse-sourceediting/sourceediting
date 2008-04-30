@@ -13,4 +13,5 @@ package org.eclipse.wst.xsl.ui.internal;
 public class XSLUIConstants
 {
 	public static final String TEMPLATE_CONTEXT_XSL_NEW = "xsl_new";
+	public static final String NEW_FILE_TEMPLATE_NAME = "NEW_FILE_TEMPLATE_NAME";
 }

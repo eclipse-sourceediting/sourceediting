@@ -341,32 +341,32 @@ public class NewXSLFileTemplatesWizardPage extends WizardPage
 
 	private void loadLastSavedPreferences()
 	{
-//		String templateName = XSLUIPlugin.getDefault().getPreferenceStore().getString("JSPUIPreferenceNames.NEW_FILE_TEMPLATE_NAME");
-//		if (templateName == null || templateName.length() == 0)
-//		{
-//			fLastSelectedTemplateName = ""; //$NON-NLS-1$
-//			fUseTemplateButton.setSelection(false);
-//		}
-//		else
-//		{
-//			fLastSelectedTemplateName = templateName;
-//			fUseTemplateButton.setSelection(true);
-//		}
-//		enableTemplates();
+		String templateName = XSLUIPlugin.getDefault().getPreferenceStore().getString(XSLUIConstants.NEW_FILE_TEMPLATE_NAME);
+		if (templateName == null || templateName.length() == 0)
+		{
+			fLastSelectedTemplateName = ""; //$NON-NLS-1$
+			fUseTemplateButton.setSelection(false);
+		}
+		else
+		{
+			fLastSelectedTemplateName = templateName;
+			fUseTemplateButton.setSelection(true);
+		}
+		enableTemplates();
 	}
 
 	void saveLastSavedPreferences()
 	{
-//		String templateName = ""; //$NON-NLS-1$
-//
-//		Template template = getSelectedTemplate();
-//		if (template != null)
-//		{
-//			templateName = template.getName();
-//		}
-//
-//		XSLUIPlugin.getDefault().getPreferenceStore().setValue(JSPUIPreferenceNames.NEW_FILE_TEMPLATE_NAME, templateName);
-//		XSLUIPlugin.getDefault().savePluginPreferences();
+		String templateName = ""; //$NON-NLS-1$
+
+		Template template = getSelectedTemplate();
+		if (template != null)
+		{
+			templateName = template.getName();
+		}
+
+		XSLUIPlugin.getDefault().getPreferenceStore().setValue(XSLUIConstants.NEW_FILE_TEMPLATE_NAME, templateName);
+		XSLUIPlugin.getDefault().savePluginPreferences();
 	}
 
 	private void setSelectedTemplate(String templateName)
