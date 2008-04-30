@@ -899,7 +899,10 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		// install content type independent plugins
 		if (fPresentationReconciler != null)
 			fPresentationReconciler.uninstall();
-		fPresentationReconciler = fConfiguration.getPresentationReconciler(this);
+		// 228847 - XSL Content Assist tests fail with Null Pointer on Highlighter
+		if(fConfiguration != null)
+			fPresentationReconciler = fConfiguration.getPresentationReconciler(this);
+		
 		if (fPresentationReconciler != null)
 			fPresentationReconciler.install(this);
 
