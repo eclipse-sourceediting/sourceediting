@@ -18,6 +18,7 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
@@ -37,6 +38,18 @@ import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
 public class LineStyleProviderForJSDT extends AbstractLineStyleProvider implements LineStyleProvider {
 	/** The scanner it uses */
 	private JSDTCodeScanner fScanner;
+	
+	private IPropertyChangeListener fPreferenceListener = new IPropertyChangeListener() {
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+		 */
+		public void propertyChange(PropertyChangeEvent event) {
+			// have to do it this way so others can override the method
+			handlePropertyChange(event);
+		}
+	};
 	
 	public LineStyleProviderForJSDT() {
 		super();
@@ -238,7 +251,7 @@ public class LineStyleProviderForJSDT extends AbstractLineStyleProvider implemen
 		}
 		if (styleKey != null || javaStyleKey != null) {
 			// force a full update of the text viewer
-			fRecHighlighter.refreshDisplay();
+			super.getHighlighter().refreshDisplay();
 		}
 	}
 	
