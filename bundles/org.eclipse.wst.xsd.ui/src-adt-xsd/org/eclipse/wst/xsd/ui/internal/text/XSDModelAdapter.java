@@ -83,19 +83,8 @@ public class XSDModelAdapter implements INodeAdapter
 
       // TODO... gotta pester SSE folks to provide 'useful' baseLocations
       // 
-      URI uri = null;
-      if (baseLocation.startsWith("/"))
-      {
-        uri = URI.createPlatformResourceURI(baseLocation);
-      }
-      else if (baseLocation.startsWith("http"))
-      {
-        uri = URI.createURI(baseLocation);
-      }
-      else
-      {
-        uri = URI.createFileURI(baseLocation);
-      }  
+      URI uri = getURI(baseLocation);
+
       Resource resource = new XSDResourceImpl();
       resource.setURI(uri);
       schema = XSDFactory.eINSTANCE.createXSDSchema(); 
@@ -172,6 +161,10 @@ public class XSDModelAdapter implements INodeAdapter
       schema.setDocument(document);
       schema.setElement(document.getDocumentElement());
       
+      String baseLocation = domNode.getModel().getBaseLocation();           
+      URI uri = getURI(baseLocation);
+      schema.eResource().setURI(uri);
+
       resourceSet = XSDSchemaImpl.createResourceSet();
       resourceSet.getAdapterFactories().add(new XSDSchemaLocationResolverAdapterFactory());                
       resourceSet.getResources().add(schema.eResource());
@@ -212,7 +205,25 @@ public class XSDModelAdapter implements INodeAdapter
     }   
     result = adapter.getSchema();    
     return result;    
-  }  
+  }
+  
+  private URI getURI(String baseLocation)
+  {
+    URI uri = null;
+    if (baseLocation.startsWith("/"))
+    {
+      uri = URI.createPlatformResourceURI(baseLocation);
+    }
+    else if (baseLocation.startsWith("http"))
+    {
+      uri = URI.createURI(baseLocation);
+    }
+    else
+    {
+      uri = URI.createFileURI(baseLocation);
+    }
+    return uri;
+  }
 }
 
 
