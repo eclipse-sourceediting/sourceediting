@@ -6,21 +6,26 @@ Bundle-Version: 0.5.0.qualifier
 Bundle-Activator: org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin
 Require-Bundle: org.eclipse.ui;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.core.runtime;bundle-version="[3.4.0,4.0.0)",
- org.eclipse.core.resources;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.core.variables;bundle-version="[3.2.0,4.0.0)",
- org.eclipse.debug.core;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.debug.ui;bundle-version="[3.3.100,4.0.0)",
  org.eclipse.jdt.debug.ui;bundle-version="[3.3.0,4.0.0)",
- org.eclipse.jdt.launching;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.jface.text;bundle-version="[3.4.0,4.0.0)",
- org.eclipse.ui.editors;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.ui.ide;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.ui.workbench.texteditor;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.wst.sse.ui;bundle-version="[1.1.0,2.0.0)",
  org.eclipse.wst.xsl.launching;bundle-version="[0.5.0,1.0.0)",
- org.eclipse.wst.xsl.debug;bundle-version="[0.5.0,1.0.0)",
  org.eclipse.ui.console;bundle-version="[3.2.0,4.0.0)"
 Eclipse-LazyStart: true
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Localization: plugin
 Bundle-Vendor: %Bundle-Vendor.0
+Export-Package: org.eclipse.wst.xsl.internal.debug.ui;x-internal:=true,
+ org.eclipse.wst.xsl.internal.debug.ui.actions;x-internal:=true,
+ org.eclipse.wst.xsl.internal.debug.ui.breakpoint;x-internal:=true,
+ org.eclipse.wst.xsl.internal.debug.ui.model;x-internal:=true,
+ org.eclipse.wst.xsl.internal.debug.ui.preferences;x-internal:=true,
+ org.eclipse.wst.xsl.internal.debug.ui.tabs.formatter;x-internal:=true,
+ org.eclipse.wst.xsl.internal.debug.ui.tabs.main;x-internal:=true,
+ org.eclipse.wst.xsl.internal.debug.ui.tabs.output;x-internal:=true,
+ org.eclipse.wst.xsl.internal.debug.ui.tabs.processor;x-internal:=true,
+ org.eclipse.wst.xsl.internal.debug.ui.tabs.resolver;x-internal:=true
