@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,18 +26,13 @@ import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 
 /**
- * ActionContributorJSP
- * 
- * This class should not be used inside multi page editor's
- * ActionBarContributor, since cascaded init() call from the
- * ActionBarContributor will causes exception and it leads to lose whole
- * toolbars.
- * 
- * Instead, use SourcePageActionContributor for source page contributor of multi
- * page editor.
- * 
- * Note that this class is still valid for single page editor.
- */
+*
+
+* Provisional API: This class/interface is part of an interim API that is still under development and expected to
+* change significantly before reaching stability. It is being made available at this early stage to solicit feedback
+* from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
+* (repeatedly) as the API evolves.
+*/
 public class ActionContributorJSP extends ActionContributorHTML {
 	private static final String[] EDITOR_IDS = { "org.eclipse.wst.html.core.htmlsource.source", "org.eclipse.wst.sse.ui.StructuredTextEditor" }; //$NON-NLS-1$ //$NON-NLS-2$
 	private RetargetTextEditorAction moveElementAction = null;

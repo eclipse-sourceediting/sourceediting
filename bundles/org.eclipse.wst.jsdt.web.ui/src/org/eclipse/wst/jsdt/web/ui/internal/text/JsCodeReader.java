@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,14 +23,13 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.jsdt.web.ui.internal.derived.SingleCharReader;
 
 /**
- * Reads from a document either forwards or backwards. May be configured to skip
- * comments and strings.
- * 
- * Copied from org.eclipse.wst.jsdt.internal.ui.text so we don't have to depend
- * on the org.eclipse.wst.jsdt.ui plugin.
- * 
- * No modifications were made.
- */
+*
+
+* Provisional API: This class/interface is part of an interim API that is still under development and expected to
+* change significantly before reaching stability. It is being made available at this early stage to solicit feedback
+* from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
+* (repeatedly) as the API evolves.
+*/
 class JsCodeReader extends SingleCharReader {
 	/** The EOF character */
 	public static final int EOF = -1;

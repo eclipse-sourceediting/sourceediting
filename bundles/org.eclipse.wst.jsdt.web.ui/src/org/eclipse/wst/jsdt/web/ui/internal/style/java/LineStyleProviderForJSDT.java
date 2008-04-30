@@ -32,9 +32,14 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.internal.provisional.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
+/**
+*
 
-// Note: many of the methods in this class were based on (or copied from) those
-// found in the example Java Editor
+* Provisional API: This class/interface is part of an interim API that is still under development and expected to
+* change significantly before reaching stability. It is being made available at this early stage to solicit feedback
+* from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
+* (repeatedly) as the API evolves.
+*/
 public class LineStyleProviderForJSDT extends AbstractLineStyleProvider implements LineStyleProvider {
 	/** The scanner it uses */
 	private JSDTCodeScanner fScanner;

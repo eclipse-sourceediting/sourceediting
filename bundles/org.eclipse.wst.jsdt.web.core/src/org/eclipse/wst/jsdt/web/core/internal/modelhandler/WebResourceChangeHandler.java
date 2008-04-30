@@ -26,11 +26,13 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelLifecycleListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
-
 /**
- * Copyright IBM 2007. All rights reserved. This class maintains resource change
- * events for web document moedels. Author Bradley Childs. (childsb@us.ibm.com)
- */
+*
+* Provisional API: This class/interface is part of an interim API that is still under development and expected to
+* change significantly before reaching stability. It is being made available at this early stage to solicit feedback
+* from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
+* (repeatedly) as the API evolves.
+*/
 public class WebResourceChangeHandler implements IResourceChangeListener, IDocumentListener, IModelLifecycleListener {
 	/*
 	 * Check the level of dirty regions when signaling for document events.
