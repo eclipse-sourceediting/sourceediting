@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,10 +11,11 @@
 package org.eclipse.wst.xsd.ui.internal.adapters;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
@@ -23,6 +24,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObjectListener;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IStructure;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
@@ -36,13 +38,16 @@ import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDWildcard;
 
-public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implements IStructure, IActionProvider, IGraphElement
+public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implements IStructure, IActionProvider, IGraphElement, IADTObjectListener
 {
   public static final Image ATTRIBUTE_GROUP_REF_ICON_IMAGE = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAttributeGroupRef.gif");
   public static final Image ATTRIBUTE_GROUP_REF_DISABLED_ICON_IMAGE = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAttributeGroupRefdis.gif");
   public static final Image ATTRIBUTE_GROUP_ICON_IMAGE = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAttributeGroup.gif");
   public static final Image ATTRIBUTE_GROUP_DISABLED_ICON_IMAGE = XSDEditorPlugin.getPlugin().getIcon("obj16/XSDAttributeGroupdis.gif");
 	  
+  protected List fields = null;
+  protected List otherThingsToListenTo = null;
+
   public XSDAttributeGroupDefinitionAdapter()
   {
     super();
@@ -126,9 +131,43 @@ public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implement
 
   public List getFields()
   {
-    // TODO (cs) ... review this    
-    ITreeElement[] chidlren = getChildren();
-    return Arrays.asList(chidlren);
+    if (fields == null)
+    {
+      fields = new ArrayList();
+      otherThingsToListenTo = new ArrayList();
+      XSDVisitorForFields visitor = new XSDVisitorForFields();
+      visitor.visitAttributeGroupDefinition(getXSDAttributeGroupDefinition());
+      populateAdapterList(visitor.concreteComponentList, fields);
+      populateAdapterList(visitor.thingsWeNeedToListenTo, otherThingsToListenTo);
+      for (Iterator i = otherThingsToListenTo.iterator(); i.hasNext();)
+      {
+        Adapter adapter = (Adapter) i.next();
+        if (adapter instanceof IADTObject)
+        {
+          IADTObject adtObject = (IADTObject) adapter;
+          adtObject.registerListener(this);
+        }
+      }
+    }
+    return fields;
+  }
+
+  protected void clearFields()
+  {
+    if (otherThingsToListenTo != null)
+    {
+      for (Iterator i = otherThingsToListenTo.iterator(); i.hasNext();)
+      {
+        Adapter adapter = (Adapter) i.next();
+        if (adapter instanceof IADTObject)
+        {
+          IADTObject adtObject = (IADTObject) adapter;
+          adtObject.unregisterListener(this);
+        }
+      }
+    }
+    fields = null;
+    otherThingsToListenTo = null;
   }
 
   public IModel getModel()
@@ -156,6 +195,18 @@ public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implement
   public IADTObject getTopContainer()
   {
     return getGlobalXSDContainer(getXSDAttributeGroupDefinition());
+  }
+
+  public void notifyChanged(Notification msg)
+  {
+    clearFields();
+    super.notifyChanged(msg);
+  }
+  
+  public void propertyChanged(Object object, String property)
+  {
+    clearFields();
+    notifyListeners(this, null);
   }
   
 
