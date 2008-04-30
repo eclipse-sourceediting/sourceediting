@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,9 +49,11 @@ public abstract class XSDBaseAttributeAdapter extends XSDBaseAdapter implements 
   public String[] getActions(Object object)
   {
     List list = new ArrayList();
-    list.add(AddXSDAttributeDeclarationAction.ID);
-    list.add(BaseSelectionAction.SEPARATOR_ID);
-    //list.add(DeleteXSDConcreteComponentAction.DELETE_XSD_COMPONENT_ID);
+    if (!isGlobal())
+    {
+      list.add(AddXSDAttributeDeclarationAction.ID);
+      list.add(BaseSelectionAction.SEPARATOR_ID);
+    }
     list.add(DeleteAction.ID);
     list.add(BaseSelectionAction.SEPARATOR_ID);
     Object schema = getEditorSchema();
