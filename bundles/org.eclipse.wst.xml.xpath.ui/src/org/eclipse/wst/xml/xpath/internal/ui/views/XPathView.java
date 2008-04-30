@@ -16,6 +16,7 @@ import java.util.Map;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.eclipse.core.runtime.ListenerList;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -23,7 +24,10 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.resource.JFaceColors;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -53,12 +57,15 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -148,6 +155,21 @@ public class XPathView extends ViewPart
 		treeViewer.setLabelProvider(new JFaceNodeLabelProviderXPath());
 		this.contentProvider = new JFaceNodeContentProviderXPath();
 		treeViewer.setContentProvider(contentProvider);
+		treeViewer.addSelectionChangedListener(new ISelectionChangedListener(){
+
+			public void selectionChanged(SelectionChangedEvent event)
+			{
+				handleTreeSelection((IStructuredSelection)event.getSelection(),false);
+			}
+		});
+		treeViewer.addDoubleClickListener(new IDoubleClickListener(){
+
+			public void doubleClick(DoubleClickEvent event)
+			{
+				handleTreeSelection((IStructuredSelection)event.getSelection(),true);
+			}
+			
+		});
 
 		final CTabFolder folder= new CTabFolder(parentComp, SWT.BOTTOM | SWT.FLAT);
 		gd = new GridData(SWT.FILL, SWT.NONE, true, false);
@@ -184,6 +206,25 @@ public class XPathView extends ViewPart
 		
 		// TODO when xpath core plugin exists
 		// org.eclipse.jface.fieldassist.AutoCompleteField;
+	}
+
+	private void handleTreeSelection(IStructuredSelection selection, boolean reveal)
+	{
+		if (activeEditor != null)
+		{
+			if (selection.getFirstElement() != null)
+			{
+				IDOMNode node = (IDOMNode)selection.getFirstElement();
+				ITextEditor textEditor = (ITextEditor)activeEditor.getAdapter(ITextEditor.class);
+				if (textEditor != null)
+				{
+					if (reveal)
+						textEditor.selectAndReveal(node.getStartOffset(), node.getEndOffset()-node.getStartOffset());
+					else
+						textEditor.setHighlightRange(node.getStartOffset(), 0, true);
+				}
+			}
+		}
 	}
 
 	private void createContextMenu()
