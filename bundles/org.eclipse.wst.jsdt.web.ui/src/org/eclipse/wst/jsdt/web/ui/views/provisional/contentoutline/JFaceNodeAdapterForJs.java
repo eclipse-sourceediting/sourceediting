@@ -3,8 +3,8 @@ package org.eclipse.wst.jsdt.web.ui.views.provisional.contentoutline;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterForHTML;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
-import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
@@ -51,12 +51,12 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		return super.getElements(object);
 	}
 	
-	private JavaElementLabelProvider getJavaElementLabelProvider() {
-		return new JavaElementLabelProvider();
+	private JavaScriptElementLabelProvider getJavaElementLabelProvider() {
+		return new JavaScriptElementLabelProvider();
 	}
 	
-	private StandardJavaElementContentProvider getJavaElementProvider() {
-		return new StandardJavaElementContentProvider(true);
+	private StandardJavaScriptElementContentProvider getJavaElementProvider() {
+		return new StandardJavaScriptElementContentProvider(true);
 	}
 	
 	private synchronized Object[] getJSElementsFromNode(Node node) {

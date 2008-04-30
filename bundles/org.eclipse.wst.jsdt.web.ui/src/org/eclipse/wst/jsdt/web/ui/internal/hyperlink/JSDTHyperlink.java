@@ -4,7 +4,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 
 /**
@@ -55,9 +55,9 @@ class JSDTHyperlink implements IHyperlink {
 	 */
 	public void open() {
 		try {
-			IEditorPart editor = JavaUI.openInEditor(fElement);
+			IEditorPart editor = JavaScriptUI.openInEditor(fElement);
 			if (editor != null) {
-				JavaUI.revealInEditor(editor, fElement);
+				JavaScriptUI.revealInEditor(editor, fElement);
 			}
 		} catch (Exception e) {
 			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);

@@ -7,7 +7,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.core.JavaElement;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
@@ -60,7 +60,7 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 			hasChildren=false;
 		}
 		removeAttributes();
-		me = (new JavaElementLabelProvider()).getImage(originalElement);
+		me = (new JavaScriptElementLabelProvider()).getImage(originalElement);
 	}
 	
 	public Image getImage() {

@@ -14,8 +14,8 @@ import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.core.JavaElement;
 import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
-import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
@@ -40,7 +40,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	
 	private IJavaScriptUnit lazyCu;
 	private IProgressMonitor monitor;
-	private JavaElementLabelProvider javaElementLabelProvider;
+	private JavaScriptElementLabelProvider javaElementLabelProvider;
 	
 	public Object[] getChildren(Object object) {
 		if (object instanceof IJavaScriptElement) {
@@ -85,7 +85,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		
 		if( elementObj instanceof IJavaWebNode ){
 			IJavaScriptElement element = ((IJavaWebNode)elementObj).getJavaElement();
-			if (element.getElementType() == IJavaScriptElement.TYPE && element.getParent().getElementType() == IJavaScriptElement.COMPILATION_UNIT ) {
+			if (element.getElementType() == IJavaScriptElement.TYPE && element.getParent().getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT ) {
 				
 				IType type = (IType)element;
 				try {
@@ -135,15 +135,15 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		return super.getElements(object);
 	}
 	
-	private JavaElementLabelProvider getJavaElementLabelProvider() {
+	private JavaScriptElementLabelProvider getJavaElementLabelProvider() {
 		if(javaElementLabelProvider==null) {
-			javaElementLabelProvider = new JavaElementLabelProvider();
+			javaElementLabelProvider = new JavaScriptElementLabelProvider();
 		}
 		return javaElementLabelProvider;
 	}
 	
-	private StandardJavaElementContentProvider getJavaElementProvider() {
-		return new StandardJavaElementContentProvider(true);
+	private StandardJavaScriptElementContentProvider getJavaElementProvider() {
+		return new StandardJavaScriptElementContentProvider(true);
 	}
 	
 	private Object[] filterChildrenForRange(IJavaScriptElement[] allChildren, Node node) {
