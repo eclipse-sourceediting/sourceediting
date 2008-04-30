@@ -60,7 +60,7 @@ import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
-import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
+import org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL;
 import org.eclipse.wst.xsl.ui.internal.XSLUIConstants;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 
@@ -232,7 +232,7 @@ public class NewXSLFileTemplatesWizardPage extends WizardPage
 	private SourceViewer createViewer(Composite parent)
 	{
 		SourceViewerConfiguration sourceViewerConfiguration = new StructuredTextViewerConfiguration() {
-			StructuredTextViewerConfiguration baseConfiguration = new StructuredTextViewerConfigurationXML();
+			StructuredTextViewerConfiguration baseConfiguration = new StructuredTextViewerConfigurationXSL();
 
 			public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 				return baseConfiguration.getConfiguredContentTypes(sourceViewer);
