@@ -12,8 +12,10 @@ package org.eclipse.wst.xsl.ui.internal.wizards;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.text.templates.DocumentTemplateContext;
@@ -52,6 +54,13 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.dialogs.PreferencesUtil;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
+import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
+import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 import org.eclipse.wst.xsl.ui.internal.XSLUIConstants;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 
@@ -222,10 +231,22 @@ public class NewXSLFileTemplatesWizardPage extends WizardPage
 
 	private SourceViewer createViewer(Composite parent)
 	{
-		SourceViewer viewer = new SourceViewer(parent, null, null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-		SourceViewerConfiguration configuration = new SourceViewerConfiguration();
-		viewer.configure(configuration);
-		IDocument document = new Document();
+		SourceViewerConfiguration sourceViewerConfiguration = new StructuredTextViewerConfiguration() {
+			StructuredTextViewerConfiguration baseConfiguration = new StructuredTextViewerConfigurationXML();
+
+			public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
+				return baseConfiguration.getConfiguredContentTypes(sourceViewer);
+			}
+
+			public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
+				return baseConfiguration.getLineStyleProviders(sourceViewer, partitionType);
+			}
+		};
+		SourceViewer viewer = new StructuredTextViewer(parent, null, null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		((StructuredTextViewer) viewer).getTextWidget().setFont(JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$
+		IStructuredModel scratchModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForXML.ContentTypeID_XML);
+		IDocument document = scratchModel.getStructuredDocument();
+		viewer.configure(sourceViewerConfiguration);
 		viewer.setDocument(document);
 		return viewer;
 	}
