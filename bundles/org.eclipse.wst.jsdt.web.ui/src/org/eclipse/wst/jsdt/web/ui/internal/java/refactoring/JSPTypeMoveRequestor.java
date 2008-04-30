@@ -12,7 +12,7 @@ package org.eclipse.wst.jsdt.web.ui.internal.java.refactoring;
 
 import java.text.MessageFormat;
 
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.search.SearchMatch;
 //import org.eclipse.wst.jsdt.web.core.internal.java.JsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.search.JSDTSearchDocumentDelegate;
@@ -26,7 +26,7 @@ public class JSPTypeMoveRequestor extends BasicRefactorSearchRequestor {
 	 * @param element
 	 * @param newName
 	 */
-	public JSPTypeMoveRequestor(IJavaElement element, String newPackage) {
+	public JSPTypeMoveRequestor(IJavaScriptElement element, String newPackage) {
 		super(element, newPackage);
 	}
 	

@@ -42,7 +42,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.search.SearchDocument;
 import org.eclipse.wst.jsdt.core.search.SearchMatch;
 import org.eclipse.wst.jsdt.core.search.SearchRequestor;
@@ -54,7 +54,7 @@ import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.encoding.CodedStreamCreator;
 
 /**
- * Creates document change(s) for an IJavaElement rename. Changes are created
+ * Creates document change(s) for an IJavaScriptElement rename. Changes are created
  * for every type "match" in the workspace
  * 
  * @author pavery
@@ -229,13 +229,13 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 	}
 	// end inner class RenameChange
 	/** The type being renamed (the old type) */
-	IJavaElement fElement = null;
+	IJavaScriptElement fElement = null;
 	/** The new name of the type being renamed */
 	private String fNewName = ""; //$NON-NLS-1$
 	/** maps a JSPSearchDocument path -> MultiTextEdit for the java file */
 	private HashMap fSearchDocPath2JavaEditMap = null;
 	
-	public BasicRefactorSearchRequestor(IJavaElement element, String newName) {
+	public BasicRefactorSearchRequestor(IJavaScriptElement element, String newName) {
 		this.fNewName = newName;
 		this.fElement = element;
 		this.fSearchDocPath2JavaEditMap = new HashMap();
@@ -322,7 +322,7 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 		return ""; //$NON-NLS-1$
 	}
 	
-	public IJavaElement getElement() {
+	public IJavaScriptElement getElement() {
 		return this.fElement;
 	}
 	

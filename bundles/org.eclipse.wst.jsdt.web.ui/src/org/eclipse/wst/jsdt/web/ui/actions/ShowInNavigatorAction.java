@@ -15,7 +15,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ISetSelectionTarget;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
 
 /**
@@ -28,8 +28,8 @@ public class ShowInNavigatorAction extends JsElementActionProxy {
 	 * 
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
-	private IResource getHostResource(IJavaElement virtualElement) {
-		IProject project = virtualElement.getJavaProject().getProject();
+	private IResource getHostResource(IJavaScriptElement virtualElement) {
+		IProject project = virtualElement.getJavaScriptProject().getProject();
 		IPath path = new Path(virtualElement.getHostPath().getPath());
 		IResource host = project.getWorkspace().getRoot().findMember(path);
 		return host;
@@ -37,7 +37,7 @@ public class ShowInNavigatorAction extends JsElementActionProxy {
 	
 	
 	public void run(IAction action) {
-		IJavaElement elements[] = JsElementActionProxy.getJsElementsFromSelection(getCurrentSelection());
+		IJavaScriptElement elements[] = JsElementActionProxy.getJsElementsFromSelection(getCurrentSelection());
 		if (elements == null || elements.length == 0) {
 			return;
 		}
@@ -65,7 +65,7 @@ public class ShowInNavigatorAction extends JsElementActionProxy {
 	
 	public void selectionChanged(IAction action, ISelection selection) {
 		setSelection(selection);
-		IJavaElement elements[] = JsElementActionProxy.getJsElementsFromSelection(getCurrentSelection());
+		IJavaScriptElement elements[] = JsElementActionProxy.getJsElementsFromSelection(getCurrentSelection());
 		for (int i = 0; i < elements.length; i++) {
 			if (elements[i].isVirtual()) {
 				IResource resource = getHostResource(elements[i]);

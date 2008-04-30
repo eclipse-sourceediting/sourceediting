@@ -16,7 +16,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.web.ui.views.contentoutline.IJavaWebNode;
 import org.eclipse.wst.jsdt.web.ui.views.contentoutline.JsJfaceNode;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -131,7 +131,7 @@ public class StandardEditorActionsAction implements IObjectActionDelegate {
 			Iterator itt = ((IStructuredSelection) selection).iterator();
 			while (itt.hasNext()) {
 				Object element = itt.next();
-				if (element instanceof IJavaElement) {
+				if (element instanceof IJavaScriptElement) {
 					elements.add(element);
 				}
 				if (element instanceof IJavaWebNode) {

@@ -4,10 +4,10 @@ import java.util.Collection;
 
 import org.eclipse.jface.text.Position;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.core.JavaElement;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
@@ -38,16 +38,16 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 	private Position fDocPosition;
 //	private Node parent;
 	private String typeName;
-	//private IJavaElement dirtyElement;
+	//private IJavaScriptElement dirtyElement;
 	private boolean hasChildren;
 	//private String name;
 	private Image me;
 	
-	public JsJfaceNode(Node parent, IJavaElement originalElement, Position structureDocLocation) {
+	public JsJfaceNode(Node parent, IJavaScriptElement originalElement, Position structureDocLocation) {
 		this(parent, originalElement, structureDocLocation, null);
 	}
 	
-	public JsJfaceNode(Node parent, IJavaElement originalElement, Position structureDocLocation, String typeName) {
+	public JsJfaceNode(Node parent, IJavaScriptElement originalElement, Position structureDocLocation, String typeName) {
 		//super();
 		super(((ElementImpl)parent));
 		// super(parentObject, parentObject.getElementName());
@@ -56,11 +56,11 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 		this.typeName = typeName;
 		try {
 			hasChildren=((JavaElement)originalElement).hasChildren();
-		} catch (JavaModelException ex) {
+		} catch (JavaScriptModelException ex) {
 			hasChildren=false;
 		}
 		removeAttributes();
-		me = (new JavaElementLabelProvider()).getImage(originalElement);
+		me = (new JavaScriptElementLabelProvider()).getImage(originalElement);
 	}
 	
 	public Image getImage() {
@@ -70,7 +70,7 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 	public boolean hasChildren() {
 //		try {
 //			return ((JavaElement)this.dirtyElement).hasChildren();
-//		} catch (JavaModelException ex) {
+//		} catch (JavaScriptModelException ex) {
 //			// TODO Auto-generated catch block
 //			ex.printStackTrace();
 //		}
@@ -137,7 +137,7 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 		return adaptableDomNode.getExistingAdapter(type);
 	}
 	
-	public synchronized IJavaElement getJavaElement() {
+	public synchronized IJavaScriptElement getJavaElement() {
 		/*
 		 * since this may become 'stale' we need to rediscover our element every
 		 * time we're asked
@@ -146,10 +146,10 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 		int startOffset = getStartOffset();
 		int endOffset = getLength();
 		if (typeName != null) {
-			IJavaElement myType = tran.getCompilationUnit().getType(typeName);
+			IJavaScriptElement myType = tran.getCompilationUnit().getType(typeName);
 			return myType;
 		}
-		IJavaElement elements[] = tran.getAllElementsInJsRange(startOffset, startOffset + endOffset);
+		IJavaScriptElement elements[] = tran.getAllElementsInJsRange(startOffset, startOffset + endOffset);
 		if (elements != null) {
 			return elements[0];
 		} else {

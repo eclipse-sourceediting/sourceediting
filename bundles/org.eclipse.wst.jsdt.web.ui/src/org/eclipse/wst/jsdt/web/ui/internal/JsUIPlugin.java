@@ -15,7 +15,7 @@ import java.io.IOException;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.jsdt.internal.ui.JavaPlugin;
+import org.eclipse.wst.jsdt.internal.ui.JavaScriptPlugin;
 import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryRegistryImpl;
 
@@ -65,7 +65,7 @@ public class JsUIPlugin extends AbstractUIPlugin {
 // registry.addContextType(TemplateContextTypeIdsJSP.TAG);
 // registry.addContextType(TemplateContextTypeIdsJSP.ATTRIBUTE);
 // registry.addContextType(TemplateContextTypeIdsJSP.ATTRIBUTE_VALUE);
-			fContextTypeRegistry = JavaPlugin.getDefault().getCodeTemplateContextRegistry();
+			fContextTypeRegistry = JavaScriptPlugin.getDefault().getCodeTemplateContextRegistry();
 		}
 		return fContextTypeRegistry;
 	}
@@ -80,7 +80,7 @@ public class JsUIPlugin extends AbstractUIPlugin {
 // fTemplateStore = new ContributionTemplateStore(
 // getTemplateContextRegistry(), getPreferenceStore(),
 // JSPUIPreferenceNames.TEMPLATES_KEY);
-			JavaPlugin jp = JavaPlugin.getDefault();
+			JavaScriptPlugin jp = JavaScriptPlugin.getDefault();
 			fTemplateStore = jp.getTemplateStore();
 			try {
 				fTemplateStore.load();

@@ -40,12 +40,12 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.wst.jsdt.core.IBuffer;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.ISourceRange;
-import org.eclipse.wst.jsdt.core.JavaModelException; // import
+import org.eclipse.wst.jsdt.core.JavaScriptModelException; // import
 														// org.eclipse.wst.jsdt.core.LibrarySuperType;
 import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
 import org.eclipse.wst.jsdt.internal.core.DocumentContextFragmentRoot;
@@ -67,9 +67,9 @@ public class JsTranslation implements IJsTranslation {
 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 
-	private ICompilationUnit fCompilationUnit = null;
+	private IJavaScriptUnit fCompilationUnit = null;
 	private DocumentContextFragmentRoot fDocumentScope;
-	private IJavaProject fJavaProject = null;
+	private IJavaScriptProject fJavaProject = null;
 	private byte[] fLock = null;
 	private IProgressMonitor fProgressMonitor = null;
 	protected IStructuredDocument fHtmlDocument;
@@ -99,7 +99,7 @@ public class JsTranslation implements IJsTranslation {
 	
 
 	
-	protected JsTranslation(IStructuredDocument htmlDocument, IJavaProject javaProj, boolean listenForChanges) {
+	protected JsTranslation(IStructuredDocument htmlDocument, IJavaScriptProject javaProj, boolean listenForChanges) {
 		fLock = new byte[0];
 		fJavaProject = javaProj;
 		fHtmlDocument = htmlDocument;
@@ -108,14 +108,14 @@ public class JsTranslation implements IJsTranslation {
 		this.listenForChanges=listenForChanges;
 	}
 
-	public IJsTranslation getInstance(IStructuredDocument htmlDocument, IJavaProject javaProj, boolean listenForChanges) {
+	public IJsTranslation getInstance(IStructuredDocument htmlDocument, IJavaScriptProject javaProj, boolean listenForChanges) {
 		return new JsTranslation(htmlDocument,javaProj, listenForChanges);
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation#getJavaProject()
 	 */
-	public IJavaProject getJavaProject() {
+	public IJavaScriptProject getJavaProject() {
 		return fJavaProject;
 	}
 
@@ -183,19 +183,19 @@ public class JsTranslation implements IJsTranslation {
 	}
 
 	/**
-	 * Originally from ReconcileStepForJava. Creates an ICompilationUnit from
+	 * Originally from ReconcileStepForJava. Creates an IJavaScriptUnit from
 	 * the contents of the JSP document.
 	 * 
-	 * @return an ICompilationUnit from the contents of the JSP document
+	 * @return an IJavaScriptUnit from the contents of the JSP document
 	 */
-	private ICompilationUnit createCompilationUnit() throws JavaModelException {
+	private IJavaScriptUnit createCompilationUnit() throws JavaScriptModelException {
 		IPackageFragmentRoot root = getDocScope(true);
-		ICompilationUnit cu = root.getPackageFragment("").getCompilationUnit(getMangledName() + JsDataTypes.BASE_FILE_EXTENSION).getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor()); //$NON-NLS-1$
+		IJavaScriptUnit cu = root.getPackageFragment("").getJavaScriptUnit(getMangledName() + JsDataTypes.BASE_FILE_EXTENSION).getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor()); //$NON-NLS-1$
 		IBuffer buffer;
 		try {
 			buffer = cu.getBuffer();
 		}
-		catch (JavaModelException e) {
+		catch (JavaScriptModelException e) {
 			e.printStackTrace();
 			buffer = null;
 		}
@@ -215,29 +215,29 @@ public class JsTranslation implements IJsTranslation {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation#getAllElementsInJsRange(int, int)
 	 */
-	public IJavaElement[] getAllElementsInJsRange(int javaPositionStart, int javaPositionEnd) {
-		IJavaElement[] EMTPY_RESULT_SET = new IJavaElement[0];
-		IJavaElement[] result = EMTPY_RESULT_SET;
-		IJavaElement[] allChildren = null;
+	public IJavaScriptElement[] getAllElementsInJsRange(int javaPositionStart, int javaPositionEnd) {
+		IJavaScriptElement[] EMTPY_RESULT_SET = new IJavaScriptElement[0];
+		IJavaScriptElement[] result = EMTPY_RESULT_SET;
+		IJavaScriptElement[] allChildren = null;
 		try {
 			allChildren = getCompilationUnit().getChildren();
 		}
-		catch (JavaModelException e) {
+		catch (JavaScriptModelException e) {
 		}
 		Vector validChildren = new Vector();
 		for (int i = 0; i < allChildren.length; i++) {
-			if (allChildren[i].getElementType() != IJavaElement.PACKAGE_DECLARATION) {
+			if (allChildren[i].getElementType() != IJavaScriptElement.PACKAGE_DECLARATION) {
 				ISourceRange range = getJSSourceRangeOf(allChildren[i]);
 				if (javaPositionStart <= range.getOffset() && range.getLength() + range.getOffset() <= (javaPositionEnd)) {
 					validChildren.add(allChildren[i]);
 				}
-				else if (allChildren[i].getElementType() == IJavaElement.TYPE) {
+				else if (allChildren[i].getElementType() == IJavaScriptElement.TYPE) {
 					validChildren.add(allChildren[i]);
 				}
 			}
 		}
 		if (validChildren.size() > 0) {
-			result = (IJavaElement[]) validChildren.toArray(new IJavaElement[]{});
+			result = (IJavaScriptElement[]) validChildren.toArray(new IJavaScriptElement[]{});
 		}
 		if (result == null || result.length == 0) {
 			return EMTPY_RESULT_SET;
@@ -248,7 +248,7 @@ public class JsTranslation implements IJsTranslation {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation#getCompilationUnit()
 	 */
-	public ICompilationUnit getCompilationUnit() {
+	public IJavaScriptUnit getCompilationUnit() {
 		synchronized (fLock) {
 			try {
 				if (fCompilationUnit == null) {
@@ -257,7 +257,7 @@ public class JsTranslation implements IJsTranslation {
 				}
 
 			}
-			catch (JavaModelException jme) {
+			catch (JavaScriptModelException jme) {
 				if (JsTranslation.DEBUG) {
 					Logger.logException("error creating JSP working copy... ", jme); //$NON-NLS-1$
 				}
@@ -269,7 +269,7 @@ public class JsTranslation implements IJsTranslation {
 			fCompilationUnit = fCompilationUnit.getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor());
 			// fCompilationUnit.makeConsistent(getProgressMonitor());
 		}
-		catch (JavaModelException ex) {
+		catch (JavaScriptModelException ex) {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
 		}
@@ -279,11 +279,11 @@ public class JsTranslation implements IJsTranslation {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation#getElementsFromJsRange(int, int)
 	 */
-	public IJavaElement[] getElementsFromJsRange(int javaPositionStart, int javaPositionEnd) {
-		IJavaElement[] EMTPY_RESULT_SET = new IJavaElement[0];
-		IJavaElement[] result = EMTPY_RESULT_SET;
+	public IJavaScriptElement[] getElementsFromJsRange(int javaPositionStart, int javaPositionEnd) {
+		IJavaScriptElement[] EMTPY_RESULT_SET = new IJavaScriptElement[0];
+		IJavaScriptElement[] result = EMTPY_RESULT_SET;
 		try {
-			ICompilationUnit cu = getCompilationUnit();
+			IJavaScriptUnit cu = getCompilationUnit();
 			if (cu != null) {
 				synchronized (fLock) {
 					int cuDocLength = cu.getBuffer().getLength();
@@ -297,7 +297,7 @@ public class JsTranslation implements IJsTranslation {
 				return EMTPY_RESULT_SET;
 			}
 		}
-		catch (JavaModelException x) {
+		catch (JavaScriptModelException x) {
 			Logger.logException(x);
 		}
 		return result;
@@ -325,12 +325,12 @@ public class JsTranslation implements IJsTranslation {
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation#getJsElementAtOffset(int)
 	 */
-	public IJavaElement getJsElementAtOffset(int jsOffset) {
-		IJavaElement elements = null;
+	public IJavaScriptElement getJsElementAtOffset(int jsOffset) {
+		IJavaScriptElement elements = null;
 		try {
 			elements = getCompilationUnit().getElementAt(jsOffset);
 		}
-		catch (JavaModelException e) {
+		catch (JavaScriptModelException e) {
 			// TODO Auto-generated catch block
 			if (JsTranslation.DEBUG) {
 				Logger.logException("error retrieving java elemtnt from compilation unit... ", e); //$NON-NLS-1$
@@ -340,14 +340,14 @@ public class JsTranslation implements IJsTranslation {
 		return elements;
 	}
 
-	private ISourceRange getJSSourceRangeOf(IJavaElement element) {
+	private ISourceRange getJSSourceRangeOf(IJavaScriptElement element) {
 		// returns the offset in html of given element
 		ISourceRange range = null;
 		if (element instanceof SourceRefElement) {
 			try {
 				range = ((SourceRefElement) element).getSourceRange();
 			}
-			catch (JavaModelException e) {
+			catch (JavaScriptModelException e) {
 				e.printStackTrace();
 			}
 		}
@@ -449,7 +449,7 @@ public class JsTranslation implements IJsTranslation {
 
 	/**
 	 * 
-	 * @return the problem requestor for the CompilationUnit in this
+	 * @return the problem requestor for the JavaScriptUnit in this
 	 *         JSPTranslation
 	 */
 	private JsProblemRequestor getProblemRequestor() {
@@ -494,7 +494,7 @@ public class JsTranslation implements IJsTranslation {
 	 */
 	public void reconcileCompilationUnit() {
 		// if(true) return;
-		ICompilationUnit cu = getCompilationUnit();
+		IJavaScriptUnit cu = getCompilationUnit();
 		if (fCompilationUnit == null) {
 			return;
 		}
@@ -503,10 +503,10 @@ public class JsTranslation implements IJsTranslation {
 				synchronized (fLock) {
 					// if(false)
 					// cu.makeConsistent(getProgressMonitor());
-					cu.reconcile(ICompilationUnit.NO_AST, true, getWorkingCopyOwner(), getProgressMonitor());
+					cu.reconcile(IJavaScriptUnit.NO_AST, true, getWorkingCopyOwner(), getProgressMonitor());
 				}
 			}
-			catch (JavaModelException e) {
+			catch (JavaScriptModelException e) {
 				Logger.logException(e);
 			}
 		}
@@ -524,12 +524,12 @@ public class JsTranslation implements IJsTranslation {
 				try {
 					if (JsTranslation.DEBUG) {
 						System.out.println("------------------------------------------------------------------"); //$NON-NLS-1$
-						System.out.println("(-) JSPTranslation [" + this + "] discarding CompilationUnit: " + fCompilationUnit); //$NON-NLS-1$ //$NON-NLS-2$
+						System.out.println("(-) JSPTranslation [" + this + "] discarding JavaScriptUnit: " + fCompilationUnit); //$NON-NLS-1$ //$NON-NLS-2$
 						System.out.println("------------------------------------------------------------------"); //$NON-NLS-1$
 					}
 					fCompilationUnit.discardWorkingCopy();
 				}
-				catch (JavaModelException e) {
+				catch (JavaScriptModelException e) {
 					// we're done w/ it anyway
 				}
 			}
@@ -540,7 +540,7 @@ public class JsTranslation implements IJsTranslation {
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation#setProblemCollectingActive(boolean)
 	 */
 	public void setProblemCollectingActive(boolean collect) {
-		ICompilationUnit cu = getCompilationUnit();
+		IJavaScriptUnit cu = getCompilationUnit();
 		if (cu != null) {
 			getProblemRequestor().setIsActive(collect);
 		}

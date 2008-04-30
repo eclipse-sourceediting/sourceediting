@@ -23,8 +23,8 @@ import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
-import org.eclipse.wst.jsdt.core.IMethod;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IFunction;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 import org.eclipse.wst.jsdt.web.ui.views.contentoutline.IJavaWebNode;
@@ -33,7 +33,7 @@ import org.eclipse.wst.jsdt.web.ui.views.contentoutline.IJavaWebNode;
  * @author pavery
  */
 public class JSPMethodRenameParticipant extends RenameParticipant {
-	private IMethod fMethod = null;
+	private IFunction fMethod = null;
 	
 	/*
 	 * (non-Javadoc)
@@ -71,7 +71,7 @@ public class JSPMethodRenameParticipant extends RenameParticipant {
 		if (this.fMethod != null) {
 			try {
 				name = this.fMethod.getSource();
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				Logger.logException(e);
 			}
 		}
@@ -83,12 +83,12 @@ public class JSPMethodRenameParticipant extends RenameParticipant {
 	 */
 	
 	protected boolean initialize(Object element) {
-		if (element instanceof IMethod) {
-			this.fMethod = (IMethod) element;
+		if (element instanceof IFunction) {
+			this.fMethod = (IFunction) element;
 			return true;
 		}else if (element instanceof IJavaWebNode) {
-			if(((IJavaWebNode)element).getJavaElement() instanceof IMethod) {
-				this.fMethod = (IMethod) ((IJavaWebNode)element).getJavaElement();
+			if(((IJavaWebNode)element).getJavaElement() instanceof IFunction) {
+				this.fMethod = (IFunction) ((IJavaWebNode)element).getJavaElement();
 				return true;
 			}
 		}

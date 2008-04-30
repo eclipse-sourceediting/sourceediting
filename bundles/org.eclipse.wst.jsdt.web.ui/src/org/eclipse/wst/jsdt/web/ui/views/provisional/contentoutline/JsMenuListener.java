@@ -119,7 +119,7 @@ public class JsMenuListener extends XMLNodeActionManager implements IMenuListene
 //					
 //					
 //					
-// JavaPlugin.createStandardGroups(manager);
+// JavaScriptPlugin.createStandardGroups(manager);
 // String[] actionSets = JSDTActionSetUtil.getAllActionSets();
 //
 // IAction[] actions = JSDTActionSetUtil.getActionsFromSet(actionSets);

@@ -9,8 +9,8 @@ import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.ui.text.java.JavaAutoIndentStrategy;
 import org.eclipse.wst.jsdt.internal.ui.text.java.SmartSemicolonAutoEditStrategy;
 import org.eclipse.wst.jsdt.internal.ui.text.javadoc.JavaDocAutoIndentStrategy;
@@ -42,9 +42,9 @@ public class AutoEditStrategyForJs implements IAutoEditStrategy {
 		return fStrategies;
 	}
 	
-	private IJavaProject getJavaProject(IDocument document) {
+	private IJavaScriptProject getJavaProject(IDocument document) {
 		IDOMModel model = null;
-		IJavaProject javaProject = null;
+		IJavaScriptProject javaProject = null;
 		try {
 			model = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(document);
 			String baseLocation = model.getBaseLocation();
@@ -55,7 +55,7 @@ public class AutoEditStrategyForJs implements IAutoEditStrategy {
 				project = root.getProject(filePath.segment(0));
 			}
 			if (project != null) {
-				javaProject = JavaCore.create(project);
+				javaProject = JavaScriptCore.create(project);
 			}
 		} finally {
 			if (model != null) {

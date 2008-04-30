@@ -3,18 +3,18 @@ package org.eclipse.wst.jsdt.web.ui.internal.hyperlink;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.ui.JavaUI;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.ui.JavaScriptUI;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 
 /**
  * Hyperlink for JSP Java elements
  */
 class JSDTHyperlink implements IHyperlink {
-	private IJavaElement fElement;
+	private IJavaScriptElement fElement;
 	private IRegion fRegion;
 	
-	public JSDTHyperlink(IRegion region, IJavaElement element) {
+	public JSDTHyperlink(IRegion region, IJavaScriptElement element) {
 		fRegion = region;
 		fElement = element;
 	}
@@ -55,9 +55,9 @@ class JSDTHyperlink implements IHyperlink {
 	 */
 	public void open() {
 		try {
-			IEditorPart editor = JavaUI.openInEditor(fElement);
+			IEditorPart editor = JavaScriptUI.openInEditor(fElement);
 			if (editor != null) {
-				JavaUI.revealInEditor(editor, fElement);
+				JavaScriptUI.revealInEditor(editor, fElement);
 			}
 		} catch (Exception e) {
 			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);

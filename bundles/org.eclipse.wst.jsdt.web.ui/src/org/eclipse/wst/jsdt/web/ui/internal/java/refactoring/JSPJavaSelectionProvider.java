@@ -15,7 +15,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
@@ -25,8 +25,8 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 class JSPJavaSelectionProvider {
-	static IJavaElement[] getSelection(ITextEditor textEditor) {
-		IJavaElement[] elements = null;
+	static IJavaScriptElement[] getSelection(ITextEditor textEditor) {
+		IJavaScriptElement[] elements = null;
 		IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 		ISelection selection = textEditor.getSelectionProvider().getSelection();
 		if (selection instanceof ITextSelection) {
@@ -51,7 +51,7 @@ class JSPJavaSelectionProvider {
 			}
 		}
 		if (elements == null) {
-			elements = new IJavaElement[0];
+			elements = new IJavaScriptElement[0];
 		}
 		return elements;
 	}

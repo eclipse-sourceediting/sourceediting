@@ -8,8 +8,8 @@ import java.net.URI;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.wst.jsdt.core.IClasspathEntry;
-import org.eclipse.wst.jsdt.core.IJavaProject;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
 import org.eclipse.wst.jsdt.core.IJsGlobalScopeContainer;
 import org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer;
 import org.eclipse.wst.jsdt.core.compiler.libraries.LibraryLocation;
@@ -28,7 +28,7 @@ public class WebProjectJsGlobalScopeContainerInitializer extends JsGlobalScopeCo
 	private static final String MANGLED_BUTT1 = "htm"; //$NON-NLS-1$
 	private static final String MANGLED_BUTT2 = ".js"; //$NON-NLS-1$
 	
-	//private IJavaProject javaProject;
+	//private IJavaScriptProject javaProject;
 	
 	
 	private static String getUnmangedHtmlPath(String containerPathString) {
@@ -50,16 +50,16 @@ public class WebProjectJsGlobalScopeContainerInitializer extends JsGlobalScopeCo
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer#canUpdateJsGlobalScopeContainer(org.eclipse.core.runtime.IPath,
-	 *      org.eclipse.wst.jsdt.core.IJavaProject)
+	 *      org.eclipse.wst.jsdt.core.IJavaScriptProject)
 	 */
 	
-	public boolean canUpdateJsGlobalScopeContainer(IPath containerPath, IJavaProject project) {
+	public boolean canUpdateJsGlobalScopeContainer(IPath containerPath, IJavaScriptProject project) {
 		/* dont remove from this project */
 		return false;
 	}
 	
 	
-	protected IJsGlobalScopeContainer getContainer(IPath containerPath, IJavaProject project) {
+	protected IJsGlobalScopeContainer getContainer(IPath containerPath, IJavaScriptProject project) {
 		return this;
 	}
 	
@@ -72,10 +72,10 @@ public class WebProjectJsGlobalScopeContainerInitializer extends JsGlobalScopeCo
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer#getDescription(org.eclipse.core.runtime.IPath,
-	 *      org.eclipse.wst.jsdt.core.IJavaProject)
+	 *      org.eclipse.wst.jsdt.core.IJavaScriptProject)
 	 */
 	
-	public String getDescription(IPath containerPath, IJavaProject javaProject) {
+	public String getDescription(IPath containerPath, IJavaScriptProject javaProject) {
 		if (containerPath.equals(new Path(JsWebNature.VIRTUAL_CONTAINER))) {
 			return WebProjectJsGlobalScopeContainerInitializer.CONTAINER_DESCRIPTION;
 		}
@@ -104,7 +104,7 @@ public class WebProjectJsGlobalScopeContainerInitializer extends JsGlobalScopeCo
 	 * @see org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer#getHostPath(org.eclipse.core.runtime.IPath)
 	 */
 	
-	public URI getHostPath(IPath path, IJavaProject project) {
+	public URI getHostPath(IPath path, IJavaScriptProject project) {
 		// TODO Auto-generated method stub
 		String htmlPath = WebProjectJsGlobalScopeContainerInitializer.getUnmangedHtmlPath(path.toString());
 		if (htmlPath != null) {
@@ -137,22 +137,28 @@ public class WebProjectJsGlobalScopeContainerInitializer extends JsGlobalScopeCo
 		return new Path(JsWebNature.VIRTUAL_CONTAINER);
 	}
 
-	public IClasspathEntry[] getClasspathEntries() {
+	/**
+	 * @deprecated Use {@link #getIncludepathEntries()} instead
+	 */
+	public IIncludePathEntry[] getClasspathEntries() {
+		return getIncludepathEntries();
+	}
+	public IIncludePathEntry[] getIncludepathEntries() {
 		
-		//IClasspathEntry entry=null;
+		//IIncludePathEntry entry=null;
 		
-	return new IClasspathEntry[0];
+	return new IIncludePathEntry[0];
 //		try {
 //		
 //			
 //			
 //			IPath contextPath = getWebContextRoot(javaProject);
-//			//entry =JavaCore.newLibraryEntry(contextPath.makeAbsolute(), null,null, new IAccessRule[0], new IClasspathAttribute[0], true);
-//			//entry =JavaCore.newLibraryEntry(contextPath.makeAbsolute(), null, null, new IAccessRule[0], new IClasspathAttribute[0], true);
-//			//entry =JavaCore.newSourceEntry(contextPath.makeAbsolute());
+//			//entry =JavaScriptCore.newLibraryEntry(contextPath.makeAbsolute(), null,null, new IAccessRule[0], new IIncludePathAttribute[0], true);
+//			//entry =JavaScriptCore.newLibraryEntry(contextPath.makeAbsolute(), null, null, new IAccessRule[0], new IIncludePathAttribute[0], true);
+//			//entry =JavaScriptCore.newSourceEntry(contextPath.makeAbsolute());
 //			entry = new ClasspathEntry(
 //					IPackageFragmentRoot.K_SOURCE,
-//					IClasspathEntry.CPE_SOURCE,
+//					IIncludePathEntry.CPE_SOURCE,
 //					contextPath.makeAbsolute(),
 //					ClasspathEntry.INCLUDE_ALL, ClasspathEntry.EXCLUDE_NONE,
 //					null, // source attachment
@@ -161,23 +167,23 @@ public class WebProjectJsGlobalScopeContainerInitializer extends JsGlobalScopeCo
 //					false,
 //					null,
 //					false, // no access rules to combine
-//					new IClasspathAttribute[] {ClasspathEntry.EXCLUDE_VALIDATE}); 
+//					new IIncludePathAttribute[] {ClasspathEntry.EXCLUDE_VALIDATE}); 
 //			
 //		} catch (RuntimeException ex) {
 //			// TODO Auto-generated catch block
 //			ex.printStackTrace();
 //		}
 //		
-//		if(entry!=null) return new IClasspathEntry[] {entry};
-//		return new IClasspathEntry[0];
+//		if(entry!=null) return new IIncludePathEntry[] {entry};
+//		return new IIncludePathEntry[0];
 	}
-	public void initialize(IPath containerPath, IJavaProject project) throws CoreException {
+	public void initialize(IPath containerPath, IJavaScriptProject project) throws CoreException {
 		//this.javaProject = project;
 		super.initialize(containerPath, project);
 		
 	}
 	
-	public static IPath getWebContextRoot(IJavaProject javaProject) {
+	public static IPath getWebContextRoot(IJavaScriptProject javaProject) {
 		String webRoot = WebRootFinder.getWebContentFolder(javaProject.getProject()).toString();	
 		IPath webRootPath = javaProject.getPath().append(webRoot);
 		return webRootPath;
@@ -194,7 +200,7 @@ public class WebProjectJsGlobalScopeContainerInitializer extends JsGlobalScopeCo
 //					{
 //						IPath path = proxy.requestResource().getLocation();
 //						found.add(path);
-//						//IClasspathEntry newLibraryEntry = JavaCore.newLibraryEntry( path,null, null, new IAccessRule[ 0 ], new IClasspathAttribute[ 0 ], true );
+//						//IIncludePathEntry newLibraryEntry = JavaScriptCore.newLibraryEntry( path,null, null, new IAccessRule[ 0 ], new IIncludePathAttribute[ 0 ], true );
 //						//entries.add( newLibraryEntry );
 //						return false;
 //					}

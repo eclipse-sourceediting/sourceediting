@@ -13,7 +13,7 @@ package org.eclipse.wst.jsdt.web.ui.internal.java.search.ui;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
 import org.eclipse.wst.jsdt.core.search.SearchRequestor;
 import org.eclipse.wst.jsdt.ui.search.ElementQuerySpecification;
@@ -63,7 +63,7 @@ public class JsQueryParticipant implements IQueryParticipant {
 		if (querySpecification instanceof ElementQuerySpecification) {
 			// element search (eg. from global find references in Java file)
 			ElementQuerySpecification elementQuery = (ElementQuerySpecification) querySpecification;
-			IJavaElement element = elementQuery.getElement();
+			IJavaScriptElement element = elementQuery.getElement();
 			if (JsQueryParticipant.DEBUG) {
 				System.out.println("JSP Query Participant searching on ELEMENT: " + element); //$NON-NLS-1$
 			}

@@ -40,11 +40,11 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.wst.jsdt.core.IClasspathAttribute;
-import org.eclipse.wst.jsdt.core.IClasspathEntry;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IIncludePathAttribute;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.web.core.internal.JsCoreMessages;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -81,7 +81,7 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
                       //try {
                               if (project.isOpen()) {
                                       try {
-                                              if (project.hasNature(JavaCore.NATURE_ID)) {
+                                              if (project.hasNature(JavaScriptCore.NATURE_ID)) {
                                                     WorkbenchReporter.removeAllMessages(project, rhinoValidator, null);
                                               }
                                       } catch (CoreException e) {
@@ -224,20 +224,20 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 		if(excludeLibPaths!=null) return excludeLibPaths;
 		
 		IProject project = file.getProject();
-		IJavaProject javaProject= JavaCore.create(project);
+		IJavaScriptProject javaProject= JavaScriptCore.create(project);
 		
 		if(javaProject==null) return new IPath[0];
 		
-		IClasspathEntry[] entries = new IClasspathEntry[0];
+		IIncludePathEntry[] entries = new IIncludePathEntry[0];
 		try {
-			entries = javaProject.getResolvedClasspath(true);
-		} catch (JavaModelException ex) {
+			entries = javaProject.getResolvedIncludepath(true);
+		} catch (JavaScriptModelException ex) {
 			// May run into an exception if the project isn't jsdt.
 		}
 		ArrayList ignorePaths = new ArrayList();
 		nextEntry: for(int i = 0;i<entries.length;i++) {
-			if(entries[i].getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
-				IClasspathAttribute[] attribs = entries[i].getExtraAttributes();
+			if(entries[i].getEntryKind() == IIncludePathEntry.CPE_LIBRARY) {
+				IIncludePathAttribute[] attribs = entries[i].getExtraAttributes();
 				for(int k=0; attribs!=null && k<attribs.length;k++) {
 					if(attribs[k].getName().equalsIgnoreCase("validate") && attribs[k].getValue().equalsIgnoreCase("false")) { //$NON-NLS-1$ //$NON-NLS-2$
 						ignorePaths.add(entries[i].getPath());
@@ -417,7 +417,7 @@ public final class JsBatchValidator implements IValidatorJob, IExecutableExtensi
 			}
 		};
 		try {
-			JavaCore.run(validationRunnable, rule, new NullProgressMonitor());
+			JavaScriptCore.run(validationRunnable, rule, new NullProgressMonitor());
 		} catch (CoreException e) {
 			if (e.getCause() instanceof ValidationException) {
 				throw (ValidationException) e.getCause();

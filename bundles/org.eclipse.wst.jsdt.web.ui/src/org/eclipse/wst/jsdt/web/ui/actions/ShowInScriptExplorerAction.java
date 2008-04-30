@@ -11,7 +11,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.part.ISetSelectionTarget;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.internal.ui.packageview.PackageExplorerPart;
 
 /**
@@ -24,8 +24,8 @@ public class ShowInScriptExplorerAction extends JsElementActionProxy {
 	 * 
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
-	private IResource getHostResource(IJavaElement virtualElement) {
-		IProject project = virtualElement.getJavaProject().getProject();
+	private IResource getHostResource(IJavaScriptElement virtualElement) {
+		IProject project = virtualElement.getJavaScriptProject().getProject();
 		IPath path = new Path(virtualElement.getHostPath().getPath());
 		IResource host = project.getWorkspace().getRoot().findMember(path);
 		return host;
@@ -38,7 +38,7 @@ public class ShowInScriptExplorerAction extends JsElementActionProxy {
 	 */
 	
 	public Object[] getRunArgs(IAction action) {
-		IJavaElement elements[] = JsElementActionProxy.getJsElementsFromSelection(getCurrentSelection());
+		IJavaScriptElement elements[] = JsElementActionProxy.getJsElementsFromSelection(getCurrentSelection());
 		if (elements != null && elements.length > 0) {
 			return new Object[] { elements[0] };
 		}
@@ -52,12 +52,12 @@ public class ShowInScriptExplorerAction extends JsElementActionProxy {
 	 */
 	
 	public Class[] getRunArgTypes() {
-		return new Class[] { IJavaElement.class };
+		return new Class[] { IJavaScriptElement.class };
 	}
 	
 	
 	public void run(IAction action) {
-		IJavaElement elements[] = JsElementActionProxy.getJsElementsFromSelection(getCurrentSelection());
+		IJavaScriptElement elements[] = JsElementActionProxy.getJsElementsFromSelection(getCurrentSelection());
 		if (elements == null || elements.length == 0) {
 			return;
 		}
@@ -90,7 +90,7 @@ public class ShowInScriptExplorerAction extends JsElementActionProxy {
 	
 	public void selectionChanged(IAction action, ISelection selection) {
 		setSelection(selection);
-		IJavaElement elements[] = JsElementActionProxy.getJsElementsFromSelection(getCurrentSelection());
+		IJavaScriptElement elements[] = JsElementActionProxy.getJsElementsFromSelection(getCurrentSelection());
 		for (int i = 0; i < elements.length; i++) {
 			if (elements[i].isVirtual()) {
 				IResource resource = getHostResource(elements[i]);

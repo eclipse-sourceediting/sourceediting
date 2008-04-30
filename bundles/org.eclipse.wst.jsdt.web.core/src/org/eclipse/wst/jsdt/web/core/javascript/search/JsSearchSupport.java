@@ -26,9 +26,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchConstants;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchConstants;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchDocument;
 import org.eclipse.wst.jsdt.core.search.SearchEngine;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
@@ -55,8 +55,8 @@ public class JsSearchSupport {
     static final boolean DEBUG;
     static {
         String value = Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspsearch"); //$NON-NLS-1$
-        DEBUG=true;
-        //  DEBUG = (value != null) && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+       
+         DEBUG = (value != null) && value.equalsIgnoreCase("true"); //$NON-NLS-1$
     }
 
     private static JsSearchSupport singleton = null;
@@ -79,11 +79,11 @@ public class JsSearchSupport {
      * This operation ensures that the live resource's search markers show up in
      * the open editor. It also allows the ability to pass in a ProgressMonitor
      */
-    private class SearchJob extends Job implements IJavaSearchConstants {
+    private class SearchJob extends Job implements IJavaScriptSearchConstants {
 
         String fSearchText = ""; //$NON-NLS-1$
 
-        IJavaSearchScope fScope = null;
+        IJavaScriptSearchScope fScope = null;
 
         int fSearchFor = FIELD;
 
@@ -95,10 +95,10 @@ public class JsSearchSupport {
 
         SearchRequestor fRequestor = null;
 
-        IJavaElement fElement = null;
+        IJavaScriptElement fElement = null;
 
         // constructor w/ java element
-        public SearchJob(IJavaElement element, IJavaSearchScope scope, SearchRequestor requestor) {
+        public SearchJob(IJavaScriptElement element, IJavaScriptSearchScope scope, SearchRequestor requestor) {
 
             super(JsCoreMessages.JSP_Search + element.getElementName());
             this.fElement = element;
@@ -107,7 +107,7 @@ public class JsSearchSupport {
         }
 
         // constructor w/ search text
-        public SearchJob(String searchText, IJavaSearchScope scope, int searchFor, int limitTo, int matchMode, boolean isCaseSensitive, SearchRequestor requestor) {
+        public SearchJob(String searchText, IJavaScriptSearchScope scope, int searchFor, int limitTo, int matchMode, boolean isCaseSensitive, SearchRequestor requestor) {
 
             super(JsCoreMessages.JSP_Search + searchText);
             this.fSearchText = searchText;
@@ -170,11 +170,11 @@ public class JsSearchSupport {
     /**
      * Runnable forces caller to wait until finished (as opposed to using a Job)
      */
-    private class SearchRunnable implements IWorkspaceRunnable, IJavaSearchConstants {
+    private class SearchRunnable implements IWorkspaceRunnable, IJavaScriptSearchConstants {
 
         String fSearchText = ""; //$NON-NLS-1$
 
-        IJavaSearchScope fScope = null;
+        IJavaScriptSearchScope fScope = null;
 
         int fSearchFor = FIELD;
 
@@ -186,10 +186,10 @@ public class JsSearchSupport {
 
         SearchRequestor fRequestor = null;
 
-        IJavaElement fElement = null;
+        IJavaScriptElement fElement = null;
 
         // constructor w/ java element
-        public SearchRunnable(IJavaElement element, IJavaSearchScope scope, SearchRequestor requestor) {
+        public SearchRunnable(IJavaScriptElement element, IJavaScriptSearchScope scope, SearchRequestor requestor) {
 
             this.fElement = element;
             this.fScope = scope;
@@ -197,7 +197,7 @@ public class JsSearchSupport {
         }
 
         // constructor w/ search text
-        public SearchRunnable(String searchText, IJavaSearchScope scope, int searchFor, int limitTo, int matchMode, boolean isCaseSensitive, SearchRequestor requestor) {
+        public SearchRunnable(String searchText, IJavaScriptSearchScope scope, int searchFor, int limitTo, int matchMode, boolean isCaseSensitive, SearchRequestor requestor) {
 
             this.fSearchText = searchText;
             this.fScope = scope;
@@ -338,12 +338,12 @@ public class JsSearchSupport {
      * @param searchText
      *            the string of text to search on
      * @param searchFor
-     *            IJavaSearchConstants.TYPE, METHOD, FIELD, PACKAGE, etc...
+     *            IJavaScriptSearchConstants.TYPE, METHOD, FIELD, PACKAGE, etc...
      * @param limitTo
-     *            IJavaSearchConstants.DECLARATIONS,
-     *            IJavaSearchConstants.REFERENCES,
-     *            IJavaSearchConstants.IMPLEMENTORS, or
-     *            IJavaSearchConstants.ALL_OCCURRENCES
+     *            IJavaScriptSearchConstants.DECLARATIONS,
+     *            IJavaScriptSearchConstants.REFERENCES,
+     *            IJavaScriptSearchConstants.IMPLEMENTORS, or
+     *            IJavaScriptSearchConstants.ALL_OCCURRENCES
      * @param matchMode
      *            allow * wildcards or not
      * @param isCaseSensitive
@@ -351,7 +351,7 @@ public class JsSearchSupport {
      *            passed in to accept search matches (and do "something" with
      *            them)
      */
-    public void search(String searchText, IJavaSearchScope scope, int searchFor, int limitTo, int matchMode, boolean isCaseSensitive, SearchRequestor requestor) {
+    public void search(String searchText, IJavaScriptSearchScope scope, int searchFor, int limitTo, int matchMode, boolean isCaseSensitive, SearchRequestor requestor) {
 
         JsIndexManager.getInstance().rebuildIndexIfNeeded();
 
@@ -366,14 +366,14 @@ public class JsSearchSupport {
     }
 
     /**
-     * Search for an IJavaElement, constrained by the given parameters. Runs in
+     * Search for an IJavaScriptElement, constrained by the given parameters. Runs in
      * a background Job (results may still come in after this method call)
      * 
      * @param element
      * @param scope
      * @param requestor
      */
-    public void search(IJavaElement element, IJavaSearchScope scope, SearchRequestor requestor) {
+    public void search(IJavaScriptElement element, IJavaScriptSearchScope scope, SearchRequestor requestor) {
 
         JsIndexManager.getInstance().rebuildIndexIfNeeded();
 
@@ -386,7 +386,7 @@ public class JsSearchSupport {
     }
 
     /**
-     * Search for an IJavaElement, constrained by the given parameters. Runs in
+     * Search for an IJavaScriptElement, constrained by the given parameters. Runs in
      * an IWorkspace runnable (results will be reported by the end of this
      * method)
      * 
@@ -394,7 +394,7 @@ public class JsSearchSupport {
      * @param scope
      * @param requestor
      */
-    public void searchRunnable(IJavaElement element, IJavaSearchScope scope, SearchRequestor requestor) {
+    public void searchRunnable(IJavaScriptElement element, IJavaScriptSearchScope scope, SearchRequestor requestor) {
 
         JsIndexManager.getInstance().rebuildIndexIfNeeded();
 

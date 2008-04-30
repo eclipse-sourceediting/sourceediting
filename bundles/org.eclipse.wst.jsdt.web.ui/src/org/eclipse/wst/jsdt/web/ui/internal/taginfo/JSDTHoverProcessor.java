@@ -14,11 +14,11 @@ import java.io.Reader;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
-import org.eclipse.wst.jsdt.core.JavaModelException;
-import org.eclipse.wst.jsdt.ui.JavaElementLabels;
-import org.eclipse.wst.jsdt.ui.JavadocContentAccess;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabels;
+import org.eclipse.wst.jsdt.ui.JSdocContentAccess;
 
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
@@ -35,10 +35,10 @@ public class JSDTHoverProcessor extends AbstractHoverProcessor {
 	 * Bulk of the work was copied from
 	 * org.eclipse.wst.jsdt.internal.ui.text.java.hover.JavadocHover
 	 */
-	private final long LABEL_FLAGS = JavaElementLabels.ALL_FULLY_QUALIFIED | JavaElementLabels.M_PRE_RETURNTYPE | JavaElementLabels.M_PARAMETER_TYPES | JavaElementLabels.M_PARAMETER_NAMES | JavaElementLabels.M_EXCEPTIONS | JavaElementLabels.F_PRE_TYPE_SIGNATURE | JavaElementLabels.M_PRE_TYPE_PARAMETERS | JavaElementLabels.T_TYPE_PARAMETERS | JavaElementLabels.USE_RESOLVED;
-	private final long LOCAL_VARIABLE_FLAGS = LABEL_FLAGS & ~JavaElementLabels.F_FULLY_QUALIFIED | JavaElementLabels.F_POST_QUALIFIED;
+	private final long LABEL_FLAGS = JavaScriptElementLabels.ALL_FULLY_QUALIFIED | JavaScriptElementLabels.M_PRE_RETURNTYPE | JavaScriptElementLabels.M_PARAMETER_TYPES | JavaScriptElementLabels.M_PARAMETER_NAMES | JavaScriptElementLabels.M_EXCEPTIONS | JavaScriptElementLabels.F_PRE_TYPE_SIGNATURE | JavaScriptElementLabels.M_PRE_TYPE_PARAMETERS | JavaScriptElementLabels.T_TYPE_PARAMETERS | JavaScriptElementLabels.USE_RESOLVED;
+	private final long LOCAL_VARIABLE_FLAGS = LABEL_FLAGS & ~JavaScriptElementLabels.F_FULLY_QUALIFIED | JavaScriptElementLabels.F_POST_QUALIFIED;
 	
-	private String getHoverInfo(IJavaElement[] result) {
+	private String getHoverInfo(IJavaScriptElement[] result) {
 		StringBuffer buffer = new StringBuffer();
 		int nResults = result.length;
 		if (nResults == 0) {
@@ -47,14 +47,14 @@ public class JSDTHoverProcessor extends AbstractHoverProcessor {
 		if (nResults > 1) {
 			for (int i = 0; i < result.length; i++) {
 				HTMLPrinter.startBulletList(buffer);
-				IJavaElement curr = result[i];
-				if (curr instanceof IMember || curr.getElementType() == IJavaElement.LOCAL_VARIABLE) {
+				IJavaScriptElement curr = result[i];
+				if (curr instanceof IMember || curr.getElementType() == IJavaScriptElement.LOCAL_VARIABLE) {
 					HTMLPrinter.addBullet(buffer, getInfoText(curr));
 				}
 				HTMLPrinter.endBulletList(buffer);
 			}
 		} else {
-			IJavaElement curr = result[0];
+			IJavaScriptElement curr = result[0];
 			if (curr == null) {
 				return null;
 			}
@@ -63,14 +63,14 @@ public class JSDTHoverProcessor extends AbstractHoverProcessor {
 				HTMLPrinter.addSmallHeader(buffer, getInfoText(member));
 				Reader reader;
 				try {
-					reader = JavadocContentAccess.getHTMLContentReader(member, true, true);
-				} catch (JavaModelException ex) {
+					reader = JSdocContentAccess.getHTMLContentReader(member, true, true);
+				} catch (JavaScriptModelException ex) {
 					return null;
 				}
 				if (reader != null) {
 					HTMLPrinter.addParagraph(buffer, reader);
 				}
-			} else if (curr.getElementType() == IJavaElement.LOCAL_VARIABLE || curr.getElementType() == IJavaElement.TYPE_PARAMETER) {
+			} else if (curr.getElementType() == IJavaScriptElement.LOCAL_VARIABLE || curr.getElementType() == IJavaScriptElement.TYPE_PARAMETER) {
 				HTMLPrinter.addSmallHeader(buffer, getInfoText(curr));
 			}
 		}
@@ -98,15 +98,15 @@ public class JSDTHoverProcessor extends AbstractHoverProcessor {
 				JsTranslationAdapter adapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 				if (adapter != null) {
 					IJsTranslation translation = adapter.getJSPTranslation(true);
-					IJavaElement[] result = translation.getElementsFromJsRange(hoverRegion.getOffset(), hoverRegion.getOffset() + hoverRegion.getLength());
+					IJavaScriptElement[] result = translation.getElementsFromJsRange(hoverRegion.getOffset(), hoverRegion.getOffset() + hoverRegion.getLength());
 // Vector filteredResults = new Vector();
 // List badFunctions = translation.getGeneratedFunctionNames();
 // boolean bad = false;
 // for(int i = 0;i<result.length;i++){
 // bad=false;
-// if(result[i] instanceof IMethod){
+// if(result[i] instanceof IFunction){
 // for(int j=0;j<badFunctions.size() && ! bad;j++){
-// if(((IMethod)result[i]).getElementName().equalsIgnoreCase((String)badFunctions.get(j))){
+// if(((IFunction)result[i]).getElementName().equalsIgnoreCase((String)badFunctions.get(j))){
 // bad=true;
 // continue;
 // }
@@ -117,8 +117,8 @@ public class JSDTHoverProcessor extends AbstractHoverProcessor {
 // if(filteredResults.size()<1) return new String();
 //					
 // String filteredResult =
-// translation.fixupMangledName(getHoverInfo((IJavaElement[])filteredResults.toArray(new
-// IJavaElement[]{})));
+// translation.fixupMangledName(getHoverInfo((IJavaScriptElement[])filteredResults.toArray(new
+// IJavaScriptElement[]{})));
 // for(int i = 0;i<badFunctions.size();i++){
 // filteredResult.replace((String)badFunctions.get(i), "");
 // }
@@ -144,9 +144,9 @@ public class JSDTHoverProcessor extends AbstractHoverProcessor {
 		return JsWordFinder.findWord(textViewer.getDocument(), offset);
 	}
 	
-	private String getInfoText(IJavaElement member) {
-		long flags = member.getElementType() == IJavaElement.LOCAL_VARIABLE ? LOCAL_VARIABLE_FLAGS : LABEL_FLAGS;
-		String label = JavaElementLabels.getElementLabel(member, flags);
+	private String getInfoText(IJavaScriptElement member) {
+		long flags = member.getElementType() == IJavaScriptElement.LOCAL_VARIABLE ? LOCAL_VARIABLE_FLAGS : LABEL_FLAGS;
+		String label = JavaScriptElementLabels.getElementLabel(member, flags);
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < label.length(); i++) {
 			char ch = label.charAt(i);

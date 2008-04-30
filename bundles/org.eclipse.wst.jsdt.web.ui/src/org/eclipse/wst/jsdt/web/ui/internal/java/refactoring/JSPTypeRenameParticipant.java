@@ -18,7 +18,7 @@ import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.RenameParticipant;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 import org.eclipse.wst.jsdt.web.ui.views.contentoutline.IJavaWebNode;
@@ -63,7 +63,7 @@ public class JSPTypeRenameParticipant extends RenameParticipant {
 		if (this.fType != null) {
 			try {
 				name = this.fType.getSource();
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				Logger.logException(e);
 			}
 		}

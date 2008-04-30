@@ -18,10 +18,10 @@ import org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy;
 import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.text.edits.TextEdit;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.formatter.CodeFormatter;
 import org.eclipse.wst.jsdt.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.wst.jsdt.internal.formatter.DefaultCodeFormatter;
@@ -78,12 +78,12 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 				// JSPTranslationUtil translationUtil = new
 				// JSPTranslationUtil(document);
 				IJsTranslation translation = getTranslation(document);
-				ICompilationUnit cu = translation.getCompilationUnit();
+				IJavaScriptUnit cu = translation.getCompilationUnit();
 				if (cu != null) {
 					String cuSource = cu.getSource();
 					int javaStart = partition.getOffset();
 					int javaLength = partition.getLength();
-					TextEdit edit = CodeFormatterUtil.format2(CodeFormatter.K_COMPILATION_UNIT, cuSource, javaStart, javaLength, startIndentLevel, TextUtilities.getDefaultLineDelimiter(document), getPreferences());
+					TextEdit edit = CodeFormatterUtil.format2(CodeFormatter.K_JAVASCRIPT_UNIT, cuSource, javaStart, javaLength, startIndentLevel, TextUtilities.getDefaultLineDelimiter(document), getPreferences());
 					IDocument doc = new Document(translation.getJsText());
 					/* error formating the code so abort */
 					if(edit==null) return;
@@ -100,7 +100,7 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 				//	document.addDocumentPartitioningListener(new ModelIrritant(document));
 				}
 			} catch (BadLocationException e) {
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 			}
 		}
 	}
@@ -138,7 +138,7 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 	}
 	
 	private Map getProjectOptions(IDocument baseDocument) {
-		IJavaProject javaProject = null;
+		IJavaScriptProject javaProject = null;
 		IDOMModel xmlModel = null;
 		Map options = null;
 		try {
@@ -151,7 +151,7 @@ public class FormattingStrategyJSDT extends ContextBasedFormattingStrategy {
 				project = root.getProject(filePath.segment(0));
 			}
 			if (project != null) {
-				javaProject = JavaCore.create(project);
+				javaProject = JavaScriptCore.create(project);
 			}
 		} finally {
 			if (xmlModel != null) {

@@ -16,14 +16,14 @@ import java.util.List;
 
 import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 
 /**
  * Used to constrain JSP/java search to certain paths and elements.
  * @author pavery
  */
-public class JsSearchScope implements IJavaSearchScope {
+public class JsSearchScope implements IJavaScriptSearchScope {
 
 	private boolean fEnclosesAll = false;
 	private List fResourcePaths = null;
@@ -41,7 +41,7 @@ public class JsSearchScope implements IJavaSearchScope {
 		fResourcePaths.addAll(Arrays.asList(resourceStringPath));
 	}
 
-	public JsSearchScope(IJavaElement[] javaElement) {
+	public JsSearchScope(IJavaScriptElement[] javaElement) {
 		init();
 		fJavaElements.addAll(Arrays.asList(javaElement));
 	}
@@ -62,7 +62,7 @@ public class JsSearchScope implements IJavaSearchScope {
 		return false;
 	}
 
-	public boolean encloses(IJavaElement element) {
+	public boolean encloses(IJavaScriptElement element) {
 
 		// pa_TOD implement
 		if (this.fEnclosesAll) {
@@ -87,7 +87,7 @@ public class JsSearchScope implements IJavaSearchScope {
 		this.fResourcePaths.add(path);
 	}
 
-	public void addElement(IJavaElement element) {
+	public void addElement(IJavaScriptElement element) {
 		this.fJavaElements.add(element);
 	}
 

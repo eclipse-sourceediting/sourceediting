@@ -15,14 +15,14 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.wst.jsdt.core.IClassFile;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IField;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.ILocalVariable;
-import org.eclipse.wst.jsdt.core.IMethod;
+import org.eclipse.wst.jsdt.core.IFunction;
 import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.ISourceReference;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.core.JavaElement;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
@@ -37,7 +37,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
  * Detects hyperlinks in JSP Java content
  */
 public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
-	private IHyperlink createHyperlink(IJavaElement element, IRegion region, IDocument document) {
+	private IHyperlink createHyperlink(IJavaScriptElement element, IRegion region, IDocument document) {
 		IHyperlink link = null;
 		if (region != null) {
 			// open local variable in the JSP file...
@@ -70,14 +70,14 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 						// link to local variable definitions
 						if (element instanceof ILocalVariable) {
 							range = ((ILocalVariable) element).getNameRange();
-							IJavaElement unit=((ILocalVariable) element).getParent();
-							ICompilationUnit myUnit = jspTranslation.getCompilationUnit();
+							IJavaScriptElement unit=((ILocalVariable) element).getParent();
+							IJavaScriptUnit myUnit = jspTranslation.getCompilationUnit();
 							
-							while(!(unit instanceof ICompilationUnit || unit instanceof IClassFile || unit==null)) {
+							while(!(unit instanceof IJavaScriptUnit || unit instanceof IClassFile || unit==null)) {
 								unit = ((JavaElement) unit).getParent();
 							}
-							if(unit instanceof ICompilationUnit) {
-								ICompilationUnit cu = (ICompilationUnit)unit;
+							if(unit instanceof IJavaScriptUnit) {
+								IJavaScriptUnit cu = (IJavaScriptUnit)unit;
 								if(cu!=myUnit) {
 									file = getFile(cu.getPath().toString());
 									if(file==null) {
@@ -96,15 +96,15 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 							
 						}
 						// linking to fields of the same compilation unit
-						else if (element.getElementType() == IJavaElement.FIELD) {
-							Object cu = ((IField) element).getCompilationUnit();
+						else if (element.getElementType() == IJavaScriptElement.FIELD) {
+							Object cu = ((IField) element).getJavaScriptUnit();
 							if (cu != null && cu.equals(jspTranslation.getCompilationUnit())) {
 								range = ((ISourceReference) element).getSourceRange();
 							}
 						}
 						// linking to methods of the same compilation unit
-						else if (element.getElementType() == IJavaElement.METHOD) {
-							Object cu = ((IMethod) element).getCompilationUnit();
+						else if (element.getElementType() == IJavaScriptElement.METHOD) {
+							Object cu = ((IFunction) element).getJavaScriptUnit();
 							if (cu != null && cu.equals(jspTranslation.getCompilationUnit())) {
 								range = ((ISourceReference) element).getSourceRange();
 							}
@@ -121,7 +121,7 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 							link = new ExternalFileHyperlink(region,outsidePath.toFile());
 						}
 					}
-				} catch (JavaModelException jme) {
+				} catch (JavaScriptModelException jme) {
 					Logger.log(Logger.WARNING_DEBUG, jme.getMessage(), jme);
 				}
 			}
@@ -149,11 +149,11 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 				// check that we are not in indirect Java content (like
 				// included files)
 				// get Java elements
-				IJavaElement[] elements = jspTranslation.getElementsFromJsRange(region.getOffset(), region.getOffset() + region.getLength());
+				IJavaScriptElement[] elements = jspTranslation.getElementsFromJsRange(region.getOffset(), region.getOffset() + region.getLength());
 				if (elements != null && elements.length > 0) {
 					// create a JSPJavaHyperlink for each Java element
 					for (int i = 0; i < elements.length; ++i) {
-						IJavaElement element = elements[i];
+						IJavaScriptElement element = elements[i];
 						// find hyperlink range for Java element
 						IRegion hyperlinkRegion = selectWord(document, region.getOffset());
 						IHyperlink link = createHyperlink(element, hyperlinkRegion, document);

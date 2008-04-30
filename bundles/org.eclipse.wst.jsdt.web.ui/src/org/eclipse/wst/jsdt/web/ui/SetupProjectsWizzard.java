@@ -11,9 +11,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.wst.jsdt.core.IClasspathEntry;
-import org.eclipse.wst.jsdt.core.JavaCore;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
 import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
 
@@ -46,11 +46,11 @@ public class SetupProjectsWizzard implements IObjectActionDelegate, IActionDeleg
 							ex.printStackTrace();
 						}
 					}else {
-						JavaProject jp = (JavaProject)JavaCore.create(project);
-						IClasspathEntry[] rawClasspath = null;
+						JavaProject jp = (JavaProject)JavaScriptCore.create(project);
+						IIncludePathEntry[] rawClasspath = null;
 						try {
-							rawClasspath = jp.getRawClasspath();
-						} catch (JavaModelException ex1) {
+							rawClasspath = jp.getRawIncludepath();
+						} catch (JavaScriptModelException ex1) {
 							// TODO Auto-generated catch block
 							ex1.printStackTrace();
 						}

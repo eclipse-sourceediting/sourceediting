@@ -2,9 +2,9 @@ package org.eclipse.wst.jsdt.web.ui.views.provisional.contentoutline;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterForHTML;
-import org.eclipse.wst.jsdt.core.IJavaElement;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
-import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
@@ -26,7 +26,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	
 	
 	public Object[] getChildren(Object object) {
-		if (object instanceof IJavaElement) {
+		if (object instanceof IJavaScriptElement) {
 			return getJavaElementProvider().getChildren(object);
 		}
 		Node node = (Node) object;
@@ -45,18 +45,18 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	
 	
 	public Object[] getElements(Object object) {
-		if (object instanceof IJavaElement) {
+		if (object instanceof IJavaScriptElement) {
 			return getJavaElementProvider().getElements(object);
 		}
 		return super.getElements(object);
 	}
 	
-	private JavaElementLabelProvider getJavaElementLabelProvider() {
-		return new JavaElementLabelProvider();
+	private JavaScriptElementLabelProvider getJavaElementLabelProvider() {
+		return new JavaScriptElementLabelProvider();
 	}
 	
-	private StandardJavaElementContentProvider getJavaElementProvider() {
-		return new StandardJavaElementContentProvider(true);
+	private StandardJavaScriptElementContentProvider getJavaElementProvider() {
+		return new StandardJavaScriptElementContentProvider(true);
 	}
 	
 	private synchronized Object[] getJSElementsFromNode(Node node) {
@@ -66,7 +66,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		int startOffset = 0;
 		int endOffset = 0;
 		int type = node.getNodeType();
-		IJavaElement[] result = null;
+		IJavaScriptElement[] result = null;
 		IJsTranslation translation = null;
 		if (node.getNodeType() == Node.TEXT_NODE && (node instanceof NodeImpl)) {
 			startOffset = ((NodeImpl) node).getStartOffset();
@@ -87,10 +87,10 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 // htmloffset = translation.getJspOffset(((SourceRefElement)
 // (result[i])).getSourceRange().getOffset());
 // position = new Position(htmloffset, htmllength);
-// } catch (JavaModelException e) {
+// } catch (JavaScriptModelException e) {
 // e.printStackTrace();
 // }
-// newResults[i] = getJsNode(node.getParentNode(), (IJavaElement) result[i],
+// newResults[i] = getJsNode(node.getParentNode(), (IJavaScriptElement) result[i],
 // position);
 // }
 // return newResults;
@@ -98,7 +98,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	
 	
 	public Image getLabelImage(Object node) {
-		if (node instanceof IJavaElement) {
+		if (node instanceof IJavaScriptElement) {
 			return getJavaElementLabelProvider().getImage(node);
 		}
 		return super.getLabelImage(node);
@@ -106,7 +106,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	
 	
 	public String getLabelText(Object node) {
-		if (node instanceof IJavaElement) {
+		if (node instanceof IJavaScriptElement) {
 			return getJavaElementLabelProvider().getText(node);
 		}
 		return super.getLabelText(node);
@@ -114,7 +114,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	
 	
 	public Object getParent(Object element) {
-		if (element instanceof IJavaElement) {
+		if (element instanceof IJavaScriptElement) {
 			return getJavaElementProvider().getParent(element);
 		}
 		return super.getParent(element);
@@ -149,7 +149,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	
 	
 	public boolean hasChildren(Object object) {
-		if (object instanceof IJavaElement) {
+		if (object instanceof IJavaScriptElement) {
 			return getJavaElementProvider().hasChildren(object);
 		}
 		Node node = (Node) object;

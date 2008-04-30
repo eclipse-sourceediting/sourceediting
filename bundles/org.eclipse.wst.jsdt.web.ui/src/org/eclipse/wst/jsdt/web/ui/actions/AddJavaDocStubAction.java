@@ -13,8 +13,8 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.internal.ui.actions.WorkbenchRunnableAdapter;
 import org.eclipse.wst.jsdt.internal.ui.util.ExceptionHandler;
@@ -41,13 +41,13 @@ public class AddJavaDocStubAction implements IObjectActionDelegate {
 	}
 	
 	public void run(IAction action) {
-		IJavaElement[] elements = JsElementActionProxy.getJsElementsFromSelection(selection);
+		IJavaScriptElement[] elements = JsElementActionProxy.getJsElementsFromSelection(selection);
 		if (elements == null || elements.length < 1) {
 			return;
 		}
-		IJavaElement parent = elements[0].getParent();
+		IJavaScriptElement parent = elements[0].getParent();
 		/* find the cu */
-		while (parent != null && !(parent instanceof ICompilationUnit)) {
+		while (parent != null && !(parent instanceof IJavaScriptUnit)) {
 			
 		}
 		if (parent != null) {
@@ -59,11 +59,11 @@ public class AddJavaDocStubAction implements IObjectActionDelegate {
 			}
 			JsJfaceNode node[] = SimpleJSDTActionProxy.getJsJfaceNodesFromSelection(selection);
 			/* only should be one node */
-			run((ICompilationUnit) parent, (IMember[]) members.toArray(new IMember[members.size()]), node[0]);
+			run((IJavaScriptUnit) parent, (IMember[]) members.toArray(new IMember[members.size()]), node[0]);
 		}
 	}
 	
-	public void run(ICompilationUnit cu, IMember[] members, JsJfaceNode node) {
+	public void run(IJavaScriptUnit cu, IMember[] members, JsJfaceNode node) {
 		try {
 			AddJavaDocStubOperation op = new AddJavaDocStubOperation(members, node);
 			PlatformUI.getWorkbench().getProgressService().runInUI(PlatformUI.getWorkbench().getProgressService(), new WorkbenchRunnableAdapter(op, op.getScheduleRule()), op.getScheduleRule());

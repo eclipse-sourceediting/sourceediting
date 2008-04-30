@@ -11,7 +11,7 @@
 package org.eclipse.wst.jsdt.web.core.javascript.search;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.internal.core.search.JavaSearchDocument;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 
@@ -69,7 +69,7 @@ public class JSDTSearchDocumentDelegate extends JavaSearchDocument {
 	public void release() {
 		this.fJSPSearchDoc.release();
 	}
-	public IJavaElement getJavaElement() {
+	public IJavaScriptElement getJavaElement() {
 		return getJspTranslation().getCompilationUnit();
 	}
 	public boolean isVirtual() {

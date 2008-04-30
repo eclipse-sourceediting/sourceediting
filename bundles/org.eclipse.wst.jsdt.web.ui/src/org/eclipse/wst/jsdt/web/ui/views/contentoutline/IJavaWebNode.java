@@ -3,7 +3,7 @@
  */
 package org.eclipse.wst.jsdt.web.ui.views.contentoutline;
 
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.w3c.dom.Node;
 
 /**
@@ -11,7 +11,7 @@ import org.w3c.dom.Node;
  * 
  */
 public interface IJavaWebNode {
-	public IJavaElement getJavaElement();
+	public IJavaScriptElement getJavaElement();
 	
 	public Node getParentNode();
 		

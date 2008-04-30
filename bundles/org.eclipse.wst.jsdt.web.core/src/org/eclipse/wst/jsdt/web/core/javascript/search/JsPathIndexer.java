@@ -20,7 +20,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.jsdt.core.search.IJavaSearchScope;
+import org.eclipse.wst.jsdt.core.search.IJavaScriptSearchScope;
 import org.eclipse.wst.jsdt.core.search.SearchPattern;
 import org.eclipse.wst.jsdt.web.core.internal.validation.Util;
 
@@ -46,10 +46,10 @@ public class JsPathIndexer {
 	class JSPFileVisitor implements IResourceProxyVisitor {
 		// hash map forces only one of each file
 		private HashMap fPaths = new HashMap();
-		IJavaSearchScope fScope = null;
+		IJavaScriptSearchScope fScope = null;
 		SearchPattern fPattern = null;
 
-		public JSPFileVisitor(SearchPattern pattern, IJavaSearchScope scope) {
+		public JSPFileVisitor(SearchPattern pattern, IJavaScriptSearchScope scope) {
 			this.fPattern = pattern;
 			this.fScope = scope;
 		}
@@ -97,7 +97,7 @@ public class JsPathIndexer {
 		}
 	}
 
-	public IPath[] getVisibleJspPaths(SearchPattern pattern, IJavaSearchScope scope) {
+	public IPath[] getVisibleJspPaths(SearchPattern pattern, IJavaScriptSearchScope scope) {
 
 		JSPFileVisitor jspFileVisitor = new JSPFileVisitor(pattern, scope);
 		try {

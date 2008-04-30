@@ -13,8 +13,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.wst.jsdt.core.IClasspathEntry;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.IIncludePathEntry;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.LibrarySuperType;
 
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
@@ -23,13 +23,13 @@ import org.eclipse.wst.jsdt.internal.core.JavaProject;
 public class JsWebNature implements IProjectNature {
 	//private static final String FILENAME_CLASSPATH = ".classpath"; //$NON-NLS-1$
 	// private static final String NATURE_IDS[] =
-	// {"org.eclipse.wst.jsdt.web.core.embeded.jsNature",JavaCore.NATURE_ID};
+	// {"org.eclipse.wst.jsdt.web.core.embeded.jsNature",JavaScriptCore.NATURE_ID};
 	// //$NON-NLS-1$
-	private static final String NATURE_IDS[] = { JavaCore.NATURE_ID };
+	private static final String NATURE_IDS[] = { JavaScriptCore.NATURE_ID };
 
 	public static final IPath VIRTUAL_BROWSER_CLASSPATH = new Path("org.eclipse.wst.jsdt.launching.baseBrowserLibrary"); //$NON-NLS-1$
 	public static final String VIRTUAL_CONTAINER = "org.eclipse.wst.jsdt.launching.WebProject"; //$NON-NLS-1$
-	public static final IClasspathEntry VIRTUAL_SCOPE_ENTRY = JavaCore.newContainerEntry(new Path(VIRTUAL_CONTAINER));
+	public static final IIncludePathEntry VIRTUAL_SCOPE_ENTRY = JavaScriptCore.newContainerEntry(new Path(VIRTUAL_CONTAINER));
 	private static final String SUPER_TYPE_NAME = "Window"; //$NON-NLS-1$
 	private static final String SUPER_TYPE_LIBRARY = "org.eclipse.wst.jsdt.launching.baseBrowserLibrary"; //$NON-NLS-1$
 	
@@ -45,7 +45,7 @@ public class JsWebNature implements IProjectNature {
 			String[] prevNatures = description.getNatureIds();
 			String[] newNatures = new String[prevNatures.length + JsWebNature.NATURE_IDS.length];
 			System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
-			// newNatures[prevNatures.length] = JavaCore.NATURE_ID;
+			// newNatures[prevNatures.length] = JavaScriptCore.NATURE_ID;
 			for (int i = 0; i < JsWebNature.NATURE_IDS.length; i++) {
 				newNatures[prevNatures.length + i] = JsWebNature.NATURE_IDS[i];
 			}
@@ -124,7 +124,7 @@ public class JsWebNature implements IProjectNature {
 		initLocalClassPath();
 		
 		if (hasProjectClassPathFile()) {
-			IClasspathEntry[] entries = getRawClassPath();
+			IIncludePathEntry[] entries = getRawClassPath();
 			if (entries != null && entries.length > 0) {
 				classPathEntries.removeAll(Arrays.asList(entries));
 				classPathEntries.addAll(Arrays.asList(entries));
@@ -132,14 +132,14 @@ public class JsWebNature implements IProjectNature {
 		}
 		
 		JsWebNature.addJsNature(fCurrProject, monitor);
-		fJavaProject = (JavaProject) JavaCore.create(fCurrProject);
+		fJavaProject = (JavaProject) JavaScriptCore.create(fCurrProject);
 		fJavaProject.setProject(fCurrProject);
 		try {
 			// , fOutputLocation
 			if (!hasProjectClassPathFile()) {
-				fJavaProject.setRawClasspath((IClasspathEntry[]) classPathEntries.toArray(new IClasspathEntry[] {}), fOutputLocation, monitor);
+				fJavaProject.setRawIncludepath((IIncludePathEntry[]) classPathEntries.toArray(new IIncludePathEntry[] {}), fOutputLocation, monitor);
 			}else{
-				fJavaProject.setRawClasspath((IClasspathEntry[]) classPathEntries.toArray(new IClasspathEntry[] {}), monitor);
+				fJavaProject.setRawIncludepath((IIncludePathEntry[]) classPathEntries.toArray(new IIncludePathEntry[] {}), monitor);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -155,16 +155,16 @@ public class JsWebNature implements IProjectNature {
 			return;
 		}
 		// IPath projectPath = fCurrProject.getFullPath();
-		// classPathEntries.add(JavaCore.newSourceEntry(projectPath));
+		// classPathEntries.add(JavaScriptCore.newSourceEntry(projectPath));
 	}
 	
 	public void deconfigure() throws CoreException {
 		Vector badEntries = new Vector();
-		IClasspathEntry defaultJRELibrary =  getJreEntry();
-		IClasspathEntry[] localEntries = initLocalClassPath();
+		IIncludePathEntry defaultJRELibrary =  getJreEntry();
+		IIncludePathEntry[] localEntries = initLocalClassPath();
 		badEntries.add(defaultJRELibrary);
 		badEntries.addAll(Arrays.asList(localEntries));
-		IClasspathEntry[] entries = getRawClassPath();
+		IIncludePathEntry[] entries = getRawClassPath();
 		Vector goodEntries = new Vector();
 		for (int i = 0; i < entries.length; i++) {
 			if (!badEntries.contains(entries[i])) {
@@ -173,7 +173,7 @@ public class JsWebNature implements IProjectNature {
 		}
 		// getJavaProject().removeFromBuildSpec(BUILDER_ID);
 		IPath outputLocation = getJavaProject().getOutputLocation();
-		getJavaProject().setRawClasspath((IClasspathEntry[]) goodEntries.toArray(new IClasspathEntry[] {}), outputLocation, monitor);
+		getJavaProject().setRawIncludepath((IIncludePathEntry[]) goodEntries.toArray(new IIncludePathEntry[] {}), outputLocation, monitor);
 		getJavaProject().deconfigure();
 		JsWebNature.removeJsNature(fCurrProject, monitor);
 		fCurrProject.refreshLocal(IResource.DEPTH_INFINITE, monitor);
@@ -181,7 +181,7 @@ public class JsWebNature implements IProjectNature {
 	
 	public JavaProject getJavaProject() {
 		if (fJavaProject == null) {
-			fJavaProject = (JavaProject) JavaCore.create(fCurrProject);
+			fJavaProject = (JavaProject) JavaScriptCore.create(fCurrProject);
 			fJavaProject.setProject(fCurrProject);
 		}
 		return fJavaProject;
@@ -191,18 +191,18 @@ public class JsWebNature implements IProjectNature {
 		return this.fCurrProject;
 	}
 	
-	private IClasspathEntry[] getRawClassPath() {
+	private IIncludePathEntry[] getRawClassPath() {
 		JavaProject proj = new JavaProject();
 		proj.setProject(fCurrProject);
-		return proj.readRawClasspath();
+		return proj.readRawIncludepath();
 	}
 	
 	private boolean hasAValidSourcePath() {
 		if (hasProjectClassPathFile()) {
 			try {
-				IClasspathEntry[] entries = getRawClassPath();
+				IIncludePathEntry[] entries = getRawClassPath();
 				for (int i = 0; i < entries.length; i++) {
-					if (entries[i].getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+					if (entries[i].getEntryKind() == IIncludePathEntry.CPE_SOURCE) {
 						return true;
 					}
 				}
@@ -222,14 +222,14 @@ public class JsWebNature implements IProjectNature {
 		return fCurrProject.getFolder(JavaProject.DEFAULT_PREFERENCES_DIRNAME).getFile(JavaProject.CLASSPATH_FILENAME).exists();
 	}
 	
-	private IClasspathEntry getJreEntry() {
-		return JavaCore.newContainerEntry(new Path(DEFAULT_JRE_PATH));
+	private IIncludePathEntry getJreEntry() {
+		return JavaScriptCore.newContainerEntry(new Path(DEFAULT_JRE_PATH));
 	}
 	
 	private void initJREEntry() {
-		IClasspathEntry defaultJRELibrary =  getJreEntry();
+		IIncludePathEntry defaultJRELibrary =  getJreEntry();
 		try {
-			IClasspathEntry[] entries = getRawClassPath();
+			IIncludePathEntry[] entries = getRawClassPath();
 			for (int i = 0; i < entries.length; i++) {
 				if (entries[i] == defaultJRELibrary) {
 					return;
@@ -243,15 +243,15 @@ public class JsWebNature implements IProjectNature {
 		}
 	}
 	
-	private IClasspathEntry[] initLocalClassPath() {
+	private IIncludePathEntry[] initLocalClassPath() {
 		
 		classPathEntries.add(JsWebNature.VIRTUAL_SCOPE_ENTRY);
-		IClasspathEntry browserLibrary = JavaCore.newContainerEntry( VIRTUAL_BROWSER_CLASSPATH);
+		IIncludePathEntry browserLibrary = JavaScriptCore.newContainerEntry( VIRTUAL_BROWSER_CLASSPATH);
 		classPathEntries.add(browserLibrary);
 		//IPath webRoot = WebRootFinder.getWebContentFolder(fCurrProject);
-	//	IClasspathEntry source = JavaCore.newSourceEntry(fCurrProject.getFullPath().append(webRoot).append("/"));
+	//	IIncludePathEntry source = JavaScriptCore.newSourceEntry(fCurrProject.getFullPath().append(webRoot).append("/"));
 	//	classPathEntries.add(source);
-		return new IClasspathEntry[] { JsWebNature.VIRTUAL_SCOPE_ENTRY , browserLibrary/*,source*/};
+		return new IIncludePathEntry[] { JsWebNature.VIRTUAL_SCOPE_ENTRY , browserLibrary/*,source*/};
 	}
 	
 	private void initOutputPath() {

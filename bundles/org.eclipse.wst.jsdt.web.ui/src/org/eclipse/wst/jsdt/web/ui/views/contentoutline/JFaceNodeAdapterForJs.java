@@ -7,15 +7,15 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.Position;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterForHTML;
-import org.eclipse.wst.jsdt.core.ICompilationUnit;
-import org.eclipse.wst.jsdt.core.IJavaElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.IType;
-import org.eclipse.wst.jsdt.core.JavaModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.core.JavaElement;
 import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
-import org.eclipse.wst.jsdt.ui.JavaElementLabelProvider;
-import org.eclipse.wst.jsdt.ui.StandardJavaElementContentProvider;
+import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
+import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslation;
@@ -38,21 +38,21 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		super(adapterFactory);
 	}
 	
-	private ICompilationUnit lazyCu;
+	private IJavaScriptUnit lazyCu;
 	private IProgressMonitor monitor;
-	private JavaElementLabelProvider javaElementLabelProvider;
+	private JavaScriptElementLabelProvider javaElementLabelProvider;
 	
 	public Object[] getChildren(Object object) {
-		if (object instanceof IJavaElement) {
+		if (object instanceof IJavaScriptElement) {
 			return getJavaElementProvider().getChildren(object);
 		}
 		if (object instanceof IJavaWebNode) {
 			JavaElement enclosedElement = (JavaElement) ((IJavaWebNode) object).getJavaElement();
 			if (enclosedElement != null) {
 				try {
-					IJavaElement[] children = enclosedElement.getChildren();
+					IJavaScriptElement[] children = enclosedElement.getChildren();
 					if (children == null) {
-						return new IJavaElement[0];
+						return new IJavaScriptElement[0];
 					}
 					Object[] nodes = new Object[children.length];
 					Node parent = ((IJavaWebNode) object).getParentNode();
@@ -64,7 +64,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 						nodes[i] = getJsNode(parent, children[i], position);
 					}
 					return nodes;
-				} catch (JavaModelException ex) {
+				} catch (JavaScriptModelException ex) {
 				}
 			}
 		}
@@ -84,13 +84,13 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	protected boolean matches(Object elementObj) {
 		
 		if( elementObj instanceof IJavaWebNode ){
-			IJavaElement element = ((IJavaWebNode)elementObj).getJavaElement();
-			if (element.getElementType() == IJavaElement.TYPE && element.getParent().getElementType() == IJavaElement.COMPILATION_UNIT ) {
+			IJavaScriptElement element = ((IJavaWebNode)elementObj).getJavaElement();
+			if (element.getElementType() == IJavaScriptElement.TYPE && element.getParent().getElementType() == IJavaScriptElement.JAVASCRIPT_UNIT ) {
 				
 				IType type = (IType)element;
 				try {
 					return type.isAnonymous();
-				} catch (JavaModelException e) {
+				} catch (JavaScriptModelException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -129,24 +129,24 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	}
 	
 	public Object[] getElements(Object object) {
-		if (object instanceof IJavaElement) {
+		if (object instanceof IJavaScriptElement) {
 			return getJavaElementProvider().getElements(object);
 		}
 		return super.getElements(object);
 	}
 	
-	private JavaElementLabelProvider getJavaElementLabelProvider() {
+	private JavaScriptElementLabelProvider getJavaElementLabelProvider() {
 		if(javaElementLabelProvider==null) {
-			javaElementLabelProvider = new JavaElementLabelProvider();
+			javaElementLabelProvider = new JavaScriptElementLabelProvider();
 		}
 		return javaElementLabelProvider;
 	}
 	
-	private StandardJavaElementContentProvider getJavaElementProvider() {
-		return new StandardJavaElementContentProvider(true);
+	private StandardJavaScriptElementContentProvider getJavaElementProvider() {
+		return new StandardJavaScriptElementContentProvider(true);
 	}
 	
-	private Object[] filterChildrenForRange(IJavaElement[] allChildren, Node node) {
+	private Object[] filterChildrenForRange(IJavaScriptElement[] allChildren, Node node) {
 		int javaPositionStart = ((NodeImpl) node).getStartOffset();
 		int javaPositionEnd   = ((NodeImpl) node).getEndOffset();
 		
@@ -155,17 +155,17 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		
 		Vector validChildren = new Vector();
 		for (int i = 0; i < allChildren.length; i++) {
-			if (allChildren[i] instanceof IJavaElement && allChildren[i].getElementType() != IJavaElement.PACKAGE_DECLARATION) {
+			if (allChildren[i] instanceof IJavaScriptElement && allChildren[i].getElementType() != IJavaScriptElement.PACKAGE_DECLARATION) {
 				ISourceRange range = null;
 				if (allChildren[i]  instanceof SourceRefElement) {
 					try {
 						range = ((SourceRefElement)allChildren[i] ).getSourceRange();
-					} catch (JavaModelException e) {
+					} catch (JavaScriptModelException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
-				if (allChildren[i].getElementType() == IJavaElement.TYPE || (javaPositionStart <= range.getOffset() && range.getLength() + range.getOffset() <= (javaPositionEnd))) {
+				if (allChildren[i].getElementType() == IJavaScriptElement.TYPE || (javaPositionStart <= range.getOffset() && range.getLength() + range.getOffset() <= (javaPositionEnd))) {
 					
 				int htmllength = range==null?0:range.getLength();
 				int htmloffset = range==null?0:range.getOffset();
@@ -183,7 +183,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 			result = validChildren.toArray();
 		}
 		if (result == null || result.length == 0) {
-			return new IJavaElement[0];
+			return new IJavaScriptElement[0];
 		}
 		return result;
 	}
@@ -198,16 +198,16 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		if (node.getNodeType() == Node.TEXT_NODE && (node instanceof NodeImpl)) {
 			startOffset = ((NodeImpl) node).getStartOffset();
 			endOffset = ((NodeImpl) node).getEndOffset();
-			ICompilationUnit unit = getLazyCu(node);
+			IJavaScriptUnit unit = getLazyCu(node);
 			try {
 				if(ensureConsistant) unit.makeConsistent(getProgressMonitor());
-			} catch (JavaModelException ex1) {
+			} catch (JavaScriptModelException ex1) {
 				// TODO Auto-generated catch block
 				ex1.printStackTrace();
 			}
 			try {
 				result = filterChildrenForRange(unit.getChildren(),node);
-			} catch (JavaModelException ex) {
+			} catch (JavaScriptModelException ex) {
 				// TODO Auto-generated catch block
 				ex.printStackTrace();
 				result = new Object[0];
@@ -229,11 +229,11 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		
 	}
 	
-	private Object getJsNode(Node parent, IJavaElement root, Position position) {
+	private Object getJsNode(Node parent, IJavaScriptElement root, Position position) {
 		JsJfaceNode instance = null;
-		if (root.getElementType() == IJavaElement.TYPE) {
+		if (root.getElementType() == IJavaScriptElement.TYPE) {
 			instance = new JsJfaceNode(parent, root, position, ((SourceRefElement) root).getElementName());
-		} else if (root.getElementType() == IJavaElement.FIELD) {
+		} else if (root.getElementType() == IJavaScriptElement.FIELD) {
 			/* Field refrence, possibly to a type may need to implement later */
 			instance = new JsJfaceNode(parent, root,  position);
 		} else {
@@ -255,7 +255,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 		if (node instanceof JsJfaceNode) {
 			return ((JsJfaceNode) node).getImage();
 		}
-		if (node instanceof IJavaElement) {
+		if (node instanceof IJavaScriptElement) {
 			return getJavaElementLabelProvider().getImage(node);
 		}
 		return super.getLabelImage(node);
@@ -266,7 +266,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 //		if (node instanceof JsJfaceNode) {
 //			return ((JsJfaceNode) node).getName();
 //		}
-		if (node instanceof IJavaElement) {
+		if (node instanceof IJavaScriptElement) {
 			return getJavaElementLabelProvider().getText(node);
 		}
 		return super.getLabelText(node);
@@ -274,18 +274,18 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	
 	
 	public Object getParent(Object element) {
-		if (element instanceof IJavaElement) {
+		if (element instanceof IJavaScriptElement) {
 			return getJavaElementProvider().getParent(element);
 		}
 		return super.getParent(element);
 	}
 	
-	private ICompilationUnit getLazyCu(Node node) {
+	private IJavaScriptUnit getLazyCu(Node node) {
 		if(lazyCu==null) {
 			lazyCu = getTranslation(node).getCompilationUnit();
 			try {
 				lazyCu.makeConsistent( new NullProgressMonitor() );
-			} catch (JavaModelException e) {
+			} catch (JavaScriptModelException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -322,7 +322,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	
 	
 	public boolean hasChildren(Object object) {
-		if (object instanceof IJavaElement) {
+		if (object instanceof IJavaScriptElement) {
 			return getJavaElementProvider().hasChildren(object);
 		}
 		Node node = (Node) object;

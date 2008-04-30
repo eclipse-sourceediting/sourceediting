@@ -35,8 +35,8 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.wst.jsdt.core.IJavaProject;
-import org.eclipse.wst.jsdt.core.JavaCore;
+import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.internal.core.JavaModelManager;
 import org.eclipse.wst.jsdt.internal.core.index.Index;
 import org.eclipse.wst.jsdt.internal.core.search.indexing.IndexManager;
@@ -265,7 +265,7 @@ public class JsIndexManager {
 					}
 					IFile file = filesToBeProcessed[lastFileCursor];
 					try {
-						IJavaProject project = JavaCore.create(file.getProject());
+						IJavaScriptProject project = JavaScriptCore.create(file.getProject());
 						if (project.exists()) {
 							ss.addJspFile(file);
 							// JSP Indexer processing n files
