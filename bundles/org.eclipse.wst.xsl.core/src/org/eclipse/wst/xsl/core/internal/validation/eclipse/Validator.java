@@ -58,12 +58,25 @@ public class Validator extends AbstractNestedValidator
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 
 	private boolean asYouTypeValidation;
+	private long cleanStart;
 
 	@Override
 	public void clean(IProject project, ValidationState state, IProgressMonitor monitor)
 	{
 		super.clean(project, state, monitor);
+		cleanStart = System.currentTimeMillis();
 		XSLCore.getInstance().clean(project,monitor);
+	}
+	
+	@Override
+	public void validationFinishing(IProject project, ValidationState state, IProgressMonitor monitor)
+	{
+		// TODO Auto-generated method stub
+		if (project == null)
+		{
+			System.out.println("CLEAN in "+(System.currentTimeMillis()-cleanStart)+"ms");
+		}
+		super.validationFinishing(project, state, monitor);
 	}
 	
 	@Override
