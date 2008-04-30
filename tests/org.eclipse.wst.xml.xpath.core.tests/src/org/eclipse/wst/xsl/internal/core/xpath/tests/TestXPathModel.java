@@ -47,7 +47,7 @@ public class TestXPathModel extends TestCase {
 		assertEquals("Name does not equal test", "test", variable.getName());
 		assertEquals("Beginning Column Number not 1", 1, variable.getBeginColumn());
 		assertEquals("Ending Column Number not 4", 4, variable.getEndColumn());
-		assertEquals("Beggning Line Number incorrect.", 1, variable.getBeginLineNumber());
+		assertEquals("Begining Line Number incorrect.", 1, variable.getBeginLineNumber());
 		assertEquals("Ending Line Number incorrect.", 1, variable.getEndLineNumber());
 	}
 	
