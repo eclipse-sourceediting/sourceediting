@@ -7,8 +7,7 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.eclipse.wst.xml.xpath.core;uses:="org.osgi.framework,org.eclipse.core.runtime",
- org.eclipse.wst.xml.xpath.core.internal.model.XPath;x-internal:=true,
+Export-Package: org.eclipse.wst.xml.xpath.core.internal.model.XPath;x-internal:=true,
  org.eclipse.wst.xml.xpath.core.internal.model.XPath.Axis;x-internal:=true,
  org.eclipse.wst.xml.xpath.core.internal.model.XPath.Axis.impl;x-internal:=true,
  org.eclipse.wst.xml.xpath.core.internal.model.XPath.Axis.util;x-internal:=true,
@@ -21,14 +20,7 @@ Export-Package: org.eclipse.wst.xml.xpath.core;uses:="org.osgi.framework,org.ecl
  org.eclipse.wst.xml.xpath.core.internal.model.XPath.Keywords;x-internal:=true,
  org.eclipse.wst.xml.xpath.core.internal.model.XPath.Keywords.impl;x-internal:=true,
  org.eclipse.wst.xml.xpath.core.internal.model.XPath.Keywords.util;x-internal:=true,
- org.eclipse.wst.xml.xpath.core.internal.model.XPath.impl;x-internal:=true,
- org.eclipse.wst.xml.xpath.core.util;
-  uses:="org.apache.xml.utils,
-   org.w3c.dom.traversal,
-   org.apache.xpath.objects,
-   org.w3c.dom,
-   org.apache.xpath.compiler"
+ org.eclipse.wst.xml.xpath.core.internal.model.XPath.impl;x-internal:=true
 Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.eclipse.emf.ecore;visibility:=reexport,
- org.apache.commons.jxpath,
  org.apache.xalan;bundle-version="[2.7.1,2.8.0)"
