@@ -180,8 +180,9 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		 * validators.
 		 */
 		Set disabledValsByClass = new HashSet(20);
-		if (getFile() != null) {
-			for (Iterator it = ValidationFramework.getDefault().getDisabledValidatorsFor(getFile()).iterator(); it.hasNext();) {
+		IFile file = getFile();
+		if (file != null) {
+			for (Iterator it = ValidationFramework.getDefault().getDisabledValidatorsFor(file).iterator(); it.hasNext();) {
 				Validator v = (Validator) it.next();
 				IValidator iv = v.asIValidator();
 				if (iv != null && v.getSourceId() != null)
