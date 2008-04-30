@@ -88,6 +88,12 @@
          version="0.0.0"/>
 
    <plugin
+         id="org.eclipse.wst.xml.catalog.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
          id="org.eclipse.wst.xsd.tests.performance"
          download-size="0"
          install-size="0"
