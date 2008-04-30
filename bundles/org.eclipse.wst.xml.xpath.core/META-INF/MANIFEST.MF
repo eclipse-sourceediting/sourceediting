@@ -7,7 +7,8 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.eclipse.wst.xml.xpath.core.internal.model.XPath;x-internal:=true,
+Export-Package: org.eclipse.wst.xml.xpath.core,
+ org.eclipse.wst.xml.xpath.core.internal.model.XPath;x-internal:=true,
  org.eclipse.wst.xml.xpath.core.internal.model.XPath.Axis;x-internal:=true,
  org.eclipse.wst.xml.xpath.core.internal.model.XPath.Axis.impl;x-internal:=true,
  org.eclipse.wst.xml.xpath.core.internal.model.XPath.Axis.util;x-internal:=true,
@@ -20,7 +21,8 @@ Export-Package: org.eclipse.wst.xml.xpath.core.internal.model.XPath;x-internal:=
  org.eclipse.wst.xml.xpath.core.internal.model.XPath.Keywords;x-internal:=true,
  org.eclipse.wst.xml.xpath.core.internal.model.XPath.Keywords.impl;x-internal:=true,
  org.eclipse.wst.xml.xpath.core.internal.model.XPath.Keywords.util;x-internal:=true,
- org.eclipse.wst.xml.xpath.core.internal.model.XPath.impl;x-internal:=true
+ org.eclipse.wst.xml.xpath.core.internal.model.XPath.impl;x-internal:=true,
+ org.eclipse.wst.xml.xpath.core.util
 Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.apache.xalan;bundle-version="[2.7.1,2.8.0)"
