@@ -27,6 +27,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
+import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -62,7 +63,19 @@ public class StylesheetBuilder
 		IStructuredModel smodel = null;
 		try
 		{
-			smodel = StructuredModelManager.getModelManager().getModelForRead(file);
+			smodel = StructuredModelManager.getModelManager().getExistingModelForRead(file);
+			if (smodel == null)
+			{
+				smodel = StructuredModelManager.getModelManager().getModelForRead(file);
+				long endParse = System.currentTimeMillis();
+				System.out.println("PARSE "+file+" in "+(endParse-start)+"ms");
+			}
+			else
+			{
+				long endParse = System.currentTimeMillis();
+				System.out.println("NO-PARSE "+file+" in "+(endParse-start)+"ms");
+			}
+			start = System.currentTimeMillis();
 			if (smodel != null && smodel instanceof IDOMModel)
 			{
 				IDOMModel model = (IDOMModel) smodel;
@@ -120,12 +133,14 @@ public class StylesheetBuilder
 		
 		public void walkDocument(IDOMDocument document)
 		{
+			
+			
 			if (document.getDocumentElement() != null)
 				recurse(document.getDocumentElement());
 		}
 
 		private void recurse(Element element)
-		{
+		{			
 			if (XSLCore.XSL_NAMESPACE_URI.equals(element.getNamespaceURI()))
 			{
 				XSLElement xslEl;
