@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.quickassist.IQuickAssistInvocationContext;
 import org.eclipse.jface.text.quickassist.IQuickAssistProcessor;
@@ -79,7 +80,8 @@ public class SourceValidationQuickAssistProcessor implements IQuickAssistProcess
 					if (anno instanceof TemporaryAnnotation) {
 						attributes = ((TemporaryAnnotation) anno).getAttributes();
 					}
-					StructuredTextInvocationContext sseContext = new StructuredTextInvocationContext(viewer, documentOffset, length, attributes);
+					Position pos = model.getPosition(anno);
+					StructuredTextInvocationContext sseContext = new StructuredTextInvocationContext(viewer, pos.getOffset(), pos.getLength(), attributes);
 
 					// call each processor
 					for (int i = 0; i < processors.size(); ++i) {
