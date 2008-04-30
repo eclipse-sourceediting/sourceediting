@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+
 package org.eclipse.wst.xml.catalog.tests.internal;
 
 import java.util.List;
@@ -116,21 +127,21 @@ public class CatalogContributorRegistryReaderTest extends AbstractCatalogTest
 				ICatalogEntry entry = (ICatalogEntry) entries.get(0);
 				//URI uri = URIHelper.getURIForFilePath(resolvedURI);
 				//resolvedURI = URIHelper.makeAbsolute(uri.toURL(), "./Invoice/Invoice.dtd");
-				assertEquals("./Invoice/Invoice.dtd", entry.getURI());
+				assertEquals(getFileLocation("data/Invoice/Invoice.dtd"), entry.getURI());
 				assertEquals("InvoiceId_test", entry.getKey());
 				// test system entries
 				entries = CatalogTest.getCatalogEntries(nextCatalog,
 						ICatalogEntry.ENTRY_TYPE_SYSTEM);
 				assertEquals(1, entries.size());
 				entry = (ICatalogEntry) entries.get(0);
-				assertEquals("./Invoice/Invoice.dtd", entry.getURI());
+				assertEquals(getFileLocation("data/Invoice/Invoice.dtd"), entry.getURI());
 				assertEquals("Invoice.dtd", entry.getKey());
 				// test uri entries
 				entries = CatalogTest.getCatalogEntries(nextCatalog,
 						ICatalogEntry.ENTRY_TYPE_URI);
 				assertEquals(1, entries.size());
 				entry = (ICatalogEntry) entries.get(0);
-				assertEquals("./Invoice/Invoice.dtd", entry.getURI());
+				assertEquals(getFileLocation("data/Invoice/Invoice.dtd"), entry.getURI());
 				assertEquals("http://www.test.com/Invoice.dtd", entry.getKey());
 			}
 		}

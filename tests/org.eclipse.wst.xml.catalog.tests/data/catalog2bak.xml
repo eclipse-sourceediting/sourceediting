@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-  <public publicId="http://www.eclipse.org/webtools/Catalogue" uri="./PublicationCatalog/Catalogue.xsd"/>
-  <system systemId="Catalogue.xsd" uri="./PublicationCatalog/Catalogue.xsd"/>
+  <public publicId="http://www.eclipse.org/webtools/Catalogue" uri="./PublicationCatalogue/Catalogue.xsd"/>
+  <system systemId="Catalogue.xsd" uri="./PublicationCatalogue/Catalogue.xsd"/>
    <group id="group1" prefer="system">
  		<uri name="http://Catalogue.xsd" uri="http://www.eclipse.org/webtools/Catalogue/Catalogue.xsd"/>
    </group>

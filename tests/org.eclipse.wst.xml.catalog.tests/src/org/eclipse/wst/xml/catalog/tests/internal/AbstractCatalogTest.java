@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+
 package org.eclipse.wst.xml.catalog.tests.internal;
 
 import java.io.IOException;
@@ -8,7 +19,10 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.catalog.CatalogContributorRegistryReader;
 import org.eclipse.wst.xml.core.internal.catalog.CatalogSet;
@@ -112,7 +126,7 @@ public abstract class AbstractCatalogTest extends TestCase
 			URL bundleEntry = bundle.getEntry("/");
 			try
 			{
-				return Platform.resolve(bundleEntry);
+				return FileLocator.resolve(bundleEntry);
 			} catch (IOException e)
 			{
 				e.printStackTrace();
@@ -127,6 +141,15 @@ public abstract class AbstractCatalogTest extends TestCase
 
 		  return  CatalogContributorRegistryReader.resolvePath( 
 				  CatalogContributorRegistryReader.getPlatformURL(pluginId), path);
+	  }
+	  
+	  
+	  protected String getFileLocation(String path) {
+		  String result = null;
+		  try {
+			result = FileLocator.toFileURL(FileLocator.find(TestPlugin.getDefault().getBundle(), new Path(path), null)).toString();
+		} catch (IOException e) {}
+		return URIHelper.ensureFileURIProtocolFormat(result);
 	  }
 
 }

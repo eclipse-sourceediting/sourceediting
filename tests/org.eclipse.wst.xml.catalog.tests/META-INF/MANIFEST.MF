@@ -1,17 +1,18 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Test Plug-in
+Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.xml.catalog.tests; singleton:=true
 Bundle-Version: 0.7.0
 Bundle-Activator: org.eclipse.wst.xml.catalog.tests.internal.TestPlugin
-Bundle-Vendor: IBM
+Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
-Export-Package: org.eclipse.wst.xml.catalog.tests.internal,
- org.eclipse.wst.xml.resolver.tools.tests.internal,
- org.eclipse.wst.xml.uriresolver.validation.tests.internal
+Export-Package: org.eclipse.wst.xml.catalog.tests.internal
 Require-Bundle: org.eclipse.core.runtime,
  org.junit,
  org.eclipse.wst.xml.core,
  org.apache.xerces,
- org.eclipse.xsd
-Eclipse-AutoStart: true
+ org.eclipse.xsd,
+ org.eclipse.wst.common.uriresolver
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: catalogtests.jar
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?> 
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-  <public publicId="http://www.eclipse.org/webtools/Catalogue_001" uri="./PublicationCatalog/Catalogue.xsd" /> 
-  <system systemId="Catalogue.xsd" uri="./PublicationCatalog/Catalogue.xsd" /> 
+  <public publicId="http://www.eclipse.org/webtools/Catalogue_001" uri="./PublicationCatalogue/Catalogue.xsd" /> 
+  <system systemId="Catalogue.xsd" uri="./PublicationCatalogue/Catalogue.xsd" /> 
   <uri name="http://www.eclipse.org/webtools/Catalogue.xsd" uri="http://www.eclipse.org/webtools/Catalogue/Catalogue.xsd" /> 
   <group id="group1" prefer="system">
-    <public publicId="http://www.eclipse.org/webtools/Catalogue_002" uri="./PublicationCatalog/Catalogue.xsd" /> 
+    <public publicId="http://www.eclipse.org/webtools/Catalogue_002" uri="./PublicationCatalogue/Catalogue.xsd" /> 
   </group>
   </catalog>

@@ -1,12 +1,24 @@
-package org.eclipse.wst.xml.catalog.tests.internal;
+/*******************************************************************************
+ * Copyright (c) 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleContext;
+package org.eclipse.wst.xml.catalog.tests.internal;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Plugin;
+import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -77,7 +89,7 @@ public class TestPlugin extends Plugin {
 	
 	public static String resolvePluginLocation(String path) throws IOException {
 		URL url = getDefault().getBundle().getEntry(path);
-		url = Platform.resolve(url);
+		url = FileLocator.resolve(url);
 		return url.getFile();
 	}
 

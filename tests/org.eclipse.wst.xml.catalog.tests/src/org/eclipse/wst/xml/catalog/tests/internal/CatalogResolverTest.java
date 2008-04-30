@@ -1,4 +1,17 @@
+/*******************************************************************************
+ * Copyright (c) 2008 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+
 package org.eclipse.wst.xml.catalog.tests.internal;
+
+import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 
 
 public class CatalogResolverTest extends AbstractCatalogTest {
@@ -42,30 +55,25 @@ public class CatalogResolverTest extends AbstractCatalogTest {
 
 		resolvedActual = defaultCatalog.resolveSystem("Invoice.dtd");
 		resolvedURI = makeAbsolute(pluginBase, "data/Invoice/Invoice.dtd");
-		assertEquals(resolvedURI, resolvedActual);
+		assertEquals(URIHelper.ensureFileURIProtocolFormat(resolvedURI), resolvedActual);
 
 		resolvedActual = defaultCatalog.resolveURI("http://www.test.com/Invoice.dtd");
 		resolvedURI = makeAbsolute(pluginBase, "data/Invoice/Invoice.dtd");
-		assertEquals(resolvedURI, resolvedActual);
+		assertEquals(URIHelper.ensureFileURIProtocolFormat(resolvedURI), resolvedActual);
 
 		
 		// from catalog2.xml
 		resolvedActual = defaultCatalog.resolvePublic("http://www.eclipse.org/webtools/Catalogue_001", null);
-		resolvedURI = makeAbsolute(pluginBase, "data/PublicationCatalog/Catalogue.xsd");
-		assertEquals(resolvedURI, resolvedActual);
+		resolvedURI = makeAbsolute(pluginBase, "data/PublicationCatalogue/Catalogue.xsd");
+		assertEquals(URIHelper.ensureFileURIProtocolFormat(resolvedURI), resolvedActual);
 		
 		resolvedActual = defaultCatalog.resolvePublic("http://www.eclipse.org/webtools/Catalogue_002", null);
-		resolvedURI = makeAbsolute(pluginBase, "data/PublicationCatalog/Catalogue.xsd");
-		assertEquals(resolvedURI, resolvedActual);
+		resolvedURI = makeAbsolute(pluginBase, "data/PublicationCatalogue/Catalogue.xsd");
+		assertEquals(URIHelper.ensureFileURIProtocolFormat(resolvedURI), resolvedActual);
 
 		resolvedActual = defaultCatalog.resolveSystem("Catalogue.xsd");
-		resolvedURI = makeAbsolute(pluginBase, "data/PublicationCatalog/Catalogue.xsd");
-		assertEquals(resolvedURI, resolvedActual);
-
-		resolvedActual = defaultCatalog.resolveURI("http://Catalogue.xsd");
-		resolvedURI = "http://www.eclipse.org/webtools/Catalogue.xsd";
-		assertEquals(resolvedURI, resolvedURI);
-
+		resolvedURI = makeAbsolute(pluginBase, "data/PublicationCatalogue/Catalogue.xsd");
+		assertEquals(URIHelper.ensureFileURIProtocolFormat(resolvedURI), resolvedActual);
 
 	}
 
