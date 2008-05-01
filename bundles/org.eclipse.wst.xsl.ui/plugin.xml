@@ -147,35 +147,33 @@
 		</validator>
 	</extension>
 	
-<!--   <extension
-         point="org.eclipse.wst.sse.ui.sourcevalidation">
-		<validator
-			scope="total"
-			class="org.eclipse.wst.xsl.ui.internal.validation.DelegatingSourceValidatorForXalanXSL"
-			id="org.eclipse.wst.xsl.ui.internal.validation.DelegatingSourceValidatorForXalanXSL">
-			<contentTypeIdentifier
-				id="org.eclipse.wst.xml.core.xslsource">
-				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT">
-				</partitionType>
-			</contentTypeIdentifier>
-			<contentTypeIdentifier
-				id="org.eclipse.wst.xsl.core.xslsource">
-				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT">
-				</partitionType>
-			</contentTypeIdentifier>
-		</validator>
-   </extension>
--->
-	
 	<extension point="org.eclipse.ui.actionSets">
 		<actionSet id="org.eclipse.wst.xsl.ui.xslActionSet" label="XSL Actions">
+			<action id="org.eclipse.wst.xsl.ui.newDTDFileAction"
+				class="org.eclipse.wst.xsl.ui.internal.actions.NewDTDFileWizardDelegate"
+				icon="icons/full/newdtd_wiz.gif" 
+				label="New DTD File" 
+				style="push" 
+				toolbarPath="org.eclipse.wst.xsl.ui.xslActionSet" />
+			<action id="org.eclipse.wst.xsl.ui.newXSDFileAction"
+				class="org.eclipse.wst.xsl.ui.internal.actions.NewXSDFileWizardDelegate"
+				icon="icons/full/XSDFile.gif" 
+				label="New XSD File" 
+				style="push" 
+				toolbarPath="org.eclipse.wst.xsl.ui.xslActionSet" />
+<!--			<action id="org.eclipse.wst.xsl.ui.newWSDLFileAction"
+				class="org.eclipse.wst.xsl.ui.internal.actions.NewWSDLFileWizardDelegate"
+				icon="icons/full/new_xml.gif" 
+				label="New WSDL File" 
+				style="push" 
+				toolbarPath="org.eclipse.wst.xsl.ui.xslActionSet" /> -->
 			<action id="org.eclipse.wst.xsl.ui.newXSLFileAction"
 				class="org.eclipse.wst.xsl.ui.internal.actions.NewXSLFileWizardDelegate"
 				icon="icons/full/operation.gif" 
 				label="New XSL File" 
 				style="push" 
 				toolbarPath="org.eclipse.wst.xsl.ui.xslActionSet" />
-			<action id="org.eclipse.wst.xsl.ui.newXSLFileAction"
+			<action id="org.eclipse.wst.xsl.ui.newXMLFileAction"
 				class="org.eclipse.wst.xsl.ui.internal.actions.NewXMLFileWizardDelegate"
 				icon="icons/full/new_xml.gif" 
 				label="New XML File" 
@@ -235,5 +233,36 @@
 	             wizardId="org.eclipse.wst.wsdl.ui">
 	          <enablement></enablement>
 	       </commonWizard>
-	 </extension>	
+	 </extension>
+  <extension
+        point="org.eclipse.ui.commands">
+     <command
+           categoryId="org.eclipse.ui.category.edit"
+           id="org.eclipse.wst.xsl.ui.command.openDeclaration"
+           name="Open Declaration">
+     </command>
+  </extension>
+  <extension
+        point="org.eclipse.ui.handlers">
+     <handler
+           class="org.eclipse.wst.xsl.ui.internal.actions.OpenDeclarationHandler"
+           commandId="org.eclipse.wst.xsl.ui.command.openDeclaration">
+     </handler>
+  </extension>
+  <extension
+        point="org.eclipse.ui.menus">
+     <menuContribution
+           locationURI="popup:org.eclipse.wst.sse.ui.StructuredTextEditor.EditorContext?after=additions">
+        <command
+              commandId="org.eclipse.wst.xsl.ui.command.openDeclaration"
+              id="openDeclaration"
+              label="Open Declaration"
+              style="push"
+              tooltip="Open Declaration">
+           <visibleWhen
+                 checkEnabled="false">
+           </visibleWhen>
+        </command>
+     </menuContribution>
+  </extension>
 </plugin>

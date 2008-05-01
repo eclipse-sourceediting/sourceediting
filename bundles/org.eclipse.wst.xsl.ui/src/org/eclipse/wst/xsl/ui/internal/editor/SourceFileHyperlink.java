@@ -25,7 +25,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.xsl.core.internal.model.XSLNode;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 
-class SourceFileHyperlink implements IHyperlink
+public class SourceFileHyperlink implements IHyperlink
 {
 	private IRegion hyperLinkRegion;
 	private IFile linkedFile;
@@ -57,8 +57,7 @@ class SourceFileHyperlink implements IHyperlink
 
 	public String getHyperlinkText()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return linkedFile.getFullPath().toString();
 	}
 
 	public void open()

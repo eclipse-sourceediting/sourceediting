@@ -15,14 +15,14 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-public class NewXMLFileWizardDelegate implements IWorkbenchWindowActionDelegate
+public class NewXSDFileWizardDelegate implements IWorkbenchWindowActionDelegate
 {
 	private NewWizardAction openAction;
 	private ISelection selection;
 
 	public void init(IWorkbenchWindow window)
 	{
-		this.openAction = new NewWizardAction("org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard");
+		this.openAction = new NewWizardAction("org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard");
 	}
 
 	public void run(IAction action)

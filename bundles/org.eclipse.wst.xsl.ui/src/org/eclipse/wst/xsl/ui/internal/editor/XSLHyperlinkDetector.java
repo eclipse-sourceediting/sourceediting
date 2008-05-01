@@ -60,10 +60,19 @@ public class XSLHyperlinkDetector extends AbstractHyperlinkDetector
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks)
 	{
 		IHyperlink hyperlink = null;
-		
 		if (region != null && textViewer != null)
 		{
-			IDocument document = textViewer.getDocument();
+			return detectHyperlinks(textViewer.getDocument(), region, canShowMultipleHyperlinks);
+		}
+		return hyperlink == null ? null : new IHyperlink[]{hyperlink};
+	}
+
+	public IHyperlink[] detectHyperlinks(IDocument document, IRegion region, boolean canShowMultipleHyperlinks)
+	{
+		IHyperlink hyperlink = null;
+		
+		if (region != null && document != null)
+		{
 			Node currentNode = getCurrentNode(document, region.getOffset());
 
 			Element xslEl = null;
@@ -107,7 +116,7 @@ public class XSLHyperlinkDetector extends AbstractHyperlinkDetector
 		}
 		return hyperlink == null ? null : new IHyperlink[]{hyperlink};
 	}
-
+	
 	private IHyperlink createIncludeHyperLink(IFile currentFile, String include, IRegion hyperlinkRegion)
 	{
 		IHyperlink hyperlink = null;

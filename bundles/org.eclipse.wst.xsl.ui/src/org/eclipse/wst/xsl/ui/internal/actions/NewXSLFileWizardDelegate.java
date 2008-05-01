@@ -17,12 +17,12 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 public class NewXSLFileWizardDelegate implements IWorkbenchWindowActionDelegate
 {
-	private NewXSLFileAction openAction;
+	private NewWizardAction openAction;
 	private ISelection selection;
 
 	public void init(IWorkbenchWindow window)
 	{
-		this.openAction = new NewXSLFileAction();
+		this.openAction = new NewWizardAction("org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard");
 	}
 
 	public void run(IAction action)
