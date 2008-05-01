@@ -128,7 +128,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 			}
 		}
 		catch (Exception e) {
-		    Logger.log(Logger.ERROR, "Error occurred while firing Node Parsed event for "+fDocumentInput.toString(), e); //$NON-NLS-1$
+		    Logger.log(Logger.ERROR, "Error occurred while firing Node Parsed event", e); //$NON-NLS-1$
 		}
 	}
 
