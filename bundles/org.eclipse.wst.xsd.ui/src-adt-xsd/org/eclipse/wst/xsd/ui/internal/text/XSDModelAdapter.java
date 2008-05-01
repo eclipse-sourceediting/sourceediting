@@ -160,15 +160,13 @@ public class XSDModelAdapter implements INodeAdapter
       IDOMNode domNode = (IDOMNode)document;
       schema.setDocument(document);
       schema.setElement(document.getDocumentElement());
+
+      resourceSet = schema.eResource().getResourceSet();
       
       String baseLocation = domNode.getModel().getBaseLocation();           
       URI uri = getURI(baseLocation);
       schema.eResource().setURI(uri);
 
-      resourceSet = XSDSchemaImpl.createResourceSet();
-      resourceSet.getAdapterFactories().add(new XSDSchemaLocationResolverAdapterFactory());                
-      resourceSet.getResources().add(schema.eResource());
- 
       modelReconcileAdapter = new XSDModelReconcileAdapter(document, schema);
       domNode.getModel().addModelStateListener(modelReconcileAdapter);
     }
