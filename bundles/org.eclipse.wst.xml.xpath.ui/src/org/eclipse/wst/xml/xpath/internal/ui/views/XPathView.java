@@ -504,6 +504,8 @@ public class XPathView extends ViewPart
 				}
 	        }
     	}
+    	if (currentSheet == null)
+    		currentSheet = 0;
     	super.init(site, memento);
     }
 

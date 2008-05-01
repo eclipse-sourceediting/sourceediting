@@ -90,7 +90,8 @@ public class XPathComputer
 	{
 		this.path = XPathFactory.newInstance().newXPath();
 		Document doc = (Document) model.getAdapter(Document.class);
-		Assert.isNotNull(doc, Messages.XPathComputer_0);
+		if (doc == null)
+			return;
 
 		Element rootEl = doc.getDocumentElement();
 		if (rootEl != null)
