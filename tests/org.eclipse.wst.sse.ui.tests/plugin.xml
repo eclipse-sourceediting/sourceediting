@@ -57,6 +57,16 @@
 				class="org.eclipse.wst.sse.ui.tests.TestActionDelegate"
 				menubarPath="additions"
 				id="org.eclipse.wst.sse.ui.tests.test.1" />
+			<action
+				label="%action.label.1"
+				class="org.eclipse.wst.sse.ui.tests.ReadOnlyToggleDelegate"
+				menubarPath="additions"
+				id="org.eclipse.wst.sse.ui.tests.test.2" />
+			<action
+				label="%action.label.2"
+				class="org.eclipse.wst.sse.ui.tests.ClearReadOnlyDelegate"
+				menubarPath="additions"
+				id="org.eclipse.wst.sse.ui.tests.test.2" />
 		</viewerContribution>
 	</extension>
 
