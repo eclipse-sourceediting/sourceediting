@@ -593,7 +593,13 @@ public class NewXMLWizard extends NewModelWizard {
 						for (int i = 0; i < generator.namespaceInfoList.size(); i++) {
 							NamespaceInfo nsinfo = (NamespaceInfo) generator.namespaceInfoList.get(i);
 							if ((nsinfo.prefix == null || nsinfo.prefix.trim().length() == 0) && (nsinfo.uri != null && nsinfo.uri.trim().length() != 0)) {
-								nsinfo.prefix = getDefaultPrefix(generator.namespaceInfoList);
+								if("http://www.w3.org/XML/1998/namespace".equals(nsinfo.uri)) { //$NON-NLS-1$
+									nsinfo.prefix = "xml"; //$NON-NLS-1$
+								} else if("http://www.w3.org/2000/xmlns".equals(nsinfo.uri)) { //$NON-NLS-1$
+									nsinfo.prefix = "xmlns"; //$NON-NLS-1$
+								} else {
+									nsinfo.prefix = getDefaultPrefix(generator.namespaceInfoList);
+								}
 							}
 						}
 						xsdOptionsPanel.setNamespaceInfoList(generator.namespaceInfoList);
