@@ -25,7 +25,9 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
+import org.eclipse.wst.xsl.core.ValidationPreferences;
 import org.eclipse.wst.xsl.core.XSLCore;
+import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.eclipse.wst.xsl.core.internal.model.CallTemplate;
 import org.eclipse.wst.xsl.core.internal.model.Include;
 import org.eclipse.wst.xsl.core.internal.model.Parameter;
@@ -93,9 +95,15 @@ public class XSLValidator
 		// call-template checks
 		checkCallTemplates(stylesheetComposed, report);
 		// call-template checks
-		checkXPaths(stylesheetComposed.getStylesheet(), report);
+		if (getPreference(ValidationPreferences.XPATHS) > IMarker.SEVERITY_INFO)
+			checkXPaths(stylesheetComposed.getStylesheet(), report);
 		
 		// TODO a) check globals and b) apply-templates where mode does not exist
+	}
+	
+	private int getPreference(String key)
+	{
+		return XSLCorePlugin.getDefault().getPluginPreferences().getInt(key);
 	}
 
 	private void checkXPaths(XSLElement xslEl, XSLValidationReport report) throws MaxErrorsExceededException
@@ -121,7 +129,7 @@ public class XSLValidator
 			}
 			catch (XPathExpressionException e)
 			{
-				createMarker(report, att, IMarker.SEVERITY_ERROR, "Xpath is invalid");
+				createMarker(report, att, getPreference(ValidationPreferences.XPATHS), "Xpath is invalid");
 			}
 			catch (NullPointerException e)
 			{
@@ -133,7 +141,7 @@ public class XSLValidator
 	private void checkCircularRef(StylesheetModel stylesheetComposed, XSLValidationReport report) throws MaxErrorsExceededException
 	{
 		if (stylesheetComposed.hasCircularReference())
-			createMarker(report, stylesheetComposed.getStylesheet(), IMarker.SEVERITY_ERROR, "Included stylesheets form a circular reference");
+			createMarker(report, stylesheetComposed.getStylesheet(), getPreference(ValidationPreferences.CIRCULAR_REF), "Included stylesheets form a circular reference");
 	}
 
 	private void checkIncludes(StylesheetModel stylesheetComposed, XSLValidationReport report) throws MaxErrorsExceededException
@@ -144,11 +152,11 @@ public class XSLValidator
 			IFile includedFile = include.getHrefAsFile();
 			if (includedFile == null || !includedFile.exists())
 			{ // included file does not exist
-				createMarker(report, include.getAttribute("href"), IMarker.SEVERITY_ERROR, "Missing include: " + include.getHref());
+				createMarker(report, include.getAttribute("href"), getPreference(ValidationPreferences.MISSING_INCLUDE), "Missing include: " + include.getHref());
 			}
 			else if (includedFile.equals(include.getStylesheet().getFile()))
 			{ // stylesheet including itself!
-				createMarker(report, include.getAttribute("href"), IMarker.SEVERITY_ERROR, "A stylesheet must not include itself");
+				createMarker(report, include.getAttribute("href"), getPreference(ValidationPreferences.CIRCULAR_REF), "A stylesheet must not include itself");
 			}
 		}
 		//imports
@@ -157,11 +165,11 @@ public class XSLValidator
 			IFile includedFile = include.getHrefAsFile();
 			if (includedFile == null || !includedFile.exists())
 			{ // included file does not exist
-				createMarker(report, include.getAttribute("href"), IMarker.SEVERITY_ERROR, "Missing import: " + include.getHref());
+				createMarker(report, include.getAttribute("href"), getPreference(ValidationPreferences.MISSING_INCLUDE), "Missing import: " + include.getHref());
 			}
 			else if (includedFile.equals(include.getStylesheet().getFile()))
 			{ // stylesheet including itself!
-				createMarker(report, include.getAttribute("href"), IMarker.SEVERITY_ERROR, "A stylesheet must not import itself");
+				createMarker(report, include.getAttribute("href"), getPreference(ValidationPreferences.CIRCULAR_REF), "A stylesheet must not import itself");
 			}
 		}
 	}
@@ -173,12 +181,12 @@ public class XSLValidator
 			// check attributes are correct
 			if (template.getName() != null)
 			{// named template
-				if (template.getMatch() != null)
-					createMarker(report, template, IMarker.SEVERITY_ERROR, "Template cannot specify both name and match attributes");
-				if (template.getMode() != null)
-					createMarker(report, template, IMarker.SEVERITY_ERROR, "Named templates cannot specify a mode");
+//				if (template.getMatch() != null)
+//					createMarker(report, template, IMarker.SEVERITY_ERROR, "Template cannot specify both name and match attributes");
+//				if (template.getMode() != null)
+//					createMarker(report, template, IMarker.SEVERITY_ERROR, "Named templates cannot specify a mode");
 				checkParameters(report, template);
-			}
+			} 
 
 			for (Template checkTemplate : stylesheetComposed.getTemplates())
 			{
@@ -186,15 +194,15 @@ public class XSLValidator
 				{
 					if (template.getStylesheet() == stylesheetComposed.getStylesheet() && checkTemplate.getStylesheet() == stylesheetComposed.getStylesheet())
 					{// templates in this stylesheet conflict with each other
-						createMarker(report, template, IMarker.SEVERITY_ERROR, "Template conflicts with another template in this stylesheet");
+						createMarker(report, template, getPreference(ValidationPreferences.TEMPLATE_CONFLICT), "Template conflicts with another template in this stylesheet");
 					}
 					else if (template.getStylesheet() == stylesheetComposed.getStylesheet())
 					{// template in included stylesheet conflicts with this
-						createMarker(report, template, IMarker.SEVERITY_ERROR, "Template conflicts with an included template");
+						createMarker(report, template, getPreference(ValidationPreferences.TEMPLATE_CONFLICT), "Template conflicts with an included template");
 					}
 					else
 					{// templates in included stylesheets conflict with each other
-						createMarker(report, template.getStylesheet(), IMarker.SEVERITY_ERROR, "Included templates conflict with each other");
+						createMarker(report, template.getStylesheet(), getPreference(ValidationPreferences.TEMPLATE_CONFLICT), "Included templates conflict with each other");
 					}
 				}
 			}
@@ -213,11 +221,11 @@ public class XSLValidator
 		{
 			if (param.getName() == null)
 			{// name is required
-				createMarker(report, param, IMarker.SEVERITY_ERROR, "Name attribute is required");
+				createMarker(report, param, getPreference(ValidationPreferences.NAME_ATTRIBUTE_MISSING), "Name attribute is required");
 			}
 			else if (param.getName().trim().length() == 0)
 			{// name value is required
-				createMarker(report, param, IMarker.SEVERITY_ERROR, "Name must be specified");
+				createMarker(report, param, getPreference(ValidationPreferences.NAME_ATTRIBUTE_EMPTY), "Name must be specified");
 			}
 			else if (duplicateParameters.contains(param))
 			{// don't recheck the parameter
@@ -232,7 +240,7 @@ public class XSLValidator
 						if (param.getName().equals(checkParam.getName()))
 						{
 							duplicateParameters.add(checkParam);
-							createMarker(report, param, IMarker.SEVERITY_ERROR, "Parameter already defined");
+							createMarker(report, param, getPreference(ValidationPreferences.DUPLICATE_PARAMETER), "Parameter already defined");
 						}
 					}
 				}
@@ -243,9 +251,6 @@ public class XSLValidator
 	private void checkCallTemplates(StylesheetModel stylesheetComposed, XSLValidationReport report) throws MaxErrorsExceededException
 	{
 		// TODO these need to be real preferences
-		int REPORT_EMPTY_PARAM_PREF = IMarker.SEVERITY_WARNING;
-		int REPORT_MISSING_PARAM_PREF = IMarker.SEVERITY_WARNING;
-
 		for (CallTemplate calledTemplate : stylesheetComposed.getStylesheet().getCalledTemplates())
 		{
 			// get the list of templates that might be being called by this
@@ -253,7 +258,7 @@ public class XSLValidator
 			List<Template> templateList = stylesheetComposed.getTemplatesByName(calledTemplate.getName());
 			if (templateList.size() == 0)
 			{
-				createMarker(report, calledTemplate.getAttribute("name"), IMarker.SEVERITY_ERROR, "Named template '" + calledTemplate.getName() + "' is not available");
+				createMarker(report, calledTemplate.getAttribute("name"), getPreference(ValidationPreferences.CALL_TEMPLATES), "Named template '" + calledTemplate.getName() + "' is not available");
 			}
 			else
 			{
@@ -266,15 +271,15 @@ public class XSLValidator
 						if (calledTemplateParam.getName().equals(namedTemplateParam.getName()))
 						{
 							found = true;
-							if (REPORT_EMPTY_PARAM_PREF > IMarker.SEVERITY_INFO && !namedTemplateParam.isValue() && !calledTemplateParam.isValue())
-								createMarker(report, calledTemplateParam, REPORT_EMPTY_PARAM_PREF, "Parameter " + calledTemplateParam.getName() + " does not have a default value");
+							if (!namedTemplateParam.isValue() && !calledTemplateParam.isValue())
+								createMarker(report, calledTemplateParam, getPreference(ValidationPreferences.EMPTY_PARAM), "Parameter " + calledTemplateParam.getName() + " does not have a default value");
 							break;
 						}
 					}
 					if (!found)
-						createMarker(report, calledTemplateParam.getAttribute("name"), IMarker.SEVERITY_WARNING, "Parameter " + calledTemplateParam.getName() + " does not exist");
+						createMarker(report, calledTemplateParam.getAttribute("name"), getPreference(ValidationPreferences.MISSING_PARAM), "Parameter " + calledTemplateParam.getName() + " does not exist");
 				}
-				if (REPORT_MISSING_PARAM_PREF > IMarker.SEVERITY_INFO)
+				if (getPreference(ValidationPreferences.MISSING_PARAM) > IMarker.SEVERITY_INFO)
 				{
 					for (Parameter namedTemplateParam : namedTemplate.getParameters())
 					{
@@ -290,7 +295,7 @@ public class XSLValidator
 								}
 							}
 							if (!found)
-								createMarker(report, calledTemplate, REPORT_MISSING_PARAM_PREF, "Missing parameter: " + namedTemplateParam.getName());
+								createMarker(report, calledTemplate, getPreference(ValidationPreferences.MISSING_PARAM), "Missing parameter: " + namedTemplateParam.getName());
 						}
 					}
 				}
@@ -300,16 +305,19 @@ public class XSLValidator
 
 	private void createMarker(XSLValidationReport report, XSLNode xslNode, int severity, String message) throws MaxErrorsExceededException
 	{
-		if (report.getErrors().size() + report.getWarnings().size() > MAX_ERRORS)
-			throw new MaxErrorsExceededException();
-		switch (severity)
+		if (severity > IMarker.SEVERITY_INFO)
 		{
-			case IMarker.SEVERITY_ERROR:
-				report.addError(xslNode, message);
-				break;
-			case IMarker.SEVERITY_WARNING:
-				report.addWarning(xslNode, message);
-				break;
+			if (report.getErrors().size() + report.getWarnings().size() > MAX_ERRORS)
+				throw new MaxErrorsExceededException();
+			switch (severity)
+			{
+				case IMarker.SEVERITY_ERROR:
+					report.addError(xslNode, message);
+					break;
+				case IMarker.SEVERITY_WARNING:
+					report.addWarning(xslNode, message);
+					break;
+			}
 		}
 	}
 

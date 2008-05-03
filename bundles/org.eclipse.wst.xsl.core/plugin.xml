@@ -117,6 +117,12 @@
               uri="xslt-schemas/xinclude.xsd">
         </uri>
      </catalogContribution>
+  </extension>
+  <extension
+        point="org.eclipse.core.runtime.preferences">
+     <initializer
+           class="org.eclipse.wst.xsl.core.internal.preferences.PreferenceInitializer">
+     </initializer>
   </extension>	
    
 
