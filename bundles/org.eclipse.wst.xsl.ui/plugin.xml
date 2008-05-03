@@ -235,30 +235,22 @@
 	       </commonWizard>
 	 </extension>
   <extension
-        point="org.eclipse.ui.commands">
-     <command
-           categoryId="org.eclipse.ui.category.edit"
-           id="org.eclipse.wst.xsl.ui.command.openDeclaration"
-           name="Open Declaration">
-     </command>
-  </extension>
-  <extension
         point="org.eclipse.ui.handlers">
      <handler
-           class="org.eclipse.wst.xsl.ui.internal.actions.OpenDeclarationHandler"
-           commandId="org.eclipse.wst.xsl.ui.command.openDeclaration">
+           class="org.eclipse.wst.xsl.ui.internal.handlers.OpenDeclarationHandler"
+           commandId="org.eclipse.wst.sse.ui.open.file.from.source">
      </handler>
   </extension>
   <extension
         point="org.eclipse.ui.menus">
      <menuContribution
-           locationURI="popup:org.eclipse.wst.sse.ui.StructuredTextEditor.EditorContext?after=additions">
+           locationURI="popup:org.eclipse.wst.sse.ui.StructuredTextEditor.EditorContext?before=additions">
         <command
-              commandId="org.eclipse.wst.xsl.ui.command.openDeclaration"
-              id="openDeclaration"
-              label="Open Declaration"
+              commandId="org.eclipse.wst.sse.ui.open.file.from.source"
+              id="openSelection"
+              label="Open Selection"
               style="push"
-              tooltip="Open Declaration">
+              tooltip="Open Selection">
            <visibleWhen
                  checkEnabled="false">
            </visibleWhen>
