@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Doc Plug-in
+Bundle-Name: XSL User Documentation (Incubating)
 Bundle-SymbolicName: org.eclipse.wst.xsl.doc; singleton:=true
 Bundle-Version: 0.5.0.qualifier
 Bundle-Activator: org.eclipse.wst.xsl.doc.Activator

@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -28,6 +29,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceSorter;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
+import org.eclipse.wst.xsl.launching.XSLTRuntime;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 
 public class AddWorkspaceFileAction extends AbstractStylesheetAction
@@ -74,15 +76,15 @@ public class AddWorkspaceFileAction extends AbstractStylesheetAction
 			@Override
 			public boolean select(Viewer viewer, Object parentElement, Object element)
 			{
-				if (element instanceof IContainer)
-					return true;
-				IFile file = (IFile) element;
-				String fileExt = file.getFileExtension();
-				if (fileExt != null && fileExt.equalsIgnoreCase("xsl")) //$NON-NLS-1$
+				if (!(element instanceof IResource))
+					return false;
+				IResource resource = (IResource)element;
+				if (resource.getType() == IResource.FILE)
 				{
-					return true;
+					if (!XSLTRuntime.isXSLFile((IFile)resource))
+						return false;
 				}
-				return false;
+				return true;
 			}
 		});
 		dialog.setInput(ResourcesPlugin.getWorkspace().getRoot());

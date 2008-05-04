@@ -348,7 +348,7 @@ public class XSLTRuntime
 		IContentType[] types = contentTypeManager.findContentTypesFor(file.getName());
 		for (IContentType contentType : types)
 		{
-			if (contentType.isKindOf(contentTypeManager.getContentType("org.eclipse.wst.xml.core.xslsource"))) //$NON-NLS-1$
+			if (contentType.equals(contentTypeManager.getContentType("org.eclipse.wst.xml.core.xslsource"))) //$NON-NLS-1$
 			{
 				return true;
 			}

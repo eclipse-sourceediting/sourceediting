@@ -230,7 +230,15 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 		for (ILaunchConfiguration config : configs)
 		{
 			String inputFile = config.getAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, (String) null);
-			inputFile = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(inputFile);
+			try
+			{
+				inputFile = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(inputFile);
+			}
+			catch (CoreException e)
+			{
+				// just ignore this one
+				continue;
+			}
 			Path path = new Path(inputFile);
 			// the source xml file must be the same
 			if (path.equals(xmlFilePath))
