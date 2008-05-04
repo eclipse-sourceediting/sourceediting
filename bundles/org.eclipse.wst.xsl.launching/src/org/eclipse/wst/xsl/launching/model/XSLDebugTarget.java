@@ -61,7 +61,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget
 	private final IProcess process;
 	private final ILaunch launch;
 	private XSLThread thread;
-	private IThread[] threads;
+	private IThread[] threads = new IThread[0];
 	private IStackFrame[] stackFramesCache = new IStackFrame[0];
 
 	private EventDispatchJob eventDispatch;
