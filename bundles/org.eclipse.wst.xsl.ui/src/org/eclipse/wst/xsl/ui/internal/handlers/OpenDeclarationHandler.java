@@ -30,7 +30,6 @@ public class OpenDeclarationHandler extends AbstractHandler
 {
 	private XSLHyperlinkDetector detector = new XSLHyperlinkDetector();
 
-	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException
 	{
 		IEditorPart editor = HandlerUtil.getActiveEditor(event);
