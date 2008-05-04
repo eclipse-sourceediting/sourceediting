@@ -115,7 +115,7 @@
 	<extension point="org.eclipse.debug.ui.contextViewBindings">
 		<contextViewBinding autoOpen="true"
 			contextId="org.eclipse.wst.xsl.debug.ui.context"
-			viewId="org.eclipse.wst.xml.ui.xpath.view">
+			viewId="org.eclipse.wst.xml.views.XPathView">
 		</contextViewBinding>
 	</extension>
 
