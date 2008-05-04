@@ -28,20 +28,21 @@ class XPathViewActions
 	private ImageDescriptor SYNCED_D = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_DLCL_SYNCED);
 	private ImageDescriptor SYNCED_E = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_ELCL_SYNCED);
 
-	private boolean linkWithEditor = true;
+	boolean linkWithEditor = false;
 	private CollapseTreeAction collapseAction;
 	private ToggleLinkAction toggleAction;
 
 	protected IAction[] createMenuContributions(TreeViewer viewer)
 	{
-		this.toggleAction = new ToggleLinkAction();
-		return new IAction[]{ toggleAction };
+		return new IAction[]{  };
 	}
 
 	protected IAction[] createToolbarContributions(TreeViewer viewer)
 	{
 		this.collapseAction = new CollapseTreeAction(viewer);
-		return new IAction[]{ collapseAction };
+		this.toggleAction = new ToggleLinkAction();
+		toggleAction.setChecked(linkWithEditor);
+		return new IAction[]{ collapseAction,toggleAction };
 	}
 
 	public ISelection getSelection(TreeViewer viewer, ISelection selection)

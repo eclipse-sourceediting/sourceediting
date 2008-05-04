@@ -16,7 +16,6 @@ import java.util.Map;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.eclipse.core.runtime.ListenerList;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -24,7 +23,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.resource.JFaceColors;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -57,7 +55,6 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.IShowInTargetList;
@@ -73,6 +70,7 @@ import org.w3c.dom.NodeList;
 
 public class XPathView extends ViewPart
 {
+	private boolean isFiringSelection = false;
 	private IPartListener2 partListener2 = new XPathPartListener();
 	private ISelectionListener selectionListener = new ISelectionListener()
 	{
@@ -104,7 +102,7 @@ public class XPathView extends ViewPart
 	private JFaceNodeContentProviderXPath contentProvider;
 	private XPathComputer xpathComputer;
 	private Text locationText;
-	private XPathViewActions xpathViewActions;
+	private XPathViewActions xpathViewActions = new XPathViewActions();
 	private IPostSelectionProvider selectionProvider = new SelectionProvider();
 	private String location = ""; //$NON-NLS-1$
 	private String message;
@@ -159,7 +157,8 @@ public class XPathView extends ViewPart
 
 			public void selectionChanged(SelectionChangedEvent event)
 			{
-				handleTreeSelection((IStructuredSelection)event.getSelection(),false);
+				if (getSite().getPage().getActivePart() == XPathView.this)
+					handleTreeSelection((IStructuredSelection)event.getSelection(),false);
 			}
 		});
 		treeViewer.addDoubleClickListener(new IDoubleClickListener(){
@@ -193,7 +192,6 @@ public class XPathView extends ViewPart
 		pageChange(currentSheet);
 
 		this.xpathComputer = new XPathComputer(this);
-		createActions();
 		createMenu();
 		createToolbar();
 		createContextMenu();
@@ -212,6 +210,7 @@ public class XPathView extends ViewPart
 	{
 		if (activeEditor != null)
 		{
+			isFiringSelection = true;
 			if (selection.getFirstElement() != null)
 			{
 				IDOMNode node = (IDOMNode)selection.getFirstElement();
@@ -224,6 +223,7 @@ public class XPathView extends ViewPart
 						textEditor.setHighlightRange(node.getStartOffset(), 0, true);
 				}
 			}
+			isFiringSelection = false;
 		}
 	}
 
@@ -251,11 +251,6 @@ public class XPathView extends ViewPart
 			text.setText(exp);
 		else
 			text.setText("/"); //$NON-NLS-1$
-	}
-
-	public void createActions()
-	{
-		this.xpathViewActions = new XPathViewActions();
 	}
 
 	private void createMenu()
@@ -432,6 +427,7 @@ public class XPathView extends ViewPart
 		if (part == activeEditor)
 		{
 			treeViewer.setInput(null);
+			locationText.setText("");
 			activeEditor = null;
 		}
 	}
@@ -485,6 +481,8 @@ public class XPathView extends ViewPart
     		child.putInteger("Index", entry.getKey()); //$NON-NLS-1$
     		child.putString("XPath", entry.getValue()); //$NON-NLS-1$
 		}
+    	boolean link = xpathViewActions.linkWithEditor;
+    	memento.putBoolean("LinkWithEditor", link);
         super.saveState( memento);
     }
     
@@ -503,11 +501,18 @@ public class XPathView extends ViewPart
 	        		sheetMap.put(sheet.getInteger("Index"), sheet.getString("XPath")); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 	        }
+	        Boolean linkWithEditor = memento.getBoolean("LinkWithEditor");
+	        boolean link = false;
+	        if(linkWithEditor!=null)
+	        {
+	        	link = linkWithEditor.booleanValue();
+	        }
+	        xpathViewActions.setLinkWithEditor(link);
     	}
     	if (currentSheet == null)
     		currentSheet = 0;
     	super.init(site, memento);
-    }
+    }    
 
 	private class XPathPartListener implements IPartListener2
 	{
@@ -570,7 +575,6 @@ public class XPathView extends ViewPart
 			}
 		}
 
-		private boolean isFiringSelection = false;
 		private ListenerList listeners = new ListenerList();
 		private ListenerList postListeners = new ListenerList();
 		private ISelectionChangedListener postSelectionChangedListener = new PostSelectionChangedListener();
