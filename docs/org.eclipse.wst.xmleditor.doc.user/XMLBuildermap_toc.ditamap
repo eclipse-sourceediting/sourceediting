@@ -73,8 +73,12 @@ toc="no"></topicref>
 <anchor id="xml_post_txmlcat"/>
 <topicref href="topics/tedtgram.dita" id="tedtgram" navtitle="Updating XML files with changes made to DTDs and schemas">
 </topicref>
+<topicref href="topics/rxmlcatkey.dita" id="rxmlcatkey" navtitle="XML Catalog keyboard shortcuts">
+</topicref>
+<anchor id="xml_post_rxmlcatkey"/><?Pub Caret?>
 <anchor id="xml_post_tedtgram"/></topicref>
 <topicref href="topics/rxmlbicons.dita" id="ricons" navtitle="Icons used in the XML editor">
 </topicref>
 <anchor id="xml_post_rxmlbicons"/></topicref>
 </map>
+<?Pub *0000004231?>

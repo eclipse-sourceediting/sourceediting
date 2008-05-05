@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN"
+ "reference.dtd">
+<reference id="xmlcatalogkeyboardshortcuts" xml:lang="en-us">
+<title outputclass="id_title">XML Catalog keyboard shortcuts</title>
+<shortdesc outputclass="id_shortdesc">Accelerator keys can be used in the
+catalog tree structure and catalog entry wizard by first pressing and holding
+the Alt key.</shortdesc>
+<prolog><metadata>
+<keywords><indexterm>accessibility<indexterm>keyboard shortcuts<indexterm>XML
+editor</indexterm></indexterm></indexterm><indexterm>keyboard shortcuts<indexterm>XML
+editor</indexterm></indexterm><indexterm>shortcuts<indexterm>keyboard<indexterm>XML
+editor</indexterm></indexterm></indexterm><indexterm>XML editor<indexterm>accessibility</indexterm></indexterm>
+<indexterm>XML editor<indexterm>keyboard shortcuts</indexterm></indexterm>
+</keywords>
+</metadata></prolog>
+<refbody>
+<table frame="all">
+<tgroup cols="2"><colspec colname="col1" colwidth="84*"/><colspec colname="col3"
+colwidth="93*"/>
+<thead>
+<row valign="bottom">
+<entry colname="col1">Key Combination</entry>
+<entry colname="col3">Function</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry colname="col1">Alt+A</entry>
+<entry colname="col3">Add catalog entry</entry>
+</row>
+<row>
+<entry colname="col1">Alt+E</entry>
+<entry colname="col3">Edit selected catalog entry</entry>
+</row>
+<row>
+<entry colname="col1">Alt+R</entry>
+<entry colname="col3">Remove selected catalog entry</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</refbody>
+</reference>
