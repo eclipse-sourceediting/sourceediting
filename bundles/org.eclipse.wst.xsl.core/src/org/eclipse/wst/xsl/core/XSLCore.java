@@ -26,7 +26,12 @@ import org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder;
 import org.eclipse.wst.xsl.core.internal.model.StylesheetModel;
 
 /**
- * TODO: Add JavaDoc
+ * The interface to all aspects of the XSL core functionality.
+ * <p>
+ * This is responsible for building and maintaining the cache of built XSL models.
+ * </p>
+ * 
+ * @author Doug Satchwell
  */
 public class XSLCore
 {
@@ -34,6 +39,10 @@ public class XSLCore
 	 * The XSL namespace URI (= http://www.w3.org/1999/XSL/Transform)
 	 */
 	public static final String XSL_NAMESPACE_URI = "http://www.w3.org/1999/XSL/Transform"; //$NON-NLS-1$
+	
+	/**
+	 * The XSL content type (= org.eclipse.wst.xml.core.xslsource)
+	 */
 	public static final String XSL_CONTENT_TYPE = "org.eclipse.wst.xml.core.xslsource"; //$NON-NLS-1$
 	
 	private static XSLCore instance;
@@ -60,7 +69,7 @@ public class XSLCore
 	 * Completely rebuild the source file from its DOM
 	 * 
 	 * @param file
-	 * @return
+	 * @return the stylesheet model, or null if it could not be created.
 	 */
 	public synchronized StylesheetModel buildStylesheet(IFile file)
 	{
@@ -73,11 +82,17 @@ public class XSLCore
 		return stylesheetComposed;
 	}
 	
+	/**
+	 * Clean all of the stylesheets from the given project.
+	 * 
+	 * @param project the project to be cleaned
+	 * @param monitor a progress monitor to track the clean progress
+	 */
 	public synchronized void clean(IProject project, IProgressMonitor monitor)
 	{
-		for (Iterator iter = stylesheetsComposed.values().iterator(); iter.hasNext();)
+		for (Iterator<StylesheetModel> iter = stylesheetsComposed.values().iterator(); iter.hasNext();)
 		{
-			StylesheetModel model = (StylesheetModel)iter.next();
+			StylesheetModel model = iter.next();
 			if (project == null || project.equals(model.getStylesheet().getFile().getProject()))
 			{
 				iter.remove();
@@ -86,9 +101,9 @@ public class XSLCore
 	}
 
 	/**
-	 * TODO: Add JavaDoc
+	 * Get the singleton <code>XSLCore</code> instance.
 	 * 
-	 * @return An Instances of XSLCore
+	 * @return the <code>XSLCore</code> instance
 	 */
 	public static synchronized XSLCore getInstance()
 	{
@@ -100,9 +115,9 @@ public class XSLCore
 	/**
 	 * Locates a file for the given current file and URI.
 	 * 
-	 * @param currentFile
-	 * @param uri
-	 * @return
+	 * @param currentFile the file to resolve relative to
+	 * @param uri the relative URI 
+	 * @return the file at the URI relative to this <code>currentFile</code>
 	 */
 	public static IFile resolveFile(IFile currentFile, String uri)
 	{
@@ -112,13 +127,19 @@ public class XSLCore
 		return currentFile.getParent().getFile(new Path(uri));
 	}
 	
+	/**
+	 * Determine whether the given file is an XSL file by inspecting its content types.
+	 * 
+	 * @param file the file to inspect
+	 * @return true if this file is an XSL file
+	 */
 	public static boolean isXSLFile(IFile file)
 	{
 		IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
 		IContentType[] types = contentTypeManager.findContentTypesFor(file.getName());
 		for (IContentType contentType : types)
 		{
-			if (contentType.isKindOf(contentTypeManager.getContentType(XSL_CONTENT_TYPE))) //$NON-NLS-1$
+			if (contentType.isKindOf(contentTypeManager.getContentType(XSL_CONTENT_TYPE)))
 			{
 				return true;
 			}

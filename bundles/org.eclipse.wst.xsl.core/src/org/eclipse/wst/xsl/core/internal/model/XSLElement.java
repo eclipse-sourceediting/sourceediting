@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TODO: Add Javadoc
+ * An element in the XSL namespace.
+ * 
  * @author Doug Satchwell
- *
  */
 public class XSLElement extends XSLNode
 {
@@ -26,8 +26,9 @@ public class XSLElement extends XSLNode
 	final List<XSLElement> childElements = new ArrayList<XSLElement>();
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @param stylesheet
+	 * Create a new instance of this.
+	 * 
+	 * @param stylesheet the stylesheet that this belongs to
 	 */
 	public XSLElement(Stylesheet stylesheet)
 	{
@@ -35,8 +36,9 @@ public class XSLElement extends XSLNode
 	}
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @param attribute
+	 * Add an attribute of this
+	 * 
+	 * @param attribute the attribute to add
 	 */
 	public void setAttribute(XSLAttribute attribute)
 	{
@@ -44,24 +46,31 @@ public class XSLElement extends XSLNode
 	}
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @param name
-	 * @return
+	 * Get the attribute with the given name.
+	 * 
+	 * @param name the name of the attribute
+	 * @return the attribute
 	 */
 	public XSLAttribute getAttribute(String name)
 	{
 		return attributes.get(name);
 	}
 
+	/**
+	 * Get the attributes keyed by their names. 
+	 * 
+	 * @return the map of attribute names and instances
+	 */
 	public Map<String, XSLAttribute> getAttributes()
 	{
 		return attributes;
 	}
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @param name
-	 * @return
+	 * Get the value of the attribute with the given name.
+	 * 
+	 * @param name the name of the attribute
+	 * @return the attribute value
 	 */
 	public String getAttributeValue(String name)
 	{
@@ -69,11 +78,21 @@ public class XSLElement extends XSLNode
 		return attribute == null ? null : attribute.getValue();
 	}
 
+	/**
+	 * Add a child element of this.
+	 * 
+	 * @param element the chold element
+	 */
 	public void addChild(XSLElement element)
 	{
 		childElements.add(element);
 	}
 	
+	/**
+	 * Get the list of child elements
+	 * 
+	 * @return the list of children
+	 */
 	public List<XSLElement> getChildElements()
 	{
 		return childElements;

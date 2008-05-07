@@ -11,11 +11,17 @@
 package org.eclipse.wst.xsl.core.internal.model;
 
 /**
+ * The <code>xsl:import</code> model element.
+ * 
  * @author Doug Satchwell
- *
  */
 public class Import extends Include
 {
+	/**
+	 * Create a new instance of this.
+	 * 
+	 * @param stylesheet the stylesheet that this belongs to
+	 */
 	public Import(Stylesheet stylesheet)
 	{
 		super(stylesheet,IMPORT);

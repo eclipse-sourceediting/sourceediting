@@ -10,16 +10,15 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.validation;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 
-import org.apache.xpath.jaxp.XPathFactoryImpl;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
@@ -38,21 +37,26 @@ import org.eclipse.wst.xsl.core.internal.model.XSLElement;
 import org.eclipse.wst.xsl.core.internal.model.XSLNode;
 
 /**
- * TODO: Add Javadoc
+ * The XSL validator for workspace XSL files.
  * 
  * @author Doug Satchwell
- * 
  */
 public class XSLValidator
 {
 	private static XSLValidator instance;
-	private XPath xpath = XPathFactoryImpl.newInstance().newXPath();
-	private int MAX_ERRORS = 100;
 
 	private XSLValidator()
 	{
 	}
 
+	/**
+	 * Validate the given XSL file. Same as <code>validate(xslFile,report,forceBuild)</code> except a new report is created and returned.
+	 * 
+	 * @param xslFile the XSL file
+	 * @param forceBuild true if build should always be forced
+	 * @return the validation report
+	 * @throws CoreException if any exception occurs while validating
+	 */
 	public ValidationReport validate(IFile xslFile, boolean forceBuild) throws CoreException
 	{
 		XSLValidationReport report = new XSLValidationReport(xslFile.getLocationURI().toString());
@@ -60,6 +64,15 @@ public class XSLValidator
 		return report;
 	}
 
+	/**
+	 * Validate the given XSL file using the specified report.
+	 * 
+	 * @param xslFile the XSL file
+	 * @param report the report to use for reporting validation errors
+	 * @param forceBuild true if build should always be forced
+	 * @return the validation report
+	 * @throws CoreException if any exception occurs while validating
+	 */
 	public void validate(IFile xslFile, XSLValidationReport report, boolean forceBuild) throws CoreException
 	{
 		StylesheetModel stylesheet;
@@ -68,7 +81,7 @@ public class XSLValidator
 		else
 			stylesheet = XSLCore.getInstance().getStylesheet(xslFile);
 
-		long start = System.currentTimeMillis();
+//		long start = System.currentTimeMillis();
 		if (stylesheet!=null)
 		{
 			try
@@ -80,8 +93,8 @@ public class XSLValidator
 				// do nothing
 			}
 		}
-		long end = System.currentTimeMillis();
-		System.out.println("VALIDATE "+xslFile+" in "+(end-start)+"ms");
+//		long end = System.currentTimeMillis();
+//		System.out.println("VALIDATE "+xslFile+" in "+(end-start)+"ms");
 	}
 
 	private void calculateProblems(StylesheetModel stylesheetComposed, XSLValidationReport report) throws MaxErrorsExceededException
@@ -108,9 +121,9 @@ public class XSLValidator
 
 	private void checkXPaths(XSLElement xslEl, XSLValidationReport report) throws MaxErrorsExceededException
 	{
-		validateXPath(xslEl, report, "select");
-		validateXPath(xslEl, report, "test");
-		validateXPath(xslEl, report, "match");
+		validateXPath(xslEl, report, "select"); //$NON-NLS-1$
+		validateXPath(xslEl, report, "test"); //$NON-NLS-1$
+		validateXPath(xslEl, report, "match"); //$NON-NLS-1$
 		for (XSLElement childEl : xslEl.getChildElements())
 		{
 			checkXPaths(childEl, report);
@@ -125,11 +138,10 @@ public class XSLValidator
 			try
 			{
 				XSLTXPathHelper.compile(att.getValue());
-				//xpath.compile(att.getValue());
 			}
 			catch (XPathExpressionException e)
 			{
-				createMarker(report, att, getPreference(ValidationPreferences.XPATHS), "Xpath is invalid");
+				createMarker(report, att, getPreference(ValidationPreferences.XPATHS), Messages.XSLValidator_1);
 			}
 			catch (NullPointerException e)
 			{
@@ -141,7 +153,7 @@ public class XSLValidator
 	private void checkCircularRef(StylesheetModel stylesheetComposed, XSLValidationReport report) throws MaxErrorsExceededException
 	{
 		if (stylesheetComposed.hasCircularReference())
-			createMarker(report, stylesheetComposed.getStylesheet(), getPreference(ValidationPreferences.CIRCULAR_REF), "Included stylesheets form a circular reference");
+			createMarker(report, stylesheetComposed.getStylesheet(), getPreference(ValidationPreferences.CIRCULAR_REF), Messages.XSLValidator_2);
 	}
 
 	private void checkIncludes(StylesheetModel stylesheetComposed, XSLValidationReport report) throws MaxErrorsExceededException
@@ -152,11 +164,11 @@ public class XSLValidator
 			IFile includedFile = include.getHrefAsFile();
 			if (includedFile == null || !includedFile.exists())
 			{ // included file does not exist
-				createMarker(report, include.getAttribute("href"), getPreference(ValidationPreferences.MISSING_INCLUDE), "Missing include: " + include.getHref());
+				createMarker(report, include.getAttribute("href"), getPreference(ValidationPreferences.MISSING_INCLUDE), Messages.XSLValidator_4 + include.getHref()); //$NON-NLS-1$
 			}
 			else if (includedFile.equals(include.getStylesheet().getFile()))
 			{ // stylesheet including itself!
-				createMarker(report, include.getAttribute("href"), getPreference(ValidationPreferences.CIRCULAR_REF), "A stylesheet must not include itself");
+				createMarker(report, include.getAttribute("href"), getPreference(ValidationPreferences.CIRCULAR_REF), Messages.XSLValidator_6); //$NON-NLS-1$
 			}
 		}
 		//imports
@@ -165,11 +177,11 @@ public class XSLValidator
 			IFile includedFile = include.getHrefAsFile();
 			if (includedFile == null || !includedFile.exists())
 			{ // included file does not exist
-				createMarker(report, include.getAttribute("href"), getPreference(ValidationPreferences.MISSING_INCLUDE), "Missing import: " + include.getHref());
+				createMarker(report, include.getAttribute("href"), getPreference(ValidationPreferences.MISSING_INCLUDE), Messages.XSLValidator_8 + include.getHref()); //$NON-NLS-1$
 			}
 			else if (includedFile.equals(include.getStylesheet().getFile()))
 			{ // stylesheet including itself!
-				createMarker(report, include.getAttribute("href"), getPreference(ValidationPreferences.CIRCULAR_REF), "A stylesheet must not import itself");
+				createMarker(report, include.getAttribute("href"), getPreference(ValidationPreferences.CIRCULAR_REF), Messages.XSLValidator_10); //$NON-NLS-1$
 			}
 		}
 	}
@@ -194,15 +206,15 @@ public class XSLValidator
 				{
 					if (template.getStylesheet() == stylesheetComposed.getStylesheet() && checkTemplate.getStylesheet() == stylesheetComposed.getStylesheet())
 					{// templates in this stylesheet conflict with each other
-						createMarker(report, template, getPreference(ValidationPreferences.TEMPLATE_CONFLICT), "Template conflicts with another template in this stylesheet");
+						createMarker(report, template, getPreference(ValidationPreferences.TEMPLATE_CONFLICT), Messages.XSLValidator_11);
 					}
 					else if (template.getStylesheet() == stylesheetComposed.getStylesheet())
 					{// template in included stylesheet conflicts with this
-						createMarker(report, template, getPreference(ValidationPreferences.TEMPLATE_CONFLICT), "Template conflicts with an included template");
+						createMarker(report, template, getPreference(ValidationPreferences.TEMPLATE_CONFLICT), Messages.XSLValidator_12);
 					}
 					else
 					{// templates in included stylesheets conflict with each other
-						createMarker(report, template.getStylesheet(), getPreference(ValidationPreferences.TEMPLATE_CONFLICT), "Included templates conflict with each other");
+						createMarker(report, template.getStylesheet(), getPreference(ValidationPreferences.TEMPLATE_CONFLICT), Messages.XSLValidator_13);
 					}
 				}
 			}
@@ -221,11 +233,11 @@ public class XSLValidator
 		{
 			if (param.getName() == null)
 			{// name is required
-				createMarker(report, param, getPreference(ValidationPreferences.NAME_ATTRIBUTE_MISSING), "Name attribute is required");
+				createMarker(report, param, getPreference(ValidationPreferences.NAME_ATTRIBUTE_MISSING), Messages.XSLValidator_14);
 			}
 			else if (param.getName().trim().length() == 0)
 			{// name value is required
-				createMarker(report, param, getPreference(ValidationPreferences.NAME_ATTRIBUTE_EMPTY), "Name must be specified");
+				createMarker(report, param, getPreference(ValidationPreferences.NAME_ATTRIBUTE_EMPTY), Messages.XSLValidator_15);
 			}
 			else if (duplicateParameters.contains(param))
 			{// don't recheck the parameter
@@ -240,7 +252,7 @@ public class XSLValidator
 						if (param.getName().equals(checkParam.getName()))
 						{
 							duplicateParameters.add(checkParam);
-							createMarker(report, param, getPreference(ValidationPreferences.DUPLICATE_PARAMETER), "Parameter already defined");
+							createMarker(report, param, getPreference(ValidationPreferences.DUPLICATE_PARAMETER), Messages.XSLValidator_16);
 						}
 					}
 				}
@@ -250,7 +262,6 @@ public class XSLValidator
 
 	private void checkCallTemplates(StylesheetModel stylesheetComposed, XSLValidationReport report) throws MaxErrorsExceededException
 	{
-		// TODO these need to be real preferences
 		for (CallTemplate calledTemplate : stylesheetComposed.getStylesheet().getCalledTemplates())
 		{
 			// get the list of templates that might be being called by this
@@ -258,7 +269,7 @@ public class XSLValidator
 			List<Template> templateList = stylesheetComposed.getTemplatesByName(calledTemplate.getName());
 			if (templateList.size() == 0)
 			{
-				createMarker(report, calledTemplate.getAttribute("name"), getPreference(ValidationPreferences.CALL_TEMPLATES), "Named template '" + calledTemplate.getName() + "' is not available");
+				createMarker(report, calledTemplate.getAttribute("name"), getPreference(ValidationPreferences.CALL_TEMPLATES), MessageFormat.format(Messages.XSLValidator_18, calledTemplate.getName())); //$NON-NLS-1$
 			}
 			else
 			{
@@ -272,12 +283,12 @@ public class XSLValidator
 						{
 							found = true;
 							if (!namedTemplateParam.isValue() && !calledTemplateParam.isValue())
-								createMarker(report, calledTemplateParam, getPreference(ValidationPreferences.EMPTY_PARAM), "Parameter " + calledTemplateParam.getName() + " does not have a default value");
+								createMarker(report, calledTemplateParam, getPreference(ValidationPreferences.EMPTY_PARAM), MessageFormat.format(Messages.XSLValidator_20, calledTemplateParam.getName()));
 							break;
 						}
 					}
 					if (!found)
-						createMarker(report, calledTemplateParam.getAttribute("name"), getPreference(ValidationPreferences.MISSING_PARAM), "Parameter " + calledTemplateParam.getName() + " does not exist");
+						createMarker(report, calledTemplateParam.getAttribute("name"), getPreference(ValidationPreferences.MISSING_PARAM), MessageFormat.format(Messages.XSLValidator_22, calledTemplateParam.getName())); //$NON-NLS-1$
 				}
 				if (getPreference(ValidationPreferences.MISSING_PARAM) > IMarker.SEVERITY_INFO)
 				{
@@ -295,7 +306,7 @@ public class XSLValidator
 								}
 							}
 							if (!found)
-								createMarker(report, calledTemplate, getPreference(ValidationPreferences.MISSING_PARAM), "Missing parameter: " + namedTemplateParam.getName());
+								createMarker(report, calledTemplate, getPreference(ValidationPreferences.MISSING_PARAM), MessageFormat.format(Messages.XSLValidator_3, namedTemplateParam.getName()));
 						}
 					}
 				}
@@ -307,7 +318,7 @@ public class XSLValidator
 	{
 		if (severity > IMarker.SEVERITY_INFO)
 		{
-			if (report.getErrors().size() + report.getWarnings().size() > MAX_ERRORS)
+			if (report.getErrors().size() + report.getWarnings().size() > getPreference(ValidationPreferences.MAX_ERRORS))
 				throw new MaxErrorsExceededException();
 			switch (severity)
 			{
@@ -321,6 +332,11 @@ public class XSLValidator
 		}
 	}
 
+	/**
+	 * Get the singleton XSLValidator instance.
+	 * 
+	 * @return the singleson XSLValidator instance
+	 */
 	public static XSLValidator getInstance()
 	{
 		if (instance == null)

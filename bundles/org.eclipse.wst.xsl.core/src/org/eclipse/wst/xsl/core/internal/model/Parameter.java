@@ -11,7 +11,8 @@
 package org.eclipse.wst.xsl.core.internal.model;
 
 /**
- * TODO: Add JavaDoc
+ * The <code>xsl:parameter</code> or <code>xsl:with-param</code> model element.
+ * 
  * @author Doug Satchwell
  */
 public class Parameter extends Variable
@@ -19,22 +20,29 @@ public class Parameter extends Variable
 	private boolean valueSet;
 
 	/**
-	 * TODO: Add Javadoc
-	 * @param sf
+	 * Create a new instance of this.
+	 * 
+	 * @param stylesheet the stylesheet that this belongs to
 	 */
-	public Parameter(Stylesheet sf)
+	public Parameter(Stylesheet stylesheet)
 	{
-		super(sf);
+		super(stylesheet);
 	}
 	
+	/**
+	 * Set whether this has a value.
+	 * 
+	 * @param valueSet <code>true</code> if this has a value
+	 */
 	public void setValue(boolean valueSet)
 	{
 		this.valueSet = valueSet;
 	}
 
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Get whether this has a value.
+	 * 
+	 * @return <code>true</code> if this has a value
 	 */
 	public boolean isValue()
 	{
@@ -44,9 +52,4 @@ public class Parameter extends Variable
 			return true;
 		return false; 
 	}
-	
-//	@Override
-//	public String toString() {
-//		return "Parameter "+super.toString()+" name="+name+", select="+select;
-//	}
 }

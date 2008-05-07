@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO: Add Javadoc
+ * The <code>xsl:template</code> model element.
+ * 
  * @author Doug Satchwell
- *
  */
 public class Template extends XSLElement
 {
@@ -24,11 +24,9 @@ public class Template extends XSLElement
 	final List<Parameter> parameters = new ArrayList<Parameter>();
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @param stylesheet
-	 * @param name
-	 * @param match 
-	 * @param mode 
+	 * Create a new instance of this.
+	 * 
+	 * @param stylesheet the stylesheet that this belongs to
 	 */
 	public Template(Stylesheet stylesheet)
 	{
@@ -36,8 +34,9 @@ public class Template extends XSLElement
 	}
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @param parameter
+	 * Add a parameter to this.
+	 * 
+	 * @param parameter the parameter to add
 	 */
 	public void addParameter(Parameter parameter)
 	{
@@ -45,8 +44,9 @@ public class Template extends XSLElement
 	}
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @param var
+	 * Add a variable to this.
+	 * 
+	 * @param var the variable to add
 	 */
 	public void addVariable(Variable var)
 	{
@@ -54,8 +54,9 @@ public class Template extends XSLElement
 	}
 
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Get the value of the <code>name</code> attribute if one exists.
+	 * 
+	 * @return the template name, or null
 	 */
 	public String getName()
 	{
@@ -63,8 +64,9 @@ public class Template extends XSLElement
 	}
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Get the value of the <code>match</code> attribute if one exists.
+	 * 
+	 * @return the match value, or null
 	 */
 	public String getMatch()
 	{
@@ -72,8 +74,9 @@ public class Template extends XSLElement
 	}
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Get the value of the <code>mode</code> attribute if one exists.
+	 * 
+	 * @return the mode value, or null
 	 */
 	public String getMode()
 	{
@@ -81,8 +84,9 @@ public class Template extends XSLElement
 	}
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Get the value of the <code>priority</code> attribute if one exists.
+	 * 
+	 * @return the priority value, or null
 	 */
 	public String getPriority()
 	{
@@ -90,8 +94,9 @@ public class Template extends XSLElement
 	}
 
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Get the list of parameters of this.
+	 * 
+	 * @return the list of parameters
 	 */
 	public List<Parameter> getParameters()
 	{
@@ -156,6 +161,6 @@ public class Template extends XSLElement
 	{
 		String name = getName();
 		String match = getMatch();
-		return "file="+getStylesheet().getFile()+", name="+name+", match="+match;
+		return "file="+getStylesheet().getFile()+", name="+name+", match="+match; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }

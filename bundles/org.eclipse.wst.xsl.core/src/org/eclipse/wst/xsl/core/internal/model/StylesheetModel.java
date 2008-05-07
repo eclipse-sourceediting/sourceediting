@@ -12,7 +12,6 @@ package org.eclipse.wst.xsl.core.internal.model;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -21,10 +20,17 @@ import org.eclipse.wst.xsl.core.XSLCore;
 
 /**
  * The composed stylesheet, consisting of all templates and variables available 
- * via imports and includes.  
+ * via imports and includes.
  * 
+ * <p>
+ * The <code>fix()</code> method does the actual work of populating the fields of this, so
+ * it must be called before calling any of the other methods.
+ * </p>
+ * 
+ * <p>
  * Note that this model may not be valid - for instance there may be more than one named template for a given name
  * or more than one global variable with a given name.
+ * </p>
  * 
  * @author Doug Satchwell
  */
@@ -39,7 +45,9 @@ public class StylesheetModel
 	final List<Variable> globalVariables = new ArrayList<Variable>();
 	
 	/**
-	 * @param stylesheet
+	 * Create a new instance of this.
+	 * 
+	 * @param stylesheet the stylesheet that this is the model for
 	 */
 	public StylesheetModel(Stylesheet stylesheet)
 	{
@@ -47,14 +55,22 @@ public class StylesheetModel
 	}
 
 	/**
-	 * Get all stylesheets in the hierarchy (including the current stylesheet)
-	 * @return
+	 * Get all stylesheets that are included in this stylesheet anywhere in the hierarchy 
+	 * via either import or include.
+	 * 
+	 * @return the set of stylesheets in the entire hierarchy
 	 */
 	public Set<Stylesheet> getIncludedStylesheets()
 	{
 		return stylesheets;
 	}
 	
+	/**
+	 * Get all files that are included in this stylesheet anywhere in the hierarchy 
+	 * via either import or include.
+	 * 
+	 * @return the set of files in the entire hierarchy
+	 */
 	public Set<IFile> getFileDependencies()
 	{
 		return files;
@@ -63,27 +79,42 @@ public class StylesheetModel
 	/**
 	 * Get the stylesheet that this is the model for.
 	 * 
-	 * @return
+	 * @return the stylesheet that this is the model for
 	 */
 	public Stylesheet getStylesheet()
 	{
 		return this.stylesheet;
 	}
 	
+	/**
+	 * Get all global variables that are included in this stylesheet anywhere in the hierarchy 
+	 * via either import or include.
+	 * 
+	 * @return the set of files in the entire hierarchy
+	 */
 	public List<Variable> getGlobalVariables()
 	{
 		return globalVariables;
 	}
 	
 	/**
-	 * Get all available templates from the current stylesheet or via includes
-	 * @return
+	 * Get all templates that are included in this stylesheet anywhere in the hierarchy 
+	 * via either import or include.
+	 * 
+	 * @return the set of templates in the entire hierarchy
 	 */
 	public List<Template> getTemplates()
 	{
 		return templates;
 	}
 	
+	/**
+	 * Get all named templates that are included in this stylesheet anywhere in the hierarchy 
+	 * via either import or include which have the given name.
+	 * 
+	 * @param name the template name
+	 * @return the set of named templates with the given name
+	 */
 	public List<Template> getTemplatesByName(String name)
 	{
 		List<Template> matching = new ArrayList<Template>(templates.size());
@@ -95,6 +126,12 @@ public class StylesheetModel
 		return matching;
 	}	
 	
+	/**
+	 * Get all templates that match the given template (determined from <code>Template.equals()</code>).
+	 * 
+	 * @param toMatch the template to match
+	 * @return the set of templates that match
+	 */
 	public List<Template> findMatching(Template toMatch)
 	{
 		List<Template> matching = new ArrayList<Template>(templates.size());
@@ -106,15 +143,25 @@ public class StylesheetModel
 		return matching;
 	}
 	
+	/**
+	 * Get whether this has a circular reference anywhere in its import/included hierarchy.
+	 * 
+	 * @return <code>true</code> if this has a circular reference
+	 */
 	public boolean hasCircularReference()
 	{
 		return circularReference;
 	}
 	
+	/**
+	 * Perform the process of traversing the hierarchy to determine all of the properties of this.
+	 * Note that this method may force other <code>StylesheetModel</code>'s to be built during the 
+	 * process of fixing.
+	 */
 	public void fix()
 	{
 //		System.out.println("Fixing "+stylesheet.getFile()+"...");
-		long start = System.currentTimeMillis();
+//		long start = System.currentTimeMillis();
 		templates.addAll(stylesheet.templates);
 		templateSet.addAll(stylesheet.templates);
 		for (Include inc : stylesheet.includes)
@@ -125,8 +172,8 @@ public class StylesheetModel
 		{
 			handleInclude(inc);
 		}
-		long end = System.currentTimeMillis();
-		System.out.println("FIX "+stylesheet.getFile()+" in "+(end-start)+"ms");
+//		long end = System.currentTimeMillis();
+//		System.out.println("FIX "+stylesheet.getFile()+" in "+(end-start)+"ms");
 	}
 	
 	private void handleInclude(Include include)

@@ -27,14 +27,14 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
-import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * TODO: Add Javadoc
+ * A builder that creates and maintains a cache of <code>Stylesheet</code>'s.
+ * 
  * @author Doug Satchwell
  */
 public class StylesheetBuilder
@@ -43,9 +43,20 @@ public class StylesheetBuilder
 	private final Map<IFile, Stylesheet> builtFiles = new HashMap<IFile, Stylesheet>();
 
 	private StylesheetBuilder()
-	{}
+	{
+	}
 	
-	public Stylesheet getStylesheet(IFile file, boolean force){
+	/**
+	 * Get the <code>Stylesheet</code> associated with the given file. 
+	 * If either the <code>Stylesheet</code> has not yet been created or <code>force</code> is 
+	 * specified then the <code>Stylesheet</code> is built.
+	 * 
+	 * @param file the XSL file
+	 * @param force <code>true</code> to force a parse of the file
+	 * @return the <code>Stylesheet</code>
+	 */
+	public Stylesheet getStylesheet(IFile file, boolean force)
+	{
 		Stylesheet stylesheet = builtFiles.get(file);
 		if (stylesheet == null || force)
 		{
@@ -57,8 +68,8 @@ public class StylesheetBuilder
 
 	private Stylesheet build(IFile file)
 	{
-//		System.out.println("Building "+file+"...");
-		long start = System.currentTimeMillis();
+		// System.out.println("Building "+file+"...");
+//		long start = System.currentTimeMillis();
 		Stylesheet stylesheet = null;
 		IStructuredModel smodel = null;
 		try
@@ -67,15 +78,15 @@ public class StylesheetBuilder
 			if (smodel == null)
 			{
 				smodel = StructuredModelManager.getModelManager().getModelForRead(file);
-				long endParse = System.currentTimeMillis();
-				System.out.println("PARSE "+file+" in "+(endParse-start)+"ms");
+//				long endParse = System.currentTimeMillis();
+//				System.out.println("PARSE " + file + " in " + (endParse - start) + "ms");
 			}
 			else
 			{
-				long endParse = System.currentTimeMillis();
-				System.out.println("NO-PARSE "+file+" in "+(endParse-start)+"ms");
+//				long endParse = System.currentTimeMillis();
+//				System.out.println("NO-PARSE " + file + " in " + (endParse - start) + "ms");
 			}
-			start = System.currentTimeMillis();
+//			start = System.currentTimeMillis();
 			if (smodel != null && smodel instanceof IDOMModel)
 			{
 				IDOMModel model = (IDOMModel) smodel;
@@ -95,8 +106,8 @@ public class StylesheetBuilder
 			if (smodel != null)
 				smodel.releaseFromRead();
 		}
-		long end = System.currentTimeMillis();
-		System.out.println("BUILD "+file+" in "+(end-start)+"ms");
+//		long end = System.currentTimeMillis();
+//		System.out.println("BUILD " + file + " in " + (end - start) + "ms");
 		return stylesheet;
 	}
 
@@ -109,6 +120,11 @@ public class StylesheetBuilder
 		return sf;
 	}
 
+	/**
+	 * Get the singleton <code>StylesheetBuilder</code> instance.
+	 * 
+	 * @return the <code>StylesheetBuilder</code> instance
+	 */
 	public static synchronized StylesheetBuilder getInstance()
 	{
 		if (instance == null)
@@ -117,7 +133,7 @@ public class StylesheetBuilder
 		}
 		return instance;
 	}
-	
+
 	private static class StylesheetParser
 	{
 		private final Stylesheet sf;
@@ -130,49 +146,48 @@ public class StylesheetBuilder
 		{
 			this.sf = stylesheet;
 		}
-		
+
 		public void walkDocument(IDOMDocument document)
 		{
-			
-			
+
 			if (document.getDocumentElement() != null)
 				recurse(document.getDocumentElement());
 		}
 
 		private void recurse(Element element)
-		{			
+		{
 			if (XSLCore.XSL_NAMESPACE_URI.equals(element.getNamespaceURI()))
 			{
 				XSLElement xslEl;
 				String elName = element.getLocalName();
-				if ("stylesheet".equals(elName) && elementStack.size() == 0)
+				if ("stylesheet".equals(elName) && elementStack.size() == 0) //$NON-NLS-1$
 				{
 					xslEl = sf;
 				}
-				else if ("include".equals(elName) && elementStack.size() == 1)
+				else if ("include".equals(elName) && elementStack.size() == 1) //$NON-NLS-1$
 				{
 					Include include = new Include(sf);
 					sf.addInclude(include);
 					xslEl = include;
 				}
-				else if ("import".equals(elName) && elementStack.size() == 1)
+				else if ("import".equals(elName) && elementStack.size() == 1) //$NON-NLS-1$
 				{
 					Import include = new Import(sf);
 					sf.addImport(include);
 					xslEl = include;
 				}
-				else if ("template".equals(elName) && elementStack.size() == 1)
+				else if ("template".equals(elName) && elementStack.size() == 1) //$NON-NLS-1$
 				{
 					currentTemplate = new Template(sf);
 					sf.addTemplate(currentTemplate);
 					xslEl = currentTemplate;
 				}
-				else if ("param".equals(elName) && elementStack.size() == 2 && currentTemplate != null)
+				else if ("param".equals(elName) && elementStack.size() == 2 && currentTemplate != null) //$NON-NLS-1$
 				{
 					Parameter param = new Parameter(sf);
 					// determine whether param has a value
 					NodeList childNodes = element.getChildNodes();
-					for(int i=0;i<childNodes.getLength();i++)
+					for (int i = 0; i < childNodes.getLength(); i++)
 					{
 						Node childNode = childNodes.item(i);
 						if (childNode.getNodeType() != Node.ATTRIBUTE_NODE)
@@ -184,18 +199,18 @@ public class StylesheetBuilder
 					currentTemplate.addParameter(param);
 					xslEl = param;
 				}
-				else if ("call-template".equals(elName) && elementStack.size() >= 2)
+				else if ("call-template".equals(elName) && elementStack.size() >= 2) //$NON-NLS-1$
 				{
 					currentCallTemplate = new CallTemplate(sf);
 					sf.addCalledTemplate(currentCallTemplate);
 					xslEl = currentCallTemplate;
 				}
-				else if ("with-param".equals(elName) && elementStack.size() >= 3 && currentCallTemplate != null)
+				else if ("with-param".equals(elName) && elementStack.size() >= 3 && currentCallTemplate != null) //$NON-NLS-1$
 				{
 					Parameter param = new Parameter(sf);
 					// determine whether param has a value
 					NodeList childNodes = element.getChildNodes();
-					for(int i=0;i<childNodes.getLength();i++)
+					for (int i = 0; i < childNodes.getLength(); i++)
 					{
 						Node childNode = childNodes.item(i);
 						if (childNode.getNodeType() != Node.ATTRIBUTE_NODE)
@@ -207,7 +222,7 @@ public class StylesheetBuilder
 					currentCallTemplate.addParameter(param);
 					xslEl = param;
 				}
-				else if ("variable".equals(elName) && elementStack.size() == 1)
+				else if ("variable".equals(elName) && elementStack.size() == 1) //$NON-NLS-1$
 				{
 					Variable var = new Variable(sf);
 					sf.addGlobalVariable(var);
@@ -217,7 +232,7 @@ public class StylesheetBuilder
 				{
 					xslEl = new XSLElement(sf);
 				}
-				configure((IDOMNode)element, xslEl);
+				configure((IDOMNode) element, xslEl);
 			}
 			elementStack.push(element);
 			NodeList childNodes = element.getChildNodes();
@@ -226,22 +241,22 @@ public class StylesheetBuilder
 				Node node = childNodes.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE)
 				{
-					recurse((Element)node);
+					recurse((Element) node);
 				}
 			}
 			elementStack.pop();
-//			currentTemplate = null;
-//			currentCallTemplate = null;
+			// currentTemplate = null;
+			// currentCallTemplate = null;
 		}
 
 		private void configure(IDOMNode node, XSLElement element)
 		{
-			setPositionInfo(node,element);
+			setPositionInfo(node, element);
 			NamedNodeMap map = node.getAttributes();
 			for (int i = 0; i < map.getLength(); i++)
 			{
-				IDOMAttr attr = (IDOMAttr)map.item(i);
-				XSLAttribute xslatt = new XSLAttribute(element,attr.getName(),attr.getValue());
+				IDOMAttr attr = (IDOMAttr) map.item(i);
+				XSLAttribute xslatt = new XSLAttribute(element, attr.getName(), attr.getValue());
 				setPositionInfo(attr, xslatt);
 				element.setAttribute(xslatt);
 			}

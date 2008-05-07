@@ -46,10 +46,9 @@ import org.eclipse.wst.xsl.core.internal.validation.XSLValidationMessage;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidator;
 
 /**
- * TODO: Add Javadoc
+ * The XSL validator extends the XML <code>AbstractNestedValidator</code>.
  * 
  * @author Doug Satchwell
- * 
  */
 public class Validator extends AbstractNestedValidator
 {
@@ -58,57 +57,23 @@ public class Validator extends AbstractNestedValidator
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 
 	private boolean asYouTypeValidation;
-	private long cleanStart;
 
 	@Override
 	public void clean(IProject project, ValidationState state, IProgressMonitor monitor)
 	{
 		super.clean(project, state, monitor);
-		cleanStart = System.currentTimeMillis();
 		XSLCore.getInstance().clean(project,monitor);
-	}
-	
-	@Override
-	public void validationFinishing(IProject project, ValidationState state, IProgressMonitor monitor)
-	{
-		// TODO Auto-generated method stub
-		if (project == null)
-		{
-			System.out.println("CLEAN in "+(System.currentTimeMillis()-cleanStart)+"ms");
-		}
-		super.validationFinishing(project, state, monitor);
 	}
 	
 	@Override
 	public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor)
 	{
-/*		String s;
-		switch(kind)
-		{
-			case IResourceDelta.ADDED:
-				s = "added";
-				break;
-			case IResourceDelta.CHANGED:
-				s = "CHANGED";
-				break;
-			case IResourceDelta.CONTENT:
-				s = "CONTENT";
-				break;
-			case IResourceDelta.REMOVED:
-				s = "REMOVED";
-				break;
-			default:
-				s = "other";
-		}
-		System.out.println(s);
-*/		
 		ValidationResult res = super.validate(resource, kind, state, monitor);
 		if (resource.getType() == IResource.FILE)
 		{
 			StylesheetModel stylesheet = XSLCore.getInstance().getStylesheet((IFile) resource);
 			IFile[] dependencies = stylesheet.getFileDependencies().toArray(new IFile[0]);
 			res.setDependsOn(dependencies);
-//			res.setValidated(dependencies);
 		}
 		return res;
 	} 
@@ -134,25 +99,22 @@ public class Validator extends AbstractNestedValidator
 
 			public String getFileURI()
 			{
-				// TODO Auto-generated method stub
 				return uri;
 			}
 
+			@SuppressWarnings("unchecked")
 			public HashMap getNestedMessages()
 			{
-				// TODO Auto-generated method stub
 				return new HashMap();
 			}
 
 			public ValidationMessage[] getValidationMessages()
 			{
-				// TODO Auto-generated method stub
 				return new ValidationMessage[0];
 			}
 
 			public boolean isValid()
 			{
-				// TODO Auto-generated method stub
 				return true;
 			}};
 		try
@@ -184,16 +146,16 @@ public class Validator extends AbstractNestedValidator
 		// constants are defined in org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidator
 		if (node.getNodeType() == XSLNode.ATTRIBUTE_NODE)
 		{
-			message.setAttribute("ERROR_SIDE", "ERROR_SIDE_RIGHT");
+			message.setAttribute("ERROR_SIDE", "ERROR_SIDE_RIGHT");  //$NON-NLS-1$//$NON-NLS-2$
 			message.setAttribute(COLUMN_NUMBER_ATTRIBUTE, new Integer(validationMessage.getColumnNumber()));
-			message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "ATTRIBUTE_VALUE"); // whether to squiggle the element, attribute or text
+			message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "ATTRIBUTE_VALUE"); // whether to squiggle the element, attribute or text //$NON-NLS-1$
 			message.setAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE, ((XSLAttribute) node).getName());
 		}
 		else if (node.getNodeType() == XSLNode.ELEMENT_NODE)
 		{
-			message.setAttribute("ERROR_SIDE", "ERROR_SIDE_RIGHT");
+			message.setAttribute("ERROR_SIDE", "ERROR_SIDE_RIGHT");  //$NON-NLS-1$//$NON-NLS-2$
 			message.setAttribute(COLUMN_NUMBER_ATTRIBUTE, new Integer(validationMessage.getColumnNumber()));
-			message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "START_TAG"); // whether to squiggle the element, attribute or text
+			message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "START_TAG"); // whether to squiggle the element, attribute or text //$NON-NLS-1$
 		}
 	}
 }

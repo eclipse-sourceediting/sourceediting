@@ -11,9 +11,9 @@
 package org.eclipse.wst.xsl.core.internal.model;
 
 /**
- * TODO: Add Javadoc
+ * An attribute of an element in the XSL namespace.
+ * 
  * @author Doug Satchwell
- *
  */
 public class XSLAttribute extends XSLNode
 {
@@ -21,10 +21,11 @@ public class XSLAttribute extends XSLNode
 	final String value;
 
 	/**
-	 * TODO: Add Javadoc
-	 * @param element
-	 * @param name
-	 * @param value
+	 * Create a new instance of this.
+	 * 
+	 * @param element the element this belongs to
+	 * @param name the name of the attribute
+	 * @param value the value of the attribute
 	 */
 	public XSLAttribute(XSLElement element, String name, String value)
 	{
@@ -34,8 +35,9 @@ public class XSLAttribute extends XSLNode
 	}
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Get the name of this.
+	 * 
+	 * @return the attribute's name
 	 */
 	public String getName()
 	{
@@ -43,8 +45,9 @@ public class XSLAttribute extends XSLNode
 	}
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Get the value of this.
+	 * 
+	 * @return the attribute's value
 	 */
 	public String getValue()
 	{

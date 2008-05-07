@@ -10,16 +10,17 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.model;
 
-
 /**
- * @author Doug Satchwell
+ * The <code>xsl:variable</code> model element.
  * 
+ * @author Doug Satchwell
  */
 public class Variable extends XSLElement
 {
 	/**
-	 * TODO: Add Javadoc
-	 * @param stylesheet
+	 * Create a new instance of this.
+	 * 
+	 * @param stylesheet the stylesheet that this belongs to
 	 */
 	public Variable(Stylesheet stylesheet)
 	{
@@ -27,8 +28,9 @@ public class Variable extends XSLElement
 	}
 
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Get the value of the <code>name</code> attribute if one exists.
+	 * 
+	 * @return the variable name, or null
 	 */
 	public String getName()
 	{
@@ -36,8 +38,9 @@ public class Variable extends XSLElement
 	}
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Get the value of the <code>select</code> attribute if one exists.
+	 * 
+	 * @return the select value, or null
 	 */
 	public String getSelect()
 	{

@@ -14,33 +14,40 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.xsl.core.XSLCore;
 
 /**
+ * The <code>xsl:include</code> model element.
+ * 
  * @author Doug Satchwell
- *
  */
 public class Include extends XSLElement
 {
 	/**
-	 * TODO: Add JavaDoc
+	 * Constant indicating that this is an <code>Include</code>.
 	 */
 	public static final int INCLUDE = 1;
 	
 	/**
-	 * TODO: Add JavaDoc
+	 * Constant indicating that this is an <code>Import</code>.
 	 */
 	public static final int IMPORT = 2;
+	
 	private final int type;
 	
 	/**
-	 * TODO: Add JavaDoc
-	 * @param stylesheet
-	 * @param href
-	 * @param type
+	 * Create a new instance of this.
+	 * 
+	 * @param stylesheet the stylesheet that this belongs to
 	 */
 	public Include(Stylesheet stylesheet)
 	{
 		this(stylesheet,INCLUDE);
 	}
 
+	/**
+	 * Create a new instance of this, specifying whether an <code>Include</code> or an <code>Import</code>.
+	 * 
+	 * @param stylesheet the stylesheet that this belongs to
+	 * @param type one of the constants <code>INCLUDE</code> or <code>IMPORT</code>
+	 */
 	protected Include(Stylesheet stylesheet, int type)
 	{
 		super(stylesheet);
@@ -48,8 +55,9 @@ public class Include extends XSLElement
 	}
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Get the type of include, whether an <code>Include</code> or an <code>Import</code>.
+	 * 
+	 * @return one of the constants <code>INCLUDE</code> or <code>IMPORT</code>
 	 */
 	public int getIncludeType()
 	{
@@ -57,8 +65,9 @@ public class Include extends XSLElement
 	}
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Get the value of the <code>href</code> attribute if one exists.
+	 * 
+	 * @return the <code>href</code> value, or null
 	 */
 	public String getHref() {
 		return getAttributeValue("href"); //$NON-NLS-1$

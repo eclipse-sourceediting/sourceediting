@@ -16,10 +16,9 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 
 /**
- * TODO: Add Javadoc
+ * The <code>xsl:stylesheet</code> model element.
  * 
  * @author Doug Satchwell
- * 
  */
 public class Stylesheet extends XSLElement
 {
@@ -32,9 +31,9 @@ public class Stylesheet extends XSLElement
 	final List<XSLElement> elements = new ArrayList<XSLElement>();
 
 	/**
-	 * TODO: Add Javadoc
+	 * Create an instance of this.
 	 * 
-	 * @param file
+	 * @param file the file that this represents
 	 */
 	public Stylesheet(IFile file)
 	{
@@ -49,9 +48,9 @@ public class Stylesheet extends XSLElement
 	}
 
 	/**
-	 * TODO: Add Javadoc
+	 * Add an <code>Include</code> to this.
 	 * 
-	 * @param include
+	 * @param include the include to add
 	 */
 	public void addInclude(Include include)
 	{
@@ -59,9 +58,9 @@ public class Stylesheet extends XSLElement
 	}
 
 	/**
-	 * TODO: Add Javadoc
+	 * Add an <code>Import</code> to this.
 	 * 
-	 * @param include
+	 * @param include the import to add
 	 */
 	public void addImport(Import include)
 	{
@@ -69,9 +68,9 @@ public class Stylesheet extends XSLElement
 	}
 
 	/**
-	 * TODO: Add Javadoc
+	 * Add a <code>Template</code> to this.
 	 * 
-	 * @param template
+	 * @param template the template to add
 	 */
 	public void addTemplate(Template template)
 	{
@@ -79,9 +78,9 @@ public class Stylesheet extends XSLElement
 	}
 
 	/**
-	 * TODO: Add Javadoc
+	 * Add a <code>CallTemplate</code> to this.
 	 * 
-	 * @param template
+	 * @param template the template to add
 	 */
 	public void addCalledTemplate(CallTemplate template)
 	{
@@ -89,9 +88,9 @@ public class Stylesheet extends XSLElement
 	}
 
 	/**
-	 * TODO: Add Javadoc
+	 * Get the file that this represents.
 	 * 
-	 * @return
+	 * @return the file that this represents
 	 */
 	public IFile getFile()
 	{
@@ -99,22 +98,29 @@ public class Stylesheet extends XSLElement
 	}
 
 	/**
-	 * TODO: Add Javadoc
+	 * Get the list of includes for this.
 	 * 
-	 * @return
+	 * @return the list of includes
 	 */
 	public List<Include> getIncludes()
 	{
 		return includes;
 	}
 	
+	/**
+	 * Get the list of imports for this.
+	 * 
+	 * @return the list of imports
+	 */
 	public List<Import> getImports()
 	{
 		return imports;
 	}
 
 	/**
-	 * @return
+	 * Get the list of templates for this.
+	 * 
+	 * @return the list of templates
 	 */
 	public List<Template> getTemplates()
 	{
@@ -122,19 +128,19 @@ public class Stylesheet extends XSLElement
 	}
 
 	/**
-	 * TODO: Add Javadoc
+	 * Get the list of called templates for this.
 	 * 
-	 * @return
+	 * @return the list of called templates
 	 */
 	public List<CallTemplate> getCalledTemplates()
 	{
 		return calledTemplates;
 	}
 
-
 	/**
-	 * TODO: Add Javadoc
-	 * @param var
+	 * Add a global variable to this.
+	 * 
+	 * @param var the variable to add
 	 */
 	public void addGlobalVariable(Variable var)
 	{

@@ -14,20 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO: Add Javadoc
+ * The <code>xsl:call-template</code> model element.
+ * 
  * @author Doug Satchwell
- *
  */
 public class CallTemplate extends XSLElement
 {
 	final List<Parameter> parameters = new ArrayList<Parameter>();
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @param stylesheet
-	 * @param name
-	 * @param match 
-	 * @param mode 
+	 * Create a new instance of this.
+	 * 
+	 * @param stylesheet the stylesheet that this belongs to
 	 */
 	public CallTemplate(Stylesheet stylesheet)
 	{
@@ -35,8 +33,9 @@ public class CallTemplate extends XSLElement
 	}
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @param parameter
+	 * Add a parameter to this.
+	 * 
+	 * @param parameter the parameter to add
 	 */
 	public void addParameter(Parameter parameter)
 	{
@@ -44,8 +43,9 @@ public class CallTemplate extends XSLElement
 	}
 
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Get the value of the <code>name</code> attribute if one exists.
+	 * 
+	 * @return the template name, or null
 	 */
 	public String getName()
 	{
@@ -53,8 +53,9 @@ public class CallTemplate extends XSLElement
 	}
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Get the list of parameters associated with this.
+	 * 
+	 * @return a list of parameters
 	 */
 	public List<Parameter> getParameters()
 	{

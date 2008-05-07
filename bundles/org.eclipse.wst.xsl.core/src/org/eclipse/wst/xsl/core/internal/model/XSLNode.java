@@ -14,18 +14,19 @@ import org.eclipse.core.runtime.PlatformObject;
 import org.w3c.dom.Node;
 
 /**
+ * A node in the XSL namespace.
+ * 
  * @author Doug Satchwell
- *
  */
 public abstract class XSLNode extends PlatformObject
 {
 	/**
-	 * TODO: Add Javadoc
+	 * A constant for the element node (= <code>org.w3c.dom.Node.ELEMENT_NODE</code>)
 	 */
 	public static final short ELEMENT_NODE = Node.ELEMENT_NODE;
 	
 	/**
-	 * TODO: Add Javadoc
+	 * A constant for the attribute node (= <code>org.w3c.dom.Node.ATTRIBUTE_NODE</code>)
 	 */
 	public static final short ATTRIBUTE_NODE = Node.ATTRIBUTE_NODE;
 	
@@ -38,9 +39,10 @@ public abstract class XSLNode extends PlatformObject
 	private short type;
 	
 	/**
-	 * TODO: Javadoc
-	 * @param stylesheet
-	 * @param type
+	 * Create a new instance of this.
+	 * 
+	 * @param stylesheet the stylesheet this belongs to
+	 * @param type one of <code>ELEMENT_NODE</code> or <code>ATTRIBUTE_NODE</code>
 	 */
 	public XSLNode(Stylesheet stylesheet, short type)
 	{
@@ -49,8 +51,9 @@ public abstract class XSLNode extends PlatformObject
 	}
 
 	/**
-	 * TODO: Add Javadoc
-	 * @param lineNumber
+	 * Set the line number where this node occurs in the XSL file.
+	 * 
+	 * @param lineNumber the line number
 	 */
 	public void setLineNumber(int lineNumber)
 	{
@@ -58,8 +61,9 @@ public abstract class XSLNode extends PlatformObject
 	}
 
 	/**
-	 * TODO: Add Javadoc
-	 * @param columnNumber
+	 * Set the columns number where this node occurs in the XSL file.
+	 * 
+	 * @param columnNumber the column number
 	 */
 	public void setColumnNumber(int columnNumber)
 	{
@@ -67,8 +71,9 @@ public abstract class XSLNode extends PlatformObject
 	}
 
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Get the stylesheet that this belongs to.
+	 * 
+	 * @return the stylesheet
 	 */
 	public Stylesheet getStylesheet()
 	{
@@ -76,8 +81,8 @@ public abstract class XSLNode extends PlatformObject
 	}
 
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Set the line number where this node occurs in the XSL file.
+	 * @return the line number where this node occurs in the XSL file.
 	 */
 	public int getLineNumber()
 	{
@@ -85,8 +90,8 @@ public abstract class XSLNode extends PlatformObject
 	}
 
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Set the column number where this node occurs in the XSL file.
+	 * @return the column number where this node occurs in the XSL file.
 	 */
 	public int getColumnNumber()
 	{
@@ -94,8 +99,8 @@ public abstract class XSLNode extends PlatformObject
 	}
 
 	/**
-	 * TODO: Add Javadoc
-	 * @param offset
+	 * Set the document offset where this node occurs.
+	 * @param offset the document offset
 	 */
 	public void setOffset(int offset)
 	{
@@ -103,8 +108,8 @@ public abstract class XSLNode extends PlatformObject
 	}
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Get the document offset where this node occurs.
+	 * @return the document offset
 	 */
 	public int getOffset()
 	{
@@ -112,8 +117,8 @@ public abstract class XSLNode extends PlatformObject
 	}
 
 	/**
-	 * TODO: Add Javadoc
-	 * @param length
+	 * Set the length of this node.
+	 * @param length the node length
 	 */
 	public void setLength(int length)
 	{
@@ -121,8 +126,8 @@ public abstract class XSLNode extends PlatformObject
 	}
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Get the length of this node.
+	 * @return the node length
 	 */
 	public int getLength()
 	{
@@ -130,8 +135,9 @@ public abstract class XSLNode extends PlatformObject
 	}
 	
 	/**
-	 * TODO: Add Javadoc
-	 * @return
+	 * Get the type of node.
+	 * 
+	 * @return one of <code>ELEMENT_NODE</code> or <code>ATTRIBUTE_NODE</code>
 	 */
 	public short getNodeType()
 	{
