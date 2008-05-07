@@ -25,7 +25,7 @@ public class XSLUITestSuite extends TestSuite {
 
 	public XSLUITestSuite() {
 		super("XML UI Test Suite");
-		addTestSuite(TestDelegatingSourceValidatorForXSL.class);
+	//	addTestSuite(TestDelegatingSourceValidatorForXSL.class);
 		addTestSuite(XSLCodeCompletionTest.class);
 	}
 }
