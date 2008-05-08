@@ -47,9 +47,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
+import org.eclipse.wst.xsl.core.internal.util.FileUtil;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.InputFileBlock;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
-import org.eclipse.wst.xsl.launching.XSLTRuntime;
 import org.eclipse.wst.xsl.launching.config.LaunchHelper;
 import org.eclipse.wst.xsl.launching.config.LaunchPipeline;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
@@ -181,9 +181,9 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 			if (resource.getType() == IResource.FILE)
 			{
 				IFile file = (IFile)resource;
-				if (XSLTRuntime.isXMLFile(file))
+				if (FileUtil.isXMLFile(file))
 				{
-					if (XSLTRuntime.isXSLFile(file))
+					if (FileUtil.isXSLFile(file))
 						xslFileList.add(file);
 					else if (xmlFile==null)
 						xmlFile = file;
