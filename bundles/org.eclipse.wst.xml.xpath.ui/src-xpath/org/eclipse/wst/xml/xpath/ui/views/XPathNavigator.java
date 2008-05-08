@@ -66,6 +66,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPathEditorInput;
@@ -630,9 +631,7 @@ public class XPathNavigator extends ViewPart
         IStructuredSelection selection = (IStructuredSelection)documents.getSelection();
         IEditorReference editorReference = (IEditorReference)selection.getFirstElement();
         
-        XMLMultiPageEditorPart structuredTextEditor  = (XMLMultiPageEditorPart)editorReference.getEditor( true);
-        
-        return (Document)structuredTextEditor.getAdapter( Document.class);
+        return (Document)editorReference.getEditor(true).getAdapter(Document.class);
     }
     
     protected Element getQueryContext()
@@ -640,7 +639,7 @@ public class XPathNavigator extends ViewPart
         IStructuredSelection selection = (IStructuredSelection)documents.getSelection();
         IEditorReference editorReference = (IEditorReference)selection.getFirstElement();
         
-        XMLMultiPageEditorPart structuredTextEditor  = (XMLMultiPageEditorPart)editorReference.getEditor( true);
+        IEditorPart structuredTextEditor  = editorReference.getEditor( true);
 
         if( queryByContext.getSelection())
         {
@@ -732,7 +731,7 @@ public class XPathNavigator extends ViewPart
 	        
 	        for (IEditorReference ref : aClone)
 	        {
-	            if( !(ref.getEditor(false) instanceof XMLMultiPageEditorPart))
+	            if( !(ref.getEditor(false) instanceof IEditorPart))
 	            {
 	                editorReferences.remove( ref);
 	            }       
