@@ -460,7 +460,7 @@ public class JsSearchSupport {
         String classname = split[split.length - 1];
 
         // ignore anything but .java matches (like .class binary matches)
-        if(!searchDocPath.endsWith(".java")) { //$NON-NLS-1$
+        if(!searchDocPath.endsWith(".js")) { //$NON-NLS-1$
             return null;
         }
 
