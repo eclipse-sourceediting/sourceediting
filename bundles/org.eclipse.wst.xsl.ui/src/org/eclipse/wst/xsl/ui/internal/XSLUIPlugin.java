@@ -23,10 +23,6 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 	 */
 	private TemplateStore fTemplateStore;
 
-	/**
-	 * The template store for xpath.
-	 */
-	private TemplateStore fXPathTemplateStore;
 	
     private ScopedPreferenceStore preferenceStore;
     
@@ -34,11 +30,6 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 	 * The template context type registry for the xml editor.
 	 */
 	private ContributionContextTypeRegistry fContextTypeRegistry;
-	
-	/**
-	 * The template context type registry for xpath.
-	 */
-	private ContributionContextTypeRegistry fXPathContextTypeRegistry;
 	
 	/**
 	 * The plugin id for this plugin.
@@ -128,42 +119,5 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 		}
 		return fContextTypeRegistry;
 	}
-
-	/**
-	 * Returns the template store for the xpath templates.
-	 * 
-	 * @return the template store for the xpath templates
-	 */
-	public TemplateStore getXPathTemplateStore() {
-		if (fXPathTemplateStore == null) {
-			fXPathTemplateStore = new ContributionTemplateStore(getXPathTemplateContextRegistry(), getPreferenceStore(), "org.eclipse.wst.xsl.ui.xpath_custom_templates"); //$NON-NLS-1$
-			try {
-				fXPathTemplateStore.load();
-			}
-			catch (IOException e) {
-				log(e);
-			}
-		}
-		return fXPathTemplateStore;
-	}
 	
-	/**
-	 * Returns the template context type registry for xpath
-	 * 
-	 * @return the template context type registry for xpath
-	 */
-	public ContextTypeRegistry getXPathTemplateContextRegistry() {
-		if (fXPathContextTypeRegistry == null) {
-			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
-			registry.addContextType("xsl_xpath"); //$NON-NLS-1$
-			registry.addContextType("xpath_operator"); //$NON-NLS-1$
-			registry.addContextType("xpath_axis"); //$NON-NLS-1$
-			registry.addContextType("exslt_function"); //$NON-NLS-1$
-			registry.addContextType("xpath_2"); //$NON-NLS-1$
-			registry.addContextType("extension_function"); //$NON-NLS-1$
-			fXPathContextTypeRegistry = registry;
-		}
-
-		return fXPathContextTypeRegistry;
-	}
 }

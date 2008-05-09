@@ -35,6 +35,7 @@ import org.eclipse.jface.text.templates.TemplateProposal;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xml.ui.internal.contentassist.ReplaceNameTemplateContext;
+import org.eclipse.wst.xml.xpath.ui.XPathViewPlugin;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 import org.eclipse.wst.xsl.ui.internal.templates.TemplateContextTypeIdsXPath;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper;
@@ -93,7 +94,7 @@ class XPathTemplateCompletionProcessor extends TemplateCompletionProcessor {
 	}
 
 	private ContextTypeRegistry getTemplateContextRegistry() {
-		return XSLUIPlugin.getDefault().getXPathTemplateContextRegistry();
+		return XPathViewPlugin.getDefault().getXPathTemplateContextRegistry();
 	}
 
 	protected Template[] getTemplates(String contextTypeId) {
@@ -108,7 +109,7 @@ class XPathTemplateCompletionProcessor extends TemplateCompletionProcessor {
 	}
 
 	private TemplateStore getTemplateStore() {
-		return XSLUIPlugin.getDefault().getXPathTemplateStore();
+		return XPathViewPlugin.getDefault().getXPathTemplateStore();
 	}
 
 	void setContextType(String contextTypeId) {
