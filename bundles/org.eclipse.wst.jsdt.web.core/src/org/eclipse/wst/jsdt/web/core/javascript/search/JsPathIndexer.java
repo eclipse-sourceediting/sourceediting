@@ -45,8 +45,8 @@ public class JsPathIndexer {
 	static {
 		
 		String value= Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspsearch"); //$NON-NLS-1$
-		DEBUG = true;
-		//DEBUG= (value != null) && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		//DEBUG = true;
+		DEBUG= (value != null) && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 	
 	// visitor that retrieves jsp project paths for all jsp files in the workspace
