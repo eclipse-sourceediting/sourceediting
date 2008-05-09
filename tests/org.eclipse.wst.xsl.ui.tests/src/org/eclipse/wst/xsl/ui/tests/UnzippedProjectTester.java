@@ -37,7 +37,7 @@ public abstract class UnzippedProjectTester extends TestCase {
 	protected static IProject fTestProject;
 	private static boolean fTestProjectInitialized;
 	private static int nSetups = 0;
-	private static final String TEST_PROJECT_NAME = "net.sourceforge.docbook.stylesheets";
+	private static final String TEST_PROJECT_NAME = "xsltestfiles";
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -47,7 +47,7 @@ public abstract class UnzippedProjectTester extends TestCase {
 			// unzip files to the root of workspace directory
 			String destinationProjectString = fTestProject.getLocation().toOSString();
 			String destinationFolder = destinationProjectString + "/";
-			File zipFile = XSLModelXMLTestsPlugin.getTestFile("projectfiles/docbookstylesheets.zip");
+			File zipFile = XSLModelXMLTestsPlugin.getTestFile("projectfiles/projectfiles.zip");
 			ProjectUnzipUtility projUtil = new ProjectUnzipUtility();
 			projUtil.unzipAndImport(zipFile, destinationFolder);
 			projUtil.initJavaProject(TEST_PROJECT_NAME);
