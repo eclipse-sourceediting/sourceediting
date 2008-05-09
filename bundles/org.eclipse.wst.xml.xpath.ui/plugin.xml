@@ -18,5 +18,50 @@
           id="org.eclipse.wst.xml.views.XPathView"
           name="%xpathViewName"/>
  </extension>
+
+   	<!-- XPath templates -->
+	<extension point="org.eclipse.ui.editors.templates">
+		<contextType
+			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+			id="xpath_axis" name="axis">
+		</contextType>
+		<contextType
+			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+			id="exslt_function" name="exslt">
+		</contextType>
+		<contextType
+			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+			id="xsl_xpath" name="xpath">
+		</contextType>
+		<contextType
+			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+			id="xpath_2" name="xpath 2.0">
+		</contextType>
+		<contextType
+			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+			id="xpath_operator" name="operator">
+		</contextType>
+		<contextType
+			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+			id="extension_function" name="custom">
+		</contextType>
+		<include file="templates/xpath_templates.xml"/>
+		<include file="templates/xpath_operator_templates.xml"/>
+		<include file="templates/xpath_axis_templates.xml"/>
+	</extension>
    
+	<extension point="org.eclipse.ui.preferencePages">
+	  <page
+	        category="org.eclipse.wst.xml.ui.preferences.xml"
+	        class="org.eclipse.wst.xml.xpath.ui.internal.preferences.XPathPrefencePage"
+	        id="org.eclipse.wst.xml.xpath.ui.XPathPreferencePage"
+	        name="XPath">
+	  </page>
+		<page category="org.eclipse.wst.xml.xpath.ui.XPathPreferencePage"
+			class="org.eclipse.wst.xml.xpath.ui.internal.preferences.XPathTemplatePreferencePage"
+			id="org.eclipse.wst.xsl.ui.XPath" 
+			name="XPath Templates">
+		</page>	
+	</extension>
+	   
 </plugin>

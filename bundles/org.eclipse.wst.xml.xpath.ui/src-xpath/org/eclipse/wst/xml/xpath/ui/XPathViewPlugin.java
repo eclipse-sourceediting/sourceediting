@@ -13,6 +13,7 @@
 
 package org.eclipse.wst.xml.xpath.ui;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.MissingResourceException;
@@ -23,12 +24,16 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.jface.text.templates.ContextTypeRegistry;
+import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
+import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.xml.xpath.ui.views.XPathNavigator;
 import org.osgi.framework.BundleContext;
@@ -41,6 +46,17 @@ public class XPathViewPlugin extends AbstractUIPlugin implements IPartListener2
 
 	//Resource bundle.
 	private ResourceBundle resourceBundle;
+
+	/**
+	 * The template store for xpath.
+	 */
+	private TemplateStore fXPathTemplateStore;
+	
+	/**
+	 * The template context type registry for xpath.
+	 */
+	private ContributionContextTypeRegistry fXPathContextTypeRegistry;
+	
 	
 	/**
 	 * The constructor.
@@ -235,5 +251,44 @@ public class XPathViewPlugin extends AbstractUIPlugin implements IPartListener2
     {
         updateXPathNavigatorView( partRef);
     }
-    /* -- */    
+    /* -- */
+    
+	/**
+	 * Returns the template store for the xpath templates.
+	 * 
+	 * @return the template store for the xpath templates
+	 */
+	public TemplateStore getXPathTemplateStore() {
+		if (fXPathTemplateStore == null) {
+			fXPathTemplateStore = new ContributionTemplateStore(getXPathTemplateContextRegistry(), getPreferenceStore(), "org.eclipse.wst.xml.xpath.ui.xpath_custom_templates"); //$NON-NLS-1$
+			try {
+				fXPathTemplateStore.load();
+			}
+			catch (IOException e) {
+				log(e);
+			}
+		}
+		return fXPathTemplateStore;
+	}
+	
+	/**
+	 * Returns the template context type registry for xpath
+	 * 
+	 * @return the template context type registry for xpath
+	 */
+	public ContextTypeRegistry getXPathTemplateContextRegistry() {
+		if (fXPathContextTypeRegistry == null) {
+			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
+			registry.addContextType("xsl_xpath"); //$NON-NLS-1$
+			registry.addContextType("xpath_operator"); //$NON-NLS-1$
+			registry.addContextType("xpath_axis"); //$NON-NLS-1$
+			registry.addContextType("exslt_function"); //$NON-NLS-1$
+			registry.addContextType("xpath_2"); //$NON-NLS-1$
+			registry.addContextType("extension_function"); //$NON-NLS-1$
+			fXPathContextTypeRegistry = registry;
+		}
+
+		return fXPathContextTypeRegistry;
+	}
+    
 }

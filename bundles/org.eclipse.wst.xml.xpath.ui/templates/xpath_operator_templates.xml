@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.addition"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Addition"
+	          enabled="true" name="+">+ ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.subtraction"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Subtraction"
+	          enabled="true" name="-">- ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.multiplication"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Multiplication"
+	          enabled="true" name="*">* ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.division"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Division"
+	          enabled="true" name="div">div ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.equal"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Equal"
+	          enabled="true" name="=">= ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.notequal"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Not Equal"
+	          enabled="true" name="!=">!= ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.lessthan"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Less Than"
+	          enabled="true" name="&lt;">&amp;lt; ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.lessthanorequal"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Less Than or equal to"
+	          enabled="true" name="&lt;">&amp;lt;= ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.greaterthan"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Greater than"
+	          enabled="true" name=">">> ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.greaterthanorequal"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Greater than or equal to"
+	          enabled="true" name=">=">>= ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.or"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="or"
+	          enabled="true" name="or">or ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.and"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="and"
+	          enabled="true" name="and">and ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.string"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Modulus (division remainder)"
+	          enabled="true" name="mod">mod ${cursor}</template>
+	<template id="org.eclipse.wst.xslt.templates.xpath.operator.ornodes"
+	          autoinsert="true" context="xpath_operator" deleted="false"
+	          description="Computes two node sets. i.e. //book | //cd"
+	          enabled="true" name="|">| ${cursor}</template>
+	          
+</templates>
