@@ -260,28 +260,7 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
             dm.setTargetedRuntimes( Collections.singleton( runtime ) );
         }
         
-        String presetID = FacetedProjectFramework.DEFAULT_CONFIGURATION_PRESET_ID;
-        
-        if(beginingPages != null && beginingPages.length > 0 && beginingPages[0] instanceof DataModelFacetCreationWizardPage){
-        	DataModelFacetCreationWizardPage firstPage = (DataModelFacetCreationWizardPage)beginingPages[0];
-            final IProjectFacetVersion fv = firstPage.getPrimaryFacetVersion();
-	        if( fv != null )
-	        {
-	        	if(runtime != null){
-	        		if(runtime.getRuntimeComponents().size() > 0){
-	        			IRuntimeComponent runtimeComponent = runtime.getRuntimeComponents().get(0);
-	        			String facetRuntimeTypeID = runtimeComponent.getRuntimeComponentType().getId();
-	        			String facetRuntimeVersion = runtimeComponent.getRuntimeComponentVersion().getVersionString();
-	        			String facetID = fv.getProjectFacet().getId();
-			    	    String facetVersion = fv.getVersionString();
-			    	    presetID = RuntimePresetMappingRegistry.INSTANCE.getPresetID(facetRuntimeTypeID, facetRuntimeVersion, facetID, facetVersion);	
-	        		}
-	        	}
-	        }
-        }
-        
-        
-        dm.setSelectedPreset( presetID );
+        dm.setSelectedPreset( FacetedProjectFramework.DEFAULT_CONFIGURATION_PRESET_ID );
     }
     
 	public String getProjectName() {
