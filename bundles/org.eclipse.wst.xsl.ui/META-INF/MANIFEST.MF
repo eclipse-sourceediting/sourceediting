@@ -21,13 +21,15 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.wst.validation;bundle-version="[1.1.103,2.0.0)",
  org.eclipse.ui.ide;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.ui.forms;bundle-version="3.3.100",
- org.eclipse.wst.xml.xpath.ui;bundle-version="[0.5.0,1.0.0)"
+ org.eclipse.wst.xml.xpath.ui;bundle-version="[0.5.0,1.0.0)",
+ org.eclipse.wst.xml.xpath.core;bundle-version="0.5.0"
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.wst.xsl.ui.internal;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.actions;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.contentassist;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.editor;x-internal:=true,
+ org.eclipse.wst.xsl.ui.internal.handlers;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.perspective;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.preferences;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.style;x-internal:=true,

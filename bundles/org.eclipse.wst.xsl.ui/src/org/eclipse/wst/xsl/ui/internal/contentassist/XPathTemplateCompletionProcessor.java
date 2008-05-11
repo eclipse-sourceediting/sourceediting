@@ -36,7 +36,6 @@ import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xml.ui.internal.contentassist.ReplaceNameTemplateContext;
 import org.eclipse.wst.xml.xpath.ui.XPathViewPlugin;
-import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 import org.eclipse.wst.xsl.ui.internal.templates.TemplateContextTypeIdsXPath;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages;
@@ -49,7 +48,7 @@ import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages;
  * XSL content assist processor has already set the context type for
  * templates.
  * 
- * @see org.eclipse.wst.xml.ui.
+ * @see org.eclipse.wst.xsl.ui.
  * @since 0.5M6
  */
 class XPathTemplateCompletionProcessor extends TemplateCompletionProcessor {
@@ -184,19 +183,5 @@ class XPathTemplateCompletionProcessor extends TemplateCompletionProcessor {
 			return new ReplaceNameTemplateContext(contextType, document, region.getOffset(), region.getLength(), offset);
 		}
 		return null;
-	}
-	
-//	/**
-//	 * 
-//	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getCompletionProposalAutoActivationCharacters()
-//	 */
-//	@Override
-//	public char[] getCompletionProposalAutoActivationCharacters() {
-//		char apostrophe = '\'';
-//		char quote = '"';
-//		char[] autoProposal = {apostrophe, quote};
-//		return autoProposal;
-//	}
-	
-	
+	}	
 }

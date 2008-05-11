@@ -7,6 +7,8 @@
  *
  * Contributors:
  *     David Carver - STAR - bug 213849 - initial API and implementation
+ *     David Carver - STAR - bug 230958 - refactored to fix bug with getting
+ *                                        the DOM Document for the current editor
  *     
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.contentassist;
@@ -16,7 +18,6 @@ import java.util.List;
 
 import javax.xml.transform.TransformerException;
 
-import org.apache.xpath.XPathAPI;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.ITextViewer;
@@ -24,11 +25,13 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.Workbench;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -36,6 +39,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
+import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 import org.eclipse.wst.xsl.ui.internal.templates.TemplateContextTypeIdsXPath;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper;
@@ -51,6 +55,8 @@ import org.w3c.dom.NodeList;
  * select statements as well as on test and match attributes.
  * 
  * @author David Carver
+ * 
+ *
  * 
  */
 @SuppressWarnings("restriction")//$NON-NLS-1$
@@ -107,7 +113,7 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 	 * content proposal was instantiated.
 	 * 
 	 * @param contentAssistRequest
-	 *            Content Assist Request that initiated the proposal request
+	 * 		Content Assist Request that initiated the proposal request
 	 * 
 	 */
 	@Override
@@ -123,12 +129,7 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 		// DOMNamespaceHelper.getUnprefixedName(node.getNodeName());
 		String attributeName = getAttributeName(contentAssistRequest);
 
-		// Retrieve the Editor so that we may get a w3c DOM representation of
-		// the document.
-		IEditorPart editor = Workbench.getInstance().getActiveWorkbenchWindow()
-				.getActivePage().getActiveEditor();
-		IStructuredModel model = this.getEditorModel(editor);
-		Document document = (Document) model.getAdapter(Document.class);
+		Document document = contentAssistRequest.getNode().getOwnerDocument();
 		Element rootElement = (IDOMElement) document.getDocumentElement();
 
 		if (attributeName != null) {
@@ -147,9 +148,6 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 			// for the namespace. Regardless of what the prefix is set too.
 			if (namespace != null) {
 				if (namespace.equals(this.xslNamespace)) {
-					// Adjust the offset so we don't overwrite the " due to the
-					// fact that SSE includes " in the value region for
-					// attributes.
 					if (attributeName.equals(ATTR_SELECT)
 							|| attributeName.equals(ATTR_TEST)) {
 						addGlobalProposals(rootElement, contentAssistRequest,
@@ -171,18 +169,18 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 								TemplateContextTypeIdsXPath.AXIS, offset);
 						addTemplates(contentAssistRequest,
 								TemplateContextTypeIdsXPath.XPATH, offset);
-//						addTemplates(contentAssistRequest,
-//								TemplateContextTypeIdsXPath.OPERATOR, offset);
+						// addTemplates(contentAssistRequest,
+						// TemplateContextTypeIdsXPath.OPERATOR, offset);
 						addTemplates(contentAssistRequest,
 								TemplateContextTypeIdsXPath.CUSTOM, offset);
 					}
 
 					// Operators like And, Or, greater than, are more likely to
 					// be used in test statements
-//					if (attributeName.equals(ATTR_TEST)) {
-//						addTemplates(contentAssistRequest,
-//								TemplateContextTypeIdsXPath.OPERATOR, offset);
-//					}
+					// if (attributeName.equals(ATTR_TEST)) {
+					// addTemplates(contentAssistRequest,
+					// TemplateContextTypeIdsXPath.OPERATOR, offset);
+					// }
 
 					// Match attributes probably need to get a listing of all
 					// available elements from the
@@ -212,28 +210,28 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 					TemplateContextTypeIdsXPath.XPATH, offset);
 			addTemplates(contentAssistRequest,
 					TemplateContextTypeIdsXPath.CUSTOM, offset);
-			
+
 		}
 	}
 
 	private void addLocalProposals(Node xpathnode,
 			ContentAssistRequest contentAssistRequest, int offset) {
-		addvariablesProposals(XPATH_LOCAL_VARIABLES, xpathnode,
+		addVariablesProposals(XPATH_LOCAL_VARIABLES, xpathnode,
 				contentAssistRequest, offset);
-		addvariablesProposals(XPATH_LOCAL_PARAMS, xpathnode,
+		addVariablesProposals(XPATH_LOCAL_PARAMS, xpathnode,
 				contentAssistRequest, offset);
 	}
 
 	private void addGlobalProposals(Node xpathnode,
 			ContentAssistRequest contentAssistRequest, int offset) {
-		addvariablesProposals(XPATH_GLOBAL_VARIABLES, xpathnode,
+		addVariablesProposals(XPATH_GLOBAL_VARIABLES, xpathnode,
 				contentAssistRequest, offset);
-		addvariablesProposals(XPATH_GLOBAL_PARAMS, xpathnode,
+		addVariablesProposals(XPATH_GLOBAL_PARAMS, xpathnode,
 				contentAssistRequest, offset);
 	}
 
 	/**
-	 * addvariableProposals adds Parameter and Variables as proposals. This
+	 * addVariableProposals adds Parameter and Variables as proposals. This
 	 * information is selected based on the XPath statement that is sent to it
 	 * and the input Node passed. It uses a custom composer to XSL Variable
 	 * proposal.
@@ -243,34 +241,38 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 	 * @param contentAssistRequest
 	 * @param offset
 	 */
-	private void addvariablesProposals(String xpath, Node xpathnode,
+	private void addVariablesProposals(String xpath, Node xpathnode,
 			ContentAssistRequest contentAssistRequest, int offset) {
 		synchronized (XPATH_LOCK) {
 			try {
-				NodeList nodes = XPathAPI.selectNodeList(xpathnode, xpath);
+				NodeList nodes = XSLTXPathHelper.selectNodeList(xpathnode, xpath);
 				
-			
-				// Get the current cursor position, this is not the same as the offset
-				// Since content assist assumes you want to replace everything, you need to calculate
-				// where the cursor should end up.  This is helpful for when the PrositionBasedCompletionProposal
+
+				// Get the current cursor position, this is not the same as the
+				// offset
+				// Since content assist assumes you want to replace everything,
+				// you need to calculate
+				// where the cursor should end up. This is helpful for when the
+				// PrositionBasedCompletionProposal
 				// is called later to apply the request item.
-				int currentCursorPosition = fTextViewer.getTextWidget().getCaretOffset();
+				int currentCursorPosition = fTextViewer.getTextWidget()
+						.getCaretOffset();
 				int startOffset = offset;
-				// Calculate the length from the beginning to current cursor position.
+				// Calculate the length from the beginning to current cursor
+				// position.
 				int startLength = currentCursorPosition - startOffset;
-				
-				
+
 				if (nodes != null && nodes.getLength() > 0) {
 					for (int nodecnt = 0; nodecnt < nodes.getLength(); nodecnt++) {
 						Node node = nodes.item(nodecnt);
 						String variableName = "$" + node.getAttributes().getNamedItem("name").getNodeValue(); //$NON-NLS-1$ //$NON-NLS-2$
-						
-						// The cursor position is calculated based on the length of the string to the current position
+
+						// The cursor position is calculated based on the length
+						// of the string to the current position
 						// plus the length of the text that will be inserted.
-						XSLVariableCustomCompletionProposal proposal = new XSLVariableCustomCompletionProposal(
+						CustomCompletionProposal proposal = new CustomCompletionProposal(
 								variableName, offset, 0, startLength + variableName.length(),
-								XSLPluginImageHelper.getInstance().getImage(
-										XSLPluginImages.IMG_VARIABLES),
+								XSLPluginImageHelper.getInstance().getImage(XSLPluginImages.IMG_VARIABLES),
 								variableName, null, null, 0);
 						contentAssistRequest.addProposal(proposal);
 					}
@@ -280,18 +282,6 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 				XSLUIPlugin.log(ex);
 			}
 		}
-	}
-
-	/**
-	 * Adds templates to the list of proposals
-	 * 
-	 * @param contentAssistRequest
-	 * @param context
-	 */
-	private void addTemplates(ContentAssistRequest contentAssistRequest,
-			String context) {
-		addTemplates(contentAssistRequest, context, contentAssistRequest
-				.getReplacementBeginPosition());
 	}
 
 	/**
@@ -380,8 +370,8 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 	 * @param documentPosition
 	 * @return
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractContentAssistProcessor#computeCompletionProposals(org.eclipse.jface.text.ITextViewer,
-	 *      int)
+	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractContentAssistProcessor#
+	 * 	computeCompletionProposals(org.eclipse.jface.text.ITextViewer, int)
 	 */
 	public ICompletionProposal[] computeCompletionProposals(
 			ITextViewer textViewer, int documentPosition) {
@@ -426,7 +416,7 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 		}
 	}
 
-	private IStructuredModel getEditorModel(IEditorPart editor) {
-		return (IStructuredModel) editor.getAdapter(IStructuredModel.class);
-	}
+//	private IStructuredModel getEditorModel(IEditorPart editor) {
+//		return (IStructuredModel) editor.getAdapter(IStructuredModel.class);
+//	}
 }
