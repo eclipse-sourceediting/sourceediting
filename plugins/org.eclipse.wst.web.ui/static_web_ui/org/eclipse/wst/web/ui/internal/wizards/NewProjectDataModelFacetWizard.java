@@ -54,10 +54,8 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 import org.eclipse.wst.common.project.facet.core.events.IFacetedProjectEvent;
 import org.eclipse.wst.common.project.facet.core.events.IFacetedProjectListener;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
-import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
 import org.eclipse.wst.common.project.facet.ui.ModifyFacetedProjectWizard;
 import org.eclipse.wst.web.internal.DelegateConfigurationElement;
-import org.eclipse.wst.web.internal.facet.RuntimePresetMappingRegistry;
 import org.eclipse.wst.web.ui.internal.Logger;
 import org.eclipse.wst.web.ui.internal.WSTWebUIPlugin;
 
