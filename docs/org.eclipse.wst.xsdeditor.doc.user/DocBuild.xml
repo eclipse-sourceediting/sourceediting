@@ -23,6 +23,9 @@
 	- Created.
 	2008-01-09 Kate Price <katep@ca.ibm.com>
 	- modified for new DITA-OT version
+	2008-05-05 Kate Price <katep@ca.ibm.com>
+	- modified to add generation of pre-built help index. 
+	- Must delete /index folder before running build
 -->
 <project name="eclipsehelp" default="all">
 
@@ -56,5 +59,8 @@
 			<property name="transtype" value="eclipsehelp" />
 		</ant>
 		<copy file="myplugin.xml" tofile="plugin.xml" overwrite="yes" />
+	</target>
+	<target name="build.index" description="Builds search index for the plug-in" if="eclipse.running">
+	     <help.buildHelpIndex manifest="plugin.xml" destination="."/>
 	</target>
 </project>
