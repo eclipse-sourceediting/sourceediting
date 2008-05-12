@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE reference  PUBLIC "-//OASIS//DTD DITA Reference//EN" "reference.dtd">
+<reference id="keyboardshortcutsinthedtdeditor" xml:lang="en-us">
+<title outputclass="id_title">DTD editor keyboard shortcuts<?Pub Caret?></title>
+<shortdesc outputclass="id_shortdesc"></shortdesc>
+<prolog><metadata>
+<keywords></keywords>
+</metadata></prolog>
+<refbody>
+<table frame="all">
+<tgroup cols="2">
+<?PubTbl tgroup dispwid="680.00px"?>
+<colspec colname="col1" colwidth="84*"/><colspec colname="col3" colwidth="93*"/>
+<thead>
+<row valign="bottom">
+<entry colname="col1">Key Combination</entry>
+<entry colname="col3">Function</entry>
+</row>
+</thead>
+<tbody>
+<row>
+<entry colname="col1">Shift+Alt+Up Arrow</entry>
+<entry colname="col3">Expand selection to enclosing element</entry>
+</row>
+<row>
+<entry colname="col1">Shift+Alt+Right Arrow</entry>
+<entry colname="col3">Expand selection to next element</entry>
+</row>
+<row>
+<entry colname="col1">Shift+Alt+Left Arrow</entry>
+<entry colname="col3">Expand selection to previous element</entry>
+</row>
+<row>
+<entry colname="col1">Shift+Alt+Down Arrow</entry>
+<entry colname="col3">Restore last selection</entry>
+</row>
+<row>
+<entry colname="col1">Ctrl+Shift+P</entry>
+<entry colname="col3">Go to matching bracket</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</refbody>
+</reference>
+<?Pub *0000001431?>

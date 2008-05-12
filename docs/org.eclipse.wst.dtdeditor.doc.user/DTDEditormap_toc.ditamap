@@ -2,7 +2,7 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
  "map.dtd">
-<map collection-type="sequence" title="DTD Editor">
+<map collection-type="sequence" id="dtdeditorTOC" title="DTD Editor">
 <topicref href="topics/cworkdtds.dita" navtitle="Working with DTDs" type="concept">
 <anchor id="dtd_post_cworkdtds"/>
 <topicref href="topics/tcretdtd.dita" linking="normal" navtitle="Creating DTDs"
@@ -25,5 +25,8 @@ type="task"></topicref>
 <anchor id="dtd_post_tvaldtd"/>
 <topicref href="topics/rdtdicons.dita" navtitle="Icons used in the DTD editor"
 type="reference"></topicref>
-<anchor id="dtd_post_rdtdicons"/></topicref>
+<anchor id="dtd_post_rdtdicons"/>
+<topicref href="topics/rdtdkey.dita" navtitle="DTD editor keyboard shortcuts"
+type="reference"></topicref>
+<anchor id="dtd_post_rdtdkey"/></topicref>
 </map>
