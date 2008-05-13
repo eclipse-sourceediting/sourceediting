@@ -420,7 +420,7 @@ unicode_range = "U"\+[0-9a-fA-F?]{1,6}("-"[0-9a-fA-F?]{1,6})?
 <ST_SELECTOR_MODIFIER> {
 	"," { yybegin(ST_SELECTOR); return CSS_SELECTOR_SEPARATOR; }
 	// using LOOKAHEAD
-	{s}+/[^+>\{] { yybegin(ST_SELECTOR); return CSS_SELECTOR_COMBINATOR; }
+	{s}+/[^+>\{/] { yybegin(ST_SELECTOR); return CSS_SELECTOR_COMBINATOR; }
 	"+"|">" { yybegin(ST_SELECTOR); return CSS_SELECTOR_COMBINATOR; }
 	"{" { yybegin(ST_DECLARATION); return CSS_LBRACE; }
 }
