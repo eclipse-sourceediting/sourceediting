@@ -25,12 +25,15 @@ import org.eclipse.jface.text.BadPositionCategoryException;
 import org.eclipse.jface.text.DefaultPositionUpdater;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.DocumentPartitioningChangedEvent;
+import org.eclipse.jface.text.DocumentRewriteSessionEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
+import org.eclipse.jface.text.IDocumentExtension4;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IDocumentPartitioningListener;
 import org.eclipse.jface.text.IDocumentPartitioningListenerExtension;
 import org.eclipse.jface.text.IDocumentPartitioningListenerExtension2;
+import org.eclipse.jface.text.IDocumentRewriteSessionListener;
 import org.eclipse.jface.text.IPositionUpdater;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextInputListener;
@@ -272,10 +275,17 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 	 */
 	class InternalListener implements
 			ITextInputListener, IDocumentListener, ITextListener, IStructuredDocumentListener,
-			IDocumentPartitioningListener, IDocumentPartitioningListenerExtension, IDocumentPartitioningListenerExtension2 {
+			IDocumentPartitioningListener, IDocumentPartitioningListenerExtension, IDocumentPartitioningListenerExtension2, IDocumentRewriteSessionListener {
 
 		/** Set to <code>true</code> if between a document about to be changed and a changed event. */
 		private boolean fDocumentChanging= false;
+		
+		/** Flag for the document being in a rewrite session */
+		private boolean fInRewriteSession = false;
+		
+		/** Flag for some kind of changes being applied during a document rewrite session */
+		private boolean fHasIncomingChanges = false;
+		
 		/**
 		 * The cached redraw state of the text viewer.
 		 * @since 3.0
@@ -283,6 +293,10 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 		private boolean fCachedRedrawState= true;
 
 		public void newModel(NewDocumentEvent structuredDocumentEvent) {
+			if(fInRewriteSession) {
+				fHasIncomingChanges = true;
+				return;
+			}
 			if (_trace) {
 				time1 = System.currentTimeMillis();
 			}
@@ -299,12 +313,18 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 		}
 
 		public void noChange(NoChangeEvent structuredDocumentEvent) {
+			if(fInRewriteSession) {
+				fHasIncomingChanges = true;
+				return;
+			}
 			if (_trace) {
 				time1 = System.currentTimeMillis();
 			}
 			if (structuredDocumentEvent.reason != NoChangeEvent.NO_EVENT) {
 				IRegion damage = new Region(0, structuredDocumentEvent.fDocument.getLength());
 				recordDamage(damage, structuredDocumentEvent.fDocument);
+			}
+			if (structuredDocumentEvent.reason == NoChangeEvent.READ_ONLY_STATE_CHANGE) {
 				fViewer.invalidateTextPresentation();
 			}
 			if (_trace && _traceTime) {
@@ -314,6 +334,10 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 		}
 
 		public void nodesReplaced(StructuredDocumentRegionsReplacedEvent structuredDocumentEvent) {
+			if(fInRewriteSession) {
+				fHasIncomingChanges = true;
+				return;
+			}
 			if (_trace) {
 				time1 = System.currentTimeMillis();
 			}
@@ -340,6 +364,10 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 		}
 
 		public void regionChanged(RegionChangedEvent structuredDocumentEvent) {
+			if(fInRewriteSession) {
+				fHasIncomingChanges = true;
+				return;
+			}
 			if (_trace) {
 				time1 = System.currentTimeMillis();
 			}
@@ -361,6 +389,10 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 		}
 
 		public void regionsReplaced(RegionsReplacedEvent structuredDocumentEvent) {
+			if(fInRewriteSession) {
+				fHasIncomingChanges = true;
+				return;
+			}
 			if (_trace) {
 				time1 = System.currentTimeMillis();
 			}
@@ -531,6 +563,10 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 		 * @see ITextListener#textChanged(TextEvent)
 		 */
 		public void textChanged(TextEvent e) {
+			if(fInRewriteSession) {
+				fHasIncomingChanges = true;
+				return;
+			}
 			fCachedRedrawState= e.getViewerRedrawState();
 	 		if (!fCachedRedrawState) {
 				if (_trace) {
@@ -613,6 +649,19 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 			IRegion region= new Region(e.getOffset() + visible.getOffset(), length);
 			return region;
 		}
+
+		public void documentRewriteSessionChanged(DocumentRewriteSessionEvent event) {
+			fInRewriteSession = (event != null && event.fChangeType == DocumentRewriteSessionEvent.SESSION_START);
+			if(!fInRewriteSession && fHasIncomingChanges && event != null) {
+				if (_trace)
+					time0 = System.currentTimeMillis();
+				processDamage(new Region(0, event.fDocument.getLength()), event.fDocument);
+				if(_trace && _traceTime)
+					System.out.println(TRACE_PREFIX + " processed damaged after ending document rewrite session at " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+				fHasIncomingChanges = false;
+			}
+		}
+
 	}
 	
 	private static class RecordedDamage {
@@ -757,6 +806,9 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 			if(document instanceof IStructuredDocument) {
 				((IStructuredDocument) document).addDocumentChangedListener(fInternalListener);
 			}
+			if(document instanceof IDocumentExtension4) {
+				((IDocumentExtension4) document).addDocumentRewriteSessionListener(fInternalListener);
+			}
 		}
 		if(_trace) {
 			System.out.println(TRACE_PREFIX + "installed to text viewer in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -775,6 +827,9 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 		IDocument document = null;
 		if(( document = fViewer.getDocument()) instanceof IStructuredDocument) {
 			((IStructuredDocument) document).removeDocumentChangedListener(fInternalListener);
+		}
+		if(document instanceof IDocumentExtension4) {
+			((IDocumentExtension4) document).removeDocumentRewriteSessionListener(fInternalListener);
 		}
 		// Ensure we uninstall all listeners
 		fInternalListener.inputDocumentAboutToBeChanged(fViewer.getDocument(), null);
