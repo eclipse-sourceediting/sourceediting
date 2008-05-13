@@ -36,7 +36,7 @@ import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xml.ui.internal.contentassist.ReplaceNameTemplateContext;
 import org.eclipse.wst.xml.xpath.ui.XPathViewPlugin;
-import org.eclipse.wst.xsl.ui.internal.templates.TemplateContextTypeIdsXPath;
+import org.eclipse.wst.xml.xpath.ui.internal.templates.TemplateContextTypeIdsXPath;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages;
 
