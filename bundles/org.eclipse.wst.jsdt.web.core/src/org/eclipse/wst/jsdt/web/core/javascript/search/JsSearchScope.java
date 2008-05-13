@@ -117,22 +117,6 @@ public class JsSearchScope implements IJavaScriptSearchScope {
 		return (IPath[]) fResourcePaths.toArray(new IPath[fResourcePaths.size()]);
 	}
 
-	public boolean includesBinaries() {
-		return false;
-	}
-
-	public boolean includesClasspaths() {
-		return false;
-	}
-
-	public void setIncludesBinaries(boolean includesBinaries) {
-		// do nothing
-	}
-
-	public void setIncludesClasspaths(boolean includesClasspaths) {
-		// do nothing
-	}
-
 	public boolean shouldExclude(String container, String resourceName) {
 		/* auto gen */
 		return false;
