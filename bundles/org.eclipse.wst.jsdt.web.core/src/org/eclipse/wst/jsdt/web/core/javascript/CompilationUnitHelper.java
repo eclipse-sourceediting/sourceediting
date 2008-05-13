@@ -22,6 +22,8 @@ import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
  * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
  * (repeatedly) as the API evolves.
  * 
+ * <br><br> this code was taken from the JSP plugin.  This class is to ensure only one copy of the compilation unit exits.
+ * 
  * @author pavery
  */
 public class CompilationUnitHelper {

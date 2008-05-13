@@ -27,6 +27,12 @@ import org.eclipse.text.edits.ReplaceEdit;
 * change significantly before reaching stability. It is being made available at this early stage to solicit feedback
 * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
 * (repeatedly) as the API evolves.
+* <br><br>
+* 
+* this class attaches to a "cloned" document, listens for changes to that document then translates
+* the changes to text edits.  these changes can then be applied back to the original document.
+* 
+*
 */
 public class DocumentChangeListenerToTextEdit implements IDocumentListener {
 	private MultiTextEdit textEdit;

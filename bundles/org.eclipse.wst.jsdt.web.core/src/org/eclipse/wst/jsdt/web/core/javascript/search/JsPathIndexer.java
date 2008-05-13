@@ -31,7 +31,7 @@ import org.eclipse.wst.jsdt.web.core.internal.validation.Util;
 * change significantly before reaching stability. It is being made available at this early stage to solicit feedback
 * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
 * (repeatedly) as the API evolves.
-*
+*(copied from JSP)
  * pa_TODO Still need to take into consideration:
  * 	- focus in workspace
  *  - search pattern

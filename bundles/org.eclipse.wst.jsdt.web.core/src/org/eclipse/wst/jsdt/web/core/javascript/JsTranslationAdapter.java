@@ -45,6 +45,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
 * (repeatedly) as the API evolves.
 
+ * <br><br> this adapter loads translation information from extension points.  this is to allow more complicated html/js translations through extensions.
  * @author pavery
  */
 public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListener {

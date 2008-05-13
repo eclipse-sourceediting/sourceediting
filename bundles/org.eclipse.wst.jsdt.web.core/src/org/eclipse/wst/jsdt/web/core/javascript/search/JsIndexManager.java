@@ -54,7 +54,7 @@ import org.osgi.framework.Bundle;
 * change significantly before reaching stability. It is being made available at this early stage to solicit feedback
 * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
 * (repeatedly) as the API evolves.
-*
+*(copied from JSP)
  * Responsible for keeping the JSP index up to date.
  * 
  * @author pavery

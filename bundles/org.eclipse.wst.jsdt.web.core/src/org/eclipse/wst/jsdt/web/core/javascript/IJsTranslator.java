@@ -36,26 +36,65 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 */
 public interface IJsTranslator extends IDocumentListener{
 
+	/**
+	 * @return string of javascript from the document
+	 */
 	public String getJsText();
 
+	/**
+	 * sets the javascript unit buffer
+	 * @param buffer
+	 */
 	public void setBuffer(IBuffer buffer);
 
+	/**
+	 * 
+	 * @return a list of html locations within the docuemnt.
+	 */
 	public Position[] getHtmlLocations();
 
+	/**
+	 * @return the region of a missing </script> tag
+	 */
 	public int getMissingEndTagRegionStart();
 
+	/**
+	 * @return position array of <script src=".."> within the doc.
+	 */
 	public Position[] getImportHtmlRanges();
 
+	/**
+	 * @return raw/unresolved <script imports>
+	 */
 	public String[] getRawImports();
 
+	/**
+	 *  begin translating the document.
+	 */
 	public void translate();
 
+	/**
+	 * translates an inline (event="..") js container region and adds it to the document text.  must be called in order
+	 * @param container
+	 */
 	public void translateInlineJSNode(IStructuredDocumentRegion container);
 
+	/**
+	 * translates a script block.  must be called in the order it appears within the document.
+	 * @param container
+	 */
 	public void translateJSNode(IStructuredDocumentRegion container);
 
+	/**
+	 * translates a <script src=".."> element, parsing out an import.
+	 * @param region
+	 */
 	public void translateScriptImportNode(IStructuredDocumentRegion region);
 
+	/**
+	 * release any resources the translation is holding onto.
+	 * 
+	 */
 	public void release();
 
 }

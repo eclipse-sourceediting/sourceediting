@@ -39,7 +39,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 * change significantly before reaching stability. It is being made available at this early stage to solicit feedback
 * from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
 * (repeatedly) as the API evolves.
-*
+*(copied from JSP)
  * Created with a .jsp file, but should appear to be a .java file for indexing
  * and searching purposes. There are purposely few fields in this class, and
  * those fields are lightweight since it's possible for many JSP search
