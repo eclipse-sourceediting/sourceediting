@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -49,6 +49,10 @@ public class CSSTextParserTest extends TestCase {
 
 	public void testText7() throws IOException {
 		textParserTest("sample07.css"); //$NON-NLS-1$
+	}
+	
+	public void testText8() throws IOException {
+		textParserTest("sample08.css"); //$NON-NLS-1$
 	}
 
 	private void textParserTest(String filename) throws IOException {

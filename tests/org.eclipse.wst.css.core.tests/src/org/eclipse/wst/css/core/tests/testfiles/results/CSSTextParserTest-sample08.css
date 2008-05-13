@@ -1,0 +1,22 @@
+[a] SELECTOR_ELEMENT_NAME - 0, 1
+[.newWindow] SELECTOR_CLASS - 1, 10
+[ ] S - 11, 1
+[/* */] COMMENT - 12, 5
+[ ] S - 17, 1
+[{] LBRACE - 18, 1
+[
+    ] S - 19, 6
+[background-image] DECLARATION_PROPERTY - 25, 16
+[:] DECLARATION_SEPARATOR - 41, 1
+[ ] S - 42, 1
+[url(../images/test.png)] DECLARATION_VALUE_URI - 43, 23
+[ ] DECLARATION_VALUE_S - 66, 1
+[!important] CSS_DECLARATION_VALUE_IMPORTANT - 67, 10
+[;] DECLARATION_DELIMITER - 77, 1
+[
+] S - 78, 2
+[}] RBRACE - 80, 1
+[
+] S - 81, 2
+
+-------

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,6 +53,10 @@ public class CSSSourceParserTest extends TestCase {
 	public void testSourceOpen7() throws IOException {
 		sourceParserTest("sample07.css", MODE_OPEN); //$NON-NLS-1$
 	}
+	
+	public void testSourceOpen8() throws IOException {
+		sourceParserTest("sample08.css", MODE_OPEN); //$NON-NLS-1$
+	}
 
 	public void testSourceAppend1() throws IOException {
 		sourceParserTest("sample01.css", MODE_APPEND); //$NON-NLS-1$
@@ -81,6 +85,10 @@ public class CSSSourceParserTest extends TestCase {
 	public void testSourceAppend7() throws IOException {
 		sourceParserTest("sample07.css", MODE_APPEND); //$NON-NLS-1$
 	}
+	
+	public void testSourceAppend8() throws IOException {
+		sourceParserTest("sample08.css", MODE_APPEND); //$NON-NLS-1$
+	}
 
 	public void testSourceInsert1() throws IOException {
 		sourceParserTest("sample01.css", MODE_INSERT); //$NON-NLS-1$
@@ -108,6 +116,10 @@ public class CSSSourceParserTest extends TestCase {
 
 	public void testSourceInsert7() throws IOException {
 		sourceParserTest("sample07.css", MODE_INSERT); //$NON-NLS-1$
+	}
+	
+	public void testSourceInsert8() throws IOException {
+		sourceParserTest("sample08.css", MODE_INSERT); //$NON-NLS-1$
 	}
 
 	private void sourceParserTest(String filename, String mode) throws IOException {

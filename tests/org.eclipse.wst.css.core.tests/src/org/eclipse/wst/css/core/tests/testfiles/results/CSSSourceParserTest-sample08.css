@@ -1,0 +1,19 @@
+[0, 18] (a.newWindow /* */ )
+    ContextRegion--> SELECTOR_ELEMENT_NAME: 0-1, ContextRegion--> SELECTOR_CLASS: 1-11/12, ContextRegion--> COMMENT: 12-17/18, 
+[18, 25] ({
+    )
+    ContextRegion--> LBRACE: 0-1/7, 
+[25, 77] (background-image: url(../images/test.png) !important)
+    ContextRegion--> DECLARATION_PROPERTY: 0-16, ContextRegion--> DECLARATION_SEPARATOR: 16-17/18, ContextRegion--> DECLARATION_VALUE_URI: 18-41/42, ContextRegion--> CSS_DECLARATION_VALUE_IMPORTANT: 42-52, 
+[77, 78] (;)
+    ContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[78, 80] (
+)
+    ContextRegion--> S: 0-2, 
+[80, 81] (})
+    ContextRegion--> RBRACE: 0-1, 
+[81, 83] (
+)
+    ContextRegion--> S: 0-2, 
+
+-------
