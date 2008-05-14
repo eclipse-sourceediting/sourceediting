@@ -65,8 +65,8 @@ public class JsIndexManager {
 	// TODO move this to Logger, as we have in SSE
 	static final boolean DEBUG;
 	static {
-		String value = Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspindexmanager"); //$NON-NLS-1$
-		DEBUG = (value != null) && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsindexmanager"); //$NON-NLS-1$
+ 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 
 	private static final String PKEY_INDEX_STATE = "jspIndexState"; //$NON-NLS-1$

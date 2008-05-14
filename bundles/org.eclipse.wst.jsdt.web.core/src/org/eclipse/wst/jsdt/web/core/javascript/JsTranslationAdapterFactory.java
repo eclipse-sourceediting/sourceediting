@@ -44,8 +44,8 @@ public class JsTranslationAdapterFactory extends AbstractAdapterFactory {
 	private boolean listenForProjectChanges;
 	
 	static {
-		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation"); //$NON-NLS-1$
-		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jstranslation"); //$NON-NLS-1$
+ 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 	private JsTranslationAdapter fAdapter = null;
 	

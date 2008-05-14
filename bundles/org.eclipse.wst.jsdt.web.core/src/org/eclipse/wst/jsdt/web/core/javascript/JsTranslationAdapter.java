@@ -50,7 +50,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
  */
 public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListener {
 
-	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation")); //$NON-NLS-1$  //$NON-NLS-2$
+	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jstranslation")); //$NON-NLS-1$  //$NON-NLS-2$
 	private IStructuredDocument fHtmlDocument = null;
 	private IJsTranslation fJSPTranslation = null;
 	private NullProgressMonitor fTranslationMonitor = null;

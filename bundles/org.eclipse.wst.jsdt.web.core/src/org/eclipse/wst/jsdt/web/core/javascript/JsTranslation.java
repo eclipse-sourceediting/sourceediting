@@ -68,8 +68,8 @@ public class JsTranslation implements IJsTranslation {
 
 	private static final boolean DEBUG;
 	static {
-		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslation"); //$NON-NLS-1$
-		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jstranslation"); //$NON-NLS-1$
+ 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 
 	private IJavaScriptUnit fCompilationUnit = null;

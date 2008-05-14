@@ -54,7 +54,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
  * (repeatedly) as the API evolves.
  */
 public class JsValidator implements IValidator{
-	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspvalidator")).booleanValue(); //$NON-NLS-1$
+	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsvalidator")).booleanValue(); //$NON-NLS-1$
 	private IValidator fMessageOriginator;
 	
 	private static String [] jsdtValidator = {"org.eclipse.wst.jsdt.web.core.internal.validation.JsBatchValidator"}; //$NON-NLS-1$

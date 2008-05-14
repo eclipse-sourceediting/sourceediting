@@ -74,7 +74,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidatorJob;
  */
 public final class JsBatchValidator implements IValidatorJob, IExecutableExtension {
 	// for debugging
-	static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspvalidator")).booleanValue(); //$NON-NLS-1$
+	static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsvalidator")).booleanValue(); //$NON-NLS-1$
 	private static final String PLUGIN_ID_JSP_CORE = "org.eclipse.wst.jsdt.web.core"; //$NON-NLS-1$
 	private IPath[] excludeLibPaths;
 	

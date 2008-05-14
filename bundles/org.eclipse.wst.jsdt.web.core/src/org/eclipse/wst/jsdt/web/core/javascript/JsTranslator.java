@@ -25,7 +25,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
@@ -68,16 +67,16 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 public class JsTranslator extends Job implements IJsTranslator{
 	
 	protected static final boolean DEBUG;
-	private static final boolean DEBUG_SAVE_OUTPUT = false;  //"true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsptranslationstodisk")); //$NON-NLS-1$  //$NON-NLS-2$
-	protected static final String ENDL = "\n"; //$NON-NLS-1$
+	private static final boolean DEBUG_SAVE_OUTPUT = false;  //"true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jstranslationstodisk")); //$NON-NLS-1$  //$NON-NLS-2$
+	private static final String ENDL = "\n"; //$NON-NLS-1$
 	
-	protected static final boolean REMOVE_XML_COMMENT = true;
-	protected static final String XML_COMMENT_START = "<!--"; //$NON-NLS-1$
-	protected static final String XML_COMMENT_END = "-->"; //$NON-NLS-1$
+	private static final boolean REMOVE_XML_COMMENT = true;
+	private static final String XML_COMMENT_START = "<!--"; //$NON-NLS-1$
+	private static final String XML_COMMENT_END = "-->"; //$NON-NLS-1$
 	
 	static {
-		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jspjavamapping"); //$NON-NLS-1$
-		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsjavamapping"); //$NON-NLS-1$
+ 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 
 	private IStructuredDocumentRegion fCurrentNode;
