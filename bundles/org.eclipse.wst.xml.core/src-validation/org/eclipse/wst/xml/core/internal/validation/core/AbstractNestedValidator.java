@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Locale;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -48,10 +47,8 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
   // Locally used, non-UI strings.
   private static final String REFERENCED_FILE_ERROR_OPEN = "referencedFileError("; //$NON-NLS-1$
   private static final String REFERENCED_FILE_ERROR_CLOSE = ")"; //$NON-NLS-1$
-  private static final String REFERENCED_FILE_ERROR = "referencedFileError"; //$NON-NLS-1$
   private static final String FILE_PROTOCOL_NO_SLASH = "file:"; //$NON-NLS-1$
   private static final String FILE_PROTOCOL = "file:///"; //$NON-NLS-1$
-  private static final String GROUP_NAME = "groupName"; //$NON-NLS-1$
   private final String GET_FILE = "getFile"; //$NON-NLS-1$
   private final String GET_PROJECT_FILES = "getAllFiles"; //$NON-NLS-1$
   private final String GET_INPUTSTREAM = "inputStream"; //$NON-NLS-1$
@@ -412,30 +409,6 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
 
       reporter.addMessage(this, message);
 	      
-    }
-    try
-    {
-      IMarker[] markers = iFile.findMarkers(null, true, IResource.DEPTH_INFINITE);
-      for (int i = 0; i < markers.length; i++)
-      {
-        IMarker marker = markers[i];
-        String groupName = null;
-        try
-        {
-          groupName = (String) marker.getAttribute(GROUP_NAME);
-        }
-        catch (Exception e)
-        {
-        }
-        if (groupName != null && groupName.startsWith(REFERENCED_FILE_ERROR))
-        {
-          marker.setAttribute(IMarker.DONE, true);
-        }
-      }
-    }
-    catch (CoreException e)
-    {
-      e.printStackTrace();
     }
   }
 	  

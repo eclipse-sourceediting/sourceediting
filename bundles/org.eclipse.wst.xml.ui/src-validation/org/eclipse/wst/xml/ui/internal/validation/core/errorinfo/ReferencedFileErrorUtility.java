@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,19 +16,21 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.wst.xml.core.internal.validation.core.logging.LoggerFactory;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 
 public class ReferencedFileErrorUtility {
@@ -46,41 +48,44 @@ public class ReferencedFileErrorUtility {
 						{
 							path = path.setDevice(device.substring(1));
 						}
-						IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(path);
-						if ((file != null) && file.exists()) {
-							// WorkbenchUtility.openEditor(file);
+						final IFile iFile = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(path);
+						if ((iFile != null) && iFile.exists()) {
 							// Open the editor for this file.
-							final IFile iFile = file;
-							IWorkbench workbench = XMLUIPlugin.getInstance().getWorkbench();
+							final IWorkbench workbench = PlatformUI.getWorkbench();
 							final IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
 
 							Display.getDefault().asyncExec(new Runnable() {
 								public void run() {
 									try {
-										IEditorDescriptor descriptor = XMLUIPlugin.getInstance().getWorkbench().getEditorRegistry().getDefaultEditor(iFile.getName());
+										IContentType contentType = iFile.getContentDescription().getContentType();
+										IEditorRegistry editorRegistry = workbench.getEditorRegistry();
+										String fileName = iFile.getName();
+										IEditorDescriptor descriptor = editorRegistry.getDefaultEditor(fileName, contentType);
 										String editorId;
 										if (descriptor != null) {
 											editorId = descriptor.getId();
 										}
 										else {
-											editorId = XMLUIPlugin.getInstance().getWorkbench().getEditorRegistry().getDefaultEditor(iFile.getName() + ".txt").getId(); //$NON-NLS-1$
+											descriptor = editorRegistry.getDefaultEditor(fileName + ".txt"); //$NON-NLS-1$
+											editorId = descriptor.getId(); 
 										}
-										workbenchWindow.getActivePage().openEditor(new FileEditorInput(iFile), editorId);
+										
+										if (editorId != null)
+										{
+										  FileEditorInput editorInput = new FileEditorInput(iFile);
+										  IWorkbenchPage activePage = workbenchWindow.getActivePage();
+										  activePage.openEditor(editorInput, editorId);
+										}
 									}
-									catch (PartInitException ex) {
+									catch (Exception ex) {
 										LoggerFactory.getLoggerInstance().logError("Exception encountered when attempting to open file: " + iFile + "\n\n", ex); //$NON-NLS-1$ //$NON-NLS-2$
-										// B2BGUIPlugin.getPlugin().getMsgLogger().write("Exception
-										// encountered when attempting to open
-										// file: " + iFile + "\n\n" + ex);
 									}
 								}
 							});
 
 							Runnable runnable = new Runnable() {
 								public void run() {
-									// IEditorPart editorPart =
-									// WorkbenchUtility.getActiveEditor();
-									IEditorPart editorPart = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+									IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
 									gotoError(editorPart, line, column);
 								}
 							};

@@ -519,31 +519,61 @@
 		</viewerContribution>
 	</extension>
 
-	<!-- ====================================================== -->
-	<!-- An extension for creating nested validation messages.  -->
-	<!-- This extension should be moved when the referenced     -->
-	<!-- files dialog is moved to another plugin.               -->
-	<!-- ====================================================== -->
-	<extension point="org.eclipse.ui.popupMenus">
-		<objectContribution
-			objectClass="org.eclipse.core.resources.IMarker"
-			id="org.eclipse.wst.xml.ui.internal.validation.nestederrorlist"
-			nameFilter="*">
-			<filter
-				name="done"
-				value="true">
-			</filter>
-			<filter
-				name="type"
-				value="org.eclipse.wst.validation.problemmarker">
-			</filter>
-			<action
-				label="%_UI_REF_FILE_SHOW_DETAILS"
-				class="org.eclipse.wst.xml.ui.internal.validation.core.errorinfo.ReferencedFileErrorActionDelegate"
-				id="org.eclipse.wst.xml.ui.internal.validation.core.errorinfo.ReferencedFileErrorActionDelegate">
-			</action>
-		</objectContribution>
+	<!--======================================================================================-->
+	<!-- Pop-up menu and associated command/handler for nested validation messages.           -->
+	<!--======================================================================================-->
+
+	<extension point="org.eclipse.ui.menus">
+      <menuContribution locationURI="popup:org.eclipse.ui.ide.MarkersView">
+          <command commandId="org.eclipse.wst.xml.ui.referencedFileErrors">
+             <visibleWhen checkEnabled="false">
+				<reference definitionId="org.eclipse.wst.xml.ui.referencedFileErrors" />
+             </visibleWhen>
+         </command>
+      </menuContribution>
 	</extension>
+	
+	<extension point="org.eclipse.ui.commands">
+		<command
+			description="%_UI_REF_FILE_SHOW_DETAILS"
+			id="org.eclipse.wst.xml.ui.referencedFileErrors" 
+			name="%_UI_REF_FILE_SHOW_DETAILS" />
+	</extension>
+	
+    <extension point="org.eclipse.ui.handlers">
+       <handler
+             class="org.eclipse.wst.xml.ui.internal.validation.core.errorinfo.ReferencedFileErrorsHandler"
+             commandId="org.eclipse.wst.xml.ui.referencedFileErrors">
+             <enabledWhen>
+				<reference definitionId="org.eclipse.wst.xml.ui.referencedFileErrors" />
+             </enabledWhen>
+       </handler>
+	</extension>
+	
+	<extension point="org.eclipse.core.expressions.propertyTesters">
+	   <propertyTester
+	         class="org.eclipse.wst.xml.ui.internal.validation.core.errorinfo.GroupNamePropertyTester"
+	         id="org.eclipse.wst.xml.ui.markerGroupNamePropertyTester"
+	         namespace="org.eclipse.wst.xml.ui"
+	         properties="groupNamePrefix"
+	         type="org.eclipse.core.resources.IMarker">
+	   </propertyTester>
+	</extension>
+	 
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.eclipse.wst.xml.ui.referencedFileErrors">
+                <and>
+                   <count value="1" />
+                   <with variable="selection">
+                   		<iterate operator="or">
+                      		<adapt type="org.eclipse.core.resources.IMarker">
+                            	<test property="org.eclipse.wst.xml.ui.groupNamePrefix" value="referencedFileError" forcePluginActivation="true" />
+                      		</adapt>
+                   		</iterate>
+                	</with>
+                </and>
+		</definition>
+	</extension>	 
 
 <!--	
 	<extension point="org.eclipse.ui.editorActions">
