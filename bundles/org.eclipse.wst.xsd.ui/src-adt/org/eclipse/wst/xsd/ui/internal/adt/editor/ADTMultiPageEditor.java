@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,10 +22,12 @@ import org.eclipse.gef.SelectionManager;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.graphics.Rectangle;
@@ -209,6 +211,32 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
   {
     currentPage = newPageIndex;
     super.pageChange(newPageIndex);
+    
+    if (newPageIndex == DESIGN_PAGE_INDEX)
+    {
+      ISelection selection = graphicalViewer.getSelectionManager().getSelection();
+      Object model = null;
+      if (selection instanceof StructuredSelection)
+      {
+        StructuredSelection structuredSelection = (StructuredSelection)selection;
+        // While in the source view, selection could have changed.
+        // Will try to select the first item when switching back to the design view.
+        // We currently do not multi-select figures if multiple elements are selected in the source view.
+        // For example, if multiple global elements are selected, the graph view will be in the details view
+        // of the first one.
+        Object elem = structuredSelection.getFirstElement();
+        if (elem instanceof EditPart)
+          model = ((EditPart)elem).getModel();
+      }
+      // Refresh the design page upon page change
+      graphicalViewer.getContents().refresh();
+      // Need to use the adapter, since after refresh, the old edit part will have been replaced
+      // Maintain previous selection:
+      if (model != null)
+      {
+        getSelectionManager().setSelection(new StructuredSelection(model));
+      }
+    }
     setFocus();
   }
   

@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
+import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.gef.editparts.ZoomListener;
@@ -35,6 +36,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvide
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IFeedbackHandler;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.KeyBoardAccessibilityEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.design.figures.IFigureFactory;
+import org.eclipse.wst.xsd.ui.internal.adt.editor.CommonMultiPageEditor;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObjectListener;
 
@@ -111,20 +113,23 @@ public abstract class BaseEditPart extends AbstractGraphicalEditPart implements 
   }
   
   public void refresh() {
-    super.refresh();
-
-    for(Iterator i = getChildren().iterator(); i.hasNext(); )
+    
+    boolean doUpdateDesign = doUpdateDesign();
+    if (doUpdateDesign)
     {
-      Object obj = i.next();
-      if (obj instanceof BaseEditPart)
+      super.refresh();
+      for (Iterator i = getChildren().iterator(); i.hasNext();)
       {
-        ((BaseEditPart)obj).refresh();
+        Object obj = i.next();
+        if (obj instanceof BaseEditPart)
+        {
+          ((BaseEditPart) obj).refresh();
+        }
+        else if (obj instanceof AbstractGraphicalEditPart)
+        {
+          ((AbstractGraphicalEditPart) obj).refresh();
+        }
       }
-      else if (obj instanceof AbstractGraphicalEditPart)
-      {
-        ((AbstractGraphicalEditPart)obj).refresh();
-      }
-      
     }
   }
 
@@ -229,5 +234,38 @@ public abstract class BaseEditPart extends AbstractGraphicalEditPart implements 
       }
     }
     return false;
+  }
+  
+  // For https://bugs.eclipse.org/bugs/show_bug.cgi?id=218281
+  // Don't want to refresh the design when changes are made in the source view.
+  protected boolean doUpdateDesign()
+  {
+    IWorkbench workbench = PlatformUI.getWorkbench();
+    if (workbench != null)
+    {
+      IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+      if (workbenchWindow != null)
+      {
+        IWorkbenchPage page = workbenchWindow.getActivePage();
+        if (page != null)
+        {
+          IEditorPart editorPart = page.getActiveEditor();
+          if (editorPart instanceof CommonMultiPageEditor)
+          {
+            CommonMultiPageEditor editor = (CommonMultiPageEditor) editorPart;
+            GraphicalViewer viewer = (GraphicalViewer)editor.getAdapter(GraphicalViewer.class);
+            // Need to ensure this is the same editor we are working with since the active editor may not be 
+            // the current, eg. at startup, there can be another XSD Editor open on the source page, so we could end
+            // up not populating the design view initally
+            if (getViewer() == viewer)
+            {
+              // If source page is active, don't update the design
+              return !editor.isSourcePageActive();
+            }
+          }
+        }
+      }
+    }
+    return true;
   }
 }

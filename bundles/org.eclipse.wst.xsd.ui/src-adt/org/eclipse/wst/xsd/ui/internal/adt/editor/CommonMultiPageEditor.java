@@ -923,5 +923,9 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
       // do nothing
     }
   }
-
+  
+  public boolean isSourcePageActive()
+  {
+    return getActivePage() == SOURCE_PAGE_INDEX;
+  }
 }
