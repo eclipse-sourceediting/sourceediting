@@ -2,7 +2,7 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
  "concept.dtd">
-<concept id="cdtdover" xml:lang="en-us"><?Pub Caret1?>
+<concept id="cdtdover" xml:lang="en-us">
 <title>Document type definitions (DTDs) - overview</title>
 <titlealts>
 <searchtitle>Document type definition (DTD) - overview</searchtitle>
@@ -12,7 +12,7 @@ validate XML files against a set of rules. When you create a DTD file, you
 can specify rules that control the structure of any XML files that reference
 the DTD file.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>DTD<indexterm>overview</indexterm></indexterm></keywords>
+<keywords><indexterm>DTDs<indexterm>overview</indexterm></indexterm></keywords>
 </metadata></prolog>
 <conbody>
 <p>A DTD can contain declarations that define elements, attributes, notations,
@@ -31,4 +31,3 @@ parser is called a validating parser because it validates the content of the
 XML file against the DTD.</p>
 </conbody>
 </concept>
-<?Pub *0000001753?>

@@ -10,6 +10,9 @@
     <entry keyword="generating from XML schemas">
       <topic href="topics/tcrexxsd.html#tcrexxsd" title="Generating XML files from XML schemas"/>
     </entry>
+    <entry keyword="schemas">
+      <topic href="topics/tcrexxsd.html#tcrexxsd" title="Generating XML files from XML schemas"/>
+    </entry>
     <entry keyword="editing">
       <topic href="topics/txedttag.html#txedttag" title="Editing XML files"/>
     </entry>
@@ -25,6 +28,9 @@
     <entry keyword="content assist">
       <topic href="topics/twcdast.html#twcdast" title="Using XML content assist"/>
     </entry>
+    <entry keyword="templates">
+      <topic href="topics/twmacro.html#twmacro" title="Working with XML templates"/>
+    </entry>
     <entry keyword="editing with constraints">
       <topic href="topics/tedtcnst.html#tedtcnst" title="Editing with DTD or XML schema constraints"/>
     </entry>
@@ -38,12 +44,12 @@
       <topic href="topics/tedtgram.html#tedtgram" title="Updating XML files with changes made to DTDs and schemas"/>
     </entry>
   </entry>
-  <entry keyword="DTD">
+  <entry keyword="DTDs">
     <entry keyword="generating XML files">
       <topic href="topics/tcrexdtd.html#tcrexdtd" title="Generating XML files from DTDs"/>
     </entry>
   </entry>
-  <entry keyword="XML schemas">
+  <entry keyword="schemas">
     <entry keyword="generating XML files">
       <topic href="topics/tcrexxsd.html#tcrexxsd" title="Generating XML files from XML schemas"/>
     </entry>
@@ -88,6 +94,12 @@
     <entry keyword="updating XML files">
       <topic href="topics/tedtgram.html#tedtgram" title="Updating XML files with changes made to DTDs and schemas"/>
     </entry>
+    <entry keyword="accessibility">
+      <topic href="topics/rxmlcatkey.html#xmlcatalogkeyboardshortcuts" title="XML Catalog keyboard shortcuts"/>
+    </entry>
+    <entry keyword="keyboard shortcuts">
+      <topic href="topics/rxmlcatkey.html#xmlcatalogkeyboardshortcuts" title="XML Catalog keyboard shortcuts"/>
+    </entry>
     <entry keyword="icons">
       <topic href="topics/rxmlbicons.html#ricons" title="Icons used in the XML editor"/>
     </entry>
@@ -103,11 +115,6 @@
     </entry>
   </entry>
   <entry keyword="character encoding">
-    <entry keyword="text in files">
-      <topic href="topics/cxmlenc.html#cxmlenc" title="XML and HTML encodings"/>
-    </entry>
-  </entry>
-  <entry keyword="encodings">
     <entry keyword="supported character sets">
       <topic href="topics/cxmlenc.html#cxmlenc" title="XML and HTML encodings"/>
     </entry>
@@ -117,8 +124,8 @@
       <topic href="topics/tedtdoc.html#tedtdoc" title="Editing DOCTYPE declarations"/>
     </entry>
   </entry>
-  <entry keyword="XML templates">
-    <entry keyword="working with predefined code">
+  <entry keyword="templates">
+    <entry keyword="working with predefined XML code">
       <topic href="topics/twmacro.html#twmacro" title="Working with XML templates"/>
     </entry>
   </entry>
@@ -128,6 +135,25 @@
     </entry>
     <entry keyword="adding entries">
       <topic href="topics/txmlcat.html#txmlcat" title="Adding entries to the XML Catalog"/>
+    </entry>
+  </entry>
+  <entry keyword="accessibility">
+    <entry keyword="keyboard shortcuts">
+      <entry keyword="XML editor">
+        <topic href="topics/rxmlcatkey.html#xmlcatalogkeyboardshortcuts" title="XML Catalog keyboard shortcuts"/>
+      </entry>
+    </entry>
+  </entry>
+  <entry keyword="keyboard shortcuts">
+    <entry keyword="XML editor">
+      <topic href="topics/rxmlcatkey.html#xmlcatalogkeyboardshortcuts" title="XML Catalog keyboard shortcuts"/>
+    </entry>
+  </entry>
+  <entry keyword="shortcuts">
+    <entry keyword="keyboard">
+      <entry keyword="XML editor">
+        <topic href="topics/rxmlcatkey.html#xmlcatalogkeyboardshortcuts" title="XML Catalog keyboard shortcuts"/>
+      </entry>
     </entry>
   </entry>
 </index>

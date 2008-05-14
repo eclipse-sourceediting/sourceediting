@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <index>
-  <entry keyword="DTD">
+  <entry keyword="DTDs">
     <entry keyword="creating">
       <topic href="topics/tcretdtd.html#tcretdtd" title="Creating DTDs"/>
     </entry>
@@ -16,9 +16,6 @@
     <entry keyword="importing">
       <topic href="topics/timptdtd.html#timptdtd" title="Importing DTDs"/>
     </entry>
-    <entry keyword="validating">
-      <topic href="topics/tvaldtd.html#tvaldtd" title="Validating DTDs"/>
-    </entry>
     <entry keyword="editor icons">
       <topic href="topics/rdtdicons.html#ricons" title="Icons used in the DTD editor"/>
     </entry>
@@ -31,6 +28,21 @@
   <entry keyword="templates">
     <entry keyword="DTD">
       <topic href="topics/tdtemplt.html#twmacro" title="Working with DTD templates"/>
+    </entry>
+  </entry>
+  <entry keyword="DTD">
+    <entry keyword="validating">
+      <topic href="topics/tvaldtd.html#tvaldtd" title="Validating DTDs"/>
+    </entry>
+  </entry>
+  <entry keyword="DTD editor">
+    <entry keyword="keyboard shortcuts">
+      <topic href="topics/rdtdkey.html#keyboardshortcutsinthedtdeditor" title="DTD editor keyboard shortcuts"/>
+    </entry>
+  </entry>
+  <entry keyword="keyboard shortcuts">
+    <entry keyword="DTD editor">
+      <topic href="topics/rdtdkey.html#keyboardshortcutsinthedtdeditor" title="DTD editor keyboard shortcuts"/>
     </entry>
   </entry>
 </index>

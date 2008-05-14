@@ -2,7 +2,6 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
-<?Pub Inc?>
 <task id="tcretdtd" xml:lang="en-us">
 <title>Creating DTDs</title>
 <titlealts>
@@ -14,15 +13,14 @@ it manually, adding declarations that define elements, attributes, entities,
 and notations, and how they can be used for any XML files that reference the
 DTD file.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>DTD<indexterm>creating</indexterm></indexterm></keywords>
+<keywords><indexterm>DTDs<indexterm>creating</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
-<context><p></p><p>The following instructions were written for the Resource
-perspective, but they will also work in many other perspectives.</p><p>To
-create a new DTD, complete the following steps:</p></context>
+<context><p>The following instructions were written for the Resource perspective,
+but they will also work in many other perspectives.</p><p>To create a new
+DTD, complete the following steps:</p></context>
 <steps>
-<step><cmd>Create a project to contain the DTD if needed<?Pub Caret?>.</cmd>
-</step>
+<step><cmd>Create a project to contain the DTD if needed.</cmd></step>
 <step><cmd>In the workbench, click <menucascade><uicontrol>File</uicontrol>
 <uicontrol>New</uicontrol><uicontrol>Other</uicontrol></menucascade> and select <menucascade>
 <uicontrol>XML</uicontrol><uicontrol> DTD</uicontrol></menucascade>. Click <uicontrol>Next</uicontrol>. </cmd>
@@ -45,4 +43,3 @@ file, and want to later re-open it in the DTD editor, double-click it in the
 Navigator view.</p></result>
 </taskbody>
 </task>
-<?Pub *0000002420?>

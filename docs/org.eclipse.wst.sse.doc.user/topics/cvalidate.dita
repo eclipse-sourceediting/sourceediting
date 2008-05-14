@@ -6,8 +6,8 @@
 <title>Source and batch validation</title>
 <shortdesc></shortdesc>
 <prolog><metadata>
-<keywords><indexterm>validation<indexterm>source vs batch</indexterm></indexterm>
-</keywords>
+<keywords><indexterm keyref="cvalidate|1|validationsourcevsbatch" status="changed">validation<indexterm>source
+versus batch</indexterm></indexterm></keywords>
 </metadata></prolog>
 <conbody>
 <p>There are two types of validation that can occur when you are working with

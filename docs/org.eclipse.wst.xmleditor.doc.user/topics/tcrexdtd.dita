@@ -13,8 +13,10 @@ DTD saves you time by creating an XML file that is already associated with
 your DTD, and contains at least some of the elements and attributes in your
 DTD.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML files<indexterm>generating from DTDs</indexterm></indexterm>
-<indexterm>DTD<indexterm>generating XML files</indexterm></indexterm></keywords>
+<keywords><indexterm keyref="tcrexdtd|1|XMLfilesgeneratingfromDTDs" status="new">XML
+files<indexterm>generating from DTDs</indexterm></indexterm><indexterm keyref="tcrexdtd|2|DTDgeneratingXMLfiles"
+status="changed">DTDs<indexterm>generating XML files</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context><p>After you have generated your XML file, you can further customize
@@ -41,8 +43,8 @@ and optional attributes will be generated.</choice>
 optional elements will be generated.</choice>
 <choice><uicontrol>Create first choice of required choice</uicontrol>: the
 first option of a required choice will be generated in your XML file.</choice>
-<choice><uicontrol>Fill elements and attributes with data</uicontrol>:<?Pub Caret?>
-any elements and attributes generated will be filled with sample data.</choice>
+<choice><uicontrol>Fill elements and attributes with data</uicontrol>: any
+elements and attributes generated will be filled with sample data.</choice>
 </choices>
 <info> If you do not select any of these options, then only the minimum amount
 of content required for the XML file will be created.</info></step>
@@ -57,4 +59,3 @@ attributes, entities, and notations to the XML file, however, they must follow
 the rules established in the DTD that you used to create the XML file.</p></result>
 </taskbody>
 </task>
-<?Pub *0000003391?>

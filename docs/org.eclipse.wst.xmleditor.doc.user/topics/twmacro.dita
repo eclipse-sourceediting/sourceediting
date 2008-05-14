@@ -2,7 +2,6 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
-<?Pub Inc?>
 <task id="twmacro" xml:lang="en-us">
 <title>Working with XML templates</title>
 <titlealts>
@@ -13,8 +12,12 @@ code that you can insert into a file. You may find a template useful when
 you have a certain piece of code you want to reuse several times, and you
 do not want to write it out every time.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML templates<indexterm>working with predefined code</indexterm></indexterm>
+<keywords><indexterm keyref="twmacro|1|XMLtemplatesworkingwithpredefinedcode"
+status="changed">templates<indexterm>working with predefined XML code</indexterm></indexterm>
 </keywords>
+</metadata><metadata>
+<keywords><indexterm keyref="twmacro|10|XMLfilestemplates" status="new">XML
+files<indexterm>templates</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context><p>You can use a default template as provided, customize that template,
@@ -43,7 +46,7 @@ assist.</cmd></step>
 <step><cmd>If you want to insert a variable, click the <uicontrol>Insert Variable</uicontrol> button
 and select the variable to be inserted. </cmd><info>For example, the <b>date</b> variable
 indicates the current date will be inserted. </info></step>
-<step><cmd>Click <uicontrol>OK</uicontrol> and then <uicontrol>Apply<?Pub Caret?></uicontrol> to
+<step><cmd>Click <uicontrol>OK</uicontrol> and then <uicontrol>Apply</uicontrol> to
 save your changes.</cmd></step>
 </steps>
 <postreq>You can edit, remove, import, or export a template by using the same
@@ -55,4 +58,3 @@ content assist list, clear its check box in the table on the Templates preferenc
 page.</p></postreq>
 </taskbody>
 </task>
-<?Pub *0000003238?>

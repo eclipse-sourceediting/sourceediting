@@ -12,7 +12,7 @@ a DTD file when it is created. You may find a template useful when you have
 a certain piece of code you want to reuse several times, and you do not want
 to write it out every time.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>DTD<indexterm>creating templates</indexterm></indexterm>
+<keywords><indexterm>DTDs<indexterm>creating templates</indexterm></indexterm>
 <indexterm>templates<indexterm>DTD</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
@@ -41,7 +41,6 @@ save your changes.</cmd></step>
 <postreq>You can edit, remove, import, or export a template by using the same
 preferences page. <p>If you have a template that you do not want to remove,
 but you no longer want the template to appear in the DTD templates list when
-you create a file, clear its checkbox in the templates table<?Pub Caret?>.</p></postreq>
+you create a file, clear its checkbox in the templates table.</p></postreq>
 </taskbody>
 </task>
-<?Pub *0000002424?>

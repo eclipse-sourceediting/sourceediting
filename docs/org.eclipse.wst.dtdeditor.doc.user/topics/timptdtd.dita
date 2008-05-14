@@ -11,7 +11,7 @@
 the product, you can import them into the workbench and open them in the DTD
 editor. </shortdesc>
 <prolog><metadata>
-<keywords><indexterm>DTD<indexterm>importing</indexterm></indexterm></keywords>
+<keywords><indexterm>DTDs<indexterm>importing</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context><p>To import a DTD into the workbench, complete the following steps:</p></context>
@@ -23,7 +23,7 @@ System</uicontrol></menucascade> and click <uicontrol>Next</uicontrol>.</cmd>
 <step><cmd>Fill in the fields in the <uicontrol>Import</uicontrol> wizard
 as necessary.</cmd></step>
 <step><cmd>Click <uicontrol>Finish</uicontrol> to exit the wizard and import
-the files<?Pub Caret?>.</cmd></step>
+the files.</cmd></step>
 <step><cmd>Select the DTD file in the Navigator view and double-click it to
 open it in the DTD editor.</cmd></step>
 </steps>
@@ -31,4 +31,3 @@ open it in the DTD editor.</cmd></step>
 it in the DTD editor, you can edit it manually.</p></result>
 </taskbody>
 </task>
-<?Pub *0000001456?>

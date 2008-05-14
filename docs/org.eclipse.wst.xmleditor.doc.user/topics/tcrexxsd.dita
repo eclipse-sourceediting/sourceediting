@@ -2,7 +2,6 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
-<?Pub Inc?>
 <task id="tcrexxsd" xml:lang="en-us">
 <title>Generating XML files from XML schemas</title>
 <titlealts>
@@ -14,9 +13,13 @@ file from your XML schema saves you time by creating an XML file that is already
 associated with your XML schema, and contains at least some of the elements
 and attributes in your XML schema.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>XML files<indexterm>generating from XML schemas</indexterm></indexterm>
-<indexterm>XML schemas<indexterm>generating XML files</indexterm></indexterm>
-</keywords>
+<keywords><indexterm keyref="tcrexxsd|1|XMLfilesgeneratingfromXMLschemas"
+status="new">XML files<indexterm>generating from XML schemas</indexterm></indexterm>
+<indexterm keyref="tcrexxsd|2|XMLschemasgeneratingXMLfiles" status="changed">schemas<indexterm>generating
+XML files</indexterm></indexterm></keywords>
+</metadata><metadata>
+<keywords><indexterm keyref="tcrexxsd|11|XMLfilesschemas" status="new">XML
+files<indexterm>schemas</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context><p>After you have generated your XML file, you can further customize
@@ -72,7 +75,7 @@ to the XML file.</p><note>In certain cases, when an XML file is generated
 from a complex XML schema file, the XML file might not be valid. If this occurs,
 you can open the generated file in the XML editor and correct any errors that
 occur. Usually, only a few errors need to be fixed. The following XML schema
-constructs might present problems:</note><ul><?Pub Caret?>
+constructs might present problems:</note><ul>
 <li>Restrictions: sometimes restricted elements are erroneously generated. </li>
 <li>Facets: default generated data values might not conform to complex facets
 (for example, patterns).</li>
@@ -80,4 +83,3 @@ constructs might present problems:</note><ul><?Pub Caret?>
 </ul></result>
 </taskbody>
 </task>
-<?Pub *0000004762?>

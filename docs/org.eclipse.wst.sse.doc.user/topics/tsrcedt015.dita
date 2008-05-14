@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "..\dtd\task.dtd">
 <task id="tsrcedt015" xml:lang="en-us">
 <title>Adding items to snippets drawers</title>
 <prolog><metadata>
-<keywords><indexterm>snippet drawers<indexterm>adding items</indexterm></indexterm>
-<indexterm>snippet items<indexterm>adding to drawers</indexterm></indexterm>
+<keywords><indexterm keyref="tsrcedt015|2|snippetitemsaddingtodrawers" status="changed">snippets<indexterm>drawers</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
-<context> To add new items to an existing snippets drawer::</context>
+<context> To add new items to an existing snippets drawer:</context>
 <steps>
 <step><cmd>Do one of the following choices:</cmd><info><table colsep="0" frame="topbot">
 <tgroup cols="2"><colspec colname="col1" colwidth="72*"/><colspec colname="col2"

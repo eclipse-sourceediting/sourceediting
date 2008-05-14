@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc topic="topics/tcretdtd.html">
+<topic label="Creating DTDs" href="topics/tcretdtd.html"/>
+<topic label="Document type definitions (DTDs) - overview" href="topics/cdtdover.html"/>
+<topic label="Document type definitions (DTDs) - overview" href="topics/cdtdover.html"/>
+<topic label="Validating DTDs" href="topics/tvaldtd.html"/>
+<topic label="Creating DTDs" href="topics/tcretdtd.html"/>
+<topic label="Working with DTD templates" href="topics/tdtemplt.html"/>
+</toc>

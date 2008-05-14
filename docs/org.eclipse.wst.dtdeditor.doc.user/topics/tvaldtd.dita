@@ -28,12 +28,12 @@ number of visible items in the problems view. </note><p>You can set up a project
 properties so that different types of project resources are automatically
 validated when you save them. Right click on the project, click <uicontrol>Properties</uicontrol>,
 and select <uicontrol>Validation</uicontrol>. Any validators you can run against
-your&nbsp;project<?Pub Caret?> will be listed in the Validation page.&nbsp;</p></result>
+your&nbsp;project will be listed in the Validation page.</p></result>
 </taskbody>
 <related-links>
 <link href="../../org.eclipse.jst.j2ee.doc.user/topics/tjval.dita" scope="peer">
+<linktext>Validating code in enterprise applications</linktext>
 <desc>General validation information</desc>
 </link>
 </related-links>
 </task>
-<?Pub *0000002030?>

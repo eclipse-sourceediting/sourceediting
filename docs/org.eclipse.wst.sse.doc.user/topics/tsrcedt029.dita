@@ -2,18 +2,15 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "..\dtd\task.dtd">
-<!-- $Id: tsrcedt029.dita,v 1.4 2006/04/13 20:37:13 bkorn Exp $ -->
 <task id="tsrcedt027" xml:lang="en-us">
 <title>Adding and removing XML templates</title>
 <shortdesc>XML content assist provides a comment template, a chunk of predefined
 code that you can insert into a file. You can use the default template as
 provided, customize that template, or create your own templates.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>templates<indexterm>XML</indexterm></indexterm>
-<indexterm>xml templates<indexterm>adding</indexterm></indexterm>
-
-
-</keywords>
+<keywords><indexterm keyref="tsrcedt029|1|templatesXML" status="new">templates<indexterm>XML</indexterm></indexterm>
+<indexterm keyref="tsrcedt029|2|xmltemplatesadding" status="changed">XML<indexterm>adding
+templates</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context> <p>For example, you may work on a group of XML pages that should

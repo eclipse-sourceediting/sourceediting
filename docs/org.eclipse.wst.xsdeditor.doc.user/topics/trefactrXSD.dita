@@ -11,10 +11,13 @@
 single artifact change, and have that change implemented throughout all other
 dependant artifacts.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>dependent artifacts<indexterm>refactorting XML schema
-files</indexterm></indexterm><indexterm>refactoring<indexterm>XML schema files</indexterm></indexterm>
-<indexterm>renaming<indexterm>XML schema files</indexterm></indexterm><indexterm>XML
-schemas<indexterm>editing</indexterm></indexterm></keywords>
+<keywords><indexterm keyref="trefactrXSD|1|dependentartifactsrefactortingXMLschemafiles"
+status="new">dependent artifacts<indexterm>refactoring XML schema files</indexterm></indexterm>
+<indexterm keyref="trefactrXSD|2|refactoringXMLschemafiles" status="new">refactoring<indexterm>XML
+schema files</indexterm></indexterm><indexterm keyref="trefactrXSD|3|renamingXMLschemafiles"
+status="new">renaming<indexterm>XML schema files</indexterm></indexterm><indexterm
+keyref="trefactrXSD|4|XMLschemasediting" status="changed">schemas<indexterm>editing</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <prereq></prereq>
@@ -39,7 +42,7 @@ indicating all of the changes which will take place due to the refactoring.</inf
 </step>
 </steps>
 <result>The new name will be entered in the opened XSD source, as well as
-in all dependant artifacts.<?Pub Caret?></result>
+in all dependant artifacts.</result>
 <example><b><u>Component References in XML Schema</u></b><simpletable>
 <sthead>
 <stentry>Global named components</stentry>
@@ -93,4 +96,3 @@ in all dependant artifacts.<?Pub Caret?></result>
 <postreq></postreq>
 </taskbody>
 </task>
-<?Pub *0000003205?>

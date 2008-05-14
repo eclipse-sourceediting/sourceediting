@@ -4,12 +4,16 @@
     <entry keyword="overview">
       <topic href="topics/csrcedt004.html#csrcedt004" title="Structured text editors for markup languages"/>
     </entry>
-    <entry keyword="preference setting">
+    <entry keyword="preferences">
       <topic href="topics/tsrcedt025.html#tsrcedt025" title="Setting preferences for structured text editors"/>
     </entry>
     <entry keyword="content assistance">
-      <topic href="topics/tsrcedt005.html#tsrcedt005" title="Getting content assistance in structured text editors"/>
-      <topic href="topics/csrcedt006.html#csrcedt006" title="Content assist"/>
+      <entry keyword="text editors">
+        <topic href="topics/tsrcedt005.html#tsrcedt005" title="Getting content assistance in structured text editors"/>
+      </entry>
+      <entry keyword="overview">
+        <topic href="topics/csrcedt006.html#csrcedt006" title="Content assist"/>
+      </entry>
     </entry>
     <entry keyword="text search">
       <topic href="topics/tsrcedt007.html#tsrcedt007" title="Searching or finding text within a file"/>
@@ -52,11 +56,11 @@
     </entry>
   </entry>
   <entry keyword="validation">
-    <entry keyword="source vs batch">
+    <entry keyword="source versus batch">
       <topic href="topics/cvalidate.html#csrcedt001" title="Source and batch validation"/>
     </entry>
   </entry>
-  <entry keyword="annotation preferences">
+  <entry keyword="annotations">
     <entry keyword="markup language settings">
       <topic href="topics/tsrcedt001.html#tsrcedt001" title="Setting annotation preferences for markup languages"/>
     </entry>
@@ -78,6 +82,9 @@
     </entry>
     <entry keyword="character encoding">
       <topic href="topics/cencoding.html#cencoding" title="File Encoding"/>
+    </entry>
+    <entry keyword="templates">
+      <topic href="topics/tsrcedt028.html#tsrcedt028" title="Adding and removing JSP templates"/>
     </entry>
   </entry>
   <entry keyword="content types">
@@ -109,6 +116,9 @@
     <entry keyword="character encoding">
       <topic href="topics/cencoding.html#cencoding" title="File Encoding"/>
     </entry>
+    <entry keyword="adding templates">
+      <topic href="topics/tsrcedt029.html#tsrcedt027" title="Adding and removing XML templates"/>
+    </entry>
   </entry>
   <entry keyword="spell check">
     <entry keyword="structured text editors">
@@ -125,22 +135,15 @@
       </entry>
     </entry>
   </entry>
-  <entry keyword="JSP pages">
-    <entry keyword="templates">
-      <topic href="topics/tsrcedt028.html#tsrcedt028" title="Adding and removing JSP templates"/>
-    </entry>
-  </entry>
-  <entry keyword="xml templates">
-    <entry keyword="adding">
-      <topic href="topics/tsrcedt029.html#tsrcedt027" title="Adding and removing XML templates"/>
-    </entry>
-  </entry>
   <entry keyword="snippets">
     <entry keyword="overview">
       <topic href="topics/tsrcedt026.html#tsrcedt026" title="Editing with snippets - overview"/>
     </entry>
     <entry keyword="drawer customization">
       <topic href="topics/tsrcedt014.html#tsrcedt014" title="Adding snippets drawers"/>
+    </entry>
+    <entry keyword="drawers">
+      <topic href="topics/tsrcedt015.html#tsrcedt015" title="Adding items to snippets drawers"/>
     </entry>
     <entry keyword="editing items">
       <topic href="topics/tsrcedt022.html#tsrcedt022" title="Editing snippet items"/>
@@ -152,16 +155,6 @@
   <entry keyword="Snippets view">
     <entry keyword="overview">
       <topic href="topics/csrcedt001.html#csrcedt001" title="Snippets view"/>
-    </entry>
-  </entry>
-  <entry keyword="snippet drawers">
-    <entry keyword="adding items">
-      <topic href="topics/tsrcedt015.html#tsrcedt015" title="Adding items to snippets drawers"/>
-    </entry>
-  </entry>
-  <entry keyword="snippet items">
-    <entry keyword="adding to drawers">
-      <topic href="topics/tsrcedt015.html#tsrcedt015" title="Adding items to snippets drawers"/>
     </entry>
   </entry>
   <entry keyword="drawers">

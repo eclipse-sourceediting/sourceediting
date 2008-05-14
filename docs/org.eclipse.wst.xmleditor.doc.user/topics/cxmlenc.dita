@@ -2,7 +2,6 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
  "concept.dtd">
-<?Pub Inc?>
 <concept id="cxmlenc" xml:lang="en-us">
 <title>XML and HTML encodings</title>
 <titlealts>
@@ -11,9 +10,8 @@
 <shortdesc>Encodings enable you to specify what character encoding your text
 is in.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>character encoding<indexterm>text in files</indexterm></indexterm>
-<indexterm>encodings<indexterm>supported character sets</indexterm></indexterm>
-</keywords>
+<keywords><indexterm keyref="cxmlenc|1|characterencodingtextinfiles" status="changed">character
+encoding<indexterm>supported character sets</indexterm></indexterm></keywords>
 </metadata></prolog>
 <conbody>
 <p>The IANA name is used in the encoding statement of an XML file, or charset
@@ -118,7 +116,7 @@ Designer Design page)</p> </entry>
 <entry> <p>Unicode LittleEndian</p> </entry>
 </row>
 <row>
-<entry colname="COLSPEC0"><p>WINDOWS-31J<?Pub Caret?></p></entry>
+<entry colname="COLSPEC0"><p>WINDOWS-31J</p></entry>
 <entry colname="COLSPEC1"><p>Japanese, Windows-31J</p></entry>
 </row>
 <row>
@@ -134,4 +132,3 @@ Designer Design page)</p> </entry>
 </table>
 </conbody>
 </concept>
-<?Pub *0000003415?>

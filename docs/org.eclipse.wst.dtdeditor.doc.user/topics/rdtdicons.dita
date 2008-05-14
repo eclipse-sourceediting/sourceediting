@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
-<!DOCTYPE reference  PUBLIC "-//OASIS//DTD DITA Reference//EN" "reference.dtd">
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN"
+ "reference.dtd">
 <reference id="ricons" xml:lang="en-us">
 <title>Icons used in the DTD editor</title>
 <titlealts>
@@ -8,8 +9,7 @@
 </titlealts>
 <shortdesc>These DTD editor icons appear in the Outline view.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>DTD<indexterm>editor icons</indexterm></indexterm>
-</keywords>
+<keywords><indexterm>DTDs<indexterm>editor icons</indexterm></indexterm></keywords>
 </metadata></prolog>
 <refbody>
 <table>

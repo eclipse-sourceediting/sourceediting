@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "..\dtd\task.dtd">
 <task id="tsrcedt001" xml:lang="en-us">
@@ -13,9 +13,10 @@ syntactic validity of your file while you are typing and what colors to use
 to highlight errors, warnings, tasks, search results, bookmarks, and other
 text.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>annotation preferences<indexterm>markup language settings</indexterm></indexterm><indexterm>markup languages<indexterm>setting annotation preferences</indexterm></indexterm>
-
-
+<keywords><indexterm keyref="tsrcedt001|1|annotationpreferencesmarkuplanguagesettings"
+status="changed">annotations<indexterm>markup language settings</indexterm></indexterm>
+<indexterm keyref="tsrcedt001|2|markuplanguagessettingannotationpreferences"
+status="new">markup languages<indexterm>setting annotation preferences</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

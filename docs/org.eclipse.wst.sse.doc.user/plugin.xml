@@ -21,8 +21,11 @@
     <extension point="org.eclipse.help.toc">
       <toc file="sse_toc.xml"/>
        <index path="index/"/>
-       </extension>
+   </extension>
 	<extension point="org.eclipse.help.index">
       <index file="org.eclipse.wst.sse.doc.userindex.xml"/>
 </extension>
+<extension point="org.eclipse.help.base.luceneSearchParticipants">
+      <binding participantId="org.eclipse.help.base.xhtml"/>
+   </extension>
 </plugin>

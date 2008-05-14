@@ -1,0 +1,8 @@
+<maplist version="3.6.2">
+  <nav>
+    <map file="XMLBuildermap_toc.ditamap"/>
+  </nav>
+  <link>
+    <map file="XMLBuilderrel.ditamap"/>
+  </link>
+</maplist>

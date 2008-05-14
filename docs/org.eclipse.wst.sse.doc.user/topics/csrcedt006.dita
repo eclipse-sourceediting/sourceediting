@@ -9,8 +9,9 @@ finish a line of code in a structured text editor. The placement of the cursor
 in the source file provides the context for the content assist to offer suggestions
 for completion.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>content assistance<indexterm>overview</indexterm></indexterm>
-<indexterm>structured text editors<indexterm>content assistance</indexterm></indexterm>
+<keywords><indexterm keyref="csrcedt006|1|contentassistanceoverview" status="new">content
+assistance<indexterm>overview</indexterm></indexterm><indexterm keyref="csrcedt006|2|structuredtexteditorscontentassistance"
+status="changed">structured text editors<indexterm>content assistance<indexterm>overview</indexterm></indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <conbody>
@@ -65,16 +66,16 @@ sometimes cause the <tm tmclass="special" tmowner="Sun Microsystems, Inc."
 tmtype="tm" trademark="Java">Java</tm> VM to terminate. Instead of double-clicking
 on the list, use the arrows and Enter keys to make the selection from the
 list.</note></section>
-<section><?Pub Caret1?><title>JSP content assist</title><p>You have many options
-for embedding <tm tmclass="special" tmowner="Sun Microsystems, Inc." tmtype="tm"
-trademark="Java">Java</tm> and HTML code in your JSP pages by using content
-assist.</p><p>All of the JSP tags are included both in the template list and
-in XML format (for example, <codeph>&lt;jsp:expression></codeph>). To add
-JSP scriptlet tags, for example, move the cursor to the appropriate position
-in the file and press Ctrl+Space to use content assist. Select <image alt="JSP scriptlet content assist"
-href="../images/nmacscrp.gif" placement="inline"></image> from the proposal
-list to insert <codeph>&lt;% %></codeph>  in the document.</p><p>Scriptlets
-are inserted in a tag <codeph>&lt;% %></codeph>. For example: <codeblock>&lt;% System.currentTimeMillis() %></codeblock></p><p>This
+<section><title>JSP content assist</title><p>You have many options for embedding <tm
+tmclass="special" tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="Java">Java</tm> and
+HTML code in your JSP pages by using content assist.</p><p>All of the JSP
+tags are included both in the template list and in XML format (for example, <codeph>&lt;jsp:expression></codeph>).
+To add JSP scriptlet tags, for example, move the cursor to the appropriate
+position in the file and press Ctrl+Space to use content assist. Select <image
+alt="JSP scriptlet content assist" href="../images/nmacscrp.gif" placement="inline">
+</image> from the proposal list to insert <codeph>&lt;% %></codeph>  in the
+document.</p><p>Scriptlets are inserted in a tag <codeph>&lt;% %></codeph>.
+For example: <codeblock>&lt;% System.currentTimeMillis() %></codeblock></p><p>This
 example will evaluate the <tm tmclass="special" tmowner="Sun Microsystems, Inc."
 tmtype="tm" trademark="Java">Java</tm> statement to get the current time in
 milliseconds.</p><p>To have the result of the statement inserted in the file,
@@ -112,4 +113,3 @@ text editors</linktext></link>
 </linkpool>
 </related-links>
 </concept>
-<?Pub *0000008076?>

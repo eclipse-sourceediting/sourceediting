@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "..\dtd\task.dtd">
 <task id="tsrcedt005" xml:lang="en-us">
@@ -12,8 +12,10 @@
 in a structured text editor. Content assist helps you insert or finish a tag
 or function or finish a line of code in a structured text editor.</shortdesc>
 <prolog><metadata>
-<keywords><indexterm>content assistance<indexterm>structured text editors</indexterm></indexterm>
-<indexterm>structured text editors<indexterm>content assistance</indexterm></indexterm>
+<keywords><indexterm keyref="tsrcedt005|1|contentassistancestructuredtexteditors"
+status="new">content assistance<indexterm>structured text editors</indexterm></indexterm>
+<indexterm keyref="tsrcedt005|2|structuredtexteditorscontentassistance" status="changed">structured
+text editors<indexterm>content assistance<indexterm>text editors</indexterm></indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>

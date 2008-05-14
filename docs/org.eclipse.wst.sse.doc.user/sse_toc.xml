@@ -1,42 +1,34 @@
-<?xml version="1.0" encoding="utf-8"?>
-<?NLS type="org.eclipse.help.contexts"?>
-<!-- /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/ -->
-<toc label="Structured text editors" topics="topics/csrcedt004.html">
-   <topic label="Structured text editors" href="topics/csrcedt004.html">
-      <topic label="Editing text coded in markup languages " href="topics/tsrcedt000.html">
-         <topic label="Source and batch validation" href="topics/cvalidate.html"/>
-         <topic label="Setting preferences for structured text editors" href="topics/tsrcedt025.html">
-            <topic label="Setting annotation preferences for markup languages" href="topics/tsrcedt001.html"/>
-         </topic>
-         <topic label="Getting content assistance in structured text editors" href="topics/tsrcedt005.html">
-            <topic label="Content assist" href="topics/csrcedt006.html"/>
-            <topic label="Making content assist work for JSP files" href="topics/tsrcedt023.html"/>
-         </topic>
-         <topic label="Associating editors with file types" href="topics/tcontenttype.html"/>
-         <topic label="File Encoding" href="topics/cencoding.html"/>
-         <topic label="Searching or finding text within a file" href="topics/tsrcedt007.html"/>
-         <topic label="Checking spelling" href="topics/tsrcedt010.html"/>
-         <topic label="Adding and removing markup language templates - overview" href="topics/tsrcedt027.html">
-            <topic label="Adding and removing HTML templates" href="topics/tsrcedt024.html"/>
-            <topic label="Adding and removing JSP templates" href="topics/tsrcedt028.html"/>
-            <topic label="Adding and removing XML templates" href="topics/tsrcedt029.html"/>
-         </topic>
-         <topic label="Editing with snippets - overview" href="topics/tsrcedt026.html">
-            <topic label="Snippets view" href="topics/csrcedt001.html"/>
-            <topic label="Adding snippets drawers" href="topics/tsrcedt014.html"/>
-            <topic label="Adding items to snippets drawers" href="topics/tsrcedt015.html"/>
-            <topic label="Editing snippet items" href="topics/tsrcedt022.html"/>
-            <topic label="Deleting or hiding snippet items or drawers" href="topics/tsrcedt016.html"/>
-         </topic>
-      </topic>
-   </topic>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Editing text coded in markup languages - overview" topic="topics/csrcedt004.html">
+<topic label="Structured text editors" href="topics/csrcedt004.html">
+<topic label="Editing text coded in markup languages " href="topics/tsrcedt000.html">
+<topic label="Source and batch validation" href="topics/cvalidate.html"/>
+<topic label="Setting preferences for structured text editors" href="topics/tsrcedt025.html">
+<topic label="Setting annotation preferences for markup languages" href="topics/tsrcedt001.html"/>
+</topic>
+<topic label="Getting content assistance in structured text editors" href="topics/tsrcedt005.html">
+<topic label="Content assist" href="topics/csrcedt006.html"/>
+<topic label="Making content assist work for JSP files" href="topics/tsrcedt023.html"/>
+</topic>
+<topic label="Associating editors with file types" href="topics/tcontenttype.html"/>
+<topic label="File Encoding" href="topics/cencoding.html"/>
+<topic label="Searching or finding text within a file" href="topics/tsrcedt007.html"/>
+<topic label="Checking spelling" href="topics/tsrcedt010.html"/>
+<topic label="Adding and removing markup language templates - overview" href="topics/tsrcedt027.html">
+<topic label="Adding and removing HTML templates" href="topics/tsrcedt024.html"/>
+<topic label="Adding and removing JSP templates" href="topics/tsrcedt028.html"/>
+<topic label="Adding and removing XML templates" href="topics/tsrcedt029.html"/>
+</topic>
+<topic label="Editing with snippets - overview" href="topics/tsrcedt026.html">
+<topic label="Snippets view" href="topics/csrcedt001.html"/>
+<topic label="Adding snippets drawers" href="topics/tsrcedt014.html"/>
+<topic label="Adding items to snippets drawers" href="topics/tsrcedt015.html"/>
+<topic label="Editing snippet items" href="topics/tsrcedt022.html"/>
+<topic label="Deleting or hiding snippet items or drawers" href="topics/tsrcedt016.html"/>
+</topic>
+</topic>
+</topic>
 </toc>
