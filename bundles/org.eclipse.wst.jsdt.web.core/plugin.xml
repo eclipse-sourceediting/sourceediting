@@ -24,13 +24,10 @@
 		<project-facet-version facet="wst.jsdt.web" version="1.0">
 		
 		<constraint>
-			<and>
 			  <or>
 			    <requires facet="jst.web"/>
 			    <requires facet="wst.web"/>
 			  </or>
-			  <conflicts facet="jst.ear"/>	  
-			</and>
 		</constraint>
 		
 		</project-facet-version>
@@ -110,14 +107,14 @@
 	
 	
 	
-	
+	<!--
 	<extension point="org.eclipse.wst.sse.core.taskscanner">
 		<scanner
 			id="org.eclipse.wst.jsdt.web.core.internal.tasks.JsFileTaskScanner"
 			class="org.eclipse.wst.jsdt.web.core.internal.tasks.JsFileTaskScanner"
 			contentTypeIds="org.eclipse.wst.html.core.htmlsource" />
 	</extension>
-	
+	-->
 	
 	<extension point="org.eclipse.wst.sse.core.formatProcessors">
 		<processor
