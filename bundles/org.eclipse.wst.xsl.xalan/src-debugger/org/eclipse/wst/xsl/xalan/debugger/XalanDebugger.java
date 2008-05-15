@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.xalan.debugger;
 
-import java.util.Map;
 import java.util.TooManyListenersException;
 
 import javax.xml.transform.Transformer;
@@ -36,7 +35,7 @@ public class XalanDebugger extends AbstractDebugger
 		tfi.setAttribute(TransformerFactoryImpl.FEATURE_OPTIMIZE, Boolean.FALSE);
 	}
 
-	public void addTransformer(Transformer transformer, Map locations)
+	public void addTransformer(Transformer transformer)
 	{
 		TransformerImpl transformerImpl = (TransformerImpl) transformer;
 		TraceManager trMgr = transformerImpl.getTraceManager();

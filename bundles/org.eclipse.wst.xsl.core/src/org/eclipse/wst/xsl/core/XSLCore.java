@@ -139,7 +139,7 @@ public class XSLCore
 		IContentType[] types = contentTypeManager.findContentTypesFor(file.getName());
 		for (IContentType contentType : types)
 		{
-			if (contentType.isKindOf(contentTypeManager.getContentType(XSL_CONTENT_TYPE)))
+			if (contentType.equals(contentTypeManager.getContentType(XSL_CONTENT_TYPE)))
 			{
 				return true;
 			}
