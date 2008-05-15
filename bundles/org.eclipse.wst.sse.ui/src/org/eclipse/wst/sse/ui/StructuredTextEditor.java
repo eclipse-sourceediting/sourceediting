@@ -113,6 +113,7 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
+import org.eclipse.ui.editors.text.DefaultEncodingSupport;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.ITextEditorHelpContextIds;
 import org.eclipse.ui.editors.text.TextEditor;
@@ -2668,9 +2669,12 @@ public class StructuredTextEditor extends TextEditor {
 	 * @see org.eclipse.ui.editors.text.TextEditor#installEncodingSupport()
 	 */
 	protected void installEncodingSupport() {
-		// TODO: install our custom support that can
-		// update document appropriately
-		// super.installEncodingSupport();
+		fEncodingSupport = new DefaultEncodingSupport() {
+			protected void setEncoding(String encoding, boolean overwrite) {
+				super.setEncoding(encoding, overwrite);
+			}
+		};
+		fEncodingSupport.initialize(this);
 	}
 
 	/**
@@ -3159,17 +3163,20 @@ public class StructuredTextEditor extends TextEditor {
 			if (memento != null && detector != null)
 				detector.set(doc);
 			try {
-				detector.getEncoding();
+				String newEncoding = detector.getEncoding();
+				if (newEncoding != null) {
+					memento.setDetectedCharsetName(newEncoding);
+				}
 			}
 			catch (IOException e) {
 				failed = true;
 			}
-			// be sure to use the new instance
-			// but only if no exception occurred.
-			// (we may find cases we need to do more error recover there)
-			// should be near impossible to get IOException from processing
-			// the
-			// *document*
+			/**
+			 * Be sure to use the new value but only if no exception
+			 * occurred. (we may find cases we need to do more error recovery
+			 * there) should be near impossible to get IOException from
+			 * processing the _document_
+			 */
 			if (!failed) {
 				doc.setEncodingMemento(memento);
 			}
