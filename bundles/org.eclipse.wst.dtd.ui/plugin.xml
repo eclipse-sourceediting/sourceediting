@@ -384,4 +384,92 @@
 	 </propertySection>
   </propertySections>
 </extension>
+
+	<!-- Define theme -->
+	<extension
+		point="org.eclipse.ui.themes">
+		<theme
+			id="org.eclipse.ui.ide.systemDefault">
+			<colorOverride
+				id="dtdDefault"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="dtdTag"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="dtdTagName"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="dtdComment"
+				value="COLOR_LIST_SELECTION">
+			</colorOverride>
+			<colorOverride
+				id="dtdKeyword"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="dtdString"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="dtdData"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="dtdSymbol"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+		</theme>
+		<colorDefinition
+			id="dtdDefault"
+			isEditable="false"
+			label="%Colors.dtdDefault"
+			value="0, 0, 0">
+		</colorDefinition>
+		<colorDefinition
+			id="dtdTag"
+			isEditable="false"
+			label="%Colors.dtdTag"
+			value="63, 63, 191">
+		</colorDefinition>
+		<colorDefinition
+			id="dtdTagName"
+			isEditable="false"
+			label="%Colors.dtdTagName"
+			value="63, 63, 191">
+		</colorDefinition>
+		<colorDefinition
+			id="dtdComment"
+			isEditable="false"
+			label="%Colors.dtdComment"
+			value="127, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="dtdKeyword"
+			isEditable="false"
+			label="%Colors.dtdKeyword"
+			value="128, 0, 0">
+		</colorDefinition>
+		<colorDefinition
+			id="dtdString"
+			isEditable="false"
+			label="%Colors.dtdString"
+			value="63, 159, 95">
+		</colorDefinition>
+		<colorDefinition
+			id="dtdData"
+			isEditable="false"
+			label="%Colors.dtdData"
+			value="191, 95, 95">
+		</colorDefinition>
+		<colorDefinition
+			id="dtdSymbol"
+			isEditable="false"
+			label="%Colors.dtdSymbol"
+			value="128, 0, 0">
+		</colorDefinition>
+	</extension>
 </plugin>

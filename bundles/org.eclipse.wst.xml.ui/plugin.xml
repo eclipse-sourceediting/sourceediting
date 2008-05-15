@@ -1321,6 +1321,164 @@
 	          name="%CollapseAll_name">
 	    </command>
 	</extension> 
+	
+	<!-- Define theme -->
+	<extension
+		point="org.eclipse.ui.themes">
+		<theme
+			id="org.eclipse.ui.ide.systemDefault">
+			<colorOverride
+				id="tagAttributeName"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="tagAttributeValue"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="commentBorder"
+				value="COLOR_LIST_SELECTION">
+			</colorOverride>
+			<colorOverride
+				id="commentText"
+				value="COLOR_LIST_SELECTION">
+			</colorOverride>
+			<colorOverride
+				id="declBoder"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="doctypeName"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="doctypeExternalPubref"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="doctypeExternalId"
+				value="COLOR_WIDGET_NORMAL_SHADOW">
+			</colorOverride>
+			<colorOverride
+				id="doctypeExtrenalSysref"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="tagBorder"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="tagName"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="piBorder"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="cdataBorder"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="cdataText"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="entityReference"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+		</theme>
+		<colorDefinition
+			id="tagAttributeName"
+			isEditable="false"
+			label="%Colors.tagAttributeName"
+			value="127, 0, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="tagAttributeValue"
+			isEditable="false"
+			label="%Colors.tagAttributeValue"
+			value="42, 0, 255">
+		</colorDefinition>
+		<colorDefinition
+			id="commentBorder"
+			isEditable="false"
+			label="%Colors.commentBorder"
+			value="63, 95, 191">
+		</colorDefinition>
+		<colorDefinition
+			id="commentText"
+			isEditable="false"
+			label="%Colors.commentText"
+			value="63, 95, 191">
+		</colorDefinition>
+		<colorDefinition
+			id="declBoder"
+			isEditable="false"
+			label="%Colors.declBorder"
+			value="0, 128, 128">
+		</colorDefinition>
+		<colorDefinition
+			id="doctypeName"
+			isEditable="false"
+			label="%Colors.doctypeName"
+			value="0, 128, 128">
+		</colorDefinition>
+		<colorDefinition
+			id="doctypeExternalPubref"
+			isEditable="false"
+			label="%Colors.doctypeExternalPubref"
+			value="0, 128, 128">
+		</colorDefinition>
+		<colorDefinition
+			id="doctypeExternalId"
+			isEditable="false"
+			label="%Colors.doctypeExternalId"
+			value="128, 128, 128">
+		</colorDefinition>
+		<colorDefinition
+			id="doctypeExtrenalSysref"
+			isEditable="false"
+			label="%Colors.doctypeExtrenalSysref"
+			value="63, 127, 95">
+		</colorDefinition>
+		<colorDefinition
+			id="tagBorder"
+			isEditable="false"
+			label="%Colors.tagBorder"
+			value="0, 128, 128">
+		</colorDefinition>
+		<colorDefinition
+			id="tagName"
+			isEditable="false"
+			label="%Colors.tagName"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="piBorder"
+			isEditable="false"
+			label="%Colors.piBorder"
+			value="0, 128, 128">
+		</colorDefinition>
+		<colorDefinition
+			id="cdataBorder"
+			isEditable="false"
+			label="%Colors.cdataBorder"
+			value="0, 128, 128">
+		</colorDefinition>
+		<colorDefinition
+			id="cdataText"
+			isEditable="false"
+			label="%Colors.cdataText"
+			value="0, 0, 0">
+		</colorDefinition>
+		<colorDefinition
+			id="entityReference"
+			isEditable="false"
+			label="%Colors.entityReference"
+			value="42, 0, 255">
+		</colorDefinition>
+	</extension>
 
 	<!-- Enable the FormatHandler for XML Content Type -->
 	<extension point="org.eclipse.ui.handlers">

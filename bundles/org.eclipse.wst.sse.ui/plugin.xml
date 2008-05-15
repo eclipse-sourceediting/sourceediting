@@ -4,17 +4,17 @@
 
 	<extension-point
 		id="adapterFactoryDescription"
-		name="%Adapter_Factory_Description_Extension.name" />
+		name="%Adapter_Factory_Description_Extension.name" ></extension-point>
 	<extension-point
 		id="extendedEditorActions"
-		name="%Extended_Editor_Actions_Extension.name" />
+		name="%Extended_Editor_Actions_Extension.name" ></extension-point>
 	<extension-point
 		id="dropTargetTransfers"
-		name="%Drop_Target_Transfers_Extension.name" />
+		name="%Drop_Target_Transfers_Extension.name" ></extension-point>
 	<extension-point
 		id="editorConfiguration"
 		name="%Extended_Editor_Configuration_Extension.name"
-		schema="schema/editorconfiguration.exsd" />
+		schema="schema/editorconfiguration.exsd" ></extension-point>
 
 
 	<!-- Make sure default preference values are set at runtime -->
@@ -714,6 +714,54 @@
 	           </iterate>
             </with>
 		</definition>
+	</extension>
+	
+	<!-- Define theme -->
+	<extension
+		point="org.eclipse.ui.themes">
+		<theme
+			id="org.eclipse.ui.ide.systemDefault">
+			<colorOverride
+				id="content_assist_proposals_background"
+				value="COLOR_LIST_BACKGROUND">
+			</colorOverride>
+			<colorOverride
+				id="content_assist_proposals_foreground"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="content_assist_parameters_background"
+				value="COLOR_LIST_BACKGROUND">
+			</colorOverride>
+			<colorOverride
+				id="content_assist_parameters_foreground"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+		</theme>
+		<colorDefinition
+			id="content_assist_proposals_background"
+			isEditable="false"
+			label="%Colors.content_assist_proposals_background"
+			value="255,255,255">
+		</colorDefinition>
+		<colorDefinition
+			id="content_assist_proposals_foreground"
+			isEditable="false"
+			label="%Colors.content_assist_proposals_foreground"
+			value="0,0,0">
+		</colorDefinition>
+		<colorDefinition
+			id="content_assist_parameters_background"
+			isEditable="false"
+			label="%Colors.content_assist_parameters_background"
+			value="255,255,255">
+		</colorDefinition>
+		<colorDefinition
+			id="content_assist_parameters_foreground"
+			isEditable="false"
+			label="%Colors.content_assist_parameters_foreground"
+			value="0,0,0">
+		</colorDefinition>
 	</extension>
 	
 </plugin>

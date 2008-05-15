@@ -565,6 +565,25 @@
 		</definition>
 	</extension>
 	
+	<!-- Define theme - Many of the color overrides and definitions come from 
+	     the XML plugin -->
+	<extension
+		point="org.eclipse.ui.themes">
+		<theme
+			id="org.eclipse.ui.ide.systemDefault">
+			<colorOverride
+				id="SCRIPT_AREA_BORDER"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+		</theme>
+		<colorDefinition
+			id="SCRIPT_AREA_BORDER"
+			isEditable="false"
+			label="%Colors.scriptAreaBorder"
+			value="191, 95, 63">
+		</colorDefinition>
+	</extension>
+	
 	<!-- Enable the FormatHandler for HTML Content Type -->
 	<extension point="org.eclipse.ui.handlers">
 		<handler 

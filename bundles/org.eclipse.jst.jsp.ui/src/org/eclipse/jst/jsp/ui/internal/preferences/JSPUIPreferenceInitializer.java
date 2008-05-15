@@ -2,9 +2,11 @@ package org.eclipse.jst.jsp.ui.internal.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.style.IStyleConstantsJSP;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.html.ui.internal.style.IStyleConstantsHTML;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
@@ -21,6 +23,7 @@ public class JSPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 	 */
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = JSPUIPlugin.getDefault().getPreferenceStore();
+		ColorRegistry registry = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry();
 
 		// setting the same as HTML
 		store.setDefault(JSPUIPreferenceNames.AUTO_PROPOSE, true);
@@ -29,10 +32,10 @@ public class JSPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		// JSP Style Preferences
 		String NOBACKGROUNDBOLD = " | null | false"; //$NON-NLS-1$
 		String JUSTITALIC = " | null | false | true"; //$NON-NLS-1$
-		String styleValue = ColorHelper.getColorString(127, 0, 127) + NOBACKGROUNDBOLD;
+		String styleValue = ColorHelper.findRGBString(registry, IStyleConstantsXML.TAG_ATTRIBUTE_NAME, 127, 0, 127) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsXML.TAG_ATTRIBUTE_NAME, styleValue);
 
-		styleValue = ColorHelper.getColorString(42, 0, 255) + JUSTITALIC;
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsXML.TAG_ATTRIBUTE_VALUE, 42, 0, 255) + JUSTITALIC;
 		store.setDefault(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE, styleValue);
 
 		styleValue = "null" + NOBACKGROUNDBOLD; //$NON-NLS-1$
@@ -40,17 +43,18 @@ public class JSPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		// specified value is black; leaving as widget default
 		store.setDefault(IStyleConstantsXML.TAG_ATTRIBUTE_EQUALS, styleValue);
 
-		styleValue = ColorHelper.getColorString(63, 95, 191) + NOBACKGROUNDBOLD;
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsXML.COMMENT_BORDER, 63, 95, 191) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsXML.COMMENT_BORDER, styleValue);
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsXML.COMMENT_TEXT, 63, 95, 191) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsXML.COMMENT_TEXT, styleValue);
 
-		styleValue = ColorHelper.getColorString(0, 128, 128) + NOBACKGROUNDBOLD;
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsXML.TAG_BORDER, 0, 128, 128) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsXML.TAG_BORDER, styleValue);
 
-		styleValue = ColorHelper.getColorString(63, 127, 127) + NOBACKGROUNDBOLD;
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsXML.TAG_NAME, 63, 127, 127) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsXML.TAG_NAME, styleValue);
 
-		styleValue = ColorHelper.getColorString(191, 95, 63) + NOBACKGROUNDBOLD;
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsHTML.SCRIPT_AREA_BORDER, 191, 95, 63) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsHTML.SCRIPT_AREA_BORDER, styleValue);
 
 		styleValue = "null" + NOBACKGROUNDBOLD; //$NON-NLS-1$

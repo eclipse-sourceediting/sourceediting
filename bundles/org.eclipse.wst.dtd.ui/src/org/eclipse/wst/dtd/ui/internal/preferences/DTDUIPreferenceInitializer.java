@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,8 @@ package org.eclipse.wst.dtd.ui.internal.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.ColorRegistry;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.style.IStyleConstantsDTD;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
@@ -29,32 +31,34 @@ public class DTDUIPreferenceInitializer extends AbstractPreferenceInitializer {
 	 */
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = DTDUIPlugin.getDefault().getPreferenceStore();
-
+		ColorRegistry registry = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry();
+		
 		// DTD Style Preferences
 		String NOBACKGROUNDBOLD = " | null | false"; //$NON-NLS-1$
 		String JUSTITALIC = " | null | false | true"; //$NON-NLS-1$
-		String styleValue = ColorHelper.getColorString(0, 0, 0) + NOBACKGROUNDBOLD;
+		String styleValue = ColorHelper.findRGBString(registry, IStyleConstantsDTD.DTD_DEFAULT, 0, 0, 0) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsDTD.DTD_DEFAULT, styleValue); // black
 
-		styleValue = ColorHelper.getColorString(63, 63, 191) + NOBACKGROUNDBOLD;
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsDTD.DTD_TAG, 63, 63, 191) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsDTD.DTD_TAG, styleValue); // blue
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsDTD.DTD_TAGNAME, 63, 63, 191) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsDTD.DTD_TAGNAME, styleValue); // blue
 
-		styleValue = ColorHelper.getColorString(127, 127, 127) + NOBACKGROUNDBOLD;
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsDTD.DTD_COMMENT, 127, 127, 127) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsDTD.DTD_COMMENT, styleValue); // grey
 
-		styleValue = ColorHelper.getColorString(128, 0, 0) + NOBACKGROUNDBOLD;
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsDTD.DTD_KEYWORD, 128, 0, 0) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsDTD.DTD_KEYWORD, styleValue); // dark
 		// red
 
-		styleValue = ColorHelper.getColorString(63, 159, 95) + JUSTITALIC;
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsDTD.DTD_STRING, 63, 159, 95) + JUSTITALIC;
 		store.setDefault(IStyleConstantsDTD.DTD_STRING, styleValue); // green
 
-		styleValue = ColorHelper.getColorString(191, 95, 95) + NOBACKGROUNDBOLD;
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsDTD.DTD_DATA, 191, 95, 95) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsDTD.DTD_DATA, styleValue); // light
 		// red
 
-		styleValue = ColorHelper.getColorString(128, 0, 0) + NOBACKGROUNDBOLD;
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsDTD.DTD_SYMBOL, 128, 0, 0) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsDTD.DTD_SYMBOL, styleValue); // dark
 		// red
 	}

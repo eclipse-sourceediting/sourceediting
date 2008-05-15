@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,10 +15,13 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 
@@ -29,7 +32,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	 */
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
-
+		ColorRegistry registry = PlatformUI.getWorkbench().getThemeManager().getCurrentTheme().getColorRegistry();
+		
 		// use the base annotation & quick diff preference page
 		EditorsUI.useAnnotationsPreferencePage(store);
 		EditorsUI.useQuickDiffPreferencePage(store);
@@ -47,7 +51,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		// preference
 		store.setDefault(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS, true);
 
-		setMatchingBracketsPreferences(store);
+		setMatchingBracketsPreferences(store, registry);
 
 		// hover help preferences are not part of base text editor preference
 		String mod2Name = Action.findModifierString(SWT.MOD2); // SWT.COMMAND
@@ -67,15 +71,15 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		
 		// set content assist defaults
 		store.setDefault(EditorPreferenceNames.CODEASSIST_AUTOACTIVATION_DELAY, 500);
-		PreferenceConverter.setDefault(store, EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND, new RGB(255, 255, 255));
-		PreferenceConverter.setDefault(store, EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND, new RGB(0, 0, 0));
-		PreferenceConverter.setDefault(store, EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND, new RGB(255, 255, 255));
-		PreferenceConverter.setDefault(store, EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND, new RGB(0, 0, 0));
+		PreferenceConverter.setDefault(store, EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND, ColorHelper.findRGB(registry, EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND, new RGB(255, 255, 255)));
+		PreferenceConverter.setDefault(store, EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND, ColorHelper.findRGB(registry, EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND, new RGB(0, 0, 0)));
+		PreferenceConverter.setDefault(store, EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND, ColorHelper.findRGB(registry, EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND, new RGB(255, 255, 255)));
+		PreferenceConverter.setDefault(store, EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND, ColorHelper.findRGB(registry, EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND, new RGB(0, 0, 0)));
 	}
 
-	private void setMatchingBracketsPreferences(IPreferenceStore store) {
+	private void setMatchingBracketsPreferences(IPreferenceStore store, ColorRegistry registry) {
 		// matching brackets is not part of base text editor preference
 		store.setDefault(EditorPreferenceNames.MATCHING_BRACKETS, true);
-		PreferenceConverter.setDefault(store, EditorPreferenceNames.MATCHING_BRACKETS_COLOR, new RGB(192, 192, 192));
+		PreferenceConverter.setDefault(store, EditorPreferenceNames.MATCHING_BRACKETS_COLOR, ColorHelper.findRGB(registry, EditorPreferenceNames.MATCHING_BRACKETS_COLOR, new RGB(192, 192, 192)));
 	}
 }

@@ -352,6 +352,104 @@
 		</definition>
 	</extension>
 	
+	<!-- Define theme -->
+	<extension
+		point="org.eclipse.ui.themes">
+		<theme
+			id="org.eclipse.ui.ide.systemDefault">
+			<colorOverride
+				id="ATMARK_RULE"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="SELECTOR"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="MEDIA"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="COMMENT"
+				value="COLOR_LIST_SELECTION">
+			</colorOverride>
+			<colorOverride
+				id="PROPERTY_NAME"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="PROPERTY_VALUE"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="URI"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="STRING"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+			<colorOverride
+				id="ERROR"
+				value="COLOR_LIST_FOREGROUND">
+			</colorOverride>
+		</theme>
+		<colorDefinition
+			id="ATMARK_RULE"
+			isEditable="false"
+			label="%Colors.atmarkRule"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="SELECTOR"
+			isEditable="false"
+			label="%Colors.selector"
+			value="63, 127, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="MEDIA"
+			isEditable="false"
+			label="%Colors.media"
+			value="42, 0, 225">
+		</colorDefinition>
+		<colorDefinition
+			id="COMMENT"
+			isEditable="false"
+			label="%Colors.comment"
+			value="63, 95, 191">
+		</colorDefinition>
+		<colorDefinition
+			id="PROPERTY_NAME"
+			isEditable="false"
+			label="%Colors.propertyName"
+			value="127, 0, 127">
+		</colorDefinition>
+		<colorDefinition
+			id="PROPERTY_VALUE"
+			isEditable="false"
+			label="%Colors.propertyValue"
+			value="42, 0, 225">
+		</colorDefinition>
+		<colorDefinition
+			id="URI"
+			isEditable="false"
+			label="%Colors.uri"
+			value="42, 0, 225">
+		</colorDefinition>
+		<colorDefinition
+			id="STRING"
+			isEditable="false"
+			label="%Colors.string"
+			value="42, 0, 225">
+		</colorDefinition>
+		<colorDefinition
+			id="ERROR"
+			isEditable="false"
+			label="%Colors.error"
+			value="191, 63, 63">
+		</colorDefinition>
+	</extension>
+	
 	<!-- Enable the FormatHandler for CSS Content Type -->
 	<extension point="org.eclipse.ui.handlers">
 		<handler 
