@@ -49,13 +49,17 @@ import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.ui.part.MultiPageSelectionProvider;
 import org.eclipse.ui.progress.UIJob;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.xml.core.internal.provisional.IXMLPreferenceNames;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
@@ -247,7 +251,22 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 				// StructuredTextEditor could tell it containing editor that
 				// the input has change, when a 'resource moved' event is
 				// found.
-				case IEditorPart.PROP_INPUT :
+				case IEditorPart.PROP_INPUT : {
+				  if (source == getTextEditor() && fDesignViewer instanceof XMLTableTreeViewer) {
+				    IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
+				    try {
+				      if (model instanceof IDOMModel) {
+				        IDOMDocument modelDocument = ((IDOMModel)model).getDocument();
+	                    Object designInput = ((XMLTableTreeViewer)fDesignViewer).getInput();
+				        if (modelDocument != designInput)
+				          setInput(getTextEditor().getEditorInput());
+				      }
+				    } finally {
+				      if (model != null)
+				        model.releaseFromRead();
+				    }
+				  }
+				}
 				case IEditorPart.PROP_DIRTY : {
 					if (source == getTextEditor()) {
 						if (getTextEditor().getEditorInput() != getEditorInput()) {
