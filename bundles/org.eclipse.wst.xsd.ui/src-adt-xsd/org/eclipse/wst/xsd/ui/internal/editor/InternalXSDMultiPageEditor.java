@@ -47,6 +47,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.INavigationLocation;
 import org.eclipse.ui.INavigationLocationProvider;
@@ -159,11 +160,9 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     IStructuredModel structuredModel = null;
     try
     {
+      // only set input if structured model already exists
+      // (meaning source editor is already managing the model)
       structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(newDocument);
-      
-      if (structuredModel == null)
-        structuredModel = StructuredModelManager.getModelManager().getModelForRead((IStructuredDocument)newDocument);
-
       if ((structuredModel != null) && (structuredModel instanceof IDOMModel))
       {
         Document doc = ((IDOMModel) structuredModel).getDocument();
@@ -1114,6 +1113,60 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
       fXSDSelectionListener.doSetSelection();
 
   }
+  
+  public void propertyChanged(Object source, int propId)
+  {
+    switch (propId)
+    {
+      // when refactor rename while file is open in editor, need to reset
+      // editor contents to reflect new document
+      case IEditorPart.PROP_INPUT:
+      {
+        if (source == structuredTextEditor && xsdSchema != null)
+        {
+          IStructuredModel structuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
+          try
+          {
+            if (structuredModel instanceof IDOMModel)
+            {
+              Document schemaDocument = xsdSchema.getDocument();
+              Document domModelDocument = ((IDOMModel)structuredModel).getDocument();
+              // if dom documents are not the same, they need to be reset
+              if (schemaDocument != domModelDocument)
+              {
+                XSDModelAdapter modelAdapter = null;
+                if (schemaDocument instanceof IDOMDocument)
+                {
+                  // save this model adapter for cleanup later
+                  modelAdapter = (XSDModelAdapter) ((IDOMDocument)schemaDocument).getExistingAdapter(XSDModelAdapter.class);
+                }
+                
+                // update multipage editor with new editor input
+                IEditorInput editorInput = structuredTextEditor.getEditorInput();
+                setInput(editorInput);
+                setPartName(editorInput.getName());
+                getCommandStack().markSaveLocation();
+                
+                // Now do the clean up model adapter
+                if (modelAdapter != null)
+                {
+                  modelAdapter.clear();
+                  modelAdapter = null;
+                }
+              }
+            }
+          }
+          finally
+          {
+            if (structuredModel != null)
+              structuredModel.releaseFromRead();
+          }
+        }
+        break;
+      }
+    }
+    super.propertyChanged(source, propId);
+  }
 
   public INavigationLocation createEmptyNavigationLocation()
   {
@@ -1305,12 +1358,9 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
       getCommandStack().markSaveLocation();
    
       // Now do the clean up on the old document
-      if (doc != null)
+      if (modelAdapter != null)
       {
-        // remove the adapters
-        doc.getModel().removeModelStateListener(modelAdapter.getModelReconcileAdapter());
-        doc.removeAdapter(modelAdapter.getModelReconcileAdapter());
-        doc.removeAdapter(modelAdapter);
+        // clear out model adapter
         modelAdapter.clear();
         modelAdapter = null;
       }

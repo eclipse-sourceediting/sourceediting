@@ -22,6 +22,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsd.ui.internal.util.ModelReconcileAdapter;
 import org.eclipse.wst.xsd.ui.internal.util.XSDSchemaLocationResolverAdapterFactory;
@@ -50,7 +51,16 @@ public class XSDModelAdapter implements INodeAdapter
   
   public void clear()
   {
-    schema = null;
+	if (schema != null) {
+		Document doc = schema.getDocument();
+		if (doc instanceof IDOMDocument) {
+			IDOMDocument domDocument = (IDOMDocument)doc;
+			domDocument.getModel().removeModelStateListener(getModelReconcileAdapter());
+			domDocument.removeAdapter(getModelReconcileAdapter());
+			domDocument.removeAdapter(this);		
+		}
+	    schema = null;
+	}
     resourceSet = null;
   }
 
