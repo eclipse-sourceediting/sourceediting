@@ -32,20 +32,17 @@
 <topic label="Creating JavaServer Pages (JSP) files" href="topics/tjcrejsp.html">
 <topic label="JavaServer Pages (JSP) technology" href="topics/cpdjsps.html"/>
 </topic>
+<topic label="Creating Web Artifacts" href="topics/cwebartifact.html">
+<topic label="Creating servlets" href="topics/twsrvwiz.html">
+<topic label="Servlets" href="topics/cwservbn.html"/>
 </topic>
-<topic href="topics/cwebartifact.html" label="Creating Web artifacts">
-   <topic href="topics/twsrvwiz.html" label="Creating Servlets">
-      <topic href="topics/cwservbn.html" label="Servlets">
-      </topic>
-   </topic>
-   <topic href="topics/twfltwiz.html" label="Creating Filters">
-      <topic href="topics/cwfiltbn.html" label="Filters">
-      </topic>
-   </topic>
-   <topic href="topics/twlstwiz.html" label="Creating Listeners">
-      <topic href="topics/cwlistbn.html" label="Listeners">
-      </topic>
-   </topic>
+<topic label="Creating Listeners" href="topics/twlstwiz.html">
+<topic label="Listeners" href="topics/cwlistbn.html"/>
+</topic>
+<topic label="Creating Filters" href="topics/twfltwiz.html">
+<topic label="Listeners" href="topics/cwfiltbn.html"/>
+</topic>
+</topic>
 </topic>
 <topic label="Setting CVS repository defaults" href="topics/twcvsr.html"/>
 <topic label="Server targeting for Web applications" href="topics/tservertarget.html"/>

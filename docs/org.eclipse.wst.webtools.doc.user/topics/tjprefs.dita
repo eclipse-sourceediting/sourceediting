@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
-<!-- ArborText, Inc.,  1988-2002, v.4002-->
 <task id="tjprefs" xml:lang="en-us">
 <title>Defining HTML file preferences</title>
 <prolog><metadata>
-<keywords>
-</keywords>
+<keywords><indexterm keyref="tjprefs|1|DOCTYPEdeclarationsaddingautomatically"
+status="new">DOCTYPE declarations<indexterm>adding automatically</indexterm></indexterm>
+<indexterm keyref="tjprefs|2|HTMLfileseditingpreferences" status="changed">HTML<indexterm>editing
+preferences</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
-<context> <p><indexterm>DOCTYPE declarations<indexterm>adding automatically</indexterm></indexterm>
-<indexterm>HTML files<indexterm>editing preferences</indexterm></indexterm>
-To define general HTML file preferences, complete the following
-steps::</p></context>
+<context> <p><indexterm>DOCTYPE declarations<indexterm>adding automatically</indexterm></indexterm> <indexterm>HTML
+files<indexterm>editing preferences</indexterm></indexterm> To define general
+HTML file preferences, complete the following steps:</p></context>
 <steps>
 <step><cmd>From the <uicontrol>Window</uicontrol> menu, select <uicontrol>Preferences</uicontrol>.</cmd>
 </step>

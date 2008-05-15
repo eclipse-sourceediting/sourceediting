@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN"
  "map.dtd">
-<map title="Web tools related links"><?Pub Caret1?>
+<map title="Web tools related links">
 <reltable>
 <relheader>
 <relcolspec type="concept"></relcolspec>
@@ -270,7 +270,7 @@ scope="peer"></topicref>
 </topicref>
 <topicref href="topics/cwservbn.dita" linking="targetonly" navtitle="Servlets">
 </topicref>
-<topicref href="topics/cwlistvbn.dita" linking="targetonly" navtitle="Listeners">
+<topicref href="topics/cwlistbn.dita" linking="targetonly" navtitle="Listeners">
 </topicref>
 <topicref href="topics/cwfiltbn.dita" linking="targetonly" navtitle="Filters">
 </topicref>
@@ -480,4 +480,3 @@ scope="peer"></topicref>
 </relrow>
 </reltable>
 </map>
-<?Pub *0000014944?>

@@ -1,165 +1,93 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="en-us" xml:lang="en-us">
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<meta name="copyright"
-	content="Copyright (c) 2000, 2006 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
-<meta name="DC.rights.owner" content="(C) Copyright 2000, 2006" />
+<meta name="copyright" content="Copyright (c) 2000, 2008 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
+<meta name="DC.rights.owner" content="(C) Copyright 2000, 2008" />
 <meta content="public" name="security" />
 <meta content="index,follow" name="Robots" />
-<meta http-equiv="PICS-Label"
-	content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
 <meta content="task" name="DC.Type" />
 <meta name="DC.Title" content="Creating Listeners" />
-<meta content="listeners, creating" name="DC.subject" />
-<meta content="listeners, creating" name="keywords" />
+<meta name="abstract" content="The listener wizard helps you create application lifecycle listeners by walking you through the creation process and by providing you with output files that you can use or that you can modify for use with your Web application. The listeners can run on Java EE-compliant Web servers." />
+<meta name="description" content="The listener wizard helps you create application lifecycle listeners by walking you through the creation process and by providing you with output files that you can use or that you can modify for use with your Web application. The listeners can run on Java EE-compliant Web servers." />
+<meta content="servlets, creating" name="DC.subject" />
+<meta content="servlets, creating" name="keywords" />
+<meta scheme="URI" name="DC.Relation" content="../topics/cwlistbn.html" />
 <meta content="XHTML" name="DC.Format" />
 <meta content="twlstwiz" name="DC.Identifier" />
 <meta content="en-us" name="DC.Language" />
-<link href="../../org.eclipse.wst.doc.user/common.css" type="text/css"
-	rel="stylesheet" />
+<link href="../../org.eclipse.wst.doc.user/common.css" type="text/css" rel="stylesheet" />
 <title>Creating Listeners</title>
 </head>
-<body id="twlstwiz">
-<a name="twlstwiz"><!-- --></a>
+<body id="twlstwiz"><a name="twlstwiz"><!-- --></a>
 
 
 <h1 class="topictitle1">Creating Listeners</h1>
 
-<div>
-<p>The listener wizard helps you create application lifecycle
-listeners by walking you through the creation process and by providing
-you with output files that you can use or that you can modify for use
-with your Web application. The listeners can run on Java EE-compliant
-Web servers.</p>
 
-<div class="section">
-<p>To create a listener, complete the following steps:</p>
+
+<div><p>The listener wizard helps you create application lifecycle listeners by walking you through the creation process and by providing you with output files that you can use or that you can modify for use with your Web application. The listeners can run on Java EE-compliant Web servers.</p>
+
+<div class="section"> <p>To create a listener, complete the following steps: </p>
 </div>
 
 <ol>
-	<li class="stepexpand"><span>In the Java EE perspective,
-	expand your <a href="ccwebprj.html" title="">dynamic project</a> in the
-	Project Explorer view.</span></li>
+<li class="stepexpand"><span>From the Java EE perspective, expand your  <a href="ccwebprj.html" title="">dynamic project</a> in the Project Explorer view.</span></li>
 
-	<li class="stepexpand"><span>Right click on the <strong>Listener</strong>
-	icon, and select <span class="menucascade"> <span
-		class="uicontrol">New</span> &gt; <span class="uicontrol">Listener</span></span>
-	from the pop-up menu.</span> The <span class="uicontrol">Create Listener</span>
-	wizard appears.</li>
+<li class="stepexpand"><span>Right click on the <strong>Listener</strong> icon, and select <span class="menucascade"><span class="uicontrol">New</span> &gt; <span class="uicontrol">Listener</span></span> from the pop-up menu.</span>  The <span class="uicontrol">Create Listener</span> wizard appears.</li>
 
-	<li class="stepexpand"><span>Follow the project wizard
-	prompts.</span></li>
+<li class="stepexpand"><span>Follow the project wizard prompts.</span></li>
 
 </ol>
 
-<div class="section">
-<p><strong>General Information</strong></p>
-<dl>
+<div class="section"><dl>
+<dt class="dlterm">Application lifecycle listeners</dt>
 
-	<p>
-	<dt class="dlterm">Application lifecycle listeners</dt>
-	</p>
+<dd>The <cite>Sun Microsystems Java™ Servlet 2.3 Specification</cite>defines the 	following interfaces that represent that application lifecycle 	listeners. You should select at least one of the intefaces. 	<ul>
+<li><strong>javax.servlet.ServletContextListener:</strong> This interface is provided by javax.servlet package and can be used to listen to the ServletContext life-cycle events. This interface has two methods: contextInitialized and contextDestroyed. The <strong><em>contextInitialized</em></strong> method is called when the web application is ready to service requests and the <strong><em>contextDestroyed</em></strong> method is invoked when the servlet context is about to be shut down.</li>
 
-	<dd>The <cite>Sun Microsystems Java Servlet Specification</cite> defines the
-	following interfaces that represent that application lifecycle
-	listeners. You should select at least one of the intefaces. 
-	<ul>
-		<li><strong>javax.servlet.ServletContextListener:
-		</strong> This interface is provided by javax.servlet package and can be used
-		to listen to the ServletContext life-cycle events. This interface has
-		two methods: contextInitialized and contextDestroyed. The
-		<b><i>contextInitialized</i></b> method is called when the web application is ready
-		to service requests and the <b><i>contextDestroyed</i></b> method is invoked when
-		the servlet context is about to be shut down.</li>
-		<li><strong>javax.servlet.ServletContextAttributeListener:
-		</strong> This interface is provided by javax.servlet package. It can be used
-		to be notified when any attribute is added to the ServletContext or if
-		any of the ServletContext's attributes are changed or removed. This
-		inetface has three methods: <b><i>attributeAdded, attributeRemoved</i></b> and
-		<b><i>attributeReplaced</i></b>.</li>
-		<li><strong>javax.servlet.ServletRequestListener:
-		</strong> This interface is provided by javax.servlet package. It can be used
-		to be notified when a request is coming in or out of scope in a Web
-		component. This interface has two methods: requestInitialized and
-		requestDestroyed. The <b><i>requestInitialized</i></b> method is called when it is
-		about to enter the first servlet or filter in each Web application. The <b><i>requestDestroyed</i></b> method is called when it exits the last servlet
-		or the first filter in the chain.</li>
-		<li><strong>javax.servlet.ServletRequestAttributeListener:
-		</strong> This interface is provided by javax.servlet package and can be used
-		to be notified when any request attribute is changed. This interface
-		has three methods: attributeAdded, attributeRemoved and
-		attributeReplaced. The <b><i>attributteAdded</i></b> method is called when a new
-		attribute was added to servlet request. The <b><i>attributeRemoved</i></b> method is
-		called when an existing attribute has been removed from the servlet
-		request. The <b><i>attributeReplaced</i></b> method is called when an attribute
-		was replaced on the servlet request.</li>
-		<li><strong>javax.servlet.http.HttpSessionListener:
-		</strong> This interface is provided by javax.servlet.http package and can be
-		used to listen to a session&apos;s life cycle events. This interface has
-		two methods: sessionCreated and sessionDestroyed. The <b><i>sessionCreated</i></b>
-		method is called when an HttpSession object is created. The
-		<b><i>sessionDestroyed</i></b> method is called when an HttpSession object is
-		invalidated.</li>
-		<li><strong>javax.servlet.http.HttpSessionActivationListener:
-		</strong> This interface is provided by javax.servlet.http package. It can be
-		used to listen to a container events notifying that sessions will be
-		passivated or activated. This interface has two methods:
-		sessionDidActivate and sessionWillPasivate. The <b><i>sessionDidActivate</i></b> is
-		called when the session has just been activated and the
-		<b><i>sessionWillPasivate</i></b> is called when the session is about to be
-		passivated.</li>
-		<li><strong>javax.servlet.http.HttpSessionAttributeListener:
-		</strong> This interface is provided by javax.servlet.http package and can be
-		used to listen to events related to session attributes. This interface
-		has three methods: attributeAdded, attributeRemoved and
-		attributeReplaced. The <b><i>attributeAdded</i></b> method is called when an
-		attribute is added to an HttpSession object. The <b><i>attributeRemoved</i></b> and
-		<b><i>attributeReplaced</i></b> methods are called when an HttpSession attribute is
-		removed or replaced, respectively.</li>
-		<li><strong>javax.servlet.http.HttpSessionBindingListener:
-		</strong> This interface is provided by javax.servlet.http package and can be
-		used to be notified when an object is bound to or unbound from a
-		session. This interface has two methods: valueBound and valueUnbound.
-		The <b><i>valueBound</i></b> method is called when the object is being bound to a
-		session and identifies the session. The <b><i>valueUnbound</i></b> method is called
-		when the object is being unbound from a session and identifies the
-		session.</li>
-	</ul>
-	</dd>
+<li><strong>javax.servlet.ServletContextAttributeListener:</strong> This interface is provided by javax.servlet package. It can be used to be notified when any attribute is added to the ServletContext or if any of the ServletContext's attributes are changed or removed. This inetface has three methods: <strong><em>attributeAdded, attributeRemoved</em></strong> and <strong><em>attributeReplaced</em></strong>.</li>
 
-	<p>
-	<dt class="dlterm">Modifiers</dt>
-	</p>
+<li><strong>javax.servlet.ServletRequestListener:</strong> This interface is provided by javax.servlet package. It can be used to be notified when a request is coming in or out of scope in a Web component. This interface has two methods: requestInitialized and requestDestroyed. The <strong><em>requestInitialized</em></strong> method is called when it is about to enter the first servlet or filter in each Web application. The <strong><em>requestDestroyed</em></strong> method is called when it exits the last servlet or the first filter in the chain.</li>
 
-	<dd>The <cite>Sun Microsystems Java Servlet Specification</cite> states that a
-	Listener class must be <b>public</b> and not <b>abstract</b>. Therefore,
-	you cannot change these modifiers. The only one available for change is
-	the <b>final</b> modifier. </dd>
+<li><strong>javax.servlet.ServletRequestAttributeListener:</strong> This interface is provided by javax.servlet package and can be used to be notified when any request attribute is changed. This interface has three methods: attributeAdded, attributeRemoved and attributeReplaced. The <strong><em>attributteAdded</em></strong> method is called when a new attribute was added to servlet request. The <strong><em>attributeRemoved</em></strong> method is called when an existing attribute has been removed from the servlet request. The <strong><em>attributeReplaced</em></strong> method is called when an attribute was replaced on the servlet request.</li>
 
-	<p>
-	<dt class="dlterm">Interfaces</dt>
-	</p>
+<li><strong>javax.servlet.http.HttpSessionListener:</strong> This interface is provided by javax.servlet.http package and can be used to listen to a sessions life cycle events. This interface has two methods: sessionCreated and sessionDestroyed. The <strong><em>sessionCreated</em></strong>  	method is called when an HttpSession object is created. The <strong><em>sessionDestroyed</em></strong> method is called when an HttpSession object is invalidated.</li>
 
-	<dd>The interfaces that you selected in the previous page of the wizard
-	are provided as default values in the <b>Interfaces</b> field. To add
-	additional interfaces, click the <b>Add</b> button next to this field.</dd>
+<li><strong>javax.servlet.http.HttpSessionActivationListener:</strong> This interface is provided by javax.servlet.http package. It can be used to listen to a container events notifying that sessions will be passivated or activated. This interface has two methods: sessionDidActivate and sessionWillPasivate. The <strong><em>sessionDidActivate</em></strong> is called when the session has just been activated and the <strong><em>sessionWillPasivate</em></strong> is called when the session is about to be passivated.</li>
 
-	<p>
-	<dt class="dlterm">Interfaces dialog</dt>
-	</p>
+<li><strong>javax.servlet.http.HttpSessionAttributeListener:</strong> This interface is provided by javax.servlet.http package and can be used to listen to events related to session attributes. This interface has three methods: attributeAdded, attributeRemoved and attributeReplaced. The <strong><em>attributeAdded</em></strong> method is called when an attribute is added to an HttpSession object. The <strong><em>attributeRemoved</em></strong> and <strong><em>attributeReplaced</em></strong> methods are called when an HttpSession attribute is removed or replaced, respectively.</li>
 
-	<dd>This dialog appears if you select to add an interface to your
-	servlet. As you type the name of the interface that you are adding, a
-	list of available interfaces listed in the <b>Matching items</b> list box
-	updates dynamically to display only the interfaces that match the
-	pattern. Choose an interface to see the qualifier, and then click <b>OK</b>
-	when finished.</dd>
+<li><strong>javax.servlet.http.HttpSessionBindingListener:</strong> This interface is provided by javax.servlet.http package and can be used to be notified when an object is bound to or unbound from a session. This interface has two methods: valueBound and valueUnbound. The <strong><em>valueBound</em></strong> method is called when the object is being bound to a session and identifies the session. The <strong><em>valueUnbound</em></strong> method is called when the object is being unbound from a session and identifies the session.</li>
+
+</ul>
+ 	</dd>
+
+
+<dt class="dlterm">Modifiers</dt>
+
+<dd>The <cite>Sun Microsystems Java Servlet 2.3 Specification</cite> states that a 	Listener class must be <strong>public</strong> and not <strong>abstract</strong>. Therefore, 	you cannot change these modifiers. The only one available for change is 	the <strong>final</strong> modifier.</dd>
+
+
+<dt class="dlterm">Interfaces</dt>
+
+<dd>The interfaces that you selected in the previous page of the wizard 	are provided as default values in the <strong>Interfaces</strong> field. To add 	additional interfaces, click the <strong>Add</strong> button next to this field.</dd>
+
+
+<dt class="dlterm">Interface selection dialog</dt>
+
+<dd>This dialog appears if you select to add an interface to your 	servlet. As you type the name of the interface that you are adding, a 	list of available interfaces listed in the <strong>Matching items</strong> list box 	updates dynamically to display only the interfaces that match the 	pattern. Choose an interface to see the qualifier, and then click <strong>OK</strong> 	when finished.</dd>
 
 </dl>
 </div>
 
 </div>
+
+<div><div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cwlistbn.html">Listeners</a></div>
+</div>
+</div>
+
 </body>
 </html>

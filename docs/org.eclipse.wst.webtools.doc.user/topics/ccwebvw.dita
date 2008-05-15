@@ -5,9 +5,9 @@
 <concept id="ccwebvw" xml:lang="en-us">
 <title>Project Explorer view and Web development</title>
 <prolog><metadata>
-<keywords><indexterm>Project Explorer view<indexterm>overview</indexterm></indexterm>
-<indexterm>Web development<indexterm>Project Explorer view</indexterm></indexterm>
-<indexterm>Web perspective<indexterm>Project Explorer view</indexterm></indexterm>
+<keywords><indexterm keyref="ccwebvw|1|ProjectExplorerviewoverview" status="new">Project
+Explorer view<indexterm>overview</indexterm></indexterm><indexterm keyref="ccwebvw|2|WebdevelopmentProjectExplorerview"
+status="changed">Web projects<indexterm>Project Explorer view</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <conbody>

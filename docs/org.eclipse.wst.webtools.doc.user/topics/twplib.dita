@@ -5,9 +5,11 @@
 <task id="twplib" xml:lang="en-us">
 <title>Adding Web library projects</title>
 <prolog><metadata>
-<keywords><indexterm>Web library projects<indexterm>virtual JAR files and
-projects</indexterm></indexterm><indexterm>virtual JAR files associations<indexterm>Web
-library projects</indexterm></indexterm></keywords>
+<keywords><indexterm keyref="twplib|1|WeblibraryprojectsvirtualJARfilesandprojects"
+status="changed">Web projects<indexterm>virtual JAR files and projects</indexterm></indexterm>
+<indexterm keyref="twplib|2|virtualJARfilesassociationsWeblibraryprojects"
+status="new">virtual JAR files associations<indexterm>Web library projects</indexterm></indexterm>
+</keywords>
 </metadata></prolog>
 <taskbody>
 <context> <p>Web library projects allow you to associate <tm tmclass="special"

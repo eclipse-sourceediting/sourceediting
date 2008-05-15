@@ -1,110 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Arbortext, Inc., 1988-2006, v.4002-->
-<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
- "task.dtd">
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
 <task id="twlstwiz" xml:lang="en-us">
 <title>Creating Listeners</title>
-<shortdesc>The listener wizard helps you create application lifecycle
-listeners by walking you through the creation process and by providing
-you with output files that you can use or that you can modify for use
-with your Web application. The listeners can run on Java EE-compliant
-Web servers.</shortdesc>
+<shortdesc>The listener wizard helps you create application lifecycle listeners by walking you through the creation process and by providing you with output files that you can use or that you can modify for use with your Web application. The listeners can run on Java EE-compliant Web servers.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>servlets<indexterm>creating</indexterm></indexterm></keywords>
 </metadata></prolog>
 <taskbody>
 <context> <p>To create a listener, complete the following steps: </p></context>
 <steps>
-<step><cmd>From the Java EE perspective, expand your  <xref href="ccwebprj.dita"
-scope="peer"><desc></desc>dynamic project</xref> in the Project Explorer view.</cmd></step>
-<step><cmd>Right click on the <b>Listener</b> icon, and select <menucascade>
-<uicontrol>New</uicontrol><uicontrol>Listener</uicontrol></menucascade> from
-the pop-up menu.</cmd><stepresult> The <uicontrol>Create Listener</uicontrol> wizard
-appears.</stepresult></step>
+<step><cmd>From the Java EE perspective, expand your  <xref href="ccwebprj.dita" scope="peer"><desc></desc>dynamic project</xref> in the Project Explorer view.</cmd></step>
+<step><cmd>Right click on the <b>Listener</b> icon, and select <menucascade><uicontrol>New</uicontrol><uicontrol>Listener</uicontrol></menucascade> from the pop-up menu.</cmd><stepresult> The <uicontrol>Create Listener</uicontrol> wizard appears.</stepresult></step>
 <step><cmd>Follow the project wizard prompts.</cmd></step>
 </steps>
-<postreq><p><b>General Information</b></p><dl><dlentry>
-<p><dt>Application lifecycle listeners</dt></p>
-<dd>The <cite>Sun Microsystems <tm tmclass="special" tmowner="Sun Microsystems, Inc." tmtype="tm"
-trademark="Java">Java</tm> Servlet 2.3 Specification</cite>defines the
-	following interfaces that represent that application lifecycle
-	listeners. You should select at least one of the intefaces.
-	<ul>
-		<li><b>javax.servlet.ServletContextListener:</b> This interface is provided by javax.servlet package and can be used
-		to listen to the ServletContext life-cycle events. This interface has
-		two methods: contextInitialized and contextDestroyed. The
-		<b><i>contextInitialized</i></b> method is called when the web application is ready
-		to service requests and the <b><i>contextDestroyed</i></b> method is invoked when
-		the servlet context is about to be shut down.</li>
-		<li><b>javax.servlet.ServletContextAttributeListener:</b> This interface is provided by javax.servlet package. It can be used
-		to be notified when any attribute is added to the ServletContext or if
-		any of the ServletContext's attributes are changed or removed. This
-		inetface has three methods: <b><i>attributeAdded, attributeRemoved</i></b> and
-		<b><i>attributeReplaced</i></b>.</li>
-		<li><b>javax.servlet.ServletRequestListener:</b> This interface is provided by javax.servlet package. It can be used
-		to be notified when a request is coming in or out of scope in a Web
-		component. This interface has two methods: requestInitialized and
-		requestDestroyed. The <b><i>requestInitialized</i></b> method is called when it is
-		about to enter the first servlet or filter in each Web application. The <b><i>requestDestroyed</i></b> method is called when it exits the last servlet
-		or the first filter in the chain.</li>
-		<li><b>javax.servlet.ServletRequestAttributeListener:</b> This interface is provided by javax.servlet package and can be used
-		to be notified when any request attribute is changed. This interface
-		has three methods: attributeAdded, attributeRemoved and
-		attributeReplaced. The <b><i>attributteAdded</i></b> method is called when a new
-		attribute was added to servlet request. The <b><i>attributeRemoved</i></b> method is
-		called when an existing attribute has been removed from the servlet
-		request. The <b><i>attributeReplaced</i></b> method is called when an attribute
-		was replaced on the servlet request.</li>
-		<li><b>javax.servlet.http.HttpSessionListener:</b> This interface is provided by javax.servlet.http package and can be
-		used to listen to a session’s life cycle events. This interface has
-		two methods: sessionCreated and sessionDestroyed. The <b><i>sessionCreated</i></b>
-		method is called when an HttpSession object is created. The
-		<b><i>sessionDestroyed</i></b> method is called when an HttpSession object is
-		invalidated.</li>
-		<li><b>javax.servlet.http.HttpSessionActivationListener:</b> This interface is provided by javax.servlet.http package. It can be
-		used to listen to a container events notifying that sessions will be
-		passivated or activated. This interface has two methods:
-		sessionDidActivate and sessionWillPasivate. The <b><i>sessionDidActivate</i></b> is
-		called when the session has just been activated and the
-		<b><i>sessionWillPasivate</i></b> is called when the session is about to be
-		passivated.</li>
-		<li><b>javax.servlet.http.HttpSessionAttributeListener:</b> This interface is provided by javax.servlet.http package and can be
-		used to listen to events related to session attributes. This interface
-		has three methods: attributeAdded, attributeRemoved and
-		attributeReplaced. The <b><i>attributeAdded</i></b> method is called when an
-		attribute is added to an HttpSession object. The <b><i>attributeRemoved</i></b> and
-		<b><i>attributeReplaced</i></b> methods are called when an HttpSession attribute is
-		removed or replaced, respectively.</li>
-		<li><b>javax.servlet.http.HttpSessionBindingListener:</b> This interface is provided by javax.servlet.http package and can be
-		used to be notified when an object is bound to or unbound from a
-		session. This interface has two methods: valueBound and valueUnbound.
-		The <b><i>valueBound</i></b> method is called when the object is being bound to a
-		session and identifies the session. The <b><i>valueUnbound</i></b> method is called
-		when the object is being unbound from a session and identifies the
-		session.</li>
-	</ul>
-	</dd>
+<postreq><dl><dlentry>
+<dt>Application lifecycle listeners</dt>
+<dd>The <cite>Sun Microsystems <tm tmclass="special" tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="Java">Java</tm> Servlet 2.3 Specification</cite>defines the 	following interfaces that represent that application lifecycle 	listeners. You should select at least one of the intefaces. 	<ul>
+<li><b>javax.servlet.ServletContextListener:</b> This interface is provided by javax.servlet package and can be used to listen to the ServletContext life-cycle events. This interface has two methods: contextInitialized and contextDestroyed. The <b><i>contextInitialized</i></b> method is called when the web application is ready to service requests and the <b><i>contextDestroyed</i></b> method is invoked when the servlet context is about to be shut down.</li>
+<li><b>javax.servlet.ServletContextAttributeListener:</b> This interface is provided by javax.servlet package. It can be used to be notified when any attribute is added to the ServletContext or if any of the ServletContext's attributes are changed or removed. This inetface has three methods: <b><i>attributeAdded, attributeRemoved</i></b> and <b><i>attributeReplaced</i></b>.</li>
+<li><b>javax.servlet.ServletRequestListener:</b> This interface is provided by javax.servlet package. It can be used to be notified when a request is coming in or out of scope in a Web component. This interface has two methods: requestInitialized and requestDestroyed. The <b><i>requestInitialized</i></b> method is called when it is about to enter the first servlet or filter in each Web application. The <b><i>requestDestroyed</i></b> method is called when it exits the last servlet or the first filter in the chain.</li>
+<li><b>javax.servlet.ServletRequestAttributeListener:</b> This interface is provided by javax.servlet package and can be used to be notified when any request attribute is changed. This interface has three methods: attributeAdded, attributeRemoved and attributeReplaced. The <b><i>attributteAdded</i></b> method is called when a new attribute was added to servlet request. The <b><i>attributeRemoved</i></b> method is called when an existing attribute has been removed from the servlet request. The <b><i>attributeReplaced</i></b> method is called when an attribute was replaced on the servlet request.</li>
+<li><b>javax.servlet.http.HttpSessionListener:</b> This interface is provided by javax.servlet.http package and can be used to listen to a sessions life cycle events. This interface has two methods: sessionCreated and sessionDestroyed. The <b><i>sessionCreated</i></b>  	method is called when an HttpSession object is created. The <b><i>sessionDestroyed</i></b> method is called when an HttpSession object is invalidated.</li>
+<li><b>javax.servlet.http.HttpSessionActivationListener:</b> This interface is provided by javax.servlet.http package. It can be used to listen to a container events notifying that sessions will be passivated or activated. This interface has two methods: sessionDidActivate and sessionWillPasivate. The <b><i>sessionDidActivate</i></b> is called when the session has just been activated and the <b><i>sessionWillPasivate</i></b> is called when the session is about to be passivated.</li>
+<li><b>javax.servlet.http.HttpSessionAttributeListener:</b> This interface is provided by javax.servlet.http package and can be used to listen to events related to session attributes. This interface has three methods: attributeAdded, attributeRemoved and attributeReplaced. The <b><i>attributeAdded</i></b> method is called when an attribute is added to an HttpSession object. The <b><i>attributeRemoved</i></b> and <b><i>attributeReplaced</i></b> methods are called when an HttpSession attribute is removed or replaced, respectively.</li>
+<li><b>javax.servlet.http.HttpSessionBindingListener:</b> This interface is provided by javax.servlet.http package and can be used to be notified when an object is bound to or unbound from a session. This interface has two methods: valueBound and valueUnbound. The <b><i>valueBound</i></b> method is called when the object is being bound to a session and identifies the session. The <b><i>valueUnbound</i></b> method is called when the object is being unbound from a session and identifies the session.</li>
+</ul> 	</dd>
 </dlentry><dlentry>
-<p><dt>Modifiers</dt></p>
-<dd>The <cite>Sun
-Microsystems <tm tmclass="special" tmowner="Sun Microsystems, Inc." tmtype="tm"
-trademark="Java">Java</tm> Servlet 2.3 Specification</cite> states that a
-	Listener class must be <b>public</b> and not <b>abstract</b>. Therefore,
-	you cannot change these modifiers. The only one available for change is
-	the <b>final</b> modifier.</dd>
+<dt>Modifiers</dt>
+<dd>The <cite>Sun Microsystems <tm tmclass="special" tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="Java">Java</tm> Servlet 2.3 Specification</cite> states that a 	Listener class must be <b>public</b> and not <b>abstract</b>. Therefore, 	you cannot change these modifiers. The only one available for change is 	the <b>final</b> modifier.</dd>
 </dlentry><dlentry>
-<p><dt>Interfaces</dt></p>
-<dd>The interfaces that you selected in the previous page of the wizard
-	are provided as default values in the <b>Interfaces</b> field. To add
-	additional interfaces, click the <b>Add</b> button next to this field.</dd>
+<dt>Interfaces</dt>
+<dd>The interfaces that you selected in the previous page of the wizard 	are provided as default values in the <b>Interfaces</b> field. To add 	additional interfaces, click the <b>Add</b> button next to this field.</dd>
 </dlentry><dlentry>
-<p><dt>Interface selection dialog</dt></p>
-<dd>This dialog appears if you select to add an interface to your
-	servlet. As you type the name of the interface that you are adding, a
-	list of available interfaces listed in the <b>Matching items</b> list box
-	updates dynamically to display only the interfaces that match the
-	pattern. Choose an interface to see the qualifier, and then click <b>OK</b>
-	when finished.</dd>
+<dt>Interface selection dialog</dt>
+<dd>This dialog appears if you select to add an interface to your 	servlet. As you type the name of the interface that you are adding, a 	list of available interfaces listed in the <b>Matching items</b> list box 	updates dynamically to display only the interfaces that match the 	pattern. Choose an interface to see the qualifier, and then click <b>OK</b> 	when finished.</dd>
 </dlentry></dl></postreq>
 </taskbody>
 </task>

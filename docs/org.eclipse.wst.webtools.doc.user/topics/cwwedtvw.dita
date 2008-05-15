@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
  "concept.dtd">
 <concept id="cwwedtvw" xml:lang="en-us">
 <title>Workbench integration with Web editors</title>
 <prolog><metadata>
-<keywords><indexterm>Web editors<indexterm>workbench integration</indexterm></indexterm>
-</keywords>
+<keywords><indexterm keyref="cwwedtvw|1|Webeditorsworkbenchintegration" status="changed">workbench<indexterm>Web
+editors</indexterm></indexterm></keywords>
 </metadata></prolog>
 <conbody>
 <p>There are several editors for use in various contexts for various file

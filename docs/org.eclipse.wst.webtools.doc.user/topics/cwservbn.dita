@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
  "concept.dtd">
 <concept id="cwservbn" xml:lang="en-us">
 <title>Servlets</title>
 <prolog><metadata>
-<keywords><indexterm>servlets<indexterm>overview</indexterm></indexterm>
-<indexterm>Web servers<indexterm>generating dynamic content</indexterm></indexterm>
-</keywords>
+<keywords><indexterm>servlets<indexterm>overview</indexterm></indexterm><indexterm>Web
+servers<indexterm>generating dynamic content</indexterm></indexterm></keywords>
 </metadata></prolog>
 <conbody>
 <p>Servlets are server-side <tm tmclass="special" tmowner="Sun Microsystems, Inc."
@@ -34,10 +33,10 @@ which determines how information is presented to the user</li>
 </ul>Using this paradigm, you may choose to have business logic handled by <tm
 tmclass="special" tmowner="Sun Microsystems, Inc." tmtype="tm" trademark="Java">Java</tm> beans,
 the presentation logic handled by JavaServer Pages (JSP) or HTML files, and
-the HTTP protocol handled by a servlet. <note>JSP files can be used to manage
-both the presentation and business logic for a Web application. JSP files
-use structured markup for presentation, and supply servlet model behavior
-at run time.</p>
+the HTTP protocol handled by a servlet.</p>
+<note>JSP files can be used to manage both the presentation and business logic
+for a Web application. JSP files use structured markup for presentation, and
+supply servlet model behavior at run time.</note>
 <p>You can develop, debug, and deploy servlets, set breakpoints within servlet
 objects, and step through code to make changes that are dynamically folded
 into the running servlet on a running server, without having to restart each

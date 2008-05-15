@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2005, v.4002-->
+<!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN"
  "concept.dtd">
 <concept id="cpdjsps" xml:lang="en-us">
 <title>JavaServer Pages (JSP) technology</title>
 <prolog><metadata>
-<keywords><indexterm>JSP pages<indexterm>overview</indexterm></indexterm>
-<indexterm>Web content<indexterm>generating dynamically</indexterm></indexterm>
+<keywords><indexterm keyref="cpdjsps|1|JSPpagesoverview" status="changed">JSP
+files<indexterm>overview</indexterm></indexterm><indexterm keyref="cpdjsps|2|Webcontentgeneratingdynamically"
+status="new">Web content<indexterm>generating dynamically</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <conbody>
