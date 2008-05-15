@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.formatter;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -276,6 +277,7 @@ public class DefaultXMLPartitionFormatter {
 		boolean isAllWhitespace = ((IDOMText) currentDOMRegion.domNode).isElementContentWhitespace();
 		IStructuredDocumentRegion nextDocumentRegion = null;
 		if (isAllWhitespace) {
+			parentConstraints.setAvailableLineWidth(fPreferences.getMaxLineWidth());
 			nextDocumentRegion = currentRegion.getNext();
 			if (nextDocumentRegion != null)
 				return;
@@ -406,6 +408,9 @@ public class DefaultXMLPartitionFormatter {
 		}
 		else if (regionType == DOMRegionContext.XML_CONTENT) {
 			formatContent(edit, formatRange, parentConstraints, domRegion, previousRegion);
+		}
+		else if (regionType == DOMRegionContext.XML_COMMENT_TEXT) {
+			formatComment(edit, formatRange, parentConstraints, domRegion, previousRegion);
 		}
 		else {
 			// unknown, so just leave alone for now but make sure to update
@@ -918,6 +923,138 @@ public class DefaultXMLPartitionFormatter {
 		// update line width
 		constraints.setAvailableLineWidth(availableLineWidth);
 		return false;
+	}
+	
+	/**
+	 * Format an XML comment structured document region.
+	 */
+	private void formatComment(TextEdit textEdit, Position formatRange, XMLFormattingConstraints parentConstraints, DOMRegion currentDOMRegion, IStructuredDocumentRegion previousRegion) {
+		IStructuredDocumentRegion currentRegion = currentDOMRegion.documentRegion;
+		int lineWidth = parentConstraints.getAvailableLineWidth() - currentRegion.getFullText().length();
+		// Don't format if we're not exceeding the available line width, or if the whitespace
+		// strategy is to preserve whitespace - But update line width.
+		if(currentRegion == null || (lineWidth >= 0) ||
+				parentConstraints.getWhitespaceStrategy() == XMLFormattingConstraints.PRESERVE) {
+			parentConstraints.setAvailableLineWidth(lineWidth);
+			return;
+		}
+		
+		Iterator it = currentRegion.getRegions().iterator();
+		// Iterate over each text region of the comment
+		while(it.hasNext()) {
+			ITextRegion text = (ITextRegion) it.next();
+			formatCommentTag(textEdit, parentConstraints, currentRegion, text);
+		}
+	}
+	
+	/**
+	 * Handles formatting various portions of an XML comment. Because the XML
+	 * Comment is considered its own document region, there are cases where
+	 * the previous region must be referred to for proper indentation
+	 * consideration. Because of this, most of the special cases are
+	 * catering to the opening text region of the document region.
+	 * 
+	 * @param textEdit
+	 * @param parentConstraints
+	 * @param currentRegion
+	 * @param region
+	 */
+	private void formatCommentTag(TextEdit textEdit, XMLFormattingConstraints parentConstraints, IStructuredDocumentRegion currentRegion, ITextRegion region) {
+		int availableLineWidth = parentConstraints.getAvailableLineWidth();
+		int indentLevel = parentConstraints.getIndentLevel() + 1;
+		boolean initialIndent = false;
+		
+		// Indent the text of the comment an additional level
+		if(region.getType() == DOMRegionContext.XML_COMMENT_TEXT) {
+			indentLevel++;
+			initialIndent = true;
+		}
+		
+		int fullTextOffset = 0;
+		char[] fullTextArray = currentRegion.getFullText(region).toCharArray();
+		while (fullTextOffset < fullTextArray.length) {
+			// gather all whitespaces
+			String whitespaceRun = null;
+			
+			// If the region is a comment opening, the whitespace would actually come from the
+			// previous document region
+			if(region.getType() == DOMRegionContext.XML_COMMENT_OPEN && currentRegion.getPrevious() != null)
+				whitespaceRun = getCharacterRun(currentRegion.getPrevious().getFullText().toCharArray(), 0, true);
+			else
+				whitespaceRun = getCharacterRun(fullTextArray, fullTextOffset, true);
+			
+			if (whitespaceRun.length() > 0) {
+				// offset where whitespace starts
+				int whitespaceStart = fullTextOffset;
+				// update current offset in fullText for non comment-opening regions
+				if(region.getType() != DOMRegionContext.XML_COMMENT_OPEN)
+					fullTextOffset += whitespaceRun.length();
+
+				// gather following word
+				String characterRun = getCharacterRun(fullTextArray, fullTextOffset, false);
+				int characterRunLength = characterRun.length();
+				if (characterRunLength > 0) {
+					// indent if word is too long or forcing initial
+					// indent
+					availableLineWidth -= characterRunLength;
+					// offset where indent/collapse will happen - for comment-opening regions,
+					// this occurs in the previous document region
+					int startOffset = 0;
+					if(region.getType() == DOMRegionContext.XML_COMMENT_OPEN && currentRegion.getPrevious() != null)
+						startOffset = currentRegion.getPrevious().getStartOffset();
+					else
+						startOffset = currentRegion.getStartOffset(region) + whitespaceStart;
+					
+					if (region.getType() == DOMRegionContext.XML_COMMENT_OPEN || initialIndent || (availableLineWidth <= 0)) {
+						// indent if not already indented
+						availableLineWidth = indentIfNotAlreadyIndented(textEdit, currentRegion, indentLevel, startOffset, whitespaceRun);
+						// remember to subtract word length
+						availableLineWidth -= characterRunLength;
+						// Indented the first word of the comment
+						if(initialIndent)
+							initialIndent = false;
+					}
+					else {
+						// just collapse spaces
+						availableLineWidth = collapseSpaces(textEdit, startOffset, availableLineWidth, whitespaceRun);
+					}
+
+					fullTextOffset += characterRunLength;
+				}
+				else {
+					// handle trailing whitespace
+					int whitespaceOffset = currentRegion.getStartOffset(region) + whitespaceStart;
+					DeleteEdit deleteTrailing = new DeleteEdit(whitespaceOffset, whitespaceRun.length());
+					textEdit.addChild(deleteTrailing);
+				}
+			}
+			else {
+				// gather word
+				String characterRun = getCharacterRun(fullTextArray, fullTextOffset, false);
+				int characterRunLength = characterRun.length();
+				if (characterRunLength > 0) {
+					// indent if word is too long or forcing initial
+					// indent
+					availableLineWidth = availableLineWidth - characterRunLength;
+
+					if ((region.getType() == DOMRegionContext.XML_COMMENT_CLOSE || region.getType() == DOMRegionContext.XML_COMMENT_OPEN) || initialIndent || (region.getType() == DOMRegionContext.XML_COMMENT_TEXT && availableLineWidth <= 0)) {
+						// indent if not already indented
+						availableLineWidth = indentIfNotAlreadyIndented(textEdit, currentRegion, indentLevel, currentRegion.getStartOffset(region), whitespaceRun);
+						// remember to subtract word length
+						availableLineWidth -= characterRunLength;
+						if(initialIndent)
+							initialIndent = false;
+					}
+					else {
+						// just collapse spaces
+						availableLineWidth -= characterRunLength;
+					}
+					fullTextOffset += characterRunLength;
+				}
+			}
+		}
+		// update available line width
+		parentConstraints.setAvailableLineWidth(availableLineWidth);
 	}
 
 	/**
