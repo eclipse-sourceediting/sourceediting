@@ -266,4 +266,9 @@ public class TestPartitionFormatterXML extends TestCase {
 	    // BUG198297
 		formatAndAssertEquals("testfiles/xml/processinginstruction.xml", "testfiles/xml/processinginstruction-fmt.xml");
 	}
+	
+	public void testComments() throws UnsupportedEncodingException, IOException, CoreException {
+		// Bug 226821
+		formatAndAssertEquals("testfiles/xml/xml-comment.xml", "testfiles/xml/xml-comment-newfmt.xml");
+	}
 }
