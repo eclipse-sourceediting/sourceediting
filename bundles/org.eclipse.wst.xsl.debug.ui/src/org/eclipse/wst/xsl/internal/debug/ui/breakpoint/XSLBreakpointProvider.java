@@ -34,6 +34,11 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakp
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.model.XSLLineBreakpoint;
 
+/**
+ * An SSE <code>IBreakpointProvider</code> for XSL files.
+ * 
+ * @author Doug Satchwell
+ */
 public class XSLBreakpointProvider implements IBreakpointProvider, IExecutableExtension
 {
 	public IStatus addBreakpoint(IDocument document, IEditorInput input, int editorLineNumber, int offset) throws CoreException
@@ -128,7 +133,7 @@ public class XSLBreakpointProvider implements IBreakpointProvider, IExecutableEx
 
 					for (int i = 0; i < partitions.length; ++i)
 					{
-						String type = partitions[i].getType();
+						// String type = partitions[i].getType();
 						result = partitions[i].getOffset();
 					}
 				}

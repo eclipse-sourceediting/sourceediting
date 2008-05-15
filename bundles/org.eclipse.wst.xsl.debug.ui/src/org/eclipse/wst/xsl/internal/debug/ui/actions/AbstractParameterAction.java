@@ -18,13 +18,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.actions.SelectionListenerAction;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.ParameterViewer;
 
+/**
+ * A convenient base class for add/remove parameter actions.
+ * 
+ * @author Doug Satchwell
+ */
 public abstract class AbstractParameterAction extends SelectionListenerAction
 {
-	public static final int DEFAULT = 0;
-	public static final int ADD = 1;
-	public static final int REMOVE = 2;
-	public static final int MOVE = 3;
-
 	private ParameterViewer viewer;
 	private Button button;
 	private Shell shell;
@@ -35,6 +35,11 @@ public abstract class AbstractParameterAction extends SelectionListenerAction
 		setViewer(viewer);
 	}
 
+	/**
+	 * Set the viewer.
+	 * 
+	 * @param viewer the parametere viewer
+	 */
 	public void setViewer(ParameterViewer viewer)
 	{
 		if (this.viewer != null)
@@ -54,6 +59,11 @@ public abstract class AbstractParameterAction extends SelectionListenerAction
 		return viewer;
 	}
 
+	/**
+	 * Set the button associated with the action.
+	 * 
+	 * @param button the button
+	 */
 	public void setButton(Button button)
 	{
 		this.button = button;
@@ -92,6 +102,11 @@ public abstract class AbstractParameterAction extends SelectionListenerAction
 		return shell;
 	}
 
+	/**
+	 * Set the shell that will be used for opening a dialog.
+	 * 
+	 * @param shell the shell to use
+	 */
 	public void setShell(Shell shell)
 	{
 		this.shell = shell;
@@ -105,6 +120,6 @@ public abstract class AbstractParameterAction extends SelectionListenerAction
 
 	protected int getActionType()
 	{
-		return DEFAULT;
+		return AbstractStylesheetAction.DEFAULT;
 	}
 }

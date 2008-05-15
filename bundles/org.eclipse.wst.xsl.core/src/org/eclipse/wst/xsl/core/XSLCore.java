@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.wst.xsl.core.internal.model.Stylesheet;
 import org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder;
 import org.eclipse.wst.xsl.core.internal.model.StylesheetModel;
+import org.eclipse.wst.xsl.core.internal.util.FileUtil;
 
 /**
  * The interface to all aspects of the XSL core functionality.
@@ -126,7 +127,18 @@ public class XSLCore
 		// TODO depends on how we resolve URIs
 		return currentFile.getParent().getFile(new Path(uri));
 	}
-	
+	/**
+	 * Determine whether the given file is an XML file by inspecting its content types.
+	 * 
+	 * @param file the file to inspect
+	 * @return true if this file is an XML file
+	 */
+
+	public static boolean isXMLFile(IFile file)
+	{
+		return FileUtil.isXMLFile(file);
+	}
+
 	/**
 	 * Determine whether the given file is an XSL file by inspecting its content types.
 	 * 
@@ -135,15 +147,6 @@ public class XSLCore
 	 */
 	public static boolean isXSLFile(IFile file)
 	{
-		IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
-		IContentType[] types = contentTypeManager.findContentTypesFor(file.getName());
-		for (IContentType contentType : types)
-		{
-			if (contentType.equals(contentTypeManager.getContentType(XSL_CONTENT_TYPE)))
-			{
-				return true;
-			}
-		}
-		return false;
+		return FileUtil.isXSLFile(file);
 	}
 }

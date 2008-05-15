@@ -16,9 +16,18 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.ParameterViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchAttribute;
 
+/**
+ * An action that removes a selection from a viewer.
+ * 
+ * @author Doug Satchwell
+ */
 public class RemoveParameterAction extends AbstractParameterAction
 {
-
+	/**
+	 * Create a new instance of this.
+	 * 
+	 * @param viewer the viewer that will have its selection removed
+	 */
 	public RemoveParameterAction(ParameterViewer viewer)
 	{
 		super(ActionMessages.RemoveParameterAction, viewer);

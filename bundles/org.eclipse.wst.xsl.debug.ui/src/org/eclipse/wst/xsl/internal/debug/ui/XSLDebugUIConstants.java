@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2008 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,17 +10,40 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui;
 
-
+/**
+ * Constants for the XSL Debug UI.
+ * 
+ * @author Doug Satchwell
+ */
 public class XSLDebugUIConstants
 {
 	private static final String PREFIX = XSLDebugUIPlugin.PLUGIN_ID + '.';
+	/**
+	 * Constant used to store column setting preferences for the <code>InstalledProcessorsBlock</code>
+	 */
 	public static final String PROCESSOR_DETAILS_DIALOG = PREFIX + "PROCESSOR_DETAILS_DIALOG"; //$NON-NLS-1$
-	public static final String PROCESSOR_OUTPUT_PROPERTIES_BLOCK = PREFIX + "PROCESSOR_OUTPUT_PROPERTIES_BLOCK"; //$NON-NLS-1$
+	/**
+	 * Constant used to store column setting preferences for the <code>ParametersBlock</code>
+	 */
 	public static final String MAIN_PARAMATERS_BLOCK = PREFIX + "MAIN_PARAMATERS_BLOCK"; //$NON-NLS-1$
+	/**
+	 * Constant used to store column setting preferences for the <code>TransformsBlock</code>
+	 */
 	public static final String MAIN_TRANSFORMS_BLOCK = PREFIX + "MAIN_TRANSFORMS_BLOCK"; //$NON-NLS-1$
+	/**
+	 * Constant used to store column setting preferences for the <code>FeaturesBlock</code>
+	 */
 	public static final String FEATURES_BLOCK = PREFIX + "FEATURES_BLOCK"; //$NON-NLS-1$
+	/**
+	 * Constant used to store column setting preferences for the <code>OutputBlock</code>
+	 */
 	public static final String OUTPUT_BLOCK = PREFIX + "OUTPUT_BLOCK"; //$NON-NLS-1$
+	/**
+	 * Constant used to store column setting preferences for the <code>FeaturesBlock</code>
+	 */
 	public static final String FEATURES_LAUNCH_BLOCK = PREFIX + "FEATURES_LAUNCH_BLOCK"; //$NON-NLS-1$
-
+	/**
+	 * The id of the XSL editor
+	 */
 	public static final String XSL_EDITOR_ID = "org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"; //$NON-NLS-1$
 }

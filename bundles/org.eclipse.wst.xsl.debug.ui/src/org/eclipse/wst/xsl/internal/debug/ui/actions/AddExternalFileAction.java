@@ -17,9 +17,19 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 
+/**
+ * An action that opens a dialog to allow the user to select a file from the file system.
+ * 
+ * @author Doug Satchwell
+ */
 public class AddExternalFileAction extends OpenDialogAction
 {
-
+	/**
+	 * Create a new instance of this.
+	 * 
+	 * @param viewer the stylesheet viewer
+	 * @param dialogSettingsPrefix a prefix to use for saving dialog preferences
+	 */
 	public AddExternalFileAction(StylesheetViewer viewer, String dialogSettingsPrefix)
 	{
 		super(ActionMessages.AddExternalFileAction_Text, viewer, dialogSettingsPrefix);

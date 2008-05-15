@@ -37,6 +37,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 
+/**
+ * A dialog with handy methods for adding simple controls to itself.
+ * 
+ * @author Doug Satchwell
+ */
 public class MultipleInputDialog extends Dialog
 {
 	protected static final String FIELD_NAME = "FIELD_NAME"; //$NON-NLS-1$
@@ -50,11 +55,18 @@ public class MultipleInputDialog extends Dialog
 	protected List<FieldSummary> fieldList = new ArrayList<FieldSummary>();
 	protected List<Scrollable> controlList = new ArrayList<Scrollable>();
 	protected List<Validator> validators = new ArrayList<Validator>();
+	@SuppressWarnings("unchecked")
 	protected Map<Object, Comparable> valueMap = new HashMap<Object, Comparable>();
 
 	private final String title;
 
-	public MultipleInputDialog(Shell shell, String title)
+	/**
+	 * Create a new instance of this.
+	 * 
+	 * @param shell the shell to open the dialog on
+	 * @param title the title for the dialog
+	 */
+	public MultipleInputDialog(final Shell shell, final String title)
 	{
 		super(shell);
 		this.title = title;
@@ -125,21 +137,49 @@ public class MultipleInputDialog extends Dialog
 		return container;
 	}
 
+	/**
+	 * Add a label, text box and button for browsing the for a file.
+	 * 
+	 * @param labelText the label
+	 * @param initialValue the initial value
+	 * @param allowsEmpty true if the text box can be empty
+	 */
 	public void addBrowseField(String labelText, String initialValue, boolean allowsEmpty)
 	{
 		fieldList.add(new FieldSummary(BROWSE, labelText, initialValue, allowsEmpty));
 	}
 
+	/**
+	 * Add a label and a text box.
+	 * 
+	 * @param labelText the label
+	 * @param initialValue the initial value
+	 * @param allowsEmpty true if the text box can be empty
+	 */
 	public void addTextField(String labelText, String initialValue, boolean allowsEmpty)
 	{
 		fieldList.add(new FieldSummary(TEXT, labelText, initialValue, allowsEmpty));
 	}
 
+	/**
+	 * Add a label, a text box and a button for selecting variables.
+	 * 
+	 * @param labelText the label
+	 * @param initialValue the initial value
+	 * @param allowsEmpty true if the text box can be empty
+	 */
 	public void addVariablesField(String labelText, String initialValue, boolean allowsEmpty)
 	{
 		fieldList.add(new FieldSummary(VARIABLE, labelText, initialValue, allowsEmpty));
 	}
 
+	/**
+	 * Add a label and a combo.
+	 * 
+	 * @param labelText the label
+	 * @param initialIndex the initial selection index
+	 * @param items the array of items for the combo
+	 */
 	public void addComboField(String labelText, int initialIndex, String[] items)
 	{
 		fieldList.add(new FieldSummary(COMBO, labelText, items, initialIndex));
@@ -185,7 +225,7 @@ public class MultipleInputDialog extends Dialog
 		controlList.add(text);
 	}
 
-	public void createVariablesField(String labelText, String initialValue, boolean allowEmpty)
+	protected void createVariablesField(String labelText, String initialValue, boolean allowEmpty)
 	{
 		Label label = new Label(panel, SWT.NONE);
 		label.setText(labelText);
@@ -255,7 +295,7 @@ public class MultipleInputDialog extends Dialog
 
 	}
 
-	public void createComboField(String labelText, int initialValue, String[] items)
+	protected void createComboField(String labelText, int initialValue, String[] items)
 	{
 		Label label = new Label(panel, SWT.NONE);
 		label.setText(labelText);
@@ -311,22 +351,22 @@ public class MultipleInputDialog extends Dialog
 		return super.open();
 	}
 
-	public Object getValue(String key)
+	protected Object getValue(String key)
 	{
 		return valueMap.get(key);
 	}
 
-	public String getStringValue(String key)
+	protected String getStringValue(String key)
 	{
 		return (String) getValue(key);
 	}
 
-	public int getIntValue(String key)
+	protected int getIntValue(String key)
 	{
 		return ((Integer) getValue(key)).intValue();
 	}
 
-	public void validateFields()
+	protected void validateFields()
 	{
 		for (Iterator<Validator> i = validators.iterator(); i.hasNext();)
 		{

@@ -19,6 +19,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
+/**
+ * The base class for XSL launch configuration tabs which allows a number of 'blocks' to be added.
+ * Each block must itself fully implement <code>ILaunchConfigurationTab</code>.
+ * 
+ * @author Doug Satchwell
+ */
 public abstract class XSLLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 {
 	private ILaunchConfigurationTab[] blocks;

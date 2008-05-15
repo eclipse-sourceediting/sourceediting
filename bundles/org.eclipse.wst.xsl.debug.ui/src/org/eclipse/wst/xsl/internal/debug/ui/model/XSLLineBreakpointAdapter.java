@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.model;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.DebugPlugin;
@@ -20,9 +21,15 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.launching.model.IXSLConstants;
 import org.eclipse.wst.xsl.launching.model.XSLLineBreakpoint;
 
+/**
+ * An <code>IToggleBreakpointsTarget</code> for XSL breakpoints.
+ * 
+ * @author Doug Satchwell
+ */
 public class XSLLineBreakpointAdapter implements IToggleBreakpointsTarget
 {
 	public void toggleLineBreakpoints(IWorkbenchPart part, ISelection selection) throws CoreException
@@ -67,11 +74,9 @@ public class XSLLineBreakpointAdapter implements IToggleBreakpointsTarget
 		{
 			ITextEditor editorPart = (ITextEditor) part;
 			IResource resource = (IResource) editorPart.getEditorInput().getAdapter(IResource.class);
-			if (resource != null)
+			if (resource != null && resource.getType() == IResource.FILE)
 			{
-				String extension = resource.getFileExtension();
-				// TODO handle other file extensions/content types
-				if (extension != null && extension.equalsIgnoreCase("xsl")) //$NON-NLS-1$
+				if (XSLCore.isXSLFile((IFile)resource))
 				{
 					return editorPart;
 				}

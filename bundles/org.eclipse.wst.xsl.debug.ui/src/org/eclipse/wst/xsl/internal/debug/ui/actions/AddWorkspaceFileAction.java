@@ -10,12 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.actions;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -26,12 +24,17 @@ import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
-import org.eclipse.ui.views.navigator.ResourceSorter;
-import org.eclipse.wst.xsl.core.internal.util.FileUtil;
+import org.eclipse.ui.views.navigator.ResourceComparator;
+import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 
+/**
+ * An action that opens a dialog to allow the user to select a file in the workspace.
+ * 
+ * @author Doug Satchwell
+ */
 public class AddWorkspaceFileAction extends AbstractStylesheetAction
 {
 	private final ISelectionStatusValidator validator = new ISelectionStatusValidator()
@@ -53,6 +56,11 @@ public class AddWorkspaceFileAction extends AbstractStylesheetAction
 		}
 	};
 
+	/**
+	 * Create a new instance of this.
+	 * 
+	 * @param viewer the viewer
+	 */
 	public AddWorkspaceFileAction(StylesheetViewer viewer)
 	{
 		super(ActionMessages.AddWorkspaceFileAction_Text, viewer);
@@ -81,14 +89,14 @@ public class AddWorkspaceFileAction extends AbstractStylesheetAction
 				IResource resource = (IResource)element;
 				if (resource.getType() == IResource.FILE)
 				{
-					if (!FileUtil.isXSLFile((IFile)resource))
+					if (!XSLCore.isXSLFile((IFile)resource))
 						return false;
 				}
 				return true;
 			}
 		});
 		dialog.setInput(ResourcesPlugin.getWorkspace().getRoot());
-		dialog.setSorter(new ResourceSorter(ResourceSorter.NAME));
+		dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
 
 		if (dialog.open() == Window.OK)
 		{

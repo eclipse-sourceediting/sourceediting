@@ -23,11 +23,28 @@ import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchPipeline;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 
+/**
+ * A convenient base class for actions associated with the stylesheet viewer.
+ * 
+ * @author Doug Satchwell
+ */
 public abstract class AbstractStylesheetAction extends SelectionListenerAction
 {
+	/**
+	 * The default action type.
+	 */
 	public static final int DEFAULT = 0;
+	/**
+	 * The action type for add actions.
+	 */
 	public static final int ADD = 1;
+	/**
+	 * The action type for remove actions.
+	 */
 	public static final int REMOVE = 2;
+	/**
+	 * The action type for move actions.
+	 */
 	public static final int MOVE = 3;
 
 	private StylesheetViewer viewer;
@@ -40,11 +57,21 @@ public abstract class AbstractStylesheetAction extends SelectionListenerAction
 		setViewer(viewer);
 	}
 
+	/**
+	 * Add an array of LaunchTransform's to the viewer.
+	 * 
+	 * @param res launch transforms to add
+	 */
 	public void addTransforms(LaunchTransform[] res)
 	{
 		viewer.addTransforms(res);
 	}
 
+	/**
+	 * Set the viewer associated with this action.
+	 * 
+	 * @param viewer the viewer
+	 */
 	public void setViewer(StylesheetViewer viewer)
 	{
 		if (this.viewer != null)
@@ -64,6 +91,11 @@ public abstract class AbstractStylesheetAction extends SelectionListenerAction
 		return viewer;
 	}
 
+	/**
+	 * Set the button associated with this action.
+	 * 
+	 * @param button the button
+	 */
 	public void setButton(Button button)
 	{
 		this.button = button;
@@ -102,6 +134,11 @@ public abstract class AbstractStylesheetAction extends SelectionListenerAction
 		return shell;
 	}
 
+	/**
+	 * Set the shell to be used for opening a dialog.
+	 * 
+	 * @param shell the shell to use
+	 */
 	public void setShell(Shell shell)
 	{
 		this.shell = shell;

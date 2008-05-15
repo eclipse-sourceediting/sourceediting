@@ -21,8 +21,16 @@ import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.XSLMainTab;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.output.OutputTab;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.processor.XSLProcessorTab;
 
+/**
+ *The tab group for the XSL tabs.
+ * 
+ * @author Doug Satchwell
+ */
 public class XSLTTabGroup extends AbstractLaunchConfigurationTabGroup
 {
+	/**
+	 * Create a new instance of this.
+	 */
 	public XSLTTabGroup()
 	{
 	}

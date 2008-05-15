@@ -14,6 +14,13 @@ import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.swt.widgets.Table;
 
+/**
+ * An <code>AbstractLaunchConfigurationTab</code> specialised for blocks that
+ * contain a table. This abstract class conveniently saves and restores the table's
+ * column settings.
+ * 
+ * @author Doug Satchwell
+ */
 public abstract class AbstractTableBlock extends AbstractLaunchConfigurationTab
 {
 	private int fSortColumn;
@@ -45,8 +52,6 @@ public abstract class AbstractTableBlock extends AbstractLaunchConfigurationTab
 
 	/**
 	 * Restore table settings from the given dialog store using the given key.
-	 * 
-	 * @param widths
 	 */
 	public void restoreColumnSettings()
 	{

@@ -14,11 +14,16 @@ import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.widgets.Control;
 
+/**
+ * Used to help with accessibility.
+ * 
+ * @author Doug Satchwell
+ */
 public class ControlAccessibleListener extends AccessibleAdapter
 {
 	private final String controlName;
 
-	public ControlAccessibleListener(String name)
+	private ControlAccessibleListener(String name)
 	{
 		controlName = name;
 	}
@@ -29,6 +34,12 @@ public class ControlAccessibleListener extends AccessibleAdapter
 		e.result = controlName;
 	}
 
+	/**
+	 * Helper for adding an instance of this to the given control.
+	 * 
+	 * @param comp the control to add this to
+	 * @param name the name for this
+	 */
 	public static void addListener(Control comp, String name)
 	{
 		// strip mnemonic

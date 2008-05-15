@@ -51,6 +51,12 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 
+/**
+ * A block that shows a text box with buttons for browsing workspace or the filesystem
+ * in order to populate the text box with a file path.
+ * 
+ * @author Doug Satchwell
+ */
 public abstract class ResourceSelectionBlock extends AbstractLaunchConfigurationTab
 {
 	protected static final int ERROR_DIRECTORY_NOT_SPECIFIED = 1;
@@ -130,26 +136,55 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 		}
 	}
 
+	/**
+	 * Same as <code>new ResourceSelectionBlock(true)</code>
+	 */
 	public ResourceSelectionBlock()
 	{
 		this(true);
 	}
 
+	/**
+	 * Same as <code>new ResourceSelectionBlock(IResource.FOLDER,showDefault)</code>
+	 * 
+	 * @param showDefault true if this should have a 'Show Default' button
+	 */
 	public ResourceSelectionBlock(boolean showDefault)
 	{
 		this(IResource.FOLDER, showDefault);
 	}
 
+	/**
+	 * Same as <code>new ResourceSelectionBlock(resourceType,showDefault,true)</code>
+	 * 
+	 * @param resourceType the type of resource to select - IResource.FOLDER or IResource.FILE
+	 * @param showDefault true if this should have a 'Show Default' button
+	 */
 	public ResourceSelectionBlock(int resourceType, boolean showDefault)
 	{
 		this(resourceType, showDefault, true);
 	}
 
+	/**
+	 * Same as <code>new ResourceSelectionBlock(resourceType,showDefault,required,true)</code>
+	 * 
+	 * @param resourceType the type of resource to select - IResource.FOLDER or IResource.FILE
+	 * @param showDefault true if this should have a 'Show Default' button
+	 * @param required true if a blank text box is invalid
+	 */
 	public ResourceSelectionBlock(int resourceType, boolean showDefault, boolean required)
 	{
 		this(resourceType, showDefault, required, true);
 	}
 
+	/**
+	 * Create a new instance of this.
+	 * 
+	 * @param resourceType the type of resource to select - IResource.FOLDER or IResource.FILE
+	 * @param showDefault true if this should have a 'Show Default' button
+	 * @param required true if a blank text box is invalid
+	 * @param mustExist true of the selected resource must already exist
+	 */
 	public ResourceSelectionBlock(int resourceType, boolean showDefault, boolean required, boolean mustExist)
 	{
 		super();

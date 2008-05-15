@@ -14,13 +14,24 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 
+/**
+ * An action that removes a selection from a viewer.
+ * 
+ * @author Doug Satchwell
+ */
 public class RemoveAction extends AbstractStylesheetAction
 {
+	/**
+	 * Create a new instance of this.
+	 * 
+	 * @param viewer the viewer that will have its selection removed
+	 */
 	public RemoveAction(StylesheetViewer viewer)
 	{
 		super(ActionMessages.RemoveAction_Text, viewer);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void run()
 	{

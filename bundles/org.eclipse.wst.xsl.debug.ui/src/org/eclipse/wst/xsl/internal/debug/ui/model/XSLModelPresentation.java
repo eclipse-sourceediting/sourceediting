@@ -24,6 +24,11 @@ import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIConstants;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.model.XSLVariable;
 
+/**
+ * An <code>IDebugModelPresentation</code> for XSL debugging. 
+ * 
+ * @author Doug Satchwell
+ */
 public class XSLModelPresentation extends LabelProvider implements IDebugModelPresentation
 {
 	private Image localImg;

@@ -14,12 +14,22 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.ParameterViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchAttribute;
 
+/**
+ * An action that opens a dialog to allow the user to add a parameter to a transform.
+ * 
+ * @author Doug Satchwell
+ */
 public class AddParameterAction extends AbstractParameterAction
 {
 	final String[] types = new String[]
 	{ LaunchAttribute.TYPE_STRING, LaunchAttribute.TYPE_BOOLEAN, LaunchAttribute.TYPE_INT, LaunchAttribute.TYPE_DOUBLE, LaunchAttribute.TYPE_FLOAT, LaunchAttribute.TYPE_OBJECT,
 			LaunchAttribute.TYPE_CLASS, };
 
+	/**
+	 * Create a new instance of this.
+	 * 
+	 * @param viewer teh viewer
+	 */
 	public AddParameterAction(ParameterViewer viewer)
 	{
 		super(ActionMessages.AddParameterAction, viewer);

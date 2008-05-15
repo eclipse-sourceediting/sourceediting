@@ -14,11 +14,23 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
 
+/**
+ * An action that opens a dialog.
+ * 
+ * @author Doug Satchwell
+ */
 public class OpenDialogAction extends AbstractStylesheetAction
 {
 	protected static final String LAST_PATH_SETTING = "LAST_PATH_SETTING"; //$NON-NLS-1$
 	private String fPrefix = null;
 
+	/**
+	 * Create a new instance of this
+	 * 
+	 * @param label the dialog title
+	 * @param viewer a viewer that this dialog is associated with
+	 * @param dialogSettingsPrefix the prefix to use for saving dialog preferences
+	 */
 	public OpenDialogAction(String label, StylesheetViewer viewer, String dialogSettingsPrefix)
 	{
 		super(label, viewer);
