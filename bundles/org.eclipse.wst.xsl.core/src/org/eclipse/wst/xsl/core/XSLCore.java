@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsl.core.internal.model.Stylesheet;
 import org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder;
 import org.eclipse.wst.xsl.core.internal.model.StylesheetModel;
@@ -145,5 +146,9 @@ public class XSLCore
 	public static boolean isXSLFile(IFile file)
 	{
 		return FileUtil.isXSLFile(file);
+	}
+	
+	public static boolean isXSLNamespace(IDOMNode node) {
+		return node.getNamespaceURI().equals(XSL_NAMESPACE_URI);
 	}
 }

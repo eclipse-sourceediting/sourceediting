@@ -25,7 +25,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
-import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
@@ -34,6 +33,7 @@ import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xml.xpath.ui.internal.contentassist.XPathTemplateCompletionProcessor;
 import org.eclipse.wst.xml.xpath.ui.internal.templates.TemplateContextTypeIdsXPath;
 import org.eclipse.wst.xsl.core.XSLCore;
+import org.eclipse.wst.xsl.core.internal.util.StructuredDocumentUtil;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages;
@@ -91,6 +91,8 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 		super();
 	}
 	
+	
+	
 	/**
 	 * TODO: Add Javadoc
 	 * 
@@ -120,7 +122,6 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 	@Override
 	protected void addAttributeValueProposals(ContentAssistRequest contentAssistRequest) {
 		super.addAttributeValueProposals(contentAssistRequest);
-		String namespace = DOMNamespaceHelper.getNamespaceURI(contentAssistRequest.getNode());
 
 		String attributeName = getAttributeName(contentAssistRequest);
 		Element rootElement = contentAssistRequest.getNode().getOwnerDocument().getDocumentElement();
@@ -128,9 +129,9 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 		if (attributeName != null) {
 			int offset = contentAssistRequest.getStartOffset() + 1;
 
-			addAttributeValueOfProposals(contentAssistRequest, namespace, rootElement, offset);
+			addAttributeValueOfProposals(contentAssistRequest, contentAssistRequest.getNode().getNamespaceURI(), rootElement, offset);
 
-			if (isXSLNamespace(namespace)) {
+			if (XSLCore.isXSLNamespace((IDOMNode)contentAssistRequest.getNode())) {
 				addSelectAndTestProposals(contentAssistRequest, attributeName, rootElement, offset);
 				addMatchProposals(contentAssistRequest, attributeName,	offset);
 			}
@@ -154,10 +155,6 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.XPATH, offset);
 			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.CUSTOM, offset);
 		}
-	}
-
-	private boolean isXSLNamespace(String namespace) {
-		return namespace != null && namespace.equals(XSLCore.XSL_NAMESPACE_URI);
 	}
 
 	private void addAttributeValueOfProposals(
@@ -310,4 +307,107 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 		return null;
 	}
 
+	/**
+	 * Get the Match String.  This is typically the string-before the current
+	 * offset position.   For a standard XML Region this is calculated from the
+	 * beginning of the region (i.e. element, attribute, attribute value, etc.
+	 * For XSL, an additional check has to be made to determine if we are parsing
+	 * within an XPath region and where we are in the XPath region, as different
+	 * content assistance can be made available depending on where we are at.  This
+	 * primarily affects TEST, and SELECT attributes.
+	 * @param parent
+	 * @param aRegion
+	 * @param offset
+	 * @return
+	 */
+	@Override
+	protected String getMatchString(IStructuredDocumentRegion parent, ITextRegion aRegion, int offset) {
+		String emptyString = "";
+
+		if (isMatchStringEmpty(parent, aRegion, offset)) {
+			return emptyString; //$NON-NLS-1$
+		}
+		
+		if (hasXMLMatchString(parent, aRegion, offset)) {
+			return extractXMLMatchString(parent, aRegion, offset);
+		}
+		// This is here for saftey reasons.
+		return emptyString;
+	}
+
+	protected boolean notXPathRegion(IStructuredDocumentRegion nodeRegion, ITextRegion aRegion) {
+		IDOMNode currentNode = StructuredDocumentUtil.getNode(nodeRegion, aRegion);
+		
+		if (XSLCore.isXSLNamespace(currentNode)) {
+			
+		}
+
+		return true;
+	}
+	
+	/**
+	 * An XML Match string is extracted starting from the beginning of the
+	 * region to the current offset.
+	 * @param parent
+	 * @param aRegion
+	 * @param offset
+	 * @return
+	 */
+	protected String extractXMLMatchString(IStructuredDocumentRegion parent,
+			ITextRegion aRegion, int offset) {
+		return parent.getText(aRegion).substring(0, offset - parent.getStartOffset(aRegion));
+	}
+
+	protected boolean hasXMLMatchString(IStructuredDocumentRegion parent,
+			ITextRegion aRegion, int offset) {
+		return regionHasData(parent, aRegion) && isOffsetAfterStart(parent, aRegion, offset);
+	}
+
+	protected boolean isOffsetAfterStart(IStructuredDocumentRegion parent,
+			ITextRegion aRegion, int offset) {
+		return parent.getStartOffset(aRegion) < offset;
+	}
+
+	protected boolean regionHasData(IStructuredDocumentRegion parent,
+			ITextRegion aRegion) {
+		return parent.getText(aRegion).length() > 0;
+	}
+
+	protected boolean isXMLContentRegion(String regionType) {
+		return regionType == DOMRegionContext.XML_CONTENT;
+	}
+
+	protected boolean isOffsetAfterEndOffset(IStructuredDocumentRegion parent,
+			ITextRegion aRegion, int offset) {
+		return offset > getRegionEndOffset(parent, aRegion);
+	}
+
+	protected int getRegionEndOffset(IStructuredDocumentRegion parent,
+			ITextRegion aRegion) {
+		return parent.getStartOffset(aRegion) + aRegion.getTextLength();
+	}
+
+	protected boolean isXMLTagOpen(String regionType) {
+		return regionType == DOMRegionContext.XML_TAG_OPEN;
+	}
+
+	protected boolean isAttributeEqualsRegion(String regionType) {
+		return regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS;
+	}
+
+	protected boolean isMatchStringEmpty(IStructuredDocumentRegion parent, ITextRegion aRegion, int offset) {
+		return isRegionNull(aRegion) ||
+		       isCloseRegion(aRegion) ||
+		       isAttributeEqualsRegion(aRegion.getType()) ||
+		       isXMLTagOpen(aRegion.getType()) ||
+		       isOffsetAfterEndOffset(parent, aRegion, offset) ||
+		       isXMLContentRegion(aRegion.getType());
+	}
+	
+	protected boolean isRegionNull(ITextRegion aRegion) {
+		return aRegion == null;
+	}
+	
+	
+	
 }
