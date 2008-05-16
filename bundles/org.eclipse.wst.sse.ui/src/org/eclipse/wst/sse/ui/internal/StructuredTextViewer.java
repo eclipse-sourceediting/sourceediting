@@ -171,6 +171,11 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			fRecHighlighter = null;
 		}
 		
+		// Bug 230297 - Uninstall presentation reconciler in preparation of a new one
+		if(fPresentationReconciler != null) {
+			fPresentationReconciler.uninstall();
+			fPresentationReconciler = null;
+		}
 
 		IReconciler newReconciler = configuration.getReconciler(this);
 
@@ -300,19 +305,31 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			if (prefixes != null && prefixes.length > 0)
 				setDefaultPrefixes(prefixes, t);
 
-			// add highlighter/linestyleprovider
-			// BUG139753 - only create Highlighter if we have a valid document
-			if (configuration instanceof StructuredTextViewerConfiguration && getDocument() instanceof IStructuredDocument) {
+			// Bug 230297 - Add LineStyleProviders from the new configuration if
+			// the document is set
+			if(getDocument() != null) {
+				// add highlighter/linestyleprovider
 				LineStyleProvider[] providers = ((StructuredTextViewerConfiguration) configuration).getLineStyleProviders(this, t);
 				if (providers != null) {
 					for (int j = 0; j < providers.length; ++j) {
-						/*
-						 * Delay creation of highlighter till
-						 * linestyleprovider needs to be added.
-						 */
-						if (fHighlighter == null)
-							fHighlighter = new CompatibleHighlighter();
-						fHighlighter.addProvider(t, providers[j]);
+						
+						if(fRecHighlighter == null) {
+							fRecHighlighter = new ReconcilerHighlighter();
+							((StructuredTextViewerConfiguration) configuration).setHighlighter(fRecHighlighter);
+						}
+						if (providers[j] instanceof AbstractLineStyleProvider) {
+							((AbstractLineStyleProvider) providers[j]).init((IStructuredDocument) getDocument(), fRecHighlighter);
+							fRecHighlighter.addProvider(t, providers[j]);
+						}
+						else {
+							// init with compatibility instance
+							if (fHighlighter == null) {
+								fHighlighter = new CompatibleHighlighter();
+							}
+							Logger.log(Logger.INFO_DEBUG, "CompatibleHighlighter installing compatibility for " + providers[j].getClass()); //$NON-NLS-1$
+							providers[j].init((IStructuredDocument) getDocument(), fHighlighter);
+							fHighlighter.addProvider(t, providers[j]);
+						}
 					}
 				}
 			}
@@ -324,10 +341,19 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			fHighlighter.setDocument((IStructuredDocument) getDocument());
 			fHighlighter.install(this);
 		}
+		
+		if (fRecHighlighter != null)
+			fRecHighlighter.install(this);
 
 		activatePlugins();
 
 		fConfiguration = configuration;
+		
+		// Update the viewer's presentation reconciler
+		fPresentationReconciler = configuration.getPresentationReconciler(this);
+		
+		if(fPresentationReconciler != null)
+			fPresentationReconciler.install(this);
 	}
 
 	/**
