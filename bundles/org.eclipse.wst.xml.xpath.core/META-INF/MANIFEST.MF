@@ -25,5 +25,6 @@ Export-Package: org.eclipse.wst.xml.xpath.core,
  org.eclipse.wst.xml.xpath.core.util
 Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.eclipse.emf.ecore;visibility:=reexport,
- org.apache.xalan;bundle-version="[2.7.1,2.8.0)"
+ org.apache.xalan;bundle-version="[2.7.1,2.8.0)",
+ org.apache.commons.jxpath;bundle-version="[1.2.0,1.3.0)"
 Bundle-ActivationPolicy: lazy
