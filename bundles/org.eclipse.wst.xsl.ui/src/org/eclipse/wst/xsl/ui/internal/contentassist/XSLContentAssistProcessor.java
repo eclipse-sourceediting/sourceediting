@@ -18,6 +18,7 @@ import java.util.List;
 
 import javax.xml.transform.TransformerException;
 
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -335,14 +336,32 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 		return emptyString;
 	}
 
-	protected boolean notXPathRegion(IStructuredDocumentRegion nodeRegion, ITextRegion aRegion) {
+	protected boolean isXPathRegion(IStructuredDocumentRegion nodeRegion, ITextRegion aRegion, int offset) throws Exception {
 		IDOMNode currentNode = StructuredDocumentUtil.getNode(nodeRegion, aRegion);
 		
 		if (XSLCore.isXSLNamespace(currentNode)) {
-			
+			if (isXPathNode(currentNode)) {
+				IDocument document = nodeRegion.getParentDocument();
+				int currentLine = document.getLineOfOffset(offset);
+				int startingLine = document.getLineOfOffset(nodeRegion.getStartOffset());
+				int lineOffset = currentLine - startingLine;
+				
+			}
 		}
 
 		return true;
+	}
+	
+	protected boolean isXPathNode(Node node) {
+		return isXSLSelectNode(node) || isXSLTestNode(node);
+	}
+	
+	protected boolean isXSLSelectNode(Node node) {
+		return node.getNodeName().equals(ATTR_SELECT);
+	}
+	
+	protected boolean isXSLTestNode(Node node) {
+		return node.getNodeName().equals(ATTR_TEST);
 	}
 	
 	/**
