@@ -425,8 +425,5 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 	
 	protected boolean isRegionNull(ITextRegion aRegion) {
 		return aRegion == null;
-	}
-	
-	
-	
+	}	
 }
