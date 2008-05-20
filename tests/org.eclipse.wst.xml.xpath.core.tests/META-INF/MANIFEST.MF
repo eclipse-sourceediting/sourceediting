@@ -12,4 +12,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: Eclipse
 Export-Package: org.eclipse.wst.xml.xpath.core.tests;uses:="org.osgi.framework,junit.framework,org.eclipse.core.runtime",
- org.eclipse.wst.xsl.internal.core.xpath.tests
+ org.eclipse.wst.xsl.internal.core.xpath.tests;x-internal:=true
