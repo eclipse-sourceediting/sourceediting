@@ -38,7 +38,9 @@ import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyE
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.internal.encoding.XMLDocumentLoader;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL;
 import org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistProcessor;
 import org.eclipse.wst.xsl.ui.tests.UnzippedProjectTester;
@@ -155,23 +157,46 @@ public class XSLCompletionTest extends UnzippedProjectTester {
     	int cursorPosition = document.getLineOffset(lineNumber) + columnNumber;
     	return new XSLContentAssistProcessor().computeCompletionProposals(sourceViewer, cursorPosition); 
 	}
+	
+	public void testGetNodeAtLine15() throws Exception {
+		int cursorPosition = document.getLineOffset(15) + 2;
+		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer, cursorPosition);
+		assertEquals("Wrong node name returned:", "xsl:stylesheet", node.getNodeName());
+		
+	}
+	
+	public void testGetNodeAtLine16() throws Exception {
+		int cursorPosition = document.getLineOffset(16) + 10;
+		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer, cursorPosition);
+		assertEquals("Wrong node name returned:", "xsl:template", node.getNodeName());
+	}
+	
+	public void testGetNodeAtLine17() throws Exception {
+		int cursorPosition = document.getLineOffset(17) + 10;
+		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer, cursorPosition);
+		assertEquals("Wrong node name returned:", "xsl:param", node.getNodeName());
+	}
     
-    public void testSelectAttributeProposalsAvailable() throws Exception {
-    	
-    	ICompletionProposal[] proposals = getProposals(20, 21); 
-    	assertTrue(proposals.length >= 1);
-    }
+//    public void testSelectAttributeProposalsAvailable() throws Exception {
+//    	
+//    	ICompletionProposal[] proposals = getProposals(17, 10); 
+//    	assertTrue(proposals.length > 1);
+//    	//ICompletionProposal proposal = proposals[3];
+//    	//assertEquals("Wrong select item returned: ", "axis-or-self::", proposal.getDisplayString());
+//    }
     
-    public void testTestAttributeProposalsAvailable() throws Exception {
-    	ICompletionProposal[] proposals = getProposals(17, 32);
-    	assertTrue(proposals.length >= 1);
-    }
-    
-    public void testXSLElementProposalsAvailable() throws Exception {
-    	ICompletionProposal[] proposals = getProposals(21,1);
-    	assertTrue(proposals.length >= 2);
-    	
-    	ICompletionProposal proposal = proposals[0];
-    	assertTrue("Can't find XSL element proposals.", proposal.getDisplayString().equals("xsl:otherwise"));
-    }
+//    public void testTestAttributeProposalsAvailable() throws Exception {
+//    	ICompletionProposal[] proposals = getProposals(17, 32);
+//    	assertTrue(proposals.length >= 1);
+//    	ICompletionProposal proposal = proposals[0];
+//    	assertEquals("Wrong attribute proposal returned:", "default-collation", proposal.getDisplayString());
+//    }
+//    
+//    public void testXSLElementProposalsAvailable() throws Exception {
+//    	ICompletionProposal[] proposals = getProposals(21,1);
+//    	assertTrue(proposals.length >= 2);
+//    	
+//    	ICompletionProposal proposal = proposals[0];
+//    	assertTrue("Can't find XSL element proposals.", proposal.getDisplayString().equals("xsl:otherwise"));
+//    }
 }

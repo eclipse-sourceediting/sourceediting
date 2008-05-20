@@ -14,10 +14,9 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
     <xsl:template name="long_date">
-        <xsl:param name="date" />
+        <xsl:param name="date"/>
         <!-- Month -->
-        <xsl:variable name="month" 
-            select="number(substring($date, 6, 2))"/>
+        <xsl:variable name="month" select="number(substring($date, 6, 2))"/>
         <xsl:choose>
             <xsl:when test="$month=1">January</xsl:when>
             <xsl:when test="$month=2">February</xsl:when>
@@ -33,7 +32,7 @@
             <xsl:when test="$month=12">December</xsl:when>
             <xsl:otherwise>INVALID MONTH</xsl:otherwise>
         </xsl:choose>
-        <xsl:text> </xsl:text>
+        <xsl:text/> 
         <!-- Day -->
         <xsl:value-of select="number(substring($date, 9, 2))" />
         <xsl:text>, </xsl:text>
