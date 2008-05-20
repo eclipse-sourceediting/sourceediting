@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Arbortext, Inc., 1988-2006, v.4002-->
+<!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN"
+ "reference.dtd">
+<reference id="xmltoolskeyboardshortcuts" xml:lang="en-us">
+<title>Source editor and XML tools keyboard shortcuts</title>
+<shortdesc>The following keyboard shortcuts are available for the XML, XSD,
+WSDL, HTML, JSP, CSS and DTD editors.</shortdesc>
+<prolog><metadata>
+<keywords><indexterm>accessibility<indexterm>keyboard shortcuts<indexterm>XML
+editor</indexterm></indexterm></indexterm><indexterm>accessibility<indexterm>keyboard
+shortcuts<indexterm>source editor</indexterm></indexterm></indexterm><indexterm>keyboard
+shortcuts<indexterm>XML editor</indexterm></indexterm><indexterm>shortcuts<indexterm>keyboard<indexterm>XML
+editor</indexterm></indexterm></indexterm><indexterm>XML editor<indexterm>accessibility</indexterm></indexterm>
+<indexterm>XML editor<indexterm>keyboard shortcuts</indexterm></indexterm>
+<indexterm>XSD editor<indexterm>keyboard shortcuts</indexterm></indexterm>
+<indexterm>WSDL editor<indexterm>keyboard shortcuts</indexterm></indexterm>
+<indexterm>HTML editor<indexterm>keyboard shortcuts</indexterm></indexterm>
+<indexterm>JSP editor<indexterm>keyboard shortcuts</indexterm></indexterm>
+<indexterm>CSS editor<indexterm>keyboard shortcuts</indexterm></indexterm>
+<indexterm>DTD editor<indexterm>keyboard shortcuts</indexterm></indexterm>
+</keywords>
+</metadata></prolog>
+<refbody>
+<section><title>Shortcuts available in all source editors</title><simpletable>
+<sthead>
+<stentry>Command</stentry>
+<stentry>Shortcut</stentry>
+</sthead>
+<strow>
+<stentry>Go To Matching Bracket</stentry>
+<stentry>Ctrl+Shift+P</stentry>
+</strow>
+<strow>
+<stentry>Restore Last Selection</stentry>
+<stentry>Atl+Shift+Down</stentry>
+</strow>
+<strow>
+<stentry>Select Enclosing Element</stentry>
+<stentry>Alt+Shift+Up</stentry>
+</strow>
+<strow>
+<stentry>Select Next Element</stentry>
+<stentry>Alt+Shift+Right</stentry>
+</strow>
+<strow>
+<stentry>Select Previous Element</stentry>
+<stentry>Alt+Shift+Left</stentry>
+</strow>
+</simpletable></section>
+<section><title>Shortcuts available in the XML, XSD, WSDL, HTML, JSP, and
+CSS editors (excludes the DTD editor)</title><simpletable>
+<sthead>
+<stentry>Command</stentry>
+<stentry>Shortcut</stentry>
+</sthead>
+<strow>
+<stentry>Format</stentry>
+<stentry>Ctrl+Shift+F</stentry>
+</strow>
+<strow>
+<stentry>Format Active Elements</stentry>
+<stentry>Ctrl+I</stentry>
+</strow>
+</simpletable></section>
+<section><title>Shortcuts available in the XML, XSD, WSDL, HTML, and JSP editors
+(excludes the DTD and CSS editors)</title><simpletable>
+<sthead>
+<stentry>Command</stentry>
+<stentry>Shortcut</stentry>
+</sthead>
+<strow>
+<stentry>Add Block Comment</stentry>
+<stentry>Ctrl+Shift+/</stentry>
+</strow>
+<strow>
+<stentry>Go To Matching Tag</stentry>
+<stentry>Ctrl+Shift+></stentry>
+</strow>
+<strow>
+<stentry>Go To Next Sibling</stentry>
+<stentry>Ctrl+Shift+Down</stentry>
+</strow>
+<strow>
+<stentry>Occurrences in File</stentry>
+<stentry>Ctrl+Shift+A</stentry>
+</strow>
+<strow>
+<stentry>Open Selection</stentry>
+<stentry>F3</stentry>
+</strow>
+<strow>
+<stentry>Go To Previous Sibling</stentry>
+<stentry>Ctrl+Shift+Up</stentry>
+</strow>
+<strow>
+<stentry>Remove Block Comment</stentry>
+<stentry>Ctrl+Shift+\</stentry>
+</strow>
+<strow>
+<stentry>Toggle Comment</stentry>
+<stentry>Ctrl+Shift+C</stentry>
+</strow>
+</simpletable></section>
+<section><title>Shortcuts available in the design view of the XSD and WSDL
+editors</title><simpletable>
+<sthead>
+<stentry>Command</stentry>
+<stentry>Shortcut</stentry>
+</sthead>
+<strow>
+<stentry>Zoom In</stentry>
+<stentry>Ctrl+=</stentry>
+</strow>
+<strow>
+<stentry>Zoom Out</stentry>
+<stentry>Ctrl+-</stentry>
+</strow>
+</simpletable></section>
+<section><title>Shortcuts available in the design view of the WSDL editor</title><simpletable>
+<sthead>
+<stentry>Command</stentry>
+<stentry>Shortcut</stentry>
+</sthead>
+<strow>
+<stentry>Export Diagram as Image</stentry>
+<stentry>Ctrl+Shift+X</stentry>
+</strow>
+</simpletable></section>
+</refbody>
+</reference>

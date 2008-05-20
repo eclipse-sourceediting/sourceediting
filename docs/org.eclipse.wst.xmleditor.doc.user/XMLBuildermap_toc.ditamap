@@ -75,10 +75,11 @@ toc="no"></topicref>
 </topicref>
 <topicref href="topics/rxmlcatkey.dita" id="rxmlcatkey" navtitle="XML Catalog keyboard shortcuts">
 </topicref>
-<anchor id="xml_post_rxmlcatkey"/><?Pub Caret?>
+<anchor id="xml_post_rxmlcatkey"/>
+<topicref href="topics/rxmltoolskey.dita" navtitle="XML editor keyboard shortcuts">
+</topicref>
 <anchor id="xml_post_tedtgram"/></topicref>
 <topicref href="topics/rxmlbicons.dita" id="ricons" navtitle="Icons used in the XML editor">
 </topicref>
 <anchor id="xml_post_rxmlbicons"/></topicref>
 </map>
-<?Pub *0000004231?>

@@ -64,6 +64,7 @@
 <topic label="Updating XML files with changes made to DTDs and schemas" href="topics/tedtgram.html"/>
 <topic label="XML Catalog keyboard shortcuts" href="topics/rxmlcatkey.html"/>
 <anchor id="xml_post_rxmlcatkey"/>
+<topic label="Source editor and XML tools keyboard shortcuts" href="topics/rxmltoolskey.html"/>
 <anchor id="xml_post_tedtgram"/>
 </topic>
 <topic label="Icons used in the XML editor" href="topics/rxmlbicons.html"/>
