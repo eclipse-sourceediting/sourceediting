@@ -7,7 +7,7 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: org.eclipse.wst.xml.xpath.core,
+Export-Package: org.eclipse.wst.xml.xpath.core;uses:="org.osgi.framework,org.eclipse.core.runtime",
  org.eclipse.wst.xml.xpath.core.internal.model.XPath;x-internal:=true,
  org.eclipse.wst.xml.xpath.core.internal.model.XPath.Axis;x-internal:=true,
  org.eclipse.wst.xml.xpath.core.internal.model.XPath.Axis.impl;x-internal:=true,
@@ -22,9 +22,14 @@ Export-Package: org.eclipse.wst.xml.xpath.core,
  org.eclipse.wst.xml.xpath.core.internal.model.XPath.Keywords.impl;x-internal:=true,
  org.eclipse.wst.xml.xpath.core.internal.model.XPath.Keywords.util;x-internal:=true,
  org.eclipse.wst.xml.xpath.core.internal.model.XPath.impl;x-internal:=true,
- org.eclipse.wst.xml.xpath.core.util
+ org.eclipse.wst.xml.xpath.core.internal.parser;x-internal:=true,
+ org.eclipse.wst.xml.xpath.core.util;
+  uses:="org.apache.xml.utils,
+   org.w3c.dom.traversal,
+   org.apache.xpath.objects,
+   org.w3c.dom,
+   org.apache.xpath.compiler"
 Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.eclipse.emf.ecore;visibility:=reexport,
  org.apache.xalan;bundle-version="[2.7.1,2.8.0)",
  org.apache.commons.jxpath;bundle-version="[1.2.0,1.3.0)"
-Bundle-ActivationPolicy: lazy

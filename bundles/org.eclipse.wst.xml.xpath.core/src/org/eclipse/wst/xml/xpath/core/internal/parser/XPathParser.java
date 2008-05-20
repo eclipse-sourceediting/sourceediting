@@ -16,16 +16,16 @@ public class XPathParser {
 	}
 	
 	public int getTokenStartOffset(int offsetLine, int offsetColumn) {
-		currentToken = parser.token;
+		currentToken = parser.getNextToken();
 		
 		while (currentToken != null) {
 			if (locatedLine(currentToken, offsetLine)) {
-				if (locatedColumn(currentToken, offsetLine)) {
+				if (locatedColumn(currentToken, offsetColumn)) {
 					return currentToken.beginColumn;
 				}
 			}
 			previousToken = currentToken;
-			currentToken = currentToken.next;
+			currentToken = parser.getNextToken();
 		}
 		return previousToken.beginColumn;
 	}	
@@ -50,6 +50,14 @@ public class XPathParser {
 	protected boolean locatedColumn(Token token, int offsetColumn) {
 		return token.beginColumn <= offsetColumn &&
 		       token.endColumn >= offsetColumn;
+	}
+	
+	public Token getCurrentToken() {
+		return currentToken;
+	}
+	
+	public Token getPreviousToken() {
+		return previousToken;
 	}
 	
 	
