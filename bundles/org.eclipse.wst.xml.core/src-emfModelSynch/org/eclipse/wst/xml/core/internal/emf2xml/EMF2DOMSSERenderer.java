@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +29,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jem.util.emf.workbench.ProjectResourceSet;
@@ -42,6 +45,8 @@ import org.eclipse.wst.sse.core.internal.model.ModelLifecycleEvent;
 import org.eclipse.wst.sse.core.internal.provisional.IModelLifecycleListener;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeImpl;
@@ -258,8 +263,39 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 	}
 
 	public EMF2DOMAdapter getExistingDOMAdapter(Node node) {
-		IDOMNode xNode = (IDOMNode) node;
-		return (EMF2DOMSSEAdapter) xNode.getAdapterFor(EMF2DOMAdapter.ADAPTER_CLASS);
+		//IDOMNode xNode = (IDOMNode) node;
+		//return (EMF2DOMSSEAdapter) xNode.getAdapterFor(EMF2DOMAdapter.ADAPTER_CLASS);
+
+		INodeNotifier sseNode = (INodeNotifier) node;
+		List sse2domAdapters = new ArrayList();
+		Collection adapters = sseNode.getAdapters();
+		for (Iterator iterator = adapters.iterator(); iterator.hasNext();) {
+			INodeAdapter adapter = (INodeAdapter) iterator.next();
+			// First Check if it's an EMF2DOMAdapter
+			if (adapter != null && adapter.isAdapterForType(EMF2DOMAdapter.ADAPTER_CLASS)) {
+				// Cast to EMF2DOMAdapter
+				EMF2DOMAdapter e2DAdapter = (EMF2DOMAdapter) adapter;
+				// Check if targets are the resources
+				if (e2DAdapter.getTarget() != null && e2DAdapter.getTarget() instanceof Resource) {
+					/*
+					 * Now check if it's the right one (Multiple resources
+					 * could be attached)
+					 */
+					if (e2DAdapter.getTarget() == getResource()) {
+						return e2DAdapter;
+					}
+					else {
+						sse2domAdapters.add(e2DAdapter);
+						continue;
+					}
+				}
+			}
+		}
+		if (sse2domAdapters.size() == 1) {
+			return (EMF2DOMAdapter) sse2domAdapters.get(0);
+		}
+		return null;
+	
 	}
 
 	protected IModelManager getModelManager() {
@@ -581,4 +617,5 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 	public boolean wasReverted() {
 		return xmlModelReverted;
 	}
+
 }
