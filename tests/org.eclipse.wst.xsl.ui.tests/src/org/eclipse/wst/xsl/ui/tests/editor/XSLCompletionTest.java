@@ -153,50 +153,46 @@ public class XSLCompletionTest extends UnzippedProjectTester {
 	 * @return
 	 * @throws Exception
 	 */
-	private ICompletionProposal[] getProposals(int lineNumber, int columnNumber) throws Exception {
-    	int cursorPosition = document.getLineOffset(lineNumber) + columnNumber;
-    	return new XSLContentAssistProcessor().computeCompletionProposals(sourceViewer, cursorPosition); 
+	private ICompletionProposal[] getProposals(int offset) throws Exception {
+    	return new XSLContentAssistProcessor().computeCompletionProposals(sourceViewer, offset); 
 	}
 	
 	public void testGetNodeAtLine15() throws Exception {
-		int cursorPosition = document.getLineOffset(15) + 2;
-		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer, cursorPosition);
+		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer, 631);
 		assertEquals("Wrong node name returned:", "xsl:stylesheet", node.getNodeName());
 		
 	}
 	
 	public void testGetNodeAtLine16() throws Exception {
-		int cursorPosition = document.getLineOffset(16) + 10;
-		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer, cursorPosition);
+		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer, 712);
 		assertEquals("Wrong node name returned:", "xsl:template", node.getNodeName());
 	}
 	
 	public void testGetNodeAtLine17() throws Exception {
-		int cursorPosition = document.getLineOffset(17) + 10;
-		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer, cursorPosition);
+		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer, 748);
 		assertEquals("Wrong node name returned:", "xsl:param", node.getNodeName());
 	}
     
-//    public void testSelectAttributeProposalsAvailable() throws Exception {
-//    	
-//    	ICompletionProposal[] proposals = getProposals(17, 10); 
-//    	assertTrue(proposals.length > 1);
-//    	//ICompletionProposal proposal = proposals[3];
-//    	//assertEquals("Wrong select item returned: ", "axis-or-self::", proposal.getDisplayString());
-//    }
+    public void testSelectAttributeProposalsAvailable() throws Exception {
+    	
+    	ICompletionProposal[] proposals = getProposals(838); 
+    	assertTrue(proposals.length > 1);
+    	ICompletionProposal proposal = proposals[3];
+    	assertEquals("Wrong select item returned: ", "ancestor-or-self::", proposal.getDisplayString());
+    }
     
-//    public void testTestAttributeProposalsAvailable() throws Exception {
-//    	ICompletionProposal[] proposals = getProposals(17, 32);
-//    	assertTrue(proposals.length >= 1);
-//    	ICompletionProposal proposal = proposals[0];
-//    	assertEquals("Wrong attribute proposal returned:", "default-collation", proposal.getDisplayString());
-//    }
-//    
-//    public void testXSLElementProposalsAvailable() throws Exception {
-//    	ICompletionProposal[] proposals = getProposals(21,1);
-//    	assertTrue(proposals.length >= 2);
-//    	
-//    	ICompletionProposal proposal = proposals[0];
-//    	assertTrue("Can't find XSL element proposals.", proposal.getDisplayString().equals("xsl:otherwise"));
-//    }
+    public void testTestAttributeProposalsAvailable() throws Exception {
+    	ICompletionProposal[] proposals = getProposals(1753);
+    	assertTrue(proposals.length >= 1);
+    	ICompletionProposal proposal = proposals[0];
+    	assertEquals("Wrong attribute proposal returned:", "default-collation", proposal.getDisplayString());
+    }
+
+    public void testXSLElementProposalsAvailable() throws Exception {
+    	ICompletionProposal[] proposals = getProposals(1569);
+    	assertTrue(proposals.length >= 2);
+    	
+    	ICompletionProposal proposal = proposals[1];
+    	assertTrue("Can't find XSL element proposals.", proposal.getDisplayString().equals("xsl:otherwise"));
+    }
 }
