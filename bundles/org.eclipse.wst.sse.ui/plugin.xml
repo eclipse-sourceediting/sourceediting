@@ -239,10 +239,24 @@
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<key
+			sequence="M1+/"
+			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			commandId="org.eclipse.wst.sse.ui.add.block.comment"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			platform="carbon">
+		</key>
+		<key
 			sequence="M1+M2+\"
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.sse.ui.remove.block.comment"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+		</key>
+		<key
+			sequence="M1+\"
+			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			commandId="org.eclipse.wst.sse.ui.remove.block.comment"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			platform="carbon">
 		</key>
 		<key
 			sequence="M1+M2+F"
