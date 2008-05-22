@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -327,7 +327,7 @@ class JSPElementCollection extends DeclCollection implements JSP11Namespace.Elem
 			return declarations;
 		}
 
-		private AttrDecl createBoolType(String name, String defValue) {
+		AttrDecl createBoolType(String name, String defValue) {
 			AttrDecl adec = new AttrDecl(name);
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.ENUM);
 			String[] values = {ATTR_VALUE_TRUE, ATTR_VALUE_FALSE};
@@ -411,7 +411,7 @@ class JSPElementCollection extends DeclCollection implements JSP11Namespace.Elem
 			declarations.putNamedItem(ATTR_NAME_FILE, adec);
 		}
 
-		void createForDirTaglib() {
+		private void createForDirTaglib() {
 			// ("uri" URI REQUIRED)
 			AttrDecl adec = new AttrDecl(ATTR_NAME_URI);
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.URI);
@@ -613,7 +613,7 @@ class JSPElementCollection extends DeclCollection implements JSP11Namespace.Elem
 		}
 
 		private void createForRoot() {
-			// ("xmlns:jsp" CDATA "http://jva.sun.com/JSP/Page")
+			// ("xmlns:jsp" CDATA "http://java.sun.com/JSP/Page")
 			AttrDecl adec = new AttrDecl(ATTR_NAME_XMLNS_JSP);
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
 			adec.type.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, ATTR_VALUE_XMLNS_JSP);

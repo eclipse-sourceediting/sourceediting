@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -77,6 +77,15 @@ final class JSP20ElementCollection extends JSPElementCollection implements JSP20
 				case Ids.ID_DIRECTIVE_TAGLIB :
 					createForDirTaglib();
 					break;
+				case Ids.ID_DIRECTIVE_PAGE :
+					createForDirPage();
+					break;
+				case Ids.ID_ROOT :
+					createForRoot();
+					break;
+				case Ids.ID_PLUGIN :
+					createForPlugin();
+					break;
 				default :
 					super.getDeclarations(eid);
 			}
@@ -87,13 +96,13 @@ final class JSP20ElementCollection extends JSPElementCollection implements JSP20
 		}
 
 		private void createForOutput() {
-			AttrDecl adec = new AttrDecl(JSP20Namespace.ElementName.OUTPUT);
+			AttrDecl adec = new AttrDecl(JSP20Namespace.ATTR_NAME_OMIT_XML_DECL);
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.ENUM);
 			String[] values = {ATTR_VALUE_TRUE, ATTR_VALUE_FALSE, JSP20Namespace.ATTR_VALUE_YES, JSP20Namespace.ATTR_VALUE_NO};
 			adec.type.setEnumValues(values);
 			adec.type.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, JSP20Namespace.ATTR_VALUE_NO);
 			adec.usage = CMAttributeDeclaration.OPTIONAL;
-			declarations.putNamedItem(JSP20Namespace.ElementName.OUTPUT, adec);
+			declarations.putNamedItem(JSP20Namespace.ATTR_NAME_OMIT_XML_DECL, adec);
 
 			adec = new AttrDecl(JSP20Namespace.ATTR_NAME_DOCTYPE_ROOT_ELEMENT);
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
@@ -134,6 +143,82 @@ final class JSP20ElementCollection extends JSPElementCollection implements JSP20
 			declarations.putNamedItem(ATTR_NAME_PREFIX, adec);
 		}
 		
+		void createForDirPage() {
+			AttrDecl adec = null;
+			// ("language" CDATA DECLARED "java")
+			adec = new AttrDecl(ATTR_NAME_LANGUAGE);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			adec.type.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, ATTR_VALUE_JAVA);
+			declarations.putNamedItem(ATTR_NAME_LANGUAGE, adec);
+
+			// ("extends" CDATA IMPLIED)
+			adec = new AttrDecl(ATTR_NAME_EXTENDS);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			declarations.putNamedItem(ATTR_NAME_EXTENDS, adec);
+
+			// ("import" CDATA IMPLIED)
+			adec = new AttrDecl(ATTR_NAME_IMPORT);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			declarations.putNamedItem(ATTR_NAME_IMPORT, adec);
+
+			// ("session" ENUM DECLARED (true|false) "true")
+			adec = createBoolType(ATTR_NAME_SESSION, ATTR_VALUE_TRUE);
+			if (adec != null)
+				declarations.putNamedItem(ATTR_NAME_SESSION, adec);
+
+			// ("buffer" CDATA DECLARED "8kb")
+			adec = new AttrDecl(ATTR_NAME_BUFFER);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			adec.type.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, ATTR_VALUE_BUFSIZ_DEFAULT);
+			declarations.putNamedItem(ATTR_NAME_BUFFER, adec);
+
+			// ("autoFlush" ENUM DECLARED (true|false) "true")
+			adec = createBoolType(ATTR_NAME_AUTOFLUSH, ATTR_VALUE_TRUE);
+			if (adec != null)
+				declarations.putNamedItem(ATTR_NAME_AUTOFLUSH, adec);
+
+			// ("isThreadSafe" ENUM DECLARED (true|false) "true")
+			adec = createBoolType(ATTR_NAME_IS_THREAD_SAFE, ATTR_VALUE_TRUE);
+			if (adec != null)
+				declarations.putNamedItem(ATTR_NAME_IS_THREAD_SAFE, adec);
+
+			// ("info" CDATA IMPLIED)
+			adec = new AttrDecl(ATTR_NAME_INFO);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			declarations.putNamedItem(ATTR_NAME_INFO, adec);
+
+			// ("errorPage" URI IMPLIED)
+			adec = new AttrDecl(ATTR_NAME_ERROR_PAGE);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.URI);
+			declarations.putNamedItem(ATTR_NAME_ERROR_PAGE, adec);
+
+			// ("isErrorPage" ENUM DECLARED (true|false) "false")
+			adec = createBoolType(ATTR_NAME_IS_ERROR_PAGE, ATTR_VALUE_FALSE);
+			if (adec != null)
+				declarations.putNamedItem(ATTR_NAME_IS_ERROR_PAGE, adec);
+
+			// ("contentType" CDATA DECLARED "text/html; ISO-8859-1")
+			adec = new AttrDecl(ATTR_NAME_CONTENT_TYPE);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			adec.type.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, ATTR_VALUE_CT_DEFAULT);
+			declarations.putNamedItem(ATTR_NAME_CONTENT_TYPE, adec);
+
+			// ("pageEncoding" CDATA IMPLIED)
+			adec = new AttrDecl(ATTR_NAME_PAGE_ENCODING);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			adec.type.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, JSP20Namespace.ATTR_VALUE_ENCODING_DEFAULT);
+			declarations.putNamedItem(ATTR_NAME_PAGE_ENCODING, adec);
+
+			// ("isELIgnored" ENUM DECLARED (true|false) "false")
+			adec = new AttrDecl(JSP20Namespace.ATTR_NAME_ISELIGNORED);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.ENUM);
+			String[] values = new String[]{ATTR_VALUE_TRUE, ATTR_VALUE_FALSE};
+			adec.type.setEnumValues(values);
+			adec.type.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, ATTR_VALUE_FALSE);
+			adec.usage = CMAttributeDeclaration.OPTIONAL;
+			declarations.putNamedItem(JSP20Namespace.ATTR_NAME_ISELIGNORED, adec);
+		}
+		
 		private void createForElement() {
 			AttrDecl adec = new AttrDecl(ATTR_NAME_NAME);
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
@@ -151,9 +236,105 @@ final class JSP20ElementCollection extends JSPElementCollection implements JSP20
 			adec.type = new HTMLCMDataTypeImpl(CMDataType.ENUM);
 			String[] values = {ATTR_VALUE_TRUE, ATTR_VALUE_FALSE};
 			adec.type.setEnumValues(values);
-			adec.type.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, ATTR_VALUE_FALSE);
+			adec.type.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, ATTR_VALUE_TRUE);
 			adec.usage = CMAttributeDeclaration.OPTIONAL;
 			declarations.putNamedItem(JSP20Namespace.ATTR_NAME_TRIM, adec);
+		}
+		
+		private void createForRoot() {
+			// ("xmlns:jsp" CDATA "http://java.sun.com/JSP/Page")
+			AttrDecl adec = new AttrDecl(ATTR_NAME_XMLNS_JSP);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			adec.type.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, ATTR_VALUE_XMLNS_JSP);
+			declarations.putNamedItem(ATTR_NAME_XMLNS_JSP, adec);
+			// ("version" CDATA REQUIRED)
+			adec = new AttrDecl(ATTR_NAME_VERSION);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			adec.type.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, JSP20Namespace.ATTR_VALUE_JSP_VER_20);
+			adec.usage = CMAttributeDeclaration.REQUIRED;
+			declarations.putNamedItem(ATTR_NAME_VERSION, adec);
+		}
+		
+		private void createForPlugin() {
+			// ("type" ENUM REQUIRED (bean|applet))
+			AttrDecl adec = new AttrDecl(ATTR_NAME_TYPE);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.ENUM);
+			adec.usage = CMAttributeDeclaration.REQUIRED;
+			String[] values = {ATTR_VALUE_BEAN, ATTR_VALUE_APPLET};
+			adec.type.setEnumValues(values);
+			declarations.putNamedItem(ATTR_NAME_TYPE, adec);
+
+			// ("code" CDATA REQUIRED)
+			adec = new AttrDecl(ATTR_NAME_CODE);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.URI);
+			adec.usage = CMAttributeDeclaration.REQUIRED;
+			declarations.putNamedItem(ATTR_NAME_CODE, adec);
+
+			// ("codebase" URI REQUIRED)
+			adec = new AttrDecl(ATTR_NAME_CODEBASE);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.URI);
+			adec.usage = CMAttributeDeclaration.REQUIRED;
+			declarations.putNamedItem(ATTR_NAME_CODEBASE, adec);
+
+			// ("align" ENUM IMPLIED (top|middle|bottom|left|right))
+			adec = new AttrDecl(ATTR_NAME_ALIGN);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.ENUM);
+			String[] aligns = {ATTR_VALUE_TOP, ATTR_VALUE_MIDDLE, ATTR_VALUE_BOTTOM, ATTR_VALUE_LEFT, ATTR_VALUE_RIGHT};
+			adec.type.setEnumValues(aligns);
+			adec.type.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, ATTR_VALUE_BOTTOM);
+			declarations.putNamedItem(ATTR_NAME_ALIGN, adec);
+
+			// ("archive" CDATA IMPLIED)
+			adec = new AttrDecl(ATTR_NAME_ARCHIVE);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			declarations.putNamedItem(ATTR_NAME_ARCHIVE, adec);
+
+			// ("height" CDATA IMPLIED)
+			adec = new AttrDecl(ATTR_NAME_HEIGHT);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			declarations.putNamedItem(ATTR_NAME_HEIGHT, adec);
+
+			// ("hspace" CDATA IMPLIED)
+			adec = new AttrDecl(ATTR_NAME_HSPACE);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			declarations.putNamedItem(ATTR_NAME_HSPACE, adec);
+
+			// ("jreversion" CDATA DECLARED "1.1")
+			adec = new AttrDecl(ATTR_NAME_JREVERSION);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			adec.type.setImpliedValue(CMDataType.IMPLIED_VALUE_DEFAULT, JSP20Namespace.ATTR_VALUE_JVER12);
+			declarations.putNamedItem(ATTR_NAME_JREVERSION, adec);
+
+			// ("name" CDATA IMPLIED)
+			adec = new AttrDecl(ATTR_NAME_NAME);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			declarations.putNamedItem(ATTR_NAME_NAME, adec);
+
+			// ("vspace" CDATA IMPLIED)
+			adec = new AttrDecl(ATTR_NAME_VSPACE);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			declarations.putNamedItem(ATTR_NAME_VSPACE, adec);
+
+			// ("width" CDATA IMPLIED)
+			adec = new AttrDecl(ATTR_NAME_WIDTH);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.CDATA);
+			declarations.putNamedItem(ATTR_NAME_WIDTH, adec);
+
+			// ("nspluginurl" URI IMPLIED)
+			adec = new AttrDecl(ATTR_NAME_NSPLUGINURL);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.URI);
+			declarations.putNamedItem(ATTR_NAME_NSPLUGINURL, adec);
+
+			// ("iepluginurl" URI IMPLIED)
+			adec = new AttrDecl(ATTR_NAME_IEPLUGINURL);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.URI);
+			declarations.putNamedItem(ATTR_NAME_IEPLUGINURL, adec);
+			
+			// ("mayscript" ENUM IMPLIED (true | false)
+			adec = new AttrDecl(JSP20Namespace.ATTR_NAME_MAYSCRIPT);
+			adec.type = new HTMLCMDataTypeImpl(CMDataType.ENUM);
+			adec.type.setEnumValues(new String[] {ATTR_VALUE_TRUE, ATTR_VALUE_FALSE});
+			declarations.putNamedItem(JSP20Namespace.ATTR_NAME_MAYSCRIPT, adec);
 		}
 	}
 
@@ -273,6 +454,25 @@ final class JSP20ElementCollection extends JSPElementCollection implements JSP20
 				packet.omit = HTMLElementDeclaration.OMIT_END;
 				packet.layout = HTMLElementDeclaration.LAYOUT_HIDDEN;
 				packet.format = HTMLElementDeclaration.FORMAT_JSP_DIRECTIVE;
+				break;
+			case Ids.ID_DIRECTIVE_PAGE :
+				// directive.page
+				packet.name = DIRECTIVE_PAGE;
+				packet.omit = HTMLElementDeclaration.OMIT_END;
+				packet.layout = HTMLElementDeclaration.LAYOUT_HIDDEN;
+				packet.format = HTMLElementDeclaration.FORMAT_JSP_DIRECTIVE;
+				break;
+			case Ids.ID_ROOT :
+				packet.name = ROOT;
+				packet.content = CMElementDeclaration.ELEMENT;
+				packet.layout = HTMLElementDeclaration.LAYOUT_HIDDEN; // same as HTML
+				break;
+			case Ids.ID_PLUGIN :
+				// plugin
+				packet.name = PLUGIN;
+				packet.content = CMElementDeclaration.ELEMENT;
+				packet.layout = HTMLElementDeclaration.LAYOUT_OBJECT;
+				packet.indentChild = true;
 				break;
 			default :
 				return super.createElemDecl(eid);
