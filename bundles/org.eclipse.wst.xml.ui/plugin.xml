@@ -920,7 +920,7 @@
 						<adapt
 							type="org.eclipse.core.resources.IFile">
 							<test
-								property="org.eclipse.core.resources.contentTypeId"
+								property="org.eclipse.wst.sse.core.resources.contentTypeId"
                     			value="org.eclipse.wst.xsd.core.xsdsource">
 							</test>
 						</adapt>
@@ -929,7 +929,7 @@
 						<adapt
 							type="org.eclipse.core.resources.IFile">
 							<test
-								property="org.eclipse.core.resources.contentTypeId"
+								property="org.eclipse.wst.sse.core.resources.contentTypeId"
                     			value="org.eclipse.wst.dtd.core.dtdsource">
 							</test>
 						</adapt>
