@@ -48,6 +48,9 @@ public class ValidatorGroupListener implements IValidatorGroupListener {
 	public void validationFinishing(IResource resource, IProgressMonitor monitor, ValidationState state) {
 		if (_debug)
 			System.out.println("Finishing:" + resource.getFullPath());
+		if (resource.getType() != IResource.FILE)
+			return;
+
 		IStructuredModel model = (IStructuredModel) fDiagnosticMap.remove(resource.getFullPath());
 		if (model != null) {
 			model.releaseFromRead();
@@ -59,6 +62,9 @@ public class ValidatorGroupListener implements IValidatorGroupListener {
 			System.out.println("Starting: " + resource.getFullPath());
 		try {
 			if (monitor != null && !monitor.isCanceled()) {
+				if (resource.getType() != IResource.FILE)
+					return;
+
 				IStructuredModel model = StructuredModelManager.getModelManager().getModelForRead((IFile) resource);
 				if (model != null) {
 					fDiagnosticMap.put(resource.getFullPath(), model);
