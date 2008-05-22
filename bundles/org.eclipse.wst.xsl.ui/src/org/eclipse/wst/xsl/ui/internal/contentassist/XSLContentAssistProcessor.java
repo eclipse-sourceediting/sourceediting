@@ -18,6 +18,7 @@ import java.util.List;
 
 import javax.xml.transform.TransformerException;
 
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -25,20 +26,25 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
+import org.eclipse.wst.xml.xpath.core.internal.parser.XPathParser;
 import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xml.xpath.ui.internal.contentassist.XPathTemplateCompletionProcessor;
 import org.eclipse.wst.xml.xpath.ui.internal.templates.TemplateContextTypeIdsXPath;
 import org.eclipse.wst.xsl.core.XSLCore;
+import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.eclipse.wst.xsl.core.internal.util.StructuredDocumentUtil;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -128,7 +134,7 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 		Element rootElement = contentAssistRequest.getNode().getOwnerDocument().getDocumentElement();
 
 		if (attributeName != null) {
-			int offset = contentAssistRequest.getStartOffset() + 1;
+			int offset = contentAssistRequest.getReplacementBeginPosition() + 1;
 
 			addAttributeValueOfProposals(contentAssistRequest, contentAssistRequest.getNode().getNamespaceURI(), rootElement, offset);
 
@@ -329,40 +335,72 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 			return emptyString; //$NON-NLS-1$
 		}
 		
+		IDOMNode currentNode = (IDOMNode) ContentAssistUtils.getNodeAt(super.fTextViewer, offset);
+		
+		IDOMAttr attributeNode = isXPathRegion(currentNode, aRegion, offset);
+		if (attributeNode != null) {
+			String temp = extractXPathMatchString(attributeNode, aRegion, offset);
+			return temp;
+		}
+		
+				
 		if (hasXMLMatchString(parent, aRegion, offset)) {
 			return extractXMLMatchString(parent, aRegion, offset);
 		}
 		// This is here for saftey reasons.
 		return emptyString;
 	}
-
-	protected boolean isXPathRegion(IStructuredDocumentRegion nodeRegion, ITextRegion aRegion, int offset) throws Exception {
-		IDOMNode currentNode = StructuredDocumentUtil.getNode(nodeRegion, aRegion);
+	
+	protected String extractXPathMatchString(IDOMAttr node, ITextRegion aRegion, int offset) {
+		if (node.getValue().length() == 0)	return "";
 		
+		int nodeOffset = node.getValueRegionStartOffset();
+		int column = offset - node.getValueRegionStartOffset();
+		XPathParser parser = new XPathParser(node.getValue());
+		int tokenStart = parser.getTokenStartOffset(1, column);
+		
+		if (tokenStart == column) {
+			return "";
+		}
+		
+		return node.getValue().substring(tokenStart - 1, column - 1);
+	}
+	
+	protected IDOMAttr isXPathRegion(IDOMNode currentNode, ITextRegion aRegion, int offset) {
 		if (XSLCore.isXSLNamespace(currentNode)) {
-			if (isXPathNode(currentNode)) {
-				IDocument document = nodeRegion.getParentDocument();
-				int currentLine = document.getLineOfOffset(offset);
-				int startingLine = document.getLineOfOffset(nodeRegion.getStartOffset());
-				int lineOffset = currentLine - startingLine;
-				
-			}
+			return getXPathNode(currentNode, aRegion);
 		}
 
-		return true;
+		return null;
 	}
 	
-	protected boolean isXPathNode(Node node) {
-		return isXSLSelectNode(node) || isXSLTestNode(node);
+	protected IDOMAttr getXPathNode(Node node, ITextRegion aRegion) {
+		if (node.hasAttributes()) {
+			if (hasAttributeAtTextRegion(ATTR_SELECT, node.getAttributes(), aRegion)) {
+				return this.getAttributeAtTextRegion(ATTR_SELECT, node.getAttributes(), aRegion);
+			}
+			
+			if (hasAttributeAtTextRegion(ATTR_TEST, node.getAttributes(), aRegion)) {
+				return this.getAttributeAtTextRegion(ATTR_TEST, node.getAttributes(), aRegion);
+			}
+			
+		}
+		return null;
 	}
 	
-	protected boolean isXSLSelectNode(Node node) {
-		return node.getNodeName().equals(ATTR_SELECT);
+	protected boolean hasAttributeAtTextRegion(String attrName, NamedNodeMap nodeMap, ITextRegion aRegion) {
+		IDOMAttr attrNode = (IDOMAttr) nodeMap.getNamedItem(attrName);
+		return attrNode != null && attrNode.getValueRegion().getStart() == aRegion.getStart();
 	}
 	
-	protected boolean isXSLTestNode(Node node) {
-		return node.getNodeName().equals(ATTR_TEST);
+	protected IDOMAttr getAttributeAtTextRegion(String attrName, NamedNodeMap nodeMap, ITextRegion aRegion) {
+		IDOMAttr node = (IDOMAttr) nodeMap.getNamedItem(attrName);
+		if (node != null && node.getValueRegion().getStart() == aRegion.getStart()) {
+			return node;
+		}
+		return null;
 	}
+	
 	
 	/**
 	 * An XML Match string is extracted starting from the beginning of the
@@ -426,4 +464,47 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 	protected boolean isRegionNull(ITextRegion aRegion) {
 		return aRegion == null;
 	}	
+
+	@Override
+	protected ContentAssistRequest computeAttributeValueProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode nodeAtOffset, IDOMNode node) {
+		ContentAssistRequest contentAssistRequest = null;
+		IStructuredDocumentRegion sdRegion = getStructuredDocumentRegion(documentPosition);
+		if ((documentPosition > sdRegion.getStartOffset(completionRegion) + completionRegion.getTextLength()) && (sdRegion.getStartOffset(completionRegion) + completionRegion.getTextLength() != sdRegion.getStartOffset(completionRegion) + completionRegion.getLength())) {
+			// setup to add a new attribute at the documentPosition
+			IDOMNode actualNode = (IDOMNode) node.getModel().getIndexedRegion(sdRegion.getStartOffset(completionRegion));
+			contentAssistRequest = newContentAssistRequest(actualNode, actualNode, sdRegion, completionRegion, documentPosition, 0, matchString);
+			addAttributeNameProposals(contentAssistRequest);
+			if ((actualNode.getFirstStructuredDocumentRegion() != null) && !actualNode.getFirstStructuredDocumentRegion().isEnded()) {
+				addTagCloseProposals(contentAssistRequest);
+			}
+		}
+		else {
+			// setup to replace the existing value
+			if (!nodeAtOffset.getFirstStructuredDocumentRegion().isEnded() && (documentPosition < sdRegion.getStartOffset(completionRegion))) {
+				// if the IStructuredDocumentRegion isn't closed and the
+				// cursor is in front of the value, add
+				contentAssistRequest = newContentAssistRequest(nodeAtOffset, node, sdRegion, completionRegion, documentPosition, 0, matchString);
+				addAttributeNameProposals(contentAssistRequest);
+			}
+			else {
+				IDOMAttr xpathNode = this.isXPathRegion(nodeAtOffset, completionRegion, documentPosition);
+				if (xpathNode != null) {
+					// This needs to setup the content assistance correctly. Here is what needs to happen:
+					// 1. Adjust the matchString (This should have been calculated earlier) 
+					// 2. Get the current tokens offset position..this will be the starting offset.
+					// 3. Get the replacement length...this is the difference between the token offset and the next token or end of the string
+					XPathParser parser = new XPathParser(xpathNode.getValue());
+					int startOffset = xpathNode.getValueRegionStartOffset() + parser.getTokenStartOffset(1, documentPosition - xpathNode.getValueRegionStartOffset()) - 1;
+					int replacementLength = documentPosition - startOffset;
+					contentAssistRequest = newContentAssistRequest(nodeAtOffset, node, sdRegion, completionRegion, startOffset, replacementLength, matchString);
+				} else {
+					contentAssistRequest = newContentAssistRequest(nodeAtOffset, node, sdRegion, completionRegion, sdRegion.getStartOffset(completionRegion), completionRegion.getTextLength(), matchString);
+				}
+				
+				addAttributeValueProposals(contentAssistRequest);
+			}
+		}
+		return contentAssistRequest;
+	}
+
 }
