@@ -15,12 +15,23 @@ public class XPathParser {
 		parser = new org.apache.commons.jxpath.ri.parser.XPathParser(new StringReader(xpath));
 	}
 	
+	/**
+	 * Given a line number and a column number, return the starting
+	 * offset of the last known token.
+	 * @param offsetLine
+	 * @param offsetColumn
+	 * @return
+	 */
 	public int getTokenStartOffset(int offsetLine, int offsetColumn) {
 		currentToken = parser.getNextToken();
+		previousToken = currentToken;
 		
 		while (currentToken != null) {
 			if (locatedLine(currentToken, offsetLine)) {
 				if (locatedColumn(currentToken, offsetColumn)) {
+					if (previousToken.kind == 78) {
+						return previousToken.beginColumn;
+					}
 					return currentToken.beginColumn;
 				}
 			}
