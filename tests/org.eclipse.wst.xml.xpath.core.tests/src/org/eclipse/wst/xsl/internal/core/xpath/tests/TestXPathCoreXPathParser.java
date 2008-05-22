@@ -12,6 +12,7 @@ public class TestXPathCoreXPathParser extends TestCase {
 	protected String xpathMultiLine = "$linksFile='' and\n" +
 	                                  "(normalize-space(translate($searchIncludedSchemas, 'TRUE', 'true'))='true'\n" +
 	                                  "or normalize-space(translate($searchImportedSchemas, 'TRUE', 'true'))='true')";
+	protected String xpathPartial = "starts-with(, )";
 	
 	
 	public TestXPathCoreXPathParser() {
@@ -67,6 +68,12 @@ public class TestXPathCoreXPathParser extends TestCase {
 		XPathParser parser = new XPathParser(xpathSingleLine);
 		assertNotNull(parser);
 		assertFalse("Value of token offset is 1 should be 164:", parser.getTokenStartOffset(1, 167) == 1);
+	}
+	
+	public void testXPathPartial() {
+		XPathParser parser = new XPathParser(xpathPartial);
+		assertNotNull(parser);
+		assertEquals("Value of token offset is wrong:", 13, parser.getTokenStartOffset(1, 13));
 	}
 
 	
