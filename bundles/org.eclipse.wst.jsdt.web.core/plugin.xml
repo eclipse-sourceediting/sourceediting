@@ -129,7 +129,7 @@
 	<!--======================================================================================-->
 	<extension
 		id="JsBatchValidator"
-		name="JavaScript Syntax Validation"
+		name="%javascript.validator"
 		point="org.eclipse.wst.validation.validator">
 		<validator>
 			<projectNature id="org.eclipse.wst.jsdt.core.jsNature" />
