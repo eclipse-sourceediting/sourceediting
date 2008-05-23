@@ -33,8 +33,15 @@ public class XPathParser {
 						return previousToken.beginColumn;
 					}
 					return currentToken.beginColumn;
+				} else if (currentToken.beginColumn > offsetColumn && previousToken.beginColumn > offsetColumn) {
+					return offsetColumn;
 				}
 			}
+			if (currentToken.beginColumn == currentToken.next.beginColumn &&
+					currentToken.beginLine == currentToken.next.beginLine) {
+					return currentToken.beginColumn;
+				}
+
 			previousToken = currentToken;
 			currentToken = parser.getNextToken();
 		}
