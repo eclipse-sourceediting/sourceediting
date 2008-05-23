@@ -16,6 +16,7 @@ public class XPathCoreTests {
 		suite.addTestSuite(TestXPathParser.class);
 		suite.addTestSuite(TestXPathModel.class);
 		suite.addTestSuite(TestXSLXPathHelper.class);
+		suite.addTestSuite(XPathCoreTests.class);
 		//$JUnit-END$
 		return suite;
 	}

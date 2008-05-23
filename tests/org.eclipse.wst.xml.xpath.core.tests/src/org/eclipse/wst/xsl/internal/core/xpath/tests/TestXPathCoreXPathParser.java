@@ -13,6 +13,8 @@ public class TestXPathCoreXPathParser extends TestCase {
 	                                  "(normalize-space(translate($searchIncludedSchemas, 'TRUE', 'true'))='true'\n" +
 	                                  "or normalize-space(translate($searchImportedSchemas, 'TRUE', 'true'))='true')";
 	protected String xpathPartial = "starts-with(, )";
+	protected String xpathSpaceCheck = "  and starts-with('pre', )";
+	
 	
 	
 	public TestXPathCoreXPathParser() {
@@ -76,5 +78,17 @@ public class TestXPathCoreXPathParser extends TestCase {
 		assertEquals("Value of token offset is wrong:", 13, parser.getTokenStartOffset(1, 13));
 	}
 
+	public void testXPathSpaceCheck() {
+		XPathParser parser = new XPathParser(xpathSpaceCheck);
+		assertNotNull(parser);
+		assertEquals("Value of token offset is wrong:", 2, parser.getTokenStartOffset(1, 2));
+	}
+	
+	public void testEmptyString() {
+		XPathParser parser = new XPathParser("");
+		assertNotNull(parser);
+		assertEquals("Value of token offset is wrong:", 0, parser.getTokenStartOffset(1, 1));
+	}
+	
 	
 }
