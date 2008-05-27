@@ -1,6 +1,6 @@
 package org.eclipse.wst.xsl.internal.core.xpath.tests;
 
-import org.apache.commons.jxpath.ri.parser.Token;
+
 import org.apache.commons.jxpath.ri.parser.XPathParserConstants;
 import org.eclipse.wst.xml.xpath.core.internal.parser.XPathParser;
 
@@ -87,7 +87,7 @@ public class TestXPathCoreXPathParser extends TestCase {
 	public void testEmptyString() {
 		XPathParser parser = new XPathParser("");
 		assertNotNull(parser);
-		assertEquals("Value of token offset is wrong:", 0, parser.getTokenStartOffset(1, 1));
+		assertEquals("Value of token offset is wrong:", 1, parser.getTokenStartOffset(1, 1));
 	}
 	
 	
