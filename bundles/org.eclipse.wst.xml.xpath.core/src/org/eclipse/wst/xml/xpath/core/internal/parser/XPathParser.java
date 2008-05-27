@@ -37,10 +37,16 @@ public class XPathParser {
 					return offsetColumn;
 				}
 			}
+			
 			if (currentToken.beginColumn == currentToken.next.beginColumn &&
 					currentToken.beginLine == currentToken.next.beginLine) {
+				if (currentToken.beginColumn == 0) {
+					return 1;
+				} else {
 					return currentToken.beginColumn;
 				}
+			}
+			
 
 			previousToken = currentToken;
 			currentToken = parser.getNextToken();
