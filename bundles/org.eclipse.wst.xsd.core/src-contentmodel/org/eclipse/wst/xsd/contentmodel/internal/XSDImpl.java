@@ -7,6 +7,9 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver - STAR - bug 157254 - referenced Attributes and Elements
+ *        were not being checked to see if they had the annotations if
+ *        none were defined locally. (Initial fix modified - see bug)
  *******************************************************************************/
 package org.eclipse.wst.xsd.contentmodel.internal;
 import java.io.IOException;
@@ -1375,7 +1378,29 @@ public class XSDImpl
      */
     protected CMNodeList getDocumentation()
     {
-      XSDAnnotation annotation = xsdAttributeUse.getAttributeDeclaration().getAnnotation();
+      // Check if it is an attribute reference first
+      XSDAttributeDeclaration xsdAttributeRef = xsdAttributeUse.getContent();
+      if (xsdAttributeRef != null && xsdAttributeRef.isAttributeDeclarationReference())
+      {
+        // Determine if it has annotations
+        boolean refHasDocumentation = false;
+        XSDAnnotation refAnnotation = xsdAttributeRef.getAnnotation();
+        if (refAnnotation != null)
+        {
+          // Determine if there is documentation
+          if (!refAnnotation.getUserInformation().isEmpty())
+          {
+            refHasDocumentation = true;
+          }
+        }
+        if (refHasDocumentation)
+          return getDocumentations(refAnnotation);
+      }
+      
+      // Otherwise proceed with getting the documentation as usual
+      XSDAttributeDeclaration xsdAttributeDeclaration =  xsdAttributeUse.getAttributeDeclaration();      
+      XSDAnnotation annotation = xsdAttributeDeclaration.getAnnotation();
+      
       return getDocumentations(annotation);
     }
 
@@ -1895,7 +1920,29 @@ public class XSDImpl
      */
     protected CMNodeList getDocumentation()
     {
-      XSDAnnotation annotation = getXSDElementDeclaration().getAnnotation();
+      XSDElementDeclaration xsdElementDeclaration = getXSDElementDeclaration();
+      XSDAnnotation annotation = xsdElementDeclaration.getAnnotation();
+      
+      // Need to check to see if there are any documentation elements.  Just because
+      // there is an annotation element doesn't mean that the documentation element is
+      // also there, as it could contain just appinfo elements.
+      
+      boolean hasDocumentation = false;
+      
+      if (annotation != null) {
+    	  if (!annotation.getUserInformation().isEmpty()) {
+    		  hasDocumentation = true;
+    	  }
+      }
+
+      // The element may not have annotation and if it is referenced
+      // check the referenced attribute for the annotations.
+      if (hasDocumentation == false) {
+          if (xsdElementDeclaration.isElementDeclarationReference()) {
+        	  annotation = xsdElementDeclaration.getResolvedElementDeclaration().getAnnotation();
+          }
+      }
+      
       return getDocumentations(annotation);
     }
 
