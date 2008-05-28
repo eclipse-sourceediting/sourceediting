@@ -226,14 +226,20 @@ public class EditNamespaceInfoDialog extends Dialog {
 			}
 
 
-			CMDocument document = ContentModelManager.getInstance().createCMDocument(grammarURI, "xsd"); //$NON-NLS-1$
-			List namespaceInfoList = (List) document.getProperty("http://org.eclipse.wst/cm/properties/namespaceInfo"); //$NON-NLS-1$
-			NamespaceInfo info = (NamespaceInfo) namespaceInfoList.get(0);
-			if ((uriField.getText().trim().length() == 0) && (info.uri != null)) {
-				uriField.setText(info.uri);
-			}
-			if ((prefixField.getText().trim().length() == 0) && (info.prefix != null)) {
-				prefixField.setText(info.prefix);
+			CMDocument document = ContentModelManager.getInstance().createCMDocument(URIHelper.getURIForFilePath(grammarURI), "xsd"); //$NON-NLS-1$
+			if(document != null) {
+				List namespaceInfoList = (List) document.getProperty("http://org.eclipse.wst/cm/properties/namespaceInfo"); //$NON-NLS-1$
+				if(namespaceInfoList != null) {
+					NamespaceInfo info = (NamespaceInfo) namespaceInfoList.get(0);
+					if(info != null) {
+						if ((uriField.getText().trim().length() == 0) && (info.uri != null)) {
+							uriField.setText(info.uri);
+						}
+						if ((prefixField.getText().trim().length() == 0) && (info.prefix != null)) {
+							prefixField.setText(info.prefix);
+						}
+					}
+				}
 			}
 		}
 	}
