@@ -243,8 +243,11 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
                 this.fpjwc.setProjectFacets( facets );
         	}
         	else
-        	{
+        	{  // setting the facets prior to setting the preset is to let the dynamic presets adjust
+        		final Set<IProjectFacetVersion> facets = getFacetConfiguration( fv );
+                this.fpjwc.setProjectFacets( facets );
         		this.fpjwc.setSelectedPreset(presetID);
+        		
         	}
         }
 	}
