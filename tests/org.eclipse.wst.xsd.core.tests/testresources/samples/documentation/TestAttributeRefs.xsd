@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="object" type="object"></xsd:element>
+	<xsd:complexType name="object">
+		<xsd:attribute ref="globalAttr1" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					PASS! Documentation for attribute ref overrides the resolved attribute ref documentation
+				</xsd:documentation>
+				<xsd:documentation>
+					PASS! Multiple documentation elements.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute ref="globalAttr2" use="required"></xsd:attribute>
+		<xsd:attribute ref="globalAttr3" use="required">
+			<xsd:annotation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute ref="globalAttr4" use="required">
+			<xsd:annotation>
+				<xsd:documentation></xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="localAttr" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>
+		       PASS! Multiple documentation elements for local attribute part 1
+		    </xsd:documentation>
+				<xsd:documentation>
+		       PASS! Multiple documentation elements for local attribute part 2
+		    </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:attribute name="globalAttr1">
+		<xsd:annotation>
+			<xsd:documentation>
+				FAILED! Documentation for resolved attribute ref.  If this doc shows, it's a bug.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:string">
+				<xsd:pattern value="[a-zA-Z0-9_]+"></xsd:pattern>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:attribute>
+	<xsd:attribute name="globalAttr2" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>
+				PASS! Documentation for resolved attribute ref when the attribute ref does not have documentation
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:attribute name="globalAttr3" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>
+				PASS! Documentation for resolved attribute ref when the attribute ref has an annotation but does not have documentation
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:attribute name="globalAttr4" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>
+				FAILED! Documentation for attribute ref is empty.  This documentation should not display.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+</xsd:schema>

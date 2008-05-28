@@ -7,27 +7,34 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver - STAR - bug 157254 
  *******************************************************************************/
 
 package org.eclipse.wst.xsd.core.tests.internal;
 
+import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNodeList;
 import org.eclipse.wst.xsd.contentmodel.internal.CMDocumentFactoryXSD;
 import org.eclipse.wst.xsd.contentmodel.internal.XSDImpl;
+import org.eclipse.wst.xsd.contentmodel.internal.XSDImpl.DocumentationImpl;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
+import org.osgi.framework.Bundle;
 
 /**
  * Test class for bug fixes.
@@ -210,7 +217,7 @@ public class BugFixesTest extends BaseTestCase
     CMDataType attrTypeB = cmAttributeDeclarationB.getAttrType();
     assertEquals("typeNames", attrTypeB.getDataTypeName());
   }
-
+  
   public void testEnumerationsInComplexTypesWithSimpleContent()
   {
     // See bug 215514
@@ -239,4 +246,143 @@ public class BugFixesTest extends BaseTestCase
       }
     }
   }
+  
+  public void testGlobalElementDocumentation()
+  {
+    // See bug 157254
+
+	Bundle bundle = Platform.getBundle("org.eclipse.wst.xsd.core.tests");
+	URL url = bundle.getEntry("/testresources/samples/documentation/globalreftest.xsd");
+    
+	CMDocument document = XSDImpl.buildCMDocument(url.toExternalForm());
+	assertNotNull("Content model loaded Null", document);
+    
+    CMNamedNodeMap elements = document.getElements();
+    
+    CMElementDeclaration node =  (CMElementDeclaration)elements.getNamedItem("rootTest");
+	assertNotNull("Missing rootElement", node);
+
+    CMElementDeclaration testElement = (CMElementDeclaration)node.getLocalElements().getNamedItem("test");
+	assertNotNull("Missing test element", testElement);
+
+    CMNodeList documentation = (CMNodeList)testElement.getProperty("documentation");
+    if (documentation.getLength() == 0) {
+    	fail("test global element missing documentation.");
+    }
+    for (int cnt = 0; cnt < documentation.getLength(); cnt++) {
+    	DocumentationImpl doc = (DocumentationImpl) documentation.item(cnt);
+    	assertEquals("Test global element missing documentation.", "This some global documentation", doc.getValue());
+    }
+    
+    testElement = (CMElementDeclaration)node.getLocalElements().getNamedItem("testElement");
+    documentation = (CMNodeList)testElement.getProperty("documentation");
+    if (documentation.getLength() == 0) {
+    	fail("testElement local element missing documentation.");
+    }
+    for (int cnt = 0; cnt < documentation.getLength(); cnt++) {
+    	DocumentationImpl doc = (DocumentationImpl) documentation.item(cnt);
+    	assertEquals("testElement documentation wrong.", "This is an override", doc.getValue());
+    }    
+  }  
+
+  public void testGlobalAtrributeDocumentation()
+  {
+    // See bug 157254
+
+	Bundle bundle = Platform.getBundle("org.eclipse.wst.xsd.core.tests");
+	URL url = bundle.getEntry("/testresources/samples/documentation/TestAttributeRefs.xsd");
+    
+	CMDocument document = XSDImpl.buildCMDocument(url.toExternalForm());
+	assertNotNull("Content model loaded Null", document);
+    
+    CMNamedNodeMap elements = document.getElements();
+    
+    CMElementDeclaration node =  (CMElementDeclaration)elements.getNamedItem("object");
+	assertNotNull("Missing object element", node);
+	
+	CMNamedNodeMap attributes =  node.getAttributes();
+	testGlobalAttr1Documentation(attributes);
+	testGlobalAttr2Documentation(attributes);
+	testGlobalAttr3Documentation(attributes);
+	testGlobalAttr4Documentation(attributes);
+	testLocalAttrDocumentation(attributes);
+	
+ }
+  
+	private void testLocalAttrDocumentation(CMNamedNodeMap attributes) {
+		CMAttributeDeclaration attribute = (CMAttributeDeclaration) attributes.getNamedItem("localAttr");
+		assertNotNull("Missing localAttr attribute.");
+		
+		CMNodeList documentation = (CMNodeList)attribute.getProperty("documentation");
+		if (documentation.getLength() == 0) {
+			fail("Unable to find documentation for localAttr");
+		}
+		assertEquals("Wrong number of documentation annotations.", 2, documentation.getLength());
+		assertEquals("Incorrect annotation for localAttr:",
+					 "PASS! Multiple documentation elements for local attribute part 1",
+					 ((DocumentationImpl)documentation.item(0)).getValue().trim());
+		assertEquals("Incorrect annotation for localAttr:",
+					 "PASS! Multiple documentation elements for local attribute part 2",
+				     ((DocumentationImpl)documentation.item(1)).getValue().trim());
+	}
+
+
+	private void testGlobalAttr1Documentation(CMNamedNodeMap attributes) {
+		CMAttributeDeclaration attribute = (CMAttributeDeclaration) attributes.getNamedItem("globalAttr1");
+		assertNotNull("Missing globalAttr1 attribute.");
+		
+		CMNodeList documentation = (CMNodeList)attribute.getProperty("documentation");
+		if (documentation.getLength() == 0) {
+			fail("Unable to find documentation for globalAttr1");
+		}
+		assertEquals("Wrong number of documentation annotations.", 2, documentation.getLength());
+		assertEquals("Incorrect first annotation for globalAttr1:",
+		"PASS! Documentation for attribute ref overrides the resolved attribute ref documentation",
+		((DocumentationImpl)documentation.item(0)).getValue().trim());
+		
+		assertEquals("Incorrect second annotation for globalAttr1:",
+		"PASS! Multiple documentation elements.",
+		((DocumentationImpl)documentation.item(1)).getValue().trim());
+	}  
+
+	private void testGlobalAttr2Documentation(CMNamedNodeMap attributes) {
+		CMAttributeDeclaration attribute = (CMAttributeDeclaration) attributes.getNamedItem("globalAttr2");
+		assertNotNull("Missing globalAttr1 attribute.");
+		
+		CMNodeList documentation = (CMNodeList)attribute.getProperty("documentation");
+		if (documentation.getLength() == 0) {
+			fail("Unable to find documentation for globalAttr2");
+		}
+		assertEquals("Wrong number of documentation annotations.", 1, documentation.getLength());
+		assertEquals("Incorrect annotation for globalAttr2:",
+		"PASS! Documentation for resolved attribute ref when the attribute ref does not have documentation",
+		((DocumentationImpl)documentation.item(0)).getValue().trim());
+	}
+	
+	private void testGlobalAttr3Documentation(CMNamedNodeMap attributes) {
+		CMAttributeDeclaration attribute = (CMAttributeDeclaration) attributes.getNamedItem("globalAttr3");
+		assertNotNull("Missing globalAttr1 attribute.");
+		
+		CMNodeList documentation = (CMNodeList)attribute.getProperty("documentation");
+		if (documentation.getLength() == 0) {
+			fail("Unable to find documentation for globalAttr3");
+		}
+		assertEquals("Wrong number of documentation annotations.", 1, documentation.getLength());
+		assertEquals("Incorrect annotation for globalAttr3:",
+		"PASS! Documentation for resolved attribute ref when the attribute ref has an annotation but does not have documentation",
+		((DocumentationImpl)documentation.item(0)).getValue().trim());
+	}
+	
+	private void testGlobalAttr4Documentation(CMNamedNodeMap attributes) {
+		CMAttributeDeclaration attribute = (CMAttributeDeclaration) attributes.getNamedItem("globalAttr4");
+		assertNotNull("Missing globalAttr1 attribute.");
+		
+		CMNodeList documentation = (CMNodeList)attribute.getProperty("documentation");
+		if (documentation.getLength() == 0) {
+			fail("Documentation element not returned for globalAttr4");
+		}
+		assertNull("globalAttr4 returned data when non expected.", ((DocumentationImpl)documentation.item(0)).getValue());
+	}
+	
+		
 }
