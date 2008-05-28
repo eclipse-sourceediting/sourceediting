@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -126,7 +126,7 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
 		if (PatternMatcher.class.equals(adapterType) &&
 				(adaptableObject instanceof XMLSearchPattern ||
 				adaptableObject instanceof XMLComponentSearchPattern) ) {
-			return new XMLSearchPatternMatcher();
+			return new XMLSearchPatternMatcher(this);
 		} 
 		return null; 
 	}
@@ -199,7 +199,7 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
 			if(childPattern != null){
 					childPattern.setSearchName(componentPattern.getName().getLocalName());
 					childPattern.setSearchNamespace(componentPattern.getName().getNamespace());
-	     			componentPattern.setChildren(new XMLSearchPattern[]{childPattern});
+	     			componentPattern.addChildren(this, new XMLSearchPattern[]{childPattern});
 			}
 			
 		}
@@ -211,7 +211,7 @@ public abstract class XMLSearchParticipant extends SearchParticipant {
 				childPattern.setSearchName(componentPattern.getName().getLocalName());
 				childPattern.setSearchNamespace(componentPattern.getName().getNamespace());				
 			}
-			componentPattern.setChildren(childPatterns);
+			componentPattern.addChildren(this, childPatterns);
 			
 		}
 	}

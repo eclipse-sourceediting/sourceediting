@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.wst.xml.core.internal.search.matching;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.common.core.search.SearchMatch;
+import org.eclipse.wst.common.core.search.SearchParticipant;
 import org.eclipse.wst.common.core.search.SearchRequestor;
 import org.eclipse.wst.common.core.search.pattern.QualifiedName;
 import org.eclipse.wst.common.core.search.pattern.SearchPattern;
@@ -25,7 +26,20 @@ import org.w3c.dom.Node;
 
 public class XMLSearchPatternMatcher extends PatternMatcher{
 	
-
+   /**
+    * The active search participant.
+    */
+    private SearchParticipant searchParticipant;
+  
+    /**
+     * Constructs a pattern matcher given a search participant.
+     * @param searchParticipant the active {@link SearchParticipant search participant}.
+     */
+    public XMLSearchPatternMatcher(SearchParticipant searchParticipant)
+    {
+      this.searchParticipant = searchParticipant;
+    }
+    
 	protected String computeNamespaceForPrefix(Element element, String prefix)
 	{
 	  String result = null;
@@ -110,7 +124,10 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
 	
 	public void locateMatches(SearchPattern pattern, IFile file, Element element, SearchRequestor requestor) {
 		if(pattern instanceof XMLComponentSearchPattern){
-			XMLSearchPattern[] childPatterns = ((XMLComponentSearchPattern)pattern).getChildren();
+			XMLSearchPattern[] childPatterns = ((XMLComponentSearchPattern)pattern).getChildren(searchParticipant);
+			if (childPatterns == null){
+			  return;
+			}
 			for (int i = 0; i < childPatterns.length; i++) {
 				PatternMatcher matcher = (PatternMatcher)childPatterns[i].getAdapter(PatternMatcher.class);
 				if(matcher == null){
@@ -135,7 +152,10 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
 	 */
 	public boolean matches(SearchPattern pattern, Object element){
 		if(pattern instanceof XMLComponentSearchPattern){
-			XMLSearchPattern[] childPatterns = ((XMLComponentSearchPattern)pattern).getChildren();
+			XMLSearchPattern[] childPatterns = ((XMLComponentSearchPattern)pattern).getChildren(searchParticipant);
+            if (childPatterns == null){
+              return false;
+            }
 			for (int i = 0; i < childPatterns.length; i++) {
 				PatternMatcher matcher = (PatternMatcher)childPatterns[i].getAdapter(PatternMatcher.class);
 				if(matcher == null){
