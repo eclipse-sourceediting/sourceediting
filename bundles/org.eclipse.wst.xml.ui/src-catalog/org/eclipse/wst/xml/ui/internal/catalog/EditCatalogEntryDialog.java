@@ -669,6 +669,7 @@ public class EditCatalogEntryDialog extends Dialog {
 
 		public void saveData() {
 			getNextCatalog().setCatalogLocation(URIUtils.convertLocationToURI(catalogLocationField.getText()));
+			dataSaved = true;
 		}
 
 		protected void updateWidgets(Widget widget) {
