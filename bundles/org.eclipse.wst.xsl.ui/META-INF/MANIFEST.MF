@@ -28,6 +28,7 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.wst.xsl.ui.internal;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.actions;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.contentassist;x-internal:=true,
+ org.eclipse.wst.xsl.ui.internal.doubleclick,
  org.eclipse.wst.xsl.ui.internal.editor;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.handlers;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.perspective;x-internal:=true,
