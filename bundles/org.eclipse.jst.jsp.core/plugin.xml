@@ -138,7 +138,7 @@
 			name="%JSP_Tag_Content_Type_Extension_Element.name"
 			id="tagsource"
 			base-type="org.eclipse.jst.jsp.core.jspsource"
-			default-charset="UTF-8"/>
+			default-charset="ISO-8859-1"/>
 		<!-- create content type for .tld files -->
 		<content-type
 			file-extensions="tld"
