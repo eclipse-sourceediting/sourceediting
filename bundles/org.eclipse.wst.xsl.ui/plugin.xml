@@ -34,14 +34,18 @@
 	</extension>
 
 	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
-	    <doubleClickStrategy
-           class="org.eclipse.wst.xsl.ui.internal.doubleclick.XSLDoubleClickStrategy"
-           target="org.eclipse.wst.xsl.ui.doubleClickStrategy">
-	    </doubleClickStrategy>
 		<sourceViewerConfiguration
 			class="org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL"
 			target="org.eclipse.wst.xml.core.xslsource">
 		</sourceViewerConfiguration>
+	    <doubleClickStrategy
+           class="org.eclipse.wst.xsl.ui.internal.doubleclick.XSLDoubleClickStrategy"
+           target="org.eclipse.wst.xsl.XSL_XPATH">
+	    </doubleClickStrategy>
+		<provisionalDefinition
+			type="activecontexts"
+			value="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.navigation, org.eclipse.wst.xml.cleanup, org.eclipse.wst.xml.comments, org.eclipse.wst.xml.selection, org.eclipse.wst.xml.dependencies, org.eclipse.wst.xml.grammar, org.eclipse.wst.xml.expand, org.eclipse.wst.xml.occurrences"
+        	target="org.eclipse.core.runtime.xml" />
 	</extension>
 	
 	<extension point="org.eclipse.ui.newWizards">

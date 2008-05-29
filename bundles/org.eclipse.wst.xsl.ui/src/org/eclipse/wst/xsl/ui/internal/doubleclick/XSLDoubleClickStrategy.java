@@ -17,6 +17,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.doubleclick.XMLDoubleClickStrategy;
+ 
 
 /**
  * XSLDoubleClickStrategy extends the XMLDoubleclickStrategy to take into
