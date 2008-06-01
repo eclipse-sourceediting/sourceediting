@@ -20,7 +20,38 @@
     <extension point="org.eclipse.wst.xml.core.catalogContributions">
         <catalogContribution id="default">
 
-
+            <public
+                publicId="-//W3C//DTD HTML 4.01 Frameset//EN"
+                uri="dtds/frameset.dtd"
+                webURL="http://www.w3.org/TR/html4/frameset.dtd">
+            </public>
+            <public
+                publicId="-//W3C//DTD HTML 4.01 Transitional//EN"
+                uri="dtds/loose.dtd"
+                webURL="http://www.w3.org/TR/html4/loose.dtd">
+            </public>
+            <public
+                publicId="-//W3C//DTD HTML 4.01//EN"
+                uri="dtds/strict.dtd"
+                webURL="http://www.w3.org/TR/html4/strict.dtd">
+            </public>            
+            <public
+                publicId="-//W3C//ENTITIES Latin 1//EN//HTML"
+                uri="dtds/HTMLlat1.ent"
+                webURL="http://www.w3.org/TR/REC-html40/HTMLlat1.ent">
+            </public>            
+            <public
+                publicId="-//W3C//ENTITIES Special//EN//HTML"
+                uri="dtds/HTMLsymbol.ent"
+                webURL="http://www.w3.org/TR/REC-html40/HTMLsymbol.ent">
+            </public>            
+            <public
+                publicId="-//W3C//ENTITIES Symbols//EN//HTML"
+                uri="dtds/HTMLspecial.ent"
+                webURL="http://www.w3.org/TR/REC-html40/HTMLspecial.ent">
+            </public>             
+            
+            
             <public
                 publicId="-//WAPFORUM//DTD WML 1.1//EN"
                 uri="dtds/wml11.dtd">
@@ -105,6 +136,35 @@
 
 
     <extension point="org.eclipse.wst.sse.core.documentTypes">
+    
+        <documentType
+            elementName="html"
+            displayName="%documentType.displayName.7"
+            namespaceURI="http://www.w3.org/TR/html4/frameset.dtd"
+            isXHTML="false"
+            hasFrameset="true"
+            publicID="-//W3C//DTD HTML 4.01 Frameset//EN"
+            systemID="http://www.w3.org/TR/html4/frameset.dtd">
+        </documentType>
+        <documentType
+            elementName="html"
+            displayName="%documentType.displayName.8"
+            namespaceURI="http://www.w3.org/TR/html4/loose.dtd"
+            isXHTML="false"
+            hasFrameset="true"
+            publicID="-//W3C//DTD HTML 4.01 Transitional//EN"
+            systemID="http://www.w3.org/TR/html4/loose.dtd">
+        </documentType>
+        <documentType
+            elementName="html"
+            displayName="%documentType.displayName.9"
+            namespaceURI="http://www.w3.org/TR/html4/strict.dtd"
+            isXHTML="false"
+            hasFrameset="true"
+            publicID="-//W3C//DTD HTML 4.01//EN"
+            systemID="http://www.w3.org/TR/html4/strict.dtd">
+        </documentType>
+                
         <documentType
             elementName="html"
             displayName="%documentType.displayName.0"
