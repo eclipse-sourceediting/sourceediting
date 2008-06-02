@@ -207,12 +207,11 @@ public class TaglibClassLoader extends ClassLoader {
 					newClass = defineClass(className, byteArray, 0, byteArray.length);
 					resolveClass(newClass);
 				}
-				catch (Throwable t) {
-					Logger.logException("Error loading TEI class " + className, t);
-
-					// j9 can give ClassCircularityError
-					// parent should already have the class then
-					// try parent loader
+				catch (ClassCircularityError e) {
+					/*
+					 * j9 can give ClassCircularityError parent should already
+					 * have the class then try parent loader
+					 */
 					try {
 						Class c = getParent().loadClass(className);
 						if (DEBUG)
@@ -223,6 +222,10 @@ public class TaglibClassLoader extends ClassLoader {
 						if (DEBUG)
 							cnf.printStackTrace();
 					}
+					Logger.logException("Unrecoverable error loading TEI class " + className, e);
+				}
+				catch (Throwable t) {
+					Logger.logException("Error loading TEI class " + className, t);
 				}
 				stream.close();
 			}
@@ -296,12 +299,11 @@ public class TaglibClassLoader extends ClassLoader {
 						newClass = defineClass(className, byteArray, 0, byteArray.length);
 						resolveClass(newClass);
 					}
-					catch (Throwable t) {
-						Logger.logException("Error loading TEI class " + className, t);
-						// j9 can give ClassCircularityError
-						// parent should already have the class then
-
-						// try parent
+					catch (ClassCircularityError e) {
+						/*
+						 * j9 can give ClassCircularityError parent should already
+						 * have the class then try parent loader
+						 */
 						try {
 							Class c = getParent().loadClass(className);
 							if (DEBUG)
@@ -311,8 +313,11 @@ public class TaglibClassLoader extends ClassLoader {
 						catch (ClassNotFoundException cnf) {
 							if (DEBUG)
 								cnf.printStackTrace();
-							failedClasses.put(className, cnf);
 						}
+						Logger.logException("Unrecoverable error loading TEI class " + className, e);
+					}
+					catch (Throwable t) {
+						Logger.logException("Error loading TEI class " + className, t);
 					}
 					stream.close();
 					jarfile.close();

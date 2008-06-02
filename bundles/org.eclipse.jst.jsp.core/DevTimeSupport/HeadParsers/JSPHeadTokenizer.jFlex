@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -171,7 +171,7 @@ UTF83ByteBOM = \xEF\xBB\xBF
 // [3] S ::= (0x20 | 0x9 | 0xD | 0xA)+
 S = [\x20\x09\x0D\x0A]
 
-BeginAttribeValue = {S}* \= {S}*
+BeginAttributeeValue = {S}* \= {S}*
 
 LineTerminator = \r|\n
 
@@ -204,16 +204,16 @@ LineTerminator = \r|\n
          // another case that's part of the "HTML family" is WML 1.0 (WML 2.0 is part of XHTML)
          "<!DOCTYPE" {S}* "wml" {S}* "PUBLIC" .* "//DTD WML"                   {isWML = true;}
 
-        "<%" {S}* "@" {S}* "page" {S}+   {yybegin(ST_PAGE_DIRECTIVE); return JSPHeadTokenizerConstants.PageDirectiveStart;}
-        "<jsp:directive.page" {S}+           {yybegin(ST_PAGE_DIRECTIVE); return JSPHeadTokenizerConstants.PageDirectiveStart;}
+        "<%" {S}* "@" {S}* ("page"|"tag") {S}+   {yybegin(ST_PAGE_DIRECTIVE); return JSPHeadTokenizerConstants.PageDirectiveStart;}
+        ("<jsp:directive.page"|"<jsp:directive.tag") {S}+           {yybegin(ST_PAGE_DIRECTIVE); return JSPHeadTokenizerConstants.PageDirectiveStart;}
 
 
 }
 
 <ST_XMLDecl>
 {
-        "version" {BeginAttribeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDeclVersion;}
-        "encoding" {BeginAttribeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDelEncoding;}
+        "version" {BeginAttributeeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDeclVersion;}
+        "encoding" {BeginAttributeeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDelEncoding;}
         // note the "forced end" (via 'hasMore=false') once the end of XML Declaration found
         // This is since non-ascii chars may follow and may cause IOExceptions which would not occur once stream is
         // read with incorrect encoding (such as if platform encoding is in effect until true encoding detected).
@@ -226,9 +226,9 @@ LineTerminator = \r|\n
 <ST_PAGE_DIRECTIVE>
 {
 //  removed 'language' since it really can be handled seperately from encoding, but may add it back later for simple re-use.
-        "language"     {BeginAttribeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return JSPHeadTokenizerConstants.PageLanguage;}
-        "contentType" {BeginAttribeValue}  {pushCurrentState(); yybegin(QuotedAttributeValue); return JSPHeadTokenizerConstants.PageContentType;}
-        "pageEncoding" {BeginAttribeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return JSPHeadTokenizerConstants.PageEncoding;}
+        "language"     {BeginAttributeeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return JSPHeadTokenizerConstants.PageLanguage;}
+        "contentType" {BeginAttributeeValue}  {pushCurrentState(); yybegin(QuotedAttributeValue); return JSPHeadTokenizerConstants.PageContentType;}
+        "pageEncoding" {BeginAttributeeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return JSPHeadTokenizerConstants.PageEncoding;}
         // note the "forced end" (via 'hasMore=false') once the end of XML Declaration found
         // This is since non-ascii chars may follow and may cause IOExceptions which would not occur once stream is
         // read in correct encoding.

@@ -1130,10 +1130,12 @@ class ProjectDescription {
 				 */
 					IPath libPath = entry.getPath();
 					if (!fClasspathJars.containsKey(libPath.toString())) {
-						if (libPath.toFile().exists()) {
+						File systemFile = libPath.toFile();
+						// Can't handle folders
+						if (systemFile.isFile() && systemFile.exists()) {
 							updateClasspathLibrary(libPath.toString(), ITaglibRecordEvent.ADDED, entry.isExported());
 						}
-						else {
+						else if (libPath.segmentCount() > 1) {
 							/*
 							 * Note: .jars on the classpath inside of the
 							 * project will have duplicate entries in the JAR
@@ -1141,7 +1143,7 @@ class ProjectDescription {
 							 * getAvailableTaglibRecords().
 							 */
 							IFile libFile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
-							if (libFile != null && libFile.exists()) {
+							if (libFile != null && libFile.getType() == IResource.FILE && libFile.exists() && libFile.getLocation() != null) {
 								updateClasspathLibrary(libFile.getLocation().toString(), ITaglibRecordEvent.ADDED, entry.isExported());
 							}
 						}

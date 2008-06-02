@@ -188,7 +188,14 @@ public class ProjectResolver implements URIResolver {
 	}
 
 	protected String getRootLocationString() {
-		return fProject.getLocation().toString();
+		if (fProject == null)
+			return null;
+
+		String location = null;
+		if (fProject.getLocation() != null) {
+			location = fProject.getLocation().toString();
+		}
+		return location;
 	}
 
 	public InputStream getURIStream(String uri) {

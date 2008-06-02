@@ -159,7 +159,7 @@ public class JSPTranslator {
 	 * A map of tag names to tag library variable information; used to store
 	 * the ones needed for AT_END variable support.
 	 */
-	private HashMap fTagToVariableMap = null;
+	private StackMap fTagToVariableMap = null;
 
 	private StringBuffer fResult; // the final traslated java document
 	// string buffer
@@ -750,39 +750,47 @@ public class JSPTranslator {
 		String decl = ""; //$NON-NLS-1$
 		if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_TAG_OPEN)) {
 			TaglibVariable[] taglibVars = helper.getTaglibVariables(tagToAdd, getStructuredDocument(), customTag);
+			// store for use at end tag
+			fTagToVariableMap.push(tagToAdd, taglibVars);
+
+			// Bug 199047
 			/*
-			 * These loops are duplicated intentionally to keep the nesting
-			 * scoped variables from interfering with the others
+			 * Add AT_BEGIN variables
 			 */
 			for (int i = 0; i < taglibVars.length; i++) {
 				if (taglibVars[i].getScope() == VariableInfo.AT_BEGIN) {
 					decl = taglibVars[i].getDeclarationString();
 					appendToBuffer(decl, fUserCode, false, fCurrentNode);
 				}
-				if (taglibVars[i].getScope() == VariableInfo.AT_END) {
-					decl = taglibVars[i].getDeclarationString();
-					fTagToVariableMap.put(tagToAdd, taglibVars);
-				}
 			}
+			
+			/*
+			 * Add NESTED variables 
+			 */
+			StringBuffer text = new StringBuffer();
+			text.append("{ // <"); //$NON-NLS-1$
+			text.append(getRegionName(customTag));
+			text.append(">\n"); //$NON-NLS-1$
+			appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
+
 			for (int i = 0; i < taglibVars.length; i++) {
 				if (taglibVars[i].getScope() == VariableInfo.NESTED) {
 					decl = taglibVars[i].getDeclarationString();
-					appendToBuffer("{", fUserCode, false, fCurrentNode);
 					appendToBuffer(decl, fUserCode, false, fCurrentNode);
-					fTagToVariableMap.put(tagToAdd, taglibVars);
 				}
 			}
+
 			if (customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
+				text = new StringBuffer();
+				text.append("} // </"); //$NON-NLS-1$
+				text.append(getRegionName(customTag));
+				text.append(">\n"); //$NON-NLS-1$
+				appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
+				// pop them off since there won't be a separate end tag to do so
+				fTagToVariableMap.pop(tagToAdd);
 				/*
-				 * Process NESTED variables backwards so the scopes "unroll"
-				 * correctly.
+				 * Add AT_END variables 
 				 */
-				for (int i = taglibVars.length; i > 0; i--) {
-					if (taglibVars[i-1].getScope() == VariableInfo.NESTED) {
-						appendToBuffer("}", fUserCode, false, fCurrentNode);
-					}
-				}
-				/* Treat this as the end for empty tags */
 				for (int i = 0; i < taglibVars.length; i++) {
 					if (taglibVars[i].getScope() == VariableInfo.AT_END) {
 						decl = taglibVars[i].getDeclarationString();
@@ -796,13 +804,17 @@ public class JSPTranslator {
 		 * "unroll" correctly.
 		 */
 		else if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_END_TAG_OPEN)) {
-			TaglibVariable[] taglibVars = (TaglibVariable[]) fTagToVariableMap.remove(tagToAdd);
+			StringBuffer text = new StringBuffer();
+			text.append("} // </"); //$NON-NLS-1$
+			text.append(getRegionName(customTag));
+			text.append(">\n"); //$NON-NLS-1$
+			appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
+			// pop the variables
+			TaglibVariable[] taglibVars = (TaglibVariable[]) fTagToVariableMap.pop(tagToAdd);
 			if (taglibVars != null) {
-				for (int i = taglibVars.length; i > 0; i--) {
-					if (taglibVars[i-1].getScope() == VariableInfo.NESTED) {
-						appendToBuffer("}", fUserCode, false, fCurrentNode);
-					}
-				}
+				/*
+				 * Add AT_END variables 
+				 */
 				for (int i = 0; i < taglibVars.length; i++) {
 					if (taglibVars[i].getScope() == VariableInfo.AT_END) {
 						decl = taglibVars[i].getDeclarationString();
@@ -842,7 +854,7 @@ public class JSPTranslator {
 	 */
 	public void translate() {
 		if (fTagToVariableMap == null) {
-			fTagToVariableMap = new HashMap(2);
+			fTagToVariableMap = new StackMap();
 		}
 
 		setCurrentNode(fStructuredDocument.getFirstStructuredDocumentRegion());
@@ -950,7 +962,11 @@ public class JSPTranslator {
 			if (type == DOMRegionContext.BLOCK_TEXT) {
 				// check if it's nested jsp in a script tag...
 				if (region instanceof ITextRegionContainer) {
-					translateJSPNode(region, regions, type, EMBEDDED_JSP);
+					// Bug 126377 - JSP scriptlets enclosed by HTML comment cause validation errors
+					// pass in block text's container & iterator
+					Iterator regionIterator = ((ITextRegionCollection) region).getRegions().iterator();
+					translateJSPNode(region, regionIterator, type, EMBEDDED_JSP);
+
 				}
 				else {
 					// ////////////////////////////////////////////////////////////////////////////////
@@ -1030,7 +1046,8 @@ public class JSPTranslator {
 		if (tagName == null)
 			return false;
 
-		if (tagName.indexOf(":") > 0 && !tagName.startsWith("jsp")) //$NON-NLS-1$  //$NON-NLS-2$
+		/* valid for any tag with a ':' and not a JSP prefix - this will cause */
+		if (tagName.indexOf(":") > 0 && !tagName.startsWith("jsp:")) //$NON-NLS-1$  //$NON-NLS-2$
 			return true;
 
 		return false;
@@ -1124,7 +1141,7 @@ public class JSPTranslator {
 
 			{
 				String fullTagName = container.getText(r);
-				if (fullTagName.indexOf(':') > -1) {
+				if (fullTagName.indexOf(':') > -1 && !fullTagName.startsWith("jsp:")) {//$NON-NLS-1$
 					addTaglibVariables(fullTagName); // it may be a custom
 					// tag
 				}
@@ -1390,7 +1407,7 @@ public class JSPTranslator {
 			}
 			else if (JSPType == EMBEDDED_JSP && region instanceof ITextRegionCollection) {
 
-				translateEmbeddedJSPInBlock((ITextRegionCollection) region);
+				translateEmbeddedJSPInBlock((ITextRegionCollection) region, regions);
 				// ensure the rest of this method won't be called
 				contentRegion = null;
 			}
@@ -1484,8 +1501,7 @@ public class JSPTranslator {
 	 * 
 	 * @param iterator
 	 */
-	private void translateEmbeddedJSPInBlock(ITextRegionCollection collection) {
-		Iterator regions = collection.getRegions().iterator();
+	private void translateEmbeddedJSPInBlock(ITextRegionCollection collection, Iterator regions) {
 		ITextRegion region = null;
 		while (regions.hasNext()) {
 			region = (ITextRegion) regions.next();
@@ -1495,11 +1511,14 @@ public class JSPTranslator {
 		}
 		if (region != null) {
 			translateEmbeddedJSPInAttribute(collection);
+			while(regions.hasNext())
+				regions.next();
 		}
 	}
 
 	/*
-	 * for example: <a href="index.jsp?p=<%=abc%>b=<%=xyz%>">abc</a>
+	 * Translates all embedded jsp regions in embeddedContainer for example:
+	 * <a href="index.jsp?p=<%=abc%>b=<%=xyz%>">abc</a>
 	 */
 	private void translateEmbeddedJSPInAttribute(ITextRegionCollection embeddedContainer) {
 		// THIS METHOD IS A FIX FOR
@@ -1509,6 +1528,12 @@ public class JSPTranslator {
 		ITextRegion delim = null;
 		ITextRegion content = null;
 		String type = null;
+		if(embeddedRegions.get(0).getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN) {
+			Iterator iterator = embeddedRegions.iterator();
+			iterator.next();
+			translateDirective(embeddedContainer, iterator);
+		}
+		else
 		for (int i = 0; i < embeddedRegions.size(); i++) {
 
 			// possible delimiter, check later
@@ -1520,7 +1545,6 @@ public class JSPTranslator {
 				String regionType = embeddedRegions.get(i + 1).getType();
 				if (regionType == DOMJSPRegionContexts.JSP_CONTENT || regionType == DOMJSPRegionContexts.JSP_EL_CONTENT)
 					content = embeddedRegions.get(i + 1);
-
 			}
 
 			if (content != null) {
@@ -1614,7 +1638,7 @@ public class JSPTranslator {
 			// "",
 			// skips
 			// attrs?
-			regionText = getCurrentNode().getText(r);
+			regionText = container.getText(r);
 			if (regionText.indexOf("taglib") > -1) { //$NON-NLS-1$
 				// add custom tag block markers here
 				handleTaglib();
@@ -1629,7 +1653,7 @@ public class JSPTranslator {
 				while (r != null && regions.hasNext() && !r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
 					r = (ITextRegion) regions.next();
 				}
-				fileLocation = getAttributeValue(r, regions);
+				fileLocation = getAttributeValue(r, regions, container);
 				if (attrValue != null)
 					handleIncludeFile(fileLocation);
 			}
@@ -1745,10 +1769,21 @@ public class JSPTranslator {
 	 * @return the value for the attribute name (r), or null if isn't one
 	 */
 	protected String getAttributeValue(ITextRegion r, Iterator remainingRegions) {
+		return getAttributeValue(r, remainingRegions, getCurrentNode());
+	}
+	/**
+	 * If r is an attribute name region, this method will safely return the
+	 * value for that attribute.
+	 * 
+	 * @param r
+	 * @param remainingRegions
+	 * @return the value for the attribute name (r), or null if isn't one
+	 */
+	protected String getAttributeValue(ITextRegion r, Iterator remainingRegions, ITextRegionCollection container) {
 		if (r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
 			if (remainingRegions.hasNext() && (r = (ITextRegion) remainingRegions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 				if (remainingRegions.hasNext() && (r = (ITextRegion) remainingRegions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
-					return StringUtils.stripQuotes(getCurrentNode().getText(r));
+					return StringUtils.stripQuotes(container.getText(r));
 				}
 			}
 		}

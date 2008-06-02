@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,8 +8,6 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-
-/*nlsXXX*/
 
 package org.eclipse.jst.jsp.core.internal.parser.internal;
 
@@ -1935,6 +1933,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 		return PROXY_CONTEXT;
 	}
 }
+
 <ST_BLOCK_TAG_INTERNAL_SCAN> {jspCommentStart}  {
 	yybegin(ST_JSP_COMMENT);
 	assembleEmbeddedContainer(JSP_COMMENT_OPEN, JSP_COMMENT_CLOSE);
@@ -1942,9 +1941,35 @@ jspDirectiveStart        = {jspScriptletStart}@
 		yybegin(ST_BLOCK_TAG_SCAN);
 	return PROXY_CONTEXT;
 }
-<YYINITIAL,ST_BLOCK_TAG_INTERNAL_SCAN> {jspDirectiveStart}  {
+
+{jspDirectiveStart} {
+	/* JSP directive begun (anywhere)
+	 * A consequence of the start anywhere possibility is that the
+	 *  incoming state must be checked to see if it's erroneous
+	 *  due to the order of precedence generated
+	 */
+	// begin sanity checks
+	if(yystate() == ST_JSP_CONTENT) {
+		// at the beginning?!
+		yypushback(2);
+		return JSP_CONTENT;
+	}
+	else if(yystate() == ST_BLOCK_TAG_SCAN) {
+		yypushback(3);
+		return doBlockTagScan();
+	}
+	else if(yystate() == ST_XML_COMMENT) {
+		yypushback(3);
+		return scanXMLCommentText();
+	}
+	else if(yystate() == ST_JSP_COMMENT) {
+		yypushback(3);
+		return scanJSPCommentText();
+	}
+	// end sanity checks
 	fStateStack.push(yystate());
 	if(fStateStack.peek()==YYINITIAL) {
+		// the simple case, just a declaration out in content
 		if(Debug.debugTokenizer)
 			dump("\nJSP directive start");//$NON-NLS-1$
 		yybegin(ST_JSP_DIRECTIVE_NAME);
@@ -1955,16 +1980,39 @@ jspDirectiveStart        = {jspScriptletStart}@
 			System.out.println("begin embedded region: " + fEmbeddedHint);//$NON-NLS-1$
 		}
 		if(Debug.debugTokenizer)
-			dump("JSP directive start");//$NON-NLS-1$
+			dump("JSP declaration start");//$NON-NLS-1$
+		if(yystate() == ST_XML_ATTRIBUTE_VALUE_DQUOTED)
+			fEmbeddedPostState = ST_XML_ATTRIBUTE_VALUE_DQUOTED;
+		else if(yystate() == ST_XML_ATTRIBUTE_VALUE_SQUOTED)
+			fEmbeddedPostState = ST_XML_ATTRIBUTE_VALUE_SQUOTED;
+		else if(yystate() == ST_CDATA_TEXT) {
+			fEmbeddedPostState = ST_CDATA_TEXT;
+			fEmbeddedHint = XML_CDATA_TEXT;
+		}
 		yybegin(ST_JSP_DIRECTIVE_NAME);
 		assembleEmbeddedContainer(JSP_DIRECTIVE_OPEN, new String[]{JSP_DIRECTIVE_CLOSE, JSP_CLOSE});
 		if(yystate() == ST_BLOCK_TAG_INTERNAL_SCAN) {
 			yybegin(ST_BLOCK_TAG_SCAN);
 			return BLOCK_TEXT;
 		}
+		// required help for successive embedded regions
+		if(yystate() == ST_XML_TAG_NAME) {
+			fEmbeddedHint = XML_TAG_NAME;
+			fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
+		}
+		else if((yystate() == ST_XML_ATTRIBUTE_NAME || yystate() == ST_XML_EQUALS)) {
+			fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
+			fEmbeddedPostState = ST_XML_EQUALS;
+		}
+		else if(yystate() == ST_XML_ATTRIBUTE_VALUE) {
+			fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
+			fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
+		}
 		return PROXY_CONTEXT;
 	}
 }
+
+
 <ST_JSP_DIRECTIVE_NAME> {Name} {
 	if(Debug.debugTokenizer)
 		dump("JSP directive name");//$NON-NLS-1$
@@ -2358,7 +2406,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 	yybegin(ST_PI);
         return XML_PI_OPEN;
 }
-// the next three are order dependent
+// the next four are order dependent
 <ST_PI> ((X|x)(M|m)(L|l)) {
 	if(Debug.debugTokenizer)
 		dump("XML processing instruction target");//$NON-NLS-1$
@@ -2373,6 +2421,13 @@ jspDirectiveStart        = {jspScriptletStart}@
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
 	fEmbeddedPostState = ST_XML_EQUALS;
         yybegin(ST_DHTML_ATTRIBUTE_NAME);
+        return XML_TAG_NAME;
+}
+<ST_PI> xml-stylesheet {
+	if(Debug.debugTokenizer)
+		dump("XSL processing instruction target");//$NON-NLS-1$
+	fEmbeddedPostState = ST_XML_EQUALS;
+        yybegin(ST_XML_PI_ATTRIBUTE_NAME);
         return XML_TAG_NAME;
 }
 <ST_PI> {Name} {

@@ -458,7 +458,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	}
 
 	protected boolean isPossibleCustomTag(String tagName) {
-		return tagName.indexOf(":") > 0 && !tagName.startsWith("jsp"); //$NON-NLS-1$  //$NON-NLS-2$
+		return tagName.indexOf(":") > 0 && !tagName.startsWith("jsp:"); //$NON-NLS-1$  //$NON-NLS-2$
 	}
 
 	protected boolean isTaglibDirective(String tagName) {
