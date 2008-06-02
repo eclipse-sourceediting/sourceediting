@@ -166,11 +166,11 @@
                 uri="dtdsAndSchemas/web-facesconfig_1_2.xsd" />
                 
             <uri
-                name="http://java.sun.com/xml/ns/persistence/orm"
+                name="http://java.sun.com/xml/ns/persistence/orm_1_0.xsd"
                 uri="dtdsAndSchemas/orm_1_0.xsd" />
    
             <uri
-                name="http://java.sun.com/xml/ns/persistence"
+                name="http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
                 uri="dtdsAndSchemas/persistence_1_0.xsd" />   
                           
         </catalogContribution>
