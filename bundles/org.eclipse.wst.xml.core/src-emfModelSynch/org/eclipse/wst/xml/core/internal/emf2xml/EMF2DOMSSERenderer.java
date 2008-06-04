@@ -275,7 +275,7 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 			if (adapter != null && adapter.isAdapterForType(EMF2DOMAdapter.ADAPTER_CLASS)) {
 				// Cast to EMF2DOMAdapter
 				EMF2DOMAdapter e2DAdapter = (EMF2DOMAdapter) adapter;
-				// Check if targets are the resources
+				// First check if targets are resources
 				if (e2DAdapter.getTarget() != null && e2DAdapter.getTarget() instanceof Resource) {
 					/*
 					 * Now check if it's the right one (Multiple resources
@@ -288,6 +288,18 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 						sse2domAdapters.add(e2DAdapter);
 						continue;
 					}
+				} else {
+					// Check if targets are EObjects with the same resources
+					TranslatorResource myTarget = getResource();
+					EObject adapterTarget = (EObject) e2DAdapter.getTarget();
+					/*
+					 * Now check if it's the right one (Multiple resources could
+					 * be attached)
+					 */
+					if (adapterTarget != null && myTarget != null && adapterTarget.eResource() == myTarget) {
+						return e2DAdapter;
+					}
+					sse2domAdapters.add(e2DAdapter);
 				}
 			}
 		}
