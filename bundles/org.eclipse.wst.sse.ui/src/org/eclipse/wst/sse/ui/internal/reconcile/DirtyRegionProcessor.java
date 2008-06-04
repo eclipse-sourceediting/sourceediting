@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -186,8 +186,13 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 				if (DEBUG) {
 					time0 = System.currentTimeMillis();
 				}
-				flushDirtyRegionQueue();
-				fReprocessAfterRewrite = false;
+				// bug 235446 - source validation annotations lost after rewrite session
+				if (!getDirtyRegionQueue().isEmpty()) {
+					flushDirtyRegionQueue();
+					fReprocessAfterRewrite = true;	
+				} else {
+					fReprocessAfterRewrite = false;
+				}
 			}
 			else if (event.getChangeType().equals(DocumentRewriteSessionEvent.SESSION_STOP)) {
 				if (fInRewriteSession ^ oldValue && fDocument != null) {
