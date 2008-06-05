@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,7 +50,8 @@ public class XMLTreeExtension extends TreeExtension {
 		String[] properties = {STRUCTURE_PROPERTY, VALUE_PROPERTY};
 		setColumnProperties(properties);
 
-		f1 = tree.getDisplay().getSystemColor(SWT.COLOR_BLACK);
+		/* https://bugs.eclipse.org/bugs/show_bug.cgi?id=185851 - Used to be hardcoded as COLOR_BLACK */
+		f1 = tree.getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND);
 		Color background = tree.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
 
 		int r = Math.abs(background.getRed() - 125);
