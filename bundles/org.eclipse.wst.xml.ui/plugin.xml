@@ -167,7 +167,7 @@
 			class="org.eclipse.wst.xml.ui.internal.preferences.XMLFilesPreferencePage"
 			id="org.eclipse.wst.xml.ui.preferences.xml.xml">
          	<keywordReference id="org.eclipse.wst.xml.ui.files"/>
-         	<keywordReference id="preferenceKeywords.severities"/>
+         	<keywordReference id="org.eclipse.wst.xml.ui.severities"/>
         </page>
 		<!-- XML PREFERENCE PAGES -->
 		<page
@@ -223,6 +223,9 @@
 		<keyword
 			label="%preferenceKeywords.xmlcatalog"
 			id="org.eclipse.wst.xml.ui.xmlcatalog"/>
+		<keyword
+			label="%preferenceKeywords.severities"
+			id="org.eclipse.wst.xml.ui.severities"/>
     </extension>
 	
 	<!-- Editor actionsets -->
@@ -310,7 +313,7 @@
 	<!-- ================================================== -->
 	<extension point="org.eclipse.ui.newWizards">
 		<category
-			name="%_UI_WIZARD_NEW_XML"
+			name="%_UI_WIZARD_XML_CATEGORY"
 			id="org.eclipse.wst.XMLCategory">
 		</category>
 		<wizard
