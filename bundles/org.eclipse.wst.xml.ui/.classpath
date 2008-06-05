@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src" />
+	<classpathentry kind="src" path="src-validation" />
+	<classpathentry kind="src" path="src-multipage" />
+	<classpathentry kind="src" path="src-wizards" />
+	<classpathentry kind="src" path="src-catalog" />
+	<classpathentry kind="con"
+		path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.4" />
+	<classpathentry kind="con"
+		path="org.eclipse.pde.core.requiredPlugins">
+		<accessrules>
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/validation/internal/core/ValidationException" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/validation/internal/operations/LocalizedMessage/" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/validation/internal/provisional/core/IMessage" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/validation/internal/core/Message" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/validation/internal/provisional/core/IReporter" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/validation/internal/provisional/core/IValidationContext" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/validation/internal/provisional/core/IValidator" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/common/ui/internal/dnd/DefaultDragAndDropCommand" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/common/ui/internal/dialogs/SelectSingleFileDialog" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/validation/internal/core/IMessageAccess" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/validation/internal/provisional/core/IProjectValidationContext" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/validation/internal/provisional/core/IValidatorJob" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/common/ui/internal/viewers/SelectSingleFileView" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/common/ui/internal/dnd/DragAndDropCommand" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/common/ui/internal/dnd/DragAndDropManager" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/common/ui/internal/dnd/ObjectTransfer" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/common/ui/internal/dnd/ViewerDragAdapter" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/common/ui/internal/dnd/ViewerDropAdapter" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/validation/internal/ConfigurationManager" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/validation/internal/ProjectConfiguration" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/validation/internal/ValidationRegistryReader" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/validation/internal/ValidatorMetaData" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/validation/internal/provisional/ValidationFactory" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/common/ui/internal/viewers/*" />
+			<accessrule kind="accessible"
+				pattern="org/eclipse/wst/validation/internal/ValidationConfiguration" />
+		</accessrules>
+	</classpathentry>
+	<classpathentry kind="output" path="bin" />
+</classpath>
