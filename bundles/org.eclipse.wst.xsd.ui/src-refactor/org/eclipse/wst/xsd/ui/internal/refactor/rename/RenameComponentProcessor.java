@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2000, 2006 IBM Corporation and others.
+ * Copyright (c) 2000, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -227,10 +227,10 @@ public class RenameComponentProcessor extends RenameProcessor implements INameUp
 		final RefactoringStatus status = new RefactoringStatus();
 		try {
 			monitor.beginTask("", 2); //$NON-NLS-1$
-			monitor.setTaskName("RefactoringMessages.RenameComponentRefactoring_checking");
+			monitor.setTaskName(RefactoringMessages.getString("RenameComponentRefactoring_checking")); //$NON-NLS-1$
 			status.merge(checkNewElementName(getNewElementName()));
 			monitor.worked(1);
-			monitor.setTaskName("RefactoringMessages.RenameComponentRefactoring_searching");
+			monitor.setTaskName(RefactoringMessages.getString("RenameComponentRefactoring_searching")); //$NON-NLS-1$
 			status.merge(createRenameChanges(new SubProgressMonitor(monitor, 1)));
 		}
 		finally {
@@ -304,7 +304,7 @@ public class RenameComponentProcessor extends RenameProcessor implements INameUp
 		Assert.isNotNull(monitor);
 		final RefactoringStatus status = new RefactoringStatus();
 		try {
-			monitor.beginTask("RefactoringMessages.RenameComponentRefactoring_searching", 1);
+			monitor.beginTask(RefactoringMessages.getString("RenameComponentRefactoring_searching"), 1); //$NON-NLS-1$
 			updateChangeManager(new SubProgressMonitor(monitor, 1), status);
 		}
 		finally {
