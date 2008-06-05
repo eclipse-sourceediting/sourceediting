@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,9 +44,17 @@ public final class CatalogWriter
 
   public void write(ICatalog xmlCatalog, String uri) throws FileNotFoundException, IOException
   {
-    visitCatalog(xmlCatalog);
-    OutputStream outputStream = getOutputStream(uri);
-    serialize(outputStream);
+	OutputStream outputStream = null;
+	try {
+      visitCatalog(xmlCatalog);
+      outputStream = getOutputStream(uri);
+      serialize(outputStream);
+	}
+	finally {
+	  if(outputStream != null) {
+		outputStream.close();
+	  }
+	}
   }
 
   public void write(ICatalog catalog, OutputStream os) throws FileNotFoundException, IOException
