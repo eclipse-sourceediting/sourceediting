@@ -29,6 +29,7 @@ Export-Package: org.eclipse.jst.jsp.ui.tests,
 Require-Bundle: org.eclipse.jface.text,
  org.eclipse.ui,
  org.eclipse.core.resources,
+ org.eclipse.jdt.ui,
  org.eclipse.jdt.core,
  org.eclipse.jst.jsp.ui,
  org.junit;bundle-version="[3.8.0,4.0.0)",
@@ -46,6 +47,8 @@ Require-Bundle: org.eclipse.jface.text,
  org.eclipse.wst.xml.ui,
  com.ibm.icu,
  org.eclipse.wst.html.ui,
- org.eclipse.wst.validation
+ org.eclipse.wst.validation,
+ org.eclipse.core.commands,
+ org.eclipse.core.expressions
 Eclipse-LazyStart: true
 Bundle-RequiredExecutionEnvironment: J2SE-1.4

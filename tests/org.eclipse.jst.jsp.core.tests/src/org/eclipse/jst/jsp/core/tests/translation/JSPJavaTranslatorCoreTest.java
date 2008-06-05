@@ -42,6 +42,7 @@ import org.eclipse.jst.jsp.core.tests.validation.ReporterForTest;
 import org.eclipse.jst.jsp.core.tests.validation.ValidationContextForTest;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.validation.ValidationFramework;
 import org.eclipse.wst.validation.internal.operations.ValidatorManager;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
@@ -305,5 +306,48 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 			s.append("\n" + markers[i].getAttribute(IMarker.LINE_NUMBER) + ":" + markers[i].getAttribute(IMarker.MESSAGE));
 		}
 		assertEquals("problem markers found" + s.toString(), 0, markers.length);
+	}
+	
+	public void test_219761a() throws Exception {
+		/**
+		 * Broken behavior has a Java syntax error on line 19, which only
+		 * contains an include directive to a fragment that doesn't exist.
+		 * 
+		 * All syntax errors should be on lines 25 or 28 and after offset 373
+		 * (single character line delimiter!).
+		 */
+		String testName = "testTranslatorMessagesWithIncludes";
+		// Create new project
+		IProject project = BundleResourceUtil.createSimpleProject(testName, null, null);
+		assertTrue(project.exists());
+		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
+
+		waitForBuildAndValidation(project);
+		ValidationFramework.getDefault().validate(new IProject[]{project}, true, true, new NullProgressMonitor());
+		waitForBuildAndValidation(project);
+
+		IFile main = project.getFile("/WebContent/sample.jsp");
+		assertTrue("sample test file does not exist", main.isAccessible());
+		IMarker[] markers = main.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
+		StringBuffer markerText = new StringBuffer();
+		for (int i = 0; i < markers.length; i++) {
+			// line/start-end
+			markerText.append("\nL" + markers[i].getAttribute(IMarker.LINE_NUMBER) + "/o" + markers[i].getAttribute(IMarker.CHAR_START) + "-"  + markers[i].getAttribute(IMarker.CHAR_END) + ":" + markers[i].getAttribute(IMarker.MESSAGE));
+		}
+		int numberOfSyntaxErrors = 0;
+		for (int i = 0; i < markers.length; i++) {
+			Object message = markers[i].getAttribute(IMarker.MESSAGE);
+			assertNotNull("Marker message was null!", message);
+			if (message.toString().startsWith("Syntax error")) {
+				numberOfSyntaxErrors++;
+				assertTrue("Syntax error reported before line 25" + markerText, ((Integer) markers[i].getAttribute(IMarker.LINE_NUMBER)).intValue() >= 25);
+				assertTrue("Syntax error reported before offset 374" + markerText, ((Integer) markers[i].getAttribute(IMarker.CHAR_START)).intValue() >= 373);
+				assertTrue("Syntax error reported after 459" + markerText, ((Integer) markers[i].getAttribute(IMarker.CHAR_START)).intValue() < 459);
+			}
+		}
+		assertEquals("wrong number of syntax errors reported\n" + markerText, 3, numberOfSyntaxErrors);
+
+		// clean up if we got to the end
+		project.delete(true, true, null);
 	}
 }
