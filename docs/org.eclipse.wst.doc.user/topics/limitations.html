@@ -38,17 +38,19 @@ including it in the server's global classpath or by placing a copy of activation
 project's <samp>lib/</samp> directory.
 </p>
 </dd>
-<dt class="dlterm"><b>Problems encountered publishing from dynamic Web projects with non-ASCII names</b></dt>
+<dt class="dlterm"><b>Problems encountered publishing from dynamic Web projects with non-ASCII characters in the context root</b></dt>
 <dd>
-<p>Cause: Dynamic Web projects must have ASCII names. If non-ASCII characters are used as project names for dynamic Web projects, 
-the context root defaults to use the project name. This causes problems when trying to publish from the Web project.
-</p>
-<p>If you create a dynamic Web project with non Latin-1 characters (leaving the context root
-to default to the project name containing non Latin-1 characters) and try to
-publish, you will see an error message similar to "The requested resource is not available".</p>  
-<p>If a dynamic Web project containing a non-ASCII context root is used in an Axis1 Web service creation 
-scenario, you will see an error message similar to "Unable to deploy to Axis".</p>
-<p>Solution: Use ASCII characters as the context root.</p>
+<p>Cause: By default the context root of a dynamic Web project uses the project name. If non-ASCII characters are used as project names for dynamic Web projects, 
+the default context root causes problems when trying to publish from the Web project.</p>
+<p>You may encounter the following errors if this occurs:
+<ul>
+<li>If you create a dynamic Web project with non-ASCII characters (leaving the context root
+to default to the project name containing non ASCII characters) and try to
+publish, you will see an error message similar to "The requested resource is not available".</li>
+<li>If a dynamic Web project containing a non-ASCII context root is used in an Axis1 Web service creation 
+scenario, you will see an error message similar to "Unable to deploy to Axis".</li>
+</ul>
+<p>Solution: The following ASCII characters are valid in the context root: all letters, all numbers, an underscore, a hyphen (dash), a forward slash, or a period.</p>
 </dd>
 </dl>
 </body>
