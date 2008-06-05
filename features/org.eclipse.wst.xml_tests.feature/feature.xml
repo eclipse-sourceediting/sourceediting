@@ -21,6 +21,11 @@
       <update label="%updateSiteName" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
 
+   <requires>
+      <import feature="org.eclipse.wst.xml_core.feature" version="3.0.0"/>
+      <import feature="org.eclipse.wst.xml_ui.feature" version="3.0.0"/>
+   </requires>
+
    <plugin
          id="org.eclipse.wst.dtd.core.tests"
          download-size="0"
