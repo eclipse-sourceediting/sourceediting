@@ -14,10 +14,10 @@
  *******************************************************************************/ -->
 <link rel="stylesheet" type="text/css"
 	href="../../org.eclipse.wst.doc.user/common.css" >
-<title>Web Tools Project Limitations and Known Issues</title>
+<title>Web Tools Platform Limitations and Known Issues</title>
 </head>
 <body>
-<h1>Web Tools Project Limitations and Known Issues</h1>
+<h1>Web Tools Platform Limitations and Known Issues</h1>
 <p>The following are limitations and known issues:</p>
 <dl>
 <dt class="dlterm"><b>When using XDoclet the generation does not appear to run.</b></dt>
@@ -37,6 +37,18 @@ For services, you will also need to make sure <samp>activation.jar</samp> is ava
 including it in the server's global classpath or by placing a copy of activation.jar into the target Web 
 project's <samp>lib/</samp> directory.
 </p>
+</dd>
+<dt class="dlterm"><b>Problems encountered publishing from dynamic Web projects with non-ASCII names</b></dt>
+<dd>
+<p>Cause: Dynamic Web projects must have ASCII names. If non-ASCII characters are used as project names for dynamic Web projects, 
+the context root defaults to use the project name. This causes problems when trying to publish from the Web project.
+</p>
+<p>If you create a dynamic Web project with non Latin-1 characters (leaving the context root
+to default to the project name containing non Latin-1 characters) and try to
+publish, you will see an error message similar to "The requested resource is not available".</p>  
+<p>If a dynamic Web project containing a non-ASCII context root is used in an Axis1 Web service creation 
+scenario, you will see an error message similar to "Unable to deploy to Axis".</p>
+<p>Solution: Use ASCII characters as the context root.</p>
 </dd>
 </dl>
 </body>
