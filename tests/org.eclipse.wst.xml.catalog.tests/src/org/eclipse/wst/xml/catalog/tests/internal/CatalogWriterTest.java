@@ -11,11 +11,17 @@
 
 package org.eclipse.wst.xml.catalog.tests.internal;
 
+import java.io.File;
 import java.net.URL;
 import java.util.List;
 
+import org.eclipse.core.resources.IWorkspaceRunnable;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.xml.core.internal.catalog.Catalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
@@ -111,5 +117,46 @@ public class CatalogWriterTest extends AbstractCatalogTest {
 
 		assertEquals("catalog2.xml", nextCatalogEntry.getCatalogLocation());
 	}
+	
+    public final void testBug235445() throws Exception {
+      // read catalog
+      String catalogFile = "/data/deletemecatalog.xml";
+      URL catalogUrl = TestPlugin.getDefault().getBundle().getEntry(
+              catalogFile);
+      assertNotNull(catalogUrl);
+      URL resolvedURL = FileLocator.resolve(catalogUrl);
+
+      Catalog testCatalog = (Catalog) getCatalog("deletemecatalog", resolvedURL
+              .toString());
+      assertNotNull(testCatalog);
+      testCatalog.setBase(resolvedURL.toString());
+      // CatalogReader.read(testCatalog, resolvedURL.getFile());
+      assertNotNull(testCatalog);
+
+      // write catalog
+      URL resultsFolder = TestPlugin.getDefault().getBundle().getEntry(
+              "/");
+      IPath path = new Path(FileLocator.resolve(resultsFolder).getFile());
+      final File catalogIOFile = path.append("/deletemecatalog.xml").toFile();
+      String resultCatalogFile = catalogIOFile.toURI().toString();
+      testCatalog.setLocation(resultCatalogFile);
+      
+      // write catalog
+      testCatalog.save();
+      
+      IWorkspaceRunnable deleteOp = new IWorkspaceRunnable() {
+        public void run(IProgressMonitor monitor) throws CoreException
+        {
+          try {
+            catalogIOFile.delete();
+          } catch (Exception e) {
+            assertTrue("exception thrown when trying to delete catalog", false);
+          }
+        }
+      };
+      
+      ResourcesPlugin.getWorkspace().run(deleteOp, null);
+      assertFalse("catalog file was not deleted", catalogIOFile.exists());
+    }
 
 }

@@ -8,6 +8,7 @@ Bundle-Vendor: %Bundle-Vendor.0
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.xml.catalog.tests.internal
 Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources,
  org.junit,
  org.eclipse.wst.xml.core,
  org.apache.xerces,

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+  <public publicId="InvoiceId_test" uri="./Invoice/Invoice.dtd" webURL="http://webURL"/>
+  <system systemId="Invoice.dtd" uri="./Invoice/Invoice.dtd" chached="yes" property="value1"/>
+  <uri name="http://www.test.com/Invoice.dtd" uri="./Invoice/Invoice.dtd" chached="no" property="value2"/>
+  <nextCatalog catalog="catalog2.xml" id="nextCatalog1"/>
+</catalog>
