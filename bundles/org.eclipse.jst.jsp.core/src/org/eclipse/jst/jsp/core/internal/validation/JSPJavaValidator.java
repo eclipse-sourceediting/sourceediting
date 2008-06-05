@@ -83,7 +83,6 @@ public class JSPJavaValidator extends JSPValidator {
 		IStructuredDocumentRegion[] regions = sDoc.getStructuredDocumentRegions(0, m.getOffset() + m.getLength());
 		// iterate backwards until you hit the include directive
 		for (int i = regions.length - 1; i >= 0; i--) {
-
 			IStructuredDocumentRegion region = regions[i];
 			if (region.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
 				if (getDirectiveName(region).equals("include")) { //$NON-NLS-1$
@@ -96,6 +95,11 @@ public class JSPJavaValidator extends JSPValidator {
 						m.setOffset(region.getStartOffset());
 						m.setLength(region.getTextLength());
 					}
+					/**
+					 * Bug 219761 - Syntax error reported at wrong location
+					 * (don't forget to adjust the line number, too)
+					 */
+					m.setLineNo(sDoc.getLineOfOffset(m.getOffset()) + 1);
 					break;
 				}
 			}
@@ -103,7 +107,7 @@ public class JSPJavaValidator extends JSPValidator {
 	}
 
 	/**
-	 * Creates an IMessage from an IProblem
+	 * Creates an IMessage from asn IProblem
 	 * 
 	 * @param problem
 	 * @param f

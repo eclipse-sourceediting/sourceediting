@@ -838,7 +838,7 @@ public class JSPTranslator {
 			for (int i = 0; i < taglibVars.length; i++) {
 				if (taglibVars[i].getScope() == VariableInfo.AT_BEGIN) {
 					decl = taglibVars[i].getDeclarationString();
-					appendToBuffer(decl, fUserCode, false, fCurrentNode);
+					appendToBuffer(decl, fUserCode, false, customTag);
 				}
 				if (taglibVars[i].getScope() == VariableInfo.AT_END) {
 					decl = taglibVars[i].getDeclarationString();
@@ -848,8 +848,8 @@ public class JSPTranslator {
 			for (int i = 0; i < taglibVars.length; i++) {
 				if (taglibVars[i].getScope() == VariableInfo.NESTED) {
 					decl = taglibVars[i].getDeclarationString();
-					appendToBuffer("{", fUserCode, false, fCurrentNode);
-					appendToBuffer(decl, fUserCode, false, fCurrentNode);
+					appendToBuffer("{", fUserCode, false, customTag);
+					appendToBuffer(decl, fUserCode, false, customTag);
 					fTagToVariableMap.push(tagToAdd, taglibVars);
 				}
 			}
@@ -860,14 +860,14 @@ public class JSPTranslator {
 				 */
 				for (int i = taglibVars.length; i > 0; i--) {
 					if (taglibVars[i - 1].getScope() == VariableInfo.NESTED) {
-						appendToBuffer("}", fUserCode, false, fCurrentNode);
+						appendToBuffer("}", fUserCode, false, customTag);
 					}
 				}
 				/* Treat this as the end for empty tags */
 				for (int i = 0; i < taglibVars.length; i++) {
 					if (taglibVars[i].getScope() == VariableInfo.AT_END) {
 						decl = taglibVars[i].getDeclarationString();
-						appendToBuffer(decl, fUserCode, false, fCurrentNode);
+						appendToBuffer(decl, fUserCode, false, customTag);
 					}
 				}
 			}
@@ -881,13 +881,13 @@ public class JSPTranslator {
 			if (taglibVars != null) {
 				for (int i = taglibVars.length; i > 0; i--) {
 					if (taglibVars[i - 1].getScope() == VariableInfo.NESTED) {
-						appendToBuffer("}", fUserCode, false, fCurrentNode);
+						appendToBuffer("}", fUserCode, false, customTag);
 					}
 				}
 				for (int i = 0; i < taglibVars.length; i++) {
 					if (taglibVars[i].getScope() == VariableInfo.AT_END) {
 						decl = taglibVars[i].getDeclarationString();
-						appendToBuffer(decl, fUserCode, false, fCurrentNode);
+						appendToBuffer(decl, fUserCode, false, customTag);
 					}
 				}
 			}
@@ -1044,6 +1044,9 @@ public class JSPTranslator {
 	/**
 	 * translates a region container (and XML JSP container, or <% JSP
 	 * container)
+	 * 
+	 * This method should only be called in this class and for containers in
+	 * the primary structured document as all buffer appends will be direct
 	 */
 	protected void translateRegionContainer(ITextRegionCollection container, int JSPType) {
 
@@ -1210,7 +1213,7 @@ public class JSPTranslator {
 	 * @return
 	 */
 	private void decodeScriptBlock(String blockText, int startOfBlock) {
-		XMLJSPRegionHelper helper = new XMLJSPRegionHelper(this);
+		XMLJSPRegionHelper helper = new XMLJSPRegionHelper(this, false);
 		helper.addBlockMarker(new BlockMarker("jsp:scriptlet", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
 		helper.addBlockMarker(new BlockMarker("jsp:expression", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
 		helper.addBlockMarker(new BlockMarker("jsp:declaration", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
@@ -1279,7 +1282,7 @@ public class JSPTranslator {
 			{
 				String fullTagName = container.getText(r);
 				if (fullTagName.indexOf(':') > -1) {
-					addTaglibVariables(fullTagName, getCurrentNode()); // it
+					addTaglibVariables(fullTagName, container); // it
 					// may
 					// be a
 					// custom
@@ -1509,13 +1512,13 @@ public class JSPTranslator {
 	private void writeToBuffer(int type, String content, int jspStart, int jspEnd) {
 		switch (type) {
 			case SCRIPTLET :
-				translateScriptletString(content, getCurrentNode(), jspStart, jspEnd - jspStart);
+				translateScriptletString(content, getCurrentNode(), jspStart, jspEnd - jspStart, false);
 				break;
 			case EXPRESSION :
-				translateExpressionString(content, getCurrentNode(), jspStart, jspEnd - jspStart);
+				translateExpressionString(content, getCurrentNode(), jspStart, jspEnd - jspStart, false);
 				break;
 			case DECLARATION :
-				translateDeclarationString(content, getCurrentNode(), jspStart, jspEnd - jspStart);
+				translateDeclarationString(content, getCurrentNode(), jspStart, jspEnd - jspStart, false);
 				break;
 		}
 	}
@@ -1699,19 +1702,19 @@ public class JSPTranslator {
 					fLastJSPType = EXPRESSION;
 					// translateExpressionString(embeddedContainer.getText(content),
 					// fCurrentNode, contentStart, content.getLength());
-					translateExpressionString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength());
+					translateExpressionString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength(), false);
 				}
 				else if (type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN) {
 					fLastJSPType = SCRIPTLET;
 					// translateScriptletString(embeddedContainer.getText(content),
 					// fCurrentNode, contentStart, content.getLength());
-					translateScriptletString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength());
+					translateScriptletString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength(), false);
 				}
 				else if (type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN) {
 					fLastJSPType = DECLARATION;
 					// translateDeclarationString(embeddedContainer.getText(content),
 					// fCurrentNode, contentStart, content.getLength());
-					translateDeclarationString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength());
+					translateDeclarationString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength(), false);
 				}
 				else if (type == DOMJSPRegionContexts.JSP_EL_OPEN) {
 					fLastJSPType = EXPRESSION;
@@ -2068,7 +2071,7 @@ public class JSPTranslator {
 
 				if (!getIncludes().contains(filePathString) && !filePathString.equals(modelPath.toString())) {
 					getIncludes().push(filePathString);
-					JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
+					JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this, true);
 					// Should we consider preludes on this segment?
 					helper.parse(filePathString);
 					getIncludes().pop();
@@ -2087,14 +2090,14 @@ public class JSPTranslator {
 		return fIncludedPaths;
 	}
 
-	protected void translateExpressionString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength) {
+	protected void translateExpressionString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength, boolean isIndirect) {
 		appendToBuffer(EXPRESSION_PREFIX, fUserCode, false, embeddedContainer);
-		appendToBuffer(newText, fUserCode, true, embeddedContainer, jspPositionStart, jspPositionLength);
+		appendToBuffer(newText, fUserCode, true, embeddedContainer, jspPositionStart, jspPositionLength, isIndirect);
 		appendToBuffer(EXPRESSION_SUFFIX, fUserCode, false, embeddedContainer);
 	}
 
-	protected void translateDeclarationString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength) {
-		appendToBuffer(newText, fUserDeclarations, true, embeddedContainer, jspPositionStart, jspPositionLength);
+	protected void translateDeclarationString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength, boolean isIndirect) {
+		appendToBuffer(newText, fUserDeclarations, true, embeddedContainer, jspPositionStart, jspPositionLength, isIndirect);
 		appendToBuffer(ENDL, fUserDeclarations, false, embeddedContainer);
 	}
 
@@ -2106,32 +2109,32 @@ public class JSPTranslator {
 	 * @param jspPositionStart
 	 * @param jspPositionLength
 	 */
-	protected void translateScriptletString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength) {
-		appendToBuffer(newText, fUserCode, true, embeddedContainer, jspPositionStart, jspPositionLength);
+	protected void translateScriptletString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength, boolean isIndirect) {
+		appendToBuffer(newText, fUserCode, true, embeddedContainer, jspPositionStart, jspPositionLength, isIndirect);
 	}
 
 	// the following 3 methods determine the cursor position
 	// <%= %>
 	protected void translateExpression(ITextRegionCollection region) {
 		String newText = getUnescapedRegionText(region, EXPRESSION);
-		appendToBuffer(EXPRESSION_PREFIX, fUserCode, false, fCurrentNode);
+		appendToBuffer(EXPRESSION_PREFIX, fUserCode, false, region);
 		appendToBuffer(newText, fUserCode, true, fCurrentNode);
-		appendToBuffer(EXPRESSION_SUFFIX, fUserCode, false, fCurrentNode);
+		appendToBuffer(EXPRESSION_SUFFIX, fUserCode, false, region);
 	}
 
 	//
 	// <%! %>
 	protected void translateDeclaration(ITextRegionCollection region) {
 		String newText = getUnescapedRegionText(region, DECLARATION);
-		appendToBuffer(newText, fUserDeclarations, true, fCurrentNode);
-		appendToBuffer(ENDL, fUserDeclarations, false, fCurrentNode);
+		appendToBuffer(newText, fUserDeclarations, true, region);
+		appendToBuffer(ENDL, fUserDeclarations, false, region);
 	}
 
 	//
 	// <% %>
 	protected void translateScriptlet(ITextRegionCollection region) {
 		String newText = getUnescapedRegionText(region, SCRIPTLET);
-		appendToBuffer(newText, fUserCode, true, fCurrentNode);
+		appendToBuffer(newText, fUserCode, true, region);
 	}
 
 	/**
@@ -2150,10 +2153,6 @@ public class JSPTranslator {
 			length = jspReferenceRegion.getLength();
 		}
 		appendToBuffer(newText, buffer, addToMap, jspReferenceRegion, start, length, false);
-	}
-
-	private void appendToBuffer(String newText, StringBuffer buffer, boolean addToMap, ITextRegionCollection jspReferenceRegion, int jspPositionStart, int jspPositionLength) {
-		appendToBuffer(newText, buffer, addToMap, jspReferenceRegion, jspPositionStart, jspPositionLength, true);
 	}
 
 	/**
@@ -2826,7 +2825,7 @@ public class JSPTranslator {
 				for (int i = 0; i < codas.length; i++) {
 					if (!getIncludes().contains(codas[i].toString()) && !codas[i].equals(modelpath)) {
 						getIncludes().push(codas[i]);
-						JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
+						JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this, true);
 						helper.parse(codas[i].toString());
 						getIncludes().pop();
 					}
@@ -2846,7 +2845,7 @@ public class JSPTranslator {
 				for (int i = 0; i < preludes.length; i++) {
 					if (!getIncludes().contains(preludes[i].toString()) && !preludes[i].equals(modelpath)) {
 						getIncludes().push(preludes[i]);
-						JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
+						JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this, true);
 						helper.parse(preludes[i].toString());
 						getIncludes().pop();
 					}

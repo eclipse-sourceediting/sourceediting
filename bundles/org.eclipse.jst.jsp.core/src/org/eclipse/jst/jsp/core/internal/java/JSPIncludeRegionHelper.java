@@ -26,8 +26,8 @@ class JSPIncludeRegionHelper extends XMLJSPRegionHelper {
 	/**
 	 * @param JSPTranslator
 	 */
-	public JSPIncludeRegionHelper(JSPTranslator translator) {
-		super(translator);
+	public JSPIncludeRegionHelper(JSPTranslator translator, boolean appendAsIndirectSource) {
+		super(translator, appendAsIndirectSource);
 	}
 
 	// these methods determine what content gets added to the local scriplet, expression, declaration buffers
