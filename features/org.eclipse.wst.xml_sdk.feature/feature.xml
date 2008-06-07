@@ -22,18 +22,19 @@
    </url>
 
    <includes
+         id="org.eclipse.wst.xml_core.feature"
+         version="0.0.0"/>
+   <includes
          id="org.eclipse.wst.xml_ui.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.wst.xml_core.feature.source"
          version="0.0.0"/>
 
    <includes
          id="org.eclipse.wst.xml_ui.feature.source"
          version="0.0.0"/>
 
-   <includes
-         id="org.eclipse.wst.xml_core.feature"
-         version="0.0.0"/>
-   <includes
-         id="org.eclipse.wst.xml_core.feature.source"
-         version="0.0.0"/>
          
 </feature>
