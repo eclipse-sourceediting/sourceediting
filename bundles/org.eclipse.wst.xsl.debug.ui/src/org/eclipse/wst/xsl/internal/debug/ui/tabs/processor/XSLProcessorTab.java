@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver - bug 223557 - Added images contributed by Holger Voormann
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.tabs.processor;
 
@@ -14,6 +15,9 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.ILaunchConfigurationTab;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.wst.xsl.debug.internal.util.XSLDebugPluginImages;
+import org.eclipse.wst.xsl.debug.internal.util.XSLPluginImageHelper;
+import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLLaunchConfigurationTab;
 import org.eclipse.wst.xsl.launching.IProcessorInvoker;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
@@ -61,8 +65,7 @@ public class XSLProcessorTab extends XSLLaunchConfigurationTab
 	@Override
 	public Image getImage()
 	{
-		// TODO image
-		return null;
+		return XSLPluginImageHelper.getInstance().getImage(XSLDebugPluginImages.IMG_PROCESSOR_TAB);
 	}
 
 	@Override

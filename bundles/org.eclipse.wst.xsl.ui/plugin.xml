@@ -5,14 +5,14 @@
 	<extension point="org.eclipse.ui.perspectives">
 		<perspective id="org.eclipse.wst.xsl.ui.perspective"
 			class="org.eclipse.wst.xsl.ui.internal.perspective.XMLPerspectiveFactory"
-			icon="icons/XMLFile.gif" 
+			icon="icons/full/xml_perspective.gif" 
 			name="%perspectiveName">
 		</perspective>
 	</extension>
 	
 	<extension point="org.eclipse.ui.editors">
 		<editor name="XSL Editor" 
-			icon="icons/full/operation.gif"
+			icon="icons/full/xslt_file.gif"
 			contributorClass="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorActionBarContributor"
 			class="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"
 			default="true"
@@ -52,7 +52,7 @@
 		<wizard category="org.eclipse.wst.XMLCategory"
 			class="org.eclipse.wst.xsl.ui.internal.wizards.NewXSLFileWizard"
 			finalPerspective="org.eclipse.wst.xsl.ui.perspective" 
-			icon="icons/full/operation.gif"
+			icon="icons/full/xslt_file.gif"
 			id="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard"
 			name="XSL" 
 			preferredPerspectives="org.eclipse.wst.xsl.ui.perspective">
@@ -142,7 +142,7 @@
 				toolbarPath="org.eclipse.wst.xsl.ui.xslActionSet" /> -->
 			<action id="org.eclipse.wst.xsl.ui.newXSLFileAction"
 				class="org.eclipse.wst.xsl.ui.internal.actions.NewXSLFileWizardDelegate"
-				icon="icons/full/operation.gif" 
+				icon="icons/full/xslt_file.gif" 
 				label="New XSL File" 
 				style="push" 
 				toolbarPath="org.eclipse.wst.xsl.ui.xslActionSet" />

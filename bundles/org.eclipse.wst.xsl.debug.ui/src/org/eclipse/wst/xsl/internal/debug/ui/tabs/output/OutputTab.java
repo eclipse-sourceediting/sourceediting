@@ -12,10 +12,13 @@ package org.eclipse.wst.xsl.internal.debug.ui.tabs.output;
 
 import org.eclipse.debug.ui.ILaunchConfigurationTab;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.wst.xsl.debug.internal.util.XSLDebugPluginImages;
+import org.eclipse.wst.xsl.debug.internal.util.XSLPluginImageHelper;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLLaunchConfigurationTab;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.XSLMainTab;
 
@@ -56,5 +59,10 @@ public class OutputTab extends XSLLaunchConfigurationTab
 	public String getName()
 	{
 		return Messages.OutputTab_1;
+	}
+	
+	@Override
+	public Image getImage() {
+		return XSLPluginImageHelper.getInstance().getImage(XSLDebugPluginImages.IMG_OUTPUT_TAB);
 	}
 }

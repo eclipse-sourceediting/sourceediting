@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2007,2008 Chase Technology Ltd - http://www.chasetechnology.co.uk and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver - STAR - bug 223557 - Added Images contributed by Holger Voorman
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.tabs.main;
 
@@ -23,11 +24,14 @@ import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.ui.ILaunchConfigurationTab;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.wst.xsl.debug.internal.util.XSLDebugPluginImages;
+import org.eclipse.wst.xsl.debug.internal.util.XSLPluginImageHelper;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLLaunchConfigurationTab;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
@@ -208,5 +212,10 @@ public class XSLMainTab extends XSLLaunchConfigurationTab
 		}
 		return (IFile[]) stylesheets.toArray(new IFile[0]);
 
+	}
+	
+	@Override
+	public Image getImage() {
+		return XSLPluginImageHelper.getInstance().getImage(XSLDebugPluginImages.IMG_MAIN_TAB);
 	}
 }

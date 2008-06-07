@@ -31,7 +31,7 @@
 	
 	<extension
 		point="org.eclipse.debug.ui.launchConfigurationTypeImages">
-		<launchConfigurationTypeImage icon="icons/sample.gif"
+		<launchConfigurationTypeImage icon="icons/xslt_launch.gif"
 			configTypeID="org.eclipse.wst.xsl.launching.launchConfigurationType"
 			id="org.eclipse.wst.xsl.internal.debug.ui.launchConfigurationTypeImage" />
 	</extension>
@@ -65,9 +65,11 @@
 
 	<extension point="org.eclipse.debug.ui.launchShortcuts">
 		<shortcut
-			class="org.eclipse.wst.xsl.internal.debug.ui.XSLLaunchShortcut"
-			id="org.eclipse.wst.xsl.debug.ui.launchshortcut"
-			label="%shortcut.label.0" modes="run, debug, profile">
+        class="org.eclipse.wst.xsl.internal.debug.ui.XSLLaunchShortcut"
+        icon="icons/xslt_launch.gif"
+        id="org.eclipse.wst.xsl.debug.ui.launchshortcut"
+        label="%shortcut.label.0"
+        modes="run, debug, profile">
 			<contextualLaunch>
 				<enablement>
 					<with variable="selection">
