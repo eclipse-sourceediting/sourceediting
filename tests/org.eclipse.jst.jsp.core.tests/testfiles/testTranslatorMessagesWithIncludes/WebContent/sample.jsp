@@ -16,7 +16,7 @@
 
 
 
-  <%@ include file="../commonEventHandlers.jspf"%> 
+  <%@ include file="commonEventHandlers.jspf"%> 
   </p>
   
  <p> 

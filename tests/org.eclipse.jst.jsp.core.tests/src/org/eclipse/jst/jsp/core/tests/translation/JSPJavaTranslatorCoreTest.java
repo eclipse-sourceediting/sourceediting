@@ -324,7 +324,6 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 
 		waitForBuildAndValidation(project);
 		ValidationFramework.getDefault().validate(new IProject[]{project}, true, true, new NullProgressMonitor());
-		waitForBuildAndValidation(project);
 
 		IFile main = project.getFile("/WebContent/sample.jsp");
 		assertTrue("sample test file does not exist", main.isAccessible());
@@ -341,8 +340,8 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 			if (message.toString().startsWith("Syntax error")) {
 				numberOfSyntaxErrors++;
 				assertTrue("Syntax error reported before line 25" + markerText, ((Integer) markers[i].getAttribute(IMarker.LINE_NUMBER)).intValue() >= 25);
-				assertTrue("Syntax error reported before offset 374" + markerText, ((Integer) markers[i].getAttribute(IMarker.CHAR_START)).intValue() >= 373);
-				assertTrue("Syntax error reported after 459" + markerText, ((Integer) markers[i].getAttribute(IMarker.CHAR_START)).intValue() < 459);
+				assertTrue("Syntax error reported before offset 371" + markerText, ((Integer) markers[i].getAttribute(IMarker.CHAR_START)).intValue() >= 370);
+				assertTrue("Syntax error reported after 456" + markerText, ((Integer) markers[i].getAttribute(IMarker.CHAR_START)).intValue() < 456);
 			}
 		}
 		assertEquals("wrong number of syntax errors reported\n" + markerText, 3, numberOfSyntaxErrors);
