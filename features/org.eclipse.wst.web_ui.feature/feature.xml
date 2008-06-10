@@ -33,6 +33,22 @@
          id="org.eclipse.wst.jsdt.feature"
          version="0.0.0"/>
 
+   <includes
+         id="org.eclipse.wst.server_ui.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.wst.common_ui.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.wst.xml_ui.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.wst.ws_ui.feature"
+         version="0.0.0"/>
+
    <requires>
       <import feature="org.eclipse.platform" version="3.4.0"/>
       <import feature="org.eclipse.emf.ecore" version="2.4.0"/>

@@ -37,6 +37,10 @@
          id="org.eclipse.wst.server_core.feature"
          version="0.0.0"/>
 
+   <includes
+         id="org.eclipse.wst.jsdt.feature"
+         version="0.0.0"/>
+
    <requires>
       <import feature="org.eclipse.platform" version="3.4.0"/>
       <import feature="org.eclipse.emf.ecore" version="2.4.0"/>
