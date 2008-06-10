@@ -701,6 +701,21 @@
             id="org.eclipse.wst.jsdt.internal.web.ui.convertProjects">
       	</action>
    		</objectContribution>
+   </extension>
+        <extension
+         point="org.eclipse.ui.newWizards">        
+      <wizard
+            name="%wizard.name.0"
+            icon="/icons/eye_icon.gif"
+            category="org.eclipse.wst.jsdt.ui.java"
+            id="org.eclipse.wst.jsdt.ui.wizards.NewClassCreationWizard">
+         <class class="org.eclipse.wst.jsdt.internal.ui.wizards.dojo.NewClassCreationWizard">
+            <parameter name="javatype" value="true"/>
+         </class>
+         <description>
+            %wizard.description.0
+         </description>
+      </wizard>    
    </extension> 
   	 <!-- Uncomment for Standalone + HTML as seperate options -->
   	 <!--
