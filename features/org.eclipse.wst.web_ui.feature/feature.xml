@@ -34,11 +34,11 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.wst.server_ui.feature"
-         version="0.0.0"/>
-
-   <includes
          id="org.eclipse.wst.common_ui.feature"
+         version="0.0.0"/>
+         
+   <includes
+         id="org.eclipse.wst.server_ui.feature"
          version="0.0.0"/>
 
    <includes

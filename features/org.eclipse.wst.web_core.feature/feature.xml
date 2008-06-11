@@ -22,15 +22,15 @@
    </url>
 
    <includes
-         id="org.eclipse.wst.ws_core.feature"
+         id="org.eclipse.wst.jsdt.feature"
          version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.wst.xml_core.feature"
-         version="0.0.0"/>
-
+         
    <includes
          id="org.eclipse.wst.common_core.feature"
+         version="0.0.0"/>
+         
+   <includes
+         id="org.eclipse.wst.xml_core.feature"
          version="0.0.0"/>
 
    <includes
@@ -38,7 +38,7 @@
          version="0.0.0"/>
 
    <includes
-         id="org.eclipse.wst.jsdt.feature"
+         id="org.eclipse.wst.ws_core.feature"
          version="0.0.0"/>
 
    <requires>
