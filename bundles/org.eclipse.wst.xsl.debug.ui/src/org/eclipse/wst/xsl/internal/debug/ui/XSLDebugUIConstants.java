@@ -45,5 +45,5 @@ public class XSLDebugUIConstants
 	/**
 	 * The id of the XSL editor
 	 */
-	public static final String XSL_EDITOR_ID = "org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"; //$NON-NLS-1$
+	public static final String XSL_EDITOR_ID = "org.eclipse.wst.xsl.ui.XSLEditor"; //$NON-NLS-1$
 }

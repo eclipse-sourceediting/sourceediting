@@ -58,7 +58,7 @@ public class XMLPerspectiveFactory implements IPerspectiveFactory {
 		IFolderLayout bottomLeft = 
 			layout.createFolder("bottom-left", IPageLayout.BOTTOM, (float) 0.50, "left"); //$NON-NLS-1$ //$NON-NLS-2$
 		bottomLeft.addView("org.eclipse.wst.xml.views.XPathView"); //$NON-NLS-1$
-		bottomLeft.addView("org.eclipse.wst.xml.xpath.ui.views.XPathNavigator"); //$NON-NLS-1$
+		//bottomLeft.addView("org.eclipse.wst.xml.xpath.ui.views.XPathNavigator"); //$NON-NLS-1$
 		
 		IFolderLayout bottom = layout.createFolder("bottom", IPageLayout.BOTTOM, (float) 0.75, editorArea); //$NON-NLS-1$
 		bottom.addView(IPageLayout.ID_PROBLEM_VIEW);

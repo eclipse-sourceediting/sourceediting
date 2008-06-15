@@ -159,7 +159,7 @@ public class OutputFileBlock extends ResourceSelectionBlock
 	{
 		try
 		{
-			String outputMethod = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_METHOD, OUTPUT_METHODS[0]);
+			// String outputMethod = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_METHOD, OUTPUT_METHODS[0]);
 			// methodViewer.setSelection(new StructuredSelection(outputMethod),
 			// true);
 
@@ -212,7 +212,7 @@ public class OutputFileBlock extends ResourceSelectionBlock
 		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OPEN_FILE, true);
 	}
 
-	public void updateDefaultOutputFile()
+	private void updateDefaultOutputFile()
 	{
 		String method = OUTPUT_METHOD_XML;
 		if (methodViewer != null)
@@ -230,6 +230,6 @@ public class OutputFileBlock extends ResourceSelectionBlock
 
 		defaultOutputFile = file;
 
-		updateResourceText(openFileCheckButton.getSelection());
+		// updateResourceText(openFileCheckButton.getSelection());
 	}
 }
