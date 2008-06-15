@@ -74,7 +74,8 @@ public class XPathComputer
 			if (modelQuery != null)
 			{
 				cmDocumentManager = modelQuery.getCMDocumentManager();
-				cmDocumentManager.addListener(fCMDocumentManagerListener);
+				if (cmDocumentManager != null)
+					cmDocumentManager.addListener(fCMDocumentManagerListener);
 			}
 			updateXPath();
 		}
