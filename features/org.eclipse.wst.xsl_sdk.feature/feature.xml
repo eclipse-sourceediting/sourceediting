@@ -30,9 +30,4 @@
          id="org.eclipse.wst.xsl.feature.source"
          version="0.0.0"/>
 
-   <includes
-         id="org.eclipse.wst.xsl.docbook.feature"
-         version="0.0.0"
-         optional="true"/>
-
 </feature>
