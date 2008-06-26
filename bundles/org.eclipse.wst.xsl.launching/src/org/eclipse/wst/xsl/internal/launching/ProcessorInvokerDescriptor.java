@@ -35,24 +35,28 @@ public class ProcessorInvokerDescriptor implements IProcessorInvoker
 
 	public String[] getClasspathEntries()
 	{
+		return createEntries(bundleId,classpath);
+	}
+	
+	public static String[] createEntries(String bundleId, String[] classpath)
+	{
 		List<String> entries = new ArrayList<String>();
 		try {
 			// if in dev mode, use the bin dir
 			if (Platform.inDevelopmentMode())
 				entries.add(Utils.getFileLocation(bundleId, "/bin")); //$NON-NLS-1$
-			for (int i=0;i <classpath.length;i++) 
+			for (String jar : classpath)
 			{
-				String string = classpath[i];
 				String entry;
-				if (string.startsWith("${eclipse_orbit:") && string.endsWith("}")) //$NON-NLS-1$ //$NON-NLS-2$
+				if (jar.startsWith("${eclipse_orbit:") && jar.endsWith("}")) //$NON-NLS-1$ //$NON-NLS-2$
 				{
-					string = string.substring("${eclipse_orbit:".length()); //$NON-NLS-1$
-					string = string.substring(0,string.length()-1);
-					entry = Utils.getFileLocation(string,""); //$NON-NLS-1$
+					jar = jar.substring("${eclipse_orbit:".length()); //$NON-NLS-1$
+					jar = jar.substring(0,jar.length()-1);
+					entry = Utils.getFileLocation(jar,""); //$NON-NLS-1$
 				}
 				else
 				{
-					entry = Utils.getFileLocation(bundleId,string);
+					entry = Utils.getFileLocation(bundleId,jar);
 				}
 				if (entry!=null)
 					entries.add(entry);

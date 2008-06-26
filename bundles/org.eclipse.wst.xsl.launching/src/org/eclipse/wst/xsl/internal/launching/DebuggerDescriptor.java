@@ -45,24 +45,7 @@ public class DebuggerDescriptor implements IDebugger
 
 	public String[] getClassPath()
 	{
-		List<String> entries = new ArrayList<String>();
-		try 
-		{
-			// in dev, add the bin dir
-			if (Platform.inDevelopmentMode())
-				entries.add(Utils.getFileLocation(bundleId, "/bin")); //$NON-NLS-1$
-			for (String jar : classpath)
-			{
-				String entry = Utils.getFileLocation(bundleId, "/" + jar); //$NON-NLS-1$
-				if (entry!=null)
-					entries.add(entry);
-			}
-		} 
-		catch (CoreException e) 
-		{
-			LaunchingPlugin.log(e);
-		}
-		return entries.toArray(new String[0]);
+		return ProcessorInvokerDescriptor.createEntries(bundleId, classpath);
 	}
 
 	public String getId()
