@@ -46,6 +46,7 @@ import org.eclipse.debug.core.model.ISourceLocator;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.jdt.launching.IVMRunner;
 import org.eclipse.jdt.launching.JavaLaunchDelegate;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -223,8 +224,15 @@ public class XSLTLaunchConfigurationDelegate extends JavaLaunchDelegate implemen
 						IProcessorInstall processor = XSLTRuntime.getProcessor(debuggingInstallId);
 
 						IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-						result[0] = MessageDialog.openQuestion(dw.getShell(), Messages.getString("XSLTLaunchConfigurationDelegate.0"), Messages.getString("XSLTLaunchConfigurationDelegate.1") + install.getName() + Messages.getString("XSLTLaunchConfigurationDelegate.2") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-								+ Messages.getString("XSLTLaunchConfigurationDelegate.3") + processor.getName() + Messages.getString("XSLTLaunchConfigurationDelegate.4")); //$NON-NLS-1$ //$NON-NLS-2$
+						
+						String title = Messages.getString("XSLTLaunchConfigurationDelegate.0"); //$NON-NLS-1$
+						String message = Messages.getString("XSLTLaunchConfigurationDelegate.1") + install.getName() + Messages.getString("XSLTLaunchConfigurationDelegate.2") //$NON-NLS-1$ //$NON-NLS-2$
+								+ Messages.getString("XSLTLaunchConfigurationDelegate.3") + processor.getName() + Messages.getString("XSLTLaunchConfigurationDelegate.4");//$NON-NLS-1$ //$NON-NLS-2$
+						
+						MessageDialog dialog = new MessageDialog(dw.getShell(), title, null, message, MessageDialog.QUESTION,
+								new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0); // yes is the default
+						
+				        result[0] = dialog.open() == 0;
 					}
 				});
 				return result[0];
