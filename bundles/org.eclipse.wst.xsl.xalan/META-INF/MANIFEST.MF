@@ -12,7 +12,6 @@ Export-Package: org.eclipse.wst.xsl.xalan.debugger;
    org.apache.xalan.trace,
    javax.xml.transform,
    org.apache.xalan.templates"
-Require-Bundle: org.apache.xerces;bundle-version="[2.9.0,3.0.0)",
- org.apache.xalan;bundle-version="[2.7.0,2.8.0)",
+Require-Bundle: org.apache.xalan;bundle-version="[2.7.0,2.8.0)",
+ org.apache.xml.serializer;bundle-version="[2.7.0,2.8.0)",
  org.eclipse.wst.xsl.debug;bundle-version="[0.5.0,1.0.0)"
-Bundle-ClassPath: xalan-debugger.jar

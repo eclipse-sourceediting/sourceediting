@@ -15,7 +15,7 @@
          point="org.eclipse.wst.xsl.launching.debugger">
       <debugger
             className="org.eclipse.wst.xsl.xalan.debugger.XalanDebugger"
-            classpath="xalan-debugger.jar"
+            classpath="${eclipse_orbit:org.eclipse.wst.xsl.xalan}"
             id="org.eclipse.wst.xsl.xalan.debugger"
             name="Xalan 2.5.1 or greater"
             processorTypeId="org.eclipse.wst.xsl.xalan.processorType">
