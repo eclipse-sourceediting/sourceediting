@@ -95,16 +95,9 @@
 			class="org.eclipse.wst.xsl.ui.internal.validation.DelegatingSourceValidatorForXSL"
 			id="org.eclipse.wst.xsl.ui.internal.validation.DelegatingSourceValidatorForXSL">
 			<contentTypeIdentifier id="org.eclipse.wst.xml.core.xslsource">
-				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT">
-				</partitionType>
-				<partitionType id="org.eclipse.wst.xsl.XSL_XPATH">
-				</partitionType>
-			</contentTypeIdentifier>
-			<contentTypeIdentifier id="org.eclipse.wst.xsl.core.xslsource">
-				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT">
-				</partitionType>
-				<partitionType id="org.eclipse.wst.xsl.XSL_XPATH">
-				</partitionType>
+				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.xsl.XSL_XPATH"/>
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
@@ -116,10 +109,7 @@
 			<contentTypeIdentifier id="org.eclipse.wst.xml.core.xslsource">
 				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT" />
 				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT" />
-			</contentTypeIdentifier>
-			<contentTypeIdentifier id="org.eclipse.wst.xsl.core.xslsource">
-				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT" />
-				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT" />
+				<partitionType id="org.eclipse.wst.xsl.XSL_XPATH" />
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
