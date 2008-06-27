@@ -21,6 +21,7 @@ import org.eclipse.wst.xml.core.internal.encoding.XMLDocumentCharsetDetector;
 import org.eclipse.wst.xml.core.internal.encoding.XMLDocumentLoader;
 import org.eclipse.wst.xml.core.internal.modelhandler.ModelHandlerForXML;
 import org.eclipse.wst.xml.core.internal.modelhandler.XMLModelLoader;
+import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.encoding.XSLDocumentLoader;
 
 
@@ -34,7 +35,7 @@ public class ModelHandlerForXSL extends ModelHandlerForXML implements IModelHand
 	 * Needs to match what's in plugin registry. In fact, can be overwritten
 	 * at run time with what's in registry! (so should never be 'final')
 	 */
-	static String AssociatedContentTypeID = "org.eclipse.wst.xml.core.xslsource"; //$NON-NLS-1$
+	static String AssociatedContentTypeID = XSLCore.XSL_CONTENT_TYPE;
 	/**
 	 * Needs to match what's in plugin registry. In fact, can be overwritten
 	 * at run time with what's in registry! (so should never be 'final')

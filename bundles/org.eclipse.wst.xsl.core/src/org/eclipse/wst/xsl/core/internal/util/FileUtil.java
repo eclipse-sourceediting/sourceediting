@@ -4,6 +4,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
+import org.eclipse.wst.xsl.core.XSLCore;
 
 /**
  * This is a general file utility class.
@@ -44,7 +45,7 @@ public class FileUtil {
 		IContentType[] types = contentTypeManager.findContentTypesFor(file.getName());
 		for (IContentType contentType : types)
 		{
-			if (contentType.equals(contentTypeManager.getContentType("org.eclipse.wst.xml.core.xslsource"))) //$NON-NLS-1$
+			if (contentType.equals(contentTypeManager.getContentType(XSLCore.XSL_CONTENT_TYPE)))
 			{
 				return true;
 			}
