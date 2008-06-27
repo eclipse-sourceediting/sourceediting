@@ -35,7 +35,7 @@ public class DelegatingSourceValidatorForXSL extends DelegatingSourceValidator {
 
 	private Validator getValidator() {
 		if (_validator == null)
-			_validator = ValidationFramework.getDefault().getValidator(Id);
+			_validator = ValidationFramework.getDefault().getValidator(Id,null);
 		return _validator;
 	}
 
@@ -44,12 +44,5 @@ public class DelegatingSourceValidatorForXSL extends DelegatingSourceValidator {
 		if (v == null)
 			return null;
 		return v.asIValidator();
-	}
-	
-	@Override
-	public void validate(IValidationContext helper, IReporter reporter)
-			throws ValidationException {
-		// TODO Auto-generated method stub
-		super.validate(helper, reporter);
 	}
 }
