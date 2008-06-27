@@ -69,6 +69,10 @@ public class Messages extends NLS
 	 */
 	public static String XSLValidator_22;
 	/**
+	 * href attribute is required
+	 */
+	public static String XSLValidator_23;
+	/**
 	 * Missing parameter
 	 */
 	public static String XSLValidator_3;

@@ -164,7 +164,11 @@ public class XSLValidator
 			IFile includedFile = include.getHrefAsFile();
 			if (includedFile == null || !includedFile.exists())
 			{ // included file does not exist
-				createMarker(report, include.getAttribute("href"), getPreference(ValidationPreferences.MISSING_INCLUDE), Messages.XSLValidator_4 + include.getHref()); //$NON-NLS-1$
+				XSLAttribute att = include.getAttribute("href");  //$NON-NLS-1$
+				if (att != null)
+					createMarker(report, att, getPreference(ValidationPreferences.MISSING_INCLUDE), Messages.XSLValidator_4 + include.getHref());
+				else
+					createMarker(report, include, getPreference(ValidationPreferences.NAME_ATTRIBUTE_EMPTY), Messages.XSLValidator_23 );					
 			}
 			else if (includedFile.equals(include.getStylesheet().getFile()))
 			{ // stylesheet including itself!
