@@ -110,9 +110,9 @@ public class ResolverExtension implements URIResolverExtension
 			initialised = true;
 			try
 			{
-				URL pluginURL = FileLocator.find(XSLCorePlugin.getDefault().getBundle(), new Path("/xslt-schemas/xslt-1.0.xsd"), null);
+				URL pluginURL = FileLocator.find(XSLCorePlugin.getDefault().getBundle(), new Path("/xslt-schemas/xslt-1.0.xsd"), null); //$NON-NLS-1$
 				xslt_1_0_fileURL = FileLocator.toFileURL(pluginURL).toExternalForm();
-				pluginURL = FileLocator.find(XSLCorePlugin.getDefault().getBundle(), new Path("/xslt-schemas/xslt-2.0.xsd"), null);
+				pluginURL = FileLocator.find(XSLCorePlugin.getDefault().getBundle(), new Path("/xslt-schemas/xslt-2.0.xsd"), null); //$NON-NLS-1$
 				xslt_2_0_fileURL = FileLocator.toFileURL(pluginURL).toExternalForm();
 			}
 			catch (IOException e)
