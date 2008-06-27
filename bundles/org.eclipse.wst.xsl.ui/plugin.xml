@@ -97,9 +97,13 @@
 			<contentTypeIdentifier id="org.eclipse.wst.xml.core.xslsource">
 				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT">
 				</partitionType>
+				<partitionType id="org.eclipse.wst.xsl.XSL_XPATH">
+				</partitionType>
 			</contentTypeIdentifier>
 			<contentTypeIdentifier id="org.eclipse.wst.xsl.core.xslsource">
 				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT">
+				</partitionType>
+				<partitionType id="org.eclipse.wst.xsl.XSL_XPATH">
 				</partitionType>
 			</contentTypeIdentifier>
 		</validator>
