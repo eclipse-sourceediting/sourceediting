@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -118,12 +119,15 @@ public class XSLCore
 	 * @param uri the relative URI 
 	 * @return the file at the URI relative to this <code>currentFile</code>
 	 */
+	// TODO depends on how we resolve URIs		
 	public static IFile resolveFile(IFile currentFile, String uri)
 	{
-		if (uri == null)
+		if (uri == null || uri.trim().length() == 0)
 			return null;
-		// TODO depends on how we resolve URIs
-		return currentFile.getParent().getFile(new Path(uri));
+		IResource resource = currentFile.getParent().findMember(new Path(uri));
+		if (resource == null || resource.getType() != IResource.FILE)
+			return null;		
+		return (IFile)resource;
 	}
 	/**
 	 * Determine whether the given file is an XML file by inspecting its content types.
