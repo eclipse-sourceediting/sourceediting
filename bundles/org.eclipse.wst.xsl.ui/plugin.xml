@@ -46,6 +46,10 @@
 			type="activecontexts"
 			value="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.navigation, org.eclipse.wst.xml.cleanup, org.eclipse.wst.xml.comments, org.eclipse.wst.xml.selection, org.eclipse.wst.xml.dependencies, org.eclipse.wst.xml.grammar, org.eclipse.wst.xml.expand, org.eclipse.wst.xml.occurrences"
         	target="org.eclipse.core.runtime.xml" />
+        <provisionalDefinition
+            type="preferencepages"
+            value="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage, org.eclipse.wst.xsl.ui.template.preferencePage, org.eclipse.wst.xsl.ui.preferences.Validation, org.eclipse.wst.xml.xpath.ui.XPathPreferencePage, org.eclipse.wst.xsl.ui.XPath"
+            target="org.eclipse.wst.xml.core.xslsource"/>
 	</extension>
 	
 	<extension point="org.eclipse.ui.newWizards">
