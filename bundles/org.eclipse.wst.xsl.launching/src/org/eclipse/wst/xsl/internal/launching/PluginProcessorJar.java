@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.wst.xsl.core.internal.util.Debug;
 import org.eclipse.wst.xsl.launching.IProcessorJar;
 import org.osgi.framework.Bundle;
 
@@ -49,7 +50,9 @@ public class PluginProcessorJar implements IProcessorJar
 				{
 					s = s.substring(0,s.length()-2);
 				}
-				System.out.println(s);
+				if (Debug.debugLauncher) {
+					System.out.println(s);
+				}
 				url = new URL(s);
 			}
 			else

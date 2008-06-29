@@ -35,6 +35,7 @@ import org.eclipse.wst.xsl.core.internal.model.Template;
 import org.eclipse.wst.xsl.core.internal.model.XSLAttribute;
 import org.eclipse.wst.xsl.core.internal.model.XSLElement;
 import org.eclipse.wst.xsl.core.internal.model.XSLNode;
+import org.eclipse.wst.xsl.core.internal.util.Debug;
 
 /**
  * The XSL validator for workspace XSL files.
@@ -81,7 +82,10 @@ public class XSLValidator
 		else
 			stylesheet = XSLCore.getInstance().getStylesheet(xslFile);
 
-//		long start = System.currentTimeMillis();
+		long start;
+		if (Debug.debugXSLModel) {
+			start = System.currentTimeMillis();
+		}
 		if (stylesheet!=null)
 		{
 			try
@@ -93,8 +97,10 @@ public class XSLValidator
 				// do nothing
 			}
 		}
-//		long end = System.currentTimeMillis();
-//		System.out.println("VALIDATE "+xslFile+" in "+(end-start)+"ms");
+		if (Debug.debugXSLModel) {
+			long end = System.currentTimeMillis();
+			System.out.println("VALIDATE "+xslFile+" in "+(end-start)+"ms");
+		}
 	}
 
 	private void calculateProblems(StylesheetModel stylesheetComposed, XSLValidationReport report) throws MaxErrorsExceededException
