@@ -161,6 +161,7 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.AXIS, offset);
 			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.XPATH, offset);
 			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.CUSTOM, offset);
+			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.OPERATOR, offset);
 		}
 	}
 
@@ -173,7 +174,7 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.AXIS, offset);
 			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.XPATH, offset);
 			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.CUSTOM, offset);
-
+			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.OPERATOR, offset);
 		}
 	}
 
