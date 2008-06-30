@@ -12,7 +12,6 @@ package org.eclipse.wst.sse.core.internal.propertytester;
 
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.wst.sse.core.internal.Logger;
@@ -73,8 +72,10 @@ public class StructuredFilePropertyTester extends PropertyTester {
 				}
 			}
 		}
-		catch (CoreException e) {
-			Logger.logException(e);
+		catch (Exception e) {
+			// [232831] - Log messages only when debugging
+			if(Logger.DEBUG)
+				Logger.logException(e);
 		}
 		return false;
 	}
