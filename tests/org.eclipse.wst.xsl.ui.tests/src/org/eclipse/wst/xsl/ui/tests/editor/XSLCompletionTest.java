@@ -178,7 +178,7 @@ public class XSLCompletionTest extends UnzippedProjectTester {
     	ICompletionProposal[] proposals = getProposals(838); 
     	assertTrue(proposals.length > 1);
     	ICompletionProposal proposal = proposals[3];
-    	assertEquals("Wrong select item returned: ", "ancestor-or-self::", proposal.getDisplayString());
+    	assertEquals("Wrong select item returned: ", "..", proposal.getDisplayString());
     }
     
     public void testTestAttributeProposalsAvailable() throws Exception {
