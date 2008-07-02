@@ -43,6 +43,9 @@ public class XPathParser {
 				if (currentToken.beginColumn == 0) {
 					return 1;
 				} else {
+					if (currentToken.beginColumn == currentToken.endColumn) {
+						return currentToken.beginColumn + 1;
+					}
 					return currentToken.beginColumn;
 				}
 			}
