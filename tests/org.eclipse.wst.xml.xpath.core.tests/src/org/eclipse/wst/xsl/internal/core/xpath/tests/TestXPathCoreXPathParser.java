@@ -65,6 +65,12 @@ public class TestXPathCoreXPathParser extends TestCase {
 		assertEquals("Value of token offset is wrong:", 164, parser.getTokenStartOffset(1, 167));
 		assertEquals("Unexpected token value:", "'true'", parser.getCurrentToken().image);
 	}
+
+	public void testgetTokenStartOffset6() {
+		XPathParser parser = new XPathParser("self::");
+		assertNotNull(parser);
+		assertEquals("Value of token offset is wrong:", 7, parser.getTokenStartOffset(1, 7));
+	}
 	
 	public void testgetTokenStartOffsetNotEqual() {
 		XPathParser parser = new XPathParser(xpathSingleLine);
