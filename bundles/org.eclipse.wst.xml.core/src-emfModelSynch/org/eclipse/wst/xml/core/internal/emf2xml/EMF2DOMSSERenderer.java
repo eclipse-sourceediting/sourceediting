@@ -267,7 +267,6 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 		//return (EMF2DOMSSEAdapter) xNode.getAdapterFor(EMF2DOMAdapter.ADAPTER_CLASS);
 
 		INodeNotifier sseNode = (INodeNotifier) node;
-		List sse2domAdapters = new ArrayList();
 		Collection adapters = sseNode.getAdapters();
 		for (Iterator iterator = adapters.iterator(); iterator.hasNext();) {
 			INodeAdapter adapter = (INodeAdapter) iterator.next();
@@ -275,18 +274,17 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 			if (adapter != null && adapter.isAdapterForType(EMF2DOMAdapter.ADAPTER_CLASS)) {
 				// Cast to EMF2DOMAdapter
 				EMF2DOMAdapter e2DAdapter = (EMF2DOMAdapter) adapter;
+				if (getResource() == null || e2DAdapter.getTarget() == null)
+					return e2DAdapter;
+				
 				// First check if targets are resources
-				if (e2DAdapter.getTarget() != null && e2DAdapter.getTarget() instanceof Resource) {
+				if (e2DAdapter.getTarget() instanceof Resource) {
 					/*
 					 * Now check if it's the right one (Multiple resources
 					 * could be attached)
 					 */
 					if (e2DAdapter.getTarget() == getResource()) {
 						return e2DAdapter;
-					}
-					else {
-						sse2domAdapters.add(e2DAdapter);
-						continue;
 					}
 				} else {
 					// Check if targets are EObjects with the same resources
@@ -296,15 +294,11 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 					 * Now check if it's the right one (Multiple resources could
 					 * be attached)
 					 */
-					if (adapterTarget != null && myTarget != null && adapterTarget.eResource() == myTarget) {
+					if (adapterTarget.eResource() == myTarget || adapterTarget.eResource() == null) {
 						return e2DAdapter;
 					}
-					sse2domAdapters.add(e2DAdapter);
 				}
 			}
-		}
-		if (sse2domAdapters.size() == 1) {
-			return (EMF2DOMAdapter) sse2domAdapters.get(0);
 		}
 		return null;
 	
@@ -434,26 +428,24 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 		if (isBatchChanges)
 			return;
 		try {
-			if (aboutToChangeNode != null && model.getStructuredDocument() != null && model.getStructuredDocument().getFirstStructuredDocumentRegion() != aboutToChangeNode) {
-				String id = getModelManagerId();
-				IStructuredModel tempModel = null;
+			if (aboutToChangeNode != null
+					&& model.getStructuredDocument() != null
+					&& model.getStructuredDocument()
+							.getFirstStructuredDocumentRegion() != aboutToChangeNode) {
+				modelAccessForWrite();
 				try {
-					tempModel = getModelManager().getExistingModelForEdit(id);
 					xmlModelReverted = true;
 					resource.unload();
-				}
-				finally {
-					if (tempModel != null) {
-						tempModel.releaseFromEdit();
-					}
+				} finally {
+					if (getXMLModel() != null)
+						getXMLModel().releaseFromEdit();
 				}
 			}
-		}
-		finally {
+		} finally {
 			aboutToChangeNode = null;
 		}
-	}
-
+	} 
+	
 	public void modelDirtyStateChanged(IStructuredModel model, boolean isDirty) {
 		if (!isDirty && resource.isModified()) { // The XMLModel was saved
 			resource.setModified(false);

@@ -11,10 +11,8 @@
 
 package org.eclipse.wst.xml.core.internal.emf2xml;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
@@ -277,7 +275,7 @@ public class EMF2DOMSSEAdapter extends EMF2DOMAdapterImpl implements INodeAdapte
 		//Assert.isNotNull(childMap.getChildAdapterClass());
 		Assert.isNotNull(node);
 
-		EMF2DOMAdapter adapter = primGetExistingAdapterForCreate(node);
+		EMF2DOMAdapter adapter = primGetExistingAdapter(node);
 
 		if (adapter != null) {
 			if (adapter.isMOFProxy() || adapter.getTarget() == null) {
@@ -298,7 +296,7 @@ public class EMF2DOMSSEAdapter extends EMF2DOMAdapterImpl implements INodeAdapte
 		// adapted. For instance a subtree that maps to a MOF attribute
 		// setting.
 		if (childNode.getNodeType() == Node.ELEMENT_NODE) {
-			EMF2DOMAdapter attrAdapter = primGetExistingAdapterForCreate(childNode);
+			EMF2DOMAdapter attrAdapter = primGetExistingAdapter(childNode);
 
 			if (attrAdapter == null || attrAdapter.getNode() != getNode()) {
 				// If the node is adapted, but not by this adapter then remove
@@ -314,62 +312,19 @@ public class EMF2DOMSSEAdapter extends EMF2DOMAdapterImpl implements INodeAdapte
 			}
 		}
 	}
-
+	
 	protected EMF2DOMAdapter primGetExistingAdapter(Node aNode) {
 		INodeNotifier sseNode = (INodeNotifier) aNode;
 		Collection adapters = sseNode.getAdapters();
-		List sse2domAdapters = new ArrayList();
 		for (Iterator iterator = adapters.iterator(); iterator.hasNext();) {
 			INodeAdapter adapter = (INodeAdapter) iterator.next();
 			// First Check if it's an EMF2DOMAdapter
 			if (adapter != null && adapter.isAdapterForType(EMF2DOMAdapter.ADAPTER_CLASS)) {
 				// Cast to EMF2DOMAdapter
 				EMF2DOMAdapter e2DAdapter = (EMF2DOMAdapter) adapter;
-				// Check if targets are the resources
-				if (getTarget() instanceof Resource) {
-					/*
-					 * Now check if it's the right one (Multiple resources
-					 * could be attached)
-					 */
-					if (e2DAdapter.getTarget() == getTarget()) {
-						return e2DAdapter;
-					}
-					else {
-						sse2domAdapters.add(e2DAdapter);
-						continue;
-					}
-				} else {
-					// Check if targets are EObjects with the same resources
-					EObject myTarget = (EObject) getTarget();
-					EObject adapterTarget = (EObject) e2DAdapter.getTarget();
-					/*
-					 * Now check if it's the right one (Multiple resources could
-					 * be attached)
-					 */
-					if (adapterTarget != null && myTarget != null && adapterTarget.eResource() == myTarget.eResource()) {
-						return e2DAdapter;
-					}
-					sse2domAdapters.add(e2DAdapter);
-				}
-			}
-		}
-		if (sse2domAdapters.size() == 1) {
-			return (EMF2DOMAdapter) sse2domAdapters.get(0);
-		}
-			
-		//return (EMF2DOMAdapter) ((IDOMNode) aNode).getExistingAdapter(EMF2DOMAdapter.ADAPTER_CLASS);
-		return null;
-	}
-	
-	protected EMF2DOMAdapter primGetExistingAdapterForCreate(Node aNode) {
-		INodeNotifier sseNode = (INodeNotifier) aNode;
-		Collection adapters = sseNode.getAdapters();
-		for (Iterator iterator = adapters.iterator(); iterator.hasNext();) {
-			INodeAdapter adapter = (INodeAdapter) iterator.next();
-			// First Check if it's an EMF2DOMAdapter
-			if (adapter != null && adapter.isAdapterForType(EMF2DOMAdapter.ADAPTER_CLASS)) {
-				// Cast to EMF2DOMAdapter
-				EMF2DOMAdapter e2DAdapter = (EMF2DOMAdapter) adapter;
+				if (getTarget() == null || e2DAdapter.getTarget() == null)
+					return e2DAdapter;
+				
 				// Check if target is an EMF resource
 				if (getTarget() instanceof Resource) {
 					/*
@@ -379,18 +334,24 @@ public class EMF2DOMSSEAdapter extends EMF2DOMAdapterImpl implements INodeAdapte
 					if (e2DAdapter.getTarget() == getTarget()) {
 						return e2DAdapter;
 					}
-					else
-						continue;
 				}
-				// Check if targets are EObjects with the same resources
-				EObject myTarget = (EObject) getTarget();
-				EObject adapterTarget = (EObject) e2DAdapter.getTarget();
-				/*
-				 * Now check if it's the right one (Multiple resources could
-				 * be attached)
-				 */
-				if (adapterTarget != null && myTarget != null && adapterTarget.eResource() == myTarget.eResource()) {
-					return e2DAdapter;
+				else {
+					// Check if targets are EObjects with the same resources
+					EObject myTarget = (EObject) getTarget();
+					EObject adapterTarget = (EObject) e2DAdapter.getTarget();
+					/*
+					 * Now check if it's the right one (Multiple resources could
+					 * be attached)
+					 */
+					if (adapterTarget.eResource() == myTarget.eResource()) {
+						return e2DAdapter;
+					}
+				}
+				
+				if (e2DAdapter.getTarget() instanceof EObject) {
+					if (((EObject) e2DAdapter.getTarget()).eResource() == null) {
+						return e2DAdapter;
+					}
 				}
 			}
 		}
