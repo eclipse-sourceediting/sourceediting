@@ -229,9 +229,9 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 	 */
 	private IPropertyDescriptor createEnumeratedPropertyDescriptor(CMAttributeDeclaration attrDecl, CMDataType valuesHelper) {
 		// the displayName MUST be set
-		EnumeratedStringPropertyDescriptor descriptor = new EnumeratedStringPropertyDescriptor(attrDecl.getAttrName(), attrDecl.getAttrName(), _getValidStrings(attrDecl, valuesHelper));
-		descriptor.setCategory(getCategory(attrDecl));
 		String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
+		EnumeratedStringPropertyDescriptor descriptor = new EnumeratedStringPropertyDescriptor(attrName, attrName, _getValidStrings(attrDecl, valuesHelper));
+		descriptor.setCategory(getCategory(attrDecl));
 		descriptor.setDescription(attrName);
 		if ((attrDecl.getUsage() != CMAttributeDeclaration.REQUIRED) && fSetExpertFilter) {
 			descriptor.setFilterFlags(new String[]{IPropertySheetEntry.FILTER_ID_EXPERT});
@@ -249,7 +249,8 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 	 */
 	private IPropertyDescriptor createFixedPropertyDescriptor(CMAttributeDeclaration attrDecl, CMDataType helper) {
 		// the displayName MUST be set
-		EnumeratedStringPropertyDescriptor descriptor = new EnumeratedStringPropertyDescriptor(attrDecl.getNodeName(), attrDecl.getNodeName(), _getValidFixedStrings(attrDecl, helper));
+		String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
+		EnumeratedStringPropertyDescriptor descriptor = new EnumeratedStringPropertyDescriptor(attrName, attrName, _getValidFixedStrings(attrDecl, helper));
 		descriptor.setCategory(getCategory(attrDecl));
 		descriptor.setDescription(DOMNamespaceHelper.computeName(attrDecl, fNode, null));
 		return descriptor;
