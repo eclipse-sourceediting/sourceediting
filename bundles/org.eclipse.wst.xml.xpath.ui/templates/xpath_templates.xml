@@ -73,7 +73,7 @@
 	          enabled="true" name="normalize-space(string?)">normalize-space(${cursor})</template>
 	<template id="org.eclipse.wst.xslt.templates.xpath.translate"
 	          autoinsert="true" context="xsl_xpath" deleted="false"
-	          description='The normalize-space function returns the argument string with whitespace normalized by stripping leading and trailing whitespace and replacing sequences of whitespace characters by a single space. Whitespace characters are the same as those allowed by the S production in XML. If the argument is omitted, it defaults to the context node converted to a string, in other words the string-value of the context node.'
+	          description='The translate function returns the first argument string with occurrences of characters in the second argument string replaced by the character at the corresponding position in the third argument string.'
 	          enabled="true" name="translate(string, string, string)">translate(${cursor}, , )</template>
 	<template id="org.eclipse.wst.xslt.templates.xpath.boolean"
 	          autoinsert="true" context="xsl_xpath" deleted="false"
