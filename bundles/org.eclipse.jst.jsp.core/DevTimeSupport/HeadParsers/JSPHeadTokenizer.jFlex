@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,13 +12,10 @@
 package org.eclipse.jst.jsp.core.internal.contenttype;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Arrays;
 
 import org.eclipse.wst.xml.core.internal.contenttype.EncodingParserConstants;
 import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
-
-
-
-
 
 %%
 
@@ -53,13 +50,13 @@ import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
 
                 /* this buffer contains the current text to be matched and is
                  the source of the yytext() string */
-                java.util.Arrays.fill(zzBuffer, (char)0);
+                Arrays.fill(zzBuffer, (char)0);
 
                 /* the textposition at the last accepting state */
                 zzMarkedPos = 0;
 
                 /* the textposition at the last state to be included in yytext */
-                zzPushbackPos = 0;
+                //zzPushbackPos = 0;
 
                 /* the current text position in the buffer */
                 zzCurrentPos = 0;
@@ -108,7 +105,7 @@ import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
         }
 
 
-        public final HeadParserToken getNextToken() throws IOException {
+        public final HeadParserToken getNextToken() throws IOException, Exception {
                 String context = null;
                 context = primGetNextToken();
                 HeadParserToken result = null;
@@ -159,6 +156,7 @@ import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
 //%debug
 %switch
 %buffer 8192
+%scanerror java.lang.Exception
 
 
 UTF16BE = \xFE\xFF
