@@ -11,6 +11,8 @@
 <body>
 <libtags:emptyme></libtags:emptyme>
 <jsp:attribute name="named"></jsp:attribute>
+<%-- Make sure that attributes can be defined using jsp:attribute --%>
+<libtags:ireqattrs><jsp:attribute name="name"></jsp:attribute></libtags:ireqattrs>
 <libtags:ireqattrs name="<%= "named"%>" scope="<%= "expression" %>"></libtags:ireqattrs>
 <libtags:ihaveattrs name="boo"></libtags:ihaveattrs>
 </body>
