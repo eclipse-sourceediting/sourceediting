@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2007 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -90,7 +90,9 @@ public class RegionUpdateRule {
 		if (region.getEnd() > region.getTextEnd()) {
 			// no need to add one to end of text, as we used to, since we
 			// change definition of length to equate to offset plus one.
-			if (requestStart > parent.getTextEndOffset(region)) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=105866
+			// watch out for whitespace at end of text
+			if (requestStart >= parent.getTextEndOffset(region)) {
 				// ok, we are in the whitespace region, so we can't handle,
 				// unless
 				// we are just inserting whitespace.
@@ -116,7 +118,9 @@ public class RegionUpdateRule {
 		if (region.getEnd() > region.getTextEnd()) {
 			// no need to add one to end of text, as we used to, since we
 			// change definition of length to equate to offset plus one.
-			if (requestStart > region.getTextEnd()) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=105866
+			// watch out for whitespace at end of text
+			if (requestStart >= region.getTextEnd()) {
 				// ok, we are in the whitespace region, so we can't handle,
 				// unless
 				// we are just inserting whitespace.
