@@ -35,11 +35,11 @@ public class JSPHeadTokenizerTester extends TestCase {
 	private String fXMLDecEncodingName;
 	private String fLanguage;
 
-	private void doTestFile(String filename, String expectedName) throws IOException {
+	private void doTestFile(String filename, String expectedName) throws Exception {
 		doTestFile(filename, expectedName, null, null);
 	}
 
-	private void doTestFile(String filename, String expectedName, String finalTokenType, String expectedContentType) throws IOException {
+	private void doTestFile(String filename, String expectedName, String finalTokenType, String expectedContentType) throws Exception {
 		JSPHeadTokenizer tokenizer = null;
 		Reader fileReader = null;
 		try {
@@ -91,7 +91,7 @@ public class JSPHeadTokenizerTester extends TestCase {
 	// String filename = fileLocation + "NoEncoding.jsp";
 	// doTestFile(filename);
 	// }
-	public void testNormalNonDefault() throws IOException {
+	public void testNormalNonDefault() throws Exception {
 		String filename = fileLocation + "NormalNonDefault.jsp";
 		doTestFile(filename, "ISO-8859-8");
 	}
@@ -172,7 +172,7 @@ public class JSPHeadTokenizerTester extends TestCase {
 	 * Give's priority to encoding value, if found else, looks for contentType
 	 * value;
 	 */
-	private HeadParserToken parseHeader(JSPHeadTokenizer tokenizer) throws IOException {
+	private HeadParserToken parseHeader(JSPHeadTokenizer tokenizer) throws Exception {
 		fPageEncodingValue = null;
 		fCharset = null;
 		fContentType = null;
@@ -227,68 +227,68 @@ public class JSPHeadTokenizerTester extends TestCase {
 		return finalToken;
 	}
 
-	public void testBestCase() throws IOException {
+	public void testBestCase() throws Exception {
 		String filename = fileLocation + "nomalDirectiveCase.jsp";
 		doTestFile(filename, "ISO-8859-2", null, "text/html");
 	}
 
-	public void testMinimalPageDirective() throws IOException {
+	public void testMinimalPageDirective() throws Exception {
 		String filename = fileLocation + "minimalPageDirective.jsp";
 		doTestFile(filename, null, null, "text/html");
 	}
 
-	public void testIllFormed() throws IOException {
+	public void testIllFormed() throws Exception {
 		String filename = fileLocation + "testIllFormed.jsp";
 		doTestFile(filename, null);
 	}
 
-	public void testIllFormed2() throws IOException {
+	public void testIllFormed2() throws Exception {
 		String filename = fileLocation + "testIllFormed2.jsp";
 		doTestFile(filename, "UTF-8");
 	}
 
-	public void testIllformedNormalNonDefault() throws IOException {
+	public void testIllformedNormalNonDefault() throws Exception {
 		String filename = fileLocation + "IllformedNormalNonDefault.jsp";
 		doTestFile(filename, "ISO-8859-8", null, "text/html");
 	}
 
-	public void testEmptyFile() throws IOException {
+	public void testEmptyFile() throws Exception {
 		String filename = fileLocation + "EmptyFile.jsp";
 		doTestFile(filename, null);
 	}
 
-	public void testNomalDirectiveCaseUsingXMLSyntax() throws IOException {
+	public void testNomalDirectiveCaseUsingXMLSyntax() throws Exception {
 		String filename = fileLocation + "nomalDirectiveCaseUsingXMLSyntax.jsp";
 		doTestFile(filename, "ISO-8859-2", null, "text/html");
 	}
 
-	public void testNoPageDirective() throws IOException {
+	public void testNoPageDirective() throws Exception {
 		String filename = fileLocation + "testNoPageDirective.jsp";
 		doTestFile(filename, null);
 	}
 
-	public void testNormalPageDirectiveWithXMLDecl() throws IOException {
+	public void testNormalPageDirectiveWithXMLDecl() throws Exception {
 		String filename = fileLocation + "nomalDirectiveCasewithXMLDecl.jsp";
 		doTestFile(filename, "ISO-8859-1", null, "text/html");
 	}
 
 
-	public void testNoPageDirectiveAtFirst() throws IOException {
+	public void testNoPageDirectiveAtFirst() throws Exception {
 		String filename = fileLocation + "testNoPageDirectiveAtFirst.jsp";
 		doTestFile(filename, "ISO-8859-2", null, "text/html");
 	}
 
-	public void testNoPageDirectiveInLargeFile() throws IOException {
+	public void testNoPageDirectiveInLargeFile() throws Exception {
 		String filename = fileLocation + "testNoPageDirectiveInLargeFile.jsp";
 		doTestFile(filename, null, EncodingParserConstants.MAX_CHARS_REACHED, null);
 	}
 
-	public void testNormalCaseWithNeither() throws IOException {
+	public void testNormalCaseWithNeither() throws Exception {
 		String filename = fileLocation + "nomalDirectiveCaseNoEncoding.jsp";
 		doTestFile(filename, null);
 	}
 
-	public void testNormalCharset() throws IOException {
+	public void testNormalCharset() throws Exception {
 		String filename = fileLocation + "nomalDirectiveCaseUsingCharset.jsp";
 		doTestFile(filename, "ISO-8859-3", null, "text/html");
 	}
