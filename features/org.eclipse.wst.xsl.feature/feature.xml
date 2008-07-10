@@ -91,13 +91,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.wst.xml.ui.editor.outline"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.wst.xsl.doc"
          download-size="0"
          install-size="0"
