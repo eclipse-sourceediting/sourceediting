@@ -180,8 +180,8 @@ public class XSLCompletionTest extends UnzippedProjectTester {
     	ICompletionProposal proposal = proposals[3];
     	assertEquals("Wrong select item returned: ", "..", proposal.getDisplayString());
     }
-
-// Temporarily commented out for further investigation.    
+ 
+// Temporarily commented out for further investigation.  Important that his test remain commented out for now.  
 //    public void testSelectAttributeProposalsNarrow() throws Exception {
 //    	int offset = sourceViewer.getDocument().getLineOffset(18) + 44;
 //    	String s = sourceViewer.getDocument().get(offset-9,9);
