@@ -35,6 +35,7 @@ public class XMLFormattingPreferences {
 	private String fMixedIndentStrategy = XMLFormattingConstraints.INDENT;
 	private String fMixedWhitespaceStrategy = XMLFormattingConstraints.IGNORE;
 	private String fOneIndent = "\t"; //$NON-NLS-1$
+	private boolean fClearAllBlankLines = false;
 
 	public XMLFormattingPreferences() {
 		Preferences preferences = XMLCorePlugin.getDefault().getPluginPreferences();
@@ -62,6 +63,7 @@ public class XMLFormattingPreferences {
 				indent.append(indentChar);
 			}
 			setOneIndent(indent.toString());
+			setClearAllBlankLines(preferences.getBoolean(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
 		}
 	}
 
@@ -143,5 +145,13 @@ public class XMLFormattingPreferences {
 
 	protected void setOneIndent(String oneIndent) {
 		fOneIndent = oneIndent;
+	}
+
+	public boolean getClearAllBlankLines() {
+		return fClearAllBlankLines;
+	}
+
+	public void setClearAllBlankLines(boolean clearAllBlankLines) {
+		fClearAllBlankLines = clearAllBlankLines;
 	}
 }

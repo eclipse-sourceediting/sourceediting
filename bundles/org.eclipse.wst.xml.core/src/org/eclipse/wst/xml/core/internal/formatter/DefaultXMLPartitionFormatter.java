@@ -98,6 +98,23 @@ public class DefaultXMLPartitionFormatter {
 		--availableLineWidth;
 		return availableLineWidth;
 	}
+	
+	private int collapseAndIndent(TextEdit textEdit, int spaceStartOffset, int availableLineWidth, int indentLevel, String whitespaceRun, IStructuredDocumentRegion currentRegion) {
+		// Need to keep blank lines, but still collapse the whitespace
+		String lineDelimiters = null;
+		if (!getFormattingPreferences().getClearAllBlankLines()) {
+			lineDelimiters = extractLineDelimiters(whitespaceRun, currentRegion);
+			String formattedLine = lineDelimiters + getIndentString(indentLevel);
+			if(lineDelimiters.length() > 0 && !formattedLine.equals(whitespaceRun)) {
+				textEdit.addChild(new ReplaceEdit(spaceStartOffset, whitespaceRun.length(), formattedLine));
+				availableLineWidth = getFormattingPreferences().getMaxLineWidth() - indentLevel;
+			}
+		}
+		if (lineDelimiters == null || lineDelimiters.length() == 0) {
+			availableLineWidth = collapseSpaces(textEdit, spaceStartOffset, availableLineWidth, whitespaceRun);
+		}
+		return availableLineWidth;
+	}
 
 	private void deleteTrailingSpaces(TextEdit textEdit, ITextRegion currentTextRegion, IStructuredDocumentRegion currentDocumentRegion) {
 		int textEnd = currentTextRegion.getTextEnd();
@@ -682,8 +699,8 @@ public class DefaultXMLPartitionFormatter {
 						forceInitialIndent = false; // initial indent done
 					}
 					else {
-						// just collapse spaces
-						availableLineWidth = collapseSpaces(textEdit, startOffset, availableLineWidth, whitespaceRun);
+						// just collapse spaces, but adjust for any indenting that may result from preserving line delimiters
+						availableLineWidth = collapseAndIndent(textEdit, startOffset, availableLineWidth, indentLevel, whitespaceRun, currentRegion);
 					}
 
 					fullTextOffset += characterRunLength;
@@ -691,16 +708,18 @@ public class DefaultXMLPartitionFormatter {
 				else {
 					// handle trailing whitespace
 					int whitespaceOffset = currentRegion.getStartOffset() + whitespaceStart;
-					if (whitespaceMode == XMLFormattingConstraints.IGNORE) {
-						// if ignore, trim
-						DeleteEdit deleteTrailing = new DeleteEdit(whitespaceOffset, whitespaceRun.length());
-						textEdit.addChild(deleteTrailing);
-					}
-					else {
-						// if collapse, leave a space. but what if end up
-						// wanting to add indent? then need to delete space
-						// added and add indent instead
-						availableLineWidth = collapseSpaces(textEdit, whitespaceOffset, availableLineWidth, whitespaceRun);
+					if(getFormattingPreferences().getClearAllBlankLines()) {
+						if (whitespaceMode == XMLFormattingConstraints.IGNORE) {
+							// if ignore, trim
+							DeleteEdit deleteTrailing = new DeleteEdit(whitespaceOffset, whitespaceRun.length());
+							textEdit.addChild(deleteTrailing);
+						}
+						else {
+							// if collapse, leave a space. but what if end up
+							// wanting to add indent? then need to delete space
+							// added and add indent instead
+							availableLineWidth = collapseSpaces(textEdit, whitespaceOffset, availableLineWidth, whitespaceRun);
+						}
 					}
 				}
 			}
@@ -933,9 +952,21 @@ public class DefaultXMLPartitionFormatter {
 		int lineWidth = parentConstraints.getAvailableLineWidth() - currentRegion.getFullText().length();
 		// Don't format if we're not exceeding the available line width, or if the whitespace
 		// strategy is to preserve whitespace - But update line width.
-		if(currentRegion == null || (lineWidth >= 0) ||
-				parentConstraints.getWhitespaceStrategy() == XMLFormattingConstraints.PRESERVE) {
+		if(currentRegion == null ||	parentConstraints.getWhitespaceStrategy() == XMLFormattingConstraints.PRESERVE) {
 			parentConstraints.setAvailableLineWidth(lineWidth);
+			return;
+		}
+		
+		// If there is enough room, format the start of the comment tag if it
+		// is on its own line
+		if(lineWidth >= 0) {
+			parentConstraints.setAvailableLineWidth(lineWidth);
+			if(previousRegion.getType() == DOMRegionContext.XML_CONTENT) {
+				String delimiters = extractLineDelimiters(previousRegion.getFullText(), previousRegion);
+				// Format the comment if its on a newline
+				if(delimiters != null && delimiters.length() > 0)
+					textEdit.addChild(new ReplaceEdit(previousRegion.getStartOffset(), previousRegion.getLength(), delimiters + getIndentString(parentConstraints.getIndentLevel()+1)));
+			}
 			return;
 		}
 		
@@ -1084,6 +1115,19 @@ public class DefaultXMLPartitionFormatter {
 		}
 		return characterRun.toString();
 	}
+	
+	private String getTrailingWhitespace(String text) {
+		StringBuffer whitespaceRun = new StringBuffer();
+		int index = text.length() - 1;
+		while(index > 0) {
+			char c = text.charAt(index--);
+			if (Character.isWhitespace(c))
+				whitespaceRun.insert(0, c);
+			else
+				break;
+		}
+		return whitespaceRun.toString();
+	}
 
 	private String getIndentString(int indentLevel) {
 		StringBuffer indentString = new StringBuffer();
@@ -1119,21 +1163,46 @@ public class DefaultXMLPartitionFormatter {
 
 		int availableLineWidth;
 		String indentString = getIndentString(indentLevel);
-		String newLineAndIndent = getLineDelimiter(currentRegion) + indentString;
-
+		String lineDelimiter = getLineDelimiter(currentRegion);
+		String newLineAndIndent = lineDelimiter + indentString;
+		
+		TextEdit indentation = null;
+		
 		// if not already correctly indented
 		if (!newLineAndIndent.equals(whitespaceRun)) {
-			if (whitespaceRun != null) {
-				// replace existing whitespace run
-				ReplaceEdit replaceEdit = new ReplaceEdit(indentStartOffset, whitespaceRun.length(), newLineAndIndent);
-				textEdit.addChild(replaceEdit);
+			if (getFormattingPreferences().getClearAllBlankLines()) {
+				if (whitespaceRun != null) {
+					// replace existing whitespace run
+					indentation = new ReplaceEdit(indentStartOffset, whitespaceRun.length(), newLineAndIndent);
+				}
+				else {
+					// just insert correct indent
+					indentation = new InsertEdit(indentStartOffset, newLineAndIndent);
+				}
 			}
+			// Keep the empty lines
 			else {
 				// just insert correct indent
-				InsertEdit insertEdit = new InsertEdit(indentStartOffset, newLineAndIndent);
-				textEdit.addChild(insertEdit);
+				if(whitespaceRun == null)
+					indentation = new InsertEdit(indentStartOffset, newLineAndIndent);
+				// Need to preserve the number of empty lines, but still indent on the current line properly
+				else {
+					String existingDelimiters = extractLineDelimiters(whitespaceRun, currentRegion);
+					if(existingDelimiters != null && existingDelimiters.length() > 0) {
+						String formatted = existingDelimiters + indentString;
+						// Don't perform a replace if the formatted string is the same as the exisiting whitespaceRun
+						if(!formatted.equals(whitespaceRun))
+							indentation = new ReplaceEdit(indentStartOffset, whitespaceRun.length(), formatted);
+					}
+					// No blank lines to preserve - correct the indent
+					else
+						indentation = new ReplaceEdit(indentStartOffset, whitespaceRun.length(), newLineAndIndent);
+				}
 			}
 		}
+		
+		if(indentation != null)
+			textEdit.addChild(indentation);
 		// update line width
 		availableLineWidth = maxAvailableLineWidth - indentString.length();
 		return availableLineWidth;
@@ -1201,6 +1270,10 @@ public class DefaultXMLPartitionFormatter {
 			if ((previousRegionFullText != null) && (previousRegionFullText.trim().length() == 0)) {
 				indentStartOffset = previousDocumentRegion.getStartOffset();
 				whitespaceRun = previousRegionFullText;
+			}
+			if ((previousRegionFullText != null) && (whitespaceRun == null) && !getFormattingPreferences().getClearAllBlankLines()) {
+				whitespaceRun = getTrailingWhitespace(previousRegionFullText);
+				indentStartOffset = previousDocumentRegion.getEndOffset() - whitespaceRun.length();
 			}
 
 			int indentLevel = thisConstraints.getIndentLevel();
@@ -1551,6 +1624,19 @@ public class DefaultXMLPartitionFormatter {
 		if (lineDelimiter == null)
 			lineDelimiter = doc.getLineDelimiter();
 		return lineDelimiter;
+	}
+	
+	private String extractLineDelimiters(String base, IStructuredDocumentRegion currentRegion) {
+		String lineDelimiter = getLineDelimiter(currentRegion);
+		StringBuffer sb = new StringBuffer();
+		for(int index = 0; index < base.length();) {
+			index = base.indexOf(lineDelimiter, index);
+			if(index++ >= 0)
+				sb.append(lineDelimiter);
+			else
+				break;
+		}
+		return sb.toString();
 	}
 
 	void setProgressMonitor(IProgressMonitor monitor) {
