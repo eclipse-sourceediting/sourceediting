@@ -9,11 +9,18 @@
 		debug xsl stylsheet transformations.	
 	</para>
 	<section id="XSLLaunch">
-		<?dbhtml filename="launching/xsllaunching.html" ?>
+		<?dbhtml filename="launching/launching.html" ?>
 		<title>XSL Launching</title>
 		<para>
-	       This is a place holder until some actual documentation can be written.
+			In the Project Explorer, simply select the input XML file and the stylesheet(s) to transform it, and then right-click and select 
+			<i>Run As &gt; XSL Transformation</i>. 
 	    </para>
+		<mediaobject>
+			<imageobject>
+				<imagedata align="center" format="PNG"
+					fileref="../images/launching/launchShortcut.png" />
+			</imageobject>
+		</mediaobject>
 	</section>
 	<section id="XSLDebug">
 	    <?dbhtml filename="launching/debuglaunching.html" ?>
