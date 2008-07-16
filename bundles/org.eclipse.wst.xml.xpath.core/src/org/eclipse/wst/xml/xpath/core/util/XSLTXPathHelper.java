@@ -1,8 +1,6 @@
 package org.eclipse.wst.xml.xpath.core.util;
 
-import javax.xml.transform.ErrorListener;
 import javax.xml.transform.TransformerException;
-import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.xml.utils.PrefixResolver;
@@ -290,6 +288,12 @@ public class XSLTXPathHelper {
 		functionTable.installFunction("key", org.apache.xalan.templates.FuncKey.class);
 		functionTable.installFunction("format-number", org.apache.xalan.templates.FuncFormatNumb.class);
 		functionTable.installFunction("document", org.apache.xalan.templates.FuncDocument.class);
+		functionTable.installFunction("element-available", org.apache.xpath.functions.FuncExtElementAvailable.class);
+		functionTable.installFunction("function-available", org.apache.xpath.functions.FuncExtFunctionAvailable.class);
+		functionTable.installFunction("current", org.apache.xpath.functions.FuncCurrent.class);
+		functionTable.installFunction("unparsed-entity-string", org.apache.xpath.functions.FuncUnparsedEntityURI.class);
+		functionTable.installFunction("generate-id", org.apache.xpath.functions.FuncGenerateId.class);
+		functionTable.installFunction("system-property", org.apache.xpath.functions.FuncSystemProperty.class);
 		return functionTable;
 	}
 
