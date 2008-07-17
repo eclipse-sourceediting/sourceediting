@@ -234,10 +234,14 @@ public final class DeploymentDescriptorPropertyCache {
 				return;
 			if (delta.getKind() == IResourceDelta.CHANGED && (delta.getFlags() == IResourceDelta.ENCODING || delta.getFlags() == IResourceDelta.MARKERS))
 				return;
+
 			IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
 				public boolean visit(IResourceDelta delta) {
 					IResource resource = delta.getResource();
 					if (resource.getType() == IResource.FILE) {
+						if (delta.getKind() == IResourceDelta.CHANGED && (delta.getFlags() == IResourceDelta.ENCODING || delta.getFlags() == IResourceDelta.MARKERS))
+							return false;
+						
 						IPath path = resource.getFullPath();
 						int segmentCount = path.segmentCount();
 						if (segmentCount > 1 && path.lastSegment().equals(WEB_XML) && path.segment(segmentCount - 2).equals(WEB_INF)) {

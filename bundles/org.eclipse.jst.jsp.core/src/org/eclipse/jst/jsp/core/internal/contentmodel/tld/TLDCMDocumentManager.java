@@ -12,7 +12,7 @@ package org.eclipse.jst.jsp.core.internal.contentmodel.tld;
 
 import java.io.File;
 import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -663,7 +663,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 					TLDCacheEntry entry = (TLDCacheEntry) o;
 					entry.referenceCount--;
 					if (entry.referenceCount <= 0) {
-						getSharedDocumentCache().put(key, new WeakReference(entry));
+						getSharedDocumentCache().put(key, new SoftReference(entry));
 					}
 				}
 			}
