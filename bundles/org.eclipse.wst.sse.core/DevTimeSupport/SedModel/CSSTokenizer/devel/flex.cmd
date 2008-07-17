@@ -1,7 +1,6 @@
 @echo off
-set PATH=%PATH%;c:\jdk1.4\bin
-java -Xmx470000000 -cp JFlex\lib\sed-jflex.jar;. JFlex.Main JSPTokenizer -skel skeleton.sed
-java -Xmx470000000 -cp JFlex\lib\sed-jflex.jar;. JFlex.Main XMLTokenizer -skel skeleton.sed
-rm -f JSPTokenizer.java~ JSPTokenizer~ XMLTokenizer.java~ XMLTokenizer~
-copy XMLTokenizer.java ..\..\..\..\sedmodel\com\ibm\sed\parser\internal
-copy JSPTokenizer.java ..\..\..\..\sedmodel\com\ibm\sed\parser\internal
+set JAVA_HOME=d:\jdk6_03
+set JFLEX_HOME=D:\JFlex\jflex-1.4.2
+
+%JAVA_HOME%\bin\java -Xmx470M -jar %JFLEX_HOME%\lib\JFlex.jar CSSTokenizer.jflex
+move CSSTokenizer.java ..\..\..\..\..\org.eclipse.wst.css.core\src\org\eclipse\wst\css\core\internal\parser\ && del CSSTokenizer.java*

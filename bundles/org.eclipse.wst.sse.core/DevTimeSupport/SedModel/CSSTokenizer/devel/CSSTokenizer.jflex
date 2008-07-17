@@ -29,7 +29,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 %function primGetNextToken
 %type String
 %char
-%line
 %unicode
 %caseless
 //%debug
@@ -234,6 +233,15 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 		super();
 	}
 
+	/**
+	 * Added to workaround stricter compilation options without creating
+	 * an alternate skeleton file
+	 */
+	void _usePrivates() {
+		System.out.print(yycolumn);
+		System.out.print(yyline);
+		System.out.print(Boolean.toString(zzAtBOL));
+	}
 %}
 
 %state ST_CHARSET_NAME
@@ -408,8 +416,8 @@ unicode_range = "U"\+[0-9a-fA-F?]{1,6}("-"[0-9a-fA-F?]{1,6})?
 <YYINITIAL, ST_SELECTOR_MODIFIER, ST_SELECTOR> {
 	"*" { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_UNIVERSAL; }
 	{hash} { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_ID; }
-//	":"{ident} { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_PSEUDO; }
-	":"{ident}("("{s}*{ident}{s}*")")? { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_PSEUDO; }
+//	":"{ident}("("{s}*{ident}{s}*")")? { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_PSEUDO; }
+	":"({ident}("("{s}*{ident}{s}*")")?)? { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_PSEUDO; }
 	"."{name} { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_CLASS; }
 	"[" { yybegin(ST_SELECTOR_ATTRIBUTE_NAME); return CSS_SELECTOR_ATTRIBUTE_START; }
 }
@@ -421,7 +429,7 @@ unicode_range = "U"\+[0-9a-fA-F?]{1,6}("-"[0-9a-fA-F?]{1,6})?
 <ST_SELECTOR_MODIFIER> {
 	"," { yybegin(ST_SELECTOR); return CSS_SELECTOR_SEPARATOR; }
 	// using LOOKAHEAD
-	{s}+/[^+>\{/] { yybegin(ST_SELECTOR); return CSS_SELECTOR_COMBINATOR; }
+	{s}+/[^+>\{,/] { yybegin(ST_SELECTOR); return CSS_SELECTOR_COMBINATOR; }
 	"+"|">" { yybegin(ST_SELECTOR); return CSS_SELECTOR_COMBINATOR; }
 	"{" { yybegin(ST_DECLARATION); return CSS_LBRACE; }
 }
