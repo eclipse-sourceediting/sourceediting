@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,10 +43,10 @@ class HTMLCleanupHandlerFactory {
 		IStructuredCleanupHandler handler = null;
 		switch (nodeType) {
 			case Node.ELEMENT_NODE : {
-				if (isJSPTag(node))
-					handler = new JSPElementNodeCleanupHandler();
-				else
+				if (isXMLTag(node))
 					handler = new ElementNodeCleanupHandler();
+				else
+					handler = new JSPElementNodeCleanupHandler();
 				break;
 			}
 			case Node.TEXT_NODE : {
@@ -65,56 +65,13 @@ class HTMLCleanupHandlerFactory {
 
 		return handler;
 	}
-
-	/**
-	 * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
-	 * way for expedency. Should be evolved in future to depend on "nestedContext".
-	 */
-
-	private boolean isJSPTag(Node node) {
-
-		final String JSP_CLOSE = "JSP_CLOSE"; //$NON-NLS-1$
-		// final String JSP_COMMENT_CLOSE = "JSP_COMMENT_CLOSE"; //$NON-NLS-1$
-
-		// final String JSP_COMMENT_OPEN = "JSP_COMMENT_OPEN"; //$NON-NLS-1$
-		// final String JSP_COMMENT_TEXT = "JSP_COMMENT_TEXT"; //$NON-NLS-1$
-
-		final String JSP_CONTENT = "JSP_CONTENT"; //$NON-NLS-1$
-		final String JSP_DECLARATION_OPEN = "JSP_DECLARATION_OPEN"; //$NON-NLS-1$
-		final String JSP_DIRECTIVE_CLOSE = "JSP_DIRECTIVE_CLOSE"; //$NON-NLS-1$
-		final String JSP_DIRECTIVE_NAME = "JSP_DIRECTIVE_NAME"; //$NON-NLS-1$
-
-		final String JSP_DIRECTIVE_OPEN = "JSP_DIRECTIVE_OPEN"; //$NON-NLS-1$
-		final String JSP_EXPRESSION_OPEN = "JSP_EXPRESSION_OPEN"; //$NON-NLS-1$
-
-		// final String JSP_ROOT_TAG_NAME = "JSP_ROOT_TAG_NAME"; //$NON-NLS-1$
-
-		final String JSP_SCRIPTLET_OPEN = "JSP_SCRIPTLET_OPEN"; //$NON-NLS-1$
-
-		boolean result = false;
-
-		if (node instanceof IDOMNode) {
-			IStructuredDocumentRegion flatNode = ((IDOMNode) node).getFirstStructuredDocumentRegion();
-			// in some cases, the nodes exists, but hasn't been associated
-			// with
-			// a flatnode yet (the screen updates can be initiated on a
-			// different thread,
-			// so the request for a flatnode can come in before the node is
-			// fully formed.
-			// if the flatnode is null, we'll just allow the defaults to
-			// apply.
-			if (flatNode != null) {
-				String flatNodeType = flatNode.getType();
-				// should not be null, but just to be sure
-				if (flatNodeType != null) {
-					if ((flatNodeType.equals(JSP_CONTENT)) || (flatNodeType.equals(JSP_EXPRESSION_OPEN)) || (flatNodeType.equals(JSP_SCRIPTLET_OPEN)) || (flatNodeType.equals(JSP_DECLARATION_OPEN)) || (flatNodeType.equals(JSP_DIRECTIVE_CLOSE)) || (flatNodeType.equals(JSP_DIRECTIVE_NAME)) || (flatNodeType.equals(JSP_DIRECTIVE_OPEN)) || (flatNodeType.equals(JSP_CLOSE))) {
-						result = true;
-					}
-				}
-			}
+	
+	private boolean isXMLTag(Node node) {
+		if(node instanceof IDOMNode) {
+			IStructuredDocumentRegion region = ((IDOMNode) node).getFirstStructuredDocumentRegion();
+			return (DOMRegionContext.XML_TAG_NAME == region.getType());
 		}
-
-		return result;
+		return false;
 	}
 
 	private boolean isParentStyleTag(Node node) {
