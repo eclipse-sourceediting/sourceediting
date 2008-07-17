@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,17 +50,26 @@ public class LineStyleProviderForEmbeddedCSS extends LineStyleProviderForCSS {
 
 		if (0 < tokens.size()) {
 			int start = offset;
+			int end = start;
 			Iterator i = tokens.iterator();
 			while (i.hasNext()) {
 				CSSTextToken token = (CSSTextToken) i.next();
+				end = start + token.length;
+				int styleLength = token.length;
+				/* The token starts in the region */
 				if (regionStart <= start && start < regionEnd) {
-					TextAttribute attribute = getAttributeFor(token.kind);
-					if (attribute != null) {
-						holdResults.add(new StyleRange(start, token.length, attribute.getForeground(), attribute.getBackground(), attribute.getStyle()));
-					}
-					else {
-						holdResults.add(new StyleRange(start, token.length, null, null));
-					}
+					/* [239415] The region may not span the total length of the token -
+					 * Adjust the length so that it doesn't overlap with other style ranges */
+					if (regionEnd < end)
+						styleLength = regionEnd - start;
+					addStyleRange(holdResults, getAttributeFor(token.kind), start, styleLength);
+				}
+				/* The region starts in the token */
+				else if (start <= regionStart && regionStart < end ) {
+					/* The token may not span the total length of the region */
+					if (end < regionEnd)
+						styleLength = end - regionStart;
+					addStyleRange(holdResults, getAttributeFor(token.kind), regionStart, styleLength);
 				}
 				start += token.length;
 			}
@@ -68,6 +77,13 @@ public class LineStyleProviderForEmbeddedCSS extends LineStyleProviderForCSS {
 		}
 
 		return result;
+	}
+	
+	private void addStyleRange(Collection holdResults, TextAttribute attribute, int start, int end) {
+		if (attribute != null)
+			holdResults.add(new StyleRange(start, end, attribute.getForeground(), attribute.getBackground(), attribute.getStyle()));
+		else
+			holdResults.add(new StyleRange(start, end, null, null));
 	}
 
 	protected TextAttribute getAttributeFor(ITextRegion region) {

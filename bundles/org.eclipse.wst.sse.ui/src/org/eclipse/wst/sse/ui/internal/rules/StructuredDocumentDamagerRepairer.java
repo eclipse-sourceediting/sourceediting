@@ -12,8 +12,7 @@
 package org.eclipse.wst.sse.ui.internal.rules;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextPresentation;
@@ -43,14 +42,27 @@ public class StructuredDocumentDamagerRepairer extends DefaultDamagerRepairer {
 	}
 
 	public void createPresentation(TextPresentation presentation, ITypedRegion region) {
-		if(fProvider != null) {
-			Collection styles = new ArrayList();
+		if (fProvider != null) {
+			List styles = new ArrayList();
 			boolean handled = fProvider.prepareRegions(region, region.getOffset(), region.getLength(), styles);
+			if (handled) {
+				int numberOfStyles = styles.size();
+				if (numberOfStyles > 0) {
+					StyleRange firstRange = (StyleRange) styles.get(0);
+					StyleRange lastRange = (StyleRange) styles.get(numberOfStyles - 1);
 
-			for(Iterator it = styles.iterator(); handled && it.hasNext(); )
-				presentation.addStyleRange((StyleRange)it.next());
+					/*
+					 * Check that the first and last prepared StyleRanges fall
+					 * within the requested region
+					 */
+					if (region.getOffset() <= firstRange.start && (lastRange.start + lastRange.length) <= (region.getOffset() + region.getLength())) {
+						for (int i = 0; i < numberOfStyles; i++) {
+							presentation.addStyleRange((StyleRange) styles.get(i));
+						}
+					}
+				}
+			}
 		}
-			
 	}
 	
 	public void setProvider(LineStyleProvider provider) {

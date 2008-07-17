@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,7 +30,9 @@ public interface LineStyleProvider {
 
 	/**
 	 * Optionally appends StyleRanges to the styleRanges Collection, in order,
-	 * and only covering the given range within the document.
+	 * and only covering the given range within the document. StyleRanges added
+	 * to the collection should not expand outside of the range of the currentRegion
+	 * ITypedRegion.
 	 * 
 	 * @param currentRegion -
 	 *            the current document partition
