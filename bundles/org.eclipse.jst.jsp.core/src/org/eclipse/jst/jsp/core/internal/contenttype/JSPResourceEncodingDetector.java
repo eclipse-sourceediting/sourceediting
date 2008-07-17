@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.encoding.CodedIO;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
@@ -377,7 +378,7 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 	 * responsibility of the tokenizer to stop when appropriate and not go too
 	 * far.
 	 */
-	private void parseHeader(JSPHeadTokenizer tokenizer) throws IOException {
+	private void parseHeader(JSPHeadTokenizer tokenizer) throws Exception {
 		fPageEncodingValue = null;
 		fCharset = null;
 
@@ -389,7 +390,6 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 			if (canHandleAsUnicodeStream(tokenType))
 				unicodeCase = true;
 			else {
-
 				if (tokenType == XMLHeadTokenizerConstants.XMLDelEncoding) {
 					if (tokenizer.hasMoreTokens()) {
 						HeadParserToken valueToken = tokenizer.getNextToken();
@@ -438,21 +438,23 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 		if (tokenizer.isWML() ) {
 			fWML = true;
 		}
-		
-
 	}
 
 	private void parseInput() throws IOException {
 		JSPHeadTokenizer tokenizer = getTokinizer();
 		fReader.reset();
 		tokenizer.reset(fReader);
-		parseHeader(tokenizer);
-		// unicode stream cases are created directly in parseHeader
-		if (!unicodeCase) {
-			String enc = getAppropriateEncoding();
-			if (enc != null && enc.length() > 0) {
-				createEncodingMemento(enc, EncodingMemento.FOUND_ENCODING_IN_CONTENT);
+		try {
+			parseHeader(tokenizer);
+			// unicode stream cases are created directly in parseHeader
+			if (!unicodeCase) {
+				String enc = getAppropriateEncoding();
+				if (enc != null && enc.length() > 0) {
+					createEncodingMemento(enc, EncodingMemento.FOUND_ENCODING_IN_CONTENT);
+				}
 			}
+		} catch (Exception e) {
+			Logger.log(Logger.ERROR_DEBUG, e.getMessage());
 		}
 	}
 

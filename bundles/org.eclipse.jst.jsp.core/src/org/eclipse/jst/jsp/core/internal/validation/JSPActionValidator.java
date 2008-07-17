@@ -56,7 +56,9 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
 
 /**
  * Checks for: missing required attributes & undefined attributes in jsp
@@ -108,19 +110,49 @@ public class JSPActionValidator extends JSPValidator {
 			if (attr.getUsage() == CMAttributeDeclaration.REQUIRED) {
 				Attr a = element.getAttributeNode(attr.getAttrName());
 				if (a == null) {
-					String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_5, attr.getAttrName());
-					LocalizedMessage message = new LocalizedMessage(fSeverityMissingRequiredAttribute, msgText, file);
-					int start = element.getStartOffset();
-					int length = element.getStartEndOffset() - start;
-					int lineNo = document.getLineOfOffset(start);
-					message.setLineNo(lineNo);
-					message.setOffset(start);
-					message.setLength(length);
-
-					reporter.addMessage(fMessageOriginator, message);
+					// Attribute may be defined using a jsp:attribute action
+					if (!checkJSPAttributeAction(element, attr)) {
+						String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_5, attr.getAttrName());
+						LocalizedMessage message = new LocalizedMessage(fSeverityMissingRequiredAttribute, msgText, file);
+						int start = element.getStartOffset();
+						int length = element.getStartEndOffset() - start;
+						int lineNo = document.getLineOfOffset(start);
+						message.setLineNo(lineNo);
+						message.setOffset(start);
+						message.setLength(length);
+	
+						reporter.addMessage(fMessageOriginator, message);
+					}
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Checks for jsp:attribute actions of <code>element</code> to see if they
+	 * satisfy the required attribute <code>attr</code>
+	 * 
+	 * @param element The element with a required attribute
+	 * @param attr The required attribute
+	 * @return <code>true</code> if a jsp:attribute action has the name of
+	 * the required attribute <code>attr</code>; <code>false</code> otherwise.
+	 */
+	private boolean checkJSPAttributeAction(IDOMElement element, CMAttributeDeclaration attr) {
+		if (element != null && attr != null) {
+			NodeList elements = element.getElementsByTagName("jsp:attribute"); //$NON-NLS-1$
+			String neededAttrName = attr.getNodeName();
+			for (int i = 0; i < elements.getLength(); i++) {
+				Element childElement = (Element) elements.item(i);
+				/*
+				 * Get the name attribute of jsp:attribute and compare its
+				 * value to the required attribute name
+				 */
+				if (neededAttrName.equals(childElement.getAttribute("name"))) {//$NON-NLS-1$
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private boolean checkUnknownAttributes(IDOMElement element, CMNamedNodeMap cmAttrs, IReporter reporter, IFile file, IStructuredDocument document, IStructuredDocumentRegion documentRegion) {
