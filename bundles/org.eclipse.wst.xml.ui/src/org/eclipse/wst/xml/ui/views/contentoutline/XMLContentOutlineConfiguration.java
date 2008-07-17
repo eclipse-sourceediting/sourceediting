@@ -90,7 +90,9 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 			if (fActionManager == null) {
 				fActionManager = createNodeActionManager(fTreeViewer);
 			}
-			fActionManager.fillContextMenu(manager, fTreeViewer.getSelection());
+			if (fActionManager != null) {
+				fActionManager.fillContextMenu(manager, fTreeViewer.getSelection());
+			}
 		}
 
 		/*
