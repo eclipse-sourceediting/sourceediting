@@ -10,9 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.validate;
 
-import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
@@ -31,8 +29,7 @@ import org.w3c.dom.Node;
 public class MessageFactory implements ErrorState {
 
 
-	private static Map fPreferences = new HashMap();
-	private static IProject fProject;
+	private IProject fProject;
 	
 	public MessageFactory() {
 		init();
@@ -73,8 +70,7 @@ public class MessageFactory implements ErrorState {
 		else
 			severity = new InstanceScope().getNode(HTMLCorePlugin.getDefault().getBundle().getSymbolicName()).getInt(key, ValidationMessage.WARNING);
 			
-		ErrorTable.Packet packet = errorTable.put(state, msg, severity);
-		fPreferences.put(key, packet);
+		errorTable.put(state, msg, severity);
 	}
 	
 	private void init() {
