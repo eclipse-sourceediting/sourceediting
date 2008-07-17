@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,8 @@ import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
 import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclaration;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleRule;
 import org.eclipse.wst.css.ui.internal.image.CSSImageType;
 
 class CSSProposalGeneratorForDeclarationName extends CSSProposalGenerator {
@@ -73,7 +75,7 @@ class CSSProposalGeneratorForDeclarationName extends CSSProposalGenerator {
 		// Collections.sort(names);
 
 		boolean bAddColon = true;
-		if (targetNode instanceof ICSSStyleDeclItem && fContext.targetHas(CSSRegionContexts.CSS_DECLARATION_SEPARATOR)) {
+		if ((targetNode instanceof ICSSStyleRule || targetNode instanceof ICSSStyleDeclItem || targetNode instanceof ICSSStyleDeclaration) && fContext.targetHas(CSSRegionContexts.CSS_DECLARATION_SEPARATOR)) {
 			bAddColon = false;
 		}
 

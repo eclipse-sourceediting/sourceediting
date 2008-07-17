@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.wst.css.ui.internal.contentassist;
 
 
 
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
@@ -52,7 +53,10 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 		IDOMNode parent = null;
 		CSSProposalArranger arranger = null;
 		boolean isEmptyDocument = false;
-
+		// If there is a selected region, we'll need to replace the text
+		ITextSelection selection = (ITextSelection) viewer.getSelectionProvider().getSelection();
+		boolean selected = (selection != null && selection.getText() != null && selection.getText().trim().length() > 0);
+		
 		// bail if we couldn't get an indexed node
 		// if(indexedNode == null) return new ICompletionProposal[0];
 		if (indexedNode instanceof IDOMNode) {
@@ -72,7 +76,7 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 				if (keyIndexedNode == null) {
 					keyIndexedNode = (IndexedRegion) ((ICSSModel) cssModel).getDocument();
 				}
-				arranger = new CSSProposalArranger(pos, (ICSSNode) keyIndexedNode, offset, (char) 0);
+				arranger = new CSSProposalArranger(pos, (ICSSNode) keyIndexedNode, offset, (char) 0, selected);
 			}
 		} else if ((parent != null) && parent.getNodeName().equalsIgnoreCase(HTML40Namespace.ElementName.STYLE)) {
 			// now we know the cursor is in a <style> tag with a region
@@ -86,7 +90,7 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 				if (keyIndexedNode == null) {
 					keyIndexedNode = (IndexedRegion) ((ICSSModel) cssModel).getDocument();
 				}
-				arranger = new CSSProposalArranger(pos, (ICSSNode) keyIndexedNode, offset, (char) 0);
+				arranger = new CSSProposalArranger(pos, (ICSSNode) keyIndexedNode, offset, (char) 0, selected);
 			}
 		} else if (indexedNode instanceof IDOMNode) {
 			// get model for node w/ style attribute
@@ -98,7 +102,7 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 				}
 				if (keyIndexedNode instanceof ICSSNode) {
 					// inline style for a tag, not embedded
-					arranger = new CSSProposalArranger(documentPosition, (ICSSNode) keyIndexedNode, fDocumentOffset, fQuote);
+					arranger = new CSSProposalArranger(documentPosition, (ICSSNode) keyIndexedNode, fDocumentOffset, fQuote, selected);
 				}
 			}
 		} else if (indexedNode instanceof ICSSNode) {
@@ -114,7 +118,7 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 					}
 					if (keyIndexedNode instanceof ICSSNode) {
 						// inline style for a tag, not embedded
-						arranger = new CSSProposalArranger(documentPosition, (ICSSNode) keyIndexedNode, fDocumentOffset, fQuote);
+						arranger = new CSSProposalArranger(documentPosition, (ICSSNode) keyIndexedNode, fDocumentOffset, fQuote, selected);
 					}
 				}
 			}
