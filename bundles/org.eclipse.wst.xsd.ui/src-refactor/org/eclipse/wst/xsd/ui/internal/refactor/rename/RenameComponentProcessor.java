@@ -14,7 +14,6 @@ package org.eclipse.wst.xsd.ui.internal.refactor.rename;
 //import com.ibm.icu.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
-//import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -30,11 +29,11 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jface.text.Position;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.ltk.core.refactoring.TextChange;
-//import org.eclipse.ltk.core.refactoring.TextFileChange;
 import org.eclipse.ltk.core.refactoring.participants.CheckConditionsContext;
 import org.eclipse.ltk.core.refactoring.participants.ParticipantManager;
 import org.eclipse.ltk.core.refactoring.participants.RefactoringParticipant;
@@ -51,6 +50,7 @@ import org.eclipse.wst.common.core.search.scope.SearchScope;
 import org.eclipse.wst.common.core.search.scope.SelectionSearchScope;
 import org.eclipse.wst.common.core.search.scope.WorkspaceSearchScope;
 import org.eclipse.wst.common.core.search.util.CollectingSearchRequestor;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.search.XMLComponentDeclarationPattern;
 import org.eclipse.wst.xml.core.internal.search.XMLComponentReferencePattern;
 import org.eclipse.wst.xsd.ui.internal.refactor.Checks;
@@ -134,16 +134,34 @@ public class RenameComponentProcessor extends RenameProcessor implements INameUp
         }  
 		searchEngine.search(pattern, requestor, scope, map, new NullProgressMonitor());
 		List results = requestor.getResults();
+		
+		// more than one declaration found, so use offset as additional check
+		Position offsetPosition = null;
+		if (results.size() > 1) {
+		    IDOMElement selectedElement = selectedComponent.getElement();
+		    if (selectedElement != null) {
+		    	int startOffset = selectedElement.getStartOffset();
+		    	offsetPosition = new Position(startOffset, (selectedElement.getEndOffset() - startOffset));
+		    }
+		}
+		
 		for (Iterator iter = results.iterator(); iter.hasNext();) {
 			SearchMatch match = (SearchMatch) iter.next();
 			if (match != null) {
-				TextChange textChange = manager.get(match.getFile());
-				String newName = getNewElementName();
-				newName = quoteString(newName);
-
-				ReplaceEdit replaceEdit = new ReplaceEdit(match.getOffset(), match.getLength(), newName);
-				String editName = RefactoringMessages.getString("RenameComponentProcessor.Component_Refactoring_update_declatation");
-				TextChangeCompatibility.addTextEdit(textChange, editName, replaceEdit);
+				boolean addTextChange = true;
+				// additional check to verify correct declaration is changed
+				if (offsetPosition != null) {
+					addTextChange = offsetPosition.overlapsWith(match.getOffset(), match.getLength());  
+				}
+				if (addTextChange) {
+					TextChange textChange = manager.get(match.getFile());
+					String newName = getNewElementName();
+					newName = quoteString(newName);
+	
+					ReplaceEdit replaceEdit = new ReplaceEdit(match.getOffset(), match.getLength(), newName);
+					String editName = RefactoringMessages.getString("RenameComponentProcessor.Component_Refactoring_update_declatation");
+					TextChangeCompatibility.addTextEdit(textChange, editName, replaceEdit);
+				}
 			}
 		}
 	}
