@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,6 +38,7 @@ class CSSContentAssistContext {
 	private int fDocumentOffset = 0;
 	private char fQuote = 0;
 	private ICSSModel fModel = null;
+	private boolean fSelected = false;
 
 	/**
 	 *  
@@ -54,6 +55,15 @@ class CSSContentAssistContext {
 		fCursorPos = documentPosition;
 		fDocumentOffset = documentOffset;
 		fQuote = quote;
+		initialize(node.getOwnerDocument());
+	}
+	
+	CSSContentAssistContext(int documentPosition, ICSSNode node, int documentOffset, char quote, boolean selected) {
+		this();
+		fCursorPos = documentPosition;
+		fDocumentOffset = documentOffset;
+		fQuote = quote;
+		fSelected = selected;
 		initialize(node.getOwnerDocument());
 	}
 
@@ -279,7 +289,7 @@ class CSSContentAssistContext {
 		} else {
 			String regionText = documentRegion.getText(targetRegion);
 			int regionStart = documentRegion.getStartOffset(targetRegion);
-			if (regionStart == fCursorPos || regionText.trim().length() == 0 || regionStart + regionText.length() - 1 < fTargetPos) {
+			if (!fSelected && (regionStart == fCursorPos || regionText.trim().length() == 0 || regionStart + regionText.length() - 1 < fTargetPos)) {
 				// to insertion
 				fReplaceBegin = fCursorPos;
 				fTextToReplace = ""; //$NON-NLS-1$
@@ -288,7 +298,10 @@ class CSSContentAssistContext {
 				// to replace
 				fReplaceBegin = regionStart;
 				fTextToReplace = regionText;
-				fTextToCompare = regionText.substring(0, fCursorPos - fReplaceBegin);
+				if(fCursorPos >= fReplaceBegin && regionText.trim().length() >= (fCursorPos - fReplaceBegin))
+					fTextToCompare = regionText.substring(0, fCursorPos - fReplaceBegin);
+				else
+					fTextToCompare = ""; //$NON-NLS-1$
 			}
 		}
 	}
@@ -299,7 +312,7 @@ class CSSContentAssistContext {
 	private boolean isSpecialDelimiterRegion(int pos) {
 		ITextRegion region = getRegionByOffset(pos);
 		String type = region.getType();
-		return (type == CSSRegionContexts.CSS_LBRACE || type == CSSRegionContexts.CSS_RBRACE || type == CSSRegionContexts.CSS_DELIMITER || type == CSSRegionContexts.CSS_DECLARATION_SEPARATOR || type == CSSRegionContexts.CSS_DECLARATION_DELIMITER || type == CSSRegionContexts.CSS_DECLARATION_VALUE_OPERATOR);
+		return (type == CSSRegionContexts.CSS_LBRACE || type == CSSRegionContexts.CSS_RBRACE || type == CSSRegionContexts.CSS_DELIMITER || type == CSSRegionContexts.CSS_DECLARATION_SEPARATOR || type == CSSRegionContexts.CSS_DECLARATION_DELIMITER || type == CSSRegionContexts.CSS_DECLARATION_VALUE_OPERATOR || type == CSSRegionContexts.CSS_S);
 	}
 
 	/**
@@ -372,12 +385,11 @@ class CSSContentAssistContext {
 	 *  
 	 */
 	boolean targetHas(String regionType) {
-		int start = ((IndexedRegion) fTargetNode).getStartOffset();
 		int end = ((IndexedRegion) fTargetNode).getEndOffset();
-		if (start < 0 || end <= 0) {
+		if (getTargetPos() < 0 || end <= 0) {
 			return false;
 		}
-		RegionIterator iRegion = new RegionIterator(fStructuredDocument, start);
+		RegionIterator iRegion = new RegionIterator(fStructuredDocument, getTargetPos());
 		while (iRegion.hasNext()) {
 			ITextRegion region = iRegion.next();
 			if (end <= iRegion.getStructuredDocumentRegion().getStartOffset(region)) {

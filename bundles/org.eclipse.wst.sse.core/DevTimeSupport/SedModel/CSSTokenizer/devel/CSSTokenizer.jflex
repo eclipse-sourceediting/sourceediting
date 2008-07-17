@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,10 +29,9 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 %function primGetNextToken
 %type String
 %char
-%line
 %unicode
 %caseless
-%debug
+//%debug
 %pack
 
 %{
@@ -163,7 +162,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 	
 	/* user method */
 	public final boolean isEOF() {
-		return yy_atEOF;
+		return zzAtEOF;
 	}
 
 	/* user method */
@@ -174,36 +173,36 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 	/* user method */
 	public final void reset(java.io.Reader in, int newOffset) {
 		/** the input device */
-		yy_reader = in;
+		zzReader = in;
 
 		/** the current state of the DFA */
-		yy_state = 0;
+		zzState = 0;
 
 		/** the current lexical state */
-		yy_lexical_state = fInitialState; //YYINITIAL;
+		zzLexicalState = fInitialState; //YYINITIAL;
 
 		/** this buffer contains the current text to be matched and is
 			the source of the yytext() string */
-		if (yy_buffer.length != fInitialBufferSize) {
-			yy_buffer = new char[fInitialBufferSize];
+		if (zzBuffer.length != fInitialBufferSize) {
+			zzBuffer = new char[fInitialBufferSize];
 		}
-		java.util.Arrays.fill(yy_buffer, (char)0);
+		java.util.Arrays.fill(zzBuffer, (char)0);
 
 		/** the textposition at the last accepting state */
-		yy_markedPos = 0;
+		zzMarkedPos = 0;
 
 		/** the textposition at the last state to be included in yytext */
-		yy_pushbackPos = 0;
+//		yy_pushbackPos = 0;
 
 		/** the current text position in the buffer */
-		yy_currentPos = 0;
+		zzCurrentPos = 0;
 
 		/** startRead marks the beginning of the yytext() string in the buffer */
-		yy_startRead = 0;
+		zzStartRead = 0;
 
 		/** endRead marks the last character in the buffer, that has been read
 			from input */
-		yy_endRead = 0;
+		zzEndRead = 0;
 
 		/** number of newlines encountered up to the start of the matched text */
 		yyline = 0;
@@ -220,10 +219,10 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 		/** 
 		 * yy_atBOL == true <=> the scanner is currently at the beginning of a line
 		 */
-		yy_atBOL = false;
+//		yy_atBOL = false;
 		
-		/** yy_atEOF == true <=> the scanner has returned a value for EOF */
-		yy_atEOF = false;
+		/** zzAtEOF == true <=> the scanner has returned a value for EOF */
+		zzAtEOF = false;
 
 		/* user variables */
 		//		fUndefined.delete(0, fUndefined.length());
@@ -234,6 +233,15 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 		super();
 	}
 
+	/**
+	 * Added to workaround stricter compilation options without creating
+	 * an alternate skeleton file
+	 */
+	void _usePrivates() {
+		System.out.print(yycolumn);
+		System.out.print(yyline);
+		System.out.print(Boolean.toString(zzAtBOL));
+	}
 %}
 
 %state ST_CHARSET_NAME
@@ -270,6 +278,7 @@ string1 = \"([\t !#$%&(-~]|\\{nl}|\'|{nonascii}|{escape})*\"
 string2 = \'([\t !#$%&(-~]|\\{nl}|\"|{nonascii}|{escape})*\'
 
 ident = -?{nmstart}{nmchar}*
+value_ident = -?{nmstart}"."?({nmchar}+"."?)*
 
 name = {nmchar}+
 num = [+-]?([0-9]+|[0-9]*"."[0-9]+)
@@ -407,8 +416,8 @@ unicode_range = "U"\+[0-9a-fA-F?]{1,6}("-"[0-9a-fA-F?]{1,6})?
 <YYINITIAL, ST_SELECTOR_MODIFIER, ST_SELECTOR> {
 	"*" { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_UNIVERSAL; }
 	{hash} { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_ID; }
-//	":"{ident} { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_PSEUDO; }
-	":"{ident}("("{s}*{ident}{s}*")")? { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_PSEUDO; }
+//	":"{ident}("("{s}*{ident}{s}*")")? { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_PSEUDO; }
+	":"({ident}("("{s}*{ident}{s}*")")?)? { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_PSEUDO; }
 	"."{name} { yybegin(ST_SELECTOR_MODIFIER); return CSS_SELECTOR_CLASS; }
 	"[" { yybegin(ST_SELECTOR_ATTRIBUTE_NAME); return CSS_SELECTOR_ATTRIBUTE_START; }
 }
@@ -420,7 +429,7 @@ unicode_range = "U"\+[0-9a-fA-F?]{1,6}("-"[0-9a-fA-F?]{1,6})?
 <ST_SELECTOR_MODIFIER> {
 	"," { yybegin(ST_SELECTOR); return CSS_SELECTOR_SEPARATOR; }
 	// using LOOKAHEAD
-	{s}+/[^+>\{/] { yybegin(ST_SELECTOR); return CSS_SELECTOR_COMBINATOR; }
+	{s}+/[^+>\{,/] { yybegin(ST_SELECTOR); return CSS_SELECTOR_COMBINATOR; }
 	"+"|">" { yybegin(ST_SELECTOR); return CSS_SELECTOR_COMBINATOR; }
 	"{" { yybegin(ST_DECLARATION); return CSS_LBRACE; }
 }
@@ -469,7 +478,7 @@ unicode_range = "U"\+[0-9a-fA-F?]{1,6}("-"[0-9a-fA-F?]{1,6})?
 	// ordered following two rules deliberately, see 
 	//  https://bugs.eclipse.org/bugs/show_bug.cgi?id=129902
 	{num}{ident} { yybegin(ST_DECLARATION_VALUE); return CSS_DECLARATION_VALUE_DIMENSION; }
-	{ident} { yybegin(ST_DECLARATION_VALUE); return CSS_DECLARATION_VALUE_IDENT; }
+	{value_ident} { yybegin(ST_DECLARATION_VALUE); return CSS_DECLARATION_VALUE_IDENT; }
 
 
 	{num}"%" { yybegin(ST_DECLARATION_VALUE); return CSS_DECLARATION_VALUE_PERCENTAGE; }

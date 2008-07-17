@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -77,12 +77,11 @@ class CSSProposalGeneratorForPseudoSelector extends CSSProposalGenerator {
 
 			int cursorPos = 0;
 			StringBuffer buf = new StringBuffer();
-			if (hasLeadingColon) {
-				buf.append(text.substring(1));
-			} else {
+			
+			if (!hasLeadingColon)
 				buf.append(textToReplace);
-				buf.append(text);
-			}
+			
+			buf.append(text);
 			cursorPos += buf.length();
 
 			if (0 < buf.length()) {
@@ -136,21 +135,5 @@ class CSSProposalGeneratorForPseudoSelector extends CSSProposalGenerator {
 			}
 		}
 		return tagList;
-	}
-
-	/**
-	 *  
-	 */
-	protected boolean isMatch(String text) {
-		if (!super.isMatch(text)) {
-			ITextRegion region = fContext.getTargetRegion();
-			if (region != null && region.getType() == CSSRegionContexts.CSS_SELECTOR_PSEUDO) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return true;
-		}
 	}
 }

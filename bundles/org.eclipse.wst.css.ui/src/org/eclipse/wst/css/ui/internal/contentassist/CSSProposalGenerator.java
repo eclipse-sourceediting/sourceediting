@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,7 +23,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
 import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
-import org.eclipse.wst.css.core.internal.util.RegionIterator;
 import org.eclipse.wst.css.ui.internal.image.CSSImageHelper;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
@@ -55,7 +54,7 @@ abstract class CSSProposalGenerator {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	protected boolean checkLeadingColon() {
 		boolean hasLeadingColon = false;
@@ -65,20 +64,20 @@ abstract class CSSProposalGenerator {
 			if (targetRegion != null && targetRegion.getType() == CSSRegionContexts.CSS_SELECTOR_PSEUDO) {
 				hasLeadingColon = true;
 			}
-		} else if (targetRegion != null) {
-			RegionIterator iterator = fContext.getRegionIterator();
-			if (iterator.hasPrev()) {
-				iterator.prev();
-				if (iterator.hasPrev() && iterator.prev().getType() == CSSRegionContexts.CSS_SELECTOR_PSEUDO) {
-					hasLeadingColon = true;
-				}
+		}
+		else if (targetRegion != null) {
+			// BUG 92848 - Changed how pseudo-selectors are defined in the
+			// tokenizer
+			// The target region should be the CSS_SELECTOR_PSEUDO now
+			if (targetRegion.getType() == CSSRegionContexts.CSS_SELECTOR_PSEUDO) {
+				hasLeadingColon = true;
 			}
 		}
 		return hasLeadingColon;
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	protected StringAndOffset generateBraces() {
 		StringBuffer buf = new StringBuffer();
@@ -106,7 +105,7 @@ abstract class CSSProposalGenerator {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	protected StringAndOffset generateParenthesis() {
 		StringBuffer buf = new StringBuffer();
@@ -118,7 +117,7 @@ abstract class CSSProposalGenerator {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	protected StringAndOffset generateQuotes() {
 		StringBuffer buf = new StringBuffer();
@@ -129,7 +128,7 @@ abstract class CSSProposalGenerator {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	protected StringAndOffset generateSemicolon() {
 		StringBuffer buf = new StringBuffer();
@@ -140,11 +139,11 @@ abstract class CSSProposalGenerator {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	protected StringAndOffset generateURI() {
 		StringBuffer buf = new StringBuffer();
-		
+
 		boolean isQuoteInURI = CSSCorePlugin.getDefault().getPluginPreferences().getBoolean(CSSCorePreferenceNames.FORMAT_QUOTE_IN_URI);
 		char quoteChar = getQuoteChar();
 		buf.append("url(");//$NON-NLS-1$
@@ -196,7 +195,7 @@ abstract class CSSProposalGenerator {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	protected boolean isMatch(String text) {
 		String textToCompare = fContext.getTextToCompare();
@@ -211,7 +210,7 @@ abstract class CSSProposalGenerator {
 		 * (text.toUpperCase().indexOf(textToReplace.toUpperCase()) == 0); }
 		 */
 	}
-	
+
 
 	private String getIndentString() {
 		StringBuffer indent = new StringBuffer();
