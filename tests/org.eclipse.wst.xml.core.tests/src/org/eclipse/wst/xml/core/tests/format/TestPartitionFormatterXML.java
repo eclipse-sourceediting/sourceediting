@@ -162,17 +162,26 @@ public class TestPartitionFormatterXML extends TestCase {
 
 	public void testSimpleXml() throws UnsupportedEncodingException, IOException, CoreException {
 		// results are different than old formatter
-		formatAndAssertEquals("testfiles/xml/simple-standalone.xml", "testfiles/xml/simple-standalone-newfmt.xml");
+		// Bug [228495] - Result should have blank lines cleared
+		XMLFormattingPreferences prefs = new XMLFormattingPreferences();
+		prefs.setClearAllBlankLines(true);
+		formatAndAssertEquals("testfiles/xml/simple-standalone.xml", "testfiles/xml/simple-standalone-newfmt.xml", prefs);
 	}
 
 	public void testPreserveFormat() throws UnsupportedEncodingException, IOException, CoreException {
 		// results are different than old formatter
-		formatAndAssertEquals("testfiles/xml/xml-space-preserve-standalone.xml", "testfiles/xml/xml-space-preserve-standalone-newfmt.xml");
+		// Bug [228495] - Result should have blank lines cleared
+		XMLFormattingPreferences prefs = new XMLFormattingPreferences();
+		prefs.setClearAllBlankLines(true);
+		formatAndAssertEquals("testfiles/xml/xml-space-preserve-standalone.xml", "testfiles/xml/xml-space-preserve-standalone-newfmt.xml", prefs);
 	}
 
 	public void testPreserveFormatDTD() throws UnsupportedEncodingException, IOException, CoreException {
 		// results are different than old formatter
-		formatAndAssertEquals("testfiles/xml/xml-space-preserve-dtd.xml", "testfiles/xml/xml-space-preserve-dtd-newfmt.xml");
+		// Bug [228495] - Result should have blank lines cleared
+		XMLFormattingPreferences prefs = new XMLFormattingPreferences();
+		prefs.setClearAllBlankLines(true);
+		formatAndAssertEquals("testfiles/xml/xml-space-preserve-dtd.xml", "testfiles/xml/xml-space-preserve-dtd-newfmt.xml", prefs);
 	}
 
 	public void testOneLineFormat() throws UnsupportedEncodingException, IOException, CoreException {
@@ -201,13 +210,16 @@ public class TestPartitionFormatterXML extends TestCase {
 	public void testEntityFormat() throws UnsupportedEncodingException, IOException, CoreException {
 		// results are different than old formatter
 		// BUG102076
-		formatAndAssertEquals("testfiles/xml/entities.xml", "testfiles/xml/entities-newfmt.xml");
+		XMLFormattingPreferences prefs = new XMLFormattingPreferences();
+		prefs.setClearAllBlankLines(true);
+		formatAndAssertEquals("testfiles/xml/entities.xml", "testfiles/xml/entities-newfmt.xml", prefs);
 	}
 
 	public void testPreservePCDATAFormat() throws UnsupportedEncodingException, IOException, CoreException {
 		// BUG84688
 		XMLFormattingPreferences prefs = new XMLFormattingPreferences();
 		prefs.setPCDataWhitespaceStrategy(XMLFormattingPreferences.PRESERVE);
+		prefs.setClearAllBlankLines(true);
 		formatAndAssertEquals("testfiles/xml/xml-preservepcdata.xml", "testfiles/xml/xml-preservepcdata-yes-fmt.xml", prefs);
 
 		// results are different than old formatter
@@ -270,5 +282,21 @@ public class TestPartitionFormatterXML extends TestCase {
 	public void testComments() throws UnsupportedEncodingException, IOException, CoreException {
 		// Bug 226821
 		formatAndAssertEquals("testfiles/xml/xml-comment.xml", "testfiles/xml/xml-comment-newfmt.xml");
+	}
+	
+	public void testKeepEmptyLines() throws UnsupportedEncodingException, IOException, CoreException {
+		// Bug 228495
+		// Test that formatting keeps empty lines
+		XMLFormattingPreferences prefs = new XMLFormattingPreferences();
+		prefs.setClearAllBlankLines(false);
+		formatAndAssertEquals("testfiles/xml/xml-keep-blank-lines.xml", "testfiles/xml/xml-keep-blank-lines-fmt.xml", prefs);
+	}
+	
+	public void testClearBlankLines() throws UnsupportedEncodingException, IOException, CoreException {
+		// Bug 228495
+		// Test that formatting clears empty lines
+		XMLFormattingPreferences prefs = new XMLFormattingPreferences();
+		prefs.setClearAllBlankLines(true);
+		formatAndAssertEquals("testfiles/xml/xml-keep-blank-lines.xml", "testfiles/xml/xml-clear-blank-lines-fmt.xml", prefs);
 	}
 }
