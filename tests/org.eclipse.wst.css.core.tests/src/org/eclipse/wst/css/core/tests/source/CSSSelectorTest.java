@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -753,6 +753,43 @@ public class CSSSelectorTest extends TestCase {
 		checkSimpleSelectorClasses(item, new String[]{"123f567"});
 	}
 
+	// Bug 221504: whitespace preceding a selector separator was causing selectors
+	// to be merged
+	public void testSelector40() {
+		ICSSSelectorList list = createSelectorList("h1.fix , h2.fix, h3.fix , div#container");
+		checkSelectorList(list, "h1.fix, h2.fix, h3.fix, div#container", 4, 0);
+		
+		ICSSSelector selector;
+		ICSSSelectorItem item;
+		
+		selector = list.getSelector(0);
+		checkSelector(selector, "h1.fix", 1, 101, 0);
+		
+		item = selector.getItem(0);
+		checkSimpleSelector(item, "h1", false, 0, 1, 0, 0);
+		checkSimpleSelectorClasses(item, new String[] {"fix"});
+		
+		selector = list.getSelector(1);
+		checkSelector(selector, "h2.fix", 1, 101, 0);
+		
+		item = selector.getItem(0);
+		checkSimpleSelector(item, "h2", false, 0, 1, 0, 0);
+		checkSimpleSelectorClasses(item, new String[] {"fix"});
+		
+		selector = list.getSelector(2);
+		checkSelector(selector, "h3.fix", 1, 101, 0);
+		
+		item = selector.getItem(0);
+		checkSimpleSelector(item, "h3", false, 0, 1, 0, 0);
+		checkSimpleSelectorClasses(item, new String[] {"fix"});
+		
+		selector = list.getSelector(3);
+		checkSelector(selector, "div#container", 1, 10001, 0);
+		
+		item = selector.getItem(0);
+		checkSimpleSelector(item, "div", false, 0, 0, 1, 0);
+		checkSimpleSelectorIDs(item, new String[] {"container"});
+	}
 
 	private void checkSelectorList(ICSSSelectorList list, String formattedSource, int nSelectors, int nErrors) {
 		assertEquals(formattedSource, list.getString());
