@@ -10,13 +10,16 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.validate;
 
+import java.util.List;
+
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class HTMLElementContentValidator extends PrimeValidator {
 
@@ -42,17 +45,27 @@ public class HTMLElementContentValidator extends PrimeValidator {
 		if (CMUtil.isForeign(target))
 			return;
 
-		validateContent(target, target.getChildNodes());
+		validateContent(target, target.getFirstChild());
 	}
 
-	private void validateContent(Element parent, NodeList children) {
-		for (int i = 0; i < children.getLength(); i++) {
-			Node child = children.item(i);
-			if (child == null)
-				continue;
+	private void validateContent(Element parent, Node child) {
+		if (child == null)
+			return;
 
+		CMElementDeclaration ed = CMUtil.getDeclaration(parent);
+		if(ed == null || ed.getContentType() == CMElementDeclaration.ANY)
+			return;
+		
+		/*
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=218143 - 
+		 * ModelQuery use not pervasive enough
+		 */
+		List availableChildElementDeclarations = ModelQueryUtil.getModelQuery(parent.getOwnerDocument()).getAvailableContent(parent, ed, ModelQuery.INCLUDE_CHILD_NODES);
+
+		while (child != null) {
 			// perform actual validation
-			validateNode(parent, child);
+			validateNode(parent, child, ed, availableChildElementDeclarations);
+			child = child.getNextSibling();
 		}
 	}
 
@@ -79,12 +92,11 @@ public class HTMLElementContentValidator extends PrimeValidator {
 	// private int getMaxOccur(Element parent, String childTag) {
 	// return 1;
 	// }
-	private void validateNode(Element target, Node child) {
+	private void validateNode(Element target, Node child, CMElementDeclaration edec, List availableChildElementDeclarations) {
 		// NOTE: If the target element is 'UNKNOWN', that is, it has no
 		// element declaration, the content type of the element should be
 		// regarded as 'ANY'. -- 9/10/2001
 		int contentType = CMElementDeclaration.ANY;
-		CMElementDeclaration edec = CMUtil.getDeclaration(target);
 		if (edec != null)
 			contentType = edec.getContentType();
 
@@ -105,7 +117,7 @@ public class HTMLElementContentValidator extends PrimeValidator {
 				// Defect 186774: If a child is not one of HTML elements,
 				// it should be regarded as a valid child regardless the
 				// type of the parent content model. -- 10/12/2001
-				if (ced == null || CMUtil.isSSI(ced) || (!CMUtil.isHTML(ced)))
+				if (ced == null || CMUtil.isSSI(ced) || (!CMUtil.isHTML(ced)) || availableChildElementDeclarations.contains(ced))
 					return;
 
 				switch (contentType) {
