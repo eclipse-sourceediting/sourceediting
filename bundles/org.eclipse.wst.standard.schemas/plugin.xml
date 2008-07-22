@@ -66,8 +66,43 @@
                 uri="dtds/wml13.dtd"
                 webURL="http://www.wapforum.org/DTD/wml13.dtd">
             </public>
-
+            
+            
+            <public
+                publicId="-//W3C//DTD HTML 4.01 Frameset//EN"
+                uri="dtds/frameset.dtd"
+                webURL="http://www.w3.org/TR/html4/frameset.dtd">
+            </public>
+            
+            <public
+                publicId="-//W3C//ENTITIES Latin 1//EN//HTML"
+                uri="dtds/HTMLlat1.ent"
+                webURL="HTMLlat1.ent">
+            </public>
+            
+            <public
+                publicId="-//W3C//ENTITIES Special//EN//HTM"
+                uri="dtds/HTMLspecial.ent"
+                webURL="HTMLspecial.ent">
+            </public>
+            
+            <public
+                publicId="-//W3C//ENTITIES Symbols//EN//HTML"
+                uri="dtds/HTMLsymbol.ent"
+                webURL="HTMLsymbol.ent">
+            </public>
+            
+            <public
+                publicId="-//W3C//DTD HTML 4.01 Transitional//EN"
+                uri="dtds/loose.dtd"
+                webURL="http://www.w3.org/TR/html4/loose.dtd">
+            </public>
         
+            <public
+                publicId="-//W3C//DTD HTML 4.01//EN"
+                uri="dtds/strict.dtd"
+                webURL="http://www.w3.org/TR/html4/strict.dtd">
+            </public>
 
             <uri
                 name="http://schemas.xmlsoap.org/wsdl/"
