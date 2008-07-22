@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
@@ -54,6 +56,9 @@ public class JSPJavaValidator extends JSPValidator {
 	private IPreferencesService fPreferencesService = null;
 	private static final String PREFERENCE_NODE_QUALIFIER = JSPCorePlugin.getDefault().getBundle().getSymbolicName();
 	private IScopeContext[] fScopes = null;
+	
+	private static final boolean UPDATE_JAVA_TASKS = true;
+	private static final String JAVA_TASK_MARKER_TYPE = "org.eclipse.jdt.core.task"; //$NON-NLS-1$
 
 	public JSPJavaValidator() {
 		this.fMessageOriginator = this;
@@ -177,14 +182,22 @@ public class JSPJavaValidator extends JSPValidator {
 				case IProblem.UnusedImport : {
 					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_JAVA_UNUSED_IMPORT);
 				}
-					break;
+				break;
+				case IProblem.MissingSerialVersion : {
+					// JSP files don't get serialized...right?
+					sev = ValidationMessage.IGNORE;
+				}
+				break;
 
 				default : {
 					if (problem.isError()) {
 						sev = IMessage.HIGH_SEVERITY;
 					}
-					else {
+					else if (problem.isWarning()) {
 						sev = IMessage.NORMAL_SEVERITY;
+					}
+					else {
+						sev = IMessage.LOW_SEVERITY;
 					}
 				}
 					if (sev == ValidationMessage.IGNORE) {
@@ -282,17 +295,67 @@ public class JSPJavaValidator extends JSPValidator {
 
 			if (!reporter.isCancelled()) {
 				loadPreferences(f);
+				// only update task markers if the model is the same as what's on disk
+				boolean updateJavaTasks = UPDATE_JAVA_TASKS && !domModel.isDirty() && f != null && f.isAccessible();
+
+				if (updateJavaTasks) {
+					// remove old Java task markers
+					try {
+						IMarker[] foundMarkers = f.findMarkers(JAVA_TASK_MARKER_TYPE, true, IResource.DEPTH_ONE);
+						for (int i = 0; i < foundMarkers.length; i++) {
+							foundMarkers[i].delete();
+						}
+					}
+					catch (CoreException e) {
+						Logger.logException(e);
+					}
+				}
 
 				translation.setProblemCollectingActive(true);
 				translation.reconcileCompilationUnit();
 				List problems = translation.getProblems();
 				// add new messages
 				for (int i = 0; i < problems.size() && !reporter.isCancelled(); i++) {
-					IMessage m = createMessageFromProblem((IProblem) problems.get(i), f, translation, domModel.getStructuredDocument());
-					if (m != null)
-						reporter.addMessage(fMessageOriginator, m);
+					IProblem problem = (IProblem) problems.get(i);
+					IMessage m = createMessageFromProblem(problem, f, translation, domModel.getStructuredDocument());
+					if (m != null) {
+						if (problem.getID() == IProblem.Task) {
+							if (updateJavaTasks) {
+								// add new Java task marker
+								try {
+									IMarker task = f.createMarker(JAVA_TASK_MARKER_TYPE);
+									task.setAttribute(IMarker.LINE_NUMBER, new Integer(m.getLineNumber()));
+									task.setAttribute(IMarker.CHAR_START, new Integer(m.getOffset()));
+									task.setAttribute(IMarker.CHAR_END, new Integer(m.getOffset() + m.getLength()));
+									task.setAttribute(IMarker.MESSAGE, m.getText());
+									task.setAttribute(IMarker.USER_EDITABLE, Boolean.FALSE);
+
+									switch (m.getSeverity()) {
+										case IMarker.PRIORITY_HIGH : {
+											task.setAttribute(IMarker.PRIORITY, new Integer(IMarker.PRIORITY_HIGH));
+										}
+											break;
+										case IMarker.PRIORITY_LOW : {
+											task.setAttribute(IMarker.PRIORITY, new Integer(IMarker.PRIORITY_LOW));
+										}
+											break;
+										default : {
+											task.setAttribute(IMarker.PRIORITY, new Integer(IMarker.PRIORITY_NORMAL));
+										}
+									}
+								}
+								catch (CoreException e) {
+									Logger.logException(e);
+								}
+							}
+						}
+						else {
+							reporter.addMessage(fMessageOriginator, m);
+						}
+					}
 				}
 			}
+			
 		}
 		unloadPreferences();
 	}
