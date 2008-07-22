@@ -562,7 +562,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 	protected String getContainedText(Node parent) {
 		NodeList children = parent.getChildNodes();
 		if (children.getLength() == 1) {
-			return children.item(0).getNodeValue().trim();
+			return getValue(children.item(0));
 		}
 		StringBuffer s = new StringBuffer();
 		Node child = parent.getFirstChild();
@@ -577,11 +577,20 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 				}
 			}
 			else {
-				s.append(child.getNodeValue().trim());
+				s.append(getValue(child));
 			}
 			child = child.getNextSibling();
 		}
 		return s.toString().trim();
+	}
+
+	private String getValue(Node n) {
+		if (n == null)
+			return ""; //$NON-NLS-1$
+		String value = n.getNodeValue();
+		if (value == null)
+			return ""; //$NON-NLS-1$
+		return value.trim();
 	}
 
 	public boolean isBuilderForGrammar(String grammarFileName) {
