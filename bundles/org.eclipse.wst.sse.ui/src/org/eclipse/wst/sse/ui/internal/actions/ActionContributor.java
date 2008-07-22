@@ -54,7 +54,7 @@ import org.eclipse.wst.sse.ui.internal.ui.OffsetStatusLineContributionItem;
  */
 public class ActionContributor extends TextEditorActionContributor implements ISourceViewerActionBarContributor, IExtendedContributor {
 
-	public static final boolean _showDebugStatus = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/actioncontributor/debugstatusfields")); //$NON-NLS-1$ //$NON-NLS-2$
+	public static final boolean _showDebugStatus = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/actioncontributor/debugstatusfields")) || Platform.inDebugMode() || Platform.inDevelopmentMode(); //$NON-NLS-1$ //$NON-NLS-2$
 
 	private static final String[] EDITOR_IDS = {"org.eclipse.wst.sse.ui.StructuredTextEditor"}; //$NON-NLS-1$
 
