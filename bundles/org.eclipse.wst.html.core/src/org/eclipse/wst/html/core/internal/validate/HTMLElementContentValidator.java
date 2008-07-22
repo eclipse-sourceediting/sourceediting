@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,13 +10,18 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.validate;
 
+import java.util.List;
+import java.util.Locale;
+
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class HTMLElementContentValidator extends PrimeValidator {
 
@@ -42,17 +47,27 @@ public class HTMLElementContentValidator extends PrimeValidator {
 		if (CMUtil.isForeign(target))
 			return;
 
-		validateContent(target, target.getChildNodes());
+		validateContent(target, target.getFirstChild());
 	}
 
-	private void validateContent(Element parent, NodeList children) {
-		for (int i = 0; i < children.getLength(); i++) {
-			Node child = children.item(i);
-			if (child == null)
-				continue;
+	private void validateContent(Element parent, Node child) {
+		if (child == null)
+			return;
 
+		CMElementDeclaration ed = CMUtil.getDeclaration(parent);
+		if(ed == null || ed.getContentType() == CMElementDeclaration.ANY)
+			return;
+		
+		/*
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=218143 - 
+		 * ModelQuery use not pervasive enough
+		 */
+		List availableChildElementDeclarations = ModelQueryUtil.getModelQuery(parent.getOwnerDocument()).getAvailableContent(parent, ed, ModelQuery.INCLUDE_CHILD_NODES);
+
+		while (child != null) {
 			// perform actual validation
-			validateNode(parent, child);
+			validateNode(parent, child, ed, availableChildElementDeclarations);
+			child = child.getNextSibling();
 		}
 	}
 
@@ -70,6 +85,17 @@ public class HTMLElementContentValidator extends PrimeValidator {
 	// return count;
 	// }
 
+	private boolean containsDeclaration(CMElementDeclaration edec, List available) {
+		if (edec != null && available != null) {
+			
+			for (int i = 0; i < available.size(); i++) {
+				CMNode cmnode = (CMNode) available.get(i);
+				if (cmnode.getNodeType() == CMNode.ELEMENT_DECLARATION && cmnode.getNodeName().toLowerCase(Locale.US).equals(edec.getElementName().toLowerCase(Locale.US)))
+					return true;
+			}
+		}
+		return false;
+	}
 	/*
 	 * The implementation of the following method is practical but accurate.
 	 * The accurate maximum occurence should be retreive from the content
@@ -79,18 +105,17 @@ public class HTMLElementContentValidator extends PrimeValidator {
 	// private int getMaxOccur(Element parent, String childTag) {
 	// return 1;
 	// }
-	private void validateNode(Element target, Node child) {
+	private void validateNode(Element target, Node child, CMElementDeclaration edec, List availableChildElementDeclarations) {
 		// NOTE: If the target element is 'UNKNOWN', that is, it has no
 		// element declaration, the content type of the element should be
 		// regarded as 'ANY'. -- 9/10/2001
 		int contentType = CMElementDeclaration.ANY;
-		CMElementDeclaration edec = CMUtil.getDeclaration(target);
 		if (edec != null)
 			contentType = edec.getContentType();
 
 		int error = ErrorState.NONE_ERROR;
 		int segType = FMUtil.SEG_WHOLE_TAG;
-
+		
 		switch (child.getNodeType()) {
 			case Node.ELEMENT_NODE :
 				Element childElem = (Element) child;
@@ -105,7 +130,7 @@ public class HTMLElementContentValidator extends PrimeValidator {
 				// Defect 186774: If a child is not one of HTML elements,
 				// it should be regarded as a valid child regardless the
 				// type of the parent content model. -- 10/12/2001
-				if (ced == null || CMUtil.isSSI(ced) || (!CMUtil.isHTML(ced)))
+				if (ced == null || CMUtil.isSSI(ced) || (!CMUtil.isHTML(ced)) || containsDeclaration(ced, availableChildElementDeclarations))
 					return;
 
 				switch (contentType) {
