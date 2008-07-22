@@ -15,12 +15,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.text.quickassist.IQuickAssistProcessor;
 import org.eclipse.jface.text.source.Annotation;
+import org.eclipse.wst.sse.core.internal.Logger;
 
 public class QuickFixRegistry {
 	private static QuickFixRegistry instance;
@@ -53,7 +55,6 @@ public class QuickFixRegistry {
 	 *            the configuration element defining the result
 	 */
 	void addResolutionQuery(AnnotationQuery query, AnnotationQueryResult result, IConfigurationElement element) {
-
 		addQuery(resolutionQueries, query, result, element);
 	}
 
@@ -96,10 +97,17 @@ public class QuickFixRegistry {
 
 	public IQuickAssistProcessor[] getQuickFixProcessors(Annotation anno) {
 		// Collect all matches
-		ArrayList processors = new ArrayList();
+		List processors = new ArrayList();
 		for (Iterator iter = resolutionQueries.keySet().iterator(); iter.hasNext();) {
 			AnnotationQuery query = (AnnotationQuery) iter.next();
-			AnnotationQueryResult result = query.performQuery(anno);
+			AnnotationQueryResult result = null;
+			try {
+				/* AnnotationQuery objects are contributed by extension point */
+				result = query.performQuery(anno);
+			}
+			catch (Exception e) {
+				Logger.logException(e);
+			}
 			if (result != null) {
 				// See if a matching result is registered
 				Map resultsTable = (Map) resolutionQueries.get(query);
