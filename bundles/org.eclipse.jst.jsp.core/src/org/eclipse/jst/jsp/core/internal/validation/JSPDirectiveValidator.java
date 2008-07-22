@@ -49,6 +49,8 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
@@ -111,7 +113,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 		fPrefixValueRegionToDocumentRegionMap.clear();
 	}
 
-	private void collectTaglibPrefix(IStructuredDocumentRegion documentRegion, ITextRegion valueRegion, String taglibPrefix) {
+	private void collectTaglibPrefix(ITextRegionCollection documentRegion, ITextRegion valueRegion, String taglibPrefix) {
 		fPrefixValueRegionToDocumentRegionMap.put(valueRegion, documentRegion);
 
 		Object o = fTaglibPrefixesInUse.get(taglibPrefix);
@@ -202,13 +204,22 @@ public class JSPDirectiveValidator extends JSPValidator {
 		fTaglibPrefixesInUse.clear();
 
 		// iterate all document regions
-		IStructuredDocumentRegion region = sDoc.getFirstStructuredDocumentRegion();
-		while (region != null && !reporter.isCancelled()) {
+		IStructuredDocumentRegion documentRegion = sDoc.getFirstStructuredDocumentRegion();
+		while (documentRegion != null && !reporter.isCancelled()) {
 			// only checking directives
-			if (region.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
-				processDirective(reporter, f, sDoc, region);
+			if (documentRegion.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
+				processDirective(reporter, f, sDoc, documentRegion);
 			}
-			region = region.getNext();
+			ITextRegionList regions = documentRegion.getRegions();
+			int size = regions.size();
+			for (int i = 0; i < size; i++) {
+				ITextRegion textRegion = regions.get(i);
+				if(textRegion instanceof ITextRegionCollection) {
+					ITextRegionCollection collection = (ITextRegionCollection) textRegion;
+					processDirective(reporter, f, sDoc, collection);
+				}
+			}
+			documentRegion = documentRegion.getNext();
 		}
 
 		if (!reporter.isCancelled()) {
@@ -221,21 +232,22 @@ public class JSPDirectiveValidator extends JSPValidator {
 		unloadPreferences();
 	}
 
-	private void processDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion) {
-		String directiveName = getDirectiveName(documentRegion);
+	private void processDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, ITextRegionCollection collection) {
+		// note: only supports one directive per collection
+		String directiveName = getDirectiveName(collection);
 		// we only care about taglib directive
 		if (directiveName.equals("taglib")) { //$NON-NLS-1$
-			processTaglibDirective(reporter, file, sDoc, documentRegion);
+			processTaglibDirective(reporter, file, sDoc, collection);
 		}
 		else if (directiveName.equals("include")) { //$NON-NLS-1$
-			processIncludeDirective(reporter, file, sDoc, documentRegion);
+			processIncludeDirective(reporter, file, sDoc, collection);
 		}
 		else if (directiveName.equals("page")) { //$NON-NLS-1$
-			processPageDirective(reporter, file, sDoc, documentRegion);
+			processPageDirective(reporter, file, sDoc, collection);
 		}
 	}
 
-	private void processIncludeDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion) {
+	private void processIncludeDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, ITextRegionCollection documentRegion) {
 		ITextRegion fileValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_FILE);
 		if (fileValueRegion != null) {
 			// file specified
@@ -296,7 +308,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 	 * @param doc
 	 * @param documentRegion
 	 */
-	private void processPageDirective(IReporter reporter, IFile file, IStructuredDocument doc, IStructuredDocumentRegion documentRegion) {
+	private void processPageDirective(IReporter reporter, IFile file, IStructuredDocument doc, ITextRegionCollection documentRegion) {
 		ITextRegion superclassValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_EXTENDS);
 		if (superclassValueRegion != null) {
 			// file specified
@@ -329,7 +341,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 		}
 	}
 
-	private void processTaglibDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion) {
+	private void processTaglibDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, ITextRegionCollection documentRegion) {
 		ITextRegion prefixValueRegion = null;
 		ITextRegion uriValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_URI);
 		ITextRegion tagdirValueRegion = getAttributeValueRegion(documentRegion, JSP20Namespace.ATTR_NAME_TAGDIR);

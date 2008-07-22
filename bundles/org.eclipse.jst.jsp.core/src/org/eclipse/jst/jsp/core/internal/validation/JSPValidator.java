@@ -37,8 +37,8 @@ import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentproperties.JSPFContentProperties;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.validation.AbstractValidator;
 import org.eclipse.wst.validation.ValidationResult;
@@ -252,16 +252,16 @@ public class JSPValidator extends AbstractValidator implements IValidatorJob {
 
 	/**
 	 * 
-	 * @param sdr
+	 * @param collection
 	 * @return the jsp directive name
 	 */
-	protected String getDirectiveName(IStructuredDocumentRegion sdr) {
+	protected String getDirectiveName(ITextRegionCollection collection) {
 		String name = ""; //$NON-NLS-1$
-		ITextRegionList subRegions = sdr.getRegions();
+		ITextRegionList subRegions = collection.getRegions();
 		for (int j = 0; j < subRegions.size(); j++) {
 			ITextRegion subRegion = subRegions.get(j);
 			if (subRegion.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
-				name = sdr.getText(subRegion);
+				name = collection.getText(subRegion);
 				break;
 			}
 		}
@@ -275,7 +275,7 @@ public class JSPValidator extends AbstractValidator implements IValidatorJob {
 	 * @return the ITextRegion for the attribute value of the given attribute
 	 *         name, case sensitive, null if no matching attribute is found
 	 */
-	protected ITextRegion getAttributeValueRegion(IStructuredDocumentRegion sdr, String attrName) {
+	protected ITextRegion getAttributeValueRegion(ITextRegionCollection sdr, String attrName) {
 		ITextRegion valueRegion = null;
 		ITextRegionList subRegions = sdr.getRegions();
 		for (int i = 0; i < subRegions.size(); i++) {
@@ -294,7 +294,7 @@ public class JSPValidator extends AbstractValidator implements IValidatorJob {
 		return valueRegion;
 	}
 
-	protected String getAttributeValue(IStructuredDocumentRegion sdr, String attrName) {
+	protected String getAttributeValue(ITextRegionCollection sdr, String attrName) {
 		ITextRegion r = getAttributeValueRegion(sdr, attrName);
 		if (r != null)
 			return sdr.getText(r).trim();
