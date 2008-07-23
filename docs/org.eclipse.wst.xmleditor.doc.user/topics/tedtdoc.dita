@@ -22,14 +22,14 @@ declaration, complete the following steps:</p></context>
 <steps>
 <step><cmd>In the Design view of the XML editor, right-click <uicontrol>DOCTYPE</uicontrol> and
 click <uicontrol>Edit DOCTYPE</uicontrol>.</cmd></step>
-<step><cmd>The <?Pub Caret?>value in the <uicontrol>Root element name</uicontrol> field
+<step><cmd>The value in the <uicontrol>Root element name</uicontrol> field
 should match the root element of your XML file exactly.</cmd><info>You should
 only edit the value in this field if your root element changes.</info></step>
 <step><cmd>You can select a Public ID for any existing XML Catalog entries
 by clicking <uicontrol>Browse</uicontrol>. </cmd><info>The value in the <uicontrol>Public
 ID</uicontrol> field is the Public Identifier. It is used to associate the
 XML file (using an XML Catalog entry) with a DTD file. For more information,
-see <xref format="html" href="txmlcat.dita" scope="peer">Adding entries to
+see <xref format="dita" href="txmlcat.dita" scope="local">Adding entries to
 the XML Catalog</xref>.</info></step>
 <step><cmd>The value in the <uicontrol>System ID</uicontrol> field is the
 DTD the XML file is associated with. Type the path of the DTD file (or browse
@@ -44,4 +44,3 @@ right-click in the Design view and click <uicontrol>Add DTD Information</uicontr
 add one.</postreq>
 </taskbody>
 </task>
-<?Pub *0000002518?>

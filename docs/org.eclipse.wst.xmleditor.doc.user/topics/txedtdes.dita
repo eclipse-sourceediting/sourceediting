@@ -2,7 +2,6 @@
 <!--Arbortext, Inc., 1988-2006, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
-<?Pub Inc?>
 <task id="txedtdes" xml:lang="en-us">
 <title>Editing in the Design view</title>
 <titlealts>
@@ -37,11 +36,10 @@ expand all the items in your XML file, click <menucascade><uicontrol>XML</uicont
 <uicontrol>Expand All</uicontrol></menucascade> <image href="../images/expand_all.gif">
 <alt>This graphic is the Expand All toolbar button</alt></image> on the toolbar.
 To collapse them, click the <menucascade><uicontrol>XML</uicontrol><uicontrol>Collapse
-A<?Pub Caret?>ll</uicontrol></menucascade> <image href="../images/collapse_all.gif">
-<alt>This graphic is the Collapse All toolbar button</alt></image> on the
-toolbar.</p><p>If you right-click the item that you want to work with, some
-or all of the following options (as applicable) will be available from the
-pop-up menu that appears:</p><p></p><table>
+All</uicontrol></menucascade> <image href="../images/collapse_all.gif"><alt>This
+graphic is the Collapse All toolbar button</alt></image> on the toolbar.</p><p>If
+you right-click the item that you want to work with, some or all of the following
+options (as applicable) will be available from the pop-up menu that appears:</p><table>
 <tgroup cols="2"><colspec colname="col1" colwidth="48*"/><colspec colname="col2"
 colwidth="150*"/>
 <thead>
@@ -58,21 +56,21 @@ colwidth="150*"/>
 <row>
 <entry colname="col1">Edit DOCTYPE</entry>
 <entry colname="col2">Edit the DOCTYPE declaration. Refer to the related task
-for more details. For more information, see <xref format="html" href="tedtdoc.dita"
-scope="peer">Editing DOCTYPE declarations</xref>.</entry>
+for more details. For more information, see <xref format="dita" href="tedtdoc.dita"
+scope="local">Editing DOCTYPE declarations</xref>.</entry>
 </row>
 <row>
 <entry colname="col1">Edit Namespaces</entry>
 <entry colname="col2">Edit the existing namespace information or create a
 new association with a namespace. Refer to the related task for more details.
-For more information, see <xref format="html" href="tedtsch.dita" scope="peer">Editing
+For more information, see <xref format="dita" href="tedtsch.dita" scope="local">Editing
 namespace information</xref>.</entry>
 </row>
 <row>
 <entry colname="col1">Edit Processing Instruction</entry>
 <entry colname="col2">Edit the processing instruction. Refer to the related
-task for more details. For more information, see <xref format="html" href="tedtproc.dita"
-scope="peer">Editing XML processing instructions</xref>.</entry>
+task for more details. For more information, see <xref format="dita" href="tedtproc.dita"
+scope="local">Editing XML processing instructions</xref>.</entry>
 </row>
 <row>
 <entry colname="col1">Remove</entry>
@@ -129,4 +127,3 @@ Source view and the Outline view.</p><note>These instructions were written
 for the Resource perspective, but they will also work in many other perspectives.</note></result>
 </taskbody>
 </task>
-<?Pub *0000006781?>

@@ -50,7 +50,6 @@ children at that point (as long as grammar constraints are on).</li>
 need to do form-oriented editing. For example, you could use the Create XML
 File wizard to create a template XML file for a job description form from
 a job description DTD. After those steps are completed, you would only have
-to fill in the form data using the Design view.</p><p></p><?Pub Caret1?></section>
+to fill in the form data using the Design view.</p></section>
 </conbody>
 </concept>
-<?Pub *0000002948?>
