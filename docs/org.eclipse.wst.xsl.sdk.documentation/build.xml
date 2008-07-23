@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Jul 21, 2008 6:46:02 PM                                                        
+
+     SDK Documentation    
+     Builds SDK TOC Documentation using JELDoclet.
+                   
+     dcarver                                                                
+     ====================================================================== -->
+<project name="SDK Documentation" default="default">
+    <description>
+            Builds SDK TOC Documentation using JELDoclet.
+    </description>
+	
+	<property name="workspace" location="."/>
+	<property name="workspaceloc" location=".."/>
+
+    <!-- ================================= 
+          target: default              
+         ================================= -->
+    <target name="default" description="Builds SDK TOC Documentation using JELDoclet.">
+	  <javadoc destdir="doc" package="true" docletpath="${workspace}/lib/jeldoclet.jar">
+	  	 <fileset dir="${workspaceloc}">
+	  	 	<include name="org.eclipse.wst.xsl.core/**/*.java"/>
+	  	 	<include name="org.eclipse.wst.xsl.debug/**/*.java"/>
+	  	 	<include name="org.eclipse.wst.xsl.debug.ui/**/*.java"/>
+	  	 	<include name="org.eclipse.wst.xsl.launching/**/*.java"/>
+	  	 	<include name="org.eclipse.wst.xsl.saxon/**/*.java"/>
+	  	 	<include name="org.eclipse.wst.xsl.ui/**/*.java"/>
+	  	 	<include name="org.eclipse.wst.xsl.xalan/src-debugger/**/*.java"/>
+	  	 	<include name="org.eclipse.wst.xml.xpath.core/src/**/*.java"/>
+	  	 	<include name="org.eclipse.wst.xml.xpath.ui/**/*.java"/>
+	  	 </fileset>
+	     <doclet name="com.jeldoclet.JELDoclet" />
+	  </javadoc>
+
+    </target>
+
+</project>
