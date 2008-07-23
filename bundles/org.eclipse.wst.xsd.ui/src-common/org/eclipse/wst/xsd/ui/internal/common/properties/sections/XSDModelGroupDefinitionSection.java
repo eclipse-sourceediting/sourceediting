@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDDirectivesManager;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.xsd.XSDConcreteComponent;
@@ -334,6 +335,7 @@ public class XSDModelGroupDefinitionSection extends MultiplicitySection
         if (namedComponent instanceof XSDModelGroupDefinition)
         {
           element.setAttribute(XSDConstants.REF_ATTRIBUTE, newValue);
+          XSDDirectivesManager.removeUnusedXSDImports(namedComponent.getSchema());
         }
       }
     }

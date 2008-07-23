@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.common.commands;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDVisitor;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDDirectivesManager;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDAttributeUse;
@@ -24,6 +25,7 @@ import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
+import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDWildcard;
 import org.eclipse.xsd.util.XSDConstants;
 
@@ -53,13 +55,15 @@ public class DeleteCommand extends BaseCommand
     };
 
     XSDConcreteComponent parent = target.getContainer();
+    XSDSchema schema = target.getSchema();
 
     try
     {
       beginRecording(parent.getElement());
-
+      boolean doCleanup = false;
       if (target instanceof XSDModelGroup || target instanceof XSDElementDeclaration || target instanceof XSDModelGroupDefinition)
       {
+        doCleanup = true;
         if (parent instanceof XSDParticle)
         {
           if (parent.getContainer() instanceof XSDModelGroup)
@@ -83,6 +87,7 @@ public class DeleteCommand extends BaseCommand
       }
       else if (target instanceof XSDAttributeDeclaration)
       {
+        doCleanup = true;
         if (parent instanceof XSDAttributeUse)
         {
           EObject obj = parent.eContainer();
@@ -116,6 +121,7 @@ public class DeleteCommand extends BaseCommand
       }
       else if (target instanceof XSDAttributeGroupDefinition && parent instanceof XSDComplexTypeDefinition)
       {
+        doCleanup = true;
         ((XSDComplexTypeDefinition) parent).getAttributeContents().remove(target);
       }
       else if (target instanceof XSDEnumerationFacet)
@@ -142,19 +148,23 @@ public class DeleteCommand extends BaseCommand
           ((XSDAttributeGroupDefinition) parent).setAttributeWildcardContent(null);
         }
       }
-      else if (target instanceof XSDComplexTypeDefinition && parent instanceof XSDElementDeclaration)
+      else if (target instanceof XSDTypeDefinition && parent instanceof XSDElementDeclaration)
       {
+        doCleanup = true;
         ((XSDElementDeclaration) parent).setTypeDefinition(target.resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string"));
       }
       else
       {
         if (parent instanceof XSDSchema)
         {
+          doCleanup = true;
           visitor.visitSchema(target.getSchema());
           ((XSDSchema) parent).getContents().remove(target);
         }
       }
 
+      if (doCleanup)
+        XSDDirectivesManager.removeUnusedXSDImports(schema);
     }
     finally
     {
