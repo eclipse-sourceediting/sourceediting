@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -281,7 +281,18 @@ public class OpenInNewEditor extends BaseSelectionAction
     {
       if (schemaLocation != null && !schemaLocation.startsWith("http"))
       {
-        String fileLocation = URIHelper.removeProtocol(schemaLocation);
+        String fileLocation = null;
+        // This is to workaround the difference in URI resolution. On linux, the resolved location is
+        // platform:/resource/   On Windows, it's file://
+        // 
+       	if (java.io.File.separatorChar == '/')
+      	{
+          fileLocation = "/" + URIHelper.removePlatformResourceProtocol(schemaLocation);
+      	}
+    	  else // Windows
+      	{
+          fileLocation = URIHelper.removeProtocol(schemaLocation);
+      	}
         IPath schemaPath = new Path(fileLocation);
         IFileStore fileStore = EFS.getLocalFileSystem().getStore(schemaPath);
         if (!fileStore.fetchInfo().isDirectory() && fileStore.fetchInfo().exists())
@@ -426,9 +437,12 @@ public class OpenInNewEditor extends BaseSelectionAction
 
   public static void openExternalFiles(IWorkbenchPage page, String schemaLocation, XSDConcreteComponent fComponent)
   {
-    IPath schemaPath = new Path(schemaLocation);  // URIHelper.removeProtocol(schemaLocation));
-    String device = schemaPath.getDevice();
-    if (!device.startsWith("http"))
+    if (schemaLocation == null) return;  // Assert not null
+  
+    IPath schemaPath = new Path(schemaLocation);
+//  Initially tried to use schemaPath.getDevice() to determine if it is an http reference.  However, on Linux, it is null.
+//  So as a result of bug 221421, we will just use the schemaLocation.
+    if (!schemaLocation.startsWith("http"))
     {
       schemaPath = new Path(URIHelper.removeProtocol(schemaLocation));
     }
@@ -474,7 +488,7 @@ public class OpenInNewEditor extends BaseSelectionAction
     {
       try
       {
-        if (device.startsWith("http"))
+        if (schemaLocation.startsWith("http"))
         {
           try
           {
