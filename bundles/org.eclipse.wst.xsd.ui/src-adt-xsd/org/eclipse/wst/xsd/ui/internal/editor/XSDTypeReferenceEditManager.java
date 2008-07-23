@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,6 +28,7 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDComplexTypeDefiniti
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDSimpleTypeDefinitionCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateTypeReferenceAndManageDirectivesCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateTypeReferenceCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDDirectivesManager;
 import org.eclipse.wst.xsd.ui.internal.dialogs.NewTypeDialog;
 import org.eclipse.wst.xsd.ui.internal.editor.search.XSDSearchListDialogDelegate;
 import org.eclipse.wst.xsd.ui.internal.search.IXSDSearchConstants;
@@ -182,16 +183,16 @@ public class XSDTypeReferenceEditManager implements ComponentReferenceEditManage
           if (component.getMetaName() == IXSDSearchConstants.COMPLEX_TYPE_META_NAME)
           {
             XSDComplexTypeDefinition complexType = factory.createXSDComplexTypeDefinition();            
-	  	    elementDeclaration.setAnonymousTypeDefinition(complexType);
+	  	      elementDeclaration.setAnonymousTypeDefinition(complexType);
           }
           else
           {
-        	XSDSimpleTypeDefinition simpleType = factory.createXSDSimpleTypeDefinition();
-        	simpleType.setBaseTypeDefinition(
-        			elementDeclaration.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string") ); //$NON-NLS-1$
+        	  XSDSimpleTypeDefinition simpleType = factory.createXSDSimpleTypeDefinition();
+        	  simpleType.setBaseTypeDefinition(
+        	    elementDeclaration.getSchema().getSchemaForSchema().resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string") ); //$NON-NLS-1$
   	  	    elementDeclaration.setAnonymousTypeDefinition(simpleType);
           }
-		  elementDeclaration.getElement().removeAttribute("type"); //TODO use external literal string
+		      elementDeclaration.getElement().removeAttribute("type"); //TODO use external literal string
         }
         else if (component.getMetaName() == IXSDSearchConstants.COMPLEX_TYPE_META_NAME)
         {  
@@ -212,7 +213,8 @@ public class XSDTypeReferenceEditManager implements ComponentReferenceEditManage
           Command command = new UpdateTypeReferenceCommand(concreteComponent, td);
           command.setLabel(Messages._UI_ACTION_SET_TYPE);
           command.execute();
-        }  
+        }
+        XSDDirectivesManager.removeUnusedXSDImports(concreteComponent.getSchema());
       }  
       else
       {  

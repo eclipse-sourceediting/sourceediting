@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDDirectivesManager;
 import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
@@ -44,6 +45,7 @@ public class UpdateElementReferenceAndManageDirectivesCommand extends UpdateComp
         UpdateElementReferenceCommand command = new UpdateElementReferenceCommand(Messages._UI_ACTION_UPDATE_ELEMENT_REFERENCE, (XSDElementDeclaration) concreteComponent,
             (XSDElementDeclaration) elementDef);
         command.execute();
+        XSDDirectivesManager.removeUnusedXSDImports(concreteComponent.getSchema());
       }
     }
     catch (Exception e)
