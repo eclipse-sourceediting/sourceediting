@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://www.example.org/Main"
+	elementFormDefault="qualified"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.example.org/Main">
+
+    <xsd:include schemaLocation="../../Include1.xsd"></xsd:include>
+
+	<xsd:complexType name="MainCT">
+		<xsd:sequence>
+			<xsd:element ref="MainElement1"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+    <xsd:element name="MainElement1" type="xsd:string"></xsd:element>
+</xsd:schema>

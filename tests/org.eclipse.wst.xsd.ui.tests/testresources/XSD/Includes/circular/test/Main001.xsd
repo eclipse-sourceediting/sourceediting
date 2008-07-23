@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.example.org/Main"
+	xmlns:tns="http://www.example.org/Main"
+	elementFormDefault="qualified" xmlns:p="http://www.example.org/Import">
+
+	<include schemaLocation="../Include4.xsd"></include>
+
+	<element name="MainElem1" type="string">
+		<annotation>
+			<appinfo>
+				<p:ImpElem1></p:ImpElem1>
+			</appinfo>
+		</annotation>
+	</element>
+</schema>

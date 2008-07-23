@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.example.org/Main"
+	xmlns:tns="http://www.example.org/Main"
+    xmlns:imp="http://www.example.org/Import"
+    xmlns:imp4="http://www.example.org/Import4"
+	elementFormDefault="qualified">
+	<include schemaLocation="../Include1.xsd"></include>
+	<import schemaLocation="../Import1.xsd" namespace="http://www.example.org/Import"></import>
+	<import schemaLocation="../Import2.xsd" namespace="http://www.example.org/Import"></import>
+	<import schemaLocation="../Import3.xsd" namespace="http://www.example.org/Import"></import>
+	<import schemaLocation="../Import4.xsd" namespace="http://www.example.org/Import4"></import>
+</schema>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://www.example.org/Main"
+	elementFormDefault="qualified"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:imp="http://www.example.org/Import"
+	xmlns="http://www.example.org/Main">
+
+    <xsd:import schemaLocation="../../Import1.xsd" namespace="http://www.example.org/Import"></xsd:import>
+
+    <xsd:simpleType name="MainST">
+      <xsd:union memberTypes="xsd:boolean xsd:date imp:ImpST1">
+         <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:maxLength value="5"></xsd:maxLength>
+            </xsd:restriction>
+         </xsd:simpleType>
+      </xsd:union>
+    </xsd:simpleType>
+</xsd:schema>

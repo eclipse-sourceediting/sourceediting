@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://www.example.org/Main"
+	elementFormDefault="qualified"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:imp="http://www.example.org/Import"
+	xmlns="http://www.example.org/Main">
+
+    <xsd:import schemaLocation="../../Import1.xsd" namespace="http://www.example.org/Import"></xsd:import>
+
+	<xsd:element name="MainElement1" type="MainCT"></xsd:element>
+
+	<xsd:complexType name="MainCT">
+        <xsd:attributeGroup ref="imp:ImpAttrGr1"></xsd:attributeGroup>
+    </xsd:complexType>
+
+	<xsd:attributeGroup name="MainAttributeGroup1">
+		<xsd:attribute name="atr1" type="xsd:string"></xsd:attribute>
+		<xsd:anyAttribute></xsd:anyAttribute>
+	</xsd:attributeGroup>
+</xsd:schema>

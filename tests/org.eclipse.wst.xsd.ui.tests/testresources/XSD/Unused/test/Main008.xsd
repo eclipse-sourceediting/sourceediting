@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.example.org/Main"
+	xmlns:tns="http://www.example.org/Main"
+	elementFormDefault="qualified" xmlns:p="http://www.example.org/Import">
+	<import schemaLocation="../Import1.xsd" namespace="http://www.example.org/Import"></import>
+
+	<include schemaLocation="../Include1.xsd"></include>
+	
+	<include schemaLocation="../Include2.xsd"></include>
+	
+	<include schemaLocation="../Include3.xsd"></include>
+
+	<element name="MainElem1" type="tns:Inc1CT1">
+		<annotation>
+			<appinfo>
+				<p:ImpElem1></p:ImpElem1>
+			</appinfo>
+		</annotation>
+	</element>
+
+    <attribute name="Main8Attribute" type="tns:Inc3ST1"></attribute>
+</schema>

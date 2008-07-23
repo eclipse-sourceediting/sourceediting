@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://wsdlTest/Import" 
+	xmlns:tns="http://wsdlTest/Import">
+	<xsd:complexType name="ct01">
+		<xsd:sequence>
+			<xsd:element minOccurs="0" name="field1"
+				type="xsd:string">
+			</xsd:element>
+			<xsd:element minOccurs="0" name="field2"
+				type="xsd:string">
+			</xsd:element>
+			<xsd:element minOccurs="0" name="field3"
+				type="xsd:string">
+			</xsd:element>
+			<xsd:element minOccurs="0" name="field4"
+				type="xsd:string">
+			</xsd:element>
+			<xsd:element minOccurs="0" name="field5"
+				type="xsd:string">
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="imp1Element" type="tns:ct01" />
+</xsd:schema>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema elementFormDefault="qualified"
+	targetNamespace="http://www.example.org/Main"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://www.example.org/Main">
+
+	<xsd:include schemaLocation="Include4.xsd"></xsd:include>
+	<xsd:complexType name="Inc3CT1">
+		<xsd:sequence>
+			<xsd:element name="e1" type="xsd:string" maxOccurs="25"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:group name="Inc3Gr1">
+		<xsd:sequence>
+			<xsd:element name="e1" type="xsd:string"></xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+
+	<xsd:attribute name="Inc3Attr1" type="tns:Inc3ST1"></xsd:attribute>
+
+	<xsd:attributeGroup name="Inc3AttrGr1">
+		<xsd:attribute name="at1" type="xsd:string"></xsd:attribute>
+	</xsd:attributeGroup>
+
+	<xsd:element name="Inc3Elem1" type="xsd:string"></xsd:element>
+
+	<xsd:simpleType name="Inc3ST1">
+		<xsd:restriction base="xsd:string"></xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="Inc3ST2">
+		<xsd:restriction base="xsd:string"></xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:complexType name="Inc3CT2">
+		<xsd:attribute name="attr1" type="xsd:string"></xsd:attribute>
+	</xsd:complexType>
+</xsd:schema>

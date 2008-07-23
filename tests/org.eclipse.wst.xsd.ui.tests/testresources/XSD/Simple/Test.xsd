@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://wsdlTest"
+	xmlns:imp="http://wsdlTest/Import" xmlns:tns="http://wsdlTest"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:import namespace="http://wsdlTest/Import"
+		schemaLocation="Import001.xsd" />
+	<xsd:import namespace="http://wsdlTest/Import"
+		schemaLocation="Import002.xsd" />
+	<xsd:import namespace="http://wsdlTest/Import"
+		schemaLocation="Import003.xsd" />
+	<xsd:element name="operation1">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="input1" nillable="true" type="xsd:int" />
+				<xsd:element name="in" type="imp:ct03" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="operation1Response">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="output1" nillable="true" type="imp:ct02" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

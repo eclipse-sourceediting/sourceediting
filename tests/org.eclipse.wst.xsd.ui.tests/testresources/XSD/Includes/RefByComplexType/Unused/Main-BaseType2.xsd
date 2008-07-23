@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://www.example.org/Main"
+	elementFormDefault="qualified"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.example.org/Main">
+    <xsd:include schemaLocation="../../Include1.xsd"></xsd:include>
+    
+    <xsd:complexType name="MainCT1">
+    	<xsd:complexContent>
+    		<xsd:restriction base="MainCT2">
+    			<xsd:sequence>
+    				<xsd:element name="e1" minOccurs="1">
+    					<xsd:simpleType>
+    						<xsd:restriction base="xsd:string">
+    							<xsd:minLength value="1"></xsd:minLength>
+    							<xsd:maxLength value="10"></xsd:maxLength>
+    						</xsd:restriction>
+    					</xsd:simpleType>
+    				</xsd:element>
+    			</xsd:sequence>
+    		</xsd:restriction>
+    	</xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="MainCT2">
+    	<xsd:sequence>
+    		<xsd:element name="e1" type="xsd:string"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>
