@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.common.commands.SetTypeCommand;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.xsd.XSDConcreteComponent;
 
 public class SetTypeAction extends XSDBaseAction
@@ -40,7 +41,7 @@ public class SetTypeAction extends XSDBaseAction
 
       if (target instanceof XSDConcreteComponent)
       {
-        command = new SetTypeCommand(getText(), getId(), (XSDConcreteComponent) target);
+        command = new SetTypeCommand(Messages._UI_ACTION_SET_TYPE, getId(), (XSDConcreteComponent) target);
         command.setAdapter((XSDBaseAdapter) selection);
         getCommandStack().execute(command);
       }
