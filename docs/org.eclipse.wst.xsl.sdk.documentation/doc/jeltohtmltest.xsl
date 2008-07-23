@@ -45,7 +45,9 @@
                <tr bgcolor="#CCCCFF" cols="2">
                   <td width="100%" colspan="2"><h2>Field Summary</h2></td>
                </tr>
-               <xsl:apply-templates select="fields/field" mode="summary"/>
+               <xsl:apply-templates select="fields/field" mode="summary">
+                  <xsl:sort select="@name" order="ascending"/>
+               </xsl:apply-templates>
             </table>
             <br/>
          </xsl:if>
@@ -54,7 +56,9 @@
                <tr bgcolor="#CCCCFF">
                   <td width="100%"><h2>Constructor Summary</h2></td>
                </tr>
-               <xsl:apply-templates select="descendant::constructor" mode="summary"/>
+               <xsl:apply-templates select="descendant::constructor" mode="summary">
+                  <xsl:sort select="@name" order="ascending"/>
+               </xsl:apply-templates>
             </table>
             <br/>
          </xsl:if>
@@ -63,10 +67,23 @@
                <tr bgcolor="#CCCCFF" cols="2">
                   <td width="100%" colspan="2"><h2>Method Summary</h2></td>
                </tr>
-               <xsl:apply-templates select="methods/method" mode="summary"/>
+               <xsl:apply-templates select="methods/method" mode="summary">
+                  <xsl:sort select="@name" order="ascending"/>
+               </xsl:apply-templates>
             </table>
          </xsl:if>
          <hr/>
+         <xsl:if test="fields">
+            <xsl:call-template name="fieldDetail"/>
+         </xsl:if>
+         <xsl:if test="methods/constructor">
+            <xsl:call-template name="constructorDetail"/>
+         </xsl:if>
+         <xsl:if test="methods/method">
+            <xsl:call-template name="methodsDetail"/>
+         </xsl:if>
+         
+         
     </xsl:template>
     
     <!-- Output any description that may be there for comments. -->
@@ -123,12 +140,12 @@
                <code>
                   <strong>
                      <xsl:value-of select="@name"/>
-                     <xsl:text>(</xsl:text>
-                     <xsl:if test="params">
-                        <xsl:apply-templates select="params/param"/>
-                     </xsl:if>
-                     <xsl:text>)</xsl:text>
-                  </strong>
+                  </strong>                     
+                  <xsl:text>(</xsl:text>
+                  <xsl:if test="params">
+                     <xsl:apply-templates select="params/param"/>
+                  </xsl:if>
+                  <xsl:text>)</xsl:text>
                </code>
             </td>
          </tr>
@@ -178,5 +195,177 @@
 extends <xsl:value-of select="@superclassfulltype"/>
          </pre>
     </xsl:template>
-   
+    
+    <xsl:template name="fieldDetail">
+      <table border="1" width="100%" cols="2">
+         <tr align="left" bgcolor="#CCCCFF" width="100%" colspan="2">
+            <td>
+               <h2>
+                  Field Detail
+               </h2>
+            </td>
+         </tr>
+      </table>
+      <xsl:apply-templates select="fields/field" mode="detail">
+         <xsl:sort select="@name" order="ascending"/>
+      </xsl:apply-templates>
+    </xsl:template>
+    
+    <xsl:template match="fields/field" mode="detail">
+      <h2>
+         <xsl:value-of select="@name"/>
+      </h2>
+      <p>
+         <code>
+            <xsl:value-of select="@visibility"/>
+            <xsl:if test="@static = 'true'">
+               <xsl:text> static </xsl:text>
+            </xsl:if>
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="@fulltype"/>
+            <xsl:text> </xsl:text>
+            <strong>
+               <xsl:value-of select="@name"/>
+            </strong>                   
+         </code>
+      </p>
+      <xsl:if test="comment">
+         <table>
+            <tr>
+              <td>
+                  <xsl:apply-templates select="comment/description"/>
+              </td>
+            </tr>
+         </table>
+      </xsl:if>
+      <hr/>
+      
+    </xsl:template>
+    
+    <xsl:template name="constructorDetail">
+      <table border="1" width="100%" cols="2">
+         <tr align="left" bgcolor="#CCCCFF" width="100%" colspan="2">
+            <td>
+               <h2>
+                  Constructor Detail
+               </h2>
+            </td>
+         </tr>
+      </table>
+      <xsl:apply-templates select="methods/constructor" mode="detail">
+         <xsl:sort select="@name" order="ascending"/>
+      </xsl:apply-templates>
+    </xsl:template>
+    
+    <xsl:template match="methods/constructor" mode="detail">
+      <h2>
+         <xsl:value-of select="@name"/>
+      </h2>
+      <p>
+         <code>
+            <xsl:value-of select="@visibility"/>
+            <xsl:text> </xsl:text>
+            <strong>
+               <xsl:value-of select="@name"/>
+            </strong>
+            <xsl:text>(</xsl:text>
+            <xsl:if test="params">
+               <xsl:apply-templates select="params/param"/>
+            </xsl:if>
+            <xsl:text>)</xsl:text>
+         </code>
+      </p>
+      <p>
+         <xsl:apply-templates select="comment/description"/>
+      </p>
+      <hr/>
+      
+    </xsl:template>
+    
+    <xsl:template name="methodsDetail">
+      <table border="1" width="100%" cols="2">
+         <tr align="left" bgcolor="#CCCCFF" width="100%" colspan="2">
+            <td>
+               <h2>
+                  Methods Detail
+               </h2>
+            </td>
+         </tr>
+      </table>
+      <xsl:apply-templates select="methods/method" mode="detail">
+         <xsl:sort select="@name" order="ascending"/>
+      </xsl:apply-templates>
+    </xsl:template>
+    
+    <xsl:template match="methods/method" mode="detail">
+      <h2>
+         <xsl:value-of select="@name"/>
+      </h2>
+      <p>
+         <code>
+            <xsl:value-of select="@visibility"/>
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="@fulltype"/>
+            <xsl:text> </xsl:text>
+            <strong>
+               <xsl:value-of select="@name"/>
+            </strong>
+            <xsl:text>(</xsl:text>
+            <xsl:if test="params">
+               <xsl:apply-templates select="params/param"/>
+            </xsl:if>
+            <xsl:text>)</xsl:text>
+         </code>
+      </p>
+      <p>
+         <xsl:apply-templates select="comment/description"/>
+      </p>
+      <xsl:if test="params">
+         <h3>Parameters</h3>
+         <xsl:apply-templates select="params/param" mode="detail"/>
+      </xsl:if>
+      <xsl:if test="@type != 'void'">
+         <h3>Returns</h3>
+            <p>
+               <code>
+                  <xsl:value-of select="@fulltype"/>
+               </code>
+               <xsl:if test="string-length(@returncomment) > 0">
+                  <xsl:text> - </xsl:text>
+                  <xsl:value-of select="@returncomment" disable-output-escaping="yes"/>
+               </xsl:if>
+            </p>
+      </xsl:if>
+      <xsl:if test="exceptions">
+         <h3>Throws:</h3>
+         <xsl:apply-templates select="exceptions/exception" mode="detail"/>
+      </xsl:if>
+      <hr/>
+      
+    </xsl:template>
+    
+    <xsl:template match="param" mode="detail">
+         <p>
+            <code>
+               <xsl:value-of select="@name"/>
+            </code>
+            <xsl:if test="string-length(@comment) > 0">
+               <xsl:text> - </xsl:text>
+               <xsl:value-of select="@comment" disable-output-escaping="yes"/>
+            </xsl:if>
+         </p>
+    </xsl:template>
+    
+    <xsl:template match="exception" mode="detail">
+      <p>
+         <code>
+            <xsl:value-of select="@fulltype"/>
+            <xsl:if test="string-length(@comment) > 0">
+               <xsl:text> - </xsl:text>
+               <xsl:value-of select="@comment" disable-output-escaping="yes"/>
+            </xsl:if>
+         </code>
+      </p>
+    </xsl:template>
+       
 </xsl:stylesheet>
