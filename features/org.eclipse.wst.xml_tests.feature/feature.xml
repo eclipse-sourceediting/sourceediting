@@ -21,7 +21,6 @@
       <update label="%updateSiteName" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
 
-
    <requires>
       <import feature="org.eclipse.wst.xml_ui.feature" version="3.0.1"/>
       <import feature="org.eclipse.test" version="3.3.0"/>
@@ -107,6 +106,12 @@
 
    <plugin
          id="org.eclipse.wst.xsd.core.tests"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.wst.xsd.ui.tests"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
