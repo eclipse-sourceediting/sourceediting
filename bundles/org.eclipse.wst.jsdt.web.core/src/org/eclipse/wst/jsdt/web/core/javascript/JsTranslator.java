@@ -73,6 +73,8 @@ public class JsTranslator extends Job implements IJsTranslator{
 	private static final boolean REMOVE_XML_COMMENT = true;
 	private static final String XML_COMMENT_START = "<!--"; //$NON-NLS-1$
 	private static final String XML_COMMENT_END = "-->"; //$NON-NLS-1$
+	private static final boolean REPLACE_INNER_BLOCK_SECTIONS_WITH_SPACE = false;
+	
 	
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jsjavamapping"); //$NON-NLS-1$
@@ -478,16 +480,20 @@ public class JsTranslator extends Job implements IJsTranslator{
 				int regionLength = regionText.length();
 				// /Position inScript = new Position(scriptOffset,
 				// regionLength);
-				Position inHtml = new Position(scriptStart, scriptTextEnd);
-				scriptLocationInHtml.add(inHtml);
+				
+				
 				spaces = Util.getPad(scriptStart - scriptOffset);
 				fScriptText.append(spaces); 	
 				// fJsToHTMLRanges.put(inScript, inHtml);
-				if(isBlockRegion) {
+				if(isBlockRegion && REPLACE_INNER_BLOCK_SECTIONS_WITH_SPACE) {
 					spaces = Util.getPad(regionLength);
 					fScriptText.append(spaces); 	
+				}else if(isBlockRegion){
+					fScriptText.append(regionText);
 				}else {
 					fScriptText.append(regionText);
+					Position inHtml = new Position(scriptStart, scriptTextEnd);
+					scriptLocationInHtml.add(inHtml);
 				}
 				
 				

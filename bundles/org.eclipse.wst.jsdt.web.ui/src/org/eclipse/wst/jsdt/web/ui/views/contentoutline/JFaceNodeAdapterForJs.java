@@ -23,6 +23,7 @@ import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.core.JavaElement;
+import org.eclipse.wst.jsdt.internal.core.Member;
 import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
 import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
@@ -75,10 +76,21 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 					Node parent = ((IJavaWebNode) object).getParentNode();
 					
 					for (int i = 0; i < children.length; i++) {
-						int htmllength = ((SourceRefElement) (children[i])).getSourceRange().getLength();
-						int htmloffset = ((SourceRefElement) (children[i])).getSourceRange().getOffset();
+					//	int htmllength = ((SourceRefElement) (children[i])).getSourceRange().getLength();
+					//	int htmloffset = ((SourceRefElement) (children[i])).getSourceRange().getOffset();
+						IJavaScriptElement javaElement = children[i];
+						ISourceRange range = null;
+						if (javaElement instanceof Member) {
+								range = ((Member) javaElement).getNameRange();
+						} else {
+								range = ((SourceRefElement) javaElement).getSourceRange();
+						}
+						int htmllength = range.getLength();
+						int htmloffset = range.getOffset();
+
+						
 						Position position = new Position(htmloffset, htmllength);
-						nodes[i] = getJsNode(parent, children[i], position);
+						nodes[i] = getJsNode(parent, javaElement, position);
 					}
 					return nodes;
 				} catch (JavaScriptModelException ex) {
@@ -164,17 +176,26 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	}
 	
 	private Object[] filterChildrenForRange(IJavaScriptElement[] allChildren, Node node) {
+	//	int javaPositionStart = ((NodeImpl) node).getStartOffset();
+	//	int javaPositionEnd   = ((NodeImpl) node).getEndOffset();
+		
+	//	Object[] result =new Object[0];
+		
+		int javaPositionEnd = ((NodeImpl) node).getEndOffset();
 		int javaPositionStart = ((NodeImpl) node).getStartOffset();
-		int javaPositionEnd   = ((NodeImpl) node).getEndOffset();
-		
-		Object[] result =new Object[0];
-		
-		
+
 		Vector validChildren = new Vector();
 		for (int i = 0; i < allChildren.length; i++) {
 			if (allChildren[i] instanceof IJavaScriptElement && allChildren[i].getElementType() != IJavaScriptElement.PACKAGE_DECLARATION) {
 				ISourceRange range = null;
-				if (allChildren[i]  instanceof SourceRefElement) {
+				if (allChildren[i] instanceof Member) {
+					try {
+						range = ((Member) allChildren[i]).getNameRange();
+					} catch (JavaScriptModelException e) {
+											// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else if (allChildren[i]  instanceof SourceRefElement) {
 					try {
 						range = ((SourceRefElement)allChildren[i] ).getSourceRange();
 					} catch (JavaScriptModelException e) {
@@ -184,18 +205,22 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 				}
 				if (allChildren[i].getElementType() == IJavaScriptElement.TYPE || (javaPositionStart <= range.getOffset() && range.getLength() + range.getOffset() <= (javaPositionEnd))) {
 					
-				int htmllength = range==null?0:range.getLength();
-				int htmloffset = range==null?0:range.getOffset();
-				if(htmllength<0 || htmloffset<0) {
-					continue;
-				}
-				Position position = new Position(htmloffset, htmllength);
-				validChildren.add( getJsNode(node.getParentNode(), allChildren[i], position));
+					
+							int htmllength = range == null ? 0 : range.getLength();
+							int htmloffset = range == null ? 0 : range.getOffset();
+							if (htmllength < 0 || htmloffset < 0) {
+								continue;
+							}
+							Position position = new Position(htmloffset, htmllength);
+							validChildren.add(getJsNode(node.getParentNode(), allChildren[i], position));
 					
 				
 				}
 			}
 		}
+		Object[] result = new Object[0];
+
+
 		if (validChildren.size() > 0) {
 			result = validChildren.toArray();
 		}
