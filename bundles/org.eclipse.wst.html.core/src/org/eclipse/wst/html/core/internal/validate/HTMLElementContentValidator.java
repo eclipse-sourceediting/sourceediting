@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.validate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -63,10 +64,23 @@ public class HTMLElementContentValidator extends PrimeValidator {
 		 * ModelQuery use not pervasive enough
 		 */
 		List availableChildElementDeclarations = ModelQueryUtil.getModelQuery(parent.getOwnerDocument()).getAvailableContent(parent, ed, ModelQuery.INCLUDE_CHILD_NODES);
+		/*
+		 * Retrieve and set aside just the element names for faster checking
+		 * later.
+		 */
+		int availableChildCount = availableChildElementDeclarations.size();
+		List availableChildElementLowercaseNames = new ArrayList(availableChildCount);
+		for (int i = 0; i < availableChildCount; i++) {
+			CMNode cmnode = (CMNode) availableChildElementDeclarations.get(i);
+			if (cmnode.getNodeType() == CMNode.ELEMENT_DECLARATION) {
+				availableChildElementLowercaseNames.add(cmnode.getNodeName().toLowerCase(Locale.US));
+			}
+		}
+		Object[] availableChildElementLowercaseNamesArray = availableChildElementLowercaseNames.toArray();
 
 		while (child != null) {
 			// perform actual validation
-			validateNode(parent, child, ed, availableChildElementDeclarations);
+			validateNode(parent, child, ed, availableChildElementLowercaseNamesArray);
 			child = child.getNextSibling();
 		}
 	}
@@ -85,27 +99,27 @@ public class HTMLElementContentValidator extends PrimeValidator {
 	// return count;
 	// }
 
-	private boolean containsDeclaration(CMElementDeclaration edec, List available) {
-		if (edec != null && available != null) {
-			
-			for (int i = 0; i < available.size(); i++) {
-				CMNode cmnode = (CMNode) available.get(i);
-				if (cmnode.getNodeType() == CMNode.ELEMENT_DECLARATION && cmnode.getNodeName().toLowerCase(Locale.US).equals(edec.getElementName().toLowerCase(Locale.US)))
-					return true;
-			}
-		}
-		return false;
-	}
 	/*
 	 * The implementation of the following method is practical but accurate.
-	 * The accurate maximum occurence should be retreive from the content
+	 * The accurate maximum occurrence should be retrieve from the content
 	 * model. However, it is useful enough, since almost implicit elements are
 	 * HTML, HEAD, or BODY.
 	 */
 	// private int getMaxOccur(Element parent, String childTag) {
 	// return 1;
 	// }
-	private void validateNode(Element target, Node child, CMElementDeclaration edec, List availableChildElementDeclarations) {
+
+	private boolean containsName(String name, Object[] possible) {
+		if (name != null && possible != null) {
+			for (int i = 0; i < possible.length; i++) {
+				if(name.equals(possible[i]))
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void validateNode(Element target, Node child, CMElementDeclaration edec, Object[] availableLowercaseChildElementNames) {
 		// NOTE: If the target element is 'UNKNOWN', that is, it has no
 		// element declaration, the content type of the element should be
 		// regarded as 'ANY'. -- 9/10/2001
@@ -130,7 +144,7 @@ public class HTMLElementContentValidator extends PrimeValidator {
 				// Defect 186774: If a child is not one of HTML elements,
 				// it should be regarded as a valid child regardless the
 				// type of the parent content model. -- 10/12/2001
-				if (ced == null || CMUtil.isSSI(ced) || (!CMUtil.isHTML(ced)) || containsDeclaration(ced, availableChildElementDeclarations))
+				if (ced == null || CMUtil.isSSI(ced) || (!CMUtil.isHTML(ced)) || containsName(ced.getElementName().toLowerCase(Locale.US), availableLowercaseChildElementNames))
 					return;
 
 				switch (contentType) {
