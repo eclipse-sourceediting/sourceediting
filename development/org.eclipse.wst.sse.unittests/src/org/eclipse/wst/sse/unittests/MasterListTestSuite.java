@@ -72,13 +72,13 @@ public class MasterListTestSuite extends TestSuite {
 		// addTest(RegressionBucket.suite());
 		// addTest(AllTestCases.suite());
 
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.wst.sse.unittests.additionalSuites");
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.wst.sse.unittests.additionalTests");
 		for (int i = 0; i < elements.length; i++) {
 			if (elements[i].getName().equals("suite")) {
 				TestSuite suite;
 				try {
 					suite = (TestSuite) elements[i].createExecutableExtension("class");
-					addTest(suite);
+					addTest(new TestSuite(suite.getClass()));
 				}
 				catch (CoreException e) {
 					Platform.getLog(Platform.getBundle("org.eclipse.wst.sse.unittests")).log(e.getStatus());
