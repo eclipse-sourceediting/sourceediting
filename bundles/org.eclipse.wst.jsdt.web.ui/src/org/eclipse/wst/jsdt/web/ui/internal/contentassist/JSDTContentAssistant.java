@@ -48,6 +48,8 @@ public class JSDTContentAssistant extends AbstractContentAssistProcessor {
 		/* add end script tag if needed */
 
 		/* --------- Content Assistant --------- */
+		if(theCollector==null) return new ICompletionProposal[0];
+		
 		getContentAssistProcessor().setProposalCollector(theCollector);
 		completionProposals = getContentAssistProcessor().computeCompletionProposals(viewer, documentPosition);
 		proposals.addAll(Arrays.asList(completionProposals));
@@ -98,6 +100,7 @@ public class JSDTContentAssistant extends AbstractContentAssistProcessor {
 	
 	protected JSDTProposalCollector getProposalCollector(ITextViewer viewer, int offset) {
 		IJsTranslation tran = getJSPTranslation(viewer, offset);
+		if(tran==null) return null;
 		return new JSDTProposalCollector(tran);
 	}
 	
