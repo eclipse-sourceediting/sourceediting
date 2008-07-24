@@ -178,7 +178,7 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 					is.close();
 				}
 			}
-			initializeXMLModel(file, true);
+			initializeXMLModel(file, resource.getWriteCount() != 0);
 		}
 		catch (IOException ex) {
 			Logger.log(Logger.ERROR, "IWAE0017E Unexpected IO exception occurred creating xml document");//$NON-NLS-1$
