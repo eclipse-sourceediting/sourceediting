@@ -41,10 +41,11 @@ public class RuntimePresetMappingRegistry {
 		if (descriptors == null) {
 			readDescriptors();
 		}
-		for (MappingDescriptor descriptor : descriptors) {
-			if (descriptor.getFacetRuntimeTypeID().equals(facetRuntimeTypeID) && descriptor.getFacetRuntimeVersion().equals(facetRuntimeVersion) && descriptor.getFacetID().equals(facetID)
-					&& descriptor.getFacetVersion().equals(facetVersion)) {
-				return descriptor.getPresetID();
+		if(facetRuntimeTypeID != null){
+			for (MappingDescriptor descriptor : descriptors) {
+				if (facetRuntimeTypeID.startsWith(descriptor.getFacetRuntimeTypeID()) &&  descriptor.getFacetID().equals(facetID)) {
+					return descriptor.getPresetID();
+				}
 			}
 		}
 		return null;
