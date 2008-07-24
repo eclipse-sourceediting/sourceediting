@@ -288,9 +288,12 @@ public class JSPJavaValidator extends JSPValidator {
 				List problems = translation.getProblems();
 				// add new messages
 				for (int i = 0; i < problems.size() && !reporter.isCancelled(); i++) {
-					IMessage m = createMessageFromProblem((IProblem) problems.get(i), f, translation, domModel.getStructuredDocument());
-					if (m != null)
-						reporter.addMessage(fMessageOriginator, m);
+					IProblem problem = (IProblem) problems.get(i);
+					if (problem.getID() != IProblem.Task) {
+						IMessage m = createMessageFromProblem(problem, f, translation, domModel.getStructuredDocument());
+						if (m != null)
+							reporter.addMessage(fMessageOriginator, m);
+					}
 				}
 			}
 		}
