@@ -313,7 +313,9 @@ public class XSLTRuntime
 			props.put("indent", "yes"); //$NON-NLS-1$ //$NON-NLS-2$
 		else if (XSLLaunchConfigurationConstants.XALAN_TYPE_ID.equals(typeId))
 			props.put("{http://xml.apache.org/xslt}indent-amount", "4"); //$NON-NLS-1$ //$NON-NLS-2$
-		else if (XSLLaunchConfigurationConstants.SAXONB_TYPE_ID.equals(typeId))
+		else if (XSLLaunchConfigurationConstants.SAXON_TYPE_ID.equals(typeId))
+			props.put("{http://saxon.sf.net/}indent-spaces", "4"); //$NON-NLS-1$ //$NON-NLS-2$
+		else if (XSLLaunchConfigurationConstants.SAXON_1_0_TYPE_ID.equals(typeId))
 			props.put("{http://saxon.sf.net/}indent-spaces", "4"); //$NON-NLS-1$ //$NON-NLS-2$
 		return props;
 	}

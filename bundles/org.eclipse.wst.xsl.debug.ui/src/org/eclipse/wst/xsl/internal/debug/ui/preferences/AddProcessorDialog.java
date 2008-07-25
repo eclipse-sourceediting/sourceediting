@@ -27,8 +27,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -58,8 +56,6 @@ public class AddProcessorDialog extends StatusDialog
 	private int fPrevIndex = -1;
 	private final InstalledProcessorsBlock block;
 	private boolean adding;
-	private Button supportsVerson10Checkbox;
-	private Button supportsVerson20Checkbox;
 
 	public AddProcessorDialog(InstalledProcessorsBlock block, Shell parent, IProcessorType[] types, IProcessorInstall install)
 	{
@@ -140,20 +136,6 @@ public class AddProcessorDialog extends StatusDialog
 			}
 		});
 
-		label = new Label(parent, SWT.NONE);
-		label.setText(ProcessorMessages.AddProcessorDialog_1);
-		supportsVerson10Checkbox = new Button(parent, SWT.CHECK);
-		gd = new GridData();
-		gd.horizontalSpan = 2;
-		supportsVerson10Checkbox.setLayoutData(gd);
-		supportsVerson10Checkbox.setText("XSLT 1.0"); //$NON-NLS-1$
-
-		label = new Label(parent, SWT.NONE);
-		supportsVerson20Checkbox = new Button(parent, SWT.CHECK);
-		gd = new GridData();
-		gd.horizontalSpan = 2;
-		supportsVerson20Checkbox.setLayoutData(gd);
-		supportsVerson20Checkbox.setText("XSLT 2.0"); //$NON-NLS-1$
 	}
 
 	protected void createFieldListeners()
@@ -174,33 +156,6 @@ public class AddProcessorDialog extends StatusDialog
 				updateStatusLine();
 			}
 		});
-
-		supportsVerson10Checkbox.addSelectionListener(new SelectionListener()
-		{
-			public void widgetDefaultSelected(SelectionEvent e)
-			{
-			}
-
-			public void widgetSelected(SelectionEvent e)
-			{
-				setVersionStatus(validateVersionStatus());
-				updateStatusLine();
-			}
-		});
-
-		supportsVerson20Checkbox.addSelectionListener(new SelectionListener()
-		{
-			public void widgetDefaultSelected(SelectionEvent e)
-			{
-			}
-
-			public void widgetSelected(SelectionEvent e)
-			{
-				setVersionStatus(validateVersionStatus());
-				updateStatusLine();
-			}
-		});
-
 	}
 
 	protected String getProcessorName()
@@ -267,7 +222,6 @@ public class AddProcessorDialog extends StatusDialog
 		{
 			processorNameField.setText(""); //$NON-NLS-1$
 			processorTypeField.setSelection(new StructuredSelection(processorTypes[0]));
-			supportsVerson10Checkbox.setSelection(true);
 			fLibraryBlock.initializeFrom(standinProcessor, selectedProcessorType);
 		}
 		else
@@ -276,8 +230,6 @@ public class AddProcessorDialog extends StatusDialog
 			processorTypeField.setSelection(new StructuredSelection(standinProcessor.getProcessorType()));
 			processorNameField.setText(standinProcessor.getName());
 
-			supportsVerson10Checkbox.setSelection(standinProcessor.supports("1.0")); //$NON-NLS-1$
-			supportsVerson20Checkbox.setSelection(standinProcessor.supports("2.0")); //$NON-NLS-1$
 			fLibraryBlock.initializeFrom(standinProcessor, selectedProcessorType);
 		}
 		setProcessorNameStatus(validateProcessorName());
@@ -316,8 +268,6 @@ public class AddProcessorDialog extends StatusDialog
 	protected IStatus validateVersionStatus()
 	{
 		IStatus status = Status.OK_STATUS;
-		if (!supportsVerson10Checkbox.getSelection() && !supportsVerson20Checkbox.getSelection())
-			status = new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, IStatus.OK, ProcessorMessages.AddProcessorDialog_7, null);
 		return status;
 	}
 
@@ -369,16 +319,6 @@ public class AddProcessorDialog extends StatusDialog
 				processor.setDebuggerId(element.getId());
 		}
 
-		String supports = ""; //$NON-NLS-1$
-		if (supportsVerson10Checkbox.getSelection())
-		{
-			supports += "1.0"; //$NON-NLS-1$
-			if (supportsVerson20Checkbox.getSelection())
-				supports += ","; //$NON-NLS-1$
-		}
-		if (supportsVerson20Checkbox.getSelection())
-			supports += "2.0"; //$NON-NLS-1$
-		processor.setSupports(supports);
 		fLibraryBlock.performApply(processor);
 	}
 

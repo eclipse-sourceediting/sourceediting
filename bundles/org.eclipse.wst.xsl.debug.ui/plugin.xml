@@ -6,15 +6,15 @@
 		<page
 			category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
 			class="org.eclipse.wst.xsl.internal.debug.ui.preferences.ProcessorsPreferencePage"
-			id="org.eclipse.wst.xsl.launching.ui.preferences.ProcessorPreferencePage"
+			id="org.eclipse.wst.xsl.ui.preferences.java"
 			name="%page.name.1">
 		</page>
 		<page
-			category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
+			category="org.eclipse.wst.xsl.ui.preferences.java"
 			class="org.eclipse.wst.xsl.internal.debug.ui.preferences.FeaturesPreferencePage"
 			id="org.eclipse.wst.xsl.debug.ui.page1" name="%page.name.2" />
 		<page
-			category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
+			category="org.eclipse.wst.xsl.ui.preferences.java"
 			class="org.eclipse.wst.xsl.internal.debug.ui.preferences.OutputPreferencePage"
 			id="org.eclipse.wst.xsl.debug.ui.output" name="%page.name.3" />
 	</extension>

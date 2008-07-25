@@ -38,7 +38,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer
 		OutputPropertyPreferences outputPrefs = new OutputPropertyPreferences();
 		outputPrefs.setOutputPropertyValues(XSLTRuntime.JRE_DEFAULT_PROCESSOR_TYPE_ID, XSLTRuntime.createDefaultOutputProperties(XSLTRuntime.JRE_DEFAULT_PROCESSOR_TYPE_ID));
 		outputPrefs.setOutputPropertyValues(XSLLaunchConfigurationConstants.XALAN_TYPE_ID, XSLTRuntime.createDefaultOutputProperties(XSLLaunchConfigurationConstants.XALAN_TYPE_ID));
-		outputPrefs.setOutputPropertyValues(XSLLaunchConfigurationConstants.SAXONB_TYPE_ID, XSLTRuntime.createDefaultOutputProperties(XSLLaunchConfigurationConstants.SAXONB_TYPE_ID));
+		outputPrefs.setOutputPropertyValues(XSLLaunchConfigurationConstants.SAXON_TYPE_ID, XSLTRuntime.createDefaultOutputProperties(XSLLaunchConfigurationConstants.SAXON_TYPE_ID));
+		outputPrefs.setOutputPropertyValues(XSLLaunchConfigurationConstants.SAXON_1_0_TYPE_ID, XSLTRuntime.createDefaultOutputProperties(XSLLaunchConfigurationConstants.SAXON_1_0_TYPE_ID));
 
 		try
 		{

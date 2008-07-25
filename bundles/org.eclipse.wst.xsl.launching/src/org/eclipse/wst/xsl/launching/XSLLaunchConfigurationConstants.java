@@ -41,5 +41,6 @@ public class XSLLaunchConfigurationConstants
 	public static final String ATTR_DEFAULT_DEBUGGING_INSTALL_ID = LaunchingPlugin.PLUGIN_ID + ".ATTR_DEFAULT_DEBUGGING_INSTALL_ID";; //$NON-NLS-1$
 
 	public static final String XALAN_TYPE_ID = "org.eclipse.wst.xsl.xalan.processorType"; //$NON-NLS-1$
-	public static final String SAXONB_TYPE_ID = "org.eclipse.wst.xsl.saxon.processorType"; //$NON-NLS-1$
+	public static final String SAXON_TYPE_ID = "org.eclipse.wst.xsl.saxon.processorType"; //$NON-NLS-1$
+	public static final String SAXON_1_0_TYPE_ID = "org.eclipse.wst.xsl.saxon_1_0.processorType"; //$NON-NLS-1$
 }

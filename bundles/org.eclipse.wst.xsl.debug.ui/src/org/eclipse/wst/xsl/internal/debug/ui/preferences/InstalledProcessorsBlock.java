@@ -144,7 +144,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 		fTable.setLinesVisible(true);
 
 		TableColumn column1 = new TableColumn(fTable, SWT.NONE);
-		column1.setWidth(150);
+		column1.setWidth(180);
 		column1.setResizable(true);
 		column1.setText(ProcessorMessages.InstalledProcessorsBlock_1);
 		column1.addSelectionListener(new SelectionAdapter()
@@ -157,7 +157,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 		});
 
 		TableColumn column2 = new TableColumn(fTable, SWT.NONE);
-		column2.setWidth(80);
+		column2.setWidth(90);
 		column2.setResizable(true);
 		column2.setText(ProcessorMessages.InstalledProcessorsBlock_2);
 		column2.addSelectionListener(new SelectionAdapter()
@@ -169,21 +169,8 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 			}
 		});
 
-		TableColumn column3 = new TableColumn(fTable, SWT.NONE);
-		column3.setWidth(90);
-		column3.setResizable(true);
-		column3.setText(ProcessorMessages.InstalledProcessorsBlock_3);
-		column3.addSelectionListener(new SelectionAdapter()
-		{
-			@Override
-			public void widgetSelected(SelectionEvent e)
-			{
-				sortByVersion();
-			}
-		});
-
 		TableColumn column4 = new TableColumn(fTable, SWT.NONE);
-		column4.setWidth(150);
+		column4.setWidth(180);
 		column4.setResizable(true);
 		column4.setText(ProcessorMessages.InstalledProcessorsBlock_4);
 		column4.addSelectionListener(new SelectionAdapter()
@@ -394,7 +381,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 	{
 		IStructuredSelection selection = (IStructuredSelection) tableViewer.getSelection();
 		int selectionCount = selection.size();
-		fEditButton.setEnabled(selectionCount == 1);
+		fEditButton.setEnabled(selectionCount == 1 && !((IProcessorInstall)selection.getFirstElement()).isContributed());
 		if (selectionCount > 0 && selectionCount < tableViewer.getTable().getItemCount())
 		{
 			Iterator<?> iterator = selection.iterator();
@@ -482,13 +469,13 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 		{
 			return;
 		}
-		if (install.isContributed())
+		if (!install.isContributed())
 		{
-			ProcessorDetailsDialog dialog = new ProcessorDetailsDialog(getShell(), install);
-			dialog.open();
-		}
-		else
-		{
+//			ProcessorDetailsDialog dialog = new ProcessorDetailsDialog(getShell(), install);
+//			dialog.open();
+//		}
+//		else
+//		{
 			AddProcessorDialog dialog = new AddProcessorDialog(this, getShell(), XSLTRuntime.getProcessorTypesExclJREDefault(), install);
 			dialog.setTitle(ProcessorMessages.AddProcessorDialog_Edit_Title);
 			if (dialog.open() != Window.OK)
@@ -640,8 +627,6 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 					case 1:
 						return install.getProcessorType().getLabel();
 					case 2:
-						return install.getSupports();
-					case 3:
 						if (install.getDebugger() != null)
 						{
 							return install.getDebugger().getName();

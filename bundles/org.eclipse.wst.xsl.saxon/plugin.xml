@@ -10,6 +10,13 @@
             outputProperties="SaxonOutputProperties.properties"
             transformerFactory="net.sf.saxon.TransformerFactoryImpl">
       </processorType>
+      <processorType
+            featureProperties="SaxonFeatures.properties"
+            id="org.eclipse.wst.xsl.saxon_1_0.processorType"
+            label="%processorType.label.1"
+            outputProperties="SaxonOutputProperties.properties"
+            transformerFactory="com.icl.saxon.TransformerFactoryImpl">
+      </processorType>
    </extension>
 
 </plugin>
