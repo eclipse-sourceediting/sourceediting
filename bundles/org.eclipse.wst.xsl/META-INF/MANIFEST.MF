@@ -4,3 +4,4 @@ Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.xsl
 Bundle-Version: 0.5.0.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
+Bundle-Localization: plugin
