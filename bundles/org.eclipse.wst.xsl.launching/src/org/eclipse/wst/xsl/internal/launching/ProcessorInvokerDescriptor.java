@@ -52,7 +52,7 @@ public class ProcessorInvokerDescriptor implements IProcessorInvoker
 				{
 					jar = jar.substring("${eclipse_orbit:".length()); //$NON-NLS-1$
 					jar = jar.substring(0,jar.length()-1);
-					entry = Utils.getFileLocation(jar,""); //$NON-NLS-1$
+					entry = Utils.getPluginLocation(jar);
 				}
 				else
 				{

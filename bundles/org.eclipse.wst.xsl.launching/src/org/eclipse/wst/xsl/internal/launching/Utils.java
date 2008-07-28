@@ -34,4 +34,24 @@ public class Utils
 		return location;
 	}
 
+	public static String getPluginLocation(String bundleId) throws CoreException
+	{
+		String location = null;
+		try
+		{
+			URL url = new URL("platform:/plugin/"+bundleId);
+			if (url != null)
+			{
+				URL fileUrl = FileLocator.toFileURL(url);
+				File file = new File(fileUrl.getFile());
+				location = file.getAbsolutePath();
+			}
+		}
+		catch (IOException e)
+		{
+			throw new CoreException(new Status(IStatus.ERROR, LaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.getString("Utils.0") + bundleId + Messages.getString("Utils.1") + bundleId, e)); //$NON-NLS-1$ //$NON-NLS-2$
+		} 
+		return location;
+	}
+
 }
