@@ -39,7 +39,7 @@ public class ImportsTest extends BaseTestCase
 
   public void testImport002()
   {
-    XSDSchema schema = getXSDSchema(TC_ROOT_FOLDER + "/ImportsWithNamespace/RefByAttribute/UnUsed/Main.xsd");
+    XSDSchema schema = getXSDSchema(TC_ROOT_FOLDER + "/ImportsWithNamespace/RefByAttribute/Unused/Main.xsd");
     importManager.performRemoval(schema);
     List list = importManager.getUnusedXSDDirectives();
     assertTrue(list.size() == 1);
@@ -55,7 +55,7 @@ public class ImportsTest extends BaseTestCase
 
   public void testImport004()
   {
-    XSDSchema schema = getXSDSchema(TC_ROOT_FOLDER + "/ImportsWithNamespace/RefByAttributeGroup/UnUsed/Main.xsd");
+    XSDSchema schema = getXSDSchema(TC_ROOT_FOLDER + "/ImportsWithNamespace/RefByAttributeGroup/Unused/Main.xsd");
     importManager.performRemoval(schema);
     List list = importManager.getUnusedXSDDirectives();
     assertTrue(list.size() == 1);

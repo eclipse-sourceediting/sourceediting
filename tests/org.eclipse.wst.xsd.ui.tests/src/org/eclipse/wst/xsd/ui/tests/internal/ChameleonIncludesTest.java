@@ -39,7 +39,7 @@ public class ChameleonIncludesTest extends BaseTestCase
 
   public void testChameleonTest002()
   {
-    XSDSchema schema = getXSDSchema(TC_ROOT_FOLDER + "/Chameleon-NoNamespace/RefByAttribute/UnUsed/Main.xsd");
+    XSDSchema schema = getXSDSchema(TC_ROOT_FOLDER + "/Chameleon-NoNamespace/RefByAttribute/Unused/Main.xsd");
     importManager.performRemoval(schema);
     List list = importManager.getUnusedXSDDirectives();
     assertTrue(list.size() == 1);
@@ -55,7 +55,7 @@ public class ChameleonIncludesTest extends BaseTestCase
 
   public void testChameleonTest004()
   {
-    XSDSchema schema = getXSDSchema(TC_ROOT_FOLDER + "/Chameleon-NoNamespace/RefByAttributeGroup/UnUsed/Main.xsd");
+    XSDSchema schema = getXSDSchema(TC_ROOT_FOLDER + "/Chameleon-NoNamespace/RefByAttributeGroup/Unused/Main.xsd");
     importManager.performRemoval(schema);
     List list = importManager.getUnusedXSDDirectives();
     assertTrue(list.size() == 1);
