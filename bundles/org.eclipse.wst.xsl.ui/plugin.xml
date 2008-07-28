@@ -118,41 +118,6 @@
 		</validator>
 	</extension>
 	
-	<extension point="org.eclipse.ui.actionSets">
-		<actionSet id="org.eclipse.wst.xsl.ui.xslActionSet" label="XSL Actions">
-			<action id="org.eclipse.wst.xsl.ui.newDTDFileAction"
-				class="org.eclipse.wst.xsl.ui.internal.actions.NewDTDFileWizardDelegate"
-				icon="icons/full/newdtd_wiz.gif" 
-				label="New DTD File" 
-				style="push" 
-				toolbarPath="org.eclipse.wst.xsl.ui.xslActionSet" />
-			<action id="org.eclipse.wst.xsl.ui.newXSDFileAction"
-				class="org.eclipse.wst.xsl.ui.internal.actions.NewXSDFileWizardDelegate"
-				icon="icons/full/XSDFile.gif" 
-				label="New XSD File" 
-				style="push" 
-				toolbarPath="org.eclipse.wst.xsl.ui.xslActionSet" />
-<!--			<action id="org.eclipse.wst.xsl.ui.newWSDLFileAction"
-				class="org.eclipse.wst.xsl.ui.internal.actions.NewWSDLFileWizardDelegate"
-				icon="icons/full/new_xml.gif" 
-				label="New WSDL File" 
-				style="push" 
-				toolbarPath="org.eclipse.wst.xsl.ui.xslActionSet" /> -->
-			<action id="org.eclipse.wst.xsl.ui.newXSLFileAction"
-				class="org.eclipse.wst.xsl.ui.internal.actions.NewXSLFileWizardDelegate"
-				icon="icons/full/xslt_file.gif" 
-				label="New XSL File" 
-				style="push" 
-				toolbarPath="org.eclipse.wst.xsl.ui.xslActionSet" />
-			<action id="org.eclipse.wst.xsl.ui.newXMLFileAction"
-				class="org.eclipse.wst.xsl.ui.internal.actions.NewXMLFileWizardDelegate"
-				icon="icons/full/new_xml.gif" 
-				label="New XML File" 
-				style="push" 
-				toolbarPath="org.eclipse.wst.xsl.ui.xslActionSet" />
-		</actionSet>
-	</extension>
-	
  <extension
        point="org.eclipse.ui.perspectiveExtensions">
     <perspectiveExtension
@@ -227,5 +192,90 @@
            </visibleWhen>
         </command>
      </menuContribution>
+     <menuContribution
+              locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+        <toolbar
+              id="org.eclipse.wst.xsl.ui.design.NewFileToolBar">
+          <visibleWhen checkEnabled="false">
+			<with variable="activeWorkbenchWindow.activePerspective">
+			       <equals value="org.eclipse.wst.xsl.ui.perspective"/>
+			    </with>
+           </visibleWhen>         
+      <separator
+           name="org.eclipse.wst.xsl.toolbar.separator.1"
+           visible="true">
+       </separator>
+        <command
+              commandId="org.eclipse.ui.newWizard"
+              icon="icons/full/new_xml.gif"
+              id="org.eclipse.wst.xsl.ui.newXMLFile"
+              style="push"
+              tooltip="New XML File">
+             <parameter
+                   name="newWizardId"
+                   value="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard">
+             </parameter>
+          <visibleWhen checkEnabled="false">
+			<with variable="activeWorkbenchWindow.activePerspective">
+			       <equals value="org.eclipse.wst.xsl.ui.perspective"/>
+			    </with>
+           </visibleWhen>         
+        </command>
+        <command
+              commandId="org.eclipse.ui.newWizard"
+              icon="icons/full/newdtd_wiz.gif"
+              id="org.eclipse.wst.xsl.ui.newDTDFile"
+              style="push"
+              tooltip="New XML File">
+             <parameter
+                   name="newWizardId"
+                   value="org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard">
+             </parameter>
+          <visibleWhen checkEnabled="false">
+			<with variable="activeWorkbenchWindow.activePerspective">
+			       <equals value="org.eclipse.wst.xsl.ui.perspective"/>
+			    </with>
+           </visibleWhen>         
+        </command>
+        <command
+              commandId="org.eclipse.ui.newWizard"
+              icon="icons/full/XSDFile.gif"
+              id="org.eclipse.wst.xsl.ui.newXSDFile"
+              style="push"
+              tooltip="New XML Schema File">
+             <parameter
+                   name="newWizardId"
+                   value="org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard">
+             </parameter>
+          <visibleWhen checkEnabled="false">
+			<with variable="activeWorkbenchWindow.activePerspective">
+			       <equals value="org.eclipse.wst.xsl.ui.perspective"/>
+			    </with>
+           </visibleWhen>         
+        </command>        
+                
+        <command
+              commandId="org.eclipse.ui.newWizard"
+              icon="icons/full/xslt_file.gif"
+              id="org.eclipse.wst.xsl.ui.newXSLFile"
+              style="push"
+              tooltip="New XSL File">
+             <parameter
+                   name="newWizardId"
+                   value="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard">
+             </parameter>
+          <visibleWhen checkEnabled="false">
+			<with variable="activeWorkbenchWindow.activePerspective">
+			       <equals value="org.eclipse.wst.xsl.ui.perspective"/>
+			    </with>
+           </visibleWhen>         
+        </command>
+      <separator
+           name="additions"
+           visible="true">
+       </separator>
+      </toolbar> 
+     </menuContribution>
   </extension>
+   
 </plugin>
