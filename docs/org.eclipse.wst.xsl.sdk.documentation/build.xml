@@ -87,5 +87,11 @@
 	  	  	 </doclet>
 	  	  </javadoc>
 	</target>
+	
+	<target name="ExtensionPointDoc">
+		<pde.convertSchemaToHTML manifest="../org.eclipse.wst.xsl.launching/plugin.xml"
+			                     destination="${workspace}/doc/html/extension_point"
+		/>
+	</target>
 
 </project>

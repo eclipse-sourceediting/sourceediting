@@ -461,4 +461,14 @@
          <topic href="doc/html/org.eclipse.wst.xsl.xalan.debugger.XalanVariable.html" label="org.eclipse.wst.xsl.xalan.debugger.XalanVariable"/>
       </topic>
    </topic>
+   <topic label="Extension Points">
+      <topic href="doc/html/extension_point/org_eclipse_wst_xsl_launching_debugger.html" label="org.eclipse.wst.xsl.launching.debugger">
+      </topic>
+      <topic href="doc/html/extension_point/org_eclipse_wst_xsl_launching_invoke.html" label="org.eclipse.wst.xsl.launching.invoke">
+      </topic>
+      <topic href="doc/html/extension_point/org_eclipse_wst_xsl_launching_processor.html" label="org.eclipse.wst.xsl.launching.processor">
+      </topic>
+      <topic href="doc/html/extension_point/org_eclipse_wst_xsl_launching_processorType.html" label="org.eclipse.wst.xsl.launching.processorType">
+      </topic>
+   </topic>
 </toc>
