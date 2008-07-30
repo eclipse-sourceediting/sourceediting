@@ -17,14 +17,17 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 
 public class StylesheetLabelProvider extends LabelProvider
 {
+	private Image image = XSLDebugUIPlugin.getImageDescriptor("icons/xslt_launch.gif").createImage();
+	
 	@Override
 	public Image getImage(Object element)
 	{
-		return null;
+		return image;
 	}
 
 	@Override
