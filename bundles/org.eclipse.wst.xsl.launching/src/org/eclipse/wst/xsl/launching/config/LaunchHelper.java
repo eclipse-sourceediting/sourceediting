@@ -47,7 +47,6 @@ import org.w3c.dom.Document;
 
 public class LaunchHelper
 {
-	private IPath sourceFile;
 	private final URL source;
 	private final File target;
 	private final LaunchFeatures features;
@@ -183,7 +182,7 @@ public class LaunchHelper
 		}
 	}
 
-	private LaunchProperties hydrateOutputProperties(ILaunchConfiguration configuration) throws CoreException
+	public static LaunchProperties hydrateOutputProperties(ILaunchConfiguration configuration) throws CoreException
 	{
 		LaunchProperties properties = null;
 		boolean usePreferenceProperties = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_USE_PROPERTIES_FROM_PREFERENCES, true);
@@ -283,7 +282,7 @@ public class LaunchHelper
 		return null;
 	}
 
-	private LaunchPipeline hydratePipeline(ILaunchConfiguration configuration) throws CoreException
+	private static LaunchPipeline hydratePipeline(ILaunchConfiguration configuration) throws CoreException
 	{
 		LaunchPipeline pipeline = null;
 		String s = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_PIPELINE, (String) null);
@@ -295,15 +294,19 @@ public class LaunchHelper
 		return pipeline;
 	}
 
-	private URL hydrateSourceFileURL(ILaunchConfiguration configuration) throws CoreException
+	public static URL hydrateSourceFileURL(ILaunchConfiguration configuration) throws CoreException
+	{
+		IPath sourceFile = hydrateSourceFile(configuration);
+		return pathToURL(sourceFile);
+	}
+	
+	private static IPath hydrateSourceFile(ILaunchConfiguration configuration) throws CoreException
 	{
 		String sourceFileExpr = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, (String) null);
-		sourceFile = getSubstitutedPath(sourceFileExpr);
-		URL url = pathToURL(sourceFile);
-		return url;
+		return getSubstitutedPath(sourceFileExpr);
 	}
 
-	private URL pathToURL(IPath sourceFile) throws CoreException
+	private static URL pathToURL(IPath sourceFile) throws CoreException
 	{
 		URL url = null;
 		try
@@ -317,7 +320,7 @@ public class LaunchHelper
 		return url;
 	}
 
-	private File hydrateOutputFile(ILaunchConfiguration configuration) throws CoreException
+	public static File hydrateOutputFile(ILaunchConfiguration configuration) throws CoreException
 	{
 		IPath outputFile = null;
 		boolean useDefaultOutputFile = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_OUTPUT_FILE, true);
@@ -330,7 +333,7 @@ public class LaunchHelper
 		{
 			// TODO: where is the default output file? And must share this with
 			// the value displayed in the UI.
-			outputFile = (IPath) sourceFile.clone();
+			outputFile = (IPath) hydrateSourceFile(configuration);
 			outputFile = outputFile.addFileExtension("out").addFileExtension("xml"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return outputFile.toFile();
@@ -346,7 +349,7 @@ public class LaunchHelper
 		return null;
 	}
 
-	private IProcessorInstall getProcessorInstall(ILaunchConfiguration configuration) throws CoreException
+	public static IProcessorInstall getProcessorInstall(ILaunchConfiguration configuration) throws CoreException
 	{
 		boolean useDefaultProcessor = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_PROCESSOR, true);
 		if (useDefaultProcessor)
