@@ -12,6 +12,7 @@ package org.eclipse.wst.xsl.core.tests;
 
 
 import org.eclipse.wst.xsl.internal.core.tests.TestIncludedTemplates;
+import org.eclipse.wst.xsl.internal.core.tests.TestXSLCore;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -25,5 +26,6 @@ public class XSLCoreTestSuite extends TestSuite {
 	public XSLCoreTestSuite() {
 		super("XSL Core Test Suite");
 		addTestSuite(TestIncludedTemplates.class);
+		addTestSuite(TestXSLCore.class);
 	}
 }
