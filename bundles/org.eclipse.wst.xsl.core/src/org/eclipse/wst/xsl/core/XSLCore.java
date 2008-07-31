@@ -152,7 +152,29 @@ public class XSLCore
 		return FileUtil.isXSLFile(file);
 	}
 	
+	
+	/**
+	 * Takes a given <code>IDOMNode</code> and returns whether it 
+	 * is part of the the XSLT Namespace.
+	 * @param node  The IDOMNode to be checked.
+	 * @return True if part of the XSLT namespace, false otherwise.
+	 */
 	public static boolean isXSLNamespace(IDOMNode node) {
+		if (hasNamespace(node)) {
+			return false;
+		}
 		return node.getNamespaceURI().equals(XSL_NAMESPACE_URI);
 	}
+
+	/**
+	 * Determine if the Node that was passed has a Namespace.  If it
+	 * doesn't the node is either going to be false, or the call to the
+	 * getNamespace() method will return null.
+	 * @param node
+	 * @return
+	 */
+	private static boolean hasNamespace(IDOMNode node) {
+		return node == null || node.getNamespaceURI() == null;
+	}
+	
 }
