@@ -23,15 +23,14 @@
     	    	
 	  <javadoc destdir="doc" package="true" docletpath="${workspace}/lib/jeldoclet.jar">
 	  	 <fileset dir="${workspaceloc}">
-	  	 	<include name="org.eclipse.wst.xsl.core/**/*.java"/>
-	  	 	<include name="org.eclipse.wst.xsl.debug/**/*.java"/>
-	  	 	<include name="org.eclipse.wst.xsl.debug.ui/**/*.java"/>
-	  	 	<include name="org.eclipse.wst.xsl.launching/**/*.java"/>
-	  	 	<include name="org.eclipse.wst.xsl.saxon/**/*.java"/>
-	  	 	<include name="org.eclipse.wst.xsl.ui/**/*.java"/>
-	  	 	<include name="org.eclipse.wst.xsl.xalan/src-debugger/**/*.java"/>
-	  	 	<include name="org.eclipse.wst.xml.xpath.core/src/**/*.java"/>
-	  	 	<include name="org.eclipse.wst.xml.xpath.ui/**/*.java"/>
+	  	 	<include name="org.eclipse.wst.xsl.core/src/org/eclipse/wst/xsl/core/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xsl.debug/src-debugger/org/eclipse/wst/xsl/debugger/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xsl.debug/src-invoker/org/eclipse/wst/xsl/invoker/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xsl.debug/src-invoker/org/eclipse/wst/xsl/invoker/config/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xsl.xalan/src-debugger/org/eclipse/wst/xsl/xalan/debugger/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xml.xpath.core/src/org/eclipse/wst/xml/xpath/core/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xml.xpath.ui/src-xpath/org/eclipse/wst/xml/xpath/ui/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xml.xpath.ui/src-xpath/org/eclipse/wst/xml/xpath/ui/views/*.java"/>
 	  	 </fileset>
 	     <doclet name="com.jeldoclet.JELDoclet">
 	     	<param name="-multiple"/>
@@ -47,15 +46,16 @@
 
   	  <javadoc destdir="doc" package="true" docletpath="${workspace}/lib/jeldoclet.jar">
   	  	 <fileset dir="${workspaceloc}">
-  	  	 	<include name="org.eclipse.wst.xsl.core/**/*.java"/>
-  	  	 	<include name="org.eclipse.wst.xsl.debug/**/*.java"/>
-  	  	 	<include name="org.eclipse.wst.xsl.debug.ui/**/*.java"/>
-  	  	 	<include name="org.eclipse.wst.xsl.launching/**/*.java"/>
-  	  	 	<include name="org.eclipse.wst.xsl.saxon/**/*.java"/>
-  	  	 	<include name="org.eclipse.wst.xsl.ui/**/*.java"/>
-  	  	 	<include name="org.eclipse.wst.xsl.xalan/src-debugger/**/*.java"/>
-  	  	 	<include name="org.eclipse.wst.xml.xpath.core/src/**/*.java"/>
-  	  	 	<include name="org.eclipse.wst.xml.xpath.ui/**/*.java"/>
+	  	 	<include name="org.eclipse.wst.xsl.core/src/org/eclipse/wst/xsl/core/*.java"/>
+	  	 	<include name="org.eclipse.wst.xsl.core/src/org/eclipse/wst/xsl/core/resolver/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xsl.debug/src-debugger/org/eclipse/wst/xsl/debugger/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xsl.debug/src-invoker/org/eclipse/wst/xsl/invoker/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xsl.debug/src-invoker/org/eclipse/wst/xsl/invoker/config/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xsl.xalan/src-debugger/org/eclipse/wst/xsl/xalan/debugger/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xml.xpath.core/src/org/eclipse/wst/xml/xpath/core/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xml.xpath.core/src/org/eclipse/wst/xml/xpath/core/util/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xml.xpath.ui/src-xpath/org/eclipse/wst/xml/xpath/ui/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xml.xpath.ui/src-xpath/org/eclipse/wst/xml/xpath/ui/views/*.java"/>
   	  	 </fileset>
   	     <doclet name="com.jeldoclet.JELDoclet"/>
   	  </javadoc>
