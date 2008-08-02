@@ -12,78 +12,90 @@
  *******************************************************************************/
 
  -->
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:redirect="http://xml.apache.org/xalan/redirect"
+                extension-element-prefixes="redirect">
     <xsl:output encoding="UTF-8" method="html" indent="no" omit-xml-declaration="yes"/>
     
     <!-- Create the HTML structure -->
 	<xsl:template match="/">
-        <html>
-          <body>
-      		<xsl:apply-templates select="//jelclass"/>
-          </body>
-        </html>
+   		<xsl:apply-templates select="//jelclass"/>
 	</xsl:template>
    
     <!-- This is the main work horse that does the general layout for the class page -->
     <xsl:template match="jelclass">
-         <p>
-            <font size="+1"><strong>Package <xsl:value-of select="@package"/></strong></font>
-         </p>
-         <hr/>
-         <h2>
-            <font size="-1"><strong><xsl:value-of select="@package"/></strong></font><br/>
-            Class <xsl:value-of select="@type"/>
-         </h2>
-         <br/>
-         <hr/>
-         <xsl:call-template name="format-header"/>
-         <xsl:apply-templates select="comment/description"/>
-         <xsl:apply-templates select="comment/attribute"/>
-         <hr/>
-         <xsl:if test="descendant::fields">
-            <table border="1" width="100%">
-               <tr bgcolor="#CCCCFF" cols="2">
-                  <td width="100%" colspan="2"><h2>Field Summary</h2></td>
-               </tr>
-               <xsl:apply-templates select="fields/field" mode="summary">
-                  <xsl:sort select="@name" order="ascending"/>
-               </xsl:apply-templates>
-            </table>
+      <xsl:variable name="outputFile">
+        <xsl:value-of select="@fulltype"/>
+        <xsl:text>.html</xsl:text>
+      </xsl:variable>
+      <xsl:message terminate="no">
+         <xsl:text>Generating JavaDoc for </xsl:text>
+         <xsl:value-of select="@fulltype"/>
+         <xsl:text>.</xsl:text>
+      </xsl:message>
+      <redirect:write select="$outputFile">
+       <html>
+         <body>
+            <p>
+               <font size="+1"><strong>Package <xsl:value-of select="@package"/></strong></font>
+            </p>
+            <hr/>
+            <h2>
+               <font size="-1"><strong><xsl:value-of select="@package"/></strong></font><br/>
+               Class <xsl:value-of select="@type"/>
+            </h2>
             <br/>
-         </xsl:if>
-         <xsl:if test="descendant::constructor">
-            <table border="1" width="100%">
-               <tr bgcolor="#CCCCFF">
-                  <td width="100%"><h2>Constructor Summary</h2></td>
-               </tr>
-               <xsl:apply-templates select="descendant::constructor" mode="summary">
-                  <xsl:sort select="@name" order="ascending"/>
-               </xsl:apply-templates>
-            </table>
-            <br/>
-         </xsl:if>
-         <xsl:if test="descendant::methods">
-            <table border="1" width="100%">
-               <tr bgcolor="#CCCCFF" cols="2">
-                  <td width="100%" colspan="2"><h2>Method Summary</h2></td>
-               </tr>
-               <xsl:apply-templates select="methods/method" mode="summary">
-                  <xsl:sort select="@name" order="ascending"/>
-               </xsl:apply-templates>
-            </table>
-         </xsl:if>
-         <hr/>
-         <xsl:if test="fields">
-            <xsl:call-template name="fieldDetail"/>
-         </xsl:if>
-         <xsl:if test="methods/constructor">
-            <xsl:call-template name="constructorDetail"/>
-         </xsl:if>
-         <xsl:if test="methods/method">
-            <xsl:call-template name="methodsDetail"/>
-         </xsl:if>
-         
-         
+            <hr/>
+            <xsl:call-template name="format-header"/>
+            <xsl:apply-templates select="comment/description"/>
+            <xsl:apply-templates select="comment/attribute"/>
+            <hr/>
+            <xsl:if test="descendant::fields">
+               <table border="1" width="100%">
+                  <tr bgcolor="#CCCCFF" cols="2">
+                     <td width="100%" colspan="2"><h2>Field Summary</h2></td>
+                  </tr>
+                  <xsl:apply-templates select="fields/field" mode="summary">
+                     <xsl:sort select="@name" order="ascending"/>
+                  </xsl:apply-templates>
+               </table>
+               <br/>
+            </xsl:if>
+            <xsl:if test="descendant::constructor">
+               <table border="1" width="100%">
+                  <tr bgcolor="#CCCCFF">
+                     <td width="100%"><h2>Constructor Summary</h2></td>
+                  </tr>
+                  <xsl:apply-templates select="descendant::constructor" mode="summary">
+                     <xsl:sort select="@name" order="ascending"/>
+                  </xsl:apply-templates>
+               </table>
+               <br/>
+            </xsl:if>
+            <xsl:if test="descendant::methods">
+               <table border="1" width="100%">
+                  <tr bgcolor="#CCCCFF" cols="2">
+                     <td width="100%" colspan="2"><h2>Method Summary</h2></td>
+                  </tr>
+                  <xsl:apply-templates select="methods/method" mode="summary">
+                     <xsl:sort select="@name" order="ascending"/>
+                  </xsl:apply-templates>
+               </table>
+            </xsl:if>
+            <hr/>
+            <xsl:if test="fields">
+               <xsl:call-template name="fieldDetail"/>
+            </xsl:if>
+            <xsl:if test="methods/constructor">
+               <xsl:call-template name="constructorDetail"/>
+            </xsl:if>
+            <xsl:if test="methods/method">
+               <xsl:call-template name="methodsDetail"/>
+            </xsl:if>
+           </body>
+         </html>
+      </redirect:write>
     </xsl:template>
     
     <!-- Output any description that may be there for comments. -->
@@ -123,7 +135,9 @@
             </td>
             <td align="left" width="80%">
                <code>
+                  <a href="field_{@name}">
                   <xsl:value-of select="@name"/>
+                  </a>
                </code>
                <br/>
                &#160;&#160;&#160;&#160;
@@ -139,7 +153,9 @@
             <td>
                <code>
                   <strong>
+                    <a href="#con_{@name}">
                      <xsl:value-of select="@name"/>
+                    </a>
                   </strong>                     
                   <xsl:text>(</xsl:text>
                   <xsl:if test="params">
@@ -174,7 +190,9 @@
             </td>
             <td align="left" width="">
                <code>
+                  <a href="#method_{@name}">
                   <xsl:value-of select="@name"/>
+                  </a>
                   <xsl:text>(</xsl:text>
                   <xsl:if test="params">
                      <xsl:apply-templates select="params/param"/>
@@ -213,7 +231,9 @@ extends <xsl:value-of select="@superclassfulltype"/>
     
     <xsl:template match="fields/field" mode="detail">
       <h2>
-         <xsl:value-of select="@name"/>
+         <a name="field_{@name}">
+            <xsl:value-of select="@name"/>
+         </a>
       </h2>
       <p>
          <code>
@@ -259,7 +279,7 @@ extends <xsl:value-of select="@superclassfulltype"/>
     
     <xsl:template match="methods/constructor" mode="detail">
       <h2>
-         <xsl:value-of select="@name"/>
+         <a name="con_{@name}"><xsl:value-of select="@name"/></a>
       </h2>
       <p>
          <code>
@@ -299,7 +319,9 @@ extends <xsl:value-of select="@superclassfulltype"/>
     
     <xsl:template match="methods/method" mode="detail">
       <h2>
-         <xsl:value-of select="@name"/>
+         <a name="method_{@name}">
+            <xsl:value-of select="@name"/>
+         </a>
       </h2>
       <p>
          <code>

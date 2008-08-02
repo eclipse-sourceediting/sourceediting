@@ -20,7 +20,7 @@
          ================================= -->
     <target name="default" description="Builds SDK TOC Documentation using JELDoclet.">
     	
-    	    	
+<!--
 	  <javadoc destdir="doc" package="true" docletpath="${workspace}/lib/jeldoclet.jar">
 	  	 <fileset dir="${workspaceloc}">
 	  	 	<include name="org.eclipse.wst.xsl.core/src/org/eclipse/wst/xsl/core/*.java"/>
@@ -36,13 +36,8 @@
 	     	<param name="-multiple"/>
 	     </doclet>
 	  </javadoc>
+-->	  
       
-      <xslt style="doc/jeltohtmltest.xsl" destdir="doc/html">
-		<factory name="org.apache.xalan.processor.TransformerFactoryImpl">
-			<attribute name="http://xml.apache.org/xalan/features/optimize" value="true"/>
-		</factory>
-   	    <mapper type="glob" from="doc/*.xml" to="*.html"/>
-      </xslt>
 
   	  <javadoc destdir="doc" package="true" docletpath="${workspace}/lib/jeldoclet.jar">
   	  	 <fileset dir="${workspaceloc}">
@@ -59,6 +54,14 @@
   	  	 </fileset>
   	     <doclet name="com.jeldoclet.JELDoclet"/>
   	  </javadoc>
+    	
+     <xslt basedir="." style="doc/jeltohtml.xsl" in="doc/jel.xml" out="doc/html/deleteme.html">
+  		<factory name="org.apache.xalan.processor.TransformerFactoryImpl">
+  			<attribute name="http://xml.apache.org/xalan/features/optimize" value="true"/>
+  			
+  		</factory>
+     </xslt>
+    	
     	
      <xslt style="doc/jeltotoc.xsl" in="doc/jel.xml" out="toc.xml" destdir=".">
   		<factory name="org.apache.xalan.processor.TransformerFactoryImpl">
