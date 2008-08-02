@@ -135,7 +135,7 @@
             </td>
             <td align="left" width="80%">
                <code>
-                  <a href="field_{@name}">
+                  <a href="#field_{@name}">
                   <xsl:value-of select="@name"/>
                   </a>
                </code>

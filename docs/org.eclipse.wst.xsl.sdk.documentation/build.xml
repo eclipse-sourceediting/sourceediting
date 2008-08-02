@@ -19,25 +19,6 @@
           target: default              
          ================================= -->
     <target name="default" description="Builds SDK TOC Documentation using JELDoclet.">
-    	
-<!--
-	  <javadoc destdir="doc" package="true" docletpath="${workspace}/lib/jeldoclet.jar">
-	  	 <fileset dir="${workspaceloc}">
-	  	 	<include name="org.eclipse.wst.xsl.core/src/org/eclipse/wst/xsl/core/*.java"/>
-  	  	 	<include name="org.eclipse.wst.xsl.debug/src-debugger/org/eclipse/wst/xsl/debugger/*.java"/>
-  	  	 	<include name="org.eclipse.wst.xsl.debug/src-invoker/org/eclipse/wst/xsl/invoker/*.java"/>
-  	  	 	<include name="org.eclipse.wst.xsl.debug/src-invoker/org/eclipse/wst/xsl/invoker/config/*.java"/>
-  	  	 	<include name="org.eclipse.wst.xsl.xalan/src-debugger/org/eclipse/wst/xsl/xalan/debugger/*.java"/>
-  	  	 	<include name="org.eclipse.wst.xml.xpath.core/src/org/eclipse/wst/xml/xpath/core/*.java"/>
-  	  	 	<include name="org.eclipse.wst.xml.xpath.ui/src-xpath/org/eclipse/wst/xml/xpath/ui/*.java"/>
-  	  	 	<include name="org.eclipse.wst.xml.xpath.ui/src-xpath/org/eclipse/wst/xml/xpath/ui/views/*.java"/>
-	  	 </fileset>
-	     <doclet name="com.jeldoclet.JELDoclet">
-	     	<param name="-multiple"/>
-	     </doclet>
-	  </javadoc>
--->	  
-      
 
   	  <javadoc destdir="doc" package="true" docletpath="${workspace}/lib/jeldoclet.jar">
   	  	 <fileset dir="${workspaceloc}">
