@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.docbook.org/xsd/4.5/docbook.xsd">
+	<?dbhtml filename="legal.html" ?>
+	<title>Notices</title>
+	<para>
+      The material in this guide is Copyright (c) Doug Satchwell (<link xlink:href="http://www.chasetechnology.co.uk">Chase Technology Ltd</link>), 
+      David Carver ((<link xlink:href="http://www.starstandard.org">Standards for Technology in Automotive Retail</link>)
+      and others 2008.
+    </para>
+    <para>
+		This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies 
+		this distribution, and is available at 
+		<link xlink:href="http://www.eclipse.org/legal/epl-v10.html">http://www.eclipse.org/legal/epl-v10.html</link>.
+    </para>
+	<para>
+		<link xlink:href="about.html">Terms and conditions regarding the use of this guide.</link>.
+	</para>
+</chapter>

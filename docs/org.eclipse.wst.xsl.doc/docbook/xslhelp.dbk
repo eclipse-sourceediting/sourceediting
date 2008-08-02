@@ -17,5 +17,6 @@
    <xi:include href="launching/launching.xml"/>
    <xi:include href="preferences/preferences.xml"/>
    <xi:include href="samples/samples.xml"/>
+   <xi:include href="legal.xml"/>
 </book>
 
