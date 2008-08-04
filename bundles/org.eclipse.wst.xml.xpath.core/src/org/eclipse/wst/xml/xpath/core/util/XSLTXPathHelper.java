@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2008 Standards for Technology in Automotive Retail and others
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     David Carver (STAR) - initial API and implementation
+ *******************************************************************************/
+
 package org.eclipse.wst.xml.xpath.core.util;
 
 import javax.xml.transform.TransformerException;
@@ -6,10 +17,8 @@ import javax.xml.xpath.XPathExpressionException;
 import org.apache.xml.utils.PrefixResolver;
 import org.apache.xml.utils.PrefixResolverDefault;
 import org.apache.xpath.XPath;
-import org.apache.xpath.XPathAPI;
 import org.apache.xpath.XPathContext;
 import org.apache.xpath.compiler.FunctionTable;
-import org.apache.xpath.jaxp.XPathExpressionImpl;
 import org.apache.xpath.objects.XObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -275,7 +284,8 @@ public class XSLTXPathHelper {
 	
 	public static void compile(String expression) throws XPathExpressionException {
         try {
-            org.apache.xpath.XPath xpath = new XPath (expression, null,
+            @SuppressWarnings("unused")
+			org.apache.xpath.XPath xpath = new XPath (expression, null,
                     null, org.apache.xpath.XPath.SELECT, null, getFunctionTable());
         } catch ( javax.xml.transform.TransformerException te ) {
             throw new XPathExpressionException ( te ) ;
