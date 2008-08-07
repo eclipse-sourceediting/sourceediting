@@ -393,7 +393,12 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 	}
 
 	public boolean isShared() {
-		if (getResourceSet() == null || xmlModel == null)
+		
+		if( xmlModel == null) { //resource could be in process of being unloaded - check with model manager
+			String id = getModelManagerId();
+			return getModelManager().isShared(id);
+		}
+		if (getResourceSet() == null)
 			return false;
 		return xmlModel.isShared();
 	}
