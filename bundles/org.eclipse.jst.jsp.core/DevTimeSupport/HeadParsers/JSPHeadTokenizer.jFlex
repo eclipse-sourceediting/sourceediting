@@ -169,10 +169,14 @@ UTF83ByteBOM = \xEF\xBB\xBF
 // [3] S ::= (0x20 | 0x9 | 0xD | 0xA)+
 S = [\x20\x09\x0D\x0A]
 
-BeginAttributeeValue = {S}* \= {S}*
+//BeginAttributeeValue = {S}* \= {S}*
 
 LineTerminator = \r|\n
 
+
+Z = (\x00)?
+S_UTF = {Z}{S}{Z}
+BeginAttributeValueUTF = {S_UTF}* \= {S_UTF}*
 
 %state ST_XMLDecl
 %state ST_PAGE_DIRECTIVE
@@ -192,72 +196,69 @@ LineTerminator = \r|\n
         ^ {UTF83ByteBOM}       {if (yychar == 0 ) {hasMore = false; return EncodingParserConstants.UTF83ByteBOM;}}
         
         // force to be started on first line, but we do allow preceeding spaces
-        ^ {S}* "<\?xml" {S}+ {if (yychar == 0 ) {yybegin(ST_XMLDecl); return XMLHeadTokenizerConstants.XMLDeclStart;}}
+		^ {S_UTF}* ({Z}<{Z}\?{Z}x{Z}m{Z}l{Z}){S_UTF}+ {if (yychar == 0 ) {yybegin(ST_XMLDecl); return XMLHeadTokenizerConstants.XMLDeclStart;}}
 
 
         // following are some simply rules to identify JSP content as "XHTML"
         // see http://www.rfc-editor.org/rfc/rfc3236.txt
-        "<!DOCTYPE" {S}* "html" {S}* "PUBLIC" .* "//DTD XHTML"                {isXHTML = true;}
-        "<html" {S}* "xmlns" {S}* "=" {S}* (\" | \') "http://www.w3.org/1999/xhtml"     {isXHTML = true;}
+		{Z}<{Z}\!{Z}D{Z}O{Z}C{Z}T{Z}Y{Z}P{Z}E{Z} {S_UTF}* {Z}h{Z}t{Z}m{Z}l{Z} {S_UTF}* {Z}P{Z}U{Z}B{Z}L{Z}I{Z}C{Z} .* {Z}\/{Z}\/{Z}D{Z}T{Z}D{Z}{S_UTF}{Z}X{Z}H{Z}T{Z}M{Z}L{Z}                {isXHTML = true;}
+		{Z}<{Z}h{Z}t{Z}m{Z}l{Z} {S_UTF}* {Z}x{Z}m{Z}l{Z}n{Z}s{Z} {S_UTF}* {Z}\={Z} {S_UTF}* (({Z}\"{Z}) | ({Z}\'{Z})) {Z}h{Z}t{Z}t{Z}p{Z}:{Z}\/{Z}\/{Z}w{Z}w{Z}w{Z}\.{Z}w{Z}3{Z}\.{Z}o{Z}r{Z}g{Z}\/{Z}1{Z}9{Z}9{Z}9{Z}\/{Z}x{Z}h{Z}t{Z}m{Z}l{Z}     {isXHTML = true;}
          // another case that's part of the "HTML family" is WML 1.0 (WML 2.0 is part of XHTML)
-         "<!DOCTYPE" {S}* "wml" {S}* "PUBLIC" .* "//DTD WML"                   {isWML = true;}
+		{Z}<{Z}\!{Z}D{Z}O{Z}C{Z}T{Z}Y{Z}P{Z}E{Z} {S_UTF}* {Z}w{Z}m{Z}l{Z} {S_UTF}* {Z}P{Z}U{Z}B{Z}L{Z}I{Z}C{Z} .* {Z}\/{Z}\/{Z}D{Z}T{Z}D {S}{Z}W{Z}M{Z}L{Z}                   {isWML = true;}
 
-        "<%" {S}* "@" {S}* ("page"|"tag") {S}+   {yybegin(ST_PAGE_DIRECTIVE); return JSPHeadTokenizerConstants.PageDirectiveStart;}
-        ("<jsp:directive.page"|"<jsp:directive.tag") {S}+           {yybegin(ST_PAGE_DIRECTIVE); return JSPHeadTokenizerConstants.PageDirectiveStart;}
-
+		{Z}<{Z}%{Z} {S_UTF}* {Z}@{Z} {S_UTF}* (({Z}p{Z}a{Z}g{Z}e{Z})|({Z}t{Z}a{Z}g{Z})) {S_UTF}+   {yybegin(ST_PAGE_DIRECTIVE); return JSPHeadTokenizerConstants.PageDirectiveStart;}
+		(({Z}<{Z}j{Z}s{Z}p{Z}:{Z}d{Z}i{Z}r{Z}e{Z}c{Z}t{Z}i{Z}v{Z}e{Z}\.{Z}p{Z}a{Z}g{Z}e{Z})|({Z}<{Z}j{Z}s{Z}p{Z}:{Z}d{Z}i{Z}r{Z}e{Z}c{Z}t{Z}i{Z}v{Z}e{Z}\.{Z}t{Z}a{Z}g{Z})) {S_UTF}+           {yybegin(ST_PAGE_DIRECTIVE); return JSPHeadTokenizerConstants.PageDirectiveStart;}
 
 }
 
 <ST_XMLDecl>
 {
-        "version" {BeginAttributeeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDeclVersion;}
-        "encoding" {BeginAttributeeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDelEncoding;}
+        ({Z}v{Z}e{Z}r{Z}s{Z}i{Z}o{Z}n{Z}) {BeginAttributeValueUTF} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDeclVersion;}
+        ({Z}e{Z}n{Z}c{Z}o{Z}d{Z}i{Z}n{Z}g{Z}) {BeginAttributeValueUTF} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDelEncoding;}
         // note the "forced end" (via 'hasMore=false') once the end of XML Declaration found
         // This is since non-ascii chars may follow and may cause IOExceptions which would not occur once stream is
         // read with incorrect encoding (such as if platform encoding is in effect until true encoding detected).
         // BUT, the hasMore=false was removed for this JSP case (probably still ok for pure XML) because
         // in a JSP, we must parse past xmlDecl to get at JSP page directive.
         // We'll assume all chars in this area are "readable" as is.
-        {S}* "\?>"    {yybegin(YYINITIAL); return XMLHeadTokenizerConstants.XMLDeclEnd;}
+		{S_UTF}* {Z}\?{Z}>{Z}    {yybegin(YYINITIAL); return XMLHeadTokenizerConstants.XMLDeclEnd;}
 }
 
 <ST_PAGE_DIRECTIVE>
 {
 //  removed 'language' since it really can be handled seperately from encoding, but may add it back later for simple re-use.
-        "language"     {BeginAttributeeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return JSPHeadTokenizerConstants.PageLanguage;}
-        "contentType" {BeginAttributeeValue}  {pushCurrentState(); yybegin(QuotedAttributeValue); return JSPHeadTokenizerConstants.PageContentType;}
-        "pageEncoding" {BeginAttributeeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return JSPHeadTokenizerConstants.PageEncoding;}
+		{Z}l{Z}a{Z}n{Z}g{Z}u{Z}a{Z}g{Z}e{Z}     {BeginAttributeValueUTF} {pushCurrentState(); yybegin(QuotedAttributeValue); return JSPHeadTokenizerConstants.PageLanguage;}
+        {Z}c{Z}o{Z}n{Z}t{Z}e{Z}n{Z}t{Z}T{Z}y{Z}p{Z}e{Z} {BeginAttributeValueUTF}  {pushCurrentState(); yybegin(QuotedAttributeValue); return JSPHeadTokenizerConstants.PageContentType;}
+        {Z}p{Z}a{Z}g{Z}e{Z}E{Z}n{Z}c{Z}o{Z}d{Z}i{Z}n{Z}g{Z} {BeginAttributeValueUTF} {pushCurrentState(); yybegin(QuotedAttributeValue); return JSPHeadTokenizerConstants.PageEncoding;}
         // note the "forced end" (via 'hasMore=false') once the end of XML Declaration found
         // This is since non-ascii chars may follow and may cause IOExceptions which would not occur once stream is
         // read in correct encoding.
 
         // https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=4205 demonstrates how we need to keep parsing,
         // even if come to end of one page directive, so hasMore=false was removed from these rules.
-        "%>"    { yybegin(YYINITIAL);  return JSPHeadTokenizerConstants.PageDirectiveEnd;}
-        "\/>"    { yybegin(YYINITIAL); return JSPHeadTokenizerConstants.PageDirectiveEnd;}
+		{Z}%{Z}>{Z}    { yybegin(YYINITIAL);  return JSPHeadTokenizerConstants.PageDirectiveEnd;}
+        {Z}\/{Z}>{Z}    { yybegin(YYINITIAL); return JSPHeadTokenizerConstants.PageDirectiveEnd;}
 }
 
 
 <QuotedAttributeValue>
 {
-        \"                      { yybegin(DQ_STRING); string.setLength(0); }
-        \'                      { yybegin(SQ_STRING); string.setLength(0); }
+        {Z}\"{Z}                      { yybegin(DQ_STRING); string.setLength(0); }
+        {Z}\'{Z}                      { yybegin(SQ_STRING); string.setLength(0); }
         // in this state, anything other than a space character can start an undelimited string
-        {S}*.           { yypushback(1); yybegin(UnDelimitedString); string.setLength(0);}
-
+		{S_UTF}*.           { yypushback(1); yybegin(UnDelimitedString); string.setLength(0);}
 }
 
 
 <DQ_STRING>
 {
 
-        \"                      { popState(); valueText = string.toString(); return EncodingParserConstants.StringValue; }
-        {LineTerminator}        { yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
-        "\?>"                   { yypushback(2); popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
-        '<'                     { yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
-        .                       { string.append( yytext() ); }
-
-        "%>"                    { yypushback(2);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+        {Z}\"{Z}			{ popState(); valueText = string.toString(); return EncodingParserConstants.StringValue; }
+        {Z}{LineTerminator}{Z}        { yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+        {Z}\?{Z}>{Z}	{ yypushback(yylength()); popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+        {Z}<{Z}				{ yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+		[^\x00]			{ string.append( yytext() ); }
+        {Z}%{Z}>{Z}		{ yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
 
 
 }
@@ -265,12 +266,13 @@ LineTerminator = \r|\n
 <SQ_STRING>
 {
 
-        \'                      { popState(); valueText = string.toString(); return EncodingParserConstants.StringValue;}
-        {LineTerminator}        { yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
-        "%>"                    { yypushback(2);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
-        '<'                     { yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
-        .                       { string.append( yytext() ); }
-        "%>"                    { yypushback(2);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+        {Z}\'{Z}                      { popState(); valueText = string.toString(); return EncodingParserConstants.StringValue;}
+		{Z}{LineTerminator}{Z}        { yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+        {Z}%{Z}>{Z}               { yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+        {Z}<{Z}                     { yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+		// Skip over the single-byte 0s
+		[^\x00]			{ string.append( yytext() ); }
+        {Z}%{Z}>{Z}                    { yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
 
 
 }
@@ -279,27 +281,24 @@ LineTerminator = \r|\n
 {
 
 
-        {S}                     { yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.UnDelimitedStringValue; }
-        {LineTerminator}        { yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
-        "\?>"                   { yypushback(2);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
-        '<'                     { yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+        {S_UTF}                     { yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.UnDelimitedStringValue; }
+        {Z}{LineTerminator}{Z}        { yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+        {Z}\?{Z}>{Z}                   { yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+        {Z}<{Z}                     { yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
         // these are a bit special, since we started an undelimit string, but found a quote ... probably indicates a missing beginning quote
-        \'                      { yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTermintatedUnDelimitedStringValue;}
-        \"                      { yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTermintatedUnDelimitedStringValue;}
+        {Z}\'{Z}                      { yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTermintatedUnDelimitedStringValue;}
+        {Z}\"{Z}                      { yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTermintatedUnDelimitedStringValue;}        
 
-        .                       { string.append( yytext() ); }
-        "%>"                    { yypushback(2);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+		[^\x00]			{ string.append( yytext() ); }
+        {Z}%{Z}>{Z}                    { yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
 
 }
 
 // The "match anything" rule should always be in effect except for when looking for end of string
 // (That is, remember to update state list if/when new states added)
-<YYINITIAL, ST_XMLDecl, QuotedAttributeValue, ST_PAGE_DIRECTIVE>
-{
-// this is the fallback (match "anything") rule  (for this scanner, input is ignored, and position advanced, if not recognized)
-.|\n              {if (yychar > MAX_TO_SCAN) {hasMore=false; return EncodingParserConstants.MAX_CHARS_REACHED;}}
-}
+.|\n	{if(yychar > MAX_TO_SCAN) {hasMore=false; return EncodingParserConstants.MAX_CHARS_REACHED;}}
 
 // this rule always in effect
 <<EOF>>         {hasMore = false; return EncodingParserConstants.EOF;}
+
 
