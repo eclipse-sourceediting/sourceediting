@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,6 +51,7 @@ import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImageHelper;
 import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImages;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.sse.core.utils.StringUtils;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 
 public class NewDTDWizard extends Wizard implements INewWizard {
 	private WizardNewFileCreationPage fNewFilePage;
@@ -227,9 +228,8 @@ public class NewDTDWizard extends Wizard implements INewWizard {
 			if (templateString != null) {
 				templateString = applyLineDelimiter(file, templateString);
 				// determine the encoding for the new file
-				Preferences preference = DTDCorePlugin.getInstance().getPluginPreferences();
-				String charSet = preference.getString(CommonEncodingPreferenceNames.OUTPUT_CODESET);
-
+				String charSet = getAppropriateCharset();
+				
 				try {
 					ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 					OutputStreamWriter outputStreamWriter = null;
@@ -259,6 +259,19 @@ public class NewDTDWizard extends Wizard implements INewWizard {
 			performedOK = true;
 		}
 		return performedOK;
+	}
+	
+	/**
+	 * If the DTD preference identifies a charset, use that. If not, revert to the XML
+	 * charset preference
+	 * 
+	 * @return charset based on DTD preferences if defined, if not, from the XML preferences
+	 */
+	private String getAppropriateCharset() {
+		String charset = DTDCorePlugin.getInstance().getPluginPreferences().getString(CommonEncodingPreferenceNames.OUTPUT_CODESET);
+		if(charset == null || charset.trim().equals(""))
+			charset = XMLCorePlugin.getDefault().getPluginPreferences().getString(CommonEncodingPreferenceNames.OUTPUT_CODESET);
+		return charset;
 	}
 
 }
