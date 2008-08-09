@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -406,6 +407,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 	{
 		Button button = new Button(parent, SWT.PUSH);
 		button.setText(label);
+		button.setLayoutData(GridDataFactory.fillDefaults().create());
 		return button;
 	}
 
