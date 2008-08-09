@@ -332,6 +332,10 @@ public class TaglibHelper {
 		}
 		catch (Error e) {
 			// this is 3rd party code, need to catch all errors
+			Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TEIClassNotInstantiated, JSPCoreMessages.TaglibHelper_1, teiClassname, true);
+			if (createdProblem != null) {
+				problems.add(createdProblem);
+			}
 			if (DEBUG)
 				logException(teiClassname, e);
 		}

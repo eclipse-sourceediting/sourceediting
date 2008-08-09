@@ -19,7 +19,11 @@ import java.util.Locale;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
@@ -39,6 +43,9 @@ import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.util.FacetModuleCoreSupport;
+import org.eclipse.jst.jsp.core.taglib.IJarRecord;
+import org.eclipse.jst.jsp.core.taglib.ITLDRecord;
+import org.eclipse.jst.jsp.core.taglib.ITagDirRecord;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.osgi.util.NLS;
@@ -49,8 +56,6 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
@@ -107,13 +112,25 @@ public class JSPDirectiveValidator extends JSPValidator {
 		this.fMessageOriginator = validator;
 	}
 
+	/**
+	 * Record that the currently validating resource depends on the given
+	 * file. Only possible during batch (not source) validation.
+	 * 
+	 * @param file
+	 */
+	private void addDependsOn(IResource file) {
+		if (fMessageOriginator instanceof JSPBatchValidator) {
+			((JSPBatchValidator) fMessageOriginator).addDependsOn(file);
+		}
+	}
+
 	public void cleanup(IReporter reporter) {
 		super.cleanup(reporter);
 		fTaglibPrefixesInUse.clear();
 		fPrefixValueRegionToDocumentRegionMap.clear();
 	}
 
-	private void collectTaglibPrefix(ITextRegionCollection documentRegion, ITextRegion valueRegion, String taglibPrefix) {
+	private void collectTaglibPrefix(IStructuredDocumentRegion documentRegion, ITextRegion valueRegion, String taglibPrefix) {
 		fPrefixValueRegionToDocumentRegionMap.put(valueRegion, documentRegion);
 
 		Object o = fTaglibPrefixesInUse.get(taglibPrefix);
@@ -204,22 +221,13 @@ public class JSPDirectiveValidator extends JSPValidator {
 		fTaglibPrefixesInUse.clear();
 
 		// iterate all document regions
-		IStructuredDocumentRegion documentRegion = sDoc.getFirstStructuredDocumentRegion();
-		while (documentRegion != null && !reporter.isCancelled()) {
+		IStructuredDocumentRegion region = sDoc.getFirstStructuredDocumentRegion();
+		while (region != null && !reporter.isCancelled()) {
 			// only checking directives
-			if (documentRegion.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
-				processDirective(reporter, f, sDoc, documentRegion);
+			if (region.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
+				processDirective(reporter, f, sDoc, region);
 			}
-			ITextRegionList regions = documentRegion.getRegions();
-			int size = regions.size();
-			for (int i = 0; i < size; i++) {
-				ITextRegion textRegion = regions.get(i);
-				if(textRegion instanceof ITextRegionCollection) {
-					ITextRegionCollection collection = (ITextRegionCollection) textRegion;
-					processDirective(reporter, f, sDoc, collection);
-				}
-			}
-			documentRegion = documentRegion.getNext();
+			region = region.getNext();
 		}
 
 		if (!reporter.isCancelled()) {
@@ -232,22 +240,21 @@ public class JSPDirectiveValidator extends JSPValidator {
 		unloadPreferences();
 	}
 
-	private void processDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, ITextRegionCollection collection) {
-		// note: only supports one directive per collection
-		String directiveName = getDirectiveName(collection);
+	private void processDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion) {
+		String directiveName = getDirectiveName(documentRegion);
 		// we only care about taglib directive
 		if (directiveName.equals("taglib")) { //$NON-NLS-1$
-			processTaglibDirective(reporter, file, sDoc, collection);
+			processTaglibDirective(reporter, file, sDoc, documentRegion);
 		}
 		else if (directiveName.equals("include")) { //$NON-NLS-1$
-			processIncludeDirective(reporter, file, sDoc, collection);
+			processIncludeDirective(reporter, file, sDoc, documentRegion);
 		}
 		else if (directiveName.equals("page")) { //$NON-NLS-1$
-			processPageDirective(reporter, file, sDoc, collection);
+			processPageDirective(reporter, file, sDoc, documentRegion);
 		}
 	}
 
-	private void processIncludeDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, ITextRegionCollection documentRegion) {
+	private void processIncludeDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion) {
 		ITextRegion fileValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_FILE);
 		if (fileValueRegion != null) {
 			// file specified
@@ -267,22 +274,25 @@ public class JSPDirectiveValidator extends JSPValidator {
 
 				reporter.addMessage(fMessageOriginator, message);
 			}
-			else if (fSeverityIncludeFileMissing != ValidationMessage.IGNORE) {
+			else {
 				IPath testPath = FacetModuleCoreSupport.resolve(file.getFullPath(), fileValue);
 				if (testPath.segmentCount() > 1) {
 					IFile testFile = file.getWorkspace().getRoot().getFile(testPath);
+					addDependsOn(testFile);
 					if (!testFile.isAccessible()) {
-						// File not found
-						String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_4, new String[]{fileValue, testPath.toString()});
-						LocalizedMessage message = new LocalizedMessage(fSeverityIncludeFileMissing, msgText, file);
-						int start = documentRegion.getStartOffset(fileValueRegion);
-						int length = fileValueRegion.getTextLength();
-						int lineNo = sDoc.getLineOfOffset(start);
-						message.setLineNo(lineNo);
-						message.setOffset(start);
-						message.setLength(length);
+						if (fSeverityIncludeFileMissing != ValidationMessage.IGNORE) {
+							// File not found
+							String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_4, new String[]{fileValue, testPath.toString()});
+							LocalizedMessage message = new LocalizedMessage(fSeverityIncludeFileMissing, msgText, file);
+							int start = documentRegion.getStartOffset(fileValueRegion);
+							int length = fileValueRegion.getTextLength();
+							int lineNo = sDoc.getLineOfOffset(start);
+							message.setLineNo(lineNo);
+							message.setOffset(start);
+							message.setLength(length);
 
-						reporter.addMessage(fMessageOriginator, message);
+							reporter.addMessage(fMessageOriginator, message);
+						}
 					}
 				}
 			}
@@ -308,7 +318,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 	 * @param doc
 	 * @param documentRegion
 	 */
-	private void processPageDirective(IReporter reporter, IFile file, IStructuredDocument doc, ITextRegionCollection documentRegion) {
+	private void processPageDirective(IReporter reporter, IFile file, IStructuredDocument doc, IStructuredDocumentRegion documentRegion) {
 		ITextRegion superclassValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_EXTENDS);
 		if (superclassValueRegion != null) {
 			// file specified
@@ -326,7 +336,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 			}
 
 			if (superClass == null && fSeveritySuperClassNotFound != ValidationMessage.IGNORE) {
-				// file value is specified but empty
+				// superclass not found
 				String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_8, superclassName);
 				LocalizedMessage message = new LocalizedMessage(fSeveritySuperClassNotFound, msgText, file);
 				int start = documentRegion.getStartOffset(superclassValueRegion);
@@ -341,7 +351,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 		}
 	}
 
-	private void processTaglibDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, ITextRegionCollection documentRegion) {
+	private void processTaglibDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion) {
 		ITextRegion prefixValueRegion = null;
 		ITextRegion uriValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_URI);
 		ITextRegion tagdirValueRegion = getAttributeValueRegion(documentRegion, JSP20Namespace.ATTR_NAME_TAGDIR);
@@ -352,8 +362,46 @@ public class JSPDirectiveValidator extends JSPValidator {
 			if (file != null) {
 				uri = StringUtils.stripQuotes(uri);
 				if (uri.length() > 0) {
-					ITaglibRecord tld = TaglibIndex.resolve(file.getFullPath().toString(), uri, false);
-					if (tld == null && fSeverityTaglibUnresolvableURI != ValidationMessage.IGNORE) {
+					ITaglibRecord reference = TaglibIndex.resolve(file.getFullPath().toString(), uri, false);
+					if (reference != null) {
+						switch (reference.getRecordType()) {
+							case (ITaglibRecord.TLD) : {
+								ITLDRecord record = (ITLDRecord) reference;
+								IResource tldfile = ResourcesPlugin.getWorkspace().getRoot().getFile(record.getPath());
+								addDependsOn(tldfile);
+							}
+								break;
+							case (ITaglibRecord.JAR) : {
+								IJarRecord record = (IJarRecord) reference;
+								IFile[] foundFilesForLocation = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(record.getLocation());
+								for (int i = 0; i < foundFilesForLocation.length; i++) {
+									addDependsOn(foundFilesForLocation[i]);
+								}
+							}
+								break;
+							case (ITaglibRecord.TAGDIR) : {
+								ITagDirRecord record = (ITagDirRecord) reference;
+								IPath path = record.getPath();
+								IResource found = ResourcesPlugin.getWorkspace().getRoot().findMember(path, false);
+
+								try {
+									found.accept(new IResourceVisitor() {
+										public boolean visit(IResource resource) throws CoreException {
+											if (resource.getType() == IResource.FILE) {
+												addDependsOn(resource);
+											}
+											return true;
+										}
+									});
+								}
+								catch (CoreException e) {
+									Logger.logException(e);
+								}
+							}
+								break;
+						}
+					}
+					if (reference == null && fSeverityTaglibUnresolvableURI != ValidationMessage.IGNORE) {
 						// URI specified but does not resolve
 						String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_1, uri);
 						LocalizedMessage message = new LocalizedMessage(fSeverityTaglibUnresolvableURI, msgText, file);

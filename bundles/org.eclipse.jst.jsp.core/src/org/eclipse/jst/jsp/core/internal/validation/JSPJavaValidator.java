@@ -59,6 +59,7 @@ public class JSPJavaValidator extends JSPValidator {
 	
 	private static final boolean UPDATE_JAVA_TASKS = true;
 	private static final String JAVA_TASK_MARKER_TYPE = "org.eclipse.jdt.core.task"; //$NON-NLS-1$
+	private static final String[] DEPEND_ONs = new String[]{".classpath", ".project", ".settings/org.eclipse.jst.jsp.core.prefs", ".settings/org.eclipse.wst.common.project.facet.core.xml", ".settings/org.eclipse.wst.common.component"};
 
 	public JSPJavaValidator() {
 		this.fMessageOriginator = this;
@@ -182,7 +183,7 @@ public class JSPJavaValidator extends JSPValidator {
 				case IProblem.UnusedImport : {
 					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_JAVA_UNUSED_IMPORT);
 				}
-				break;
+					break;
 				case IProblem.MissingSerialVersion : {
 					// JSP files don't get serialized...right?
 					sev = ValidationMessage.IGNORE;
@@ -285,6 +286,9 @@ public class JSPJavaValidator extends JSPValidator {
 	}
 
 	void performValidation(IFile f, IReporter reporter, IStructuredModel model) {
+		for (int i = 0; i < DEPEND_ONs.length; i++) {
+			addDependsOn(f.getProject().getFile(DEPEND_ONs[i]));	
+		}
 		if (model instanceof IDOMModel) {
 			IDOMModel domModel = (IDOMModel) model;
 			ModelHandlerForJSP.ensureTranslationAdapterFactory(domModel);
@@ -295,9 +299,9 @@ public class JSPJavaValidator extends JSPValidator {
 
 			if (!reporter.isCancelled()) {
 				loadPreferences(f);
+
 				// only update task markers if the model is the same as what's on disk
 				boolean updateJavaTasks = UPDATE_JAVA_TASKS && !domModel.isDirty() && f != null && f.isAccessible();
-
 				if (updateJavaTasks) {
 					// remove old Java task markers
 					try {
@@ -355,7 +359,6 @@ public class JSPJavaValidator extends JSPValidator {
 					}
 				}
 			}
-			
 		}
 		unloadPreferences();
 	}
@@ -381,6 +384,9 @@ public class JSPJavaValidator extends JSPValidator {
 			// get jsp model, get tranlsation
 			model = StructuredModelManager.getModelManager().getModelForRead(f);
 			if (!reporter.isCancelled() && model != null) {
+				for (int i = 0; i < DEPEND_ONs.length; i++) {
+					addDependsOn(f.getProject().getFile(DEPEND_ONs[i]));	
+				}
 				// get jsp model, get translation
 				if (model instanceof IDOMModel) {
 					reporter.removeAllMessages(fMessageOriginator, f);
@@ -399,4 +405,17 @@ public class JSPJavaValidator extends JSPValidator {
 				model.releaseFromRead();
 		}
 	}
+
+	/**
+	 * Record that the currently validating resource depends on the given
+	 * file. Only possible during batch (not source) validation.
+	 * 
+	 * @param file
+	 */
+	private void addDependsOn(IFile file) {
+		if (fMessageOriginator instanceof JSPBatchValidator) {
+			((JSPBatchValidator) fMessageOriginator).addDependsOn(file);
+		}
+	}
+
 }
