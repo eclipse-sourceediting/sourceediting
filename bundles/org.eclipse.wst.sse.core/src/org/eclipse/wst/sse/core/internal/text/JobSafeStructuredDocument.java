@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,8 +12,10 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.text;
 
-import org.eclipse.core.runtime.Platform;
+import java.util.Stack;
+
 import org.eclipse.core.runtime.jobs.ILock;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.DocumentRewriteSession;
 import org.eclipse.jface.text.DocumentRewriteSessionType;
 import org.eclipse.wst.sse.core.internal.IExecutionDelegate;
@@ -25,8 +27,8 @@ import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEv
 
 public class JobSafeStructuredDocument extends BasicStructuredDocument implements IExecutionDelegatable, ILockable {
 
-	private IExecutionDelegate fExecutionDelegate;
-	private ILock fLockable = Platform.getJobManager().newLock();
+	private Stack fExecutionDelegates = new Stack();
+	private ILock fLockable = Job.getJobManager().newLock();
 
 	public JobSafeStructuredDocument() {
 		super();
@@ -46,9 +48,11 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 	}
 
 	private IExecutionDelegate getExecutionDelegate() {
-		return fExecutionDelegate;
+		if (!fExecutionDelegates.isEmpty())
+			return (IExecutionDelegate) fExecutionDelegates.peek();
+		return null;
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -75,7 +79,8 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 	 */
 	public StructuredDocumentEvent replaceText(final Object requester, final int start, final int replacementLength, final String changes, final boolean ignoreReadOnlySettings) {
 		StructuredDocumentEvent event = null;
-		if (getExecutionDelegate() == null) {
+		IExecutionDelegate delegate = getExecutionDelegate();
+		if (delegate == null) {
 			// if the delegate has not been set, we execute on current
 			// thread, like "normal". This is the case for normal
 			// non-editor
@@ -106,7 +111,7 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 			// results
 			// basically just routes to Display.synchExec(runnable),
 			// if not already running on display thread.
-			getExecutionDelegate().execute(runnable);
+			delegate.execute(runnable);
 
 			// this remembering and re-throwing of exception is just to
 			// get an
@@ -124,13 +129,16 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 	}
 
 	public void setExecutionDelegate(IExecutionDelegate delegate) {
-		fExecutionDelegate = delegate;
+		if (delegate != null)
+			fExecutionDelegates.push(delegate);
+		else if (!fExecutionDelegates.isEmpty())
+			fExecutionDelegates.pop();
 	}
-
 
 	public StructuredDocumentEvent setText(final Object requester, final String theString) {
 		StructuredDocumentEvent event = null;
-		if (getExecutionDelegate() == null) {
+		IExecutionDelegate executionDelegate = getExecutionDelegate();
+		if (executionDelegate == null) {
 			// if the delegate has not been set, we execute on current
 			// thread, like "normal". This is the case for normal
 			// non-editor
@@ -161,7 +169,7 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 			// results
 			// basically just routes to Display.synchExec(runnable),
 			// if not already running on display thread.
-			getExecutionDelegate().execute(runnable);
+			executionDelegate.execute(runnable);
 
 			// this remembering and re-throwing of exception is just to
 			// get an
@@ -180,7 +188,8 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 
 	public DocumentRewriteSession startRewriteSession(DocumentRewriteSessionType sessionType) throws IllegalStateException {
 		DocumentRewriteSession session = null;
-		if (getExecutionDelegate() == null) {
+		IExecutionDelegate executionDelegate = getExecutionDelegate();
+		if (executionDelegate == null) {
 			// if the delegate has not been set, we execute on current
 			// thread, like "normal". This is the case for normal
 			// non-editor
@@ -213,7 +222,7 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 			// results
 			// basically just routes to Display.synchExec(runnable),
 			// if not already running on display thread.
-			getExecutionDelegate().execute(runnable);
+			executionDelegate.execute(runnable);
 
 			// this remembering and re-throwing of exception is just to
 			// get an
@@ -231,7 +240,8 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 	}
 
 	public void stopRewriteSession(DocumentRewriteSession session) {
-		if (getExecutionDelegate() == null) {
+		IExecutionDelegate executionDelegate = getExecutionDelegate();
+		if (executionDelegate == null) {
 			// if the delegate has not been set, we execute on current
 			// thread, like "normal". This is the case for normal
 			// non-editor
@@ -264,7 +274,7 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 			// results
 			// basically just routes to Display.synchExec(runnable),
 			// if not already running on display thread.
-			getExecutionDelegate().execute(runnable);
+			executionDelegate.execute(runnable);
 
 			// this remembering and re-throwing of exception is just to
 			// get an

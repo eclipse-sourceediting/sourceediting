@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,10 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.validate;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -61,10 +64,23 @@ public class HTMLElementContentValidator extends PrimeValidator {
 		 * ModelQuery use not pervasive enough
 		 */
 		List availableChildElementDeclarations = ModelQueryUtil.getModelQuery(parent.getOwnerDocument()).getAvailableContent(parent, ed, ModelQuery.INCLUDE_CHILD_NODES);
+		/*
+		 * Retrieve and set aside just the element names for faster checking
+		 * later.
+		 */
+		int availableChildCount = availableChildElementDeclarations.size();
+		List availableChildElementLowercaseNames = new ArrayList(availableChildCount);
+		for (int i = 0; i < availableChildCount; i++) {
+			CMNode cmnode = (CMNode) availableChildElementDeclarations.get(i);
+			if (cmnode.getNodeType() == CMNode.ELEMENT_DECLARATION) {
+				availableChildElementLowercaseNames.add(cmnode.getNodeName().toLowerCase(Locale.US));
+			}
+		}
+		Object[] availableChildElementLowercaseNamesArray = availableChildElementLowercaseNames.toArray();
 
 		while (child != null) {
 			// perform actual validation
-			validateNode(parent, child, ed, availableChildElementDeclarations);
+			validateNode(parent, child, ed, availableChildElementLowercaseNamesArray);
 			child = child.getNextSibling();
 		}
 	}
@@ -85,14 +101,25 @@ public class HTMLElementContentValidator extends PrimeValidator {
 
 	/*
 	 * The implementation of the following method is practical but accurate.
-	 * The accurate maximum occurence should be retreive from the content
+	 * The accurate maximum occurrence should be retrieve from the content
 	 * model. However, it is useful enough, since almost implicit elements are
 	 * HTML, HEAD, or BODY.
 	 */
 	// private int getMaxOccur(Element parent, String childTag) {
 	// return 1;
 	// }
-	private void validateNode(Element target, Node child, CMElementDeclaration edec, List availableChildElementDeclarations) {
+
+	private boolean containsName(String name, Object[] possible) {
+		if (name != null && possible != null) {
+			for (int i = 0; i < possible.length; i++) {
+				if(name.equals(possible[i]))
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void validateNode(Element target, Node child, CMElementDeclaration edec, Object[] availableLowercaseChildElementNames) {
 		// NOTE: If the target element is 'UNKNOWN', that is, it has no
 		// element declaration, the content type of the element should be
 		// regarded as 'ANY'. -- 9/10/2001
@@ -102,7 +129,7 @@ public class HTMLElementContentValidator extends PrimeValidator {
 
 		int error = ErrorState.NONE_ERROR;
 		int segType = FMUtil.SEG_WHOLE_TAG;
-
+		
 		switch (child.getNodeType()) {
 			case Node.ELEMENT_NODE :
 				Element childElem = (Element) child;
@@ -117,7 +144,7 @@ public class HTMLElementContentValidator extends PrimeValidator {
 				// Defect 186774: If a child is not one of HTML elements,
 				// it should be regarded as a valid child regardless the
 				// type of the parent content model. -- 10/12/2001
-				if (ced == null || CMUtil.isSSI(ced) || (!CMUtil.isHTML(ced)) || availableChildElementDeclarations.contains(ced))
+				if (ced == null || CMUtil.isSSI(ced) || (!CMUtil.isHTML(ced)) || containsName(ced.getElementName().toLowerCase(Locale.US), availableLowercaseChildElementNames))
 					return;
 
 				switch (contentType) {

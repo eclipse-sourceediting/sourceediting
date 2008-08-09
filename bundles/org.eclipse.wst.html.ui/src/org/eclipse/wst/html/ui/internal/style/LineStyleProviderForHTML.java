@@ -36,8 +36,13 @@ public class LineStyleProviderForHTML extends LineStyleProviderForXML implements
 		if (region == null) {
 			return (TextAttribute)getTextAttributes().get(IStyleConstantsXML.XML_CONTENT);
 		}
-		if (region.getType() == DOMRegionContext.BLOCK_TEXT) {
+		String type = region.getType();
+		if (type == DOMRegionContext.BLOCK_TEXT) {
 			return (TextAttribute)getTextAttributes().get(IStyleConstantsXML.XML_CONTENT);
+		}
+		// workaround: make PI edges the same color as tag edges
+		else if ((type == DOMRegionContext.XML_PI_OPEN) || (type == DOMRegionContext.XML_PI_CLOSE)) {
+			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_BORDER);
 		}
 		// first try "standard" tag attributes from super class
 		return super.getAttributeFor(region);

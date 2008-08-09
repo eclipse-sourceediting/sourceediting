@@ -51,39 +51,43 @@ public class ConfigurationPointCalculator {
 	public String[] getConfigurationPoints() {
 		List points = new ArrayList(2);
 
-		IEditorSite site = fPart.getEditorSite();
-		String id = site.getId();
-		if (id != null && id.length() > 0 && !id.equals(fRootClass.getName()))
-			points.add(id);
+		if (fPart != null) {
+			IEditorSite site = fPart.getEditorSite();
+			String id = site.getId();
+			if (id != null && id.length() > 0 && !id.equals(fRootClass.getName()))
+				points.add(id);
 
-		if (site instanceof MultiPageEditorSite) {
-			String multipageID = ((MultiPageEditorSite) site).getMultiPageEditor().getSite().getId();
-			if (!points.contains(multipageID))
-				points.add(multipageID);
-			String sourcePageID = ((MultiPageEditorSite) site).getMultiPageEditor().getSite().getId() + ".source"; //$NON-NLS-1$
-			if (!points.contains(sourcePageID))
-				points.add(sourcePageID);
-		}
-		if (site instanceof MultiPageEditorSite) {
-			String multipageClassName = ((MultiPageEditorSite) site).getMultiPageEditor().getClass().getName();
-			if (!points.contains(multipageClassName))
-				points.add(multipageClassName);
-		}
-		Class editorClass = fPart.getClass();
-		while (editorClass != null && fRootClass != null && !editorClass.equals(fRootClass)) {
-			if (!points.contains(editorClass.getName()))
-				points.add(editorClass.getName());
-			editorClass = editorClass.getSuperclass();
-		}
-
-		IContentType contentType = Platform.getContentTypeManager().getContentType(fContentType);
-		while (contentType != null && !contentType.getId().equals(IContentTypeManager.CT_TEXT)) {
-			if (!points.contains(contentType.getId()))
-				points.add(contentType.getId());
-			contentType = contentType.getBaseType();
+			if (site instanceof MultiPageEditorSite) {
+				String multipageID = ((MultiPageEditorSite) site).getMultiPageEditor().getSite().getId();
+				if (!points.contains(multipageID))
+					points.add(multipageID);
+				String sourcePageID = ((MultiPageEditorSite) site).getMultiPageEditor().getSite().getId() + ".source"; //$NON-NLS-1$
+				if (!points.contains(sourcePageID))
+					points.add(sourcePageID);
+			}
+			if (site instanceof MultiPageEditorSite) {
+				String multipageClassName = ((MultiPageEditorSite) site).getMultiPageEditor().getClass().getName();
+				if (!points.contains(multipageClassName))
+					points.add(multipageClassName);
+			}
+			Class editorClass = fPart.getClass();
+			while (editorClass != null && fRootClass != null && !editorClass.equals(fRootClass)) {
+				if (!points.contains(editorClass.getName()))
+					points.add(editorClass.getName());
+				editorClass = editorClass.getSuperclass();
+			}
 		}
 
-		if (!points.contains(fRootClass.getName()))
+		if (fContentType != null) {
+			IContentType contentType = Platform.getContentTypeManager().getContentType(fContentType);
+			while (contentType != null && !contentType.getId().equals(IContentTypeManager.CT_TEXT)) {
+				if (!points.contains(contentType.getId()))
+					points.add(contentType.getId());
+				contentType = contentType.getBaseType();
+			}
+		}
+
+		if (fRootClass != null && !points.contains(fRootClass.getName()))
 			points.add(fRootClass.getName());
 		return (String[]) points.toArray(new String[0]);
 	}
@@ -118,7 +122,7 @@ public class ConfigurationPointCalculator {
 
 	/**
 	 * @param contentType
-	 *            The contentType to set.
+	 * 		The contentType to set.
 	 */
 	public void setContentType(String contentType) {
 		fContentType = contentType;
@@ -126,7 +130,7 @@ public class ConfigurationPointCalculator {
 
 	/**
 	 * @param part
-	 *            The part to set.
+	 * 		The part to set.
 	 */
 	public void setPart(IEditorPart part) {
 		fPart = part;
@@ -134,7 +138,7 @@ public class ConfigurationPointCalculator {
 
 	/**
 	 * @param rootClass
-	 *            The rootClass to set.
+	 * 		The rootClass to set.
 	 */
 	public void setRootClass(Class rootClass) {
 		fRootClass = rootClass;
@@ -142,7 +146,7 @@ public class ConfigurationPointCalculator {
 
 	/**
 	 * @param subContext
-	 *            The subContext to set.
+	 * 		The subContext to set.
 	 */
 	public void setSubContext(String subContext) {
 		fSubContext = subContext;

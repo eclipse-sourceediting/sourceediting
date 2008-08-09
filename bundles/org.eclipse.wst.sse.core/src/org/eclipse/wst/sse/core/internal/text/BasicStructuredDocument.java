@@ -1074,6 +1074,13 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	}
 
 	public boolean containsReadOnly(int startOffset, int length) {
+		/*
+		 * Specifically allow during a rewrite session as there's no mechanism
+		 * for rejecting changes there.
+		 */
+		if(fActiveRewriteSession != null)
+			return true;
+		
 		boolean result = false;
 		try {
 			Position[] positions = getPositions(READ_ONLY_REGIONS_CATEGORY);

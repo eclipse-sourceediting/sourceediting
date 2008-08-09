@@ -122,6 +122,7 @@ public final class CompatibleHighlighter extends Highlighter {
 	 * @see org.eclipse.wst.sse.ui.internal.provisional.style.Highlighter#uninstall()
 	 */
 	public void uninstall() {
+		super.uninstall();
 		textViewer = null;
 	}
 }

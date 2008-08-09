@@ -170,6 +170,7 @@ public class XMLUIMessages extends NLS {
 	public static String Attribute__is_missing_a_value;
 	public static String Attribute__has_no_value;
 	public static String Missing_end_tag_;
+	public static String Missing_start_tag_;
 	public static String ReconcileStepForMarkup_0;
 	public static String ReconcileStepForMarkup_1;
 	public static String ReconcileStepForMarkup_2;

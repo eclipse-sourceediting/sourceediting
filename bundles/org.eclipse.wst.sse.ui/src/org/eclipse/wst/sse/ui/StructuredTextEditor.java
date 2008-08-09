@@ -115,6 +115,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.editors.text.DefaultEncodingSupport;
 import org.eclipse.ui.editors.text.EditorsUI;
+import org.eclipse.ui.editors.text.IEncodingSupport;
 import org.eclipse.ui.editors.text.ITextEditorHelpContextIds;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -2670,8 +2671,50 @@ public class StructuredTextEditor extends TextEditor {
 	 */
 	protected void installEncodingSupport() {
 		fEncodingSupport = new DefaultEncodingSupport() {
+			IEncodingSupport getDelegate() {
+				IEncodingSupport support = null;
+
+				String[] targets = getConfigurationPoints();
+				ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
+				for (int i = 0; support == null && i < targets.length; i++) {
+					support = (IEncodingSupport) builder.getConfiguration(IEncodingSupport.class.getName(), targets[i]);
+				}
+				
+				return support;
+			}
+			/* (non-Javadoc)
+			 * @see org.eclipse.ui.editors.text.DefaultEncodingSupport#getDefaultEncoding()
+			 */
+			public String getDefaultEncoding() {
+				IEncodingSupport delegate = getDelegate();
+				if (delegate != null) {
+					return delegate.getDefaultEncoding();
+				}
+				
+				return super.getDefaultEncoding();
+			}
+			/* (non-Javadoc)
+			 * @see org.eclipse.ui.editors.text.DefaultEncodingSupport#getEncoding()
+			 */
+			public String getEncoding() {
+				IEncodingSupport delegate = getDelegate();
+				if (delegate != null) {
+					return delegate.getEncoding();
+				}
+				
+				return super.getEncoding();
+			}
+			
+			/* (non-Javadoc)
+			 * @see org.eclipse.ui.editors.text.DefaultEncodingSupport#setEncoding(java.lang.String, boolean)
+			 */
 			protected void setEncoding(String encoding, boolean overwrite) {
 				super.setEncoding(encoding, overwrite);
+				IEncodingSupport delegate = getDelegate();
+				
+				if(delegate != null && overwrite) {
+					delegate.setEncoding(encoding);
+				}
 			}
 		};
 		fEncodingSupport.initialize(this);

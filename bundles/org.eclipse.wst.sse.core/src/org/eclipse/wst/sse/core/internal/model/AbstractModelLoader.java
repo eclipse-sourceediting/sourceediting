@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -98,7 +98,7 @@ public abstract class AbstractModelLoader implements IModelLoader {
 			model.setStructuredDocument((IStructuredDocument) structuredDocument);
 			addFactories(model, getAdapterFactories());
 			//
-			initEmbeddedTypePre(model);
+			initEmbeddedTypePre(model, (IStructuredDocument) structuredDocument);
 			initEmbeddedTypePost(model);
 			// For types with propagating adapters, its important
 			// that the propagating adapter be in place before the contents
@@ -122,7 +122,7 @@ public abstract class AbstractModelLoader implements IModelLoader {
 		// that the propagating adapter be in place before the contents
 		// are set.
 		preLoadAdapt(model);
-		initEmbeddedTypePre(model);
+		initEmbeddedTypePre(model, structuredDocument);
 
 		model.setStructuredDocument(structuredDocument);
 		//
@@ -183,12 +183,28 @@ public abstract class AbstractModelLoader implements IModelLoader {
 	abstract public IDocumentLoader getDocumentLoader();
 
 	/**
-	 * Method initEmbeddedType. Nothing to do here in super class.
+	 * Method initEmbeddedType, "pre"-stage. Nothing to do here in super class.
 	 * 
 	 * @param model
 	 */
 	protected void initEmbeddedTypePre(IStructuredModel model) {
 	}
+
+	/**
+	 * Method initEmbeddedType, "pre"-stage. By default simply calls the
+	 * version of this method that uses only the structured model.
+	 * 
+	 * @param model
+	 *            the model for which to initialize
+	 * @param structuredDocument
+	 *            The structured document containing the text content for the
+	 *            model, which may be a different instance than what is in the
+	 *            model at this stage.
+	 */
+	protected void initEmbeddedTypePre(IStructuredModel model, IStructuredDocument structuredDocument) {
+		initEmbeddedTypePre(model);
+	}
+		
 	protected void initEmbeddedTypePost(IStructuredModel model) {
 	}
 

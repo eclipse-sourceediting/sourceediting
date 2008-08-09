@@ -194,6 +194,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 							state = ErrorState.UNDEFINED_VALUE_ERROR;
 						}
 					} else {
+						// Check current value is valid among a known list
 						String[] candidates = attrType.getEnumeratedValues();
 						if (candidates != null && candidates.length > 0) {
 							// several candidates are found.
@@ -220,6 +221,10 @@ public class HTMLAttributeValidator extends PrimeValidator {
 									state = ErrorState.UNDEFINED_VALUE_ERROR;
 								}
 							}
+						}
+						else if (attrType.getDataTypeName() == CMDataType.URI) {
+							// TODO: Check URIs
+
 						}
 					}
 				}

@@ -18,12 +18,15 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.resources.IEncodedStorage;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationModel;
@@ -580,6 +583,47 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 		if (provider == null)
 			provider = new FileDocumentProvider();
 		provider.saveDocument(monitor, element, document, overwrite);
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.editors.text.StorageDocumentProvider#getPersistedEncoding(java.lang.Object)
+	 */
+	protected String getPersistedEncoding(Object element) {
+		if (element instanceof IStorageEditorInput) {
+			IStorage storage;
+			try {
+				storage = ((IStorageEditorInput) element).getStorage();
+				if (storage != null && !(storage instanceof IEncodedStorage)) {
+					InputStream contents = null;
+					try {
+						contents = storage.getContents();
+						if (contents != null) {
+							QualifiedName[] detectionOptions = new QualifiedName[]{IContentDescription.BYTE_ORDER_MARK, IContentDescription.CHARSET};
+							IContentDescription description = Platform.getContentTypeManager().getDescriptionFor(contents, storage.getName(), detectionOptions);
+							String charset = description.getCharset();
+							if (charset != null)
+								return charset;
+						}
+
+					}
+					catch (IOException e) {
+					}
+					finally {
+						if (contents != null)
+							try {
+								contents.close();
+							}
+							catch (IOException e) {
+								// do nothing
+							}
+					}
+				}
+			}
+			catch (CoreException e) {
+				Logger.logException(e);
+			}
+		}
+		return super.getPersistedEncoding(element);
 	}
 
 	public IStructuredModel getModel(IEditorInput element) {

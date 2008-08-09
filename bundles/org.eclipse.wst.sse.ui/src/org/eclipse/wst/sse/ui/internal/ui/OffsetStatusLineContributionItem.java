@@ -901,7 +901,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 					if (element instanceof ITextRegionContainer) {
 						return ((ITextRegionContainer) element).getParent();
 					}
-					return null;
+					return fDocument;
 				}
 
 				public boolean hasChildren(Object element) {
@@ -1164,9 +1164,11 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				Position p = annotationModel.getPosition(annotation);
 				if (p != null && !p.isDeleted()) {
 					try {
-						line = fDocument.getLineOfOffset(p.getOffset());
+						// don't forget the +1
+						line = fDocument.getLineOfOffset(p.getOffset()) + 1;
 					}
 					catch (BadLocationException e) {
+						return e.getMessage();
 					}
 				}
 			}

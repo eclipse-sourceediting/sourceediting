@@ -134,11 +134,11 @@ public class DOMObserver {
 	class TimerJob extends Job {
 		public TimerJob() {
 			super(SSEUIMessages.LoadingReferencedGrammars);
-			setPriority(Job.SHORT);
 		}
 
 		public IStatus run(IProgressMonitor monitor) {
 			monitor.beginTask("", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+			Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 			invokeCMDocumentLoad();
 			monitor.done();
 			return Status.OK_STATUS;
@@ -171,8 +171,7 @@ public class DOMObserver {
 		// immediately
 		// very nasty... I need to revist this problem with Ed Merks
 		//
-		// invokeCMDocumentLoad();
-		invokeDelayedCMDocumentLoad();
+		timer.schedule();
 	}
 
 	public void invokeCMDocumentLoad() {

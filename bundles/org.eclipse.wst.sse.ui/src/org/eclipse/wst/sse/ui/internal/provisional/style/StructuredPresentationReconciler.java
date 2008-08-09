@@ -708,9 +708,9 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 	private YUV_RGBConverter rgbConverter;
 	private Map readOnlyColorTable;
 	double readOnlyForegroundScaleFactor = 30;
-	
-	//private StructuredDocumentListener fDocumentListener = new StructuredDocumentListener();
 
+	private IDocument fLastDocument;
+	
 	/**
 	 * Creates a new presentation reconciler. There are no damagers or repairers
 	 * registered with this reconciler by default. The default partitioning
@@ -903,15 +903,17 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 	 */
 	protected TextPresentation createPresentation(IRegion damage, IDocument document) {
 		try {
+			int validLength = Math.min(damage.getLength(), document.getLength() - damage.getOffset());
+			
 			if (fRepairers == null || fRepairers.isEmpty()) {
 				TextPresentation presentation= new TextPresentation(damage, 1);
-				presentation.setDefaultStyleRange(new StyleRange(damage.getOffset(), damage.getLength(), null, null));
+				presentation.setDefaultStyleRange(new StyleRange(damage.getOffset(), validLength, null, null));
 				return presentation;
 			}
 
 			TextPresentation presentation= new TextPresentation(damage, 1000);
 
-			ITypedRegion[] partitions= TextUtilities.computePartitioning(document, getDocumentPartitioning(), damage.getOffset(), damage.getLength(), false);
+			ITypedRegion[] partitions= TextUtilities.computePartitioning(document, getDocumentPartitioning(), damage.getOffset(), validLength, false);
 			for (int i= 0; i < partitions.length; i++) {
 				ITypedRegion r= partitions[i];
 				IPresentationRepairer repairer= getRepairer(r.getType());
@@ -1157,5 +1159,30 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 	
 		return result;
 	}
+
+	/**
+	 * Constructs a "repair description" for the given damage and returns this
+	 * description as a text presentation, essentially making
+	 * {@link #createPresentation(IRegion, IDocument)} publicly callable.
+	 * <p>
+	 * NOTE: Should not be used if this reconciler is installed on a viewer.
+	 * This method is considered EXPERIMENTAL and may not be available in
+	 * subsequent versions.
+	 * </p>
+	 * 
+	 * @param damage
+	 *            the damage to be repaired
+	 * @param document
+	 *            the document whose presentation must be repaired
+	 * @return the presentation repair description as text presentation
+	 */
+	public TextPresentation createRepairDescription(IRegion damage, IDocument document) {
+		if (document != fLastDocument) {
+			setDocumentToDamagers(document);
+			setDocumentToRepairers(document);
+			fLastDocument= document;
+		}
+		return createPresentation(damage, document);
+	}	
 
 }

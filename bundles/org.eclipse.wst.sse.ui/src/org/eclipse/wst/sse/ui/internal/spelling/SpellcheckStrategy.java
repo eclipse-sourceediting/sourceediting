@@ -220,6 +220,13 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 	protected boolean isInterestingProblem(SpellingProblem problem) {
 		IDocument document = getDocument();
 		if (document instanceof IStructuredDocument) {
+			/*
+			 * If the error is in a read-only section, ignore it. The user
+			 * won't be able to correct it.
+			 */
+			if (((IStructuredDocument) document).containsReadOnly(problem.getOffset(), problem.getLength()))
+				return false;
+
 			IStructuredDocumentRegion documentRegion = ((IStructuredDocument) document).getRegionAtCharacterOffset(problem.getOffset());
 			if (documentRegion != null) {
 				ITextRegion textRegion = documentRegion.getRegionAtCharacterOffset(problem.getOffset());

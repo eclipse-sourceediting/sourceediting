@@ -70,6 +70,10 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 		if (validatorStrategy != null) {
 			validatorStrategy.endProcessing();
 		}
+		/* single spell-check for everything to ensure that SpellingProblem offsets are correct */
+		if (getSpellcheckStrategy() != null) {
+			getSpellcheckStrategy().reconcile(new Region(0, getDocument().getLength()));
+		}
 	}
 
 	protected String getContentType(IDocument doc) {
@@ -174,11 +178,6 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 				dirty = createDirtyRegion(partitions[i], DirtyRegion.INSERT);
 				getValidatorStrategy().reconcile(partitions[i], dirty);
 			}
-		}
-
-		// single spell-check for everything
-		if (getSpellcheckStrategy() != null) {
-			getSpellcheckStrategy().reconcile(dirtyRegion, dirtyRegion);
 		}
 	}
 

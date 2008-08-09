@@ -203,7 +203,8 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
 		LineStyleProvider[] providers = null;
 
-		if (partitionType == IHTMLPartitions.HTML_DEFAULT || partitionType == IHTMLPartitions.HTML_COMMENT || partitionType == IHTMLPartitions.HTML_DECLARATION) {
+		// workaround IXMLPartitions.XML_PI
+		if (partitionType == IHTMLPartitions.HTML_DEFAULT || partitionType == IHTMLPartitions.HTML_COMMENT || partitionType == IHTMLPartitions.HTML_DECLARATION || partitionType == IXMLPartitions.XML_PI) {
 			providers = new LineStyleProvider[]{getLineStyleProviderForHTML()};
 		}
 		else if (partitionType == ICSSPartitions.STYLE) {

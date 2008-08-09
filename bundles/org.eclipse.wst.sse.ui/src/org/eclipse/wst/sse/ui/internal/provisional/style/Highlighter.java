@@ -245,7 +245,7 @@ public class Highlighter implements IHighlighter {
 
 	private final boolean DEBUG = false;
 	private final StyleRange[] EMPTY_STYLE_RANGE = new StyleRange[0];
-	private static final String LINE_STYLE_PROVIDER_EXTENDED_ID = "linestyleprovider"; //$NON-NLS-1$
+	static final String LINE_STYLE_PROVIDER_EXTENDED_ID = "linestyleprovider"; //$NON-NLS-1$
 	private static final int MAX_NUMBER_STYLES = 500;
 	private static final int LEFT_STYLES_SIZE = 200;
 	private static final int RIGHT_STYLES_SIZE = 200;

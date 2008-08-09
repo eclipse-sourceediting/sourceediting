@@ -23,7 +23,7 @@ import org.eclipse.wst.sse.ui.internal.Logger;
 
 public class ReconcilerHighlighter {
 
-	private static final String LINE_STYLE_PROVIDER_EXTENDED_ID = "linestyleprovider"; //$NON-NLS-1$
+	private static final String LINE_STYLE_PROVIDER_EXTENDED_ID = Highlighter.LINE_STYLE_PROVIDER_EXTENDED_ID;
 
 	private Map fTableOfProviders = null;
 

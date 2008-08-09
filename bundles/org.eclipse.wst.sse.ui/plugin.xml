@@ -509,6 +509,7 @@
 		    <menu id="refactorPopupMenuId" label="%Refactor">
 		    </menu>
 		</menuContribution>
+
 	    <menuContribution locationURI="menu:goTo?after=additions">
 		    <separator name="matchingBegin" visible="false"></separator>
 		    <command commandId="org.eclipse.wst.sse.ui.goto.matching.bracket" id="org.eclipse.wst.sse.ui.goto.matching.bracket" label="%ActionDefinition.gotoMatchingBracket.name" style="push">
@@ -689,6 +690,20 @@
 				</command>
 				
 	     </menuContribution>		
+
+		<!-- 
+			Allow for sharing via ECF when present.  Will cause class load failure log messsages since visibility doesn't affect whether the class is loaded in 3.4.
+			https://bugs.eclipse.org/bugs/show_bug.cgi?id=201589#c9
+		-->
+		<menuContribution locationURI="popup:org.eclipse.wst.sse.ui.StructuredTextEditor.EditorContext?after=additions">
+			<dynamic id="org.eclipse.wst.sse.ui.StructuredTextEditor.EditorContext.DocShareRosterMenu">
+				<class class="org.eclipse.ecf.internal.provisional.docshare.menu.DocShareRosterMenuContributionItem" />
+				<visibleWhen>
+					<test property="org.eclipse.core.runtime.isBundleInstalled" args="org.eclipse.ecf.docshare"/>
+				</visibleWhen>
+			</dynamic>
+		</menuContribution>
+
 	</extension>
 	<extension
        point="org.eclipse.ui.commands">

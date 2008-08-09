@@ -628,6 +628,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 		if (!PlatformUI.isWorkbenchRunning())
 			return status;
 
+		Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 		try {
 			beginProcessing();
 

@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.wst.sse.ui">
+<schema targetNamespace="org.eclipse.wst.sse.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
-      <appInfo>
+      <appinfo>
          <meta.schema plugin="org.eclipse.wst.sse.ui" id="editorConfiguration" name="Editor Configuration"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          The SSE StructuredTextEditor is intended to be as flexible as possible.  Much of its design centers around the notion of defining and redefining its behavior and appearance based on the content type of its input.  This extension point allows clients to provide an editor configuration to the StructuredTextEditor without having to subclass the editor.
       </documentation>
@@ -64,9 +64,9 @@
                <documentation>
                   Must subclass org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration:"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -91,9 +91,9 @@
                <documentation>
                   Must subclass org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration:"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -118,9 +118,9 @@
                <documentation>
                   Must subclass org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute kind="java" basedOn="org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration:"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -147,9 +147,9 @@
                <documentation>
                   Must implement org.eclipse.jface.text.ITextHover
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute kind="java" basedOn=":org.eclipse.jface.text.ITextHover"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -176,9 +176,9 @@
                <documentation>
                   Must implement org.eclipse.jface.text.ITextDoubleClickStrategy
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute kind="java" basedOn=":org.eclipse.jface.text.ITextDoubleClickStrategy"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -211,9 +211,9 @@ Note: this is not API and is only used for provisional configuration types.
                <documentation>
                   Implementation class for this type.
                </documentation>
-               <appInfo>
+               <appinfo>
                   <meta.attribute kind="java"/>
-               </appInfo>
+               </appinfo>
             </annotation>
          </attribute>
       </complexType>
@@ -234,7 +234,7 @@ Note: this is not API and is only used for provisional configuration types.
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="value" type="string">
+         <attribute name="value" type="string" use="required">
             <annotation>
                <documentation>
                   The value of this definition.
@@ -252,18 +252,18 @@ Note: this is not API and is only used for provisional configuration types.
    </element>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="since"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          1.0
       </documentation>
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="examples"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          &lt;pre&gt;
    &lt;extension 
@@ -286,19 +286,20 @@ Note: this is not API and is only used for provisional configuration types.
    </annotation>
 
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="apiInfo"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          see &lt;code&gt;org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration&lt;/code&gt;, &lt;code&gt;org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration&lt;/code&gt;, &lt;code&gt;org.eclipse.wst.sse.ui.views.properties.StructuredPropertySheetConfiguration&lt;/code&gt;.
       </documentation>
    </annotation>
 
 
+
    <annotation>
-      <appInfo>
+      <appinfo>
          <meta.section type="copyright"/>
-      </appInfo>
+      </appinfo>
       <documentation>
          Copyright (c) 2005, 2007 IBM Corporation and others.
 All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at &lt;a href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/a&gt;

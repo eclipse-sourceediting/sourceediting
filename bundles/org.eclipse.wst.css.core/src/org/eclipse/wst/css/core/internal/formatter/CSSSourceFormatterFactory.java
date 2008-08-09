@@ -61,6 +61,7 @@ public class CSSSourceFormatterFactory {
 				return StyleDeclItemFormatter.getInstance();
 			case ICSSNode.STYLERULE_NODE :
 				return StyleRuleFormatter.getInstance();
+			case ICSSNode.DOCUMENTCSSSTYLE_NODE:
 			case ICSSNode.STYLESHEET_NODE :
 				return StyleSheetFormatter.getInstance();
 			case ICSSNode.ATTR_NODE :
