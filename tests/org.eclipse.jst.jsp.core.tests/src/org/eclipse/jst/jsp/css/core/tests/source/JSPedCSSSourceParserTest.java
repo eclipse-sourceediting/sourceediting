@@ -211,6 +211,30 @@ public class JSPedCSSSourceParserTest extends TestCase {
 		sourceParserTest("sample07.jsp", MODE_INSERT); //$NON-NLS-1$
 	}
 	
+	public void testSourceOpen15() throws IOException {
+		sourceParserTest("sample08.jsp", MODE_OPEN); //$NON-NLS-1$
+	}
+	
+	public void testSourceInsert15() throws IOException {
+		sourceParserTest("sample08.jsp", MODE_INSERT); //$NON-NLS-1$
+	}
+	
+	public void testSourceAppend15() throws IOException {
+		sourceParserTest("sample08.jsp", MODE_APPEND); //$NON-NLS-1$
+	}
+	
+	public void testSourceOpen16() throws IOException {
+		sourceParserTest("sample08.jspf", MODE_OPEN); //$NON-NLS-1$
+	}
+	
+	public void testSourceInsert16() throws IOException {
+		sourceParserTest("sample08.jspf", MODE_INSERT); //$NON-NLS-1$
+	}
+	
+	public void testSourceAppend16() throws IOException {
+		sourceParserTest("sample08.jspf", MODE_APPEND); //$NON-NLS-1$
+	}
+	
 	protected void setUp() throws Exception {
 		// set cssjsptestX.jsp(f) file as css jsp.
 		IContentType ct = Platform.getContentTypeManager().getContentType("org.eclipse.jst.jsp.core.cssjspsource");
