@@ -183,5 +183,21 @@ public class TestContentTypeDetectionForXML extends TestContentTypeDetection {
 	public void testFile128() throws CoreException, IOException {
 		doTest(expectedXMLContentType, "testfiles/xml/UTF8With3ByteBOM.xml", null);
 	}
+	
+	public void testFile129() throws CoreException, IOException {
+		doTest(expectedCustomXMLContentType, "testfiles/xml/utf16be.xml", null);
+	}
+	
+	public void testFile130() throws CoreException, IOException {
+		doTest(expectedCustomXMLContentType, "testfiles/xml/utf16le.xml", null);
+	}
+	
+	public void testFile131() throws CoreException, IOException {
+		doTest(expectedCustomXMLContentType, "testfiles/xml/utf16beMalformed.xml", null);
+	}
+	
+	public void testFile132() throws CoreException, IOException {
+		doTest(expectedCustomXMLContentType, "testfiles/xml/utf16leMalformed.xml", null);
+	}
 
 }

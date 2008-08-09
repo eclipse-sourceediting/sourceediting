@@ -451,7 +451,7 @@ public class TestCodedReader extends TestCase {
 	}
 
 	public void testFile93() throws CoreException, IOException {
-		doTest("UTF-16BE", "UTF-16BE", "testfiles/jsp/testUTF16.jsp", null);
+		doTest("UTF-16", "UTF-16", "testfiles/jsp/testUTF16.jsp", null);
 	}
 
 	public void testFile94() throws CoreException, IOException {
@@ -459,11 +459,11 @@ public class TestCodedReader extends TestCase {
 	}
 
 	public void testFile95() throws CoreException, IOException {
-		doTest("UTF-16BE", "UTF-16BE", "testfiles/jsp/utf16UnicodeStreamWithNoEncodingInHeaderBE.jsp", null);
+		doTest("UTF-16", "UTF-16", "testfiles/jsp/utf16UnicodeStreamWithNoEncodingInHeaderBE.jsp", null);
 	}
 
 	public void testFile96() throws CoreException, IOException {
-		doTest("UTF-16BE", "UTF-16BE", "testfiles/jsp/utf16WithJapaneseChars.jsp", null);
+		doTest("UTF-16", "UTF-16", "testfiles/jsp/utf16WithJapaneseChars.jsp", null);
 	}
 
 	public void testFile97() throws CoreException, IOException {

@@ -36,7 +36,7 @@ public class SSEModelXMLTestSuite extends TestSuite {
 	}
 
 	public SSEModelXMLTestSuite() {
-		super("Test Suite for org.eclipse.wst.xml.core.tests");
+		super("XML Core Test Suite");
 		addTest(new TestSuite(TestModelsFromFiles.class));
 		addTest(new TestSuite(TestXMLModelLoader.class));
 		addTest(new TestSuite(TestXMLDocumentLoader.class));

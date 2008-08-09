@@ -357,4 +357,24 @@ public class XMLHeadTokenizerTester extends TestCase {
 		String filename = fileLocation + "UTF16LEAtStartOfLargeFile.xml";
 		doTestFile(filename, "UTF16LEInStream");
 	}
+	
+	public void testUTF16LE() {
+		String filename = fileLocation + "utf16le.xml";
+		doTestFile(filename, "UTF-16LE");
+	}
+	
+	public void testUTF16BE() {
+		String filename = fileLocation + "utf16be.xml";
+		doTestFile(filename, "UTF-16BE");
+	}
+	
+	public void testUTF16BEMalformed() {
+		String filename = fileLocation + "utf16beMalformed.xml";
+		doTestFile(filename, "UTF-16BE");
+	}
+	
+	public void testUTF16LEMalformed() {
+		String filename = fileLocation + "utf16leMalformed.xml";
+		doTestFile(filename, "UTF-16LE");
+	}
 }

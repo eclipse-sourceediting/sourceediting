@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.eclipse.wst.xml.tests.encoding
-Bundle-Version: 1.0.200.qualifier
+Bundle-Version: 1.0.201.qualifier
 Bundle-ClassPath: tests.jar
 Bundle-Activator: org.eclipse.wst.xml.tests.encoding.TestsPlugin
 Bundle-Vendor: %Bundle-Vendor.0
@@ -15,12 +15,12 @@ Export-Package: org.eclipse.wst.xml.tests.encoding,
  org.eclipse.wst.xml.tests.encoding.write,
  org.eclipse.wst.xml.tests.encoding.xml
 Require-Bundle: org.eclipse.core.resources,
- org.junit;bundle-version="[3.8.0,4.0.0)",
+ org.junit;bundle-version="[3.8.1,4.0.0)",
  org.eclipse.ui,
  org.eclipse.ui.workbench,
  org.eclipse.ui.ide,
  org.eclipse.wst.xml.core,
  org.eclipse.core.runtime,
  org.eclipse.wst.sse.core
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.4

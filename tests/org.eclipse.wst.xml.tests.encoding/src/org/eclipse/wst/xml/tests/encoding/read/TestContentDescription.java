@@ -374,7 +374,7 @@ public class TestContentDescription extends TestCase {
 	}
 
 	public void testFile93() throws CoreException, IOException {
-		doTest("UTF-16BE", "testfiles/jsp/testUTF16.jsp", null);
+		doTest("UTF-16", "testfiles/jsp/testUTF16.jsp", null);
 	}
 
 	public void testFile94() throws CoreException, IOException {
@@ -382,11 +382,11 @@ public class TestContentDescription extends TestCase {
 	}
 
 	public void testFile95() throws CoreException, IOException {
-		doTest("UTF-16BE", "testfiles/jsp/utf16UnicodeStreamWithNoEncodingInHeaderBE.jsp", null);
+		doTest("UTF-16", "testfiles/jsp/utf16UnicodeStreamWithNoEncodingInHeaderBE.jsp", null);
 	}
 
 	public void testFile96() throws CoreException, IOException {
-		doTest("UTF-16BE", "testfiles/jsp/utf16WithJapaneseChars.jsp", null);
+		doTest("UTF-16", "testfiles/jsp/utf16WithJapaneseChars.jsp", null);
 	}
 
 	public void testFile97() throws CoreException, IOException {
@@ -513,8 +513,24 @@ public class TestContentDescription extends TestCase {
 //		doTest("UTF-16BE", "testfiles/xml/utf16WithJapaneseChars.xml", null);
 //	}
 
-	public void testFile128() throws CoreException, IOException {
+	public void testFile129() throws CoreException, IOException {
 		doTest("UTF-8", "testfiles/xml/UTF8With3ByteBOM.xml", null);
+	}
+	
+	public void testFile130() throws CoreException, IOException {
+		doTest("UTF-16BE", "testfiles/xml/utf16be.xml", null);
+	}
+	
+	public void testFile131() throws CoreException, IOException {
+		doTest("UTF-16LE", "testfiles/xml/utf16le.xml", null);
+	}
+	
+	public void testFile132() throws CoreException, IOException {
+		doTest("UTF-16LE", "testfiles/xml/utf16leMalformed.xml", null);
+	}
+	
+	public void testFile133() throws CoreException, IOException {
+		doTest("UTF-16BE", "testfiles/xml/utf16beMalformed.xml", null);
 	}
 
 }

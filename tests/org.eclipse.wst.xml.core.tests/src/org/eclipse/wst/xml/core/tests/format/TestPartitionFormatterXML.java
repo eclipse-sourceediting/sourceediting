@@ -29,6 +29,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.formatter.DefaultXMLPartitionFormatter;
 import org.eclipse.wst.xml.core.internal.formatter.XMLFormattingPreferences;
 import org.eclipse.wst.xml.core.tests.util.StringCompareUtil;
@@ -126,6 +127,12 @@ public class TestPartitionFormatterXML extends TestCase {
 			assertNotNull("could not retrieve structured model for : " + afterPath, afterModel);
 
 			IStructuredDocument document = beforeModel.getStructuredDocument();
+			
+			String normalizedContents = document.get();
+			normalizedContents = StringUtils.replace(normalizedContents, "\r\n", "\n");
+			normalizedContents = StringUtils.replace(normalizedContents, "\r", "\n");
+			document.set(normalizedContents);
+			
 			if (prefs == null)
 				prefs = new XMLFormattingPreferences();
 			TextEdit edit = partitionFormatter.format(beforeModel, 0, document.getLength(), prefs);
@@ -150,6 +157,13 @@ public class TestPartitionFormatterXML extends TestCase {
 
 			String expectedContents = new String(afterBytes.toByteArray(), UTF_8);
 			String actualContents = new String(formattedBytes.toByteArray(), UTF_8);
+
+			/* Make some adjustments to ignore cross platform line delimiter issues */
+			expectedContents = StringUtils.replace(expectedContents, "\r\n", "\n");
+			expectedContents = StringUtils.replace(expectedContents, "\r", "\n");
+			actualContents = StringUtils.replace(actualContents, "\r\n", "\n");
+			actualContents = StringUtils.replace(actualContents, "\r", "\n");
+			
 			assertTrue("Formatted document differs from the expected.\nExpected Contents:\n" + expectedContents + "\nActual Contents:\n" + actualContents, fStringCompareUtil.equalsIgnoreLineSeperator(expectedContents, actualContents));
 		}
 		finally {
@@ -166,6 +180,11 @@ public class TestPartitionFormatterXML extends TestCase {
 		XMLFormattingPreferences prefs = new XMLFormattingPreferences();
 		prefs.setClearAllBlankLines(true);
 		formatAndAssertEquals("testfiles/xml/simple-standalone.xml", "testfiles/xml/simple-standalone-newfmt.xml", prefs);
+	}
+	
+	public void testWhitespaceFormatXSD() throws UnsupportedEncodingException, IOException, CoreException {
+		// Bug 194698
+		formatAndAssertEquals("testfiles/xml/xml-whitespace-xsd.xml", "testfiles/xml/xml-whitespace-xsd-actual.xml");
 	}
 
 	public void testPreserveFormat() throws UnsupportedEncodingException, IOException, CoreException {

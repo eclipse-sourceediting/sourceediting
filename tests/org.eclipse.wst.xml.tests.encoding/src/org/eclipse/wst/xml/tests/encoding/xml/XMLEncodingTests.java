@@ -103,7 +103,7 @@ public class XMLEncodingTests extends TestCase {
 	 */
 	public void testUTF16() throws IOException {
 		String filename = fileLocation + "utf16WithJapaneseChars.xml";
-		doTestFileStream(filename, "UTF-16BE", new XMLResourceEncodingDetector());
+		doTestFileStream(filename, "UTF-16", new XMLResourceEncodingDetector());
 	}
 
 	/**
@@ -120,12 +120,32 @@ public class XMLEncodingTests extends TestCase {
 	 */
 	public void testUtf16UnicodeStreamWithNoEncodingInHeaderBE() throws IOException {
 		String filename = fileLocation + "utf16UnicodeStreamWithNoEncodingInHeaderBE.xml";
-		doTestFileStream(filename, "UTF-16BE", new XMLResourceEncodingDetector());
+		doTestFileStream(filename, "UTF-16", new XMLResourceEncodingDetector());
 	}
 
 	public void testUTF83ByteBOM() throws IOException {
 		String filename = fileLocation + "UTF8With3ByteBOM.xml";
 		doTestFileStream(filename, "UTF-8", new XMLResourceEncodingDetector());
+	}
+	
+	public void testUTF16BE() throws IOException {
+		String filename = fileLocation + "utf16be.xml";
+		doTestFileStream(filename, "UTF-16BE", new XMLResourceEncodingDetector());
+	}
+	
+	public void testUTF16LE() throws IOException {
+		String filename = fileLocation + "utf16le.xml";
+		doTestFileStream(filename, "UTF-16LE", new XMLResourceEncodingDetector());
+	}
+	
+	public void testUTF16LEMalformed() throws IOException {
+		String filename = fileLocation + "utf16leMalformed.xml";
+		doTestFileStream(filename, "UTF-16LE", new XMLResourceEncodingDetector());
+	}
+	
+	public void testUTF16BEMalformed() throws IOException {
+		String filename = fileLocation + "utf16beMalformed.xml";
+		doTestFileStream(filename, "UTF-16BE", new XMLResourceEncodingDetector());
 	}
 
 	/**
