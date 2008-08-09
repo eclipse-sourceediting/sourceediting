@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -87,6 +87,9 @@ public class CSSHeadTokenizerTester extends TestCase {
 		do {
 			token = tokenizer.getNextToken();
 			String tokenType = token.getType();
+			if(canHandleAsUnicodeStream(tokenType)) {
+
+			}
 			if (tokenType == CSSHeadTokenizerConstants.CHARSET_RULE) {
 				if (tokenizer.hasMoreTokens()) {
 					HeadParserToken valueToken = tokenizer.getNextToken();
@@ -102,6 +105,19 @@ public class CSSHeadTokenizerTester extends TestCase {
 		finalToken = token;
 		return finalToken;
 
+	}
+	
+	private boolean canHandleAsUnicodeStream(String tokenType) {
+		boolean canHandleAsUnicode = false;
+		if (tokenType == EncodingParserConstants.UTF83ByteBOM) {
+			canHandleAsUnicode = true;
+			this.fcharset = "UTF-8"; //$NON-NLS-1$
+		}
+		else if (tokenType == EncodingParserConstants.UTF16BE || tokenType == EncodingParserConstants.UTF16LE) {
+			canHandleAsUnicode = true;
+			this.fcharset = "UTF-16"; //$NON-NLS-1$
+		}
+		return canHandleAsUnicode;
 	}
 
 	public void testBestCase() throws IOException {
@@ -144,4 +160,45 @@ public class CSSHeadTokenizerTester extends TestCase {
 		String filename = this.fileLocation + "encoding_test_sjis.css";
 		doTestFile(filename, "SHIFT_JIS");
 	}
+	
+	public void testUTF16be() throws IOException {
+		String filename = fileLocation + "utf16be.css";
+		doTestFile(filename, "UTF-16BE");
+	}
+	
+	public void testUTF16le() throws IOException {
+		String filename = fileLocation + "utf16le.css";
+		doTestFile(filename, "UTF-16LE");
+	}
+	
+	public void testUTF16beMalformed() throws IOException {
+		String filename = fileLocation + "utf16beMalformed.css";
+		doTestFile(filename, "UTF-16BE");
+	}
+	
+	public void testUTF16leMalformed() throws IOException {
+		String filename = fileLocation + "utf16leMalformed.css";
+		doTestFile(filename, "UTF-16LE");
+	}
+	
+	/*
+		sun.io.MalformedInputException
+		at sun.io.ByteToCharUTF8.convert(ByteToCharUTF8.java:262)
+		at sun.nio.cs.StreamDecoder$ConverterSD.convertInto(StreamDecoder.java:314)
+		at sun.nio.cs.StreamDecoder$ConverterSD.implRead(StreamDecoder.java:364)
+		at sun.nio.cs.StreamDecoder.read(StreamDecoder.java:250)
+		at java.io.InputStreamReader.read(InputStreamReader.java:212)
+		at org.eclipse.wst.css.core.internal.contenttype.CSSHeadTokenizer.yy_advance(CSSHeadTokenizer.java:337)
+		at org.eclipse.wst.css.core.internal.contenttype.CSSHeadTokenizer.primGetNextToken(CSSHeadTokenizer.java:470)
+		at org.eclipse.wst.css.core.internal.contenttype.CSSHeadTokenizer.getNextToken(CSSHeadTokenizer.java:229)
+		at org.eclipse.wst.css.tests.encoding.css.CSSHeadTokenizerTester.parseHeader(CSSHeadTokenizerTester.java:88)
+		at org.eclipse.wst.css.tests.encoding.css.CSSHeadTokenizerTester.doTestFile(CSSHeadTokenizerTester.java:52)
+		at org.eclipse.wst.css.tests.encoding.css.CSSHeadTokenizerTester.doTestFile(CSSHeadTokenizerTester.java:31)
+		at org.eclipse.wst.css.tests.encoding.css.CSSHeadTokenizerTester.testUTF16BOM(CSSHeadTokenizerTester.java:186)
+
+	public void testUTF16BOM() throws IOException {
+		String filename = fileLocation + "utf16BOM.css";
+		doTestFile(filename, "UTF-16");
+	}
+	*/
 }

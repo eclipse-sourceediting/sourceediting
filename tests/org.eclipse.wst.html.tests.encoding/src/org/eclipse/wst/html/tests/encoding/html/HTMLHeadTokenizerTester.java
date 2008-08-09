@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -177,6 +177,9 @@ public class HTMLHeadTokenizerTester extends TestCase {
 				System.out.println(token);
 			}
 			String tokenType = token.getType();
+			if(canHandleAsUnicodeStream(tokenType)) {
+				
+			}
 			if (tokenType == HTMLHeadTokenizerConstants.MetaTagContentType) {
 				if (tokenizer.hasMoreTokens()) {
 					HeadParserToken valueToken = tokenizer.getNextToken();
@@ -199,6 +202,19 @@ public class HTMLHeadTokenizerTester extends TestCase {
 		finalToken = token;
 		return finalToken;
 
+	}
+	
+	private boolean canHandleAsUnicodeStream(String tokenType) {
+		boolean canHandleAsUnicode = false;
+		if (tokenType == EncodingParserConstants.UTF83ByteBOM) {
+			canHandleAsUnicode = true;
+			this.fCharset = "UTF-8"; //$NON-NLS-1$
+		}
+		else if (tokenType == EncodingParserConstants.UTF16BE || tokenType == EncodingParserConstants.UTF16LE) {
+			canHandleAsUnicode = true;
+			this.fCharset = "UTF-16"; //$NON-NLS-1$
+		}
+		return canHandleAsUnicode;
 	}
 
 	public void testBestCase() throws IOException {
@@ -256,5 +272,40 @@ public class HTMLHeadTokenizerTester extends TestCase {
 		doTestFile(filename, "UTF-8");
 
 	}
+	
+	public void testnoquotesUTF16le() throws IOException {
+		String filename = this.fileLocation + "noquotesUTF16le.html";
+		doTestFile(filename, "UTF-16LE");
+	}
+	
+	public void testUTF16le() throws IOException {
+		String filename = this.fileLocation + "utf16le.html";
+		doTestFile(filename, "UTF-16LE");
+	}
 
+	public void testUTF16be() throws IOException {
+		String filename = this.fileLocation + "utf16be.html";
+		doTestFile(filename, "UTF-16BE");
+	}
+	
+	/*
+		sun.io.MalformedInputException
+		at sun.io.ByteToCharUTF8.convert(ByteToCharUTF8.java:262)
+		at sun.nio.cs.StreamDecoder$ConverterSD.convertInto(StreamDecoder.java:314)
+		at sun.nio.cs.StreamDecoder$ConverterSD.implRead(StreamDecoder.java:364)
+		at sun.nio.cs.StreamDecoder.read(StreamDecoder.java:250)
+		at java.io.InputStreamReader.read(InputStreamReader.java:212)
+		at org.eclipse.wst.html.core.internal.contenttype.HTMLHeadTokenizer.yy_advance(HTMLHeadTokenizer.java:340)
+		at org.eclipse.wst.html.core.internal.contenttype.HTMLHeadTokenizer.primGetNextToken(HTMLHeadTokenizer.java:477)
+		at org.eclipse.wst.html.core.internal.contenttype.HTMLHeadTokenizer.getNextToken(HTMLHeadTokenizer.java:232)
+		at org.eclipse.wst.html.tests.encoding.html.HTMLHeadTokenizerTester.parseHeader(HTMLHeadTokenizerTester.java:175)
+		at org.eclipse.wst.html.tests.encoding.html.HTMLHeadTokenizerTester.doTestFile(HTMLHeadTokenizerTester.java:57)
+		at org.eclipse.wst.html.tests.encoding.html.HTMLHeadTokenizerTester.doTestFile(HTMLHeadTokenizerTester.java:37)
+		at org.eclipse.wst.html.tests.encoding.html.HTMLHeadTokenizerTester.testUTF16BOM(HTMLHeadTokenizerTester.java:293)
+
+	public void testUTF16BOM() throws IOException {
+		String filename = this.fileLocation + "utf16BOM.html";
+		doTestFile(filename, "UTF-16");
+	}
+	*/
 }

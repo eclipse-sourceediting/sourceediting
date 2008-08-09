@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -162,6 +162,26 @@ public class HTMLEncodingTests extends TestCase {
 		String filename = fileLocation + "NormalNonDefault.html";
 		String ianaInFile = "UTF-8";
 		doTestFileStream(filename, ianaInFile, new HTMLResourceEncodingDetector());
+	}
+	
+	public void testUTF16BE() throws IOException {
+		String filename = fileLocation + "utf16be.html";
+		doTestFileStream(filename, "UTF-16BE", new HTMLResourceEncodingDetector());
+	}
+	
+	public void testUTF16LE() throws IOException {
+		String filename = fileLocation + "utf16le.html";
+		doTestFileStream(filename, "UTF-16LE", new HTMLResourceEncodingDetector());
+	}
+	
+	public void testUTF16LENoQuotes() throws IOException {
+		String filename = fileLocation + "noquotesUTF16le.html";
+		doTestFileStream(filename, "UTF-16LE", new HTMLResourceEncodingDetector());
+	}
+	
+	public void testUTF16BOM() throws IOException {
+		String filename = this.fileLocation + "utf16BOM.html";
+		doTestFileStream(filename, "UTF-16", new HTMLResourceEncodingDetector());
 	}
 
 }

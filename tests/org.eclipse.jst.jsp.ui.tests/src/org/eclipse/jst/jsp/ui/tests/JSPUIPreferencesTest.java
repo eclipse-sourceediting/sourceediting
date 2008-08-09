@@ -111,4 +111,11 @@ public class JSPUIPreferencesTest extends TestCase {
 		// attempt to restore original preference value
 		store.setValue(prefKey, originalValue);
 	}
+	
+	public void testJavaSeverityPageIDsMatch() {
+		// used when linking from our JSP severity preference page to the Java severity preference page
+		assertEquals(org.eclipse.jdt.internal.ui.preferences.ProblemSeveritiesPreferencePage.PREF_ID,org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPValidationPreferencePage.JAVA_SEVERITY_PREFERENCE_PAGE);
+		assertEquals(org.eclipse.jdt.internal.ui.preferences.ProblemSeveritiesPreferencePage.PROP_ID,org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPValidationPreferencePage.JAVA_SEVERITY_PROPERTY_PAGE);
+		assertEquals(org.eclipse.jdt.internal.ui.preferences.PropertyAndPreferencePage.DATA_NO_LINK, org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPValidationPreferencePage.DATA_NO_LINK);
+	}
 }

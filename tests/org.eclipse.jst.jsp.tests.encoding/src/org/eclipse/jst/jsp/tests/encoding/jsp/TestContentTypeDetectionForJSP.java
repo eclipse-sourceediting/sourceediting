@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -206,6 +206,21 @@ public class TestContentTypeDetectionForJSP extends TestContentTypeDetection {
 	public void testFile99() throws CoreException, IOException {
 		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/regressionTestFiles/defect223365/SelColBeanRow12ResultsForm.jsp", null, "text/html");
 	}
+	
+	public void testFile103() throws CoreException, IOException {
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/utf16le.jsp", null, "text/html");
+	}
+	
+	public void testFile104() throws CoreException, IOException {
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/utf16be.jsp", null, "text/html");
+	}
+	
+	public void testFile105() throws CoreException, IOException {
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/utf16BOM.jsp", null, null);
+	}
 
+	public void testFile106() throws CoreException, IOException {
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/utf16le_xmlStyle.jsp", null, null);
+	}
 
 }

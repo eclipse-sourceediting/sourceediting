@@ -14,11 +14,17 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
+import org.eclipse.jst.jsp.core.tests.taglibindex.BundleResourceUtil;
 import org.eclipse.wst.css.core.internal.provisional.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 
 public class TestModelHandlers extends TestCase {
@@ -106,5 +112,87 @@ public class TestModelHandlers extends TestCase {
 		assertEquals("model handler registry does not have XML type ", ContentTypeIdForXML.ContentTypeID_XML, handler.getAssociatedContentTypeId());
 	}
 
+	public void testDirtyStateForEmbeddedContentTypeTextHTML() throws Exception {
+		String name = "bug243243";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
+		if (!project.isAccessible()) {
+			project = BundleResourceUtil.createSimpleProject(name, null, null);
+			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/bug243243", "/bug243243");
+		}
+		IFile testFile = project.getFile("html.jsp");
+		IStructuredModel model = StructuredModelManager.getModelManager().getModelForRead(testFile);
+		assertFalse("newly opened model was dirty " + testFile.getName(), model.isDirty());
+		model.releaseFromRead();
+		project.delete(true, null);
+	}
 
+	public void testDirtyStateForEmbeddedContentTypeTextCSS() throws Exception {
+		String name = "bug243243";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
+		if (!project.isAccessible()) {
+			project = BundleResourceUtil.createSimpleProject(name, null, null);
+			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/bug243243", "/bug243243");
+		}
+		IFile testFile = project.getFile("css.jsp");
+		IStructuredModel model = StructuredModelManager.getModelManager().getModelForRead(testFile);
+		assertFalse("newly opened model was dirty " + testFile.getName(), model.isDirty());
+		model.releaseFromRead();
+		project.delete(true, null);
+	}
+	
+	public void testDirtyStateForEmbeddedContentTypeTextXML() throws Exception {
+		String name = "bug243243";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
+		if (!project.isAccessible()) {
+			project = BundleResourceUtil.createSimpleProject(name, null, null);
+			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/bug243243", "/bug243243");
+		}
+		IFile testFile = project.getFile("xml.jsp");
+		IStructuredModel model = StructuredModelManager.getModelManager().getModelForRead(testFile);
+		assertFalse("newly opened model was dirty " + testFile.getName(), model.isDirty());
+		model.releaseFromRead();
+		project.delete(true, null);
+	}
+
+	public void testDirtyStateForEmbeddedContentTypeSubXML() throws Exception {
+		String name = "bug243243";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
+		if (!project.isAccessible()) {
+			project = BundleResourceUtil.createSimpleProject(name, null, null);
+			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/bug243243", "/bug243243");
+		}
+		IFile testFile = project.getFile("rdf.jsp");
+		IStructuredModel model = StructuredModelManager.getModelManager().getModelForRead(testFile);
+		assertFalse("newly opened model was dirty " + testFile.getName(), model.isDirty());
+		model.releaseFromRead();
+		project.delete(true, null);
+	}
+
+	public void testDirtyStateForDefaultEmbeddedContentType() throws Exception {
+		String name = "bug243243";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
+		if (!project.isAccessible()) {
+			project = BundleResourceUtil.createSimpleProject(name, null, null);
+			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/bug243243", "/bug243243");
+		}
+		IFile testFile = project.getFile("default.jsp");
+		IStructuredModel model = StructuredModelManager.getModelManager().getModelForRead(testFile);
+		assertFalse("newly opened model was dirty " + testFile.getName(), model.isDirty());
+		model.releaseFromRead();
+		project.delete(true, null);
+	}
+
+	public void testDirtyStateWithNoPageDirective() throws Exception {
+		String name = "bug243243";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(name);
+		if (!project.isAccessible()) {
+			project = BundleResourceUtil.createSimpleProject(name, null, null);
+			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/bug243243", "/bug243243");
+		}
+		IFile testFile = project.getFile("nodirective.jsp");
+		IStructuredModel model = StructuredModelManager.getModelManager().getModelForRead(testFile);
+		assertFalse("newly opened model was dirty " + testFile.getName(), model.isDirty());
+		model.releaseFromRead();
+		project.delete(true, null);
+	}
 }

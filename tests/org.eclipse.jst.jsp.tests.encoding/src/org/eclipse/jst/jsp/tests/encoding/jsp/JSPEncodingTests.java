@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -132,7 +132,8 @@ public class JSPEncodingTests extends TestCase {
 	 */
 	public void testUTF16() throws IOException {
 		String filename = fileLocation + "testUTF16.jsp";
-		doTestFileStream(filename, "UTF-16BE", new JSPResourceEncodingDetector());
+		// [228366] Encoding changes: For UTF-16 with BOM, the expected should be UTF-16
+		doTestFileStream(filename, "UTF-16", new JSPResourceEncodingDetector());
 	}
 
 	/**
@@ -149,12 +150,14 @@ public class JSPEncodingTests extends TestCase {
 	 */
 	public void testUtf16UnicodeStreamWithNoEncodingInHeaderBE() throws IOException {
 		String filename = fileLocation + "utf16UnicodeStreamWithNoEncodingInHeaderBE.jsp";
-		doTestFileStream(filename, "UTF-16BE", new JSPResourceEncodingDetector());
+		// [228366] Encoding changes: For UTF-16 with BOM, the expected should be UTF-16
+		doTestFileStream(filename, "UTF-16", new JSPResourceEncodingDetector());
 	}
 
 	public void testUTF16WithJapaneseChars() throws IOException {
 		String filename = fileLocation + "utf16WithJapaneseChars.jsp";
-		doTestFileStream(filename, "UTF-16BE", new JSPResourceEncodingDetector());
+		// [228366] Encoding changes: For UTF-16 with BOM, the expected should be UTF-16
+		doTestFileStream(filename, "UTF-16", new JSPResourceEncodingDetector());
 	}
 
 	public void testUTF83ByteBOM() throws IOException {
@@ -178,5 +181,24 @@ public class JSPEncodingTests extends TestCase {
 		String ianaInFile = "ISO-8859-8";
 		doTestFileStream(filename, ianaInFile, new JSPResourceEncodingDetector());
 	}
-
+	
+	public void testUTF16le() throws IOException {
+		String filename = fileLocation + "utf16le.jsp";
+		doTestFileStream(filename, "UTF-16LE", new JSPResourceEncodingDetector());
+	}
+	
+	public void testUTF16be() throws IOException {
+		String filename = fileLocation + "utf16be.jsp";
+		doTestFileStream(filename, "UTF-16BE", new JSPResourceEncodingDetector());
+	}
+	
+	public void testUTF16BOM() throws IOException {
+		String filename = fileLocation + "utf16BOM.jsp";
+		doTestFileStream(filename, "UTF-16", new JSPResourceEncodingDetector());
+	}
+	
+	public void testUTF16leXmlStyle() throws IOException {
+		String filename = fileLocation + "utf16le_xmlStyle.jsp";
+		doTestFileStream(filename, "UTF-16LE", new JSPResourceEncodingDetector());
+	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -166,6 +166,31 @@ public class CSSEncodingTester extends TestCase {
 	public void testShiftJIS() throws IOException {
 		String filename = fileLocation + "encoding_test_sjis.css";
 		doTestFileStream(filename, "SHIFT_JIS", new CSSResourceEncodingDetector());
+	}
+	
+	public void testUTF16be() throws IOException {
+		String filename = fileLocation + "utf16be.css";
+		doTestFileStream(filename, "UTF-16BE", new CSSResourceEncodingDetector());
+	}
+	
+	public void testUTF16le() throws IOException {
+		String filename = fileLocation + "utf16le.css";
+		doTestFileStream(filename, "UTF-16LE", new CSSResourceEncodingDetector());
+	}
+	
+	public void testUTF16beMalformed() throws IOException {
+		String filename = fileLocation + "utf16beMalformed.css";
+		doTestFileStream(filename, "UTF-16BE", new CSSResourceEncodingDetector());
+	}
+	
+	public void testUTF16leMalformed() throws IOException {
+		String filename = fileLocation + "utf16leMalformed.css";
+		doTestFileStream(filename, "UTF-16LE", new CSSResourceEncodingDetector());
+	}
+	
+	public void testUTF16BOM() throws IOException {
+		String filename = fileLocation + "utf16BOM.css";
+		doTestFileStream(filename, "UTF-16", new CSSResourceEncodingDetector());
 	}
 
 }

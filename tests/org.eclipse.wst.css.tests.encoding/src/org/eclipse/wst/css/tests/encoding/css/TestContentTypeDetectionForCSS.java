@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,4 +51,23 @@ public class TestContentTypeDetectionForCSS extends TestContentTypeDetection {
 		doTest("org.eclipse.wst.css.core.csssource", "testfiles/css/nonStandardIllFormed2.css", null);
 	}
 
+	public void testUTF16be() throws CoreException, IOException {
+		doTest("org.eclipse.wst.css.core.csssource", "testfiles/css/utf16be.css", null);
+	}
+	
+	public void testUTF16le() throws CoreException, IOException {
+		doTest("org.eclipse.wst.css.core.csssource", "testfiles/css/utf16le.css", null);
+	}
+	
+	public void testUTF16beMalformed() throws CoreException, IOException {
+		doTest("org.eclipse.wst.css.core.csssource", "testfiles/css/utf16beMalformed.css", null);
+	}
+	
+	public void testUTF16leMalformed() throws CoreException, IOException {
+		doTest("org.eclipse.wst.css.core.csssource", "testfiles/css/utf16leMalformed.css", null);
+	}
+	
+	public void testUTF16BOM() throws CoreException, IOException {
+		doTest("org.eclipse.wst.css.core.csssource", "testfiles/css/utf16BOM.css", null);
+	}
 }
