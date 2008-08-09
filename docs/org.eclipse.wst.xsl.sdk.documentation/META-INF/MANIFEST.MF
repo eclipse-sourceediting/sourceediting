@@ -5,4 +5,3 @@ Bundle-SymbolicName: org.eclipse.wst.xsl.sdk.documentation; singleton:=true
 Bundle-Version: 0.0.5.qualifier
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %providerName
-Require-Bundle: org.eclipse.help;bundle-version="[3.3.0,4.0.0)"

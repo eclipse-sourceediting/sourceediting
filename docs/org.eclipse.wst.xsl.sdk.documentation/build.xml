@@ -102,7 +102,7 @@
                 <include name="**" />
             </packageset>
             <doclet name="com.sun.tools.doclets.doccheck.DocCheck">
-                <param name="-execDepth" value="2" />
+                <param name="-execDepth" value="5" />
             </doclet>
         </javadoc>
     </target>
