@@ -16,7 +16,6 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -31,6 +30,8 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNodeList;
 import org.eclipse.wst.xsd.contentmodel.internal.CMDocumentFactoryXSD;
 import org.eclipse.wst.xsd.contentmodel.internal.XSDImpl;
 import org.eclipse.wst.xsd.contentmodel.internal.XSDImpl.DocumentationImpl;
+import org.eclipse.wst.xsd.contentmodel.internal.XSDImpl.XSDElementDeclarationAdapter;
+import org.eclipse.wst.xsd.contentmodel.internal.XSDImpl.XSDModelGroupAdapter;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
@@ -167,6 +168,38 @@ public class BugFixesTest extends BaseTestCase
       }
     }
     assertTrue(foundDesiredElement);  // if we didn't even find the noinput element, then something terrible went wrong
+  }
+  
+  public void testXSDTypeWhitespaceFacets() {
+	  // Bug [194698] - Test that the correct whitespace facets are applied to the types
+	  String XSD_FILE_NAME = "XSDWhitespace.xsd";
+	  String fileURI = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + XSD_FILE_NAME;
+	  CMDocumentFactoryXSD factory = new CMDocumentFactoryXSD();
+	  assertNotNull("Assert factory is not null", factory);
+	  CMDocument cmDocument = factory.createCMDocument(fileURI);
+	  assertNotNull("Assert CMDocument is not null", cmDocument);
+	  CMElementDeclaration elemDecl = (CMElementDeclaration)cmDocument.getElements().item(0);
+	  assertEquals("test", elemDecl.getNodeName());
+	  assertTrue(elemDecl.getContent() instanceof XSDModelGroupAdapter);
+	  XSDModelGroupAdapter group = (XSDModelGroupAdapter) elemDecl.getContent();
+	  CMNodeList list = group.getChildNodes();
+	  XSDElementDeclarationAdapter adapter = null;
+	  
+	  String nodeName = null, expected = null;
+	  CMDataType type = null;
+	  // Iterate over the child nodes of the element, examining the whitespace facets */
+	  for(int i = 0; i < list.getLength(); i++) {
+		  adapter = (XSDElementDeclarationAdapter) list.item(i);
+
+		  nodeName = adapter.getNodeName();
+		  assertNotNull(nodeName);
+		  assertTrue(nodeName.contains("-"));
+		  type = adapter.getDataType();
+		  assertNotNull(type);
+		  
+		  expected = nodeName.substring(nodeName.indexOf('-') + 1);
+		  assertEquals(expected, type.getProperty(XSDImpl.PROPERTY_WHITESPACE_FACET));
+	  }
   }
   
   public void testXSITypeVsTypeAttr() 

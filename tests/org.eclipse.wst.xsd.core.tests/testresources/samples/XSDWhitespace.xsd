@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:element name="test" type="xsdTest" />
+	<!-- Define a simple type to test that the hierarchy overriding whitespace rule is observed -->
+	<xsd:simpleType name="CollapsedString">
+		<xsd:restriction base="xsd:string">
+			<xsd:whiteSpace value="collapse" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	<!-- Define a simple type to test that the whitespace rule is inherited from the ancestor -->
+	<xsd:simpleType name="Normalized">
+  		<xsd:restriction base="xsd:normalizedString"></xsd:restriction>
+  	</xsd:simpleType>
+	<xsd:complexType name="xsdTest">
+		<xsd:sequence>
+			<!-- Whitespace should be replaced -->
+			<xsd:element name="simple-replace" type="xsd:normalizedString" />
+			<xsd:element name="integer-collapse" type="xsd:nonNegativeInteger" />
+			<!-- Whitespace should collapse -->
+			<xsd:element name="token-collapse" type="xsd:token" />
+			<!-- Whitespace should be preserved -->
+			<xsd:element name="string-preserve" type="xsd:string" />
+			<!-- Whitespace should collapse -->
+			<xsd:element name="duration-collapse" type="xsd:duration" />
+			<xsd:element name="extended-collapse" type="CollapsedString" />
+			<xsd:element name="extended-replace" type="Normalized" />
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>
