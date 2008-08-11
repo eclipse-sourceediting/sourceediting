@@ -195,10 +195,10 @@ public class CSSHeadTokenizerTester extends TestCase {
 		at org.eclipse.wst.css.tests.encoding.css.CSSHeadTokenizerTester.doTestFile(CSSHeadTokenizerTester.java:52)
 		at org.eclipse.wst.css.tests.encoding.css.CSSHeadTokenizerTester.doTestFile(CSSHeadTokenizerTester.java:31)
 		at org.eclipse.wst.css.tests.encoding.css.CSSHeadTokenizerTester.testUTF16BOM(CSSHeadTokenizerTester.java:186)
+	*/
 
 	public void testUTF16BOM() throws IOException {
 		String filename = fileLocation + "utf16BOM.css";
 		doTestFile(filename, "UTF-16");
 	}
-	*/
 }

@@ -302,10 +302,10 @@ public class HTMLHeadTokenizerTester extends TestCase {
 		at org.eclipse.wst.html.tests.encoding.html.HTMLHeadTokenizerTester.doTestFile(HTMLHeadTokenizerTester.java:57)
 		at org.eclipse.wst.html.tests.encoding.html.HTMLHeadTokenizerTester.doTestFile(HTMLHeadTokenizerTester.java:37)
 		at org.eclipse.wst.html.tests.encoding.html.HTMLHeadTokenizerTester.testUTF16BOM(HTMLHeadTokenizerTester.java:293)
+	*/
 
 	public void testUTF16BOM() throws IOException {
 		String filename = this.fileLocation + "utf16BOM.html";
 		doTestFile(filename, "UTF-16");
 	}
-	*/
 }

@@ -332,12 +332,12 @@ public class JSPHeadTokenizerTester extends TestCase {
 		at org.eclipse.jst.jsp.tests.encoding.jsp.JSPHeadTokenizerTester.parseHeader(JSPHeadTokenizerTester.java:182)
 		at org.eclipse.jst.jsp.tests.encoding.jsp.JSPHeadTokenizerTester.doTestFile(JSPHeadTokenizerTester.java:58)
 		at org.eclipse.jst.jsp.tests.encoding.jsp.JSPHeadTokenizerTester.testUTF16BOM(JSPHeadTokenizerTester.java:324)
+	*/
 
 	public void testUTF16BOM() throws Exception {
 		String filename = fileLocation + "utf16BOM.jsp";
 		doTestFile(filename, "UTF-16", null, null);
 	}
-	*/
 	
 	public void testUTF16leXmlStyle() throws Exception {
 		String filename = fileLocation + "utf16le_xmlStyle.jsp";
