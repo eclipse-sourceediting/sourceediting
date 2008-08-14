@@ -28,9 +28,7 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IMemento;
-import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -38,13 +36,11 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
-import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xsl.launching.model.XSLDebugTarget;
 import org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL;
 
 /**
  * TODO handle multiple concurrent debugging processes (and bring the current results to the top depending on which selected in Debug view)
- * TODO handle different output methods - xml, html, text - will need a call back from the debugger to tell us this (output method defined in XSL stylesheet)
  * 
  * @author Doug Satchwell
  */
@@ -92,11 +88,7 @@ public class ResultView extends ViewPart implements IDebugEventSetListener
 		};
 		SourceViewer viewer = new StructuredTextViewer(parent, null, null, false, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		((StructuredTextViewer) viewer).getTextWidget().setFont(JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$
-		IStructuredModel scratchModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForXML.ContentTypeID_XML);
-		
-		IDocument document = scratchModel.getStructuredDocument();
 		viewer.configure(sourceViewerConfiguration);
-		viewer.setDocument(document);
 		viewer.setEditable(false);
 		return viewer;
 	}
@@ -119,7 +111,7 @@ public class ResultView extends ViewPart implements IDebugEventSetListener
 	private void handleDebugTarget(XSLDebugTarget xdt)
 	{
 		// first, clear the viewer
-		sv.getDocument().set("");
+		sv.setDocument(null);
 		
 		final Reader reader = xdt.getGenerateReader();
 		IWorkbenchSiteProgressService service = (IWorkbenchSiteProgressService)getSite().getService(IWorkbenchSiteProgressService.class);
@@ -153,7 +145,31 @@ public class ResultView extends ViewPart implements IDebugEventSetListener
 
 					public void run()
 					{
+						// if this is the first lot of data, determine the correct content type and set the appropriate document
+						if (sv.getDocument()  == null)
+						{
+							IDocument document;
+							if (s.startsWith("<!DOCTYPE html"))
+							{
+								String contentType = "org.eclipse.wst.html.core.htmlsource";
+								IStructuredModel scratchModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(contentType);
+								document = scratchModel.getStructuredDocument();
+							}
+							else if (s.startsWith("<?xml"))
+							{
+								String contentType = "org.eclipse.core.runtime.xml";
+								IStructuredModel scratchModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(contentType);
+								document = scratchModel.getStructuredDocument();
+							}
+							else
+							{
+								// TODO how to create a plain text Document??
+								document = null;
+							}
+							sv.setDocument(document);
+						}
 						sv.getDocument().set(sv.getDocument().get()+s);
+						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(ResultView.this);
 					}
 				});
 			}
