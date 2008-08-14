@@ -74,7 +74,9 @@ class AnnotationQuery {
 
 		Map annoAttributes = ((TemporaryAnnotation) anno).getAttributes();
 		/*
-		 * may be null if the original validation IMessage contained no
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=243660
+		 * 
+		 * May be null if the original validation IMessage contained no
 		 * attributes or this annotation was not based on a validation
 		 * IMessage
 		 */
