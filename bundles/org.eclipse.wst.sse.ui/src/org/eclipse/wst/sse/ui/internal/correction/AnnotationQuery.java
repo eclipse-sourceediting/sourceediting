@@ -73,6 +73,17 @@ class AnnotationQuery {
 			return null;
 
 		Map annoAttributes = ((TemporaryAnnotation) anno).getAttributes();
+		
+		/*
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=243660
+		 * 
+		 * May be null this annotation was not based on a validation IMessage
+		 * or if the original validation IMessage contained no attributes
+		 */
+		if (annoAttributes == null) {
+			return null;
+		}
+
 		// Check type
 		if (type != null) {
 			String problemType = (String) annoAttributes.get("problemType");
