@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: XSL JAXP Debugger (Incubating)
+Bundle-SymbolicName: org.eclipse.wst.xsl.jaxp.debug
+Bundle-Version: 0.5.0.qualifier
+Bundle-Vendor: Eclipse.org
+Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Require-Bundle: org.apache.commons.logging;bundle-version="1.0.4";visibility:=reexport
+Export-Package: org.eclipse.wst.xsl.jaxp.debug.debugger,
+ org.eclipse.wst.xsl.jaxp.debug.invoker
