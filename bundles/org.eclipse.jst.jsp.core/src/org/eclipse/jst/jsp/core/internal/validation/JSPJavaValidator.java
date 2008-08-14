@@ -335,16 +335,19 @@ public class JSPJavaValidator extends JSPValidator {
 									task.setAttribute(IMarker.USER_EDITABLE, Boolean.FALSE);
 
 									switch (m.getSeverity()) {
-										case IMarker.PRIORITY_HIGH : {
+										case IMessage.HIGH_SEVERITY: {
 											task.setAttribute(IMarker.PRIORITY, new Integer(IMarker.PRIORITY_HIGH));
+											task.setAttribute(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_ERROR));
 										}
 											break;
-										case IMarker.PRIORITY_LOW : {
+										case IMessage.LOW_SEVERITY : {
 											task.setAttribute(IMarker.PRIORITY, new Integer(IMarker.PRIORITY_LOW));
+											task.setAttribute(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_INFO));
 										}
 											break;
 										default : {
 											task.setAttribute(IMarker.PRIORITY, new Integer(IMarker.PRIORITY_NORMAL));
+											task.setAttribute(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_WARNING));
 										}
 									}
 								}
