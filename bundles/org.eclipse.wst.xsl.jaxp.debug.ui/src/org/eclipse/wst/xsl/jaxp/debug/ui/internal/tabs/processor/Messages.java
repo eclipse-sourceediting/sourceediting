@@ -3,7 +3,7 @@ package org.eclipse.wst.xsl.jaxp.debug.ui.internal.tabs.processor;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-public class Messages {
+class Messages {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.xsl.jaxp.debug.ui.internal.tabs.processor.messages"; //$NON-NLS-1$
 
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle

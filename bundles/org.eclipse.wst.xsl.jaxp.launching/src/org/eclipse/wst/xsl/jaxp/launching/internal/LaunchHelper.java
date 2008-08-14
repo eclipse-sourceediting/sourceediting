@@ -147,12 +147,11 @@ public class LaunchHelper extends BaseLaunchHelper
 
 	public static LaunchProperties hydrateOutputProperties(ILaunchConfiguration configuration) throws CoreException
 	{
-		LaunchProperties properties = null;
+		LaunchProperties properties = new LaunchProperties();
 		boolean usePreferenceProperties = false; //configuration.getAttribute(JAXPLaunchConfigurationConstants.ATTR_USE_PROPERTIES_FROM_PREFERENCES, true);
 		IProcessorType pt = getProcessorInstall(configuration).getProcessorType();
 		if (usePreferenceProperties)
 		{
-			properties = new LaunchProperties();
 			for (Map.Entry<String, String> entry : pt.getOutputPropertyValues().entrySet())
 			{
 				String name = (String) entry.getKey();
@@ -174,11 +173,10 @@ public class LaunchHelper extends BaseLaunchHelper
 
 	private static LaunchAttributes hydrateAttributes(ILaunchConfiguration configuration) throws CoreException
 	{
-		LaunchAttributes attributes = null;
+		LaunchAttributes attributes  = new LaunchAttributes();
 		boolean useDefaultAttributes = false; //configuration.getAttribute(JAXPLaunchConfigurationConstants.ATTR_USE_FEATURES_FROM_PREFERENCES, true);
 		if (useDefaultAttributes)
 		{
-			attributes = new LaunchAttributes();
 			IProcessorType pt = getProcessorInstall(configuration).getProcessorType();
 			Map<String, String> fvals = pt.getAttributeValues();
 			for (Map.Entry<String, String> entry : fvals.entrySet())

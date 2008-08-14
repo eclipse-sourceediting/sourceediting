@@ -225,9 +225,7 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate impl
 
 	private IProcessorInvoker getProcessorInvokerDescriptor(ILaunchConfiguration configuration) throws CoreException
 	{
-		String invokerId = configuration.getAttribute(JAXPLaunchConfigurationConstants.INVOKER_DESCRIPTOR, (String) null);
-		if (invokerId == null)
-			invokerId = "org.eclipse.wst.xsl.launching.jaxp.invoke"; //$NON-NLS-1$
+		String invokerId = configuration.getAttribute(JAXPLaunchConfigurationConstants.INVOKER_DESCRIPTOR, "org.eclipse.wst.xsl.launching.jaxp.invoke");
 		return JAXPRuntime.getProcessorInvoker(invokerId);
 	}
 

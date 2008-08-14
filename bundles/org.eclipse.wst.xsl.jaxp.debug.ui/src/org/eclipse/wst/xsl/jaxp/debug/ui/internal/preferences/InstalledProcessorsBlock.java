@@ -57,7 +57,6 @@ import org.eclipse.wst.xsl.internal.debug.ui.AbstractTableBlock;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIConstants;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.jaxp.debug.ui.internal.tabs.processor.InstallStandin;
-import org.eclipse.wst.xsl.jaxp.debug.ui.internal.tabs.processor.ProcessorMessages;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorInstall;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorType;
 import org.eclipse.wst.xsl.jaxp.launching.JAXPRuntime;
@@ -127,7 +126,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 		GridData data;
 
 		Label tableLabel = new Label(parent, SWT.NONE);
-		tableLabel.setText(ProcessorMessages.InstalledProcessorsBlock_0);
+		tableLabel.setText(Messages.InstalledProcessorsBlock_0);
 		data = new GridData();
 		data.horizontalSpan = 2;
 		tableLabel.setLayoutData(data);
@@ -146,7 +145,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 		TableColumn column1 = new TableColumn(fTable, SWT.NONE);
 		column1.setWidth(180);
 		column1.setResizable(true);
-		column1.setText(ProcessorMessages.InstalledProcessorsBlock_1);
+		column1.setText(Messages.InstalledProcessorsBlock_1);
 		column1.addSelectionListener(new SelectionAdapter()
 		{
 			@Override
@@ -159,7 +158,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 		TableColumn column2 = new TableColumn(fTable, SWT.NONE);
 		column2.setWidth(90);
 		column2.setResizable(true);
-		column2.setText(ProcessorMessages.InstalledProcessorsBlock_2);
+		column2.setText(Messages.InstalledProcessorsBlock_2);
 		column2.addSelectionListener(new SelectionAdapter()
 		{
 			@Override
@@ -172,7 +171,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 		TableColumn column4 = new TableColumn(fTable, SWT.NONE);
 		column4.setWidth(180);
 		column4.setResizable(true);
-		column4.setText(ProcessorMessages.InstalledProcessorsBlock_4);
+		column4.setText(Messages.InstalledProcessorsBlock_4);
 		column4.addSelectionListener(new SelectionAdapter()
 		{
 			@Override
@@ -239,7 +238,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 		buttons.setLayout(layout);
 		buttons.setFont(font);
 
-		fAddButton = createPushButton(buttons, ProcessorMessages.InstalledProcessorsBlock_5);
+		fAddButton = createPushButton(buttons, Messages.InstalledProcessorsBlock_5);
 		fAddButton.addListener(SWT.Selection, new Listener()
 		{
 			public void handleEvent(Event evt)
@@ -248,7 +247,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 			}
 		});
 
-		fEditButton = createPushButton(buttons, ProcessorMessages.InstalledProcessorsBlock_6);
+		fEditButton = createPushButton(buttons, Messages.InstalledProcessorsBlock_6);
 		fEditButton.addListener(SWT.Selection, new Listener()
 		{
 			public void handleEvent(Event evt)
@@ -257,7 +256,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 			}
 		});
 
-		fRemoveButton = createPushButton(buttons, ProcessorMessages.InstalledProcessorsBlock_7);
+		fRemoveButton = createPushButton(buttons, Messages.InstalledProcessorsBlock_7);
 		fRemoveButton.addListener(SWT.Selection, new Listener()
 		{
 			public void handleEvent(Event evt)
@@ -435,7 +434,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 	private void addProcessor()
 	{
 		AddProcessorDialog dialog = new AddProcessorDialog(this, getShell(), JAXPRuntime.getProcessorTypesExclJREDefault(), null);
-		dialog.setTitle(ProcessorMessages.AddProcessorDialog_Add_Title);
+		dialog.setTitle(Messages.AddProcessorDialog_Add_Title);
 		if (dialog.open() != Window.OK)
 		{
 			return;
@@ -478,7 +477,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 //		else
 //		{
 			AddProcessorDialog dialog = new AddProcessorDialog(this, getShell(), JAXPRuntime.getProcessorTypesExclJREDefault(), install);
-			dialog.setTitle(ProcessorMessages.AddProcessorDialog_Edit_Title);
+			dialog.setTitle(Messages.AddProcessorDialog_Edit_Title);
 			if (dialog.open() != Window.OK)
 			{
 				return;
@@ -632,7 +631,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 						{
 							return install.getDebugger().getName();
 						}
-						return ProcessorMessages.InstalledProcessorsBlock_8;
+						return Messages.InstalledProcessorsBlock_8;
 				}
 			}
 			return element.toString();

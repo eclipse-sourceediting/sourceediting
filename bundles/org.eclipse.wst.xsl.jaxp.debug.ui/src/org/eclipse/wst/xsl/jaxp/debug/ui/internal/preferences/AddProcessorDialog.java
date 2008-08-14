@@ -37,7 +37,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.jaxp.debug.ui.internal.tabs.processor.InstallStandin;
-import org.eclipse.wst.xsl.jaxp.debug.ui.internal.tabs.processor.ProcessorMessages;
 import org.eclipse.wst.xsl.jaxp.launching.IDebugger;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorInstall;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorJar;
@@ -95,7 +94,7 @@ public class AddProcessorDialog extends StatusDialog
 		Label label;
 
 		label = new Label(parent, SWT.NONE);
-		label.setText(ProcessorMessages.AddProcessorDialog_processorName);
+		label.setText(Messages.AddProcessorDialog_processorName);
 		processorNameField = new Text(parent, SWT.BORDER);
 		gd = new GridData(SWT.NONE, SWT.NONE, false, false);
 		gd.widthHint = convertWidthInCharsToPixels(50);
@@ -103,7 +102,7 @@ public class AddProcessorDialog extends StatusDialog
 		processorNameField.setLayoutData(gd);
 
 		label = new Label(parent, SWT.NONE);
-		label.setText(ProcessorMessages.AddProcessorDialog_processorType);
+		label.setText(Messages.AddProcessorDialog_processorType);
 		processorTypeField = new ComboViewer(parent, SWT.READ_ONLY);
 		gd = new GridData();
 		gd.horizontalSpan = 2;
@@ -174,7 +173,7 @@ public class AddProcessorDialog extends StatusDialog
 		createDialogFields(parent);
 
 		Label l = new Label(parent, SWT.NONE);
-		l.setText(ProcessorMessages.AddProcessorDialog_jars);
+		l.setText(Messages.AddProcessorDialog_jars);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 3;
 		l.setLayoutData(gd);
@@ -242,13 +241,13 @@ public class AddProcessorDialog extends StatusDialog
 		String name = processorNameField.getText();
 		if (name == null || name.trim().length() == 0)
 		{
-			status = new Status(IStatus.INFO, XSLDebugUIPlugin.PLUGIN_ID, IStatus.OK, ProcessorMessages.AddProcessorDialog_enterName, null);
+			status = new Status(IStatus.INFO, XSLDebugUIPlugin.PLUGIN_ID, IStatus.OK, Messages.AddProcessorDialog_enterName, null);
 		}
 		else
 		{
 			if (block.isDuplicateName(name) && (standinProcessor == null || !name.equals(standinProcessor.getName())))
 			{
-				status = new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, IStatus.OK, ProcessorMessages.AddProcessorDialog_duplicateName, null);
+				status = new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, IStatus.OK, Messages.AddProcessorDialog_duplicateName, null);
 			}
 			else
 			{
@@ -256,7 +255,7 @@ public class AddProcessorDialog extends StatusDialog
 				// IResource.FILE);
 				// if (!s.isOK())
 				// {
-				// status.setError(MessageFormat.format(ProcessorMessages.AddProcessorDialog_Processor_name_must_be_a_valid_file_name,
+				// status.setError(MessageFormat.format(Messages.AddProcessorDialog_Processor_name_must_be_a_valid_file_name,
 				// new String[]
 				// { s.getMessage() }));
 				// }

@@ -51,7 +51,6 @@ import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.jaxp.debug.ui.internal.tabs.processor.InstallStandin;
 import org.eclipse.wst.xsl.jaxp.debug.ui.internal.tabs.processor.JarContentProvider;
 import org.eclipse.wst.xsl.jaxp.debug.ui.internal.tabs.processor.JarLabelProvider;
-import org.eclipse.wst.xsl.jaxp.debug.ui.internal.tabs.processor.ProcessorMessages;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorInstall;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorJar;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorType;
@@ -128,13 +127,13 @@ public class ProcessorLibraryBlock implements SelectionListener, ISelectionChang
 		pathButtonComp.setLayoutData(gd);
 		pathButtonComp.setFont(font);
 
-		addWorkspaceButton = createPushButton(pathButtonComp, ProcessorMessages.ProcessorLibraryBlock_AddWorkspaceButton);
+		addWorkspaceButton = createPushButton(pathButtonComp, Messages.ProcessorLibraryBlock_AddWorkspaceButton);
 		addWorkspaceButton.addSelectionListener(this);
 
-		addButton = createPushButton(pathButtonComp, ProcessorMessages.ProcessorLibraryBlock_AddButton);
+		addButton = createPushButton(pathButtonComp, Messages.ProcessorLibraryBlock_AddButton);
 		addButton.addSelectionListener(this);
 
-		removeButton = createPushButton(pathButtonComp, ProcessorMessages.ProcessorLibraryBlock_RemoveButton);
+		removeButton = createPushButton(pathButtonComp, Messages.ProcessorLibraryBlock_RemoveButton);
 		removeButton.addSelectionListener(this);
 
 		return comp;
@@ -175,7 +174,7 @@ public class ProcessorLibraryBlock implements SelectionListener, ISelectionChang
 		IStatus status = Status.OK_STATUS;
 		if (install != null && install.getProcessorJars().length == 0)
 		{
-			status = new Status(IStatus.INFO, XSLDebugUIPlugin.PLUGIN_ID, 0, ProcessorMessages.ProcessorLibraryBlock_6, null);
+			status = new Status(IStatus.INFO, XSLDebugUIPlugin.PLUGIN_ID, 0, Messages.ProcessorLibraryBlock_6, null);
 		}
 		addDialog.setSystemLibraryStatus(status);
 		addDialog.updateStatusLine();
@@ -227,7 +226,7 @@ public class ProcessorLibraryBlock implements SelectionListener, ISelectionChang
 			lastUsedPath = ""; //$NON-NLS-1$
 		}
 		FileDialog dialog = new FileDialog(tableViewer.getControl().getShell(), SWT.MULTI);
-		dialog.setText(ProcessorMessages.ProcessorLibraryBlock_FileDialog_Title);
+		dialog.setText(Messages.ProcessorLibraryBlock_FileDialog_Title);
 		dialog.setFilterExtensions(new String[]
 		{ "*.jar;*.zip" }); //$NON-NLS-1$
 		dialog.setFilterPath(lastUsedPath);
@@ -268,8 +267,8 @@ public class ProcessorLibraryBlock implements SelectionListener, ISelectionChang
 
 		// IResource currentResource = getResource();
 		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(tableViewer.getControl().getShell(), new WorkbenchLabelProvider(), new WorkbenchContentProvider());
-		dialog.setTitle(ProcessorMessages.ProcessorLibraryBlock_WorkspaceFileDialog_Title);
-		dialog.setMessage(ProcessorMessages.ProcessorLibraryBlock_WorkspaceFileDialog_Message);
+		dialog.setTitle(Messages.ProcessorLibraryBlock_WorkspaceFileDialog_Title);
+		dialog.setMessage(Messages.ProcessorLibraryBlock_WorkspaceFileDialog_Message);
 		dialog.setValidator(validator);
 		dialog.addFilter(new ViewerFilter()
 		{
