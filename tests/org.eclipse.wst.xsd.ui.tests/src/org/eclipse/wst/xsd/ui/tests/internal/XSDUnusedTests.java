@@ -40,6 +40,39 @@ public class XSDUnusedTests extends BaseTestCase
     assertTrue("Import001.xsd".equals(d1.getSchemaLocation()));
   }
 
+  public void testImport001RepeatRemovalOnce()
+  {
+    XSDSchema schema = getXSDSchema(TC_ROOT_FOLDER + "/Simple/Test.xsd");
+    importManager.performRemoval(schema);
+    List list = importManager.getUnusedXSDDirectives();
+    assertTrue(list.size() == 1);
+    XSDSchemaDirective d1 = (XSDSchemaDirective) list.get(0);
+    assertTrue("Import001.xsd".equals(d1.getSchemaLocation()));
+    
+    importManager.performRemoval(schema);
+    list = importManager.getUnusedXSDDirectives();
+    assertTrue(list.size() == 0);
+  }
+
+  public void testImport001RepeatRemovalTwice()
+  {
+    XSDSchema schema = getXSDSchema(TC_ROOT_FOLDER + "/Simple/Test.xsd");
+    importManager.performRemoval(schema);
+    List list = importManager.getUnusedXSDDirectives();
+    assertTrue(list.size() == 1);
+    XSDSchemaDirective d1 = (XSDSchemaDirective) list.get(0);
+    assertTrue("Import001.xsd".equals(d1.getSchemaLocation()));
+    
+    importManager.performRemoval(schema);
+    list = importManager.getUnusedXSDDirectives();
+    assertTrue(list.size() == 0);
+    
+    importManager.performRemoval(schema);
+    list = importManager.getUnusedXSDDirectives();
+    assertTrue(list.size() == 0);
+  }
+
+ 
   public void testImport002()
   {
     XSDSchema schema = getXSDSchema(TC_ROOT_FOLDER + "/Unused/test/Main001.xsd");
