@@ -179,7 +179,9 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 	private JSPActionValidator fJSPActionValidator = new JSPActionValidator(this);
 
 	void addDependsOn(IResource resource) {
-		fDependsOn.add(resource);
+		if(resource != null) {
+			fDependsOn.add(resource);
+		}
 	}
 
 	public void cleanup(IReporter reporter) {
@@ -489,6 +491,9 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 		final IReporter reporter = result.getReporter(monitor);
 		fDependsOn = new HashSet();
 		
+		// add web.xml as a dependency
+		addDependsOn(DeploymentDescriptorPropertyCache.getInstance().getWebXML(resource.getFullPath()));
+
 		// List relevant JSP 2.0 preludes/codas as dependencies
 		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 		PropertyGroup[] propertyGroups = DeploymentDescriptorPropertyCache.getInstance().getPropertyGroups(resource.getFullPath());

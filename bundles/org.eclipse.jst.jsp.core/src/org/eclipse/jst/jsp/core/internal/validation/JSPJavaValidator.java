@@ -59,7 +59,7 @@ public class JSPJavaValidator extends JSPValidator {
 	
 	private static final boolean UPDATE_JAVA_TASKS = true;
 	private static final String JAVA_TASK_MARKER_TYPE = "org.eclipse.jdt.core.task"; //$NON-NLS-1$
-	private static final String[] DEPEND_ONs = new String[]{".classpath", ".project", ".settings/org.eclipse.jst.jsp.core.prefs", ".settings/org.eclipse.wst.common.project.facet.core.xml", ".settings/org.eclipse.wst.common.component"};
+	private static final String[] DEPEND_ONs = new String[]{".classpath", ".project", ".settings/org.eclipse.jdt.core.prefs", ".settings/org.eclipse.jst.jsp.core.prefs", ".settings/org.eclipse.wst.common.project.facet.core.xml", ".settings/org.eclipse.wst.common.component"};
 
 	public JSPJavaValidator() {
 		this.fMessageOriginator = this;

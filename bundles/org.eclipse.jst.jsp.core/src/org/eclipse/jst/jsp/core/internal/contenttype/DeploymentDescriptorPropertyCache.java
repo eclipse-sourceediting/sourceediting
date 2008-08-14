@@ -875,6 +875,14 @@ public final class DeploymentDescriptorPropertyCache {
 		}
 		return resolved;
 	}
+	
+	public IFile getWebXML(IPath jspFilePath) {
+		IPath webxmlPath = getWebXMLPath(jspFilePath);
+		if (webxmlPath == null)
+			return null;
+
+		return ResourcesPlugin.getWorkspace().getRoot().getFile(webxmlPath);
+	}
 
 	private void updateCacheEntry(IPath fullPath) {
 		/* don't update right now; remove and wait for another query to update */
