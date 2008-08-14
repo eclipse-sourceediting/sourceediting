@@ -580,7 +580,7 @@ public class FormatTester extends TestCase {
 				System.out.println(formattedString);
 				System.out.println("=======================================");
 			}
-			assertTrue(false);
+			assertEquals(expected, formatted);
 		}
 	}
 }
