@@ -16,9 +16,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
@@ -627,19 +632,25 @@ public class JSPTranslation implements IJSPTranslation {
 	 */
 	public void release() {
 		
-		synchronized(fLock) {
-			if(fCompilationUnit != null) {
-				try {
-					if(DEBUG) {
-						System.out.println("------------------------------------------------------------------"); //$NON-NLS-1$
-						System.out.println("(-) JSPTranslation [" + this +"] discarding CompilationUnit: " + fCompilationUnit); //$NON-NLS-1$ //$NON-NLS-2$
-						System.out.println("------------------------------------------------------------------"); //$NON-NLS-1$
+		synchronized (fLock) {
+			if (fCompilationUnit != null) {
+				Job discarder = new WorkspaceJob(fClassname) {
+					public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+						try {
+							if (DEBUG) {
+								System.out.println("------------------------------------------------------------------"); //$NON-NLS-1$
+								System.out.println("(-) JSPTranslation [" + this + "] discarding CompilationUnit: " + fCompilationUnit); //$NON-NLS-1$ //$NON-NLS-2$
+								System.out.println("------------------------------------------------------------------"); //$NON-NLS-1$
+							}
+							fCompilationUnit.discardWorkingCopy();
+						}
+						catch (JavaModelException e) {
+							// we're done w/ it anyway
+						}
+						return Status.OK_STATUS;
 					}
-					fCompilationUnit.discardWorkingCopy();	
-				} 
-				catch (JavaModelException e) {
-					// we're done w/ it anyway
-				}
+				};
+				discarder.schedule();
 			}
 		}
 	}

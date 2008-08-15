@@ -64,6 +64,8 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 	private boolean isSaving = false;
 
 	private IModelManager modelManager;
+	
+	private Class resourceClass;
 
 	/** The XML DOM model */
 	protected IDOMModel xmlModel;
@@ -178,7 +180,7 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 					is.close();
 				}
 			}
-			initializeXMLModel(file, true);
+			initializeXMLModel(file, resource.getWriteCount() != 0);
 		}
 		catch (IOException ex) {
 			Logger.log(Logger.ERROR, "IWAE0017E Unexpected IO exception occurred creating xml document");//$NON-NLS-1$
@@ -272,10 +274,15 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 			INodeAdapter adapter = (INodeAdapter) iterator.next();
 			// First Check if it's an EMF2DOMAdapter
 			if (adapter != null && adapter.isAdapterForType(EMF2DOMAdapter.ADAPTER_CLASS)) {
-				// Cast to EMF2DOMAdapter
-				EMF2DOMAdapter e2DAdapter = (EMF2DOMAdapter) adapter;
+				// Cast to EMF2DOMSSEAdapter
+				EMF2DOMSSEAdapter e2DAdapter = (EMF2DOMSSEAdapter) adapter;
+				//Handle the cases where either adapter's target is null 
+				//Use the resourceClass to make sure the resource type is identical
 				if (getResource() == null || e2DAdapter.getTarget() == null)
-					return e2DAdapter;
+					if(resourceClass.equals(e2DAdapter.getResourceClass()))
+						return e2DAdapter;
+					else
+						continue;
 				
 				// First check if targets are resources
 				if (e2DAdapter.getTarget() instanceof Resource) {
@@ -386,7 +393,12 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 	}
 
 	public boolean isShared() {
-		if (getResourceSet() == null || xmlModel == null)
+		
+		if( xmlModel == null) { //resource could be in process of being unloaded - check with model manager
+			String id = getModelManagerId();
+			return getModelManager().isShared(id);
+		}
+		if (getResourceSet() == null)
 			return false;
 		return xmlModel.isShared();
 	}
@@ -428,17 +440,18 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 		if (isBatchChanges)
 			return;
 		try {
-			if (aboutToChangeNode != null
-					&& model.getStructuredDocument() != null
-					&& model.getStructuredDocument()
-							.getFirstStructuredDocumentRegion() != aboutToChangeNode) {
-				modelAccessForWrite();
+			if (aboutToChangeNode != null && model.getStructuredDocument() != null
+					&& model.getStructuredDocument().getFirstStructuredDocumentRegion() != aboutToChangeNode) {
+				String id = getModelManagerId();
+				IStructuredModel tempModel = null;
 				try {
+					tempModel = getModelManager().getExistingModelForEdit(id);
 					xmlModelReverted = true;
 					resource.unload();
 				} finally {
-					if (getXMLModel() != null)
-						getXMLModel().releaseFromEdit();
+					if (tempModel != null && (tempModel.getReferenceCountForEdit() > 0)) {
+						tempModel.releaseFromEdit();
+					}
 				}
 			}
 		} finally {
@@ -620,6 +633,12 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 
 	public boolean wasReverted() {
 		return xmlModelReverted;
+	}
+
+	public void setResource(TranslatorResource resource) {
+		super.setResource(resource);
+		if (resource != null)
+			resourceClass = resource.getClass();
 	}
 
 }

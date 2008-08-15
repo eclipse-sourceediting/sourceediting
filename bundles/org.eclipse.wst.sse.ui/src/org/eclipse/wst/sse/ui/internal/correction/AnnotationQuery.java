@@ -43,9 +43,9 @@ class AnnotationQuery {
 	 * </p>
 	 * 
 	 * @param problemType
-	 *            the targeted annotation type
+	 *            the targetted annotation type
 	 * @param markerAttributes
-	 *            the targeted annotation attributes
+	 *            the targetted annotation attributes
 	 */
 	public AnnotationQuery(String annotationType, String[] annotationAttributes) {
 		if (annotationAttributes == null) {
@@ -73,18 +73,20 @@ class AnnotationQuery {
 			return null;
 
 		Map annoAttributes = ((TemporaryAnnotation) anno).getAttributes();
+		
 		/*
-		 * may be null if the original validation IMessage contained no
-		 * attributes or this annotation was not based on a validation
-		 * IMessage
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=243660
+		 * 
+		 * May be null this annotation was not based on a validation IMessage
+		 * or if the original validation IMessage contained no attributes
 		 */
 		if (annoAttributes == null) {
 			return null;
 		}
-		
+
 		// Check type
 		if (type != null) {
-			String problemType = (String) annoAttributes.get("problemType"); //$NON-NLS-1$;
+			String problemType = (String) annoAttributes.get("problemType");
 			if (!type.equals(problemType))
 				return null;
 		}

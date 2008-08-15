@@ -173,6 +173,8 @@ public class XSDDirectivesManager
    */
   protected void removeXSDDirective(XSDSchemaDirective xsdImport)
   {
+    XSDSchema schema = xsdImport.getSchema();
+    
     Element element = xsdImport.getElement();
     
     Document doc = element.getOwnerDocument();
@@ -191,7 +193,10 @@ public class XSDDirectivesManager
     finally
     {
       if (doc instanceof IDOMNode)
-       ((IDOMNode)doc).getModel().changedModel();
+      {
+        ((IDOMNode)doc).getModel().changedModel();
+      }
+      schema.update(true);
     }
 
   }

@@ -30,7 +30,6 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.Logger;
-import org.eclipse.wst.xml.core.internal.document.ElementImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -40,6 +39,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
 public class EMF2DOMSSEAdapter extends EMF2DOMAdapterImpl implements INodeAdapter {
+	
+	private Class resourceClass;
 	public EMF2DOMSSEAdapter(Node node, EMF2DOMRenderer renderer, Translator translator) {
 		super(node, renderer, translator);
 	}
@@ -321,9 +322,16 @@ public class EMF2DOMSSEAdapter extends EMF2DOMAdapterImpl implements INodeAdapte
 			// First Check if it's an EMF2DOMAdapter
 			if (adapter != null && adapter.isAdapterForType(EMF2DOMAdapter.ADAPTER_CLASS)) {
 				// Cast to EMF2DOMAdapter
-				EMF2DOMAdapter e2DAdapter = (EMF2DOMAdapter) adapter;
-				if (getTarget() == null || e2DAdapter.getTarget() == null)
-					return e2DAdapter;
+				EMF2DOMSSEAdapter e2DAdapter = (EMF2DOMSSEAdapter) adapter;
+				Object adapterTarget = e2DAdapter.getTarget();
+				
+				//Handle the cases where either adapter's target is null 
+				if ((getTarget() == null) || (adapterTarget == null))
+					if(resourceClass.equals(e2DAdapter.getResourceClass()))
+						return e2DAdapter;
+					else
+						continue;
+				
 				
 				// Check if target is an EMF resource
 				if (getTarget() instanceof Resource) {
@@ -331,24 +339,23 @@ public class EMF2DOMSSEAdapter extends EMF2DOMAdapterImpl implements INodeAdapte
 					 * Now check if it's the right one (Multiple resources
 					 * could be attached)
 					 */
-					if (e2DAdapter.getTarget() == getTarget()) {
+					if (adapterTarget != null && adapterTarget == getTarget()) {
 						return e2DAdapter;
 					}
 				}
 				else {
 					// Check if targets are EObjects with the same resources
 					EObject myTarget = (EObject) getTarget();
-					EObject adapterTarget = (EObject) e2DAdapter.getTarget();
 					/*
 					 * Now check if it's the right one (Multiple resources could
 					 * be attached)
 					 */
-					if (adapterTarget.eResource() == myTarget.eResource()) {
+					if (adapterTarget != null && ((EObject)adapterTarget).eResource() == myTarget.eResource()) {
 						return e2DAdapter;
 					}
 				}
 				
-				if (e2DAdapter.getTarget() instanceof EObject) {
+				if (adapterTarget instanceof EObject) {
 					if (((EObject) e2DAdapter.getTarget()).eResource() == null) {
 						return e2DAdapter;
 					}
@@ -404,7 +411,7 @@ public class EMF2DOMSSEAdapter extends EMF2DOMAdapterImpl implements INodeAdapte
 	}
 
 	protected void setEmptyTag(Element element) {
-		((ElementImpl) element).setEmptyTag(true);
+		((IDOMElement) element).setEmptyTag(true);
 	}
 
 	public void updateDOM() {
@@ -418,4 +425,15 @@ public class EMF2DOMSSEAdapter extends EMF2DOMAdapterImpl implements INodeAdapte
 			enableUndoManagement();
 		}
 	}
+
+	public Class getResourceClass() {
+		return resourceClass;
+	}
+
+	protected void initChildTranslators() {
+		if (fRenderer != null && fRenderer.getResource() != null)
+			resourceClass = fRenderer.getResource().getClass();
+		super.initChildTranslators();
+	}
+
 }

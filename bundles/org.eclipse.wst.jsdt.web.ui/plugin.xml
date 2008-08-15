@@ -27,12 +27,6 @@
 		<documentationTextHover
 			class="org.eclipse.wst.jsdt.web.ui.internal.taginfo.JSDTHoverProcessor"
 			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENTHANDLER" />
-	<!-- Not sure on information provider extension -->
-		<provisionalConfiguration
-			type="informationpresenter"
-			class="org.eclipse.wst.jsdt.web.ui.internal.taginfo.JSDTInformationProvider"
-			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENTHANDLER" />
-
 		<provisionalConfiguration
 			type="characterpairmatcher"
 			class="org.eclipse.wst.jsdt.web.ui.internal.text.JsDocumentRegionEdgeMatcher"
@@ -41,17 +35,6 @@
 			type="autoeditstrategy"
 			class="org.eclipse.wst.jsdt.web.ui.internal.autoedit.AutoEditStrategyForJs"
 			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENTHANDLER" />
-		<provisionalConfiguration
-			type="slaveformattingstrategy"
-			class="org.eclipse.wst.jsdt.web.ui.internal.format.FormattingStrategyJSDT"
-			target="org.eclipse.wst.html.SCRIPT" />
-		<!--
-		<provisionalConfiguration
-			type="hyperlinkdetector"
-			class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
-			target="org.eclipse.wst.html.SCRIPT" />
-			
-		-->
 	</extension>
 	
 	<extension
@@ -689,12 +672,14 @@
 		</renameParticipant>
 
 	  </extension>
+	  <!--
   <extension point="org.eclipse.wst.jsdt.ui.JsGlobalScopeUIInitializer">
      <JsGlobalScopeUIInitializer
      	id="org.eclipse.wst.jsdt.launching.WebProject"
      	class="org.eclipse.wst.jsdt.web.ui.WebProjectJsGlobalScopeUIInitializer">
      </JsGlobalScopeUIInitializer>
    </extension>
+-->
 
 
   	 <extension

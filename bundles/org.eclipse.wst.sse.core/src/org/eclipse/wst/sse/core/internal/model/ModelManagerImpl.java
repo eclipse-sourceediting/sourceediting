@@ -1739,7 +1739,17 @@ public class ModelManagerImpl implements IModelManager {
 				if ((sharedObject.referenceCountForRead > 0) && (sharedObject.referenceCountForEdit == 0) && sharedObject.theSharedModel.isDirty()) {
 					signalPreLifeCycleListenerRevert(sharedObject.theSharedModel);
 					revertModel(id, sharedObject);
-					sharedObject.theSharedModel.setDirtyState(false);
+					/*
+					 * Because model events are fired to notify about the
+					 * revert's changes, and listeners can still get/release
+					 * the model from this thread (locking prevents it being
+					 * done from other threads), the reference counts could
+					 * have changed since we entered this if block, and the
+					 * model could have been discarded.  Check the counts again.
+					 */
+					if (sharedObject.referenceCountForRead > 0 && sharedObject.referenceCountForEdit == 0) {
+						sharedObject.theSharedModel.setDirtyState(false);
+					}
 					signalPostLifeCycleListenerRevert(sharedObject.theSharedModel);
 				}
 			}

@@ -49,6 +49,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException; // import
 														// org.eclipse.wst.jsdt.core.LibrarySuperType;
 import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
 import org.eclipse.wst.jsdt.internal.core.DocumentContextFragmentRoot;
+import org.eclipse.wst.jsdt.internal.core.Member;
 import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
@@ -348,7 +349,14 @@ public class JsTranslation implements IJsTranslation {
 	private ISourceRange getJSSourceRangeOf(IJavaScriptElement element) {
 		// returns the offset in html of given element
 		ISourceRange range = null;
-		if (element instanceof SourceRefElement) {
+		if (element instanceof Member) {
+			try {
+				range = ((Member) element).getNameRange();
+			} catch (JavaScriptModelException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if (element instanceof SourceRefElement) {
 			try {
 				range = ((SourceRefElement) element).getSourceRange();
 			}
