@@ -22,7 +22,7 @@
    </url>
 
    <requires>
-      <import feature="org.eclipse.wst.xml_core.feature" version="1.5.5.v200708020450--3YIAAbAWGEFQHU" patch="true"/>
+      <import feature="org.eclipse.wst.xml_core.feature" version="3.0.1.v200807220139-7A7NEGuE7QYGHNH_NuKhUl" patch="true"/>
    </requires>
 
    <plugin
@@ -31,11 +31,5 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-   <plugin
-         id="org.eclipse.wst.xml.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>         
 
 </feature>
