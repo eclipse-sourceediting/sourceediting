@@ -581,7 +581,10 @@ public class XSDDirectivesManager
           }
         }
         
-        if (!isUsed && !unusedDirectives.contains(directive))
+        // If resolved directives are determined unused
+        // If resolved directives are not already in the unused list
+        // Also any redefines should be considered used
+        if (!isUsed && !unusedDirectives.contains(directive) && !(directive instanceof XSDRedefine))
         {
           unusedDirectives.add(directive);
         }
