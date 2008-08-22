@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,10 +23,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xml.ui.internal.dialogs.EditSchemaInfoDialog;
 import org.eclipse.wst.xml.ui.internal.nsedit.CommonEditNamespacesTargetFieldDialog;
-import org.eclipse.wst.xsd.ui.internal.adt.editor.ProductCustomizationProvider;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.xsd.XSDForm;
 
@@ -102,19 +100,7 @@ public class XSDEditSchemaInfoDialog extends EditSchemaInfoDialog implements Sel
     
     Label elementFormLabel = new Label(otherAttributesComposite, SWT.LEFT);
     elementFormLabel.setText(Messages._UI_LABEL_ELEMENTFORMDEFAULT);
-    
-    Object object = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getAdapter(ProductCustomizationProvider.class);
-    if (object instanceof ProductCustomizationProvider)
-    {
-      ProductCustomizationProvider productCustomizationProvider = (ProductCustomizationProvider)object;
-      String newString = productCustomizationProvider.getProductString("LABEL_ELEMENT_FORM_DEFAULT");
-      if (newString != null)
-      {
-        elementFormLabel.setText(newString);
-      }
-    }
 
-    
     elementFormCombo = new Combo(otherAttributesComposite, SWT.NONE);
     elementFormCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     elementFormCombo.setItems(formQualification);
