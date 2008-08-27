@@ -403,7 +403,7 @@ public class HTMLHeadTokenizer {
       System.out.println(YY_ERROR_MSG[YY_UNKNOWN_ERROR]);
     }
 
-    System.exit(1);
+//    System.exit(1);
   } 
 
 
