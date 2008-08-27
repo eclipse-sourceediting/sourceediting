@@ -2396,7 +2396,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * One of the APIs to manipulate the IStructuredDocument in terms of text.
 	 */
 	public StructuredDocumentEvent replaceText(Object requester, int start, int replacementLength, String changes) {
-		return replaceText(requester, start, replacementLength, changes, false);
+		return replaceText(requester, start, replacementLength, changes, true);
 	}
 
 	public StructuredDocumentEvent replaceText(Object requester, int start, int replacementLength, String changes, boolean ignoreReadOnlySettings) {
