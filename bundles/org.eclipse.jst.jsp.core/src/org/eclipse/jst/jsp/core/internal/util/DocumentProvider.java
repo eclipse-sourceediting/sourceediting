@@ -18,8 +18,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -141,20 +139,13 @@ public class DocumentProvider {
 		return document;
 	}
 
-	ThreadLocal fDocumentBuilder = new ThreadLocal();
+	DocumentBuilder fDocumentBuilder = null;
 	
 	private DocumentBuilder getDocumentBuilder() {
-		DocumentBuilder db = null;
-
-		Reference builderReference = (Reference) fDocumentBuilder.get();
-		if (builderReference != null) {
-			db = (DocumentBuilder) builderReference.get();
+		if (fDocumentBuilder == null) {
+			fDocumentBuilder = CommonXML.getDocumentBuilder(isValidating());
 		}
-		if (db == null) {
-			db = CommonXML.getDocumentBuilder(isValidating());
-			fDocumentBuilder.set(new SoftReference(db));
-		}
-		return db;
+		return fDocumentBuilder;
 	}
 
 	private DOMImplementation getDomImplementation() {
