@@ -48,21 +48,36 @@ public class XSLLaunchingTests extends TestCase {
 		IPath folder = _testProject.getFullPath();
 		_env.addFileFromResource(folder, "input.xml", "1-input.xml");
 		_env.addFileFromResource(folder, "transform.xsl", "1-transform.xsl");
+//
+//		String launchXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\r\n" + 
+//				"<launchConfiguration type=\"org.eclipse.wst.xsl.launching.launchConfigurationType\">\r\n" + 
+//				"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_INPUT_FILE\" value=\"${workspace_loc:/XSLTestProject/input.xml}\"/>\r\n" + 
+//				"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OPEN_FILE\" value=\"false\"/>\r\n" + 
+//				"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FILE\" value=\"${workspace_loc:/XSLTestProject}/output.xml\"/>\r\n" + 
+//				"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_PROPERTIES\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Properties&gt;&#13;&#10;&lt;Property name=&quot;indent&quot; value=&quot;yes&quot;/&gt;&#13;&#10;&lt;/Properties&gt;&#13;&#10;\"/>\r\n" + 
+//				"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_PIPELINE\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Pipeline&gt;&#13;&#10;&lt;OutputProperties/&gt;&#13;&#10;&lt;Transform path=&quot;/XSLTestProject/transform.xsl&quot; pathType=&quot;resource&quot; uriResolver=&quot;&quot;&gt;&#13;&#10;&lt;Parameters/&gt;&#13;&#10;&lt;/Transform&gt;&#13;&#10;&lt;/Pipeline&gt;&#13;&#10;\"/>\r\n" + 
+//				"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_PROCESSOR\" value=\"org.eclipse.wst.xsl.launching.jre.default\"/>\r\n" + 
+//				"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_DEFAULT_OUTPUT_FILE\" value=\"false\"/>\r\n" + 
+//				"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_DEFAULT_PROCESSOR\" value=\"false\"/>\r\n" + 
+//				"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_FEATURES_FROM_PREFERENCES\" value=\"true\"/>\r\n" + 
+//				"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_PROPERTIES_FROM_PREFERENCES\" value=\"true\"/>\r\n" + 
+//				"<stringAttribute key=\"org.eclipse.wst.xsl.launching.INVOKER_DESCRIPTOR\" value=\"org.eclipse.wst.xsl.launching.jaxp.invoke\"/>\r\n" + 
+//				"</launchConfiguration>";
+		
+		String launchXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
+		"<launchConfiguration type=\"org.eclipse.wst.xsl.launching.launchConfigurationType\">" +
+		"<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_ATTRIBUTES\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Attributes/&gt;&#13;&#10;\"/>" +
+		"<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_OUTPUT_PROPERTIES\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Properties/&gt;&#13;&#10;\"/>" +
+		"<booleanAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_USE_DEFAULT_PROCESSOR\" value=\"true\"/>" +
+		"<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.INVOKER_DESCRIPTOR\" value=\"org.eclipse.wst.xsl.launching.jaxp.invoke\"/>" +
+		"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_FORMAT_FILE\" value=\"false\"/>" +
+		"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_INPUT_FILE\" value=\"${workspace_loc:/XSLTestProject/input.xml}\"/>" +
+		"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OPEN_FILE\" value=\"true\"/>" +
+		"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FILE\" value=\"${workspace_loc:/XSLTestProject}/output.xml\"/>" +
+		"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_PIPELINE\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Pipeline&gt;&#13;&#10;&lt;OutputProperties/&gt;&#13;&#10;&lt;Transform path=&quot;/XSLTestProject/transform.xsl&quot; pathType=&quot;resource&quot;&gt;&#13;&#10;&lt;Parameters/&gt;&#13;&#10;&lt;/Transform&gt;&#13;&#10;&lt;/Pipeline&gt;&#13;&#10;\"/>" +
+		"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_DEFAULT_OUTPUT_FILE\" value=\"false\"/>" +
+		"</launchConfiguration>";
 
-		String launchXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\r\n" + 
-				"<launchConfiguration type=\"org.eclipse.wst.xsl.launching.launchConfigurationType\">\r\n" + 
-				"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_INPUT_FILE\" value=\"${workspace_loc:/XSLTestProject/input.xml}\"/>\r\n" + 
-				"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OPEN_FILE\" value=\"false\"/>\r\n" + 
-				"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FILE\" value=\"${workspace_loc:/XSLTestProject}/output.xml\"/>\r\n" + 
-				"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_PROPERTIES\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Properties&gt;&#13;&#10;&lt;Property name=&quot;indent&quot; value=&quot;yes&quot;/&gt;&#13;&#10;&lt;/Properties&gt;&#13;&#10;\"/>\r\n" + 
-				"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_PIPELINE\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Pipeline&gt;&#13;&#10;&lt;OutputProperties/&gt;&#13;&#10;&lt;Transform path=&quot;/XSLTestProject/transform.xsl&quot; pathType=&quot;resource&quot; uriResolver=&quot;&quot;&gt;&#13;&#10;&lt;Parameters/&gt;&#13;&#10;&lt;/Transform&gt;&#13;&#10;&lt;/Pipeline&gt;&#13;&#10;\"/>\r\n" + 
-				"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_PROCESSOR\" value=\"org.eclipse.wst.xsl.launching.jre.default\"/>\r\n" + 
-				"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_DEFAULT_OUTPUT_FILE\" value=\"false\"/>\r\n" + 
-				"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_DEFAULT_PROCESSOR\" value=\"false\"/>\r\n" + 
-				"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_FEATURES_FROM_PREFERENCES\" value=\"true\"/>\r\n" + 
-				"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_PROPERTIES_FROM_PREFERENCES\" value=\"true\"/>\r\n" + 
-				"<stringAttribute key=\"org.eclipse.wst.xsl.launching.INVOKER_DESCRIPTOR\" value=\"org.eclipse.wst.xsl.launching.jaxp.invoke\"/>\r\n" + 
-				"</launchConfiguration>";
 		
 		String name = "launch" + (int)(Math.random()*1000);
 		_env.addFile(folder, name + ".launch", launchXml);
@@ -86,10 +101,8 @@ public class XSLLaunchingTests extends TestCase {
 			System.out.println("waiting");
 			Thread.sleep(100);
 		}
-		if (! launch.isTerminated()) {
-			System.out.println("Got tired of waiting, terminating");
-			launch.terminate();
-		}
+		assertTrue("Launch did not complete within a 20 second time period", launch.isTerminated());
+
 		_testProject.refreshLocal(2, null);
 		IFile output = _testProject.getFile("output.xml");
 		Document doc = parseXml(output.getContents(true));
