@@ -52,7 +52,6 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.wst.xsl.internal.debug.ui.AbstractTableBlock;
-import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIConstants;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.jaxp.debug.ui.internal.JAXPDebugUIPlugin;
 import org.eclipse.wst.xsl.jaxp.launching.IAttribute;
