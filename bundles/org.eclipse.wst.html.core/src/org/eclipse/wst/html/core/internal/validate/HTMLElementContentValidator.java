@@ -59,28 +59,11 @@ public class HTMLElementContentValidator extends PrimeValidator {
 		if(ed == null || ed.getContentType() == CMElementDeclaration.ANY)
 			return;
 		
-		/*
-		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=218143 - 
-		 * ModelQuery use not pervasive enough
-		 */
-		List availableChildElementDeclarations = ModelQueryUtil.getModelQuery(parent.getOwnerDocument()).getAvailableContent(parent, ed, ModelQuery.INCLUDE_CHILD_NODES);
-		/*
-		 * Retrieve and set aside just the element names for faster checking
-		 * later.
-		 */
-		int availableChildCount = availableChildElementDeclarations.size();
-		List availableChildElementLowercaseNames = new ArrayList(availableChildCount);
-		for (int i = 0; i < availableChildCount; i++) {
-			CMNode cmnode = (CMNode) availableChildElementDeclarations.get(i);
-			if (cmnode.getNodeType() == CMNode.ELEMENT_DECLARATION) {
-				availableChildElementLowercaseNames.add(cmnode.getNodeName().toLowerCase(Locale.US));
-			}
-		}
-		Object[] availableChildElementLowercaseNamesArray = availableChildElementLowercaseNames.toArray();
-
+		List extendedContentHolder = new ArrayList();
+		boolean[] extendedContentRetrieved = new boolean[1];
 		while (child != null) {
 			// perform actual validation
-			validateNode(parent, child, ed, availableChildElementLowercaseNamesArray);
+			validateNode(parent, child, ed, extendedContentHolder, extendedContentRetrieved);
 			child = child.getNextSibling();
 		}
 	}
@@ -109,17 +92,17 @@ public class HTMLElementContentValidator extends PrimeValidator {
 	// return 1;
 	// }
 
-	private boolean containsName(String name, Object[] possible) {
-		if (name != null && possible != null) {
-			for (int i = 0; i < possible.length; i++) {
-				if(name.equals(possible[i]))
-				return true;
-			}
-		}
-		return false;
-	}
+//	private boolean containsName(String name, Object[] possible) {
+//		if (name != null && possible != null) {
+//			for (int i = 0; i < possible.length; i++) {
+//				if(name.equals(possible[i]))
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 
-	private void validateNode(Element target, Node child, CMElementDeclaration edec, Object[] availableLowercaseChildElementNames) {
+	private void validateNode(Element target, Node child, CMElementDeclaration edec, List extendedContent, boolean[] extendedContentInitialized) {
 		// NOTE: If the target element is 'UNKNOWN', that is, it has no
 		// element declaration, the content type of the element should be
 		// regarded as 'ANY'. -- 9/10/2001
@@ -144,7 +127,7 @@ public class HTMLElementContentValidator extends PrimeValidator {
 				// Defect 186774: If a child is not one of HTML elements,
 				// it should be regarded as a valid child regardless the
 				// type of the parent content model. -- 10/12/2001
-				if (ced == null || CMUtil.isSSI(ced) || (!CMUtil.isHTML(ced)) || containsName(ced.getElementName().toLowerCase(Locale.US), availableLowercaseChildElementNames))
+				if (ced == null || CMUtil.isSSI(ced) || (!CMUtil.isHTML(ced)))
 					return;
 
 				switch (contentType) {
@@ -165,6 +148,30 @@ public class HTMLElementContentValidator extends PrimeValidator {
 							if (CMUtil.isValidInclusion(ced, target))
 								return;
 						}
+						
+						/*
+						 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=218143 - 
+						 * ModelQuery use not pervasive enough
+						 */
+						if (!extendedContentInitialized[0]) {
+							extendedContent.addAll(ModelQueryUtil.getModelQuery(target.getOwnerDocument()).getAvailableContent(target, edec, ModelQuery.INCLUDE_CHILD_NODES));
+							extendedContentInitialized[0] = true;
+						}
+
+						List availableChildElementDeclarations = extendedContent;
+						/*
+						 * Retrieve and set aside just the element names for faster checking
+						 * later.
+						 */
+						int availableChildCount = availableChildElementDeclarations.size();
+						String elementName = ced.getElementName().toLowerCase(Locale.US);
+						for (int i = 0; i < availableChildCount; i++) {
+							CMNode cmnode = (CMNode) availableChildElementDeclarations.get(i);
+							if (cmnode.getNodeType() == CMNode.ELEMENT_DECLARATION && cmnode.getNodeName().toLowerCase(Locale.US).equals(elementName)) {
+								return;
+							}
+						}
+						
 						error = ErrorState.INVALID_CONTENT_ERROR;
 						break;
 					default :
