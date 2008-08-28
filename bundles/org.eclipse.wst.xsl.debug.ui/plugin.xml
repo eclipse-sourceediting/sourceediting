@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-
-	<extension point="org.eclipse.ui.preferencePages">
-		<page
-			category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
-			class="org.eclipse.wst.xsl.internal.debug.ui.preferences.ProcessorsPreferencePage"
-			id="org.eclipse.wst.xsl.ui.preferences.java"
-			name="%page.name.1">
-		</page>
-		<page
-			category="org.eclipse.wst.xsl.ui.preferences.java"
-			class="org.eclipse.wst.xsl.internal.debug.ui.preferences.FeaturesPreferencePage"
-			id="org.eclipse.wst.xsl.debug.ui.page1" name="%page.name.2" />
-		<page
-			category="org.eclipse.wst.xsl.ui.preferences.java"
-			class="org.eclipse.wst.xsl.internal.debug.ui.preferences.OutputPreferencePage"
-			id="org.eclipse.wst.xsl.debug.ui.output" name="%page.name.3" />
-	</extension>
 	
 	<extension point="org.eclipse.ui.perspectiveExtensions">
 		<perspectiveExtension
@@ -114,13 +97,6 @@
 		</modelContextBinding>
 	</extension>
 	
-	<extension point="org.eclipse.debug.ui.contextViewBindings">
-		<contextViewBinding autoOpen="true"
-			contextId="org.eclipse.wst.xsl.debug.ui.context"
-			viewId="org.eclipse.wst.xml.views.XPathView">
-		</contextViewBinding>
-	</extension>
-
 	<extension point="org.eclipse.wst.sse.ui.breakpoint">
 		<breakpointContribution
 			id="org.eclipse.wst.xsl.debug.ui.providers">
@@ -132,14 +108,6 @@
 				class="org.eclipse.wst.xsl.internal.debug.ui.breakpoint.XSLBreakpointProvider:*xsl,*xslt,*xml"
 				id="org.eclipse.wst.xsl.debug.ui.XSLBreakpointProvider" /> -->
 		</breakpointContribution>
-	</extension>
-
-	<extension point="org.eclipse.debug.ui.consoleLineTrackers">
-		<consoleLineTracker
-			id="org.eclipse.wst.xsl.internal.debug.ui.XSLConsoleLineTracker"
-			class="org.eclipse.wst.xsl.internal.debug.ui.XSLConsoleLineTracker"
-			processType="java">
-		</consoleLineTracker>
 	</extension>
 
 </plugin>

@@ -42,6 +42,8 @@ public class XSLDebugUIPlugin extends AbstractUIPlugin
 
 	// The shared instance
 	private static XSLDebugUIPlugin plugin;
+	
+	private XSLDebugUILaunchListener launchListener = new XSLDebugUILaunchListener();
 
 	/**
 	 * Create a new instance of this.
@@ -55,12 +57,14 @@ public class XSLDebugUIPlugin extends AbstractUIPlugin
 	public void start(BundleContext context) throws Exception
 	{
 		super.start(context);
+		launchListener.start();
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception
 	{
 		plugin = null;
+		launchListener.stop();
 		super.stop(context);
 	}
 

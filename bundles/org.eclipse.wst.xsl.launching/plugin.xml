@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-	<extension-point id="invoke" name="%extension-point.name.0"
-		schema="schema/invoke.exsd" />
-	<extension-point id="processorType" name="%extension-point.name.1"
-		schema="schema/processorType.exsd" />
-	<extension-point id="processor" name="%extension-point.name.2"
-		schema="schema/processor.exsd" />
-	<extension-point id="debugger" name="%extension-point.name.3" schema="schema/debugger.exsd"/>
-
 	<extension
 		point="org.eclipse.debug.core.launchConfigurationTypes">
 		<launchConfigurationType
             sourceLocatorId="org.eclipse.wst.xsl.launching.sourceLookupDirector"
             sourcePathComputerId="org.eclipse.wst.xsl.launching.sourcePathComputer"
-			delegate="org.eclipse.wst.xsl.internal.launching.XSLTLaunchConfigurationDelegate"
 			id="org.eclipse.wst.xsl.launching.launchConfigurationType"
-			modes="run, debug, profile" name="%launchConfigurationType.name.0" />
+			name="%launchConfigurationType.name.0" />
 	</extension>
 	
    <extension
@@ -55,30 +46,5 @@
             value="true">
       </persistent>
    </extension>
- 	
-	<extension point="org.eclipse.core.runtime.preferences">
-		<initializer
-			class="org.eclipse.wst.xsl.internal.launching.PreferenceInitializer">
-		</initializer>
-	</extension>
- 
- 	<extension
-	       point="org.eclipse.wst.xsl.launching.processorType">
-     <processorType
-            featureProperties="W3CProcessorFeatures.properties"
-            id="org.eclipse.wst.xsl.launching.processorType.jreDefault"
-            label="%processorType.label.0"
-            outputProperties="W3COutputProperties.properties" />
-	 </extension>
-
-	<extension
-	         point="org.eclipse.wst.xsl.launching.processor">
-        <processor
-              classpath=""
-              id="org.eclipse.wst.xsl.launching.jre.default"
-              label="%processor.label.0"
-              processorTypeId="org.eclipse.wst.xsl.launching.processorType.jreDefault"
-              supports="1.0"/>
-	 </extension>
 	
 </plugin>

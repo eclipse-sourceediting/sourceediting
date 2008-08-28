@@ -30,8 +30,8 @@ import org.apache.xml.dtm.ref.DTMNodeProxy;
 import org.apache.xml.utils.QName;
 import org.apache.xpath.VariableStack;
 import org.apache.xpath.XPath;
-import org.eclipse.wst.xsl.debugger.StyleFrame;
-import org.eclipse.wst.xsl.debugger.Variable;
+import org.eclipse.wst.xsl.jaxp.debug.debugger.StyleFrame;
+import org.eclipse.wst.xsl.jaxp.debug.debugger.Variable;
 import org.w3c.dom.Node;
 
 public class XalanStyleFrame extends StyleFrame

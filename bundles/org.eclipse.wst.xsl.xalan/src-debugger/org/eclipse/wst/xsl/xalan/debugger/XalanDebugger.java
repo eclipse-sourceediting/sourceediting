@@ -20,13 +20,16 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.xalan.processor.TransformerFactoryImpl;
 import org.apache.xalan.trace.TraceManager;
 import org.apache.xalan.transformer.TransformerImpl;
-import org.eclipse.wst.xsl.debugger.AbstractDebugger;
-import org.eclipse.wst.xsl.debugger.Variable;
+import org.eclipse.wst.xsl.jaxp.debug.debugger.AbstractDebugger;
+import org.eclipse.wst.xsl.jaxp.debug.debugger.BreakPoint;
+import org.eclipse.wst.xsl.jaxp.debug.debugger.Variable;
+import org.xml.sax.SAXException;
 
 public class XalanDebugger extends AbstractDebugger
 {
 	private static final Log log = LogFactory.getLog(XalanDebugger.class);
 	private XalanTraceListener currentTraceListener;
+	private TransformerImpl lastTransformerInChain;
 	
 	public void setTransformerFactory(TransformerFactory factory)
 	{
@@ -34,10 +37,27 @@ public class XalanDebugger extends AbstractDebugger
 		tfi.setAttribute(TransformerFactoryImpl.FEATURE_SOURCE_LOCATION, Boolean.TRUE);
 		tfi.setAttribute(TransformerFactoryImpl.FEATURE_OPTIMIZE, Boolean.FALSE);
 	}
+	
+	public synchronized void debuggerSuspended(BreakPoint breakpoint)
+	{
+		// flush the serializer (which is buffered by Xalan itself)
+		try
+		{
+			lastTransformerInChain.getSerializationHandler().flushPending();
+		}
+		catch (SAXException e)
+		{
+			log.error("Error flushing serializer", e);
+		}
+		super.debuggerSuspended(breakpoint);
+	}
 
 	public void addTransformer(Transformer transformer)
 	{
 		TransformerImpl transformerImpl = (TransformerImpl) transformer;
+		
+		lastTransformerInChain = transformerImpl;
+		
 		TraceManager trMgr = transformerImpl.getTraceManager();
 		try
 		{

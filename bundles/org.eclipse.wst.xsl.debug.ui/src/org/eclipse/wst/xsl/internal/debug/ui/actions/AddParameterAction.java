@@ -21,10 +21,6 @@ import org.eclipse.wst.xsl.launching.config.LaunchAttribute;
  */
 public class AddParameterAction extends AbstractParameterAction
 {
-	final String[] types = new String[]
-	{ LaunchAttribute.TYPE_STRING, LaunchAttribute.TYPE_BOOLEAN, LaunchAttribute.TYPE_INT, LaunchAttribute.TYPE_DOUBLE, LaunchAttribute.TYPE_FLOAT, LaunchAttribute.TYPE_OBJECT,
-			LaunchAttribute.TYPE_CLASS, };
-
 	/**
 	 * Create a new instance of this.
 	 * 
@@ -41,8 +37,6 @@ public class AddParameterAction extends AbstractParameterAction
 		MultipleInputDialog dialog = new MultipleInputDialog(getShell(), ActionMessages.AddParameterAction_Dialog);
 		String namelabel = ActionMessages.AddParameterAction_Dialog_Name;
 		dialog.addTextField(namelabel, null, false);
-		String typelabel = ActionMessages.AddParameterAction_Dialog_Type;
-		dialog.addComboField(typelabel, 0, types);
 		String variableslabel = ActionMessages.AddParameterAction_Dialog_Value;
 		dialog.addVariablesField(variableslabel, null, false);
 		dialog.open();
@@ -50,13 +44,12 @@ public class AddParameterAction extends AbstractParameterAction
 		if (dialog.getReturnCode() == Window.OK)
 		{
 			String name = dialog.getStringValue(namelabel);
-			int type = dialog.getIntValue(typelabel);
 			String value = dialog.getStringValue(variableslabel);
 			LaunchAttribute parameter = null;
 			if (value != null && value.indexOf("${") > -1) //$NON-NLS-1$
-				parameter = new LaunchAttribute(name, types[type], value);
+				parameter = new LaunchAttribute(name, null, value);
 			else
-				parameter = new LaunchAttribute(name, types[type], value);
+				parameter = new LaunchAttribute(name, null, value);
 			getViewer().addParameter(parameter);
 		}
 	}

@@ -25,8 +25,6 @@ public class ParametersLabelProvider implements ITableLabelProvider
 			case 0:
 				return p.uri;
 			case 1:
-				return p.type;
-			case 2:
 				return p.value;
 		}
 		return "!"; //$NON-NLS-1$

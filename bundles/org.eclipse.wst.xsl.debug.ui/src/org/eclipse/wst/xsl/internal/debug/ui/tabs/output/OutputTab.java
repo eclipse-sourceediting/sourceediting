@@ -11,12 +11,9 @@
 package org.eclipse.wst.xsl.internal.debug.ui.tabs.output;
 
 import org.eclipse.debug.ui.ILaunchConfigurationTab;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.wst.xsl.debug.internal.util.XSLDebugPluginImages;
 import org.eclipse.wst.xsl.debug.internal.util.XSLPluginImageHelper;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLLaunchConfigurationTab;
@@ -24,16 +21,17 @@ import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.XSLMainTab;
 
 public class OutputTab extends XSLLaunchConfigurationTab
 {
-	private final OutputPropertiesBlock outputBlock;
 	private final OutputFileBlock outputFileBlock;
 
 	public OutputTab(XSLMainTab main)
 	{
 		outputFileBlock = new OutputFileBlock();
-		outputBlock = new OutputPropertiesBlock(main);
+//		outputBlock = new OutputPropertiesBlock(main);
 
+//		setBlocks(new ILaunchConfigurationTab[]
+//		{ outputBlock, outputFileBlock });
 		setBlocks(new ILaunchConfigurationTab[]
-		{ outputBlock, outputFileBlock });
+		                              		{ outputFileBlock });
 	}
 
 	@Override
@@ -46,14 +44,20 @@ public class OutputTab extends XSLLaunchConfigurationTab
 
 		outputFileBlock.createControl(comp);
 
-		Group group = new Group(comp, SWT.NULL);
-		group.setText(Messages.OutputTab_0);
-		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-		group.setLayoutData(gd);
-		layout = new GridLayout(2, false);
-		group.setLayout(layout);
+//		Group group = new Group(comp, SWT.NULL);
+//		group.setText(Messages.OutputTab_0);
+//		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+//		group.setLayoutData(gd);
+//		layout = new GridLayout(2, false);
+//		group.setLayout(layout);
 
-		outputBlock.createControl(group);
+//		outputBlock.createControl(group);
+	}
+	
+	@Override
+	public String getId()
+	{
+		return "org.eclipse.wst.xsl.internal.debug.ui.tabs.output";
 	}
 
 	public String getName()

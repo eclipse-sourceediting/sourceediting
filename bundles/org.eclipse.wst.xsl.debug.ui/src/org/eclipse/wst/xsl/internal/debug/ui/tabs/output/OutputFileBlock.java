@@ -43,6 +43,7 @@ public class OutputFileBlock extends ResourceSelectionBlock
 	// private Combo formatCombo;
 	private ComboViewer methodViewer;
 	private String inputFilename;
+	private Button formatFileCheckButton;
 
 	public OutputFileBlock()
 	{
@@ -113,7 +114,13 @@ public class OutputFileBlock extends ResourceSelectionBlock
 	@Override
 	protected void createButtons(Composite parent)
 	{
-		openFileCheckButton = createCheckButton(parent, MainTabMessages.OutputFileBlock_8);
+		Composite checkComposite = new Composite(parent,SWT.NONE);
+		checkComposite.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING));
+		GridLayout gl = new GridLayout();
+		gl.marginWidth = 0;
+		checkComposite.setLayout(gl);
+		
+		openFileCheckButton = createCheckButton(checkComposite, MainTabMessages.OutputFileBlock_8);
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gd.horizontalSpan = 1;
 		openFileCheckButton.setLayoutData(gd);
@@ -126,16 +133,42 @@ public class OutputFileBlock extends ResourceSelectionBlock
 
 			public void widgetSelected(SelectionEvent e)
 			{
+				if (openFileCheckButton.getSelection())
+				{
+					formatFileCheckButton.setEnabled(true);
+					updateLaunchConfigurationDialog();
+				}
+				else
+				{
+					formatFileCheckButton.setEnabled(false);
+					formatFileCheckButton.setSelection(false);
+				}
+			}
+		});
+
+		formatFileCheckButton = createCheckButton(checkComposite, "Format file on completion");
+		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		gd.horizontalSpan = 1;
+		formatFileCheckButton.setLayoutData(gd);
+		formatFileCheckButton.addSelectionListener(new SelectionListener()
+		{
+
+			public void widgetDefaultSelected(SelectionEvent e)
+			{
+			}
+
+			public void widgetSelected(SelectionEvent e)
+			{
 				updateLaunchConfigurationDialog();
 			}
 		});
 
-		Composite buttonComp = new Composite(parent, SWT.NONE);
+		Composite buttonComp = new Composite(parent, SWT.TOP);
 		GridLayout layout = new GridLayout(3, false);
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		buttonComp.setLayout(layout);
-		gd = new GridData(GridData.HORIZONTAL_ALIGN_END);
+		gd = new GridData(GridData.HORIZONTAL_ALIGN_END | GridData.VERTICAL_ALIGN_BEGINNING);
 		gd.horizontalSpan = 1;
 		buttonComp.setLayoutData(gd);
 		buttonComp.setFont(parent.getFont());
@@ -178,6 +211,9 @@ public class OutputFileBlock extends ResourceSelectionBlock
 
 			boolean openFileOnCompletion = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_OPEN_FILE, true);
 			openFileCheckButton.setSelection(openFileOnCompletion);
+			
+			boolean formatFileOnCompletion = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_FORMAT_FILE, false);
+			formatFileCheckButton.setSelection(formatFileOnCompletion);
 		}
 		catch (CoreException e)
 		{
@@ -202,14 +238,17 @@ public class OutputFileBlock extends ResourceSelectionBlock
 
 		boolean openFileOnCompletion = openFileCheckButton.getSelection();
 		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OPEN_FILE, openFileOnCompletion);
+		
+		boolean formatFileOnCompletion = formatFileCheckButton.getSelection();
+		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_FORMAT_FILE, formatFileOnCompletion);
 	}
 
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
 	{
 		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_OUTPUT_FILE, true);
-		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FILE, ""); //$NON-NLS-1$
-		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_METHOD, (String) null);
+		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FILE, (String)null);
 		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OPEN_FILE, true);
+		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_FORMAT_FILE, false);
 	}
 
 	private void updateDefaultOutputFile()

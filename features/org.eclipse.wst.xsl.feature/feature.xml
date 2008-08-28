@@ -29,13 +29,6 @@
    </requires>
 
    <plugin
-         id="org.eclipse.wst.xsl.debug"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.wst.xsl.core"
          download-size="0"
          install-size="0"
@@ -120,6 +113,20 @@
          unpack="false"/>
 
    <plugin
+         id="org.apache.bcel"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="java_cup.runtime"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+         
+   <plugin
          id="org.eclipse.wst.xsl.saxon"
          download-size="0"
          install-size="0"
@@ -128,6 +135,27 @@
 
    <plugin
          id="org.eclipse.wst.xsl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.wst.xsl.jaxp.debug"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.wst.xsl.jaxp.debug.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.wst.xsl.jaxp.launching"
          download-size="0"
          install-size="0"
          version="0.0.0"

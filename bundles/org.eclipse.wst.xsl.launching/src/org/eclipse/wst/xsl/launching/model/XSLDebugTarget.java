@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.Socket;
@@ -34,7 +35,6 @@ import org.eclipse.debug.core.DebugEvent;
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.ILineBreakpoint;
@@ -46,9 +46,7 @@ import org.eclipse.debug.core.model.IValue;
 import org.eclipse.wst.xsl.core.internal.util.Debug;
 import org.eclipse.wst.xsl.debugger.DebugConstants;
 import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
-import org.eclipse.wst.xsl.internal.launching.XSLTLaunchConfigurationDelegate;
-import org.eclipse.wst.xsl.launching.IProcessorInstall;
-import org.eclipse.wst.xsl.launching.config.LaunchHelper;
+import org.eclipse.wst.xsl.launching.config.BaseLaunchHelper;
 
 public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget {
 	private final byte[] STACK_FRAMES_LOCK = new byte[0];
@@ -70,31 +68,31 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget {
 	private final Map<XSLVariable, XSLValue> valueMapCache = new HashMap<XSLVariable, XSLValue>();
 	private String name;
 	private boolean suspended;
-	private boolean terminated;
 
 	private Socket requestSocket;
 	private Socket eventSocket;
+	private Socket generateSocket;
 	private BufferedReader requestReader;
 	private BufferedReader eventReader;
 	private PrintWriter requestWriter;
+	private Reader generateReader;
 	private boolean stale;
 
 	public XSLDebugTarget(ILaunch launch, IProcess process,
-			LaunchHelper launchHelper) throws CoreException {
+			BaseLaunchHelper BaseLaunchHelper) throws CoreException {
 		super(null);
 		this.launch = launch;
 		this.process = process;
-		this.requestSocket = attemptConnect(launchHelper.getRequestPort());
-		this.eventSocket = attemptConnect(launchHelper.getEventPort());
+		this.requestSocket = attemptConnect(BaseLaunchHelper.getRequestPort());
+		this.eventSocket = attemptConnect(BaseLaunchHelper.getEventPort());
+		this.generateSocket = attemptConnect(BaseLaunchHelper.getGeneratePort());
 
 		if (!process.isTerminated()) {
 			try {
-				this.eventReader = new BufferedReader(new InputStreamReader(
-						eventSocket.getInputStream()));
-				this.requestWriter = new PrintWriter(requestSocket
-						.getOutputStream());
-				this.requestReader = new BufferedReader(new InputStreamReader(
-						requestSocket.getInputStream()));
+				this.eventReader = new BufferedReader(new InputStreamReader(eventSocket.getInputStream()));
+				this.requestWriter = new PrintWriter(requestSocket.getOutputStream());
+				this.requestReader = new BufferedReader(new InputStreamReader(requestSocket.getInputStream()));
+				this.generateReader = new InputStreamReader(generateSocket.getInputStream());
 			} catch (IOException e) {
 				abort(Messages.getString("XSLDebugTarget.0"), e); //$NON-NLS-1$
 			}
@@ -102,10 +100,14 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget {
 			this.threads = new IThread[] { thread };
 			this.eventDispatch = new EventDispatchJob();
 			this.eventDispatch.schedule();
-
-			DebugPlugin.getDefault().getBreakpointManager()
-					.addBreakpointListener(this);
+			
+			DebugPlugin.getDefault().getBreakpointManager().addBreakpointListener(this);
 		}
+	}
+	
+	public Reader getGenerateReader()
+	{
+		return generateReader;
 	}
 
 	private void abort(String message, Throwable e) throws DebugException {
@@ -158,16 +160,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget {
 
 	public String getName() throws DebugException {
 		if (name == null) {
-			try {
-				IProcessorInstall install = XSLTLaunchConfigurationDelegate
-						.getProcessorInstall(getLaunch()
-								.getLaunchConfiguration(),
-								ILaunchManager.DEBUG_MODE);
-				String type = install.getProcessorType().getLabel();
-				name = type + " [" + install.getName() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-			} catch (CoreException e) {
-				throw new DebugException(e.getStatus());
-			}
+			name = launch.getAttribute("launchName");
 		}
 		return name;
 	}
@@ -181,7 +174,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget {
 			// ILineBreakpoint lb = (ILineBreakpoint) breakpoint;
 			// IMarker marker = lb.getMarker();
 			// for (Iterator<?> iter =
-			// launchHelper.getPipeline().getTransformDefs().iterator();
+			// BaseLaunchHelper.getPipeline().getTransformDefs().iterator();
 			// iter.hasNext();)
 			// {
 			// LaunchTransform lt = (LaunchTransform) iter.next();
@@ -213,7 +206,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget {
 	}
 
 	public boolean isTerminated() {
-		return terminated;
+		return getProcess().isTerminated();
 	}
 
 	public void terminate() throws DebugException {
@@ -355,13 +348,9 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget {
 	}
 
 	private void terminated() {
-		terminated = true;
 		suspended = true;
-		DebugPlugin.getDefault().getBreakpointManager()
-				.removeBreakpointListener(this);
-
+		DebugPlugin.getDefault().getBreakpointManager().removeBreakpointListener(this);
 		threads = new IThread[0];
-
 		fireTerminateEvent();
 	}
 
@@ -395,34 +384,6 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget {
 			return stackFramesCache;
 		}
 	}
-
-	/*
-	 * private void init(String data) {
-	 * 
-	 * String[] strings = data.split("\\|"); String fileName = strings[0]; try {
-	 * URL url = new URL(fileName); Path p = new Path(url.getFile());
-	 * xslFileName = (new Path(fileName)).lastSegment();
-	 * 
-	 * String idString = strings[1]; id = Integer.parseInt(idString); String pc
-	 * = strings[2]; lineNumber = Integer.parseInt(pc); String safename =
-	 * strings[3];
-	 * 
-	 * int theIndex; while ((theIndex = safename.indexOf("%@_PIPE_@%")) != -1) {
-	 * safename = safename.substring(0, theIndex) + "|" +
-	 * safename.substring(theIndex + "%@_PIPE_@%".length(), safename.length());
-	 * }
-	 * 
-	 * name = p.lastSegment() + " " + safename;
-	 * 
-	 * int numVars = strings.length - 4; variables = new IVariable[numVars]; for
-	 * (int i = 0; i < numVars; i++) { String val = strings[i + 4]; int index =
-	 * val.lastIndexOf('&'); int slotNumber =
-	 * Integer.parseInt(val.substring(index + 1)); val = val.substring(0,
-	 * index); index = val.lastIndexOf('&'); String name = val.substring(0,
-	 * index); String scope = val.substring(index + 1); variables[i] = new
-	 * XSLVariable(this, scope, name, slotNumber); } } catch
-	 * (MalformedURLException e) { LaunchingPlugin.log(e); } }
-	 */
 
 	private void ressetStackFramesCache() {
 		stale = true;

@@ -16,6 +16,8 @@ import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -68,6 +70,15 @@ public class TransformsBlock extends AbstractTableBlock implements IStylesheetEn
 		stylesheetViewer.getControl().setFont(font);
 		stylesheetViewer.setLabelProvider(new StylesheetLabelProvider());
 		stylesheetViewer.setContentProvider(new StylesheetContentProvider());
+		stylesheetViewer.getTable().addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent event) {
+				if (event.character == SWT.DEL && event.stateMask == 0) {
+					RemoveAction ra = new RemoveAction(stylesheetViewer);
+					ra.run();
+					updateLaunchConfigurationDialog();
+				}
+			}
+		});
 
 		Composite upDownButtonComp = new Composite(group, SWT.NONE);
 		GridLayout upDownButtonLayout = new GridLayout();
@@ -95,9 +106,6 @@ public class TransformsBlock extends AbstractTableBlock implements IStylesheetEn
 
 		createButton(pathButtonComp, new AddWorkspaceFileAction(stylesheetViewer));
 		createButton(pathButtonComp, new AddExternalFileAction(stylesheetViewer, DIALOG_SETTINGS_PREFIX));
-		// TODO
-		// createButton(pathButtonComp, new
-		// SetURIResolverAction(stylesheetViewer));
 		createButton(pathButtonComp, new RemoveAction(stylesheetViewer));
 	}
 

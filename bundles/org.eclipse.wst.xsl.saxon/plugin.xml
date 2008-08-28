@@ -2,22 +2,27 @@
 <?eclipse version="3.2"?>
 <plugin>
    <extension
-         point="org.eclipse.wst.xsl.launching.processorType">
+         point="org.eclipse.wst.xsl.jaxp.launching.processorType">
       <processorType
-            featureProperties="SaxonFeatures.properties"
+            attributeProperties="SaxonAttributes.properties"
             id="org.eclipse.wst.xsl.saxon_1_0.processorType"
             label="%processorType.label.1"
-            outputProperties="SaxonOutputProperties.properties"
-            transformerFactory="com.icl.saxon.TransformerFactoryImpl">
+            outputProperties="SaxonOutputProperties.properties">
+         <transformerFactory
+               factoryClass="com.icl.saxon.TransformerFactoryImpl"
+               name="Saxon 6">
+         </transformerFactory>
       </processorType>
       <processorType
-            featureProperties="SaxonFeatures.properties"
+            attributeProperties="SaxonAttributes.properties"
             id="org.eclipse.wst.xsl.saxon.processorType"
             label="%processorType.label.0"
-            outputProperties="SaxonOutputProperties.properties"
-            transformerFactory="net.sf.saxon.TransformerFactoryImpl">
+            outputProperties="SaxonOutputProperties.properties">
+         <transformerFactory
+               factoryClass="net.sf.saxon.TransformerFactoryImpl"
+               name="Saxon 7">
+         </transformerFactory>
       </processorType>
-      
    </extension>
 
 </plugin>

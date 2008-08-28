@@ -20,7 +20,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -36,8 +35,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -50,7 +47,7 @@ import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.wst.xsl.core.internal.util.FileUtil;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.InputFileBlock;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
-import org.eclipse.wst.xsl.launching.config.LaunchHelper;
+import org.eclipse.wst.xsl.launching.config.BaseLaunchHelper;
 import org.eclipse.wst.xsl.launching.config.LaunchPipeline;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 
@@ -243,7 +240,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 			// the source xml file must be the same
 			if (path.equals(xmlFilePath))
 			{
-				LaunchHelper lh = new LaunchHelper(config);
+				BaseLaunchHelper lh = new BaseLaunchHelper(config);
 				// all the selected stylesheets must be in the pipeline
 				boolean found = false;
 				for (IFile stylesheet : xslFiles)
@@ -306,10 +303,9 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 				wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, "${workspace_loc:" + xmlFile.getFullPath().toPortableString()+"}"); //$NON-NLS-1$ //$NON-NLS-2$
 			else
 				wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, xmlFilePath.toPortableString());
-			wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_USE_FEATURES_FROM_PREFERENCES, true);
+
 			wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_OUTPUT_FILE, true);
-			wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_PROCESSOR, true);
-			wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_PROCESSOR_WORKING_DIR, true);
+			wc.setAttribute(XSLLaunchConfigurationConstants.ATTR_OPEN_FILE, true);
 
 			LaunchPipeline pipeline = new LaunchPipeline();
 			for (IFile element : xslFiles)

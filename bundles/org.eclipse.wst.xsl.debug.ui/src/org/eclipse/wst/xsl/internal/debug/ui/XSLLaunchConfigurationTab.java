@@ -86,6 +86,15 @@ public abstract class XSLLaunchConfigurationTab extends AbstractLaunchConfigurat
 		for (ILaunchConfigurationTab element : blocks)
 			element.activated(workingCopy);
 	}
+	
+//	@Override
+//	protected boolean isDirty()
+//	{
+//		for (ILaunchConfigurationTab element : blocks)
+//			if (((XSLLaunchConfigurationTab)element).isDirty())
+//				return true;
+//		return super.isDirty();
+//	}
 
 	@Override
 	public boolean isValid(ILaunchConfiguration configuration)

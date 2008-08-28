@@ -14,13 +14,14 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
@@ -37,6 +38,7 @@ import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIConstants;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.internal.debug.ui.actions.AbstractParameterAction;
 import org.eclipse.wst.xsl.internal.debug.ui.actions.AddParameterAction;
+import org.eclipse.wst.xsl.internal.debug.ui.actions.RemoveAction;
 import org.eclipse.wst.xsl.internal.debug.ui.actions.RemoveParameterAction;
 import org.eclipse.wst.xsl.launching.config.LaunchAttribute;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
@@ -111,40 +113,11 @@ public class ParametersBlock extends AbstractTableBlock
 		column1.setWidth(150);
 		column1.setResizable(true);
 		column1.setText(Messages.getString("ParametersBlock.0")); //$NON-NLS-1$
-		column1.addSelectionListener(new SelectionAdapter()
-		{
-			@Override
-			public void widgetSelected(SelectionEvent e)
-			{
-				// sortByName();
-			}
-		});
-
-		TableColumn column2 = new TableColumn(fTable, SWT.NONE);
-		column2.setWidth(50);
-		column2.setResizable(true);
-		column2.setText(Messages.getString("ParametersBlock.1")); //$NON-NLS-1$
-		column2.addSelectionListener(new SelectionAdapter()
-		{
-			@Override
-			public void widgetSelected(SelectionEvent e)
-			{
-				// sortByType();
-			}
-		});
 
 		TableColumn column3 = new TableColumn(fTable, SWT.NONE);
-		column3.setWidth(150);
+		column3.setWidth(250);
 		column3.setResizable(true);
 		column3.setText(Messages.getString("ParametersBlock.2")); //$NON-NLS-1$
-		column3.addSelectionListener(new SelectionAdapter()
-		{
-			@Override
-			public void widgetSelected(SelectionEvent e)
-			{
-				// sortByType();
-			}
-		});
 
 		parametersViewer = new ParameterViewer(fTable);
 		parametersViewer.setLabelProvider(new ParametersLabelProvider());
@@ -157,37 +130,32 @@ public class ParametersBlock extends AbstractTableBlock
 				updateLaunchConfigurationDialog();
 			}
 		});
+		parametersViewer.getTable().addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent event) {
+				if (event.character == SWT.DEL && event.stateMask == 0) {
+					RemoveParameterAction ra = new RemoveParameterAction(parametersViewer);
+					ra.run();
+					updateLaunchConfigurationDialog();
+				}
+			}
+		});
 
 		parametersViewer.setColumnProperties(new String[]
-		{ Messages.getString("ParametersBlock.3"), Messages.getString("ParametersBlock.4"), Messages.getString("ParametersBlock.5") }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		final String[] types = new String[]
-		{ LaunchAttribute.TYPE_STRING, LaunchAttribute.TYPE_BOOLEAN, LaunchAttribute.TYPE_INT, LaunchAttribute.TYPE_DOUBLE, LaunchAttribute.TYPE_FLOAT, LaunchAttribute.TYPE_OBJECT,
-				LaunchAttribute.TYPE_CLASS, };
-		ComboBoxCellEditor comboEditor = new ComboBoxCellEditor(fTable, types, SWT.READ_ONLY | SWT.DROP_DOWN);
+		{ "name", "value" }); //$NON-NLS-1$ //$NON-NLS-2$
 		TextCellEditor textEditor = new TextCellEditor(fTable);
 		CellEditor[] editors = new CellEditor[]
-		{ null, comboEditor, textEditor };
+		{ null, textEditor };
 		parametersViewer.setCellEditors(editors);
 		parametersViewer.setCellModifier(new ICellModifier()
 		{
 			public boolean canModify(Object element, String property)
 			{
-				return Messages.getString("ParametersBlock.6").equals(property) || Messages.getString("ParametersBlock.7").equals(property); //$NON-NLS-1$ //$NON-NLS-2$
+				return "value".equals(property); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 			public Object getValue(Object element, String property)
 			{
 				LaunchAttribute att = (LaunchAttribute) element;
-				if (Messages.getString("ParametersBlock.8").equals(property)) //$NON-NLS-1$
-				{
-					for (int i = 0; i < types.length; i++)
-					{
-						String type = types[i];
-						if (type.equals(att.type))
-							return new Integer(i);
-					}
-					return null;
-				}
 				return att.value == null ? "" : att.value; //$NON-NLS-1$
 			}
 
@@ -195,13 +163,7 @@ public class ParametersBlock extends AbstractTableBlock
 			{
 				Item item = (Item) element;
 				LaunchAttribute att = (LaunchAttribute) item.getData();
-				if (Messages.getString("ParametersBlock.10").equals(property)) //$NON-NLS-1$
-				{
-					Integer v = (Integer) value;
-					att.type = types[v.intValue()];
-				}
-				else if (Messages.getString("ParametersBlock.11").equals(property)) //$NON-NLS-1$
-					att.value = (String) value;
+				att.value = (String) value;
 				parametersViewer.update(att, null);
 				updateLaunchConfigurationDialog();
 			}
@@ -230,21 +192,6 @@ public class ParametersBlock extends AbstractTableBlock
 		Button button = createPushButton(pathButtonComp, action.getText(), null);
 		action.setButton(button);
 		return button;
-	}
-
-	@Override
-	protected void setSortColumn(int column)
-	{
-		switch (column)
-		{
-		// case 1:
-		// sortByName();
-		// break;
-		// case 2:
-		// sortByType();
-		// break;
-		}
-		super.setSortColumn(column);
 	}
 
 	@Override

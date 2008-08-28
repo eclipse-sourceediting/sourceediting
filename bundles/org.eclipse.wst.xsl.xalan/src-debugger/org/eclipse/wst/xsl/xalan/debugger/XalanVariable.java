@@ -18,7 +18,7 @@ import org.apache.xalan.templates.ElemVariable;
 import org.apache.xpath.VariableStack;
 import org.apache.xpath.objects.XNodeSet;
 import org.apache.xpath.objects.XObject;
-import org.eclipse.wst.xsl.debugger.Variable;
+import org.eclipse.wst.xsl.jaxp.debug.debugger.Variable;
 
 public class XalanVariable extends Variable implements Comparable
 {

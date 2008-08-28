@@ -22,7 +22,7 @@ import org.apache.xalan.templates.ElemVariable;
 import org.apache.xalan.templates.StylesheetRoot;
 import org.apache.xalan.trace.TracerEvent;
 import org.apache.xpath.VariableStack;
-import org.eclipse.wst.xsl.debugger.Variable;
+import org.eclipse.wst.xsl.jaxp.debug.debugger.Variable;
 
 public class XalanRootStyleFrame extends XalanStyleFrame
 {

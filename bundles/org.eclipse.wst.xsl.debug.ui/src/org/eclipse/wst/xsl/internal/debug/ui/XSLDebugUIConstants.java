@@ -31,17 +31,9 @@ public class XSLDebugUIConstants
 	 */
 	public static final String MAIN_TRANSFORMS_BLOCK = PREFIX + "MAIN_TRANSFORMS_BLOCK"; //$NON-NLS-1$
 	/**
-	 * Constant used to store column setting preferences for the <code>FeaturesBlock</code>
-	 */
-	public static final String FEATURES_BLOCK = PREFIX + "FEATURES_BLOCK"; //$NON-NLS-1$
-	/**
 	 * Constant used to store column setting preferences for the <code>OutputBlock</code>
 	 */
 	public static final String OUTPUT_BLOCK = PREFIX + "OUTPUT_BLOCK"; //$NON-NLS-1$
-	/**
-	 * Constant used to store column setting preferences for the <code>FeaturesBlock</code>
-	 */
-	public static final String FEATURES_LAUNCH_BLOCK = PREFIX + "FEATURES_LAUNCH_BLOCK"; //$NON-NLS-1$
 	/**
 	 * The id of the XSL editor
 	 */
