@@ -41,7 +41,10 @@ public class Messages extends NLS
 	public static String InstalledProcessorsBlock_7;
 	public static String InstalledProcessorsBlock_8;
 	
-	
+	public static String ProcessorsPreferencePage_0;
+	public static String ProcessorsPreferencePage_1;
+	public static String ProcessorsPreferencePage_2;
+
 	private Messages()
 	{
 	}
