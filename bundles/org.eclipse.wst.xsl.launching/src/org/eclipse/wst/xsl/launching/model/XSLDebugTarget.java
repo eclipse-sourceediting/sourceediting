@@ -44,7 +44,6 @@ import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.wst.xsl.core.internal.util.Debug;
-import org.eclipse.wst.xsl.debugger.DebugConstants;
 import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
 import org.eclipse.wst.xsl.launching.config.BaseLaunchHelper;
 
