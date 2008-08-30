@@ -4,11 +4,11 @@ Bundle-Name: XSL Core Tests Plug-in
 Bundle-SymbolicName: org.eclipse.wst.xsl.core.tests
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.wst.xsl.core.tests.XSLCoreTestsPlugin
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.core.resources;bundle-version="3.4.0",
- org.eclipse.wst.xsl.core;bundle-version="1.0.0",
- org.eclipse.wst.sse.core;bundle-version="1.1.300",
- org.eclipse.wst.xml.core;bundle-version="1.1.300",
+Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.4.0,4.0.0)",
+ org.eclipse.core.resources;bundle-version="[3.4.0,4.0.0)",
+ org.eclipse.wst.xsl.core;bundle-version="[1.0.0,2.0.0)",
+ org.eclipse.wst.sse.core;bundle-version="[1.1.0,2.0.0)",
+ org.eclipse.wst.xml.core;bundle-version="[1.1.0,2.0.0)",
  org.apache.xalan;bundle-version="[2.7.1,2.8.0)"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
