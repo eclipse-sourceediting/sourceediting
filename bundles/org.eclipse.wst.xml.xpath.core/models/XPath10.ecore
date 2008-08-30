@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="XPath"
+    nsURI="org.eclipse.wst.xml.xpath.core.internal.model" nsPrefix="xpath">
+  <eClassifiers xsi:type="ecore:EClass" name="XPath" eSuperTypes="#//XpathCommon">
+    <eOperations name="setComponents" lowerBound="1">
+      <eParameters name="components" lowerBound="1" upperBound="-1" eType="#//Component"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="components" lowerBound="1"
+        upperBound="-1" eType="#//Component"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="XpathCommon" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="beginColumn" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="endColumn" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="beginLineNumber" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="endLineNumber" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Component" abstract="true" interface="true"/>
+  <eSubpackages name="DataTypes" nsURI="org.eclipse.wst.xml.xpath.core.internal.model.datatypes"
+      nsPrefix="xpathdatatypes">
+    <eClassifiers xsi:type="ecore:EEnum" name="DataTypes">
+      <eLiterals name="nodeset"/>
+      <eLiterals name="boolean" value="1"/>
+      <eLiterals name="string" value="2"/>
+      <eLiterals name="number" value="3"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Variable" eSuperTypes="#//XpathCommon #//Component">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1"
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eClassifiers>
+  </eSubpackages>
+  <eSubpackages name="Function" nsURI="org.eclipse.wst.xml.xpath.core.internal.model.functions"
+      nsPrefix="func">
+    <eClassifiers xsi:type="ecore:EClass" name="Function" eSuperTypes="#//XpathCommon #//Component">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="namespace" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="prefix" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1"
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="returns" lowerBound="1"
+          eType="#//DataTypes/DataTypes" defaultValueLiteral=""/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="arguments" upperBound="-1"
+          eType="#//Function/Argument"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="minimumArguments" lowerBound="1"
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="maximumArguments" lowerBound="1"
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="Argument" eSuperTypes="#//XpathCommon">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" lowerBound="1"
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="required" lowerBound="1"
+          eType="#//Function/Occurrence"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="componet" upperBound="-1"
+          eType="#//Component"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="Occurrence">
+      <eLiterals name="no"/>
+      <eLiterals name="yes" value="1"/>
+    </eClassifiers>
+  </eSubpackages>
+  <eSubpackages name="Keywords" nsURI="org.eclipse.wst.xml.xpath.core.internal.model.keywords"
+      nsPrefix="keyw">
+    <eClassifiers xsi:type="ecore:EClass" name="Keyword" eSuperTypes="#//XpathCommon #//Component">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eClassifiers>
+  </eSubpackages>
+  <eSubpackages name="Axis" nsURI="org.eclipse.wst.xml.xpath.core.internal.model.axis"
+      nsPrefix="axis">
+    <eClassifiers xsi:type="ecore:EClass" name="Axis" eSuperTypes="#//XpathCommon #//Component">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="shortcut" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eClassifiers>
+  </eSubpackages>
+</ecore:EPackage>
