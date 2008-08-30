@@ -50,8 +50,8 @@ import org.eclipse.wst.xsl.jaxp.launching.IProcessorJar;
 import org.eclipse.wst.xsl.jaxp.launching.ITransformerFactory;
 import org.eclipse.wst.xsl.jaxp.launching.JAXPLaunchConfigurationConstants;
 import org.eclipse.wst.xsl.jaxp.launching.JAXPRuntime;
+import org.eclipse.wst.xsl.jaxp.launching.model.JAXPDebugTarget;
 import org.eclipse.wst.xsl.launching.model.IXSLConstants;
-import org.eclipse.wst.xsl.launching.model.XSLDebugTarget;
 
 public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate implements IDebugEventSetListener
 {
@@ -96,7 +96,7 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate impl
 //		launch.removeDebugTarget(javaTarget);
 		
 		IDebugTarget javaTarget = launch.getDebugTarget();
-		IDebugTarget xslTarget = new XSLDebugTarget(launch, launch.getProcesses()[0], launchHelper);
+		IDebugTarget xslTarget = new JAXPDebugTarget(launch, launch.getProcesses()[0], launchHelper);
 		
 		// remove java as the primary target and make xsl the primary target
 		launch.removeDebugTarget(javaTarget);

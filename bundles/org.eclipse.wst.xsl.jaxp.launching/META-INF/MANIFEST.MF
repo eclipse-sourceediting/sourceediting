@@ -15,5 +15,6 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="[3.4.0,4.0.0)",
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %Bundle-Vendor.0
-Export-Package: org.eclipse.wst.xsl.jaxp.launching
+Export-Package: org.eclipse.wst.xsl.jaxp.launching,
+ org.eclipse.wst.xsl.jaxp.launching.model
 Bundle-Localization: plugin

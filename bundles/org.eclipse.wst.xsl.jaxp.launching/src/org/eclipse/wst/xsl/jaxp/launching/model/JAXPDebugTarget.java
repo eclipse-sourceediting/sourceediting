@@ -8,7 +8,7 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.launching.model;
+package org.eclipse.wst.xsl.jaxp.launching.model;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,11 +43,19 @@ import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IValue;
-import org.eclipse.wst.xsl.core.internal.util.Debug;
-import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
+import org.eclipse.wst.xsl.jaxp.launching.internal.JAXPLaunchingPlugin;
 import org.eclipse.wst.xsl.launching.config.BaseLaunchHelper;
+import org.eclipse.wst.xsl.launching.model.DebugConstants;
+import org.eclipse.wst.xsl.launching.model.IXSLConstants;
+import org.eclipse.wst.xsl.launching.model.IXSLDebugTarget;
+import org.eclipse.wst.xsl.launching.model.Messages;
+import org.eclipse.wst.xsl.launching.model.XSLDebugElement;
+import org.eclipse.wst.xsl.launching.model.XSLStackFrame;
+import org.eclipse.wst.xsl.launching.model.XSLThread;
+import org.eclipse.wst.xsl.launching.model.XSLValue;
+import org.eclipse.wst.xsl.launching.model.XSLVariable;
 
-public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget {
+public class JAXPDebugTarget extends XSLDebugElement implements IXSLDebugTarget {
 	private final byte[] STACK_FRAMES_LOCK = new byte[0];
 	private final byte[] VALUE_MAP_LOCK = new byte[0];
 	private final byte[] WRITE_LOCK = new byte[0];
@@ -77,7 +85,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget {
 	private Reader generateReader;
 	private boolean stale;
 
-	public XSLDebugTarget(ILaunch launch, IProcess process,
+	public JAXPDebugTarget(ILaunch launch, IProcess process,
 			BaseLaunchHelper BaseLaunchHelper) throws CoreException {
 		super(null);
 		this.launch = launch;
@@ -113,7 +121,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget {
 		if (!getDebugTarget().isTerminated())
 			getDebugTarget().getProcess().terminate();
 		throw new DebugException(new Status(IStatus.ERROR,
-				LaunchingPlugin.PLUGIN_ID, DebugPlugin.INTERNAL_ERROR, message,
+				JAXPLaunchingPlugin.PLUGIN_ID, DebugPlugin.INTERNAL_ERROR, message,
 				e));
 	}
 
@@ -140,7 +148,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget {
 			throw new CoreException(
 					new Status(
 							Status.ERROR,
-							LaunchingPlugin.PLUGIN_ID,
+							JAXPLaunchingPlugin.PLUGIN_ID,
 							Messages.getString("XSLDebugTarget.2") + port + Messages.getString("XSLDebugTarget.3") + CONNECT_ATTEMPTS + Messages.getString("XSLDebugTarget.4"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		return socket;
 	}
@@ -183,7 +191,7 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget {
 			// }
 			// catch (CoreException e)
 			// {
-			// LaunchingPlugin.log(e);
+			// JAXPLaunchingPlugin.log(e);
 			// }
 			return true;
 		}
@@ -258,9 +266,9 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget {
 									+ " " + file + " " + lb.getLineNumber()); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 					} catch (CoreException e) {
-						LaunchingPlugin.log(e);
+						JAXPLaunchingPlugin.log(e);
 					} catch (MalformedURLException e) {
-						LaunchingPlugin.log(e);
+						JAXPLaunchingPlugin.log(e);
 					}
 				}
 			} catch (CoreException e) {
@@ -280,9 +288,9 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget {
 							+ " " + file + " " + lb.getLineNumber()); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			} catch (CoreException e) {
-				LaunchingPlugin.log(e);
+				JAXPLaunchingPlugin.log(e);
 			} catch (MalformedURLException e) {
-				LaunchingPlugin.log(e);
+				JAXPLaunchingPlugin.log(e);
 			}
 		}
 	}
@@ -450,17 +458,17 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget {
 	private String sendRequest(String request) throws DebugException {
 		String response = null;
 		synchronized (WRITE_LOCK) {
-			if (Debug.debugLauncher) {
-				System.out.println("REQUEST: " + request);
-			}
+//			if (Debug.debugLauncher) {
+//				System.out.println("REQUEST: " + request);
+//			}
 			requestWriter.println(request);
 			requestWriter.flush();
 			try {
 				// wait for response
 				response = requestReader.readLine();
-				if (Debug.debugLauncher) {
-					System.out.println("RESPONSE: " + response);
-				}
+//				if (Debug.debugLauncher) {
+//					System.out.println("RESPONSE: " + response);
+//				}
 			} catch (IOException e) {
 				abort(Messages.getString("XSLDebugTarget.19") + request, e); //$NON-NLS-1$
 			}
@@ -564,9 +572,9 @@ public class XSLDebugTarget extends XSLDebugElement implements IXSLDebugTarget {
 		}
 
 		private void debugEventMsg(String event) {
-			if (Debug.debugLauncher) {
-				 System.out.println("Did not understand event:" + event);
-			}
+//			if (Debug.debugLauncher) {
+//				 System.out.println("Did not understand event:" + event);
+//			}
 		}
 	}
 }

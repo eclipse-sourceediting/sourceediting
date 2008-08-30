@@ -36,7 +36,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
-import org.eclipse.wst.xsl.launching.model.XSLDebugTarget;
+import org.eclipse.wst.xsl.jaxp.launching.model.JAXPDebugTarget;
 import org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL;
 
 /**
@@ -64,9 +64,9 @@ public class ResultView extends ViewPart implements IDebugEventSetListener
 		IDebugTarget[] targets = DebugPlugin.getDefault().getLaunchManager().getDebugTargets();
 		for (IDebugTarget debugTarget : targets)
 		{
-			if (debugTarget instanceof XSLDebugTarget)
+			if (debugTarget instanceof JAXPDebugTarget)
 			{
-				handleDebugTarget((XSLDebugTarget)debugTarget);
+				handleDebugTarget((JAXPDebugTarget)debugTarget);
 			}			
 		}
 		// listen to further launches
@@ -101,14 +101,14 @@ public class ResultView extends ViewPart implements IDebugEventSetListener
 	{
 		for (DebugEvent debugEvent : events)
 		{
-			if (debugEvent.getKind() == DebugEvent.CREATE && debugEvent.getSource() instanceof XSLDebugTarget)
+			if (debugEvent.getKind() == DebugEvent.CREATE && debugEvent.getSource() instanceof JAXPDebugTarget)
 			{
-				handleDebugTarget((XSLDebugTarget)debugEvent.getSource());
+				handleDebugTarget((JAXPDebugTarget)debugEvent.getSource());
 			}
 		}
 	}
 	
-	private void handleDebugTarget(XSLDebugTarget xdt)
+	private void handleDebugTarget(JAXPDebugTarget xdt)
 	{
 		// first, clear the viewer
 		sv.setDocument(null);
