@@ -109,7 +109,8 @@ public class XSLHyperlinkDetector extends AbstractHyperlinkDetector
 					else if (("include".equals(xslEl.getLocalName()) || "import".equals(xslEl.getLocalName()))
 						&& "href".equals(xslAttr.getLocalName()))
 					{
-						hyperlink = createIncludeHyperLink(file,xslAttr.getValue(), hyperlinkRegion);
+						// seems to be handled elsewhere (XML editor??)
+//						hyperlink = createIncludeHyperLink(file,xslAttr.getValue(), hyperlinkRegion);
 					}
 				}
 			}
@@ -117,14 +118,14 @@ public class XSLHyperlinkDetector extends AbstractHyperlinkDetector
 		return hyperlink == null ? null : new IHyperlink[]{hyperlink};
 	}
 	
-	private IHyperlink createIncludeHyperLink(IFile currentFile, String include, IRegion hyperlinkRegion)
-	{
-		IHyperlink hyperlink = null;
-		IFile linkedFile = XSLCore.resolveFile(currentFile, include);
-		if (linkedFile != null && linkedFile.exists())
-			hyperlink = new SourceFileHyperlink(hyperlinkRegion,linkedFile);
-		return hyperlink;
-	}
+//	private IHyperlink createIncludeHyperLink(IFile currentFile, String include, IRegion hyperlinkRegion)
+//	{
+//		IHyperlink hyperlink = null;
+//		IFile linkedFile = XSLCore.resolveFile(currentFile, include);
+//		if (linkedFile != null && linkedFile.exists())
+//			hyperlink = new SourceFileHyperlink(hyperlinkRegion,linkedFile);
+//		return hyperlink;
+//	}
 
 	private IHyperlink createCallTemplateHyperLink(IFile currentFile, String templateName, IRegion hyperlinkRegion)
 	{
