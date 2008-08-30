@@ -22,6 +22,7 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IDebugEventSetListener;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -36,6 +37,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
+import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.jaxp.launching.model.JAXPDebugTarget;
 import org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL;
 
@@ -168,7 +170,15 @@ public class ResultView extends ViewPart implements IDebugEventSetListener
 							}
 							sv.setDocument(document);
 						}
-						sv.getDocument().set(sv.getDocument().get()+s);
+						try
+						{
+							sv.getDocument().replace(sv.getDocument().getLength(), 0, s);
+						}
+						catch (BadLocationException e)
+						{
+							XSLDebugUIPlugin.log(e);
+						}
+						sv.revealRange(sv.getDocument().getLength(),0);
 						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(ResultView.this);
 					}
 				});
