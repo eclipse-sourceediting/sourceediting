@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.xsl.internal.debug.ui.ResourceSelectionBlock;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
-import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.MainTabMessages;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
 
 public class OutputFileBlock extends ResourceSelectionBlock
@@ -56,27 +55,27 @@ public class OutputFileBlock extends ResourceSelectionBlock
 		switch (type)
 		{
 			case ERROR_DIRECTORY_NOT_SPECIFIED:
-				return MainTabMessages.OutputFOFileBlock_DIRECTORY_NOT_SPECIFIED;
+				return Messages.OutputFOFileBlock_DIRECTORY_NOT_SPECIFIED;
 			case ERROR_DIRECTORY_DOES_NOT_EXIST:
-				return MainTabMessages.OutputFOFileBlock_DIRECTORY_DOES_NOT_EXIST;
+				return Messages.OutputFOFileBlock_DIRECTORY_DOES_NOT_EXIST;
 			case GROUP_NAME:
 				return getName();
 			case USE_DEFAULT_RADIO:
-				return MainTabMessages.OutputFileBlock_0;
+				return Messages.OutputFileBlock_0;
 			case USE_OTHER_RADIO:
-				return MainTabMessages.OutputFOFileBlock_OTHER_RADIO;
+				return Messages.OutputFOFileBlock_OTHER_RADIO;
 			case DIRECTORY_DIALOG_MESSAGE:
-				return MainTabMessages.OutputFOFileBlock_DIALOG_MESSAGE;
+				return Messages.OutputFOFileBlock_DIALOG_MESSAGE;
 			case WORKSPACE_DIALOG_MESSAGE:
-				return MainTabMessages.OutputFOFileBlock_WORKSPACE_DIALOG_MESSAGE;
+				return Messages.OutputFOFileBlock_WORKSPACE_DIALOG_MESSAGE;
 			case VARIABLES_BUTTON:
-				return MainTabMessages.OutputFOFileBlock_VARIABLES_BUTTON;
+				return Messages.OutputFOFileBlock_VARIABLES_BUTTON;
 			case FILE_SYSTEM_BUTTON:
-				return MainTabMessages.OutputFOFileBlock_FILE_SYSTEM_BUTTON;
+				return Messages.OutputFOFileBlock_FILE_SYSTEM_BUTTON;
 			case WORKSPACE_BUTTON:
-				return MainTabMessages.OutputFOFileBlock_WORKSPACE_BUTTON;
+				return Messages.OutputFOFileBlock_WORKSPACE_BUTTON;
 			case WORKSPACE_DIALOG_TITLE:
-				return MainTabMessages.OutputFOFileBlock_WORKSPACE_DIALOG_TITLE;
+				return Messages.OutputFOFileBlock_WORKSPACE_DIALOG_TITLE;
 		}
 		return "" + type; //$NON-NLS-1$
 	}
@@ -106,7 +105,7 @@ public class OutputFileBlock extends ResourceSelectionBlock
 		// methodViewer.setSelection(new StructuredSelection("xml"), true);
 		// formatViewer.setSelection(new StructuredSelection("<none>"), true);
 
-		fileLabel = MainTabMessages.OutputFileBlock_7;
+		fileLabel = Messages.OutputFileBlock_7;
 		createCheckboxAndText(parent);
 		createButtons(parent);
 	}
@@ -120,7 +119,7 @@ public class OutputFileBlock extends ResourceSelectionBlock
 		gl.marginWidth = 0;
 		checkComposite.setLayout(gl);
 		
-		openFileCheckButton = createCheckButton(checkComposite, MainTabMessages.OutputFileBlock_8);
+		openFileCheckButton = createCheckButton(checkComposite, Messages.OutputFileBlock_8);
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gd.horizontalSpan = 1;
 		openFileCheckButton.setLayoutData(gd);
@@ -185,7 +184,7 @@ public class OutputFileBlock extends ResourceSelectionBlock
 
 	public String getName()
 	{
-		return MainTabMessages.OutputFileBlock_9;
+		return Messages.OutputFileBlock_9;
 	}
 
 	public void initializeFrom(ILaunchConfiguration configuration)
