@@ -134,7 +134,7 @@ public class StylesheetBuilder {
 		private final Stylesheet sf;
 		private final Stack<Element> elementStack = new Stack<Element>();
 		private Template currentTemplate;
-		private CallTemplate currentCallTemplate;
+		private Stack<CallTemplate> callTemplates = new Stack<CallTemplate>();
 		private XSLElement parentEl;
 
 		public StylesheetParser(Stylesheet stylesheet) {
@@ -148,8 +148,8 @@ public class StylesheetBuilder {
 		}
 
 		private void recurse(Element element) {
+			XSLElement xslEl = null;
 			if (XSLCore.XSL_NAMESPACE_URI.equals(element.getNamespaceURI())) {
-				XSLElement xslEl;
 				String elName = element.getLocalName();
 				if ("stylesheet".equals(elName) && elementStack.size() == 0) //$NON-NLS-1$
 				{
@@ -185,10 +185,11 @@ public class StylesheetBuilder {
 					xslEl = param;
 				} else if ("call-template".equals(elName) && elementStack.size() >= 2) //$NON-NLS-1$
 				{
-					currentCallTemplate = new CallTemplate(sf);
+					CallTemplate currentCallTemplate = new CallTemplate(sf);
+					callTemplates.push(currentCallTemplate);
 					sf.addCalledTemplate(currentCallTemplate);
 					xslEl = currentCallTemplate;
-				} else if ("with-param".equals(elName) && elementStack.size() >= 3 && currentCallTemplate != null) //$NON-NLS-1$
+				} else if ("with-param".equals(elName) && elementStack.size() >= 3 && callTemplates.size() > 0) //$NON-NLS-1$
 				{
 					Parameter param = new Parameter(sf);
 					// determine whether param has a value
@@ -200,6 +201,8 @@ public class StylesheetBuilder {
 							break;
 						}
 					}
+					// get the previous call-template
+					CallTemplate currentCallTemplate = callTemplates.peek();
 					currentCallTemplate.addParameter(param);
 					xslEl = param;
 				} else if ("variable".equals(elName) && elementStack.size() == 1) //$NON-NLS-1$
@@ -220,6 +223,8 @@ public class StylesheetBuilder {
 					recurse((Element) node);
 				}
 			}
+			if (xslEl instanceof CallTemplate)
+				callTemplates.pop();
 			elementStack.pop();
 			// currentTemplate = null;
 			// currentCallTemplate = null;
