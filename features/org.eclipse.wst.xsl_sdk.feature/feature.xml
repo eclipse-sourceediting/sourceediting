@@ -26,10 +26,6 @@
       <import feature="org.eclipse.wst.xml_ui.feature" version="3.0.0"/>
       <import feature="org.eclipse.jdt" version="3.4.0"/>
    </requires>
-   
-   <includes
-         id="org.eclipse.wst.xsl.feature.source"
-         version="0.0.0"/>
 
    <plugin
          id="org.eclipse.wst.xsl.core"
