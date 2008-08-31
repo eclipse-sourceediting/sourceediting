@@ -90,16 +90,10 @@ of problems processing the schema using various tools
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
 <xs:complexType name="generic-element-type" mixed="true">
-  <xs:attribute name="default-collation" type="xsl:uri-list"/>
-
-  <xs:attribute name="exclude-result-prefixes" type="xsl:prefix-list-or-all"/>
-  <xs:attribute name="extension-element-prefixes" type="xsl:prefix-list"/>
-  <xs:attribute name="use-when" type="xsl:expression"/>
-  <xs:attribute name="xpath-default-namespace" type="xs:anyURI"/>
   <xs:anyAttribute namespace="##other" processContents="skip"/>
 </xs:complexType>
 
-<xs:complexType name="versioned-element-type" mixed="true">
+<!-- <xs:complexType name="versioned-element-type" mixed="true">
   <xs:complexContent>
     <xs:extension base="xsl:generic-element-type">    
       <xs:attribute name="version" type="xs:decimal" use="optional"/>
@@ -107,10 +101,11 @@ of problems processing the schema using various tools
     </xs:extension>
   </xs:complexContent>
 </xs:complexType>
+-->
 
 <xs:complexType name="element-only-versioned-element-type" mixed="false">
   <xs:complexContent>
-    <xs:restriction base="xsl:versioned-element-type">
+    <xs:restriction base="xsl:generic-element-type">
       <xs:anyAttribute namespace="##other" processContents="skip"/>
     </xs:restriction>
   </xs:complexContent>
@@ -119,7 +114,7 @@ of problems processing the schema using various tools
 
 <xs:complexType name="sequence-constructor">
   <xs:complexContent mixed="true">
-    <xs:extension base="xsl:versioned-element-type">    
+    <xs:extension base="xsl:generic-element-type">    
       <xs:group ref="xsl:sequence-constructor-group" minOccurs="0" maxOccurs="unbounded"/>
     </xs:extension>
   </xs:complexContent>
@@ -136,7 +131,7 @@ of problems processing the schema using various tools
 
 <xs:element name="declaration" type="xsl:generic-element-type" abstract="true"/>
 
-<xs:element name="instruction" type="xsl:versioned-element-type" abstract="true"/>
+<xs:element name="instruction" type="xsl:generic-element-type" abstract="true"/>
 
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 <xs:annotation>
@@ -354,7 +349,7 @@ of problems processing the schema using various tools
   </xs:annotation>
   <xs:complexType>
     <xs:complexContent mixed="true">
-      <xs:extension base="xsl:versioned-element-type">
+      <xs:extension base="xsl:generic-element-type">
         <xs:attribute name="select" type="xsl:expression" use="required">
            <xs:annotation>
               <xs:documentation source="http://www.w3.org/TR/xslt">
@@ -524,7 +519,7 @@ of problems processing the schema using various tools
   </xs:annotation>
   <xs:complexType>
     <xs:complexContent mixed="true">
-      <xs:extension base="xsl:versioned-element-type">
+      <xs:extension base="xsl:generic-element-type">
         <xs:sequence>
           <xs:element ref="xsl:sort" minOccurs="0" maxOccurs="unbounded"/>
           <xs:group ref="xsl:sequence-constructor-group" minOccurs="0" maxOccurs="unbounded"/>
@@ -722,7 +717,7 @@ of problems processing the schema using various tools
 
   <xs:complexType>
     <xs:complexContent mixed="true">
-      <xs:extension base="xsl:versioned-element-type">
+      <xs:extension base="xsl:generic-element-type">
         <xs:attribute name="value" type="xsl:expression">
            <xs:annotation>
               <xs:documentation source="http://www.w3.org/TR/xslt">
@@ -1065,7 +1060,7 @@ of problems processing the schema using various tools
    </xs:annotation>
   <xs:complexType>
     <xs:complexContent mixed="true">
-      <xs:extension base="xsl:versioned-element-type">
+      <xs:extension base="xsl:generic-element-type">
         <xs:sequence>
           <xs:element ref="xsl:param" minOccurs="0" maxOccurs="unbounded"/>
           <xs:group ref="xsl:sequence-constructor-group" minOccurs="0" maxOccurs="unbounded"/>
@@ -1111,7 +1106,7 @@ of problems processing the schema using various tools
 
 <xs:complexType name="text-element-base-type">
   <xs:simpleContent>
-    <xs:restriction base="xsl:versioned-element-type">
+    <xs:restriction base="xsl:generic-element-type">
 
       <xs:simpleType>
         <xs:restriction base="xs:string"/>
@@ -1145,7 +1140,7 @@ of problems processing the schema using various tools
 
 <xs:complexType name="transform-element-base-type">
   <xs:complexContent>
-    <xs:restriction base="xsl:element-only-versioned-element-type">
+    <xs:extension base="xsl:element-only-versioned-element-type">
       <xs:attribute name="version" type="xs:decimal" use="required">
            <xs:annotation>
               <xs:documentation source="http://www.w3.org/TR/xslt">
@@ -1155,8 +1150,15 @@ of problems processing the schema using various tools
               </xs:documentation>
            </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="exclude-result-prefixes" type="xsl:prefixes" use="optional">
+      	<xs:annotation>
+      		<xs:documentation source="http:/www.w3.org/TR/xslt">
+      			Optional. A list of namespace prefixes to exclude from the result document.
+      		</xs:documentation>
+      	</xs:annotation>
+      </xs:attribute>
       <xs:anyAttribute namespace="##other" processContents="skip"/>
-    </xs:restriction>
+    </xs:extension>
   </xs:complexContent>
 </xs:complexType>
 
