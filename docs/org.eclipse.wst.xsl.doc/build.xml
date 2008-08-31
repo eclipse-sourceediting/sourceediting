@@ -8,13 +8,14 @@
 	<property name="docbooksource" value="${current-loc}/docbook"/>
 	<property name="xalan" value="org.apache.xalan.processor.TransformerFactoryImpl" />
 
-    <taskdef name="xinclude" classname="org.znerd.xincludetask.XIncludeTask" />
     
 	<!-- XSLT Chunking Properties -->
 	<property name="base.dir" value="${htmldir}"/>
 	
 	<target name="merge">
-		<xinclude in="${docbooksource}/xslhelp.dbk" out="${docbooksource}/xslhelpcombined.dbk"/>
+		<xsl.xinclude in="${docbooksource}/xslhelp.dbk"
+		              out="${docbooksource}/xslhelpcombined.dbk"
+		/>
 	</target>
 
 	<target name="create-doc" depends="merge">
