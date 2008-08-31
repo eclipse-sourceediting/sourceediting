@@ -11,44 +11,14 @@
   Contributors:
       David Carver - initial API and implementation
 
- $Id: plugin.xml,v 1.1 2008/04/22 21:07:33 dacarver Exp $
+ $Id: plugin.xml,v 1.2 2008/08/31 17:10:08 dacarver Exp $
 -->
 
 <plugin>
 
-  <extension point="org.eclipse.emf.ecore.generated_package">
-    <package 
-       uri = "org.eclipse.wst.xsl.core.internal.model" 
-       class = "org.eclipse.wst.xsl.core.internal.model.xpath.XPath.XPathPackage"
-       genModel = "models/XPath10.genmodel" /> 
-  </extension>
 
-  <extension point="org.eclipse.emf.ecore.generated_package">
-    <package 
-       uri = "org.eclipse.wst.xsl.core.internal.model.datatypes" 
-       class = "org.eclipse.wst.xsl.core.internal.model.xpath.XPath.DataTypes.DataTypesPackage"
-       genModel = "models/XPath10.genmodel" /> 
-  </extension>
 
-  <extension point="org.eclipse.emf.ecore.generated_package">
-    <package 
-       uri = "org.eclipse.wst.xsl.core.internal.model.functions" 
-       class = "org.eclipse.wst.xsl.core.internal.model.xpath.XPath.Function.FunctionPackage"
-       genModel = "models/XPath10.genmodel" /> 
-  </extension>
 
-  <extension point="org.eclipse.emf.ecore.generated_package">
-    <package 
-       uri = "org.eclipse.wst.xsl.core.internal.model.keywords" 
-       class = "org.eclipse.wst.xsl.core.internal.model.xpath.XPath.Keywords.KeywordsPackage"
-       genModel = "models/XPath10.genmodel" /> 
-  </extension>
 
-  <extension point="org.eclipse.emf.ecore.generated_package">
-    <package 
-       uri = "org.eclipse.wst.xsl.core.internal.model.axis" 
-       class = "org.eclipse.wst.xsl.core.internal.model.xpath.XPath.Axis.AxisPackage"
-       genModel = "models/XPath10.genmodel" /> 
-  </extension>
 
 </plugin>
