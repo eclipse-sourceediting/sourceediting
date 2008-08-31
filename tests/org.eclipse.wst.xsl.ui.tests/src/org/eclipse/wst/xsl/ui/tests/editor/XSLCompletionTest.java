@@ -194,9 +194,9 @@ public class XSLCompletionTest extends UnzippedProjectTester {
     	ICompletionProposal[] proposals = getProposals(1753);
     	assertTrue(proposals.length >= 1);
     	ICompletionProposal proposal = proposals[0];
-    	assertEquals("Wrong attribute proposal returned:", "default-collation", proposal.getDisplayString());
+    	assertTrue("Wrong attribute proposal returned:", proposal.getDisplayString().contains("disable-output-escaping"));
     }
-
+    
     public void testXSLElementProposalsAvailable() throws Exception {
     	ICompletionProposal[] proposals = getProposals(1569);
     	assertTrue(proposals.length >= 2);
