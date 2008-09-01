@@ -156,6 +156,7 @@ public class XSLCompletionTest extends UnzippedProjectTester {
 	private ICompletionProposal[] getProposals(int offset) throws Exception {
     	return new XSLContentAssistProcessor().computeCompletionProposals(sourceViewer, offset); 
 	}
+		
 	
 	public void testGetNodeAtLine15() throws Exception {
 		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer, 631);
@@ -174,21 +175,31 @@ public class XSLCompletionTest extends UnzippedProjectTester {
 	}
     
     public void testSelectAttributeProposalsAvailable() throws Exception {
+    	int offset = sourceViewer.getDocument().getLineOffset(18) + 44;
+    	String s = sourceViewer.getDocument().get(offset-1, 6 );
+    	assertEquals("number",s);
+
     	
-    	ICompletionProposal[] proposals = getProposals(838); 
+    	ICompletionProposal[] proposals = getProposals(838);
+    	
     	assertTrue(proposals.length > 1);
     	ICompletionProposal proposal = proposals[3];
     	assertEquals("Wrong select item returned: ", "..", proposal.getDisplayString());
     }
  
-// Temporarily commented out for further investigation.  Important that his test remain commented out for now.  
-//    public void testSelectAttributeProposalsNarrow() throws Exception {
-//    	int offset = sourceViewer.getDocument().getLineOffset(18) + 44;
-//    	String s = sourceViewer.getDocument().get(offset-9,9);
-//    	assertEquals("select=\"n",s);
-//    	ICompletionProposal[] proposals = getProposals(offset); 
-//    	assertEquals(6,proposals.length);
-//    }
+    /**
+     * Bug 240170
+     * @throws Exception
+     */
+    public void testSelectAttributeProposalsNarrow() throws Exception {
+    	int offset = sourceViewer.getDocument().getLineOffset(18) + 44;
+    	String s = sourceViewer.getDocument().get(offset-9,9);
+    	assertEquals("select=\"n",s);
+    	
+    	ICompletionProposal[] proposals = getProposals(offset);
+    	assertEquals("Wrong xpath item returned: ", "name(node-set)", proposals[0].getDisplayString());
+    	assertEquals(6,proposals.length);
+    }
 
     public void testTestAttributeProposalsAvailable() throws Exception {
     	ICompletionProposal[] proposals = getProposals(1753);
