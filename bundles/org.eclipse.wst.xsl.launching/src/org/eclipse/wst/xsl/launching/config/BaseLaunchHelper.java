@@ -26,6 +26,7 @@ import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
+import org.eclipse.wst.xsl.launching.XSLTRuntime;
 
 public class BaseLaunchHelper
 {
@@ -127,15 +128,13 @@ public class BaseLaunchHelper
 		boolean useDefaultOutputFile = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_OUTPUT_FILE, true);
 		if (!useDefaultOutputFile)
 		{
-			String outputFileExpr = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FILE, (String) null);
-			outputFile = getSubstitutedPath(outputFileExpr);
+			String outputFileName = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FILENAME, (String) null);
+			String outputFolderExpr = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FOLDER, (String) null);
+			outputFile = getSubstitutedPath(outputFolderExpr).append(outputFileName);
 		}
 		else
 		{
-			// TODO: where is the default output file? And must share this with
-			// the value displayed in the UI.
-			outputFile = (IPath) hydrateSourceFile(configuration);
-			outputFile = outputFile.addFileExtension("out").addFileExtension("xml"); //$NON-NLS-1$ //$NON-NLS-2$
+			outputFile = XSLTRuntime.defaultOutputFileForInputFile(configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, (String) null));
 		}
 		return outputFile.toFile();
 	}

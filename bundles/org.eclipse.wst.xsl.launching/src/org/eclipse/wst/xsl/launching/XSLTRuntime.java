@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.launching;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
 
 public class XSLTRuntime
@@ -28,6 +32,15 @@ public class XSLTRuntime
 	private static Preferences getPreferences()
 	{
 		return LaunchingPlugin.getDefault().getPluginPreferences();
+	}
+
+	public static IPath defaultOutputFileForInputFile(String inputFileExpression) throws CoreException
+	{
+		String file = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(inputFileExpression);
+		IPath inputFilePath = new Path(file);
+		inputFilePath = inputFilePath.removeFileExtension();
+		inputFilePath = inputFilePath.addFileExtension("out.xml");
+		return inputFilePath;
 	}
 
 }

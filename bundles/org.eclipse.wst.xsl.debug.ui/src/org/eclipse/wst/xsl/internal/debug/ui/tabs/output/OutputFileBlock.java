@@ -10,12 +10,14 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.tabs.output;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -23,30 +25,25 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.xsl.internal.debug.ui.ResourceSelectionBlock;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
+import org.eclipse.wst.xsl.launching.XSLTRuntime;
 
 public class OutputFileBlock extends ResourceSelectionBlock
 {
-	public static final String OUTPUT_METHOD_DEFAULT = "<Default>"; //$NON-NLS-1$
-	public static final String OUTPUT_METHOD_XML = "xml"; //$NON-NLS-1$
-	public static final String OUTPUT_METHOD_XHTML = "xhtml"; //$NON-NLS-1$
-	public static final String OUTPUT_METHOD_HTML = "html"; //$NON-NLS-1$
-	public static final String OUTPUT_METHOD_TEXT = "text"; //$NON-NLS-1$
-
-	public static final String[] OUTPUT_METHODS = new String[]
-	{ OUTPUT_METHOD_DEFAULT, OUTPUT_METHOD_XML, OUTPUT_METHOD_XHTML, OUTPUT_METHOD_HTML, OUTPUT_METHOD_TEXT };
 	private Button openFileCheckButton;
-	// private ComboViewer formatViewer;
-	// private Combo formatCombo;
-	private ComboViewer methodViewer;
-	private String inputFilename;
 	private Button formatFileCheckButton;
+	private String inputFilename;
+	private Text fileNameText;
+	private String defaultOutputFileName;
+	private String outputFileName;
 
 	public OutputFileBlock()
 	{
-		super(IResource.FILE, true, true, false);
+		super(IResource.FOLDER, true, true, false);
 	}
 
 	@Override
@@ -83,31 +80,54 @@ public class OutputFileBlock extends ResourceSelectionBlock
 	@Override
 	protected void setDefaultResource()
 	{}
-
+	
 	@Override
-	protected void createContents(Composite parent)
+	protected void createCheckboxAndText(Composite parent)
 	{
-		// Composite comp = new Composite(parent,SWT.NONE);
-		// GridData gd = new GridData(SWT.FILL,SWT.FILL,true,false);
-		// gd.horizontalSpan = 2;
-		// comp.setLayoutData(gd);
-		// GridLayout layout = new GridLayout(2,true);
-		// layout.marginHeight = 0;
-		// layout.marginWidth = 0;
-		// comp.setLayout(layout);
+		if (showDefault)
+		{
+			useDefaultCheckButton = createCheckButton(parent, getMessage(USE_DEFAULT_RADIO));
+			GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+			gd.horizontalSpan = 2;
+			useDefaultCheckButton.setLayoutData(gd);
+			useDefaultCheckButton.addSelectionListener(widgetListener);
+		}
 
-		// createMethodCombo(comp);
-		// createFormatCombo(comp);
+		Composite specificFileComp = new Composite(parent, SWT.NONE);
+		GridLayout layout = new GridLayout(2, false);
+		layout.marginWidth = 0;
+		if (showDefault)
+			layout.marginLeft = 20;
+		else
+			layout.marginLeft = 0;
+		layout.marginHeight = 0;
+		specificFileComp.setLayout(layout);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 2;
+		specificFileComp.setLayoutData(gd);
 
-		// methodViewer.setInput("");
-		// formatViewer.setInput("");
+		Label label = new Label(specificFileComp, SWT.NONE);
+		label.setText("Filename");
 
-		// methodViewer.setSelection(new StructuredSelection("xml"), true);
-		// formatViewer.setSelection(new StructuredSelection("<none>"), true);
+		fileNameText = new Text(specificFileComp, SWT.SINGLE | SWT.BORDER);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = showDefault ? 1 : 2;
+		fileNameText.setLayoutData(gd);
+		fileNameText.setFont(parent.getFont());
+		fileNameText.addModifyListener(widgetListener);
 
-		fileLabel = Messages.OutputFileBlock_7;
-		createCheckboxAndText(parent);
-		createButtons(parent);
+		if (showDefault)
+		{
+			label = new Label(specificFileComp, SWT.NONE);
+			label.setText(Messages.OutputFileBlock_7);
+		}
+
+		resourceText = new Text(specificFileComp, SWT.SINGLE | SWT.BORDER);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = showDefault ? 1 : 2;
+		resourceText.setLayoutData(gd);
+		resourceText.setFont(parent.getFont());
+		resourceText.addModifyListener(widgetListener);
 	}
 
 	@Override
@@ -191,20 +211,14 @@ public class OutputFileBlock extends ResourceSelectionBlock
 	{
 		try
 		{
-			// String outputMethod = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_METHOD, OUTPUT_METHODS[0]);
-			// methodViewer.setSelection(new StructuredSelection(outputMethod),
-			// true);
-
 			inputFilename = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, ""); //$NON-NLS-1$
-			// String renderTo =
-			// configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_RENDER_TO,
-			// "");
 			updateDefaultOutputFile();
 
 			boolean useDefault = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_OUTPUT_FILE, true);
 			useDefaultCheckButton.setSelection(useDefault);
 
-			outputFile = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FILE, defaultOutputFile);
+			outputFileName = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FILENAME, defaultOutputFileName);
+			resource = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FOLDER, defaultResource);
 
 			updateResourceText(useDefault);
 
@@ -226,14 +240,10 @@ public class OutputFileBlock extends ResourceSelectionBlock
 		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_OUTPUT_FILE, useDefault);
 
 		String outputFile = resourceText.getText();
-		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FILE, outputFile);
+		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FOLDER, outputFile);
 
-		// String outputMethod =
-		// (String)((IStructuredSelection)methodViewer.getSelection()).getFirstElement();
-		// outputMethod = outputMethod == OUTPUT_METHODS[0] ? null :
-		// outputMethod;
-		// configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_METHOD,
-		// outputMethod);
+		String outputFileName = fileNameText.getText();
+		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FILENAME, outputFileName);
 
 		boolean openFileOnCompletion = openFileCheckButton.getSelection();
 		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OPEN_FILE, openFileOnCompletion);
@@ -245,29 +255,45 @@ public class OutputFileBlock extends ResourceSelectionBlock
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
 	{
 		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_USE_DEFAULT_OUTPUT_FILE, true);
-		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FILE, (String)null);
+		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FOLDER, (String)null);
+		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OUTPUT_FILENAME, (String)null);
 		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_OPEN_FILE, true);
 		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_FORMAT_FILE, false);
+	}
+	
+	protected void updateResourceText(boolean useDefault)
+	{
+		fileNameText.setEnabled(!useDefault);
+		if (useDefault)
+			fileNameText.setText(defaultOutputFileName == null ? "" : defaultOutputFileName); //$NON-NLS-1$
+		else
+			fileNameText.setText(outputFileName == null ? defaultOutputFileName : outputFileName); //$NON-NLS-1$
+		super.updateResourceText(useDefault);
 	}
 
 	private void updateDefaultOutputFile()
 	{
-		String method = OUTPUT_METHOD_XML;
-		if (methodViewer != null)
-			method = (String) ((IStructuredSelection) methodViewer.getSelection()).getFirstElement();
-		if (OUTPUT_METHOD_DEFAULT.equals(method))
-			method = OUTPUT_METHOD_XML;
-
-		String file = inputFilename;
-		int index = inputFilename.lastIndexOf('.');
-		if (index != -1)
-			file = inputFilename.substring(0, index);
-		file += ".out." + method; //$NON-NLS-1$
-		if (inputFilename.trim().endsWith("}")) //$NON-NLS-1$
-			file += "}"; //$NON-NLS-1$
-
-		defaultOutputFile = file;
-
-		// updateResourceText(openFileCheckButton.getSelection());
+		try
+		{
+			IPath path = XSLTRuntime.defaultOutputFileForInputFile(inputFilename);
+			// determine whether this path exists in the workspace
+			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(path);
+			if (files.length > 0)
+			{// inside workspace
+				IPath p = new Path(files[0].getProject().getName());
+				p.append(files[0].getParent().getProjectRelativePath());
+				defaultResource = "${workspace_loc:/"+p.toString()+"}";
+			}
+			else
+			{// outside workspace
+				IPath p = path.removeLastSegments(1);
+				defaultResource = p.toOSString();
+			}
+			defaultOutputFileName = path.lastSegment();
+		}
+		catch (CoreException e)
+		{
+			// do nothing			
+		}
 	}
 }

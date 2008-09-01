@@ -205,11 +205,20 @@ public class StylesheetBuilder {
 					CallTemplate currentCallTemplate = callTemplates.peek();
 					currentCallTemplate.addParameter(param);
 					xslEl = param;
-				} else if ("variable".equals(elName) && elementStack.size() == 1) //$NON-NLS-1$
+				} else if ("variable".equals(elName)) //$NON-NLS-1$
 				{
-					Variable var = new Variable(sf);
-					sf.addGlobalVariable(var);
-					xslEl = var;
+					if (elementStack.size() == 1)
+					{// global variable
+						Variable var = new Variable(sf);
+						sf.addGlobalVariable(var);
+						xslEl = var;
+					}
+					else if (elementStack.size() > 2 && currentTemplate != null)
+					{// local variable
+						Variable var = new Variable(sf);
+						currentTemplate.addVariable(var);
+						xslEl = var;
+					}
 				} else {
 					xslEl = new XSLElement(sf);
 				}

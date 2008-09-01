@@ -14,7 +14,6 @@ import java.io.File;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -82,8 +81,8 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 	private final int resourceType;
 	private final boolean mustExist;
 	protected boolean required;
-	protected String defaultOutputFile;
-	protected String outputFile;
+	protected String defaultResource;
+	protected String resource;
 	protected String fileLabel = Messages.getString("ResourceSelectionBlock.0"); //$NON-NLS-1$
 
 	private final ISelectionStatusValidator validator = new ISelectionStatusValidator()
@@ -96,7 +95,7 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 			}
 			for (int i = 0; i < selection.length; i++)
 			{
-				if (resourceType == IResource.FOLDER && !(selection[i] instanceof IFolder))
+				if (resourceType == IResource.FOLDER && !(selection[i] instanceof IContainer))
 					return new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null);  //$NON-NLS-1$
 				else if (resourceType == IResource.FILE && !(selection[i] instanceof IFile))
 					return new Status(IStatus.ERROR, XSLDebugUIPlugin.PLUGIN_ID, 0, "", null);  //$NON-NLS-1$
@@ -289,11 +288,11 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 	{
 		if (useDefault)
 		{
-			resourceText.setText(defaultOutputFile == null ? "" : defaultOutputFile); //$NON-NLS-1$
+			resourceText.setText(defaultResource == null ? "" : defaultResource); //$NON-NLS-1$
 		}
 		else
 		{
-			resourceText.setText(outputFile == null ? "" : outputFile); //$NON-NLS-1$
+			resourceText.setText(resource == null ? "" : resource); //$NON-NLS-1$
 		}
 		resourceText.setEnabled(!useDefault);
 		fFileSystemButton.setEnabled(!useDefault);
