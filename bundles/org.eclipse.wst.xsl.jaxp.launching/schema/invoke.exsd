@@ -73,14 +73,6 @@
       </complexType>
    </element>
 
-   <annotation>
-      <appinfo>
-         <meta.section type="since"/>
-      </appinfo>
-      <documentation>
-         &lt;b&gt;This extension point is internal and should not be used by any other plugins.&lt;/b&gt;
-      </documentation>
-   </annotation>
 
 
 

@@ -52,19 +52,22 @@
          <appinfo>
             <meta.element labelAttribute="label"/>
          </appinfo>
+         <documentation>
+            An instance of a JAXP-compliant XSLT processor
+         </documentation>
       </annotation>
       <complexType>
          <attribute name="id" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  A unique id for this processor instance
                </documentation>
             </annotation>
          </attribute>
          <attribute name="label" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  A label for this instance to be displayed in the UI
                </documentation>
                <appinfo>
                   <meta.attribute translatable="true"/>
@@ -74,21 +77,21 @@
          <attribute name="processorTypeId" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The id for the processor type
                </documentation>
             </annotation>
          </attribute>
          <attribute name="classpath" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  The classpath to use when this processor is launched
                </documentation>
             </annotation>
          </attribute>
          <attribute name="debuggerId" type="string">
             <annotation>
                <documentation>
-                  
+                  The id of a debugger to associate with the processor
                </documentation>
             </annotation>
          </attribute>
@@ -110,11 +113,13 @@
       <documentation>
          &lt;pre&gt;
    &lt;extension
-         point=&quot;org.eclipse.wst.xsl.launching.processor&quot;&gt;
+         point=&quot;org.eclipse.wst.xsl.jaxp.launching.processor&quot;&gt;
+      &lt;!-- An adopter can specify the ${eclipse_orbit: } variable to indicate which eclipse
+           bundle should be added to the class path. --&gt;
       &lt;processor
-            classpath=&quot;xalan2.7.0.jar;serializer2.7.0.jar&quot;
-            id=&quot;org.eclipse.wst.xsl.launching.xalan.2_7_0&quot;
-            label=&quot;Xalan 2.7.0&quot;
+      classpath=&quot;${eclipse_orbit:org.apache.xalan};${eclipse_orbit:org.apache.xml.serializer};${eclipse_orbit:org.apache.bcel};${eclipse_orbit:java_cup.runtime}&quot;
+            id=&quot;org.eclipse.wst.xsl.launching.xalan.processor&quot;
+            label=&quot;%processor.label.1&quot;
             processorTypeId=&quot;org.eclipse.wst.xsl.xalan.processorType&quot;
             debuggerId=&quot;org.eclipse.wst.xsl.xalan.debugger&quot;
             supports=&quot;1.0&quot;&gt;
