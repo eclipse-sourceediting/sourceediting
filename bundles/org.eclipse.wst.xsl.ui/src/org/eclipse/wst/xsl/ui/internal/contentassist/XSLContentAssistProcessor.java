@@ -9,44 +9,33 @@
  *     David Carver - STAR - bug 213849 - initial API and implementation
  *     David Carver - STAR - bug 230958 - refactored to fix bug with getting
  *                                        the DOM Document for the current editor
+ *     David Carver - STAR - bug 240170 - refactored code to help with narrowing of
+ *                                        results and easier maintenance.
  *     
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.transform.TransformerException;
-
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
+import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.jface.text.contentassist.IContextInformationValidator;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
-import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
+import org.eclipse.wst.xml.ui.internal.contentassist.AbstractContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
-import org.eclipse.wst.xml.xpath.core.internal.parser.XPathParser;
-import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
-import org.eclipse.wst.xml.xpath.ui.internal.contentassist.XPathTemplateCompletionProcessor;
-import org.eclipse.wst.xml.xpath.ui.internal.templates.TemplateContextTypeIdsXPath;
 import org.eclipse.wst.xsl.core.XSLCore;
-import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
-import org.eclipse.wst.xsl.core.internal.util.StructuredDocumentUtil;
-import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
-import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper;
-import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages;
-import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * The XSL Content Assist Processor provides content assistance for various
@@ -55,11 +44,11 @@ import org.w3c.dom.NodeList;
  * 
  * @author David Carver
  * 
- *
+ * 
  * 
  */
-public class XSLContentAssistProcessor extends XMLContentAssistProcessor
-		implements IPropertyChangeListener {
+public class XSLContentAssistProcessor implements IContentAssistProcessor,
+		IReleasable {
 
 	private static final String ATTR_SELECT = "select"; //$NON-NLS-1$
 	private static final String ATTR_TEST = "test"; //$NON-NLS-1$
@@ -67,26 +56,9 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 	/**
 	 * Retrieve all global variables in the stylesheet.
 	 */
-	private static final String XPATH_GLOBAL_VARIABLES = "/xsl:stylesheet/xsl:variable"; //$NON-NLS-1$
 
-	/**
-	 * Retrieve all global parameters in the stylesheet.
-	 */
-	private static final String XPATH_GLOBAL_PARAMS = "/xsl:stylesheet/xsl:param"; //$NON-NLS-1$
-
-	/**
-	 * Limit selection of variables to those that are in the local scope.
-	 */
-	private static final String XPATH_LOCAL_VARIABLES = "ancestor::xsl:template/descendant::xsl:variable"; //$NON-NLS-1$
-
-	/**
-	 * Limit selection of params to those that are in the local scope.
-	 */
-	private static final String XPATH_LOCAL_PARAMS = "ancestor::xsl:template/descendant::xsl:param"; //$NON-NLS-1$
-
-	private XPathTemplateCompletionProcessor fTemplateProcessor = null;
-	private List<String> fTemplateContexts = new ArrayList<String>();
-	private static final byte[] XPATH_LOCK = new byte[0];
+	private String errorMessage = "";
+	private ITextViewer textViewer = null;
 
 	/**
 	 * The XSL Content Assist Processor handles XSL specific functionality for
@@ -97,196 +69,85 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 	public XSLContentAssistProcessor() {
 		super();
 	}
-	
-	
-	
+
 	/**
-	 * TODO: Add Javadoc
+	 * CONTENT ASSIST STARTS HERE
+	 * 
+	 * Return a list of proposed code completions based on the specified
+	 * location within the document that corresponds to the current cursor
+	 * position within the text-editor control.
 	 * 
 	 * @param textViewer
 	 * @param documentPosition
-	 * @return
+	 *            - the cursor location within the document
 	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractContentAssistProcessor#
-	 * 	computeCompletionProposals(org.eclipse.jface.text.ITextViewer, int)
+	 *            an array of ICompletionProposals
 	 */
-	@Override
 	public ICompletionProposal[] computeCompletionProposals(
 			ITextViewer textViewer, int documentPosition) {
-		fTemplateContexts.clear();
-		return super.computeCompletionProposals(textViewer, documentPosition);
+		setErrorMessage(null);
+		ContentAssistRequest contentAssistRequest = null;
+
+		this.textViewer = textViewer;
+
+		IndexedRegion treeNode = ContentAssistUtils.getNodeAt(textViewer,
+				documentPosition);
+
+		Node node = (Node) treeNode;
+		while ((node != null) && (node.getNodeType() == Node.TEXT_NODE)
+				&& (node.getParentNode() != null)) {
+			node = node.getParentNode();
+		}
+		IDOMNode xmlNode = (IDOMNode) node;
+		IStructuredDocumentRegion sdRegion = getStructuredDocumentRegion(documentPosition);
+		ITextRegion completionRegion = getCompletionRegion(documentPosition,
+				node);
+
+		AbstractContentAssistProcessor processor = new XMLContentAssistProcessor();
+
+		ICompletionProposal proposals[] = processor.computeCompletionProposals(
+				textViewer, documentPosition);
+
+		String matchString = getXPathMatchString(sdRegion, completionRegion,
+				documentPosition);
+
+		if (XSLCore.isXSLNamespace(xmlNode)) {
+			proposals = getXSLProposals(textViewer, documentPosition, xmlNode,
+					sdRegion, completionRegion, proposals, matchString);
+		}
+		return proposals;
 	}
-	
+
+	protected ICompletionProposal[] getXSLProposals(ITextViewer textViewer,
+			int documentPosition, IDOMNode xmlNode,
+			IStructuredDocumentRegion sdRegion, ITextRegion completionRegion,
+			ICompletionProposal[] proposals, String matchString) {
+		ContentAssistRequest contentAssistRequest;
+		if (this.hasAttributeAtTextRegion(ATTR_SELECT, xmlNode.getAttributes(), completionRegion)) {
+			contentAssistRequest = new SelectAttributeContentAssist(
+					xmlNode, xmlNode.getParentNode(), sdRegion,
+					completionRegion, documentPosition, 0, matchString,
+					textViewer);
+		 proposals = contentAssistRequest.getCompletionProposals();
+		} 
+		if (this.hasAttributeAtTextRegion(ATTR_TEST, xmlNode.getAttributes(), completionRegion)) {
+			contentAssistRequest = new TestAttributeContentAssist(
+					xmlNode, xmlNode.getParentNode(), sdRegion,
+					completionRegion, documentPosition, 0, matchString,
+					textViewer);
+			proposals = contentAssistRequest.getCompletionProposals();
+		}
+		return proposals;
+	}
 
 	/**
-	 * Adds Attribute proposals based on the element and the attribute where the
-	 * content proposal was instantiated.
+	 * StructuredTextViewer must be set before using this.
 	 * 
-	 * @param contentAssistRequest
-	 * 		Content Assist Request that initiated the proposal request
-	 * 
+	 * @param pos
+	 * @return
 	 */
-	@Override
-	protected void addAttributeValueProposals(ContentAssistRequest contentAssistRequest) {
-		super.addAttributeValueProposals(contentAssistRequest);
-
-		String attributeName = getAttributeName(contentAssistRequest);
-		Element rootElement = contentAssistRequest.getNode().getOwnerDocument().getDocumentElement();
-
-		if (attributeName != null) {
-			int offset = contentAssistRequest.getReplacementBeginPosition() + 1;
-
-			addAttributeValueOfProposals(contentAssistRequest, contentAssistRequest.getNode().getNamespaceURI(), rootElement, offset);
-
-			if (XSLCore.isXSLNamespace((IDOMNode)contentAssistRequest.getNode())) {
-				addSelectAndTestProposals(contentAssistRequest, attributeName, rootElement, offset);
-				addMatchProposals(contentAssistRequest, attributeName,	offset);
-			}
-		}
-	}
-
-	private void addMatchProposals(ContentAssistRequest contentAssistRequest, String attributeName, int offset) {
-		if (attributeName.equals(ATTR_MATCH)) {
-			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.AXIS, offset);
-			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.XPATH, offset);
-			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.CUSTOM, offset);
-		}
-	}
-
-	private void addSelectAndTestProposals(
-			ContentAssistRequest contentAssistRequest, String attributeName, Element rootElement, int offset) {
-		if (attributeName.equals(ATTR_SELECT) || attributeName.equals(ATTR_TEST)) {
-			addGlobalProposals(rootElement, contentAssistRequest, offset);
-			addLocalProposals(contentAssistRequest.getNode(), contentAssistRequest, offset);
-			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.AXIS, offset);
-			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.XPATH, offset);
-			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.CUSTOM, offset);
-			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.OPERATOR, offset);
-		}
-	}
-
-	private void addAttributeValueOfProposals(
-			ContentAssistRequest contentAssistRequest, String namespace, Element rootElement, int offset) {
-		if (contentAssistRequest.getMatchString().contains("{")) {
-			addGlobalProposals(rootElement, contentAssistRequest, contentAssistRequest.getReplacementBeginPosition());
-			addLocalProposals(contentAssistRequest.getNode(), contentAssistRequest,
-					          contentAssistRequest.getReplacementBeginPosition());
-			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.AXIS, offset);
-			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.XPATH, offset);
-			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.CUSTOM, offset);
-			addTemplates(contentAssistRequest, TemplateContextTypeIdsXPath.OPERATOR, offset);
-		}
-	}
-
-	private void addLocalProposals(Node xpathnode,
-			ContentAssistRequest contentAssistRequest, int offset) {
-		addVariablesProposals(XPATH_LOCAL_VARIABLES, xpathnode,
-				contentAssistRequest, offset);
-		addVariablesProposals(XPATH_LOCAL_PARAMS, xpathnode,
-				contentAssistRequest, offset);
-	}
-
-	private void addGlobalProposals(Node xpathnode,
-			ContentAssistRequest contentAssistRequest, int offset) {
-		addVariablesProposals(XPATH_GLOBAL_VARIABLES, xpathnode,
-				contentAssistRequest, offset);
-		addVariablesProposals(XPATH_GLOBAL_PARAMS, xpathnode,
-				contentAssistRequest, offset);
-	}
-
-	/**
-	 * Adds Parameter and Variables as proposals. This
-	 * information is selected based on the XPath statement that is sent to it
-	 * and the input Node passed. It uses a custom composer to XSL Variable
-	 * proposal.
-	 * 
-	 * @param xpath
-	 * @param xpathnode
-	 * @param contentAssistRequest
-	 * @param offset
-	 */
-	private void addVariablesProposals(String xpath, Node xpathnode,
-			ContentAssistRequest contentAssistRequest, int offset) {
-		synchronized (XPATH_LOCK) {
-			try {
-				NodeList nodes = XSLTXPathHelper.selectNodeList(xpathnode, xpath);
-				int startLength = getCursorPosition() - offset;
-
-				if (hasNodes(nodes)) {
-					for (int nodecnt = 0; nodecnt < nodes.getLength(); nodecnt++) {
-						Node node = nodes.item(nodecnt);
-						String variableName = "$" + node.getAttributes().getNamedItem("name").getNodeValue(); //$NON-NLS-1$ //$NON-NLS-2$
-
-						CustomCompletionProposal proposal = new CustomCompletionProposal(
-								variableName, offset, 0, startLength + variableName.length(),
-								XSLPluginImageHelper.getInstance().getImage(XSLPluginImages.IMG_VARIABLES),
-								variableName, null, null, 0);
-						contentAssistRequest.addProposal(proposal);
-					}
-				}
-
-			} catch (TransformerException ex) {
-				XSLUIPlugin.log(ex);
-			}
-		}
-	}
-
-	/**
-	 * Checks to make sure that the NodeList has data
-	 * @param nodes A NodeList object
-	 * @return True if has data, false if empty
-	 */
-	private boolean hasNodes(NodeList nodes) {
-		return nodes != null && nodes.getLength() > 0;
-	}
-
-	/**
-	 * Get the cursor position within the Text Viewer
-	 * @return An int value containing the cursor position
-	 */
-	private int getCursorPosition() {
-		return fTextViewer.getTextWidget().getCaretOffset();
-	}
-
-	/**
-	 * Adds XPath related templates to the list of proposals
-	 * 
-	 * @param contentAssistRequest
-	 * @param context
-	 * @param startOffset
-	 */
-	private void addTemplates(ContentAssistRequest contentAssistRequest,
-			String context, int startOffset) {
-		if (contentAssistRequest == null) {
-			return;
-		}
-
-		// if already adding template proposals for a certain context type, do
-		// not add again
-		if (!fTemplateContexts.contains(context)) {
-			fTemplateContexts.add(context);
-			boolean useProposalList = !contentAssistRequest.shouldSeparate();
-
-			if (getTemplateCompletionProcessor() != null) {
-				getTemplateCompletionProcessor().setContextType(context);
-				ICompletionProposal[] proposals = getTemplateCompletionProcessor()
-						.computeCompletionProposals(fTextViewer, startOffset);
-				for (int i = 0; i < proposals.length; ++i) {
-					if (useProposalList) {
-						contentAssistRequest.addProposal(proposals[i]);
-					} else {
-						contentAssistRequest.addMacro(proposals[i]);
-					}
-				}
-			}
-		}
-	}
-
-	private XPathTemplateCompletionProcessor getTemplateCompletionProcessor() {
-		if (fTemplateProcessor == null) {
-			fTemplateProcessor = new XPathTemplateCompletionProcessor();
-		}
-		return fTemplateProcessor;
+	public IStructuredDocumentRegion getStructuredDocumentRegion(int pos) {
+		return ContentAssistUtils.getStructuredDocumentRegion(textViewer, pos);
 	}
 
 	/**
@@ -295,10 +156,11 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 	 * @param contentAssistRequest
 	 * @return
 	 */
-	private String getAttributeName(ContentAssistRequest contentAssistRequest) {
-		IStructuredDocumentRegion open = ((IDOMNode)contentAssistRequest.getNode()).getFirstStructuredDocumentRegion();
+	private String getAttributeName(IDOMNode xmlNode, ITextRegion region) {
+		IStructuredDocumentRegion open = xmlNode
+				.getFirstStructuredDocumentRegion();
 		ITextRegionList openRegions = open.getRegions();
-		int i = openRegions.indexOf(contentAssistRequest.getRegion());
+		int i = openRegions.indexOf(region);
 		if (i >= 0) {
 
 			ITextRegion nameRegion = null;
@@ -316,77 +178,259 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 	}
 
 	/**
-	 * Get the Match String.  This is typically the string-before the current
-	 * offset position.   For a standard XML Region this is calculated from the
-	 * beginning of the region (i.e. element, attribute, attribute value, etc.
-	 * For XSL, an additional check has to be made to determine if we are parsing
-	 * within an XPath region and where we are in the XPath region, as different
-	 * content assistance can be made available depending on where we are at.  This
-	 * primarily affects TEST, and SELECT attributes.
-	 * @param parent
-	 * @param aRegion
-	 * @param offset
-	 * @return
+	 * Return the region whose content's require completion. This is something
+	 * of a misnomer as sometimes the user wants to be prompted for contents of
+	 * a non-existant ITextRegion, such as for enumerated attribute values
+	 * following an '=' sign.
+	 * 
+	 * Copied from AbstractContentAssist Processor.
 	 */
-	@Override
-	protected String getMatchString(IStructuredDocumentRegion parent, ITextRegion aRegion, int offset) {
-		String emptyString = "";
-
-		if (isMatchStringEmpty(parent, aRegion, offset)) {
-			return emptyString; //$NON-NLS-1$
-		}
-		
-		IDOMNode currentNode = (IDOMNode) ContentAssistUtils.getNodeAt(super.fTextViewer, offset);
-		
-		IDOMAttr attributeNode = isXPathRegion(currentNode, aRegion, offset);
-		if (attributeNode != null) {
-			String temp = extractXPathMatchString(attributeNode, aRegion, offset);
-			return temp;
-		}
-		
-				
-		if (hasXMLMatchString(parent, aRegion, offset)) {
-			return extractXMLMatchString(parent, aRegion, offset);
-		}
-		// This is here for saftey reasons.
-		return emptyString;
-	}
-	
-	protected String extractXPathMatchString(IDOMAttr node, ITextRegion aRegion, int offset) {
-		if (node.getValue().length() == 0)	return "";
-		
-		int nodeOffset = node.getValueRegionStartOffset();
-		int column = offset - node.getValueRegionStartOffset();
-		XPathParser parser = new XPathParser(node.getValue());
-		int tokenStart = parser.getTokenStartOffset(1, column);
-		
-		if (tokenStart == column) {
-			return "";
-		}
-		
-		return node.getValue().substring(tokenStart - 1, column - 1);
-	}
-	
-	protected IDOMAttr isXPathRegion(IDOMNode currentNode, ITextRegion aRegion, int offset) {
-		if (XSLCore.isXSLNamespace(currentNode)) {
-			return getXPathNode(currentNode, aRegion);
+	protected ITextRegion getCompletionRegion(int documentPosition, Node domnode) {
+		if (domnode == null) {
+			return null;
 		}
 
+		ITextRegion region = null;
+		int offset = documentPosition;
+		IStructuredDocumentRegion flatNode = null;
+		IDOMNode node = (IDOMNode) domnode;
+
+		if (node.getNodeType() == Node.DOCUMENT_NODE) {
+			if (node.getStructuredDocument().getLength() == 0) {
+				return null;
+			}
+			ITextRegion result = node.getStructuredDocument()
+					.getRegionAtCharacterOffset(offset)
+					.getRegionAtCharacterOffset(offset);
+			while (result == null) {
+				offset--;
+				result = node.getStructuredDocument()
+						.getRegionAtCharacterOffset(offset)
+						.getRegionAtCharacterOffset(offset);
+			}
+			return result;
+		}
+
+		IStructuredDocumentRegion startTag = node
+				.getStartStructuredDocumentRegion();
+		IStructuredDocumentRegion endTag = node
+				.getEndStructuredDocumentRegion();
+
+		if ((startTag != null) && (startTag.getStartOffset() <= offset)
+				&& (offset < startTag.getStartOffset() + startTag.getLength())) {
+			flatNode = startTag;
+		} else if ((endTag != null) && (endTag.getStartOffset() <= offset)
+				&& (offset < endTag.getStartOffset() + endTag.getLength())) {
+			flatNode = endTag;
+		}
+
+		if (flatNode != null) {
+			region = getCompletionRegion(offset, flatNode);
+		} else {
+			flatNode = node.getStructuredDocument().getRegionAtCharacterOffset(
+					offset);
+			if ((flatNode.getStartOffset() <= documentPosition)
+					&& (flatNode.getEndOffset() >= documentPosition)) {
+				if ((offset == flatNode.getStartOffset())
+						&& (flatNode.getPrevious() != null)
+						&& (((flatNode
+								.getRegionAtCharacterOffset(documentPosition) != null) && (flatNode
+								.getRegionAtCharacterOffset(documentPosition)
+								.getType() != DOMRegionContext.XML_CONTENT))
+								|| (flatNode.getPrevious().getLastRegion()
+										.getType() == DOMRegionContext.XML_TAG_OPEN) || (flatNode
+								.getPrevious().getLastRegion().getType() == DOMRegionContext.XML_END_TAG_OPEN))) {
+					region = flatNode.getPrevious().getLastRegion();
+				} else if (flatNode.getEndOffset() == documentPosition) {
+					region = flatNode.getLastRegion();
+				} else {
+					region = flatNode.getFirstRegion();
+				}
+			} else {
+				region = flatNode.getLastRegion();
+			}
+		}
+
+		return region;
+	}
+
+	protected ITextRegion getCompletionRegion(int offset,
+			IStructuredDocumentRegion sdRegion) {
+		ITextRegion region = sdRegion.getRegionAtCharacterOffset(offset);
+		if (region == null) {
+			return null;
+		}
+
+		if (sdRegion.getStartOffset(region) == offset) {
+			// The offset is at the beginning of the region
+			if ((sdRegion.getStartOffset(region) == sdRegion.getStartOffset())
+					&& (sdRegion.getPrevious() != null)
+					&& (!sdRegion.getPrevious().isEnded())) {
+				region = sdRegion.getPrevious().getRegionAtCharacterOffset(
+						offset - 1);
+			} else {
+				// Is there no separating whitespace from the previous region?
+				// If not,
+				// then that region is the important one
+				ITextRegion previousRegion = sdRegion
+						.getRegionAtCharacterOffset(offset - 1);
+				if ((previousRegion != null)
+						&& (previousRegion != region)
+						&& (previousRegion.getTextLength() == previousRegion
+								.getLength())) {
+					region = previousRegion;
+				}
+			}
+		} else {
+			// The offset is NOT at the beginning of the region
+			if (offset > sdRegion.getStartOffset(region)
+					+ region.getTextLength()) {
+				// Is the offset within the whitespace after the text in this
+				// region?
+				// If so, use the next region
+				ITextRegion nextRegion = sdRegion
+						.getRegionAtCharacterOffset(sdRegion
+								.getStartOffset(region)
+								+ region.getLength());
+				if (nextRegion != null) {
+					region = nextRegion;
+				}
+			} else {
+				// Is the offset within the important text for this region?
+				// If so, then we've already got the right one.
+			}
+		}
+
+		// valid WHITE_SPACE region handler (#179924)
+		if ((region != null)
+				&& (region.getType() == DOMRegionContext.WHITE_SPACE)) {
+			ITextRegion previousRegion = sdRegion
+					.getRegionAtCharacterOffset(sdRegion.getStartOffset(region) - 1);
+			if (previousRegion != null) {
+				region = previousRegion;
+			}
+		}
+
+		return region;
+	}
+
+	protected String getXPathMatchString(IStructuredDocumentRegion parent,
+			ITextRegion aRegion, int offset) {
+		if ((aRegion == null) || isCloseRegion(aRegion)) {
+			return ""; //$NON-NLS-1$
+		}
+		String matchString = null;
+		String regionType = aRegion.getType();
+		if ((regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS)
+				|| (regionType == DOMRegionContext.XML_TAG_OPEN)
+				|| (offset > parent.getStartOffset(aRegion)
+						+ aRegion.getTextLength())) {
+			matchString = ""; //$NON-NLS-1$
+		} else if (regionType == DOMRegionContext.XML_CONTENT) {
+			matchString = ""; //$NON-NLS-1$
+		} else {
+			if ((parent.getText(aRegion).length() > 0)
+					&& (parent.getStartOffset(aRegion) < offset)) {
+				matchString = parent.getText(aRegion).substring(0,
+						offset - parent.getStartOffset(aRegion));
+			} else {
+				matchString = ""; //$NON-NLS-1$
+			}
+		}
+		return matchString;
+	}
+
+	protected boolean isCloseRegion(ITextRegion region) {
+		String type = region.getType();
+		return ((type == DOMRegionContext.XML_PI_CLOSE)
+				|| (type == DOMRegionContext.XML_TAG_CLOSE)
+				|| (type == DOMRegionContext.XML_EMPTY_TAG_CLOSE)
+				|| (type == DOMRegionContext.XML_CDATA_CLOSE)
+				|| (type == DOMRegionContext.XML_COMMENT_CLOSE)
+				|| (type == DOMRegionContext.XML_ATTLIST_DECL_CLOSE)
+				|| (type == DOMRegionContext.XML_ELEMENT_DECL_CLOSE)
+				|| (type == DOMRegionContext.XML_DOCTYPE_DECLARATION_CLOSE) || (type == DOMRegionContext.XML_DECLARATION_CLOSE));
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#computeContextInformation(org.eclipse.jface.text.ITextViewer,
+	 *      int)
+	 */
+	public IContextInformation[] computeContextInformation(ITextViewer viewer,
+			int offset) {
 		return null;
 	}
-	
-	protected IDOMAttr getXPathNode(Node node, ITextRegion aRegion) {
-		if (node.hasAttributes()) {
-			if (hasAttributeAtTextRegion(ATTR_SELECT, node.getAttributes(), aRegion)) {
-				return this.getAttributeAtTextRegion(ATTR_SELECT, node.getAttributes(), aRegion);
-			}
-			
-			if (hasAttributeAtTextRegion(ATTR_TEST, node.getAttributes(), aRegion)) {
-				return this.getAttributeAtTextRegion(ATTR_TEST, node.getAttributes(), aRegion);
-			}
-			
-		}
+
+	/**
+	 * Returns the characters which when entered by the user should
+	 * automatically trigger the presentation of possible completions.
+	 * 
+	 * the auto activation characters for completion proposal or
+	 * <code>null</code> if no auto activation is desired
+	 */
+	public char[] getCompletionProposalAutoActivationCharacters() {
+		//TODO: Currently these are hard coded..need to move to preferences.
+		char[] completionProposals = { '"', '\'', ':', '[', '{', '<' };
+
+		return completionProposals;
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getContextInformationAutoActivationCharacters()
+	 */
+	public char[] getContextInformationAutoActivationCharacters() {
+		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getContextInformationValidator()
+	 */
+	public IContextInformationValidator getContextInformationValidator() {
+		return null;
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getErrorMessage()
+	 */
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.wst.sse.ui.internal.IReleasable#release()
+	 */
+	public void release() {
+
+	}
+
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+	 */
+	public void propertyChange(PropertyChangeEvent event) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * Sets the error message for why content assistance didn't complete.
+	 * 
+	 * @param errorMessage
+	 */
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
 	}
 	
 	protected boolean hasAttributeAtTextRegion(String attrName, NamedNodeMap nodeMap, ITextRegion aRegion) {
@@ -402,110 +446,5 @@ public class XSLContentAssistProcessor extends XMLContentAssistProcessor
 		return null;
 	}
 	
-	
-	/**
-	 * An XML Match string is extracted starting from the beginning of the
-	 * region to the current offset.
-	 * @param parent
-	 * @param aRegion
-	 * @param offset
-	 * @return
-	 */
-	protected String extractXMLMatchString(IStructuredDocumentRegion parent,
-			ITextRegion aRegion, int offset) {
-		return parent.getText(aRegion).substring(0, offset - parent.getStartOffset(aRegion));
-	}
-
-	protected boolean hasXMLMatchString(IStructuredDocumentRegion parent,
-			ITextRegion aRegion, int offset) {
-		return regionHasData(parent, aRegion) && isOffsetAfterStart(parent, aRegion, offset);
-	}
-
-	protected boolean isOffsetAfterStart(IStructuredDocumentRegion parent,
-			ITextRegion aRegion, int offset) {
-		return parent.getStartOffset(aRegion) < offset;
-	}
-
-	protected boolean regionHasData(IStructuredDocumentRegion parent,
-			ITextRegion aRegion) {
-		return parent.getText(aRegion).length() > 0;
-	}
-
-	protected boolean isXMLContentRegion(String regionType) {
-		return regionType == DOMRegionContext.XML_CONTENT;
-	}
-
-	protected boolean isOffsetAfterEndOffset(IStructuredDocumentRegion parent,
-			ITextRegion aRegion, int offset) {
-		return offset > getRegionEndOffset(parent, aRegion);
-	}
-
-	protected int getRegionEndOffset(IStructuredDocumentRegion parent,
-			ITextRegion aRegion) {
-		return parent.getStartOffset(aRegion) + aRegion.getTextLength();
-	}
-
-	protected boolean isXMLTagOpen(String regionType) {
-		return regionType == DOMRegionContext.XML_TAG_OPEN;
-	}
-
-	protected boolean isAttributeEqualsRegion(String regionType) {
-		return regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS;
-	}
-
-	protected boolean isMatchStringEmpty(IStructuredDocumentRegion parent, ITextRegion aRegion, int offset) {
-		return isRegionNull(aRegion) ||
-		       isCloseRegion(aRegion) ||
-		       isAttributeEqualsRegion(aRegion.getType()) ||
-		       isXMLTagOpen(aRegion.getType()) ||
-		       isOffsetAfterEndOffset(parent, aRegion, offset) ||
-		       isXMLContentRegion(aRegion.getType());
-	}
-	
-	protected boolean isRegionNull(ITextRegion aRegion) {
-		return aRegion == null;
-	}	
-
-	@Override
-	protected ContentAssistRequest computeAttributeValueProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode nodeAtOffset, IDOMNode node) {
-		ContentAssistRequest contentAssistRequest = null;
-		IStructuredDocumentRegion sdRegion = getStructuredDocumentRegion(documentPosition);
-		if ((documentPosition > sdRegion.getStartOffset(completionRegion) + completionRegion.getTextLength()) && (sdRegion.getStartOffset(completionRegion) + completionRegion.getTextLength() != sdRegion.getStartOffset(completionRegion) + completionRegion.getLength())) {
-			// setup to add a new attribute at the documentPosition
-			IDOMNode actualNode = (IDOMNode) node.getModel().getIndexedRegion(sdRegion.getStartOffset(completionRegion));
-			contentAssistRequest = newContentAssistRequest(actualNode, actualNode, sdRegion, completionRegion, documentPosition, 0, matchString);
-			addAttributeNameProposals(contentAssistRequest);
-			if ((actualNode.getFirstStructuredDocumentRegion() != null) && !actualNode.getFirstStructuredDocumentRegion().isEnded()) {
-				addTagCloseProposals(contentAssistRequest);
-			}
-		}
-		else {
-			// setup to replace the existing value
-			if (!nodeAtOffset.getFirstStructuredDocumentRegion().isEnded() && (documentPosition < sdRegion.getStartOffset(completionRegion))) {
-				// if the IStructuredDocumentRegion isn't closed and the
-				// cursor is in front of the value, add
-				contentAssistRequest = newContentAssistRequest(nodeAtOffset, node, sdRegion, completionRegion, documentPosition, 0, matchString);
-				addAttributeNameProposals(contentAssistRequest);
-			}
-			else {
-				IDOMAttr xpathNode = this.isXPathRegion(nodeAtOffset, completionRegion, documentPosition);
-				if (xpathNode != null) {
-					// This needs to setup the content assistance correctly. Here is what needs to happen:
-					// 1. Adjust the matchString (This should have been calculated earlier) 
-					// 2. Get the current tokens offset position..this will be the starting offset.
-					// 3. Get the replacement length...this is the difference between the token offset and the next token or end of the string
-					XPathParser parser = new XPathParser(xpathNode.getValue());
-					int startOffset = xpathNode.getValueRegionStartOffset() + parser.getTokenStartOffset(1, documentPosition - xpathNode.getValueRegionStartOffset()) - 1;
-					int replacementLength = documentPosition - startOffset;
-					contentAssistRequest = newContentAssistRequest(nodeAtOffset, node, sdRegion, completionRegion, startOffset, replacementLength, matchString);
-				} else {
-					contentAssistRequest = newContentAssistRequest(nodeAtOffset, node, sdRegion, completionRegion, sdRegion.getStartOffset(completionRegion), completionRegion.getTextLength(), matchString);
-				}
-				
-				addAttributeValueProposals(contentAssistRequest);
-			}
-		}
-		return contentAssistRequest;
-	}
 
 }
