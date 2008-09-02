@@ -19,9 +19,9 @@ import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
-import org.eclipse.wst.xsl.core.internal.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidationMessage;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidator;
+import org.eclipse.wst.xsl.core.model.StylesheetModel;
 
 /**
  * Validator for both build validation (AbstractValidator) and as-you-type validation (IValidatorJob).

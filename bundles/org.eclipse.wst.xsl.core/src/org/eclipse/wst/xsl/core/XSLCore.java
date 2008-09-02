@@ -22,8 +22,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsl.core.internal.model.Stylesheet;
 import org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder;
-import org.eclipse.wst.xsl.core.internal.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.internal.util.FileUtil;
+import org.eclipse.wst.xsl.core.model.StylesheetModel;
 
 /**
  * The interface to all aspects of the XSL core functionality.

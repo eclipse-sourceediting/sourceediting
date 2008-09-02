@@ -8,7 +8,7 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.core.internal.model;
+package org.eclipse.wst.xsl.core.model;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,7 +16,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.wst.xsl.core.XSLCore;
+import org.eclipse.wst.xsl.core.internal.model.Include;
+import org.eclipse.wst.xsl.core.internal.model.Stylesheet;
+import org.eclipse.wst.xsl.core.internal.model.Template;
 import org.eclipse.wst.xsl.core.internal.util.Debug;
 
 /**
@@ -36,14 +40,14 @@ import org.eclipse.wst.xsl.core.internal.util.Debug;
  * 
  * @author Doug Satchwell
  */
-public class StylesheetModel {
+public class StylesheetModel extends XSLModelObject {
 	private final Stylesheet stylesheet;
 	boolean circularReference;
 	final Set<IFile> files = new HashSet<IFile>();
-	final Set<Stylesheet> stylesheets = new HashSet<Stylesheet>();
+	final Includes includeModel = new Includes();
 	final Set<Template> templateSet = new HashSet<Template>();
-	final List<Template> templates = new ArrayList<Template>();
-	final List<Variable> globalVariables = new ArrayList<Variable>();
+	final Templates templateModel = new Templates();
+	final GlobalVariables globalVariableModel = new GlobalVariables();
 
 	/**
 	 * Create a new instance of this.
@@ -61,8 +65,8 @@ public class StylesheetModel {
 	 * 
 	 * @return the set of stylesheets in the entire hierarchy
 	 */
-	public Set<Stylesheet> getIncludedStylesheets() {
-		return stylesheets;
+	public Includes getIncludes() {
+		return includeModel;
 	}
 
 	/**
@@ -90,8 +94,8 @@ public class StylesheetModel {
 	 * 
 	 * @return the set of files in the entire hierarchy
 	 */
-	public List<Variable> getGlobalVariables() {
-		return globalVariables;
+	public GlobalVariables getGlobalVariables() {
+		return globalVariableModel;
 	}
 
 	/**
@@ -100,8 +104,8 @@ public class StylesheetModel {
 	 * 
 	 * @return the set of templates in the entire hierarchy
 	 */
-	public List<Template> getTemplates() {
-		return templates;
+	public Templates getTemplates() {
+		return templateModel;
 	}
 
 	/**
@@ -113,8 +117,8 @@ public class StylesheetModel {
 	 * @return the set of named templates with the given name
 	 */
 	public List<Template> getTemplatesByName(String name) {
-		List<Template> matching = new ArrayList<Template>(templates.size());
-		for (Template template : templates) {
+		List<Template> matching = new ArrayList<Template>(templateModel.getTemplates().size());
+		for (Template template : templateModel.getTemplates()) {
 			if (name.equals(template.getName()))
 				matching.add(template);
 		}
@@ -130,8 +134,8 @@ public class StylesheetModel {
 	 * @return the set of templates that match
 	 */
 	public List<Template> findMatching(Template toMatch) {
-		List<Template> matching = new ArrayList<Template>(templates.size());
-		for (Template template : templates) {
+		List<Template> matching = new ArrayList<Template>(templateModel.getTemplates().size());
+		for (Template template : templateModel.getTemplates()) {
 			if (template.equals(toMatch))
 				matching.add(template);
 		}
@@ -159,12 +163,12 @@ public class StylesheetModel {
 		if (Debug.debugXSLModel) {
 			System.out.println("Fixing " + stylesheet.getFile() + "...");
 		}
-		templates.addAll(stylesheet.templates);
-		templateSet.addAll(stylesheet.templates);
-		for (Include inc : stylesheet.includes) {
+		templateModel.getTemplates().addAll(stylesheet.getTemplates());
+		templateSet.addAll(stylesheet.getTemplates());
+		for (Include inc : stylesheet.getIncludes()) {
 			handleInclude(inc);
 		}
-		for (Include inc : stylesheet.imports) {
+		for (Include inc : stylesheet.getImports()) {
 			handleInclude(inc);
 		}
 		if (Debug.debugXSLModel) {
@@ -189,15 +193,15 @@ public class StylesheetModel {
 				file);
 		if (includedModel == null)
 			return;
-		stylesheets.add(includedModel.getStylesheet());
+		includeModel.getStylesheets().add(includedModel.getStylesheet());
 
 		if (include.getIncludeType() == Include.INCLUDE) {
-			templates.addAll(includedModel.templates);
-			templateSet.addAll(includedModel.templates);
+			templateModel.getTemplates().addAll(includedModel.templateModel.getTemplates());
+			templateSet.addAll(includedModel.templateModel.getTemplates());
 		} else {
-			for (Template includedTemplate : includedModel.templates) {
+			for (Template includedTemplate : includedModel.templateModel.getTemplates()) {
 				if (!templateSet.contains(includedTemplate)) {
-					templates.add(includedTemplate);
+					templateModel.getTemplates().add(includedTemplate);
 					templateSet.add(includedTemplate);
 				}
 			}

@@ -12,9 +12,6 @@ package org.eclipse.wst.xsl.ui.internal.validation;
 
 import org.eclipse.wst.validation.ValidationFramework;
 import org.eclipse.wst.validation.Validator;
-import org.eclipse.wst.validation.internal.core.ValidationException;
-import org.eclipse.wst.validation.internal.provisional.core.IReporter;
-import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidator;
 
