@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver - fix issue with xslElm being null on local variables.
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.model;
 
@@ -213,7 +214,7 @@ public class StylesheetBuilder {
 						sf.addGlobalVariable(var);
 						xslEl = var;
 					}
-					else if (elementStack.size() > 2 && currentTemplate != null)
+					else if (elementStack.size() > 1 && currentTemplate != null)
 					{// local variable
 						Variable var = new Variable(sf);
 						currentTemplate.addVariable(var);
@@ -222,6 +223,7 @@ public class StylesheetBuilder {
 				} else {
 					xslEl = new XSLElement(sf);
 				}
+				
 				configure((IDOMNode) element, xslEl);
 			}
 			elementStack.push(element);
