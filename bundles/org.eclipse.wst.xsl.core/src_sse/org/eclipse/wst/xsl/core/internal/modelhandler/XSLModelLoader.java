@@ -12,22 +12,15 @@
 
 package org.eclipse.wst.xsl.core.internal.modelhandler;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;
-import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.xml.core.internal.DebugAdapterFactory;
 import org.eclipse.wst.xml.core.internal.document.DOMModelImpl;
-import org.eclipse.wst.xml.core.internal.encoding.XMLDocumentLoader;
 import org.eclipse.wst.xml.core.internal.modelhandler.XMLModelLoader;
-import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryAdapterFactoryForXML;
-import org.eclipse.wst.xml.core.internal.propagate.PropagatingAdapterFactoryImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xsl.core.internal.encoding.XSLDocumentLoader;
 

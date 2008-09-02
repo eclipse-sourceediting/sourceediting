@@ -12,8 +12,6 @@
 
 package org.eclipse.wst.xsl.core.internal.parser;
 
-import java.io.StringReader;
-
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockTokenizer;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
