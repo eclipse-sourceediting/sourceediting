@@ -73,9 +73,10 @@ public class XSLLaunchingTests extends TestCase {
 		"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_FORMAT_FILE\" value=\"false\"/>" +
 		"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_INPUT_FILE\" value=\"${workspace_loc:/XSLTestProject/input.xml}\"/>" +
 		"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OPEN_FILE\" value=\"true\"/>" +
-		"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FILE\" value=\"${workspace_loc:/XSLTestProject}/output.xml\"/>" +
+		"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FILENAME\" value=\"output.xml\"/>" +
 		"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_PIPELINE\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Pipeline&gt;&#13;&#10;&lt;OutputProperties/&gt;&#13;&#10;&lt;Transform path=&quot;/XSLTestProject/transform.xsl&quot; pathType=&quot;resource&quot;&gt;&#13;&#10;&lt;Parameters/&gt;&#13;&#10;&lt;/Transform&gt;&#13;&#10;&lt;/Pipeline&gt;&#13;&#10;\"/>" +
 		"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_DEFAULT_OUTPUT_FILE\" value=\"false\"/>" +
+		"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FOLDER\" value=\"${workspace_loc:/XSLTestProject}\"/>" +
 		"</launchConfiguration>";
 
 		
