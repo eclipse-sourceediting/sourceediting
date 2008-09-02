@@ -8,44 +8,31 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.core.internal.model;
+package org.eclipse.wst.xsl.core.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.eclipse.wst.xsl.core.model.XSLModelObject.Type;
 
 /**
- * The <code>xsl:call-template</code> model element.
+ * The <code>xsl:variable</code> model element.
  * 
  * @author Doug Satchwell
  */
-public class CallTemplate extends XSLElement
+public class Variable extends XSLElement
 {
-	final List<Parameter> parameters = new ArrayList<Parameter>();
-	
 	/**
 	 * Create a new instance of this.
 	 * 
 	 * @param stylesheet the stylesheet that this belongs to
 	 */
-	public CallTemplate(Stylesheet stylesheet)
+	public Variable(Stylesheet stylesheet)
 	{
 		super(stylesheet);
-	}
-	
-	/**
-	 * Add a parameter to this.
-	 * 
-	 * @param parameter the parameter to add
-	 */
-	public void addParameter(Parameter parameter)
-	{
-		parameters.add(parameter);
 	}
 
 	/**
 	 * Get the value of the <code>name</code> attribute if one exists.
 	 * 
-	 * @return the template name, or null
+	 * @return the variable name, or null
 	 */
 	public String getName()
 	{
@@ -53,12 +40,17 @@ public class CallTemplate extends XSLElement
 	}
 	
 	/**
-	 * Get the list of parameters associated with this.
+	 * Get the value of the <code>select</code> attribute if one exists.
 	 * 
-	 * @return a list of parameters
+	 * @return the select value, or null
 	 */
-	public List<Parameter> getParameters()
+	public String getSelect()
 	{
-		return parameters;
+		return getAttributeValue("select"); //$NON-NLS-1$
+	}
+	
+	public Type getModelType()
+	{
+		return Type.VARIABLE;
 	}
 }

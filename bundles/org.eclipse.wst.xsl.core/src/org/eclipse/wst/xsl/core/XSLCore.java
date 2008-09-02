@@ -20,9 +20,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
-import org.eclipse.wst.xsl.core.internal.model.Stylesheet;
-import org.eclipse.wst.xsl.core.internal.model.StylesheetBuilder;
+import org.eclipse.wst.xsl.core.internal.StylesheetBuilder;
 import org.eclipse.wst.xsl.core.internal.util.FileUtil;
+import org.eclipse.wst.xsl.core.model.Stylesheet;
 import org.eclipse.wst.xsl.core.model.StylesheetModel;
 
 /**

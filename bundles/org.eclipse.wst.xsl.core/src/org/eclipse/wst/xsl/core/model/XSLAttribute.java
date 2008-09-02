@@ -8,7 +8,7 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.core.internal.model;
+package org.eclipse.wst.xsl.core.model;
 
 /**
  * An attribute of an element in the XSL namespace.
@@ -52,5 +52,10 @@ public class XSLAttribute extends XSLNode
 	public String getValue()
 	{
 		return value;
+	}
+	
+	public Type getModelType()
+	{
+		return Type.ATTRIBUTE;
 	}
 }

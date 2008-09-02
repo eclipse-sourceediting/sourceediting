@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
-import org.eclipse.wst.xsl.core.internal.model.XSLNode;
+import org.eclipse.wst.xsl.core.model.XSLNode;
 
 /**
  * A validation report for the XSL validator.

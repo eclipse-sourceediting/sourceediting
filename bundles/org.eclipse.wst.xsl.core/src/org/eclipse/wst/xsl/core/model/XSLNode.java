@@ -8,9 +8,8 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.core.internal.model;
+package org.eclipse.wst.xsl.core.model;
 
-import org.eclipse.core.runtime.PlatformObject;
 import org.w3c.dom.Node;
 
 /**
@@ -18,7 +17,7 @@ import org.w3c.dom.Node;
  * 
  * @author Doug Satchwell
  */
-public abstract class XSLNode extends PlatformObject
+public abstract class XSLNode extends XSLModelObject
 {
 	/**
 	 * A constant for the element node (= <code>org.w3c.dom.Node.ELEMENT_NODE</code>)

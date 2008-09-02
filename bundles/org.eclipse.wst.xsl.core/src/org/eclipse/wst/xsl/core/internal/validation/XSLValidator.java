@@ -27,15 +27,15 @@ import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xsl.core.ValidationPreferences;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
-import org.eclipse.wst.xsl.core.internal.model.CallTemplate;
-import org.eclipse.wst.xsl.core.internal.model.Include;
-import org.eclipse.wst.xsl.core.internal.model.Parameter;
-import org.eclipse.wst.xsl.core.internal.model.Template;
-import org.eclipse.wst.xsl.core.internal.model.XSLAttribute;
-import org.eclipse.wst.xsl.core.internal.model.XSLElement;
-import org.eclipse.wst.xsl.core.internal.model.XSLNode;
 import org.eclipse.wst.xsl.core.internal.util.Debug;
+import org.eclipse.wst.xsl.core.model.CallTemplate;
+import org.eclipse.wst.xsl.core.model.Include;
+import org.eclipse.wst.xsl.core.model.Parameter;
 import org.eclipse.wst.xsl.core.model.StylesheetModel;
+import org.eclipse.wst.xsl.core.model.Template;
+import org.eclipse.wst.xsl.core.model.XSLAttribute;
+import org.eclipse.wst.xsl.core.model.XSLElement;
+import org.eclipse.wst.xsl.core.model.XSLNode;
 
 /**
  * The XSL validator for workspace XSL files.
@@ -210,7 +210,7 @@ public class XSLValidator
 				checkParameters(report, template);
 			} 
 
-			for (Template checkTemplate : stylesheetComposed.getTemplates().getTemplates())
+			for (Template checkTemplate : stylesheetComposed.getTemplates())
 			{
 				if (checkTemplate != template && checkTemplate.equals(template))
 				{

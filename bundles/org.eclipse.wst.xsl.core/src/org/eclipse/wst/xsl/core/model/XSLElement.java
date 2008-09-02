@@ -8,7 +8,7 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.core.internal.model;
+package org.eclipse.wst.xsl.core.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ import java.util.Map;
  * 
  * @author Doug Satchwell
  */
-public class XSLElement extends XSLNode
+public abstract class XSLElement extends XSLNode
 {
 	final Map<String, XSLAttribute> attributes = new HashMap<String, XSLAttribute>();
 	final List<XSLElement> childElements = new ArrayList<XSLElement>();

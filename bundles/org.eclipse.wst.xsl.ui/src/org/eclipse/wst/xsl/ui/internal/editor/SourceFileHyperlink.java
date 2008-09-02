@@ -22,7 +22,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.xsl.core.internal.model.XSLNode;
+import org.eclipse.wst.xsl.core.model.XSLNode;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 
 public class SourceFileHyperlink implements IHyperlink

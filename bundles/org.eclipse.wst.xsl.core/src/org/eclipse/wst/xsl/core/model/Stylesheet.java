@@ -8,12 +8,13 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.core.internal.model;
+package org.eclipse.wst.xsl.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.wst.xsl.core.model.XSLModelObject.Type;
 
 /**
  * The <code>xsl:stylesheet</code> model element.
@@ -146,4 +147,10 @@ public class Stylesheet extends XSLElement
 	{
 		globalVariables.add(var);
 	}
+	
+	public Type getModelType()
+	{
+		return Type.STYLESHEET;
+	}
+
 }

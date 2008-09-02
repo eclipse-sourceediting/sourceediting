@@ -8,7 +8,7 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.core.internal.model;
+package org.eclipse.wst.xsl.core.model;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.xsl.core.XSLCore;
@@ -82,5 +82,10 @@ public class Include extends XSLElement
 	public IFile getHrefAsFile()
 	{
 		return XSLCore.resolveFile(getStylesheet().getFile(), getHref());
+	}
+
+	public Type getModelType()
+	{
+		return Type.INCLUDE;
 	} 
 }

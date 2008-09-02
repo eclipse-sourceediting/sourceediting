@@ -272,5 +272,22 @@
       </toolbar> 
      </menuContribution>
   </extension>
+  <extension
+        point="org.eclipse.ui.views">
+     <view
+           class="org.eclipse.wst.xsl.ui.internal.StylesheetView"
+           id="org.eclipse.wst.xsl.ui.view.outline"
+           name="Stylesheet"
+           category="org.eclipse.wst.xml"
+           restorable="true">
+     </view>
+  </extension>
+  <extension point="org.eclipse.core.runtime.adapters">		
+		<factory 
+            class="org.eclipse.wst.xsl.ui.internal.XSLModelAdapterFactory" 
+            adaptableType="org.eclipse.wst.xsl.core.model.XSLModelObject">
+            <adapter type="org.eclipse.ui.model.IWorkbenchAdapter"/>
+		</factory>
+   </extension>     	
    
 </plugin>

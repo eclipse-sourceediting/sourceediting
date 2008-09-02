@@ -8,10 +8,12 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.core.internal.model;
+package org.eclipse.wst.xsl.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.wst.xsl.core.model.XSLModelObject.Type;
 
 /**
  * The <code>xsl:template</code> model element.
@@ -163,4 +165,10 @@ public class Template extends XSLElement
 		String match = getMatch();
 		return "file="+getStylesheet().getFile()+", name="+name+", match="+match; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
+	
+	public Type getModelType()
+	{
+		return Type.TEMPLATE;
+	}
+
 }

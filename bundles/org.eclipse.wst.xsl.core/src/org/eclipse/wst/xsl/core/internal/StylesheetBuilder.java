@@ -9,7 +9,7 @@
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *     David Carver - fix issue with xslElm being null on local variables.
  *******************************************************************************/
-package org.eclipse.wst.xsl.core.internal.model;
+package org.eclipse.wst.xsl.core.internal;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -27,8 +27,17 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsl.core.XSLCore;
-import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.eclipse.wst.xsl.core.internal.util.Debug;
+import org.eclipse.wst.xsl.core.model.CallTemplate;
+import org.eclipse.wst.xsl.core.model.Import;
+import org.eclipse.wst.xsl.core.model.Include;
+import org.eclipse.wst.xsl.core.model.Parameter;
+import org.eclipse.wst.xsl.core.model.Stylesheet;
+import org.eclipse.wst.xsl.core.model.Template;
+import org.eclipse.wst.xsl.core.model.Variable;
+import org.eclipse.wst.xsl.core.model.XSLAttribute;
+import org.eclipse.wst.xsl.core.model.XSLElement;
+import org.eclipse.wst.xsl.core.model.XSLNode;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -220,11 +229,12 @@ public class StylesheetBuilder {
 						currentTemplate.addVariable(var);
 						xslEl = var;
 					}
-				} else {
-					xslEl = new XSLElement(sf);
-				}
-				
-				configure((IDOMNode) element, xslEl);
+				} 
+//				else {
+//					xslEl = new XSLElement(sf);
+//				}
+				if (xslEl!=null)
+					configure((IDOMNode) element, xslEl);
 			}
 			elementStack.push(element);
 			NodeList childNodes = element.getChildNodes();

@@ -11,7 +11,7 @@
 package org.eclipse.wst.xsl.core.internal.validation;
 
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
-import org.eclipse.wst.xsl.core.internal.model.XSLNode;
+import org.eclipse.wst.xsl.core.model.XSLNode;
 
 /**
  * A validation message specific to the XSL validator which adds the ability 

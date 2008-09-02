@@ -8,42 +8,22 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.core.internal.model;
+package org.eclipse.wst.xsl.core.model;
 
 /**
- * The <code>xsl:variable</code> model element.
+ * The <code>xsl:import</code> model element.
  * 
  * @author Doug Satchwell
  */
-public class Variable extends XSLElement
+public class Import extends Include
 {
 	/**
 	 * Create a new instance of this.
 	 * 
 	 * @param stylesheet the stylesheet that this belongs to
 	 */
-	public Variable(Stylesheet stylesheet)
+	public Import(Stylesheet stylesheet)
 	{
-		super(stylesheet);
-	}
-
-	/**
-	 * Get the value of the <code>name</code> attribute if one exists.
-	 * 
-	 * @return the variable name, or null
-	 */
-	public String getName()
-	{
-		return getAttributeValue("name"); //$NON-NLS-1$
-	}
-	
-	/**
-	 * Get the value of the <code>select</code> attribute if one exists.
-	 * 
-	 * @return the select value, or null
-	 */
-	public String getSelect()
-	{
-		return getAttributeValue("select"); //$NON-NLS-1$
+		super(stylesheet,IMPORT);
 	}
 }
