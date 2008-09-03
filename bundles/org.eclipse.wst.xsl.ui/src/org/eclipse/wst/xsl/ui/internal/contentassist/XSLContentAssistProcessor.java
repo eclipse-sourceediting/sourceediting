@@ -337,6 +337,9 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 				matchString = ""; //$NON-NLS-1$
 			}
 		}
+		if (matchString.startsWith("\"")) {
+			matchString = matchString.substring(1);
+		}
 		return matchString;
 	}
 
@@ -372,7 +375,7 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 	 */
 	public char[] getCompletionProposalAutoActivationCharacters() {
 		//TODO: Currently these are hard coded..need to move to preferences.
-		char[] completionProposals = { '"', '\'', ':', '[', '{', '<' };
+		char[] completionProposals = { '"', '\'', ':', '[', '{', '<'};
 
 		return completionProposals;
 	}

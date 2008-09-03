@@ -19,7 +19,7 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
+import org.eclipse.wst.xsl.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
@@ -118,6 +118,7 @@ public class SelectAttributeContentAssist extends ContentAssistRequest {
 	 */
 	@Override
 	public ICompletionProposal[] getCompletionProposals() {
+		proposals.clear();
 		
 		adjustXPathStart();
 		
@@ -151,17 +152,22 @@ public class SelectAttributeContentAssist extends ContentAssistRequest {
 	}
 		
 	protected String extractXPathMatchString(IDOMAttr node, ITextRegion aRegion, int offset) {
-		if (node == null || node.getValue() == null || node.getValue().length() == 0)	return "";
+		if (node == null || node.getValue().length() == 0)	return "";
 		
-		int column = offset - node.getValueRegionStartOffset();
-		XPathParser parser = new XPathParser(node.getValue());
+		if (matchString.length() == 1) {
+			return matchString;
+		}
+		
+		int column = offset - node.getValueRegionStartOffset() - 1;
+		String nodeValue = node.getValue();
+		XPathParser parser = new XPathParser(nodeValue);
 		int tokenStart = parser.getTokenStartOffset(1, column);
 		
-		if (tokenStart == column) {
+		if (tokenStart >= column) {
 			return "";
 		}
 		
-		return node.getValue().substring(tokenStart - 1, column - 1);
+		return node.getValue().substring(tokenStart - 1, column);
 	}
 
 
