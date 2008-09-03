@@ -43,6 +43,9 @@ public class XPathParser {
 					if (previousToken.kind == 78) {
 						return previousToken.beginColumn;
 					}
+					if (currentToken.kind == 80 || currentToken.kind == 44) {
+						return currentToken.endColumn + 1;
+					}
 					return currentToken.beginColumn;
 				} else if (currentToken.beginColumn > offsetColumn && previousToken.beginColumn > offsetColumn) {
 					return offsetColumn;
@@ -55,7 +58,7 @@ public class XPathParser {
 					return 1;
 				} else {
 					if (currentToken.beginColumn == currentToken.endColumn) {
-						return currentToken.beginColumn + 1;
+						return currentToken.endColumn + 1;
 					}
 					return currentToken.beginColumn;
 				}
