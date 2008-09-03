@@ -55,7 +55,7 @@ public class TestXPathCoreXPathParser extends TestCase {
 	public void testgetTokenStartOffset4() {
 		XPathParser parser = new XPathParser(xpathSingleLine);
 		assertNotNull(parser);
-		assertEquals("Value of token offset is wrong:", 19, parser.getTokenStartOffset(1, 19));
+		assertEquals("Value of token offset is wrong:", 20, parser.getTokenStartOffset(1, 19));
 		assertEquals("Unexpected token value:", "(", parser.getCurrentToken().image);
 	}
 	
@@ -71,6 +71,20 @@ public class TestXPathCoreXPathParser extends TestCase {
 		assertNotNull(parser);
 		assertEquals("Value of token offset is wrong:", 7, parser.getTokenStartOffset(1, 7));
 	}
+	
+	public void testgetTokenStartOffset7() {
+		XPathParser parser = new XPathParser("tran");
+		assertNotNull(parser);
+		assertEquals("Value of token offset is wrong:", 1, parser.getTokenStartOffset(1, 4));
+	}
+	
+	public void testgetTokenStartOffset8() {
+		XPathParser parser = new XPathParser("translate(");
+		assertNotNull(parser);
+		assertEquals("Value of token offset is wrong:", 11, parser.getTokenStartOffset(1, 11));
+	}
+
+
 	
 	public void testgetTokenStartOffsetNotEqual() {
 		XPathParser parser = new XPathParser(xpathSingleLine);
