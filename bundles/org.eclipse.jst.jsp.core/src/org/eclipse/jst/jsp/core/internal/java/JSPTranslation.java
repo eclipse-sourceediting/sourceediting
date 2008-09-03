@@ -650,6 +650,8 @@ public class JSPTranslation implements IJSPTranslation {
 						return Status.OK_STATUS;
 					}
 				};
+				discarder.setSystem(true);
+				discarder.setUser(false);
 				discarder.schedule();
 			}
 		}
