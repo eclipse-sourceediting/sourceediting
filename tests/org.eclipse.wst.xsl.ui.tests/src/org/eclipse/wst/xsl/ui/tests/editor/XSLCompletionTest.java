@@ -198,7 +198,7 @@ public class XSLCompletionTest extends UnzippedProjectTester {
     	
     	ICompletionProposal[] proposals = getProposals(offset);
     	assertEquals("Wrong xpath item returned: ", "name(node-set)", proposals[0].getDisplayString());
-    	assertEquals(6,proposals.length);
+    	assertEquals("Wrong Number of items returned: ", 6, proposals.length);
     }
 
     public void testTestAttributeProposalsAvailable() throws Exception {
