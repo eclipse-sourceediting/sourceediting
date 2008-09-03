@@ -20,7 +20,7 @@ import java.util.Map;
  * 
  * @author Doug Satchwell
  */
-public abstract class XSLElement extends XSLNode
+public class XSLElement extends XSLNode
 {
 	final Map<String, XSLAttribute> attributes = new HashMap<String, XSLAttribute>();
 	final List<XSLElement> childElements = new ArrayList<XSLElement>();
@@ -96,5 +96,11 @@ public abstract class XSLElement extends XSLNode
 	public List<XSLElement> getChildElements()
 	{
 		return childElements;
+	}
+
+	@Override
+	public Type getModelType()
+	{
+		return Type.OTHER_ELEMENT;
 	}
 }

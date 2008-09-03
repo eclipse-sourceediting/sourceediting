@@ -230,9 +230,9 @@ public class StylesheetBuilder {
 						xslEl = var;
 					}
 				} 
-//				else {
-//					xslEl = new XSLElement(sf);
-//				}
+				else {
+					xslEl = new XSLElement(sf);
+				}
 				if (xslEl!=null)
 					configure((IDOMNode) element, xslEl);
 			}
