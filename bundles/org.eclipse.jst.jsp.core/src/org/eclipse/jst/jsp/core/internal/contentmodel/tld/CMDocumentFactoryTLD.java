@@ -162,6 +162,19 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		return loadDocument(fileName, rootElement);
 	}
 
+	protected CMDocument buildCMDocumentFromFile(IFile file) {
+		InputStream input = null;
+		try {
+			input = file.getContents(false);
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
+		}
+		if (input != null)
+			return buildCMDocument(file.getFullPath().toString(), input);
+		return null;
+	}
+
 	/**
 	 * Builds a CMDocument assuming the JSP v1.1 default path
 	 * 
@@ -990,9 +1003,9 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		switch (reference.getRecordType()) {
 			case (ITaglibRecord.TLD) : {
 				ITLDRecord record = (ITLDRecord) reference;
-				IResource file = ResourcesPlugin.getWorkspace().getRoot().getFile(record.getPath());
-				if (file.getLocation() != null) {
-					document = (CMDocumentImpl) buildCMDocumentFromFile(file.getLocation().toString());
+				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(record.getPath());
+				if (file.isAccessible()) {
+					document = (CMDocumentImpl) buildCMDocumentFromFile(file);
 					document.setLocationString(record.getPath().toString());
 					if (_debug && document != null && document.getElements().getLength() == 0) {
 						System.out.println("failure parsing " + record.getPath()); //$NON-NLS-1$
