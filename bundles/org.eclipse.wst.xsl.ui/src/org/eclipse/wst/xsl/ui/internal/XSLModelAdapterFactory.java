@@ -1,15 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2008 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 import org.eclipse.wst.xsl.core.model.Import;
 import org.eclipse.wst.xsl.core.model.Include;
-import org.eclipse.wst.xsl.core.model.Includes;
+import org.eclipse.wst.xsl.core.model.Stylesheet;
 import org.eclipse.wst.xsl.core.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.model.Template;
 import org.eclipse.wst.xsl.core.model.Variable;
@@ -41,18 +47,25 @@ public class XSLModelAdapterFactory implements IAdapterFactory
 			XSLModelObject obj = (XSLModelObject)o;
 			switch(obj.getModelType())
 			{
-				case STYLESHEET_MODEL:
-					StylesheetModel model = (StylesheetModel)obj;
-					List<XSLModelObject> list = new ArrayList<XSLModelObject>();
-					list.add(model.getIncludes());
-					list.addAll(model.getGlobalVariables());
-					list.addAll(model.getTemplates());
-					return list.toArray(new XSLModelObject[0]);
-				case INCLUDES:
-					Includes inc = (Includes)obj;
-					HashSet set = new HashSet(inc.getImports());
-					set.addAll(inc.getIncludes());
-					return set.toArray(new Include[0]);
+//				case STYLESHEET_MODEL:
+//					StylesheetModel model = (StylesheetModel)obj;
+//					Stylesheet stylesheet = model.getStylesheet();
+//					return new Object[]{
+//						new ListWorkbenchAdapter(stylesheet,null,stylesheet.getVersion(),"icons/full/xslt_launch.gif"),
+//						new ListWorkbenchAdapter(stylesheet,model.getImports(),"Imports","icons/full/imports.gif"),
+//						new ListWorkbenchAdapter(stylesheet,model.getIncludes(),"Includes","icons/full/imports.gif"),
+//						new ListWorkbenchAdapter(stylesheet,model.getGlobalVariables(),"Variables",null),
+//						new ListWorkbenchAdapter(stylesheet,model.getTemplates(),"Templates",null)
+//					};
+				case STYLESHEET:
+					Stylesheet stylesheet = (Stylesheet)obj;
+					return new Object[]{
+						new ListWorkbenchAdapter(stylesheet,null,stylesheet.getVersion(),"icons/full/xslt_launch.gif"),
+						new ListWorkbenchAdapter(stylesheet,stylesheet.getImports(),"Imports","icons/full/imports.gif"),
+						new ListWorkbenchAdapter(stylesheet,stylesheet.getIncludes(),"Includes","icons/full/imports.gif"),
+						new ListWorkbenchAdapter(stylesheet,stylesheet.getGlobalVariables(),"Variables",null),
+						new ListWorkbenchAdapter(stylesheet,stylesheet.getTemplates(),"Templates",null)
+					};
 			}
 			return EMPTY;
 		}
@@ -63,8 +76,8 @@ public class XSLModelAdapterFactory implements IAdapterFactory
 			String path = null;
 			switch(obj.getModelType())
 			{
-				case INCLUDES:
-					path = "icons/full/imports.gif";
+				case STYLESHEET:
+					path = "icons/full/xslt_launch.gif";
 					break;
 				case IMPORT:
 				case INCLUDE:
@@ -82,28 +95,39 @@ public class XSLModelAdapterFactory implements IAdapterFactory
 
 		public String getLabel(Object o)
 		{
+			String label = null;
 			XSLModelObject obj = (XSLModelObject)o;
 			switch(obj.getModelType())
 			{
-				case STYLESHEET_MODEL:
-					StylesheetModel model = (StylesheetModel)obj;
-					return model.getStylesheet().getFile().getName();
-				case INCLUDES:
-					return "Imports and Includes";
+				case STYLESHEET:
+					Stylesheet stylesheet = (Stylesheet)obj;
+					label = stylesheet.getVersion() == null ? "?" : stylesheet.getVersion();
+					break;
 				case IMPORT:
 					Import imp = (Import)obj;
-					return "import " + imp.getHref();
+					label = imp.getHref();
+					break;
 				case INCLUDE:
 					Include inc = (Include)obj;
-					return "include " + inc.getHref();
+					label = inc.getHref();
+					break;
 				case TEMPLATE:
 					Template t = (Template)obj;
-					return t.getName();
+					StringBuffer sb = new StringBuffer();
+					if (t.getName() != null)
+						sb.append(t.getName()).append(" ");
+					if (t.getMatch() != null)
+						sb.append(t.getMatch()).append(" ");
+					if (t.getMode() != null)
+						sb.append("(").append(t.getMode()).append(")");
+					label = sb.toString();
+					break;
 				case VARIABLE:
 					Variable v = (Variable)obj;
-					return v.getName();
+					label = v.getName();
+					break;
 			}
-			return null;
+			return label;
 		}
 
 		public Object getParent(Object o)
