@@ -37,7 +37,9 @@ public class StylesheetModel extends XSLModelObject
 	private final Stylesheet stylesheet;
 	boolean circularReference;
 	final Set<IFile> files = new HashSet<IFile>();
-	final Includes includeModel = new Includes();
+	final Set<Stylesheet> stylesheets = new HashSet<Stylesheet>();
+	final List<Include> includeModel = new ArrayList<Include>();
+	final List<Import> importModel = new ArrayList<Import>();
 	final Set<Template> templateSet = new HashSet<Template>();
 	final List<Template> templates = new ArrayList<Template>();
 	final List<Variable> globalVariables = new ArrayList<Variable>();
@@ -58,7 +60,7 @@ public class StylesheetModel extends XSLModelObject
 	 * 
 	 * @return the set of stylesheets in the entire hierarchy
 	 */
-	public Includes getIncludes()
+	public List<Include> getIncludes()
 	{
 		return includeModel;
 	}
@@ -168,7 +170,7 @@ public class StylesheetModel extends XSLModelObject
 		{
 			handleInclude(inc);
 		}
-		for (Include inc : stylesheet.getImports())
+		for (Import inc : stylesheet.getImports())
 		{
 			handleInclude(inc);
 		}
@@ -197,18 +199,18 @@ public class StylesheetModel extends XSLModelObject
 		StylesheetModel includedModel = XSLCore.getInstance().getStylesheet(file);
 		if (includedModel == null)
 			return;
-		includeModel.getStylesheets().add(includedModel.getStylesheet());
+		stylesheets.add(includedModel.getStylesheet());
 		globalVariables.addAll(includedModel.globalVariables);
 
 		if (include.getIncludeType() == Include.INCLUDE)
 		{
-			includeModel.addInclude(include);
+			includeModel.add(include);
 			templates.addAll(includedModel.getTemplates());
 			templateSet.addAll(includedModel.getTemplates());
 		}
 		else
 		{
-			includeModel.addImport((Import)include);
+			importModel.add((Import)include);
 			for (Template includedTemplate : includedModel.getTemplates())
 			{
 				if (!templateSet.contains(includedTemplate))

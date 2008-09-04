@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.wst.xsl.core.model.XSLModelObject.Type;
 
 /**
  * The <code>xsl:stylesheet</code> model element.
@@ -30,6 +29,7 @@ public class Stylesheet extends XSLElement
 	final List<CallTemplate> calledTemplates = new ArrayList<CallTemplate>();
 	final List<Variable> globalVariables = new ArrayList<Variable>();
 	final List<XSLElement> elements = new ArrayList<XSLElement>();
+	String version;
 
 	/**
 	 * Create an instance of this.
@@ -153,4 +153,26 @@ public class Stylesheet extends XSLElement
 		return Type.STYLESHEET;
 	}
 
+	/**
+	 * Set the stylesheet version.
+	 * 
+	 * @param version the version to set
+	 */
+	public void setVersion(String version)
+	{
+		this.version = version;
+	}
+
+	/**
+	 * Get the stylesheet version.
+	 */
+	public String getVersion()
+	{
+		return version;
+	}
+
+	public List<Variable> getGlobalVariables()
+	{
+		return globalVariables;
+	}
 }

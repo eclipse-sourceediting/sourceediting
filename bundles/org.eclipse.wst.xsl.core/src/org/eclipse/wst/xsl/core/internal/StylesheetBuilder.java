@@ -163,6 +163,9 @@ public class StylesheetBuilder {
 				String elName = element.getLocalName();
 				if ("stylesheet".equals(elName) && elementStack.size() == 0) //$NON-NLS-1$
 				{
+					NamedNodeMap map = element.getAttributes();
+					String version = element.getAttribute("version");
+					sf.setVersion(version);
 					xslEl = sf;
 				} else if ("include".equals(elName) && elementStack.size() == 1) //$NON-NLS-1$
 				{
@@ -274,6 +277,7 @@ public class StylesheetBuilder {
 						.getStartOffset());
 				int lineOffset = structuredDocument.getLineOffset(line);
 				int col = node.getStartOffset() - lineOffset;
+				inc.setOffset(node.getStartOffset());
 				inc.setLineNumber(line);
 				inc.setColumnNumber(col);
 				inc.setLength(node.getLength());
