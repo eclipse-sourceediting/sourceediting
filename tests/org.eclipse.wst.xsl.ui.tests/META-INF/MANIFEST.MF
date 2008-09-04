@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Tests Plug-in
+Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.xsl.ui.tests
 Bundle-Version: 1.0.0.qualifer
 Bundle-Activator: org.eclipse.wst.xsl.ui.tests.Activator
@@ -35,3 +35,4 @@ Export-Package: org.eclipse.wst.xsl.ui.internal.validation;x-internal:=true,
    org.eclipse.wst.xsl.ui.tests,
    org.eclipse.wst.sse.ui.internal,
    org.eclipse.ui"
+Bundle-Localization: plugin

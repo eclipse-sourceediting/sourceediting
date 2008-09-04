@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: XSL Core Tests Plug-in
+Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.xsl.core.tests
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.wst.xsl.core.tests.XSLCoreTestsPlugin
@@ -16,3 +16,4 @@ Import-Package: junit.framework,
  org.eclipse.wst.xml.core.internal.validation.core
 Export-Package: org.eclipse.wst.xsl.core.tests;uses:="org.osgi.framework,junit.framework,org.eclipse.core.runtime",
  org.eclipse.wst.xsl.internal.core.tests;x-internal:=true
+Bundle-Localization: plugin
