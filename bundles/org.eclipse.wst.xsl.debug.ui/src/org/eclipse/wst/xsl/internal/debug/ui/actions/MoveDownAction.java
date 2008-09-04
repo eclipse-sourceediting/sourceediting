@@ -15,6 +15,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
+import org.eclipse.wst.xsl.debug.ui.Messages;
 
 /**
  * The action for moving a stylesheet further down in the transformation pipeline.
@@ -30,7 +31,7 @@ public class MoveDownAction extends AbstractStylesheetAction
 	 */
 	public MoveDownAction(StylesheetViewer viewer)
 	{
-		super(ActionMessages.MoveDownAction_Text, viewer);
+		super(Messages.MoveDownAction_Text, viewer);
 	}
 
 	@Override

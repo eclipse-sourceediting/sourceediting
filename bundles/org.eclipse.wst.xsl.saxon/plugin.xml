@@ -10,7 +10,7 @@
             outputProperties="SaxonOutputProperties.properties">
          <transformerFactory
                factoryClass="com.icl.saxon.TransformerFactoryImpl"
-               name="Saxon 6">
+               name="%transformerFactorySaxon6">
          </transformerFactory>
       </processorType>
       <processorType
@@ -20,7 +20,7 @@
             outputProperties="SaxonOutputProperties.properties">
          <transformerFactory
                factoryClass="net.sf.saxon.TransformerFactoryImpl"
-               name="Saxon 7">
+               name="%transformerSaxonXSLT2">
          </transformerFactory>
       </processorType>
    </extension>

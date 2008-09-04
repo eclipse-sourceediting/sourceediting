@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver - bug 245772 - NLS Message refactoring
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.actions;
 
@@ -29,6 +30,7 @@ import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
+import org.eclipse.wst.xsl.debug.ui.Messages;
 
 /**
  * An action that opens a dialog to allow the user to select a file in the workspace.
@@ -63,7 +65,7 @@ public class AddWorkspaceFileAction extends AbstractStylesheetAction
 	 */
 	public AddWorkspaceFileAction(StylesheetViewer viewer)
 	{
-		super(ActionMessages.AddWorkspaceFileAction_Text, viewer);
+		super(Messages.AddWorkspaceFileAction_Text, viewer);
 	}
 
 	@Override
@@ -77,8 +79,8 @@ public class AddWorkspaceFileAction extends AbstractStylesheetAction
 
 		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(), lp, cp);
 		dialog.setValidator(validator);
-		dialog.setTitle(ActionMessages.AddWorkspaceFileAction_DialogTitle);
-		dialog.setMessage(ActionMessages.AddWorkspaceFileAction_DialogMessage);
+		dialog.setTitle(Messages.AddWorkspaceFileAction_DialogTitle);
+		dialog.setMessage(Messages.AddWorkspaceFileAction_DialogMessage);
 		dialog.addFilter(new ViewerFilter()
 		{
 			@Override

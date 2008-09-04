@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 245772 - NLS Message refactoring
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.actions;
 
@@ -16,6 +17,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
+import org.eclipse.wst.xsl.debug.ui.Messages;
 
 /**
  * The action for moving a stylesheet further up in the transformation pipeline.
@@ -31,7 +33,7 @@ public class MoveUpAction extends AbstractStylesheetAction
 	 */
 	public MoveUpAction(StylesheetViewer viewer)
 	{
-		super(ActionMessages.MoveUpAction_Text, viewer);
+		super(Messages.MoveUpAction_Text, viewer);
 	}
 
 	@Override

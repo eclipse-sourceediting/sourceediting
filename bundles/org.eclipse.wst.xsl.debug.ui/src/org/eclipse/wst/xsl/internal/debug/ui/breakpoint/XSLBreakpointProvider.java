@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 245772 - NLS Message refactoring
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.breakpoint;
 
@@ -33,6 +34,7 @@ import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingText
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakpointProvider;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.model.XSLLineBreakpoint;
+import org.eclipse.wst.xsl.debug.ui.Messages;
 
 /**
  * An SSE <code>IBreakpointProvider</code> for XSL files.

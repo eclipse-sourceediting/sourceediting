@@ -49,6 +49,8 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
+import org.eclipse.wst.xsl.debug.ui.Messages;
+
 
 /**
  * A block that shows a text box with buttons for browsing workspace or the filesystem

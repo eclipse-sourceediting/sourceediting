@@ -7,12 +7,14 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 245772 - NLS Message refactoring
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.actions;
 
 import org.eclipse.jface.window.Window;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.ParameterViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchAttribute;
+import org.eclipse.wst.xsl.debug.ui.Messages;
 
 /**
  * An action that opens a dialog to allow the user to add a parameter to a transform.
@@ -28,16 +30,16 @@ public class AddParameterAction extends AbstractParameterAction
 	 */
 	public AddParameterAction(ParameterViewer viewer)
 	{
-		super(ActionMessages.AddParameterAction, viewer);
+		super(Messages.AddParameterAction, viewer);
 	}
 
 	@Override
 	public void run()
 	{
-		MultipleInputDialog dialog = new MultipleInputDialog(getShell(), ActionMessages.AddParameterAction_Dialog);
-		String namelabel = ActionMessages.AddParameterAction_Dialog_Name;
+		MultipleInputDialog dialog = new MultipleInputDialog(getShell(), Messages.AddParameterAction_Dialog);
+		String namelabel = Messages.AddParameterAction_Dialog_Name;
 		dialog.addTextField(namelabel, null, false);
-		String variableslabel = ActionMessages.AddParameterAction_Dialog_Value;
+		String variableslabel = Messages.AddParameterAction_Dialog_Value;
 		dialog.addVariablesField(variableslabel, null, false);
 		dialog.open();
 

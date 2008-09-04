@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 245772 - NLS Message refactor
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.actions;
 
@@ -36,6 +37,7 @@ import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
+import org.eclipse.wst.xsl.debug.ui.Messages;
 
 /**
  * A dialog with handy methods for adding simple controls to itself.
@@ -272,7 +274,7 @@ public class MultipleInputDialog extends Dialog
 			});
 		}
 
-		Button button = createButton(comp, IDialogConstants.IGNORE_ID, ActionMessages.VariablesFieldButton_Text, false);
+		Button button = createButton(comp, IDialogConstants.IGNORE_ID, Messages.VariablesFieldButton_Text, false);
 		button.addSelectionListener(new SelectionAdapter()
 		{
 			@Override

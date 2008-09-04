@@ -10,11 +10,11 @@
             outputProperties="XalanOutputProperties.properties">
          <transformerFactory
                factoryClass="org.apache.xalan.processor.TransformerFactoryImpl"
-               name="Interpretive">
+               name="%transformerFactoryNameXalan">
          </transformerFactory>
          <transformerFactory
                factoryClass="org.apache.xalan.xsltc.trax.TransformerFactoryImpl"
-               name="Compiling">
+               name="%transformerFactoryNameXalanXSLTC">
          </transformerFactory>
       </processorType>
    </extension>

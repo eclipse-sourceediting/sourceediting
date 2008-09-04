@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 245772 - NLS Message refactoring
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.actions;
 
@@ -16,6 +17,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
+import org.eclipse.wst.xsl.debug.ui.Messages;
+
 
 /**
  * An action that opens a dialog to allow the user to select a file from the file system.
@@ -32,7 +35,7 @@ public class AddExternalFileAction extends OpenDialogAction
 	 */
 	public AddExternalFileAction(StylesheetViewer viewer, String dialogSettingsPrefix)
 	{
-		super(ActionMessages.AddExternalFileAction_Text, viewer, dialogSettingsPrefix);
+		super(Messages.AddExternalFileAction_Text, viewer, dialogSettingsPrefix);
 	}
 
 	@Override
@@ -44,7 +47,7 @@ public class AddExternalFileAction extends OpenDialogAction
 			lastUsedPath = ""; //$NON-NLS-1$
 		}
 		FileDialog dialog = new FileDialog(getShell(), SWT.MULTI);
-		dialog.setText(ActionMessages.AddExternalFileAction_Selection_3);
+		dialog.setText(Messages.AddExternalFileAction_Selection_3);
 		dialog.setFilterPath(lastUsedPath);
 		dialog.setFilterExtensions(new String[]{ "*.xsl" }); //$NON-NLS-1$
 		String res = dialog.open();

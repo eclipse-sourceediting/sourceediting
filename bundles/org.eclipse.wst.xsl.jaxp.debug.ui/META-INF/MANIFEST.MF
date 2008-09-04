@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: XSL JAXP Debug UI (Incubating)
+Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.xsl.jaxp.debug.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.wst.xsl.jaxp.debug.ui.internal.JAXPDebugUIPlugin
-Bundle-Vendor: Eclipse.org
+Bundle-Vendor: %vendorName
 Require-Bundle: org.eclipse.ui;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.core.runtime;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.debug.ui;bundle-version="[3.4.0,4.0.0)",
@@ -22,3 +22,4 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.jdt.debug.ui;bundle-version="[3.3.0,4.0.0)"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
+Bundle-Localization: plugin

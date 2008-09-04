@@ -34,7 +34,7 @@
 	<extension point="org.eclipse.ui.preferencePages">
 		<page category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
 			class="org.eclipse.wst.xsl.jaxp.debug.ui.internal.preferences.ProcessorsPreferencePage"
-			id="org.eclipse.wst.xsl.ui.preferences.java" name="Java Processors">
+			id="org.eclipse.wst.xsl.ui.preferences.java" name="%pageNameJavaProcessors">
 		</page>
 	</extension>
  <extension
@@ -42,7 +42,7 @@
     <view
           class="org.eclipse.wst.xsl.jaxp.debug.ui.internal.views.ResultView"
           id="org.eclipse.wst.xsl.jaxp.debug.ui.resultview"
-          name="Result"
+          name="%viewNameResult"
           category="org.eclipse.wst.xml">
     </view>
  </extension>

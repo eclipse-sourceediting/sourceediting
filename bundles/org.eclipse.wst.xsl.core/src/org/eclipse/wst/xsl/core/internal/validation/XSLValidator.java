@@ -36,6 +36,8 @@ import org.eclipse.wst.xsl.core.model.Template;
 import org.eclipse.wst.xsl.core.model.XSLAttribute;
 import org.eclipse.wst.xsl.core.model.XSLElement;
 import org.eclipse.wst.xsl.core.model.XSLNode;
+import org.eclipse.wst.xsl.core.Messages;
+
 
 /**
  * The XSL validator for workspace XSL files.
@@ -279,7 +281,8 @@ public class XSLValidator
 			List<Template> templateList = stylesheetComposed.getTemplatesByName(calledTemplate.getName());
 			if (templateList.size() == 0)
 			{
-				createMarker(report, calledTemplate.getAttribute("name"), getPreference(ValidationPreferences.CALL_TEMPLATES), MessageFormat.format(Messages.XSLValidator_18, calledTemplate.getName())); //$NON-NLS-1$
+				Object[] messageArgs = { calledTemplate.getName() };
+				createMarker(report, calledTemplate.getAttribute("name"), getPreference(ValidationPreferences.CALL_TEMPLATES), MessageFormat.format(Messages.XSLValidator_18, messageArgs)); //$NON-NLS-1$
 			}
 			else
 			{
@@ -292,13 +295,18 @@ public class XSLValidator
 						if (calledTemplateParam.getName().equals(namedTemplateParam.getName()))
 						{
 							found = true;
-							if (!namedTemplateParam.isValue() && !calledTemplateParam.isValue())
-								createMarker(report, calledTemplateParam, getPreference(ValidationPreferences.EMPTY_PARAM), MessageFormat.format(Messages.XSLValidator_20, calledTemplateParam.getName()));
+							if (!namedTemplateParam.isValue() && !calledTemplateParam.isValue()) {
+							    Object[] messageArgs = { calledTemplateParam.getName() };	
+								createMarker(report, calledTemplateParam, getPreference(ValidationPreferences.EMPTY_PARAM), MessageFormat.format(Messages.XSLValidator_20, messageArgs));
+							}
 							break;
+							
 						}
 					}
-					if (!found)
-						createMarker(report, calledTemplateParam.getAttribute("name"), getPreference(ValidationPreferences.MISSING_PARAM), MessageFormat.format(Messages.XSLValidator_22, calledTemplateParam.getName())); //$NON-NLS-1$
+					if (!found) {
+						Object[] messageArgs = { calledTemplateParam.getName() };
+						createMarker(report, calledTemplateParam.getAttribute("name"), getPreference(ValidationPreferences.MISSING_PARAM), MessageFormat.format(Messages.XSLValidator_22, messageArgs)); //$NON-NLS-1$
+					}
 				}
 				if (getPreference(ValidationPreferences.MISSING_PARAM) > IMarker.SEVERITY_INFO)
 				{
@@ -315,8 +323,10 @@ public class XSLValidator
 									break;
 								}
 							}
-							if (!found)
-								createMarker(report, calledTemplate, getPreference(ValidationPreferences.MISSING_PARAM), MessageFormat.format(Messages.XSLValidator_3, namedTemplateParam.getName()));
+							if (!found) {
+								Object[] messageArgs = { namedTemplateParam.getName() };
+								createMarker(report, calledTemplate, getPreference(ValidationPreferences.MISSING_PARAM), MessageFormat.format(Messages.XSLValidator_3, messageArgs));
+							}
 						}
 					}
 				}
@@ -345,7 +355,7 @@ public class XSLValidator
 	/**
 	 * Get the singleton XSLValidator instance.
 	 * 
-	 * @return the singleson XSLValidator instance
+	 * @return the singleton XSLValidator instance
 	 */
 	public static XSLValidator getInstance()
 	{

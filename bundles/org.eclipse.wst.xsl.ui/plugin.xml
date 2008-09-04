@@ -11,7 +11,7 @@
 	</extension>
 	
 	<extension point="org.eclipse.ui.editors">
-		<editor name="XSL Editor" 
+		<editor name="%editorName" 
 			icon="icons/full/xslt_file.gif"
 			contributorClass="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorActionBarContributor"
 			class="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"
@@ -58,9 +58,9 @@
 			finalPerspective="org.eclipse.wst.xsl.ui.perspective" 
 			icon="icons/full/xslt_file.gif"
 			id="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard"
-			name="XSL" 
+			name="%wizardNameXSL" 
 			preferredPerspectives="org.eclipse.wst.xsl.ui.perspective">
-			<description>Create a new XSL Stylesheet</description>
+			<description>%wizardDescriptionXSL</description>
 			<selection class="org.eclipse.core.resources.IResource">
 			</selection>
 		</wizard>
@@ -70,7 +70,7 @@
 	<extension point="org.eclipse.ui.editors.templates">
 		<contextType
 			class="org.eclipse.wst.xsl.ui.internal.templates.TemplateContextTypeXSL"
-			id="xsl_new" name="New XSL">
+			id="xsl_new" name="%contextTypeNewXSL">
 		</contextType>
 		<include file="templates/file_templates.xml" />
 	</extension>
@@ -84,13 +84,13 @@
 		<page category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
 			class="org.eclipse.wst.xsl.ui.internal.preferences.XSLTemplatePreferencePage"
 			id="org.eclipse.wst.xsl.ui.template.preferencePage" 
-			name="Templates">
+			name="%pageNameTemplates">
 		</page>
 
 		<page category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
 			class="org.eclipse.wst.xsl.ui.internal.preferences.ValidationPreferencePage"
 			id="org.eclipse.wst.xsl.ui.preferences.Validation" 
-			name="Validation">
+			name="%pageNameValidation">
 		</page>
 	</extension>
 	
@@ -184,9 +184,9 @@
         <command
               commandId="org.eclipse.wst.sse.ui.open.file.from.source"
               id="openSelection"
-              label="Open Selection"
+              label="%commandOpenSelection"
               style="push"
-              tooltip="Open Selection">
+              tooltip="%commandTooltipOpenSelection">
            <visibleWhen
                  checkEnabled="false">
            </visibleWhen>
@@ -205,7 +205,7 @@
               icon="icons/full/new_xml.gif"
               id="org.eclipse.wst.xsl.ui.newXMLFile"
               style="push"
-              tooltip="New XML File">
+              tooltip="%commandTooltipNewXMLFile">
              <parameter
                    name="newWizardId"
                    value="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard">
@@ -221,7 +221,7 @@
               icon="icons/full/newdtd_wiz.gif"
               id="org.eclipse.wst.xsl.ui.newDTDFile"
               style="push"
-              tooltip="New XML File">
+              tooltip="%commandTooltipNewXMLFile2">
              <parameter
                    name="newWizardId"
                    value="org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard">
@@ -237,7 +237,7 @@
               icon="icons/full/XSDFile.gif"
               id="org.eclipse.wst.xsl.ui.newXSDFile"
               style="push"
-              tooltip="New XML Schema File">
+              tooltip="%commandTooltipNewXSDFile">
              <parameter
                    name="newWizardId"
                    value="org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard">
@@ -254,7 +254,7 @@
               icon="icons/full/xslt_file.gif"
               id="org.eclipse.wst.xsl.ui.newXSLFile"
               style="push"
-              tooltip="New XSL File">
+              tooltip="%commandTooltipNewXSLFile">
              <parameter
                    name="newWizardId"
                    value="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard">
@@ -277,7 +277,7 @@
      <view
            class="org.eclipse.wst.xsl.ui.internal.StylesheetView"
            id="org.eclipse.wst.xsl.ui.view.outline"
-           name="Stylesheet"
+           name="%viewNameStylesheet"
            category="org.eclipse.wst.xml"
            restorable="true">
      </view>
