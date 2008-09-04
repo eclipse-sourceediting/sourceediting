@@ -14,8 +14,7 @@
 	
 	<target name="merge">
 		<xsl.xinclude in="${docbooksource}/xslhelp.dbk"
-		              out="${docbooksource}/xslhelpcombined.dbk"
-		/>
+		              out="${docbooksource}/xslhelpcombined.dbk"/>
 	</target>
 
 	<target name="create-doc" depends="merge">
