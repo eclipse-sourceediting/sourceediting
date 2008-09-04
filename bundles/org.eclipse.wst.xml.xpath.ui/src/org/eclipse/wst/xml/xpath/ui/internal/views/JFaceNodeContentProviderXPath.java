@@ -8,7 +8,7 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xml.xpath.internal.ui.views;
+package org.eclipse.wst.xml.xpath.ui.internal.views;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;

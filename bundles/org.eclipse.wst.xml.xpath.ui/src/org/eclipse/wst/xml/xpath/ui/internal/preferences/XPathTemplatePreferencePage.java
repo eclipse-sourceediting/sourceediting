@@ -11,7 +11,7 @@
 package org.eclipse.wst.xml.xpath.ui.internal.preferences;
 
 import org.eclipse.wst.xml.ui.internal.preferences.XMLTemplatePreferencePage;
-import org.eclipse.wst.xml.xpath.ui.XPathViewPlugin;
+import org.eclipse.wst.xml.xpath.ui.internal.XPathUIPlugin;
 
 /**
  * XSLTemplatePreferencePage sets up the template preference page that
@@ -27,9 +27,9 @@ public class XPathTemplatePreferencePage extends XMLTemplatePreferencePage {
 	 * 
 	 */
 	public XPathTemplatePreferencePage() {
-		setPreferenceStore(XPathViewPlugin.getDefault().getPreferenceStore());
-		setTemplateStore(XPathViewPlugin.getDefault().getXPathTemplateStore());
-		setContextTypeRegistry(XPathViewPlugin.getDefault().getXPathTemplateContextRegistry());
+		setPreferenceStore(XPathUIPlugin.getDefault().getPreferenceStore());
+		setTemplateStore(XPathUIPlugin.getDefault().getXPathTemplateStore());
+		setContextTypeRegistry(XPathUIPlugin.getDefault().getXPathTemplateContextRegistry());
 	}
 	
 	/**
@@ -40,7 +40,7 @@ public class XPathTemplatePreferencePage extends XMLTemplatePreferencePage {
 	@Override
 	public boolean performOk() {
 		boolean ok = super.performOk();
-		XPathViewPlugin.getDefault().savePluginPreferences();
+		XPathUIPlugin.getDefault().savePluginPreferences();
 		return ok;
 	}	
 }

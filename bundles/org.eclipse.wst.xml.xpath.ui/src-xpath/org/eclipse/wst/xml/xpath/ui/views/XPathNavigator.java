@@ -83,9 +83,8 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceTable;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
 import org.eclipse.wst.xml.ui.internal.provisional.IDOMSourceEditingTextTools;
-import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 import org.eclipse.wst.xml.xpath.ui.XPathUIMessages;
-import org.eclipse.wst.xml.xpath.ui.XPathViewPlugin;
+import org.eclipse.wst.xml.xpath.ui.internal.XPathUIPlugin;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
@@ -282,12 +281,12 @@ public class XPathNavigator extends ViewPart
             catch( XPathExpressionException pex) 
             {
                 MessageDialog.openError( getSite().getShell(), XPathUIMessages.XPathNavigator_XPath_Navigator, XPathUIMessages.XPathNavigator_XPath_Eval_Failed + pex.getCause().getMessage());                    
-                XPathViewPlugin.getDefault().log( "XPath Navigator : XPath Expression evaluation failed.", pex); //$NON-NLS-1$
+                XPathUIPlugin.log(pex);
             }
             catch( Exception ex) 
             {
                 MessageDialog.openError( getSite().getShell(), XPathUIMessages.XPathNavigator_XPath_Navigator, XPathUIMessages.XPathNavigator_XPath_Eval_Failed + ex.getMessage());                    
-                XPathViewPlugin.getDefault().log( "XPath Navigator : XPath Expression evaluation failed.", ex); //$NON-NLS-1$
+                XPathUIPlugin.log(ex);
             }
         }        
     }
@@ -614,12 +613,12 @@ public class XPathNavigator extends ViewPart
         query = new XPathAction();
         query.setText(XPathUIMessages.XPathNavigator_Run_XPath_Query);
         query.setToolTipText(XPathUIMessages.XPathNavigator_Run_on_selected);
-        query.setImageDescriptor(XPathViewPlugin.getDefault().getImageRegistry().getDescriptor("run")); //$NON-NLS-1$
+        query.setImageDescriptor(XPathUIPlugin.getDefault().getImageRegistry().getDescriptor("run")); //$NON-NLS-1$
         
         refresh = new RefreshAction();
         refresh.setText(XPathUIMessages.XPathNavigator_Refresh_Source_Docs);
         refresh.setToolTipText(XPathUIMessages.XPathNavigator_Refresh_Source_Docs_Tip);
-        refresh.setImageDescriptor( XPathViewPlugin.getDefault().getImageRegistry().getDescriptor( "refresh")); //$NON-NLS-1$
+        refresh.setImageDescriptor( XPathUIPlugin.getDefault().getImageRegistry().getDescriptor( "refresh")); //$NON-NLS-1$
 
         showInSource = new ShowInSourceAction();
         showInSource.setText(XPathUIMessages.XPathNavigator_Show_In_Source);

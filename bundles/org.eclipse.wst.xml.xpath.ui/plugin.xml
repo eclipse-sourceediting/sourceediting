@@ -9,7 +9,7 @@
             id="org.eclipse.wst.xml"/>
     <view
           category="org.eclipse.wst.xml"
-          class="org.eclipse.wst.xml.xpath.internal.ui.views.XPathView"
+          class="org.eclipse.wst.xml.xpath.ui.internal.views.XPathView"
           icon="$nl$/icons/full/xpath.gif"
           id="org.eclipse.wst.xml.views.XPathView"
           name="%xpathViewName"/>

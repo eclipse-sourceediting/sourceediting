@@ -8,7 +8,7 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xml.xpath.internal.ui.views;
+package org.eclipse.wst.xml.xpath.ui.internal.views;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -100,7 +100,7 @@ public class XPathView extends ViewPart
 	private TreeViewer treeViewer;
 	private IEditorPart activeEditor;
 	private Text text;
-	private JFaceNodeContentProviderXPath contentProvider;
+//	private JFaceNodeContentProviderXPath contentProvider;
 	private XPathComputer xpathComputer;
 	private Text locationText;
 	private XPathViewActions xpathViewActions = new XPathViewActions();
@@ -152,8 +152,9 @@ public class XPathView extends ViewPart
 		gd.horizontalSpan = 2;
 		treeViewer.getControl().setLayoutData(gd);
 		treeViewer.setLabelProvider(new JFaceNodeLabelProviderXPath());
-		this.contentProvider = new JFaceNodeContentProviderXPath();
-		treeViewer.setContentProvider(contentProvider);
+		treeViewer.setContentProvider(new JFaceNodeContentProviderXPath());
+//		treeViewer.setContentProvider(new BaseWorkbenchContentProvider());
+//		treeViewer.setLabelProvider(new WorkbenchLabelProvider());
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener(){
 
 			public void selectionChanged(SelectionChangedEvent event)
@@ -361,12 +362,13 @@ public class XPathView extends ViewPart
 		}
 	}
 	
-	void xpathRecomputed(NodeList nodeList)
+	void xpathRecomputed(final NodeList nodeList)
 	{
 		Control refreshControl = treeViewer.getControl();
 		if (refreshControl != null && !refreshControl.isDisposed())
 		{
 			refreshControl.setRedraw(false);
+			// treeViewer.setInput(new NodeListWorkbenchAdapter(nodeList));
 			treeViewer.setInput(nodeList);
 			treeViewer.setSelection(currentSelection, true);
 			refreshControl.setRedraw(true);

@@ -8,7 +8,7 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xml.xpath.internal.ui.views;
+package org.eclipse.wst.xml.xpath.ui.internal.views;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -18,16 +18,15 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
-import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
 import org.eclipse.wst.xml.xpath.messages.Messages;
+import org.eclipse.wst.xml.xpath.ui.internal.XPathUIPlugin;
 
 class XPathViewActions
 {
-	private ImageDescriptor COLLAPSE_D = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_DLCL_COLLAPSEALL);
-	private ImageDescriptor COLLAPSE_E = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_ELCL_COLLAPSEALL);
-	private ImageDescriptor SYNCED_D = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_DLCL_SYNCED);
-	private ImageDescriptor SYNCED_E = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_ELCL_SYNCED);
+	private ImageDescriptor COLLAPSE_D = XPathUIPlugin.imageDescriptorFromPlugin(XPathUIPlugin.PLUGIN_ID, "icons/full/dlcl16/collapseall.gif");
+	private ImageDescriptor COLLAPSE_E = XPathUIPlugin.imageDescriptorFromPlugin(XPathUIPlugin.PLUGIN_ID, "icons/full/elcl16/collapseall.gif");
+	private ImageDescriptor SYNCED_D = XPathUIPlugin.imageDescriptorFromPlugin(XPathUIPlugin.PLUGIN_ID, "icons/full/dlcl16/synced.gif");
+	private ImageDescriptor SYNCED_E = XPathUIPlugin.imageDescriptorFromPlugin(XPathUIPlugin.PLUGIN_ID, "icons/full/elcl16/synced.gif");
 
 	boolean linkWithEditor = false;
 	private CollapseTreeAction collapseAction;
