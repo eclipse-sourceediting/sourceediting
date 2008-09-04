@@ -957,7 +957,7 @@ public class JSPTranslator {
 
 		setCurrentNode(new ZeroStructuredDocumentRegion(fStructuredDocument, fStructuredDocument.getLength()));
 		translateCodas();
-if(false)
+
 		/*
 		 * Make sure any extra custom tag start tags won't cause compiler
 		 * problems.  They should instead be reported as unbalanced tags.
