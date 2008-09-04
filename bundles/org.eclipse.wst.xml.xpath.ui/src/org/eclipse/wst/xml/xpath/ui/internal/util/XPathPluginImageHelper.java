@@ -18,7 +18,7 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.xml.xpath.ui.XPathViewPlugin;
+import org.eclipse.wst.xml.xpath.ui.internal.XPathUIPlugin;
 
 
 /**
@@ -47,7 +47,7 @@ public class XPathPluginImageHelper {
 	// save a descriptor for each image
 	@SuppressWarnings("unchecked")
 	private HashMap fImageDescRegistry = null;
-	private final String PLUGINID = XPathViewPlugin.getPluginId();
+	private final String PLUGINID = XPathUIPlugin.PLUGIN_ID;
 
 	/**
 	 * Creates an image from the given resource and adds the image to the
