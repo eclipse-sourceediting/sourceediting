@@ -10,7 +10,7 @@
     <view
           category="org.eclipse.wst.xml"
           class="org.eclipse.wst.xml.xpath.internal.ui.views.XPathView"
-          icon="icons/full/xpath.gif"
+          icon="$nl$/icons/full/xpath.gif"
           id="org.eclipse.wst.xml.views.XPathView"
           name="%xpathViewName"/>
  </extension>
@@ -19,27 +19,27 @@
 	<extension point="org.eclipse.ui.editors.templates">
 		<contextType
 			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
-			id="xpath_axis" name="axis">
+			id="xpath_axis" name="%contextType.axis">
 		</contextType>
 		<contextType
 			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
-			id="exslt_function" name="exslt">
+			id="exslt_function" name="%contextType.exslt">
 		</contextType>
 		<contextType
 			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
-			id="xsl_xpath" name="xpath">
+			id="xsl_xpath" name="%contextType.xpath">
 		</contextType>
 		<contextType
 			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
-			id="xpath_2" name="xpath 2.0">
+			id="xpath_2" name="%contextType.xpath2o">
 		</contextType>
 		<contextType
 			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
-			id="xpath_operator" name="operator">
+			id="xpath_operator" name="%contextType.operator">
 		</contextType>
 		<contextType
 			class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
-			id="extension_function" name="custom">
+			id="extension_function" name="%contextType.custom">
 		</contextType>
 		<include file="templates/xpath_templates.xml"/>
 		<include file="templates/xpath_operator_templates.xml"/>
@@ -51,12 +51,12 @@
 	        category="org.eclipse.wst.xml.ui.preferences.xml"
 	        class="org.eclipse.wst.xml.xpath.ui.internal.preferences.XPathPrefencePage"
 	        id="org.eclipse.wst.xml.xpath.ui.XPathPreferencePage"
-	        name="XPath">
+	        name="%pageNameXpath">
 	  </page>
 		<page category="org.eclipse.wst.xml.xpath.ui.XPathPreferencePage"
 			class="org.eclipse.wst.xml.xpath.ui.internal.preferences.XPathTemplatePreferencePage"
 			id="org.eclipse.wst.xsl.ui.XPath" 
-			name="XPath Templates">
+			name="%pagenameXPathTemplates">
 		</page>	
 	</extension>
 	   

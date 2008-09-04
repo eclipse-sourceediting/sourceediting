@@ -1,9 +1,9 @@
-package org.eclipse.wst.xml.xpath.internal.ui.views;
+package org.eclipse.wst.xml.xpath.messages;
 
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.wst.xml.xpath.internal.ui.views.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.wst.xml.xpath.messages.messages"; //$NON-NLS-1$
 	public static String XPathComputer_0;
 	public static String XPathComputer_5;
 	public static String XPathView_0;

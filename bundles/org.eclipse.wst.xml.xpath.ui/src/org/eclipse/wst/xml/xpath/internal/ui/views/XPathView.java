@@ -63,6 +63,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.xpath.messages.Messages;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;

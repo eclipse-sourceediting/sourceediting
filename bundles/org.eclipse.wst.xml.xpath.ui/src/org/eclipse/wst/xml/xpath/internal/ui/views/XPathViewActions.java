@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
+import org.eclipse.wst.xml.xpath.messages.Messages;
 
 class XPathViewActions
 {

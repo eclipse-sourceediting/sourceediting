@@ -34,6 +34,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManag
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
+import org.eclipse.wst.xml.xpath.messages.Messages;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
