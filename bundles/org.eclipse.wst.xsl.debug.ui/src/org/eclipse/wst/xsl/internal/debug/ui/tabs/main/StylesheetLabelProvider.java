@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
+import org.eclipse.wst.xsl.debug.ui.Messages;
 
 public class StylesheetLabelProvider extends LabelProvider
 {
@@ -43,18 +44,18 @@ public class StylesheetLabelProvider extends LabelProvider
 		}
 		catch (CoreException e)
 		{
-			return MessageFormat.format(MainTabMessages.StylesheetEntryLabelProvider_Invalid_path, new String[]
+			return MessageFormat.format(Messages.StylesheetEntryLabelProvider_Invalid_path, new Object[]
 			{ "null" }); //$NON-NLS-1$
 		}
 
 		if (path == null)
 		{
-			return MessageFormat.format(MainTabMessages.StylesheetEntryLabelProvider_Invalid_path, new String[]
+			return MessageFormat.format(Messages.StylesheetEntryLabelProvider_Invalid_path, new Object[]
 			{ "null" }); //$NON-NLS-1$
 		}
 		else if (!path.isAbsolute() || !path.isValidPath(path.toString()))
 		{
-			return MessageFormat.format(MainTabMessages.StylesheetEntryLabelProvider_Invalid_path, new String[]
+			return MessageFormat.format(Messages.StylesheetEntryLabelProvider_Invalid_path, new Object[]
 			{ path.toString() });
 		}
 

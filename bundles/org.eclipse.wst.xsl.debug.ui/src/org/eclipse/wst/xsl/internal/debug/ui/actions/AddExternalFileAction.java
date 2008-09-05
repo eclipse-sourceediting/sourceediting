@@ -35,7 +35,7 @@ public class AddExternalFileAction extends OpenDialogAction
 	 */
 	public AddExternalFileAction(StylesheetViewer viewer, String dialogSettingsPrefix)
 	{
-		super(Messages.AddExternalFileAction_Text, viewer, dialogSettingsPrefix);
+		super(Messages.getString("AddExternalFileAction_Text"), viewer, dialogSettingsPrefix);
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class AddExternalFileAction extends OpenDialogAction
 			lastUsedPath = ""; //$NON-NLS-1$
 		}
 		FileDialog dialog = new FileDialog(getShell(), SWT.MULTI);
-		dialog.setText(Messages.AddExternalFileAction_Selection_3);
+		dialog.setText(Messages.getString("AddExternalFileAction_Selection_3"));
 		dialog.setFilterPath(lastUsedPath);
 		dialog.setFilterExtensions(new String[]{ "*.xsl" }); //$NON-NLS-1$
 		String res = dialog.open();

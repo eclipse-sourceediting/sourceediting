@@ -36,10 +36,11 @@ import org.eclipse.wst.xsl.internal.debug.ui.actions.MoveDownAction;
 import org.eclipse.wst.xsl.internal.debug.ui.actions.MoveUpAction;
 import org.eclipse.wst.xsl.internal.debug.ui.actions.RemoveAction;
 import org.eclipse.wst.xsl.launching.config.LaunchPipeline;
+import org.eclipse.wst.xsl.debug.ui.Messages;
 
 public class TransformsBlock extends AbstractTableBlock implements IStylesheetEntriesChangedListener
 {
-	protected static final String DIALOG_SETTINGS_PREFIX = MainTabMessages.TransformsBlock_0;
+	protected static final String DIALOG_SETTINGS_PREFIX = "TransformsBlock"; 
 	private StylesheetViewer stylesheetViewer;
 	private LaunchPipeline pipeline;
 
@@ -132,7 +133,7 @@ public class TransformsBlock extends AbstractTableBlock implements IStylesheetEn
 
 	public String getName()
 	{
-		return MainTabMessages.TransformsBlock_Name;
+		return Messages.getString("TransformsBlock_Name");
 	}
 
 	public void setPipeline(LaunchPipeline pipeline)

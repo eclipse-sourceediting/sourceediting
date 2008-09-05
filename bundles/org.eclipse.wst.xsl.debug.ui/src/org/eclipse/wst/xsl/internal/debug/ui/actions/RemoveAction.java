@@ -30,7 +30,7 @@ public class RemoveAction extends AbstractStylesheetAction
 	 */
 	public RemoveAction(StylesheetViewer viewer)
 	{
-		super(Messages.RemoveAction_Text, viewer);
+		super(Messages.getString("RemoveAction_Text"), viewer);
 	}
 
 	@SuppressWarnings("unchecked")

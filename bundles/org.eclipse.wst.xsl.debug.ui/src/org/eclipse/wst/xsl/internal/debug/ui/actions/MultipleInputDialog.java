@@ -274,7 +274,7 @@ public class MultipleInputDialog extends Dialog
 			});
 		}
 
-		Button button = createButton(comp, IDialogConstants.IGNORE_ID, Messages.VariablesFieldButton_Text, false);
+		Button button = createButton(comp, IDialogConstants.IGNORE_ID, Messages.getString("VariablesFieldButton_Text"), false);
 		button.addSelectionListener(new SelectionAdapter()
 		{
 			@Override

@@ -65,7 +65,7 @@ public class AddWorkspaceFileAction extends AbstractStylesheetAction
 	 */
 	public AddWorkspaceFileAction(StylesheetViewer viewer)
 	{
-		super(Messages.AddWorkspaceFileAction_Text, viewer);
+		super(Messages.getString("AddWorkspaceFileAction_Text"), viewer);
 	}
 
 	@Override
@@ -79,8 +79,8 @@ public class AddWorkspaceFileAction extends AbstractStylesheetAction
 
 		ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog(getShell(), lp, cp);
 		dialog.setValidator(validator);
-		dialog.setTitle(Messages.AddWorkspaceFileAction_DialogTitle);
-		dialog.setMessage(Messages.AddWorkspaceFileAction_DialogMessage);
+		dialog.setTitle(Messages.getString("AddWorkspaceFileAction_DialogTitle"));
+		dialog.setMessage(Messages.getString("AddWorkspaceFileAction_DialogMessage"));
 		dialog.addFilter(new ViewerFilter()
 		{
 			@Override
