@@ -276,61 +276,64 @@ public class XSLValidator
 	{
 		for (CallTemplate calledTemplate : stylesheetComposed.getStylesheet().getCalledTemplates())
 		{
-			// get the list of templates that might be being called by this
-			// template call
-			List<Template> templateList = stylesheetComposed.getTemplatesByName(calledTemplate.getName());
-			if (templateList.size() == 0)
+			if (calledTemplate.getName() != null)
 			{
-				Object[] messageArgs = { calledTemplate.getName() };
-				createMarker(report, calledTemplate.getAttribute("name"), getPreference(ValidationPreferences.CALL_TEMPLATES), MessageFormat.format(Messages.XSLValidator_18, messageArgs)); //$NON-NLS-1$
-			}
-			else
-			{
-				Template namedTemplate = templateList.get(0);
-				for (Parameter calledTemplateParam : calledTemplate.getParameters())
+				// get the list of templates that might be being called by this
+				// template call
+				List<Template> templateList = stylesheetComposed.getTemplatesByName(calledTemplate.getName());
+				if (templateList.size() == 0)
 				{
-					boolean found = false;
-					for (Parameter namedTemplateParam : namedTemplate.getParameters())
+					Object[] messageArgs = { calledTemplate.getName() };
+					createMarker(report, calledTemplate.getAttribute("name"), getPreference(ValidationPreferences.CALL_TEMPLATES), MessageFormat.format(Messages.XSLValidator_18, messageArgs)); //$NON-NLS-1$
+				}
+				else
+				{
+					Template namedTemplate = templateList.get(0);
+					for (Parameter calledTemplateParam : calledTemplate.getParameters())
 					{
-						if (calledTemplateParam.getName().equals(namedTemplateParam.getName()))
+						boolean found = false;
+						for (Parameter namedTemplateParam : namedTemplate.getParameters())
 						{
-							found = true;
-							if (!namedTemplateParam.isValue() && !calledTemplateParam.isValue()) {
-							    Object[] messageArgs = { calledTemplateParam.getName() };	
-								createMarker(report, calledTemplateParam, getPreference(ValidationPreferences.EMPTY_PARAM), MessageFormat.format(Messages.XSLValidator_20, messageArgs));
+							if (calledTemplateParam.getName().equals(namedTemplateParam.getName()))
+							{
+								found = true;
+								if (!namedTemplateParam.isValue() && !calledTemplateParam.isValue()) {
+								    Object[] messageArgs = { calledTemplateParam.getName() };	
+									createMarker(report, calledTemplateParam, getPreference(ValidationPreferences.EMPTY_PARAM), MessageFormat.format(Messages.XSLValidator_20, messageArgs));
+								}
+								break;
+								
 							}
-							break;
-							
+						}
+						if (!found) {
+							Object[] messageArgs = { calledTemplateParam.getName() };
+							createMarker(report, calledTemplateParam.getAttribute("name"), getPreference(ValidationPreferences.MISSING_PARAM), MessageFormat.format(Messages.XSLValidator_22, messageArgs)); //$NON-NLS-1$
 						}
 					}
-					if (!found) {
-						Object[] messageArgs = { calledTemplateParam.getName() };
-						createMarker(report, calledTemplateParam.getAttribute("name"), getPreference(ValidationPreferences.MISSING_PARAM), MessageFormat.format(Messages.XSLValidator_22, messageArgs)); //$NON-NLS-1$
-					}
-				}
-				if (getPreference(ValidationPreferences.MISSING_PARAM) > IMarker.SEVERITY_INFO)
-				{
-					for (Parameter namedTemplateParam : namedTemplate.getParameters())
+					if (getPreference(ValidationPreferences.MISSING_PARAM) > IMarker.SEVERITY_INFO)
 					{
-						if (!namedTemplateParam.isValue())
+						for (Parameter namedTemplateParam : namedTemplate.getParameters())
 						{
-							boolean found = false;
-							for (Parameter calledTemplateParam : calledTemplate.getParameters())
+							if (!namedTemplateParam.isValue())
 							{
-								if (calledTemplateParam.getName().equals(namedTemplateParam.getName()))
+								boolean found = false;
+								for (Parameter calledTemplateParam : calledTemplate.getParameters())
 								{
-									found = true;
-									break;
+									if (calledTemplateParam.getName().equals(namedTemplateParam.getName()))
+									{
+										found = true;
+										break;
+									}
+								}
+								if (!found) {
+									Object[] messageArgs = { namedTemplateParam.getName() };
+									createMarker(report, calledTemplate, getPreference(ValidationPreferences.MISSING_PARAM), MessageFormat.format(Messages.XSLValidator_3, messageArgs));
 								}
 							}
-							if (!found) {
-								Object[] messageArgs = { namedTemplateParam.getName() };
-								createMarker(report, calledTemplate, getPreference(ValidationPreferences.MISSING_PARAM), MessageFormat.format(Messages.XSLValidator_3, messageArgs));
-							}
 						}
 					}
-				}
-			} 
+				} 
+			}
 		}
 	}
 
