@@ -215,4 +215,6 @@ public class XSLCompletionTest extends UnzippedProjectTester {
     	ICompletionProposal proposal = proposals[1];
     	assertTrue("Can't find XSL element proposals.", proposal.getDisplayString().equals("xsl:otherwise"));
     }
+    
+    
 }
