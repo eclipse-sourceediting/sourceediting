@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
+import java.util.ArrayList;
+
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
@@ -53,6 +55,7 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 	private static final String ATTR_SELECT = "select"; //$NON-NLS-1$
 	private static final String ATTR_TEST = "test"; //$NON-NLS-1$
 	private static final String ATTR_MATCH = "match"; //$NON-NLS-1$
+	private static final String ATTR_EXCLUDE_RESULT_PREFIXES = "exclude-result-prefixes"; //$NON-NLS-1$
 	/**
 	 * Retrieve all global variables in the stylesheet.
 	 */
@@ -123,23 +126,33 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 			IStructuredDocumentRegion sdRegion, ITextRegion completionRegion,
 			ICompletionProposal[] proposals, String matchString) {
 		ContentAssistRequest contentAssistRequest;
-		if (this.hasAttributeAtTextRegion(ATTR_SELECT, xmlNode.getAttributes(), completionRegion)) {
+		NamedNodeMap nodeMap = xmlNode.getAttributes();
+		
+		if (this.hasAttributeAtTextRegion(ATTR_SELECT, nodeMap, completionRegion)) {
 			contentAssistRequest = new SelectAttributeContentAssist(
 					xmlNode, xmlNode.getParentNode(), sdRegion,
 					completionRegion, documentPosition, 0, matchString,
 					textViewer);
 		 proposals = contentAssistRequest.getCompletionProposals();
 		} 
-		if (this.hasAttributeAtTextRegion(ATTR_TEST, xmlNode.getAttributes(), completionRegion)) {
+		if (this.hasAttributeAtTextRegion(ATTR_TEST, nodeMap, completionRegion)) {
 			contentAssistRequest = new TestAttributeContentAssist(
 					xmlNode, xmlNode.getParentNode(), sdRegion,
 					completionRegion, documentPosition, 0, matchString,
 					textViewer);
 			proposals = contentAssistRequest.getCompletionProposals();
 		}
+		if (this.hasAttributeAtTextRegion(ATTR_EXCLUDE_RESULT_PREFIXES, nodeMap, completionRegion)) {
+			contentAssistRequest = new ExcludeResultPrefixesContentAssist(
+					xmlNode, xmlNode.getParentNode(), sdRegion,
+					completionRegion, documentPosition, 0, matchString,
+					textViewer);
+			
+			proposals = contentAssistRequest.getCompletionProposals();
+		}
 		return proposals;
 	}
-
+	
 	/**
 	 * StructuredTextViewer must be set before using this.
 	 * 

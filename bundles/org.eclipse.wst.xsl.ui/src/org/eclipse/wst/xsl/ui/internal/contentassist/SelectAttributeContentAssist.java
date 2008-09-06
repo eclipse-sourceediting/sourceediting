@@ -22,7 +22,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xsl.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
-import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.xpath.core.internal.parser.XPathParser;
 import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xml.xpath.ui.internal.contentassist.XPathTemplateCompletionProcessor;
@@ -41,7 +40,7 @@ import org.w3c.dom.NodeList;
  * @author dcarver
  *
  */
-public class SelectAttributeContentAssist extends ContentAssistRequest {
+public class SelectAttributeContentAssist extends AbstractXSLContentAssistRequest {
 	
 	private static final String XPATH_GLOBAL_VARIABLES = "/xsl:stylesheet/xsl:variable"; //$NON-NLS-1$
 
@@ -64,9 +63,6 @@ public class SelectAttributeContentAssist extends ContentAssistRequest {
 	private List<String> fTemplateContexts = new ArrayList<String>();
 	private static final byte[] XPATH_LOCK = new byte[0];
 	
-	private ITextViewer textViewer = null;
-	
-
 	/**
 	 * Handles Content Assistance requests for Select Attributes.  This is called an instantiated
 	 * through the use of the computeProposals method from the XSLContentAssistProcessor.  It will
@@ -264,24 +260,6 @@ public class SelectAttributeContentAssist extends ContentAssistRequest {
 			}
 		}
 	}
-
-	/**
-	 * Checks to make sure that the NodeList has data
-	 * @param nodes A NodeList object
-	 * @return True if has data, false if empty
-	 */
-	private boolean hasNodes(NodeList nodes) {
-		return nodes != null && nodes.getLength() > 0;
-	}
-
-	/**
-	 * Get the cursor position within the Text Viewer
-	 * @return An int value containing the cursor position
-	 */
-	private int getCursorPosition() {
-		return textViewer.getTextWidget().getCaretOffset();
-	}
-
 
 	private XPathTemplateCompletionProcessor getTemplateCompletionProcessor() {
 		if (fTemplateProcessor == null) {

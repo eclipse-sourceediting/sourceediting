@@ -33,6 +33,12 @@ public class XSLPluginImages {
 	/**
 	 * Path to the XPATH Images used for Content Assist
 	 */
-	public static final String IMG_OPERATOR = "icons/full/operation.gif"; //$NON-NLS-1$	
+	public static final String IMG_OPERATOR = "icons/full/operation.gif"; //$NON-NLS-1$
+	
+	/**
+	 * Path to the XML Prefix Image used for Content Assist
+	 */
+	public static final String IMG_PREFIX = "icons/full/package_obj.gif"; //$NON-NLS-1$
+	
 	
 }
