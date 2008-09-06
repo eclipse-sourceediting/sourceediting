@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter id="XSLPreferences" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="http://www.docbook.org/xsd/4.5/docbook.xsd">
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+          "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="XSLPreferences">
 	<?dbhtml filename="preferences/xslpreferences.html" ?>
-	<title>XSL Tooling Preferences</title>
+	<title>XSL Tools Preferences</title>
 	<para>
 		The XSL Preference pages has several sub sections.  Each of these allow for configuration
 		of various aspects of the preferences.   From the controlling of the default XSL processor
@@ -20,7 +21,7 @@
 		<title>Features</title>
 		<para>
    			The XSL Features preference page allows for the configuration of features for a particular
-   			processor.   XSL Tooling comes with Xalan 2.7.0 by default.  Adopters can extend and include
+   			processor.   XSL Tools comes with Xalan 2.7.0 by default.  Adopters can extend and include
    			their own specific features for their own procesoors.   An adopter could extend the tooling
    			to support XSLT 2.0 transformations, and features particular to that parser.
    		</para>
@@ -32,7 +33,7 @@
 		</mediaobject>
 		<para>
    			The <emphasis role="bold">Processor Type</emphasis> allows you to set features for a specific processor.  In this case
-   			this is for the processor that is being installed.   XSL Tooling comes with Xalan 2.7.0, and it is the only available
+   			this is for the processor that is being installed.   XSL Tools comes with Xalan 2.7.0, and it is the only available
    			processor type by default.
    		</para>
 		<para>
@@ -117,7 +118,7 @@
 			<listitem>
 				<para>
 					<emphasis role="bold">xpath 2.0</emphasis> - Represents an XPath 2.0 function.
-					<emphasis>Note: That currently XSL Tooling only ships with templates defined for XPath 1.0 .</emphasis>
+					<emphasis>Note: That currently XSL Tools only ships with templates defined for XPath 1.0 .</emphasis>
 				</para>
 			</listitem>
 			<listitem>

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="http://www.docbook.org/xsd/4.5/docbook.xsd">
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+          "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
 	<?dbhtml filename="launching/launching.html" ?>
 	<title>XSL Launching and Debugging</title>
 	<para>
-		The XSL Tooling adds support for XSL Launch and Debugging configurations.
+		XSL Tools adds support for XSL Launch and Debugging configurations.
 		These allow you to setup XSL configurations for various jobs, and to also
 		debug xsl stylsheet transformations.	
 	</para>
@@ -13,7 +14,7 @@
 		<title>XSL Launching</title>
 		<para>
 			In the Project Explorer, simply select the input XML file and the stylesheet(s) to transform it, and then right-click and select 
-			<i>Run As &gt; XSL Transformation</i>. 
+			<emphasis>Run As > XSL Transformation</emphasis>. 
 	    </para>
 		<mediaobject>
 			<imageobject>

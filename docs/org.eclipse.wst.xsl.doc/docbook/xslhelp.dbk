@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<book id="XSLUser" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.docbook.org/xsd/4.5/docbook.xsd"
-	  xmlns:xi="http://www.w3.org/2001/XInclude">
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+          "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<book id="XSLUser" xmlns:xi="http://www.w3.org/2001/XInclude">
   <bookinfo>
-      <title>XSL Tooling User Documentation</title>
+      <title>XSL Tools User Documentation</title>
       <author>
          <firstname>David</firstname>
          <surname>Carver</surname>

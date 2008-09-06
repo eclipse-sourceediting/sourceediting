@@ -1,111 +1,206 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="http://www.docbook.org/xsd/4.5/docbook.xsd">
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+          "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
 	<?dbhtml filename="editor/xsleditor.html" ?>
-	<title>XSL Editing</title>
-	<para>
-      The XSL Tooling plugins extend the ability of the Web Standard Tools XML
-      editor.  This extension adds specific support and functionality for working
-      with and debugging XSL files. 
+   <title>XSL Editing</title>
+   <para>
+      The XSL Tools plugins extend the ability of the Web Standard
+      Tools XML
+      editor. This extension adds specific
+      support and
+      functionality for
+      working with and debugging XSL files. 
     </para>
-    <section id="Validation">
+   <section id="Validation">
     	<?dbhtml filename="editor/xsleditor_validation.html" ?>
-    	<title>Validation</title>
-    	<para>
-    		The XSL extensions for the eclipse XML editor include as you type validation for XSL specific features.  This includes not
-    		only the ability to syntax check the grammar, but to also to validate specific XSL specification rules.  Grammar validation will
-    		be triggered based on the version attribute for the style sheet that is being edited.   Valid version numbers are 1.0, and 2.0.
-    		Currently XSLT 1.1 which was a transitional specification is not supported for editing.
+      <title>Validation</title>
+      <para>
+         The XSL extensions for the eclipse XML editor include as you
+         type
+         validation for XSL specific features. This
+         includes not
+         only the
+         ability to syntax check the grammar, but to also to validate
+         specific
+         XSL specification
+         rules. Grammar validation will
+         be triggered based on
+         the version attribute for the style sheet that is
+         being
+         edited. Valid
+         version numbers are 1.0, and 2.0.
     	</para>
-    </section>
-	<section id="ContentAssist">
+   </section>
+   <section id="ContentAssist">
 		<?dbhtml filename="editor/xsleditor_contentassist.html" ?>
-		<title>Content Assist</title>
-		<para>
-		    XSL Tooling extends the existing content assistance support of the XML
-		    Editor to provide content assistance for several XSL namespace attributes.
-		    The content assistance provided covers the available XPath statements as
-		    defined in the <emphasis>XPath Templates</emphasis> preference page.
-		</para>
-		<para>
-			The elements and attributes that have content assist available are as follows:
-		</para>
-		<itemizedlist>
-			<listitem>
-				<para>
-				    <emphasis role="bold">template</emphasis> - The template element has several content assist
-				    options available for the <emphasis>match</emphasis>, <emphasis>name</emphasis>, and 
-				    <emphasis>mode</emphasis> attributes.
-				</para>
-				<para>
-					Add image showing template completion.
-				</para>
-			</listitem>
-			<listitem>
-				<para>
-					<emphasis role="bold">variable</emphasis> and <emphasis
-					role="bold">param</emphasis> - The variable and param elements have content assist
-					for xpath, axis, parmaters and variables that have already been predefined when using the optional
-					<emphasis>select</emphasis> attribute.
-				</para>
-				<para>
-					Add image showing variable completion.
-				</para>	
-			</listitem>
-			<listitem>
-				<para>
-					<emphasis role="bold">if</emphasis> and <emphasis role="bold">when</emphasis> - The
-					if and when elements have content assist for the <emphasis>test</emphasis> attribute.
-					This content assistance is available for all paramaters and variables that are in
-					scope, as well as any available xpath or axis statement.
-				</para>
-				<para>
-					Add image showing test completion.
-				</para>
-			</listitem>
-			<listitem>
-			    <para>
-			    	<emphasis role="bold">apply-template</emphasis> - The apply template has content
-			    	assistance for both the <emphasis>mode</emphasis> and <emphasis>select</emphasis>
-			    	attributes. 
-			    </para>
-				<para>
-					Add image showing apply-template completion.
-				</para>
-			</listitem>
-		</itemizedlist>
-		<important>
-			<title>XPath 2.0 Support</title>
-			<para>
-				Currently XPath 2.0 is not supported directly.  However, a user can add this support if they need it by
-				adding the missing XPath functions to the XPath Templates.
+      <title>Content Assist</title>
+      <para>
+         XSL Tools extends the existing content assistance support of the
+         XML Editor to provide content assistance for
+         several XSL namespace
+         attributes. The content assistance provided covers the available XPath
+         statements as
+         defined in the
+         <emphasis>XPath Templates</emphasis>
+         preference page.
+      </para>
+      <important>
+         <title>XPath 2.0 Support</title>
+         <para>
+            Currently XPath 2.0 is not supported directly. However, a user
+            can add this support if they need it by
+            adding the missing XPath
+            functions to the XPath Templates.
 			</para>
-		</important>
-	</section>
-	<section id="XSLEditorTemplates">
+      </important>
+      <section id="SelectTest">
+         <title>Select and Test Attributes </title>
+         <para>
+            Where ever an xsl element supports a
+            <emphasis>select</emphasis>
+            or
+            <emphasis>test</emphasis>
+            attribute, content assistance is
+            available. This includes support for
+            the following:
+         </para>
+         <itemizedlist>
+            <title>Select and Test Assistance</title>
+            <listitem>
+               <para>
+                  <emphasis>Variables</emphasis>
+                  - both local and global variables are supported within the current
+                  stylesheet. Any local or global
+                  variable will be
+                  added to the list
+                  and the name is prefixed with a dollar sign $ symbol.
+               </para>
+            </listitem>
+            <listitem>
+               <para>
+                  <emphasis>XPath 1.0</emphasis>
+                  - XPath 1.0 is supported through the use of templates. All of the
+                  XPath 1.0 and XSLT xpath
+                  extension
+                  functions are available, as well
+                  as
+                  <emphasis>axis</emphasis>
+                  operations. Currently XPath 2.0 is not supported
+                  directly, but will
+                  be added in the future.
+               </para>
+            </listitem>
+         </itemizedlist>
+         <para>
+            Content assistance for the select and test attributes is
+            intelligent enough to know that it is within an
+            XPath expression, and will try to determine and provide content assistance based on the
+            current cursor
+            position. If a word has been partially typed it will
+            filter the available assistance.
+			</para>
+      </section>
+      <section id="ExcludeResultPrefixesContentAssist">
+         <title>Exclude-Result-Prefixes</title>
+         <para>
+            The
+            <emphasis>exclude-result-prefixes</emphasis>
+            attribute in both XSLT 1.0 and XSLT 2.0 allows for the exclusion of
+            certain namespace
+            declarations in the
+            output document. The content
+            assistance populates a list of available namespaces that have been
+            defined in
+            the
+            stylseheet and provides them as proposals as shown in
+            <xref linkend="fig_ExcludeResultPrefixesContentAssist1" />
+            .
+         </para>
+         <figure id="fig_ExcludeResultPrefixesContentAssist1">
+            <title>Exclude-result-prefixes Content
+               Assistance</title>
+            <mediaobject>
+               <imageobject>
+                  <imagedata align="center" fileref="../images/editor/ExcludeContentAssist1.png" />
+               </imageobject>
+            </mediaobject>
+         </figure>
+         <para>
+            If the attribute has no values defined, then the
+            <emphasis>#all</emphasis>
+            value will be available in the list. If #all
+            is already in the
+            attributes value, then no content assistance
+            will be available.
+         </para>
+         <figure id="fig_ExcludeResultPrefixesContentAssist2">
+            <title>Filtered exclude-result-prefixes proposals</title>
+            <mediaobject>
+               <imageobject>
+                  <imagedata align="center" fileref="../images/editor/ExcludeContentAssist2.png" />
+               </imageobject>
+            </mediaobject>
+         </figure>
+         <para>
+            Content assistance is intelligent enough to know when a
+            namespace prefix is already in the list of
+            excluded namespaces. In
+            this
+            case it will not show the namespace in the proposal list.
+			</para>
+         <note>
+            <title>Why isn't the XSL Namespace prefix in the proposals?
+				</title>
+            <para>
+               Currently the xsl prefix or any prefix that uses the XSL
+               namespace is excluded from the list. This may
+               be changed at
+               a future
+               date. This will depend on user feedback.
+				</para>
+         </note>
+      </section>
+   </section>
+   <section id="XSLEditorTemplates">
 		<?dbhtml filename="editor/xsleditor_templates.html" ?>
-		<title>Templates</title>
-		<para>
-			Specific XSL code completion templates can be added to the XML editor's Templates.   This allows a user
-			to define specific markup completion templates that are commonly used.   In addition, the XPath Templates page
-			can be enhanced to allow commonly used XPath templates to be included, in addition to those installed by default.
-			This allows a user the ability to add custom extension functions for XSLT that may be processor specific.  Adopters
-			may also use the standard template extension point to add additional functionality.
+      <title>Templates</title>
+      <para>
+         Specific XSL code completion templates can be added to the XML
+         editor's Templates. This allows a user
+         to
+         define specific markup
+         completion templates that are commonly used. In addition, the XPath
+         Templates page
+         can be
+         enhanced to allow commonly used XPath templates
+         to be included, in addition to those installed by default.
+         This
+         allows
+         a user the ability to add custom extension functions for XSLT that
+         may be processor specific. Adopters
+         may
+         also use the standard template
+         extension point to add additional functionality.
 		</para>
-		<section>
+      <section>
 			<?dbhtml filename="editor/xsleditor_xpathtemplates.html" ?>
-			<title>XPath Templates</title>
-			<para>
-				The XSL XPath Templates preference page allows for a user or adopter to add specific xpath extensions so that
-				they show up in the content assistance.   See the XPath Templates documentation for more information.
+         <title>XPath Templates</title>
+         <para>
+            The XSL XPath Templates preference page allows for a user or
+            adopter to add specific xpath extensions so
+            that
+            they show up in the
+            content assistance. See the XPath Templates documentation for more
+            information.
 			</para>
-		</section>
-	</section>
-	<section id="XSLEditorDebugging">
+      </section>
+   </section>
+   <section id="XSLEditorDebugging">
 	   <?dbhtml filename="editor/xsleditor_debugging.html" ?>
-		<title>XSL Debugging</title>
-		<para>
-			TODO: Add XSL Debugging documentation.
+      <title>XSL Debugging</title>
+      <para>
+         TODO: Add XSL Debugging documentation.
 		</para>
-	</section>
+   </section>
 </chapter>

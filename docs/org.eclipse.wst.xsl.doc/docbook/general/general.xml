@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:noNamespaceSchemaLocation="http://www.docbook.org/xsd/4.5/docbook.xsd">
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+          "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
 	<?dbhtml filename="general/general.html" ?>
 	<title>General</title>
 	<para>This section covers topics that don't have any other particular place to go.</para>
@@ -13,7 +14,7 @@
         allows for separating out large xml documents into more manageable chunks of information.
       </para>
 		<para>
-      	The XSL Tooling project includes an ANT task that can be run with in eclipse, eclipse
+      	The XSL Tools project includes an ANT task that can be run with in eclipse, eclipse
       	headless, and without eclipse at all.   If running outside of eclipse, you will need
       	to make sure that the jar file xinclude.jar in the org.eclipse.wst.xsl.core.jar file
       	is made avaiable on your class path.
