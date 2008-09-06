@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.debug.internal.util.XSLDebugPluginImages;
 import org.eclipse.wst.xsl.debug.internal.util.XSLPluginImageHelper;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
@@ -207,7 +208,7 @@ public class XSLMainTab extends XSLLaunchConfigurationTab
 		List<IResource> stylesheets = new ArrayList<IResource>();
 		for (IResource resource : context)
 		{
-			if (resource instanceof IFile && "xsl".equalsIgnoreCase(resource.getFileExtension())) //$NON-NLS-1$
+			if (resource instanceof IFile && XSLCore.isXSLFile((IFile)resource)) 
 				stylesheets.add(resource);
 		}
 		return (IFile[]) stylesheets.toArray(new IFile[0]);

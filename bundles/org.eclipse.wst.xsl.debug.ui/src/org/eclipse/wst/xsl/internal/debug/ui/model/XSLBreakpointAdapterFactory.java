@@ -10,10 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.model;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.debug.ui.actions.IToggleBreakpointsTarget;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.xsl.core.XSLCore;
 
 /**
  * Creates a toggle breakpoint adapter
@@ -27,10 +29,9 @@ public class XSLBreakpointAdapterFactory implements IAdapterFactory
 		{
 			ITextEditor editorPart = (ITextEditor) adaptableObject;
 			IResource resource = (IResource) editorPart.getEditorInput().getAdapter(IResource.class);
-			if (resource != null)
+			if (resource != null && resource instanceof IFile)
 			{
-				String extension = resource.getFileExtension();
-				if (extension != null && extension.equalsIgnoreCase("xsl")) //$NON-NLS-1$
+				if (XSLCore.isXSLFile((IFile)resource))
 				{
 					return new XSLLineBreakpointAdapter();
 				}
