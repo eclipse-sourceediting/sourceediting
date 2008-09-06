@@ -17,7 +17,6 @@
         <xsl:param name="date"/>
         <!-- Month -->
         <xsl:variable name="month" select="number(substring($date, 6, 2))"/>
-        <xsl:variable name="test" select="name()"/>
         <xsl:choose>
             <xsl:when test="$month=1">January</xsl:when>
             <xsl:when test="$month=2">February</xsl:when>
