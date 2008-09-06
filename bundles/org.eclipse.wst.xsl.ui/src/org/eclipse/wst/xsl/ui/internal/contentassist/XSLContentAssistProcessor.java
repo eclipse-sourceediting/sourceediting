@@ -150,6 +150,9 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 			
 			proposals = contentAssistRequest.getCompletionProposals();
 		}
+		if (proposals == null) {
+			setErrorMessage("No Content Assist Available or Found");
+		}
 		return proposals;
 	}
 	

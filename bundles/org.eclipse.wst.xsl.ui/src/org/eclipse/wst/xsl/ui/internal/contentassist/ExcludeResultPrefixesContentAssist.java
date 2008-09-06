@@ -80,9 +80,10 @@ public class ExcludeResultPrefixesContentAssist extends AbstractXSLContentAssist
 		 String excludeResultPrefixes = attrNode.getValue();
 		 int offset = getCursorPosition();
 		 
-		 if (excludeResultPrefixes == null) {
+		 if (excludeResultPrefixes == null || excludeResultPrefixes.equals(DEFAULT)) {
 			 return super.getCompletionProposals();
 		 }
+		 
 		 
 		 tokens = excludeResultPrefixes.split("\\s"); //$NON-NLS-1$
 		 if (tokens[0].equals("")) { //$NON-NLS-1$
