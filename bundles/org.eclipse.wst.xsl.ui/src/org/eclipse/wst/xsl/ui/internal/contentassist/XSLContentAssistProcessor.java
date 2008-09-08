@@ -30,6 +30,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.AbstractContentAssistProcessor;
@@ -56,6 +57,8 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 	private static final String ATTR_TEST = "test"; //$NON-NLS-1$
 	private static final String ATTR_MATCH = "match"; //$NON-NLS-1$
 	private static final String ATTR_EXCLUDE_RESULT_PREFIXES = "exclude-result-prefixes"; //$NON-NLS-1$
+	private static final String ATTR_MODE = "mode";
+	private static final String ELEM_TEMPLATE = "template";
 	/**
 	 * Retrieve all global variables in the stylesheet.
 	 */
@@ -134,7 +137,8 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 					completionRegion, documentPosition, 0, matchString,
 					textViewer);
 		 proposals = contentAssistRequest.getCompletionProposals();
-		} 
+		}
+		
 		if (this.hasAttributeAtTextRegion(ATTR_TEST, nodeMap, completionRegion)) {
 			contentAssistRequest = new TestAttributeContentAssist(
 					xmlNode, xmlNode.getParentNode(), sdRegion,
@@ -142,6 +146,7 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 					textViewer);
 			proposals = contentAssistRequest.getCompletionProposals();
 		}
+		
 		if (this.hasAttributeAtTextRegion(ATTR_EXCLUDE_RESULT_PREFIXES, nodeMap, completionRegion)) {
 			contentAssistRequest = new ExcludeResultPrefixesContentAssist(
 					xmlNode, xmlNode.getParentNode(), sdRegion,
@@ -150,6 +155,18 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 			
 			proposals = contentAssistRequest.getCompletionProposals();
 		}
+		
+		IDOMElement element = (IDOMElement) xmlNode;
+		
+		if (element.getLocalName().equals(ELEM_TEMPLATE)) {
+			if (hasAttributeAtTextRegion(ATTR_MODE, nodeMap, completionRegion)) {
+				contentAssistRequest = new TemplateModeAttributeContentAssist(
+					xmlNode, xmlNode.getParentNode(), sdRegion, completionRegion,
+					documentPosition, 0, matchString, textViewer);
+				proposals = contentAssistRequest.getCompletionProposals();
+			}
+		}
+		
 		if (proposals == null) {
 			setErrorMessage("No Content Assist Available or Found");
 		}

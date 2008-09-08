@@ -40,5 +40,11 @@ public class XSLPluginImages {
 	 */
 	public static final String IMG_PREFIX = "icons/full/package_obj.gif"; //$NON-NLS-1$
 	
+	/**
+	 * Path to the XSL mode Image used for Content Assist
+	 */
+	public static final String IMG_MODE = "icons/full/mode.gif"; //$NON-NLS-1$
+
+	
 	
 }
