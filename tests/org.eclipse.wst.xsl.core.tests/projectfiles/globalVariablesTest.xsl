@@ -11,12 +11,14 @@
  *     David Carver - STAR - bug 243578 - initial API and implementation
  *******************************************************************************  -->
 <xsl:stylesheet version="1.0"
-   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+   xmlns:xhtml="http://www.w3c.org/1999/xhtml"
+   exclude-result-prefixes="xhtml">
    
    <xsl:variable name="globalVariable">
       This is a global variable
    </xsl:variable>
-   
+   When xsl:i
    <xsl:param name="selectParam" select="'1'"/>
    <xsl:param name="contentParam">Test</xsl:param>
 
