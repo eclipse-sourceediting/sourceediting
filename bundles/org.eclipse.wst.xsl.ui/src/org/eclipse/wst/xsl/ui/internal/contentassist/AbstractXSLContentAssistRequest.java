@@ -13,6 +13,14 @@ import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * An extension of the XML ContentAssistRequest class.  This provides
+ * a basis for the XSL content assistance.  Classes may subclass this
+ * class and implement specific functionality.
+ * 
+ * @author dcarver
+ *
+ */
 public abstract class AbstractXSLContentAssistRequest extends
 		ContentAssistRequest {
 	
