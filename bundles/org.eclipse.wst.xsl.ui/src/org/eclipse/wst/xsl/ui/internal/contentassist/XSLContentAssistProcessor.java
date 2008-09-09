@@ -15,8 +15,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
-import java.util.ArrayList;
-
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
@@ -26,11 +24,9 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.AbstractContentAssistProcessor;
@@ -53,12 +49,6 @@ import org.w3c.dom.Node;
 public class XSLContentAssistProcessor implements IContentAssistProcessor,
 		IReleasable {
 
-	private static final String ATTR_SELECT = "select"; //$NON-NLS-1$
-	private static final String ATTR_TEST = "test"; //$NON-NLS-1$
-	private static final String ATTR_MATCH = "match"; //$NON-NLS-1$
-	private static final String ATTR_EXCLUDE_RESULT_PREFIXES = "exclude-result-prefixes"; //$NON-NLS-1$
-	private static final String ATTR_MODE = "mode";
-	private static final String ELEM_TEMPLATE = "template";
 	/**
 	 * Retrieve all global variables in the stylesheet.
 	 */
@@ -87,12 +77,11 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 	 * @param documentPosition
 	 *            - the cursor location within the document
 	 * 
-	 *            an array of ICompletionProposals
+	 * @return an array of ICompletionProposal
 	 */
 	public ICompletionProposal[] computeCompletionProposals(
 			ITextViewer textViewer, int documentPosition) {
 		setErrorMessage(null);
-		ContentAssistRequest contentAssistRequest = null;
 
 		this.textViewer = textViewer;
 
@@ -128,51 +117,32 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 			int documentPosition, IDOMNode xmlNode,
 			IStructuredDocumentRegion sdRegion, ITextRegion completionRegion,
 			ICompletionProposal[] proposals, String matchString) {
-		ContentAssistRequest contentAssistRequest;
-		NamedNodeMap nodeMap = xmlNode.getAttributes();
+		XSLContentAssistRequestFactory requestFactory = new XSLContentAssistRequestFactory();
+
+		ICompletionProposal[] xslProposals = null;
+		ContentAssistRequest contentAssistRequest = requestFactory
+				.getContentAssistRequest(textViewer, documentPosition, xmlNode,
+						sdRegion, completionRegion, proposals, matchString);
+
+		xslProposals = contentAssistRequest.getCompletionProposals();
+
+		proposals = updateProposals(proposals, xslProposals);
 		
-		if (this.hasAttributeAtTextRegion(ATTR_SELECT, nodeMap, completionRegion)) {
-			contentAssistRequest = new SelectAttributeContentAssist(
-					xmlNode, xmlNode.getParentNode(), sdRegion,
-					completionRegion, documentPosition, 0, matchString,
-					textViewer);
-		 proposals = contentAssistRequest.getCompletionProposals();
+		return proposals;
+	}
+
+	private ICompletionProposal[] updateProposals(
+			ICompletionProposal[] proposals, ICompletionProposal[] xslProposals) {
+		if (proposals == null && xslProposals == null) {
+			setErrorMessage("No Content Assist Available or Found");	
 		}
 		
-		if (this.hasAttributeAtTextRegion(ATTR_TEST, nodeMap, completionRegion)) {
-			contentAssistRequest = new TestAttributeContentAssist(
-					xmlNode, xmlNode.getParentNode(), sdRegion,
-					completionRegion, documentPosition, 0, matchString,
-					textViewer);
-			proposals = contentAssistRequest.getCompletionProposals();
-		}
-		
-		if (this.hasAttributeAtTextRegion(ATTR_EXCLUDE_RESULT_PREFIXES, nodeMap, completionRegion)) {
-			contentAssistRequest = new ExcludeResultPrefixesContentAssist(
-					xmlNode, xmlNode.getParentNode(), sdRegion,
-					completionRegion, documentPosition, 0, matchString,
-					textViewer);
-			
-			proposals = contentAssistRequest.getCompletionProposals();
-		}
-		
-		IDOMElement element = (IDOMElement) xmlNode;
-		
-		if (element.getLocalName().equals(ELEM_TEMPLATE)) {
-			if (hasAttributeAtTextRegion(ATTR_MODE, nodeMap, completionRegion)) {
-				contentAssistRequest = new TemplateModeAttributeContentAssist(
-					xmlNode, xmlNode.getParentNode(), sdRegion, completionRegion,
-					documentPosition, 0, matchString, textViewer);
-				proposals = contentAssistRequest.getCompletionProposals();
-			}
-		}
-		
-		if (proposals == null) {
-			setErrorMessage("No Content Assist Available or Found");
+		if (xslProposals != null) {
+			proposals = xslProposals;
 		}
 		return proposals;
 	}
-	
+
 	/**
 	 * StructuredTextViewer must be set before using this.
 	 * 
@@ -183,37 +153,11 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 		return ContentAssistUtils.getStructuredDocumentRegion(textViewer, pos);
 	}
 
-	/**
-	 * Gets the attribute name that the content assist was triggered on.
-	 * 
-	 * @param contentAssistRequest
-	 * @return
-	 */
-	private String getAttributeName(IDOMNode xmlNode, ITextRegion region) {
-		IStructuredDocumentRegion open = xmlNode
-				.getFirstStructuredDocumentRegion();
-		ITextRegionList openRegions = open.getRegions();
-		int i = openRegions.indexOf(region);
-		if (i >= 0) {
-
-			ITextRegion nameRegion = null;
-			while (i >= 0) {
-				nameRegion = openRegions.get(i--);
-				if (nameRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
-					break;
-				}
-			}
-
-			// String attributeName = nameRegion.getText();
-			return open.getText(nameRegion);
-		}
-		return null;
-	}
 
 	/**
 	 * Return the region whose content's require completion. This is something
 	 * of a misnomer as sometimes the user wants to be prompted for contents of
-	 * a non-existant ITextRegion, such as for enumerated attribute values
+	 * a non-existent ITextRegion, such as for enumerated attribute values
 	 * following an '=' sign.
 	 * 
 	 * Copied from AbstractContentAssist Processor.
@@ -405,10 +349,11 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 	 * 
 	 * the auto activation characters for completion proposal or
 	 * <code>null</code> if no auto activation is desired
+	 * @return an array of activation characters
 	 */
 	public char[] getCompletionProposalAutoActivationCharacters() {
-		//TODO: Currently these are hard coded..need to move to preferences.
-		char[] completionProposals = { '"', '\'', ':', '[', '{', '<'};
+		// TODO: Currently these are hard coded..need to move to preferences.
+		char[] completionProposals = { '"', '\'', ':', '[', '{', '<' };
 
 		return completionProposals;
 	}
@@ -468,19 +413,22 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
 	}
-	
-	protected boolean hasAttributeAtTextRegion(String attrName, NamedNodeMap nodeMap, ITextRegion aRegion) {
+
+	protected boolean hasAttributeAtTextRegion(String attrName,
+			NamedNodeMap nodeMap, ITextRegion aRegion) {
 		IDOMAttr attrNode = (IDOMAttr) nodeMap.getNamedItem(attrName);
-		return attrNode != null && attrNode.getValueRegion().getStart() == aRegion.getStart();
+		return attrNode != null
+				&& attrNode.getValueRegion().getStart() == aRegion.getStart();
 	}
-	
-	protected IDOMAttr getAttributeAtTextRegion(String attrName, NamedNodeMap nodeMap, ITextRegion aRegion) {
+
+	protected IDOMAttr getAttributeAtTextRegion(String attrName,
+			NamedNodeMap nodeMap, ITextRegion aRegion) {
 		IDOMAttr node = (IDOMAttr) nodeMap.getNamedItem(attrName);
-		if (node != null && node.getValueRegion().getStart() == aRegion.getStart()) {
+		if (node != null
+				&& node.getValueRegion().getStart() == aRegion.getStart()) {
 			return node;
 		}
 		return null;
 	}
-	
 
 }
