@@ -1,3 +1,13 @@
+/*******************************************************************************
+ *Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
+ *All rights reserved. This program and the accompanying materials
+ *are made available under the terms of the Eclipse Public License v1.0
+ *which accompanies this distribution, and is available at
+ *http://www.eclipse.org/legal/epl-v10.html
+ *
+ *Contributors:
+ *    David Carver - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
 import org.eclipse.jface.text.ITextViewer;
@@ -8,8 +18,14 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 
+/**
+ * A Factory that determines which Content Assist Request class is
+ * needed and returns the appropriate class.
+ * 
+ * @author dcarver
+ * @since 1.0
+ */
 public class XSLContentAssistRequestFactory {
 	private static final String ATTR_SELECT = "select"; //$NON-NLS-1$
 	private static final String ATTR_TEST = "test"; //$NON-NLS-1$
@@ -17,10 +33,6 @@ public class XSLContentAssistRequestFactory {
 	private static final String ATTR_EXCLUDE_RESULT_PREFIXES = "exclude-result-prefixes"; //$NON-NLS-1$
 	private static final String ATTR_MODE = "mode";
 	private static final String ELEM_TEMPLATE = "template";	
-	
-	public XSLContentAssistRequestFactory() {
-		// TODO Auto-generated constructor stub
-	}
 	
 	/**
 	 * Get the appropriate content assist request class for the XSL request.
@@ -47,6 +59,15 @@ public class XSLContentAssistRequestFactory {
 					completionRegion, documentPosition, 0, matchString,
 					textViewer);
 		}
+		
+		if (this.hasAttributeAtTextRegion(ATTR_MATCH, nodeMap, completionRegion)) {
+			return new SelectAttributeContentAssist(
+					xmlNode, xmlNode.getParentNode(), sdRegion,
+					completionRegion, documentPosition, 0, matchString,
+					textViewer);
+		}
+		
+		
 		if (this.hasAttributeAtTextRegion(ATTR_TEST, nodeMap, completionRegion)) {
 			return new TestAttributeContentAssist(
 					xmlNode, xmlNode.getParentNode(), sdRegion,
