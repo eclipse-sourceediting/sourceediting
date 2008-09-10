@@ -938,7 +938,6 @@ class ProjectDescription {
 
 	private void ensureUpTodate() {
 		IClasspathEntry[] entries = null;
-		if (!fBuildPathIsDirty) {
 			try {
 				/*
 				 * If the Java nature isn't present (or something else is
@@ -952,7 +951,6 @@ class ProjectDescription {
 			catch (JavaModelException e) {
 				Logger.logException(e);
 			}
-		}
 		if (entries != null) {
 			try {
 				LOCK.acquire();
@@ -961,7 +959,7 @@ class ProjectDescription {
 				 * changed. This should cover most cases such as when a
 				 * library is added into or removed from a container.
 				 */
-				fBuildPathIsDirty = (fBuildPathEntryCount != entries.length);
+				fBuildPathIsDirty = fBuildPathIsDirty || (fBuildPathEntryCount != entries.length);
 
 				if (fBuildPathIsDirty) {
 					indexClasspath(entries);
