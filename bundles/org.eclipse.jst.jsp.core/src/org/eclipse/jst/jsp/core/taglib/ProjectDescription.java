@@ -92,6 +92,14 @@ import org.w3c.dom.NodeList;
 import com.ibm.icu.text.Collator;
 import com.ibm.icu.util.StringTokenizer;
 
+/**
+ * Contains the tag library information for a single project.
+ * 
+ *  * <p>
+ * This class is neither intended to be instantiated nor accessed by clients.
+ * </p>
+ *
+ */
 class ProjectDescription {
 
 	class DeltaVisitor implements IResourceDeltaVisitor {
@@ -929,33 +937,38 @@ class ProjectDescription {
 	}
 
 	private void ensureUpTodate() {
-		try {
-			LOCK.acquire();
-
-			if (!fBuildPathIsDirty) {
+		IClasspathEntry[] entries = null;
+			try {
+				/*
+				 * If the Java nature isn't present (or something else is
+				 * wrong), don't check the build path.
+				 */
+				IJavaProject jproject = JavaCore.create(fProject);
+				if (jproject != null && jproject.exists()) {
+					entries = jproject.getResolvedClasspath(true);
+				}
+			}
+			catch (JavaModelException e) {
+				Logger.logException(e);
+			}
+		if (entries != null) {
+			try {
+				LOCK.acquire();
 				/*
 				 * Double-check that the number of build path entries has not
 				 * changed. This should cover most cases such as when a
 				 * library is added into or removed from a container.
 				 */
-				try {
-					IJavaProject jproject = JavaCore.create(fProject);
-					if (jproject != null && jproject.exists()) {
-						IClasspathEntry[] entries = jproject.getResolvedClasspath(true);
-						fBuildPathIsDirty = (fBuildPathEntryCount != entries.length);
-					}
-				}
-				catch (JavaModelException e) {
-					Logger.logException(e);
+				fBuildPathIsDirty = fBuildPathIsDirty || (fBuildPathEntryCount != entries.length);
+
+				if (fBuildPathIsDirty) {
+					indexClasspath(entries);
+					fBuildPathIsDirty = false;
 				}
 			}
-			if (fBuildPathIsDirty) {
-				indexClasspath();
-				fBuildPathIsDirty = false;
+			finally {
+				LOCK.release();
 			}
-		}
-		finally {
-			LOCK.release();
 		}
 	}
 
@@ -1312,6 +1325,9 @@ class ProjectDescription {
 			Logger.log(Logger.INFO, "indexed " + fProject.getName() + " contents in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
+	/**
+	 * @deprecated
+	 */
 	void indexClasspath() {
 		if (_debugIndexTime)
 			time0 = System.currentTimeMillis();
@@ -1332,6 +1348,22 @@ class ProjectDescription {
 		// Logger.log(Logger.WARNING, "TaglibIndex was asked to index non-Java
 		// Project " + fProject.getName()); //$NON-NLS-1$
 		// }
+
+		if (_debugIndexTime)
+			Logger.log(Logger.INFO, "indexed " + fProject.getName() + " classpath in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	}
+
+	void indexClasspath(IClasspathEntry[] entries) {
+		if (_debugIndexTime)
+			time0 = System.currentTimeMillis();
+		fClasspathProjects.clear();
+		fClasspathReferences.clear();
+		fClasspathJars.clear();
+
+		fBuildPathEntryCount = entries.length;
+		for (int i = 0; i < entries.length; i++) {
+			indexClasspath(entries[i]);
+		}
 
 		if (_debugIndexTime)
 			Logger.log(Logger.INFO, "indexed " + fProject.getName() + " classpath in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -1422,7 +1454,7 @@ class ProjectDescription {
 	 */
 
 	/**
-	 * @param javaProject
+	 * @deprecated
 	 */
 	private void indexClasspath(IJavaProject javaProject) {
 		if (javaProject == null)
