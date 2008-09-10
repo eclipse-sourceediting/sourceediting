@@ -31,8 +31,10 @@ public class XSLContentAssistRequestFactory {
 	private static final String ATTR_TEST = "test"; //$NON-NLS-1$
 	private static final String ATTR_MATCH = "match"; //$NON-NLS-1$
 	private static final String ATTR_EXCLUDE_RESULT_PREFIXES = "exclude-result-prefixes"; //$NON-NLS-1$
-	private static final String ATTR_MODE = "mode";
-	private static final String ELEM_TEMPLATE = "template";	
+	private static final String ATTR_MODE = "mode"; //$NON-NLS-1$
+	private static final String ELEM_TEMPLATE = "template";	//$NON-NLS-1$
+	private static final String ELEM_APPLYTEMPLATES = "apply-templates"; //$NON-NLS-1$
+	private static final String ELEM_APPLY_IMPORTS = "apply-imports"; //$NON-NLS-1$
 	
 	/**
 	 * Get the appropriate content assist request class for the XSL request.
@@ -88,7 +90,18 @@ public class XSLContentAssistRequestFactory {
 					xmlNode, xmlNode.getParentNode(), sdRegion, completionRegion,
 					documentPosition, 0, matchString, textViewer);
 			}
+			
 		}
+		
+		if (element.getLocalName().equals(ELEM_APPLYTEMPLATES) || element.getLocalName().equals(ELEM_APPLY_IMPORTS)) {
+			if (hasAttributeAtTextRegion(ATTR_MODE, nodeMap, completionRegion)) {
+				return new TemplateModeAttributeContentAssist(
+					xmlNode, xmlNode.getParentNode(), sdRegion, completionRegion,
+					documentPosition, 0, matchString, textViewer);
+			}
+			
+		}
+		
 				
 		return new NullContentAssistRequest(xmlNode, xmlNode.getParentNode(), sdRegion, completionRegion,
 					documentPosition, 0, matchString, textViewer);
