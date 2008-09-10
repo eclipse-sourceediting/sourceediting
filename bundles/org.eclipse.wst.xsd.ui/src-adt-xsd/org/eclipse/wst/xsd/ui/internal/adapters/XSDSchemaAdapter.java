@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Tada Takatoshi / Fujitsu - bug 245480 - provided initial patch
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adapters;
 
@@ -199,8 +200,34 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     }
     
     Object newValue = msg.getNewValue();
+    
+    Object oldValue = msg.getOldValue();
+    // Bug 245480 - Deletion of Include, Import and Redefine is not reflected in the Outline view
+    // We only want to refresh the Directives folder for any changes to XSDDirectives.  The first case covers
+    // changes to one directive, whereas the missing case as reported in bug 245480 covers changes to a list
+    // of directives.
+    boolean updateDirectivesCategory = false;
+    if (oldValue instanceof XSDSchemaDirective)
+    {
+      updateDirectivesCategory = true;
+    }
+    else if (oldValue instanceof Collection)
+    {
+      Iterator iterator = ((Collection) oldValue).iterator();
+      while (iterator.hasNext())
+      {
+        Object obj = iterator.next();
+        if (obj instanceof XSDSchemaDirective)
+        {
+          // if we find at least one directive, then we should refresh the folder
+          updateDirectivesCategory = true;
+          break;
+        }
+      }
+    }
+    
     if (newValue instanceof XSDInclude || newValue instanceof XSDImport || newValue instanceof XSDRedefine ||
-        (msg.getFeature() == XSDPackage.eINSTANCE.getXSDSchema_Contents() && msg.getOldValue() instanceof XSDSchemaDirective) || // handle the case for delete directive
+        (msg.getFeature() == XSDPackage.eINSTANCE.getXSDSchema_Contents() && updateDirectivesCategory) || // handle the case for delete directive
          msg.getFeature() == XSDPackage.eINSTANCE.getXSDSchema_IncorporatedVersions()) // updates to the imports/includes
     {
       CategoryAdapter adapter = getCategory(CategoryAdapter.DIRECTIVES);
