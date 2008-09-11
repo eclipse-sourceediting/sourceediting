@@ -50,7 +50,9 @@ public abstract class AbstractXSLUITest extends TestCase
 			getAndCreateProject();
 
 			File srcDir = XSLModelXMLTestsPlugin.getTestFile("/" + PROJECT_FILES);
-			File targetDir = fTestProject.getRawLocation().toFile();
+			String destinationProjectString = fTestProject.getLocation().toOSString();
+			String destinationFolder = destinationProjectString + "/";
+			File targetDir = new File(destinationProjectString);
 			copyDir(srcDir, targetDir);
 
 			fTestProject.refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -63,7 +65,7 @@ public abstract class AbstractXSLUITest extends TestCase
 		IWorkspace workspace = getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
 		fTestProject = root.getProject(TEST_PROJECT_NAME);
-		createProject(fTestProject, root.getFullPath().append(TEST_PROJECT_NAME), null);
+		createProject(fTestProject, null, null);
 		fTestProject.refreshLocal(IResource.DEPTH_INFINITE, null);
 		assertTrue(fTestProject.exists());
 	}
