@@ -21,6 +21,8 @@ import org.osgi.framework.BundleContext;
 public class XSLUITestsPlugin extends AbstractUIPlugin {
 	//The shared instance.
 	private static XSLUITestsPlugin plugin;
+	// The plug-in ID
+	public static final String PLUGIN_ID = "org.eclipse.wst.xsl.ui.tests";
 
 	/**
 	 * The constructor.

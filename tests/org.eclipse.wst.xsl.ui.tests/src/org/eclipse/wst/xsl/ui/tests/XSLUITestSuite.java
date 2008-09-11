@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 
 import org.eclipse.wst.xsl.ui.internal.validation.TestDelegatingSourceValidatorForXSL;
 import org.eclipse.wst.xsl.ui.tests.editor.TestExcludeResultPrefixesCompletionProposal;
+import org.eclipse.wst.xsl.ui.tests.editor.TestHrefCompletionProposal;
 import org.eclipse.wst.xsl.ui.tests.editor.TestTemplateModeCompletionProposal;
 import org.eclipse.wst.xsl.ui.tests.editor.XSLCompletionTest;
 
@@ -31,5 +32,6 @@ public class XSLUITestSuite extends TestSuite {
 		addTestSuite(XSLCompletionTest.class);
 		addTestSuite(TestExcludeResultPrefixesCompletionProposal.class);
 		addTestSuite(TestTemplateModeCompletionProposal.class);
+		addTestSuite(TestHrefCompletionProposal.class);
 	}
 }

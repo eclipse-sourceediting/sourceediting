@@ -44,14 +44,14 @@ import org.eclipse.wst.xml.core.internal.encoding.XMLDocumentLoader;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL;
 import org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistProcessor;
-import org.eclipse.wst.xsl.ui.tests.UnzippedProjectTester;
+import org.eclipse.wst.xsl.ui.tests.AbstractXSLUITest;
 import org.eclipse.wst.xsl.ui.tests.XSLUITestsPlugin;
 
 /**
  * Tests everything about code completion and code assistance.
  * 
  */
-public class TestTemplateModeCompletionProposal extends UnzippedProjectTester {
+public class TestTemplateModeCompletionProposal extends AbstractXSLUITest {
 
 	protected String projectName = null;
 	protected String fileName = null;

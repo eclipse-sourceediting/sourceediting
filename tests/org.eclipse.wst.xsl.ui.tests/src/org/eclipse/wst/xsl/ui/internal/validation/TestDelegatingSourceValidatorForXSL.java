@@ -31,7 +31,7 @@ import org.eclipse.wst.validation.internal.operations.WorkbenchContext;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
-import org.eclipse.wst.xsl.ui.tests.UnzippedProjectTester;
+import org.eclipse.wst.xsl.ui.tests.AbstractXSLUITest;
 import org.eclipse.wst.xsl.ui.tests.XSLUITestsPlugin;
 //import org.eclipse.wst.xsl.docbook.core.DocbookPlugin;
 
@@ -39,7 +39,7 @@ import org.eclipse.wst.xsl.ui.tests.XSLUITestsPlugin;
  * Test the XML delegating source validator.
  *
  */
-public class TestDelegatingSourceValidatorForXSL extends UnzippedProjectTester 
+public class TestDelegatingSourceValidatorForXSL extends AbstractXSLUITest 
 {
 	DelegatingSourceValidatorForXSL sourceValidator =  new DelegatingSourceValidatorForXSL();
 	
