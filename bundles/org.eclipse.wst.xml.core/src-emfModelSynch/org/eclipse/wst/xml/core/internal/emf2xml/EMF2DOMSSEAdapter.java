@@ -327,7 +327,7 @@ public class EMF2DOMSSEAdapter extends EMF2DOMAdapterImpl implements INodeAdapte
 				
 				//Handle the cases where either adapter's target is null 
 				if ((getTarget() == null) || (adapterTarget == null))
-					if(resourceClass.equals(e2DAdapter.getResourceClass()))
+					if (resourceClass != null && resourceClass.equals(e2DAdapter.getResourceClass()))
 						return e2DAdapter;
 					else
 						continue;
