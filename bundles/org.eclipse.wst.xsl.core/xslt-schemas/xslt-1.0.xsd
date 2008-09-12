@@ -1157,6 +1157,14 @@ of problems processing the schema using various tools
       		</xs:documentation>
       	</xs:annotation>
       </xs:attribute>
+      <xs:attribute name="extension-element-prefixes" type="xsl:prefixes" use="optional">
+         <xs:annotation>
+            <xs:documentation source="http:/www.w3.org/TR/xslt">
+               Optional.  A list of extension namespace prefixes.  This is used to identify namespaces that
+               contain XSLT processor extensions.
+            </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
       <xs:anyAttribute namespace="##other" processContents="skip"/>
     </xs:extension>
   </xs:complexContent>
