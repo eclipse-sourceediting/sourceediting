@@ -24,9 +24,8 @@
   	  	 <fileset dir="${workspaceloc}">
 	  	 	<include name="org.eclipse.wst.xsl.core/src/org/eclipse/wst/xsl/core/*.java"/>
 	  	 	<include name="org.eclipse.wst.xsl.core/src/org/eclipse/wst/xsl/core/resolver/*.java"/>
-  	  	 	<include name="org.eclipse.wst.xsl.debug/src-debugger/org/eclipse/wst/xsl/debugger/*.java"/>
-  	  	 	<include name="org.eclipse.wst.xsl.debug/src-invoker/org/eclipse/wst/xsl/invoker/*.java"/>
-  	  	 	<include name="org.eclipse.wst.xsl.debug/src-invoker/org/eclipse/wst/xsl/invoker/config/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xsl.jaxp.debug/src-debugger/org/eclipse/wst/xsl/jaxp/debug/debugger/*.java"/>
+  	  	 	<include name="org.eclipse.wst.xsl.jaxp.debug/src-invoker/org/eclipse/wst/xsl/jaxp/debug/invoker/*.java"/>
   	  	 	<include name="org.eclipse.wst.xsl.xalan/src-debugger/org/eclipse/wst/xsl/xalan/debugger/*.java"/>
   	  	 	<include name="org.eclipse.wst.xml.xpath.core/src/org/eclipse/wst/xml/xpath/core/*.java"/>
   	  	 	<include name="org.eclipse.wst.xml.xpath.core/src/org/eclipse/wst/xml/xpath/core/util/*.java"/>
@@ -73,7 +72,7 @@
 	</target>
 	
 	<target name="ExtensionPointDoc">
-		<pde.convertSchemaToHTML manifest="../org.eclipse.wst.xsl.launching/plugin.xml"
+		<pde.convertSchemaToHTML manifest="../org.eclipse.wst.xsl.jaxp.launching/plugin.xml"
 			                     destination="${workspace}/doc/html/extension_point"
 		/>
 	</target>

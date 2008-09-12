@@ -14,7 +14,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
    xmlns:set="http://exslt.org/sets"
    xmlns:xalan="http://xml.apache.org/xalan"
-    exclude-result-prefixes="set"
+    exclude-result-prefixes="set xalan"
 >
    <xsl:param name="sdkname">Some Name</xsl:param>
    <xsl:param name="dir">doc/html</xsl:param>   
