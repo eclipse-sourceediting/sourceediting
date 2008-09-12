@@ -121,4 +121,13 @@ class StackMap {
 		}
 		return null;
 	}
+
+	/**
+	 * Returns the number of keys in this StackMap.
+	 * 
+	 * @return the number of keys in this map.
+	 */
+	public int size() {
+		return fInternalMap.size();
+	}
 }

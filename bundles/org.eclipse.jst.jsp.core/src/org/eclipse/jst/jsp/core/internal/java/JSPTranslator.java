@@ -958,9 +958,16 @@ public class JSPTranslator {
 		setCurrentNode(new ZeroStructuredDocumentRegion(fStructuredDocument, fStructuredDocument.getLength()));
 		translateCodas();
 
-		buildResult();
-
+		/*
+		 * Make sure any extra custom tag start tags won't cause compiler
+		 * problems.  They should instead be reported as unbalanced tags.
+		 */
+		for (int i = 0; i < fTagToVariableMap.size(); i++) {
+			appendToBuffer("}", fUserCode, false, fStructuredDocument.getLastStructuredDocumentRegion());
+		}
 		fTagToVariableMap.clear();
+
+		buildResult();
 	}
 
 	protected void setDocumentContent(IDocument document, InputStream contentStream, String charset) {
@@ -1212,7 +1219,7 @@ public class JSPTranslator {
 	 * jsp:scriptlet, jsp:expression, and jsp:declaration @param blockText
 	 * @return
 	 */
-	private void decodeScriptBlock(String blockText, int startOfBlock) {
+	void decodeScriptBlock(String blockText, int startOfBlock) {
 		XMLJSPRegionHelper helper = new XMLJSPRegionHelper(this, false);
 		helper.addBlockMarker(new BlockMarker("jsp:scriptlet", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
 		helper.addBlockMarker(new BlockMarker("jsp:expression", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
@@ -2630,7 +2637,7 @@ public class JSPTranslator {
 				attrName = container.getText(r).trim();
 				if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 					if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
-						attrValue = StringUtils.stripQuotes(container.getText(r));
+						attrValue = StringUtils.stripQuotes(container.getText(r)).trim();
 					}
 					// has equals, but no value?
 				}
@@ -2686,9 +2693,13 @@ public class JSPTranslator {
 					typeRegion = classnameRegion;
 				}
 
-				if (!isTypeFound(type)) {
-					Object problem = createJSPProblem(IJSPProblem.F_PROBLEM_ID_LITERAL, IProblem.UndefinedType, MessageFormat.format(JSPCoreMessages.JSPTranslator_1, new String[]{type}), container.getStartOffset(typeRegion), container.getTextEndOffset(typeRegion) - 1);
-					fTranslationProblems.add(problem);
+				/* Now check the types (multiple of generics are involved) */
+				List errorTypeNames = new ArrayList(2);
+				if (!isTypeFound(type, errorTypeNames)) {
+					for (int i = 0; i < errorTypeNames.size(); i++) {
+						Object problem = createJSPProblem(IJSPProblem.F_PROBLEM_ID_LITERAL, IProblem.UndefinedType, MessageFormat.format(JSPCoreMessages.JSPTranslator_1, new String[]{errorTypeNames.get(i).toString()}), container.getStartOffset(typeRegion), container.getTextEndOffset(typeRegion) - 1);
+						fTranslationProblems.add(problem);
+					}
 				}
 				else {
 					String prefix = type + " " + id + " = "; //$NON-NLS-1$ //$NON-NLS-2$
@@ -2707,31 +2718,60 @@ public class JSPTranslator {
 	 * @param type
 	 * @return
 	 */
-	private boolean isTypeFound(String typeName) {
-		IType type = null;
+	private boolean isTypeFound(String rawTypeValue, List errorTypeNames) {
 		IProject project = getFile().getProject();
-		try {
-			IJavaProject p = JavaCore.create(project);
-			if (p.exists()) {
-				if (typeName.indexOf('<') > 0 && typeName.indexOf('>') > 0) {
-					StringTokenizer toker = new StringTokenizer(typeName);
-					String generic = toker.nextToken("<");
-					String element = toker.nextToken(">");
-					IType genericType = p.findType(generic);
-					IType elementType = p.findType(element);
-					return genericType!= null && genericType.exists() && elementType!= null && elementType.exists();
+		IJavaProject p = JavaCore.create(project);
+		if (p.exists()) {
+			String types[] = new String[3];
+			if (rawTypeValue.indexOf('<') > 0) {
+				// JSR 14 : Generics are being used, parse them out
+				try {
+					StringTokenizer toker = new StringTokenizer(rawTypeValue);
+					// generic
+					types[0] = toker.nextToken("<"); //$NON-NLS-1$
+					// type 1 or key
+					types[1] = toker.nextToken(",>"); //$NON-NLS-1$
+					// type 2 or value
+					types[2] = toker.nextToken(",>"); //$NON-NLS-1$
 				}
-				type = p.findType(typeName);
-				return type != null && type.exists();
+				catch (NoSuchElementException e) {
+					// StringTokenizer failure with unsupported syntax
+				}
+			}
+			else {
+				types[0] = rawTypeValue;
+			}
+
+			for (int i = 0; i < types.length; i++) {
+				if (types[i] != null) {
+					// remove any array suffixes 
+					if (types[i].indexOf('[') > 0) {
+						types[i] = types[i].substring(0, types[i].indexOf('[')); //$NON-NLS-1$
+					}
+					// remove any "extends" prefixes (JSR 14)
+					if (types[i].indexOf("extends") > 0) {
+						types[i] = StringUtils.strip(types[i].substring(types[i].indexOf("extends"))); //$NON-NLS-1$
+					}
+
+					addNameToListIfTypeNotFound(p, types[i], errorTypeNames);
+				}
+			}
+		}
+		return errorTypeNames.isEmpty();
+	}
+	
+	private void addNameToListIfTypeNotFound(IJavaProject p, String typeName, List collectedNamesNotFound) {
+		try {
+			if (typeName != null) {
+				IType type = p.findType(typeName);
+				if (type == null || !type.exists()) {
+					collectedNamesNotFound.add(typeName);
+				}
 			}
 		}
 		catch (JavaModelException e) {
 			// Not a Java Project
 		}
-		catch(NoSuchElementException e) {
-			// StringTokenizer failure with unsupported syntax
-		}
-		return true;
 	}
 
 	private boolean isValidJavaIdentifier(String id) {

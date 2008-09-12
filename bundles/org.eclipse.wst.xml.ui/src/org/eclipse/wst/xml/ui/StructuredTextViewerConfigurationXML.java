@@ -197,6 +197,10 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 					if (element == null)
 						return null;
 
+					if (!(element instanceof Node)) {
+						return super.getText(element);
+					}
+
 					StringBuffer s = new StringBuffer();
 					Node node = (Node) element;
 					while (node != null) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,6 +50,7 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
   Button qualifyXSDLanguage;
   private Button honourAllSchemaLocations = null;
   private Button fullSchemaConformance = null;
+  private Button removeUnusedImports;
 
   /**
    * Creates preference page controls on demand.
@@ -90,6 +91,8 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     
     
     createContentsForValidatingGroup(parent);
+    
+    createContentsForImportCleanup(parent);
 
     initializeValues();
 
@@ -169,6 +172,27 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
 
   }
   
+  private void createContentsForImportCleanup(Composite parent)
+  {
+    Group unusedImportGroup = createGroup(parent, 1);
+    unusedImportGroup.setText(Messages._UI_GRAPH_DIRECTIVES);
+
+    //GridData
+    GridData data = new GridData(SWT.FILL);
+    data.verticalAlignment = SWT.CENTER;
+    data.horizontalAlignment = SWT.FILL;
+
+    if (removeUnusedImports == null) 
+    {
+      removeUnusedImports = new Button(unusedImportGroup, SWT.CHECK | SWT.LEFT);
+      removeUnusedImports.setText(Messages._UI_TEXT_ENABLE_AUTO_IMPORT_CLEANUP);
+      removeUnusedImports.setLayoutData(data);
+      
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(removeUnusedImports,
+            XSDEditorCSHelpIds.XMLSCHEMAFILES_PREFERENCES__IMPORT_CLEANUP); 
+    }
+  }
+  
   /**
    * Does anything necessary because the default button has been pressed.
    */
@@ -235,6 +259,7 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     defaultTargetNamespaceText.setText(getPreferenceStore().getString(XSDEditorPlugin.CONST_DEFAULT_TARGET_NAMESPACE));
     honourAllSchemaLocations.setSelection(XSDCorePlugin.getDefault().getPluginPreferences().getDefaultBoolean(XSDCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS));
     fullSchemaConformance.setSelection(XSDCorePlugin.getDefault().getPluginPreferences().getDefaultBoolean(XSDCorePreferenceNames.FULL_SCHEMA_CONFORMANCE));
+    removeUnusedImports.setSelection(getPreferenceStore().getDefaultBoolean(XSDEditorPlugin.CONST_XSD_IMPORT_CLEANUP));
   }
 
   /**
@@ -248,6 +273,7 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     defaultTargetNamespaceText.setText(store.getString(XSDEditorPlugin.CONST_DEFAULT_TARGET_NAMESPACE));
     honourAllSchemaLocations.setSelection(XSDCorePlugin.getDefault().getPluginPreferences().getBoolean(XSDCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS));
     fullSchemaConformance.setSelection(XSDCorePlugin.getDefault().getPluginPreferences().getBoolean(XSDCorePreferenceNames.FULL_SCHEMA_CONFORMANCE));
+    removeUnusedImports.setSelection(store.getBoolean(XSDEditorPlugin.CONST_XSD_IMPORT_CLEANUP));
   }
 
   /**
@@ -260,6 +286,7 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     store.setValue(XSDEditorPlugin.CONST_XSD_DEFAULT_PREFIX_TEXT, getXMLSchemaPrefix());
     store.setValue(XSDEditorPlugin.CONST_XSD_LANGUAGE_QUALIFY, getQualify());
     store.setValue(XSDEditorPlugin.CONST_DEFAULT_TARGET_NAMESPACE, getXMLSchemaTargetNamespace());
+    store.setValue(XSDEditorPlugin.CONST_XSD_IMPORT_CLEANUP, getRemoveImportSetting());
 
     XSDEditorPlugin.getPlugin().savePluginPreferences();
     
@@ -282,6 +309,11 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
   public boolean getQualify()
   {
     return qualifyXSDLanguage.getSelection();
+  }
+  
+  public boolean getRemoveImportSetting()
+  {
+    return removeUnusedImports.getSelection();
   }
   
   /**

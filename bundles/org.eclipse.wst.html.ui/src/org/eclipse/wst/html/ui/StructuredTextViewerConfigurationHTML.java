@@ -231,9 +231,12 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		if (fStatusLineLabelProvider == null) {
 			fStatusLineLabelProvider = new JFaceNodeLabelProvider() {
 				public String getText(Object element) {
-
 					if (element == null)
 						return null;
+
+					if (!(element instanceof Node)) {
+						return super.getText(element);
+					}
 
 					StringBuffer s = new StringBuffer();
 					Node node = (Node) element;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,7 +28,6 @@ import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.wst.sse.core.utils.StringUtils;
-import org.eclipse.wst.sse.ui.internal.ITemporaryAnnotation;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
@@ -115,26 +114,25 @@ public class AnnotationHoverProcessor extends AbstractHoverProcessor {
 					continue;
 
 				Position p = model.getPosition(a);
-				// check if this is an annotation in the region we are
-				// concerned with
+				/*
+				 * Check if this is an Annotation in the region we are
+				 * concerned with
+				 */
 				if (p.overlapsWith(hoverRegion.getOffset(), hoverRegion.getLength())) {
 					String msg = a.getText();
 					if ((msg != null) && msg.trim().length() > 0) {
-						// it is possible for temporary annotations to
-						// duplicate other annotations so make sure not to add
-						// dups
-						if (a instanceof ITemporaryAnnotation) {
-							boolean duplicated = false;
-							int j = 0;
-							while (j < messages.size() && !duplicated) {
-								duplicated = messages.get(j).equals(msg);
-								++j;
-							}
-							if (!duplicated) {
-								messages.add(msg);
-							}
+						/*
+						 * It is possible for temporary annotations to
+						 * duplicate other annotations so make sure not to add
+						 * duplicates.
+						 */
+						boolean duplicated = false;
+						int j = 0;
+						while (j < messages.size() && !duplicated) {
+							duplicated = messages.get(j).equals(msg);
+							++j;
 						}
-						else {
+						if (!duplicated) {
 							messages.add(msg);
 						}
 					}
