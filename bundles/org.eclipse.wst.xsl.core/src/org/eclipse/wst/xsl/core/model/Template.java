@@ -138,25 +138,32 @@ public class Template extends XSLElement
 		if (obj instanceof Template)
 		{
 			Template includedTemplate = (Template)obj;
-			String name1 = getName();
-			String match1 = getMatch();
-			String mode1 = getMode();
+			if (!matchesByMatchOrName(includedTemplate))
+				return false;
+			// only possibility is that priority is different
 			String priority1 = getPriority();
-			String name2 = includedTemplate.getName();
-			String match2 = includedTemplate.getMatch();
-			String mode2 = includedTemplate.getMode();
 			String priority2 = includedTemplate.getPriority();
-
-			if (name1 != null && name1.equals(name2))
-				return true;
-			if (match1 != null && match1.equals(match2) && 
-					(mode1 == null && mode2 == null || mode1 != null && mode1.equals(mode2)) &&
-					(priority1 == null && priority2 == null || priority1 != null && priority1.equals(priority2))
-				)
+			if (priority1 == null && priority2 == null || priority1 != null && priority1.equals(priority2))
 				return true;
 		}
 		return false;
 	}
+	
+	public boolean matchesByMatchOrName(Template includedTemplate)
+	{
+		String name1 = getName();
+		String match1 = getMatch();
+		String mode1 = getMode();
+		String name2 = includedTemplate.getName();
+		String match2 = includedTemplate.getMatch();
+		String mode2 = includedTemplate.getMode();
+		if (name1 != null && name1.equals(name2))
+			return true;
+		if (match1 != null && match1.equals(match2) && (mode1 == null && mode2 == null || mode1 != null && mode1.equals(mode2)))
+			return true;
+		return false;
+	}
+	
 	
 	@Override
 	public String toString()

@@ -104,6 +104,23 @@ public class StylesheetModel extends XSLModelObject
 	{
 		return templates;
 	}
+	
+	/**
+	 * A utility method that traverses all stylesheet in the hierarchy of stylesheets (not including the current stylesheet), and adds all their templates to the returned list.
+	 * Therefore the returned list has no regard for whether a template is 'visible' (i.e. whether it might be overridden since it 
+	 * was included via an import). The order of the templates in the list is arbitrary.
+	 * 
+	 * @return an unordered list of all templates from all stylesheets.
+	 */
+	public List<Template> findAllNestedTemplates()
+	{
+		List<Template> allTemplates = new ArrayList<Template>();
+		for (Stylesheet stylesheet : stylesheets)
+		{
+			allTemplates.addAll(stylesheet.getTemplates());
+		}
+		return allTemplates;
+	}
 
 	/**
 	 * Get all named templates that are included in this stylesheet anywhere in the hierarchy via either import or include which have the given name.

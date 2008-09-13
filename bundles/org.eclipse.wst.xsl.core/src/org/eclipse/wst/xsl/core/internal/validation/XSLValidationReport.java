@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.eclipse.wst.xsl.core.model.XSLNode;
@@ -31,6 +32,7 @@ public class XSLValidationReport implements ValidationReport
 	private String uri;
 	private List<XSLValidationMessage> errors = new ArrayList<XSLValidationMessage>();
 	private List<XSLValidationMessage> warnings = new ArrayList<XSLValidationMessage>();
+	private List<XSLValidationMessage> infos = new ArrayList<XSLValidationMessage>();
 
 	/**
 	 * Create a new instance of this.
@@ -44,9 +46,9 @@ public class XSLValidationReport implements ValidationReport
 	}
 
 	/**
-	 * Get the error level validation messages.
+	 * Get the validation messages.
 	 * 
-	 * @return error level validation messages
+	 * @return validation messages
 	 */
 	public List<XSLValidationMessage> getErrors()
 	{
@@ -54,9 +56,9 @@ public class XSLValidationReport implements ValidationReport
 	}
 
 	/**
-	 * Get the warn level validation messages.
+	 * Get the validation messages.
 	 * 
-	 * @return warn level validation messages
+	 * @return validation messages
 	 */
 	public List<XSLValidationMessage> getWarnings()
 	{
@@ -64,10 +66,20 @@ public class XSLValidationReport implements ValidationReport
 	}
 
 	/**
+	 * Get the validation messages.
+	 * 
+	 * @return validation messages
+	 */
+	public List<XSLValidationMessage> getInfos()
+	{
+		return infos;
+	}
+
+	/**
 	 * Add an error message for the given XSL node.
 	 * 
 	 * @param node
-	 *            the node the error applies to
+	 *            the node the warning applies to
 	 * @param message
 	 *            the message to associate with the node
 	 * @return the validation message created
@@ -76,7 +88,7 @@ public class XSLValidationReport implements ValidationReport
 	{
 		valid = false;
 		XSLValidationMessage msg = new XSLValidationMessage(message, node.getLineNumber() + 1, node.getColumnNumber() + 1, getFileURI());
-		msg.setSeverity(ValidationMessage.SEV_HIGH);
+		msg.setSeverity(IMessage.HIGH_SEVERITY);
 		msg.setNode(node);
 		errors.add(msg);
 		return msg;
@@ -94,9 +106,27 @@ public class XSLValidationReport implements ValidationReport
 	public ValidationMessage addWarning(XSLNode node, String message)
 	{
 		XSLValidationMessage msg = new XSLValidationMessage(message, node.getLineNumber() + 1, node.getColumnNumber() + 1, getFileURI());
-		msg.setSeverity(ValidationMessage.SEV_LOW);
+		msg.setSeverity(IMessage.NORMAL_SEVERITY);
 		msg.setNode(node);
 		warnings.add(msg);
+		return msg;
+	}
+
+	/**
+	 * Add an info message for the given XSL node.
+	 * 
+	 * @param node
+	 *            the node the warning applies to
+	 * @param message
+	 *            the message to associate with the node
+	 * @return the validation message created
+	 */
+	public ValidationMessage addInfo(XSLNode node, String message)
+	{
+		XSLValidationMessage msg = new XSLValidationMessage(message, node.getLineNumber() + 1, node.getColumnNumber() + 1, getFileURI());
+		msg.setSeverity(IMessage.LOW_SEVERITY);
+		msg.setNode(node);
+		infos.add(msg);
 		return msg;
 	}
 
@@ -128,8 +158,10 @@ public class XSLValidationReport implements ValidationReport
 	 */
 	public ValidationMessage[] getValidationMessages()
 	{
-		List<ValidationMessage> messages = new ArrayList<ValidationMessage>(errors);
+		List<ValidationMessage> messages = new ArrayList<ValidationMessage>();
+		messages.addAll(errors);
 		messages.addAll(warnings);
+		messages.addAll(infos);
 		return messages.toArray(new ValidationMessage[0]);
 	}
 

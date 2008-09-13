@@ -18,8 +18,10 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -29,7 +31,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.common.uriresolver.internal.util.URIEncoder;
 import org.eclipse.wst.validation.ValidationResult;
 import org.eclipse.wst.validation.ValidationState;
+import org.eclipse.wst.validation.ValidatorMessage;
+import org.eclipse.wst.validation.internal.ResourceUnavailableError;
 import org.eclipse.wst.validation.internal.core.ValidationException;
+import org.eclipse.wst.validation.internal.plugin.ValidationPlugin;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
@@ -143,6 +148,8 @@ public class Validator extends AbstractNestedValidator
 	{
 		XSLValidationMessage msg = (XSLValidationMessage) validationMessage;
 		XSLNode node = msg.getNode();
+		// set this here as it gets set to the wrong value by the superclass
+		message.setSeverity(msg.getRealSeverity());
 		// constants are defined in org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidator
 		if (node.getNodeType() == XSLNode.ATTRIBUTE_NODE)
 		{

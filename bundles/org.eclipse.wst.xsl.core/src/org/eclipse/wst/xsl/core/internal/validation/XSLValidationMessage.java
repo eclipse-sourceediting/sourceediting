@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.validation;
 
+import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xsl.core.model.XSLNode;
 
@@ -23,6 +24,7 @@ import org.eclipse.wst.xsl.core.model.XSLNode;
 public class XSLValidationMessage extends ValidationMessage
 {
 	private XSLNode node;
+	private int realSeverity;
 
 	/**
 	 * Create a new instance of this.
@@ -58,6 +60,36 @@ public class XSLValidationMessage extends ValidationMessage
 	public XSLNode getNode()
 	{
 		return node;
+	}
+	
+	/**
+	 * The severity set here should be the org.eclipse.wst.validation.internal.provisional.core.IMessage severity.
+	 */
+	@Override
+	public void setSeverity(int sev)
+	{
+		this.realSeverity = sev;
+		// the superclass only understands high and low.
+		int severity;
+		switch(sev)
+		{
+			case IMessage.HIGH_SEVERITY:
+				severity = ValidationMessage.SEV_HIGH;
+				break;
+			default:
+				severity = ValidationMessage.SEV_LOW;
+		}
+		super.setSeverity(severity);
+	}
+	
+	/**
+	 * Workaround for superclass's bizarre handling of severity
+	 * 
+	 * @return
+	 */
+	public int getRealSeverity()
+	{
+		return realSeverity;
 	}
 	
 	public String toString()
