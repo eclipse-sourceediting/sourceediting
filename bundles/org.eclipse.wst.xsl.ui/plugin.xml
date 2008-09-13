@@ -13,8 +13,8 @@
 	<extension point="org.eclipse.ui.editors">
 		<editor name="%editorName" 
 			icon="icons/full/xslt_file.gif"
-			contributorClass="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorActionBarContributor"
-			class="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"
+			contributorClass="org.eclipse.wst.xml.ui.internal.tabletree.SourcePageActionContributor"
+			class="org.eclipse.wst.xsl.ui.internal.editor.XSLEditor"
 			default="true"
 			extensions="xsl,xslt"
 			id="org.eclipse.wst.xsl.ui.XSLEditor">
@@ -290,4 +290,38 @@
 		</factory>
    </extension>     	
    
+	<extension point="org.eclipse.ui.editors.annotationTypes">
+		<type
+			name="org.eclipse.wst.xsl.ui.override">
+		</type>
+	</extension>
+   <extension
+         point="org.eclipse.ui.editors.markerAnnotationSpecification">
+	  <specification
+            annotationType="org.eclipse.wst.xsl.ui.override"
+            label="Override"
+            icon="$nl$/icons/full/over_co.gif"
+			annotationImageProvider ="org.eclipse.wst.xsl.ui.internal.editor.OverrideIndicatorImageProvider"
+            textPreferenceKey="overrideIndicator"
+            textPreferenceValue="false"
+            highlightPreferenceKey="overrideIndicatorHighlighting"
+            highlightPreferenceValue="false"
+            contributesToHeader="false"
+            overviewRulerPreferenceKey="overrideIndicatorInOverviewRuler"
+            overviewRulerPreferenceValue="false"
+            verticalRulerPreferenceKey="overrideIndicatorInVerticalRuler"
+            verticalRulerPreferenceValue="true"
+            colorPreferenceKey="overrideIndicatorColor"
+            colorPreferenceValue="180,207,205"
+            presentationLayer="3"
+            showInNextPrevDropdownToolbarActionKey="showoverrideIndicatorInNextPrevDropdownToolbarAction"
+            showInNextPrevDropdownToolbarAction="false"
+            isGoToNextNavigationTargetKey="isOverrideIndicatorGoToNextNavigationTarget"
+	        isGoToNextNavigationTarget="false"
+            isGoToPreviousNavigationTargetKey="isOverrideIndicatorGoToPreviousNavigationTarget"
+	        isGoToPreviousNavigationTarget="false"
+            textStylePreferenceKey="overrideIndicatorTextStyle"
+            textStylePreferenceValue="SQUIGGLES">
+	  </specification>
+	</extension>
 </plugin>
