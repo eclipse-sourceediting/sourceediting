@@ -12,7 +12,11 @@
             can add this support if they need it by
             adding the missing XPath
             functions to the XPath Templates.
-			</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="SelectTest"></a>Select and Test Attributes </h3></div></div></div><p>
+			</p></div><p>
+         To initiate content assistance press CTRL + SPACE or CMD + SPACE.  This will bring up
+         a dialog that will contain any proposals that are available.   If no proposals are available
+         an message will be displayed in the status bar.
+      </p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="SelectTest"></a>Select and Test Attributes </h3></div></div></div><p>
             Where ever an xsl element supports a
             <span class="emphasis"><em>select</em></span>
             or
@@ -80,4 +84,10 @@
                be changed at
                a future
                date. This will depend on user feedback.
-				</p></div></div></div></body></html>
+				</p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="ed_ModeAssist"></a>Mode attribute assistance</h3></div></div></div><p>
+            Content assistance is available for those xsl elements that support the mode attribute.  For XSLT 1.0
+            these elements are <span class="emphasis"><em>template</em></span>, <span class="emphasis"><em>apply-templates</em></span>, and <span class="emphasis"><em>apply-imports</em></span>.
+         </p><div class="figure"><a name="fig_ModeAssistance"></a><p class="title"><b>Figure&nbsp;2.3.&nbsp;Mode attribute assistance</b></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="../images/editor/modeAssistance.png" align="middle" alt="Mode attribute assistance"></div></div></div><br class="figure-break"><p>
+            The proposal list is populated by those modes defined on templates in the current stylesheet, and any
+            of the templates that are <span class="emphasis"><em>included</em></span> or <span class="emphasis"><em>imported</em></span>.
+         </p></div></div></body></html>
