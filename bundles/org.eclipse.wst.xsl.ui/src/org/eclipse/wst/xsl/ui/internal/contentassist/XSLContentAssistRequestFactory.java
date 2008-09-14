@@ -23,7 +23,7 @@ import org.w3c.dom.NamedNodeMap;
  * A Factory that determines which Content Assist Request class is
  * needed and returns the appropriate class.
  * 
- * @author dcarver
+ * @author David Carver
  * @since 1.0
  */
 public class XSLContentAssistRequestFactory {
@@ -103,12 +103,12 @@ public class XSLContentAssistRequestFactory {
 		}
 		
 				
-		if (this.hasAttributeAtTextRegion(ATTR_HREF, nodeMap, completionRegion)) {
+		if (hasAttributeAtTextRegion(ATTR_HREF, nodeMap, completionRegion)) {
 			return new HrefContentAssistRequest(
 				xmlNode, xmlNode.getParentNode(), sdRegion, completionRegion,
 				documentPosition, 0, matchString, textViewer);
-		}
-
+		} 
+		
 		return new NullContentAssistRequest(xmlNode, xmlNode.getParentNode(), sdRegion, completionRegion,
 					documentPosition, 0, matchString, textViewer);
 	}

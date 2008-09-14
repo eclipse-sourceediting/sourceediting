@@ -15,6 +15,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
+import java.util.ArrayList;
+
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
@@ -42,9 +44,7 @@ import org.w3c.dom.Node;
  * select statements as well as on test and match attributes.
  * 
  * @author David Carver
- * 
- * 
- * 
+ * @since 1.0
  */
 public class XSLContentAssistProcessor implements IContentAssistProcessor,
 		IReleasable {
@@ -55,6 +55,7 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 
 	private String errorMessage = "";
 	private ITextViewer textViewer = null;
+	
 
 	/**
 	 * The XSL Content Assist Processor handles XSL specific functionality for
@@ -105,13 +106,38 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 
 		String matchString = getXPathMatchString(sdRegion, completionRegion,
 				documentPosition);
-
+		
+		ICompletionProposal[] additionalProposals = null;
+		if (!XSLCore.isXSLNamespace(xmlNode)) {
+			additionalProposals = new ElementContentAssistRequest(xmlNode, xmlNode.getParentNode(), sdRegion, completionRegion, documentPosition, 0, matchString, textViewer).getCompletionProposals();
+		}
+		
+		ICompletionProposal[] xslProposals = null;
 		if (XSLCore.isXSLNamespace(xmlNode)) {
-			proposals = getXSLProposals(textViewer, documentPosition, xmlNode,
+			xslProposals = getXSLProposals(textViewer, documentPosition, xmlNode,
 					sdRegion, completionRegion, proposals, matchString);
 		}
-		return proposals;
+		
+		ArrayList<ICompletionProposal> proposalList = new ArrayList();
+		addProposals(proposals, proposalList);
+		addProposals(additionalProposals, proposalList);
+		addProposals(xslProposals, proposalList);
+		
+		ICompletionProposal[] combinedProposals = new ICompletionProposal[proposalList.size()];
+        proposalList.toArray(combinedProposals); 
+		
+		return combinedProposals;
 	}
+
+	private void addProposals(ICompletionProposal[] proposals,
+			ArrayList<ICompletionProposal> proposalList) {
+		if (proposals != null) {
+			for (int cnt = 0; cnt < proposals.length; cnt++) {
+				proposalList.add(proposals[cnt]);
+			}
+		}
+	}
+	
 
 	protected ICompletionProposal[] getXSLProposals(ITextViewer textViewer,
 			int documentPosition, IDOMNode xmlNode,
@@ -124,24 +150,10 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 				.getContentAssistRequest(textViewer, documentPosition, xmlNode,
 						sdRegion, completionRegion, proposals, matchString);
 
-		xslProposals = contentAssistRequest.getCompletionProposals();
-
-		proposals = updateProposals(proposals, xslProposals);
-		
-		return proposals;
+		xslProposals = contentAssistRequest.getCompletionProposals();	
+		return xslProposals;
 	}
 
-	private ICompletionProposal[] updateProposals(
-			ICompletionProposal[] proposals, ICompletionProposal[] xslProposals) {
-		if (proposals == null && xslProposals == null) {
-			setErrorMessage("No Content Assist Available or Found");	
-		}
-		
-		if (xslProposals != null) {
-			proposals = xslProposals;
-		}
-		return proposals;
-	}
 
 	/**
 	 * StructuredTextViewer must be set before using this.
