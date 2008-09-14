@@ -44,7 +44,16 @@ public class XSLPluginImages {
 	 * Path to the XSL mode Image used for Content Assist
 	 */
 	public static final String IMG_MODE = "icons/full/mode.gif"; //$NON-NLS-1$
+	
+	/**
+	 * Path to the XSL File image use for Content Assistance.
+	 */
+	public static final String IMG_XSL_FILE = "icons/full/xslt_file.gif"; //$NON-NLS-1$ 
 
+	/**
+	 * Path to the xsl template image use for Content Assistance.
+	 */
+	public static final String IMG_TEMPLATE = "icons/full/template.gif"; //$NON-NLS-1$ 
 	
 	
 }

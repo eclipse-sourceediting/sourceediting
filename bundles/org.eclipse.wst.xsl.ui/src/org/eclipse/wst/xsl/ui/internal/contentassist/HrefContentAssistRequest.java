@@ -155,7 +155,7 @@ public class HrefContentAssistRequest extends AbstractXSLContentAssistRequest
 						getStartOffset() + 1,
 						0,
 						pathString.length(),
-						XSLPluginImageHelper.getInstance().getImage(XSLPluginImages.IMG_MODE),
+						XSLPluginImageHelper.getInstance().getImage(XSLPluginImages.IMG_XSL_FILE),
 						pathString,
 						null, 
 						null, 
@@ -209,14 +209,4 @@ public class HrefContentAssistRequest extends AbstractXSLContentAssistRequest
 		return relPath;
 	}
 	
-	/**
-	 * Retrieves the base location for the IDOMDocument for this class. This is
-	 * used to populate a new Path class for retrieving an IFile instance.
-	 * 
-	 * @return
-	 */
-	protected String getLocation() {
-		IDOMDocument document = (IDOMDocument) node.getOwnerDocument();
-		return document.getModel().getBaseLocation();		
-	}
 }

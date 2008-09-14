@@ -36,6 +36,8 @@ public class XSLContentAssistRequestFactory {
 	private static final String ELEM_APPLYTEMPLATES = "apply-templates"; //$NON-NLS-1$
 	private static final String ELEM_APPLY_IMPORTS = "apply-imports"; //$NON-NLS-1$
 	private static final String ATTR_HREF = "href"; //$NON-NLS-1$
+	private static final String ELEM_CALLTEMPLATE = "call-template"; //$NON-NLS-1$
+	private static final String ATTR_NAME = "name"; //$NON-NLS-1$
 	
 	/**
 	 * Get the appropriate content assist request class for the XSL request.
@@ -85,6 +87,13 @@ public class XSLContentAssistRequestFactory {
 					textViewer);
 		}
 		
+		if (hasAttributeAtTextRegion(ATTR_HREF, nodeMap, completionRegion)) {
+			return new HrefContentAssistRequest(
+				xmlNode, xmlNode.getParentNode(), sdRegion, completionRegion,
+				documentPosition, 0, matchString, textViewer);
+		} 
+		
+		
 		if (element.getLocalName().equals(ELEM_TEMPLATE)) {
 			if (hasAttributeAtTextRegion(ATTR_MODE, nodeMap, completionRegion)) {
 				return new TemplateModeAttributeContentAssist(
@@ -102,12 +111,12 @@ public class XSLContentAssistRequestFactory {
 			
 		}
 		
-				
-		if (hasAttributeAtTextRegion(ATTR_HREF, nodeMap, completionRegion)) {
-			return new HrefContentAssistRequest(
-				xmlNode, xmlNode.getParentNode(), sdRegion, completionRegion,
-				documentPosition, 0, matchString, textViewer);
-		} 
+		if (element.getLocalName().equals(ELEM_CALLTEMPLATE)) {
+			if (hasAttributeAtTextRegion(ATTR_NAME, nodeMap, completionRegion)) {
+				return new CallTemplateContentAssistRequest(xmlNode, xmlNode.getParentNode(), sdRegion, completionRegion,
+						documentPosition, 0, matchString, textViewer);
+			}
+		}
 		
 		return new NullContentAssistRequest(xmlNode, xmlNode.getParentNode(), sdRegion, completionRegion,
 					documentPosition, 0, matchString, textViewer);

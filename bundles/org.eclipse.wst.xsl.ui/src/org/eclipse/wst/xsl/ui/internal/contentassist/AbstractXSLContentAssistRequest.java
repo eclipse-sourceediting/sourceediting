@@ -91,6 +91,16 @@ public abstract class AbstractXSLContentAssistRequest extends
 		 
 		 return namespaceInfoList;
 	}
+
+	/**
+	 * Retrieves the base location for the IDOMDocument for this class. This is
+	 * used to populate a new Path class for retrieving an IFile instance.
+	 * @return
+	 */
+	protected String getLocation() {
+		IDOMDocument document = (IDOMDocument) node.getOwnerDocument();
+		return document.getModel().getBaseLocation();		
+	}
 	
 		
 }
