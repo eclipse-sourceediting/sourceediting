@@ -172,10 +172,11 @@ public class TestTemplateModeCompletionProposal extends AbstractXSLUITest {
 		assertEquals("Wrong offset returned", 471, offset);
     	
     	ICompletionProposal[] proposals = getProposals(offset);
-    	assertEquals("Wrong number of mode proposals returned.", 3, proposals.length);
-    	assertEquals("Unexpected mode proposal.", "mode1", proposals[0].getDisplayString());
-    	assertEquals("Unexpected mode proposal.", "mode2", proposals[1].getDisplayString());
-    	assertEquals("Unexpected mode proposal.", "mode3", proposals[2].getDisplayString());
+    	assertEquals("Wrong number of mode proposals returned.", 4, proposals.length);
+    	assertEquals("Unexpected mode proposal.", "\"#all\"", proposals[0].getDisplayString());
+    	assertEquals("Unexpected mode proposal.", "mode1", proposals[1].getDisplayString());
+    	assertEquals("Unexpected mode proposal.", "mode2", proposals[2].getDisplayString());
+    	assertEquals("Unexpected mode proposal.", "mode3", proposals[3].getDisplayString());
 
     	sourceViewer = null;
     }

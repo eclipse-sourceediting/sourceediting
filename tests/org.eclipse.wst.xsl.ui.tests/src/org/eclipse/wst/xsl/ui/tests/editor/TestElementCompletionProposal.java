@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- *     David Carver - STAR - bug 230136 - intial API and implementation
+ *     David Carver - STAR - bug 244978 - intial API and implementation
  *******************************************************************************/
 
 package org.eclipse.wst.xsl.ui.tests.editor;
@@ -51,7 +51,7 @@ import org.eclipse.wst.xsl.ui.tests.XSLUITestsPlugin;
  * Tests everything about code completion and code assistance.
  * 
  */
-public class TestExcludeResultPrefixesCompletionProposal extends AbstractXSLUITest {
+public class TestElementCompletionProposal extends AbstractXSLUITest {
 
 	protected String projectName = null;
 	protected String fileName = null;
@@ -63,7 +63,7 @@ public class TestExcludeResultPrefixesCompletionProposal extends AbstractXSLUITe
 	protected IStructuredDocument document = null;
 	protected StructuredTextViewer sourceViewer = null;
 	
-	public TestExcludeResultPrefixesCompletionProposal() {
+	public TestElementCompletionProposal() {
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -159,103 +159,104 @@ public class TestExcludeResultPrefixesCompletionProposal extends AbstractXSLUITe
     	return new XSLContentAssistProcessor().computeCompletionProposals(sourceViewer, offset); 
 	}
 	
-    public void testAllDefaultValueNoProposals() throws Exception {
-		fileName = "TestResultPrefixes.xsl";
+     
+    public void testXSLPropsoalAvailable() throws Exception {
+		fileName = "testElementProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
 		// Column is off by one when calculating for the offset position
-		int column = 29;
-		int line = 2;
+		int column = 16;
+		int line = 5;
 		
 		int offset = document.getLineOffset(line) + column;
-		assertEquals("Line Offset incorrect:", 147, offset);
-    	
-    	ICompletionProposal[] proposals = getProposals(offset);
-    	assertEquals("Found proposals when #all already in result value.", 0, proposals.length);  
-    	sourceViewer = null;
-    }
-    
-    public void testXHTMLNamespacePropsoalAvailable() throws Exception {
-		fileName = "TestResultPrefixesEmpty.xsl";
-		String xslFilePath = projectName + File.separator + fileName;
-		loadFileForTesting(xslFilePath);
-		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
-		// Column is off by one when calculating for the offset position
-		int column = 29;
-		int line = 2;
-		
-		int offset = document.getLineOffset(line) + column;
-		assertEquals("Line Offset incorrect:", 147, offset);
+		assertEquals("Line Offset incorrect:", 189, offset);
 		
     	ICompletionProposal[] proposals = getProposals(offset);
     	assertNotNull("Did not find proposals.", proposals);
-    	assertEquals("Proposal length not 2.", 2, proposals.length );
-    	assertEquals("Proposal did not find xhtml as proposal value.", "xhtml", proposals[1].getDisplayString());
     	sourceViewer = null;
     	
     }
     
-    public void testAllPropsoalAvailable() throws Exception {
-		fileName = "TestResultPrefixesEmpty.xsl";
+    public void testXSLApplyTemplatesPropsoalAvailable() throws Exception {
+		fileName = "testElementProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
 		// Column is off by one when calculating for the offset position
-		int column = 29;
-		int line = 2;
+		int column = 16;
+		int line = 5;
 		
 		int offset = document.getLineOffset(line) + column;
-		assertEquals("Line Offset incorrect:", 147, offset);
+		assertEquals("Line Offset incorrect:", 189, offset);
 		
     	ICompletionProposal[] proposals = getProposals(offset);
     	assertNotNull("Did not find proposals.", proposals);
-    	assertEquals("Proposal length not 2.", 2, proposals.length );
-    	assertEquals("Proposal did not find xhtml as proposal value.", "#all", proposals[0].getDisplayString());
-    	sourceViewer = null;
-    	
-    }
-    
-    public void testExcludeXHTMLProposal() throws Exception {
-		fileName = "TestResultPrefixesWithXhtml.xsl";
-		String xslFilePath = projectName + File.separator + fileName;
-		loadFileForTesting(xslFilePath);
-		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
-		// Column is off by one when calculating for the offset position
-		int column = 35;
-		int line = 2;
-		int offset = document.getLineOffset(line) + column;
-		
-    	ICompletionProposal[] proposals = getProposals(offset);
-    	assertNotNull("Did not find proposals.", proposals);
-    	
+
+    	String proposalName = "";
     	for (int cnt = 0; cnt < proposals.length; cnt++) {
-    		if (proposals[cnt].getDisplayString().equals("xhtml")) {
-    	    	sourceViewer = null;
-    			fail("XHTML Proposal found, when it should not have been!");
+    		if (proposals[cnt].getDisplayString().equals("xsl:apply-templates")) {
+    			proposalName = proposals[cnt].getDisplayString();
     		}
     	}
+
+    	assertEquals("Did not find expected proposal.", "xsl:apply-templates", proposalName);
+    	
     	sourceViewer = null;
+    	
     }
     
-    public void testTestProposal() throws Exception {
-		fileName = "TestResultPrefixesWithXhtml.xsl";
+    public void testXSLChoosePropsoalAvailable() throws Exception {
+		fileName = "testElementProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
 		// Column is off by one when calculating for the offset position
-		int column = 35;
-		int line = 2;
+		int column = 16;
+		int line = 5;
+		
 		int offset = document.getLineOffset(line) + column;
+		assertEquals("Line Offset incorrect:", 189, offset);
 		
     	ICompletionProposal[] proposals = getProposals(offset);
     	assertNotNull("Did not find proposals.", proposals);
-    	assertFalse("Proposals returned more than one.", proposals.length > 1);
-    	assertEquals("Did not find test in proposal list", "test", proposals[0].getDisplayString());
-    	
+
+    	String proposalName = "";
+    	for (int cnt = 0; cnt < proposals.length; cnt++) {
+    		if (proposals[cnt].getDisplayString().equals("xsl:choose")) {
+    			proposalName = proposals[cnt].getDisplayString();
+    		}
+    	}
+
+    	assertEquals("Did not find expected proposal.", "xsl:choose", proposalName);
     	sourceViewer = null;
     }
     
-    
+    public void testXSLWhenPropsoalNotAvailable() throws Exception {
+		fileName = "testElementProposals.xsl";
+		String xslFilePath = projectName + File.separator + fileName;
+		loadFileForTesting(xslFilePath);
+		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
+		// Column is off by one when calculating for the offset position
+		int column = 16;
+		int line = 5;
+		
+		int offset = document.getLineOffset(line) + column;
+		assertEquals("Line Offset incorrect:", 189, offset);
+		
+    	ICompletionProposal[] proposals = getProposals(offset);
+    	assertNotNull("Did not find proposals.", proposals);
+
+    	String proposalName = "";
+    	for (int cnt = 0; cnt < proposals.length; cnt++) {
+    		if (proposals[cnt].getDisplayString().equals("xsl:when")) {
+    			proposalName = proposals[cnt].getDisplayString();
+    		}
+    	}
+    	
+    	assertFalse("xsl:when proposal found when it shouldn't have been.", proposalName.equals("xsl:when"));
+    	sourceViewer = null;
+    }
+
     
 }
