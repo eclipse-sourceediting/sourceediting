@@ -13,6 +13,9 @@ package org.eclipse.wst.xsl.internal.debug.ui.actions;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
@@ -49,7 +52,11 @@ public class AddExternalFileAction extends OpenDialogAction
 		FileDialog dialog = new FileDialog(getShell(), SWT.MULTI);
 		dialog.setText(Messages.getString("AddExternalFileAction_Selection_3"));
 		dialog.setFilterPath(lastUsedPath);
-		dialog.setFilterExtensions(new String[]{ "*.xsl" }); //$NON-NLS-1$
+		IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
+		IContentType contentType = contentTypeManager.getContentType("org.eclipse.wst.xml.core.xslsource"); //$NON-NLS-1$
+		String[] xslContentTypes = contentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+
+		dialog.setFilterExtensions(xslContentTypes);
 		String res = dialog.open();
 		if (res == null)
 		{
