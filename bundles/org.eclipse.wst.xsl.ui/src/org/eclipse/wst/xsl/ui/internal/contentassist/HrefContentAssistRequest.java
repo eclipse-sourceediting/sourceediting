@@ -27,7 +27,6 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper;
@@ -136,8 +135,6 @@ public class HrefContentAssistRequest extends AbstractXSLContentAssistRequest
 			String text = getText();
 			String precedingText;
 			
-			
-			
 			int length = getCursorPosition()-getStartOffset();
 			if (length > 0 && text.length() > length + 1)
 				precedingText = text.substring(1,length);
@@ -145,7 +142,7 @@ public class HrefContentAssistRequest extends AbstractXSLContentAssistRequest
 				precedingText = "";
 			IFile editorFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(getLocation()));
 			editorFile.getProject().accept(new XSLFileResourceVisitor(editorFile,precedingText));
-			
+
 			Collections.sort(pathList,new PathComparator());
 			for (IPath path : pathList)
 			{
@@ -153,13 +150,14 @@ public class HrefContentAssistRequest extends AbstractXSLContentAssistRequest
 				CustomCompletionProposal proposal = new CustomCompletionProposal(
 						pathString,
 						getStartOffset() + 1,
-						0,
+						text.length()-2,
 						pathString.length(),
 						XSLPluginImageHelper.getInstance().getImage(XSLPluginImages.IMG_XSL_FILE),
 						pathString,
 						null, 
 						null, 
-						0
+						0,
+						true
 					);
 				proposals.add(proposal);
 			}

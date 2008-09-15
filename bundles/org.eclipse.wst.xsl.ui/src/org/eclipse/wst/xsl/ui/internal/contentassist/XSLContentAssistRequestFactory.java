@@ -124,6 +124,6 @@ public class XSLContentAssistRequestFactory {
 
 	protected boolean hasAttributeAtTextRegion(String attrName, NamedNodeMap nodeMap, ITextRegion aRegion) {
 		IDOMAttr attrNode = (IDOMAttr) nodeMap.getNamedItem(attrName);
-		return attrNode != null && attrNode.getValueRegion().getStart() == aRegion.getStart();
+		return attrNode != null && attrNode.getValueRegion() != null && attrNode.getValueRegion().getStart() == aRegion.getStart();
 	}	
 }
