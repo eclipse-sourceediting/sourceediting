@@ -9,6 +9,9 @@
 package org.eclipse.wst.xml.ui.internal.tabletree;
 
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -240,6 +243,26 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 			}
 		}
 	}
+	
+	private class PageInitializationData {
+		IConfigurationElement fElement;
+		String fPropertyName;
+		Object fData;
+
+		PageInitializationData(IConfigurationElement cfig, String propertyName, Object data) {
+			super();
+			fElement = cfig;
+			fPropertyName = propertyName;
+			fData = data;
+		}
+		void sendInitializationData(IExecutableExtension executableExtension) {
+			try {
+				executableExtension.setInitializationData(fElement, fPropertyName, fData);
+			} catch (CoreException e) {
+				Logger.logException(e);
+			}
+		}
+	}
 
 	/**
 	 * Internal IPropertyListener
@@ -386,6 +409,8 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	private TextEditorPostSelectionAdapter fTextEditorSelectionListener;
 
 	private ILabelProvider fStatusLineLabelProvider;
+
+	private PageInitializationData fPageInitializer;
 
 	/**
 	 * StructuredTextMultiPageEditorPart constructor comment.
@@ -640,6 +665,15 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	protected void createSourcePage() throws PartInitException {
 		fTextEditor = createTextEditor();
 		fTextEditor.setEditorPart(this);
+		
+		/*
+		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=134301 - XML editor
+		 * does not remember font settings
+		 * 
+		 * @see
+		 * org.eclipse.ui.texteditor.AbstractTextEditor#getSymbolicFontName()
+		 */
+		fPageInitializer.sendInitializationData(fTextEditor);
 
 		if (fPropertyListener == null) {
 			fPropertyListener = new PropertyListener();
@@ -855,6 +889,11 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	private void saveLastActivePageIndex(int newPageIndex) {
 		// save the last active page index to preference manager
 		getPreferenceStore().setValue(IXMLPreferenceNames.LAST_ACTIVE_PAGE, newPageIndex);
+	}
+	
+	public void setInitializationData(IConfigurationElement cfig, String propertyName, Object data) {
+		super.setInitializationData(cfig, propertyName, data);
+		fPageInitializer = new PageInitializationData(cfig, propertyName, data);
 	}
 
 	/*
