@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -99,6 +99,12 @@ public final class FacetModuleCoreSupport {
 		return path;
 	}
 
+	/**
+	 * @param path -
+	 *            the full path to a resource within the workspace
+	 * @return - the runtime path of the resource if one exists, null
+	 *         otherwise
+	 */
 	public static IPath getRuntimePath(IPath path) {
 		IPath result = null;
 		try {
