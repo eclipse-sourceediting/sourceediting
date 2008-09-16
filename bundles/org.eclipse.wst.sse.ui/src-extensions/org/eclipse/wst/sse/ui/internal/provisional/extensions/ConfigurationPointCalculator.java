@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.part.MultiPageEditorSite;
 
 public class ConfigurationPointCalculator {
@@ -36,7 +37,7 @@ public class ConfigurationPointCalculator {
 	}
 
 	protected String fContentType = null;
-	protected IEditorPart fPart = null;
+	protected IWorkbenchPart fPart = null;
 
 	protected Class fRootClass = null;
 	protected String fSubContext = null;
@@ -51,12 +52,12 @@ public class ConfigurationPointCalculator {
 	public String[] getConfigurationPoints() {
 		List points = new ArrayList(2);
 
+		IWorkbenchPartSite site = null;
 		if (fPart != null) {
-			IEditorSite site = fPart.getEditorSite();
+			site = fPart.getSite();
 			String id = site.getId();
 			if (id != null && id.length() > 0 && !id.equals(fRootClass.getName()))
 				points.add(id);
-
 			if (site instanceof MultiPageEditorSite) {
 				String multipageID = ((MultiPageEditorSite) site).getMultiPageEditor().getSite().getId();
 				if (!points.contains(multipageID))
@@ -102,7 +103,7 @@ public class ConfigurationPointCalculator {
 	/**
 	 * @return Returns the part.
 	 */
-	public IEditorPart getPart() {
+	public IWorkbenchPart getPart() {
 		return fPart;
 	}
 
@@ -122,7 +123,7 @@ public class ConfigurationPointCalculator {
 
 	/**
 	 * @param contentType
-	 * 		The contentType to set.
+	 *            The contentType to set.
 	 */
 	public void setContentType(String contentType) {
 		fContentType = contentType;
@@ -130,15 +131,15 @@ public class ConfigurationPointCalculator {
 
 	/**
 	 * @param part
-	 * 		The part to set.
+	 *            The part to set.
 	 */
-	public void setPart(IEditorPart part) {
+	public void setPart(IWorkbenchPart part) {
 		fPart = part;
 	}
 
 	/**
 	 * @param rootClass
-	 * 		The rootClass to set.
+	 *            The rootClass to set.
 	 */
 	public void setRootClass(Class rootClass) {
 		fRootClass = rootClass;
@@ -146,7 +147,7 @@ public class ConfigurationPointCalculator {
 
 	/**
 	 * @param subContext
-	 * 		The subContext to set.
+	 *            The subContext to set.
 	 */
 	public void setSubContext(String subContext) {
 		fSubContext = subContext;
