@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
+ *     Pete Carapetyan/Genuitec - 244835 - Enable/Disable breakpoint action does not refresh its label
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.debug;
 
@@ -24,6 +24,8 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
@@ -41,6 +43,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.texteditor.AbstractMarkerAnnotationModel;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.ui.texteditor.ITextEditorExtension;
 import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -154,13 +157,24 @@ public abstract class BreakpointRulerAction extends Action implements IUpdate {
 	protected IVerticalRulerInfo fRulerInfo = null;
 	protected ITextEditor fTextEditor = null;
 
+	private IMenuListener menuListener;
+
 	public BreakpointRulerAction(ITextEditor editor, IVerticalRulerInfo rulerInfo) {
 		super();
 		fTextEditor = editor;
-		if(rulerInfo != null) {
+		if (rulerInfo != null) {
 			fRulerInfo = rulerInfo;
 			fMouseListener = new MouseUpdater();
 			rulerInfo.getControl().addMouseListener(fMouseListener);
+		}
+		if (editor instanceof ITextEditorExtension) {
+			ITextEditorExtension extension = (ITextEditorExtension) editor;
+			menuListener = new IMenuListener() {
+				public void menuAboutToShow(IMenuManager manager) {
+					update();
+				}
+			};
+			extension.addRulerContextMenuListener(menuListener);
 		}
 	}
 
