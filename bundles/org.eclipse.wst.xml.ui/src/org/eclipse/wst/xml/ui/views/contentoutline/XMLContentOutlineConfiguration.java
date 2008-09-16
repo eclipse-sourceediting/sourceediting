@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,38 +14,19 @@ package org.eclipse.wst.xml.ui.views.contentoutline;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.util.LocalSelectionTransfer;
-import org.eclipse.jface.util.SafeRunnable;
-import org.eclipse.jface.util.TransferDragSourceListener;
-import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.DragSourceEvent;
-import org.eclipse.swt.dnd.DropTargetEvent;
-import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.utils.StringUtils;
-import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateAction;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
-import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
@@ -55,11 +36,8 @@ import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
-import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
-import org.eclipse.wst.xml.ui.internal.dnd.DragNodeCommand;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -71,42 +49,11 @@ import org.w3c.dom.Node;
  * 
  * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration
  * @since 1.0
+
+ TODO: Add Sort and Hide Comment actions
+
  */
-public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration {
-	private class ActionManagerMenuListener implements IMenuListener, IReleasable {
-		private XMLNodeActionManager fActionManager;
-		private TreeViewer fTreeViewer;
-
-		public ActionManagerMenuListener(TreeViewer viewer) {
-			fTreeViewer = viewer;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
-		 */
-		public void menuAboutToShow(IMenuManager manager) {
-			if (fActionManager == null) {
-				fActionManager = createNodeActionManager(fTreeViewer);
-			}
-			if (fActionManager != null) {
-				fActionManager.fillContextMenu(manager, fTreeViewer.getSelection());
-			}
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.wst.sse.ui.internal.IReleasable#release()
-		 */
-		public void release() {
-			fTreeViewer = null;
-			if (fActionManager != null) {
-				fActionManager.setModel(null);
-			}
-		}
-	}
+public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineConfiguration {
 
 	private class AttributeShowingLabelProvider extends JFaceNodeLabelProvider {
 		/*
@@ -115,8 +62,9 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 		 * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
 		 */
 		public String getText(Object o) {
-			StringBuffer text = new StringBuffer(super.getText(o));
+			StringBuffer text = null;
 			if (o instanceof Node) {
+				text = new StringBuffer(super.getText(o));
 				Node node = (Node) o;
 				if ((node.getNodeType() == Node.ELEMENT_NODE) && fShowAttributes) {
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
@@ -199,42 +147,21 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 						// display the attribute and value (without quotes)
 						String attributeName = shownAttribute.getNodeName();
 						if ((attributeName != null) && (attributeName.length() > 0)) {
-							text.append(" " + attributeName); //$NON-NLS-1$
+							text.append(" "); //$NON-NLS-1$
+							text.append(attributeName);
 							String attributeValue = shownAttribute.getNodeValue();
 							if ((attributeValue != null) && (attributeValue.length() > 0)) {
-								text.append("=" + StringUtils.strip(attributeValue)); //$NON-NLS-1$
+								text.append("="); //$NON-NLS-1$
+								text.append(StringUtils.strip(attributeValue));
 							}
 						}
 					}
 				}
 			}
-			return text.toString();
-		}
-	}
-
-	private class StatusLineLabelProvider extends JFaceNodeLabelProvider {
-		TreeViewer treeViewer = null;
-
-		public StatusLineLabelProvider(TreeViewer viewer) {
-			treeViewer = viewer;
-		}
-
-		public String getText(Object element) {
-			if (element == null)
-				return null;
-
-			StringBuffer s = new StringBuffer();
-			Node node = (Node) element;
-			while (node != null) {
-				if (node.getNodeType() != Node.DOCUMENT_NODE) {
-					s.insert(0, super.getText(node));
-				}
-				node = node.getParentNode();
-				if (node != null && node.getNodeType() != Node.DOCUMENT_NODE) {
-					s.insert(0, IPath.SEPARATOR);
-				}
+			else {
+				return super.toString();
 			}
-			return s.toString();
+			return text.toString();
 		}
 	}
 
@@ -272,19 +199,10 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 			fTreeViewer.refresh(true);
 		}
 	}
-
+	private ILabelProvider fAttributeShowingLabelProvider;
 	private IContentProvider fContentProvider = null;
 
-	private ActionManagerMenuListener fContextMenuFiller = null;
-
-	private ILabelProvider fLabelProvider = null;
-
 	boolean fShowAttributes = false;
-
-	private JFaceNodeLabelProvider fSimpleLabelProvider;
-	private TransferDragSourceListener[] fTransferDragSourceListeners;
-
-	private TransferDropTargetListener[] fTransferDropTargetListeners;
 
 	/*
 	 * Preference key for Show Attributes
@@ -322,20 +240,6 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 	}
 
 	/**
-	 * Returns the NodeActionManager to use for the given treeViewer.
-	 * <p>
-	 * Not API. May be removed in the future.
-	 * </p>
-	 * 
-	 * @param treeViewer
-	 *            the TreeViewer associated with this configuration
-	 * @return a node action manager for use with this tree viewer
-	 */
-	protected XMLNodeActionManager createNodeActionManager(TreeViewer treeViewer) {
-		return new XMLNodeActionManager((IStructuredModel) treeViewer.getInput(), treeViewer);
-	}
-
-	/**
 	 * Notifies this configuration that the flag that indicates whether or not
 	 * to show attribute values in the tree viewer has changed. The tree
 	 * viewer is automatically refreshed afterwards to update the labels.
@@ -367,7 +271,7 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 	private Object getFilteredNode(Object object) {
 		if (object instanceof Node) {
 			Node node = (Node) object;
-
+	
 			// replace attribute node in selection with its parent
 			if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
 				node = ((Attr) node).getOwnerElement();
@@ -393,31 +297,10 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getLabelProvider(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public ILabelProvider getLabelProvider(TreeViewer viewer) {
-		if (fLabelProvider == null) {
-			fLabelProvider = new AttributeShowingLabelProvider();
+		if (fAttributeShowingLabelProvider == null) {
+			fAttributeShowingLabelProvider = new AttributeShowingLabelProvider();
 		}
-		return fLabelProvider;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getMenuListener(org.eclipse.jface.viewers.TreeViewer)
-	 */
-	public IMenuListener getMenuListener(TreeViewer viewer) {
-		if (fContextMenuFiller == null) {
-			fContextMenuFiller = new ActionManagerMenuListener(viewer);
-		}
-		return fContextMenuFiller;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getPreferenceStore()
-	 */
-	protected IPreferenceStore getPreferenceStore() {
-		return XMLUIPlugin.getDefault().getPreferenceStore();
+		return fAttributeShowingLabelProvider;
 	}
 
 	/*
@@ -435,143 +318,4 @@ public class XMLContentOutlineConfiguration extends ContentOutlineConfiguration 
 		return filteredSelection;
 	}
 
-	public ILabelProvider getStatusLineLabelProvider(TreeViewer treeViewer) {
-		if (fSimpleLabelProvider == null) {
-			fSimpleLabelProvider = new StatusLineLabelProvider(treeViewer);
-		}
-		return fSimpleLabelProvider;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getTransferDragSourceListeners(org.eclipse.jface.viewers.TreeViewer)
-	 */
-	public TransferDragSourceListener[] getTransferDragSourceListeners(final TreeViewer treeViewer) {
-		if (fTransferDragSourceListeners == null) {
-			fTransferDragSourceListeners = new TransferDragSourceListener[]{new TransferDragSourceListener() {
-
-				public void dragFinished(DragSourceEvent event) {
-					LocalSelectionTransfer.getTransfer().setSelection(null);
-				}
-
-				public void dragSetData(DragSourceEvent event) {
-				}
-
-				public void dragStart(DragSourceEvent event) {
-					LocalSelectionTransfer.getTransfer().setSelection(treeViewer.getSelection());
-				}
-
-				public Transfer getTransfer() {
-					return LocalSelectionTransfer.getTransfer();
-				}
-			}};
-		}
-
-		return fTransferDragSourceListeners;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getTransferDropTargetListeners(org.eclipse.jface.viewers.TreeViewer)
-	 */
-	public TransferDropTargetListener[] getTransferDropTargetListeners(final TreeViewer treeViewer) {
-		if (fTransferDropTargetListeners == null) {
-			fTransferDropTargetListeners = new TransferDropTargetListener[]{new TransferDropTargetListener() {
-				public void dragEnter(DropTargetEvent event) {
-				}
-
-				public void dragLeave(DropTargetEvent event) {
-				}
-
-				public void dragOperationChanged(DropTargetEvent event) {
-				}
-
-				public void dragOver(DropTargetEvent event) {
-					event.feedback = DND.FEEDBACK_SELECT;
-					float feedbackFloat = getHeightInItem(event);
-					if (feedbackFloat > 0.75) {
-						event.feedback = DND.FEEDBACK_INSERT_AFTER;
-					}
-					else if (feedbackFloat < 0.25) {
-						event.feedback = DND.FEEDBACK_INSERT_BEFORE;
-					}
-					event.feedback |= DND.FEEDBACK_EXPAND | DND.FEEDBACK_SCROLL;
-				}
-
-				public void drop(DropTargetEvent event) {
-					if (event.operations != DND.DROP_NONE && LocalSelectionTransfer.getTransfer().getSelection() != null && !LocalSelectionTransfer.getTransfer().getSelection().isEmpty()) {
-						IStructuredSelection selection = (IStructuredSelection) LocalSelectionTransfer.getTransfer().getSelection();
-						if (selection != null && !selection.isEmpty() && event.item != null && event.item.getData() != null) {
-							/*
-							 * the command uses these numbers instead of the
-							 * feedback constants (even though it converts in
-							 * the other direction as well)
-							 */
-							float feedbackFloat = getHeightInItem(event);
-
-							final DragNodeCommand command = new DragNodeCommand(event.item.getData(), feedbackFloat, event.operations, event.detail, selection.toList(), treeViewer);
-							if (command != null && command.canExecute()) {
-								SafeRunnable.run(new SafeRunnable() {
-									public void run() throws Exception {
-										command.execute();
-									}
-								});
-							}
-						}
-					}
-				}
-
-				public void dropAccept(DropTargetEvent event) {
-				}
-
-				private float getHeightInItem(DropTargetEvent event) {
-					if (event.item == null)
-						return .5f;
-					if (event.item instanceof TreeItem) {
-						TreeItem treeItem = (TreeItem) event.item;
-						Control control = treeItem.getParent();
-						Point point = control.toControl(new Point(event.x, event.y));
-						Rectangle bounds = treeItem.getBounds();
-						return (float) (point.y - bounds.y) / (float) bounds.height;
-					}
-					else if (event.item instanceof TableItem) {
-						TableItem tableItem = (TableItem) event.item;
-						Control control = tableItem.getParent();
-						Point point = control.toControl(new Point(event.x, event.y));
-						Rectangle bounds = tableItem.getBounds(0);
-						return (float) (point.y - bounds.y) / (float) bounds.height;
-					}
-					else {
-						return 0.0F;
-					}
-				}
-
-				public Transfer getTransfer() {
-					return LocalSelectionTransfer.getTransfer();
-				}
-
-				public boolean isEnabled(DropTargetEvent event) {
-					return getTransfer().isSupportedType(event.currentDataType);
-				}
-			}};
-		}
-		return fTransferDropTargetListeners;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#unconfigure(org.eclipse.jface.viewers.TreeViewer)
-	 */
-	public void unconfigure(TreeViewer viewer) {
-		super.unconfigure(viewer);
-		fTransferDragSourceListeners = null;
-		fTransferDropTargetListeners = null;
-		if (fContextMenuFiller != null) {
-			fContextMenuFiller.release();
-			fContextMenuFiller = null;
-		}
-	}
 }
