@@ -61,6 +61,11 @@ import org.eclipse.wst.sse.ui.internal.provisional.style.ReconcilerHighlighter;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
 
+/**
+ * <p>
+ * Like {@link org.eclipse.wst.sse.ui.StructuredTextEditor}, this class is not
+ * meant to be subclassed.<br />
+ */
 public class StructuredTextViewer extends ProjectionViewer implements IDocumentSelectionMediator {
 	/** Text operation codes */
 	private static final int BASE = ProjectionViewer.COLLAPSE_ALL; // see
@@ -685,6 +690,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			beep();
 			return;
 		}
+		
 		// for read-only support
 		if (containsReadOnly(getVisibleDocument(), e.start, e.end)) {
 			e.doit = false;
@@ -696,13 +702,14 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			super.handleVerifyEvent(e);
 		}
 		catch (Exception x) {
-			// note, we catch and log any exception,
-			// since an otherwise can actually prevent typing!
-			// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=111318
+			/*
+			 * Note, we catch and log any exception, since an otherwise can
+			 * actually prevent typing! see
+			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=111318
+			 */
 
 			if (TRACE_EXCEPTIONS)
 				Logger.logException("StructuredTextViewer.exception.verifyText", x); //$NON-NLS-1$
-
 		}
 	}
 
