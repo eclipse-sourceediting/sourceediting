@@ -7,10 +7,17 @@
       </appinfo>
       <documentation>
          This extension point allows the configuration of a default facet preset for any Runtime Type ID, Facet ID &amp; Fact Version combination.  For example, given runtime type X, facet jst.web, and version 2.4, the preset Y should be selected by default where as given runtime type X, facet jst.web, and version 2.5, the preset Z should be selected by default.
+
+For each of the four facetRuntimeTypeID, facetRuntimeVersion, facetID, facetVersion the following pattern is used to ease the definition process.  The pattern specified allows a comma deliminated list of possible values.  For example to match only &quot;1.0&quot; the pattern should be &quot;1.0&quot;.  To match multiple values, say 1.0, 2.0, and 3.0, use &quot;1.0,2.0,3.0&quot;.  Asterests may be used to specify multiple values.  For example, &quot;1.*&quot; will match any values starting with &apos;1.&apos; including 1., 1.0, 1.1, 1.2, but not 1  Likewise, &quot;*.0&quot; will match any values ending with &apos;.0&apos; including 1.0, 2.0, 3.0, but not 1 or 0  Asterists may be added both at the begining and end of a string, so &quot;*00*&quot; will match any string that contains &apos;00&apos; such as 00, 100, 1001.
       </documentation>
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appinfo>
+            <meta.element />
+         </appinfo>
+      </annotation>
       <complexType>
          <sequence minOccurs="1" maxOccurs="unbounded">
             <element ref="mapping" minOccurs="1" maxOccurs="unbounded"/>
@@ -59,28 +66,28 @@
          <attribute name="facetRuntimeTypeID" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Follows the pattern outlined in the overview
                </documentation>
             </annotation>
          </attribute>
          <attribute name="facetRuntimeVersion" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Follows the pattern outlined in the overview
                </documentation>
             </annotation>
          </attribute>
          <attribute name="facetID" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Follows the pattern outlined in the overview
                </documentation>
             </annotation>
          </attribute>
          <attribute name="facetVersion" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Follows the pattern outlined in the overview
                </documentation>
             </annotation>
          </attribute>

@@ -3,6 +3,7 @@ package org.eclipse.wst.web.internal.facet;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -37,20 +38,77 @@ public class RuntimePresetMappingRegistry {
 
 	private List<MappingDescriptor> descriptors = null;
 
-	public String getPresetID(String facetRuntimeTypeID, String facetRuntimeVersion, String facetID, String facetVersion) {
+	public String getPresetID(String facetRuntimeTypeID,
+			String facetRuntimeVersion, String facetID, String facetVersion) {
 		if (descriptors == null) {
 			readDescriptors();
 		}
-		if(facetRuntimeTypeID != null){
-			for (MappingDescriptor descriptor : descriptors) {
-				if (facetRuntimeTypeID.startsWith(descriptor.getFacetRuntimeTypeID()) &&  descriptor.getFacetID().equals(facetID)) {
-					return descriptor.getPresetID();
-				}
+		for (MappingDescriptor descriptor : descriptors) {
+			if(matches(facetRuntimeTypeID, descriptor.getFacetRuntimeTypeID()) &&
+			   matches(facetRuntimeVersion, descriptor.getFacetRuntimeVersion()) &&
+			   matches(facetID, descriptor.getFacetID()) &&
+			   matches(facetVersion, descriptor.getFacetVersion())){
+				return descriptor.getPresetID();
 			}
 		}
 		return null;
 	}
 
+	/**
+	 * Returns true if the value is matched by the pattern The pattern consists
+	 * of a common deliminated list of simple patterns Each simple pattern has
+	 * an optional starting or ending * so a String.startsWith() or
+	 * String.endsWith(). Both may be combined to compute a String.indexOf() !=
+	 * -1
+	 *
+	 * @param value
+	 * @param pattern
+	 * @return
+	 */
+	private static boolean matches(String value, String pattern){
+		StringTokenizer strTok = new StringTokenizer(pattern, ",");
+		while(strTok.hasMoreTokens()){
+			String simplePattern = strTok.nextToken().trim();
+			if(simplePattern.startsWith("*")){
+				if(simplePattern.length() < 2){
+					return true; // i.e. *
+				}
+				if(simplePattern.endsWith("*")){
+					if(simplePattern.length() < 3){ 
+						return true; // i.e. **
+					}
+					if(value.indexOf(simplePattern.substring(1, simplePattern.length()-2)) != -1){
+						return true;
+					}
+				} else {
+					if(value.endsWith(simplePattern.substring(1))){
+						return true;
+					}
+				}
+			} else if(simplePattern.endsWith("*")){
+				if(value.startsWith(simplePattern.substring(0, simplePattern.length()-2))){
+					return true;
+				}
+			} else if(value.equals(simplePattern)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private static List <String> getStaticTokens(String pattern){
+		List <String> staticTokens = new ArrayList <String> ();
+		StringTokenizer strTok = new StringTokenizer(pattern, ",");
+		while(strTok.hasMoreTokens()){
+			String simplePattern = strTok.nextToken().trim();
+			if(!simplePattern.startsWith("*") && !simplePattern.endsWith("*")){
+				staticTokens.add(simplePattern);
+			}
+		}
+		return staticTokens;
+	}
+	
+	
 	private void readDescriptors() {
 		descriptors = new ArrayList<MappingDescriptor>();
 		IExtensionPoint point = Platform.getExtensionRegistry().getExtensionPoint(WSTWebPlugin.PLUGIN_ID, EXTENSION_POINT);
@@ -72,67 +130,114 @@ public class RuntimePresetMappingRegistry {
 					continue;
 				}
 
-				IRuntimeComponentType runtimeType = null;
-				try {
-					runtimeType = RuntimeManager.getRuntimeComponentType(runtimeID);
-				} catch (IllegalArgumentException e) {
-					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_FACET_RUNTIME_TYPE_ID + ": " + runtimeID, e);
-					continue;
+				List <String> staticRuntimeIDs = getStaticTokens(runtimeID);
+				List <IRuntimeComponentType> staticRuntimeTypes = new ArrayList<IRuntimeComponentType>();
+				for(String staticRuntimeID : staticRuntimeIDs){
+					try {
+						IRuntimeComponentType runtimeType = RuntimeManager.getRuntimeComponentType(staticRuntimeID);
+						if(runtimeType != null){
+							staticRuntimeTypes.add(runtimeType);
+						}
+					} catch (IllegalArgumentException e) {
+						WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_FACET_RUNTIME_TYPE_ID + ": " + runtimeID +" unable to resolve runtime: "+staticRuntimeID, e);
+					}
 				}
-
+					
 				String runtimeVersionStr = element.getAttribute(ATTRIBUTE_FACET_RUNTIME_VERSION);
 				if (null == runtimeVersionStr || runtimeVersionStr.trim().length() == 0) {
 					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_FACET_RUNTIME_VERSION);
 					continue;
 				}
-				try {
-					runtimeType.getVersion(runtimeVersionStr);
-				} catch (IllegalArgumentException e) {
-					StringBuffer validVersions = new StringBuffer(" valid versions include: ");
-					for (Iterator<IRuntimeComponentVersion> iterator = runtimeType.getVersions().iterator(); iterator.hasNext();) {
-						validVersions.append(iterator.next().getVersionString());
-						if (iterator.hasNext()) {
-							validVersions.append(" ");
+				if(!staticRuntimeTypes.isEmpty()){
+					List <String> staticRuntimeVersions = getStaticTokens(runtimeVersionStr);
+					for(String staticVersion : staticRuntimeVersions){
+						boolean foundVersion = false;
+						for(int k=0;k<staticRuntimeTypes.size() && !foundVersion;k++){
+							IRuntimeComponentType runtimeType = staticRuntimeTypes.get(k);
+							try {
+								IRuntimeComponentVersion version = runtimeType.getVersion(staticVersion);
+								foundVersion = true;
+							} catch (IllegalArgumentException e) {
+								//eat it
+							}
+						}
+						if(!foundVersion){
+							StringBuffer validVersions = new StringBuffer(" valid versions include: ");
+							for(IRuntimeComponentType runtimeType : staticRuntimeTypes) {
+								validVersions.append("\n");
+								validVersions.append(runtimeType.getId());
+								validVersions.append(": ");
+								for (Iterator<IRuntimeComponentVersion> iterator = runtimeType.getVersions().iterator(); iterator.hasNext();) {
+									validVersions.append(iterator.next().getVersionString());
+									if (iterator.hasNext()) {
+										validVersions.append(" ");
+									}
+								}
+							}
+							WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_FACET_RUNTIME_VERSION + ": " + staticVersion
+									+ validVersions);
 						}
 					}
-					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_FACET_RUNTIME_VERSION + ": " + runtimeVersionStr
-							+ validVersions);
-					continue;
 				}
-
+				
 				String facetID = element.getAttribute(ATTRIBUTE_FACET_ID);
 				if (null == facetID || facetID.trim().length() == 0) {
 					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_FACET_ID);
 					continue;
 				}
-				IProjectFacet facet = null;
-				try {
-					facet = ProjectFacetsManager.getProjectFacet(facetID);
-				} catch (IllegalArgumentException e) {
-					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_FACET_ID + ": " + facetID, e);
-					continue;
+				
+				List <String> staticFacetIDs = getStaticTokens(facetID);
+				List <IProjectFacet> staticFacets = new ArrayList <IProjectFacet>();
+				for(String staticFacetID:staticFacetIDs){
+					try {
+						IProjectFacet facet = ProjectFacetsManager.getProjectFacet(staticFacetID);
+						if(null != facet){
+							staticFacets.add(facet);
+						}
+					} catch (IllegalArgumentException e) {
+						WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_FACET_ID + ": " + staticFacetID, e);
+					}
 				}
-
+				
 				String facetVersionStr = element.getAttribute(ATTRIBUTE_FACET_VERSION);
 				if (null == facetVersionStr || facetVersionStr.trim().length() == 0) {
 					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_FACET_VERSION);
 					continue;
 				}
-				try {
-					facet.getVersion(facetVersionStr);
-				} catch (IllegalArgumentException e) {
-					StringBuffer validVersions = new StringBuffer(" valid versions include: ");
-					for (Iterator<IProjectFacetVersion> iterator = facet.getVersions().iterator(); iterator.hasNext();) {
-						validVersions.append(iterator.next().getVersionString());
-						if (iterator.hasNext()) {
-							validVersions.append(" ");
+				List <String>staticFacetVersionStrs = getStaticTokens(facetVersionStr);
+				if(!staticFacets.isEmpty() && !staticFacetVersionStrs.isEmpty()){
+					for(String staticFacetVersion:staticFacetVersionStrs){
+						boolean foundFacetVersion = false;
+						for(int k=0;k< staticFacets.size() && !foundFacetVersion; k++) {
+							IProjectFacet staticFacet = staticFacets.get(k);
+							try {
+								IProjectFacetVersion staticVersion = staticFacet.getVersion(staticFacetVersion);
+								if(staticVersion != null){
+									foundFacetVersion = true;
+								}
+							} catch (IllegalArgumentException e) {
+								//eat it
+							}
 						}
-					}
-					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_FACET_VERSION + ": " + facetVersionStr
-							+ validVersions);
-					continue;
+						if(!foundFacetVersion){
+							StringBuffer validVersions = new StringBuffer(" valid versions include: ");
+							for(IProjectFacet staticFacet:staticFacets){
+								validVersions.append("\n");
+								validVersions.append(staticFacet.getId());
+								validVersions.append(": ");
+								for (Iterator<IProjectFacetVersion> iterator = staticFacet.getVersions().iterator(); iterator.hasNext();) {
+									validVersions.append(iterator.next().getVersionString());
+									if (iterator.hasNext()) {
+										validVersions.append(" ");
+									}
+								}
+							}
+							WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_FACET_VERSION + ": " + staticFacetVersion
+									+ validVersions);
+							continue;
+						}
+					}	
 				}
-
 				String presetID = element.getAttribute(ATTRIBUTE_PRESET_ID);
 				if (null == presetID || presetID.trim().length() == 0) {
 					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_PRESET_ID);
