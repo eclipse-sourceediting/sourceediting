@@ -30,6 +30,9 @@
             <param name="generate.toc" expression="book      toc,title,figure
 chapter   toc,title
 section   title" />
+			<param name="chapter.autolabel" expression="0"/>
+			<param name="section.autolabel" expression="0"/>
+			<param name="html.stylesheet" expression="book.css ../book.css"/>
 		</xslt>
 		
 		<replace file="${current-loc}/toc.xml" token="${current-loc}/" value=""/>

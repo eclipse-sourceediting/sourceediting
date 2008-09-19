@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+          "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter>
+   <?dbhtml filename="introduction/concepts.html" ?>
+   <title>XSLT Concepts</title>
+   <para>
+         
+   </para>
+   <section id="concepts_Resources">
+      <title>Resources</title>
+      <itemizedlist>
+         <listitem>
+            <para>
+               <ulink url="http://www.dpawson.co.uk/xsl/index.html">XSLT FAQ</ulink> - maintained by Dave Pawson.
+            </para>
+         </listitem>
+         <listitem>
+            <para><ulink url="http://www.xfront.com/rescuing-xslt.html">Rescuing XSLT from Niche Status</ulink> - by David Jacobs.</para>
+         </listitem>
+         <listitem>
+            <para><ulink url="http://www.xml.com/pub/a/2003/11/26/learnXSLT.html">Five XSLT Basics</ulink> - by Michael Fitzgerald author of Learning XSLT.</para>
+         </listitem>
+         <listitem>
+            <para><ulink url="http://www.xfront.com/files/tutorials.html">XFront Tutorials</ulink> - provides several tutorials include XSLT 1.0.</para>
+         </listitem>
+      </itemizedlist>
+   </section>
+   
+</chapter>

@@ -55,30 +55,53 @@
 			</para>
       </important>
       <para>
-         To initiate content assistance press CTRL + SPACE or CMD + SPACE.  This will bring up
-         a dialog that will contain any proposals that are available.   If no proposals are available
-         an message will be displayed in the status bar.
+         To initiate content assistance press CTRL + SPACE or CMD + SPACE. This will bring up
+         a dialog that will
+         contain any proposals that are available. If no proposals are available
+         an message will be displayed in the
+         status bar.
       </para>
+      <section id="ed_XSLProposals">
+         <title>XSLT Element Proposals</title>
+         <para>
+            Since XSLT is a templating language, it's elements must be able to be added
+            to the various markup it
+            includes. The XSLT Editor will provide content assistance
+            and proposals for XSLT elements that are available
+            to be used within non-XSLT namespaced
+            elements. This is depicted in
+            <xref linkend="fig_XSLProposals" />
+            .
+         </para>
+         <figure id="fig_XSLProposals">
+            <title>XSLT Proposals within Non-XSLT elements</title>
+            <mediaobject>
+               <imageobject>
+                  <imagedata align="center" fileref="../images/editor/xslproposals.png" />
+               </imageobject>
+            </mediaobject>
+         </figure>
+      </section>
       <section id="SelectTest">
-         <title>Select and Test Attributes </title>
+         <title>Select, Test, and Match Attributes </title>
          <para>
             Where ever an xsl element supports a
             <emphasis>select</emphasis>
-            or
+            ,
             <emphasis>test</emphasis>
-            attribute, content assistance is
-            available. This includes support for
+            , or
+            <emphasis>match</emphasis>
+            attribute, content assistance is available. This includes support for
             the following:
          </para>
          <itemizedlist>
-            <title>Select and Test Assistance</title>
+            <title>Select, Match and Test Assistance</title>
             <listitem>
                <para>
                   <emphasis>Variables</emphasis>
                   - both local and global variables are supported within the current
                   stylesheet. Any local or global
-                  variable will be
-                  added to the list
+                  variable will be added to the list
                   and the name is prefixed with a dollar sign $ symbol.
                </para>
             </listitem>
@@ -86,13 +109,11 @@
                <para>
                   <emphasis>XPath 1.0</emphasis>
                   - XPath 1.0 is supported through the use of templates. All of the
-                  XPath 1.0 and XSLT xpath
-                  extension
+                  XPath 1.0 and XSLT xpath extension
                   functions are available, as well
                   as
                   <emphasis>axis</emphasis>
-                  operations. Currently XPath 2.0 is not supported
-                  directly, but will
+                  operations. Currently XPath 2.0 is not supported directly, but will
                   be added in the future.
                </para>
             </listitem>
@@ -169,21 +190,86 @@
       <section id="ed_ModeAssist">
          <title>Mode attribute assistance</title>
          <para>
-            Content assistance is available for those xsl elements that support the mode attribute.  For XSLT 1.0
-            these elements are <emphasis>template</emphasis>, <emphasis>apply-templates</emphasis>, and <emphasis>apply-imports</emphasis>.
+            Content assistance is available for those xsl elements that support the mode attribute. For XSLT 1.0
+            these
+            elements are
+            <emphasis>template</emphasis>
+            ,
+            <emphasis>apply-templates</emphasis>
+            , and
+            <emphasis>apply-imports</emphasis>
+            .
          </para>
          <figure id="fig_ModeAssistance">
             <title>Mode attribute assistance</title>
             <mediaobject>
                <imageobject>
-                  <imagedata format="PNG" align="center" fileref="../images/editor/modeAssistance.png"/>
+                  <imagedata format="PNG" align="center" fileref="../images/editor/modeAssistance.png" />
                </imageobject>
             </mediaobject>
          </figure>
          <para>
             The proposal list is populated by those modes defined on templates in the current stylesheet, and any
-            of the templates that are <emphasis>included</emphasis> or <emphasis>imported</emphasis>.
+            of the
+            templates that are
+            <emphasis>included</emphasis>
+            or
+            <emphasis>imported</emphasis>
+            .
          </para>
+      </section>
+      <section id="ed_CallTemplateAssist">
+         <title>Call-Template Assistance</title>
+         <para>
+            Any
+            <emphasis>call-template</emphasis>
+            xslt element has content assistance available for
+            it's name attribute. This will provide a list of possible
+            XSLT named templates that can
+            be called from the current stylesheet. This takes into effect all included and
+            imported
+            stylesheets as well as those defined in the current stylesheet.
+         </para>
+         <figure id="fig_CallTemplateAssist">
+            <title>Call-Template Assistance</title>
+            <mediaobject>
+               <imageobject>
+                  <imagedata align="center" fileref="../images/editor/calltemplate.png" />
+               </imageobject>
+            </mediaobject>
+         </figure>
+
+      </section>
+      <section id="ed_href">
+         <title>
+            Include and Import
+            <emphasis>href</emphasis>
+            Assistance
+         </title>
+         <para>
+            XSLT stylesheets have the ability to import and include other stylesheets. This allows for
+            a modular
+            structure for the templates to be created. It also allows for easier maintenance.
+            However, if one is working
+            with a large project like the DocBook Projects stylesheets it can
+            be difficult to remember the names and
+            locations of all the stylesheets.
+         </para>
+         <para>
+            To this end, the XSLT editor provides content assistance for the
+            <emphasis>href</emphasis>
+            attribute. The scope of the assistance is restricted to the project that the current
+            stylesheet that is being
+            editted resides.
+         </para>
+         <figure id="fig_HREFAssistance">
+            <title>Include/Import href Assistance</title>
+            <mediaobject>
+               <imageobject>
+                  <imagedata align="center" fileref="../images/editor/hrefAssistance.png" />
+               </imageobject>
+            </mediaobject>
+         </figure>
       </section>
    </section>
    <section id="XSLEditorTemplates">
@@ -191,20 +277,16 @@
       <title>Templates</title>
       <para>
          Specific XSL code completion templates can be added to the XML
-         editor's Templates. This allows a user
-         to
+         editor's Templates. This allows a user to
          define specific markup
          completion templates that are commonly used. In addition, the XPath
-         Templates page
-         can be
+         Templates page can be
          enhanced to allow commonly used XPath templates
          to be included, in addition to those installed by default.
          This
-         allows
-         a user the ability to add custom extension functions for XSLT that
+         allows a user the ability to add custom extension functions for XSLT that
          may be processor specific. Adopters
-         may
-         also use the standard template
+         may also use the standard template
          extension point to add additional functionality.
 		</para>
       <section>
@@ -220,11 +302,52 @@
 			</para>
       </section>
    </section>
+   <section id="xsltMarkers">
+   <?dbhtml filename="editor/xsleditor_markers.html" ?>
+      <title>XSLT Markers and Annotations</title>
+      <para>
+         The XSL editor supports the ability to annotate or provide markers. These annotations provide additional
+         information about the templates and XSLT elements in the stylesheet.
+      </para>
+      <section id="xsltOverRide">
+         <title>Template Over Ride</title>
+         <para>
+            The XSLT editor will mark templates that have overriden an imported template of the same name.
+         </para>
+         <figure id="fig_OverRide1">
+            <title>Overriden Template</title>
+            <mediaobject>
+               <imageobject>
+                  <imagedata align="center" fileref="../images/editor/override1.png" />
+               </imageobject>
+            </mediaobject>
+         </figure>
+         <para>
+            In
+            <xref linkend="fig_OverRide1" />
+            , the template "TempB" overrides an imported template. By
+            moving the mouse pointer over the triangle icon in
+            the rule bar, information about which file
+            the original template resides.
+         </para>
+         <figure id="fig_OverRide2">
+            <title>Overriden Template Information</title>
+            <mediaobject>
+               <imageobject>
+                  <imagedata align="center" fileref="../images/editor/override2.png" />
+               </imageobject>
+            </mediaobject>
+         </figure>
+      </section>
+   </section>
    <section id="XSLEditorDebugging">
 	   <?dbhtml filename="editor/xsleditor_debugging.html" ?>
       <title>XSL Debugging</title>
       <para>
-         TODO: Add XSL Debugging documentation.
+         The XSL Editor supports the ability to specify break points within an XSL File. If the file is included or
+         imported and the break point is encountered during a transformation scenario it will be respected. A break
+         point may be set at any valid XSL element or other xml element within the XSLT stylesheet. See the Launching
+         and Debugging section for more information on debugging XSLT stylesheets.
 		</para>
    </section>
 </chapter>
