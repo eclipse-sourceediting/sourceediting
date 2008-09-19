@@ -24,10 +24,26 @@
 		</mediaobject>
 	</section>
 	<section id="XSLDebug">
-	    <?dbhtml filename="launching/debuglaunching.html" ?>
-		<title>Launch Debugging</title>
+	    <?dbhtml filename="launching/debugging.html" ?>
+		<title>XSLT Debugging</title>
 		<para>
-	   		This is a place holder until some actual documentation can be written.
+	   		XSL Tools provides a framework for XSLT processors to provide debugging support.  The support
+            provided is highly dependent on the processors.   XSL Tools comes with built in support
+            for the Xalan 2.7.1 processor.   Debugging is only available for those processors that
+            support the feature and plug into the extension point.
 	   </para>
+       <section>
+            <title>Result View</title>
+            <para>
+               The XSLT Debugger has a result view.  This will show the output that the
+               stylesheet has generated to the current break point or since the last step command was issued. 
+            </para>
+            <mediaobject>
+               <imageobject>
+                  <imagedata align="center" format="PNG"
+                     fileref="../images/launching/resultView.png" />
+               </imageobject>
+            </mediaobject>
+       </section>
 	</section>
 </chapter>
