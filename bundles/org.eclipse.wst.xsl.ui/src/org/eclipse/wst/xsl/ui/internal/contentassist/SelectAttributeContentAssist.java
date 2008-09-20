@@ -62,27 +62,6 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 	private XPathTemplateCompletionProcessor fTemplateProcessor = null;
 	private List<String> fTemplateContexts = new ArrayList<String>();
 	private static final byte[] XPATH_LOCK = new byte[0];
-	
-	/**
-	 * Handles Content Assistance requests for Select Attributes.  This is called an instantiated
-	 * through the use of the computeProposals method from the XSLContentAssistProcessor.  It will
-	 * calculate the available proposals that are available for the XSL select attribute.
-	 * 
-	 * @param node
-	 * @param parent
-	 * @param documentRegion
-	 * @param completionRegion
-	 * @param begin
-	 * @param length
-	 * @param filter
-	 * @deprecated  Don't use this constructor for XSL.
-	 */
-	public SelectAttributeContentAssist(Node node, Node parent,
-			IStructuredDocumentRegion documentRegion,
-			ITextRegion completionRegion, int begin, int length, String filter) {
-		super(node, parent, documentRegion, completionRegion, begin, length, filter);
-		// TODO Auto-generated constructor stub
-	}
 
 	/**
 	 * Handles Content Assistance requests for Select Attributes.  This is called an instantiated
@@ -90,7 +69,6 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 	 * calculate the available proposals that are available for the XSL select attribute.
 	 * 
 	 * @param node
-	 * @param parent
 	 * @param documentRegion
 	 * @param completionRegion
 	 * @param begin
@@ -98,15 +76,14 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 	 * @param filter
 	 * @param textViewer
 	 */
-	
-	public SelectAttributeContentAssist(Node node, Node parent,
+	public SelectAttributeContentAssist(Node node,
 			IStructuredDocumentRegion documentRegion,
 			ITextRegion completionRegion, int begin, int length, String filter,
 			ITextViewer textViewer) {
-		super(node, parent, documentRegion, completionRegion, begin, length, filter);
-		this.textViewer = textViewer;
+		super(node, documentRegion, completionRegion, begin, length, filter, textViewer);
+		// TODO Auto-generated constructor stub
 	}
-	
+
 	
 	/** 
 	 * (non-Javadoc)
@@ -125,7 +102,7 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 		
 	    addSelectProposals((Element)getNode().getParentNode(), offset);
 
-		return  super.getCompletionProposals();
+		return  getAllCompletionProposals();
     }
 	
 	

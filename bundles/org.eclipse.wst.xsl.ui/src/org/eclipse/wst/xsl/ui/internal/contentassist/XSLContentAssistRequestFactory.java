@@ -20,8 +20,8 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.NamedNodeMap;
 
 /**
- * A Factory that determines which Content Assist Request class is
- * needed and returns the appropriate class.
+ * A Factory that determines which Content Assist Request class is needed and
+ * returns the appropriate class.
  * 
  * @author David Carver
  * @since 1.0
@@ -32,15 +32,16 @@ public class XSLContentAssistRequestFactory {
 	private static final String ATTR_MATCH = "match"; //$NON-NLS-1$
 	private static final String ATTR_EXCLUDE_RESULT_PREFIXES = "exclude-result-prefixes"; //$NON-NLS-1$
 	private static final String ATTR_MODE = "mode"; //$NON-NLS-1$
-	private static final String ELEM_TEMPLATE = "template";	//$NON-NLS-1$
+	private static final String ELEM_TEMPLATE = "template"; //$NON-NLS-1$
 	private static final String ELEM_APPLYTEMPLATES = "apply-templates"; //$NON-NLS-1$
 	private static final String ELEM_APPLY_IMPORTS = "apply-imports"; //$NON-NLS-1$
 	private static final String ATTR_HREF = "href"; //$NON-NLS-1$
 	private static final String ELEM_CALLTEMPLATE = "call-template"; //$NON-NLS-1$
 	private static final String ATTR_NAME = "name"; //$NON-NLS-1$
-	
+
 	/**
 	 * Get the appropriate content assist request class for the XSL request.
+	 * 
 	 * @param textViewer
 	 * @param documentPosition
 	 * @param xmlNode
@@ -50,80 +51,80 @@ public class XSLContentAssistRequestFactory {
 	 * @param matchString
 	 * @return
 	 */
-	public AbstractXSLContentAssistRequest getContentAssistRequest(ITextViewer textViewer,
-			int documentPosition, IDOMNode xmlNode,
+	public AbstractXSLContentAssistRequest getContentAssistRequest(
+			ITextViewer textViewer, int documentPosition, IDOMNode xmlNode,
 			IStructuredDocumentRegion sdRegion, ITextRegion completionRegion,
-			ICompletionProposal[] proposals, String matchString) {
+			String matchString) {
 		NamedNodeMap nodeMap = xmlNode.getAttributes();
 		IDOMElement element = (IDOMElement) xmlNode;
 
+		if (this.hasAttributeAtTextRegion(ATTR_SELECT, nodeMap,
+				completionRegion)) {
+			return new SelectAttributeContentAssist(xmlNode, sdRegion,
+					completionRegion, documentPosition, 0, matchString,
+					textViewer);
+		}
 
-		if (this.hasAttributeAtTextRegion(ATTR_SELECT, nodeMap, completionRegion)) {
-			return new SelectAttributeContentAssist(
-					xmlNode, xmlNode.getParentNode(), sdRegion,
+		if (this
+				.hasAttributeAtTextRegion(ATTR_MATCH, nodeMap, completionRegion)) {
+			return new SelectAttributeContentAssist(xmlNode, sdRegion,
 					completionRegion, documentPosition, 0, matchString,
 					textViewer);
 		}
-		
-		if (this.hasAttributeAtTextRegion(ATTR_MATCH, nodeMap, completionRegion)) {
-			return new SelectAttributeContentAssist(
-					xmlNode, xmlNode.getParentNode(), sdRegion,
-					completionRegion, documentPosition, 0, matchString,
-					textViewer);
-		}
-		
-		
+
 		if (this.hasAttributeAtTextRegion(ATTR_TEST, nodeMap, completionRegion)) {
-			return new TestAttributeContentAssist(
-					xmlNode, xmlNode.getParentNode(), sdRegion,
+			return new TestAttributeContentAssist(xmlNode, sdRegion,
 					completionRegion, documentPosition, 0, matchString,
 					textViewer);
 		}
 
-		if (this.hasAttributeAtTextRegion(ATTR_EXCLUDE_RESULT_PREFIXES, nodeMap, completionRegion)) {
-			return new ExcludeResultPrefixesContentAssist(
-					xmlNode, xmlNode.getParentNode(), sdRegion,
+		if (this.hasAttributeAtTextRegion(ATTR_EXCLUDE_RESULT_PREFIXES,
+				nodeMap, completionRegion)) {
+			return new ExcludeResultPrefixesContentAssist(xmlNode, sdRegion,
 					completionRegion, documentPosition, 0, matchString,
 					textViewer);
 		}
-		
+
 		if (hasAttributeAtTextRegion(ATTR_HREF, nodeMap, completionRegion)) {
-			return new HrefContentAssistRequest(
-				xmlNode, xmlNode.getParentNode(), sdRegion, completionRegion,
-				documentPosition, 0, matchString, textViewer);
-		} 
-		
-		
+			return new HrefContentAssistRequest(xmlNode, sdRegion,
+					completionRegion, documentPosition, 0, matchString,
+					textViewer);
+		}
+
 		if (element.getLocalName().equals(ELEM_TEMPLATE)) {
 			if (hasAttributeAtTextRegion(ATTR_MODE, nodeMap, completionRegion)) {
-				return new TemplateModeAttributeContentAssist(
-					xmlNode, xmlNode.getParentNode(), sdRegion, completionRegion,
-					documentPosition, 0, matchString, textViewer);
+				return new TemplateModeAttributeContentAssist(xmlNode,
+						sdRegion, completionRegion, documentPosition, 0,
+						matchString, textViewer);
 			}
 		}
-		
-		if (element.getLocalName().equals(ELEM_APPLYTEMPLATES) || element.getLocalName().equals(ELEM_APPLY_IMPORTS)) {
+
+		if (element.getLocalName().equals(ELEM_APPLYTEMPLATES)
+				|| element.getLocalName().equals(ELEM_APPLY_IMPORTS)) {
 			if (hasAttributeAtTextRegion(ATTR_MODE, nodeMap, completionRegion)) {
-				return new TemplateModeAttributeContentAssist(
-					xmlNode, xmlNode.getParentNode(), sdRegion, completionRegion,
-					documentPosition, 0, matchString, textViewer);
+				return new TemplateModeAttributeContentAssist(xmlNode,
+						sdRegion, completionRegion, documentPosition, 0,
+						matchString, textViewer);
 			}
-			
+
 		}
-		
+
 		if (element.getLocalName().equals(ELEM_CALLTEMPLATE)) {
 			if (hasAttributeAtTextRegion(ATTR_NAME, nodeMap, completionRegion)) {
-				return new CallTemplateContentAssistRequest(xmlNode, xmlNode.getParentNode(), sdRegion, completionRegion,
-						documentPosition, 0, matchString, textViewer);
+				return new CallTemplateContentAssistRequest(xmlNode, sdRegion,
+						completionRegion, documentPosition, 0, matchString,
+						textViewer);
 			}
 		}
-		
-		return new NullContentAssistRequest(xmlNode, xmlNode.getParentNode(), sdRegion, completionRegion,
-					documentPosition, 0, matchString, textViewer);
+
+		return new NullContentAssistRequest(xmlNode, sdRegion,
+				completionRegion, documentPosition, 0, matchString, textViewer);
 	}
 
-	protected boolean hasAttributeAtTextRegion(String attrName, NamedNodeMap nodeMap, ITextRegion aRegion) {
+	protected boolean hasAttributeAtTextRegion(String attrName,
+			NamedNodeMap nodeMap, ITextRegion aRegion) {
 		IDOMAttr attrNode = (IDOMAttr) nodeMap.getNamedItem(attrName);
-		return attrNode != null && attrNode.getValueRegion() != null && attrNode.getValueRegion().getStart() == aRegion.getStart();
-	}	
+		return attrNode != null && attrNode.getValueRegion() != null
+				&& attrNode.getValueRegion().getStart() == aRegion.getStart();
+	}
 }

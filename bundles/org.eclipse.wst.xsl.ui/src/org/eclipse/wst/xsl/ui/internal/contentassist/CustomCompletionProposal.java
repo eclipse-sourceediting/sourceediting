@@ -27,7 +27,6 @@ public class CustomCompletionProposal extends
 		super(replacementString, replacementOffset, replacementLength,
 				cursorPosition, image, displayString, contextInformation,
 				additionalProposalInfo, relevance);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -52,7 +51,6 @@ public class CustomCompletionProposal extends
 				cursorPosition, image, displayString, contextInformation,
 				additionalProposalInfo, relevance,
 				updateReplacementLengthOnValidate);
-		// TODO Auto-generated constructor stub
 	}
 
 	/** 
@@ -62,5 +60,4 @@ public class CustomCompletionProposal extends
 	public boolean isAutoInsertable() {
 		return true;
 	}
-
 }

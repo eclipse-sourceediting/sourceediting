@@ -52,11 +52,10 @@ public class CallTemplateContentAssistRequest extends
 	 * @param filter
 	 * @param textViewer
 	 */
-	public CallTemplateContentAssistRequest(Node node, Node parent,
-			IStructuredDocumentRegion documentRegion,
+	public CallTemplateContentAssistRequest(Node node, IStructuredDocumentRegion documentRegion,
 			ITextRegion completionRegion, int begin, int length, String filter,
 			ITextViewer textViewer) {
-		super(node, parent, documentRegion, completionRegion, begin, length,
+		super(node, documentRegion, completionRegion, begin, length,
 				filter, textViewer);
 		// TODO Auto-generated constructor stub
 	}
@@ -88,7 +87,7 @@ public class CallTemplateContentAssistRequest extends
 				addProposal(proposal);
 			}
 		}
-		return super.getCompletionProposals();
+		return getAllCompletionProposals();
 	}
 	
 	protected String getAdditionalInfo(Template template) {

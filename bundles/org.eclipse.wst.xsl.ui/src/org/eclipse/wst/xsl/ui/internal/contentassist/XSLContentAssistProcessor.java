@@ -22,7 +22,6 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -32,7 +31,6 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.AbstractContentAssistProcessor;
-import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.w3c.dom.NamedNodeMap;
@@ -55,7 +53,6 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 
 	private String errorMessage = "";
 	private ITextViewer textViewer = null;
-	
 
 	/**
 	 * The XSL Content Assist Processor handles XSL specific functionality for
@@ -83,49 +80,126 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 	public ICompletionProposal[] computeCompletionProposals(
 			ITextViewer textViewer, int documentPosition) {
 		setErrorMessage(null);
-
+		ICompletionProposal[] additionalProposals = null;
 		this.textViewer = textViewer;
 
 		IndexedRegion treeNode = ContentAssistUtils.getNodeAt(textViewer,
 				documentPosition);
 
-		Node node = (Node) treeNode;
-		while ((node != null) && (node.getNodeType() == Node.TEXT_NODE)
-				&& (node.getParentNode() != null)) {
-			node = node.getParentNode();
-		}
+		Node node = getActualDOMNode((Node) treeNode);
+
 		IDOMNode xmlNode = (IDOMNode) node;
 		IStructuredDocumentRegion sdRegion = getStructuredDocumentRegion(documentPosition);
 		ITextRegion completionRegion = getCompletionRegion(documentPosition,
 				node);
 
+		ICompletionProposal[] xmlProposals = getXMLProposals(textViewer,
+				documentPosition);
+
+		String matchString = getXPathMatchString(sdRegion, completionRegion,
+				documentPosition);
+
+		additionalProposals = getAdditionalXSLElementProposals(textViewer,
+				documentPosition, additionalProposals, xmlNode, sdRegion,
+				completionRegion, matchString);
+
+		ICompletionProposal[] xslNamespaceProposals = getXSLNamespaceProposals(
+				textViewer, documentPosition, xmlNode, sdRegion,
+				completionRegion, matchString);
+
+		ArrayList<ICompletionProposal> proposalList = new ArrayList<ICompletionProposal>();
+		addProposals(xmlProposals, proposalList);
+		addProposals(additionalProposals, proposalList);
+		addProposals(xslNamespaceProposals, proposalList);
+
+		ICompletionProposal[] combinedProposals = combineProposals(proposalList);
+		
+		if (combinedProposals == null || combinedProposals.length == 0) {
+			setErrorMessage(Messages.getString("NoContentAssistance"));
+		}
+
+		return combinedProposals;
+	}
+
+	/**
+	 * @param textViewer
+	 * @param documentPosition
+	 * @param xmlNode
+	 * @param sdRegion
+	 * @param completionRegion
+	 * @param matchString
+	 * @return
+	 */
+	private ICompletionProposal[] getXSLNamespaceProposals(
+			ITextViewer textViewer, int documentPosition, IDOMNode xmlNode,
+			IStructuredDocumentRegion sdRegion, ITextRegion completionRegion,
+			String matchString) {
+		ICompletionProposal[] xslProposals = null;
+		if (XSLCore.isXSLNamespace(xmlNode)) {
+			xslProposals = getXSLProposals(textViewer, documentPosition,
+					xmlNode, sdRegion, completionRegion, matchString);
+		}
+		return xslProposals;
+	}
+
+	/**
+	 * @param textViewer
+	 * @param documentPosition
+	 * @param additionalProposals
+	 * @param xmlNode
+	 * @param sdRegion
+	 * @param completionRegion
+	 * @param matchString
+	 * @return
+	 */
+	private ICompletionProposal[] getAdditionalXSLElementProposals(
+			ITextViewer textViewer, int documentPosition,
+			ICompletionProposal[] additionalProposals, IDOMNode xmlNode,
+			IStructuredDocumentRegion sdRegion, ITextRegion completionRegion,
+			String matchString) {
+		if (!XSLCore.isXSLNamespace(xmlNode)) {
+			additionalProposals = new ElementContentAssistRequest(xmlNode,
+					sdRegion, completionRegion, documentPosition, 0,
+					matchString, textViewer).getCompletionProposals();
+		}
+		return additionalProposals;
+	}
+
+	/**
+	 * @param node
+	 * @return
+	 */
+	private Node getActualDOMNode(Node node) {
+		while ((node != null) && (node.getNodeType() == Node.TEXT_NODE)
+				&& (node.getParentNode() != null)) {
+			node = node.getParentNode();
+		}
+		return node;
+	}
+
+	/**
+	 * @param textViewer
+	 * @param documentPosition
+	 * @return
+	 */
+	private ICompletionProposal[] getXMLProposals(ITextViewer textViewer,
+			int documentPosition) {
 		AbstractContentAssistProcessor processor = new XMLContentAssistProcessor();
 
 		ICompletionProposal proposals[] = processor.computeCompletionProposals(
 				textViewer, documentPosition);
+		return proposals;
+	}
 
-		String matchString = getXPathMatchString(sdRegion, completionRegion,
-				documentPosition);
-		
-		ICompletionProposal[] additionalProposals = null;
-		if (!XSLCore.isXSLNamespace(xmlNode)) {
-			additionalProposals = new ElementContentAssistRequest(xmlNode, xmlNode.getParentNode(), sdRegion, completionRegion, documentPosition, 0, matchString, textViewer).getCompletionProposals();
-		}
-		
-		ICompletionProposal[] xslProposals = null;
-		if (XSLCore.isXSLNamespace(xmlNode)) {
-			xslProposals = getXSLProposals(textViewer, documentPosition, xmlNode,
-					sdRegion, completionRegion, proposals, matchString);
-		}
-		
-		ArrayList<ICompletionProposal> proposalList = new ArrayList();
-		addProposals(proposals, proposalList);
-		addProposals(additionalProposals, proposalList);
-		addProposals(xslProposals, proposalList);
-		
-		ICompletionProposal[] combinedProposals = new ICompletionProposal[proposalList.size()];
-        proposalList.toArray(combinedProposals); 
-		
+	/**
+	 * @param proposalList
+	 * @return
+	 */
+	private ICompletionProposal[] combineProposals(
+			ArrayList<ICompletionProposal> proposalList) {
+		ICompletionProposal[] combinedProposals = new ICompletionProposal[proposalList
+				.size()];
+		proposalList.toArray(combinedProposals);
 		return combinedProposals;
 	}
 
@@ -137,23 +211,21 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 			}
 		}
 	}
-	
 
 	protected ICompletionProposal[] getXSLProposals(ITextViewer textViewer,
 			int documentPosition, IDOMNode xmlNode,
 			IStructuredDocumentRegion sdRegion, ITextRegion completionRegion,
-			ICompletionProposal[] proposals, String matchString) {
+			String matchString) {
 		XSLContentAssistRequestFactory requestFactory = new XSLContentAssistRequestFactory();
 
 		ICompletionProposal[] xslProposals = null;
-		ContentAssistRequest contentAssistRequest = requestFactory
+		IContentAssistProposalRequest contentAssistRequest = requestFactory
 				.getContentAssistRequest(textViewer, documentPosition, xmlNode,
-						sdRegion, completionRegion, proposals, matchString);
+						sdRegion, completionRegion, matchString);
 
-		xslProposals = contentAssistRequest.getCompletionProposals();	
+		xslProposals = contentAssistRequest.getCompletionProposals();
 		return xslProposals;
 	}
-
 
 	/**
 	 * StructuredTextViewer must be set before using this.
@@ -164,7 +236,6 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 	public IStructuredDocumentRegion getStructuredDocumentRegion(int pos) {
 		return ContentAssistUtils.getStructuredDocumentRegion(textViewer, pos);
 	}
-
 
 	/**
 	 * Return the region whose content's require completion. This is something
@@ -361,6 +432,7 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 	 * 
 	 * the auto activation characters for completion proposal or
 	 * <code>null</code> if no auto activation is desired
+	 * 
 	 * @return an array of activation characters
 	 */
 	public char[] getCompletionProposalAutoActivationCharacters() {
@@ -376,7 +448,6 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 	 * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getContextInformationAutoActivationCharacters()
 	 */
 	public char[] getContextInformationAutoActivationCharacters() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -404,16 +475,6 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 	 * @see org.eclipse.wst.sse.ui.internal.IReleasable#release()
 	 */
 	public void release() {
-
-	}
-
-	/**
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
-	 */
-	public void propertyChange(PropertyChangeEvent event) {
-		// TODO Auto-generated method stub
 
 	}
 

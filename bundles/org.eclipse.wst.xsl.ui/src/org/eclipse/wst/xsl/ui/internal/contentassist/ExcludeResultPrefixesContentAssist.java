@@ -38,19 +38,13 @@ import org.w3c.dom.Node;
  * 
  */
 public class ExcludeResultPrefixesContentAssist extends AbstractXSLContentAssistRequest {
-
 	private static final String EXCLUDE_RESULT_PREFIXES = "exclude-result-prefixes"; //$NON-NLS-1$
 	private static final String DEFAULT = "#all"; //$NON-NLS-1$
 	private static final String ADDITIONAL_INFO = Messages.getString("ExcludeResultPrefixesContentAssist.2"); //$NON-NLS-1$
 	protected String[] tokens = null;
-	
+
 	/**
-	 * Handles Content Assistance requests for Select Attributes.  This is called an instantiated
-	 * through the use of the computeProposals method from the XSLContentAssistProcessor.  It will
-	 * calculate the available proposals that are available for the XSL select attribute.
-	 * 
 	 * @param node
-	 * @param parent
 	 * @param documentRegion
 	 * @param completionRegion
 	 * @param begin
@@ -58,14 +52,11 @@ public class ExcludeResultPrefixesContentAssist extends AbstractXSLContentAssist
 	 * @param filter
 	 * @param textViewer
 	 */
-	
-	@SuppressWarnings("deprecation")
-	public ExcludeResultPrefixesContentAssist(Node node, Node parent,
+	public ExcludeResultPrefixesContentAssist(Node node,
 			IStructuredDocumentRegion documentRegion,
 			ITextRegion completionRegion, int begin, int length, String filter,
 			ITextViewer textViewer) {
-		super(node, parent, documentRegion, completionRegion, begin, length, filter);
-		this.textViewer = textViewer;
+		super(node, documentRegion, completionRegion, begin, length, filter, textViewer);
 	}
 	
 	/** 
@@ -81,9 +72,8 @@ public class ExcludeResultPrefixesContentAssist extends AbstractXSLContentAssist
 		 int offset = getCursorPosition();
 		 
 		 if (excludeResultPrefixes == null || excludeResultPrefixes.equals(DEFAULT)) {
-			 return super.getCompletionProposals();
+			 return getAllCompletionProposals();
 		 }
-		 
 		 
 		 tokens = excludeResultPrefixes.split("\\s"); //$NON-NLS-1$
 		 if (tokens[0].equals("")) { //$NON-NLS-1$
@@ -105,7 +95,7 @@ public class ExcludeResultPrefixesContentAssist extends AbstractXSLContentAssist
 			 }
 		 }
 		 
-		return super.getCompletionProposals();
+		return getAllCompletionProposals();
 	}
 
 	protected boolean includePrefix(NamespaceInfo namespace) {

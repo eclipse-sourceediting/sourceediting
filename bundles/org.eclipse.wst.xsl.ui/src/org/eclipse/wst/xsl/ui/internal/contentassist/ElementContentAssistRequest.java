@@ -67,11 +67,11 @@ public class ElementContentAssistRequest extends
 	 * @param filter
 	 * @param textViewer
 	 */
-	public ElementContentAssistRequest(Node node, Node parent,
+	public ElementContentAssistRequest(Node node,
 			IStructuredDocumentRegion documentRegion,
 			ITextRegion completionRegion, int begin, int length, String filter,
 			ITextViewer textViewer) {
-		super(node, parent, documentRegion, completionRegion, begin, length,
+		super(node, documentRegion, completionRegion, begin, length,
 				filter, textViewer);
 		contentModel = new XSLContentModelGenerator();
 	}
@@ -88,7 +88,7 @@ public class ElementContentAssistRequest extends
 		} else if (region.getType() == DOMRegionContext.XML_TAG_NAME) {
 			computeTagNameProposals();
 		}
-		return super.getCompletionProposals();
+		return getAllCompletionProposals();
 	}
 
 	/**
@@ -213,11 +213,11 @@ public class ElementContentAssistRequest extends
 											XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);
 						}
 						String proposedInfo = getAdditionalInfo(
-								getCMElementDeclaration(parent), elementDecl);
+								getCMElementDeclaration(getParent()), elementDecl);
 						CustomCompletionProposal proposal = new CustomCompletionProposal(
 								proposedText, getReplacementBeginPosition(),
 								getReplacementLength(), cursorAdjustment,
-								image, contentModel.getRequiredName(parent,
+								image, contentModel.getRequiredName(getParent(),
 										elementDecl), null, proposedInfo,
 								XMLRelevanceConstants.R_TAG_NAME);
 						addProposal(proposal);

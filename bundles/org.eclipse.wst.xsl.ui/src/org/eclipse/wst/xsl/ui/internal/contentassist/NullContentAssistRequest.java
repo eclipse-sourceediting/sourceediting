@@ -16,13 +16,28 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.w3c.dom.Node;
 
+/**
+ * 
+ * @author dcarver
+ *
+ */
 public class NullContentAssistRequest extends AbstractXSLContentAssistRequest {
 
-	public NullContentAssistRequest(Node node, Node parent,
+	/**
+	 * A NULL ContentAssistRequest has no proposals.
+	 * @param node
+	 * @param documentRegion
+	 * @param completionRegion
+	 * @param begin
+	 * @param length
+	 * @param filter
+	 * @param textViewer
+	 */
+	public NullContentAssistRequest(Node node, 
 			IStructuredDocumentRegion documentRegion,
 			ITextRegion completionRegion, int begin, int length, String filter,
 			ITextViewer textViewer) {
-		super(node, parent, documentRegion, completionRegion, begin, length,
+		super(node, documentRegion, completionRegion, begin, length,
 				filter, textViewer);
 		// TODO Auto-generated constructor stub
 	}

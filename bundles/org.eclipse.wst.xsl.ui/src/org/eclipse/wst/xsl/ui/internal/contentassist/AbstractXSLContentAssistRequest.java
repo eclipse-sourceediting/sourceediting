@@ -1,15 +1,21 @@
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceTable;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
-import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
+import org.eclipse.wst.xml.ui.internal.contentassist.ProposalComparator;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -21,27 +27,17 @@ import org.w3c.dom.NodeList;
  * @author dcarver
  *
  */
-public abstract class AbstractXSLContentAssistRequest extends
-		ContentAssistRequest {
-	
+public abstract class AbstractXSLContentAssistRequest implements IContentAssistProposalRequest {
+	protected IStructuredDocumentRegion documentRegion = null;
+	protected List<ICompletionProposal> macros = new ArrayList<ICompletionProposal>();
+	protected String matchString;
+	protected Node node = null;
+	protected List<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
+	protected ITextRegion region = null;
+	protected int replacementBeginPosition;
+	protected int replacementLength;
 	protected ITextViewer textViewer = null;
 
-	/**
-	 * @param node
-	 * @param parent
-	 * @param documentRegion
-	 * @param completionRegion
-	 * @param begin
-	 * @param length
-	 * @param filter
-	 * @deprecated  
-	 */
-	public AbstractXSLContentAssistRequest(Node node, Node parent,
-			IStructuredDocumentRegion documentRegion,
-			ITextRegion completionRegion, int begin, int length, String filter) {
-		super(node, parent, documentRegion, completionRegion, begin, length, filter);
-		// TODO Auto-generated constructor stub
-	}
 
 	/**
 	 * Handles Content Assistance requests for Select Attributes.  This is called an instantiated
@@ -58,14 +54,44 @@ public abstract class AbstractXSLContentAssistRequest extends
 	 * @param textViewer
 	 */
 	
-	public AbstractXSLContentAssistRequest(Node node, Node parent,
+	public AbstractXSLContentAssistRequest(Node node,
 			IStructuredDocumentRegion documentRegion,
 			ITextRegion completionRegion, int begin, int length, String filter,
 			ITextViewer textViewer) {
-		super(node, parent, documentRegion, completionRegion, begin, length, filter);
+		setNode(node);
+		setDocumentRegion(documentRegion);
+		setRegion(completionRegion);
+		setMatchString(filter);
+		setReplacementBeginPosition(begin);
+		setReplacementLength(length);
 		this.textViewer = textViewer;
 	}
 
+	/**
+	 * Returns a list of proposals.  Implementations are to provide the appropriate
+	 * implementation for the proposals they would like to return.   Use of the getAllCompletionProposals
+	 * should be used to return the actual proposals from this method.
+	 * @return
+	 */
+	public abstract ICompletionProposal[] getCompletionProposals();
+	
+	protected ICompletionProposal[] getAllCompletionProposals() {
+		ICompletionProposal results[] = null;
+		if ((getProposals().size() > 0) || (getMacros().size() > 0)) {
+			List<ICompletionProposal> allProposals = new ArrayList<ICompletionProposal>();
+			allProposals.addAll(getProposals());
+			allProposals.addAll(getMacros());
+			allProposals = sortProposals(allProposals);
+
+			results = new ICompletionProposal[allProposals.size()];
+			for (int i = 0; i < allProposals.size(); i++) {
+				results[i] = (ICompletionProposal) allProposals.get(i);
+			}
+		}
+		return results;
+	}
+
+	
 	/**
 	 * Checks to make sure that the NodeList has data
 	 * @param nodes A NodeList object
@@ -100,6 +126,120 @@ public abstract class AbstractXSLContentAssistRequest extends
 	protected String getLocation() {
 		IDOMDocument document = (IDOMDocument) node.getOwnerDocument();
 		return document.getModel().getBaseLocation();		
+	}
+	
+	/**
+	 * @param newProposal
+	 */
+	protected void addMacro(ICompletionProposal newProposal) {
+		macros.add(newProposal);
+	}
+
+	protected void addProposal(ICompletionProposal newProposal) {
+		proposals.add(newProposal);
+	}
+
+	protected IStructuredDocumentRegion getDocumentRegion() {
+		return documentRegion;
+	}
+
+	protected List<ICompletionProposal> getMacros() {
+		return macros;
+	}
+
+	protected java.lang.String getMatchString() {
+		return matchString;
+	}
+
+	protected org.w3c.dom.Node getNode() {
+		return node;
+	}
+
+	protected org.w3c.dom.Node getParent() {
+		return node.getParentNode();
+	}
+
+	protected List<ICompletionProposal> getProposals() {
+		return proposals;
+	}
+
+	protected ITextRegion getRegion() {
+		return region;
+	}
+
+	protected int getReplacementBeginPosition() {
+		return replacementBeginPosition;
+	}
+
+	protected int getReplacementLength() {
+		return replacementLength;
+	}
+
+	protected int getStartOffset() {
+		if ((getDocumentRegion() != null) && (getRegion() != null)) {
+			return ((ITextRegionCollection) getDocumentRegion()).getStartOffset(getRegion());
+		}
+		return -1;
+	}
+
+	protected String getText() {
+		if ((getDocumentRegion() != null) && (getRegion() != null)) {
+			return ((ITextRegionCollection) getDocumentRegion()).getText(getRegion());
+		}
+		return ""; //$NON-NLS-1$
+	}
+
+	protected int getTextEndOffset() {
+		if ((getDocumentRegion() != null) && (getRegion() != null)) {
+			return ((ITextRegionCollection) getDocumentRegion()).getTextEndOffset(getRegion());
+		}
+		return -1;
+	}
+
+	protected void setDocumentRegion(IStructuredDocumentRegion region) {
+		documentRegion = region;
+	}
+
+	protected void setMatchString(java.lang.String newMatchString) {
+		matchString = newMatchString;
+	}
+
+	
+	protected void setNode(org.w3c.dom.Node newNode) {
+		node = newNode;
+	}
+
+
+	protected void setRegion(ITextRegion newRegion) {
+		region = newRegion;
+	}
+
+	protected void setReplacementBeginPosition(int newReplacementBeginPosition) {
+		replacementBeginPosition = newReplacementBeginPosition;
+	}
+
+
+	protected void setReplacementLength(int newReplacementLength) {
+		replacementLength = newReplacementLength;
+	}
+
+	protected List<ICompletionProposal> sortProposals(List<ICompletionProposal> proposalsIn) {
+		Collections.sort(proposalsIn, new ProposalComparator());
+		return proposalsIn;
+
+	}
+
+	/**
+	 * 
+	 * @return java.lang.String
+	 */
+	public java.lang.String toString() {
+		return "Node: " + getNode() //$NON-NLS-1$
+					+ "\nParent: " + getParent() //$NON-NLS-1$
+					+ "\nStructuredDocumentRegion: " + StringUtils.escape(getDocumentRegion().toString()) //$NON-NLS-1$
+					+ "\nRegion: " + getRegion() //$NON-NLS-1$
+					+ "\nMatch string: '" + StringUtils.escape(getMatchString()) + "'" //$NON-NLS-2$//$NON-NLS-1$
+					+ "\nOffsets: [" + getReplacementBeginPosition() + "-" + (getReplacementBeginPosition() + getReplacementLength()) + "]\n"; //$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
 	}
 	
 		

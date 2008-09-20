@@ -33,7 +33,6 @@ public class TestAttributeContentAssist extends SelectAttributeContentAssist {
 	 * Constructor for the XSL content assistance for the test attribute.
 	 * 
 	 * @param node
-	 * @param parent
 	 * @param documentRegion
 	 * @param completionRegion
 	 * @param begin
@@ -41,13 +40,12 @@ public class TestAttributeContentAssist extends SelectAttributeContentAssist {
 	 * @param filter
 	 * @param textViewer
 	 */
-	public TestAttributeContentAssist(Node node, Node parent,
+	public TestAttributeContentAssist(Node node, 
 			IStructuredDocumentRegion documentRegion,
 			ITextRegion completionRegion, int begin, int length, String filter,
 			ITextViewer textViewer) {
-		super(node, parent, documentRegion, completionRegion, begin, length, filter,
+		super(node, documentRegion, completionRegion, begin, length, filter,
 				textViewer);
-		// TODO Auto-generated constructor stub
 	}
 	
 	/** 
@@ -62,11 +60,11 @@ public class TestAttributeContentAssist extends SelectAttributeContentAssist {
 		int offset = getReplacementBeginPosition();
 		IDOMAttr attrNode = (IDOMAttr)((IDOMElement)getNode()).getAttributeNode("test");
 		
-		this.matchString = extractXPathMatchString(attrNode, getRegion(), getReplacementBeginPosition());
+		matchString = extractXPathMatchString(attrNode, getRegion(), getReplacementBeginPosition());
 		
 	    addSelectProposals((Element)getNode().getParentNode(), offset);
 
-		return  super.getCompletionProposals();
+		return getAllCompletionProposals();
     }
 	
 	/**

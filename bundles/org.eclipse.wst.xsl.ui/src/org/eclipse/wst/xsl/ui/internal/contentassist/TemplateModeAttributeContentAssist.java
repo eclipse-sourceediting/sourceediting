@@ -16,25 +16,16 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
-import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.model.Template;
 import org.eclipse.wst.xsl.core.model.XSLAttribute;
-import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages;
 import org.w3c.dom.Node;
@@ -61,11 +52,11 @@ public class TemplateModeAttributeContentAssist extends
 	 * @param filter
 	 * @param textViewer
 	 */
-	public TemplateModeAttributeContentAssist(Node node, Node parent,
+	public TemplateModeAttributeContentAssist(Node node,
 			IStructuredDocumentRegion documentRegion,
 			ITextRegion completionRegion, int begin, int length, String filter,
 			ITextViewer textViewer) {
-		super(node, parent, documentRegion, completionRegion, begin, length,
+		super(node, documentRegion, completionRegion, begin, length,
 				filter, textViewer);
 	}
 
@@ -81,11 +72,18 @@ public class TemplateModeAttributeContentAssist extends
 		proposals.clear();
 		
 		IFile editorFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(getLocation()));
-		
 		StylesheetModel model = XSLCore.getInstance().getStylesheet(editorFile);
 
+		addModeProposals(model);
+		return getAllCompletionProposals();
+	}
+
+	/**
+	 * @param model
+	 */
+	protected void addModeProposals(StylesheetModel model) {
 		List<Template> templates = model.getTemplates();
-		ArrayList<String> modes = new ArrayList();
+		ArrayList<String> modes = new ArrayList<String>();
 		
 		for (Template template : templates) {
 			XSLAttribute attribute = template.getAttribute("mode");
@@ -105,7 +103,6 @@ public class TemplateModeAttributeContentAssist extends
 			}
 		}
 		modes.clear();
-		return super.getCompletionProposals();
 	}
 
 }

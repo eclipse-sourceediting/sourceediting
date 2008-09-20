@@ -113,9 +113,9 @@ public class HrefContentAssistRequest extends AbstractXSLContentAssistRequest
 	 * @param filter
 	 * @param textViewer
 	 */
-	public HrefContentAssistRequest(Node node, Node parent, IStructuredDocumentRegion documentRegion, ITextRegion completionRegion, int begin, int length, String filter, ITextViewer textViewer)
+	public HrefContentAssistRequest(Node node, IStructuredDocumentRegion documentRegion, ITextRegion completionRegion, int begin, int length, String filter, ITextViewer textViewer)
 	{
-		super(node, parent, documentRegion, completionRegion, begin, length, filter, textViewer);
+		super(node, documentRegion, completionRegion, begin, length, filter, textViewer);
 	}
 
 	/**
@@ -167,7 +167,7 @@ public class HrefContentAssistRequest extends AbstractXSLContentAssistRequest
 			XSLUIPlugin.log(e);
 		}
 
-		return super.getCompletionProposals();
+		return getAllCompletionProposals();
 	}
 	
 	/**
@@ -175,8 +175,7 @@ public class HrefContentAssistRequest extends AbstractXSLContentAssistRequest
 	 * 
 	 * @return the same list, in the same order
 	 */
-	@SuppressWarnings("unchecked")
-	protected List sortProposals(List proposalsIn) {
+	protected List<ICompletionProposal> sortProposals(List<ICompletionProposal> proposalsIn) {
 		return proposalsIn;
 	}
 
