@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,7 +41,12 @@ public class NamespaceValidator extends PrimeValidator implements ErrorState {
 			IDOMElement e = (IDOMElement) target;
 			if (!isValidPrefix(e.getPrefix(), target) && !e.isCommentTag()) {
 				// report unknown tag error.
-				Segment errorSeg = FMUtil.getSegment(e, FMUtil.SEG_START_TAG);
+				Segment errorSeg = null;
+				if(e.hasStartTag())
+					errorSeg = FMUtil.getSegment(e, FMUtil.SEG_START_TAG);
+				else if (e.hasEndTag())
+					errorSeg = FMUtil.getSegment(e, FMUtil.SEG_END_TAG);
+				
 				if (errorSeg != null)
 					reporter.report(MessageFactory.createMessage(new ErrorInfoImpl(UNDEFINED_NAME_ERROR, errorSeg, e)));
 			}

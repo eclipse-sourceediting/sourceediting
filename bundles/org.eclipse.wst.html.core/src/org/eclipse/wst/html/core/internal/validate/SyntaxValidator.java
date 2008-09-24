@@ -94,8 +94,8 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		// gather information to validate from target at once.
 		getInfo(info);
 
+		validateTags(info);
 		if (info.target.isGlobalTag()) {
-			validateTags(info);
 			validateNames(info);
 			if (info.decl != null && info.isXHTML) {
 				validateTagCase(info);
@@ -187,7 +187,7 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 					if (CMUtil.isHTML(info.decl) && !info.target.hasChildNodes()) {
 						if (info.target.isContainer()) {
 							// Set the error mark to the start of the element.
-							Segment errorSeg = new Segment(info.target.getStartOffset(), 0);
+							Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_END_TAG);
 							report(MISSING_START_TAG_ERROR, errorSeg, info.target);
 						}
 						else {
@@ -197,7 +197,7 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 						}
 					}
 					else if (info.isXHTML) {
-						Segment errorSeg = new Segment(info.target.getStartOffset(), 0);
+						Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_END_TAG);
 						report(MISSING_START_TAG_ERROR, errorSeg, info.target);
 					}
 				}
@@ -221,7 +221,7 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 					}
 					else {
 						// end tag is required.
-						Segment errorSeg = new Segment(info.target.getEndOffset(), 0);
+						Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG);
 						report(MISSING_END_TAG_ERROR, errorSeg, info.target);
 					}
 				}
@@ -230,7 +230,7 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 				if (info.hasStartTag) {
 					if (info.decl != null && CMUtil.isHTML(info.decl) && !info.target.isEmptyTag() && !CMUtil.isEndTagOmissible(info.decl)) {
 						// Set the error mark to the end of the element.
-						Segment errorSeg = new Segment(info.target.getEndOffset(), 0);
+						Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG);
 						report(MISSING_END_TAG_ERROR, errorSeg, info.target);
 					}
 				}

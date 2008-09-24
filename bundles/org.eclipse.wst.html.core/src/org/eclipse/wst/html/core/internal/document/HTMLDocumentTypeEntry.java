@@ -33,12 +33,6 @@ public class HTMLDocumentTypeEntry {
 
 	/**
 	 */
-	private HTMLDocumentTypeEntry() {
-		super();
-	}
-
-	/**
-	 */
 	public HTMLDocumentTypeEntry(String name, String publicId, String systemId, String namespaceURI, boolean isXHTMLType, boolean hasFrameset, String displayName, boolean isDefaultXHTML, boolean isDefaultWML, boolean isWMLType) {
 		super();
 
