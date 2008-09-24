@@ -302,7 +302,6 @@ public class JSPJavaValidator extends JSPValidator implements ISourceValidator {
 	 * @param translation
 	 */
 	private void adjustIndirectPosition(IMessage m, JSPTranslation translation) {
-
 		if (!(translation instanceof JSPTranslationExtension))
 			return;
 
@@ -314,13 +313,17 @@ public class JSPJavaValidator extends JSPValidator implements ISourceValidator {
 		IStructuredDocumentRegion[] regions = sDoc.getStructuredDocumentRegions(0, m.getOffset() + m.getLength());
 		// iterate backwards until you hit the include directive
 		for (int i = regions.length - 1; i >= 0; i--) {
-
 			IStructuredDocumentRegion region = regions[i];
 			if (region.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
 				if (getDirectiveName(region).equals("include")) { //$NON-NLS-1$
 					ITextRegion fileValueRegion = getAttributeValueRegion(region, "file"); //$NON-NLS-1$
 					m.setOffset(region.getStartOffset(fileValueRegion));
 					m.setLength(fileValueRegion.getTextLength());
+					/**
+					 * Bug 219761 - Syntax error reported at wrong location
+					 * (don't forget to adjust the line number, too)
+					 */
+					m.setLineNo(sDoc.getLineOfOffset(m.getOffset()) + 1);
 					break;
 				}
 			}

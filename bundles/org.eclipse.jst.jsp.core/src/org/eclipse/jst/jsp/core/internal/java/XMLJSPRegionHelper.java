@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,27 +10,29 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.java;
 
-import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.jst.jsp.core.internal.encoding.JSPDocumentLoader;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
-import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
+import org.eclipse.jst.jsp.core.internal.util.FileContentCache;
+import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler;
+import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
-import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
@@ -57,9 +59,16 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	// for reconciling cursor position later
 	int fPossibleOwner = JSPTranslator.SCRIPTLET;
 
-	public XMLJSPRegionHelper(JSPTranslator translator) {
+	/**
+	 * Determines whether translated source appends are indicated as
+	 * "indirect", affecting how offsets are mapped.
+	 */
+	boolean fAppendAsIndirectSource;
+
+	public XMLJSPRegionHelper(JSPTranslator translator, boolean appendAsIndirectSource) {
 		getLocalParser().addStructuredDocumentRegionHandler(this);
 		this.fTranslator = translator;
+		this.fAppendAsIndirectSource = appendAsIndirectSource;
 	}
 
 	protected JSPSourceParser getLocalParser() {
@@ -78,13 +87,32 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 
 	public void reset(String textToParse, int start) {
 		fStartOfTextToParse = start;
-		getLocalParser().reset(textToParse);
 		fTextToParse = textToParse;
 	}
 
+	/**
+	 * Expects that {@link #reset(String, int)} was called first
+	 */
 	public void forceParse() {
-		getLocalParser().getDocumentRegions();
-		fLocalParser = null;
+		String contents = fTextToParse;
+
+		if (contents != null) {
+			IStructuredDocument document = (IStructuredDocument) new JSPDocumentLoader().createNewStructuredDocument();
+			/*
+			 * This adds the current markers from the outer class list to this
+			 * parser so parsing works correctly
+			 */
+			List blockMarkers = this.fTranslator.getBlockMarkers();
+			for (int i = 0; i < blockMarkers.size(); i++) {
+				addBlockMarker((BlockMarker) blockMarkers.get(i));
+			}
+			document.set(contents);
+			IStructuredDocumentRegion cursor = document.getFirstStructuredDocumentRegion();
+			while (cursor != null) {
+				nodeParsed(cursor);
+				cursor = cursor.getNext();
+			}
+		}
 	}
 
 	/*
@@ -94,28 +122,46 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	 * @return
 	 */
 	public boolean parse(String filename) {
-		getLocalParser().removeStructuredDocumentRegionHandler(this);
-		// from outer class
-		List blockMarkers = this.fTranslator.getBlockMarkers();
-		IStructuredDocument document = StructuredDocumentFactory.getNewStructuredDocumentInstance(getLocalParser());
-		String contents = getContents(filename);
-		if(contents == null)
-			return false;
-		// this adds the current markers from the outer class list
-		// to this parser so parsing works correctly
-		for (int i = 0; i < blockMarkers.size(); i++) {
-			addBlockMarker((BlockMarker) blockMarkers.get(i));
+		boolean parsed = false;
+		IStructuredDocument document = null;
+		String contents = null;
+
+		IPath filePath = new Path(filename);
+		IFile f = ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
+		if (f == null || !f.isAccessible()) {
+			f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(filePath);
 		}
-		reset(contents);
-//		forceParse();
-		document.set(contents);
-		IStructuredDocumentRegion cursor = document.getFirstStructuredDocumentRegion();
-		while(cursor != null) {
-			nodeParsed(cursor);
-			cursor = cursor.getNext();
+		if (f != null && f.isAccessible()) {
+			try {
+				IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerFor(f);
+				document = (IStructuredDocument) handler.getDocumentLoader().createNewStructuredDocument();
+				contents = getContents(f);
+			}
+			catch (CoreException e) {
+				Logger.logException(e);
+			}
 		}
-		getLocalParser().addStructuredDocumentRegionHandler(this);
-		return true;
+		if (contents != null && document != null) {
+			/*
+			 * This adds the current markers from the outer class list o this
+			 * parser so parsing works correctly
+			 */
+			List blockMarkers = this.fTranslator.getBlockMarkers();
+			for (int i = 0; i < blockMarkers.size(); i++) {
+				addBlockMarker((BlockMarker) blockMarkers.get(i));
+			}
+			reset(contents);
+			// forces parse
+			document.set(contents);
+			IStructuredDocumentRegion cursor = document.getFirstStructuredDocumentRegion();
+			while (cursor != null) {
+				nodeParsed(cursor);
+				cursor = cursor.getNext();
+			}
+			parsed = true;
+		}
+
+		return parsed;
 	}
 
 
@@ -128,6 +174,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 
 		try {
 			
+			// should do nothing
 			handleScopingIfNecessary(sdRegion);
 			
 			if (isJSPEndRegion(sdRegion)) {
@@ -184,6 +231,24 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 			}
 			else {
 				fTagname = null;
+				/*
+				 * We may have been asked to decode a script block with an XML
+				 * comment in it (a common provision for browsers not
+				 * supporting client scripting). While
+				 * scriptlets/expressions/declarations will be identified as
+				 * part of the normal parsing process, the temporary document
+				 * used here will be parsed differently, respecting the
+				 * comment since it's not in a tag block region any more, and
+				 * the custom tags in the comment will not be found. Run those
+				 * comment text pieces through the translator on their own.
+				 */
+				Iterator regions = sdRegion.getRegions().iterator();
+				while (regions.hasNext()) {
+					ITextRegion region = (ITextRegion) regions.next();
+					if (DOMRegionContext.XML_COMMENT_TEXT.equals(region.getType()) && region.getStart() != 0) {
+						fTranslator.decodeScriptBlock(sdRegion.getFullText(region), sdRegion.getStartOffset(region));
+					}
+				}
 			}
 			// this updates cursor position
 			checkCursorInRegion(sdRegion);
@@ -226,7 +291,6 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	}
 	
 	private boolean isSelfClosingTag(ITextRegionCollection containerRegion) {
-		
 		if(containerRegion == null)
 			return false;
 		
@@ -241,7 +305,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		text.append("{ // <"); //$NON-NLS-1$
 		text.append(tagName);
 		text.append(">\n"); //$NON-NLS-1$
-		this.fTranslator.translateScriptletString(text.toString(), currentNode, currentNode.getStartOffset(), currentNode.getLength()); //$NON-NLS-1$
+		this.fTranslator.translateScriptletString(text.toString(), currentNode, currentNode.getStartOffset(), currentNode.getLength(), fAppendAsIndirectSource); //$NON-NLS-1$
 
 	}
 
@@ -251,8 +315,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		text.append("} // </"); //$NON-NLS-1$
 		text.append(tagName);
 		text.append(">\n"); //$NON-NLS-1$
-		this.fTranslator.translateScriptletString(text.toString(), currentNode, currentNode.getStartOffset(), currentNode.getLength()); //$NON-NLS-1$
-
+		this.fTranslator.translateScriptletString(text.toString(), currentNode, currentNode.getStartOffset(), currentNode.getLength(), fAppendAsIndirectSource); //$NON-NLS-1$
 	}
 
 	public void resetNodes() {
@@ -280,21 +343,21 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	protected void processDeclaration(IStructuredDocumentRegion sdRegion) {
 		prepareText(sdRegion);
 		IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
-		this.fTranslator.translateDeclarationString(fStrippedText, currentNode, currentNode.getStartOffset(), currentNode.getLength());
+		this.fTranslator.translateDeclarationString(fStrippedText, currentNode, currentNode.getStartOffset(), currentNode.getLength(), fAppendAsIndirectSource);
 		fPossibleOwner = JSPTranslator.DECLARATION;
 	}
 
 	protected void processExpression(IStructuredDocumentRegion sdRegion) {
 		prepareText(sdRegion);
 		IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
-		this.fTranslator.translateExpressionString(fStrippedText, currentNode, currentNode.getStartOffset(), currentNode.getLength());
+		this.fTranslator.translateExpressionString(fStrippedText, currentNode, currentNode.getStartOffset(), currentNode.getLength(), fAppendAsIndirectSource);
 		fPossibleOwner = JSPTranslator.EXPRESSION;
 	}
 
 	protected void processScriptlet(IStructuredDocumentRegion sdRegion) {
 		prepareText(sdRegion);
 		IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
-		this.fTranslator.translateScriptletString(fStrippedText, currentNode, currentNode.getStartOffset(), currentNode.getLength());
+		this.fTranslator.translateScriptletString(fStrippedText, currentNode, currentNode.getStartOffset(), currentNode.getLength(), fAppendAsIndirectSource);
 		fPossibleOwner = JSPTranslator.SCRIPTLET;
 	}
 
@@ -328,7 +391,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 			}	
 
 			IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
-			this.fTranslator.translateScriptletString(beanDecl, currentNode, currentNode.getStartOffset(), currentNode.getLength());
+			this.fTranslator.translateScriptletString(beanDecl, currentNode, currentNode.getStartOffset(), currentNode.getLength(), fAppendAsIndirectSource);
 			fPossibleOwner = JSPTranslator.SCRIPTLET;
 		}
 	}
@@ -348,7 +411,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		}
 		else if (isPossibleCustomTag(fTagname)) {
 			// this custom tag may define variables
-			this.fTranslator.addTaglibVariables(fTagname);
+			this.fTranslator.addTaglibVariables(fTagname, sdRegion);
 		}
 		else if (isTaglibDirective(fTagname)) {
 			// also add the ones created here to the parent document
@@ -470,7 +533,6 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	}
 
 	protected String getRegionName(IStructuredDocumentRegion sdRegion) {
-
 		String nameStr = ""; //$NON-NLS-1$
 		ITextRegionList regions = sdRegion.getRegions();
 		for(int i=0; i<regions.size(); i++) {
@@ -490,42 +552,16 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	 * @return the contents, null if the file could not be found
 	 */
 	protected String getContents(String fileName) {
-		StringBuffer s = new StringBuffer();
-		int c = 0;
-		int count = 0;
-		InputStream is = null;
-		try {
-			IPath filePath = new Path(fileName);
-			IFile f = ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
-			if(f != null && !f.exists()) {
-				f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(filePath);
-			}
-            if (f != null && f.exists()) {
-    			is = f.getContents();
-    			while ((c = is.read()) != -1) {
-    				count++;
-    				s.append((char) c);
-    			}
-            }
-            else {
-            	// error condition, file could not be found
-            	return null;
-            }
-		}
-		catch (Exception e) {
-			if (Debug.debugStructuredDocument)
-				e.printStackTrace();
-		}
-		finally {
-			try {
-				if (is != null) {
-					is.close();
-				}
-			}
-			catch (Exception e) {
-				// nothing to do
-			}
-		}
-		return s.toString();
+		return FileContentCache.getInstance().getContents(new Path(fileName));
+	}
+
+	/**
+	 * get the contents of a file as a String
+	 * 
+	 * @param f - the file
+	 * @return the contents, null if the file could not be found
+	 */
+	private String getContents(IFile f) {
+		return FileContentCache.getInstance().getContents(f);
 	}
 }

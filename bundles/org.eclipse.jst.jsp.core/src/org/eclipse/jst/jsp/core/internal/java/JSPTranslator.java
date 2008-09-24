@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -735,7 +735,7 @@ public class JSPTranslator {
 		addTaglibVariables(tagToAdd, getCurrentNode());
 	}
 
-	protected void addTaglibVariables(String tagToAdd, IStructuredDocumentRegion customTag) {
+	protected void addTaglibVariables(String tagToAdd, ITextRegionCollection customTag) {
 		IFile f = getFile();
 
 		if (f == null || !f.exists())
@@ -750,7 +750,10 @@ public class JSPTranslator {
 		String decl = ""; //$NON-NLS-1$
 		if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_TAG_OPEN)) {
 			TaglibVariable[] taglibVars = helper.getTaglibVariables(tagToAdd, getStructuredDocument(), customTag);
-			// store for use at end tag
+			/*
+			 * Store for use at end tag and for accurate pairing even with
+			 * extra end tags (with empty non-null array)
+			 */
 			fTagToVariableMap.push(tagToAdd, taglibVars);
 
 			// Bug 199047
@@ -760,31 +763,45 @@ public class JSPTranslator {
 			for (int i = 0; i < taglibVars.length; i++) {
 				if (taglibVars[i].getScope() == VariableInfo.AT_BEGIN) {
 					decl = taglibVars[i].getDeclarationString();
-					appendToBuffer(decl, fUserCode, false, fCurrentNode);
+					appendToBuffer(decl, fUserCode, false, customTag);
 				}
 			}
 			
-			/*
-			 * Add NESTED variables 
+			/**
+			 * Add single opening curly brace
 			 */
+			
 			StringBuffer text = new StringBuffer();
 			text.append("{ // <"); //$NON-NLS-1$
-			text.append(getRegionName(customTag));
-			text.append(">\n"); //$NON-NLS-1$
+			text.append(tagToAdd);
+			if (customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
+				text.append("/>\n"); //$NON-NLS-1$
+			}
+			else {
+				text.append(">\n"); //$NON-NLS-1$
+			}
 			appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
 
+			/**
+			 * Add NESTED variables 
+			 */
 			for (int i = 0; i < taglibVars.length; i++) {
 				if (taglibVars[i].getScope() == VariableInfo.NESTED) {
 					decl = taglibVars[i].getDeclarationString();
-					appendToBuffer(decl, fUserCode, false, fCurrentNode);
+					appendToBuffer(decl, fUserCode, false, customTag);
 				}
 			}
 
+			/**
+			 * If empty, pop from stack, add ending curly brace and AT_END
+			 * variables
+			 */
 			if (customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
+				// Add single closing curly brace
 				text = new StringBuffer();
-				text.append("} // </"); //$NON-NLS-1$
-				text.append(getRegionName(customTag));
-				text.append(">\n"); //$NON-NLS-1$
+				text.append("} // <"); //$NON-NLS-1$
+				text.append(tagToAdd);
+				text.append("/>\n"); //$NON-NLS-1$
 				appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
 				// pop them off since there won't be a separate end tag to do so
 				fTagToVariableMap.pop(tagToAdd);
@@ -794,31 +811,41 @@ public class JSPTranslator {
 				for (int i = 0; i < taglibVars.length; i++) {
 					if (taglibVars[i].getScope() == VariableInfo.AT_END) {
 						decl = taglibVars[i].getDeclarationString();
-						appendToBuffer(decl, fUserCode, false, fCurrentNode);
+						appendToBuffer(decl, fUserCode, false, customTag);
 					}
 				}
 			}
 		}
-		/*
-		 * Process NESTED variables for an end tag backwards so the scopes
-		 * "unroll" correctly.
+		/**
+		 * Pop from stack, add ending curly brace and AT_END
+		 * variables
 		 */
 		else if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_END_TAG_OPEN)) {
-			StringBuffer text = new StringBuffer();
-			text.append("} // </"); //$NON-NLS-1$
-			text.append(getRegionName(customTag));
-			text.append(">\n"); //$NON-NLS-1$
-			appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
 			// pop the variables
 			TaglibVariable[] taglibVars = (TaglibVariable[]) fTagToVariableMap.pop(tagToAdd);
 			if (taglibVars != null) {
+				/*
+				 * Even an empty array will indicate a need for a closing
+				 * brace, so add one. If "taglibVars" is null, that means
+				 * there was no start tag for use with this end tag. Adding a
+				 * '}' even then would cause a Java translation fault, but
+				 * that's not particularly helpful to a user who may only know
+				 * how to use custom tags. Ultimately unbalanced custom tags
+				 * should just be reported as unbalanced tags.
+				 */
+				StringBuffer text = new StringBuffer();
+				text.append("} // </"); //$NON-NLS-1$
+				text.append(tagToAdd);
+				text.append(">\n"); //$NON-NLS-1$
+				appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
+
 				/*
 				 * Add AT_END variables 
 				 */
 				for (int i = 0; i < taglibVars.length; i++) {
 					if (taglibVars[i].getScope() == VariableInfo.AT_END) {
 						decl = taglibVars[i].getDeclarationString();
-						appendToBuffer(decl, fUserCode, false, fCurrentNode);
+						appendToBuffer(decl, fUserCode, false, customTag);
 					}
 				}
 			}
@@ -874,9 +901,21 @@ public class JSPTranslator {
 			if (getCurrentNode() != null)
 				advanceNextNode();
 		}
-		buildResult();
-
+		
+		/*
+		 * Any contents left in the map indicate start tags that never had end
+		 * tags. While the '{' that is present without the matching '}' would
+		 * cause a Java translation fault, that's not particularly helpful to
+		 * a user who may only know how to use custom tags. Ultimately
+		 * unbalanced custom tags should just be reported as unbalanced tags.
+		 */
+		int size = fTagToVariableMap.size();
+		for (int i = 0; i < size; i++) {
+			appendToBuffer("}", fUserCode, false, fStructuredDocument.getLastStructuredDocumentRegion());
+		}
 		fTagToVariableMap.clear();
+
+		buildResult();
 	}
 
 	protected void setDocumentContent(IDocument document, InputStream contentStream, String charset) {
@@ -939,8 +978,10 @@ public class JSPTranslator {
 	}
 
 	/**
-	 * translates a region container (and XML JSP container, or <% JSP
-	 * container)
+	 * Translates a region container (and XML JSP container, or <% JSP
+	 * container). This method should only be called in this class and for
+	 * containers in the primary structured document as all buffer appends
+	 * will be direct.
 	 */
 	protected void translateRegionContainer(ITextRegionCollection container, int JSPType) {
 
@@ -959,7 +1000,7 @@ public class JSPTranslator {
 
 			// content assist was not showing up in JSP inside a javascript
 			// region
-			if (type == DOMRegionContext.BLOCK_TEXT) {
+			if (DOMRegionContext.BLOCK_TEXT.equals(type)) {
 				// check if it's nested jsp in a script tag...
 				if (region instanceof ITextRegionContainer) {
 					// Bug 126377 - JSP scriptlets enclosed by HTML comment cause validation errors
@@ -1072,14 +1113,14 @@ public class JSPTranslator {
 	 * jsp:scriptlet, jsp:expression, and jsp:declaration @param blockText
 	 * @return
 	 */
-	private void decodeScriptBlock(String blockText, int startOfBlock) {
-		XMLJSPRegionHelper helper = new XMLJSPRegionHelper(this);
+	void decodeScriptBlock(String blockText, int startOfBlock) {
+		XMLJSPRegionHelper helper = new XMLJSPRegionHelper(this, false);
 		helper.addBlockMarker(new BlockMarker("jsp:scriptlet", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
 		helper.addBlockMarker(new BlockMarker("jsp:expression", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
 		helper.addBlockMarker(new BlockMarker("jsp:declaration", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
 		helper.addBlockMarker(new BlockMarker("jsp:directive.include", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
 		helper.addBlockMarker(new BlockMarker("jsp:directive.taglib", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
-		helper.reset(blockText, startOfBlock);
+		helper.reset(blockText);
 		// force parse
 		helper.forceParse();
 	}
@@ -1142,7 +1183,7 @@ public class JSPTranslator {
 			{
 				String fullTagName = container.getText(r);
 				if (fullTagName.indexOf(':') > -1 && !fullTagName.startsWith("jsp:")) {//$NON-NLS-1$
-					addTaglibVariables(fullTagName); // it may be a custom
+					addTaglibVariables(fullTagName, container); // it may be a custom
 					// tag
 				}
 				StringTokenizer st = new StringTokenizer(fullTagName, ":.", false); //$NON-NLS-1$
@@ -1363,13 +1404,13 @@ public class JSPTranslator {
 	private void writeToBuffer(int type, String content, int jspStart, int jspEnd) {
 		switch (type) {
 			case SCRIPTLET :
-				translateScriptletString(content, getCurrentNode(), jspStart, jspEnd - jspStart);
+				translateScriptletString(content, getCurrentNode(), jspStart, jspEnd - jspStart, false);
 				break;
 			case EXPRESSION :
-				translateExpressionString(content, getCurrentNode(), jspStart, jspEnd - jspStart);
+				translateExpressionString(content, getCurrentNode(), jspStart, jspEnd - jspStart, false);
 				break;
 			case DECLARATION :
-				translateDeclarationString(content, getCurrentNode(), jspStart, jspEnd - jspStart);
+				translateDeclarationString(content, getCurrentNode(), jspStart, jspEnd - jspStart, false);
 				break;
 		}
 	}
@@ -1560,19 +1601,19 @@ public class JSPTranslator {
 					fLastJSPType = EXPRESSION;
 					// translateExpressionString(embeddedContainer.getText(content),
 					// fCurrentNode, contentStart, content.getLength());
-					translateExpressionString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength());
+					translateExpressionString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength(), false);
 				}
 				else if (type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN) {
 					fLastJSPType = SCRIPTLET;
 					// translateScriptletString(embeddedContainer.getText(content),
 					// fCurrentNode, contentStart, content.getLength());
-					translateScriptletString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength());
+					translateScriptletString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength(), false);
 				}
 				else if (type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN) {
 					fLastJSPType = DECLARATION;
 					// translateDeclarationString(embeddedContainer.getText(content),
 					// fCurrentNode, contentStart, content.getLength());
-					translateDeclarationString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength());
+					translateDeclarationString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength(), false);
 				}
 				else if (type == DOMJSPRegionContexts.JSP_EL_OPEN) {
 					fLastJSPType = EXPRESSION;
@@ -1866,7 +1907,7 @@ public class JSPTranslator {
 			// file path
 			if (!getIncludes().contains(fileLocation) && getBaseLocation() != null && !fileLocation.equals(getBaseLocation())) {
 				getIncludes().push(fileLocation);
-				JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this);
+				JSPIncludeRegionHelper helper = new JSPIncludeRegionHelper(this, true);
 				boolean parsed = helper.parse(fileLocation);
 				if (!parsed) {
 					Logger.log(Logger.ERROR_DEBUG, "Error: included file " + filename + " not found {" + getBaseLocation() + ")");
@@ -1896,14 +1937,14 @@ public class JSPTranslator {
 		return fIncludes;
 	}
 
-	protected void translateExpressionString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength) {
+	protected void translateExpressionString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength, boolean isIndirect) {
 		appendToBuffer(EXPRESSION_PREFIX, fUserCode, false, embeddedContainer);
-		appendToBuffer(newText, fUserCode, true, embeddedContainer, jspPositionStart, jspPositionLength);
+		appendToBuffer(newText, fUserCode, true, embeddedContainer, jspPositionStart, jspPositionLength, isIndirect);
 		appendToBuffer(EXPRESSION_SUFFIX, fUserCode, false, embeddedContainer);
 	}
 
-	protected void translateDeclarationString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength) {
-		appendToBuffer(newText, fUserDeclarations, true, embeddedContainer, jspPositionStart, jspPositionLength);
+	protected void translateDeclarationString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength, boolean isIndirect) {
+		appendToBuffer(newText, fUserDeclarations, true, embeddedContainer, jspPositionStart, jspPositionLength, isIndirect);
 		appendToBuffer(ENDL, fUserDeclarations, false, embeddedContainer);
 	}
 
@@ -1915,32 +1956,32 @@ public class JSPTranslator {
 	 * @param jspPositionStart
 	 * @param jspPositionLength
 	 */
-	protected void translateScriptletString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength) {
-		appendToBuffer(newText, fUserCode, true, embeddedContainer, jspPositionStart, jspPositionLength);
+	protected void translateScriptletString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength, boolean isIndirect) {
+		appendToBuffer(newText, fUserCode, true, embeddedContainer, jspPositionStart, jspPositionLength, isIndirect);
 	}
 
 	// the following 3 methods determine the cursor position
 	// <%= %>
 	protected void translateExpression(ITextRegionCollection region) {
 		String newText = getUnescapedRegionText(region, EXPRESSION);
-		appendToBuffer(EXPRESSION_PREFIX, fUserCode, false, fCurrentNode);
-		appendToBuffer(newText, fUserCode, true, fCurrentNode);
-		appendToBuffer(EXPRESSION_SUFFIX, fUserCode, false, fCurrentNode);
+		appendToBuffer(EXPRESSION_PREFIX, fUserCode, false, region);
+		appendToBuffer(newText, fUserCode, true, region);
+		appendToBuffer(EXPRESSION_SUFFIX, fUserCode, false, region);
 	}
 
 	//
 	// <%! %>
 	protected void translateDeclaration(ITextRegionCollection region) {
 		String newText = getUnescapedRegionText(region, DECLARATION);
-		appendToBuffer(newText, fUserDeclarations, true, fCurrentNode);
-		appendToBuffer(ENDL, fUserDeclarations, false, fCurrentNode);
+		appendToBuffer(newText, fUserDeclarations, true, region);
+		appendToBuffer(ENDL, fUserDeclarations, false, region);
 	}
 
 	//
 	// <% %>
 	protected void translateScriptlet(ITextRegionCollection region) {
 		String newText = getUnescapedRegionText(region, SCRIPTLET);
-		appendToBuffer(newText, fUserCode, true, fCurrentNode);
+		appendToBuffer(newText, fUserCode, true, region);
 	}
 
 	/**
@@ -1959,10 +2000,6 @@ public class JSPTranslator {
 			length = jspReferenceRegion.getLength();
 		}
 		appendToBuffer(newText, buffer, addToMap, jspReferenceRegion, start, length, false);
-	}
-
-	private void appendToBuffer(String newText, StringBuffer buffer, boolean addToMap, ITextRegionCollection jspReferenceRegion, int jspPositionStart, int jspPositionLength) {
-		appendToBuffer(newText, buffer, addToMap, jspReferenceRegion, jspPositionStart, jspPositionLength, true);
 	}
 
 	/**
@@ -2460,7 +2497,7 @@ public class JSPTranslator {
 			if (className != null)
 				suffix = "new " + className + "();" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$
 
-			appendToBuffer(prefix + suffix, fUserCode, true, fCurrentNode);
+			appendToBuffer(prefix + suffix, fUserCode, true, container);
 		}
 	}
 

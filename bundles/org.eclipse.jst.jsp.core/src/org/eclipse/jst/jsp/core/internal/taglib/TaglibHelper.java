@@ -39,8 +39,8 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDVariabl
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
@@ -86,7 +86,7 @@ public class TaglibHelper {
 	 *            is the IStructuredDocumentRegion opening tag for the custom
 	 *            tag
 	 */
-	public TaglibVariable[] getTaglibVariables(String tagToAdd, IStructuredDocument structuredDoc, IStructuredDocumentRegion customTag) {
+	public TaglibVariable[] getTaglibVariables(String tagToAdd, IStructuredDocument structuredDoc, ITextRegionCollection customTag) {
 		List results = new ArrayList();
 		ModelQuery mq = getModelQuery(structuredDoc);
 		if (mq != null) {
@@ -142,7 +142,7 @@ public class TaglibHelper {
 	 *            list where the <code>TaglibVariable</code> s are added
 	 * @param node
 	 */
-	private void addVariables(List results, CMNode node, IStructuredDocumentRegion customTag) {
+	private void addVariables(List results, CMNode node, ITextRegionCollection customTag) {
 
 		List list = ((TLDElementDeclaration) node).getVariables();
 		Iterator it = list.iterator();
@@ -191,7 +191,7 @@ public class TaglibHelper {
 	 * @param uri
 	 *            URI where the tld can be found
 	 */
-	private void addTEIVariables(IStructuredDocumentRegion customTag, List results, TLDElementDeclaration decl, String prefix, String uri) {
+	private void addTEIVariables(ITextRegionCollection customTag, List results, TLDElementDeclaration decl, String prefix, String uri) {
 
 		String teiClassname = decl.getTeiclass();
 		if (teiClassname == null || teiClassname.length() == 0)
@@ -312,7 +312,7 @@ public class TaglibHelper {
 	 * @param customTag
 	 * @return
 	 */
-	private Hashtable extractTagData(IStructuredDocumentRegion customTag) {
+	private Hashtable extractTagData(ITextRegionCollection customTag) {
 
 		Hashtable tagDataTable = new Hashtable();
 		ITextRegionList regions = customTag.getRegions();
