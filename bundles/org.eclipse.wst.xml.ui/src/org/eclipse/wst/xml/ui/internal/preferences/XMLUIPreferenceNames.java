@@ -65,6 +65,21 @@ public class XMLUIPreferenceNames {
 	 */
 	public static final String USE_INFERRED_GRAMMAR = getUseInferredGrammarKey();
 
+	public static class OUTLINE_BEHAVIOR {
+		public static final String ELEMENT_NODE = "outline-behavior.element-node"; //$NON-NLS-1$
+		public static final String ATTRIBUTE_NODE = "outline-behavior.attribute-node"; //$NON-NLS-1$
+		public static final String TEXT_NODE = "outline-behavior.text-node"; //$NON-NLS-1$
+		public static final String CDATA_SECTION_NODE = "outline-behavior.cdata-section-node"; //$NON-NLS-1$
+		public static final String ENTITY_REFERENCE_NODE = "outline-behavior.entity-reference-node"; //$NON-NLS-1$
+		public static final String ENTITY_NODE = "outline-behavior.entity-node"; //$NON-NLS-1$
+		public static final String PROCESSING_INSTRUCTION_NODE = "outline-behavior.instruction-node"; //$NON-NLS-1$
+		public static final String COMMENT_NODE = "outline-behavior.comment-node"; //$NON-NLS-1$
+		public static final String DOCUMENT_NODE = "outline-behavior.document-node"; //$NON-NLS-1$
+		public static final String DOCUMENT_TYPE_NODE = "outline-behavior.document-type-node"; //$NON-NLS-1$
+		public static final String DOCUMENT_FRAGMENT_NODE = "outline-behavior.document-fragment-node"; //$NON-NLS-1$
+		public static final String NOTATION_NODE = "outline-behavior.notation-node"; //$NON-NLS-1$
+	}
+	
 	private static String getUseInferredGrammarKey() {
 		return "useInferredGrammar"; //$NON-NLS-1$
 	}

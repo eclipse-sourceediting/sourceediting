@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,16 +12,16 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.contentoutline;
 
-import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 
 /**
- * A label provider backed by JFaceNodeAdapters.
+ * A (column) label provider backed by JFaceNodeAdapters.
  */
-public class JFaceNodeLabelProvider extends LabelProvider {
+public class JFaceNodeLabelProvider extends ColumnLabelProvider {
 	/**
 	 * JFaceNodeLabelProvider constructor comment.
 	 */

@@ -38,24 +38,28 @@ import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
+import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 /**
- * Outline Configuration for generic XML support, expects that the viewer's
+ * More advanced Outline Configuration for XML support.  Expects that the viewer's
  * input will be the DOM Model.
  * 
- * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration
+ * @see AbstractXMLContentOutlineConfiguration
  * @since 1.0
-
- TODO: Add Sort and Hide Comment actions
-
  */
 public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineConfiguration {
+	static final String ATTR_NAME = "name";
+	static final String ATTR_ID = "id";
 
 	private class AttributeShowingLabelProvider extends JFaceNodeLabelProvider {
+		public boolean isLabelProperty(Object element, String property) {
+			return true;
+		}
+
 		/*
 		 * (non-Javadoc)
 		 * 
@@ -64,9 +68,9 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 		public String getText(Object o) {
 			StringBuffer text = null;
 			if (o instanceof Node) {
-				text = new StringBuffer(super.getText(o));
 				Node node = (Node) o;
 				if ((node.getNodeType() == Node.ELEMENT_NODE) && fShowAttributes) {
+					text = new StringBuffer(super.getText(o));
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
 					if (node.hasAttributes()) {
 						Element element = (Element) node;
@@ -115,8 +119,8 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 										requiredAttribute = attr;
 									}
 									else {
-										hasId = hasId || attrName.equals("id"); //$NON-NLS-1$
-										hasName = hasName || attrName.equals("name"); //$NON-NLS-1$
+										hasId = hasId || attrName.equals(ATTR_ID);
+										hasName = hasName || attrName.equals(ATTR_NAME);
 									}
 								}
 								++i;
@@ -135,10 +139,10 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 							shownAttribute = requiredAttribute;
 						}
 						else if (hasId) {
-							shownAttribute = attributes.getNamedItem("id"); //$NON-NLS-1$
+							shownAttribute = attributes.getNamedItem(ATTR_ID);
 						}
 						else if (hasName) {
-							shownAttribute = attributes.getNamedItem("name"); //$NON-NLS-1$
+							shownAttribute = attributes.getNamedItem(ATTR_NAME);
 						}
 						if (shownAttribute == null) {
 							shownAttribute = attributes.item(0);
@@ -157,11 +161,64 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 						}
 					}
 				}
+				else {
+					text = new StringBuffer(super.getText(o));
+				}
 			}
 			else {
 				return super.toString();
 			}
 			return text.toString();
+		}
+
+		/* (non-Javadoc)
+		 * @see org.eclipse.jface.viewers.CellLabelProvider#getToolTipText(java.lang.Object)
+		 */
+		public String getToolTipText(Object element) {
+			if (element instanceof Node) {
+				switch (((Node) element).getNodeType()) {
+					case Node.COMMENT_NODE :
+					case Node.CDATA_SECTION_NODE :
+					case Node.PROCESSING_INSTRUCTION_NODE :
+					case Node.TEXT_NODE : {
+						String nodeValue = ((Node) element).getNodeValue().trim();
+						return prepareText(nodeValue);
+					}
+					case Node.ELEMENT_NODE : {
+						// show the preceding comment's tooltip information
+						Node previous = ((Node) element).getPreviousSibling();
+						if (previous != null && previous.getNodeType() == Node.TEXT_NODE)
+							previous = previous.getPreviousSibling();
+						if (previous != null && previous.getNodeType() == Node.COMMENT_NODE)
+							return getToolTipText(previous);
+					}
+				}
+			}
+			return super.getToolTipText(element);
+		}
+
+		/**
+		 * Remove leading indentation from each line in the give string.
+		 * @param text
+		 * @return
+		 */
+		private String prepareText(String text) {
+			StringBuffer nodeText = new StringBuffer();
+			for (int i = 0; i < text.length(); i++) {
+				char c = text.charAt(i);
+				if (c != '\r' && c != '\n') {
+					nodeText.append(c);
+				}
+				else if (c == '\r' || c == '\n') {
+					nodeText.append('\n');
+					while (Character.isWhitespace(c) && i < text.length()) {
+						i++;
+						c = text.charAt(i);
+					}
+					nodeText.append(c);
+				}
+			}
+			return nodeText.toString();
 		}
 	}
 
@@ -199,6 +256,7 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 			fTreeViewer.refresh(true);
 		}
 	}
+	
 	private ILabelProvider fAttributeShowingLabelProvider;
 	private IContentProvider fContentProvider = null;
 
@@ -207,7 +265,11 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 	/*
 	 * Preference key for Show Attributes
 	 */
-	private final String OUTLINE_SHOW_ATTRIBUTE_PREF = "outline-show-attribute-editor"; //$NON-NLS-1$
+	private final String OUTLINE_SHOW_ATTRIBUTE_PREF = "outline-show-attribute"; //$NON-NLS-1$
+	/*
+	 * Preference key for Sorting
+	 */
+	private final String OUTLINE_SORT_PREF = "outline-sort"; //$NON-NLS-1$
 
 	/**
 	 * Create new instance of XMLContentOutlineConfiguration
@@ -215,6 +277,37 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 	public XMLContentOutlineConfiguration() {
 		// Must have empty constructor to createExecutableExtension
 		super();
+
+		/**
+		 * Set up our preference store here. This is done so that subclasses
+		 * aren't required to set their own values, although if they have,
+		 * those will be used instead.
+		 */
+		IPreferenceStore store = getPreferenceStore();
+		if (store.getDefaultString(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.DOCUMENT_NODE).length() == 0)
+			store.setDefault(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.DOCUMENT_NODE, "1, true");
+		if (store.getDefaultString(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.PROCESSING_INSTRUCTION_NODE).length() == 0)
+			store.setDefault(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.PROCESSING_INSTRUCTION_NODE, "2, true");
+		if (store.getDefaultString(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.DOCUMENT_TYPE_NODE).length() == 0)
+			store.setDefault(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.DOCUMENT_TYPE_NODE, "3, true");
+		if (store.getDefaultString(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.DOCUMENT_FRAGMENT_NODE).length() == 0)
+			store.setDefault(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.DOCUMENT_FRAGMENT_NODE, "4, true");
+		if (store.getDefaultString(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.COMMENT_NODE).length() == 0)
+			store.setDefault(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.COMMENT_NODE, "5, true");
+		if (store.getDefaultString(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.ATTRIBUTE_NODE).length() == 0)
+			store.setDefault(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.ATTRIBUTE_NODE, "6, false");
+		if (store.getDefaultString(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.ELEMENT_NODE).length() == 0)
+			store.setDefault(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.ELEMENT_NODE, "7, true");
+		if (store.getDefaultString(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.ENTITY_REFERENCE_NODE).length() == 0)
+			store.setDefault(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.ENTITY_REFERENCE_NODE, "8, true");
+		if (store.getDefaultString(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.CDATA_SECTION_NODE).length() == 0)
+			store.setDefault(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.CDATA_SECTION_NODE, "9, true");
+		if (store.getDefaultString(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.ENTITY_NODE).length() == 0)
+			store.setDefault(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.ENTITY_NODE, "10, true");
+		if (store.getDefaultString(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.NOTATION_NODE).length() == 0)
+			store.setDefault(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.NOTATION_NODE, "11, true");
+		if (store.getDefaultString(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.TEXT_NODE).length() == 0)
+			store.setDefault(XMLUIPreferenceNames.OUTLINE_BEHAVIOR.TEXT_NODE, "12, false");
 	}
 
 	/*
@@ -226,14 +319,18 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 		IContributionItem[] items;
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
 		IContributionItem showAttributeItem = new PropertyChangeUpdateActionContributionItem(new ToggleShowAttributeAction(getPreferenceStore(), OUTLINE_SHOW_ATTRIBUTE_PREF, viewer));
+
+		IContributionItem sortItem = new PropertyChangeUpdateActionContributionItem(new SortAction(viewer, getPreferenceStore(), OUTLINE_SORT_PREF));
+
 		items = super.createMenuContributions(viewer);
 		if (items == null) {
-			items = new IContributionItem[]{showAttributeItem};
+			items = new IContributionItem[]{showAttributeItem, sortItem};
 		}
 		else {
-			IContributionItem[] combinedItems = new IContributionItem[items.length + 1];
+			IContributionItem[] combinedItems = new IContributionItem[items.length + 2];
 			System.arraycopy(items, 0, combinedItems, 0, items.length);
 			combinedItems[items.length] = showAttributeItem;
+			combinedItems[items.length+1] = sortItem;
 			items = combinedItems;
 		}
 		return items;
@@ -255,7 +352,7 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 	protected void enableShowAttributes(boolean showAttributes, TreeViewer treeViewer) {
 		// nothing by default
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -271,12 +368,13 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 	private Object getFilteredNode(Object object) {
 		if (object instanceof Node) {
 			Node node = (Node) object;
-	
+			short nodeType = node.getNodeType();
 			// replace attribute node in selection with its parent
-			if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
+			if (nodeType == Node.ATTRIBUTE_NODE) {
 				node = ((Attr) node).getOwnerElement();
 			}
-			else if (node.getNodeType() == Node.TEXT_NODE) {
+			// anything else not visible, replace with parent node
+			else if (nodeType == Node.TEXT_NODE) {
 				node = node.getParentNode();
 			}
 			return node;
@@ -317,5 +415,4 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 		}
 		return filteredSelection;
 	}
-
 }

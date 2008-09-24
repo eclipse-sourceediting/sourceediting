@@ -300,7 +300,8 @@ public class XMLUIMessages extends NLS {
 	public static String previousSibling_label;
 	public static String previousSibling_description;
 	public static String Use_XInclude;
-
+	public static String Open;
+	public static String _UI_BUTTON_SORT;
 
 	static {
 		// load message values from bundle file

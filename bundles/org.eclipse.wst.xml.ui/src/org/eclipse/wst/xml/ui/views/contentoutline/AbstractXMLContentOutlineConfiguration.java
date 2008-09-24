@@ -50,7 +50,7 @@ import org.w3c.dom.Node;
  * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration
  * @since 3.1
  */
-public class AbstractXMLContentOutlineConfiguration extends ContentOutlineConfiguration {
+public abstract class AbstractXMLContentOutlineConfiguration extends ContentOutlineConfiguration {
 	private class ActionManagerMenuListener implements IMenuListener, IReleasable {
 		private XMLNodeActionManager fActionManager;
 		private TreeViewer fTreeViewer;

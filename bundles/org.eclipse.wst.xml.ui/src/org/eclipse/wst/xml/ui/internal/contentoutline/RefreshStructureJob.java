@@ -13,7 +13,9 @@
 package org.eclipse.wst.xml.ui.internal.contentoutline;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -42,32 +44,53 @@ class RefreshStructureJob extends Job {
 
 	/** debug flag */
 	static final boolean DEBUG;
-	private static final long UPDATE_DELAY = 250;
+	private static final long UPDATE_DELAY = 300;
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/refreshStructure"); //$NON-NLS-1$
 		DEBUG = (value != null) && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 	/** List of refresh requests (Nodes) */
-	private final List fRequests;
+	private final List fRefreshes;
+	/** List of update requests (Nodes) */
+	private final List fUpdates;
+	/** List of update requests (Nodes) */
+	private final List fUpdateProperties;
 	/** the structured viewers */
-	List fViewers = new ArrayList(3);
+	Set fRefreshViewers = new HashSet(3);
+	Set fUpdateViewers = new HashSet(3);
 
 	public RefreshStructureJob() {
 		super(XMLUIMessages.refreshoutline_0);
 		setPriority(Job.LONG);
 		setSystem(true);
-		fRequests = new ArrayList(2);
+		fRefreshes = new ArrayList(5);
+		fUpdates = new ArrayList(5);
+		fUpdateProperties = new ArrayList(5);
 	}
 
-	private synchronized void addRequest(Node newNodeRequest) {
+	private synchronized void addUpdateRequest(Node newNodeRequest, String[] updateProperties) {
+		/*
+		 * If we get to here, either from existing request list being zero
+		 * length, or no exisitng requests "matched" new request, then add the
+		 * new request.
+		 */
+		fUpdates.add(newNodeRequest);
+		fUpdateProperties.add(updateProperties);
+	}
+
+	private synchronized void addUpdateViewer(StructuredViewer viewer) {
+		fUpdateViewers.add(viewer);
+	}
+
+	private synchronized void addRefreshRequest(Node newNodeRequest) {
 		/*
 		 * note: the caller must NOT pass in null node request (which, since
 		 * private method, we do not need to gaurd against here, as long as we
 		 * gaurd against it in calling method.
 		 */
-		int size = fRequests.size();
+		int size = fRefreshes.size();
 		for (int i = 0; i < size; i++) {
-			Node existingNodeRequest = (Node) fRequests.get(i);
+			Node existingNodeRequest = (Node) fRefreshes.get(i);
 			/*
 			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=157427 If we
 			 * already have a request which equals the new request, discard
@@ -94,7 +117,7 @@ class RefreshStructureJob extends Job {
 			 * any that are contained by new request ... in future :) .
 			 */
 			if (contains(newNodeRequest, existingNodeRequest)) {
-				fRequests.set(i, newNodeRequest);
+				fRefreshes.set(i, newNodeRequest);
 				return;
 			}
 		}
@@ -103,13 +126,11 @@ class RefreshStructureJob extends Job {
 		 * length, or no exisitng requests "matched" new request, then add the
 		 * new request.
 		 */
-		fRequests.add(newNodeRequest);
+		fRefreshes.add(newNodeRequest);
 	}
 
-	private synchronized void addViewer(StructuredViewer viewer) {
-		if (!fViewers.contains(viewer)) {
-			fViewers.add(viewer);
-		}
+	private synchronized void addRefreshViewer(StructuredViewer viewer) {
+		fRefreshViewers.add(viewer);
 	}
 
 	/**
@@ -203,20 +224,67 @@ class RefreshStructureJob extends Job {
 	}
 
 	/**
-	 * This method also synchronized because it accesses the fRequests queue
-	 * and fViewers list
+	 * Update must be on UI thread because it's on a SWT widget.
+	 * 
+	 * @param node
+	 */
+	private void doUpdate(final StructuredViewer[] viewers, final Node node, final String[] properties) {
+		final Display display = PlatformUI.getWorkbench().getDisplay();
+		display.asyncExec(new Runnable() {
+			public void run() {
+				if (DEBUG) {
+					System.out.println("refresh on: [" + node.getNodeName() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+				}
+
+				for (int i = 0; i < viewers.length; i++) {
+					if (!viewers[i].getControl().isDisposed()) {
+						viewers[i].update(node, properties);
+					}
+					else {
+						if (DEBUG) {
+							System.out.println("   !!! skipped refreshing disposed viewer: " + viewers[i]); //$NON-NLS-1$
+						}
+					}
+				}
+			}
+		});
+	}
+
+	/**
+	 * This method also synchronized because it accesses the fRefreshes queue
+	 * and fRefreshViewers list
 	 * 
 	 * @return an array containing and array of the currently requested Nodes
 	 *         to refresh and the viewers in which to refresh them
 	 */
-	private synchronized Object[] getRequests() {
-		Node[] toRefresh = (Node[]) fRequests.toArray(new Node[fRequests.size()]);
-		fRequests.clear();
+	private synchronized Object[] getRefreshRequests() {
+		Node[] toRefresh = (Node[]) fRefreshes.toArray(new Node[fRefreshes.size()]);
+		fRefreshes.clear();
 
-		StructuredViewer[] viewers = (StructuredViewer[]) fViewers.toArray(new StructuredViewer[fViewers.size()]);
-		fViewers.clear();
+		StructuredViewer[] viewers = (StructuredViewer[]) fRefreshViewers.toArray(new StructuredViewer[fRefreshViewers.size()]);
+		fRefreshViewers.clear();
 
 		return new Object[]{toRefresh, viewers};
+	}
+
+	/**
+	 * This method also synchronized because it accesses the fUpdates queue
+	 * and fUpdateViewers list
+	 * 
+	 * @return an array containing and array of the currently requested Nodes
+	 *         to refresh and the viewers in which to refresh them
+	 */
+	private synchronized Object[] getUpdateRequests() {
+		Node[] toUpdate = (Node[]) fUpdates.toArray(new Node[fUpdates.size()]);
+		fUpdates.clear();
+
+		StructuredViewer[] viewers = (StructuredViewer[]) fUpdateViewers.toArray(new StructuredViewer[fUpdateViewers.size()]);
+		fUpdateViewers.clear();
+
+		String[][] properties = (String[][]) fUpdateProperties.toArray(new String[fUpdateProperties.size()][]);
+		fUpdateProperties.clear();
+
+		return new Object[]{toUpdate, viewers, properties};
 	}
 
 	/**
@@ -229,30 +297,63 @@ class RefreshStructureJob extends Job {
 			return;
 		}
 
-		addViewer(viewer);
-		addRequest(node);
+		addRefreshViewer(viewer);
+		addRefreshRequest(node);
+		schedule(UPDATE_DELAY);
+	}
+
+	/**
+	 * Invoke a refresh on the viewer on the given node.
+	 * 
+	 * @param node
+	 */
+	public void update(StructuredViewer viewer, Node node, String[] properties) {
+		if (node == null) {
+			return;
+		}
+
+		addUpdateViewer(viewer);
+		addUpdateRequest(node, properties);
 		schedule(UPDATE_DELAY);
 	}
 
 	protected IStatus run(IProgressMonitor monitor) {
 		IStatus status = Status.OK_STATUS;
 		try {
-			// Retrieve BOTH viewers and Nodes on one block
-			Object[] requests = getRequests();
-			Node[] nodes = (Node[]) requests[0];
-			StructuredViewer[] viewers = (StructuredViewer[]) requests[1];
-
-			for (int i = 0; i < nodes.length; i++) {
-				if (monitor.isCanceled()) {
-					throw new OperationCanceledException();
-				}
-				doRefresh(nodes[i], viewers);
-			}
+			performUpdates();
+			
+			performRefreshes(monitor);
 		}
 		finally {
 			monitor.done();
 		}
 		return status;
+	}
+
+	private void performRefreshes(IProgressMonitor monitor) {
+		// Retrieve BOTH viewers and Nodes on one block
+		Object[] requests = getRefreshRequests();
+		Node[] nodes = (Node[]) requests[0];
+		StructuredViewer[] viewers = (StructuredViewer[]) requests[1];
+
+		for (int i = 0; i < nodes.length; i++) {
+			if (monitor.isCanceled()) {
+				throw new OperationCanceledException();
+			}
+			doRefresh(nodes[i], viewers);
+		}
+	}
+
+	private void performUpdates() {
+		// Retrieve BOTH viewers and Nodes on one block
+		Object[] requests = getUpdateRequests();
+		Node[] nodes = (Node[]) requests[0];
+		StructuredViewer[] viewers = (StructuredViewer[]) requests[1];
+		String[][] properties = (String[][]) requests[2];
+
+		for (int i = 0; i < nodes.length; i++) {
+			doUpdate(viewers, nodes[i], properties[i]);
+		}
 	}
 
 }
