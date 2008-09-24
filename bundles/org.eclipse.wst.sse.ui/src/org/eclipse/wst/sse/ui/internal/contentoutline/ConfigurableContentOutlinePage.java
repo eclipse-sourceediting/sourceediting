@@ -32,6 +32,7 @@ import org.eclipse.jface.util.DelegatingDropAdapter;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.jface.util.TransferDropTargetListener;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -357,6 +358,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	 */
 	public void createControl(Composite parent) {
 		super.createControl(parent);
+		ColumnViewerToolTipSupport.enableFor(getTreeViewer());
 
 		IWorkbenchPage page = getSite().getWorkbenchWindow().getActivePage();
 		if (page != null) {
