@@ -49,7 +49,7 @@ public class TestOpenEditorXML extends TestCase {
 	private static boolean fIsSetup = false;
 
 	public TestOpenEditorXML() {
-		super("TestStructredTextEditorXML");
+		super("TestStructuredTextEditorXML");
 	}
 
 	protected void setUp() throws Exception {
@@ -66,8 +66,7 @@ public class TestOpenEditorXML extends TestCase {
 			IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 			IWorkbenchPage page = workbenchWindow.getActivePage();
 			fEditor = IDE.openEditor(page, fFile, true, true);
-			if (!((fEditor instanceof XMLMultiPageEditorPart) || (fEditor instanceof StructuredTextEditor)))
-				assertTrue("Unable to open structured text editor", false);
+			assertTrue("Unable to open structured text editor " + fEditor, (fEditor instanceof XMLMultiPageEditorPart) || (fEditor instanceof StructuredTextEditor));
 		}
 	}
 
