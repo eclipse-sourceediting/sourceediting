@@ -29,13 +29,6 @@ public abstract class StructuredDocumentEvent extends DocumentEvent {
 	private Object fOriginalRequester;
 
 	/**
-	 * There is no public null-arg version of this constructor.
-	 */
-	private StructuredDocumentEvent() {
-		super();
-	}
-
-	/**
 	 * We assume (and require) that an IStructuredDocument's are always the
 	 * source of StructuredDocument events.
 	 * 

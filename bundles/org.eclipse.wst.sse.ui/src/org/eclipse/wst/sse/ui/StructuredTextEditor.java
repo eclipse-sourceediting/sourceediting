@@ -662,13 +662,6 @@ public class StructuredTextEditor extends TextEditor {
 
 
 				/**
-				 * Creates an empty text selection.
-				 */
-				private InternalTextSelection() {
-					this(null, -1, -1);
-				}
-
-				/**
 				 * Creates a text selection for the given range. This
 				 * selection object describes generically a text range and is
 				 * intended to be an argument for the

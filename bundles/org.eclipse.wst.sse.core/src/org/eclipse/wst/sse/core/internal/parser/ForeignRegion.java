@@ -24,13 +24,6 @@ public class ForeignRegion extends ContextRegion {
 	private String language = null;
 	private String surroundingTag = null;
 
-	/**
-	 * ForeignRegion constructor comment.
-	 */
-	private ForeignRegion() {
-		super();
-	}
-
 	public ForeignRegion(String newContext, int newStart, int newTextLength, int newLength) {
 		super(newContext, newStart, newTextLength, newLength);
 	}
