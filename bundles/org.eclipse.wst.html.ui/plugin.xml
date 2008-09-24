@@ -276,7 +276,7 @@
 
 	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
 		<validator
-			scope="partial"
+			scope="total"
 			class="org.eclipse.wst.html.internal.validation.HTMLValidator"
 			id="org.eclipse.wst.html.ui.internal.validation.htmlsyntaxvalidator">
 			<contentTypeIdentifier
@@ -287,7 +287,7 @@
 			</contentTypeIdentifier>
 		</validator>
 		<validator
-			scope="partial"
+			scope="total"
 			class="org.eclipse.wst.xml.ui.internal.validation.MarkupValidator"
 			id="org.eclipse.wst.html.ui.internal.validation.markupvalidator">
 			<contentTypeIdentifier
