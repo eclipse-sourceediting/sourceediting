@@ -39,6 +39,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
@@ -268,7 +269,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 				int start = documentRegion.getStartOffset(fileValueRegion);
 				int length = fileValueRegion.getTextLength();
 				int lineNo = sDoc.getLineOfOffset(start);
-				message.setLineNo(lineNo);
+				message.setLineNo(lineNo + 1);
 				message.setOffset(start);
 				message.setLength(length);
 
@@ -287,7 +288,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 							int start = documentRegion.getStartOffset(fileValueRegion);
 							int length = fileValueRegion.getTextLength();
 							int lineNo = sDoc.getLineOfOffset(start);
-							message.setLineNo(lineNo);
+							message.setLineNo(lineNo + 1);
 							message.setOffset(start);
 							message.setLength(length);
 
@@ -304,7 +305,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 			int start = documentRegion.getStartOffset();
 			int length = documentRegion.getTextLength();
 			int lineNo = sDoc.getLineOfOffset(start);
-			message.setLineNo(lineNo);
+			message.setLineNo(lineNo + 1);
 			message.setOffset(start);
 			message.setLength(length);
 
@@ -342,7 +343,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 				int start = documentRegion.getStartOffset(superclassValueRegion);
 				int length = superclassValueRegion.getTextLength();
 				int lineNo = doc.getLineOfOffset(start);
-				message.setLineNo(lineNo);
+				message.setLineNo(lineNo + 1);
 				message.setOffset(start);
 				message.setLength(length);
 
@@ -403,16 +404,28 @@ public class JSPDirectiveValidator extends JSPValidator {
 					}
 					if (reference == null && fSeverityTaglibUnresolvableURI != ValidationMessage.IGNORE) {
 						// URI specified but does not resolve
-						String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_1, uri);
+						String msgText = null;
+						// provide better messages for typical "http:*" URIs
+						if (uri.startsWith("http:") && DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(file.getFullPath()) < 1.2) { //$NON-NLS-1$
+							if (FacetModuleCoreSupport.isDynamicWebProject(file.getProject())) {
+								msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_9, uri);
+							}
+							else {
+								msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_10, uri);
+							}
+						}
+						else {
+							msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_1, uri);
+						}
 						LocalizedMessage message = new LocalizedMessage(fSeverityTaglibUnresolvableURI, msgText, file);
 						int start = documentRegion.getStartOffset(uriValueRegion);
 						int length = uriValueRegion.getTextLength();
 						int lineNo = sDoc.getLineOfOffset(start);
-						message.setLineNo(lineNo);
+						message.setLineNo(lineNo + 1);
 						message.setOffset(start);
 						message.setLength(length);
 
-						message.setAttribute("PROBLEM_ID", new Integer(611));
+						message.setAttribute("PROBLEM_ID", new Integer(611)); //$NON-NLS-1$
 
 						reporter.addMessage(fMessageOriginator, message);
 					}
@@ -424,7 +437,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 					int start = documentRegion.getStartOffset(uriValueRegion);
 					int length = uriValueRegion.getTextLength();
 					int lineNo = sDoc.getLineOfOffset(start);
-					message.setLineNo(lineNo);
+					message.setLineNo(lineNo + 1);
 					message.setOffset(start);
 					message.setLength(length);
 
@@ -445,7 +458,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 					int start = documentRegion.getStartOffset(tagdirValueRegion);
 					int length = tagdirValueRegion.getTextLength();
 					int lineNo = sDoc.getLineOfOffset(start);
-					message.setLineNo(lineNo);
+					message.setLineNo(lineNo + 1);
 					message.setOffset(start);
 					message.setLength(length);
 
@@ -458,7 +471,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 					int start = documentRegion.getStartOffset(tagdirValueRegion);
 					int length = tagdirValueRegion.getTextLength();
 					int lineNo = sDoc.getLineOfOffset(start);
-					message.setLineNo(lineNo);
+					message.setLineNo(lineNo + 1);
 					message.setOffset(start);
 					message.setLength(length);
 
@@ -473,7 +486,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 			int start = documentRegion.getStartOffset();
 			int length = documentRegion.getTextLength();
 			int lineNo = sDoc.getLineOfOffset(start);
-			message.setLineNo(lineNo);
+			message.setLineNo(lineNo + 1);
 			message.setOffset(start);
 			message.setLength(length);
 
@@ -496,7 +509,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 				int start = documentRegion.getStartOffset(prefixValueRegion);
 				int length = prefixValueRegion.getTextLength();
 				int lineNo = sDoc.getLineOfOffset(start);
-				message.setLineNo(lineNo);
+				message.setLineNo(lineNo + 1);
 				message.setOffset(start);
 				message.setLength(length);
 
@@ -509,7 +522,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 				int start = documentRegion.getStartOffset(prefixValueRegion);
 				int length = prefixValueRegion.getTextLength();
 				int lineNo = sDoc.getLineOfOffset(start);
-				message.setLineNo(lineNo);
+				message.setLineNo(lineNo + 1);
 				message.setOffset(start);
 				message.setLength(length);
 
@@ -523,7 +536,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 			int start = documentRegion.getStartOffset();
 			int length = documentRegion.getTextLength();
 			int lineNo = sDoc.getLineOfOffset(start);
-			message.setLineNo(lineNo);
+			message.setLineNo(lineNo + 1);
 			message.setOffset(start);
 			message.setLength(length);
 
@@ -580,7 +593,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 					int start = documentRegion.getStartOffset(valueRegion);
 					int length = valueRegion.getTextLength();
 					int lineNo = document.getLineOfOffset(start);
-					message.setLineNo(lineNo);
+					message.setLineNo(lineNo + 1);
 					message.setOffset(start);
 					message.setLength(length);
 

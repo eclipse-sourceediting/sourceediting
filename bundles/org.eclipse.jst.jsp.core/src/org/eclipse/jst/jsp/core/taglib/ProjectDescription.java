@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -668,7 +669,7 @@ class ProjectDescription {
 					Iterator implicitRecords = rootReferences[j].values().iterator();
 					while (implicitRecords.hasNext()) {
 						ITaglibRecord record = (ITaglibRecord) implicitRecords.next();
-						if (record.getRecordType() == ITaglibRecord.TLD && ((ITLDRecord) record).getURI() != null) {
+						if (record.getRecordType() == ITaglibRecord.TLD && ((ITLDRecord) record).getURI() != null && ((ITLDRecord) record).getURI().length() > 0) {
 							references.put(((ITLDRecord) record).getURI(), record);
 						}
 					}
@@ -847,7 +848,7 @@ class ProjectDescription {
 		JarRecord record = new JarRecord();
 		record.info = new TaglibInfo();
 		record.location = new Path(fileLocation);
-		record.urlRecords = new ArrayList(0);
+		record.urlRecords = new LinkedList();
 		return record;
 	}
 
@@ -1104,7 +1105,7 @@ class ProjectDescription {
 
 	private Collection getCatalogRecords() {
 		if (fCatalogRecords == null) {
-			List records = new ArrayList();
+			List records = new LinkedList();
 			ICatalog defaultCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
 			if (defaultCatalog != null) {
 				// Process default catalog
@@ -1837,7 +1838,9 @@ class ProjectDescription {
 										}
 										catch (IOException e) {
 										}
-										fClasspathReferences.put(urlRecord.getURI(), urlRecord);
+										if (urlRecord.getURI() != null && urlRecord.getURI().length() > 0) {
+											fClasspathReferences.put(urlRecord.getURI(), urlRecord);
+										}
 									}
 									else if (BUILDPATH_PROJECT.equalsIgnoreCase(tokenType)) {
 										String projectName = toker.nextToken();
@@ -2016,7 +2019,7 @@ class ProjectDescription {
 										urlRecord.url = new URL("jar:file:" + libraryLocation + "!/" + z.getName()); //$NON-NLS-1$ //$NON-NLS-2$
 										libraryRecord.urlRecords.add(urlRecord);
 										TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, urlRecord, deltaKind));
-										fClasspathReferences.put(urlRecord.getURI(), urlRecord);
+										fClasspathReferences.put(info.uri, urlRecord);
 										if (_debugIndexCreation)
 											Logger.log(Logger.INFO, "created record for " + urlRecord.getURI() + "@" + urlRecord.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
 									}
@@ -2085,7 +2088,7 @@ class ProjectDescription {
 								taglibDeltaKind = ITaglibIndexDelta.CHANGED;
 							}
 
-							getImplicitReferences(jar.getFullPath().toString()).put(record.getURI(), record);
+							getImplicitReferences(jar.getFullPath().toString()).put(info.uri, record);
 							TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, taglibDeltaKind));
 							if (_debugIndexCreation)
 								Logger.log(Logger.INFO, "created record for " + record.getURI() + "@" + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -2158,7 +2161,7 @@ class ProjectDescription {
 			Logger.log(Logger.INFO, "creating record for " + tld.getFullPath()); //$NON-NLS-1$
 		TLDRecord record = createTLDRecord(tld);
 		fTLDReferences.put(tld.getFullPath().toString(), record);
-		if (record.getURI() != null) {
+		if (record.getURI() != null && record.getURI().length() > 0) {
 			getImplicitReferences(tld.getFullPath().toString()).put(record.getURI(), record);
 		}
 		TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, deltaKind));

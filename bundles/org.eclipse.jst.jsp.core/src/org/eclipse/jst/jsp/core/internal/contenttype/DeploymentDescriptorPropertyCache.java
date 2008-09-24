@@ -47,6 +47,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Document;
+import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 import org.w3c.dom.EntityReference;
 import org.w3c.dom.Node;
@@ -241,7 +242,7 @@ public final class DeploymentDescriptorPropertyCache {
 					if (resource.getType() == IResource.FILE) {
 						if (delta.getKind() == IResourceDelta.CHANGED && (delta.getFlags() == IResourceDelta.ENCODING || delta.getFlags() == IResourceDelta.MARKERS))
 							return false;
-						
+
 						IPath path = resource.getFullPath();
 						int segmentCount = path.segmentCount();
 						if (segmentCount > 1 && path.lastSegment().equals(WEB_XML) && path.segment(segmentCount - 2).equals(WEB_INF)) {
@@ -250,7 +251,7 @@ public final class DeploymentDescriptorPropertyCache {
 					}
 					else if (resource.getType() == IResource.PROJECT) {
 						String name = resource.getName();
-						if(_debugResolutionCache) {
+						if (_debugResolutionCache) {
 							System.out.println("Removing DeploymentDescriptorPropertyCache resolution cache for project " + name); //$NON-NLS-1$ 
 						}
 						getInstance().resolvedMap.remove(name);
@@ -378,8 +379,8 @@ public final class DeploymentDescriptorPropertyCache {
 
 		/**
 		 * Given the starting (inclusive) and the ending (exclusive) positions
-		 * in the <code>text</code>, determine if the given substring
-		 * matches with aPattern
+		 * in the <code>text</code>, determine if the given substring matches
+		 * with aPattern
 		 * 
 		 * @return true if the specified portion of the text matches the
 		 *         pattern
@@ -618,7 +619,7 @@ public final class DeploymentDescriptorPropertyCache {
 
 	// for use when reading TLDs
 	private EntityResolver resolver;
-	
+
 	Map resolvedMap = new HashMap();
 
 	private DeploymentDescriptorPropertyCache() {
@@ -629,20 +630,41 @@ public final class DeploymentDescriptorPropertyCache {
 		Element webapp = document.getDocumentElement();
 		if (webapp != null) {
 			if (webapp.getTagName().equals(WEB_APP_ELEMENT_NAME) || webapp.getNodeName().endsWith(WEB_APP_ELEMENT_LOCAL_NAME)) {
+				// this convention only started with 2.4?
 				String versionValue = webapp.getAttribute(WEB_APP_VERSION_NAME);
 				if (versionValue != null) {
-					try {
-						version[0] = Float.valueOf(versionValue);
+					versionValue = versionValue.trim();
+					if (versionValue.length() > 0) {
+						try {
+							version[0] = Float.valueOf(versionValue);
+						}
+						catch (NumberFormatException e) {
+							// doesn't matter
+						}
 					}
-					catch (NumberFormatException e) {
-						// doesn't matter
+				}
+				if (version[0] == null) {
+					// try determining the version from the doctype reference
+					DocumentType doctype = document.getDoctype();
+					if (doctype != null) {
+						String systemId = doctype.getSystemId();
+						String publicId = doctype.getPublicId();
+						if ((systemId != null && systemId.endsWith("web-app_2_3.dtd")) || (publicId != null && publicId.indexOf("Web Application 2.3") > 0)) { //$NON-NLS-1$ //$NON-NLS-2$
+							version[0] = new Float(2.3);
+						}
+						else if ((systemId != null && systemId.endsWith("web-app_2_2.dtd")) || (publicId != null && publicId.indexOf("Web Application 2.2") > 0)) { //$NON-NLS-1$ //$NON-NLS-2$
+							version[0] = new Float(2.2);
+						}
+						else if ((systemId != null && systemId.endsWith("web-app_2_1.dtd")) || (publicId != null && publicId.indexOf("Web Application 2.1") > 0)) { //$NON-NLS-1$ //$NON-NLS-2$
+							version[0] = new Float(2.1);
+						}
 					}
 				}
 			}
 		}
 		NodeList propertyGroupElements = document.getElementsByTagName(JSP_PROPERTY_GROUP);
 		int length = propertyGroupElements.getLength();
-		subMonitor.beginTask("Reading Property Groups", length);
+		subMonitor.beginTask("Reading Property Groups", length); //$NON-NLS-1$
 		for (int i = 0; i < length; i++) {
 			PropertyGroup group = PropertyGroup.createFrom(path, propertyGroupElements.item(i), i);
 			subMonitor.worked(1);
@@ -694,7 +716,7 @@ public final class DeploymentDescriptorPropertyCache {
 		DocumentBuilder builder = CommonXML.getDocumentBuilder(false);
 		builder.setEntityResolver(getEntityResolver());
 		builder.setErrorHandler(getErrorHandler(path));
-		try {			
+		try {
 			InputSource inputSource = new InputSource();
 			String s = FileContentCache.getInstance().getContents(path);
 			inputSource.setCharacterStream(new StringReader(s));
@@ -875,7 +897,7 @@ public final class DeploymentDescriptorPropertyCache {
 		}
 		return resolved;
 	}
-	
+
 	public IFile getWebXML(IPath jspFilePath) {
 		IPath webxmlPath = getWebXMLPath(jspFilePath);
 		if (webxmlPath == null)
