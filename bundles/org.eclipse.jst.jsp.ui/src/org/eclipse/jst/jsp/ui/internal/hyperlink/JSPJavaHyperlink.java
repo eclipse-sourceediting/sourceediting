@@ -1,10 +1,13 @@
 package org.eclipse.jst.jsp.ui.internal.hyperlink;
 
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.ui.JavaElementLabels;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.Logger;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorPart;
 
 /**
@@ -34,7 +37,7 @@ class JSPJavaHyperlink implements IHyperlink {
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getTypeLabel()
 	 */
 	public String getTypeLabel() {
-		return fElement.getPath().toString();
+		return null;
 	}
 
 	/*
@@ -43,7 +46,7 @@ class JSPJavaHyperlink implements IHyperlink {
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getHyperlinkText()
 	 */
 	public String getHyperlinkText() {
-		return fElement.getElementName();
+		return NLS.bind(JSPUIMessages.Open, JavaElementLabels.getElementLabel(fElement, JavaElementLabels.ALL_POST_QUALIFIED));
 	}
 
 	/*

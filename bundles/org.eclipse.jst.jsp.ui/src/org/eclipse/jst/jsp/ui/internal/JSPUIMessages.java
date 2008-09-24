@@ -171,4 +171,8 @@ public class JSPUIMessages extends NLS {
 	public static String VALIDATION_TRANSLATION_USEBEAN_INVALID_ID;
 	public static String VALIDATION_TRANSLATION_USBEAN_MISSING_TYPE_INFO;
 	public static String VALIDATION_TRANSLATION_USEBEAN_AMBIGUOUS_TYPE_INFO;
+
+	public static String Open;
+	public static String TLDHyperlink_hyperlinkText;
+	public static String CustomTagHyperlink_hyperlinkText;
 }

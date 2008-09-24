@@ -41,6 +41,7 @@ import org.eclipse.jst.jsp.core.taglib.ITLDRecord;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.jst.jsp.core.text.IJSPPartitions;
+import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -336,22 +337,7 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 		int hyperLinkEnd = hyperlinkRegion.getOffset() + hyperlinkRegion.getLength();
 		int detectionStart = detectionRegion.getOffset();
 		int detectionEnd = detectionRegion.getOffset() + detectionRegion.getLength();
-		return (hyperLinkStart <= detectionStart && detectionStart < hyperLinkEnd) || (hyperLinkStart <= detectionEnd && detectionEnd < hyperLinkEnd);// ||
-		// (startOffset2
-		// <=
-		// startOffset1
-		// &&
-		// startOffset1
-		// <=
-		// endOffset2)
-		// ||
-		// (startOffset2
-		// <=
-		// endOffset2
-		// &&
-		// endOffset2
-		// <=
-		// endOffset2);
+		return (hyperLinkStart <= detectionStart && detectionStart < hyperLinkEnd) || (hyperLinkStart <= detectionEnd && detectionEnd <= hyperLinkEnd);// ||
 	}
 
 	private IRegion getNameRegion(ITextRegionCollection containerRegion) {
@@ -388,7 +374,11 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 			else if (temp.startsWith(JAR_PROTOCOL)) {
 				// this is a URLFileHyperlink since this is a local address
 				try {
-					link = new URLFileRegionHyperlink(hyperlinkRegion, TAG, node.getLocalName(), new URL(uriString));
+					link = new URLFileRegionHyperlink(hyperlinkRegion, TAG, node.getLocalName(), new URL(uriString)) {
+						public String getHyperlinkText() {
+							return JSPUIMessages.CustomTagHyperlink_hyperlinkText;
+						}
+					};
 				}
 				catch (MalformedURLException e) {
 					Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
@@ -401,7 +391,11 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 					IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 					if (file.getType() == IResource.FILE && file.isAccessible()) {
 						if (node != null) {
-							link = new TLDFileHyperlink(file, TAG, node.getLocalName(), hyperlinkRegion);
+							link = new TLDFileHyperlink(file, TAG, node.getLocalName(), hyperlinkRegion) {
+								public String getHyperlinkText() {
+									return JSPUIMessages.CustomTagHyperlink_hyperlinkText;
+								}
+							};
 						}
 						else {
 							link = new WorkspaceFileHyperlink(hyperlinkRegion, file);

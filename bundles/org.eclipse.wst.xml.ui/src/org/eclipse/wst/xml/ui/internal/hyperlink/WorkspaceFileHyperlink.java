@@ -13,6 +13,7 @@ package org.eclipse.wst.xml.ui.internal.hyperlink;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -20,6 +21,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.xml.ui.internal.Logger;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 /**
  * Hyperlink for files within the workspace. (As long as there is an IFile,
@@ -56,7 +58,6 @@ class WorkspaceFileHyperlink implements IHyperlink {
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getTypeLabel()
 	 */
 	public String getTypeLabel() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -66,7 +67,7 @@ class WorkspaceFileHyperlink implements IHyperlink {
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getHyperlinkText()
 	 */
 	public String getHyperlinkText() {
-		return fFile.getFullPath().toString();
+		return NLS.bind(XMLUIMessages.Open, fFile.getName());
 	}
 
 	public void open() {

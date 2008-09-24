@@ -14,6 +14,7 @@ import java.io.File;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
@@ -21,6 +22,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.xml.ui.internal.Logger;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 /**
  * Hyperlink for external files.
@@ -44,11 +46,11 @@ class ExternalFileHyperlink implements IHyperlink {
 	}
 
 	public String getTypeLabel() {
-		return fHyperlinkFile.getAbsolutePath();
+		return null;
 	}
 
 	public String getHyperlinkText() {
-		return fHyperlinkFile.getName();
+		return NLS.bind(XMLUIMessages.Open, fHyperlinkFile.getName());
 	}
 
 	public void open() {

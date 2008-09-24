@@ -4,7 +4,9 @@ import java.io.File;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.Logger;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
@@ -34,11 +36,11 @@ class ExternalFileHyperlink implements IHyperlink {
 	}
 
 	public String getTypeLabel() {
-		return fHyperlinkFile.getAbsolutePath();
+		return null;
 	}
 
 	public String getHyperlinkText() {
-		return fHyperlinkFile.getName();
+		return NLS.bind(JSPUIMessages.Open, fHyperlinkFile.getName());
 	}
 
 	public void open() {
