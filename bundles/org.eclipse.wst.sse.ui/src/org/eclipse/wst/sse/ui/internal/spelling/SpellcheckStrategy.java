@@ -20,7 +20,6 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Position;
@@ -260,11 +259,12 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		return isSupported;
 	}
 
-	void reconcile() {
+	public void reconcile() {
 		IDocument document = getDocument();
 		if (document != null) {
+			IAnnotationModel annotationModel = getAnnotationModel();
 			IRegion documentRegion = new Region(0, document.getLength());
-			reconcile(documentRegion);
+			spellCheck(documentRegion, documentRegion, annotationModel);
 		}
 	}
 
@@ -299,7 +299,7 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		}
 	}
 
-	private void spellCheck(DirtyRegion dirtyRegion, IRegion regionToBeChecked, IAnnotationModel annotationModel) {
+	private void spellCheck(IRegion dirtyRegion, IRegion regionToBeChecked, IAnnotationModel annotationModel) {
 		TemporaryAnnotation[] annotationsToRemove;
 		Annotation[] annotationsToAdd;
 		annotationsToRemove = getSpellingAnnotationsToRemove(regionToBeChecked);
@@ -308,7 +308,7 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 			Logger.log(Logger.INFO, "Spell checking [" + regionToBeChecked.getOffset() + "-" + (regionToBeChecked.getOffset() + regionToBeChecked.getLength()) + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 		if (getDocument() != null) {
-			EditorsUI.getSpellingService().check(getDocument(), new IRegion[]{dirtyRegion}, fSpellingContext, fProblemCollector, null);
+			EditorsUI.getSpellingService().check(getDocument(), new IRegion[]{regionToBeChecked}, fSpellingContext, fProblemCollector, null);
 		}
 		annotationsToAdd = fProblemCollector.getAnnotations();
 		fProblemCollector.clear();
@@ -339,16 +339,10 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 	 */
 
 	public void reconcile(IRegion partition) {
-		DirtyRegion region = null;
 		IDocument document = getDocument();
 		if (document != null) {
-			try {
-				region = new DirtyRegion(partition.getOffset(), partition.getLength(), DirtyRegion.INSERT, document.get(partition.getOffset(), partition.getLength()));
-				reconcile(region, region);
-			}
-			catch (BadLocationException e) {
-				Logger.logException(e);
-			}
+			IAnnotationModel annotationModel = getAnnotationModel();
+			spellCheck(partition, partition, annotationModel);
 		}
 	}
 
