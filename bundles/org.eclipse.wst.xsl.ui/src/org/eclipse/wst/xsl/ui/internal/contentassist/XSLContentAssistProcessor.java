@@ -27,13 +27,11 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.AbstractContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xsl.core.XSLCore;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 /**
@@ -44,24 +42,28 @@ import org.w3c.dom.Node;
  * @author David Carver
  * @since 1.0
  */
-public class XSLContentAssistProcessor implements IContentAssistProcessor,
-		IReleasable {
-
-	/**
-	 * Retrieve all global variables in the stylesheet.
-	 */
+public class XSLContentAssistProcessor implements IContentAssistProcessor {
 
 	private String errorMessage = "";
 	private ITextViewer textViewer = null;
+	private ArrayList<ICompletionProposal> xslProposals;
+	private ArrayList<ICompletionProposal> additionalProposals;
+	private IndexedRegion treeNode;
+	private Node node;
+	private IDOMNode xmlNode;
+	private IStructuredDocumentRegion sdRegion;
+	private ITextRegion completionRegion;
+	private String matchString;
+	private int cursorPosition;
 
 	/**
-	 * The XSL Content Assist Processor handles XSL specific functionality for
-	 * content assistance. It leverages several XPath selection variables to
-	 * help with the selection of elements and template names.
-	 * 
+	 * Provides an XSL Content Assist Processor class that is XSL aware and XML
+	 * aware.
 	 */
 	public XSLContentAssistProcessor() {
 		super();
+		xslProposals = new ArrayList<ICompletionProposal>();
+		additionalProposals = new ArrayList<ICompletionProposal>();
 	}
 
 	/**
@@ -79,41 +81,21 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 	 */
 	public ICompletionProposal[] computeCompletionProposals(
 			ITextViewer textViewer, int documentPosition) {
-		setErrorMessage(null);
-		ICompletionProposal[] additionalProposals = null;
-		this.textViewer = textViewer;
+		initializeProposalVariables(textViewer, documentPosition);
 
-		IndexedRegion treeNode = ContentAssistUtils.getNodeAt(textViewer,
-				documentPosition);
+		ICompletionProposal[] xmlProposals = getXMLProposals();
 
-		Node node = getActualDOMNode((Node) treeNode);
+		additionalProposals = getAdditionalXSLElementProposals();
 
-		IDOMNode xmlNode = (IDOMNode) node;
-		IStructuredDocumentRegion sdRegion = getStructuredDocumentRegion(documentPosition);
-		ITextRegion completionRegion = getCompletionRegion(documentPosition,
-				node);
-
-		ICompletionProposal[] xmlProposals = getXMLProposals(textViewer,
-				documentPosition);
-
-		String matchString = getXPathMatchString(sdRegion, completionRegion,
-				documentPosition);
-
-		additionalProposals = getAdditionalXSLElementProposals(textViewer,
-				documentPosition, additionalProposals, xmlNode, sdRegion,
-				completionRegion, matchString);
-
-		ICompletionProposal[] xslNamespaceProposals = getXSLNamespaceProposals(
-				textViewer, documentPosition, xmlNode, sdRegion,
-				completionRegion, matchString);
+		xslProposals = getXSLNamespaceProposals();
 
 		ArrayList<ICompletionProposal> proposalList = new ArrayList<ICompletionProposal>();
 		addProposals(xmlProposals, proposalList);
-		addProposals(additionalProposals, proposalList);
-		addProposals(xslNamespaceProposals, proposalList);
+		proposalList.addAll(additionalProposals);
+		proposalList.addAll(xslProposals);
 
 		ICompletionProposal[] combinedProposals = combineProposals(proposalList);
-		
+
 		if (combinedProposals == null || combinedProposals.length == 0) {
 			setErrorMessage(Messages.getString("NoContentAssistance"));
 		}
@@ -124,45 +106,64 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 	/**
 	 * @param textViewer
 	 * @param documentPosition
-	 * @param xmlNode
-	 * @param sdRegion
-	 * @param completionRegion
-	 * @param matchString
-	 * @return
 	 */
-	private ICompletionProposal[] getXSLNamespaceProposals(
-			ITextViewer textViewer, int documentPosition, IDOMNode xmlNode,
-			IStructuredDocumentRegion sdRegion, ITextRegion completionRegion,
-			String matchString) {
-		ICompletionProposal[] xslProposals = null;
+	private void initializeProposalVariables(ITextViewer textViewer,
+			int documentPosition) {
+		this.textViewer = textViewer;
+		cursorPosition = documentPosition;
+		treeNode = ContentAssistUtils.getNodeAt(textViewer, cursorPosition);
+		node = getActualDOMNode((Node) treeNode);
+		xmlNode = (IDOMNode) node;
+		sdRegion = getStructuredDocumentRegion();
+		completionRegion = getCompletionRegion(cursorPosition, node);
+		matchString = getMatchString(sdRegion, completionRegion, cursorPosition);
+	}
+
+	private ArrayList<ICompletionProposal> getXSLNamespaceProposals() {
 		if (XSLCore.isXSLNamespace(xmlNode)) {
-			xslProposals = getXSLProposals(textViewer, documentPosition,
-					xmlNode, sdRegion, completionRegion, matchString);
+			XSLContentAssistRequestFactory requestFactory = new XSLContentAssistRequestFactory(
+					textViewer, cursorPosition, xmlNode, sdRegion,
+					completionRegion, matchString);
+
+			IContentAssistProposalRequest contentAssistRequest = requestFactory
+					.getContentAssistRequest();
+			xslProposals = contentAssistRequest.getCompletionProposals();
 		}
 		return xslProposals;
 	}
 
-	/**
-	 * @param textViewer
-	 * @param documentPosition
-	 * @param additionalProposals
-	 * @param xmlNode
-	 * @param sdRegion
-	 * @param completionRegion
-	 * @param matchString
-	 * @return
-	 */
-	private ICompletionProposal[] getAdditionalXSLElementProposals(
-			ITextViewer textViewer, int documentPosition,
-			ICompletionProposal[] additionalProposals, IDOMNode xmlNode,
-			IStructuredDocumentRegion sdRegion, ITextRegion completionRegion,
-			String matchString) {
+	private ArrayList<ICompletionProposal> getAdditionalXSLElementProposals() {
 		if (!XSLCore.isXSLNamespace(xmlNode)) {
 			additionalProposals = new ElementContentAssistRequest(xmlNode,
-					sdRegion, completionRegion, documentPosition, 0,
-					matchString, textViewer).getCompletionProposals();
+					sdRegion, completionRegion, cursorPosition, 0, matchString,
+					textViewer).getCompletionProposals();
 		}
 		return additionalProposals;
+	}
+
+	private ICompletionProposal[] getXMLProposals() {
+		AbstractContentAssistProcessor processor = new XMLContentAssistProcessor();
+
+		ICompletionProposal proposals[] = processor.computeCompletionProposals(
+				textViewer, cursorPosition);
+		return proposals;
+	}
+
+	private void addProposals(ICompletionProposal[] proposals,
+			ArrayList<ICompletionProposal> proposalList) {
+		if (proposals != null) {
+			for (int cnt = 0; cnt < proposals.length; cnt++) {
+				proposalList.add(proposals[cnt]);
+			}
+		}
+	}
+
+	private ICompletionProposal[] combineProposals(
+			ArrayList<ICompletionProposal> proposalList) {
+		ICompletionProposal[] combinedProposals = new ICompletionProposal[proposalList
+				.size()];
+		proposalList.toArray(combinedProposals);
+		return combinedProposals;
 	}
 
 	/**
@@ -178,63 +179,14 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 	}
 
 	/**
-	 * @param textViewer
-	 * @param documentPosition
-	 * @return
-	 */
-	private ICompletionProposal[] getXMLProposals(ITextViewer textViewer,
-			int documentPosition) {
-		AbstractContentAssistProcessor processor = new XMLContentAssistProcessor();
-
-		ICompletionProposal proposals[] = processor.computeCompletionProposals(
-				textViewer, documentPosition);
-		return proposals;
-	}
-
-	/**
-	 * @param proposalList
-	 * @return
-	 */
-	private ICompletionProposal[] combineProposals(
-			ArrayList<ICompletionProposal> proposalList) {
-		ICompletionProposal[] combinedProposals = new ICompletionProposal[proposalList
-				.size()];
-		proposalList.toArray(combinedProposals);
-		return combinedProposals;
-	}
-
-	private void addProposals(ICompletionProposal[] proposals,
-			ArrayList<ICompletionProposal> proposalList) {
-		if (proposals != null) {
-			for (int cnt = 0; cnt < proposals.length; cnt++) {
-				proposalList.add(proposals[cnt]);
-			}
-		}
-	}
-
-	protected ICompletionProposal[] getXSLProposals(ITextViewer textViewer,
-			int documentPosition, IDOMNode xmlNode,
-			IStructuredDocumentRegion sdRegion, ITextRegion completionRegion,
-			String matchString) {
-		XSLContentAssistRequestFactory requestFactory = new XSLContentAssistRequestFactory();
-
-		ICompletionProposal[] xslProposals = null;
-		IContentAssistProposalRequest contentAssistRequest = requestFactory
-				.getContentAssistRequest(textViewer, documentPosition, xmlNode,
-						sdRegion, completionRegion, matchString);
-
-		xslProposals = contentAssistRequest.getCompletionProposals();
-		return xslProposals;
-	}
-
-	/**
 	 * StructuredTextViewer must be set before using this.
 	 * 
 	 * @param pos
 	 * @return
 	 */
-	public IStructuredDocumentRegion getStructuredDocumentRegion(int pos) {
-		return ContentAssistUtils.getStructuredDocumentRegion(textViewer, pos);
+	private IStructuredDocumentRegion getStructuredDocumentRegion() {
+		return ContentAssistUtils.getStructuredDocumentRegion(textViewer,
+				cursorPosition);
 	}
 
 	/**
@@ -374,36 +326,25 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 		return region;
 	}
 
-	protected String getXPathMatchString(IStructuredDocumentRegion parent,
+	private String getMatchString(IStructuredDocumentRegion parent,
 			ITextRegion aRegion, int offset) {
-		if ((aRegion == null) || isCloseRegion(aRegion)) {
-			return ""; //$NON-NLS-1$
-		}
-		String matchString = null;
+		String matchString = "";
 		String regionType = aRegion.getType();
-		if ((regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS)
-				|| (regionType == DOMRegionContext.XML_TAG_OPEN)
-				|| (offset > parent.getStartOffset(aRegion)
-						+ aRegion.getTextLength())) {
-			matchString = ""; //$NON-NLS-1$
-		} else if (regionType == DOMRegionContext.XML_CONTENT) {
-			matchString = ""; //$NON-NLS-1$
-		} else {
-			if ((parent.getText(aRegion).length() > 0)
-					&& (parent.getStartOffset(aRegion) < offset)) {
-				matchString = parent.getText(aRegion).substring(0,
-						offset - parent.getStartOffset(aRegion));
-			} else {
-				matchString = ""; //$NON-NLS-1$
-			}
+		int totalRegionOffset = parent.getStartOffset(aRegion)
+				+ aRegion.getTextLength();
+
+		if ((aRegion == null) || isCloseRegion(aRegion)
+				|| hasNoMatchString(offset, regionType, totalRegionOffset)) {
+			return matchString; //$NON-NLS-1$
 		}
-		if (matchString.startsWith("\"")) {
-			matchString = matchString.substring(1);
+
+		if (hasMatchString(parent, aRegion, offset)) {
+			matchString = extractMatchString(parent, aRegion, offset);
 		}
 		return matchString;
 	}
 
-	protected boolean isCloseRegion(ITextRegion region) {
+	private boolean isCloseRegion(ITextRegion region) {
 		String type = region.getType();
 		return ((type == DOMRegionContext.XML_PI_CLOSE)
 				|| (type == DOMRegionContext.XML_TAG_CLOSE)
@@ -413,6 +354,49 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 				|| (type == DOMRegionContext.XML_ATTLIST_DECL_CLOSE)
 				|| (type == DOMRegionContext.XML_ELEMENT_DECL_CLOSE)
 				|| (type == DOMRegionContext.XML_DOCTYPE_DECLARATION_CLOSE) || (type == DOMRegionContext.XML_DECLARATION_CLOSE));
+	}
+
+	/**
+	 * @param parent
+	 * @param aRegion
+	 * @param offset
+	 * @return
+	 */
+	private boolean hasMatchString(IStructuredDocumentRegion parent,
+			ITextRegion aRegion, int offset) {
+		return (parent.getText(aRegion).length() > 0)
+				&& (parent.getStartOffset(aRegion) < offset);
+	}
+
+	/**
+	 * @param offset
+	 * @param regionType
+	 * @param totalRegionOffset
+	 * @return
+	 */
+	private boolean hasNoMatchString(int offset, String regionType,
+			int totalRegionOffset) {
+		return regionType == DOMRegionContext.XML_CONTENT
+				|| regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS
+				|| regionType == DOMRegionContext.XML_TAG_OPEN
+				|| offset > totalRegionOffset;
+	}
+
+	/**
+	 * @param parent
+	 * @param aRegion
+	 * @param offset
+	 * @return
+	 */
+	private String extractMatchString(IStructuredDocumentRegion parent,
+			ITextRegion aRegion, int offset) {
+		String matchString;
+		matchString = parent.getText(aRegion).substring(0,
+				offset - parent.getStartOffset(aRegion));
+		if (matchString.startsWith("\"")) {
+			matchString = matchString.substring(1);
+		}
+		return matchString;
 	}
 
 	/**
@@ -436,7 +420,6 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 	 * @return an array of activation characters
 	 */
 	public char[] getCompletionProposalAutoActivationCharacters() {
-		// TODO: Currently these are hard coded..need to move to preferences.
 		char[] completionProposals = { '"', '\'', ':', '[', '{', '<' };
 
 		return completionProposals;
@@ -470,38 +453,12 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor,
 	}
 
 	/**
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.internal.IReleasable#release()
-	 */
-	public void release() {
-
-	}
-
-	/**
 	 * Sets the error message for why content assistance didn't complete.
 	 * 
 	 * @param errorMessage
 	 */
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
-	}
-
-	protected boolean hasAttributeAtTextRegion(String attrName,
-			NamedNodeMap nodeMap, ITextRegion aRegion) {
-		IDOMAttr attrNode = (IDOMAttr) nodeMap.getNamedItem(attrName);
-		return attrNode != null
-				&& attrNode.getValueRegion().getStart() == aRegion.getStart();
-	}
-
-	protected IDOMAttr getAttributeAtTextRegion(String attrName,
-			NamedNodeMap nodeMap, ITextRegion aRegion) {
-		IDOMAttr node = (IDOMAttr) nodeMap.getNamedItem(attrName);
-		if (node != null
-				&& node.getValueRegion().getStart() == aRegion.getStart()) {
-			return node;
-		}
-		return null;
 	}
 
 }

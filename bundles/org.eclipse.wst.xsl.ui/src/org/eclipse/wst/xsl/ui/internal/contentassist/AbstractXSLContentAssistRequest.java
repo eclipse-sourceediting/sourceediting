@@ -29,10 +29,10 @@ import org.w3c.dom.NodeList;
  */
 public abstract class AbstractXSLContentAssistRequest implements IContentAssistProposalRequest {
 	protected IStructuredDocumentRegion documentRegion = null;
-	protected List<ICompletionProposal> macros = new ArrayList<ICompletionProposal>();
+	protected ArrayList<ICompletionProposal> macros = new ArrayList<ICompletionProposal>();
 	protected String matchString;
 	protected Node node = null;
-	protected List<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
+	protected ArrayList<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
 	protected ITextRegion region = null;
 	protected int replacementBeginPosition;
 	protected int replacementLength;
@@ -73,22 +73,16 @@ public abstract class AbstractXSLContentAssistRequest implements IContentAssistP
 	 * should be used to return the actual proposals from this method.
 	 * @return
 	 */
-	public abstract ICompletionProposal[] getCompletionProposals();
+	public abstract ArrayList<ICompletionProposal> getCompletionProposals();
 	
-	protected ICompletionProposal[] getAllCompletionProposals() {
-		ICompletionProposal results[] = null;
+	protected ArrayList<ICompletionProposal> getAllCompletionProposals() {
+		ArrayList<ICompletionProposal> allProposals = new ArrayList<ICompletionProposal>();
 		if ((getProposals().size() > 0) || (getMacros().size() > 0)) {
-			List<ICompletionProposal> allProposals = new ArrayList<ICompletionProposal>();
 			allProposals.addAll(getProposals());
 			allProposals.addAll(getMacros());
 			allProposals = sortProposals(allProposals);
-
-			results = new ICompletionProposal[allProposals.size()];
-			for (int i = 0; i < allProposals.size(); i++) {
-				results[i] = (ICompletionProposal) allProposals.get(i);
-			}
 		}
-		return results;
+		return allProposals;
 	}
 
 	
@@ -223,7 +217,7 @@ public abstract class AbstractXSLContentAssistRequest implements IContentAssistP
 		replacementLength = newReplacementLength;
 	}
 
-	protected List<ICompletionProposal> sortProposals(List<ICompletionProposal> proposalsIn) {
+	protected ArrayList<ICompletionProposal> sortProposals(ArrayList<ICompletionProposal> proposalsIn) {
 		Collections.sort(proposalsIn, new ProposalComparator());
 		return proposalsIn;
 

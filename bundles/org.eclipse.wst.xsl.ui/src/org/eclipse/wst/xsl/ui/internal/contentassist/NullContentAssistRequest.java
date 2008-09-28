@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
+import java.util.ArrayList;
+
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -17,11 +19,12 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.w3c.dom.Node;
 
 /**
- * 
+ * An empty content assist request.
  * @author dcarver
  *
  */
 public class NullContentAssistRequest extends AbstractXSLContentAssistRequest {
+	private ArrayList<ICompletionProposal> emptyProposals = new ArrayList<ICompletionProposal>();
 
 	/**
 	 * A NULL ContentAssistRequest has no proposals.
@@ -43,8 +46,8 @@ public class NullContentAssistRequest extends AbstractXSLContentAssistRequest {
 	}
 	
 	@Override
-	public ICompletionProposal[] getCompletionProposals() {
-		return null;
+	public ArrayList<ICompletionProposal> getCompletionProposals() {
+		return emptyProposals;
 	}
 
 }

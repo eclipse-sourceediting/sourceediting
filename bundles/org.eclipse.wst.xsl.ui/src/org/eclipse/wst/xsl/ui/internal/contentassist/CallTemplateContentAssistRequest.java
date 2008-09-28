@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -65,7 +66,7 @@ public class CallTemplateContentAssistRequest extends
 	 * @see org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest#getCompletionProposals()
 	 */
 	@Override
-	public ICompletionProposal[] getCompletionProposals() {
+	public ArrayList<ICompletionProposal> getCompletionProposals() {
 		proposals.clear();
 		
 		IFile editorFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(getLocation()));

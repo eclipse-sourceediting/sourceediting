@@ -38,23 +38,37 @@ public class XSLContentAssistRequestFactory {
 	private static final String ATTR_HREF = "href"; //$NON-NLS-1$
 	private static final String ELEM_CALLTEMPLATE = "call-template"; //$NON-NLS-1$
 	private static final String ATTR_NAME = "name"; //$NON-NLS-1$
+	private ITextViewer textViewer;
+	private int documentPosition;
+	private IDOMNode xmlNode;
+	private IStructuredDocumentRegion sdRegion;
+	private ITextRegion completionRegion;
+	private String matchString;
+	
 
 	/**
-	 * Get the appropriate content assist request class for the XSL request.
-	 * 
 	 * @param textViewer
 	 * @param documentPosition
 	 * @param xmlNode
 	 * @param sdRegion
 	 * @param completionRegion
-	 * @param proposals
 	 * @param matchString
-	 * @return
 	 */
-	public AbstractXSLContentAssistRequest getContentAssistRequest(
-			ITextViewer textViewer, int documentPosition, IDOMNode xmlNode,
+	public XSLContentAssistRequestFactory(ITextViewer textViewer, int documentPosition, IDOMNode xmlNode,
 			IStructuredDocumentRegion sdRegion, ITextRegion completionRegion,
 			String matchString) {
+		this.textViewer = textViewer;
+		this.documentPosition = documentPosition;
+		this.xmlNode = xmlNode;
+		this.sdRegion = sdRegion;
+		this.completionRegion = completionRegion;
+		this.matchString = matchString;
+	}
+	/**
+	 * Get the appropriate content assist request class for the XSL request.
+	 * @return
+	 */
+	public AbstractXSLContentAssistRequest getContentAssistRequest() {
 		NamedNodeMap nodeMap = xmlNode.getAttributes();
 		IDOMElement element = (IDOMElement) xmlNode;
 

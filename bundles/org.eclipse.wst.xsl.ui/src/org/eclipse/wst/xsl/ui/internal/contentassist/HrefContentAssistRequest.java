@@ -125,7 +125,7 @@ public class HrefContentAssistRequest extends AbstractXSLContentAssistRequest
 	 * @see org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest#getCompletionProposals()
 	 */
 	@Override
-	public ICompletionProposal[] getCompletionProposals()
+	public ArrayList<ICompletionProposal> getCompletionProposals()
 	{
 		pathList.clear();
 		proposals.clear();
@@ -167,7 +167,7 @@ public class HrefContentAssistRequest extends AbstractXSLContentAssistRequest
 			XSLUIPlugin.log(e);
 		}
 
-		return getAllCompletionProposals();
+		return proposals;
 	}
 	
 	/**

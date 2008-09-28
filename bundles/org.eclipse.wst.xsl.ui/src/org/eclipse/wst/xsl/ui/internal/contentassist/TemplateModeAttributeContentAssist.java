@@ -68,7 +68,7 @@ public class TemplateModeAttributeContentAssist extends
 	 * @see org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest#getCompletionProposals()
 	 */
 	@Override
-	public ICompletionProposal[] getCompletionProposals() {
+	public ArrayList<ICompletionProposal> getCompletionProposals() {
 		proposals.clear();
 		
 		IFile editorFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(getLocation()));

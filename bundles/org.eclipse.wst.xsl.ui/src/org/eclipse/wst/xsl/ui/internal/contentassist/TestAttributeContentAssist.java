@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
+import java.util.ArrayList;
+
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -53,7 +55,7 @@ public class TestAttributeContentAssist extends SelectAttributeContentAssist {
 	 * @see org.eclipse.wst.xsl.ui.internal.contentassist.SelectAttributeContentAssist#getCompletionProposals()
 	 */
 	@Override
-	public ICompletionProposal[] getCompletionProposals() {
+	public ArrayList<ICompletionProposal> getCompletionProposals() {
 		
 		adjustXPathStart();
 		

@@ -1,5 +1,7 @@
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
+import java.util.ArrayList;
+
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 
 /**
@@ -14,5 +16,5 @@ public interface IContentAssistProposalRequest {
 	 * Completion Proposals for a Content Assist Request.
 	 * @return
 	 */
-	public ICompletionProposal[] getCompletionProposals();
+	public ArrayList<ICompletionProposal> getCompletionProposals();
 }

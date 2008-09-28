@@ -81,7 +81,7 @@ public class ElementContentAssistRequest extends
 	 * scope.
 	 */
 	@Override
-	public ICompletionProposal[] getCompletionProposals() {
+	public ArrayList<ICompletionProposal> getCompletionProposals() {
 
 		if (region.getType() == DOMRegionContext.XML_TAG_OPEN) {
 			computeTagOpenProposals();

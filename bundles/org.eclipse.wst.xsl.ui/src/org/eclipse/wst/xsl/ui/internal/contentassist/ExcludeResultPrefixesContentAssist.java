@@ -11,6 +11,7 @@
 
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.jface.text.ITextViewer;
@@ -64,7 +65,7 @@ public class ExcludeResultPrefixesContentAssist extends AbstractXSLContentAssist
 	 * @see org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest#getCompletionProposals()
 	 */
 	@Override
-	public ICompletionProposal[] getCompletionProposals() {
+	public ArrayList<ICompletionProposal> getCompletionProposals() {
 		 proposals.clear();
 		 
 		 IDOMAttr attrNode = (IDOMAttr)((IDOMElement)getNode()).getAttributeNode(EXCLUDE_RESULT_PREFIXES);

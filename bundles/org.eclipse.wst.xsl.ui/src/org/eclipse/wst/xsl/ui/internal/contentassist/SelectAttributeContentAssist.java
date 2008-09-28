@@ -90,7 +90,7 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 	 * @see org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest#getCompletionProposals()
 	 */
 	@Override
-	public ICompletionProposal[] getCompletionProposals() {
+	public ArrayList<ICompletionProposal> getCompletionProposals() {
 		proposals.clear();
 		
 		adjustXPathStart();
