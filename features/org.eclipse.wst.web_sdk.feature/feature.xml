@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.web_sdk.feature"
       label="%featureName"
-      version="3.0.1.qualifier"
+      version="3.1.0.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -32,17 +32,17 @@
    <includes
          id="org.eclipse.wst.jsdt_sdk.feature"
          version="0.0.0"/>
-   
+
    <includes
          id="org.eclipse.wst.xml_sdk.feature"
          version="0.0.0"/>
-                  
+
    <includes
          id="org.eclipse.wst.server_sdk.feature"
          version="0.0.0"/>
-         
+
    <includes
          id="org.eclipse.wst.ws_sdk.feature"
          version="0.0.0"/>
-         
+
 </feature>
