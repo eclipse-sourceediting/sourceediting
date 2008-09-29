@@ -25,7 +25,6 @@ import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
@@ -329,19 +328,26 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor {
 	private String getMatchString(IStructuredDocumentRegion parent,
 			ITextRegion aRegion, int offset) {
 		String matchString = "";
-		String regionType = aRegion.getType();
-		int totalRegionOffset = parent.getStartOffset(aRegion)
-				+ aRegion.getTextLength();
-
-		if ((aRegion == null) || isCloseRegion(aRegion)
-				|| hasNoMatchString(offset, regionType, totalRegionOffset)) {
-			return matchString; //$NON-NLS-1$
+		
+		if (isNotMatchStringRegion(parent, aRegion, offset)) {
+			return matchString; 
 		}
 
 		if (hasMatchString(parent, aRegion, offset)) {
 			matchString = extractMatchString(parent, aRegion, offset);
 		}
 		return matchString;
+	}
+
+	private boolean isNotMatchStringRegion(IStructuredDocumentRegion parent, ITextRegion aRegion, int offset) {
+		if (aRegion == null || parent == null)
+			return true;
+		
+		String regionType = aRegion.getType();
+		int totalRegionOffset = parent.getStartOffset(aRegion)
+				+ aRegion.getTextLength();
+		return (isCloseRegion(aRegion)
+				|| hasNoMatchString(offset, regionType, totalRegionOffset));
 	}
 
 	private boolean isCloseRegion(ITextRegion region) {
@@ -356,24 +362,12 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor {
 				|| (type == DOMRegionContext.XML_DOCTYPE_DECLARATION_CLOSE) || (type == DOMRegionContext.XML_DECLARATION_CLOSE));
 	}
 
-	/**
-	 * @param parent
-	 * @param aRegion
-	 * @param offset
-	 * @return
-	 */
 	private boolean hasMatchString(IStructuredDocumentRegion parent,
 			ITextRegion aRegion, int offset) {
 		return (parent.getText(aRegion).length() > 0)
 				&& (parent.getStartOffset(aRegion) < offset);
 	}
 
-	/**
-	 * @param offset
-	 * @param regionType
-	 * @param totalRegionOffset
-	 * @return
-	 */
 	private boolean hasNoMatchString(int offset, String regionType,
 			int totalRegionOffset) {
 		return regionType == DOMRegionContext.XML_CONTENT
@@ -382,12 +376,6 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor {
 				|| offset > totalRegionOffset;
 	}
 
-	/**
-	 * @param parent
-	 * @param aRegion
-	 * @param offset
-	 * @return
-	 */
 	private String extractMatchString(IStructuredDocumentRegion parent,
 			ITextRegion aRegion, int offset) {
 		String matchString;
