@@ -25,25 +25,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import org.eclipse.core.filebuffers.FileBuffers;
-import org.eclipse.core.resources.IFile;
+import org.eclipse.core.filebuffers.FileBuffers; // import
+													// org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile; // import
+											// org.eclipse.core.resources.IProject;
+// import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.wst.jsdt.core.IBuffer;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
-import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.ISourceRange;
-import org.eclipse.wst.jsdt.core.JavaScriptModelException;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException; // import
+														// org.eclipse.wst.jsdt.core.LibrarySuperType;
 import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
 import org.eclipse.wst.jsdt.internal.core.DocumentContextFragmentRoot;
+import org.eclipse.wst.jsdt.internal.core.Member;
 import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
@@ -343,7 +349,14 @@ public class JsTranslation implements IJsTranslation {
 	private ISourceRange getJSSourceRangeOf(IJavaScriptElement element) {
 		// returns the offset in html of given element
 		ISourceRange range = null;
-		if (element instanceof SourceRefElement) {
+		if (element instanceof Member) {
+			try {
+				range = ((Member) element).getNameRange();
+			} catch (JavaScriptModelException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if (element instanceof SourceRefElement) {
 			try {
 				range = ((SourceRefElement) element).getSourceRange();
 			}

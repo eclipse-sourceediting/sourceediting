@@ -324,7 +324,9 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 	
 	private IJavaScriptUnit getLazyCu(Node node) {
 		if(lazyCu==null) {
-			lazyCu = getTranslation(node).getCompilationUnit();
+			IJsTranslation tran = getTranslation(node);
+			if(tran== null) return null;
+			lazyCu = tran.getCompilationUnit();
 			try {
 				lazyCu.makeConsistent( new NullProgressMonitor() );
 			} catch (JavaScriptModelException e) {
@@ -346,6 +348,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 				// model = modelManager.getModelForRead(doc);
 			}
 			IDOMModel domModel = (IDOMModel) model;
+			if(domModel == null) return null;
 			xmlDoc = domModel.getDocument();
 		} catch (Exception e) {
 			Logger.logException(e);

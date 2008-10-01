@@ -23,9 +23,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.wst.jsdt.core.IAccessRule;
+import org.eclipse.wst.jsdt.core.IIncludePathAttribute;
 import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.LibrarySuperType;
+
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
 //import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 /**
@@ -44,7 +47,7 @@ public class JsWebNature implements IProjectNature {
 
 	public static final IPath VIRTUAL_BROWSER_CLASSPATH = new Path("org.eclipse.wst.jsdt.launching.baseBrowserLibrary"); //$NON-NLS-1$
 	public static final String VIRTUAL_CONTAINER = "org.eclipse.wst.jsdt.launching.WebProject"; //$NON-NLS-1$
-	public static final IIncludePathEntry VIRTUAL_SCOPE_ENTRY = JavaScriptCore.newContainerEntry(new Path(VIRTUAL_CONTAINER));
+	public static final IIncludePathEntry VIRTUAL_SCOPE_ENTRY = JavaScriptCore.newContainerEntry(new Path(VIRTUAL_CONTAINER),  new IAccessRule[0], new IIncludePathAttribute[] {IIncludePathAttribute.HIDE}, false);
 	private static final String SUPER_TYPE_NAME = "Window"; //$NON-NLS-1$
 	private static final String SUPER_TYPE_LIBRARY = "org.eclipse.wst.jsdt.launching.baseBrowserLibrary"; //$NON-NLS-1$
 	
