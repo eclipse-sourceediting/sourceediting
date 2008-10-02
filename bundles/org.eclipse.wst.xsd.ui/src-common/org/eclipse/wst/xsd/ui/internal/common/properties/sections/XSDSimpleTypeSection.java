@@ -64,6 +64,7 @@ public class XSDSimpleTypeSection extends RefactoringSection
   CCombo varietyCombo;
   CCombo typesCombo;
   CLabel typesLabel;
+  private boolean isTraversing = false;
 
   XSDSimpleTypeDefinition memberTypeDefinition, itemTypeDefinition, baseTypeDefinition;
 
@@ -156,6 +157,7 @@ public class XSDSimpleTypeSection extends RefactoringSection
     typesCombo.setEditable(false);
     typesCombo.setLayoutData(data);
     typesCombo.addSelectionListener(this);
+    typesCombo.addListener(SWT.Traverse, this);
 
     
     data = new GridData();
@@ -281,7 +283,33 @@ public class XSDSimpleTypeSection extends RefactoringSection
 
   }
 
+  public void doWidgetDefaultSelected(SelectionEvent e)
+  {
+    if (e.widget == typesCombo)
+    {
+      String selection = typesCombo.getText();
+      if (shouldPerformComboSelection(SWT.DefaultSelection, selection))
+        handleWidgetSelection(e);
+    } else
+    {
+      handleWidgetSelection(e);
+    }
+  }
+
   public void doWidgetSelected(SelectionEvent e)
+  {
+    if (e.widget == typesCombo)
+    {
+      String selection = typesCombo.getText();
+      if (shouldPerformComboSelection(SWT.Selection, selection))
+        handleWidgetSelection(e);
+    } else
+    {
+      handleWidgetSelection(e);
+    }
+  }
+
+  private void handleWidgetSelection(SelectionEvent e)
   {
     if (e.widget == typesCombo)
     {
@@ -290,6 +318,7 @@ public class XSDSimpleTypeSection extends RefactoringSection
       ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDComplexTypeBaseTypeEditManager.class);    
 
       String selection = typesCombo.getText();
+
       ComponentSpecification newValue;
       IComponentDialog dialog= null;
       if ( selection.equals(org.eclipse.wst.xsd.ui.internal.editor.Messages._UI_ACTION_BROWSE))
@@ -654,6 +683,12 @@ public class XSDSimpleTypeSection extends RefactoringSection
   // TODO: Common this up with element declaration
   public void doHandleEvent(Event event) 
   {
+    if (event.type == SWT.Traverse) {
+      if (event.detail == SWT.TRAVERSE_ARROW_NEXT || event.detail == SWT.TRAVERSE_ARROW_PREVIOUS) {
+        isTraversing = true;
+        return;
+      }
+    }
     if (event.widget == nameText)
     {
       if (!nameText.getEditable())
@@ -757,6 +792,40 @@ public class XSDSimpleTypeSection extends RefactoringSection
     }
     return null;
   }
+  
+  private boolean shouldPerformComboSelection(int eventType, Object selectedItem)
+  {
+    // if traversing through combobox, don't automatically pop up
+    // the browse and new dialog boxes
+    boolean wasTraversing = isTraversing;
+    if (isTraversing)
+      isTraversing = false;
 
+    // we only care about default selecting (hitting enter in combobox)
+    // for browse.. and new.. otherwise, selection event will be fired
+    if (eventType == SWT.DefaultSelection)
+    {
+      if (selectedItem instanceof String && ((org.eclipse.wst.xsd.ui.internal.editor.Messages._UI_ACTION_BROWSE.equals(selectedItem) || org.eclipse.wst.xsd.ui.internal.editor.Messages._UI_ACTION_NEW.equals(selectedItem))))
+        return true;
+      return false;
+    }
 
+    // if was traversing and got selection event, do nothing if it's 
+    // browse.. or new..
+    if (wasTraversing && selectedItem instanceof String)
+    {
+      if (org.eclipse.wst.xsd.ui.internal.editor.Messages._UI_ACTION_BROWSE.equals(selectedItem) || org.eclipse.wst.xsd.ui.internal.editor.Messages._UI_ACTION_NEW.equals(selectedItem))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+  
+  public void dispose()
+  {
+    if (typesCombo != null && !typesCombo.isDisposed())
+      typesCombo.removeListener(SWT.Traverse, this);
+    super.dispose();
+  }
 }
