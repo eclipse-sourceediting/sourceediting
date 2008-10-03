@@ -111,18 +111,18 @@ public class StructuredTextViewerConfigurationXSL extends
 	public LineStyleProvider[] getLineStyleProviders(
 			ISourceViewer sourceViewer, String partitionType) {
 		LineStyleProvider[] providers = null;
-		
-		if ((partitionType == IXSLPartitions.XSL_XPATH)) {
-			providers = new LineStyleProvider[] { getLineStyleProviderForXSL() };
-		} else if ((partitionType == IXMLPartitions.XML_DEFAULT)
-				|| (partitionType == IXMLPartitions.XML_CDATA)
-				|| (partitionType == IXMLPartitions.XML_COMMENT)
-				|| (partitionType == IXMLPartitions.XML_DECLARATION)
-				|| (partitionType == IXMLPartitions.XML_PI)) {
-			providers = new LineStyleProvider[] { getLineStyleProviderForXML() };
+        if (isXMLPartition(partitionType)) {
+    		providers = new LineStyleProvider[] {getLineStyleProviderForXSL()};
 		}
-
 		return providers;
+	}
+
+	private boolean isXMLPartition(String partitionType) {
+		return partitionType == IXMLPartitions.XML_DEFAULT
+				|| partitionType == IXMLPartitions.XML_CDATA
+				|| partitionType == IXMLPartitions.XML_COMMENT
+				|| partitionType == IXMLPartitions.XML_DECLARATION
+				|| partitionType == IXMLPartitions.XML_PI;
 	}
 	
 	protected LineStyleProvider getLineStyleProviderForXSL() {
@@ -132,10 +132,4 @@ public class StructuredTextViewerConfigurationXSL extends
 		return fLineStyleProviderForXSL;
 	}
 	
-	private LineStyleProvider getLineStyleProviderForXML() {
-		if (fLineStyleProviderForXML == null) {
-			fLineStyleProviderForXML = new LineStyleProviderForXML();
-		}
-		return fLineStyleProviderForXML;
-	}	
 }

@@ -10,10 +10,15 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
@@ -21,6 +26,7 @@ import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -129,5 +135,20 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 		}
 		return fContextTypeRegistry;
 	}
+	
+	public static File makeFileFor(String directory, String filename) throws IOException {
+		Bundle bundle = Platform.getBundle(XSLUIPlugin.PLUGIN_ID);
+		URL url = bundle.getEntry("/");
+		URL localURL = FileLocator.toFileURL(url);
+		String installPath = localURL.getPath();
+		String totalDirectory = installPath + directory;
+		String totalPath = totalDirectory + "/" + filename;
+		URL totalURL = new URL(url, totalPath);
+		//URL finalurl = Platform.asLocalURL(totalURL);
+		String finalFile = totalURL.getFile();
+		File file = new File(finalFile);
+		return file;
+	}
+
 	
 }
