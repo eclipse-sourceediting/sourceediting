@@ -20,6 +20,7 @@ import org.eclipse.wst.xsl.ui.tests.editor.TestExcludeResultPrefixesCompletionPr
 import org.eclipse.wst.xsl.ui.tests.editor.TestHrefCompletionProposal;
 import org.eclipse.wst.xsl.ui.tests.editor.TestTemplateModeCompletionProposal;
 import org.eclipse.wst.xsl.ui.tests.editor.XSLCompletionTest;
+import org.eclipse.wst.xsl.ui.tests.style.TestXSLLineStyleProvider;
 
 
 public class XSLUITestSuite extends TestSuite {
@@ -35,5 +36,6 @@ public class XSLUITestSuite extends TestSuite {
 		addTestSuite(TestTemplateModeCompletionProposal.class);
 		addTestSuite(TestHrefCompletionProposal.class);
 		addTestSuite(TestElementCompletionProposal.class);
+		addTestSuite(TestXSLLineStyleProvider.class);
 	}
 }
