@@ -18,14 +18,14 @@ package org.eclipse.wst.xsl.ui.internal.style;
  * ColorManager, and any others who may be interested
  */
 public interface IStyleConstantsXSL {
-	public static final String BACKGROUND = "background"; //$NON-NLS-1$
-	public static final String DECL_BORDER = "declBoder";//$NON-NLS-1$
+	public static final String BACKGROUND = "xslbackground"; //$NON-NLS-1$
+	public static final String DECL_BORDER = "xsldeclBoder";//$NON-NLS-1$
 
-	public static final String FOREGROUND = "foreground"; //$NON-NLS-1$
+	public static final String FOREGROUND = "xslforeground"; //$NON-NLS-1$
 
-	public static final String TAG_ATTRIBUTE_EQUALS = "tagAttributeEquals"; //$NON-NLS-1$
-	public static final String TAG_ATTRIBUTE_NAME = "tagAttributeName";//$NON-NLS-1$
-	public static final String TAG_ATTRIBUTE_VALUE = "tagAttributeValue";//$NON-NLS-1$
-	public static final String TAG_BORDER = "tagBorder";//$NON-NLS-1$
-	public static final String TAG_NAME = "tagName";//$NON-NLS-1$
+	public static final String TAG_ATTRIBUTE_EQUALS = "xsltagAttributeEquals"; //$NON-NLS-1$
+	public static final String TAG_ATTRIBUTE_NAME = "xsltagAttributeName";//$NON-NLS-1$
+	public static final String TAG_ATTRIBUTE_VALUE = "xsltagAttributeValue";//$NON-NLS-1$
+	public static final String TAG_BORDER = "xsltagBorder";//$NON-NLS-1$
+	public static final String TAG_NAME = "xsltagName";//$NON-NLS-1$
 }

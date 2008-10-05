@@ -122,7 +122,8 @@ public class StructuredTextViewerConfigurationXSL extends
 				|| partitionType == IXMLPartitions.XML_CDATA
 				|| partitionType == IXMLPartitions.XML_COMMENT
 				|| partitionType == IXMLPartitions.XML_DECLARATION
-				|| partitionType == IXMLPartitions.XML_PI;
+				|| partitionType == IXMLPartitions.XML_PI
+				|| partitionType == IXSLPartitions.XSL_XPATH;
 	}
 	
 	protected LineStyleProvider getLineStyleProviderForXSL() {

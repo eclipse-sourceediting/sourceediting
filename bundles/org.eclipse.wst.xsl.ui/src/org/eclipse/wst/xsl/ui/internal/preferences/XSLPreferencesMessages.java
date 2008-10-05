@@ -8,13 +8,13 @@ import java.util.ResourceBundle;
  * @author dcarver
  *
  */
-public class Messages {
+public class XSLPreferencesMessages {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.xsl.ui.internal.preferences.messages"; //$NON-NLS-1$
 
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
 			.getBundle(BUNDLE_NAME);
 
-	private Messages() {
+	private XSLPreferencesMessages() {
 	}
 
 	/**

@@ -13,7 +13,6 @@ package org.eclipse.wst.xsl.ui.internal.preferences;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,9 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
@@ -82,84 +78,80 @@ import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
-import org.eclipse.wst.xml.core.internal.encoding.XMLDocumentLoader;
-import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
-import org.eclipse.wst.xsl.core.XSLCore;
-import org.eclipse.wst.xsl.core.internal.encoding.XSLDocumentLoader;
-import org.eclipse.wst.xsl.core.internal.modelhandler.ModelHandlerForXSL;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 import org.eclipse.wst.xsl.ui.internal.style.IStyleConstantsXSL;
 import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
-import org.w3c.dom.Node;
 
 import com.ibm.icu.text.Collator;
 
 /**
  * A preference page to configure our XSL syntax color. It resembles the XML
  * pages.
+ * 
+ * @since 1.0
  */
-public final class XSLSyntaxColoringPage extends PreferencePage implements IWorkbenchPreferencePage {
+public class XSLSyntaxColoringPage extends PreferencePage implements
+		IWorkbenchPreferencePage {
 
-	private static final String SYNTAXCOLORING_XSL = "syntaxcoloring.xsl";
-	private static final String XSLFILES_DIR = "xslfiles";
-	private Button Bold;
-	private Label ForegroundLabel;
-	private Label fBackgroundLabel;
-	private Button fClearStyle;
-	private Map fContextToStyleMap;
-	private Map fContextToXSLStyleMap;
-	private Color fDefaultForeground = null;
-	private Color fDefaultBackground = null;
-	private IStructuredDocument fDocument;
-	private ColorSelector fForegroundColorEditor;
-	private ColorSelector fBackgroundColorEditor;
-	private Button fItalic;
-	private OverlayPreferenceStore fOverlayStore;
-	private Button fStrike;
-	private Collection<String> fStylePreferenceKeys;
-	private StructuredViewer fStylesViewer = null;
-	private Map fStyleToDescriptionMap;
-	private StyledText fText;
-	private Button fUnderline;
+	private static final String SYNTAXCOLORING_XSL = "syntaxcoloring.xsl"; //$NON-NLS-1$
+	private static final String XSLFILES_DIR = "xslfiles"; //$NON-NLS-1$
+	private Button bold;
+	private Label foregroundLabel;
+	private Label backgroundLabel;
+	private Button clearStyle;
+	private Map contextToXSLStyleMap;
+	private Color defaultForeground = null;
+	private Color defaultBackground = null;
+	private IStructuredDocument document;
+	private ColorSelector foregroundColorEditor;
+	private ColorSelector backgroundColorEditor;
+	private Button italic;
+	private OverlayPreferenceStore overlayStore;
+	private Button strike;
+	private Collection<String> stylePreferenceKeys;
+	private StructuredViewer stylesViewer = null;
+	private Map styleToDescriptionMap;
+	private StyledText styledText;
+	private Button underline;
 
 	// activate controls based on the given local color type
 	private void activate(String namedStyle) {
-		Color foreground = fDefaultForeground;
-		Color background = fDefaultBackground;
+		Color foreground = defaultForeground;
+		Color background = defaultBackground;
 		if (namedStyle == null) {
-			fClearStyle.setEnabled(false);
-			Bold.setEnabled(false);
-			fItalic.setEnabled(false);
-			fStrike.setEnabled(false);
-			fUnderline.setEnabled(false);
-			ForegroundLabel.setEnabled(false);
-			fBackgroundLabel.setEnabled(false);
-			fForegroundColorEditor.setEnabled(false);
-			fBackgroundColorEditor.setEnabled(false);
-			Bold.setSelection(false);
-			fItalic.setSelection(false);
-			fStrike.setSelection(false);
-			fUnderline.setSelection(false);
-		}
-		else {
+			clearStyle.setEnabled(false);
+			bold.setEnabled(false);
+			italic.setEnabled(false);
+			strike.setEnabled(false);
+			underline.setEnabled(false);
+			foregroundLabel.setEnabled(false);
+			backgroundLabel.setEnabled(false);
+			foregroundColorEditor.setEnabled(false);
+			backgroundColorEditor.setEnabled(false);
+			bold.setSelection(false);
+			italic.setSelection(false);
+			strike.setSelection(false);
+			underline.setSelection(false);
+		} else {
 			TextAttribute attribute = getAttributeFor(namedStyle);
-			fClearStyle.setEnabled(true);
-			Bold.setEnabled(true);
-			fItalic.setEnabled(true);
-			fStrike.setEnabled(true);
-			fUnderline.setEnabled(true);
-			ForegroundLabel.setEnabled(true);
-			fBackgroundLabel.setEnabled(true);
-			fForegroundColorEditor.setEnabled(true);
-			fBackgroundColorEditor.setEnabled(true);
-			Bold.setSelection((attribute.getStyle() & SWT.BOLD) != 0);
-			fItalic.setSelection((attribute.getStyle() & SWT.ITALIC) != 0);
-			fStrike.setSelection((attribute.getStyle() & TextAttribute.STRIKETHROUGH) != 0);
-			fUnderline.setSelection((attribute.getStyle() & TextAttribute.UNDERLINE) != 0);
+			clearStyle.setEnabled(true);
+			bold.setEnabled(true);
+			italic.setEnabled(true);
+			strike.setEnabled(true);
+			underline.setEnabled(true);
+			foregroundLabel.setEnabled(true);
+			backgroundLabel.setEnabled(true);
+			foregroundColorEditor.setEnabled(true);
+			backgroundColorEditor.setEnabled(true);
+			bold.setSelection((attribute.getStyle() & SWT.BOLD) != 0);
+			italic.setSelection((attribute.getStyle() & SWT.ITALIC) != 0);
+			strike
+					.setSelection((attribute.getStyle() & TextAttribute.STRIKETHROUGH) != 0);
+			underline
+					.setSelection((attribute.getStyle() & TextAttribute.UNDERLINE) != 0);
 			if (attribute.getForeground() != null) {
 				foreground = attribute.getForeground();
 			}
@@ -168,43 +160,49 @@ public final class XSLSyntaxColoringPage extends PreferencePage implements IWork
 			}
 		}
 
-		fForegroundColorEditor.setColorValue(foreground.getRGB());
-		fBackgroundColorEditor.setColorValue(background.getRGB());
+		foregroundColorEditor.setColorValue(foreground.getRGB());
+		backgroundColorEditor.setColorValue(background.getRGB());
 	}
 
 	/**
 	 * Color the text in the sample area according to the current preferences
 	 */
-	void applyStyles() {
-		if (fText == null || fText.isDisposed())
+	public void applyStyles() {
+		if (styledText == null || styledText.isDisposed())
 			return;
-		IStructuredDocumentRegion documentRegion = fDocument.getFirstStructuredDocumentRegion();
-	
+		IStructuredDocumentRegion documentRegion = document
+				.getFirstStructuredDocumentRegion();
+
 		while (documentRegion != null) {
 			ITextRegionList regions = documentRegion.getRegions();
 			for (int i = 0; i < regions.size(); i++) {
 				ITextRegion currentRegion = regions.get(i);
 				// lookup the local coloring type and apply it
-				// This could be potentially expensive as we get the model and read it pretty consistently.
+				// This could be potentially expensive as we get the model and
+				// read it pretty consistently.
 				String namedStyle = null;
-				if (fContextToXSLStyleMap.containsKey(currentRegion.getType())) {
-					namedStyle = (String) fContextToXSLStyleMap.get(currentRegion.getType());
+				if (contextToXSLStyleMap.containsKey(currentRegion.getType())) {
+					namedStyle = (String) contextToXSLStyleMap
+							.get(currentRegion.getType());
 					if (namedStyle == null)
 						continue;
 					TextAttribute attribute = getAttributeFor(namedStyle);
 					if (attribute == null)
 						continue;
-					StyleRange style = new StyleRange(documentRegion.getStartOffset(currentRegion), currentRegion.getTextLength(), attribute.getForeground(), attribute.getBackground(), attribute.getStyle());
+					StyleRange style = new StyleRange(documentRegion
+							.getStartOffset(currentRegion), currentRegion
+							.getTextLength(), attribute.getForeground(),
+							attribute.getBackground(), attribute.getStyle());
 					style.strikeout = (attribute.getStyle() & TextAttribute.STRIKETHROUGH) != 0;
 					style.underline = (attribute.getStyle() & TextAttribute.UNDERLINE) != 0;
-					fText.setStyleRange(style);
+					styledText.setStyleRange(style);
 				}
 			}
 			documentRegion = documentRegion.getNext();
 		}
 	}
 
-	Button createCheckbox(Composite parent, String label) {
+	public Button createCheckbox(Composite parent, String label) {
 		Button button = new Button(parent, SWT.CHECK);
 		button.setText(label);
 		button.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
@@ -234,21 +232,28 @@ public final class XSLSyntaxColoringPage extends PreferencePage implements IWork
 	protected Control createContents(final Composite parent) {
 		initializeDialogUnits(parent);
 
-		fDefaultForeground = parent.getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND);
-		fDefaultBackground = parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
+		defaultForeground = parent.getDisplay().getSystemColor(
+				SWT.COLOR_LIST_FOREGROUND);
+		defaultBackground = parent.getDisplay().getSystemColor(
+				SWT.COLOR_LIST_BACKGROUND);
 		Composite pageComponent = createComposite(parent, 2);
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(pageComponent, IHelpContextIds.XML_PREFWEBX_STYLES_HELPID);
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(pageComponent,
+				IHelpContextIds.XML_PREFWEBX_STYLES_HELPID);
 
 		Link link = new Link(pageComponent, SWT.WRAP);
-		link.setText(SSEUIMessages.SyntaxColoring_Link);
+		//String linkText = SSEUIMessages.SyntaxColoring_Description + XSLPreferencesMessages.getString("XSLSyntaxColoringPage.2"); //$NON-NLS-1$
+		link.setText(XSLPreferencesMessages.getString("XSLSyntaxColoringPage.2"));
 		link.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				PreferencesUtil.createPreferenceDialogOn(parent.getShell(), e.text, null, null);
+				PreferencesUtil.createPreferenceDialogOn(parent.getShell(),
+						e.text, null, null);
 			}
 		});
 
-		GridData linkData= new GridData(SWT.FILL, SWT.BEGINNING, true, false, 2, 1);
-		linkData.widthHint= 150; // only expand further if anyone else requires it
+		GridData linkData = new GridData(SWT.FILL, SWT.BEGINNING, true, false,
+				2, 1);
+		linkData.widthHint = 150; // only expand further if anyone else requires
+									// it
 		link.setLayoutData(linkData);
 
 		new Label(pageComponent, SWT.NONE).setLayoutData(new GridData());
@@ -263,153 +268,182 @@ public final class XSLSyntaxColoringPage extends PreferencePage implements IWork
 		((GridLayout) styleEditor.getLayout()).marginRight = 5;
 		((GridLayout) styleEditor.getLayout()).marginLeft = 0;
 		createLabel(styleEditor, XMLUIMessages.SyntaxColoringPage_0);
-		fStylesViewer = createStylesViewer(styleEditor);
+		stylesViewer = createStylesViewer(styleEditor);
 		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gridData.horizontalIndent = 0;
-		Iterator iterator = fStyleToDescriptionMap.values().iterator();
+		Iterator iterator = styleToDescriptionMap.values().iterator();
 		while (iterator.hasNext()) {
-			gridData.widthHint = Math.max(gridData.widthHint, convertWidthInCharsToPixels(iterator.next().toString().length()));
+			gridData.widthHint = Math.max(gridData.widthHint,
+					convertWidthInCharsToPixels(iterator.next().toString()
+							.length()));
 		}
 		gridData.heightHint = convertHeightInCharsToPixels(5);
-		fStylesViewer.getControl().setLayoutData(gridData);
+		stylesViewer.getControl().setLayoutData(gridData);
 
 		Composite editingComposite = createComposite(top, 1);
 		((GridLayout) styleEditor.getLayout()).marginLeft = 5;
 		createLabel(editingComposite, ""); //$NON-NLS-1$
-		Button enabler = createCheckbox(editingComposite, XMLUIMessages.SyntaxColoringPage_2);
+		Button enabler = createCheckbox(editingComposite,
+				XMLUIMessages.SyntaxColoringPage_2);
 		enabler.setEnabled(false);
 		enabler.setSelection(true);
 		Composite editControls = createComposite(editingComposite, 2);
 		((GridLayout) editControls.getLayout()).marginLeft = 20;
 
-		ForegroundLabel = createLabel(editControls, SSEUIMessages.Foreground_UI_);
-		((GridData) ForegroundLabel.getLayoutData()).verticalAlignment = SWT.CENTER;
-		ForegroundLabel.setEnabled(false);
+		foregroundLabel = createLabel(editControls,
+				SSEUIMessages.Foreground_UI_);
+		((GridData) foregroundLabel.getLayoutData()).verticalAlignment = SWT.CENTER;
+		foregroundLabel.setEnabled(false);
 
-		fForegroundColorEditor = new ColorSelector(editControls);
-		Button fForegroundColor = fForegroundColorEditor.getButton();
+		foregroundColorEditor = new ColorSelector(editControls);
+		Button fForegroundColor = foregroundColorEditor.getButton();
 		GridData gd = new GridData(SWT.BEGINNING, SWT.FILL, false, false);
 		fForegroundColor.setLayoutData(gd);
-		fForegroundColorEditor.setEnabled(false);
+		foregroundColorEditor.setEnabled(false);
 
-		fBackgroundLabel = createLabel(editControls, SSEUIMessages.Background_UI_);
-		((GridData) fBackgroundLabel.getLayoutData()).verticalAlignment = SWT.CENTER;
-		fBackgroundLabel.setEnabled(false);
+		backgroundLabel = createLabel(editControls,
+				SSEUIMessages.Background_UI_);
+		((GridData) backgroundLabel.getLayoutData()).verticalAlignment = SWT.CENTER;
+		backgroundLabel.setEnabled(false);
 
-		fBackgroundColorEditor = new ColorSelector(editControls);
-		Button fBackgroundColor = fBackgroundColorEditor.getButton();
+		backgroundColorEditor = new ColorSelector(editControls);
+		Button fBackgroundColor = backgroundColorEditor.getButton();
 		gd = new GridData(SWT.BEGINNING, SWT.FILL, false, false);
 		fBackgroundColor.setLayoutData(gd);
-		fBackgroundColorEditor.setEnabled(false);
+		backgroundColorEditor.setEnabled(false);
 
-		Bold = createCheckbox(editControls, XMLUIMessages.SyntaxColoringPage_3);
-		Bold.setEnabled(false);
-		((GridData) Bold.getLayoutData()).horizontalSpan = 2;
-		fItalic = createCheckbox(editControls, XMLUIMessages.SyntaxColoringPage_4);
-		fItalic.setEnabled(false);
-		((GridData) fItalic.getLayoutData()).horizontalSpan = 2;
-		fStrike = createCheckbox(editControls, XMLUIMessages.SyntaxColoringPage_5);
-		fStrike.setEnabled(false);
-		((GridData) fStrike.getLayoutData()).horizontalSpan = 2;
-		fUnderline = createCheckbox(editControls, XMLUIMessages.SyntaxColoringPage_6);
-		fUnderline.setEnabled(false);
-		((GridData) fUnderline.getLayoutData()).horizontalSpan = 2;
-		fClearStyle = new Button(editingComposite, SWT.PUSH);
-		fClearStyle.setText(SSEUIMessages.Restore_Default_UI_); //$NON-NLS-1$ = "Restore Default"
-		fClearStyle.setLayoutData(new GridData(SWT.BEGINNING));
-		((GridData) fClearStyle.getLayoutData()).horizontalIndent = 20;
-		fClearStyle.setEnabled(false);
+		bold = createCheckbox(editControls, XMLUIMessages.SyntaxColoringPage_3);
+		bold.setEnabled(false);
+		((GridData) bold.getLayoutData()).horizontalSpan = 2;
+		italic = createCheckbox(editControls,
+				XMLUIMessages.SyntaxColoringPage_4);
+		italic.setEnabled(false);
+		((GridData) italic.getLayoutData()).horizontalSpan = 2;
+		strike = createCheckbox(editControls,
+				XMLUIMessages.SyntaxColoringPage_5);
+		strike.setEnabled(false);
+		((GridData) strike.getLayoutData()).horizontalSpan = 2;
+		underline = createCheckbox(editControls,
+				XMLUIMessages.SyntaxColoringPage_6);
+		underline.setEnabled(false);
+		((GridData) underline.getLayoutData()).horizontalSpan = 2;
+		clearStyle = new Button(editingComposite, SWT.PUSH);
+		clearStyle.setText(SSEUIMessages.Restore_Default_UI_); //$NON-NLS-1$ = "Restore Default"
+		clearStyle.setLayoutData(new GridData(SWT.BEGINNING));
+		((GridData) clearStyle.getLayoutData()).horizontalIndent = 20;
+		clearStyle.setEnabled(false);
 
 		Composite sampleArea = createComposite(editor, 1);
 
 		((GridLayout) sampleArea.getLayout()).marginLeft = 5;
 		((GridLayout) sampleArea.getLayout()).marginTop = 5;
 		createLabel(sampleArea, SSEUIMessages.Sample_text__UI_); //$NON-NLS-1$ = "&Sample text:"
-		SourceViewer viewer = new SourceViewer(sampleArea, null, SWT.BORDER | SWT.LEFT_TO_RIGHT | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.READ_ONLY);
-		fText = viewer.getTextWidget();
+		SourceViewer viewer = new SourceViewer(sampleArea, null, SWT.BORDER
+				| SWT.LEFT_TO_RIGHT | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL
+				| SWT.READ_ONLY);
+		styledText = viewer.getTextWidget();
 		GridData gridData3 = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gridData3.widthHint = convertWidthInCharsToPixels(20);
 		gridData3.heightHint = convertHeightInCharsToPixels(5);
 		gridData3.horizontalSpan = 2;
-		fText.setLayoutData(gridData3);
-		fText.setEditable(false);
-		fText.setFont(JFaceResources.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$
-		fText.addKeyListener(getTextKeyListener());
-		fText.addSelectionListener(getTextSelectionListener());
-		fText.addMouseListener(getTextMouseListener());
-		fText.addTraverseListener(getTraverseListener());
-		setAccessible(fText, SSEUIMessages.Sample_text__UI_);
-		
+		styledText.setLayoutData(gridData3);
+		styledText.setEditable(false);
+		styledText.setFont(JFaceResources
+				.getFont("org.eclipse.wst.sse.ui.textfont")); //$NON-NLS-1$
+		styledText.addKeyListener(getTextKeyListener());
+		styledText.addSelectionListener(getTextSelectionListener());
+		styledText.addMouseListener(getTextMouseListener());
+		styledText.addTraverseListener(getTraverseListener());
+		setAccessible(styledText, SSEUIMessages.Sample_text__UI_);
+
 		try {
-			File file = XSLUIPlugin.makeFileFor(this.XSLFILES_DIR, this.SYNTAXCOLORING_XSL);
-			fDocument = StructuredModelManager.getModelManager().createStructuredDocumentFor(file.getAbsolutePath(), new FileInputStream(file), null);
+			File file = XSLUIPlugin.makeFileFor(this.XSLFILES_DIR,
+					this.SYNTAXCOLORING_XSL);
+			document = StructuredModelManager.getModelManager()
+					.createStructuredDocumentFor(file.getAbsolutePath(),
+							new FileInputStream(file), null);
 		} catch (Exception ex) {
 			XSLUIPlugin.log(ex);
 		}
-		viewer.setDocument(fDocument);
+		viewer.setDocument(document);
 
-		top.setWeights(new int[]{1, 1});
-		editor.setWeights(new int[]{1, 1});
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(pageComponent, IHelpContextIds.XML_PREFWEBX_STYLES_HELPID);
+		top.setWeights(new int[] { 1, 1 });
+		editor.setWeights(new int[] { 1, 1 });
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(pageComponent,
+				IHelpContextIds.XML_PREFWEBX_STYLES_HELPID);
 
-		fStylesViewer.setInput(getStylePreferenceKeys());
+		stylesViewer.setInput(getStylePreferenceKeys());
 
 		applyStyles();
 
-		fStylesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				if (!event.getSelection().isEmpty()) {
-					Object o = ((IStructuredSelection) event.getSelection()).getFirstElement();
-					String namedStyle = o.toString();
-					activate(namedStyle);
-					if (namedStyle == null)
-						return;
-				}
-			}
-		});
+		stylesViewer
+				.addSelectionChangedListener(new ISelectionChangedListener() {
+					public void selectionChanged(SelectionChangedEvent event) {
+						if (!event.getSelection().isEmpty()) {
+							Object o = ((IStructuredSelection) event
+									.getSelection()).getFirstElement();
+							String namedStyle = o.toString();
+							activate(namedStyle);
+							if (namedStyle == null)
+								return;
+						}
+					}
+				});
 
-		fForegroundColorEditor.addListener(new IPropertyChangeListener() {
+		foregroundColorEditor.addListener(new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty().equals(ColorSelector.PROP_COLORCHANGE)) {
-					Object o = ((IStructuredSelection) fStylesViewer.getSelection()).getFirstElement();
+					Object o = ((IStructuredSelection) stylesViewer
+							.getSelection()).getFirstElement();
 					String namedStyle = o.toString();
 					String prefString = getOverlayStore().getString(namedStyle);
-					String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
+					String[] stylePrefs = ColorHelper
+							.unpackStylePreferences(prefString);
 					if (stylePrefs != null) {
 						String oldValue = stylePrefs[0];
 						// open color dialog to get new color
-						String newValue = ColorHelper.toRGBString(fForegroundColorEditor.getColorValue());
+						String newValue = ColorHelper
+								.toRGBString(foregroundColorEditor
+										.getColorValue());
 
 						if (!newValue.equals(oldValue)) {
 							stylePrefs[0] = newValue;
-							String newPrefString = ColorHelper.packStylePreferences(stylePrefs);
-							getOverlayStore().setValue(namedStyle, newPrefString);
+							String newPrefString = ColorHelper
+									.packStylePreferences(stylePrefs);
+							getOverlayStore().setValue(namedStyle,
+									newPrefString);
 							applyStyles();
-							fText.redraw();
+							styledText.redraw();
 						}
 					}
 				}
 			}
 		});
 
-		fBackgroundColorEditor.addListener(new IPropertyChangeListener() {
+		backgroundColorEditor.addListener(new IPropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
 				if (event.getProperty().equals(ColorSelector.PROP_COLORCHANGE)) {
-					Object o = ((IStructuredSelection) fStylesViewer.getSelection()).getFirstElement();
+					Object o = ((IStructuredSelection) stylesViewer
+							.getSelection()).getFirstElement();
 					String namedStyle = o.toString();
 					String prefString = getOverlayStore().getString(namedStyle);
-					String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
+					String[] stylePrefs = ColorHelper
+							.unpackStylePreferences(prefString);
 					if (stylePrefs != null) {
 						String oldValue = stylePrefs[1];
 						// open color dialog to get new color
-						String newValue = ColorHelper.toRGBString(fBackgroundColorEditor.getColorValue());
+						String newValue = ColorHelper
+								.toRGBString(backgroundColorEditor
+										.getColorValue());
 
 						if (!newValue.equals(oldValue)) {
 							stylePrefs[1] = newValue;
-							String newPrefString = ColorHelper.packStylePreferences(stylePrefs);
-							getOverlayStore().setValue(namedStyle, newPrefString);
+							String newPrefString = ColorHelper
+									.packStylePreferences(stylePrefs);
+							getOverlayStore().setValue(namedStyle,
+									newPrefString);
 							applyStyles();
-							fText.redraw();
+							styledText.redraw();
 							activate(namedStyle);
 						}
 					}
@@ -417,102 +451,115 @@ public final class XSLSyntaxColoringPage extends PreferencePage implements IWork
 			}
 		});
 
-		Bold.addSelectionListener(new SelectionAdapter() {
+		bold.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				super.widgetSelected(e);
 				// get current (newly old) style
-				Object o = ((IStructuredSelection) fStylesViewer.getSelection()).getFirstElement();
+				Object o = ((IStructuredSelection) stylesViewer.getSelection())
+						.getFirstElement();
 				String namedStyle = o.toString();
 				String prefString = getOverlayStore().getString(namedStyle);
-				String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
+				String[] stylePrefs = ColorHelper
+						.unpackStylePreferences(prefString);
 				if (stylePrefs != null) {
 					String oldValue = stylePrefs[2];
-					String newValue = String.valueOf(Bold.getSelection());
+					String newValue = String.valueOf(bold.getSelection());
 					if (!newValue.equals(oldValue)) {
 						stylePrefs[2] = newValue;
-						String newPrefString = ColorHelper.packStylePreferences(stylePrefs);
+						String newPrefString = ColorHelper
+								.packStylePreferences(stylePrefs);
 						getOverlayStore().setValue(namedStyle, newPrefString);
 						applyStyles();
-						fText.redraw();
+						styledText.redraw();
 					}
 				}
 			}
 		});
 
-		fItalic.addSelectionListener(new SelectionAdapter() {
+		italic.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				super.widgetSelected(e);
 				// get current (newly old) style
-				Object o = ((IStructuredSelection) fStylesViewer.getSelection()).getFirstElement();
+				Object o = ((IStructuredSelection) stylesViewer.getSelection())
+						.getFirstElement();
 				String namedStyle = o.toString();
 				String prefString = getOverlayStore().getString(namedStyle);
-				String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
+				String[] stylePrefs = ColorHelper
+						.unpackStylePreferences(prefString);
 				if (stylePrefs != null) {
 					String oldValue = stylePrefs[3];
-					String newValue = String.valueOf(fItalic.getSelection());
+					String newValue = String.valueOf(italic.getSelection());
 					if (!newValue.equals(oldValue)) {
 						stylePrefs[3] = newValue;
-						String newPrefString = ColorHelper.packStylePreferences(stylePrefs);
+						String newPrefString = ColorHelper
+								.packStylePreferences(stylePrefs);
 						getOverlayStore().setValue(namedStyle, newPrefString);
 						applyStyles();
-						fText.redraw();
+						styledText.redraw();
 					}
 				}
 			}
 		});
 
-		fStrike.addSelectionListener(new SelectionAdapter() {
+		strike.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				super.widgetSelected(e);
 				// get current (newly old) style
-				Object o = ((IStructuredSelection) fStylesViewer.getSelection()).getFirstElement();
+				Object o = ((IStructuredSelection) stylesViewer.getSelection())
+						.getFirstElement();
 				String namedStyle = o.toString();
 				String prefString = getOverlayStore().getString(namedStyle);
-				String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
+				String[] stylePrefs = ColorHelper
+						.unpackStylePreferences(prefString);
 				if (stylePrefs != null) {
 					String oldValue = stylePrefs[4];
-					String newValue = String.valueOf(fStrike.getSelection());
+					String newValue = String.valueOf(strike.getSelection());
 					if (!newValue.equals(oldValue)) {
 						stylePrefs[4] = newValue;
-						String newPrefString = ColorHelper.packStylePreferences(stylePrefs);
+						String newPrefString = ColorHelper
+								.packStylePreferences(stylePrefs);
 						getOverlayStore().setValue(namedStyle, newPrefString);
 						applyStyles();
-						fText.redraw();
+						styledText.redraw();
 					}
 				}
 			}
 		});
 
-		fUnderline.addSelectionListener(new SelectionAdapter() {
+		underline.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				super.widgetSelected(e);
 				// get current (newly old) style
-				Object o = ((IStructuredSelection) fStylesViewer.getSelection()).getFirstElement();
+				Object o = ((IStructuredSelection) stylesViewer.getSelection())
+						.getFirstElement();
 				String namedStyle = o.toString();
 				String prefString = getOverlayStore().getString(namedStyle);
-				String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
+				String[] stylePrefs = ColorHelper
+						.unpackStylePreferences(prefString);
 				if (stylePrefs != null) {
 					String oldValue = stylePrefs[5];
-					String newValue = String.valueOf(fUnderline.getSelection());
+					String newValue = String.valueOf(underline.getSelection());
 					if (!newValue.equals(oldValue)) {
 						stylePrefs[5] = newValue;
-						String newPrefString = ColorHelper.packStylePreferences(stylePrefs);
+						String newPrefString = ColorHelper
+								.packStylePreferences(stylePrefs);
 						getOverlayStore().setValue(namedStyle, newPrefString);
 						applyStyles();
-						fText.redraw();
+						styledText.redraw();
 					}
 				}
 			}
 		});
 
-		fClearStyle.addSelectionListener(new SelectionAdapter() {
+		clearStyle.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				if (fStylesViewer.getSelection().isEmpty())
+				if (stylesViewer.getSelection().isEmpty())
 					return;
-				String namedStyle = ((IStructuredSelection) fStylesViewer.getSelection()).getFirstElement().toString();
+				String namedStyle = ((IStructuredSelection) stylesViewer
+						.getSelection()).getFirstElement().toString();
 				getOverlayStore().setToDefault(namedStyle);
 				applyStyles();
-				fText.redraw();
+				styledText.redraw();
 				activate(namedStyle);
 			}
 		});
@@ -541,10 +588,12 @@ public final class XSLSyntaxColoringPage extends PreferencePage implements IWork
 
 		Iterator i = getStylePreferenceKeys().iterator();
 		while (i.hasNext()) {
-			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, (String) i.next()));
+			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(
+					OverlayPreferenceStore.STRING, (String) i.next()));
 		}
 
-		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
+		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys
+				.size()];
 		overlayKeys.toArray(keys);
 		return keys;
 	}
@@ -557,11 +606,13 @@ public final class XSLSyntaxColoringPage extends PreferencePage implements IWork
 	 * @return
 	 */
 	private StructuredViewer createStylesViewer(Composite parent) {
-		StructuredViewer stylesViewer = new ListViewer(parent, SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
-		stylesViewer.setComparator(new ViewerComparator(Collator.getInstance()));
+		StructuredViewer stylesViewer = new ListViewer(parent, SWT.SINGLE
+				| SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
+		stylesViewer
+				.setComparator(new ViewerComparator(Collator.getInstance()));
 		stylesViewer.setLabelProvider(new LabelProvider() {
 			public String getText(Object element) {
-				Object description = fStyleToDescriptionMap.get(element);
+				Object description = styleToDescriptionMap.get(element);
 				if (description != null)
 					return description.toString();
 				return super.getText(element);
@@ -587,15 +638,16 @@ public final class XSLSyntaxColoringPage extends PreferencePage implements IWork
 				return false;
 			}
 
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+			public void inputChanged(Viewer viewer, Object oldInput,
+					Object newInput) {
 			}
 		});
 		return stylesViewer;
 	}
 
 	public void dispose() {
-		if (fOverlayStore != null) {
-			fOverlayStore.stop();
+		if (overlayStore != null) {
+			overlayStore.stop();
 		}
 		super.dispose();
 	}
@@ -605,12 +657,14 @@ public final class XSLSyntaxColoringPage extends PreferencePage implements IWork
 	}
 
 	private TextAttribute getAttributeFor(String namedStyle) {
-		TextAttribute ta = new TextAttribute(fDefaultForeground, fDefaultBackground, SWT.NORMAL);
+		TextAttribute ta = new TextAttribute(defaultForeground,
+				defaultBackground, SWT.NORMAL);
 
-		if (namedStyle != null && fOverlayStore != null) {
+		if (namedStyle != null && overlayStore != null) {
 			// note: "namedStyle" *is* the preference key
 			String prefString = getOverlayStore().getString(namedStyle);
-			String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
+			String[] stylePrefs = ColorHelper
+					.unpackStylePreferences(prefString);
 			if (stylePrefs != null) {
 				RGB foreground = ColorHelper.toRGB(stylePrefs[0]);
 				RGB background = ColorHelper.toRGB(stylePrefs[1]);
@@ -630,7 +684,8 @@ public final class XSLSyntaxColoringPage extends PreferencePage implements IWork
 				if (stylePrefs.length > 4) {
 					boolean on = Boolean.valueOf(stylePrefs[4]).booleanValue();
 					if (on)
-						fontModifier = fontModifier | TextAttribute.STRIKETHROUGH;
+						fontModifier = fontModifier
+								| TextAttribute.STRIKETHROUGH;
 				}
 				if (stylePrefs.length > 5) {
 					boolean on = Boolean.valueOf(stylePrefs[5]).booleanValue();
@@ -638,29 +693,30 @@ public final class XSLSyntaxColoringPage extends PreferencePage implements IWork
 						fontModifier = fontModifier | TextAttribute.UNDERLINE;
 				}
 
-				ta = new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, fontModifier);
+				ta = new TextAttribute((foreground != null) ? EditorUtility
+						.getColor(foreground) : null,
+						(background != null) ? EditorUtility
+								.getColor(background) : null, fontModifier);
 			}
 		}
 		return ta;
 	}
 
-	private String getExampleText() {
-		return Messages.getString("xsltStyleDocument");
-	}
-
 	private String getNamedStyleAtOffset(int offset) {
 		// ensure the offset is clean
-		if (offset >= fDocument.getLength())
-			return getNamedStyleAtOffset(fDocument.getLength() - 1);
+		if (offset >= document.getLength())
+			return getNamedStyleAtOffset(document.getLength() - 1);
 		else if (offset < 0)
 			return getNamedStyleAtOffset(0);
-		IStructuredDocumentRegion documentRegion = fDocument.getFirstStructuredDocumentRegion();
+		IStructuredDocumentRegion documentRegion = document
+				.getFirstStructuredDocumentRegion();
 		while (documentRegion != null && !documentRegion.containsOffset(offset)) {
 			documentRegion = documentRegion.getNext();
 		}
 		if (documentRegion != null) {
 			// find the ITextRegion's Context at this offset
-			ITextRegion interest = documentRegion.getRegionAtCharacterOffset(offset);
+			ITextRegion interest = documentRegion
+					.getRegionAtCharacterOffset(offset);
 			if (interest == null)
 				return null;
 			if (offset > documentRegion.getTextEndOffset(interest))
@@ -670,7 +726,7 @@ public final class XSLSyntaxColoringPage extends PreferencePage implements IWork
 				return null;
 			// find the named style (internal/selectable name) for that
 			// context
-			String namedStyle = (String) fContextToStyleMap.get(regionContext);
+			String namedStyle = (String) contextToXSLStyleMap.get(regionContext);
 			if (namedStyle != null) {
 				return namedStyle;
 			}
@@ -679,19 +735,19 @@ public final class XSLSyntaxColoringPage extends PreferencePage implements IWork
 	}
 
 	private OverlayPreferenceStore getOverlayStore() {
-		return fOverlayStore;
+		return overlayStore;
 	}
 
 	private Collection<String> getStylePreferenceKeys() {
-		if (fStylePreferenceKeys == null) {
+		if (stylePreferenceKeys == null) {
 			List<String> styles = new ArrayList<String>();
 			styles.add(IStyleConstantsXSL.TAG_BORDER);
 			styles.add(IStyleConstantsXSL.TAG_NAME);
 			styles.add(IStyleConstantsXSL.TAG_ATTRIBUTE_NAME);
 			styles.add(IStyleConstantsXSL.TAG_ATTRIBUTE_VALUE);
-			fStylePreferenceKeys = styles;
+			stylePreferenceKeys = styles;
 		}
-		return fStylePreferenceKeys;
+		return stylePreferenceKeys;
 	}
 
 	private KeyListener getTextKeyListener() {
@@ -754,7 +810,8 @@ public final class XSLSyntaxColoringPage extends PreferencePage implements IWork
 			 */
 			public void keyTraversed(TraverseEvent e) {
 				if (e.widget instanceof StyledText) {
-					if ((e.detail == SWT.TRAVERSE_TAB_NEXT) || (e.detail == SWT.TRAVERSE_TAB_PREVIOUS))
+					if ((e.detail == SWT.TRAVERSE_TAB_NEXT)
+							|| (e.detail == SWT.TRAVERSE_TAB_PREVIOUS))
 						e.doit = true;
 				}
 			}
@@ -764,92 +821,60 @@ public final class XSLSyntaxColoringPage extends PreferencePage implements IWork
 	public void init(IWorkbench workbench) {
 		setDescription(SSEUIMessages.SyntaxColoring_Description);
 
-		fStyleToDescriptionMap = new HashMap();
-		fContextToStyleMap = new HashMap();
-		fContextToXSLStyleMap = new HashMap();
+		styleToDescriptionMap = new HashMap();
+		contextToXSLStyleMap = new HashMap();
 
 		initStyleToDescriptionMap();
 		initRegionContextToStyleMap();
 
-		fOverlayStore = new OverlayPreferenceStore(getPreferenceStore(), createOverlayStoreKeys());
-		fOverlayStore.load();
-		fOverlayStore.start();
+		overlayStore = new OverlayPreferenceStore(getPreferenceStore(),
+				createOverlayStoreKeys());
+		overlayStore.load();
+		overlayStore.start();
 	}
 
 	private void initRegionContextToStyleMap() {
-		xmlContextToStyleMap();
 		xslContextToStyleMap();
 	}
 
-	@SuppressWarnings("unchecked")
-	private void xmlContextToStyleMap() {
-		fContextToStyleMap.put(DOMRegionContext.XML_COMMENT_OPEN, IStyleConstantsXML.COMMENT_BORDER);
-		fContextToStyleMap.put(DOMRegionContext.XML_COMMENT_TEXT, IStyleConstantsXML.COMMENT_TEXT);
-		fContextToStyleMap.put(DOMRegionContext.XML_COMMENT_CLOSE, IStyleConstantsXML.COMMENT_BORDER);
 
-		fContextToStyleMap.put(DOMRegionContext.XML_TAG_OPEN, IStyleConstantsXML.TAG_BORDER);
-		fContextToStyleMap.put(DOMRegionContext.XML_END_TAG_OPEN, IStyleConstantsXML.TAG_BORDER);
-		fContextToStyleMap.put(DOMRegionContext.XML_TAG_NAME, IStyleConstantsXML.TAG_NAME);
-		fContextToStyleMap.put(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME, IStyleConstantsXML.TAG_ATTRIBUTE_NAME);
-		fContextToStyleMap.put(DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE, IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
-		fContextToStyleMap.put(DOMRegionContext.XML_TAG_CLOSE, IStyleConstantsXML.TAG_BORDER);
-		fContextToStyleMap.put(DOMRegionContext.XML_EMPTY_TAG_CLOSE, IStyleConstantsXML.TAG_BORDER);
-
-		fContextToStyleMap.put(DOMRegionContext.XML_DECLARATION_OPEN, IStyleConstantsXML.DECL_BORDER);
-		fContextToStyleMap.put(DOMRegionContext.XML_DECLARATION_CLOSE, IStyleConstantsXML.DECL_BORDER);
-		fContextToStyleMap.put(DOMRegionContext.XML_ELEMENT_DECLARATION, IStyleConstantsXML.DECL_BORDER);
-		fContextToStyleMap.put(DOMRegionContext.XML_ELEMENT_DECL_CLOSE, IStyleConstantsXML.DECL_BORDER);
-
-		fContextToStyleMap.put(DOMRegionContext.XML_CONTENT, IStyleConstantsXML.XML_CONTENT);
-		fContextToStyleMap.put(DOMRegionContext.XML_CDATA_OPEN, IStyleConstantsXML.CDATA_BORDER);
-		fContextToStyleMap.put(DOMRegionContext.XML_CDATA_TEXT, IStyleConstantsXML.CDATA_TEXT);
-		fContextToStyleMap.put(DOMRegionContext.XML_CDATA_CLOSE, IStyleConstantsXML.CDATA_BORDER);
-
-		fContextToStyleMap.put(DOMRegionContext.XML_PI_OPEN, IStyleConstantsXML.PI_BORDER);
-		fContextToStyleMap.put(DOMRegionContext.XML_PI_CONTENT, IStyleConstantsXML.PI_CONTENT);
-		fContextToStyleMap.put(DOMRegionContext.XML_PI_CLOSE, IStyleConstantsXML.PI_BORDER);
-		fContextToStyleMap.put(DOMRegionContext.XML_ELEMENT_DECL_NAME, IStyleConstantsXML.DOCTYPE_NAME);
-		fContextToStyleMap.put(DOMRegionContext.XML_DOCTYPE_DECLARATION, IStyleConstantsXML.TAG_NAME);
-		fContextToStyleMap.put(DOMRegionContext.XML_DOCTYPE_DECLARATION_CLOSE, IStyleConstantsXML.DECL_BORDER);
-
-		fContextToStyleMap.put(DOMRegionContext.XML_DOCTYPE_NAME, IStyleConstantsXML.DOCTYPE_NAME);
-		fContextToStyleMap.put(DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_PUBLIC, IStyleConstantsXML.DOCTYPE_EXTERNAL_ID);
-		fContextToStyleMap.put(DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_PUBREF, IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_PUBREF);
-		fContextToStyleMap.put(DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSTEM, IStyleConstantsXML.DOCTYPE_EXTERNAL_ID);
-		fContextToStyleMap.put(DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSREF, IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_SYSREF);
-
-		fContextToStyleMap.put(DOMRegionContext.XML_CHAR_REFERENCE, IStyleConstantsXML.ENTITY_REFERENCE);
-		fContextToStyleMap.put(DOMRegionContext.XML_ENTITY_REFERENCE, IStyleConstantsXML.ENTITY_REFERENCE);
-		fContextToStyleMap.put(DOMRegionContext.XML_PE_REFERENCE, IStyleConstantsXML.ENTITY_REFERENCE);
-	}
-	
 	@SuppressWarnings("unchecked")
 	private void xslContextToStyleMap() {
-		fContextToXSLStyleMap.put(DOMRegionContext.XML_TAG_OPEN, IStyleConstantsXSL.TAG_BORDER);
-		fContextToXSLStyleMap.put(DOMRegionContext.XML_END_TAG_OPEN, IStyleConstantsXSL.TAG_BORDER);
-		fContextToXSLStyleMap.put(DOMRegionContext.XML_TAG_NAME, IStyleConstantsXSL.TAG_NAME);
-		fContextToXSLStyleMap.put(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME, IStyleConstantsXSL.TAG_ATTRIBUTE_NAME);
-		fContextToXSLStyleMap.put(DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE, IStyleConstantsXSL.TAG_ATTRIBUTE_VALUE);
-		fContextToXSLStyleMap.put(DOMRegionContext.XML_TAG_CLOSE, IStyleConstantsXSL.TAG_BORDER);
-		fContextToXSLStyleMap.put(DOMRegionContext.XML_EMPTY_TAG_CLOSE, IStyleConstantsXSL.TAG_BORDER);
+		contextToXSLStyleMap.put(DOMRegionContext.XML_TAG_OPEN,
+				IStyleConstantsXSL.TAG_BORDER);
+		contextToXSLStyleMap.put(DOMRegionContext.XML_END_TAG_OPEN,
+				IStyleConstantsXSL.TAG_BORDER);
+		contextToXSLStyleMap.put(DOMRegionContext.XML_TAG_NAME,
+				IStyleConstantsXSL.TAG_NAME);
+		contextToXSLStyleMap.put(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME,
+				IStyleConstantsXSL.TAG_ATTRIBUTE_NAME);
+		contextToXSLStyleMap.put(DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE,
+				IStyleConstantsXSL.TAG_ATTRIBUTE_VALUE);
+		contextToXSLStyleMap.put(DOMRegionContext.XML_TAG_CLOSE,
+				IStyleConstantsXSL.TAG_BORDER);
+		contextToXSLStyleMap.put(DOMRegionContext.XML_EMPTY_TAG_CLOSE,
+				IStyleConstantsXSL.TAG_BORDER);
 	}
-
 
 	@SuppressWarnings("unchecked")
 	private void initStyleToDescriptionMap() {
-		fStyleToDescriptionMap.put(IStyleConstantsXSL.TAG_BORDER, XMLUIMessages.Tag_Delimiters_UI_);
-		fStyleToDescriptionMap.put(IStyleConstantsXSL.TAG_NAME, XMLUIMessages.Tag_Names_UI_);
-		fStyleToDescriptionMap.put(IStyleConstantsXSL.TAG_ATTRIBUTE_NAME, XMLUIMessages.Attribute_Names_UI_);
-		fStyleToDescriptionMap.put(IStyleConstantsXSL.TAG_ATTRIBUTE_VALUE, XMLUIMessages.Attribute_Values_UI_);
+		styleToDescriptionMap.put(IStyleConstantsXSL.TAG_BORDER,
+				XMLUIMessages.Tag_Delimiters_UI_);
+		styleToDescriptionMap.put(IStyleConstantsXSL.TAG_NAME,
+				XMLUIMessages.Tag_Names_UI_);
+		styleToDescriptionMap.put(IStyleConstantsXSL.TAG_ATTRIBUTE_NAME,
+				XMLUIMessages.Attribute_Names_UI_);
+		styleToDescriptionMap.put(IStyleConstantsXSL.TAG_ATTRIBUTE_VALUE,
+				XMLUIMessages.Attribute_Values_UI_);
 	}
 
 	protected void performDefaults() {
 		super.performDefaults();
 		getOverlayStore().loadDefaults();
 		applyStyles();
-		fStylesViewer.setSelection(StructuredSelection.EMPTY);
+		stylesViewer.setSelection(StructuredSelection.EMPTY);
 		activate(null);
-		fText.redraw();
+		styledText.redraw();
 	}
 
 	public boolean performOk() {
@@ -863,11 +888,10 @@ public final class XSLSyntaxColoringPage extends PreferencePage implements IWork
 	private void selectColorAtOffset(int offset) {
 		String namedStyle = getNamedStyleAtOffset(offset);
 		if (namedStyle != null) {
-			fStylesViewer.setSelection(new StructuredSelection(namedStyle));
-			fStylesViewer.reveal(namedStyle);
-		}
-		else {
-			fStylesViewer.setSelection(StructuredSelection.EMPTY);
+			stylesViewer.setSelection(new StructuredSelection(namedStyle));
+			stylesViewer.reveal(namedStyle);
+		} else {
+			stylesViewer.setSelection(StructuredSelection.EMPTY);
 		}
 		activate(namedStyle);
 	}

@@ -39,19 +39,19 @@ public class XSLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 
 
 		// XSL Style Preferences
-		String NOBACKGROUNDBOLD = " | null | false"; //$NON-NLS-1$
+		String BOLD = " | null | true"; //$NON-NLS-1$
 		String JUSTITALIC = " | null | false | true"; //$NON-NLS-1$
-		String styleValue = ColorHelper.findRGBString(registry, IStyleConstantsXSL.TAG_ATTRIBUTE_NAME, 127, 0, 127) + NOBACKGROUNDBOLD;
+		String styleValue = ColorHelper.findRGBString(registry, IStyleConstantsXSL.TAG_ATTRIBUTE_NAME, 127, 0, 127) + BOLD;
 		store.setDefault(IStyleConstantsXSL.TAG_ATTRIBUTE_NAME, styleValue);
 
 		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsXSL.TAG_ATTRIBUTE_VALUE, 42, 0, 255) + JUSTITALIC;
 		store.setDefault(IStyleConstantsXSL.TAG_ATTRIBUTE_VALUE, styleValue);
 
-		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsXML.TAG_BORDER, 0, 128, 128) + NOBACKGROUNDBOLD;
-		store.setDefault(IStyleConstantsXML.TAG_BORDER, styleValue);
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsXSL.TAG_BORDER, 0, 128, 128) + BOLD;
+		store.setDefault(IStyleConstantsXSL.TAG_BORDER, styleValue);
 
-		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsXML.TAG_NAME, 63, 127, 127) + NOBACKGROUNDBOLD;
-		store.setDefault(IStyleConstantsXML.TAG_NAME, styleValue);
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsXSL.TAG_NAME, 63, 127, 127) + BOLD;
+		store.setDefault(IStyleConstantsXSL.TAG_NAME, styleValue);
 		
 	}
 

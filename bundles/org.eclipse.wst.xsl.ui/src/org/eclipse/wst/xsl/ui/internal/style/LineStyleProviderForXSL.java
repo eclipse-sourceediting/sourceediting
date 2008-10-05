@@ -68,8 +68,11 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 
 	protected ReconcilerHighlighter recHighlighter = null;
 	
-	private HashMap xslTextAttributes = null;
-	private HashMap xmlTextAttributes = null;
+	private HashMap<String, TextAttribute> xslTextAttributes = null;
+	private HashMap<String, TextAttribute> xmlTextAttributes = null;
+	private HashMap<String,String> xmlRegionMap = null;
+	private HashMap<String,String> xslRegionMap = null;
+	
 	
 	private IPreferenceStore xslPreferenceStore = null;
 	private IPreferenceStore xmlPreferenceStore = null;
@@ -114,7 +117,7 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 	protected TextAttribute getAttributeFor(ITextRegionCollection collection,
 			ITextRegion region) {
 		if (region == null) {
-			return null;
+			return (TextAttribute) getXMLTextAttributes().get(IStyleConstantsXML.CDATA_TEXT);
 		}
 		
 		String type = region.getType();
@@ -129,45 +132,51 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 	 * @param type
 	 */
 	private TextAttribute getXSLAttribute(String type) {
-		if ((type == DOMRegionContext.XML_TAG_OPEN)
-				|| (type == DOMRegionContext.XML_END_TAG_OPEN)
-				|| (type == DOMRegionContext.XML_TAG_CLOSE)
-				|| (type == DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
-			return (TextAttribute) getXSLTextAttributes().get(
-					IStyleConstantsXSL.TAG_BORDER);
+		TextAttribute attribute = null;
+		HashMap<String,String> regionMap = getXSLRegions();
+		HashMap<String,TextAttribute> textAttributes = getXSLTextAttributes();
+		
+		if (regionMap.containsKey(type)) {
+			attribute = textAttributes.get(regionMap.get(type));
 		}
-
-		if (type == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
-			return (TextAttribute) getXSLTextAttributes().get(
-					IStyleConstantsXSL.TAG_ATTRIBUTE_NAME);
-		}
-
-		if (type == DOMRegionContext.XML_TAG_NAME) {
-			return (TextAttribute) getXSLTextAttributes().get(
-					IStyleConstantsXSL.TAG_NAME);
-		}
-
-		if ((type == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
-			return (TextAttribute) getXSLTextAttributes().get(
-					IStyleConstantsXSL.TAG_ATTRIBUTE_VALUE);
-		}
-		return null;
+		return attribute;
 	}
+	
+	protected HashMap<String,String> getXSLRegions() {
+		if (xslRegionMap == null) {
+			xslRegionMap = new HashMap<String,String>();
+			loadXSLRegions();
+		}
+		return xslRegionMap;
+	}
+	
+	protected void loadXSLRegions() {
+		xslRegionMap.put(DOMRegionContext.XML_TAG_OPEN, IStyleConstantsXSL.TAG_BORDER);
+		xslRegionMap.put(DOMRegionContext.XML_END_TAG_OPEN, IStyleConstantsXSL.TAG_BORDER);
+		xslRegionMap.put(DOMRegionContext.XML_TAG_CLOSE, IStyleConstantsXSL.TAG_BORDER);
+		xslRegionMap.put(DOMRegionContext.XML_EMPTY_TAG_CLOSE, IStyleConstantsXSL.TAG_BORDER);
+		xslRegionMap.put(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME, IStyleConstantsXSL.TAG_ATTRIBUTE_NAME);
+		xslRegionMap.put(DOMRegionContext.XML_TAG_NAME, IStyleConstantsXSL.TAG_NAME);
+		xslRegionMap.put(DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE, IStyleConstantsXSL.TAG_ATTRIBUTE_VALUE);
+	}
+	
 
-	/**
-	 * Returns the hashtable containing all the text attributes for this line
-	 * style provider. Lazily creates a hashtable if one has not already been
-	 * created.
-	 * 
-	 * @return
-	 */
-	protected HashMap getXSLTextAttributes() {
+	protected HashMap<String,TextAttribute> getXSLTextAttributes() {
 		if (xslTextAttributes == null) {
-			xslTextAttributes = new HashMap();
+			xslTextAttributes = new HashMap<String,TextAttribute>();
 			loadXSLColors();
 		}
 		return xslTextAttributes;
 	}
+	
+	protected void loadXSLColors() {
+		addXSLTextAttribute(IStyleConstantsXSL.TAG_NAME);
+		addXSLTextAttribute(IStyleConstantsXSL.TAG_BORDER);
+		addXSLTextAttribute(IStyleConstantsXSL.TAG_ATTRIBUTE_NAME);
+		addXSLTextAttribute(IStyleConstantsXSL.TAG_ATTRIBUTE_VALUE);
+	}
+	
+	
 	
 	/**
 	 * Returns the hashtable containing all the text attributes for this line
@@ -182,7 +191,8 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 			loadXMLColors();
 		}
 		return xmlTextAttributes;
-	}	
+	}
+	
 	
 	protected void handlePropertyChange(PropertyChangeEvent event) {
 		String styleKey = null;
@@ -288,12 +298,6 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 	}
 	
 
-	protected void loadXSLColors() {
-		addXSLTextAttribute(IStyleConstantsXSL.TAG_NAME);
-		addXSLTextAttribute(IStyleConstantsXSL.TAG_BORDER);
-		addXSLTextAttribute(IStyleConstantsXSL.TAG_ATTRIBUTE_NAME);
-		addXSLTextAttribute(IStyleConstantsXSL.TAG_ATTRIBUTE_VALUE);
-	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider#prepareRegions(org.eclipse.jface.text.ITypedRegion, int, int, java.util.Collection)
@@ -643,5 +647,6 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 	@Deprecated
 	protected void loadColors() {
 		
-	}	
+	}
+		
 }
