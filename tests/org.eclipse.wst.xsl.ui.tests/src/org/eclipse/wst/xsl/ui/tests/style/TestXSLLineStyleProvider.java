@@ -265,7 +265,7 @@ public class TestXSLLineStyleProvider extends AbstractXSLUITest {
 		ArrayList holdStyleResults = new ArrayList();
 		applyStyles(provider, partitions, holdStyleResults);
 		assertFalse("No styles applied.", holdStyleResults.isEmpty());
-		assertEquals("Unexpected StyleRange size", 221, holdStyleResults.size());
+		assertEquals("Unexpected StyleRange size", 220, holdStyleResults.size());
 	}
 
 }
