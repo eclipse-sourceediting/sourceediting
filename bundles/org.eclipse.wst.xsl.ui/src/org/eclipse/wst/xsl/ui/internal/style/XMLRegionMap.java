@@ -51,6 +51,7 @@ public class XMLRegionMap {
 		regionMap.put(DOMRegionContext.XML_PE_REFERENCE, IStyleConstantsXML.ENTITY_REFERENCE);
 		regionMap.put(DOMRegionContext.XML_PI_CONTENT, IStyleConstantsXML.PI_CONTENT);
 		regionMap.put(DOMRegionContext.XML_PI_OPEN, IStyleConstantsXML.PI_BORDER);
+		regionMap.put(DOMRegionContext.XML_PI_CLOSE, IStyleConstantsXML.PI_BORDER);
 		regionMap.put(DOMRegionContext.XML_DECLARATION_OPEN, IStyleConstantsXML.DECL_BORDER);
 		regionMap.put(DOMRegionContext.XML_DECLARATION_CLOSE, IStyleConstantsXML.DECL_BORDER);
 		regionMap.put(DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSREF, IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_SYSREF);
