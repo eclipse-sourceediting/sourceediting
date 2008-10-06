@@ -173,6 +173,14 @@ public class XSLCompletionTest extends AbstractXSLUITest {
 		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer, 748);
 		assertEquals("Wrong node name returned:", "xsl:param", node.getNodeName());
 	}
+	
+	public void testAttributeNotValueAvailable() throws Exception {
+    	ICompletionProposal[] proposals = getProposals(838);
+    	
+    	assertTrue(proposals.length > 1);
+    	ICompletionProposal proposal = proposals[0];
+    	assertFalse("Found \"number(substring($date, 6, 2))\".", proposal.getDisplayString().equals("\"number(substring($date, 6, 2))\""));
+	}
     
     public void testSelectAttributeProposalsAvailable() throws Exception {
     	int offset = sourceViewer.getDocument().getLineOffset(18) + 44;

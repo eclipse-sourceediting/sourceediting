@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- *     David Carver - STAR - bug 230136 - intial API and implementation
+ *     David Carver - STAR - bug 213775 - intial API and implementation
  *******************************************************************************/
 
 package org.eclipse.wst.xsl.ui.tests.style;
@@ -22,18 +22,15 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextUtilities;
-import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -47,20 +44,14 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyExists;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.provisional.style.Highlighter;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
-import org.eclipse.wst.sse.ui.internal.provisional.style.ReconcilerHighlighter;
 import org.eclipse.wst.xml.core.internal.encoding.XMLDocumentLoader;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL;
-import org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistProcessor;
 import org.eclipse.wst.xsl.ui.tests.AbstractXSLUITest;
-import org.eclipse.wst.xsl.ui.tests.XSLUITestsPlugin;
 import org.eclipse.wst.xsl.core.internal.text.rules.StructuredTextPartitionerForXSL;
 
 /**
@@ -265,7 +256,7 @@ public class TestXSLLineStyleProvider extends AbstractXSLUITest {
 		ArrayList holdStyleResults = new ArrayList();
 		applyStyles(provider, partitions, holdStyleResults);
 		assertFalse("No styles applied.", holdStyleResults.isEmpty());
-		assertEquals("Unexpected StyleRange size", 220, holdStyleResults.size());
+		assertEquals("Unexpected StyleRange size", 221, holdStyleResults.size());
 	}
 
 }
