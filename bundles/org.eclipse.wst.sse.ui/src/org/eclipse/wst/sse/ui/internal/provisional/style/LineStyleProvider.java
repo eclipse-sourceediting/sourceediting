@@ -17,6 +17,11 @@ import java.util.Collection;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
+/**
+ * This interface is not intended to be implemented by clients. Clients
+ * should instead subclass AbstractLineStyleProvider
+ *
+ */
 public interface LineStyleProvider {
 
 	/**
