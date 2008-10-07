@@ -41,7 +41,12 @@ public class NamespaceValidator extends PrimeValidator implements ErrorState {
 			IDOMElement e = (IDOMElement) target;
 			if (!isValidPrefix(e.getPrefix(), target) && !e.isCommentTag()) {
 				// report unknown tag error.
-				Segment errorSeg = FMUtil.getSegment(e, FMUtil.SEG_START_TAG);
+				Segment errorSeg = null;
+				if (e.hasStartTag())
+					errorSeg = FMUtil.getSegment(e, FMUtil.SEG_START_TAG);
+				else if (e.hasEndTag())
+					errorSeg = FMUtil.getSegment(e, FMUtil.SEG_END_TAG);
+
 				if (errorSeg != null)
 					reporter.report(new ErrorInfoImpl(UNDEFINED_NAME_ERROR, errorSeg, e));
 			}
