@@ -78,55 +78,44 @@ public class XSLHyperlinkDetector extends AbstractHyperlinkDetector
 
 			Element xslEl = null;
 			Attr xslAttr = null;
-			if (currentNode.getNodeType() == Node.ATTRIBUTE_NODE)
-			{
-				Attr att = (Attr) currentNode;
-				if (XSLCore.XSL_NAMESPACE_URI.equals(att.getOwnerElement().getNamespaceURI()))
+			if (XSLCore.XSL_NAMESPACE_URI.equals(currentNode.getNamespaceURI())) {
+				if (currentNode.getNodeType() == Node.ATTRIBUTE_NODE)
 				{
+					Attr att = (Attr) currentNode;
 					xslEl = att.getOwnerElement();
 					xslAttr = att;
 				}
-			}
-			else if (currentNode.getNodeType() == Node.ELEMENT_NODE)
-			{
-				Element el = (Element)currentNode;
-				if (XSLCore.XSL_NAMESPACE_URI.equals(el.getNamespaceURI()))
+				
+				if (currentNode.getNodeType() == Node.ELEMENT_NODE)
 				{
-					xslEl = el;
-					xslAttr = getCurrentAttrNode(el, region.getOffset());
+					Element el = (Element)currentNode;
+						xslEl = el;
+						xslAttr = getCurrentAttrNode(el, region.getOffset());
 				}
 			}
-			// try to create hyperlink from information gathered
-			if (xslEl != null && xslAttr != null)
-			{
-				IRegion hyperlinkRegion = getHyperlinkRegion(xslAttr);
-				IFile file = getFileForDocument(document);
-				if (file != null)
-				{
-					if ("call-template".equals(xslEl.getLocalName()) && "name".equals(xslAttr.getLocalName()))
-					{
-						hyperlink = createCallTemplateHyperLink(file,xslAttr.getValue(), hyperlinkRegion);
-					}
-					else if (("include".equals(xslEl.getLocalName()) || "import".equals(xslEl.getLocalName()))
-						&& "href".equals(xslAttr.getLocalName()))
-					{
-						// seems to be handled elsewhere (XML editor??)
-//						hyperlink = createIncludeHyperLink(file,xslAttr.getValue(), hyperlinkRegion);
-					}
-				}
-			}
+			
+			hyperlink = createHyperLink(document, hyperlink, xslEl, xslAttr);
 		}
 		return hyperlink == null ? null : new IHyperlink[]{hyperlink};
 	}
+
+	private IHyperlink createHyperLink(IDocument document,
+			IHyperlink hyperlink, Element xslEl, Attr xslAttr) {
+		if (xslEl != null && xslAttr != null)
+		{
+			IRegion hyperlinkRegion = getHyperlinkRegion(xslAttr);
+			IFile file = getFileForDocument(document);
+			if (file != null)
+			{
+				if ("call-template".equals(xslEl.getLocalName()) && "name".equals(xslAttr.getLocalName()))
+				{
+					hyperlink = createCallTemplateHyperLink(file,xslAttr.getValue(), hyperlinkRegion);
+				}
+			}
+		}
+		return hyperlink;
+	}
 	
-//	private IHyperlink createIncludeHyperLink(IFile currentFile, String include, IRegion hyperlinkRegion)
-//	{
-//		IHyperlink hyperlink = null;
-//		IFile linkedFile = XSLCore.resolveFile(currentFile, include);
-//		if (linkedFile != null && linkedFile.exists())
-//			hyperlink = new SourceFileHyperlink(hyperlinkRegion,linkedFile);
-//		return hyperlink;
-//	}
 
 	private IHyperlink createCallTemplateHyperLink(IFile currentFile, String templateName, IRegion hyperlinkRegion)
 	{

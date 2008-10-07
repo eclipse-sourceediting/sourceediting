@@ -22,7 +22,7 @@ import org.w3c.dom.Node;
  * This provides the ContentModel based off the XSL xml schema grammars and other
  * grammars provided by the xml editor.
  * 
- * @since 1.0
+ * @since 1.1
  *
  */
 public class XSLContentModelGenerator extends AbstractContentModelGenerator {
