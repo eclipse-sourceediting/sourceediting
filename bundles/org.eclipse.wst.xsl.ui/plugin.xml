@@ -5,14 +5,14 @@
 	<extension point="org.eclipse.ui.perspectives">
 		<perspective id="org.eclipse.wst.xsl.ui.perspective"
 			class="org.eclipse.wst.xsl.ui.internal.perspective.XMLPerspectiveFactory"
-			icon="icons/full/xml_perspective.gif" 
+			icon="$nl$/icons/full/xml_perspective.gif" 
 			name="%perspectiveName">
 		</perspective>
 	</extension>
 	
 	<extension point="org.eclipse.ui.editors">
 		<editor name="%editorName" 
-			icon="icons/full/xslt_file.gif"
+			icon="$nl$/icons/full/xslt_file.gif"
 			contributorClass="org.eclipse.wst.xml.ui.internal.tabletree.SourcePageActionContributor"
 			class="org.eclipse.wst.xsl.ui.internal.editor.XSLEditor"
 			default="true"
@@ -56,7 +56,7 @@
 		<wizard category="org.eclipse.wst.XMLCategory"
 			class="org.eclipse.wst.xsl.ui.internal.wizards.NewXSLFileWizard"
 			finalPerspective="org.eclipse.wst.xsl.ui.perspective" 
-			icon="icons/full/xslt_file.gif"
+			icon="$nl$/icons/full/xslt_file.gif"
 			id="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard"
 			name="%wizardNameXSL" 
 			preferredPerspectives="org.eclipse.wst.xsl.ui.perspective">
@@ -206,7 +206,7 @@
        </separator>
         <command
               commandId="org.eclipse.ui.newWizard"
-              icon="icons/full/new_xml.gif"
+              icon="$nl$/icons/full/new_xml.gif"
               id="org.eclipse.wst.xsl.ui.newXMLFile"
               style="push"
               tooltip="%commandTooltipNewXMLFile">
@@ -222,7 +222,7 @@
         </command>
         <command
               commandId="org.eclipse.ui.newWizard"
-              icon="icons/full/newdtd_wiz.gif"
+              icon="$nl$/icons/full/newdtd_wiz.gif"
               id="org.eclipse.wst.xsl.ui.newDTDFile"
               style="push"
               tooltip="%commandTooltipNewXMLFile2">
@@ -238,7 +238,7 @@
         </command>
         <command
               commandId="org.eclipse.ui.newWizard"
-              icon="icons/full/XSDFile.gif"
+              icon="$nl$/icons/full/XSDFile.gif"
               id="org.eclipse.wst.xsl.ui.newXSDFile"
               style="push"
               tooltip="%commandTooltipNewXSDFile">
@@ -255,7 +255,7 @@
                 
         <command
               commandId="org.eclipse.ui.newWizard"
-              icon="icons/full/xslt_file.gif"
+              icon="$nl$/icons/full/xslt_file.gif"
               id="org.eclipse.wst.xsl.ui.newXSLFile"
               style="push"
               tooltip="%commandTooltipNewXSLFile">
