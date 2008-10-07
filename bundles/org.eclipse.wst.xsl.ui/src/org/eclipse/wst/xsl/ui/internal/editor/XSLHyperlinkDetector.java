@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.editor;
 
