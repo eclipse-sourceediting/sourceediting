@@ -132,7 +132,7 @@
 	<!--======================================================================================-->
 	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
 		<validator
-			scope="partial"
+			scope="total"
 			class="org.eclipse.jst.jsp.ui.internal.validation.JSPActionSourceValidator"
 			id="org.eclipse.jst.jsp.ui.internal.validation.jspactionvalidator">
 			<contentTypeIdentifier
@@ -149,7 +149,7 @@
 	<!--======================================================================================-->
 	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
 		<validator
-			scope="partial"
+			scope="total"
 			class="org.eclipse.wst.xml.ui.internal.validation.MarkupValidator"
 			id="org.eclipse.jst.jsp.ui.internal.validation.markupvalidator">
 			<contentTypeIdentifier
@@ -165,7 +165,7 @@
 	<!--======================================================================================-->
 	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
 		<validator
-			scope="partial"
+			scope="total"
 			class="org.eclipse.jst.jsp.ui.internal.validation.JSPContentSourceValidator"
 			id="org.eclipse.jst.jsp.ui.internal.validation.htmlsyntaxvalidator">
 			<contentTypeIdentifier
