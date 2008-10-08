@@ -213,5 +213,22 @@ public class TestXSLHyperlinkDetector extends AbstractXSLUITest {
 
 		sourceViewer = null;
 	}
+	
+	public void testWithParmVariableLink() throws Exception {
+		setUpTest("DraftReleaseCRs.xsl");
+		XSLHyperlinkDetector linkDetector = new XSLHyperlinkDetector();
+		int offset = 2741;
+		IRegion region = new Region(offset, 0);
+
+		boolean canShowMultipleLinks = true;
+		IHyperlink[] links = linkDetector.detectHyperlinks(sourceViewer,
+				region, canShowMultipleLinks);
+		assertNotNull("No links returned", links);
+		assertEquals("Unexpected number of links", 1, links.length);
+		IHyperlink link = links[0];
+		assertTrue("Wrong file returned.", link.getHyperlinkText().contains("utils.xsl"));
+		sourceViewer = null;
+	}
+	
 
 }
