@@ -105,8 +105,7 @@
 			id="org.eclipse.jst.jsp.jspelsourcevalidator">
 			<contentTypeIdentifier
 				id="org.eclipse.jst.jsp.core.jspsource">
-				<partitionType id="org.eclipse.jst.jsp.SCRIPT.JSP_EL">
-				</partitionType>
+				<partitionType id="org.eclipse.jst.jsp.SCRIPT.JSP_EL"/>
 				<partitionType id="org.eclipse.jst.jsp.JSP_DIRECTIVE"/>
 			</contentTypeIdentifier>
 		</validator>
