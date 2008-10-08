@@ -16,6 +16,7 @@ import org.eclipse.wst.xsl.core.model.XSLModelObject.Type;
  * The <code>xsl:variable</code> model element.
  * 
  * @author Doug Satchwell
+ * @since 1.0
  */
 public class Variable extends XSLElement
 {

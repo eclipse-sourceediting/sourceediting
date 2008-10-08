@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Composite;
  * Each block must itself fully implement <code>ILaunchConfigurationTab</code>.
  * 
  * @author Doug Satchwell
+ * @since 1.0
  */
 public abstract class XSLLaunchConfigurationTab extends AbstractLaunchConfigurationTab
 {

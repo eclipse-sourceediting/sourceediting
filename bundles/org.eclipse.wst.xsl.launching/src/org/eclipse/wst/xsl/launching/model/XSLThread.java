@@ -90,6 +90,7 @@ public class XSLThread extends XSLDebugElement implements IThread
 	 * @param breakpoints
 	 *            the breakpoints this thread is suspended at, or
 	 *            <code>null</code> if none
+	 * @since 1.0
 	 */
 	public void setBreakpoints(IBreakpoint[] breakpoints)
 	{
@@ -171,6 +172,9 @@ public class XSLThread extends XSLDebugElement implements IThread
 		getDebugTarget().terminate();
 	}
 
+	/**
+	 * @since 1.0
+	 */
 	public void setStepping(boolean stepping)
 	{
 		fStepping = stepping;

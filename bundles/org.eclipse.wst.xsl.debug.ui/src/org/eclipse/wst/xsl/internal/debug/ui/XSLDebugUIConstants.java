@@ -14,6 +14,7 @@ package org.eclipse.wst.xsl.internal.debug.ui;
  * Constants for the XSL Debug UI.
  * 
  * @author Doug Satchwell
+ * @since 1.0
  */
 public class XSLDebugUIConstants
 {

@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Table;
  * column settings.
  * 
  * @author Doug Satchwell
+ * @since 1.0
  */
 public abstract class AbstractTableBlock extends AbstractLaunchConfigurationTab
 {

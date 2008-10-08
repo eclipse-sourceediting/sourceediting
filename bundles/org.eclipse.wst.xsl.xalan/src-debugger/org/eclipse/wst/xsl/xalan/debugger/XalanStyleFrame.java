@@ -44,6 +44,9 @@ public class XalanStyleFrame extends StyleFrame
 	private int currentLine;
 	private XalanRootStyleFrame rootStyleFrame;
 
+	/**
+	 * @since 1.0
+	 */
 	public XalanStyleFrame(StyleFrame parent, TracerEvent event)
 	{
 		super(parent);

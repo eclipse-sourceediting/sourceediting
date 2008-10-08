@@ -17,6 +17,7 @@ import org.eclipse.wst.xsl.core.XSLCore;
  * The <code>xsl:include</code> model element.
  * 
  * @author Doug Satchwell
+ * @since 1.0
  */
 public class Include extends XSLElement
 {

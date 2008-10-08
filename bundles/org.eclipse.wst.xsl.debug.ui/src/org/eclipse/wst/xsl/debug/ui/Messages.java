@@ -17,6 +17,7 @@ import java.util.ResourceBundle;
  * Messages for the debug.ui package.
  * 
  * @author Doug Satchwell
+ * @since 1.0
  */
 public class Messages
 {

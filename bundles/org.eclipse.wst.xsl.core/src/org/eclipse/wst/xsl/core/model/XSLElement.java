@@ -19,6 +19,7 @@ import java.util.Map;
  * An element in the XSL namespace.
  * 
  * @author Doug Satchwell
+ * @since 1.0
  */
 public class XSLElement extends XSLNode
 {

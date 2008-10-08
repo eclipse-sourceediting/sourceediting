@@ -56,6 +56,7 @@ public class XSLCore
 	 * 
 	 * @param file
 	 * @return source file, or null if could not be built
+	 * @since 1.0
 	 */
 	public synchronized StylesheetModel getStylesheet(IFile file)
 	{
@@ -70,6 +71,7 @@ public class XSLCore
 	 * 
 	 * @param file
 	 * @return the stylesheet model, or null if it could not be created.
+	 * @since 1.0
 	 */
 	public synchronized StylesheetModel buildStylesheet(IFile file)
 	{

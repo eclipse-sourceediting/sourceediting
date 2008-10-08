@@ -76,6 +76,10 @@ public class XalanDebugger extends AbstractDebugger
 		}
 	}
 
+	/**
+	 * Gets a variable by ID
+	 * @since 1.0
+	 */
 	public Variable getVariable(int id)
 	{
 		return currentTraceListener.getVariable(id);

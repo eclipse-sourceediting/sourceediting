@@ -16,10 +16,22 @@ public class XSLLaunchConfigurationConstants
 {
 	public static final String ATTR_INPUT_FILE = LaunchingPlugin.PLUGIN_ID + ".ATTR_INPUT_FILE"; //$NON-NLS-1$
 	public static final String ATTR_USE_DEFAULT_OUTPUT_FILE = LaunchingPlugin.PLUGIN_ID + ".ATTR_USE_DEFAULT_OUTPUT_FILE"; //$NON-NLS-1$
+	
+	/**
+	 * @since 1.0
+	 */
 	public static final String ATTR_OUTPUT_FOLDER = LaunchingPlugin.PLUGIN_ID + ".ATTR_OUTPUT_FOLDER"; //$NON-NLS-1$
+	
+	/**
+	 * @since 1.0
+	 */
 	public static final String ATTR_OUTPUT_FILENAME = LaunchingPlugin.PLUGIN_ID + ".ATTR_OUTPUT_FILENAME"; //$NON-NLS-1$
 	public static final String ID_LAUNCH_CONFIG_TYPE = LaunchingPlugin.PLUGIN_ID + ".launchConfigurationType"; //$NON-NLS-1$
 	public static final String ATTR_PIPELINE = LaunchingPlugin.PLUGIN_ID + ".ATTR_PIPELINE"; //$NON-NLS-1$
 	public static final String ATTR_OPEN_FILE = LaunchingPlugin.PLUGIN_ID + ".ATTR_OPEN_FILE"; //$NON-NLS-1$
+	
+	/**
+	 * @since 1.0
+	 */
 	public static final String ATTR_FORMAT_FILE = LaunchingPlugin.PLUGIN_ID + ".ATTR_FORMAT_FILE"; //$NON-NLS-1$
 }

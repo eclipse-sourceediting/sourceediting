@@ -14,6 +14,7 @@ package org.eclipse.wst.xsl.core.model;
  * The <code>xsl:parameter</code> or <code>xsl:with-param</code> model element.
  * 
  * @author Doug Satchwell
+ * @since 1.0
  */
 public class Parameter extends Variable
 {

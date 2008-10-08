@@ -34,6 +34,11 @@ public class XSLTRuntime
 		return LaunchingPlugin.getDefault().getPluginPreferences();
 	}
 
+	/**
+	 * Creates a default Output File for the given input file string.
+	 * @return Returns an IPath for the Output File.
+	 * @since 1.0
+	 */
 	public static IPath defaultOutputFileForInputFile(String inputFileExpression) throws CoreException
 	{
 		String file = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(inputFileExpression);

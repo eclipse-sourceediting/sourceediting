@@ -84,6 +84,7 @@ import org.eclipse.wst.xsl.debug.ui.Messages;
  * <p>In all cases, a check must be performed to find any existing launch configuration that uses the selected files.</p>
  * 
  * @author Doug
+ * @since 1.0
  */
 public class XSLLaunchShortcut implements ILaunchShortcut
 {

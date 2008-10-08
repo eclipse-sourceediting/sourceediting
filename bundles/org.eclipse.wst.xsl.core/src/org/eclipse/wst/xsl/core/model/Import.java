@@ -14,6 +14,7 @@ package org.eclipse.wst.xsl.core.model;
  * The <code>xsl:import</code> model element.
  * 
  * @author Doug Satchwell
+ * @since 1.0
  */
 public class Import extends Include
 {

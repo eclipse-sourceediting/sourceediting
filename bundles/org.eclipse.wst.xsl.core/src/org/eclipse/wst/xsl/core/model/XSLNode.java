@@ -16,6 +16,7 @@ import org.w3c.dom.Node;
  * A node in the XSL namespace.
  * 
  * @author Doug Satchwell
+ * @since 1.0
  */
 public abstract class XSLNode extends XSLModelObject
 {

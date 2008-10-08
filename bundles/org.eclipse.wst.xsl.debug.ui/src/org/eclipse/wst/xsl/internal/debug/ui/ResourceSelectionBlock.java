@@ -57,6 +57,7 @@ import org.eclipse.wst.xsl.debug.ui.Messages;
  * in order to populate the text box with a file path.
  * 
  * @author Doug Satchwell
+ * @since 1.0
  */
 public abstract class ResourceSelectionBlock extends AbstractLaunchConfigurationTab
 {

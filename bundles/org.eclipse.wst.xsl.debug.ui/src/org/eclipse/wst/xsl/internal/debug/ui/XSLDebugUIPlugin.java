@@ -32,6 +32,7 @@ import org.osgi.framework.BundleContext;
  * The XSL Debug UI plugin.
  * 
  * @author Doug Satchwell
+ * @since 1.0
  */
 public class XSLDebugUIPlugin extends AbstractUIPlugin
 {

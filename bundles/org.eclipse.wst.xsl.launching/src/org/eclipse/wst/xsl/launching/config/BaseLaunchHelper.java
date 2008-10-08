@@ -28,6 +28,9 @@ import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
 import org.eclipse.wst.xsl.launching.XSLTRuntime;
 
+/**
+ * @since 1.0
+ */
 public class BaseLaunchHelper
 {
 	private final URL source;

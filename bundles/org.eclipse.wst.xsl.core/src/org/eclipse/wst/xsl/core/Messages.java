@@ -14,6 +14,7 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * @author Jesper Steen
+ * @since 1.0
  *
  */
 // Runtime plugin message catalog

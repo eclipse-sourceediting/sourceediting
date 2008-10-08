@@ -14,6 +14,7 @@ package org.eclipse.wst.xsl.core.model;
  * An attribute of an element in the XSL namespace.
  * 
  * @author Doug Satchwell
+ * @since 1.0
  */
 public class XSLAttribute extends XSLNode
 {

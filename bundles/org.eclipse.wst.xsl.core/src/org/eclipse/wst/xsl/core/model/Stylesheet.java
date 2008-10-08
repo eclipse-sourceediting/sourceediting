@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IFile;
  * The <code>xsl:stylesheet</code> model element.
  * 
  * @author Doug Satchwell
+ * @since 1.0
  */
 public class Stylesheet extends XSLElement
 {

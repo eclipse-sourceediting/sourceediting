@@ -156,6 +156,9 @@ public class XalanTraceListener implements TraceListenerEx2 // TraceListenerEx3
 	{
 	}
 
+	/**
+	 * @since 1.0
+	 */
 	public Variable getVariable(int id)
 	{
 		return rootStyleFrame.getVariable(id);

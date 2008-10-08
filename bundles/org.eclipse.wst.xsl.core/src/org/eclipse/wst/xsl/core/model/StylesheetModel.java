@@ -31,6 +31,7 @@ import org.eclipse.wst.xsl.core.internal.util.Debug;
  * </p>
  * 
  * @author Doug Satchwell
+ * @since 1.0
  */
 public class StylesheetModel extends XSLModelObject
 {

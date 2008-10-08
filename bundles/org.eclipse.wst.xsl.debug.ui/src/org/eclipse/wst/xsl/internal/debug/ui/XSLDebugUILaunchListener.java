@@ -37,6 +37,7 @@ import org.eclipse.wst.xsl.launching.config.BaseLaunchHelper;
  * XSL launching - such as open the editor on the output file, and format it.
  * 
  * @author Doug Satchwell
+ * @since 1.0
  */
 public class XSLDebugUILaunchListener implements ILaunchesListener2
 {
