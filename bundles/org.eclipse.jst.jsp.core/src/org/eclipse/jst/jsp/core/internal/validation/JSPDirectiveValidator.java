@@ -580,24 +580,26 @@ public class JSPDirectiveValidator extends JSPValidator {
 					}
 				}
 
-				String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_2, prefixes[prefixNumber]); //$NON-NLS-2$ //$NON-NLS-1$
+				if (severity != ValidationMessage.IGNORE) {
+					String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_2, prefixes[prefixNumber]); //$NON-NLS-2$ //$NON-NLS-1$
 
-				// Report an error in all directives using this prefix
-				for (int regionNumber = 0; regionNumber < valueRegions.size(); regionNumber++) {
+					// Report an error in all directives using this prefix
+					for (int regionNumber = 0; regionNumber < valueRegions.size(); regionNumber++) {
 
-					ITextRegion valueRegion = (ITextRegion) valueRegions.get(regionNumber);
-					IStructuredDocumentRegion documentRegion = (IStructuredDocumentRegion) fPrefixValueRegionToDocumentRegionMap.get(valueRegion);
-					LocalizedMessage message = (file == null ? new LocalizedMessage(severity, msgText) : new LocalizedMessage(severity, msgText, file));
+						ITextRegion valueRegion = (ITextRegion) valueRegions.get(regionNumber);
+						IStructuredDocumentRegion documentRegion = (IStructuredDocumentRegion) fPrefixValueRegionToDocumentRegionMap.get(valueRegion);
+						LocalizedMessage message = (file == null ? new LocalizedMessage(severity, msgText) : new LocalizedMessage(severity, msgText, file));
 
-					// if there's a message, there was an error found
-					int start = documentRegion.getStartOffset(valueRegion);
-					int length = valueRegion.getTextLength();
-					int lineNo = document.getLineOfOffset(start);
-					message.setLineNo(lineNo + 1);
-					message.setOffset(start);
-					message.setLength(length);
+						// if there's a message, there was an error found
+						int start = documentRegion.getStartOffset(valueRegion);
+						int length = valueRegion.getTextLength();
+						int lineNo = document.getLineOfOffset(start);
+						message.setLineNo(lineNo + 1);
+						message.setOffset(start);
+						message.setLength(length);
 
-					reporter.addMessage(fMessageOriginator, message);
+						reporter.addMessage(fMessageOriginator, message);
+					}
 				}
 			}
 		}
