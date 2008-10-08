@@ -32,7 +32,6 @@ import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
@@ -174,14 +173,6 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	public void nodeParsed(IStructuredDocumentRegion sdRegion) {
 
 		try {
-			/*
-			 * note: next line not necessary, but removing it causes
-			 * org.eclipse.jst.jsp.ui.tests.contentassist.JSPTranslationTest
-			 * .testJSPTranslationText() to fail text comparisons. Adds { and
-			 * } for any tag with a prefix other than "jsp".
-			 */
-			handleScopingIfNecessary(sdRegion);
-			
 			if (isJSPEndRegion(sdRegion)) {
 				String nameStr = getRegionName(sdRegion);
 				if (isPossibleCustomTag(nameStr)) {
@@ -269,58 +260,6 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 				// do nothing, since we're just ending
 			}
 		}
-	}
-
-
-	private void handleScopingIfNecessary(IStructuredDocumentRegion sdRegion) {
-		/* 199047 - Braces missing from translation of custom tags not defining variables */
-		// fix to make sure custom tag block have their own scope
-		// we add '{' for custom tag open and '}' for custom tag close
-		// in the translation
-		if (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN) {
-			if (!isSelfClosingTag(sdRegion)) {
-				String nameStr = getRegionName(sdRegion);
-				if (isPossibleCustomTag(nameStr)) {
-					startScope(nameStr);
-				}
-			}
-		}
-		else if (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_END_TAG_OPEN) {
-			String nameStr = getRegionName(sdRegion);
-			if (isPossibleCustomTag(nameStr)) {
-				endScope(nameStr);
-			}
-		}
-	}
-
-	private boolean isSelfClosingTag(ITextRegionCollection containerRegion) {
-
-		if (containerRegion == null)
-			return false;
-
-		ITextRegionList regions = containerRegion.getRegions();
-		ITextRegion r = regions.get(regions.size() - 1);
-		return r.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE;
-	}
-
-	private void startScope(String tagName) {
-		IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
-		StringBuffer text = new StringBuffer();
-		text.append("{ // <"); //$NON-NLS-1$
-		text.append(tagName);
-		text.append(">\n"); //$NON-NLS-1$
-		this.fTranslator.translateScriptletString(text.toString(), currentNode, currentNode.getStartOffset(), currentNode.getLength(), fAppendAsIndirectSource); //$NON-NLS-1$
-
-	}
-
-	private void endScope(String tagName) {
-		IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
-		StringBuffer text = new StringBuffer();
-		text.append("} // </"); //$NON-NLS-1$
-		text.append(tagName);
-		text.append(">\n"); //$NON-NLS-1$
-		this.fTranslator.translateScriptletString(text.toString(), currentNode, currentNode.getStartOffset(), currentNode.getLength(), fAppendAsIndirectSource); //$NON-NLS-1$
-
 	}
 
 	public void resetNodes() {
@@ -428,7 +367,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		}
 		else if (isPossibleCustomTag(fTagname)) {
 			// this custom tag may define variables
-			this.fTranslator.addTaglibVariables(fTagname);
+			this.fTranslator.addTaglibVariables(fTagname, sdRegion);
 		}
 		else if (isTaglibDirective(fTagname)) {
 			// also add the ones created here to the parent document

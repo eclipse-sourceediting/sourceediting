@@ -876,6 +876,15 @@ public final class DeploymentDescriptorPropertyCache {
 		return resolved;
 	}
 
+	public IFile getWebXML(IPath fullPath) {
+		IPath webxmlPath = getWebXMLPath(fullPath);
+		IFile webxmlFile = null;
+		if (webxmlPath != null) {
+			webxmlFile = ResourcesPlugin.getWorkspace().getRoot().getFile(webxmlPath);
+		}
+		return webxmlFile;
+	}
+
 	private void updateCacheEntry(IPath fullPath) {
 		/* don't update right now; remove and wait for another query to update */
 		fDeploymentDescriptors.remove(fullPath);

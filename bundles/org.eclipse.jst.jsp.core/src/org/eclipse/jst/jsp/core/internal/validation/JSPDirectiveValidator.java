@@ -19,7 +19,11 @@ import java.util.Locale;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
@@ -39,6 +43,8 @@ import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.util.FacetModuleCoreSupport;
+import org.eclipse.jst.jsp.core.taglib.ITLDRecord;
+import org.eclipse.jst.jsp.core.taglib.ITagDirRecord;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.osgi.util.NLS;
@@ -103,6 +109,18 @@ public class JSPDirectiveValidator extends JSPValidator {
 	public JSPDirectiveValidator(IValidator validator) {
 		initReservedPrefixes();
 		this.fMessageOriginator = validator;
+	}
+
+	/**
+	 * Record that the currently validating resource depends on the given
+	 * file. Only possible during batch (not source) validation.
+	 * 
+	 * @param file
+	 */
+	private void addDependsOn(IResource file) {
+		if (fMessageOriginator instanceof JSPBatchValidator) {
+			((JSPBatchValidator) fMessageOriginator).addDependsOn(file);
+		}
 	}
 
 	public void cleanup(IReporter reporter) {
@@ -249,28 +267,31 @@ public class JSPDirectiveValidator extends JSPValidator {
 				int start = documentRegion.getStartOffset(fileValueRegion);
 				int length = fileValueRegion.getTextLength();
 				int lineNo = sDoc.getLineOfOffset(start);
-				message.setLineNo(lineNo);
+				message.setLineNo(lineNo + 1);
 				message.setOffset(start);
 				message.setLength(length);
 
 				reporter.addMessage(fMessageOriginator, message);
 			}
-			else if (fSeverityIncludeFileMissing != ValidationMessage.IGNORE) {
+			else {
 				IPath testPath = FacetModuleCoreSupport.resolve(file.getFullPath(), fileValue);
 				if (testPath.segmentCount() > 1) {
 					IFile testFile = file.getWorkspace().getRoot().getFile(testPath);
+					addDependsOn(testFile);
 					if (!testFile.isAccessible()) {
-						// File not found
-						String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_4, new String[]{fileValue, testPath.toString()});
-						LocalizedMessage message = new LocalizedMessage(fSeverityIncludeFileMissing, msgText, file);
-						int start = documentRegion.getStartOffset(fileValueRegion);
-						int length = fileValueRegion.getTextLength();
-						int lineNo = sDoc.getLineOfOffset(start);
-						message.setLineNo(lineNo);
-						message.setOffset(start);
-						message.setLength(length);
+						if (fSeverityIncludeFileMissing != ValidationMessage.IGNORE) {
+							// File not found
+							String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_4, new String[]{fileValue, testPath.toString()});
+							LocalizedMessage message = new LocalizedMessage(fSeverityIncludeFileMissing, msgText, file);
+							int start = documentRegion.getStartOffset(fileValueRegion);
+							int length = fileValueRegion.getTextLength();
+							int lineNo = sDoc.getLineOfOffset(start);
+							message.setLineNo(lineNo + 1);
+							message.setOffset(start);
+							message.setLength(length);
 
-						reporter.addMessage(fMessageOriginator, message);
+							reporter.addMessage(fMessageOriginator, message);
+						}
 					}
 				}
 			}
@@ -282,7 +303,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 			int start = documentRegion.getStartOffset();
 			int length = documentRegion.getTextLength();
 			int lineNo = sDoc.getLineOfOffset(start);
-			message.setLineNo(lineNo);
+			message.setLineNo(lineNo + 1);
 			message.setOffset(start);
 			message.setLength(length);
 
@@ -314,13 +335,13 @@ public class JSPDirectiveValidator extends JSPValidator {
 			}
 
 			if (superClass == null && fSeveritySuperClassNotFound != ValidationMessage.IGNORE) {
-				// file value is specified but empty
+				// superclass not found
 				String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_8, superclassName);
 				LocalizedMessage message = new LocalizedMessage(fSeveritySuperClassNotFound, msgText, file);
 				int start = documentRegion.getStartOffset(superclassValueRegion);
 				int length = superclassValueRegion.getTextLength();
 				int lineNo = doc.getLineOfOffset(start);
-				message.setLineNo(lineNo);
+				message.setLineNo(lineNo + 1);
 				message.setOffset(start);
 				message.setLength(length);
 
@@ -340,8 +361,38 @@ public class JSPDirectiveValidator extends JSPValidator {
 			if (file != null) {
 				uri = StringUtils.stripQuotes(uri);
 				if (uri.length() > 0) {
-					ITaglibRecord tld = TaglibIndex.resolve(file.getFullPath().toString(), uri, false);
-					if (tld == null && fSeverityTaglibUnresolvableURI != ValidationMessage.IGNORE) {
+					ITaglibRecord reference = TaglibIndex.resolve(file.getFullPath().toString(), uri, false);
+					if (reference != null) {
+						switch (reference.getRecordType()) {
+							case (ITaglibRecord.TLD) : {
+								ITLDRecord record = (ITLDRecord) reference;
+								IResource tldfile = ResourcesPlugin.getWorkspace().getRoot().getFile(record.getPath());
+								addDependsOn(tldfile);
+							}
+								break;
+							case (ITaglibRecord.TAGDIR) : {
+								ITagDirRecord record = (ITagDirRecord) reference;
+								IPath path = record.getPath();
+								IResource found = ResourcesPlugin.getWorkspace().getRoot().findMember(path, false);
+
+								try {
+									found.accept(new IResourceVisitor() {
+										public boolean visit(IResource resource) throws CoreException {
+											if (resource.getType() == IResource.FILE) {
+												addDependsOn(resource);
+											}
+											return true;
+										}
+									});
+								}
+								catch (CoreException e) {
+									Logger.logException(e);
+								}
+							}
+								break;
+						}
+					}
+					if (reference == null && fSeverityTaglibUnresolvableURI != ValidationMessage.IGNORE) {
 						// URI specified but does not resolve
 						String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_1, uri);
 						LocalizedMessage message = new LocalizedMessage(fSeverityTaglibUnresolvableURI, msgText, file);
@@ -364,7 +415,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 					int start = documentRegion.getStartOffset(uriValueRegion);
 					int length = uriValueRegion.getTextLength();
 					int lineNo = sDoc.getLineOfOffset(start);
-					message.setLineNo(lineNo);
+					message.setLineNo(lineNo + 1);
 					message.setOffset(start);
 					message.setLength(length);
 
@@ -385,7 +436,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 					int start = documentRegion.getStartOffset(tagdirValueRegion);
 					int length = tagdirValueRegion.getTextLength();
 					int lineNo = sDoc.getLineOfOffset(start);
-					message.setLineNo(lineNo);
+					message.setLineNo(lineNo + 1);
 					message.setOffset(start);
 					message.setLength(length);
 
@@ -398,7 +449,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 					int start = documentRegion.getStartOffset(tagdirValueRegion);
 					int length = tagdirValueRegion.getTextLength();
 					int lineNo = sDoc.getLineOfOffset(start);
-					message.setLineNo(lineNo);
+					message.setLineNo(lineNo + 1);
 					message.setOffset(start);
 					message.setLength(length);
 
@@ -413,7 +464,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 			int start = documentRegion.getStartOffset();
 			int length = documentRegion.getTextLength();
 			int lineNo = sDoc.getLineOfOffset(start);
-			message.setLineNo(lineNo);
+			message.setLineNo(lineNo + 1);
 			message.setOffset(start);
 			message.setLength(length);
 
@@ -436,7 +487,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 				int start = documentRegion.getStartOffset(prefixValueRegion);
 				int length = prefixValueRegion.getTextLength();
 				int lineNo = sDoc.getLineOfOffset(start);
-				message.setLineNo(lineNo);
+				message.setLineNo(lineNo + 1);
 				message.setOffset(start);
 				message.setLength(length);
 
@@ -449,7 +500,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 				int start = documentRegion.getStartOffset(prefixValueRegion);
 				int length = prefixValueRegion.getTextLength();
 				int lineNo = sDoc.getLineOfOffset(start);
-				message.setLineNo(lineNo);
+				message.setLineNo(lineNo + 1);
 				message.setOffset(start);
 				message.setLength(length);
 
@@ -463,7 +514,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 			int start = documentRegion.getStartOffset();
 			int length = documentRegion.getTextLength();
 			int lineNo = sDoc.getLineOfOffset(start);
-			message.setLineNo(lineNo);
+			message.setLineNo(lineNo + 1);
 			message.setOffset(start);
 			message.setLength(length);
 
@@ -520,7 +571,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 					int start = documentRegion.getStartOffset(valueRegion);
 					int length = valueRegion.getTextLength();
 					int lineNo = document.getLineOfOffset(start);
-					message.setLineNo(lineNo);
+					message.setLineNo(lineNo + 1);
 					message.setOffset(start);
 					message.setLength(length);
 

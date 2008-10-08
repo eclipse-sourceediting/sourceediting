@@ -54,6 +54,8 @@ public class JSPJavaValidator extends JSPValidator {
 	private IPreferencesService fPreferencesService = null;
 	private static final String PREFERENCE_NODE_QUALIFIER = JSPCorePlugin.getDefault().getBundle().getSymbolicName();
 	private IScopeContext[] fScopes = null;
+	
+	private static final String[] DEPEND_ONs = new String[]{".classpath", ".project", ".settings/org.eclipse.jst.jsp.core.prefs", ".settings/org.eclipse.wst.common.project.facet.core.xml", ".settings/org.eclipse.wst.common.component"};
 
 	public JSPJavaValidator() {
 		this.fMessageOriginator = this;
@@ -272,6 +274,9 @@ public class JSPJavaValidator extends JSPValidator {
 	}
 
 	void performValidation(IFile f, IReporter reporter, IStructuredModel model) {
+		for (int i = 0; i < DEPEND_ONs.length; i++) {
+			addDependsOn(f.getProject().getFile(DEPEND_ONs[i]));	
+		}
 		if (model instanceof IDOMModel) {
 			IDOMModel domModel = (IDOMModel) model;
 			ModelHandlerForJSP.ensureTranslationAdapterFactory(domModel);
@@ -321,6 +326,9 @@ public class JSPJavaValidator extends JSPValidator {
 			// get jsp model, get tranlsation
 			model = StructuredModelManager.getModelManager().getModelForRead(f);
 			if (!reporter.isCancelled() && model != null) {
+				for (int i = 0; i < DEPEND_ONs.length; i++) {
+					addDependsOn(f.getProject().getFile(DEPEND_ONs[i]));	
+				}
 				// get jsp model, get translation
 				if (model instanceof IDOMModel) {
 					reporter.removeAllMessages(fMessageOriginator, f);
@@ -339,4 +347,17 @@ public class JSPJavaValidator extends JSPValidator {
 				model.releaseFromRead();
 		}
 	}
+
+	/**
+	 * Record that the currently validating resource depends on the given
+	 * file. Only possible during batch (not source) validation.
+	 * 
+	 * @param file
+	 */
+	private void addDependsOn(IFile file) {
+		if (fMessageOriginator instanceof JSPBatchValidator) {
+			((JSPBatchValidator) fMessageOriginator).addDependsOn(file);
+		}
+	}
+
 }
