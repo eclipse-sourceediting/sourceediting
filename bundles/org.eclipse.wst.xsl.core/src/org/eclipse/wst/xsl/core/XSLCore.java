@@ -19,11 +19,18 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsl.core.internal.StylesheetBuilder;
 import org.eclipse.wst.xsl.core.internal.util.FileUtil;
 import org.eclipse.wst.xsl.core.model.Stylesheet;
 import org.eclipse.wst.xsl.core.model.StylesheetModel;
+import org.w3c.dom.Attr;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
 /**
  * The interface to all aspects of the XSL core functionality.
@@ -177,6 +184,62 @@ public class XSLCore
 	 */
 	private static boolean hasNamespace(IDOMNode node) {
 		return node == null || node.getNamespaceURI() == null;
+	}
+	
+	/**
+	 * Returns an Attr node for the current Node if one exits at the specified offset.
+	 * @param node 
+	 * @param offset 
+	 * @return A w3c.dom.Attr
+	 * @since 1.0
+	 */
+	public static Attr getCurrentAttrNode(Node node, int offset)
+	{
+		if ((node instanceof IndexedRegion) && ((IndexedRegion) node).contains(offset) && (node.hasAttributes()))
+		{
+			NamedNodeMap attrs = node.getAttributes();
+			for (int i = 0; i < attrs.getLength(); ++i)
+			{
+				IndexedRegion attRegion = (IndexedRegion) attrs.item(i);
+				if (attRegion.contains(offset))
+				{
+					return (Attr) attrs.item(i);
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the current Node at the specified offset.
+	 * 
+	 * @param document 
+	 * @param offset 
+	 * @return an w3c.dom.Node
+	 * @since 1.0
+	 */
+	public static Node getCurrentNode(IDocument document, int offset)
+	{
+		IndexedRegion inode = null;
+		IStructuredModel sModel = null;
+		try
+		{
+			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+			inode = sModel.getIndexedRegion(offset);
+			if (inode == null)
+				inode = sModel.getIndexedRegion(offset - 1);
+		}
+		finally
+		{
+			if (sModel != null)
+				sModel.releaseFromRead();
+		}
+
+		if (inode instanceof Node)
+		{
+			return (Node) inode;
+		}
+		return null;
 	}
 	
 }
