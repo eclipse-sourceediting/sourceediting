@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 Standards for Technology in Automotive Retail (STAR) and
+ * Copyright (c) 2007, 2008 Standards for Technology in Automotive Retail (STAR) and
  * others. All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,8 @@ package org.eclipse.wst.xml.ui.internal.wizards;
 
 import java.io.File;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -22,6 +24,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.eclipse.ui.wizards.newresource.BasicNewFileResourceWizard;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.catalog.CatalogSet;
@@ -29,7 +32,6 @@ import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
-import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 
 public class ExportXMLCatalogWizard extends BasicNewFileResourceWizard implements IExportWizard {
 
@@ -65,9 +67,10 @@ public class ExportXMLCatalogWizard extends BasicNewFileResourceWizard implement
 		String fullPath = workspacePath + exportPage.getContainerFullPath().toOSString();
 		String requiredString=fullPath + File.separator + exportPage.getFileName();
 		try {
-			exportPage.createNewFile();
+			IFile file = exportPage.createNewFile();
 			workingUserCatalog.setLocation(requiredString);
 			workingUserCatalog.save();
+			file.refreshLocal(IResource.DEPTH_ZERO, null);
 		} catch (Exception ex) {
 			return false;
 		}
