@@ -25,7 +25,6 @@ import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
@@ -37,7 +36,6 @@ import org.eclipse.wst.xsl.core.model.Template;
 import org.eclipse.wst.xsl.core.model.XSLAttribute;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 /**
@@ -51,6 +49,7 @@ import org.w3c.dom.Node;
  */
 public class XSLHyperlinkDetector extends AbstractHyperlinkDetector
 {
+	private static final String ELEM_WITH_PARAM = "with-param";
 	private static final String ATTR_NAME = "name";
 	private static final String ELM_CALL_TEMPLATE = "call-template";
 
@@ -74,7 +73,7 @@ public class XSLHyperlinkDetector extends AbstractHyperlinkDetector
 	}
 
 	/**
-	 * Try to create hyperlins for document and region
+	 * Try to create hyperlinks for document and region
 	 * @param document
 	 * @param region
 	 * @param canShowMultipleHyperlinks
@@ -124,7 +123,7 @@ public class XSLHyperlinkDetector extends AbstractHyperlinkDetector
 					hyperlink = createCallTemplateHyperLink(file,xslAttr.getValue(), hyperlinkRegion);
 				}
 				
-				if ("with-param".equals(xslEl.getLocalName()) && ATTR_NAME.equals(xslAttr.getLocalName())) {
+				if (ELEM_WITH_PARAM.equals(xslEl.getLocalName()) && ATTR_NAME.equals(xslAttr.getLocalName())) {
 					hyperlink = createWithParamHyperLink(file, xslEl, xslAttr, hyperlinkRegion);
 				}
 			}
@@ -176,7 +175,6 @@ public class XSLHyperlinkDetector extends AbstractHyperlinkDetector
 		}
 		return hyperlink;
 	}
-	
 
 	private IRegion getHyperlinkRegion(Node node)
 	{

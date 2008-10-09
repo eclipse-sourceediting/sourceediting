@@ -25,18 +25,31 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.xsl.core.model.XSLNode;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 
+/**
+ * @author Doug Satchwell
+ *
+ */
 public class SourceFileHyperlink implements IHyperlink
 {
 	private IRegion hyperLinkRegion;
 	private IFile linkedFile;
 	private XSLNode sourceArtifact;
 
+	/**
+	 * @param hyperLinkRegion
+	 * @param linkedFile
+	 */
 	public SourceFileHyperlink(IRegion hyperLinkRegion, IFile linkedFile)
 	{
 		this.hyperLinkRegion = hyperLinkRegion;
 		this.linkedFile = linkedFile;
 	}
 
+	/**
+	 * @param hyperLinkRegion
+	 * @param linkedFile
+	 * @param node
+	 */
 	public SourceFileHyperlink(IRegion hyperLinkRegion, IFile linkedFile, XSLNode node)
 	{
 		this.hyperLinkRegion = hyperLinkRegion;
@@ -44,22 +57,33 @@ public class SourceFileHyperlink implements IHyperlink
 		this.sourceArtifact = node;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getHyperlinkRegion()
+	 */
 	public IRegion getHyperlinkRegion()
 	{
 		return hyperLinkRegion;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getTypeLabel()
+	 */
 	public String getTypeLabel()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getHyperlinkText()
+	 */
 	public String getHyperlinkText()
 	{
 		return linkedFile.getFullPath().toString();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#open()
+	 */
 	public void open()
 	{
 		if (linkedFile != null && linkedFile.exists())
