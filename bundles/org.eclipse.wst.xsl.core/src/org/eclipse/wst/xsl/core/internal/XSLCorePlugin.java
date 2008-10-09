@@ -35,6 +35,11 @@ public class XSLCorePlugin extends Plugin {
 	 */
 	public static final String PLUGIN_ID = "org.eclipse.wst.xsl.core"; //$NON-NLS-1$
 	
+	/**
+	 * 
+	 */
+	public static final String USE_PROJECT_SETTINGS = "use-project-settings";//$NON-NLS-1$
+	
 	// The shared instance
 	private static XSLCorePlugin plugin;
 	

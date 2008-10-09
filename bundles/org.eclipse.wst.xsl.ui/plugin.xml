@@ -88,7 +88,7 @@
 		</page>
 
 		<page category="org.eclipse.wst.xsl.ui.preferences.BasePreferencePage"
-			class="org.eclipse.wst.xsl.ui.internal.preferences.ValidationPreferencePage"
+			class="org.eclipse.wst.xsl.ui.internal.preferences.XSLValidationPreferencePage"
 			id="org.eclipse.wst.xsl.ui.preferences.Validation" 
 			name="%pageNameValidation">
 		</page>
@@ -333,5 +333,20 @@
 		<initializer
 			class="org.eclipse.wst.xsl.ui.internal.preferences.XSLUIPreferenceInitializer" />
 	</extension>
+	
+	<extension point="org.eclipse.ui.propertyPages">
+		<page
+			name="%XSL_Property_validation"
+			class="org.eclipse.wst.xsl.ui.internal.preferences.XSLValidationPreferencePage"
+			id="org.eclipse.wst.xsl.ui.propertyPage.project.validation"
+			category="ValidationPropertiesPage">
+			<enabledWhen>
+				<adapt type="org.eclipse.core.resources.IProject">
+					
+				</adapt>
+			</enabledWhen>
+		</page>		
+	</extension>
+	
 	
 </plugin>
