@@ -1037,26 +1037,20 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						cursorAdjustment = proposedText.length();
 						if (elementDecl instanceof CMElementDeclaration) {
 							CMElementDeclaration ed = (CMElementDeclaration) elementDecl;
-							if (ed.getContentType() == CMElementDeclaration.EMPTY) {
-								proposedText += getContentGenerator().getStartTagClose(parent, ed);
-								cursorAdjustment = proposedText.length();
-							}
-							else {
-								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=89811
-								StringBuffer sb = new StringBuffer();
-								getContentGenerator().generateTag(parent, ed, sb);
-								// since it's a name proposal, assume '<' is
-								// already there
-								// only return the rest of the tag
-								proposedText = sb.toString().substring(1);
-								cursorAdjustment = getCursorPositionForProposedText(proposedText);
+							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=89811
+							StringBuffer sb = new StringBuffer();
+							getContentGenerator().generateTag(parent, ed, sb);
+							// since it's a name proposal, assume '<' is
+							// already there
+							// only return the rest of the tag
+							proposedText = sb.toString().substring(1);
+							cursorAdjustment = getCursorPositionForProposedText(proposedText);
 
-								// cursorAdjustment = proposedText.length() +
-								// 1;
-								// proposedText += "></" +
-								// getRequiredName(parent, elementDecl) + ">";
-								// //$NON-NLS-2$//$NON-NLS-1$
-							}
+							// cursorAdjustment = proposedText.length() +
+							// 1;
+							// proposedText += "></" +
+							// getRequiredName(parent, elementDecl) + ">";
+							// //$NON-NLS-2$//$NON-NLS-1$
 						}
 					}
 					if (beginsWith(proposedText, matchString)) {
@@ -1104,14 +1098,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					}
 
 					cursorAdjustment = getCursorPositionForProposedText(proposedText);
-
-					if (ed instanceof CMElementDeclaration) {
-						CMElementDeclaration elementDecl = (CMElementDeclaration) ed;
-						if (elementDecl.getContentType() == CMElementDeclaration.EMPTY) {
-							proposedText += getContentGenerator().getStartTagClose(parent, elementDecl);
-							cursorAdjustment = proposedText.length();
-						}
-					}
 
 					String proposedInfo = getAdditionalInfo(null, ed);
 					Image image = CMImageUtil.getImage(ed);
