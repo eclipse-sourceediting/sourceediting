@@ -230,5 +230,4 @@ public class TestXSLHyperlinkDetector extends AbstractXSLUITest {
 		sourceViewer = null;
 	}
 	
-
 }
