@@ -101,6 +101,9 @@ public class XPathParser {
 		return previousToken;
 	}
 	
+	public String getCurrentTokenValue() {
+		return currentToken.image;
+	}
 	
 	
 	
