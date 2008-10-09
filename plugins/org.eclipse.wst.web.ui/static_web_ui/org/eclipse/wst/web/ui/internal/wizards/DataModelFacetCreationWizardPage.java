@@ -119,6 +119,40 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
         createPresetPanel(top);
         return top;
 	}
+	
+	private String getPrimaryFacetCompositeLabel()
+	{
+	    final StringBuilder buf = new StringBuilder();
+	    boolean firstWord = true;
+	    
+	    for( String word : primaryProjectFacet.getLabel().split( " " ) )
+	    {
+	        if( firstWord )
+	        {
+	            buf.append( word );
+	            firstWord = false;
+	        }
+	        else
+	        {
+	            buf.append( ' ' );
+	            
+    	        if( word.length() == 1 || ! Character.isUpperCase( word.charAt( 1 ) ) )
+    	        {
+    	            buf.append( Character.toLowerCase( word.charAt( 0 ) ) );
+    	            buf.append( word.substring( 1 ) );
+    	        }
+    	        else
+    	        {
+    	            buf.append( word );
+    	        }
+	        }
+	    }
+	    
+	    buf.append( ' ' );
+	    buf.append( Messages.FACET_VERSION );
+	    
+	    return buf.toString();
+	}
 
 	protected void createPrimaryFacetComposite(Composite top) {
 		primaryProjectFacet = ProjectFacetsManager.getProjectFacet( getModuleTypeID() );
@@ -131,7 +165,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		final Group group = new Group( top, SWT.NONE );
         group.setLayoutData( gdhfill() );
         group.setLayout( new GridLayout( 1, false ) );
-        group.setText( Messages.bind( Messages.FACET_VERSION, new Object [] {primaryProjectFacet.getLabel()}));
+        group.setText( getPrimaryFacetCompositeLabel() );
 		
         primaryVersionCombo = new Combo( group, SWT.BORDER | SWT.READ_ONLY );
         primaryVersionCombo.setLayoutData( gdhfill() );
