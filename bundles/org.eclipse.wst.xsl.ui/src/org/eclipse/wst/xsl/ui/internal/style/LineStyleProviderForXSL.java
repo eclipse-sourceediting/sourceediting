@@ -40,7 +40,7 @@ import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
 
 /**
  * This implements a Syntax Line Style Provider for XSL. It leverages some
- * information from the XML Sytnax Coloring, but adds specific coloring for XSL
+ * information from the XML Syntax Coloring, but adds specific coloring for XSL
  * specific elements and attributes.
  * 
  * @author David Carver
