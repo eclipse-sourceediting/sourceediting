@@ -26,6 +26,7 @@ import org.eclipse.wst.xsl.core.ValidationPreferences;
  * Preference page for XSL validator preferences.
  * 
  * @author Doug Satchwell
+ * @deprecated  This has been replaced by XSLValidationPreferencePage
  */
 public class ValidationPreferencePage extends AbstractXSLPreferencePage
 {

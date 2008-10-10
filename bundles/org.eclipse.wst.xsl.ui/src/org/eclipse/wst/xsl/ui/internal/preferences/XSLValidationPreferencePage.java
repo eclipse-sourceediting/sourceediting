@@ -1,3 +1,15 @@
+/*******************************************************************************
+ *Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
+ *All rights reserved. This program and the accompanying materials
+ *are made available under the terms of the Eclipse Public License v1.0
+ *which accompanies this distribution, and is available at
+ *http://www.eclipse.org/legal/epl-v10.html
+ *
+ *Contributors:
+ *    David Carver - bug 230072 - initial API and implementation based on code from
+ *                                Doug Satchwell, Jesper Moeller, and the
+ *                                HTML Validation PreferencePage.
+ *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.preferences;
 
 import java.util.ArrayList;
@@ -25,6 +37,7 @@ import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ScrolledPageContent;
+import org.eclipse.wst.sse.ui.internal.util.PixelConverter;
 import org.eclipse.wst.xsl.core.ValidationPreferences;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
@@ -38,7 +51,7 @@ public class XSLValidationPreferencePage extends AbstractValidationSettingsPage 
 	private Map<String, Combo> combos = new HashMap<String, Combo>();
 	private List<ExpandableComposite> Expandables = new ArrayList<ExpandableComposite>();
 	private static final String SETTINGS_SECTION_NAME = "XSLValidationSeverities";//$NON-NLS-1$
-
+	private PixelConverter fPixelConverter;
 
 
 	static
@@ -48,8 +61,29 @@ public class XSLValidationPreferencePage extends AbstractValidationSettingsPage 
 		ERROR_MAP.put(IMarker.SEVERITY_INFO, 2);
 	}
 	
-	@Override
-	protected Composite createCommonContents(Composite parent)
+	protected Control createCommonContents(Composite parent) {
+		final Composite page = new Composite(parent, SWT.NULL);
+		
+		//GridLayout
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 1;
+		page.setLayout(layout);
+		
+		fPixelConverter = new PixelConverter(parent);
+		
+		final Composite content = createValidationSection(page);
+
+		loadPreferences();
+		restoreSectionExpansionStates(getDialogSettings().getSection(SETTINGS_SECTION_NAME));
+		
+		GridData gridData= new GridData(GridData.FILL, GridData.FILL, true, true);
+		gridData.heightHint = fPixelConverter.convertHeightInCharsToPixels(20);
+		content.setLayoutData(gridData);
+		
+		return page;
+	}
+	
+	protected Composite createValidationSection(Composite parent)
 	{
 		GridLayout layout= new GridLayout();
 		layout.numColumns= 2;
@@ -109,9 +143,6 @@ public class XSLValidationPreferencePage extends AbstractValidationSettingsPage 
 		twistie = createTwistie(body,"XPath Problems",columns);
 		inner = createInnerComposite(parent, twistie, columns);
 		createCombo(inner, "Incorrect XPath syntax:", ValidationPreferences.XPATHS);
-
-		loadPreferences();
-		restoreSectionExpansionStates(getDialogSettings().getSection(SETTINGS_SECTION_NAME));
 		
 		return parent;
 	}
@@ -181,6 +212,15 @@ public class XSLValidationPreferencePage extends AbstractValidationSettingsPage 
 		}
 	}
 	
+	@Override
+	public void dispose() {
+		storeSectionExpansionStates(getDialogSettings().addNewSection(SETTINGS_SECTION_NAME));
+		super.dispose();
+	}
+	
+	protected String getQualifier() {
+		return XSLCorePlugin.getDefault().getBundle().getSymbolicName();
+	}
 	
 	@Override
 	protected String getPreferenceNodeQualifier() {
@@ -285,5 +325,14 @@ public class XSLValidationPreferencePage extends AbstractValidationSettingsPage 
 	protected void performDefaults() {
 		resetSeverities();
 		super.performDefaults();
+	}
+	
+	/** (non-Javadoc)
+	 * @see org.eclipse.wst.xsl.ui.internal.preferences.AbstractValidationSettingsPage#performOk()
+	 */
+	public boolean performOk() {
+		boolean result = super.performOk();
+		storeValues();
+		return result;
 	}	
 }

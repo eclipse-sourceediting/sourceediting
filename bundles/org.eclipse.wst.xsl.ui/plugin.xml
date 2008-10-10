@@ -340,12 +340,11 @@
 			class="org.eclipse.wst.xsl.ui.internal.preferences.XSLValidationPreferencePage"
 			id="org.eclipse.wst.xsl.ui.propertyPage.project.validation"
 			category="ValidationPropertiesPage">
-<!--			<enabledWhen>
+-			<enabledWhen>
 				<adapt type="org.eclipse.core.resources.IProject">
 					
 				</adapt>
 			</enabledWhen>
--->
 		</page>		
 	</extension>
 	
