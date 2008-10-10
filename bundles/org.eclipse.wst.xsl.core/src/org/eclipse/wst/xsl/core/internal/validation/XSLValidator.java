@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 230072 - Project level specific validation
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.validation;
 
@@ -21,7 +22,11 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xsl.core.ValidationPreferences;
@@ -47,6 +52,7 @@ import org.eclipse.wst.xsl.core.Messages;
 public class XSLValidator
 {
 	private static XSLValidator instance;
+	private IProject project;
 
 	private XSLValidator()
 	{
@@ -63,6 +69,7 @@ public class XSLValidator
 	public ValidationReport validate(IFile xslFile, boolean forceBuild) throws CoreException
 	{
 		XSLValidationReport report = new XSLValidationReport(xslFile.getLocationURI().toString());
+		project = xslFile.getProject();
 		validate(xslFile, report, forceBuild);
 		return report;
 	}
@@ -83,6 +90,8 @@ public class XSLValidator
 			stylesheet = XSLCore.getInstance().buildStylesheet(xslFile);
 		else
 			stylesheet = XSLCore.getInstance().getStylesheet(xslFile);
+		
+		project = xslFile.getProject();
 
 		long start;
 		if (Debug.debugXSLModel) {
@@ -124,7 +133,20 @@ public class XSLValidator
 	
 	private int getPreference(String key)
 	{
-		return XSLCorePlugin.getDefault().getPluginPreferences().getInt(key);
+		if (project == null) {
+			return XSLCorePlugin.getDefault().getPluginPreferences().getInt(key);
+		}
+		
+		IEclipsePreferences prefs = new ProjectScope(project).getNode(XSLCorePlugin.getDefault().getBundle().getSymbolicName());
+		boolean useProject = prefs.getBoolean(XSLCorePlugin.USE_PROJECT_SETTINGS, false);
+		
+		int valPref;
+		if (useProject) {
+			valPref = prefs.getInt(key, ValidationMessage.WARNING);	
+		} else {
+			valPref = XSLCorePlugin.getDefault().getPluginPreferences().getInt(key);
+		}
+		return valPref;
 	}
 
 	private void checkXPaths(XSLElement xslEl, XSLValidationReport report) throws MaxErrorsExceededException
