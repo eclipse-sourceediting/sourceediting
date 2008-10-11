@@ -263,8 +263,10 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		IDocument document = getDocument();
 		if (document != null) {
 			IAnnotationModel annotationModel = getAnnotationModel();
-			IRegion documentRegion = new Region(0, document.getLength());
-			spellCheck(documentRegion, documentRegion, annotationModel);
+			if (annotationModel != null) {
+				IRegion documentRegion = new Region(0, document.getLength());
+				spellCheck(documentRegion, documentRegion, annotationModel);
+			}
 		}
 	}
 
@@ -295,11 +297,16 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 			if (_DEBUG_SPELLING) {
 				Logger.log(Logger.INFO, "Spell Checking [" + dirtyRegion.getOffset() + ":" + dirtyRegion.getLength() + "] : " + (System.currentTimeMillis() - time0));
 			}
-			spellCheck(dirtyRegion, dirtyRegion, annotationModel);
+			if (annotationModel != null) {
+				spellCheck(dirtyRegion, dirtyRegion, annotationModel);
+			}
 		}
 	}
 
 	private void spellCheck(IRegion dirtyRegion, IRegion regionToBeChecked, IAnnotationModel annotationModel) {
+		if (annotationModel == null)
+			return;
+
 		TemporaryAnnotation[] annotationsToRemove;
 		Annotation[] annotationsToAdd;
 		annotationsToRemove = getSpellingAnnotationsToRemove(regionToBeChecked);
@@ -342,7 +349,9 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		IDocument document = getDocument();
 		if (document != null) {
 			IAnnotationModel annotationModel = getAnnotationModel();
-			spellCheck(partition, partition, annotationModel);
+			if (annotationModel != null) {
+				spellCheck(partition, partition, annotationModel);
+			}
 		}
 	}
 

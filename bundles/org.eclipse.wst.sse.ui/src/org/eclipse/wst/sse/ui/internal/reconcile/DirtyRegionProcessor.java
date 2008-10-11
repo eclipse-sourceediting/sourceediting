@@ -610,7 +610,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	 * @param node
 	 */
 	public final void processDirtyRegion(DirtyRegion dr) {
-		if (dr == null)
+		if (dr == null || !isInstalled())
 			return;
 
 		cancel();
@@ -678,9 +678,9 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 			}
 			// hook up new document listener
 			fDocument.addDocumentListener(fDocumentListener);
+
+			setEntireDocumentDirty(doc);
 		}
-		
-		setEntireDocumentDirty(doc);
 	}
 
 	/**
@@ -758,6 +758,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 			getTextViewer().removeTextInputListener(fTextInputListener);
 			setInstalled(false);
 		}
+		fDirtyRegionQueue.clear();
 		setDocument(null);
 	}
 }

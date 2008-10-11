@@ -19,6 +19,7 @@ import java.util.List;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Region;
@@ -71,7 +72,8 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 			validatorStrategy.endProcessing();
 		}
 		/* single spell-check for everything to ensure that SpellingProblem offsets are correct */
-		if (getSpellcheckStrategy() != null) {
+		IReconcilingStrategy spellingStrategy = getSpellcheckStrategy();
+		if (spellingStrategy != null) {
 			getSpellcheckStrategy().reconcile(new Region(0, getDocument().getLength()));
 		}
 	}
@@ -98,14 +100,15 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 	}
 
 	protected IReconcilingStrategy getSpellcheckStrategy() {
-		if (fSpellcheckStrategy == null) {
+		if (fSpellcheckStrategy == null && getDocument() != null) {
 			String contentTypeId = getContentType(getDocument());
-			if (contentTypeId != null) {
-				if (getTextViewer() instanceof ISourceViewer) {
-					ISourceViewer viewer = (ISourceViewer) getTextViewer();
-					fSpellcheckStrategy = new SpellcheckStrategy(viewer, contentTypeId);
-					fSpellcheckStrategy.setDocument(getDocument());
-				}
+			if (contentTypeId == null) {
+				contentTypeId = IContentTypeManager.CT_TEXT;
+			}
+			if (getTextViewer() instanceof ISourceViewer) {
+				ISourceViewer viewer = (ISourceViewer) getTextViewer();
+				fSpellcheckStrategy = new SpellcheckStrategy(viewer, contentTypeId);
+				fSpellcheckStrategy.setDocument(getDocument());
 			}
 		}
 		return fSpellcheckStrategy;
@@ -187,9 +190,8 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 		if (validatorStrategy != null) {
 			validatorStrategy.setDocument(doc);
 		}
-		if (fSpellcheckStrategy != null) {
-			fSpellcheckStrategy.setDocument(doc);
-		}
+		
+		fSpellcheckStrategy = null;
 	}
 
 	protected void setEntireDocumentDirty(IDocument document) {
@@ -209,8 +211,9 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 					validatorStrategy.reconcile(fLastPartitions[i], createDirtyRegion(fLastPartitions[i], DirtyRegion.REMOVE));
 				}
 			}
-			if (fSpellcheckStrategy != null) {
-				fSpellcheckStrategy.reconcile(new Region(0, document.getLength()));
+			IReconcilingStrategy spellingStrategy = getSpellcheckStrategy();
+			if (spellingStrategy != null) {
+				spellingStrategy.reconcile(new Region(0, document.getLength()));
 			}
 		}
 	}
@@ -229,9 +232,8 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 				if (validatorStrategy instanceof IReleasable)
 					((IReleasable) validatorStrategy).release();
 			}
-			if (fSpellcheckStrategy != null) {
-				fSpellcheckStrategy.setDocument(null);
-			}
+			
+			fSpellcheckStrategy = null;
 		}
 		super.uninstall();
 	}
