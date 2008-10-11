@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.validate;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,7 +49,7 @@ public class HTMLElementContentValidator extends PrimeValidator {
 
 		validateContent(target, target.getFirstChild());
 	}
-
+	
 	private void validateContent(Element parent, Node child) {
 		if (child == null)
 			return;
@@ -59,11 +58,10 @@ public class HTMLElementContentValidator extends PrimeValidator {
 		if(ed == null || ed.getContentType() == CMElementDeclaration.ANY)
 			return;
 		
-		List extendedContentHolder = new ArrayList();
-		boolean[] extendedContentRetrieved = new boolean[1];
+		List[] extendedContent = new List[1];
 		while (child != null) {
 			// perform actual validation
-			validateNode(parent, child, ed, extendedContentHolder, extendedContentRetrieved);
+			validateNode(parent, child, ed, extendedContent);
 			child = child.getNextSibling();
 		}
 	}
@@ -102,7 +100,7 @@ public class HTMLElementContentValidator extends PrimeValidator {
 //		return false;
 //	}
 
-	private void validateNode(Element target, Node child, CMElementDeclaration edec, List extendedContent, boolean[] extendedContentInitialized) {
+	private void validateNode(Element target, Node child, CMElementDeclaration edec, List[] extendedContent) {
 		// NOTE: If the target element is 'UNKNOWN', that is, it has no
 		// element declaration, the content type of the element should be
 		// regarded as 'ANY'. -- 9/10/2001
@@ -153,12 +151,11 @@ public class HTMLElementContentValidator extends PrimeValidator {
 						 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=218143 - 
 						 * ModelQuery use not pervasive enough
 						 */
-						if (!extendedContentInitialized[0]) {
-							extendedContent.addAll(ModelQueryUtil.getModelQuery(target.getOwnerDocument()).getAvailableContent(target, edec, ModelQuery.INCLUDE_CHILD_NODES));
-							extendedContentInitialized[0] = true;
+						if (extendedContent[0] == null) {
+							extendedContent[0] = ModelQueryUtil.getModelQuery(target.getOwnerDocument()).getAvailableContent(target, edec, ModelQuery.INCLUDE_CHILD_NODES);
 						}
 
-						List availableChildElementDeclarations = extendedContent;
+						List availableChildElementDeclarations = extendedContent[0];
 						/*
 						 * Retrieve and set aside just the element names for faster checking
 						 * later.

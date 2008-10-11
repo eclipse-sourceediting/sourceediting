@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,8 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -26,7 +27,7 @@ public class NodeListImpl implements NodeList {
 
 	Object lockObject = new byte[0];
 
-	private Vector nodes = null;
+	private List nodes = null;
 
 	/**
 	 * NodeListImpl constructor
@@ -46,8 +47,8 @@ public class NodeListImpl implements NodeList {
 		if (node == null)
 			return null;
 		if (this.nodes == null)
-			this.nodes = new Vector();
-		this.nodes.addElement(node);
+			this.nodes = new ArrayList();
+		this.nodes.add(node);
 		return node;
 	}
 
@@ -72,7 +73,7 @@ public class NodeListImpl implements NodeList {
 		if (this.nodes == null || index >= this.nodes.size()) {
 			return appendNode(node);
 		}
-		this.nodes.insertElementAt(node, index);
+		this.nodes.add(index, node);
 		return node;
 	}
 
@@ -87,7 +88,7 @@ public class NodeListImpl implements NodeList {
 				return null;
 			if (index < 0 || index >= this.nodes.size())
 				return null;
-			return (Node) this.nodes.elementAt(index);
+			return (Node) this.nodes.get(index);
 		}
 	}
 
@@ -101,11 +102,13 @@ public class NodeListImpl implements NodeList {
 	protected Node removeNode(int index) {
 		if (this.nodes == null)
 			return null; // no node
-		if (index < 0 || index >= this.nodes.size())
-			return null; // invalid parameter
 
-		Node removed = (Node) this.nodes.elementAt(index);
-		this.nodes.removeElementAt(index);
-		return removed;
+		synchronized (lockObject) {
+			if (index < 0 || index >= this.nodes.size())
+				return null; // invalid parameter
+
+			Node removed = (Node) this.nodes.remove(index);
+			return removed;
+		}
 	}
 }

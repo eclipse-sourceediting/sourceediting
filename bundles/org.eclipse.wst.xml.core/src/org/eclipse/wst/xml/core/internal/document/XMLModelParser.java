@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,9 +14,9 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 
-import java.util.Enumeration;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegionList;
@@ -1181,7 +1181,7 @@ public class XMLModelParser {
 
 		String tagName = null;
 		AttrImpl attr = null;
-		Vector attrNodes = null;
+		List attrNodes = null;
 		boolean isCloseTag = false;
 		Iterator e = regions.iterator();
 		while (e.hasNext()) {
@@ -1199,8 +1199,8 @@ public class XMLModelParser {
 				if (attr != null) {
 					attr.setNameRegion(region);
 					if (attrNodes == null)
-						attrNodes = new Vector();
-					attrNodes.addElement(attr);
+						attrNodes = new ArrayList();
+					attrNodes.add(attr);
 				}
 			}
 			else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
@@ -1245,12 +1245,8 @@ public class XMLModelParser {
 			return;
 		}
 		if (attrNodes != null) {
-			Enumeration ae = attrNodes.elements();
-			while (ae.hasMoreElements()) {
-				Attr a = (Attr) ae.nextElement();
-				if (a == null)
-					continue;
-				element.appendAttributeNode(a);
+			for (int i = 0; i < attrNodes.size(); i++) {
+				element.appendAttributeNode((Attr) attrNodes.get(i));
 			}
 		}
 		element.setJSPTag(true);
@@ -1440,7 +1436,7 @@ public class XMLModelParser {
 		String tagName = null;
 		boolean isEmptyTag = false;
 		AttrImpl attr = null;
-		Vector attrNodes = null;
+		List attrNodes = null;
 		Iterator e = regions.iterator();
 		while (e.hasNext()) {
 			ITextRegion region = (ITextRegion) e.next();
@@ -1458,8 +1454,8 @@ public class XMLModelParser {
 				if (attr != null) {
 					attr.setNameRegion(region);
 					if (attrNodes == null)
-						attrNodes = new Vector();
-					attrNodes.addElement(attr);
+						attrNodes = new ArrayList();
+					attrNodes.add(attr);
 				}
 			}
 			else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
@@ -1492,12 +1488,8 @@ public class XMLModelParser {
 			return;
 		}
 		if (attrNodes != null) {
-			Enumeration ae = attrNodes.elements();
-			while (ae.hasMoreElements()) {
-				Attr a = (Attr) ae.nextElement();
-				if (a == null)
-					continue;
-				element.appendAttributeNode(a);
+			for (int i = 0; i < attrNodes.size(); i++) {
+				element.appendAttributeNode((Attr) attrNodes.get(i));
 			}
 		}
 		if (isEmptyTag)
@@ -2330,12 +2322,9 @@ public class XMLModelParser {
 			setupContext(oldStructuredDocumentRegions.item(0));
 			// Node startParent = this.context.getParentNode();
 
-			Enumeration e = oldStructuredDocumentRegions.elements();
-			while (e.hasMoreElements()) {
-				IStructuredDocumentRegion flatNode = (IStructuredDocumentRegion) e.nextElement();
-				if (flatNode == null)
-					continue;
-				removeStructuredDocumentRegion(flatNode);
+			for (int i = 0; i < oldCount; i++) {
+				IStructuredDocumentRegion documentRegion = oldStructuredDocumentRegions.item(i);
+				removeStructuredDocumentRegion(documentRegion);
 			}
 		}
 		else {
@@ -2348,12 +2337,9 @@ public class XMLModelParser {
 		this.context.setLast();
 
 		if (newCount > 0) {
-			Enumeration e = newStructuredDocumentRegions.elements();
-			while (e.hasMoreElements()) {
-				IStructuredDocumentRegion flatNode = (IStructuredDocumentRegion) e.nextElement();
-				if (flatNode == null)
-					continue;
-				insertStructuredDocumentRegion(flatNode);
+			for (int i = 0; i < newCount; i++) {
+				IStructuredDocumentRegion documentRegion = newStructuredDocumentRegions.item(i);
+				insertStructuredDocumentRegion(documentRegion);
 			}
 		}
 
@@ -2374,7 +2360,7 @@ public class XMLModelParser {
 			return;
 
 		if (offset == 0) {
-			// at the beggining of document
+			// at the beginning of document
 			Node child = root.getFirstChild();
 			if (child != null)
 				this.context.setNextNode(child);

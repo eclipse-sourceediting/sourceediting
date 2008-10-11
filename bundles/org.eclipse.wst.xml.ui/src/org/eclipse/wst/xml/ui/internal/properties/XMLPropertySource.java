@@ -289,8 +289,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		CMNamedNodeMap attrMap = null;
 		CMElementDeclaration ed = getDeclaration();
 		if (ed != null) {
-			attrMap = ed.getAttributes();
-			CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attrMap);
+			CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl();
 			List nodes = ModelQueryUtil.getModelQuery(fNode.getOwnerDocument()).getAvailableContent((Element) fNode, ed, ModelQuery.INCLUDE_ATTRIBUTES);
 			for (int k = 0; k < nodes.size(); k++) {
 				CMNode cmnode = (CMNode) nodes.get(k);

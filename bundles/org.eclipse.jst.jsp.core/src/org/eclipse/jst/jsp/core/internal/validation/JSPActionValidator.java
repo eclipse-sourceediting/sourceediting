@@ -328,9 +328,9 @@ public class JSPActionValidator extends JSPValidator {
 			if (query != null) {
 				CMElementDeclaration cmElement = query.getCMElementDeclaration(element);
 				if (cmElement != null) {
-					CMNamedNodeMap cmAttributes = cmElement.getAttributes();
+					CMNamedNodeMap cmAttributes = null;
 
-					CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(cmAttributes);
+					CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl();
 					List nodes = query.getAvailableContent(element, cmElement, ModelQuery.INCLUDE_ATTRIBUTES);
 					for (int k = 0; k < nodes.size(); k++) {
 						CMNode cmnode = (CMNode) nodes.get(k);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,10 +12,11 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.util.Debug;
@@ -28,8 +29,7 @@ import org.w3c.dom.Node;
 
 public class XMLModelNotifierImpl implements XMLModelNotifier {
 
-	/* end: for debugging only */
-	private class NotifyEvent {
+	private static class NotifyEvent {
 		Object changedFeature;
 		boolean discarded;
 		Object newValue;
@@ -65,7 +65,7 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 
 	private boolean changing = false;
 	private boolean doingNewModel = false;
-	private Vector events = null;
+	private List fEvents = null;
 	private boolean flushing = false;
 
 	/**
@@ -119,13 +119,13 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 
 	public void cancelPending() {
 		// we don't want to change the size of this array, since
-		// the array may be being processed, in the defferred notification
+		// the array may be being processed, in the deferred notification
 		// loop, but we can signal that all
 		// should be discarded, so any remaining ones will be ignored.
-		if (this.events != null) {
-			Iterator iterator = this.events.iterator();
-			while (iterator.hasNext()) {
-				NotifyEvent event = (NotifyEvent) iterator.next();
+		if (this.fEvents != null) {
+			int size = fEvents.size();
+			for (int i = 0; i < size; i++) {
+				NotifyEvent event = (NotifyEvent) fEvents.get(i);
 				event.discarded = true;
 			}
 		}
@@ -180,7 +180,7 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 			notifyStructureChanged(this.changedRoot);
 			if (Debug.debugNotifyDeferred) {
 				String p = this.changedRoot.getNodeName();
-				System.out.println("Deferred STRUCUTRE_CHANGED: " + p); //$NON-NLS-1$
+				System.out.println("Deferred STRUCTURE_CHANGED: " + p); //$NON-NLS-1$
 			}
 			this.changedRoot = null;
 		}
@@ -201,7 +201,7 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 	/**
 	 */
 	public boolean hasChanged() {
-		return (this.events != null);
+		return (this.fEvents != null);
 	}
 
 	/**
@@ -217,15 +217,15 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 			return;
 		if (this.changing && !this.flushing) {
 			// defer notification
-			if (this.events == null)
-				this.events = new Vector();
+			if (this.fEvents == null)
+				this.fEvents = new ArrayList();
 			// we do not defer anything if we are doing a new Model,
 			// except for the document event, since all others are
 			// trivial and not needed at that initial point.
 			// But even for that one document event, in the new model case,
 			// it is still important to defer it.
 			if ((!doingNewModel) || (((Node) notifier).getNodeType() == Node.DOCUMENT_NODE)) {
-				this.events.addElement(new NotifyEvent(notifier, eventType, changedFeature, oldValue, newValue, pos));
+				this.fEvents.add(new NotifyEvent(notifier, eventType, changedFeature, oldValue, newValue, pos));
 			}
 			return;
 		}
@@ -244,30 +244,32 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 	/**
 	 */
 	private void notifyDeferred() {
-		if (this.events == null)
+		if (this.fEvents == null)
 			return;
 		if (this.flushing)
 			return;
 		this.flushing = true; // force notification
-		int count = this.events.size();
+		int count = this.fEvents.size();
+
+		System.out.println("processing notification events: " + count);
+		
 		if (!doingNewModel && fOptimizeDeferred) {
-			Map values = new HashMap();
+			Map notifyEvents = new HashMap();
 			for (int i = 0; i < count; i++) {
-				NotifyEvent event = (NotifyEvent) this.events.elementAt(i);
+				NotifyEvent event = (NotifyEvent) this.fEvents.get(i);
 				if (event == null)
 					continue; // error
 				event.index = i;
 				if(event.type == INodeNotifier.REMOVE) {
-					addToMap(event.oldValue, event, values);
+					addToMap(event.oldValue, event, notifyEvents);
 				}
 				if(event.type == INodeNotifier.ADD) {
-					addToMap(event.newValue, event, values);
+					addToMap(event.newValue, event, notifyEvents);
 				}
 			}
-			Iterator it = values.keySet().iterator();
-			while(it.hasNext()) {
-				Object value = it.next();
-				NotifyEvent[] es = (NotifyEvent[])values.get(value);
+			Iterator it = notifyEvents.values().iterator();
+			while (it.hasNext()) {
+				NotifyEvent[] es = (NotifyEvent[]) it.next();
 				for (int i = 0; i < es.length - 1; i++) {
 					NotifyEvent event = es[i];
 					if(es[i].discarded) continue;
@@ -284,13 +286,13 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 				}
 			}
 			for (int i = 0; i < count; i++) {
-				NotifyEvent event = (NotifyEvent) this.events.elementAt(i);
+				NotifyEvent event = (NotifyEvent) this.fEvents.get(i);
 				if (event == null)
 					continue; // error
 				if(event.discarded) continue;
 				if (event.notifier != null && fOptimizeDeferredAccordingToParentAdded) {
 					if (event.type == INodeNotifier.ADD) {
-						NotifyEvent[] es = (NotifyEvent[])values.get(event.notifier);
+						NotifyEvent[] es = (NotifyEvent[])notifyEvents.get(event.notifier);
 						if(es != null) for (int p = 0; p < es.length && es[p].index < event.index; p++) {
 							NotifyEvent prev = es[p];
 							if (prev.type == INodeNotifier.REMOVE && prev.oldValue == event.notifier) {
@@ -313,7 +315,7 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 				if(event.discarded) continue;
 				if (event.notifier != null && fOptimizeDeferredAccordingToParentRemoved) {
 					if (event.type == INodeNotifier.REMOVE) {
-						NotifyEvent[] es = (NotifyEvent[])values.get(event.notifier);
+						NotifyEvent[] es = (NotifyEvent[])notifyEvents.get(event.notifier);
 						if(es != null) for (int n = 0; n < es.length; n++) {
 							NotifyEvent next = es[n];
 							if(next.index > event.index && next.type == INodeNotifier.REMOVE) {
@@ -333,7 +335,7 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 			}
 		}
 		for (int i = 0; i < count; i++) {
-			NotifyEvent event = (NotifyEvent) this.events.elementAt(i);
+			NotifyEvent event = (NotifyEvent) this.fEvents.get(i);
 			if (event == null)
 				continue; // error
 			if(event.discarded) continue;
@@ -341,7 +343,7 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 		}
 		if (Debug.debugNotifyDeferred) {
 			for (int l = 0; l < count; l++) {
-				NotifyEvent event = (NotifyEvent) this.events.elementAt(l);
+				NotifyEvent event = (NotifyEvent) this.fEvents.get(l);
 				Object o = null;
 				String t = null;
 				if (event.type == INodeNotifier.ADD) {
@@ -360,7 +362,7 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 			}
 		}
 		this.flushing = false;
-		this.events = null;
+		this.fEvents = null;
 	}
 
 	void addToMap(Object o, NotifyEvent event, Map map) {
@@ -443,13 +445,13 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 			setCommonRootIfNeeded(node);
 			if (Debug.debugNotifyDeferred) {
 				String p = this.changedRoot.getNodeName();
-				System.out.println("requested STRUCUTRE_CHANGED: " + p); //$NON-NLS-1$
+				System.out.println("requested STRUCTURE_CHANGED: " + p); //$NON-NLS-1$
 			}
 			return;
 		}
 		if (Debug.debugNotifyDeferred) {
 			String p = node.getNodeName();
-			System.out.println("STRUCUTRE_CHANGED: " + p); //$NON-NLS-1$
+			System.out.println("STRUCTURE_CHANGED: " + p); //$NON-NLS-1$
 		}
 		notifyStructureChanged(node);
 	}
@@ -467,7 +469,7 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 		if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
 			Attr attr = (Attr) node;
 			notifier = (IDOMNode) attr.getOwnerElement();
-			// TODO_dmw: experimental: changed 06/29/2004 to send "strucuture
+			// TODO_dmw: experimental: changed 06/29/2004 to send "structuure
 			// changed" even for attribute value changes
 			// there are pros and cons to considering attribute value
 			// "structure changed". Will (re)consider
