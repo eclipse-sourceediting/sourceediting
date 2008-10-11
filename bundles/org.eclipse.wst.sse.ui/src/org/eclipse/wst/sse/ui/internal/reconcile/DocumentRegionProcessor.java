@@ -73,8 +73,9 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 		}
 		/* single spell-check for everything to ensure that SpellingProblem offsets are correct */
 		IReconcilingStrategy spellingStrategy = getSpellcheckStrategy();
-		if (spellingStrategy != null) {
-			getSpellcheckStrategy().reconcile(new Region(0, getDocument().getLength()));
+		IDocument document = getDocument();
+		if (spellingStrategy != null && document != null) {
+			getSpellcheckStrategy().reconcile(new Region(0, document.getLength()));
 		}
 	}
 

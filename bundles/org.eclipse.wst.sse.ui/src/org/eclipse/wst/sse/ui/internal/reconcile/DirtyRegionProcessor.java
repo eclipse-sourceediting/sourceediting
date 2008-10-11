@@ -633,7 +633,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 			beginProcessing();
 
 			DirtyRegion[] toRefresh = getRequests();
-			for (int i = 0; i < toRefresh.length; i++) {
+			for (int i = 0; i < toRefresh.length && fDocument != null; i++) {
 				if (monitor.isCanceled())
 					throw new OperationCanceledException();
 				process(toRefresh[i]);
