@@ -33,7 +33,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -848,7 +847,7 @@ class ProjectDescription {
 		JarRecord record = new JarRecord();
 		record.info = new TaglibInfo();
 		record.location = new Path(fileLocation);
-		record.urlRecords = new LinkedList();
+		record.urlRecords = new ArrayList();
 		return record;
 	}
 
@@ -1105,7 +1104,7 @@ class ProjectDescription {
 
 	private Collection getCatalogRecords() {
 		if (fCatalogRecords == null) {
-			List records = new LinkedList();
+			List records = new ArrayList();
 			ICatalog defaultCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
 			if (defaultCatalog != null) {
 				// Process default catalog
