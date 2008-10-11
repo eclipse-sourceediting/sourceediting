@@ -25,13 +25,16 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.jface.text.hyperlink.URLHyperlink;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.utils.StringUtils;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
@@ -58,7 +61,6 @@ import com.ibm.icu.util.StringTokenizer;
  * 
  */
 public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
-	private final String HTTP_PROTOCOL = "http://";//$NON-NLS-1$
 	private final String NO_NAMESPACE_SCHEMA_LOCATION = "noNamespaceSchemaLocation"; //$NON-NLS-1$
 	private final String SCHEMA_LOCATION = "schemaLocation"; //$NON-NLS-1$
 	private final String XMLNS = "xmlns"; //$NON-NLS-1$
@@ -74,8 +76,9 @@ public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 	private IHyperlink createHyperlink(String uriString, IRegion hyperlinkRegion, IDocument document, Node node) {
 		IHyperlink link = null;
 
-		if (isHttp(uriString)) {
-			link = new URLHyperlink(hyperlinkRegion, uriString);
+		ICatalogEntry entry = getCatalogEntry(uriString);
+		if (entry != null) {
+			link = new CatalogEntryHyperlink(hyperlinkRegion, entry);
 		}
 		else {
 			// try to locate the file in the workspace
@@ -449,23 +452,6 @@ public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 	}
 
 	/**
-	 * Returns true if this uriString is an http string
-	 * 
-	 * @param uriString
-	 * @return true if uriString is http string, false otherwise
-	 */
-	private boolean isHttp(String uriString) {
-		boolean isHttp = false;
-		if (uriString != null) {
-			String tempString = uriString.toLowerCase();
-			if (tempString.startsWith(HTTP_PROTOCOL)) {
-				isHttp = true;
-			}
-		}
-		return isHttp;
-	}
-
-	/**
 	 * Checks to see if the given attribute is openable. Attribute is openable
 	 * if it is a namespace declaration attribute or if the attribute value is
 	 * of type URI.
@@ -521,7 +507,7 @@ public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 	private boolean isValidURI(String uriString) {
 		boolean isValid = false;
 
-		if (isHttp(uriString)) {
+		if (getCatalogEntry(uriString) != null) {
 			isValid = true;
 		}
 		else {
@@ -534,6 +520,35 @@ public class XMLHyperlinkDetector extends AbstractHyperlinkDetector {
 			
 		}
 		return isValid;
+	}
+
+	/**
+	 * @param uriString
+	 * @return
+	 */
+	private ICatalogEntry getCatalogEntry(String uriString) {
+		ICatalog defaultCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
+		if (defaultCatalog != null) {
+			// Process default catalog
+			ICatalogEntry[] entries = defaultCatalog.getCatalogEntries();
+			for (int entry = 0; entry < entries.length; entry++) {
+				if (uriString.equals(entries[entry].getKey())||uriString.equals(entries[entry].getURI())) {
+					return entries[entry];
+				}
+			}
+
+			// Process declared OASIS nextCatalogs catalog
+			INextCatalog[] nextCatalogs = defaultCatalog.getNextCatalogs();
+			for (int nextCatalog = 0; nextCatalog < nextCatalogs.length; nextCatalog++) {
+				ICatalog catalog = nextCatalogs[nextCatalog].getReferencedCatalog();
+				ICatalogEntry[] entries2 = catalog.getCatalogEntries();
+				for (int entry = 0; entry < entries2.length; entry++) {
+					if (uriString.equals(entries2[entry].getKey())||uriString.equals(entries2[entry].getURI()))
+						return entries2[entry];
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
