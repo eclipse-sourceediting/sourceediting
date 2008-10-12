@@ -37,7 +37,16 @@ public abstract class XSLNode extends XSLModelObject
 	private int offset;
 	private int length;
 	private short type;
+	private String name;
 	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	/**
 	 * Create a new instance of this.
 	 * 
