@@ -11,7 +11,6 @@
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
@@ -68,49 +67,31 @@ public class XSLContentAssistRequestFactory {
 	 * Get the appropriate content assist request class for the XSL request.
 	 * @return
 	 */
-	public AbstractXSLContentAssistRequest getContentAssistRequest() {
+	public IContentAssistProposalRequest getContentAssistRequest() {
 		NamedNodeMap nodeMap = xmlNode.getAttributes();
 		IDOMElement element = (IDOMElement) xmlNode;
-
-		if (this.hasAttributeAtTextRegion(ATTR_SELECT, nodeMap,
-				completionRegion)) {
-			return new SelectAttributeContentAssist(xmlNode, sdRegion,
-					completionRegion, documentPosition, 0, matchString,
-					textViewer);
-		}
-
-		if (this
-				.hasAttributeAtTextRegion(ATTR_MATCH, nodeMap, completionRegion)) {
-			return new SelectAttributeContentAssist(xmlNode, sdRegion,
-					completionRegion, documentPosition, 0, matchString,
-					textViewer);
-		}
-
-		if (this.hasAttributeAtTextRegion(ATTR_TEST, nodeMap, completionRegion)) {
-			return new TestAttributeContentAssist(xmlNode, sdRegion,
-					completionRegion, documentPosition, 0, matchString,
-					textViewer);
-		}
-
-		if (this.hasAttributeAtTextRegion(ATTR_EXCLUDE_RESULT_PREFIXES,
-				nodeMap, completionRegion)) {
-			return new ExcludeResultPrefixesContentAssist(xmlNode, sdRegion,
-					completionRegion, documentPosition, 0, matchString,
-					textViewer);
-		}
-
-		if (hasAttributeAtTextRegion(ATTR_HREF, nodeMap, completionRegion)) {
-			return new HrefContentAssistRequest(xmlNode, sdRegion,
-					completionRegion, documentPosition, 0, matchString,
-					textViewer);
-		}
-
-		if (element.getLocalName().equals(ELEM_TEMPLATE)) {
-			if (hasAttributeAtTextRegion(ATTR_MODE, nodeMap, completionRegion)) {
-				return new TemplateModeAttributeContentAssist(xmlNode,
-						sdRegion, completionRegion, documentPosition, 0,
-						matchString, textViewer);
+		IContentAssistProposalRequest proposal = commonAttributeProposals(nodeMap);
+		
+		if (proposal instanceof NullContentAssistRequest) {
+			if (isElementProposal(element)) {
+				proposal = getElementProposals(nodeMap, element);
 			}
+		}
+
+		return proposal;
+	}
+	
+	private boolean isElementProposal(IDOMElement element) {
+		String localName = element.getLocalName();
+		return localName.equals(ELEM_TEMPLATE) ||
+		       localName.equals(ELEM_APPLYTEMPLATES) ||
+		       localName.equals(ELEM_CALLTEMPLATE);
+	}
+	
+
+	private IContentAssistProposalRequest getElementProposals(NamedNodeMap nodeMap, IDOMElement element) {
+		if (element.getLocalName().equals(ELEM_TEMPLATE)) {
+			return getTemplateProposals(nodeMap);
 		}
 
 		if (element.getLocalName().equals(ELEM_APPLYTEMPLATES)
@@ -130,6 +111,64 @@ public class XSLContentAssistRequestFactory {
 						textViewer);
 			}
 		}
+		
+		return new NullContentAssistRequest(xmlNode, sdRegion,
+				completionRegion, documentPosition, 0, matchString, textViewer);		
+		
+	}
+	
+	private IContentAssistProposalRequest getTemplateProposals(NamedNodeMap nodeMap) {
+		if (hasAttributeAtTextRegion(ATTR_MODE, nodeMap, completionRegion)) {
+			return new TemplateModeAttributeContentAssist(xmlNode,
+					sdRegion, completionRegion, documentPosition, 0,
+					matchString, textViewer);
+		}
+		
+		if (hasAttributeAtTextRegion(ATTR_NAME, nodeMap, completionRegion)) {
+			return new TemplateNameAttributeContentAssist( xmlNode,
+					sdRegion, completionRegion, documentPosition, 0,
+					matchString, textViewer);        
+		}
+		
+		return new NullContentAssistRequest(xmlNode, sdRegion,
+				completionRegion, documentPosition, 0, matchString, textViewer);		
+		
+	}
+	
+	private IContentAssistProposalRequest commonAttributeProposals(
+			NamedNodeMap nodeMap) {
+		if (hasAttributeAtTextRegion(ATTR_SELECT, nodeMap,
+				completionRegion)) {
+			return new SelectAttributeContentAssist(xmlNode, sdRegion,
+					completionRegion, documentPosition, 0, matchString,
+					textViewer);
+		}
+
+		if (hasAttributeAtTextRegion(ATTR_MATCH, nodeMap, completionRegion)) {
+			return new SelectAttributeContentAssist(xmlNode, sdRegion,
+					completionRegion, documentPosition, 0, matchString,
+					textViewer);
+		}
+
+		if (hasAttributeAtTextRegion(ATTR_TEST, nodeMap, completionRegion)) {
+			return new TestAttributeContentAssist(xmlNode, sdRegion,
+					completionRegion, documentPosition, 0, matchString,
+					textViewer);
+		}
+
+		if (hasAttributeAtTextRegion(ATTR_EXCLUDE_RESULT_PREFIXES,
+				nodeMap, completionRegion)) {
+			return new ExcludeResultPrefixesContentAssist(xmlNode, sdRegion,
+					completionRegion, documentPosition, 0, matchString,
+					textViewer);
+		}
+
+		if (hasAttributeAtTextRegion(ATTR_HREF, nodeMap, completionRegion)) {
+			return new HrefContentAssistRequest(xmlNode, sdRegion,
+					completionRegion, documentPosition, 0, matchString,
+					textViewer);
+		}
+
 
 		return new NullContentAssistRequest(xmlNode, sdRegion,
 				completionRegion, documentPosition, 0, matchString, textViewer);

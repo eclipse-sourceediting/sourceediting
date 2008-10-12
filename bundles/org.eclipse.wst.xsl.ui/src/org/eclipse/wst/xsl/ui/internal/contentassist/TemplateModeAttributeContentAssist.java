@@ -13,16 +13,12 @@ package org.eclipse.wst.xsl.ui.internal.contentassist;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
-import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.model.Template;
 import org.eclipse.wst.xsl.core.model.XSLAttribute;
@@ -71,8 +67,7 @@ public class TemplateModeAttributeContentAssist extends
 	public ArrayList<ICompletionProposal> getCompletionProposals() {
 		proposals.clear();
 		
-		IFile editorFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(getLocation()));
-		StylesheetModel model = XSLCore.getInstance().getStylesheet(editorFile);
+		StylesheetModel model = getStylesheetModel();
 
 		addModeProposals(model);
 		return getAllCompletionProposals();

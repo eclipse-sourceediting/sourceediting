@@ -5,6 +5,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -16,6 +19,8 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceTable;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.ui.internal.contentassist.ProposalComparator;
+import org.eclipse.wst.xsl.core.XSLCore;
+import org.eclipse.wst.xsl.core.model.StylesheetModel;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -234,6 +239,12 @@ public abstract class AbstractXSLContentAssistRequest implements IContentAssistP
 					+ "\nRegion: " + getRegion() //$NON-NLS-1$
 					+ "\nMatch string: '" + StringUtils.escape(getMatchString()) + "'" //$NON-NLS-2$//$NON-NLS-1$
 					+ "\nOffsets: [" + getReplacementBeginPosition() + "-" + (getReplacementBeginPosition() + getReplacementLength()) + "]\n"; //$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
+	}
+
+	protected StylesheetModel getStylesheetModel() {
+		IFile editorFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(getLocation()));
+		StylesheetModel model = XSLCore.getInstance().getStylesheet(editorFile);
+		return model;
 	}
 	
 		
