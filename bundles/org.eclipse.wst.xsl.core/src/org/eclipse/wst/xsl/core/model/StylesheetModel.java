@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) -  bug 243577 - Added retrieving all called-templates.
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.model;
 
