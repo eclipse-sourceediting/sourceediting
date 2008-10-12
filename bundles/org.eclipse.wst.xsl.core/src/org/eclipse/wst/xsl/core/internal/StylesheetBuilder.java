@@ -24,6 +24,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsl.core.XSLCore;
@@ -256,6 +257,8 @@ public class StylesheetBuilder {
 
 		private void configure(IDOMNode node, XSLElement element) {
 			setPositionInfo(node, element);
+			IDOMElement domElem = (IDOMElement) node;
+			element.setName(domElem.getLocalName());
 			NamedNodeMap map = node.getAttributes();
 			for (int i = 0; i < map.getLength(); i++) {
 				IDOMAttr attr = (IDOMAttr) map.item(i);

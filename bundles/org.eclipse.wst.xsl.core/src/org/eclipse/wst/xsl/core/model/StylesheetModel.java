@@ -44,6 +44,9 @@ public class StylesheetModel extends XSLModelObject
 	final Set<Template> templateSet = new HashSet<Template>();
 	final List<Template> templates = new ArrayList<Template>();
 	final List<Variable> globalVariables = new ArrayList<Variable>();
+	final List<CallTemplate> callTemplates = new ArrayList<CallTemplate>();
+
+
 
 	/**
 	 * Create a new instance of this.
@@ -184,6 +187,7 @@ public class StylesheetModel extends XSLModelObject
 		templates.addAll(stylesheet.getTemplates());
 		templateSet.addAll(stylesheet.getTemplates());
 		globalVariables.addAll(stylesheet.globalVariables);
+		callTemplates.addAll(stylesheet.getCalledTemplates());
 		for (Include inc : stylesheet.getIncludes())
 		{
 			handleInclude(inc);
@@ -219,6 +223,7 @@ public class StylesheetModel extends XSLModelObject
 			return;
 		stylesheets.add(includedModel.getStylesheet());
 		globalVariables.addAll(includedModel.globalVariables);
+		callTemplates.addAll(includedModel.getCallTemplates());
 
 		if (include.getIncludeType() == Include.INCLUDE)
 		{
@@ -243,6 +248,10 @@ public class StylesheetModel extends XSLModelObject
 	public Type getModelType()
 	{
 		return Type.STYLESHEET_MODEL;
+	}
+	
+	public List<CallTemplate> getCallTemplates() {
+		return callTemplates;
 	}
 
 }
