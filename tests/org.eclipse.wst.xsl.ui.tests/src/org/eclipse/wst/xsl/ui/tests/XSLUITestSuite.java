@@ -14,10 +14,13 @@ package org.eclipse.wst.xsl.ui.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.wst.xsl.ui.internal.contentassist.CallTemplateContentAssistRequest;
 import org.eclipse.wst.xsl.ui.internal.validation.TestDelegatingSourceValidatorForXSL;
+import org.eclipse.wst.xsl.ui.tests.editor.TestCallTemplateCompletionProposal;
 import org.eclipse.wst.xsl.ui.tests.editor.TestElementCompletionProposal;
 import org.eclipse.wst.xsl.ui.tests.editor.TestExcludeResultPrefixesCompletionProposal;
 import org.eclipse.wst.xsl.ui.tests.editor.TestHrefCompletionProposal;
+import org.eclipse.wst.xsl.ui.tests.editor.TestNamedTemplateCompletionProposal;
 import org.eclipse.wst.xsl.ui.tests.editor.TestTemplateModeCompletionProposal;
 import org.eclipse.wst.xsl.ui.tests.editor.XSLCompletionTest;
 import org.eclipse.wst.xsl.ui.tests.hyperlinkdetector.TestXSLHyperlinkDetector;
@@ -43,5 +46,7 @@ public class XSLUITestSuite extends TestSuite {
 		addTestSuite(TestXMLRegionMap.class);
 		addTestSuite(TestXSLRegionMap.class);
 		addTestSuite(TestXSLHyperlinkDetector.class);
+		addTestSuite(TestNamedTemplateCompletionProposal.class);
+		addTestSuite(TestCallTemplateCompletionProposal.class);
 	}
 }

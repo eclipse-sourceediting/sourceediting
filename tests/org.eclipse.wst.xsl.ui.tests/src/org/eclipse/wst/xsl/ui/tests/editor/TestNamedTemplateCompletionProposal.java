@@ -157,7 +157,7 @@ public class TestNamedTemplateCompletionProposal extends AbstractXSLUITest {
 		int offset = 1810;
 		
     	ICompletionProposal[] proposals = getProposals(offset);
-    	assertEquals("Missing Proposals", 1, proposals.length);
+    	assertEquals("Missing Proposals", 3, proposals.length);
     	sourceViewer = null;
     }
     
