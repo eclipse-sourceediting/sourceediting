@@ -266,10 +266,6 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 	 * Preference key for Show Attributes
 	 */
 	private final String OUTLINE_SHOW_ATTRIBUTE_PREF = "outline-show-attribute"; //$NON-NLS-1$
-	/*
-	 * Preference key for Sorting
-	 */
-	private final String OUTLINE_SORT_PREF = "outline-sort"; //$NON-NLS-1$
 
 	/**
 	 * Create new instance of XMLContentOutlineConfiguration
@@ -320,17 +316,14 @@ public class XMLContentOutlineConfiguration extends AbstractXMLContentOutlineCon
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
 		IContributionItem showAttributeItem = new PropertyChangeUpdateActionContributionItem(new ToggleShowAttributeAction(getPreferenceStore(), OUTLINE_SHOW_ATTRIBUTE_PREF, viewer));
 
-		IContributionItem sortItem = new PropertyChangeUpdateActionContributionItem(new SortAction(viewer, getPreferenceStore(), OUTLINE_SORT_PREF));
-
 		items = super.createMenuContributions(viewer);
 		if (items == null) {
-			items = new IContributionItem[]{showAttributeItem, sortItem};
+			items = new IContributionItem[]{showAttributeItem};
 		}
 		else {
-			IContributionItem[] combinedItems = new IContributionItem[items.length + 2];
+			IContributionItem[] combinedItems = new IContributionItem[items.length + 1];
 			System.arraycopy(items, 0, combinedItems, 0, items.length);
 			combinedItems[items.length] = showAttributeItem;
-			combinedItems[items.length+1] = sortItem;
 			items = combinedItems;
 		}
 		return items;
