@@ -20,6 +20,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMDocumentImpl;
@@ -48,6 +53,21 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	"java.util.Map requestScope = null;" + ENDL + //$NON-NLS-1$
 	"java.util.Map sessionScope = null;" + ENDL + //$NON-NLS-1$
 	"java.util.Map applicationScope = null;" + ENDL + //$NON-NLS-1$
+	"return \"\"+"; //$NON-NLS-1$
+
+	private static final String fExpressionHeader2_param = "()" + ENDL + //$NON-NLS-1$
+	"\t\tthrows java.io.IOException, javax.servlet.ServletException {" + ENDL + //$NON-NLS-1$
+	"javax.servlet.jsp.PageContext pageContext = null;" + ENDL + //$NON-NLS-1$
+	"java.util.Map<java.lang.String, java.lang.String> param = null;" + ENDL + //$NON-NLS-1$
+	"java.util.Map<java.lang.String, java.lang.String[]> paramValues = null;" + ENDL + //$NON-NLS-1$
+	"java.util.Map<java.lang.String, java.lang.String> header = null;" + ENDL + //$NON-NLS-1$ 
+	"java.util.Map<java.lang.String, java.lang.String[]> headerValues = null;" + ENDL + //$NON-NLS-1$
+	"java.util.Map<java.lang.String, javax.servlet.http.Cookie> cookie = null;" + ENDL + //$NON-NLS-1$ 
+	"java.util.Map<java.lang.String, java.lang.String> initParam = null;" + ENDL + //$NON-NLS-1$
+	"java.util.Map<java.lang.String, java.lang.Object> pageScope = null;" + ENDL + //$NON-NLS-1$
+	"java.util.Map<java.lang.String, java.lang.Object> requestScope = null;" + ENDL + //$NON-NLS-1$
+	"java.util.Map<java.lang.String, java.lang.Object> sessionScope = null;" + ENDL + //$NON-NLS-1$
+	"java.util.Map<java.lang.String, java.lang.Object> applicationScope = null;" + ENDL + //$NON-NLS-1$
 	"return \"\"+"; //$NON-NLS-1$
 	
 	private static final String fJspImplicitObjects[] = { "pageContext" }; //$NON-NLS-1$
@@ -218,7 +238,10 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		int end = node.lastToken.endColumn - 1;
 		append(fExpressionHeader1, start, start);
 		append(Integer.toString(getMethodCounter()), start, start);
-		append(fExpressionHeader2, start, start);
+		if (compilerSupportsParameterizedTypes())
+			append(fExpressionHeader2_param, start, start);
+		else
+			append(fExpressionHeader2, start, start);
 		
 		Object retval = node.childrenAccept(this, data);
 
@@ -232,6 +255,26 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		return retval;
 	}
 
+	private boolean compilerSupportsParameterizedTypes() {
+		if (fDocument != null) {
+			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			IPath location = TaglibController.getLocation(fDocument);
+			if (location != null && location.segmentCount() > 0) {
+				IJavaProject project = JavaCore.create(root.getProject(location.segment(0)));
+				if (project != null) {
+					String compliance = project.getOption(JavaCore.COMPILER_SOURCE, true);
+					try {
+						return Float.parseFloat(compliance) >= 1.5;
+					}
+					catch (NumberFormatException e) {
+						return false;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * Generically generate an operator node.
 	 * 
