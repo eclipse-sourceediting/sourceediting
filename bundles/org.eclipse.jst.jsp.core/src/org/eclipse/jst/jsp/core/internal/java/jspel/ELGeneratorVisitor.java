@@ -103,6 +103,8 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 
 	private IStructuredDocumentRegion fCurrentNode;
 
+	private boolean fUseParameterizedTypes;
+
 	/**
 	 * Tranlsation of XML-style operators to java
 	 */
@@ -136,6 +138,8 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		fContentStart = contentStart;
 		fDocument = document;
 		fCurrentNode = currentNode;
+		
+		fUseParameterizedTypes = compilerSupportsParameterizedTypes();
 	}
 
 	/**
@@ -238,7 +242,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		int end = node.lastToken.endColumn - 1;
 		append(fExpressionHeader1, start, start);
 		append(Integer.toString(getMethodCounter()), start, start);
-		if (compilerSupportsParameterizedTypes())
+		if (fUseParameterizedTypes)
 			append(fExpressionHeader2_param, start, start);
 		else
 			append(fExpressionHeader2, start, start);
@@ -261,14 +265,12 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 			IPath location = TaglibController.getLocation(fDocument);
 			if (location != null && location.segmentCount() > 0) {
 				IJavaProject project = JavaCore.create(root.getProject(location.segment(0)));
-				if (project != null) {
-					String compliance = project.getOption(JavaCore.COMPILER_SOURCE, true);
-					try {
-						return Float.parseFloat(compliance) >= 1.5;
-					}
-					catch (NumberFormatException e) {
-						return false;
-					}
+				String compliance = project.getOption(JavaCore.COMPILER_SOURCE, true);
+				try {
+					return Float.parseFloat(compliance) >= 1.5;
+				}
+				catch (NumberFormatException e) {
+					return false;
 				}
 			}
 		}
