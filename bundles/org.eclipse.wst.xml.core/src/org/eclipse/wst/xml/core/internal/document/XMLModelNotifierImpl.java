@@ -250,8 +250,6 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 			return;
 		this.flushing = true; // force notification
 		int count = this.fEvents.size();
-
-		System.out.println("processing notification events: " + count);
 		
 		if (!doingNewModel && fOptimizeDeferred) {
 			Map notifyEvents = new HashMap();
