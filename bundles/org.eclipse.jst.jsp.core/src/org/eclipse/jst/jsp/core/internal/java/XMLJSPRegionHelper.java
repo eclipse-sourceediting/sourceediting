@@ -29,7 +29,6 @@ import org.eclipse.wst.sse.core.internal.ltk.parser.TagMarker;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
@@ -146,8 +145,6 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	public void nodeParsed(IStructuredDocumentRegion sdRegion) {
 
 		try {
-
-			handleScopingIfNecessary(sdRegion);
 			if (isJSPEndRegion(sdRegion)) {
 				String nameStr = getRegionName(sdRegion);
 				if (isPossibleCustomTag(nameStr)) {
@@ -219,57 +216,6 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		}
 	}
 
-
-	private void handleScopingIfNecessary(IStructuredDocumentRegion sdRegion) {
-		/* 199047 - Braces missing from translation of custom tags not defining variables */
-		// fix to make sure custom tag block have their own scope
-		// we add '{' for custom tag open and '}' for custom tag close
-		// in the translation
-		if (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN) {
-			if (!isSelfClosingTag(sdRegion)) {
-				String nameStr = getRegionName(sdRegion);
-				if (isPossibleCustomTag(nameStr)) {
-					startScope(nameStr);
-				}
-			}
-		}
-		else if (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_END_TAG_OPEN) {
-			String nameStr = getRegionName(sdRegion);
-			if (isPossibleCustomTag(nameStr)) {
-				endScope(nameStr);
-			}
-		}
-	}
-
-	private boolean isSelfClosingTag(ITextRegionCollection containerRegion) {
-
-		if (containerRegion == null)
-			return false;
-
-		ITextRegionList regions = containerRegion.getRegions();
-		ITextRegion r = regions.get(regions.size() - 1);
-		return r.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE;
-	}
-
-	private void startScope(String tagName) {
-		IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
-		StringBuffer text = new StringBuffer();
-		text.append("{ // <"); //$NON-NLS-1$
-		text.append(tagName);
-		text.append(">\n"); //$NON-NLS-1$
-		this.fTranslator.translateScriptletString(text.toString(), currentNode, currentNode.getStartOffset(), currentNode.getLength(), fAppendAsIndirectSource); //$NON-NLS-1$
-
-	}
-
-	private void endScope(String tagName) {
-		IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
-		StringBuffer text = new StringBuffer();
-		text.append("} // </"); //$NON-NLS-1$
-		text.append(tagName);
-		text.append(">\n"); //$NON-NLS-1$
-		this.fTranslator.translateScriptletString(text.toString(), currentNode, currentNode.getStartOffset(), currentNode.getLength(), fAppendAsIndirectSource); //$NON-NLS-1$
-
-	}
 
 	public void resetNodes() {
 		// do nothing
@@ -376,7 +322,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		}
 		else if (isPossibleCustomTag(fTagname)) {
 			// this custom tag may define variables
-			this.fTranslator.addTaglibVariables(fTagname);
+			this.fTranslator.addTaglibVariables(fTagname, sdRegion);
 		}
 		else if (isTaglibDirective(fTagname)) {
 			// also add the ones created here to the parent document
@@ -480,22 +426,23 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	}
 
 	protected boolean isPossibleCustomTag(String tagName) {
-		int colonIndex = tagName.indexOf(":");
-		if (colonIndex > 0) {
-			String prefix = tagName.substring(0, colonIndex);
-			if (prefix.equals("jsp")) { //$NON-NLS-1$
-				return false;
-			}
-			if (prefix.length() > 0) {
-				TagMarker[] prefixes = (TagMarker[]) fLocalParser.getNestablePrefixes().toArray(new TagMarker[0]);
-				for (int i = 0; i < prefixes.length; i++) {
-					if (prefix.equals(prefixes[i].getTagName())) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
+//		int colonIndex = tagName.indexOf(":");
+//		if (colonIndex > 0) {
+//			String prefix = tagName.substring(0, colonIndex);
+//			if (prefix.equals("jsp")) { //$NON-NLS-1$
+//				return false;
+//			}
+//			if (prefix.length() > 0) {
+//				TagMarker[] prefixes = (TagMarker[]) fLocalParser.getNestablePrefixes().toArray(new TagMarker[0]);
+//				for (int i = 0; i < prefixes.length; i++) {
+//					if (prefix.equals(prefixes[i].getTagName())) {
+//						return true;
+//					}
+//				}
+//			}
+//		}
+//		return false;
+		return tagName.indexOf(':') > -1 && !tagName.startsWith(JSPTranslator.JSP_PREFIX);
 	}
 
 	protected boolean isTaglibDirective(String tagName) {

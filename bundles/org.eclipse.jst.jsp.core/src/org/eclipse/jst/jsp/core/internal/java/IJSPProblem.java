@@ -14,6 +14,8 @@ public interface IJSPProblem extends IProblem {
 	int UseBeanInvalidID = F_PROBLEM_ID_LITERAL + 6;
 	int UseBeanMissingTypeInfo = F_PROBLEM_ID_LITERAL + 7;
 	int UseBeanAmbiguousType  = F_PROBLEM_ID_LITERAL + 8;
+	int StartCustomTagMissing  = F_PROBLEM_ID_LITERAL + 9;
+	int EndCustomTagMissing  = F_PROBLEM_ID_LITERAL + 10;
 	
 	/**
 	 * @return the ID of this JSP problem

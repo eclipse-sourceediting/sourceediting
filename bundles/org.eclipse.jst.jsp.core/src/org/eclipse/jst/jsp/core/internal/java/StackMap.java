@@ -11,7 +11,10 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.java;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Stack;
 
@@ -120,5 +123,36 @@ class StackMap {
 			return o;
 		}
 		return null;
+	}
+
+    /**
+	 * Returns the number of entries in this StackMap, the sum of the sizes of
+	 * every remembered stack.
+	 * 
+	 * @return the number of entries in this map.
+	 */
+	int size() {
+		int size = 0;
+		Iterator i = fInternalMap.values().iterator();
+		while (i.hasNext()) {
+			Collection c = (Collection) i.next();
+			size += c.size();
+		}
+		return size;
+	}
+
+	/**
+	 * Returns all of the values of this StackMap.
+	 * 
+	 * @return the values of every Stack within this StackMap.
+	 */
+	Collection values() {
+		Collection values = new LinkedList();
+		Iterator i = fInternalMap.values().iterator();
+		while (i.hasNext()) {
+			Collection c = (Collection) i.next();
+			values.addAll(c);
+		}
+		return values;
 	}
 }
