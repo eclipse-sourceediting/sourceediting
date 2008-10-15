@@ -509,9 +509,10 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 		}
 		
 		IWorkspaceRunnable validationRunnable = new IWorkspaceRunnable() {
-
 			public void run(IProgressMonitor monitor) throws CoreException {
-				validateFile((IFile) resource, reporter);
+				if (fragmentCheck((IFile) resource)) {
+					validateFile((IFile) resource, reporter);
+				}
 				result.setDependsOn((IResource[]) fDependsOn.toArray(new IResource[fDependsOn.size()]));
 				fDependsOn.clear();
 			}
