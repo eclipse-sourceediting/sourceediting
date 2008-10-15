@@ -342,6 +342,21 @@ public class BugFixesTest extends BaseTestCase
 	
  }
   
+  public void testForBug176420() {
+	  // Obtain the model from /testresources/samples/testSchemaForBug176420.xsd
+	  Bundle bundle = Platform.getBundle("org.eclipse.wst.xsd.core.tests");
+	  URL url = bundle.getEntry("/testresources/samples/testSchemaForBug176420.xsd");
+	  CMDocument document = XSDImpl.buildCMDocument(url.toExternalForm());
+	  assertNotNull("Content model loaded Null", document);
+	  
+	  // Obtain the enumerated values of the root element
+	  CMNode cmNode = document.getElements().item(0);
+	  String[] enumeratedValues = ((CMElementDeclaration)cmNode).getDataType().getEnumeratedValues();
+
+	  // Verify that all 12 enumerated values are included
+	  assertEquals(12, enumeratedValues.length);
+  }
+  
 	private void testLocalAttrDocumentation(CMNamedNodeMap attributes) {
 		CMAttributeDeclaration attribute = (CMAttributeDeclaration) attributes.getNamedItem("localAttr");
 		assertNotNull("Missing localAttr attribute.");
