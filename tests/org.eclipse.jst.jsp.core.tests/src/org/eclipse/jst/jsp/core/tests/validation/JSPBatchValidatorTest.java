@@ -13,12 +13,22 @@ package org.eclipse.jst.jsp.core.tests.validation;
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
+import org.eclipse.jst.jsp.core.internal.contentproperties.JSPFContentProperties;
+import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.validation.JSPJavaValidator;
 import org.eclipse.jst.jsp.core.internal.validation.JSPValidator;
 import org.eclipse.jst.jsp.core.tests.taglibindex.BundleResourceUtil;
+import org.eclipse.wst.validation.ValidationFramework;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 
 /**
@@ -35,11 +45,11 @@ public class JSPBatchValidatorTest extends TestCase {
 			wtp_autotest_noninteractive = noninteractive;
 		System.setProperty("wtp.autotest.noninteractive", "true");
 
-		if (!ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_NAME).exists()) {
+		if (!getProject().exists()) {
 			BundleResourceUtil.createSimpleProject(PROJECT_NAME, null, new String[]{JavaCore.NATURE_ID});
 			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + PROJECT_NAME, "/" + PROJECT_NAME);
 		}
-		assertTrue("project could not be created", ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_NAME).exists());
+		assertTrue("project could not be created", getProject().exists());
 	}
 
 	protected void tearDown() throws Exception {
@@ -70,5 +80,54 @@ public class JSPBatchValidatorTest extends TestCase {
 
 		validator.validate(helper, reporter);
 		assertTrue("jsp errors were not found in both files", reporter.getMessages().size() == 2);
+	}
+
+	public void testFragmentValidationPreferenceOnFile() throws Exception {
+		String filePath = "/" + PROJECT_NAME + "/WebContent/header.jspf";
+		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filePath));
+
+		// disable, no problem markers expected
+		JSPFContentProperties.setProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, file, Boolean.toString(false));
+		ValidationFramework.getDefault().validate(new IProject[]{getProject()}, true, false, new NullProgressMonitor());
+		IMarker[] problemMarkers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+		assertEquals("problem markers found while fragment validation was disabled", 0, problemMarkers.length);
+
+		// enable, some problem markers expected
+		JSPFContentProperties.setProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, file, Boolean.toString(true));
+		ValidationFramework.getDefault().validate(new IProject[]{getProject()}, true, false, new NullProgressMonitor());
+		problemMarkers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+		assertTrue("problem markers not found while fragment validation was enabled", problemMarkers.length != 0);
+	}
+
+	public void testFragmentValidationPreferenceOnWorkspace() throws Exception {
+		IEclipsePreferences jspInstanceContext = new InstanceScope().getNode(JSPCorePlugin.getDefault().getBundle().getSymbolicName());
+
+		String filePath = "/" + PROJECT_NAME + "/WebContent/header.jspf";
+		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filePath));
+
+		// disable, no problem markers expected
+		jspInstanceContext.putBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, false);
+		ValidationFramework.getDefault().validate(new IProject[]{getProject()}, true, false, new NullProgressMonitor());
+		IMarker[] problemMarkers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+		assertEquals("problem markers found while fragment validation was disabled", 0, problemMarkers.length);
+
+		// enable, some problem markers expected
+		jspInstanceContext.putBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, true);
+		ValidationFramework.getDefault().validate(new IProject[]{getProject()}, true, false, new NullProgressMonitor());
+		problemMarkers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+		assertTrue("problem markers not found while fragment validation was enabled", problemMarkers.length != 0);
+
+		// check default value of true
+		jspInstanceContext.remove(JSPCorePreferenceNames.VALIDATE_FRAGMENTS);
+		ValidationFramework.getDefault().validate(new IProject[]{getProject()}, true, false, new NullProgressMonitor());
+		problemMarkers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+		assertTrue("problem markers not found while fragment validation was enabled", problemMarkers.length != 0);
+	}
+
+	/**
+	 * @return
+	 */
+	private IProject getProject() {
+		return ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_NAME);
 	}
 }
