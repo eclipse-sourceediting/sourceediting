@@ -50,6 +50,10 @@ public class JSPBatchValidatorTest extends TestCase {
 			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + PROJECT_NAME, "/" + PROJECT_NAME);
 		}
 		assertTrue("project could not be created", getProject().exists());
+		
+		String filePath = "/" + PROJECT_NAME + "/WebContent/header.jspf";
+		IFile fragment = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filePath));
+		JSPFContentProperties.setProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, fragment, null);
 	}
 
 	protected void tearDown() throws Exception {
@@ -90,7 +94,12 @@ public class JSPBatchValidatorTest extends TestCase {
 		JSPFContentProperties.setProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, file, Boolean.toString(false));
 		ValidationFramework.getDefault().validate(new IProject[]{getProject()}, true, false, new NullProgressMonitor());
 		IMarker[] problemMarkers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
-		assertEquals("problem markers found while fragment validation was disabled", 0, problemMarkers.length);
+		StringBuffer buffer = new StringBuffer("Problem markers found while fragment validation was disabled");
+		for (int i = 0; i < problemMarkers.length; i++) {
+			buffer.append("\n");
+			buffer.append(problemMarkers[i].getAttribute(IMarker.MESSAGE));
+		}
+		assertEquals(buffer.toString(), 0, problemMarkers.length);
 
 		// enable, some problem markers expected
 		JSPFContentProperties.setProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, file, Boolean.toString(true));
@@ -109,19 +118,24 @@ public class JSPBatchValidatorTest extends TestCase {
 		jspInstanceContext.putBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, false);
 		ValidationFramework.getDefault().validate(new IProject[]{getProject()}, true, false, new NullProgressMonitor());
 		IMarker[] problemMarkers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
-		assertEquals("problem markers found while fragment validation was disabled", 0, problemMarkers.length);
+		StringBuffer buffer = new StringBuffer("Problem markers found while fragment validation was disabled");
+		for (int i = 0; i < problemMarkers.length; i++) {
+			buffer.append("\n");
+			buffer.append(problemMarkers[i].getAttribute(IMarker.MESSAGE));
+		}
+		assertEquals(buffer.toString(), 0, problemMarkers.length);
 
 		// enable, some problem markers expected
 		jspInstanceContext.putBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, true);
 		ValidationFramework.getDefault().validate(new IProject[]{getProject()}, true, false, new NullProgressMonitor());
 		problemMarkers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
-		assertTrue("problem markers not found while fragment validation was enabled", problemMarkers.length != 0);
+		assertTrue("Problem markers not found while fragment validation was enabled", problemMarkers.length != 0);
 
 		// check default value of true
 		jspInstanceContext.remove(JSPCorePreferenceNames.VALIDATE_FRAGMENTS);
 		ValidationFramework.getDefault().validate(new IProject[]{getProject()}, true, false, new NullProgressMonitor());
 		problemMarkers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
-		assertTrue("problem markers not found while fragment validation was enabled", problemMarkers.length != 0);
+		assertTrue("Problem markers not found while fragment validation was default", problemMarkers.length != 0);
 	}
 
 	/**
