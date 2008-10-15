@@ -14,7 +14,11 @@ import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.jst.jsp.core.internal.contentproperties.JSPFContentProperties;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeConstants;
 import org.eclipse.wst.html.core.internal.validate.HTMLValidationAdapterFactory;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -31,6 +35,8 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
  * the HTML regions in a JSP with content type="text/html"
  */
 public class JSPContentValidator extends JSPValidator {
+	private IContentType fJSPFContentType;
+
 	/*
 	 * Copied from HTMLValidator
 	 */
@@ -39,6 +45,29 @@ public class JSPContentValidator extends JSPValidator {
 		if (adapter == null)
 			return false;
 		return adapter.hasFeature(HTMLDocumentTypeConstants.HTML);
+	}
+
+	/**
+	 * Returns JSP fragment content type
+	 * 
+	 * @return jspf content type
+	 */
+	private IContentType getJSPFContentType() {
+		if (fJSPFContentType == null) {
+			fJSPFContentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSPFRAGMENT);
+		}
+		return fJSPFContentType;
+	}
+
+
+	private boolean fragmentCheck(IFile file) {
+		boolean shouldValidate = true;
+		// quick check to see if this is possibly a jsp fragment
+		if (getJSPFContentType().isAssociatedWith(file.getName())) {
+			// get preference for validate jsp fragments
+			shouldValidate = Boolean.valueOf(JSPFContentProperties.getProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, file, true)).booleanValue();
+		}
+		return shouldValidate;
 	}
 
 	/*
@@ -79,7 +108,9 @@ public class JSPContentValidator extends JSPValidator {
 			model = StructuredModelManager.getModelManager().getModelForRead(f);
 			if (!reporter.isCancelled() && model instanceof IDOMModel) {
 				reporter.removeAllMessages(this, f);
-				validate(reporter, f, (IDOMModel) model);
+				if (fragmentCheck(f)) {
+					validate(reporter, f, (IDOMModel) model);
+				}
 			}
 		}
 		catch (IOException e) {
