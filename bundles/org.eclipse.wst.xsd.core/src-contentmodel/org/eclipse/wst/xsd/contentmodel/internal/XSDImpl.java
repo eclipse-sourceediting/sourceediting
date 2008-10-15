@@ -410,7 +410,12 @@ public class XSDImpl
                 while (i.hasNext())
                 {
                   XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) i.next();
-                  getEnumeratedValuesForSimpleType(simpleType, result);
+                  String[] values = getEnumeratedValuesForType(simpleType);
+                  for (int j = 0; j < values.length; j++) {
+                	  if(result.indexOf(values[j]) == -1) {
+                		  result.add(values[j]);
+                	  }
+                  }
                 }
               }
             }
