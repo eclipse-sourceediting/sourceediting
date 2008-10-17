@@ -16,6 +16,7 @@ import java.util.Iterator;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.WorkingCopyOwner;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -97,7 +98,7 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 					
 					collector = getProposalCollector(cu, translation);
 					synchronized (cu) {
-						cu.codeComplete(fJavaPosition, collector, null);
+						cu.codeComplete(fJavaPosition, collector, (WorkingCopyOwner) null);
 					}
 				}
 				catch (CoreException coreEx) {
