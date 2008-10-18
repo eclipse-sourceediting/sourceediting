@@ -3,3 +3,4 @@ build.xml
 validatexsdtests.jar
 temp.folder
 javaCompiler.validatexsdtests.jar.args
+testresources/generatedResults/*
