@@ -30,8 +30,6 @@ import javax.servlet.jsp.tagext.TagLibraryInfo;
 import javax.servlet.jsp.tagext.ValidationMessage;
 import javax.servlet.jsp.tagext.VariableInfo;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -41,7 +39,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.IDocument;
@@ -214,7 +211,7 @@ public class TaglibHelper {
 			}
 			if (varName != null) {
 				String varClass = "java.lang.String"; // the default
-														// class...//$NON-NLS-1$
+				// class...//$NON-NLS-1$
 				if (var.getVariableClass() != null) {
 					varClass = var.getVariableClass();
 				}
@@ -739,7 +736,6 @@ public class TaglibHelper {
 	 * @param entry
 	 */
 	private void addProjectEntry(TaglibClassLoader loader, IClasspathEntry entry) {
-
 		if (DEBUG)
 			System.out.println(" -> project entry: [" + entry + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -759,25 +755,7 @@ public class TaglibHelper {
 	private void addDefaultDirEntry(TaglibClassLoader loader, IJavaProject project) throws JavaModelException {
 		// add default bin directory for the project
 		IPath outputPath = project.getOutputLocation();
-		String outputLocation = null;
-		if (!outputPath.toFile().exists()) {
-			if (outputPath.segmentCount() > 1) {
-				IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(outputPath);
-				if (folder.getLocation() != null) {
-					outputLocation = folder.getLocation().toString();
-				}
-			}
-			else {
-				IProject iproject = ResourcesPlugin.getWorkspace().getRoot().getProject(outputPath.segment(0));
-				if (iproject.getLocation() != null) {
-					outputLocation = iproject.getLocation().toString();
-				}
-			}
-		}
-		else {
-			outputLocation = outputPath.toString();
-		}
-		loader.addDirectory(outputLocation);
+		loader.addPath(outputPath);
 	}
 
 	/**
@@ -788,25 +766,11 @@ public class TaglibHelper {
 		String jarPathString = libPath.toString();
 		File file = new File(libPath.toOSString());
 
-		// if not absolute path, it's workspace relative
-		if (!file.exists() && libPath.segmentCount() > 1) {
-			IFile jarFile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
-			if (jarFile.isAccessible() && jarFile.getLocation() != null) {
-				jarPathString = jarFile.getLocation().toString();
-			}
+		if (!file.exists()) {
+			loader.addPath(libPath);
 		}
-
-		if (jarPathString != null) {
-			if (jarPathString.endsWith(".jar")) { //$NON-NLS-1$ 
-				loader.addJar(jarPathString);
-			}
-			else if (file.isDirectory()) {
-				/*
-				 * unlikely, the UI prevents adding folder variables to the
-				 * classpath - it's actually a folder containing binaries
-				 */
-				loader.addDirectory(jarPathString);
-			}
+		else {
+			loader.addDirectory(jarPathString);
 		}
 	}
 
@@ -818,12 +782,8 @@ public class TaglibHelper {
 		// add bin directory for specific entry if it has
 		// one
 		IPath outputLocation = entry.getOutputLocation();
-		if (outputLocation != null && outputLocation.segmentCount() > 1) {
-			IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(outputLocation);
-			if (folder != null && folder.isAccessible()) {
-				outputLocation = folder.getLocation();
-				loader.addDirectory(outputLocation.toString());
-			}
+		if (outputLocation != null) {
+			loader.addPath(outputLocation);
 		}
 	}
 
@@ -880,7 +840,7 @@ public class TaglibHelper {
 		}
 
 		String tagClassname = decl.getTagclass();
-		IType tagClass = null;
+		Object tagClass = null;
 		if (tagClassname != null && tagClassname.length() > 0 && fJavaProject != null) {
 			try {
 				tagClass = fJavaProject.findType(tagClassname, new NullProgressMonitor());
