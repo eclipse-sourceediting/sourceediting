@@ -46,7 +46,6 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceSorter;
-import org.eclipse.wst.sse.core.internal.tasks.TaskTagPreferenceKeys;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
@@ -250,13 +249,13 @@ abstract class AbstractPropertyPreferencePage extends PropertyPage implements IW
 		if (getProject() != null) {
 			if (isElementSettingsEnabled()) {
 				if (_debugPreferences) {
-					System.out.println(getClass().getName() + " setting " + TaskTagPreferenceKeys.TASK_TAG_PER_PROJECT + " (" + true + ") in scope " + preferenceScopes[0].getName() + ":" + preferenceScopes[0].getLocation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$  
+					System.out.println(getClass().getName() + " setting " + getProjectSettingsKey() + " (" + true + ") in scope " + preferenceScopes[0].getName() + ":" + preferenceScopes[0].getLocation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$  
 				}
 				preferenceScopes[0].getNode(getPreferenceNodeQualifier()).putBoolean(getProjectSettingsKey(), fEnableProjectSettings.getSelection());
 			}
 			else {
 				if (_debugPreferences) {
-					System.out.println(getClass().getName() + " removing " + TaskTagPreferenceKeys.TASK_TAG_PER_PROJECT + " from scope " + preferenceScopes[0].getName() + ":" + preferenceScopes[0].getLocation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					System.out.println(getClass().getName() + " removing " + getProjectSettingsKey() + " from scope " + preferenceScopes[0].getName() + ":" + preferenceScopes[0].getLocation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				}
 				preferenceScopes[0].getNode(getPreferenceNodeQualifier()).remove(getProjectSettingsKey());
 			}
