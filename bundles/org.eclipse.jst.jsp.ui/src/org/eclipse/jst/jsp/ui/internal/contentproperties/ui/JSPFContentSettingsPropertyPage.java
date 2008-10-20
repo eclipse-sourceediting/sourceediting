@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -112,6 +112,10 @@ public class JSPFContentSettingsPropertyPage extends PropertyPage {
 		data.verticalSpan = 8;
 		label.setLayoutData(data);
 
+		/*
+		 * The following controls are duplicated on JSP Validation
+		 * preference page; disable permanently.
+		 */
 		// specific setting
 		fSpecificSetting = new Button(propertyPage, SWT.CHECK | SWT.LEFT);
 		fSpecificSetting.setText(JSPUIMessages.JSPFContentSettingsPropertyPage_4);
@@ -129,6 +133,9 @@ public class JSPFContentSettingsPropertyPage extends PropertyPage {
 		data.horizontalSpan = 2;
 		data.horizontalIndent = 5;
 		fValidateFragments.setLayoutData(data);
+
+		fSpecificSetting.setEnabled(false);
+		fValidateFragments.setEnabled(false);
 
 		initializeValues();
 
@@ -193,16 +200,16 @@ public class JSPFContentSettingsPropertyPage extends PropertyPage {
 		else
 			fContentTypeCombo.setText(contentType);
 
-		String validate = JSPFContentProperties.getProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, getResource(), false);
-		String validate2 = JSPFContentProperties.getProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, getResource(), true);
-		if (validate == null || validate.length() == 0) {
-			updateButtons(false);
-			fValidateFragments.setSelection(Boolean.valueOf(validate2).booleanValue());
-		}
-		else {
-			updateButtons(true);
-			fValidateFragments.setSelection(Boolean.valueOf(validate).booleanValue());
-		}
+//		String validate = JSPFContentProperties.getProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, getResource(), false);
+//		String validate2 = JSPFContentProperties.getProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, getResource(), true);
+//		if (validate == null || validate.length() == 0) {
+//			updateButtons(false);
+//			fValidateFragments.setSelection(Boolean.valueOf(validate2).booleanValue());
+//		}
+//		else {
+//			updateButtons(true);
+//			fValidateFragments.setSelection(Boolean.valueOf(validate).booleanValue());
+//		}
 	}
 
 	protected void performDefaults() {
@@ -215,7 +222,9 @@ public class JSPFContentSettingsPropertyPage extends PropertyPage {
 			fContentTypeCombo.select(index);
 
 		updateButtons(false);
-		fValidateFragments.setSelection(true);
+//		fValidateFragments.setSelection(true);
+		fSpecificSetting.setGrayed(true);
+		fValidateFragments.setGrayed(true);
 
 		super.performDefaults();
 	}
@@ -238,11 +247,8 @@ public class JSPFContentSettingsPropertyPage extends PropertyPage {
 			}
 			JSPFContentProperties.setProperty(JSPFContentProperties.JSPCONTENTTYPE, getResource(), contentType);
 
-			String validate = null;
-			if (fSpecificSetting.getSelection()) {
-				validate = Boolean.toString(fValidateFragments.getSelection());
-			}
-			JSPFContentProperties.setProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, getResource(), validate);
+//			String validate = Boolean.toString(fValidateFragments.getSelection());
+//			JSPFContentProperties.setProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, getResource(), validate);
 		}
 		catch (CoreException e) {
 			// maybe in future, let user know there was a problem saving file
