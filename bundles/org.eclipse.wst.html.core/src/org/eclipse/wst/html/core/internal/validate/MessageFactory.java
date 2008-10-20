@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,9 +12,15 @@ package org.eclipse.wst.html.core.internal.validate;
 
 import java.util.Hashtable;
 
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.html.core.internal.HTMLCoreMessages;
+import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.Logger;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.w3c.dom.Node;
 
@@ -27,6 +33,12 @@ class MessageFactory implements ErrorState {
 				this.msg = msg;
 				this.severity = severity;
 			}
+			
+			public Packet(String msg, int severity, String preferenceName) {
+				this.msg = msg;
+				this.severity = severity;
+				this.preferenceName = preferenceName;
+			}
 
 			public String getMessage() {
 				return msg;
@@ -35,9 +47,14 @@ class MessageFactory implements ErrorState {
 			public int getSeverity() {
 				return severity;
 			}
+			
+			public String getPreferenceName() {
+				return preferenceName;
+			}
 
 			private String msg = null;
 			private int severity = -1;
+			private String preferenceName = null;
 		}
 
 		public ErrorTable() {
@@ -47,13 +64,21 @@ class MessageFactory implements ErrorState {
 			Packet packet = new Packet(msg, severity);
 			map.put(new Integer(state), packet);
 		}
+		
+		public void put(int state, String msg, int severity, String preferenceName) {
+			Packet packet = new Packet(msg, severity, preferenceName);
+			map.put(new Integer(state), packet);
+		}
 
 		public String getMessage(int state) {
 			return getPacket(state).getMessage();
 		}
 
 		public int getSeverity(int state) {
-			return getPacket(state).getSeverity();
+			Packet packet = getPacket(state);
+			if(packet.getPreferenceName() != null)
+				return Platform.getPreferencesService().getInt(getPreferenceNodeQualifier(), packet.getPreferenceName(), packet.getSeverity(), scopeContexts);
+			return packet.getSeverity();
 		}
 
 		private Packet getPacket(int state) {
@@ -107,6 +132,7 @@ class MessageFactory implements ErrorState {
 	private static final String MSG_UNCLOSED_ATTR_VALUE_ERROR = HTMLCoreMessages._ERROR_Attribute_value___0___not_closed__1;
 	private static ErrorTable[] errTables = new ErrorTable[NodeType.MAX_TYPE];
 
+	private static IScopeContext[] scopeContexts = new IScopeContext[]{new InstanceScope(), new DefaultScope()};
 	static {
 		for (int i = 0; i < NodeType.MAX_TYPE; i++) {
 			errTables[i] = new ErrorTable();
@@ -134,8 +160,8 @@ class MessageFactory implements ErrorState {
 		elemTable.put(INVALID_NAME_ERROR, MSG_INVALID_TAG_ERROR, ValidationMessage.ERROR);
 		elemTable.put(MISMATCHED_ERROR, MSG_MISMATCHED_TAG_ERROR, ValidationMessage.WARNING);
 		elemTable.put(MISMATCHED_END_TAG_ERROR, MSG_MISMATCHED_TAG_ERROR, ValidationMessage.ERROR);
-		elemTable.put(MISSING_START_TAG_ERROR, MSG_MISSING_START_TAG_ERROR, ValidationMessage.ERROR);
-		elemTable.put(MISSING_END_TAG_ERROR, MSG_MISSING_END_TAG_ERROR, ValidationMessage.WARNING);
+		elemTable.put(MISSING_START_TAG_ERROR, MSG_MISSING_START_TAG_ERROR, ValidationMessage.ERROR, HTMLCorePreferenceNames.ELEM_MISSING_START);
+		elemTable.put(MISSING_END_TAG_ERROR, MSG_MISSING_END_TAG_ERROR, ValidationMessage.WARNING, HTMLCorePreferenceNames.ELEM_MISSING_END);
 		elemTable.put(UNNECESSARY_END_TAG_ERROR, MSG_UNNECESSARY_END_TAG_ERROR, ValidationMessage.WARNING);
 		elemTable.put(INVALID_DIRECTIVE_ERROR, MSG_INVALID_DIRECTIVE_ERROR, ValidationMessage.ERROR);
 		elemTable.put(INVALID_CONTENT_ERROR, MSG_INVALID_CONTENT_ERROR, ValidationMessage.WARNING);
@@ -249,5 +275,9 @@ class MessageFactory implements ErrorState {
 				return null;
 		}
 		return tab;
+	}
+	
+	private static String getPreferenceNodeQualifier() {
+		return HTMLCorePlugin.getDefault().getBundle().getSymbolicName();
 	}
 }

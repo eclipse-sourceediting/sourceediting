@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -76,7 +76,7 @@ public class HTMLValidationReporter implements ValidationReporter {
 	/**
 	 */
 	public void report(ValidationMessage message) {
-		if (message == null)
+		if (message == null || message.getSeverity() == ValidationMessage.IGNORE)
 			return;
 		if (this.file == null)
 			return;
@@ -118,8 +118,10 @@ public class HTMLValidationReporter implements ValidationReporter {
 				severity = IMessage.NORMAL_SEVERITY;
 				result.addWarning();
 				break;
-			default :
+			case ValidationMessage.INFORMATION:
 				result.addInformation();
+				break;
+			default :			
 				break;
 		}
 

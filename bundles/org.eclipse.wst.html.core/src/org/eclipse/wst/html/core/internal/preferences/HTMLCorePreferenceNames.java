@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -220,4 +220,22 @@ public class HTMLCorePreferenceNames {
 	 * @see #ATTR_NAME_CASE
 	 */
 	public static final int UPPER = 2;
+	
+	/**
+	 * Validation severity for elements that are missing a start tag
+	 * <p>
+	 * Value is of type <code>Integer</code>.<br />
+	 * Possible values: {IGNORE, ERROR, WARNING}
+	 * </p>
+	 */
+	public static final String ELEM_MISSING_START = "elemMissingStart";//$NON-NLS-1$
+	
+	/**
+	 * Validation severity for elements that are missing an end tag
+	 * <p>
+	 * Value is of type <code>Integer</code>.<br />
+	 * Possible values: {IGNORE, ERROR, WARNING}
+	 * </p>
+	 */
+	public static final String ELEM_MISSING_END = "elemMissingEnd";//$NON-NLS-1$
 }

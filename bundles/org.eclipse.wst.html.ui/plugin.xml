@@ -44,7 +44,7 @@
 			target="org.eclipse.wst.html.core.htmlsource" />
 		<provisionalDefinition
 			type="preferencepages"
-			value="org.eclipse.wst.html.ui.preferences, org.eclipse.wst.html.ui.preferences.source, org.eclipse.wst.html.ui.preferences.templates, org.eclipse.wst.html.ui.preferences.styles"
+			value="org.eclipse.wst.html.ui.preferences, org.eclipse.wst.html.ui.preferences.source, org.eclipse.wst.html.ui.preferences.templates, org.eclipse.wst.html.ui.preferences.styles, org.eclipse.wst.html.ui.preferences.validation"
 			target="org.eclipse.wst.html.core.htmlsource" />
 	</extension>
 	<extension
@@ -85,6 +85,12 @@
 			category="org.eclipse.wst.html.ui.preferences"
 			class="org.eclipse.wst.html.ui.internal.preferences.ui.HTMLColorPage"
 			id="org.eclipse.wst.html.ui.preferences.styles">
+		</page>
+		<page
+			name="%HTML_Validation"
+			category="org.eclipse.wst.html.ui.preferences"
+			class="org.eclipse.wst.html.ui.internal.preferences.ui.HTMLValidationPreferencePage"
+			id="org.eclipse.wst.html.ui.preferences.validation">
 		</page>
 	</extension>
 	<!-- Web content settings -->

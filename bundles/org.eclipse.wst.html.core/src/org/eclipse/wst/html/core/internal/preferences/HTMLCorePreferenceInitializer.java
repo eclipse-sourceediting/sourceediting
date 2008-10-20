@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.sse.core.internal.encoding.CommonCharsetNames;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
+import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 
 /**
  * Sets default values for HTML Core preferences
@@ -59,5 +60,9 @@ public class HTMLCorePreferenceInitializer extends AbstractPreferenceInitializer
 		// this could be made smarter by actually looking up the content
 		// type's valid extensions
 		node.put(HTMLCorePreferenceNames.DEFAULT_EXTENSION, "html"); //$NON-NLS-1$
+		
+		// HTML Validation Severities
+		node.putInt(HTMLCorePreferenceNames.ELEM_MISSING_START, ValidationMessage.ERROR);
+		node.putInt(HTMLCorePreferenceNames.ELEM_MISSING_END, ValidationMessage.WARNING);
 	}
 }
