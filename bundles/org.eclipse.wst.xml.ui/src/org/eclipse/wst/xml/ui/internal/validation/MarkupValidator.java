@@ -40,6 +40,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.AnnotationInfo;
@@ -238,7 +239,7 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 	private int getLineNumber(int start) {
 		int lineNo = -1;
 		try {
-			lineNo = getDocument().getLineOfOffset(start);
+			lineNo = getDocument().getLineOfOffset(start) + 1;
 		}
 		catch (BadLocationException e) {
 			Logger.logException(e);
@@ -507,35 +508,37 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 
 		boolean selfClosed = false;
 		String tagName = null;
-		int length = 0;
 
+		/**
+		 * For tags that aren't meant to be EMPTY, make sure it's empty or has an end tag
+		 */
 		if (xmlNode.isContainer()) {
 			IStructuredDocumentRegion endRegion = xmlNode.getEndStructuredDocumentRegion();
 			if (endRegion == null) {
 				IStructuredDocumentRegion startRegion = xmlNode.getStartStructuredDocumentRegion();
-				if (!startRegion.isDeleted()) {
+				if (startRegion != null && !startRegion.isDeleted() && DOMRegionContext.XML_TAG_OPEN.equals(startRegion.getFirstRegion().getType())) {
 					// analyze the tag (check self closing)
 					ITextRegionList regions = startRegion.getRegions();
 					ITextRegion r = null;
+					int start = sdRegion.getStart();
+					int length = sdRegion.getTextLength();
 					for (int i = 0; i < regions.size(); i++) {
 						r = regions.get(i);
-						if ((r.getType() == DOMRegionContext.XML_TAG_OPEN) || (r.getType() == DOMRegionContext.XML_TAG_CLOSE)) {
-							length++;
-						}
-						else if (r.getType() == DOMRegionContext.XML_TAG_NAME) {
+						if (r.getType() == DOMRegionContext.XML_TAG_NAME) {
 							tagName = sdRegion.getText(r);
-							length += tagName.length();
+							start = sdRegion.getStartOffset(r);
+							length = r.getTextLength();
 						}
 						else if (r.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
 							selfClosed = true;
 						}
 					}
 
+
 					if (!selfClosed && (tagName != null)) {
 						Object[] args = {tagName};
 						String messageText = NLS.bind(XMLUIMessages.Missing_end_tag_, args);
 
-						int start = sdRegion.getStart();
 						int lineNumber = getLineNumber(start);
 
 						IMessage message = new LocalizedMessage(SEVERITY_MISSING_END_TAG , messageText);
@@ -567,14 +570,14 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 					// analyze the tag (check self closing)
 					ITextRegionList regions = endRegion.getRegions();
 					ITextRegion r = null;
+					int start = sdRegion.getStart();
+					int length = sdRegion.getTextLength();
 					for (int i = 0; i < regions.size(); i++) {
 						r = regions.get(i);
-						if ((r.getType() == DOMRegionContext.XML_END_TAG_OPEN)) {
-							length++;
-						}
-						else if (r.getType() == DOMRegionContext.XML_TAG_NAME) {
+						if (r.getType() == DOMRegionContext.XML_TAG_NAME) {
 							tagName = sdRegion.getText(r);
-							length += tagName.length();
+							start = sdRegion.getStartOffset(r);
+							length = r.getTextLength();
 						}
 					}
 
@@ -582,9 +585,6 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 						Object[] args = {tagName};
 						String messageText = NLS.bind(XMLUIMessages.Missing_start_tag_, args);
 
-						// if we can reliably find a name region, use that
-						int start = (endRegion.getNumberOfRegions() > 1 ? endRegion.getStartOffset(endRegion.getRegions().get(1)) : endRegion.getStartOffset());
-						length = (endRegion.getNumberOfRegions() > 1 ? endRegion.getRegions().get(1).getTextLength() : endRegion.getLength());
 						int lineNumber = getLineNumber(start);
 
 						IMessage message = new LocalizedMessage(SEVERITY_MISSING_START_TAG, messageText);
@@ -611,6 +611,41 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 				}
 			}
 
+		}
+		/*
+		 * Check for an end tag that has no start tag
+		 */
+		else {
+			IStructuredDocumentRegion startRegion = xmlNode.getStartStructuredDocumentRegion();
+			if (startRegion == null) {
+				IStructuredDocumentRegion endRegion = xmlNode.getEndStructuredDocumentRegion();
+				if (!endRegion.isDeleted()) {
+					// get name
+					ITextRegionList regions = endRegion.getRegions();
+					ITextRegion r = null;
+					for (int i = 0; i < regions.size(); i++) {
+						r = regions.get(i);
+						if (r.getType() == DOMRegionContext.XML_TAG_NAME) {
+							tagName = sdRegion.getText(r);
+						}
+					}
+
+					if (!selfClosed && (tagName != null)) {
+						String messageText = StringUtils.unpack(XMLUIMessages.Indicate_no_grammar_specified_severities)[0];
+
+						int start = sdRegion.getStart();
+						int lineNumber = getLineNumber(start);
+
+						// SEVERITY_STRUCTURE == IMessage.HIGH_SEVERITY
+						IMessage message = new LocalizedMessage(IMessage.HIGH_SEVERITY, messageText);
+						message.setOffset(start);
+						message.setLength(sdRegion.getTextLength());
+						message.setLineNo(lineNumber);
+
+						reporter.addMessage(this, message);
+					}
+				}
+			}
 		}
 	}
 
