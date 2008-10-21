@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,16 +20,11 @@ import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.jst.jsp.ui.internal.editor.IHelpContextIds;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PropertyPage;
@@ -49,18 +44,9 @@ public class JSPFContentSettingsPropertyPage extends PropertyPage {
 				"text/xml",  //$NON-NLS-1$
 				"text/css"}; //$NON-NLS-1$
 
-	private class ButtonListener extends SelectionAdapter {
-		public void widgetSelected(SelectionEvent e) {
-			boolean specific = fSpecificSetting.getSelection();
-			updateButtons(specific);
-		}
-	}
 
 	private Combo fLanguageCombo;
 	private Combo fContentTypeCombo;
-	private Button fValidateFragments;
-	Button fSpecificSetting;
-	private SelectionListener fSpecificListener;
 
 	public JSPFContentSettingsPropertyPage() {
 		super();
@@ -104,42 +90,11 @@ public class JSPFContentSettingsPropertyPage extends PropertyPage {
 		fContentTypeCombo.setLayoutData(data);
 		fContentTypeCombo.setItems(fContentTypes);
 
-		// create separator
-		Label label = new Label(propertyPage, SWT.SEPARATOR | SWT.HORIZONTAL);
-		data = new GridData();
-		data.horizontalAlignment = GridData.FILL;
-		data.horizontalSpan = 2;
-		data.verticalSpan = 8;
-		label.setLayoutData(data);
-
-		// specific setting
-		fSpecificSetting = new Button(propertyPage, SWT.CHECK | SWT.LEFT);
-		fSpecificSetting.setText(JSPUIMessages.JSPFContentSettingsPropertyPage_4);
-		data = new GridData(GridData.FILL, GridData.FILL, true, false);
-		data.horizontalSpan = 2;
-		fSpecificSetting.setLayoutData(data);
-
-		fSpecificListener = new ButtonListener();
-		fSpecificSetting.addSelectionListener(fSpecificListener);
-
-		// validate file
-		fValidateFragments = new Button(propertyPage, SWT.CHECK | SWT.LEFT);
-		fValidateFragments.setText(JSPUIMessages.JSPFilesPreferencePage_1);
-		data = new GridData(GridData.FILL, GridData.FILL, true, false);
-		data.horizontalSpan = 2;
-		data.horizontalIndent = 5;
-		fValidateFragments.setLayoutData(data);
-
 		initializeValues();
 
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(propertyPage, IHelpContextIds.JSP_FRAGMENT_HELPID);
 		Dialog.applyDialogFont(parent);
 		return propertyPage;
-	}
-
-	void updateButtons(boolean enabled) {
-		fSpecificSetting.setSelection(enabled);
-		fValidateFragments.setEnabled(enabled);
 	}
 
 	/**
@@ -192,17 +147,6 @@ public class JSPFContentSettingsPropertyPage extends PropertyPage {
 			fContentTypeCombo.select(index);
 		else
 			fContentTypeCombo.setText(contentType);
-
-		String validate = JSPFContentProperties.getProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, getResource(), false);
-		String validate2 = JSPFContentProperties.getProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, getResource(), true);
-		if (validate == null || validate.length() == 0) {
-			updateButtons(false);
-			fValidateFragments.setSelection(Boolean.valueOf(validate2).booleanValue());
-		}
-		else {
-			updateButtons(true);
-			fValidateFragments.setSelection(Boolean.valueOf(validate).booleanValue());
-		}
 	}
 
 	protected void performDefaults() {
@@ -213,9 +157,6 @@ public class JSPFContentSettingsPropertyPage extends PropertyPage {
 		index = fContentTypeCombo.indexOf(SELECT_NONE);
 		if (index > -1)
 			fContentTypeCombo.select(index);
-
-		updateButtons(false);
-		fValidateFragments.setSelection(true);
 
 		super.performDefaults();
 	}
@@ -237,12 +178,6 @@ public class JSPFContentSettingsPropertyPage extends PropertyPage {
 				contentType = null;
 			}
 			JSPFContentProperties.setProperty(JSPFContentProperties.JSPCONTENTTYPE, getResource(), contentType);
-
-			String validate = null;
-			if (fSpecificSetting.getSelection()) {
-				validate = Boolean.toString(fValidateFragments.getSelection());
-			}
-			JSPFContentProperties.setProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, getResource(), validate);
 		}
 		catch (CoreException e) {
 			// maybe in future, let user know there was a problem saving file

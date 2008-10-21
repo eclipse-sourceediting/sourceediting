@@ -46,7 +46,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.Logger;
-import org.eclipse.jst.jsp.core.internal.contentproperties.JSPFContentProperties;
 import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
 import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache.PropertyGroup;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
@@ -258,7 +257,7 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 		// quick check to see if this is possibly a jsp fragment
 		if (getJSPFContentType().isAssociatedWith(file.getName())) {
 			// get preference for validate jsp fragments
-			boolean shouldValidateFragments = Boolean.valueOf(JSPFContentProperties.getProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, file, true)).booleanValue();
+			boolean shouldValidateFragments = FragmentValidationTools.shouldValidateFragment(file);
 			/*
 			 * if jsp fragments should not be validated, check if file is
 			 * really jsp fragment

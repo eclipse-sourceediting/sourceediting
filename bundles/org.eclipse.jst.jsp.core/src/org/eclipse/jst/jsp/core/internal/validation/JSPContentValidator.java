@@ -11,12 +11,18 @@
 package org.eclipse.jst.jsp.core.internal.validation;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.core.runtime.content.IContentDescription;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeConstants;
 import org.eclipse.wst.html.core.internal.validate.HTMLValidationAdapterFactory;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -40,7 +46,48 @@ public class JSPContentValidator extends JSPValidator {
 	private static final String HTTP_JAVA_SUN_COM_JSP_PAGE = "http://java.sun.com/JSP/Page"; //$NON-NLS-1$
 	private static final String XMLNS = "xmlns"; //$NON-NLS-1$
 	private static final String XMLNS_JSP = "xmlns:jsp"; //$NON-NLS-1$
+	private IContentType fJSPFContentType = null;
 
+
+	/**
+	 * Checks if file is a jsp fragment or not. If so, check if the fragment
+	 * should be validated or not.
+	 * 
+	 * @param file
+	 *            Assumes shouldValidate was already called on file so it
+	 *            should not be null and does exist
+	 * @return false if file is a fragment and it should not be validated,
+	 *         true otherwise
+	 */
+	private boolean fragmentCheck(IFile file) {
+		boolean shouldValidate = true;
+		// quick check to see if this is possibly a jsp fragment
+		if (getJSPFContentType().isAssociatedWith(file.getName())) {
+			// get preference for validate jsp fragments
+			boolean shouldValidateFragments = FragmentValidationTools.shouldValidateFragment(file);
+			/*
+			 * if jsp fragments should not be validated, check if file is
+			 * really jsp fragment
+			 */
+			if (!shouldValidateFragments) {
+				boolean isFragment = isFragment(file);
+				shouldValidate = !isFragment;
+			}
+		}
+		return shouldValidate;
+	}
+
+	/**
+	 * Returns JSP fragment content type
+	 * 
+	 * @return jspf content type
+	 */
+	private IContentType getJSPFContentType() {
+		if (fJSPFContentType == null) {
+			fJSPFContentType = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSPFRAGMENT);
+		}
+		return fJSPFContentType;
+	}
 
 	/*
 	 * Copied from HTMLValidator
@@ -57,6 +104,51 @@ public class JSPContentValidator extends JSPValidator {
 		if (adapter == null)
 			return false;
 		return adapter.hasFeature(HTMLDocumentTypeConstants.HTML);
+	}
+
+	/**
+	 * Determines if file is jsp fragment or not (does a deep, indepth check,
+	 * looking into contents of file)
+	 * 
+	 * @param file
+	 *            assumes file is not null and exists
+	 * @return true if file is jsp fragment, false otherwise
+	 */
+	private boolean isFragment(IFile file) {
+		boolean isFragment = false;
+		InputStream is = null;
+		try {
+			IContentDescription contentDescription = file.getContentDescription();
+			// it can be null
+			if (contentDescription == null) {
+				is = file.getContents();
+				contentDescription = Platform.getContentTypeManager().getDescriptionFor(is, file.getName(), new QualifiedName[]{IContentDescription.CHARSET});
+			}
+			if (contentDescription != null) {
+				String fileCtId = contentDescription.getContentType().getId();
+				isFragment = (fileCtId != null && ContentTypeIdForJSP.ContentTypeID_JSPFRAGMENT.equals(fileCtId));
+			}
+		}
+		catch (IOException e) {
+			// ignore, assume it's invalid JSP
+		}
+		catch (CoreException e) {
+			// ignore, assume it's invalid JSP
+		}
+		finally {
+			/*
+			 * must close input stream in case others need it
+			 * (IFile.getContents() requirement as well)
+			 */
+			if (is != null)
+				try {
+					is.close();
+				}
+				catch (Exception e) {
+					// not sure how to recover at this point
+				}
+		}
+		return isFragment;
 	}
 
 	private boolean isXMLJSP(IDOMDocument document) {
@@ -88,6 +180,7 @@ public class JSPContentValidator extends JSPValidator {
 		}
 	}
 
+
 	/*
 	 * Mostly copied from HTMLValidator
 	 */
@@ -118,39 +211,43 @@ public class JSPContentValidator extends JSPValidator {
 	public ValidationResult validate(final IResource resource, int kind, ValidationState state, IProgressMonitor monitor) {
 		if (resource.getType() != IResource.FILE)
 			return null;
+
 		ValidationResult result = new ValidationResult();
 		final IReporter reporter = result.getReporter(monitor);
 
-		IStructuredModel model = null;
-		try {
-			model = StructuredModelManager.getModelManager().getModelForRead((IFile) resource);
-			if (!reporter.isCancelled() && model instanceof IDOMModel) {
-				reporter.removeAllMessages(this, resource);
-				validate((IFile) resource, kind, state, monitor, (IDOMModel) model, reporter);
+		if (fragmentCheck((IFile) resource)) {
+			IStructuredModel model = null;
+			try {
+				model = StructuredModelManager.getModelManager().getModelForRead((IFile) resource);
+				if (!reporter.isCancelled() && model instanceof IDOMModel) {
+					reporter.removeAllMessages(this, resource);
+					validate((IFile) resource, kind, state, monitor, (IDOMModel) model, reporter);
+				}
 			}
-		}
-		catch (IOException e) {
-			Logger.logException(e);
-		}
-		catch (CoreException e) {
-			Logger.logException(e);
-		}
-		finally {
-			if (model != null)
-				model.releaseFromRead();
+			catch (IOException e) {
+				Logger.logException(e);
+			}
+			catch (CoreException e) {
+				Logger.logException(e);
+			}
+			finally {
+				if (model != null)
+					model.releaseFromRead();
+			}
 		}
 
 		return result;
 	}
 
-
 	protected void validateFile(IFile f, IReporter reporter) {
 		IStructuredModel model = null;
 		try {
-			model = StructuredModelManager.getModelManager().getModelForRead(f);
-			if (!reporter.isCancelled() && model instanceof IDOMModel) {
-				reporter.removeAllMessages(this, f);
-				validate(reporter, f, (IDOMModel) model);
+			if (fragmentCheck(f)) {
+				model = StructuredModelManager.getModelManager().getModelForRead(f);
+				if (!reporter.isCancelled() && model instanceof IDOMModel) {
+					reporter.removeAllMessages(this, f);
+					validate(reporter, f, (IDOMModel) model);
+				}
 			}
 		}
 		catch (IOException e) {
