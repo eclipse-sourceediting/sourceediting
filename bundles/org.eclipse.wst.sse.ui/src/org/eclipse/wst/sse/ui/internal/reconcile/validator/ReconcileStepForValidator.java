@@ -251,7 +251,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 		if (dirtyRegion != null) {
 			try {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=247714
-				if (fValidator instanceof ISourceValidator && getScope() == ReconcileAnnotationKey.TOTAL) {
+				if (fValidator instanceof ISourceValidator && getScope() == ReconcileAnnotationKey.PARTIAL) {
 					results = validate(dirtyRegion, subRegion);
 				}
 				else {
