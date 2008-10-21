@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -37,6 +38,9 @@ import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 public class JSPBatchValidatorTest extends TestCase {
 	String wtp_autotest_noninteractive = null;
 	private static final String PROJECT_NAME = "batchvalidation";
+	Object originalWorkspaceValue = null;
+	IEclipsePreferences workspaceScope = null;
+	IEclipsePreferences projectScope = null;
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -50,16 +54,26 @@ public class JSPBatchValidatorTest extends TestCase {
 			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + PROJECT_NAME, "/" + PROJECT_NAME);
 		}
 		assertTrue("project could not be created", getProject().exists());
-		
+
 		String filePath = "/" + PROJECT_NAME + "/WebContent/header.jspf";
 		IFile fragment = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filePath));
-		JSPFContentProperties.setProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, fragment, null);
+
+		String qualifier = JSPCorePlugin.getDefault().getBundle().getSymbolicName();
+		workspaceScope = new InstanceScope().getNode(qualifier);
+		projectScope = new ProjectScope(fragment.getProject()).getNode(qualifier);
+		originalWorkspaceValue = workspaceScope.get(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, null);
 	}
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		if (wtp_autotest_noninteractive != null)
 			System.setProperty("wtp.autotest.noninteractive", wtp_autotest_noninteractive);
+		projectScope.remove(JSPCorePreferenceNames.VALIDATE_FRAGMENTS);
+		projectScope.remove(JSPCorePreferenceNames.VALIDATION_USE_PROJECT_SETTINGS);
+		if (originalWorkspaceValue != null)
+			workspaceScope.put(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, originalWorkspaceValue.toString());
+		else
+			workspaceScope.remove(JSPCorePreferenceNames.VALIDATE_FRAGMENTS);
 	}
 
 	/**
@@ -86,36 +100,39 @@ public class JSPBatchValidatorTest extends TestCase {
 		assertTrue("jsp errors were not found in both files", reporter.getMessages().size() == 2);
 	}
 
-	public void testFragmentValidationPreferenceOnFile() throws Exception {
+	public void testFragmentValidationPreferenceOnProject() throws Exception {
 		String filePath = "/" + PROJECT_NAME + "/WebContent/header.jspf";
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filePath));
 
-		// disable, no problem markers expected
-		JSPFContentProperties.setProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, file, Boolean.toString(false));
+		// enable workspace-wide but disable in project, no problem markers expected
+		workspaceScope.putBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, true);
+		projectScope.putBoolean(JSPCorePreferenceNames.VALIDATION_USE_PROJECT_SETTINGS, true);
+		projectScope.putBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, false);
 		ValidationFramework.getDefault().validate(new IProject[]{getProject()}, true, false, new NullProgressMonitor());
 		IMarker[] problemMarkers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
-		StringBuffer buffer = new StringBuffer("Problem markers found while fragment validation was disabled");
+		StringBuffer buffer = new StringBuffer("Problem markers found while fragment validation was disabled in project");
 		for (int i = 0; i < problemMarkers.length; i++) {
 			buffer.append("\n");
 			buffer.append(problemMarkers[i].getAttribute(IMarker.MESSAGE));
 		}
 		assertEquals(buffer.toString(), 0, problemMarkers.length);
 
-		// enable, some problem markers expected
-		JSPFContentProperties.setProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, file, Boolean.toString(true));
+		// disable workspace-wide but enable in project, some problem markers expected
+		workspaceScope.putBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, false);
+		projectScope.putBoolean(JSPCorePreferenceNames.VALIDATION_USE_PROJECT_SETTINGS, true);
+		projectScope.putBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, true);
+		JSPFContentProperties.setProperty(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, file, Boolean.toString(true));
 		ValidationFramework.getDefault().validate(new IProject[]{getProject()}, true, false, new NullProgressMonitor());
 		problemMarkers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
-		assertTrue("problem markers not found while fragment validation was enabled", problemMarkers.length != 0);
+		assertTrue("problem markers not found while fragment validation was enabled in project", problemMarkers.length != 0);
 	}
 
 	public void testFragmentValidationPreferenceOnWorkspace() throws Exception {
-		IEclipsePreferences jspInstanceContext = new InstanceScope().getNode(JSPCorePlugin.getDefault().getBundle().getSymbolicName());
-
 		String filePath = "/" + PROJECT_NAME + "/WebContent/header.jspf";
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filePath));
 
-		// disable, no problem markers expected
-		jspInstanceContext.putBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, false);
+		// disable workspace-wide, no problem markers expected
+		workspaceScope.putBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, false);
 		ValidationFramework.getDefault().validate(new IProject[]{getProject()}, true, false, new NullProgressMonitor());
 		IMarker[] problemMarkers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 		StringBuffer buffer = new StringBuffer("Problem markers found while fragment validation was disabled");
@@ -125,14 +142,16 @@ public class JSPBatchValidatorTest extends TestCase {
 		}
 		assertEquals(buffer.toString(), 0, problemMarkers.length);
 
-		// enable, some problem markers expected
-		jspInstanceContext.putBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, true);
+		// enable workspace-wide, some problem markers expected
+		workspaceScope.putBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, true);
 		ValidationFramework.getDefault().validate(new IProject[]{getProject()}, true, false, new NullProgressMonitor());
 		problemMarkers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 		assertTrue("Problem markers not found while fragment validation was enabled", problemMarkers.length != 0);
 
-		// check default value of true
-		jspInstanceContext.remove(JSPCorePreferenceNames.VALIDATE_FRAGMENTS);
+		// check default value is true
+		workspaceScope.remove(JSPCorePreferenceNames.VALIDATE_FRAGMENTS);
+		projectScope.remove(JSPCorePreferenceNames.VALIDATE_FRAGMENTS);
+		projectScope.remove(JSPCorePreferenceNames.VALIDATION_USE_PROJECT_SETTINGS);
 		ValidationFramework.getDefault().validate(new IProject[]{getProject()}, true, false, new NullProgressMonitor());
 		problemMarkers = file.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 		assertTrue("Problem markers not found while fragment validation was default", problemMarkers.length != 0);

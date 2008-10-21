@@ -336,6 +336,7 @@ public class ProjectUnzipUtility {
 		desc.setNatureIds((String[]) natures.toArray(new String[0]));
 		proj.setDescription(desc, new NullProgressMonitor());
 		Platform.getJobManager().endRule(ResourcesPlugin.getWorkspace().getRoot());
+		refreshWorkspace();
 	}
 
 	private void createProject(IProject project, IPath locationPath, IProgressMonitor monitor) throws CoreException {
