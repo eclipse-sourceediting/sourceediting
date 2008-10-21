@@ -41,6 +41,7 @@ public class NodeImplTestCase extends TestCase {
 	private static final String VALUE="value";
 	private static final String KEY2="key2";
 	private static final String VALUE2="value2";
+	private static final boolean DEBUG = false;
 	
 	
 	/**
@@ -147,6 +148,7 @@ public class NodeImplTestCase extends TestCase {
 				assertEquals(KEY, key);
 				assertEquals(src, attribute); 
 				
+				if(DEBUG)
 				System.out.println("Operation: "+operation+" Key:"+ key 
 						+ " Object:"+data+" SourceNode:"+src.getLocalName()+" DestinationNode:"+dst.getLocalName());
 				
@@ -172,6 +174,7 @@ public class NodeImplTestCase extends TestCase {
 				assertEquals(KEY, key);
 				assertEquals(src, elementToImport);
 				assertEquals(dst, null);  
+				if(DEBUG)
 				System.out.println("Operation: "+operation+" Key:"+ key 
 						+ " Object:"+data+" SourceNode:"+src.getLocalName()+" DestinationNode:"+dst);
 				}
