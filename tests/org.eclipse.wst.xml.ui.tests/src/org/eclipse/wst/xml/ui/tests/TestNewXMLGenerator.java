@@ -12,12 +12,13 @@
 
 package org.eclipse.wst.xml.ui.tests;
 
-import junit.framework.*;
+import java.io.File;
+
+import junit.framework.TestCase;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
-import org.eclipse.wst.xml.ui.internal.wizards.NewXMLGenerator;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMContentBuilder;
-import java.io.*;
+import org.eclipse.wst.xml.ui.internal.wizards.NewXMLGenerator;
 
 public class TestNewXMLGenerator extends TestCase {
 	
@@ -119,10 +120,25 @@ public class TestNewXMLGenerator extends TestCase {
 		  
 		  XMLDiff differ = new XMLDiff();
 		  assertTrue("The XML files are not identical.", differ.diff(fileNameCompare, fileNameResult, "XML")); //$NON-NLS-2$
+		  
+		  // if we've made it this far, delete the output file
+		  remove(nFile);
 	  }
 	  catch (Exception e) {
 		  e.printStackTrace();
-	  }
-	  		
+	  } 	  		
+	}
+	
+	/**
+	 * @param file
+	 */
+	private void remove(File file) {
+		if(file.isDirectory()) {
+			File[] children = file.listFiles();
+			for (int i = 0; i < children.length; i++) {
+				remove(children[i]);
+			}
+		}
+		file.delete();
 	}
 }
