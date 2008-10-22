@@ -36,6 +36,7 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
+import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDWildcard;
 
 public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implements IStructure, IActionProvider, IGraphElement, IADTObjectListener
@@ -82,11 +83,23 @@ public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implement
   {
     XSDAttributeGroupDefinition xsdAttributeGroup = (XSDAttributeGroupDefinition) target;
     List list = new ArrayList();
-    list.addAll(xsdAttributeGroup.getContents());
+    Iterator iterator = xsdAttributeGroup.getContents().iterator();    
+    while (iterator.hasNext())
+    {
+    	Object o = iterator.next();
+    	if (o instanceof XSDAttributeUse)
+    	{
+    		list.add(((XSDAttributeUse)o).getAttributeDeclaration());
+    	}
+    	else
+    	{
+    		list.add(o);
+    	}
+    }
     XSDWildcard wildcard = xsdAttributeGroup.getAttributeWildcardContent();
     if (wildcard != null)
     {
-      list.add(wildcard);
+    	list.add(wildcard);
     }
     List adapterList = new ArrayList();
     populateAdapterList(list, adapterList);
