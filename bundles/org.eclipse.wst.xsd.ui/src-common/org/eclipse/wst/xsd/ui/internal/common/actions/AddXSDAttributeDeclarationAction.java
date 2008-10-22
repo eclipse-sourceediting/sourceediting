@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,9 @@ import org.eclipse.xsd.XSDSchema;
 
 public class AddXSDAttributeDeclarationAction extends XSDBaseAction
 {
-  public static String ID = "AddXSDAttributeAction"; //$NON-NLS-1$
+  public static String ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeDeclarationAction.AddXSDAttributeAction"; //$NON-NLS-1$
+  public static String BEFORE_SELECTED_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeDeclarationAction.BEFORE_SELECTED_ID"; //$NON-NLS-1$  
+  public static String AFTER_SELECTED_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeDeclarationAction.AFTER_SELECTED_ID"; //$NON-NLS-1$  
   public static String REF_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeReferenceAction"; //$NON-NLS-1$
   boolean isReference = false;
   
@@ -71,6 +73,7 @@ public class AddXSDAttributeDeclarationAction extends XSDBaseAction
       XSDAttributeUse xsdAttributeUse = (XSDAttributeUse) selection;
       XSDConcreteComponent parent = null;
       XSDComplexTypeDefinition ct = null;
+      XSDAttributeGroupDefinition group = null;
       for (parent = xsdAttributeUse.getContainer(); parent != null;)
       {
         if (parent instanceof XSDComplexTypeDefinition)
@@ -78,11 +81,26 @@ public class AddXSDAttributeDeclarationAction extends XSDBaseAction
           ct = (XSDComplexTypeDefinition) parent;
           break;
         }
+        else if (parent instanceof XSDAttributeGroupDefinition)
+        {
+          group = (XSDAttributeGroupDefinition)parent;
+          break;
+        }
         parent = parent.getContainer();
       }
       if (ct != null)
       {
-        command = new AddXSDAttributeDeclarationCommand(Messages._UI_ACTION_ADD_ATTRIBUTE, ct);
+        XSDAttributeUse sel = (XSDAttributeUse) selection;
+        int index = ct.getAttributeContents().indexOf(sel);
+        command = new AddXSDAttributeDeclarationCommand(Messages._UI_ACTION_ADD_ATTRIBUTE, ct, getId(), index);
+        command.setReference(isReference);
+        getCommandStack().execute(command);
+      }
+      else if (group != null)
+      {
+        XSDAttributeUse sel = (XSDAttributeUse) selection;
+        int index = group.eContents().indexOf(sel);
+        command = new AddXSDAttributeDeclarationCommand(Messages._UI_ACTION_ADD_ATTRIBUTE, group, getId(), index);
         command.setReference(isReference);
         getCommandStack().execute(command);
       }

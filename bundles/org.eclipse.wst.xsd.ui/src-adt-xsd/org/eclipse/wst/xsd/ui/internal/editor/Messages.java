@@ -80,6 +80,8 @@ public class Messages extends NLS
   public static String _UI_MENU_XSD_EDITOR;
   public static String _UI_LABEL_SOURCE;
   public static String _UI_ACTION_ADD_ELEMENT;
+  public static String _UI_ACTION_ADD_ELEMENT_BEFORE;
+  public static String _UI_ACTION_ADD_ELEMENT_AFTER;
   public static String _UI_ACTION_ADD_ELEMENT_REF;
   public static String _UI_ACTION_NEW;
   public static String _UI_ACTION_BROWSE;
@@ -112,6 +114,8 @@ public class Messages extends NLS
   public static String _UI_ACTION_ADD_IMPORT;
   public static String _UI_ACTION_ADD_REDEFINE;
   public static String _UI_ACTION_ADD_ATTRIBUTE;
+  public static String _UI_ACTION_ADD_ATTRIBUTE_BEFORE;
+  public static String _UI_ACTION_ADD_ATTRIBUTE_AFTER;
   public static String _UI_ACTION_ADD_ATTRIBUTE_REF;
 
   public static String _UI_LABEL_ELEMENTFORMDEFAULT;

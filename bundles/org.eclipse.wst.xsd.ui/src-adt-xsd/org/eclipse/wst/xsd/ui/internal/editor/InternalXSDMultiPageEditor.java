@@ -628,6 +628,16 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDElement.gif"));
     registry.registerAction(action);
 
+    action = new AddXSDElementAction(this, AddXSDElementAction.BEFORE_SELECTED_ID, Messages._UI_ACTION_ADD_ELEMENT_BEFORE, false);
+    action.setSelectionProvider(getSelectionManager());
+    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDElement.gif"));
+    registry.registerAction(action);       
+    
+    action = new AddXSDElementAction(this, AddXSDElementAction.AFTER_SELECTED_ID, Messages._UI_ACTION_ADD_ELEMENT_AFTER, false);
+    action.setSelectionProvider(getSelectionManager());
+    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDElement.gif"));
+    registry.registerAction(action);      
+    
     action = new AddXSDElementAction(this, AddXSDElementAction.REF_ID, Messages._UI_ACTION_ADD_ELEMENT_REF, true);
     action.setSelectionProvider(getSelectionManager());
     action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDElementRef.gif"));
@@ -675,6 +685,16 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDAttribute.gif"));
     registry.registerAction(action);
 
+    action = new AddXSDAttributeDeclarationAction(this, AddXSDAttributeDeclarationAction.BEFORE_SELECTED_ID, Messages._UI_ACTION_ADD_ATTRIBUTE_BEFORE, false);
+    action.setSelectionProvider(getSelectionManager());
+    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDAttribute.gif"));
+    registry.registerAction(action);
+    
+    action = new AddXSDAttributeDeclarationAction(this, AddXSDAttributeDeclarationAction.AFTER_SELECTED_ID, Messages._UI_ACTION_ADD_ATTRIBUTE_AFTER, false);
+    action.setSelectionProvider(getSelectionManager());
+    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDAttribute.gif"));
+    registry.registerAction(action);
+    
     action = new AddXSDAttributeDeclarationAction(this, AddXSDAttributeDeclarationAction.REF_ID, Messages._UI_ACTION_ADD_ATTRIBUTE_REF, true);
     action.setSelectionProvider(getSelectionManager());
     action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDAttributeRef.gif"));

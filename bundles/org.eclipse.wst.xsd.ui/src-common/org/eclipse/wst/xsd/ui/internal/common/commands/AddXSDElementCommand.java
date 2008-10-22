@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,7 +36,12 @@ public class AddXSDElementCommand extends BaseCommand
   XSDSchema xsdSchema;
   boolean isReference;
   private String nameToAdd;
-
+  // The index of the currently selected item.  If no item is selected, index will be less than 0
+  private int index = -1;  
+  // Determines where the element should be inserted based on the currently selected element.  If no
+  // element is selected, use the default behaviour of appending the element to the end
+  private String addElementLocation; 
+  
   public AddXSDElementCommand()
   {
     super();
@@ -68,6 +73,14 @@ public class AddXSDElementCommand extends BaseCommand
     super(label);
     this.xsdModelGroup = xsdModelGroup;
   }
+  
+  public AddXSDElementCommand(String label, XSDModelGroup xsdModelGroup, String ID, int index)
+  {
+    super(label);
+    this.xsdModelGroup = xsdModelGroup;
+    this.index = index;
+    this.addElementLocation = ID;
+  }
 
   public AddXSDElementCommand(String label, XSDSchema xsdSchema)
   {
@@ -80,8 +93,34 @@ public class AddXSDElementCommand extends BaseCommand
     this.isReference = isReference;
   }
   
-  public void setNameToAdd(String name){
-	  nameToAdd = name;
+  public void setNameToAdd(String name)
+  {
+    nameToAdd = name;
+  }
+  
+  public void setAddElementLocation(String LocationType)
+  {
+    addElementLocation = LocationType;
+  }
+  
+  protected int getInsertionIndex()
+  {
+    if (index < 0)
+      return -1;
+
+    if (addElementLocation.equals(org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction.BEFORE_SELECTED_ID))
+    {
+      return index;
+    }
+    else if (addElementLocation.equals(org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction.AFTER_SELECTED_ID))
+    {
+      index++;
+      return index;
+    }
+    else
+    {
+      return -1;
+    }
   }
   
   /*
@@ -131,7 +170,15 @@ public class AddXSDElementCommand extends BaseCommand
         beginRecording(xsdSchema.getElement());
         if (!isReference)
         {
-          xsdModelGroup.getContents().add(createXSDElementDeclaration());
+        	index = getInsertionIndex();
+        	if(index >= 0 && index < xsdModelGroup.getContents().size())
+        	{        		
+        		xsdModelGroup.getContents().add(index,createXSDElementDeclaration());
+        	}
+        	else
+        	{
+        		xsdModelGroup.getContents().add(createXSDElementDeclaration());
+        	}
         }
         else
         {

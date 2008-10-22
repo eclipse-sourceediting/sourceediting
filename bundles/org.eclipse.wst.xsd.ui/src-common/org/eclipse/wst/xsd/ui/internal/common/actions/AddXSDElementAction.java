@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,12 +23,15 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.impl.XSDModelGroupImpl;
 
 //revisit this and see if we can reuse AddFieldAction??
 
 public class AddXSDElementAction extends XSDBaseAction
 {
   public static String ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction"; //$NON-NLS-1$
+  public static String BEFORE_SELECTED_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction.BEFORE_SELECTED_ID"; //$NON-NLS-1$
+  public static String AFTER_SELECTED_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction.AFTER_SELECTED_ID"; //$NON-NLS-1$
   public static String REF_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementReferenceAction"; //$NON-NLS-1$
   boolean isReference;
   
@@ -99,6 +102,8 @@ public class AddXSDElementAction extends XSDBaseAction
       XSDConcreteComponent parent = null;
       XSDComplexTypeDefinition ct = null;
       XSDModelGroupDefinition group = null;
+      XSDModelGroupImpl ctGroup = null;
+
       for (parent = xsdConcreteComponent.getContainer(); parent != null; )
       {
         if (parent instanceof XSDComplexTypeDefinition)
@@ -111,6 +116,11 @@ public class AddXSDElementAction extends XSDBaseAction
           group = (XSDModelGroupDefinition)parent;
           break;
         }
+        else if (parent instanceof XSDModelGroupImpl)
+        {
+          ctGroup = (XSDModelGroupImpl) parent;
+          break;
+        }
         parent = parent.getContainer();
       }
       if (ct != null)
@@ -119,7 +129,15 @@ public class AddXSDElementAction extends XSDBaseAction
         command.setReference(isReference);
         getCommandStack().execute(command);
       }
-      if (group != null)
+      else if (ctGroup != null)
+      {
+        XSDElementDeclaration sel = (XSDElementDeclaration) selection;
+        int index = ctGroup.getContents().indexOf(sel.eContainer());
+        command = new AddXSDElementCommand(getText(), ctGroup, getId(), index);
+        command.setReference(isReference);
+        getCommandStack().execute(command);
+      }
+      else if (group != null)
       {
         command = new AddXSDElementCommand(getText(), group);
         command.setReference(isReference);

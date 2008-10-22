@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -271,8 +271,14 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
   public String[] getActions(Object object)
   {
     List list = new ArrayList();
+
     if (!isGlobal())
-      list.add(AddXSDElementAction.ID);
+    {
+      list.add(BaseSelectionAction.SUBMENU_START_ID + Messages._UI_ACTION_ADD_ELEMENT);
+      list.add(AddXSDElementAction.BEFORE_SELECTED_ID);
+      list.add(AddXSDElementAction.AFTER_SELECTED_ID);
+      list.add(BaseSelectionAction.SUBMENU_END_ID);
+    }
 
     list.add(BaseSelectionAction.SUBMENU_START_ID + Messages._UI_ACTION_SET_TYPE);
     list.add(SetTypeAction.SET_NEW_TYPE_ID);

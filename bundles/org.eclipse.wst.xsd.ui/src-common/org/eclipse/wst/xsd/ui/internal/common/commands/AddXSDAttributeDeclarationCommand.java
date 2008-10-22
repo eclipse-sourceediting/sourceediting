@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,7 +33,12 @@ public class AddXSDAttributeDeclarationCommand extends BaseCommand
   XSDConcreteComponent parent;
   boolean isReference;
   private String nameToAdd;
-
+  // The index of the currently selected item.  If no item is selected, index will be less than 0
+  private int index = -1;
+  // Determines where the attribute should be inserted based on the currently selected attribute.  If no
+  // attribute is selected, use the default behaviour of appending the attribute to the end
+  private String addAttributeLocation;  
+  
   public AddXSDAttributeDeclarationCommand(String label, XSDComplexTypeDefinition xsdComplexTypeDefinition)
   {
     super(label);
@@ -45,7 +50,42 @@ public class AddXSDAttributeDeclarationCommand extends BaseCommand
     super(label);
     this.parent = parent;
   }
+  
+  public AddXSDAttributeDeclarationCommand(String label, XSDConcreteComponent parent, String addAttributeLocation, int index)
+  {
+    super(label);
+    if (parent instanceof XSDComplexTypeDefinition)
+    {
+      this.xsdComplexTypeDefinition = (XSDComplexTypeDefinition) parent;
+    }
+    else
+    {
+      this.parent = parent;
+    }
+    this.addAttributeLocation = addAttributeLocation;
+    this.index = index;
+  }
+  
+  protected int getInsertionIndex()
+  {
+    if (index < 0)
+      return -1;
 
+    if (addAttributeLocation.equals(org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeDeclarationAction.BEFORE_SELECTED_ID))
+    {
+      return index;
+    }
+    else if (addAttributeLocation.equals(org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeDeclarationAction.AFTER_SELECTED_ID))
+    {
+      index++;
+      return index;
+    }
+    else
+    {
+      return -1;
+    }
+  }
+  
   public void execute()
   {
     XSDAttributeDeclaration attribute = XSDFactory.eINSTANCE.createXSDAttributeDeclaration();
@@ -69,7 +109,15 @@ public class AddXSDAttributeDeclarationCommand extends BaseCommand
 
         if (xsdComplexTypeDefinition.getAttributeContents() != null)
         {
-          xsdComplexTypeDefinition.getAttributeContents().add(attributeUse);
+          index = getInsertionIndex();
+          if (index >= 0 && index < xsdComplexTypeDefinition.getAttributeContents().size())
+          {
+            xsdComplexTypeDefinition.getAttributeContents().add(index, attributeUse);
+          }
+          else
+          {
+            xsdComplexTypeDefinition.getAttributeContents().add(attributeUse);
+          }
           formatChild(xsdComplexTypeDefinition.getElement());
         }
       }
@@ -105,7 +153,15 @@ public class AddXSDAttributeDeclarationCommand extends BaseCommand
           attributeUse.setAttributeDeclaration(attribute);
           attributeUse.setContent(attribute);
 
-          ((XSDAttributeGroupDefinition) parent).getResolvedAttributeGroupDefinition().getContents().add(attributeUse);
+          index = getInsertionIndex();
+          if (index >= 0 && index < (((XSDAttributeGroupDefinition) parent).getResolvedAttributeGroupDefinition().getContents().size()))
+          {
+            ((XSDAttributeGroupDefinition) parent).getResolvedAttributeGroupDefinition().getContents().add(index, attributeUse);
+          }
+          else
+          {
+            ((XSDAttributeGroupDefinition) parent).getResolvedAttributeGroupDefinition().getContents().add(attributeUse);
+          }
           formatChild(parent.getElement());
         }
       }
