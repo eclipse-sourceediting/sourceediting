@@ -281,6 +281,7 @@
 			icon="$nl$/icons/xmldoc.gif"
 			contributorClass="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorActionBarContributor"
 			class="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"
+			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
 			id="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart">
 			<contentTypeBinding
 				contentTypeId="org.eclipse.core.runtime.xml" />
