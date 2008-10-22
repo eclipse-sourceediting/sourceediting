@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.CoreException;
 public class TestContentTypeDetectionForXML extends TestContentTypeDetection {
 	private static final String expectedCustomXMLContentType = "org.eclipse.wst.xml.core.xmlsource";
 	
-	private static final String expectedXSLContentType = "org.eclipse.wst.xml.core.xslsource";
+//	private static final String expectedXSLContentType = "org.eclipse.wst.xml.core.xslsource";
 	
 	private static final String expectedXMLContentType = "org.eclipse.core.runtime.xml";
 
@@ -42,10 +42,10 @@ public class TestContentTypeDetectionForXML extends TestContentTypeDetection {
 	public void testFile105() throws CoreException, IOException {
 		doTest(expectedXMLContentType, "testfiles/xml/IllformedNormalNonDefault.xml", null);
 	}
-
-	public void testFile106() throws CoreException, IOException {
-		doTest(expectedXMLContentType, "testfiles/xml/MalformedNoEncoding.xml", null);
-	}
+//  [251659] - XMLContentDescriber no longer returns content types for invalid encodings
+//	public void testFile106() throws CoreException, IOException {
+//		doTest(expectedXMLContentType, "testfiles/xml/MalformedNoEncoding.xml", null);
+//	}
 
 	/**
 	 * This file is illformed in its specified charset
@@ -53,13 +53,14 @@ public class TestContentTypeDetectionForXML extends TestContentTypeDetection {
 	 * @throws CoreException
 	 * @throws IOException
 	 */
-	public void testFile107() throws CoreException, IOException {
-		doTest(expectedXSLContentType, "testfiles/xml/MalformedNoEncoding.xsl", null);
-	}
-
-	public void testFile107P() throws CoreException, IOException {
-		doTestForParent(expectedXMLContentType, "testfiles/xml/MalformedNoEncoding.xsl", null);
-	}
+//  [251659] - XMLContentDescriber no longer returns content types for invalid encodings
+//	public void testFile107() throws CoreException, IOException {
+//		doTest(expectedXSLContentType, "testfiles/xml/MalformedNoEncoding.xsl", null);
+//	}
+//  [251659] - XMLContentDescriber no longer returns content types for invalid encodings
+//	public void testFile107P() throws CoreException, IOException {
+//		doTestForParent(expectedXMLContentType, "testfiles/xml/MalformedNoEncoding.xsl", null);
+//	}
 
 	public void testFile108() throws CoreException, IOException {
 		doTest(expectedXMLContentType, "testfiles/xml/NoEncoding.xml", null);
@@ -81,18 +82,18 @@ public class TestContentTypeDetectionForXML extends TestContentTypeDetection {
 	public void testFile112() throws CoreException, IOException {
 		doTest(expectedXMLContentType, "testfiles/xml/testExtraValidStuff.xml", null);
 	}
-
-	public void testFile113() throws CoreException, IOException {
-		doTest(expectedXMLContentType, "testfiles/xml/testIllFormed.xml", null);
-	}
+//  [251659] - XMLContentDescriber no longer returns content types for invalid encodings
+//	public void testFile113() throws CoreException, IOException {
+//		doTest(expectedXMLContentType, "testfiles/xml/testIllFormed.xml", null);
+//	}
 
 	public void testFile114() throws CoreException, IOException {
 		doTest(expectedXMLContentType, "testfiles/xml/testIllFormed2.xml", null);
 	}
-
-	public void testFile115() throws CoreException, IOException {
-		doTest(expectedXMLContentType, "testfiles/xml/testIllFormed3.xml", java.nio.charset.IllegalCharsetNameException.class);
-	}
+//  [251659] - XMLContentDescriber no longer returns content types for invalid encodings
+//	public void testFile115() throws CoreException, IOException {
+//		doTest(expectedXMLContentType, "testfiles/xml/testIllFormed3.xml", java.nio.charset.IllegalCharsetNameException.class);
+//	}
 
 	public void testFile116() throws CoreException, IOException {
 		doTest(expectedXMLContentType, "testfiles/xml/testIllFormed4.xml", null);
