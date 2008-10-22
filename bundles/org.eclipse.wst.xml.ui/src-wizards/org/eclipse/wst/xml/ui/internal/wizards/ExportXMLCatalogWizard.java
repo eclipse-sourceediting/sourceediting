@@ -81,6 +81,8 @@ public class ExportXMLCatalogWizard extends BasicNewFileResourceWizard implement
 		exportPage = new WizardNewFileCreationPage("XML Catalog Export",  getSelection());
 		exportPage.setTitle(XMLWizardsMessages._UI_DIALOG_XMLCATALOG_EXPORT_TITLE);
 		exportPage.setDescription(XMLWizardsMessages._UI_DIALOG_XMLCATALOG_EXPORT_DESCRIPTION);
+		exportPage.setFileExtension("xml"); //$NON-NLS-1$
+		
 		addPage(exportPage);
 	}
 	
