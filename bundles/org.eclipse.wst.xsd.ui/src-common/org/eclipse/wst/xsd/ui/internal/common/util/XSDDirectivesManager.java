@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.util;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,11 +21,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
+import org.eclipse.wst.xsd.ui.internal.text.XSDModelAdapter;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDImport;
 import org.eclipse.xsd.XSDInclude;
@@ -777,5 +783,33 @@ public class XSDDirectivesManager
       }
     }
     return false;
+  }
+  
+  /**
+   * 
+   * @param iFile
+   * @param checkPreference - if false, ignore checking the preference setting 
+   * @throws CoreException
+   * @throws IOException
+   */
+  
+  public static void removeUnusedXSDImports(IFile iFile, boolean checkPreference) throws CoreException, IOException
+  {
+    if (!checkPreference || XSDEditorPlugin.getDefault().getRemoveImportSetting())
+    {
+      IDOMModel model = (IDOMModel) StructuredModelManager.getModelManager().getModelForEdit(iFile);
+      if (model != null)
+      {
+        Document document = model.getDocument();
+        if (document != null)
+        {
+          XSDSchema schema = XSDModelAdapter.lookupOrCreateSchema(document);
+          XSDDirectivesManager mgr = new XSDDirectivesManager();
+          mgr.performRemoval(schema);
+          mgr.cleanup();
+          model.save();
+        }
+      }
+    }
   }
 }
