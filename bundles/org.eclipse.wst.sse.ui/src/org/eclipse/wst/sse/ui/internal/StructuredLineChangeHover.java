@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Shell;
  * so that html in the diff file (displayed in hover) isn't presented as style
  * (bold, italic, colors, etc...)
  * 
- * @author pavery
+ * @deprecated
  */
 public class StructuredLineChangeHover extends LineChangeHover {
 	/*
