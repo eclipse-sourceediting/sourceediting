@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -86,13 +86,28 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
   CommandStack commandStack;
   XSDFacetSection facetSection;
 
+  /**
+   * @deprecated
+   * @param composite
+   * @param factory
+   * @param feature
+   * @param input
+   * @param facetSection
+   */
   public SpecificConstraintsWidget(Composite composite, TabbedPropertySheetWidgetFactory factory, XSDFeature feature, XSDSimpleTypeDefinition input, XSDFacetSection facetSection)
+  {
+    this(composite, factory, feature, input, facetSection, ENUMERATION);
+  }
+
+  public SpecificConstraintsWidget(Composite composite, TabbedPropertySheetWidgetFactory factory, XSDFeature feature, XSDSimpleTypeDefinition input, XSDFacetSection facetSection, int kind)
   {
     this.factory = factory;
     this.input = input;
     this.composite = composite;
     this.feature = feature;
     this.facetSection = facetSection;
+    this.kind = kind;
+    
     createControl(composite);
   }
 
@@ -182,7 +197,6 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
     editButton.setLayoutData(data);
-    editButton.setEnabled(false);
     editButton.addSelectionListener(this);
     
     
@@ -192,10 +206,9 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
     data.grabExcessHorizontalSpace = true;
     data.horizontalAlignment = GridData.FILL;
     deleteButton.setLayoutData(data);
-    deleteButton.setEnabled(false);
     deleteButton.addSelectionListener(this);
 
-
+    setButtonStates(kind);
     return composite;
   }
 
@@ -223,6 +236,63 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
 //    constraintsTableViewer.refresh();
   }
 
+  public int getConstraintKind()
+  {
+	  return this.kind;
+  }
+  
+  protected void setButtonStates(int kind)
+  {
+    boolean add, addUsing, delete, edit;
+
+    boolean listHasItems = false;
+    StructuredSelection selection = (StructuredSelection) constraintsTableViewer.getSelection();
+    if (selection != null)
+    {
+      if (selection.toList().size() > 0)
+      {
+        listHasItems = true;
+      }
+    }
+
+    if (kind == ENUMERATION)
+    {
+      add = true;
+      addUsing = true;
+      edit = false;
+    }
+    else if (kind == PATTERN)
+    {
+      add = false;
+      addUsing = true;
+      edit = listHasItems;
+    }
+    else
+    {
+      add = true;
+      addUsing = true;
+      edit = true;
+    }
+    delete = listHasItems;
+
+    if (!addButton.isDisposed())
+    {
+      addButton.setEnabled(add);
+    }
+    if (!addUsingDialogButton.isDisposed())
+    {
+      addUsingDialogButton.setEnabled(addUsing);
+    }
+    if (!deleteButton.isDisposed())
+    {
+      deleteButton.setEnabled(delete);
+    }
+    if (!editButton.isDisposed())
+    {
+      editButton.setEnabled(edit);
+    }
+  }  
+  
   public void widgetSelected(SelectionEvent e)
   {
     XSDSimpleTypeDefinition st = input;
@@ -421,12 +491,6 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
         }
         commandStack.execute(compoundCommand);
         constraintsTableViewer.refresh();
-
-        if (constraintsTableViewer.getTable().getItemCount() == 0)
-        {
-          editButton.setEnabled(false);
-          deleteButton.setEnabled(false);
-        }
       }
     }
     else if (e.widget == editButton)
@@ -464,20 +528,8 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
         }
       }
     }
-    else if (e.widget == constraintsTableViewer.getTable())
-    {
-      StructuredSelection selection = (StructuredSelection) constraintsTableViewer.getSelection();
-      if (selection.getFirstElement() != null)
-      {
-        editButton.setEnabled(true);
-        deleteButton.setEnabled(true);
-      }
-      else
-      {
-        editButton.setEnabled(false);
-        deleteButton.setEnabled(false);
-      }
-    }
+    
+    setButtonStates(this.kind);
   }
   
   public void widgetDefaultSelected(SelectionEvent e)
@@ -489,12 +541,14 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
   public void setConstraintKind(int kind)
   {
     this.kind = kind;
+    setButtonStates(kind);
     constraintsTableViewer.setInput(input);
     constraintsTableViewer.refresh();
   }
   
   public void doModify(Object element, String property, Object value)
   {
+    setButtonStates(this.kind);
     if (element instanceof TableItem && (value != null))
     {
       TableItem item = (TableItem) element;

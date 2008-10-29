@@ -89,6 +89,8 @@ public class XSDFacetSection extends AbstractSection
 
   SpecificConstraintsWidget constraintsWidget;
 
+  private int constraintKind = SpecificConstraintsWidget.ENUMERATION;
+  
   public XSDFacetSection()
   {
     super();
@@ -244,7 +246,7 @@ public class XSDFacetSection extends AbstractSection
     PlatformUI.getWorkbench().getHelpSystem().setHelp(usePatternsButton,
       		XSDEditorCSHelpIds.CONSTRAINTS_TAB__PATTERNS);    
     
-    constraintsWidget = new SpecificConstraintsWidget(specificValueConstraintsGroup, factory, (input instanceof XSDFeature) ? (XSDFeature)input : null, xsdSimpleTypeDefinition, this);
+    constraintsWidget = new SpecificConstraintsWidget(specificValueConstraintsGroup, factory, (input instanceof XSDFeature) ? (XSDFeature)input : null, xsdSimpleTypeDefinition, this, constraintKind);
     data = new GridData();
     data.grabExcessHorizontalSpace = true;
     data.grabExcessVerticalSpace = true;
@@ -430,14 +432,18 @@ public class XSDFacetSection extends AbstractSection
         refreshValueLengths();
     }
 
-    if (xsdSimpleTypeDefinition.getEnumerationFacets().size() > 0) 
+    if ((xsdSimpleTypeDefinition.getEnumerationFacets().size() > 0 
+    		&& constraintsWidget.getConstraintKind() == SpecificConstraintsWidget.ENUMERATION)
+    		|| xsdSimpleTypeDefinition.getPatternFacets().size() == 0) 
     {
       usePatternsButton.setSelection(false);
       useEnumerationsButton.setSelection(true);
       constraintsWidget.setConstraintKind(SpecificConstraintsWidget.ENUMERATION);
       constraintsWidget.addButton.setEnabled(true);
     }
-    else if (xsdSimpleTypeDefinition.getPatternFacets().size() > 0)
+    else if ((xsdSimpleTypeDefinition.getPatternFacets().size() > 0
+    		&& constraintsWidget.getConstraintKind() == SpecificConstraintsWidget.PATTERN)
+    		|| xsdSimpleTypeDefinition.getEnumerationFacets().size() == 0)
     {
       usePatternsButton.setSelection(true);
       useEnumerationsButton.setSelection(false);
@@ -451,6 +457,7 @@ public class XSDFacetSection extends AbstractSection
       constraintsWidget.setConstraintKind(SpecificConstraintsWidget.ENUMERATION);
       constraintsWidget.addButton.setEnabled(true);
     }
+    constraintKind = constraintsWidget.getConstraintKind();
     constraintsWidget.setInput(xsdSimpleTypeDefinition);
 
     setWidgetsEnabled(isSimpleTypeRestriction && !isReadOnly);
@@ -473,7 +480,14 @@ public class XSDFacetSection extends AbstractSection
       maximumInclusiveCheckbox.setEnabled(isEnabled);
     if (constraintsWidget != null && !constraintsWidget.getControl().isDisposed())
     {
-      constraintsWidget.addButton.setEnabled(isEnabled);
+      if(constraintsWidget.getConstraintKind() == SpecificConstraintsWidget.PATTERN)
+      {
+        constraintsWidget.addButton.setEnabled(false);  
+      }
+      else 
+      {
+        constraintsWidget.addButton.setEnabled(isEnabled);
+      }      
       constraintsWidget.addUsingDialogButton.setEnabled(isEnabled);
     }
   }
@@ -649,7 +663,6 @@ public class XSDFacetSection extends AbstractSection
     {
       currentMaxExclusive = maxExclusiveFacet.getLexicalValue();
     }
-    
     
     String currentLength = null, currentMin = null, currentMax = null;
     if (lengthFacet != null)
@@ -982,13 +995,19 @@ public class XSDFacetSection extends AbstractSection
     {
       constraintsWidget.addButton.setEnabled(true);
       if (isListenerEnabled())
+      {
         constraintsWidget.setConstraintKind(SpecificConstraintsWidget.ENUMERATION);
+        constraintKind = constraintsWidget.getConstraintKind();
+      }
     }
     else if (e.widget == usePatternsButton)
     {
       constraintsWidget.addButton.setEnabled(false);
       if (isListenerEnabled())
+      {
         constraintsWidget.setConstraintKind(SpecificConstraintsWidget.PATTERN);
+        constraintKind = constraintsWidget.getConstraintKind();
+      }
     }
   }
   
