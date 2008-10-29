@@ -35,7 +35,7 @@ public class TaglibClassLoader extends URLClassLoader {
 	}
 
 	public void addDirectory(String dirPath) {
-		addFile(dirPath);
+		addFile(dirPath + "/"); //$NON-NLS-1$
 	}
 
 	private void addFile(String filename) {
@@ -56,7 +56,7 @@ public class TaglibClassLoader extends URLClassLoader {
 
 	public void addPath(IPath resourcePath) {
 		try {
-			URL url = new URL(RESOURCE + resourcePath.toString());
+			URL url = new URL(RESOURCE + resourcePath.toString() + "/"); //$NON-NLS-1$
 			super.addURL(url);
 			if (DEBUG)
 				System.out.println("added: [" + url + "] to classpath"); //$NON-NLS-1$ //$NON-NLS-2$

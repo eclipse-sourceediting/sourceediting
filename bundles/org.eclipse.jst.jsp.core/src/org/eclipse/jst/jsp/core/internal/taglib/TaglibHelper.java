@@ -451,7 +451,7 @@ public class TaglibHelper {
 
 		final int end;
 		if (customTag.getNumberOfRegions() > 3) {
-			end = customTag.getTextEndOffset(customTag.getRegions().get(customTag.getNumberOfRegions() - 2));
+			end = customTag.getTextEndOffset(customTag.getRegions().get(customTag.getNumberOfRegions() - 2)) - 1;
 		}
 		else if (customTag.getNumberOfRegions() > 1) {
 			end = customTag.getTextEndOffset(customTag.getRegions().get(1)) - 1;
