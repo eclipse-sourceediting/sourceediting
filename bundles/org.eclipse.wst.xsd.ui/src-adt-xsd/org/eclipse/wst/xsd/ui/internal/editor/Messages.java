@@ -94,6 +94,8 @@ public class Messages extends NLS
   public static String _UI_LABEL_NAME_SEARCH_FILTER_TEXT;
   public static String _UI_LABEL_ELEMENTS_COLON;
   public static String _UI_LABEL_ATTRIBUTES_COLON;
+  public static String _UI_LABEL_ATTRIBUTES_PROCESSCONTENTS;
+  public static String _UI_LABEL_ATTRIBUTES_NAMESPACE;
   public static String _UI_LABEL_SET_ELEMENT_REFERENCE;
   public static String _UI_LABEL_SET_ATTRIBUTE_REFERENCE;
   public static String _UI_LABEL_TYPES_COLON;

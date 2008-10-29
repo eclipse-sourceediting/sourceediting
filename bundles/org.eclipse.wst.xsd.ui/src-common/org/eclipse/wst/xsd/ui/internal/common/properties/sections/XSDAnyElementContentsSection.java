@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,7 +26,6 @@ import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDProcessContents;
 import org.eclipse.xsd.XSDWildcard;
-import org.eclipse.xsd.util.XSDConstants;
 
 public class XSDAnyElementContentsSection extends MultiplicitySection
 {
@@ -63,7 +62,7 @@ public class XSDAnyElementContentsSection extends MultiplicitySection
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
 
-    CLabel namespaceLabel = getWidgetFactory().createCLabel(composite, XSDConstants.NAMESPACE_ATTRIBUTE);
+    CLabel namespaceLabel = getWidgetFactory().createCLabel(composite, Messages._UI_LABEL_ATTRIBUTES_NAMESPACE);
     namespaceLabel.setLayoutData(data);
 
     namespaceCombo = getWidgetFactory().createCCombo(composite, SWT.FLAT);
@@ -77,7 +76,7 @@ public class XSDAnyElementContentsSection extends MultiplicitySection
     PlatformUI.getWorkbench().getHelpSystem().setHelp(namespaceCombo,
     		XSDEditorCSHelpIds.GENERAL_TAB__ANYELEMENT__NAMESPACE);
 
-    CLabel processContentsLabel = getWidgetFactory().createCLabel(composite, XSDConstants.PROCESSCONTENTS_ATTRIBUTE);
+    CLabel processContentsLabel = getWidgetFactory().createCLabel(composite, Messages._UI_LABEL_ATTRIBUTES_PROCESSCONTENTS);
     data = new GridData();
     data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
     data.grabExcessHorizontalSpace = false;
