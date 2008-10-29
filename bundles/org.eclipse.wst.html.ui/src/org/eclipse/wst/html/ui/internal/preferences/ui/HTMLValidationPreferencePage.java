@@ -280,9 +280,8 @@ public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage
 	 * @see org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractSettingsPage#performOk()
 	 */
 	public boolean performOk() {
-		boolean result = super.performOk();
 		storeValues();
-		return result;
+		return super.performOk();
 	}
 	
 	/*
