@@ -197,6 +197,12 @@
 	    <input type="org.eclipse.xsd.XSDSimpleTypeDefinition">
 	    </input>
 	 </propertySection>
+	 <propertySection tab="property.tab.advanced" 
+        class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDSimpleTypeAdvancedSection"  
+	 	id="prop.section.XSDSimpleTypeAdvancedSection">
+	    <input type="org.eclipse.xsd.XSDSimpleTypeDefinition">
+	    </input>
+	 </propertySection>
 	 <propertySection tab="property.tab.typeconstraints" 
         class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDFacetSection"
         filter="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDFacetSectionFilter"
