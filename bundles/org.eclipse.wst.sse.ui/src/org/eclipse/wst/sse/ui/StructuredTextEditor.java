@@ -39,12 +39,10 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.ui.actions.IToggleBreakpointsTarget;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.text.BadLocationException;
@@ -113,9 +111,7 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextService;
-import org.eclipse.ui.editors.text.DefaultEncodingSupport;
 import org.eclipse.ui.editors.text.EditorsUI;
-import org.eclipse.ui.editors.text.IEncodingSupport;
 import org.eclipse.ui.editors.text.ITextEditorHelpContextIds;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.handlers.IHandlerService;
@@ -159,7 +155,6 @@ import org.eclipse.wst.sse.ui.internal.ReadOnlyAwareDropTargetAdapter;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StorageModelProvider;
-import org.eclipse.wst.sse.ui.internal.StructuredLineChangeHover;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.UnknownContentTypeDialog;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
@@ -1184,48 +1179,9 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
-	private void abstractTextEditorContextMenuAboutToShow(IMenuManager menu) {
-		menu.add(new Separator(ITextEditorActionConstants.GROUP_UNDO));
-		menu.add(new GroupMarker(ITextEditorActionConstants.GROUP_SAVE));
-		menu.add(new Separator(ITextEditorActionConstants.GROUP_COPY));
-		menu.add(new Separator(ITextEditorActionConstants.GROUP_PRINT));
-		menu.add(new Separator(ITextEditorActionConstants.GROUP_EDIT));
-		menu.add(new Separator(ITextEditorActionConstants.GROUP_FIND));
-		menu.add(new Separator(IWorkbenchActionConstants.GROUP_ADD));
-		menu.add(new Separator(ITextEditorActionConstants.GROUP_REST));
-		menu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-
-		if (isEditable()) {
-			addAction(menu, ITextEditorActionConstants.GROUP_UNDO, ITextEditorActionConstants.UNDO);
-			addAction(menu, ITextEditorActionConstants.GROUP_UNDO, ITextEditorActionConstants.REVERT_TO_SAVED);
-			addAction(menu, ITextEditorActionConstants.GROUP_SAVE, ITextEditorActionConstants.SAVE);
-			addAction(menu, ITextEditorActionConstants.GROUP_COPY, ITextEditorActionConstants.CUT);
-			addAction(menu, ITextEditorActionConstants.GROUP_COPY, ITextEditorActionConstants.COPY);
-			addAction(menu, ITextEditorActionConstants.GROUP_COPY, ITextEditorActionConstants.PASTE);
-		}
-		else {
-			addAction(menu, ITextEditorActionConstants.GROUP_COPY, ITextEditorActionConstants.COPY);
-		}
-
-		// from AbstractDecoratedTextEditor
-		IAction preferencesAction = getAction(ITextEditorActionConstants.CONTEXT_PREFERENCES);
-		menu.appendToGroup(IWorkbenchActionConstants.MB_ADDITIONS, new Separator(ITextEditorActionConstants.GROUP_SETTINGS));
-		menu.appendToGroup(ITextEditorActionConstants.GROUP_SETTINGS, preferencesAction);
-	}
-
 	protected void addContextMenuActions(IMenuManager menu) {
 		// Only offer actions that affect the text if the viewer allows
 		// modification and supports any of these operations
-//		IAction formatAll = getAction(StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_DOCUMENT);
-//		IAction formatSelection = getAction(StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_ACTIVE_ELEMENTS);
-//		IAction cleanupAll = getAction(StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT);
-//		boolean enableFormatMenu = (formatAll != null && formatAll.isEnabled()) || (formatSelection != null && formatSelection.isEnabled()) || (cleanupAll != null && cleanupAll.isEnabled());
-//
-//		if (getSourceViewer().isEditable() && enableFormatMenu) {
-//			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_DOCUMENT);
-//			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_ACTIVE_ELEMENTS);
-//			addAction(menu, ITextEditorActionConstants.GROUP_EDIT, StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT);
-//		}
 
 		// Some Design editors (DTD) rely on this view for their own uses
 		menu.appendToGroup(IWorkbenchActionConstants.GROUP_ADD, fShowPropertiesAction);
@@ -1280,17 +1236,6 @@ public class StructuredTextEditor extends TextEditor {
 		}
 		showBusy(true);
 	}
-
-	// private void addFindOccurrencesAction(String matchType, String
-	// matchText, IMenuManager menu) {
-	//
-	// AbstractFindOccurrencesAction action = new
-	// AbstractFindOccurrencesAction(getFileInEditor(), new
-	// SearchUIConfiguration(), (IStructuredDocument) getDocument(),
-	// matchType, matchText, getProgressMonitor());
-	// action.setText("Occurrences of \"" + matchText + "\" in File");
-	// menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, action);
-	// }
 
 	/*
 	 * (non-Javadoc)
@@ -1518,7 +1463,7 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	protected LineChangeHover createChangeHover() {
-		return new StructuredLineChangeHover();
+		return super.createChangeHover(); //new StructuredLineChangeHover();
 	}
 
 	protected ICharacterPairMatcher createCharacterPairMatcher() {
@@ -1529,7 +1474,7 @@ public class StructuredTextEditor extends TextEditor {
 			matcher = (ICharacterPairMatcher) builder.getConfiguration(DocumentRegionEdgeMatcher.ID, ids[i]);
 		}
 		if (matcher == null) {
-			matcher = new DefaultCharacterPairMatcher(new char[]{'(', ')', '{', '}', '[', ']', '<', '>'});
+			matcher = new DefaultCharacterPairMatcher(new char[]{'(', ')', '{', '}', '[', ']', '<', '>', '"', '"', '\'', '\''});
 		}
 		return matcher;
 	}
@@ -2008,19 +1953,13 @@ public class StructuredTextEditor extends TextEditor {
 	 *            the menu
 	 */
 	public void editorContextMenuAboutToShow(IMenuManager menu) {
-		// To be consistant with the Java Editor, we want
-		// to remove
-		// ShiftRight and ShiftLeft from the context menu.
-		//
-		// ShiftRight and ShiftLeft were added in the super
-		// implemenation of
-		// this method. We want to skip it and call
-		// AbstractTextEditor's
-		// implementation directly. The easiest way is to
-		// copy the method here.
-
-		// super.editorContextMenuAboutToShow(menu);
-		abstractTextEditorContextMenuAboutToShow(menu);
+		/*
+		 * To be consistant with the Java Editor, we want to remove ShiftRight
+		 * and ShiftLeft from the context menu.
+		 */
+		super.editorContextMenuAboutToShow(menu);
+		menu.remove(ITextEditorActionConstants.SHIFT_LEFT);
+		menu.remove(ITextEditorActionConstants.SHIFT_RIGHT);
 
 		addContextMenuActions(menu);
 		addExtendedContextMenuActions(menu);
@@ -2138,12 +2077,12 @@ public class StructuredTextEditor extends TextEditor {
 			result = ToggleBreakpointsTarget.getInstance();
 		}
 		else if (IShowInTargetList.class.equals(required)) {
-			return new ShowInTargetListAdapter();
+			result = new ShowInTargetListAdapter();
 		}
 		else if (SelectionHistory.class.equals(required)) {
 			if (fSelectionHistory == null)
 				fSelectionHistory = new SelectionHistory(this);
-			return fSelectionHistory;
+			result = fSelectionHistory;
 		}
 		else {
 			if (result == null && internalModel != null) {
@@ -2592,8 +2531,7 @@ public class StructuredTextEditor extends TextEditor {
 	 */
 	protected void initializeEditor() {
 		super.initializeEditor();
-		// FIXME: here's where to add back in our custom encoding support
-		fEncodingSupport = null;
+
 		setPreferenceStore(createCombinedPreferenceStore());
 
 		setRangeIndicator(new DefaultRangeIndicator());
@@ -2670,53 +2608,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * @see org.eclipse.ui.editors.text.TextEditor#installEncodingSupport()
 	 */
 	protected void installEncodingSupport() {
-		fEncodingSupport = new DefaultEncodingSupport() {
-			IEncodingSupport getDelegate() {
-				IEncodingSupport support = null;
-
-				String[] targets = getConfigurationPoints();
-				ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
-				for (int i = 0; support == null && i < targets.length; i++) {
-					support = (IEncodingSupport) builder.getConfiguration(IEncodingSupport.class.getName(), targets[i]);
-				}
-				
-				return support;
-			}
-			/* (non-Javadoc)
-			 * @see org.eclipse.ui.editors.text.DefaultEncodingSupport#getDefaultEncoding()
-			 */
-			public String getDefaultEncoding() {
-				IEncodingSupport delegate = getDelegate();
-				if (delegate != null) {
-					return delegate.getDefaultEncoding();
-				}
-				
-				return super.getDefaultEncoding();
-			}
-			/* (non-Javadoc)
-			 * @see org.eclipse.ui.editors.text.DefaultEncodingSupport#getEncoding()
-			 */
-			public String getEncoding() {
-				IEncodingSupport delegate = getDelegate();
-				if (delegate != null) {
-					return delegate.getEncoding();
-				}
-				
-				return super.getEncoding();
-			}
-			
-			/* (non-Javadoc)
-			 * @see org.eclipse.ui.editors.text.DefaultEncodingSupport#setEncoding(java.lang.String, boolean)
-			 */
-			protected void setEncoding(String encoding, boolean overwrite) {
-				super.setEncoding(encoding, overwrite);
-				IEncodingSupport delegate = getDelegate();
-				
-				if(delegate != null && overwrite) {
-					delegate.setEncoding(encoding);
-				}
-			}
-		};
+		fEncodingSupport = new EncodingSupport(getConfigurationPoints());
 		fEncodingSupport.initialize(this);
 	}
 
@@ -3104,6 +2996,10 @@ public class StructuredTextEditor extends TextEditor {
 
 		if (fStructuredSelectionProvider != null) {
 			fStructuredSelectionProvider.setDocument(getInternalModel().getStructuredDocument());
+		}
+		
+		if (fEncodingSupport != null && fEncodingSupport instanceof EncodingSupport) {
+			((EncodingSupport) fEncodingSupport).reinitialize(getConfigurationPoints());
 		}
 
 		createModelDependentFields();
