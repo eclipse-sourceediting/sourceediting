@@ -1598,10 +1598,10 @@ public class StructuredTextEditor extends TextEditor {
 			allIds.add(IPageLayout.ID_OUTLINE);
 		}
 		// Copied from org.eclipse.ui.navigator.resources.ProjectExplorer.VIEW_ID
-		String PE_VIEW_ID = "org.eclipse.ui.navigator.ProjectExplorer"; //$NON-NLS-1$
-		if (!allIds.contains(PE_VIEW_ID)) {
-			allIds.add(PE_VIEW_ID);
-		}
+//		String PE_VIEW_ID = "org.eclipse.ui.navigator.ProjectExplorer"; //$NON-NLS-1$
+//		if (!allIds.contains(PE_VIEW_ID)) {
+//			allIds.add(PE_VIEW_ID);
+//		}
 		return (String[]) allIds.toArray(new String[0]);
 	}
 
