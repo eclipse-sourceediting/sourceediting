@@ -59,17 +59,32 @@ public class DefaultXMLPartitionFormatter {
 	}
 
 	static private final String PRESERVE = "preserve";//$NON-NLS-1$
+	static private final String COLLAPSE = "collapse";//$NON-NLS-1$
+	static private final String REPLACE = "replace";//$NON-NLS-1$
 	static private final String PRESERVE_QUOTED = "\"preserve\"";//$NON-NLS-1$
 	static private final String XML_SPACE = "xml:space";//$NON-NLS-1$
 	static private final String XSL_NAMESPACE = "http://www.w3.org/1999/XSL/Transform"; //$NON-NLS-1$
 	static private final String XSL_ATTRIBUTE = "attribute"; //$NON-NLS-1$
 	static private final String XSL_TEXT = "text"; //$NON-NLS-1$
 	static private final String SPACE = " "; //$NON-NLS-1$
-	static private final String STRING = "string"; //$NON-NLS-1$
+	static private final String PROPERTY_WHITESPACE_FACET = "org.eclipse.wst.xsd.cm.properties/whitespace"; //$NON-NLS-1$
 
 	private XMLFormattingPreferences fPreferences = null;
 	private IProgressMonitor fProgressMonitor;
 
+	private int replaceSpaces(TextEdit textEdit, int spaceStartOffset, int availableLineWidth, String whitespaceRun) {
+		StringBuffer buff = new StringBuffer(whitespaceRun);
+		for(int i = 0; i < buff.length(); i++) {
+			buff.setCharAt(i, ' '); //$NON-NLS-1$
+		}
+		String replacementString = buff.toString();
+		if (!replacementString.equals(whitespaceRun)) {
+			ReplaceEdit replaceEdit = new ReplaceEdit(spaceStartOffset, whitespaceRun.length(), replacementString);
+			textEdit.addChild(replaceEdit);
+		}
+		return availableLineWidth;
+	}
+	
 	private int collapseSpaces(TextEdit textEdit, int spaceStartOffset, int availableLineWidth, String whitespaceRun) {
 		// prefer to use use existing whitespace
 		int existingWhitespaceOffset = whitespaceRun.indexOf(' ');
@@ -700,7 +715,15 @@ public class DefaultXMLPartitionFormatter {
 					}
 					else {
 						// just collapse spaces, but adjust for any indenting that may result from preserving line delimiters
-						availableLineWidth = collapseAndIndent(textEdit, startOffset, availableLineWidth, indentLevel, whitespaceRun, currentRegion);
+						if (whitespaceStart == 0 && whitespaceMode == XMLFormattingConstraints.IGNOREANDTRIM) {
+							// if ignore, trim
+							DeleteEdit deleteTrailing = new DeleteEdit(startOffset, whitespaceRun.length());
+							textEdit.addChild(deleteTrailing);
+						}
+						else if(whitespaceMode == XMLFormattingConstraints.REPLACE)
+							availableLineWidth = replaceSpaces(textEdit, startOffset, availableLineWidth, whitespaceRun);
+						else
+							availableLineWidth = collapseAndIndent(textEdit, startOffset, availableLineWidth, indentLevel, whitespaceRun, currentRegion);
 					}
 
 					fullTextOffset += characterRunLength;
@@ -708,7 +731,14 @@ public class DefaultXMLPartitionFormatter {
 				else {
 					// handle trailing whitespace
 					int whitespaceOffset = currentRegion.getStartOffset() + whitespaceStart;
-					if(getFormattingPreferences().getClearAllBlankLines()) {
+					if (whitespaceMode == XMLFormattingConstraints.REPLACE)
+						availableLineWidth = replaceSpaces(textEdit, whitespaceOffset, availableLineWidth, whitespaceRun);
+					else if (whitespaceMode == XMLFormattingConstraints.IGNOREANDTRIM) {
+						// always trim
+						DeleteEdit deleteTrailing = new DeleteEdit(whitespaceOffset, whitespaceRun.length());
+						textEdit.addChild(deleteTrailing);
+					}
+					else if(getFormattingPreferences().getClearAllBlankLines()) {
 						if (whitespaceMode == XMLFormattingConstraints.IGNORE) {
 							// if ignore, trim
 							DeleteEdit deleteTrailing = new DeleteEdit(whitespaceOffset, whitespaceRun.length());
@@ -731,7 +761,7 @@ public class DefaultXMLPartitionFormatter {
 					// indent if word is too long or forcing initial
 					// indent
 					availableLineWidth = availableLineWidth - characterRunLength;
-					if (whitespaceMode == XMLFormattingConstraints.IGNORE && (forceInitialIndent || (availableLineWidth <= 0))) {
+					if ((whitespaceMode == XMLFormattingConstraints.IGNORE || whitespaceMode == XMLFormattingConstraints.IGNOREANDTRIM) && (forceInitialIndent || (availableLineWidth <= 0))) {
 						// indent if not already indented
 						availableLineWidth = indentIfNotAlreadyIndented(textEdit, currentRegion, indentLevel, currentRegion.getStartOffset(), whitespaceRun);
 						// remember to subtract word length
@@ -771,8 +801,8 @@ public class DefaultXMLPartitionFormatter {
 
 				if (indentStrategy == XMLFormattingConstraints.INLINE) {
 					// if was inlining, need to check if out of available line
-					// width
-					if (availableLineWidth < 0) {
+					// width - Whitespace may have been corrected in the text content
+					if (availableLineWidth < 0 && whitespaceStrategy == XMLFormattingConstraints.IGNORE) {
 						// need to deindent if possible
 						int lineWidth = indentIfPossible(textEdit, constraints, currentDocumentRegion, previousDocumentRegion, whitespaceStrategy, indentStrategy, false);
 						// update available line width
@@ -1190,7 +1220,7 @@ public class DefaultXMLPartitionFormatter {
 					String existingDelimiters = extractLineDelimiters(whitespaceRun, currentRegion);
 					if(existingDelimiters != null && existingDelimiters.length() > 0) {
 						String formatted = existingDelimiters + indentString;
-						// Don't perform a replace if the formatted string is the same as the exisiting whitespaceRun
+						// Don't perform a replace if the formatted string is the same as the existing whitespaceRun
 						if(!formatted.equals(whitespaceRun))
 							indentation = new ReplaceEdit(indentStartOffset, whitespaceRun.length(), formatted);
 					}
@@ -1234,7 +1264,7 @@ public class DefaultXMLPartitionFormatter {
 		String previousRegionFullText = null;
 		String previousRegionType = null;
 
-		if (whitespaceStrategy == XMLFormattingConstraints.IGNORE) {
+		if ((whitespaceStrategy == XMLFormattingConstraints.IGNORE) || whitespaceStrategy == XMLFormattingConstraints.IGNOREANDTRIM) {
 			// if ignoring, need to check if previous region was cdata
 			previousRegionType = previousDocumentRegion.getType();
 			if (previousRegionType == DOMRegionContext.XML_CDATA_TEXT)
@@ -1496,7 +1526,20 @@ public class DefaultXMLPartitionFormatter {
 							// follow whitespace strategy preference for
 							// pcdata content
 							int contentType = elementDeclaration.getContentType();
-							if (contentType == CMElementDeclaration.PCDATA && parentConstraints != null && !XMLFormattingConstraints.PRESERVE.equals(parentConstraints.getWhitespaceStrategy())) {
+							
+							String facetValue = null;
+							if(elementDeclaration.getDataType() != null)
+								facetValue = (String) elementDeclaration.getDataType().getProperty(PROPERTY_WHITESPACE_FACET);
+							if(facetValue != null) {
+								if(PRESERVE.equals(facetValue))
+									childConstraints.setWhitespaceStrategy(XMLFormattingConstraints.PRESERVE);
+								// For XSD types, "collapse" corresponds to the IGNOREANDTRIM strategy
+								else if(COLLAPSE.equals(facetValue))
+									childConstraints.setWhitespaceStrategy(XMLFormattingConstraints.IGNOREANDTRIM);
+								else if(REPLACE.equals(facetValue))
+									childConstraints.setWhitespaceStrategy(XMLFormattingConstraints.REPLACE);
+							}
+							else if (contentType == CMElementDeclaration.PCDATA && parentConstraints != null && !XMLFormattingConstraints.PRESERVE.equals(parentConstraints.getWhitespaceStrategy())) {
 								childConstraints.setWhitespaceStrategy(preferences.getPCDataWhitespaceStrategy());
 							}
 							else if (contentType == CMElementDeclaration.ELEMENT && parentConstraints != null && !XMLFormattingConstraints.PRESERVE.equals(parentConstraints.getWhitespaceStrategy())) {
@@ -1506,58 +1549,53 @@ public class DefaultXMLPartitionFormatter {
 								childConstraints.setIsIndentStrategyAHint(true);
 							}
 							else {
-								CMDataType dataType = elementDeclaration.getDataType();
-								if (dataType != null && STRING.equals(dataType.getDataTypeName()))
-									childConstraints.setWhitespaceStrategy(XMLFormattingConstraints.PRESERVE);
-								else {
-									// look for xml:space in content model
-									CMNamedNodeMap cmAttributes = elementDeclaration.getAttributes();
+								// look for xml:space in content model
+								CMNamedNodeMap cmAttributes = elementDeclaration.getAttributes();
 
-									CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(cmAttributes);
-										List nodes = ModelQueryUtil.getModelQuery(currentNode.getOwnerDocument()).getAvailableContent((Element) currentNode, elementDeclaration, ModelQuery.INCLUDE_ATTRIBUTES);
-										for (int k = 0; k < nodes.size(); k++) {
-											CMNode cmnode = (CMNode) nodes.get(k);
-											if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
-												allAttributes.put(cmnode);
-											}
-										}
-									cmAttributes = allAttributes;
-									
-									// Check implied values from the DTD way.
-									CMAttributeDeclaration attributeDeclaration = (CMAttributeDeclaration) cmAttributes.getNamedItem(XML_SPACE);
-									if (attributeDeclaration != null) {
-										// CMAttributeDeclaration found, check
-										// it
-										// out.
-										
-										//BUG214516/196544 - Fixed NPE that was caused by an attr having
-										// a null attr type
-										String defaultValue = null;
-										CMDataType attrType = attributeDeclaration.getAttrType();
-										if(attrType != null) {
-											if((attrType.getImpliedValueKind() != CMDataType.IMPLIED_VALUE_NONE) && attrType.getImpliedValue() != null)
-												defaultValue = attrType.getImpliedValue();
-											else if ((attrType.getEnumeratedValues() != null) && (attrType.getEnumeratedValues().length > 0)) {
-												defaultValue = attrType.getEnumeratedValues()[0];
-											}
-										}
-										
-										// xml:space="preserve" means preserve
-										// space,
-										// everything else means back to
-										// default.
-										if(PRESERVE.equals(defaultValue))
-											childConstraints.setWhitespaceStrategy(XMLFormattingConstraints.PRESERVE);
-										else
-											childConstraints.setWhitespaceStrategy(XMLFormattingConstraints.DEFAULT);
+								CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(cmAttributes);
+								List nodes = ModelQueryUtil.getModelQuery(currentNode.getOwnerDocument()).getAvailableContent((Element) currentNode, elementDeclaration, ModelQuery.INCLUDE_ATTRIBUTES);
+								for (int k = 0; k < nodes.size(); k++) {
+									CMNode cmnode = (CMNode) nodes.get(k);
+									if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
+										allAttributes.put(cmnode);
 									}
-									// If the node has no attributes, inherit the parents whitespace strategy
-									else {
-										if(parentConstraints != null)
-											childConstraints.setWhitespaceStrategy(parentConstraints.getWhitespaceStrategy());
-										else
-											childConstraints.setWhitespaceStrategy(null);
+								}
+								cmAttributes = allAttributes;
+
+								// Check implied values from the DTD way.
+								CMAttributeDeclaration attributeDeclaration = (CMAttributeDeclaration) cmAttributes.getNamedItem(XML_SPACE);
+								if (attributeDeclaration != null) {
+									// CMAttributeDeclaration found, check
+									// it
+									// out.
+
+									//BUG214516/196544 - Fixed NPE that was caused by an attr having
+									// a null attr type
+									String defaultValue = null;
+									CMDataType attrType = attributeDeclaration.getAttrType();
+									if (attrType != null) {
+										if ((attrType.getImpliedValueKind() != CMDataType.IMPLIED_VALUE_NONE) && attrType.getImpliedValue() != null)
+											defaultValue = attrType.getImpliedValue();
+										else if ((attrType.getEnumeratedValues() != null) && (attrType.getEnumeratedValues().length > 0)) {
+											defaultValue = attrType.getEnumeratedValues()[0];
+										}
 									}
+
+									// xml:space="preserve" means preserve
+									// space,
+									// everything else means back to
+									// default.
+									if (PRESERVE.equals(defaultValue))
+										childConstraints.setWhitespaceStrategy(XMLFormattingConstraints.PRESERVE);
+									else
+										childConstraints.setWhitespaceStrategy(XMLFormattingConstraints.DEFAULT);
+								}
+								// If the node has no attributes, inherit the parents whitespace strategy
+								else {
+									if (parentConstraints != null)
+										childConstraints.setWhitespaceStrategy(parentConstraints.getWhitespaceStrategy());
+									else
+										childConstraints.setWhitespaceStrategy(null);
 								}
 							}
 						}

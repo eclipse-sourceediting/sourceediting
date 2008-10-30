@@ -162,6 +162,19 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		return loadDocument(fileName, rootElement);
 	}
 
+	protected CMDocument buildCMDocumentFromFile(IFile file) {
+		InputStream input = null;
+		try {
+			input = file.getContents(false);
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
+		}
+		if (input != null)
+			return buildCMDocument(file.getFullPath().toString(), input);
+		return null;
+	}
+
 	/**
 	 * Builds a CMDocument assuming the JSP v1.1 default path
 	 * 
@@ -562,7 +575,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 	protected String getContainedText(Node parent) {
 		NodeList children = parent.getChildNodes();
 		if (children.getLength() == 1) {
-			return getValue(children.item(0));
+			return children.item(0).getNodeValue().trim();
 		}
 		StringBuffer s = new StringBuffer();
 		Node child = parent.getFirstChild();
@@ -577,20 +590,11 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 				}
 			}
 			else {
-				s.append(getValue(child));
+				s.append(child.getNodeValue().trim());
 			}
 			child = child.getNextSibling();
 		}
 		return s.toString().trim();
-	}
-
-	private String getValue(Node n) {
-		if (n == null)
-			return ""; //$NON-NLS-1$
-		String value = n.getNodeValue();
-		if (value == null)
-			return ""; //$NON-NLS-1$
-		return value.trim();
 	}
 
 	public boolean isBuilderForGrammar(String grammarFileName) {
@@ -999,9 +1003,9 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		switch (reference.getRecordType()) {
 			case (ITaglibRecord.TLD) : {
 				ITLDRecord record = (ITLDRecord) reference;
-				IResource file = ResourcesPlugin.getWorkspace().getRoot().getFile(record.getPath());
-				if (file.getLocation() != null) {
-					document = (CMDocumentImpl) buildCMDocumentFromFile(file.getLocation().toString());
+				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(record.getPath());
+				if (file.isAccessible()) {
+					document = (CMDocumentImpl) buildCMDocumentFromFile(file);
 					document.setLocationString(record.getPath().toString());
 					if (_debug && document != null && document.getElements().getLength() == 0) {
 						System.out.println("failure parsing " + record.getPath()); //$NON-NLS-1$

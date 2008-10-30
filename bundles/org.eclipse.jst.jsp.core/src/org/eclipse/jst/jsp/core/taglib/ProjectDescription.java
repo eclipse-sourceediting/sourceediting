@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -73,10 +73,12 @@ import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP11TLDNames;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
+import org.eclipse.jst.jsp.core.internal.java.ArrayMap;
 import org.eclipse.jst.jsp.core.internal.util.DocumentProvider;
 import org.eclipse.jst.jsp.core.internal.util.FacetModuleCoreSupport;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.util.JarUtilities;
+import org.eclipse.wst.sse.core.internal.util.Sorter;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
@@ -87,8 +89,17 @@ import org.w3c.dom.EntityReference;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.ibm.icu.text.Collator;
 import com.ibm.icu.util.StringTokenizer;
 
+/**
+ * Contains the tag library information for a single project.
+ * 
+ *  * <p>
+ * This class is neither intended to be instantiated nor accessed by clients.
+ * </p>
+ *
+ */
 class ProjectDescription {
 
 	class DeltaVisitor implements IResourceDeltaVisitor {
@@ -475,6 +486,36 @@ class ProjectDescription {
 			return s.toString();
 		}
 	}
+	
+	private class TaglibSorter extends Sorter {
+		Collator collator = Collator.getInstance();
+
+		public boolean compare(Object elementOne, Object elementTwo) {
+			/**
+			 * Returns true if elementTwo is 'greater than' elementOne This is
+			 * the 'ordering' method of the sort operation. Each subclass
+			 * overides this method with the particular implementation of the
+			 * 'greater than' concept for the objects being sorted.
+			 */
+			
+			return (collator.compare(getTaglibPath((ITaglibRecord) elementOne), getTaglibPath((ITaglibRecord) elementTwo))) < 0;
+		}
+		
+		private String getTaglibPath(ITaglibRecord record) {
+			switch(record.getRecordType()) {
+				case ITaglibRecord.JAR:
+					return ((JarRecord) record).getLocation().toString();
+				case ITaglibRecord.TAGDIR:
+					return ((TagDirRecord) record).getPath().toString();
+				case ITaglibRecord.TLD:
+					return ((TLDRecord) record).getPath().toString();
+				case ITaglibRecord.URL:
+					return ((URLRecord) record).getBaseLocation();
+				default:
+					return ""; //$NON-NLS-1$
+			}
+		}
+	}
 
 	static boolean _debugIndexCreation = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/indexcreation")); //$NON-NLS-1$ //$NON-NLS-2$
 	static boolean _debugIndexTime = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/indextime")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -543,6 +584,8 @@ class ProjectDescription {
 	ILock LOCK = Job.getJobManager().newLock();
 
 	private long time0;
+	
+	private TaglibSorter fTaglibSorter = new TaglibSorter();
 
 	ProjectDescription(IProject project, String saveStateFile) {
 		super();
@@ -894,33 +937,38 @@ class ProjectDescription {
 	}
 
 	private void ensureUpTodate() {
-		try {
-			LOCK.acquire();
-
-			if (!fBuildPathIsDirty) {
+		IClasspathEntry[] entries = null;
+			try {
+				/*
+				 * If the Java nature isn't present (or something else is
+				 * wrong), don't check the build path.
+				 */
+				IJavaProject jproject = JavaCore.create(fProject);
+				if (jproject != null && jproject.exists()) {
+					entries = jproject.getResolvedClasspath(true);
+				}
+			}
+			catch (JavaModelException e) {
+				Logger.logException(e);
+			}
+		if (entries != null) {
+			try {
+				LOCK.acquire();
 				/*
 				 * Double-check that the number of build path entries has not
 				 * changed. This should cover most cases such as when a
 				 * library is added into or removed from a container.
 				 */
-				try {
-					IJavaProject jproject = JavaCore.create(fProject);
-					if (jproject != null && jproject.exists()) {
-						IClasspathEntry[] entries = jproject.getResolvedClasspath(true);
-						fBuildPathIsDirty = (fBuildPathEntryCount != entries.length);
-					}
-				}
-				catch (JavaModelException e) {
-					Logger.logException(e);
+				fBuildPathIsDirty = fBuildPathIsDirty || (fBuildPathEntryCount != entries.length);
+
+				if (fBuildPathIsDirty) {
+					indexClasspath(entries);
+					fBuildPathIsDirty = false;
 				}
 			}
-			if (fBuildPathIsDirty) {
-				indexClasspath();
-				fBuildPathIsDirty = false;
+			finally {
+				LOCK.release();
 			}
-		}
-		finally {
-			LOCK.release();
 		}
 	}
 
@@ -1097,7 +1145,7 @@ class ProjectDescription {
 		String localRoot = getLocalRoot(path);
 		Hashtable implicitReferences = (Hashtable) fImplicitReferences.get(localRoot);
 		if (implicitReferences == null) {
-			implicitReferences = new Hashtable(1);
+			implicitReferences = new ArrayMap(1);
 			fImplicitReferences.put(localRoot, implicitReferences);
 		}
 		return implicitReferences;
@@ -1277,6 +1325,9 @@ class ProjectDescription {
 			Logger.log(Logger.INFO, "indexed " + fProject.getName() + " contents in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
+	/**
+	 * @deprecated
+	 */
 	void indexClasspath() {
 		if (_debugIndexTime)
 			time0 = System.currentTimeMillis();
@@ -1297,6 +1348,22 @@ class ProjectDescription {
 		// Logger.log(Logger.WARNING, "TaglibIndex was asked to index non-Java
 		// Project " + fProject.getName()); //$NON-NLS-1$
 		// }
+
+		if (_debugIndexTime)
+			Logger.log(Logger.INFO, "indexed " + fProject.getName() + " classpath in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	}
+
+	void indexClasspath(IClasspathEntry[] entries) {
+		if (_debugIndexTime)
+			time0 = System.currentTimeMillis();
+		fClasspathProjects.clear();
+		fClasspathReferences.clear();
+		fClasspathJars.clear();
+
+		fBuildPathEntryCount = entries.length;
+		for (int i = 0; i < entries.length; i++) {
+			indexClasspath(entries[i]);
+		}
 
 		if (_debugIndexTime)
 			Logger.log(Logger.INFO, "indexed " + fProject.getName() + " classpath in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -1387,7 +1454,7 @@ class ProjectDescription {
 	 */
 
 	/**
-	 * @param javaProject
+	 * @deprecated
 	 */
 	private void indexClasspath(IJavaProject javaProject) {
 		if (javaProject == null)
@@ -1427,7 +1494,7 @@ class ProjectDescription {
 			URLRecord[] records = (URLRecord[]) record.getURLRecords().toArray(new URLRecord[0]);
 			for (int i = 0; i < records.length; i++) {
 				TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, records[i], ITaglibIndexDelta.REMOVED));
-				getImplicitReferences(jar.getFullPath().toString()).remove(records[i].getURI());
+				((ArrayMap) getImplicitReferences(jar.getFullPath().toString())).remove(records[i].getURI(), records[i]);
 			}
 			if (record.has11TLD) {
 				TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, ITaglibIndexDelta.REMOVED));
@@ -1459,7 +1526,7 @@ class ProjectDescription {
 		TLDRecord record = (TLDRecord) fTLDReferences.remove(tld.getFullPath().toString());
 		if (record != null) {
 			if (record.getURI() != null) {
-				getImplicitReferences(tld.getFullPath().toString()).remove(record.getURI());
+				((ArrayMap) getImplicitReferences(tld.getFullPath().toString())).remove(record.getURI(), record);
 			}
 			TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, ITaglibIndexDelta.REMOVED));
 		}
@@ -1474,7 +1541,7 @@ class ProjectDescription {
 			for (int i = 0; i < records.length; i++) {
 				if (_debugIndexCreation)
 					Logger.log(Logger.INFO, "removed record for " + records[i].getURI() + "@" + records[i].path); //$NON-NLS-1$ //$NON-NLS-2$
-				getImplicitReferences(webxml.getFullPath().toString()).remove(records[i].getURI());
+				((ArrayMap) getImplicitReferences(webxml.getFullPath().toString())).remove(records[i].getURI(), records[i]);
 				TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, records[i], ITaglibIndexDelta.REMOVED));
 			}
 		}
@@ -1539,7 +1606,12 @@ class ProjectDescription {
 				record = (ITaglibRecord) fTLDReferences.get(path);
 			}
 			if (record == null && jspVersion >= 1.2) {
-				record = (ITaglibRecord) getImplicitReferences(basePath).get(reference);
+				Object[] records = (Object[]) getImplicitReferences(basePath).get(reference);
+				if (records != null && records.length > 0) {
+					if (records.length > 1)
+						records = fTaglibSorter.sort(records);
+					record =  (ITaglibRecord) records[records.length - 1];
+				}
 			}
 
 
@@ -1593,7 +1665,12 @@ class ProjectDescription {
 				for (int i = 0; i < webxmls.length; i++) {
 					if (record != null)
 						continue;
-					record = (ITaglibRecord) getImplicitReferences(webxmls[i].path.toString()).get(reference);
+					Object[] records = (Object[]) getImplicitReferences(webxmls[i].path.toString()).get(reference);
+					if (records != null && records.length > 0) {
+						if (records.length > 1)
+							records = fTaglibSorter.sort(records);
+						record =  (ITaglibRecord) records[records.length - 1];
+					}
 				}
 			}
 		}

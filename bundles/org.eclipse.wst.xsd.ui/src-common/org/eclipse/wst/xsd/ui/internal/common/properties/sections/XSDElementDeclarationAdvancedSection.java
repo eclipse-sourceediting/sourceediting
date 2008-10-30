@@ -13,6 +13,7 @@
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionEvent;
@@ -42,6 +43,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
   protected CCombo abstractCombo;
   protected CCombo substGroupCombo;
   protected CCombo nillableCombo;
+  private boolean isTraversing = false;
 
   private String blockValues[] = { EMPTY, "#" + XSDConstants.ALL_ELEMENT_TAG, //$NON-NLS-1$
       XSDConstants.EXTENSION_ELEMENT_TAG, XSDConstants.RESTRICTION_ELEMENT_TAG,
@@ -149,6 +151,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
     substGroupCombo.setLayoutData(data);
     substGroupCombo.setEditable(true);
     substGroupCombo.addSelectionListener(this);
+    substGroupCombo.addListener(SWT.Traverse, this);
     applyAllListeners(substGroupCombo);
     
     // ------------------------------------------------------------------
@@ -180,21 +183,56 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
   {
     if (e.widget == substGroupCombo)
     {
+      if (e.type == SWT.Traverse) {
+        if (e.detail == SWT.TRAVERSE_ARROW_NEXT || e.detail == SWT.TRAVERSE_ARROW_PREVIOUS)
+        {
+          isTraversing = true;
+          return;
+        }
+      }
+		
       XSDElementDeclaration eleDec = (XSDElementDeclaration) input;
       String value = substGroupCombo.getText();
-      String oldValue = eleDec.getElement().getAttribute(XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE);
-      if (oldValue == null)
-        oldValue = EMPTY;
-      if (value.equals(oldValue))
-        return;
+      
+        String oldValue = eleDec.getElement().getAttribute(XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE);
+        if (oldValue == null)
+          oldValue = EMPTY;
+        if (value.equals(oldValue))
+          return;
+  
+        UpdateAttributeValueCommand command = new UpdateAttributeValueCommand(eleDec.getElement(), XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE, value, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_SUBSTITUTION_GROUP);
+        command.setDeleteIfEmpty(true);
+        getCommandStack().execute(command);
+      }
+  }
 
-      UpdateAttributeValueCommand command = new UpdateAttributeValueCommand(eleDec.getElement(), XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE, value, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_SUBSTITUTION_GROUP);
-      command.setDeleteIfEmpty(true);
-      getCommandStack().execute(command);
+  public void doWidgetDefaultSelected(SelectionEvent e)
+  {
+    if (e.widget == substGroupCombo)
+    {
+      String selection = substGroupCombo.getText();
+      if (shouldPerformComboSelection(SWT.DefaultSelection, selection))
+        handleWidgetSelection(e);
+    } else
+    {
+      handleWidgetSelection(e);
     }
   }
 
   public void doWidgetSelected(SelectionEvent e)
+  {
+    if (e.widget == substGroupCombo)
+    {
+      String selection = substGroupCombo.getText();
+      if (shouldPerformComboSelection(SWT.Selection, selection))
+        handleWidgetSelection(e);
+    } else
+    {
+      handleWidgetSelection(e);
+    }
+  }
+
+  private void handleWidgetSelection(SelectionEvent e)
   {
     if (e.widget == blockCombo)
     {
@@ -226,9 +264,10 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
     {
       IEditorPart editor = getActiveEditor();
       if (editor == null) return;
-      ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDSubstitutionGroupEditManager.class);    
+      ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDSubstitutionGroupEditManager.class);
 
       String selection = substGroupCombo.getText();
+
       ComponentSpecification newValue;
       IComponentDialog dialog= null;
       if ( selection.equals(Messages._UI_ACTION_BROWSE))
@@ -268,7 +307,6 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
         command.setDeleteIfEmpty(true);
         getCommandStack().execute(command);
     }
-
   }
 
   public void refresh()
@@ -404,6 +442,44 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
       }
     }
     return null;
+  }
+  
+  private boolean shouldPerformComboSelection(int eventType, Object selectedItem)
+  {
+    // if traversing through combobox, don't automatically pop up
+    // the browse and new dialog boxes
+    boolean wasTraversing = isTraversing;
+    if (isTraversing)
+      isTraversing = false;
+
+    // we only care about default selecting (hitting enter in combobox)
+    // for browse.. and new.. otherwise, selection event will be fired
+    if (eventType == SWT.DefaultSelection)
+    {
+      if (selectedItem instanceof String && ((Messages._UI_ACTION_BROWSE.equals(selectedItem) || Messages._UI_ACTION_NEW.equals(selectedItem))))
+        return true;
+      return false;
+    }
+
+    // if was traversing and got selection event, do nothing if it's 
+    // browse.. or new..
+    if (wasTraversing && selectedItem instanceof String)
+    {
+      if (Messages._UI_ACTION_BROWSE.equals(selectedItem) || Messages._UI_ACTION_NEW.equals(selectedItem))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+  
+  public void dispose()
+  {
+  	if (substGroupCombo != null && !substGroupCombo.isDisposed())
+  	{
+		substGroupCombo.removeListener(SWT.Traverse, this);
+	}
+	super.dispose();
   }
 
 }

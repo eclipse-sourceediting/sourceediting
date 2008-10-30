@@ -12,7 +12,6 @@ package org.eclipse.jst.jsp.core.internal.java;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,9 +28,6 @@ import java.util.Stack;
 
 import javax.servlet.jsp.tagext.VariableInfo;
 
-import org.eclipse.core.filebuffers.FileBuffers;
-import org.eclipse.core.filebuffers.ITextFileBuffer;
-import org.eclipse.core.filebuffers.ITextFileBufferManager;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -42,7 +38,6 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
@@ -61,7 +56,6 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNa
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
 import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache.PropertyGroup;
-import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
@@ -75,7 +69,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.html.core.internal.contentmodel.JSP20Namespace;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
-import org.eclipse.wst.sse.core.internal.ltk.parser.TagMarker;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -115,7 +108,6 @@ public class JSPTranslator {
 
 	// for debugging
 	private static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspjavamapping")); //$NON-NLS-1$  //$NON-NLS-2$
-	private static final boolean DEBUG_SAVE_OUTPUT = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jsptranslationstodisk")); //$NON-NLS-1$  //$NON-NLS-2$
 
 	private IJSPELTranslator fELTranslator = null;
 
@@ -767,29 +759,6 @@ public class JSPTranslator {
 			Logger.log(Logger.INFO_DEBUG, debugString.toString());
 		}
 
-		if (DEBUG_SAVE_OUTPUT) {
-			IProject project = getFile().getProject();
-			String shortenedClassname = StringUtils.replace(getFile().getName(), ".", "_");
-			String filename = shortenedClassname + ".java";
-			IPath path = project.getFullPath().append("src/" + filename);
-			try {
-				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-				if (!file.exists()) {
-					file.create(new ByteArrayInputStream(new byte[0]), true, new NullProgressMonitor());
-				}
-				ITextFileBufferManager textFileBufferManager = FileBuffers.getTextFileBufferManager();
-				textFileBufferManager.connect(path, new NullProgressMonitor());
-				ITextFileBuffer javaOutputBuffer = textFileBufferManager.getTextFileBuffer(path);
-				javaOutputBuffer.getDocument().set(StringUtils.replace(fResult.toString(), getClassname(), shortenedClassname));
-				javaOutputBuffer.commit(new NullProgressMonitor(), true);
-				textFileBufferManager.disconnect(path, new NullProgressMonitor());
-			}
-			catch (Exception e) {
-				// this is just for debugging, ignore
-			}
-			System.out.println("Updated translation: " + path);
-		}
-
 		return fResult;
 	}
 
@@ -830,66 +799,90 @@ public class JSPTranslator {
 		String decl = ""; //$NON-NLS-1$
 		if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_TAG_OPEN)) {
 			TaglibVariable[] taglibVars = helper.getTaglibVariables(tagToAdd, getStructuredDocument(), customTag);
-			fTranslationProblems.addAll(helper.getProblems(f.getFullPath()));
+
+			// Bug 199047
 			/*
-			 * These loops are duplicated intentionally to keep the nesting
-			 * scoped variables from interfering with the others
+			 * Add AT_BEGIN variables
 			 */
 			for (int i = 0; i < taglibVars.length; i++) {
 				if (taglibVars[i].getScope() == VariableInfo.AT_BEGIN) {
 					decl = taglibVars[i].getDeclarationString();
 					appendToBuffer(decl, fUserCode, false, customTag);
 				}
-				if (taglibVars[i].getScope() == VariableInfo.AT_END) {
-					decl = taglibVars[i].getDeclarationString();
-					fTagToVariableMap.push(tagToAdd, taglibVars);
-				}
 			}
+
+			/**
+			 * Add opening curly brace
+			 */
+
+			StringBuffer text = new StringBuffer();
+			text.append("{ // <"); //$NON-NLS-1$
+			text.append(tagToAdd);
+			text.append(">\n"); //$NON-NLS-1$
+			appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
+
+			/**
+			 * Add NESTED variables
+			 */
 			for (int i = 0; i < taglibVars.length; i++) {
 				if (taglibVars[i].getScope() == VariableInfo.NESTED) {
 					decl = taglibVars[i].getDeclarationString();
-					appendToBuffer("{", fUserCode, false, customTag);
 					appendToBuffer(decl, fUserCode, false, customTag);
-					fTagToVariableMap.push(tagToAdd, taglibVars);
 				}
 			}
+
+			/**
+			 * If empty, pop from stack, add ending curly brace and AT_END
+			 * variables
+			 */
 			if (customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
-				/*
-				 * Process NESTED variables backwards so the scopes "unroll"
-				 * correctly.
-				 */
-				for (int i = taglibVars.length; i > 0; i--) {
-					if (taglibVars[i - 1].getScope() == VariableInfo.NESTED) {
-						appendToBuffer("}", fUserCode, false, customTag);
-					}
-				}
-				/* Treat this as the end for empty tags */
+				text = new StringBuffer();
+				text.append("} // </"); //$NON-NLS-1$
+				text.append(tagToAdd);
+				text.append("/>\n"); //$NON-NLS-1$
+				appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
 				for (int i = 0; i < taglibVars.length; i++) {
 					if (taglibVars[i].getScope() == VariableInfo.AT_END) {
 						decl = taglibVars[i].getDeclarationString();
 						appendToBuffer(decl, fUserCode, false, customTag);
 					}
 				}
+			}
+			else {
+				/*
+				 * Store for use at end tag and for accurate pairing even with
+				 * extra end tags (with empty non-null array)
+				 */
+				fTagToVariableMap.push(tagToAdd, taglibVars);
 			}
 		}
-		/*
-		 * Process NESTED variables for an end tag backwards so the scopes
-		 * "unroll" correctly.
+		/**
+		 * Pop from stack, add ending curly brace and AT_END variables
 		 */
 		else if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_END_TAG_OPEN)) {
+			// pop the variables
 			TaglibVariable[] taglibVars = (TaglibVariable[]) fTagToVariableMap.pop(tagToAdd);
 			if (taglibVars != null) {
-				for (int i = taglibVars.length; i > 0; i--) {
-					if (taglibVars[i - 1].getScope() == VariableInfo.NESTED) {
-						appendToBuffer("}", fUserCode, false, customTag);
-					}
-				}
+				// even an empty array will indicate a need for a closing
+				// brace
+				StringBuffer text = new StringBuffer();
+				text.append("} // </"); //$NON-NLS-1$
+				text.append(tagToAdd);
+				text.append(">\n"); //$NON-NLS-1$
+				appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
+
+				/*
+				 * Add AT_END variables
+				 */
 				for (int i = 0; i < taglibVars.length; i++) {
 					if (taglibVars[i].getScope() == VariableInfo.AT_END) {
 						decl = taglibVars[i].getDeclarationString();
 						appendToBuffer(decl, fUserCode, false, customTag);
 					}
 				}
+			}
+			else {
+				// report an unmatched end tag in fTranslationProblems ?
 			}
 		}
 	}
@@ -958,11 +951,24 @@ public class JSPTranslator {
 		setCurrentNode(new ZeroStructuredDocumentRegion(fStructuredDocument, fStructuredDocument.getLength()));
 		translateCodas();
 
-		buildResult();
-
+		/*
+		 * Make sure any extra custom tag start tags won't cause compiler
+		 * problems, they should instead be reported as unbalanced tags
+		 */
+		for (int i = 0; i < fTagToVariableMap.size(); i++) {
+			appendToBuffer("}", fUserCode, false, fStructuredDocument.getLastStructuredDocumentRegion());
+		}
 		fTagToVariableMap.clear();
+
+		buildResult();
 	}
 
+ 	/**
+	 * Translates a region container (and XML JSP container, or <% JSP
+	 * container). This method should only be called in this class and for
+	 * containers in the primary structured document as all buffer appends
+	 * will be direct.
+	 */
 	protected void setDocumentContent(IDocument document, InputStream contentStream, String charset) {
 		Reader in = null;
 		try {
@@ -1052,9 +1058,6 @@ public class JSPTranslator {
 
 		ITextRegionCollection containerRegion = container;
 
-		// custom tags need their own scope {}
-		handleScopingIfNecessary(containerRegion);
-
 		Iterator regions = containerRegion.getRegions().iterator();
 		ITextRegion region = null;
 		while (regions.hasNext()) {
@@ -1065,7 +1068,7 @@ public class JSPTranslator {
 
 			// content assist was not showing up in JSP inside a javascript
 			// region
-			if (type == DOMRegionContext.BLOCK_TEXT) {
+			if (DOMRegionContext.BLOCK_TEXT.equals(type)) {
 				// check if it's nested jsp in a script tag...
 				if (region instanceof ITextRegionContainer) {
 					// pass in block text's container & iterator
@@ -1117,102 +1120,13 @@ public class JSPTranslator {
 		// }
 	}
 
-	private void handleScopingIfNecessary(ITextRegionCollection containerRegion) {
-		/*
-		 * 199047 - Braces missing from translation of custom tags not
-		 * defining variables
-		 */
-
-		// code within a custom tag gets its own scope
-		// so if we encounter a start of a custom tag, we add '{'
-		// and for the end of a custom tag we add '}'
-		if (containerRegion.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN) {
-			// don't add '{' if it's a self closing tag
-			if (!isSelfClosingTag(containerRegion)) {
-				if (isCustomTag(containerRegion)) {
-					startScope();
-				}
-			}
-		}
-		else if (containerRegion.getFirstRegion().getType() == DOMRegionContext.XML_END_TAG_OPEN) {
-			if (isCustomTag(containerRegion)) {
-				endScope();
-			}
-		}
-	}
-
-	private void startScope() {
-		// fScopeDepth++;
-		StringBuffer text = new StringBuffer();
-		// for(int i=0; i<fScopeDepth; i++) text.append(" "); //$NON-NLS-1$
-		text.append("{ // <"); //$NON-NLS-1$
-		text.append(getRegionName(fCurrentNode));
-		text.append(">\n"); //$NON-NLS-1$
-		appendToBuffer(text.toString(), fUserCode, false, fCurrentNode); //$NON-NLS-1$
-	}
-
-	private void endScope() {
-		StringBuffer text = new StringBuffer();
-		text.append("} // </"); //$NON-NLS-1$
-		text.append(getRegionName(fCurrentNode));
-		text.append(">\n"); //$NON-NLS-1$
-		appendToBuffer(text.toString(), fUserCode, false, fCurrentNode); //$NON-NLS-1$
-	}
-
-	private boolean isSelfClosingTag(ITextRegionCollection containerRegion) {
-
-		if (containerRegion == null)
-			return false;
-
-		ITextRegionList regions = containerRegion.getRegions();
-		ITextRegion r = regions.get(regions.size() - 1);
-		return r.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE;
-	}
-
-	private boolean isCustomTag(ITextRegionCollection containerRegion) {
-		String tagName = getRegionName(containerRegion);
-
-		if (tagName == null)
-			return false;
-
-		JSPSourceParser parser = (JSPSourceParser) fStructuredDocument.getParser();
-		int colonIndex = tagName.indexOf(":");
-		if (colonIndex > 0) {
-			String prefix = tagName.substring(0, colonIndex);
-			if (prefix.equals("jsp")) { //$NON-NLS-1$
-				return false;
-			}
-			TagMarker[] prefixes = (TagMarker[]) parser.getNestablePrefixes().toArray(new TagMarker[0]);
-			for (int i = 0; i < prefixes.length; i++) {
-				if (prefix.equals(prefixes[i].getTagName())) {
-					return true;
-				}
-			}
-		}
-
-		return false;
-	}
-
-	private String getRegionName(ITextRegionCollection containerRegion) {
-		ITextRegionList regions = containerRegion.getRegions();
-		ITextRegion nameRegion = null;
-		for (int i = 0; i < regions.size(); i++) {
-			ITextRegion r = regions.get(i);
-			if (r.getType() == DOMRegionContext.XML_TAG_NAME) {
-				nameRegion = r;
-				break;
-			}
-		}
-		return nameRegion != null ? containerRegion.getText(nameRegion).trim() : null;
-	}
-
 	/*
 	 * ////////////////////////////////////////////////////////////////////////////////// **
 	 * TEMP WORKAROUND FOR CMVC 241882 Takes a String and blocks out
 	 * jsp:scriptlet, jsp:expression, and jsp:declaration @param blockText
 	 * @return
 	 */
-	private void decodeScriptBlock(String blockText, int startOfBlock) {
+	void decodeScriptBlock(String blockText, int startOfBlock) {
 		XMLJSPRegionHelper helper = new XMLJSPRegionHelper(this, false);
 		helper.addBlockMarker(new BlockMarker("jsp:scriptlet", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
 		helper.addBlockMarker(new BlockMarker("jsp:expression", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
@@ -1281,7 +1195,7 @@ public class JSPTranslator {
 
 			{
 				String fullTagName = container.getText(r);
-				if (fullTagName.indexOf(':') > -1) {
+				if (fullTagName.indexOf(':') > -1 && !fullTagName.startsWith("jsp:")) {
 					addTaglibVariables(fullTagName, container); // it
 					// may
 					// be a
@@ -2118,7 +2032,7 @@ public class JSPTranslator {
 	protected void translateExpression(ITextRegionCollection region) {
 		String newText = getUnescapedRegionText(region, EXPRESSION);
 		appendToBuffer(EXPRESSION_PREFIX, fUserCode, false, region);
-		appendToBuffer(newText, fUserCode, true, fCurrentNode);
+		appendToBuffer(newText, fUserCode, true, region);
 		appendToBuffer(EXPRESSION_SUFFIX, fUserCode, false, region);
 	}
 
@@ -2686,9 +2600,12 @@ public class JSPTranslator {
 					typeRegion = classnameRegion;
 				}
 
-				if (!isTypeFound(type)) {
-					Object problem = createJSPProblem(IJSPProblem.F_PROBLEM_ID_LITERAL, IProblem.UndefinedType, MessageFormat.format(JSPCoreMessages.JSPTranslator_1, new String[]{type}), container.getStartOffset(typeRegion), container.getTextEndOffset(typeRegion) - 1);
-					fTranslationProblems.add(problem);
+				List errorTypeNames = new ArrayList(2);
+				if (!isTypeFound(type, errorTypeNames)) {
+					for (int i = 0; i < errorTypeNames.size(); i++) {
+						Object problem = createJSPProblem(IJSPProblem.F_PROBLEM_ID_LITERAL, IProblem.UndefinedType, MessageFormat.format(JSPCoreMessages.JSPTranslator_1, new String[]{errorTypeNames.get(i).toString()}), container.getStartOffset(typeRegion), container.getTextEndOffset(typeRegion) - 1);
+						fTranslationProblems.add(problem);
+					}
 				}
 				else {
 					String prefix = type + " " + id + " = "; //$NON-NLS-1$ //$NON-NLS-2$
@@ -2707,31 +2624,60 @@ public class JSPTranslator {
 	 * @param type
 	 * @return
 	 */
-	private boolean isTypeFound(String typeName) {
-		IType type = null;
+	private boolean isTypeFound(String typeName, List errorTypes) {
 		IProject project = getFile().getProject();
-		try {
-			IJavaProject p = JavaCore.create(project);
-			if (p.exists()) {
-				if (typeName.indexOf('<') > 0 && typeName.indexOf('>') > 0) {
+		IJavaProject p = JavaCore.create(project);
+		if (p.exists()) {
+			String types[] = new String[3];
+			if (typeName.indexOf('<') > 0) {
+				// JSR 14 : Generics are being used, parse them out
+				try {
 					StringTokenizer toker = new StringTokenizer(typeName);
-					String generic = toker.nextToken("<");
-					String element = toker.nextToken(">");
-					IType genericType = p.findType(generic);
-					IType elementType = p.findType(element);
-					return genericType!= null && genericType.exists() && elementType!= null && elementType.exists();
+					// generic
+					types[0] = toker.nextToken("<"); //$NON-NLS-1$
+					// type 1 or key
+					types[1] = toker.nextToken(",>"); //$NON-NLS-1$
+					// type 2 or value
+					types[2] = toker.nextToken(",>"); //$NON-NLS-1$
 				}
-				type = p.findType(typeName);
-				return type != null && type.exists();
+				catch (NoSuchElementException e) {
+					// StringTokenizer failure with unsupported syntax
+				}
+			}
+			else {
+				types[0] = typeName;
+			}
+
+			for (int i = 0; i < types.length; i++) {
+				if (types[i] != null) {
+					// remove any array suffixes 
+					if (types[i].indexOf('[') > 0) {
+						types[i] = types[i].substring(0, types[i].indexOf('[')); //$NON-NLS-1$
+					}
+					// remove any "extends" prefixes 
+					if (types[i].indexOf("extends") > 0) {
+						types[i] = StringUtils.strip(types[i].substring(types[i].indexOf("extends"))); //$NON-NLS-1$
+					}
+
+					addNameToListIfTypeNotFound(p, types[i], errorTypes);
+				}
+			}
+		}
+		return errorTypes.isEmpty();
+	}
+	
+	private void addNameToListIfTypeNotFound(IJavaProject p, String typeName, List names) {
+		try {
+			if (typeName != null) {
+				IType type = p.findType(typeName);
+				if (type == null || !type.exists()) {
+					names.add(typeName);
+				}
 			}
 		}
 		catch (JavaModelException e) {
 			// Not a Java Project
 		}
-		catch(NoSuchElementException e) {
-			// StringTokenizer failure with unsupported syntax
-		}
-		return true;
 	}
 
 	private boolean isValidJavaIdentifier(String id) {

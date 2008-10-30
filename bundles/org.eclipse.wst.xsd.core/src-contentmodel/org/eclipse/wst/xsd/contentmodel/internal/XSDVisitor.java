@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsd.contentmodel.internal;
 
 import java.util.Iterator;
+import java.util.Stack;
 
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
@@ -35,6 +36,7 @@ public class XSDVisitor
   }
   
   protected XSDSchema schema;
+  protected Stack particleStack = new Stack();
   
   public void visitSchema(XSDSchema schema)
   {
@@ -156,7 +158,18 @@ public class XSDVisitor
   {
     if (particleContent instanceof XSDModelGroupDefinition)
     {
-      visitModelGroupDefinition((XSDModelGroupDefinition) particleContent);
+      XSDModelGroupDefinition modelGroupDef = (XSDModelGroupDefinition) particleContent;
+
+      if (particleStack.contains(modelGroupDef))
+      {
+        return;
+      }
+        
+      particleStack.push(modelGroupDef);
+      
+      visitModelGroupDefinition(modelGroupDef);
+      
+      particleStack.pop();
     }
     else if (particleContent instanceof XSDModelGroup)
     {

@@ -16,6 +16,8 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -29,6 +31,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -43,7 +46,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.Logger;
-import org.eclipse.jst.jsp.core.internal.contentproperties.JSPFContentProperties;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
+import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache.PropertyGroup;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -109,6 +113,11 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 	private static final String PLUGIN_ID_JSP_CORE = "org.eclipse.jst.jsp.core"; //$NON-NLS-1$
 
 	/**
+	 * List of IResources that the currently validating file depends upon
+	 */
+	private Collection fDependsOn;
+
+	/**
 	 * Gets current validation project configuration based on current project
 	 * (which is based on current document)
 	 * 
@@ -168,6 +177,9 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 
 	private JSPActionValidator fJSPActionValidator = new JSPActionValidator(this);
 
+	void addDependsOn(IResource resource) {
+		fDependsOn.add(resource);
+	}
 
 	public void cleanup(IReporter reporter) {
 		fJSPDirectiveValidator.cleanup(reporter);
@@ -243,7 +255,7 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 		// quick check to see if this is possibly a jsp fragment
 		if (getJSPFContentType().isAssociatedWith(file.getName())) {
 			// get preference for validate jsp fragments
-			boolean shouldValidateFragments = Boolean.valueOf(JSPFContentProperties.getProperty(JSPFContentProperties.VALIDATE_FRAGMENTS, file, true)).booleanValue();
+			boolean shouldValidateFragments = FragmentValidationTools.shouldValidateFragment(file);
 			/*
 			 * if jsp fragments should not be validated, check if file is
 			 * really jsp fragment
@@ -472,11 +484,35 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 	public ValidationResult validate(final IResource resource, int kind, ValidationState state, IProgressMonitor monitor) {
 		if (resource.getType() != IResource.FILE)
 			return null;
-		ValidationResult result = new ValidationResult();
+		final ValidationResult result = new ValidationResult();
 		final IReporter reporter = result.getReporter(monitor);
+		fDependsOn = new HashSet();
+		
+		// List relevant JSP 2.0 preludes/codas as dependencies
+		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+		IFile descriptor = DeploymentDescriptorPropertyCache.getInstance().getWebXML(resource.getFullPath());
+		if (descriptor != null) {
+			addDependsOn(descriptor);
+		}
+		PropertyGroup[] propertyGroups = DeploymentDescriptorPropertyCache.getInstance().getPropertyGroups(resource.getFullPath());
+		for (int j = 0; j < propertyGroups.length; j++) {
+			IPath[] preludes = propertyGroups[j].getIncludePrelude();
+			for (int i = 0; i < preludes.length; i++) {
+				addDependsOn(workspaceRoot.getFile(preludes[i]));
+			}
+			IPath[] codas = propertyGroups[j].getIncludeCoda();
+			for (int i = 0; i < codas.length; i++) {
+				addDependsOn(workspaceRoot.getFile(codas[i]));
+			}
+		}
+		
 		IWorkspaceRunnable validationRunnable = new IWorkspaceRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
-				validateFile((IFile) resource, reporter);
+				if (fragmentCheck((IFile) resource)) {
+					validateFile((IFile) resource, reporter);
+				}
+				result.setDependsOn((IResource[]) fDependsOn.toArray(new IResource[fDependsOn.size()]));
+				fDependsOn.clear();
 			}
 		};
 		Job currentJob = Job.getJobManager().currentJob();

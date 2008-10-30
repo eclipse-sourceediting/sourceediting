@@ -14,8 +14,11 @@ import java.util.Hashtable;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.html.core.internal.HTMLCoreMessages;
@@ -30,6 +33,8 @@ public class MessageFactory implements ErrorState {
 
 
 	private IProject fProject;
+	private IScopeContext[] fLookupOrder;
+	private IPreferencesService fPreferenceService;
 	
 	public MessageFactory() {
 		init();
@@ -56,24 +61,21 @@ public class MessageFactory implements ErrorState {
 	 * @param msg the message for the error
 	 */
 	private void mapToKey(String key, ErrorTable errorTable, int state, String msg) {
-		boolean useProject = false;
-		IEclipsePreferences prefs = null;
-		
-		if (fProject != null) {
-			prefs = new ProjectScope(fProject).getNode(HTMLCorePlugin.getDefault().getBundle().getSymbolicName());
-			useProject = prefs.getBoolean(HTMLCorePreferenceNames.USE_PROJECT_SETTINGS, false);
-		}
-		
 		int severity = ValidationMessage.WARNING;
-		if(useProject)
-			severity = prefs.getInt(key, ValidationMessage.WARNING);
-		else
-			severity = new InstanceScope().getNode(HTMLCorePlugin.getDefault().getBundle().getSymbolicName()).getInt(key, ValidationMessage.WARNING);
-			
+		severity = fPreferenceService.getInt(HTMLCorePlugin.getDefault().getBundle().getSymbolicName(), key, ValidationMessage.WARNING, fLookupOrder);
 		errorTable.put(state, msg, severity);
 	}
 	
 	private void init() {
+		fPreferenceService = Platform.getPreferencesService();
+		fLookupOrder = new IScopeContext[] {new InstanceScope(), new DefaultScope()};
+		
+		if (fProject != null) {
+			ProjectScope projectScope = new ProjectScope(fProject);
+			if(projectScope.getNode(HTMLCorePlugin.getDefault().getBundle().getSymbolicName()).getBoolean(HTMLCorePreferenceNames.USE_PROJECT_SETTINGS, false))
+				fLookupOrder = new IScopeContext[] {projectScope, new InstanceScope(), new DefaultScope()};
+		}
+		
 		for (int i = 0; i < NodeType.MAX_TYPE; i++) {
 			errTables[i] = new ErrorTable();
 		}

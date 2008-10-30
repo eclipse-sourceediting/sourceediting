@@ -133,6 +133,7 @@ public class XSDImpl
   public static final String PROPERTY_SUBSTITUTION_GROUP = "SubstitutionGroup";
   public static final String PROPERTY_SUBSTITUTION_GROUP_VALUE = "SubstitutionGroupValue";
   public static final String PROPERTY_ABSTRACT = "Abstract";
+  public static final String PROPERTY_WHITESPACE_FACET = "org.eclipse.wst.xsd.cm.properties/whitespace"; //$NON-NLS-1$
   /**
    * Definition info for element declarations.
    */
@@ -1443,27 +1444,30 @@ public class XSDImpl
       }
 
       /**
-       * Returns false. This class does not support any properties.
+       * Returns true if the property is supported for this class.
        * 
        * @param propertyName -
        *          name of a property
-       * @return false.
+       * @return true if the property is supported.
        */
       public boolean supports(String propertyName)
       {
-        return false;
+    	  return (PROPERTY_WHITESPACE_FACET.equals(propertyName));
       }
 
       /**
-       * Returns null. This class does not support any properties.
+       * Returns the property value for the property name. Returns null if the
+       * property is not supported.
        * 
        * @param propertyName -
        *          name of a property
-       * @return null.
+       * @return the property value for the property name.
        */
       public Object getProperty(String propertyName)
       {
-        return null;
+    	  if(PROPERTY_WHITESPACE_FACET.equals(propertyName))
+		  	return getWhiteSpaceFacetValue();
+    	  return null;
       }
 
       /**
@@ -1475,7 +1479,7 @@ public class XSDImpl
       {
         XSDSimpleTypeDefinition sc = xsdAttributeUse.getAttributeDeclaration().getTypeDefinition();
         String typeName = sc.getName();
-        return typeName != null ? typeName : "string";
+        return typeName != null ? typeName : "string";  //$NON-NLS-1$
       }
 
       /**
@@ -1543,6 +1547,18 @@ public class XSDImpl
       {
         XSDAttributeDeclaration attr = xsdAttributeUse.getAttributeDeclaration();
         return attr.getResolvedAttributeDeclaration().getTypeDefinition();
+      }
+      
+      /**
+       * Obtains the whitespace facet of the XSD simple type.
+       * 
+       * @return The whitespace facet for the XSD type. If none is
+       * defined, or it is a complex type, null.
+       */
+      private String getWhiteSpaceFacetValue()
+      {
+        XSDSimpleTypeDefinition def = getXSDType().getSimpleType();
+        return (def != null && def.getEffectiveWhiteSpaceFacet() != null) ? def.getEffectiveWhiteSpaceFacet().getLexicalValue() : null ;
       }
     }
   }
@@ -2051,26 +2067,29 @@ public class XSDImpl
       }
 
       /**
-       * Returns false. This class does not support any properties.
+       * Returns true if the property is supported for this class.
        * 
        * @param propertyName -
        *          name of a property
-       * @return false.
+       * @return true if the property is supported.
        */
       public boolean supports(String propertyName)
       {
-        return false;
+        return (PROPERTY_WHITESPACE_FACET.equals(propertyName));
       }
 
       /**
-       * Returns null. This class does not support any properties.
+       * Returns the property value for the property name. Returns null if the
+       * property is not supported.
        * 
        * @param propertyName -
        *          name of a property
-       * @return null.
+       * @return the property value for the property name.
        */
       public Object getProperty(String propertyName)
       {
+        if(PROPERTY_WHITESPACE_FACET.equals(propertyName))
+        	return getWhiteSpaceFacetValue();
         return null;
       }
 
@@ -2085,7 +2104,7 @@ public class XSDImpl
         XSDSimpleTypeDefinition std = getXSDType().getSimpleType();
         if (std != null)
           typeName = std.getName();
-        return typeName != null ? typeName : "string";
+        return typeName != null ? typeName : "string"; //$NON-NLS-1$
       }
 
       /**
@@ -2146,6 +2165,18 @@ public class XSDImpl
       public CMDocument getCMDocument()
       {
         return (CMDocument) getAdapter(getXSDElementDeclaration().getSchema());
+      }
+      
+      /**
+       * Obtains the whitespace facet of the XSD simple type.
+       * 
+       * @return The whitespace facet for the XSD type. If none is
+       * defined, or it is a complex type, null.
+       */
+      private String getWhiteSpaceFacetValue()
+      {
+        XSDSimpleTypeDefinition def = getXSDType().getSimpleType();
+        return (def != null && def.getEffectiveWhiteSpaceFacet() != null) ? def.getEffectiveWhiteSpaceFacet().getLexicalValue() : null ;
       }
     }
   }

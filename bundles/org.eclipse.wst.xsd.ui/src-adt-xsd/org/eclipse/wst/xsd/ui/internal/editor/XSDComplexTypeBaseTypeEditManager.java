@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDSimpleTypeDefinitio
 import org.eclipse.wst.xsd.ui.internal.common.commands.SetBaseTypeAndManagerDirectivesCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.SetBaseTypeCommand;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDDirectivesManager;
 import org.eclipse.wst.xsd.ui.internal.editor.search.XSDSearchListDialogDelegate;
 import org.eclipse.wst.xsd.ui.internal.search.IXSDSearchConstants;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
@@ -86,14 +87,15 @@ public class XSDComplexTypeBaseTypeEditManager extends XSDTypeReferenceEditManag
         {
           Command command = new SetBaseTypeCommand(concreteComponent, td);
           command.execute();
-        }  
+        }
+        XSDDirectivesManager.removeUnusedXSDImports(concreteComponent.getSchema());
       }  
       else
       {  
         Command command = new SetBaseTypeAndManagerDirectivesCommand(concreteComponent, component.getName(), component.getQualifier(), component.getFile());
         command.setLabel(Messages._UI_ACTION_SET_BASE_TYPE);
         command.execute();
-      }  
+      }
     }
     else if (concreteComponent instanceof XSDSimpleTypeDefinition)
     {
@@ -111,13 +113,14 @@ public class XSDComplexTypeBaseTypeEditManager extends XSDTypeReferenceEditManag
         {
           Command command = new SetBaseTypeCommand(concreteComponent, td);
           command.execute();
-        }  
+        }
+        XSDDirectivesManager.removeUnusedXSDImports(concreteComponent.getSchema());
       }  
       else
       {  
         Command command = new SetBaseTypeAndManagerDirectivesCommand(concreteComponent, component.getName(), component.getQualifier(), component.getFile());
         command.execute();
-      }  
+      }
     }
 
   }

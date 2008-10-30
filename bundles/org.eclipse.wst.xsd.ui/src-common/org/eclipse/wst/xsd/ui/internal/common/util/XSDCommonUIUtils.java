@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,8 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Naoki Akiyama, Fujitsu - Bug 244901 - Cannot set xsd:annotation to 
+ *                              xsd:redefine by Properties view.
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.util;
 
@@ -245,17 +247,20 @@ public class XSDCommonUIUtils
     else if (input instanceof XSDRedefine)
     {
       XSDRedefine xsdComp = (XSDRedefine) input;
-      List list = xsdComp.getAnnotations();
-      if (list.size() > 0)
-      {
-        xsdAnnotation = (XSDAnnotation) list.get(0);
-      }
-      else
-      {
-        if (createIfNotExist && xsdAnnotation == null)
+      List contents = xsdComp.getContents(); 
+      for (int i = 0; i < contents.size(); i++)
+      { 
+        Object content = contents.get(i);
+        if (content instanceof XSDAnnotation)
         {
-          // ?
+          xsdAnnotation = (XSDAnnotation) content;
+          break;
         }
+      }
+      if (createIfNotExist && xsdAnnotation == null)
+      {
+        xsdAnnotation = factory.createXSDAnnotation();
+        contents.add(0, xsdAnnotation);
       }
       return xsdAnnotation;
     }

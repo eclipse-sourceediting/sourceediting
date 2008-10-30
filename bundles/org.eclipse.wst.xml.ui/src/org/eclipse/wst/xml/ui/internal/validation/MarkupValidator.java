@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
@@ -451,16 +452,19 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 
 		boolean selfClosed = false;
 		String tagName = null;
-		int length = 0;
 
+		/**
+		 * For tags that aren't meant to be EMPTY, make sure it's empty or has an end tag
+		 */
 		if (xmlNode.isContainer()) {
 			IStructuredDocumentRegion endRegion = xmlNode.getEndStructuredDocumentRegion();
 			if (endRegion == null) {
 				IStructuredDocumentRegion startRegion = xmlNode.getStartStructuredDocumentRegion();
-				if (!startRegion.isDeleted()) {
+				if (startRegion != null && !startRegion.isDeleted() && DOMRegionContext.XML_TAG_OPEN.equals(startRegion.getFirstRegion().getType())) {
 					// analyze the tag (check self closing)
 					ITextRegionList regions = startRegion.getRegions();
 					ITextRegion r = null;
+					int length = 0;
 					for (int i = 0; i < regions.size(); i++) {
 						r = regions.get(i);
 						if ((r.getType() == DOMRegionContext.XML_TAG_OPEN) || (r.getType() == DOMRegionContext.XML_TAG_CLOSE)) {
@@ -508,6 +512,41 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 				}
 			}
 
+		}
+		/*
+		 * Check for an end tag that has no start tag
+		 */
+		else {
+			IStructuredDocumentRegion startRegion = xmlNode.getStartStructuredDocumentRegion();
+			if (startRegion == null) {
+				IStructuredDocumentRegion endRegion = xmlNode.getEndStructuredDocumentRegion();
+				if (!endRegion.isDeleted()) {
+					// get name
+					ITextRegionList regions = endRegion.getRegions();
+					ITextRegion r = null;
+					for (int i = 0; i < regions.size(); i++) {
+						r = regions.get(i);
+						if (r.getType() == DOMRegionContext.XML_TAG_NAME) {
+							tagName = sdRegion.getText(r);
+						}
+					}
+
+					if (!selfClosed && (tagName != null)) {
+						String messageText = StringUtils.unpack(XMLUIMessages.Indicate_no_grammar_specified_severities)[0];
+
+						int start = sdRegion.getStart();
+						int lineNumber = getLineNumber(start);
+
+						// SEVERITY_STRUCTURE == IMessage.HIGH_SEVERITY
+						IMessage message = new LocalizedMessage(IMessage.HIGH_SEVERITY, messageText);
+						message.setOffset(start);
+						message.setLength(sdRegion.getTextLength());
+						message.setLineNo(lineNumber);
+
+						reporter.addMessage(this, message);
+					}
+				}
+			}
 		}
 	}
 
@@ -715,6 +754,8 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 			checkAttributesInEndTag(structuredDocumentRegion, reporter);
 			// check that the closing '>' is there
 			checkClosingBracket(structuredDocumentRegion, reporter);
+			// check if end tag is started
+			checkStartEndTagPairs(structuredDocumentRegion, reporter);
 		}
 		else if (isPI(structuredDocumentRegion)) {
 			// check validity of processing instruction
@@ -732,7 +773,22 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 	}
 
 	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException {
-		// TODO Auto-generated method stub
+		if (getDocument() == null) {
+			return;
+		}
+		if (!(reporter instanceof IncrementalReporter)) {
+			return;
+		}
+		if (!(getDocument() instanceof IStructuredDocument)) {
+			return;
+		}
 
+		// remove old messages
+		reporter.removeAllMessages(this);
+
+		IStructuredDocumentRegion[] regions = ((IStructuredDocument) fDocument).getStructuredDocumentRegions();
+		for (int i = 0; i < regions.length; i++) {
+			validate(regions[i], reporter);
+		}
 	}
 }

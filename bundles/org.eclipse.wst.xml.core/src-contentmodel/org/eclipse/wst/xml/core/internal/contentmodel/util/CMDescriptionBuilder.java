@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.contentmodel.util;
+
 
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAnyElement;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
@@ -27,7 +28,6 @@ public class CMDescriptionBuilder extends CMVisitor
   protected StringBuffer sb;
   protected CMNode root;
   protected boolean isRootVisited;
-
   public String buildDescription(CMNode node)
   {
     sb = new StringBuffer();
@@ -73,7 +73,8 @@ public class CMDescriptionBuilder extends CMVisitor
     {
       separator = " | "; //$NON-NLS-1$
     }
-
+    
+   
     CMNodeList nodeList = group.getChildNodes();
     int size = nodeList.getLength();
     for (int i = 0; i < size; i++)
@@ -84,6 +85,7 @@ public class CMDescriptionBuilder extends CMVisitor
         sb.append(separator);
       }
     }
+    
     sb.append(")"); //$NON-NLS-1$
     addOccurenceSymbol(group);
   }

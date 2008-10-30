@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,6 +64,10 @@ public class CodedReaderCreator extends CodedIO {
 
 
 	private InputStream fInputStream;
+	
+	private static final String CHARSET_UTF_16= "UTF-16"; //$NON-NLS-1$
+	
+	private static final String CHARSET_UTF_16LE= "UTF-16LE"; //$NON-NLS-1$
 
 	public CodedReaderCreator() {
 
@@ -292,6 +296,11 @@ public class CodedReaderCreator extends CodedIO {
 		if (fEncodingRule == EncodingRule.FORCE_DEFAULT) {
 			charsetName = encodingMemento.getAppropriateDefault();
 		}
+		
+		// [228366] For files that have a unicode BOM, and a charset name of UTF-16, the charset decoder needs "UTF-16LE"
+		if(CHARSET_UTF_16.equals(charsetName) && encodingMemento.getUnicodeBOM() == IContentDescription.BOM_UTF_16LE)
+			charsetName = CHARSET_UTF_16LE;
+		
 		Charset charset = Charset.forName(charsetName);
 		CharsetDecoder charsetDecoder = charset.newDecoder();
 		if (fEncodingRule == EncodingRule.IGNORE_CONVERSION_ERROR) {

@@ -608,8 +608,13 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 				System.out.println(TRACE_PREFIX + "calculated simple text damage at " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
 				System.out.flush();
 			}
+			
+			boolean damageOverlaps = processRecordedDamages(damage, document);
+			if(_trace && _traceTime) {
+				System.out.println(TRACE_PREFIX + "processed recorded structured text damage at " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 
-			if (damage != null && document != null) {
+			if (damage != null && document != null && !damageOverlaps) {
 				processDamage(damage, document);
 				if(_trace && _traceTime) {
 					System.out.println(TRACE_PREFIX + "processed simple text damage at " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -617,10 +622,6 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 				}
 			}
 
-			processRecordedDamages();
-			if(_trace && _traceTime) {
-				System.out.println(TRACE_PREFIX + "processed recorded structured text damage at " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
-			}
 			fDocumentPartitioningChanged= false;
 			fChangedDocumentPartitions= null;
 			if(_trace) {
@@ -708,9 +709,9 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 	private YUV_RGBConverter rgbConverter;
 	private Map readOnlyColorTable;
 	double readOnlyForegroundScaleFactor = 30;
-	
-	//private StructuredDocumentListener fDocumentListener = new StructuredDocumentListener();
 
+	private IDocument fLastDocument;
+	
 	/**
 	 * Creates a new presentation reconciler. There are no damagers or repairers
 	 * registered with this reconciler by default. The default partitioning
@@ -1026,14 +1027,32 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 	}
 	
 	void processRecordedDamages() {
+		processRecordedDamages(null, null);
+	}
+	
+	boolean processRecordedDamages(IRegion damage, IDocument document) {
 		RecordedDamage[] recordings = null;
+		boolean recordingOverlaps = false;
 		synchronized (fRecordedDamages) {
 			recordings = (RecordedDamage[]) fRecordedDamages.toArray(new RecordedDamage[fRecordedDamages.size()]);
 			fRecordedDamages.clear();
 		}
 		for (int i = 0; i < recordings.length; i++) {
+			if (isOverlappingRegion(damage, recordings[i].damage) && document == recordings[i].document)
+				recordingOverlaps = true;
 			processDamage(recordings[i].damage, recordings[i].document);
 		}
+		return recordingOverlaps;
+	}
+	
+	private boolean isOverlappingRegion(IRegion base, IRegion damage) {
+		if(base == null || damage == null)
+			return false;
+		
+		int baseEnd = base.getOffset() + base.getLength();
+		int damageEnd = damage.getOffset() + damage.getLength();
+		
+		return damage.getOffset() <= base.getOffset() && (damageEnd >= baseEnd);
 	}
 
 	/**
@@ -1157,5 +1176,30 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 	
 		return result;
 	}
+
+	/**
+	 * Constructs a "repair description" for the given damage and returns this
+	 * description as a text presentation, essentially making
+	 * {@link #createPresentation(IRegion, IDocument)} publicly callable.
+	 * <p>
+	 * NOTE: Should not be used if this reconciler is installed on a viewer.
+	 * This method is considered EXPERIMENTAL and may not be available in
+	 * subsequent versions.
+	 * </p>
+	 * 
+	 * @param damage
+	 *            the damage to be repaired
+	 * @param document
+	 *            the document whose presentation must be repaired
+	 * @return the presentation repair description as text presentation
+	 */
+	public TextPresentation createRepairDescription(IRegion damage, IDocument document) {
+		if (document != fLastDocument) {
+			setDocumentToDamagers(document);
+			setDocumentToRepairers(document);
+			fLastDocument= document;
+		}
+		return createPresentation(damage, document);
+	}	
 
 }

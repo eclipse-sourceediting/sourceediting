@@ -6,13 +6,6 @@
 		<sourceViewerConfiguration
 			class="org.eclipse.wst.jsdt.web.support.jsp.JSDTStructuredTextViewerConfigurationJSP"
 			target="org.eclipse.jst.jsp.core.jspsource.source" />
-		
-		
-		<contentOutlineConfiguration
-			class="org.eclipse.jst.jsp.ui.views.contentoutline.JSPContentOutlineConfiguration"
-			target="org.eclipse.jst.jsp.core.jspsource" />
-		
-		
 	</extension>
 
 	
