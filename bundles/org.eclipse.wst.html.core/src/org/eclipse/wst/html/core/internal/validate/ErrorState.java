@@ -33,6 +33,7 @@ interface ErrorState {
 	static final int UNCLOSED_END_TAG_ERROR = 111;
 	static final int INVALID_EMPTY_ELEMENT_TAG = 112;
 	static final int UNCLOSED_ATTR_VALUE = 113; //D210422
+	static final int RESOURCE_NOT_FOUND = 114; //D210422
 	// layout error
 	static final int LAYOUT_ERROR_LEVEL = 1000;
 	static final int INVALID_CONTENT_ERROR = 1001;

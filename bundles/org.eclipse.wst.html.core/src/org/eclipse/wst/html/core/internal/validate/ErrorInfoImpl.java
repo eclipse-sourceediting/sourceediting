@@ -37,6 +37,7 @@ final class ErrorInfoImpl extends AbstractErrorInfo {
 					case UNDEFINED_VALUE_ERROR :
 					case MISMATCHED_VALUE_ERROR :
 					case UNCLOSED_ATTR_VALUE :
+					case RESOURCE_NOT_FOUND :
 						//D210422
 						return ((Attr) target).getValue();
 					default :

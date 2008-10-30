@@ -75,8 +75,8 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		public CMElementDeclaration decl = null;
 		public IStructuredDocumentRegion startTag = null;
 		public IStructuredDocumentRegion endTag = null;
-		public boolean hasStartTag = false;
-		public boolean hasEndTag = false;
+		public boolean hasStartTag() {return startTag != null;}
+		public boolean hasEndTag() {return endTag != null;}
 		public boolean isXHTML = false;
 	}
 
@@ -108,9 +108,6 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		info.decl = CMUtil.getDeclaration(info.target);
 		info.startTag = info.target.getStartStructuredDocumentRegion();
 		info.endTag = info.target.getEndStructuredDocumentRegion();
-
-		info.hasStartTag = (info.startTag != null);
-		info.hasEndTag = (info.endTag != null);
 
 		Document doc = info.target.getOwnerDocument();
 		if (!(doc instanceof IDOMDocument))
@@ -175,7 +172,7 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 	}
 
 	private void validateTags(ElementInfo info) {
-		if (info.hasStartTag) {
+		if (info.hasStartTag()) {
 			if (!info.target.isStartTagClosed()) {
 				// Mark the whole START tag as an error segment.
 				Segment errorSeg = new Segment(info.startTag);
@@ -183,7 +180,7 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 			}
 		}
 		else {
-			if (info.hasEndTag) {
+			if (info.hasEndTag()) {
 				if (info.decl != null) {
 					if (/*CMUtil.isHTML(info.decl) &&*/ !info.target.hasChildNodes()) {
 						if (info.target.isContainer()) {
@@ -198,14 +195,14 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 						}
 					}
 					else if (info.isXHTML) {
-						Segment errorSeg = new Segment(info.target.getStartOffset(), 0);
+						Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_END_TAG_NAME);
 						report(MISSING_START_TAG_ERROR, errorSeg, info.target);
 					}
 				}
 			}
 		}
 
-		if (info.hasEndTag) {
+		if (info.hasEndTag()) {
 			if (!info.target.isClosed()) {
 				// Set the whole END tag as error segment.
 				Segment errorSeg = new Segment(info.endTag);
@@ -214,24 +211,29 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		}
 		else {
 			if (info.isXHTML) { // XHTML
-				if (!info.target.isEmptyTag()) {
+				if (!info.target.isEmptyTag() && DOMRegionContext.XML_TAG_OPEN.equals(info.target.getStartStructuredDocumentRegion().getFirstRegion().getType())) {
+					/*
+					 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=248963 :
+					 * report empty tags not written as such, but only when
+					 * they follow actual XML/HTML syntax
+					 */
 					if (isEmptyContent(info.decl)) {
-						// EMPTY element should be written in <.../> form.
+						// EMPTY element should be written in <.../> form
 						Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG);
 						report(INVALID_EMPTY_ELEMENT_TAG, errorSeg, info.target);
 					}
 					else {
 						// end tag is required.
-						Segment errorSeg = new Segment(info.target.getEndOffset(), 0);
+						Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG);
 						report(MISSING_END_TAG_ERROR, errorSeg, info.target);
 					}
 				}
 			}
 			else { // HTML
-				if (info.hasStartTag) {
-					if (info.decl != null && CMUtil.isHTML(info.decl) && !info.target.isEmptyTag() && !CMUtil.isEndTagOmissible(info.decl)) {
+				if (info.hasStartTag()) {
+					if (info.decl != null && CMUtil.isHTML(info.decl) && !info.target.isEmptyTag() && !CMUtil.isEndTagOmissible(info.decl) && DOMRegionContext.XML_TAG_OPEN.equals(info.startTag.getFirstRegion().getType())) {
 						// Set the error mark to the end of the element.
-						Segment errorSeg = new Segment(info.target.getEndOffset(), 0);
+						Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG);
 						report(MISSING_END_TAG_ERROR, errorSeg, info.target);
 					}
 				}
@@ -241,15 +243,15 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 
 	/* perform validation about tag name definition. */
 	private void validateNames(ElementInfo info) {
-		boolean corrupted = info.hasEndTag && isEndTagCorrupted(info);
+		boolean corrupted = info.hasEndTag() && isEndTagCorrupted(info);
 		if (info.decl == null) {
 			// If no declaration is retrieved, the target is really
 			// unknown element.
-			if (!info.hasStartTag && corrupted) {
+			if (!info.hasStartTag() && corrupted) {
 				reportCorruptedEndTagError(info);
 			}
 			else {
-				Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG);
+				Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG_NAME);
 				report(UNDEFINED_NAME_ERROR, errorSeg, info.target);
 			}
 		}
@@ -272,7 +274,7 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 			return;
 
 		// start tag
-		if (info.hasStartTag) {
+		if (info.hasStartTag()) {
 			startTagName = getTagName(info.startTag);
 			if (!declared.equals(startTagName)) {
 				TagErrorInfoImpl error = new TagErrorInfoImpl(MISMATCHED_ERROR, info.startTag, startTagName);
@@ -280,9 +282,9 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 			}
 		}
 		// end tag
-		if (info.hasEndTag) {
+		if (info.hasEndTag()) {
 			endTagName = getTagName(info.endTag);
-			if (!info.hasStartTag || (!endTagName.equals(startTagName))) {
+			if (!info.hasStartTag() || (!endTagName.equals(startTagName))) {
 				if (!declared.equals(endTagName)) {
 					TagErrorInfoImpl error = new TagErrorInfoImpl(MISMATCHED_ERROR, info.endTag, endTagName);
 					this.reporter.report(error);

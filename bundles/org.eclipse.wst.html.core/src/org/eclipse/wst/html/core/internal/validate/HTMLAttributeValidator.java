@@ -15,7 +15,12 @@ package org.eclipse.wst.html.core.internal.validate;
 import java.util.List;
 import java.util.Locale;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
@@ -69,12 +74,12 @@ public class HTMLAttributeValidator extends PrimeValidator {
 				IDOMElement ownerElement = (IDOMElement) ((IDOMAttr) errorNode).getOwnerElement();
 				if (ownerElement != null) {
 					int regionStartOffset = ownerElement.getFirstStructuredDocumentRegion().getStartOffset(rgn);
-					int regionLength = rgn.getLength();
+					int regionLength = rgn.getTextLength();
 					return new Segment(regionStartOffset, regionLength);
 				}
 			}
 		}
-		return new Segment(errorNode.getStartOffset(), 0);
+		return new Segment(errorNode.getStartOffset(), 1);
 	}
 
 	/**
@@ -175,6 +180,23 @@ public class HTMLAttributeValidator extends PrimeValidator {
 							rgnType = REGION_VALUE;
 							state = ErrorState.UNDEFINED_VALUE_ERROR;
 						}
+					}
+					else if (CMDataType.URI.equals(attrType.getDataTypeName())) {
+						// TODO: URI validation?
+						if (false && actualValue.indexOf('#') < 0 && actualValue.indexOf(":/") == -1 && CMUtil.isHTML(edec)) { //$NON-NLS-1$ //$NON-NLS-2$
+							IStructuredDocumentRegion start = ((IDOMNode) node).getStartStructuredDocumentRegion();
+							if (start != null && start.getFirstRegion().getTextLength() == 1) {
+								IPath basePath = new Path(((IDOMNode) node).getModel().getBaseLocation());
+								if (basePath.segmentCount() > 1) {
+									IPath path = ModuleCoreSupport.resolve(basePath, actualValue);
+									IResource found = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+									if (found == null || !found.isAccessible()) {
+										rgnType = REGION_VALUE;
+										state = ErrorState.RESOURCE_NOT_FOUND;
+									}
+								}
+							}
+						}
 					} else {
 						// Check current value is valid among a known list
 						String[] candidates = attrType.getEnumeratedValues();
@@ -205,8 +227,21 @@ public class HTMLAttributeValidator extends PrimeValidator {
 							}
 						}
 						else if (attrType.getDataTypeName() == CMDataType.URI) {
-							// TODO: Check URIs
-
+							// TODO: URI validation?
+							if (false && actualValue.indexOf('#') < 0 && actualValue.indexOf(":/") == -1 && CMUtil.isHTML(edec)) { //$NON-NLS-1$ //$NON-NLS-2$
+								IStructuredDocumentRegion start = ((IDOMNode) node).getStartStructuredDocumentRegion();
+								if (start != null && start.getFirstRegion().getTextLength() == 1) {
+									IPath basePath = new Path(((IDOMNode) node).getModel().getBaseLocation());
+									if (basePath.segmentCount() > 1) {
+										IPath path = ModuleCoreSupport.resolve(basePath, actualValue);
+										IResource found = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+										if (found == null || !found.isAccessible()) {
+											rgnType = REGION_VALUE;
+											state = ErrorState.RESOURCE_NOT_FOUND;
+										}
+									}
+								}
+							}
 						}
 					}
 				}

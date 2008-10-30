@@ -93,6 +93,7 @@ public class MessageFactory implements ErrorState {
 		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_DUPLICATE, attrTable, DUPLICATE_ERROR, MSG_DUPLICATE_ATTR_ERROR);
 		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_MISMATCH, attrTable, MISMATCHED_VALUE_ERROR, MSG_MISMATCHED_ATTR_VALUE_ERROR);
 		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_UNCLOSED, attrTable, UNCLOSED_ATTR_VALUE, MSG_UNCLOSED_ATTR_VALUE_ERROR);
+		mapToKey(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_RESOURCE_NOT_FOUND, attrTable, RESOURCE_NOT_FOUND, MSG_RESOURCE_NOT_FOUND);
 
 		// element error map
 		ErrorTable elemTable = errTables[NodeType.ELEMENT];// short hand
@@ -235,6 +236,8 @@ public class MessageFactory implements ErrorState {
 	private static final String MSG_UNCLOSED_CDATA_SECTION_ERROR = HTMLCoreMessages.CDATA_section_not_closed__ERROR_;
 	private static final String MSG_INVALID_EMPTY_ELEMENT_TAG = HTMLCoreMessages._ERROR_Tag___0___should_be_an_empty_element_tag_1;
 	private static final String MSG_UNCLOSED_ATTR_VALUE_ERROR = HTMLCoreMessages._ERROR_Attribute_value___0___not_closed__1;
+	private static final String MSG_RESOURCE_NOT_FOUND = HTMLCoreMessages._ERROR_Resource_not_found_0;
+	
 	private ErrorTable[] errTables = new ErrorTable[NodeType.MAX_TYPE];
 
 //	static {

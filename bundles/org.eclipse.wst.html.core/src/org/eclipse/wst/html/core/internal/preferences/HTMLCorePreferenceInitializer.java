@@ -79,6 +79,7 @@ public class HTMLCorePreferenceInitializer extends AbstractPreferenceInitializer
 		node.putInt(HTMLCorePreferenceNames.ATTRIBUTE_DUPLICATE, ValidationMessage.WARNING);
 		node.putInt(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_MISMATCH, ValidationMessage.ERROR);
 		node.putInt(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_UNCLOSED, ValidationMessage.WARNING);
+		node.putInt(HTMLCorePreferenceNames.ATTRIBUTE_VALUE_RESOURCE_NOT_FOUND, ValidationMessage.IGNORE);
 		
 		// Elements
 		node.putInt(HTMLCorePreferenceNames.ELEM_UNKNOWN_NAME, ValidationMessage.WARNING);

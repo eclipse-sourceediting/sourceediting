@@ -545,6 +545,17 @@
 		</target>
 	</extension>
 	
+	<extension
+		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+		<hyperlinkDetector
+			class="org.eclipse.wst.html.ui.internal.hyperlink.AnchorHyperlinkDetector"
+			id="org.eclipse.wst.html.ui.internal.hyperlink.AnchorHyperlinkDetector"
+			name="%hyperlinkDetector.anchor.name"
+			targetId="org.eclipse.wst.html.core.htmlsource">
+		</hyperlinkDetector>
+		
+   </extension>
+
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.eclipse.wst.html.ui.htmlSourceContributions.definition">
             <with variable="activeContexts">
