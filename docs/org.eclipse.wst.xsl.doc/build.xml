@@ -27,7 +27,7 @@
 			<param name="chunker.output.indent" expression="yes"/>
 			<param name="navig.showtitles" expression="0"/>
 			<param name="suppress.navigation" expression="1"/>
-            <param name="generate.toc" expression="book      toc,title,figure
+            <param name="generate.toc" expression="book      toc,title
 chapter   toc,title
 section   title" />
 			<param name="chapter.autolabel" expression="0"/>
