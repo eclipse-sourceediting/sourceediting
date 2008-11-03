@@ -341,15 +341,17 @@ public class AnchorHyperlinkDetector extends AbstractHyperlinkDetector {
 	// link to anchors with the given name (value includes the '#')
 	IHyperlink[] createHyperlinksToAnchorNamed(ITextViewer textViewer, IRegion hyperlinkRegion, Element element, String anchorName, boolean canShowMultipleHyperlinks) {
 		List links = new ArrayList(1);
-		if (anchorName.length() > 0 && anchorName.startsWith("#")) { //$NON-NLS-1$
+		// >1 guards the substring-ing
+		if (anchorName.length() > 1 && anchorName.startsWith("#")) { //$NON-NLS-1$
 			// an anchor in this document
 			NodeList anchors = element.getOwnerDocument().getElementsByTagNameNS("*", HTML40Namespace.ElementName.A); //$NON-NLS-1$
+			String internalAnchorName = anchorName.substring(1);
 			for (int i = 0; i < anchors.getLength(); i++) {
-				addHyperLinkForName(textViewer, hyperlinkRegion, element, anchorName, links, anchors.item(i));
+				addHyperLinkForName(textViewer, hyperlinkRegion, element, internalAnchorName, links, anchors.item(i));
 			}
 			anchors = element.getOwnerDocument().getElementsByTagName(HTML40Namespace.ElementName.A);
 			for (int i = 0; i < anchors.getLength(); i++) {
-				addHyperLinkForName(textViewer, hyperlinkRegion, element, anchorName, links, anchors.item(i));
+				addHyperLinkForName(textViewer, hyperlinkRegion, element, internalAnchorName, links, anchors.item(i));
 			}
 		}
 		else {
