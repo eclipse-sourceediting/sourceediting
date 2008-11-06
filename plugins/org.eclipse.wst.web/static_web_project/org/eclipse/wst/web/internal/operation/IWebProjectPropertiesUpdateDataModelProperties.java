@@ -12,11 +12,13 @@ package org.eclipse.wst.web.internal.operation;
 
 import org.eclipse.wst.common.componentcore.datamodel.properties.IServerContextRootDataModelProperties;
 
-
 /**
  * @deprecated Replaced by {@link IServerContextRootDataModelProperties}
- *
+ * 
  */
-public interface IWebProjectPropertiesUpdateDataModelProperties extends IServerContextRootDataModelProperties {
+public interface IWebProjectPropertiesUpdateDataModelProperties {
+
+	public static final String PROJECT = "IWebProjectPropertiesUpdateDataModelProperties.PROJECT"; //$NON-NLS-1$	
+	public static final String CONTEXT_ROOT = "IWebProjectPropertiesUpdateDataModelProperties.CONTEXT_ROOT"; //$NON-NLS-1$
 
 }
