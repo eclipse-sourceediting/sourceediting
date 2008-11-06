@@ -38,14 +38,14 @@ public class TestContentTypeDetectionForXML extends TestContentTypeDetection {
 	public void testFile104b() throws CoreException, IOException {
 		doTest(expectedXMLContentType, "testfiles/xml/eucjp.xml", null);
 	}
-
-	public void testFile105() throws CoreException, IOException {
-		doTest(expectedXMLContentType, "testfiles/xml/IllformedNormalNonDefault.xml", null);
-	}
-//  [251659] - XMLContentDescriber no longer returns content types for invalid encodings
-//	public void testFile106() throws CoreException, IOException {
-//		doTest(expectedXMLContentType, "testfiles/xml/MalformedNoEncoding.xml", null);
+//	[254504] XMLContentDescriber determines this to be INVALID content now
+//	public void testFile105() throws CoreException, IOException {
+//		doTest(expectedXMLContentType, "testfiles/xml/IllformedNormalNonDefault.xml", null);
 //	}
+//  [251659] - XMLContentDescriber no longer returns content types for invalid encodings
+	public void testFile106() throws CoreException, IOException {
+		doTest(expectedXMLContentType, "testfiles/xml/MalformedNoEncoding.xml", null);
+	}
 
 	/**
 	 * This file is illformed in its specified charset
@@ -94,10 +94,10 @@ public class TestContentTypeDetectionForXML extends TestContentTypeDetection {
 //	public void testFile115() throws CoreException, IOException {
 //		doTest(expectedXMLContentType, "testfiles/xml/testIllFormed3.xml", java.nio.charset.IllegalCharsetNameException.class);
 //	}
-
-	public void testFile116() throws CoreException, IOException {
-		doTest(expectedXMLContentType, "testfiles/xml/testIllFormed4.xml", null);
-	}
+//	[254504] XMLContentDescriber determines this to be INVALID content now
+//	public void testFile116() throws CoreException, IOException {
+//		doTest(expectedXMLContentType, "testfiles/xml/testIllFormed4.xml", null);
+//	}
 
 	public void testFile117() throws CoreException, IOException {
 		doTest(expectedXMLContentType, "testfiles/xml/testMultiLine.xml", null);
@@ -117,7 +117,8 @@ public class TestContentTypeDetectionForXML extends TestContentTypeDetection {
 
 	public void testFile120WS() throws CoreException, IOException {
 		// whitespace (CRLF) before xml declaration
-		doTest(expectedCustomXMLContentType, "testfiles/xml/testWSBeforeXMLDecl.xml", null);
+		// [251748] Leading newlines can now be picked up by the XMLContentDescriber
+		doTest(expectedXMLContentType, "testfiles/xml/testWSBeforeXMLDecl.xml", null);
 	}
 
 	public void testFile120WS2() throws CoreException, IOException {
