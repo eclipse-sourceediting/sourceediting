@@ -36,6 +36,7 @@ public class ProductManager {
 	private static final String ADD_TO_EAR_BY_DEFAULT = "false"; //$NON-NLS-1$
 	private static final String OUTPUT_FOLDER = "build/classes"; //$NON-NLS-1$
 	private static final String USE_SINGLE_ROOT_STRUCTURE = "false"; //$NON-NLS-1$
+	private static final String VIEWER_SYNC_FOR_WEBSERVICES = "true"; //$NON-NLS-1$
 	private static final String ID_PERSPECTIVE_HIERARCHY_VIEW = "org.eclipse.ui.navigator.ProjectExplorer"; //$NON-NLS-1$
 	private static final String FINAL_PERSPECTIVE = "org.eclipse.jst.j2ee.J2EEPerspective"; //$NON-NLS-1$
 	private static final char RUNTIME_SEPARATOR = ':';
@@ -74,6 +75,8 @@ public class ProductManager {
 				return ADD_TO_EAR_BY_DEFAULT;
 			else if (key.equals(IProductConstants.USE_SINGLE_ROOT_STRUCTURE))
 				return USE_SINGLE_ROOT_STRUCTURE;
+			else if (key.equals(IProductConstants.VIEWER_SYNC_FOR_WEBSERVICES))
+				return VIEWER_SYNC_FOR_WEBSERVICES;
 			else if (key.equals(IProductConstants.OUTPUT_FOLDER))
 				return OUTPUT_FOLDER;
 			else if (key.equals(IProductConstants.ID_PERSPECTIVE_HIERARCHY_VIEW))
@@ -103,6 +106,11 @@ public class ProductManager {
 	
 	public static boolean shouldUseSingleRootStructure() {
 		String value = getProperty(IProductConstants.USE_SINGLE_ROOT_STRUCTURE);
+		return Boolean.valueOf(value).booleanValue();
+	}
+	
+	public static boolean shouldUseViewerSyncForWebservices() {
+		String value = getProperty(IProductConstants.VIEWER_SYNC_FOR_WEBSERVICES);
 		return Boolean.valueOf(value).booleanValue();
 	}
 
