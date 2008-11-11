@@ -59,20 +59,19 @@ public class TaglibHelperManager implements IElementChangedListener {
      * Update classpath for appropriate loader.
      * @see org.eclipse.jdt.core.IElementChangedListener#elementChanged(org.eclipse.jdt.core.ElementChangedEvent)
      */
-    public void elementChanged(ElementChangedEvent event) {
-
-        // handle classpath changes
-        IJavaElementDelta delta = event.getDelta();
-        if(delta.getElement().getElementType() == IJavaElement.JAVA_MODEL) {
-            IJavaElementDelta[] changed = delta.getChangedChildren();
-            for (int i = 0; i < changed.length; i++) {
-                if ((changed[i].getFlags() & IJavaElementDelta.F_CLASSPATH_CHANGED) != 0 || (changed[i].getFlags() & IJavaElementDelta.F_REORDER) != 0 || (changed[i].getFlags() & IJavaElementDelta.F_RESOLVED_CLASSPATH_CHANGED) != 0) {
-                    IJavaElement proj = changed[i].getElement();
-                    handleClasspathChange(changed, i, proj);
-                }
-            }
-        }
-    }
+	public void elementChanged(ElementChangedEvent event) {
+		// handle classpath changes
+		IJavaElementDelta delta = event.getDelta();
+		if (delta.getElement().getElementType() == IJavaElement.JAVA_MODEL) {
+			IJavaElementDelta[] changed = delta.getChangedChildren();
+			for (int i = 0; i < changed.length; i++) {
+				if ((changed[i].getFlags() & IJavaElementDelta.F_CLASSPATH_CHANGED) != 0 || (changed[i].getFlags() & IJavaElementDelta.F_REORDER) != 0 || (changed[i].getFlags() & IJavaElementDelta.F_RESOLVED_CLASSPATH_CHANGED) != 0 || (changed[i].getFlags() & IJavaElementDelta.F_PRIMARY_RESOURCE) != 0) {
+					IJavaElement proj = changed[i].getElement();
+					handleClasspathChange(changed, i, proj);
+				}
+			}
+		}
+	}
     
     /**
      * @param changed

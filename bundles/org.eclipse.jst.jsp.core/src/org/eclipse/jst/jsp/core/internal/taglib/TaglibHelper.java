@@ -70,8 +70,6 @@ import com.ibm.icu.text.MessageFormat;
 
 /**
  * This class helps find TaglibVariables in a JSP file.
- * 
- * @author pavery
  */
 public class TaglibHelper {
 
@@ -720,9 +718,14 @@ public class TaglibHelper {
 
 		IClasspathContainer container = JavaCore.getClasspathContainer(entry.getPath(), project);
 		if (container != null) {
-			// avoid infinite recursion
-			if (!fContainerEntries.contains(container.getPath().toString())) {
-				fContainerEntries.add(container.getPath().toString());
+			String uniqueProjectAndContainerPath = project.getProject().getFullPath().append(container.getPath()).toString();
+			/*
+			 * Avoid infinite recursion, but track containers for each project
+			 * separately as they may return different values. This may mean
+			 * indexing JREs multiple times, however.
+			 */
+			if (!fContainerEntries.contains(uniqueProjectAndContainerPath)) {
+				fContainerEntries.add(uniqueProjectAndContainerPath);
 
 				IClasspathEntry[] cpes = container.getClasspathEntries();
 				// recursive call here
