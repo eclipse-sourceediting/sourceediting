@@ -62,15 +62,11 @@ public class FileUtil {
 		if (previousResultsDirectory == null && notTriedYet) {
 			Bundle bundle = Platform.getBundle(PLUGIN_ID);
 			URL url = bundle.getEntry("/"); //$NON-NLS-1$
-			//String installPath = url.getPath();
-			// add known file so URL method below can be used
-			// (doesn't seem to work for directory?)
-			URL totalURL = new URL(url, "plugin.xml");
-			URL finalurl = FileLocator.toFileURL(totalURL);
-			String finalFile = finalurl.getFile();
-			File file = new File(finalFile);
-			String finalPath = file.getParent();
-			File pluginHomeDir = new File(finalPath);
+
+			URL finalurl = FileLocator.toFileURL(url);
+			String finalFile = finalurl.getPath();
+
+			File pluginHomeDir = new File(finalFile);
 			FilenameFilter dirFilter = new DirFilenameFilter(directoryRootName);
 			File[] allDirs = pluginHomeDir.listFiles(dirFilter);
 
