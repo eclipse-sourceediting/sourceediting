@@ -29,27 +29,27 @@ public class TestEditorConfigurationHTML extends TestCase {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.SOURCEVIEWERCONFIGURATION, ContentTypeIdForHTML.ContentTypeID_HTML);
 		assertNotNull("no source viewer configuration for " + ContentTypeIdForHTML.ContentTypeID_HTML, o);
 		// check for over-qualified subclasses
-		assertEquals("unexpected source viewer configuration for " + ContentTypeIdForHTML.ContentTypeID_HTML, o.getClass(), StructuredTextViewerConfigurationHTML.class);
+		assertEquals("unexpected source viewer configuration for " + ContentTypeIdForHTML.ContentTypeID_HTML, StructuredTextViewerConfigurationHTML.class, o.getClass());
 	}
 
 	public void testGetContentOutlineViewerConfiguration() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.CONTENTOUTLINECONFIGURATION, ContentTypeIdForHTML.ContentTypeID_HTML);
 		assertNotNull("no content outline viewer configuration for " + ContentTypeIdForHTML.ContentTypeID_HTML, o);
 		// check for over-qualified subclasses
-		assertEquals("unexpected content outline viewer configuration for " + ContentTypeIdForHTML.ContentTypeID_HTML, o.getClass(), HTMLContentOutlineConfiguration.class);
+		assertEquals("unexpected content outline viewer configuration for " + ContentTypeIdForHTML.ContentTypeID_HTML, HTMLContentOutlineConfiguration.class, o.getClass());
 	}
 
 	public void testGetPropertySheetConfiguration() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.PROPERTYSHEETCONFIGURATION, ContentTypeIdForHTML.ContentTypeID_HTML);
 		assertNotNull("no property sheet configuration for " + ContentTypeIdForHTML.ContentTypeID_HTML, o);
 		// check for over-qualified subclasses
-		assertEquals("unexpected property sheet configuration for " + ContentTypeIdForHTML.ContentTypeID_HTML, o.getClass(), XMLPropertySheetConfiguration.class);
+		assertEquals("unexpected property sheet configuration for " + ContentTypeIdForHTML.ContentTypeID_HTML, XMLPropertySheetConfiguration.class, o.getClass());
 	}
 	
 	public void testGetDocumentationTextHover() {
 		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.DOCUMENTATIONTEXTHOVER, IHTMLPartitions.HTML_DEFAULT);
 		assertNotNull("no documentation text hover for " + IHTMLPartitions.HTML_DEFAULT, o);
 		// check for over-qualified subclasses
-		assertEquals("unexpected documentation text hover for " + IHTMLPartitions.HTML_DEFAULT, o.getClass(), HTMLTagInfoHoverProcessor.class);
+		assertEquals("unexpected documentation text hover for " + IHTMLPartitions.HTML_DEFAULT, HTMLTagInfoHoverProcessor.class, o.getClass());
 	}
 }
