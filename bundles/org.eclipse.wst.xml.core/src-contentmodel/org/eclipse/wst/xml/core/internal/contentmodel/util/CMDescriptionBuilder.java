@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.contentmodel.util;
 
-import java.util.Stack;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAnyElement;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
@@ -29,8 +28,6 @@ public class CMDescriptionBuilder extends CMVisitor
   protected StringBuffer sb;
   protected CMNode root;
   protected boolean isRootVisited;
-  protected Stack visitedCMGroupStack = new Stack();
-
   public String buildDescription(CMNode node)
   {
     sb = new StringBuffer();
@@ -62,11 +59,6 @@ public class CMDescriptionBuilder extends CMVisitor
 
   public void visitCMGroup(CMGroup group)
   {
-    // This is to prevent recursion.
-    if (visitedCMGroupStack.contains(group))
-    {
-      return;
-    }
     int op = group.getOperator();
     if (op == CMGroup.ALL)
     {
@@ -82,8 +74,6 @@ public class CMDescriptionBuilder extends CMVisitor
       separator = " | "; //$NON-NLS-1$
     }
     
-    // Push the current group to check later to avoid potential recursion
-    visitedCMGroupStack.push(group);
    
     CMNodeList nodeList = group.getChildNodes();
     int size = nodeList.getLength();
@@ -95,9 +85,6 @@ public class CMDescriptionBuilder extends CMVisitor
         sb.append(separator);
       }
     }
-    
-    // Pop the current group
-    visitedCMGroupStack.pop();
     
     sb.append(")"); //$NON-NLS-1$
     addOccurenceSymbol(group);
