@@ -14,13 +14,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.gef.commands.Command;
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
-import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
+import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDSchema;
@@ -145,7 +149,7 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter
   public String[] getActions(Object object)
   {
     List list = new ArrayList();
-    list.add(DeleteXSDConcreteComponentAction.DELETE_XSD_COMPONENT_ID);
+    list.add(DeleteAction.ID);
     list.add(BaseSelectionAction.SEPARATOR_ID);
     Object schema = getEditorSchema();
     if (getXSDTypeDefinition().getSchema() == schema)
@@ -175,4 +179,16 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter
   {
     return this;
   }
+
+  public Command getDeleteCommand() 
+  {
+    return new DeleteCommand(getXSDTypeDefinition());	
+  }
+  
+  public IModel getModel()
+  {
+    Adapter adapter = XSDAdapterFactory.getInstance().adapt(getXSDTypeDefinition().getSchema());
+    return (IModel)adapter;
+  }
+
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
@@ -30,7 +31,6 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IStructure;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupAction;
-import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicityAction;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
@@ -38,6 +38,7 @@ import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
+import org.eclipse.xsd.XSDSchema;
 
 public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implements IStructure, IActionProvider, IGraphElement, IADTObjectListener
 {
@@ -121,7 +122,7 @@ public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implement
       list.add(BaseSelectionAction.SEPARATOR_ID);
     }
     
-    list.add(DeleteXSDConcreteComponentAction.DELETE_XSD_COMPONENT_ID);
+    list.add(DeleteAction.ID);
     
     if (getXSDModelGroupDefinition().isModelGroupDefinitionReference())
     {
@@ -160,7 +161,7 @@ public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implement
 
   public Command getDeleteCommand()
   {
-    return new DeleteCommand("", getXSDModelGroupDefinition()); //$NON-NLS-1$
+    return new DeleteCommand(getXSDModelGroupDefinition());
   }
 
   // TODO Common this up with XSDComplexType's.  See also getFields 
@@ -243,7 +244,10 @@ public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implement
 
   public IADTObject getTopContainer()
   {
-    return getGlobalXSDContainer(getXSDModelGroupDefinition());
+    XSDModelGroupDefinition group = getXSDModelGroupDefinition();
+    if (group.getContainer() instanceof XSDSchema)
+      return this;
+    else
+      return getGlobalXSDContainer(group);
   }
-
 }

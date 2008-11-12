@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,13 +14,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
-import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
+import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
@@ -31,10 +37,11 @@ import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDRedefinableComponent;
 import org.eclipse.xsd.XSDRedefine;
 import org.eclipse.xsd.XSDRedefineContent;
+import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 
-public class XSDSchemaDirectiveAdapter extends XSDBaseAdapter implements IActionProvider
+public class XSDSchemaDirectiveAdapter extends XSDBaseAdapter implements IActionProvider, IGraphElement
 {
   public Image getImage()
   {
@@ -128,11 +135,36 @@ public class XSDSchemaDirectiveAdapter extends XSDBaseAdapter implements IAction
   {
     List list = new ArrayList();
     list.add(OpenInNewEditor.ID);
-    list.add(DeleteXSDConcreteComponentAction.DELETE_XSD_COMPONENT_ID);
+    list.add(DeleteAction.ID);
     list.add(BaseSelectionAction.SEPARATOR_ID);
     list.add(ShowPropertiesViewAction.ID);
     
     return (String [])list.toArray(new String[0]);
+  }
+
+  public Command getDeleteCommand()
+  {
+    XSDSchemaDirective object = (XSDSchemaDirective) target;
+    return new DeleteCommand(object);
+  }
+
+  public IModel getModel()
+  {
+    XSDSchema object = ((XSDSchemaDirective) target).getSchema();
+    Adapter adapter = XSDAdapterFactory.getInstance().adapt(object);
+    return (IModel)adapter;
+  }
+
+  public IADTObject getTopContainer()
+  {
+    // There is currently no drill-down details view of directives
+    // The top level container is the schema
+    return getModel();
+  }
+
+  public boolean isFocusAllowed()
+  {
+    return false;
   }
 
 }

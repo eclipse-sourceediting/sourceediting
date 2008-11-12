@@ -19,6 +19,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
@@ -30,13 +31,13 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IStructure;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAnyAttributeAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeDeclarationAction;
-import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDAttributeUse;
+import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDWildcard;
 
 public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implements IStructure, IActionProvider, IGraphElement, IADTObjectListener
@@ -112,7 +113,7 @@ public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implement
     list.add(AddXSDAttributeDeclarationAction.ID);
     list.add(AddXSDAnyAttributeAction.ID);
     list.add(BaseSelectionAction.SEPARATOR_ID);
-    list.add(DeleteXSDConcreteComponentAction.DELETE_XSD_COMPONENT_ID);
+    list.add(DeleteAction.ID);
     list.add(BaseSelectionAction.SEPARATOR_ID);
     Object schema = getEditorSchema();
     if (getXSDAttributeGroupDefinition().getSchema() == schema)
@@ -139,7 +140,7 @@ public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implement
 
   public Command getDeleteCommand()
   {
-    return new DeleteCommand("", getXSDAttributeGroupDefinition()); //$NON-NLS-1$
+    return new DeleteCommand(getXSDAttributeGroupDefinition());
   }
 
   public List getFields()
@@ -207,7 +208,11 @@ public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implement
 
   public IADTObject getTopContainer()
   {
-    return getGlobalXSDContainer(getXSDAttributeGroupDefinition());
+    XSDAttributeGroupDefinition attrGroupDef = getXSDAttributeGroupDefinition();
+    if (attrGroupDef.getContainer() instanceof XSDSchema)
+      return this;
+    else
+      return getGlobalXSDContainer(attrGroupDef);
   }
 
   public void notifyChanged(Notification msg)
@@ -221,6 +226,4 @@ public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implement
     clearFields();
     notifyListeners(this, null);
   }
-  
-
 }

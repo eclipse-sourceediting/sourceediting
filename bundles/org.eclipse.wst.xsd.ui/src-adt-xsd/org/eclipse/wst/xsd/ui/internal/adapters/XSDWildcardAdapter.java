@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import java.util.Collection;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
@@ -23,7 +24,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
-import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
+import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDWildcard;
@@ -137,8 +138,7 @@ public class XSDWildcardAdapter extends XSDParticleAdapter implements IField, IA
 
   public Command getDeleteCommand()
   {
-    // TODO Auto-generated method stub
-    return null;
+	  return new DeleteCommand((XSDWildcard) target);	
   }
 
   public String getKind()
@@ -219,7 +219,7 @@ public class XSDWildcardAdapter extends XSDParticleAdapter implements IField, IA
   public String[] getActions(Object object)
   {
     Collection actionIDs = new ArrayList();
-    actionIDs.add(DeleteXSDConcreteComponentAction.DELETE_XSD_COMPONENT_ID);
+    actionIDs.add(DeleteAction.ID);
     actionIDs.add(BaseSelectionAction.SEPARATOR_ID);
     actionIDs.add(ShowPropertiesViewAction.ID);
     return (String [])actionIDs.toArray(new String[0]);
@@ -234,5 +234,4 @@ public class XSDWildcardAdapter extends XSDParticleAdapter implements IField, IA
   {
     return false;
   }
-  
 }

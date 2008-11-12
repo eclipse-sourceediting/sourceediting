@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,11 +22,10 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewGraphicalViewer;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
-import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
-import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
-import org.eclipse.wst.xsd.ui.internal.adt.facade.IStructure;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 
 public class DeleteAction extends BaseSelectionAction
@@ -46,32 +45,24 @@ public class DeleteAction extends BaseSelectionAction
     {
       Object selection = i.next();
       Command command = null;
-      boolean doReselect = false;
+      boolean doSetInput = false;
+      boolean doSetModelAsInput = false;
+      IADTObject topLevelContainer = null;
       IModel model = null;
-      if (selection instanceof IComplexType)
+      
+      if (selection instanceof IGraphElement)
       {
-        command = ((IComplexType)selection).getDeleteCommand();
-        model = ((IComplexType)selection).getModel();
-        doReselect = !((IComplexType)selection).isAnonymous();
-      }
-      else if (selection instanceof IField)
-      {
-        model = ((IField)selection).getModel();
-        if ( ((IField)selection).isGlobal())
+        IGraphElement xsdObj = (IGraphElement)selection;
+        topLevelContainer = xsdObj.getTopContainer();
+        if (topLevelContainer == selection)
         {
-          doReselect = true;
+          doSetInput = true;
+          doSetModelAsInput = true;
         }
-        command = ((IField)selection).getDeleteCommand();
-      }  
-      else if (selection instanceof IStructure)
-      {
-        // Fallback for model groups and attribute groups.
-        IStructure structure = (IStructure)selection; 
-        model = structure.getModel();
-        command = structure.getDeleteCommand();
-        doReselect = true;
-      }  
-
+        command = xsdObj.getDeleteCommand();
+        model = xsdObj.getModel();
+      }
+      
       if (command != null)
       {
         IWorkbench workbench = PlatformUI.getWorkbench();
@@ -91,15 +82,20 @@ public class DeleteAction extends BaseSelectionAction
                 {
                   // Bug 86218 : Don't switch to top level view if the object we're deleting
                   // is not the input to the viewer
-                  doReselect = false;
+                  doSetInput = false;
                 }
               }
             }
           }
         }
         command.execute();
-        if (model != null && doReselect)
-          provider.setSelection(new StructuredSelection(model));
+        if (doSetInput)
+        {
+          if (model != null && doSetModelAsInput)
+            provider.setSelection(new StructuredSelection(model));   
+          else if (topLevelContainer != null && !doSetModelAsInput)
+            provider.setSelection(new StructuredSelection(topLevelContainer));
+        }
       }  
     }
     

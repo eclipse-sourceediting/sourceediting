@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.common.commands;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDVisitor;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDDirectivesManager;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
@@ -36,6 +37,12 @@ public class DeleteCommand extends BaseCommand
   public DeleteCommand(String label, XSDConcreteComponent target)
   {
     super(label);
+    this.target = target;
+  }
+  
+  public DeleteCommand(XSDConcreteComponent target)
+  {
+    super(Messages._UI_ACTION_DELETE);
     this.target = target;
   }
 

@@ -106,7 +106,6 @@ public class XSDAttributeDeclarationAdapter extends XSDBaseAttributeAdapter impl
     {
       return getGlobalXSDContainer(getXSDAttributeDeclaration());
     }
-    return null;
+    return this;
   }
-
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adapters;
 
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
+import org.eclipse.xsd.XSDConcreteComponent;
 
 public class XSDAnyTypeDefinitionAdapter extends XSDTypeDefinitionAdapter
 {
@@ -37,5 +41,16 @@ public class XSDAnyTypeDefinitionAdapter extends XSDTypeDefinitionAdapter
   public IADTObject getTopContainer()
   {
     return null;
+  }
+
+  public Command getDeleteCommand()
+  {
+    return null;
+  }
+
+  public IModel getModel()
+  {
+    Adapter adapter = XSDAdapterFactory.getInstance().adapt(((XSDConcreteComponent)target).getSchema());
+    return (IModel)adapter;
   } 
 }

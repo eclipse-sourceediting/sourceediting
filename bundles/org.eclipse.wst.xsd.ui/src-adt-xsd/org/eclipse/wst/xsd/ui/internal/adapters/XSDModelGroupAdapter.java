@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,19 +15,23 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvider;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
+import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAnyElementAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupDefinitionAction;
-import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicityAction;
+import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.design.figures.ModelGroupFigure;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.xsd.XSDCompositor;
@@ -214,7 +218,7 @@ public class XSDModelGroupAdapter extends XSDParticleAdapter implements IActionP
      if (!(getParent(target) instanceof XSDModelGroupDefinition))
      {
        actionIDs.add(BaseSelectionAction.SEPARATOR_ID);
-       actionIDs.add(DeleteXSDConcreteComponentAction.DELETE_XSD_COMPONENT_ID);
+       actionIDs.add(DeleteAction.ID);
      }    
      actionIDs.add(BaseSelectionAction.SEPARATOR_ID);
      actionIDs.add(ShowPropertiesViewAction.ID);
@@ -243,4 +247,14 @@ public class XSDModelGroupAdapter extends XSDParticleAdapter implements IActionP
     return false;
   }
 
+  public Command getDeleteCommand() 
+  {
+    return new DeleteCommand(getXSDModelGroup());	
+  }
+  
+  public IModel getModel()
+  {
+    Adapter adapter = XSDAdapterFactory.getInstance().adapt(getXSDModelGroup().getSchema());
+    return (IModel)adapter;
+  }
 }

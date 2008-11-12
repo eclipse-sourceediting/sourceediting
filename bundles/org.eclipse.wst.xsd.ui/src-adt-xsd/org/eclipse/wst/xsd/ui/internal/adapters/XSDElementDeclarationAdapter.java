@@ -265,7 +265,7 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
   public Command getDeleteCommand()
   {
     // TODO Auto-generated method stub
-    return new DeleteCommand("", getXSDElementDeclaration()); //$NON-NLS-1$
+    return new DeleteCommand(getXSDElementDeclaration());
   }
   
   public String[] getActions(Object object)
@@ -329,6 +329,6 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
     {
       return getGlobalXSDContainer(getXSDElementDeclaration());
     }
-    return null;
+    return this;
   }
 }

@@ -75,7 +75,7 @@ public abstract class XSDBaseAttributeAdapter extends XSDBaseAdapter implements 
 
   public Command getDeleteCommand()
   {
-    return new DeleteCommand("", getXSDAttributeDeclaration()); //$NON-NLS-1$
+    return new DeleteCommand(getXSDAttributeDeclaration());
   }
 
   public String getKind()
