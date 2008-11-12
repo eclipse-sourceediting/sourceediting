@@ -11,8 +11,13 @@
 
 package org.eclipse.wst.xsl.launching.tests.testcase;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -34,9 +39,9 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 public class XSLLaunchingTests extends TestCase {
-	
+
 	private TestEnvironment _env;
-	private IProject		_testProject;
+	private IProject _testProject;
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -44,46 +49,13 @@ public class XSLLaunchingTests extends TestCase {
 		_testProject = _env.createProject("XSLTestProject");
 	}
 
-	public void testBuildConfig() throws CoreException, InterruptedException, ParserConfigurationException, SAXException, IOException {
-		IPath folder = _testProject.getFullPath();
-		_env.addFileFromResource(folder, "input.xml", "1-input.xml");
-		_env.addFileFromResource(folder, "transform.xsl", "1-transform.xsl");
-//
-//		String launchXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\r\n" + 
-//				"<launchConfiguration type=\"org.eclipse.wst.xsl.launching.launchConfigurationType\">\r\n" + 
-//				"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_INPUT_FILE\" value=\"${workspace_loc:/XSLTestProject/input.xml}\"/>\r\n" + 
-//				"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OPEN_FILE\" value=\"false\"/>\r\n" + 
-//				"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FILE\" value=\"${workspace_loc:/XSLTestProject}/output.xml\"/>\r\n" + 
-//				"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_PROPERTIES\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Properties&gt;&#13;&#10;&lt;Property name=&quot;indent&quot; value=&quot;yes&quot;/&gt;&#13;&#10;&lt;/Properties&gt;&#13;&#10;\"/>\r\n" + 
-//				"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_PIPELINE\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Pipeline&gt;&#13;&#10;&lt;OutputProperties/&gt;&#13;&#10;&lt;Transform path=&quot;/XSLTestProject/transform.xsl&quot; pathType=&quot;resource&quot; uriResolver=&quot;&quot;&gt;&#13;&#10;&lt;Parameters/&gt;&#13;&#10;&lt;/Transform&gt;&#13;&#10;&lt;/Pipeline&gt;&#13;&#10;\"/>\r\n" + 
-//				"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_PROCESSOR\" value=\"org.eclipse.wst.xsl.launching.jre.default\"/>\r\n" + 
-//				"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_DEFAULT_OUTPUT_FILE\" value=\"false\"/>\r\n" + 
-//				"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_DEFAULT_PROCESSOR\" value=\"false\"/>\r\n" + 
-//				"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_FEATURES_FROM_PREFERENCES\" value=\"true\"/>\r\n" + 
-//				"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_PROPERTIES_FROM_PREFERENCES\" value=\"true\"/>\r\n" + 
-//				"<stringAttribute key=\"org.eclipse.wst.xsl.launching.INVOKER_DESCRIPTOR\" value=\"org.eclipse.wst.xsl.launching.jaxp.invoke\"/>\r\n" + 
-//				"</launchConfiguration>";
-		
-		String launchXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
-		"<launchConfiguration type=\"org.eclipse.wst.xsl.launching.launchConfigurationType\">" +
-		"<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_ATTRIBUTES\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Attributes/&gt;&#13;&#10;\"/>" +
-		"<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_OUTPUT_PROPERTIES\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Properties/&gt;&#13;&#10;\"/>" +
-		"<booleanAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_USE_DEFAULT_PROCESSOR\" value=\"true\"/>" +
-		"<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.INVOKER_DESCRIPTOR\" value=\"org.eclipse.wst.xsl.launching.jaxp.invoke\"/>" +
-		"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_FORMAT_FILE\" value=\"false\"/>" +
-		"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_INPUT_FILE\" value=\"${workspace_loc:/XSLTestProject/input.xml}\"/>" +
-		"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OPEN_FILE\" value=\"true\"/>" +
-		"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FILENAME\" value=\"output.xml\"/>" +
-		"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_PIPELINE\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Pipeline&gt;&#13;&#10;&lt;OutputProperties/&gt;&#13;&#10;&lt;Transform path=&quot;/XSLTestProject/transform.xsl&quot; pathType=&quot;resource&quot;&gt;&#13;&#10;&lt;Parameters/&gt;&#13;&#10;&lt;/Transform&gt;&#13;&#10;&lt;/Pipeline&gt;&#13;&#10;\"/>" +
-		"<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_DEFAULT_OUTPUT_FILE\" value=\"false\"/>" +
-		"<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FOLDER\" value=\"${workspace_loc:/XSLTestProject}\"/>" +
-		"</launchConfiguration>";
-
-		
-		String name = "launch" + (int)(Math.random()*1000);
+	private void launchConfiguration(IPath folder, String launchXml)
+			throws CoreException, UnsupportedEncodingException,
+			InterruptedException {
+		String name = "launch" + (int) (Math.random() * 1000);
 		_env.addFile(folder, name + ".launch", launchXml);
-		
-		ILaunchManager mgr = DebugPlugin.getDefault().getLaunchManager();  
+
+		ILaunchManager mgr = DebugPlugin.getDefault().getLaunchManager();
 		ILaunchConfiguration[] allConfigs = mgr.getLaunchConfigurations();
 		ILaunchConfiguration mine = null;
 		boolean found = false;
@@ -91,36 +63,110 @@ public class XSLLaunchingTests extends TestCase {
 			if (lc.getName().equals(name)) {
 				found = true;
 				mine = lc;
-				assertEquals("bad launch config type?", "org.eclipse.wst.xsl.launching.launchConfigurationType", lc.getType().getIdentifier());
-				assertEquals("bad launch config plugin?", "org.eclipse.wst.xsl.launching", lc.getType().getPluginIdentifier());
+				assertEquals(
+						"bad launch config type?",
+						"org.eclipse.wst.xsl.launching.launchConfigurationType",
+						lc.getType().getIdentifier());
+				assertEquals("bad launch config plugin?",
+						"org.eclipse.wst.xsl.launching", lc.getType()
+								.getPluginIdentifier());
 			}
 		}
 		assertTrue("expected to find the launch config we just added", found);
 
-		ILaunch launch = mine.launch(ILaunchManager.RUN_MODE, new NullProgressMonitor());
-		for (int i = 0; i < 200 && ! launch.isTerminated(); ++i) {
+		ILaunch launch = mine.launch(ILaunchManager.RUN_MODE,
+				new NullProgressMonitor());
+		for (int i = 0; i < 200 && !launch.isTerminated(); ++i) {
 			System.out.println("waiting");
 			Thread.sleep(100);
 		}
-		assertTrue("Launch did not complete within a 20 second time period", launch.isTerminated());
+		assertTrue("Launch did not complete within a 20 second time period",
+				launch.isTerminated());
 
 		_testProject.refreshLocal(2, null);
+	}
+
+	public void testBuildConfig() throws CoreException, InterruptedException,
+			ParserConfigurationException, SAXException, IOException {
+		IPath folder = _testProject.getFullPath();
+		_env.addFileFromResource(folder, "input.xml", "1-input.xml");
+		_env.addFileFromResource(folder, "transform.xsl", "1-transform.xsl");
+
+		String launchXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+				+ "<launchConfiguration type=\"org.eclipse.wst.xsl.launching.launchConfigurationType\">"
+				+ "<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_ATTRIBUTES\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Attributes/&gt;&#13;&#10;\"/>"
+				+ "<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_OUTPUT_PROPERTIES\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Properties/&gt;&#13;&#10;\"/>"
+				+ "<booleanAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_USE_DEFAULT_PROCESSOR\" value=\"true\"/>"
+				+ "<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.INVOKER_DESCRIPTOR\" value=\"org.eclipse.wst.xsl.launching.jaxp.invoke\"/>"
+				+ "<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_FORMAT_FILE\" value=\"false\"/>"
+				+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_INPUT_FILE\" value=\"${workspace_loc:/XSLTestProject/input.xml}\"/>"
+				+ "<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OPEN_FILE\" value=\"true\"/>"
+				+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FILENAME\" value=\"output.xml\"/>"
+				+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_PIPELINE\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Pipeline&gt;&#13;&#10;&lt;OutputProperties/&gt;&#13;&#10;&lt;Transform path=&quot;/XSLTestProject/transform.xsl&quot; pathType=&quot;resource&quot;&gt;&#13;&#10;&lt;Parameters/&gt;&#13;&#10;&lt;/Transform&gt;&#13;&#10;&lt;/Pipeline&gt;&#13;&#10;\"/>"
+				+ "<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_DEFAULT_OUTPUT_FILE\" value=\"false\"/>"
+				+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FOLDER\" value=\"${workspace_loc:/XSLTestProject}\"/>"
+				+ "</launchConfiguration>";
+
+		launchConfiguration(folder, launchXml);
 		IFile output = _testProject.getFile("output.xml");
 		Document doc = parseXml(output.getContents(true));
-		
+
 		assertEquals("root-out", doc.getDocumentElement().getNodeName());
 	}
-	
-	public void testNothing() {	
+
+	public void testTransformComments() throws CoreException, InterruptedException,
+			ParserConfigurationException, SAXException, IOException {
+		IPath folder = _testProject.getFullPath();
+		_env.addFileFromResource(folder, "input.xml", "testCommentInput.xml");
+		_env.addFileFromResource(folder, "transform.xsl", "testComments.xsl");
+		_env.addFileFromResource(folder, "expected.xml", "testCommentsExpected.xml");
+
+		String launchXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+				+ "<launchConfiguration type=\"org.eclipse.wst.xsl.launching.launchConfigurationType\">"
+				+ "<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_ATTRIBUTES\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Attributes/&gt;&#13;&#10;\"/>"
+				+ "<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_OUTPUT_PROPERTIES\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Properties/&gt;&#13;&#10;\"/>"
+				+ "<booleanAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_USE_DEFAULT_PROCESSOR\" value=\"true\"/>"
+				+ "<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.INVOKER_DESCRIPTOR\" value=\"org.eclipse.wst.xsl.launching.jaxp.invoke\"/>"
+				+ "<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_FORMAT_FILE\" value=\"false\"/>"
+				+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_INPUT_FILE\" value=\"${workspace_loc:/XSLTestProject/input.xml}\"/>"
+				+ "<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OPEN_FILE\" value=\"true\"/>"
+				+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FILENAME\" value=\"output.xml\"/>"
+				+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_PIPELINE\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Pipeline&gt;&#13;&#10;&lt;OutputProperties/&gt;&#13;&#10;&lt;Transform path=&quot;/XSLTestProject/transform.xsl&quot; pathType=&quot;resource&quot;&gt;&#13;&#10;&lt;Parameters/&gt;&#13;&#10;&lt;/Transform&gt;&#13;&#10;&lt;/Pipeline&gt;&#13;&#10;\"/>"
+				+ "<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_DEFAULT_OUTPUT_FILE\" value=\"false\"/>"
+				+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FOLDER\" value=\"${workspace_loc:/XSLTestProject}\"/>"
+				+ "</launchConfiguration>";
+
+		launchConfiguration(folder, launchXml);
+		IFile output = _testProject.getFile("output.xml");
+		IFile expected = _testProject.getFile("expected.xml");
+		
+		String result = readFile(output.getContents());
+		String wanted = readFile(expected.getContents());
+		
+		assertEquals("Unexpected results:", wanted, result);
 	}
-	
-	static private Document parseXml(InputStream contents) throws ParserConfigurationException, SAXException, IOException {
-		DocumentBuilderFactory builderFactory =
-			  DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder =
-			  builderFactory.newDocumentBuilder();
-			
-			return builder.parse(contents);
+
+	private String readFile(InputStream input) {
+		String str;
+		String finalString = "";
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(input));
+			while ((str = in.readLine()) != null) {
+				finalString = finalString + str + "\n";
+			}
+			in.close();
+		} catch (IOException e) {
+		}
+		return finalString;
+	}
+
+	static private Document parseXml(InputStream contents)
+			throws ParserConfigurationException, SAXException, IOException {
+		DocumentBuilderFactory builderFactory = DocumentBuilderFactory
+				.newInstance();
+		DocumentBuilder builder = builderFactory.newDocumentBuilder();
+
+		return builder.parse(contents);
 	}
 
 	protected void tearDown() throws Exception {
