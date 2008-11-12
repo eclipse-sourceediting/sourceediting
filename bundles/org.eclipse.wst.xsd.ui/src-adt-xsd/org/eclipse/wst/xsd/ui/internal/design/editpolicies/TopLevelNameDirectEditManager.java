@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.part.CellEditorActionHandler;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.INamedEditPart;
 import org.eclipse.wst.xsd.ui.internal.design.editparts.TopLevelComponentEditPart;
 import org.eclipse.xsd.XSDNamedComponent;
@@ -148,7 +149,15 @@ public class TopLevelNameDirectEditManager extends DirectEditManager
   {
     actionBars.setGlobalActionHandler(ActionFactory.COPY.getId(), copy);
     actionBars.setGlobalActionHandler(ActionFactory.PASTE.getId(), paste);
-    actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), delete);
+    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=252509
+    // Delete action (key) doesn't always work.  The saved action could be the 
+    // CellEditorActionHandler's DeleteActionHandler...due to timing issues.
+    // We'll only restore the delete action if it is indeed the one for the Design view.
+    // We should update the other actions too, but currently, none are applicable.
+    if (delete instanceof BaseSelectionAction)
+    {
+      actionBars.setGlobalActionHandler(ActionFactory.DELETE.getId(), delete);
+    }
     actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), selectAll);
     actionBars.setGlobalActionHandler(ActionFactory.CUT.getId(), cut);
     actionBars.setGlobalActionHandler(ActionFactory.FIND.getId(), find);
@@ -160,7 +169,16 @@ public class TopLevelNameDirectEditManager extends DirectEditManager
   {
     copy = actionBars.getGlobalActionHandler(ActionFactory.COPY.getId());
     paste = actionBars.getGlobalActionHandler(ActionFactory.PASTE.getId());
-    delete = actionBars.getGlobalActionHandler(ActionFactory.DELETE.getId());
+    IAction currentDeleteAction = actionBars.getGlobalActionHandler(ActionFactory.DELETE.getId());
+    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=252509
+    // Delete action (key) doesn't always work.  The saved action could be the 
+    // CellEditorActionHandler's DeleteActionHandler...due to timing issues.
+    // We'll only restore the delete action if it is indeed the one for the Design view.
+    // We should update the other actions too, but currently, none are applicable.
+    if (currentDeleteAction instanceof BaseSelectionAction)
+    {
+      delete = currentDeleteAction;
+    }
     selectAll = actionBars.getGlobalActionHandler(ActionFactory.SELECT_ALL.getId());
     cut = actionBars.getGlobalActionHandler(ActionFactory.CUT.getId());
     find = actionBars.getGlobalActionHandler(ActionFactory.FIND.getId());
