@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,10 +16,13 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaDirectiveAdapter;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDImportCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDIncludeCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDRedefineCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.BaseCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDDirectivesSchemaLocationUpdater;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDSchema;
 
 public class AddXSDSchemaDirectiveAction extends XSDBaseAction
@@ -68,8 +71,22 @@ public class AddXSDSchemaDirectiveAction extends XSDBaseAction
     {
       Adapter adapter = XSDAdapterFactory.getInstance().adapt(command.getAddedComponent());
       if (adapter != null)
+      {
+    	  provider.setSelection(new StructuredSelection(adapter));
+        // Automatically open the schema location dialog if the preference is enabled
+        if(XSDEditorPlugin.getDefault().getAutomaticallyOpenSchemaLocationDialogSetting())
+        {
+          XSDSchemaDirectiveAdapter xsdSchemaDirectiveAdapter = null;
+          if(adapter instanceof XSDSchemaDirectiveAdapter)
+          {
+            xsdSchemaDirectiveAdapter = (XSDSchemaDirectiveAdapter)adapter;
+          }    	  
+          XSDDirectivesSchemaLocationUpdater.updateSchemaLocation((XSDSchema) selection, xsdSchemaDirectiveAdapter.getTarget(), 
+            		(command instanceof AddXSDIncludeCommand || command instanceof AddXSDRedefineCommand));
+        }
+        // The graphical view may deselect, so select again
         provider.setSelection(new StructuredSelection(adapter));
+      }
     }
-
   }
 }

@@ -13,11 +13,6 @@ package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 import java.util.Map;
 
 import org.apache.xerces.util.XMLChar;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.StyledText;
@@ -25,22 +20,14 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.common.ui.internal.viewers.ResourceFilter;
-import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDDirectivesSchemaLocationUpdater;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
-import org.eclipse.wst.xsd.ui.internal.wizards.XSDSelectIncludeFileWizard;
 import org.eclipse.xsd.XSDImport;
-import org.eclipse.xsd.XSDSchema;
-import org.eclipse.xsd.impl.XSDImportImpl;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 
@@ -208,167 +195,12 @@ public class XSDImportSection extends SchemaLocationSection
     if (event.widget == wizardButton)
     {
       setListenerEnabled(false);
-      Shell shell = Display.getCurrent().getActiveShell();
-
-      IFile currentIFile = null;
-      IEditorInput editorInput = getActiveEditor().getEditorInput();
-      ViewerFilter filter;
-      if (editorInput instanceof IFileEditorInput)
-      {
-        currentIFile = ((IFileEditorInput)editorInput).getFile();
-        filter = new ResourceFilter(new String[] { ".xsd" }, //$NON-NLS-1$ 
-            new IFile[] { currentIFile }, null);
-      }
-      else
-      {
-        filter = new ResourceFilter(new String[] { ".xsd" }, //$NON-NLS-1$ 
-            null, null);
-      }
-
-      XSDSelectIncludeFileWizard fileSelectWizard = new XSDSelectIncludeFileWizard(xsdSchema, false, XSDEditorPlugin.getXSDString("_UI_FILEDIALOG_SELECT_XML_SCHEMA"), //$NON-NLS-1$
-          XSDEditorPlugin.getXSDString("_UI_FILEDIALOG_SELECT_XML_DESC"), //$NON-NLS-1$
-          filter, (IStructuredSelection) getSelection());
-
-      WizardDialog wizardDialog = new WizardDialog(shell, fileSelectWizard);
-      wizardDialog.create();
-      wizardDialog.setBlockOnOpen(true);
-      int result = wizardDialog.open();
-
-      String value = schemaLocationText.getText();
-      prefixText.removeListener(SWT.Modify, this);
-      if (result == Window.OK)
-      {
-        errorText.setText("");
-        IFile selectedIFile = fileSelectWizard.getResultFile();
-        String schemaFileString = value;
-        if (selectedIFile != null && currentIFile != null)
-        {
-          schemaFileString = URIHelper.getRelativeURI(selectedIFile.getLocation(), currentIFile.getLocation());
-        }
-        else if (selectedIFile != null && currentIFile == null)
-        {
-          schemaFileString = selectedIFile.getLocationURI().toString();
-        }
-        else
-        {
-          schemaFileString = fileSelectWizard.getURL();
-        }
-
-        String namespace = fileSelectWizard.getNamespace();
-        if (namespace == null)
-          namespace = "";
-
-        XSDSchema externalSchema = fileSelectWizard.getExternalSchema();
-        handleSchemaLocationChange(schemaFileString, namespace, externalSchema);
-      }
+      
+      XSDDirectivesSchemaLocationUpdater.updateSchemaLocation(xsdSchema,input,false);
+      refresh();
       setListenerEnabled(true);
       prefixText.addListener(SWT.Modify, this);
-//      }
-//      else
-//      {
-//        BrowseInWorkspaceAction browseInWorkspace = new BrowseInWorkspaceAction(shell);
-//        browseInWorkspace.run();
-//        IFile selectedIFile = browseInWorkspace.getSelectedFile();
-//        String value = schemaLocationText.getText();
-//        String schemaFileString = value;
-//        if (selectedIFile != null) 
-//        {
-//          //schemaFileString = URIHelper.getRelativeURI(selectedIFile.getLocation(), currentIFile.getLocation());
-//          schemaFileString = selectedIFile.getLocationURI().toString();
-//          handleSchemaLocationChange(schemaFileString, "", null);
-//          refresh();
-//        }
-//
-//      }
     }
-  }
-
-  protected void handleSchemaLocationChange(String schemaFileString, String namespace, XSDSchema externalSchema)
-  {
-    if (input instanceof XSDImport)
-    {
-      XSDImport xsdImport = (XSDImport) input;
-
-      xsdImport.setNamespace(namespace);
-      xsdImport.setSchemaLocation(schemaFileString);
-      xsdImport.setResolvedSchema(externalSchema);
-
-      java.util.Map map = xsdSchema.getQNamePrefixToNamespaceMap();
-
-      // Referential integrity on old import
-      // How can we be sure that if the newlocation is the same as the
-      // oldlocation
-      // the file hasn't changed
-
-//      XSDSchema referencedSchema = xsdImport.getResolvedSchema();
-//      if (referencedSchema != null)
-//      {
-//        XSDExternalFileCleanup cleanHelper = new
-//        XSDExternalFileCleanup(referencedSchema);
-//        cleanHelper.visitSchema(xsdSchema);
-//      }
-
-      Element schemaElement = xsdSchema.getElement();
-
-      // update the xmlns in the schema element first, and then update the
-      // import element next
-      // so that the last change will be in the import element. This keeps the
-      // selection
-      // on the import element
-      TypesHelper helper = new TypesHelper(externalSchema);
-      String prefix = helper.getPrefix(namespace, false);
-
-      if (map.containsKey(prefix))
-      {
-        prefix = null;
-      }
-
-      if (prefix == null || (prefix != null && prefix.length() == 0))
-      {
-        StringBuffer newPrefix = new StringBuffer("pref"); //$NON-NLS-1$
-        int prefixExtension = 1;
-        while (map.containsKey(newPrefix.toString()) && prefixExtension < 100)
-        {
-          newPrefix = new StringBuffer("pref" + String.valueOf(prefixExtension));
-          prefixExtension++;
-        }
-        prefix = newPrefix.toString();
-      }
-
-      if (namespace.length() > 0)
-      {
-        // if ns already in map, use its corresponding prefix
-        if (map.containsValue(namespace))
-        {
-          TypesHelper typesHelper = new TypesHelper(xsdSchema);
-          prefix = typesHelper.getPrefix(namespace, false);
-        }
-        else
-        // otherwise add to the map
-        {
-          schemaElement.setAttribute("xmlns:" + prefix, namespace);
-        }
-        prefixText.setText(prefix);
-      }
-      else
-      {
-        prefixText.setText("");
-        namespaceText.setText("");
-      }
-      
-      // See https://bugs.eclipse.org/bugs/show_bug.cgi?id=155885
-      // Need to import otherwise the external schema is never
-      // resolved.  One problem is that the schema location is still null,
-      // so the set types dialog will show types that belong to that schema
-      // with a null schema location.  This should load resource 
-      // into the resource set
-      if (input instanceof XSDImportImpl)  // redundant
-      {
-        XSDImportImpl xsdImportImpl = (XSDImportImpl) input;
-        xsdImportImpl.importSchema();
-      }
-    }
-    refresh();
   }
 
   public void doHandleEvent(Event event)

@@ -56,6 +56,7 @@ public class XSDEditorPlugin extends AbstractUIPlugin
   public static final String CONST_DEFAULT_TARGET_NAMESPACE = "org.eclipse.wst.xmlschema.defaultTargetnamespaceText"; //$NON-NLS-1$
   public static final String CONST_SHOW_EXTERNALS = PLUGIN_ID + ".showExternals"; //$NON-NLS-1$
   public static final String CONST_XSD_IMPORT_CLEANUP = PLUGIN_ID + ".autoImportCleanup"; //$NON-NLS-1$
+  public static final String CONST_XSD_AUTO_OPEN_SCHEMA_LOCATION_DIALOG = PLUGIN_ID + ".autoOpenSchemaLocationDialog"; //$NON-NLS-1$
   
   public static String DEFAULT_PAGE = "org.eclipse.wst.xsd.ui.internal.defaultPage";
   public static String DESIGN_PAGE = "org.eclipse.wst.xsd.ui.internal.designPage";
@@ -296,6 +297,11 @@ public class XSDEditorPlugin extends AbstractUIPlugin
     return getPreferenceStore().getBoolean(CONST_XSD_IMPORT_CLEANUP);
   }
 
+  public boolean getAutomaticallyOpenSchemaLocationDialogSetting()
+  {
+    return getPreferenceStore().getBoolean(CONST_XSD_AUTO_OPEN_SCHEMA_LOCATION_DIALOG);
+  }
+  
   /**
    * Get the xml schema default target namespace
    */

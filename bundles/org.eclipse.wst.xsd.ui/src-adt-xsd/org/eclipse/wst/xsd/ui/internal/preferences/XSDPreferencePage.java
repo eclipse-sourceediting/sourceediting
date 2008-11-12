@@ -51,6 +51,7 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
   private Button honourAllSchemaLocations = null;
   private Button fullSchemaConformance = null;
   private Button removeUnusedImports;
+  private Button automaticallyOpenSchemaLocationDialog;
 
   /**
    * Creates preference page controls on demand.
@@ -188,8 +189,12 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
       removeUnusedImports.setText(Messages._UI_TEXT_ENABLE_AUTO_IMPORT_CLEANUP);
       removeUnusedImports.setLayoutData(data);
       
-        PlatformUI.getWorkbench().getHelpSystem().setHelp(removeUnusedImports,
-            XSDEditorCSHelpIds.XMLSCHEMAFILES_PREFERENCES__IMPORT_CLEANUP); 
+      PlatformUI.getWorkbench().getHelpSystem().setHelp(removeUnusedImports,
+      XSDEditorCSHelpIds.XMLSCHEMAFILES_PREFERENCES__IMPORT_CLEANUP);
+        
+      automaticallyOpenSchemaLocationDialog = new Button(unusedImportGroup, SWT.CHECK | SWT.LEFT);
+      automaticallyOpenSchemaLocationDialog.setText(Messages._UI_TEXT_ENABLE_AUTO_OPEN_SCHEMA_DIALOG);
+      automaticallyOpenSchemaLocationDialog.setLayoutData(GridDataFactory.copyData(data));      
     }
   }
   
@@ -260,6 +265,7 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     honourAllSchemaLocations.setSelection(XSDCorePlugin.getDefault().getPluginPreferences().getDefaultBoolean(XSDCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS));
     fullSchemaConformance.setSelection(XSDCorePlugin.getDefault().getPluginPreferences().getDefaultBoolean(XSDCorePreferenceNames.FULL_SCHEMA_CONFORMANCE));
     removeUnusedImports.setSelection(getPreferenceStore().getDefaultBoolean(XSDEditorPlugin.CONST_XSD_IMPORT_CLEANUP));
+    automaticallyOpenSchemaLocationDialog.setSelection(getPreferenceStore().getDefaultBoolean(XSDEditorPlugin.CONST_XSD_AUTO_OPEN_SCHEMA_LOCATION_DIALOG));    
   }
 
   /**
@@ -274,6 +280,7 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     honourAllSchemaLocations.setSelection(XSDCorePlugin.getDefault().getPluginPreferences().getBoolean(XSDCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS));
     fullSchemaConformance.setSelection(XSDCorePlugin.getDefault().getPluginPreferences().getBoolean(XSDCorePreferenceNames.FULL_SCHEMA_CONFORMANCE));
     removeUnusedImports.setSelection(store.getBoolean(XSDEditorPlugin.CONST_XSD_IMPORT_CLEANUP));
+    automaticallyOpenSchemaLocationDialog.setSelection(store.getBoolean(XSDEditorPlugin.CONST_XSD_AUTO_OPEN_SCHEMA_LOCATION_DIALOG));
   }
 
   /**
@@ -287,7 +294,8 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     store.setValue(XSDEditorPlugin.CONST_XSD_LANGUAGE_QUALIFY, getQualify());
     store.setValue(XSDEditorPlugin.CONST_DEFAULT_TARGET_NAMESPACE, getXMLSchemaTargetNamespace());
     store.setValue(XSDEditorPlugin.CONST_XSD_IMPORT_CLEANUP, getRemoveImportSetting());
-
+    store.setValue(XSDEditorPlugin.CONST_XSD_AUTO_OPEN_SCHEMA_LOCATION_DIALOG, getAutomaticallyOpenSchemaLocationDialogSetting());
+      
     XSDEditorPlugin.getPlugin().savePluginPreferences();
     
     XSDCorePlugin.getDefault().getPluginPreferences().setValue(XSDCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, honourAllSchemaLocations.getSelection());
@@ -314,6 +322,11 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
   public boolean getRemoveImportSetting()
   {
     return removeUnusedImports.getSelection();
+  }
+  
+  public boolean getAutomaticallyOpenSchemaLocationDialogSetting()
+  {
+    return automaticallyOpenSchemaLocationDialog.getSelection();
   }
   
   /**

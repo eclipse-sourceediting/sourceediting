@@ -126,4 +126,5 @@ public class Messages extends NLS
   public static String _UI_STRUCTURED_TEXT_EDITOR_PREFS_LINK;
   
   public static String _UI_TEXT_ENABLE_AUTO_IMPORT_CLEANUP;
+  public static String _UI_TEXT_ENABLE_AUTO_OPEN_SCHEMA_DIALOG;
 }

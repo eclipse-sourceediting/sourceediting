@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,11 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.StyledText;
@@ -22,20 +17,13 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.common.ui.internal.viewers.ResourceFilter;
-import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDDirectivesSchemaLocationUpdater;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
-import org.eclipse.wst.xsd.ui.internal.wizards.XSDSelectIncludeFileWizard;
 import org.eclipse.xsd.XSDInclude;
 import org.eclipse.xsd.XSDRedefine;
-import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.impl.XSDIncludeImpl;
 import org.eclipse.xsd.impl.XSDRedefineImpl;
 import org.w3c.dom.Element;
@@ -109,63 +97,14 @@ public class SchemaLocationSection extends CommonDirectivesSection
 
 		}
 		
-		public void doWidgetSelected(SelectionEvent event)
+    public void doWidgetSelected(SelectionEvent event)
     {
-			if (event.widget == wizardButton)
+      if (event.widget == wizardButton)
       {
-				Shell shell = Display.getCurrent().getActiveShell();
-
-				IFile currentIFile = null;
-        IEditorInput editorInput = getActiveEditor().getEditorInput();
-        ViewerFilter filter;
-        if (editorInput instanceof IFileEditorInput)
-        {
-          currentIFile = ((IFileEditorInput)editorInput).getFile();
-          filter = new ResourceFilter(new String[] { ".xsd" }, //$NON-NLS-1$ 
-              new IFile[] { currentIFile }, null);
-        }
-        else
-        {
-          filter = new ResourceFilter(new String[] { ".xsd" }, //$NON-NLS-1$ 
-              null, null);
-        }
-			      
-			  XSDSelectIncludeFileWizard fileSelectWizard = 
-			      new XSDSelectIncludeFileWizard(xsdSchema, true,
-			          XSDEditorPlugin.getXSDString("_UI_FILEDIALOG_SELECT_XML_SCHEMA"), //$NON-NLS-1$
-			          XSDEditorPlugin.getXSDString("_UI_FILEDIALOG_SELECT_XML_DESC"), //$NON-NLS-1$
-			          filter,
-			          (IStructuredSelection) getSelection());
-
-			  WizardDialog wizardDialog = new WizardDialog(shell, fileSelectWizard);
-			  wizardDialog.create();
-			  wizardDialog.setBlockOnOpen(true);
-			  int result = wizardDialog.open();
-				  
-	      String value = schemaLocationText.getText();
-	      if (result == Window.OK)
-	      {
-          errorText.setText(""); //$NON-NLS-1$
-	        IFile selectedIFile = fileSelectWizard.getResultFile();
-	        String schemaFileString = value;
-	        if (selectedIFile != null && currentIFile != null)
-	        {
-	          schemaFileString = URIHelper.getRelativeURI(selectedIFile.getLocation(), currentIFile.getLocation());
-	        }
-	        else if (selectedIFile != null && currentIFile == null)
-	        {
-	          schemaFileString = selectedIFile.getLocationURI().toString();
-	        }
-	        else
-	        {
-	          schemaFileString = fileSelectWizard.getURL();
-	        }
-
-          handleSchemaLocationChange(schemaFileString, fileSelectWizard.getNamespace(), null);
-	        refresh();
-			  } 
+        XSDDirectivesSchemaLocationUpdater.updateSchemaLocation(xsdSchema,input,true);
+        refresh();
       }
-		}
+    }
 
 		/*
 		 * @see org.eclipse.wst.common.ui.properties.internal.provisional.view.ITabbedPropertySection#refresh()
@@ -205,18 +144,4 @@ public class SchemaLocationSection extends CommonDirectivesSection
 	  {
 	    return true;
 	  }
-    
-    protected void handleSchemaLocationChange(String schemaFileString, String namespace, XSDSchema externalSchema)
-    {
-      if (input instanceof XSDInclude)
-      {
-        Element element = ((XSDIncludeImpl) input).getElement();
-        element.setAttribute("schemaLocation", schemaFileString); //$NON-NLS-1$
-      }
-      else if (input instanceof XSDRedefine)
-      {
-        Element element = ((XSDRedefineImpl) input).getElement();
-        element.setAttribute("schemaLocation", schemaFileString); //$NON-NLS-1$
-      }
-    }
 }
