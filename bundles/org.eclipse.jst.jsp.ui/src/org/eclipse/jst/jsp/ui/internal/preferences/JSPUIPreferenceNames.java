@@ -80,4 +80,13 @@ public class JSPUIPreferenceNames {
 	 * </p>
 	 */
 	public static final String TYPING_COMPLETE_SCRIPTLETS = "typingCompleteScriptlets"; //$NON-NLS-1$
+	
+	/**
+	 * The key to store the option for auto-completing JSP comments after entering
+	 * <code>&lt;%--</code>
+	 * <p>
+	 * Value is of type <code>boolean</code>.
+	 * </p>
+	 */
+	public static final String TYPING_COMPLETE_COMMENTS = "typingCompleteComments"; //$NON-NLS-1$
 }

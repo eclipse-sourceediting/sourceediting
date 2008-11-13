@@ -34,6 +34,7 @@ import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.jst.jsp.ui.internal.autoedit.AutoEditStrategyForTabs;
 import org.eclipse.jst.jsp.ui.internal.autoedit.StructuredAutoEditStrategyJSP;
+import org.eclipse.jst.jsp.ui.internal.autoedit.StructuredAutoEditStrategyJSPJava;
 import org.eclipse.jst.jsp.ui.internal.contentassist.JSPContentAssistProcessor;
 import org.eclipse.jst.jsp.ui.internal.contentassist.JSPELContentAssistProcessor;
 import org.eclipse.jst.jsp.ui.internal.contentassist.JSPJavaContentAssistProcessor;
@@ -115,6 +116,9 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			// jsp java autoedit strategies
 			List allStrategies = new ArrayList(0);
 
+			// add the scritplet autoedit strategy first
+			allStrategies.add(new StructuredAutoEditStrategyJSPJava());
+			
 			IAutoEditStrategy[] javaStrategies = getJavaSourceViewerConfiguration().getAutoEditStrategies(sourceViewer, IJavaPartitions.JAVA_PARTITIONING);
 			for (int i = 0; i < javaStrategies.length; i++) {
 				allStrategies.add(javaStrategies[i]);

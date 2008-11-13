@@ -73,6 +73,7 @@ public class JSPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		
 		store.setDefault(JSPUIPreferenceNames.TYPING_COMPLETE_EL_BRACES, true);
 		store.setDefault(JSPUIPreferenceNames.TYPING_COMPLETE_SCRIPTLETS, true);
+		store.setDefault(JSPUIPreferenceNames.TYPING_COMPLETE_COMMENTS, true);
 	}
 
 }
