@@ -29,7 +29,9 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.osgi.util.NLS;
@@ -300,7 +302,12 @@ public class AnchorHyperlinkDetector extends AbstractHyperlinkDetector {
 		 */
 		public void open() {
 			if (fTarget instanceof IndexedRegion) {
-				fViewer.setSelectedRange(((IndexedRegion) fTarget).getStartOffset(), 0);
+				int offset = ((IndexedRegion) fTarget).getStartOffset();
+				if (fViewer instanceof ITextViewerExtension5) {
+					offset = ((ITextViewerExtension5) fViewer).modelOffset2WidgetOffset(offset);
+				}
+				fViewer.getSelectionProvider().setSelection(new TextSelection(offset, 0));
+				fViewer.revealRange(offset, 0);
 			}
 		}
 	}
