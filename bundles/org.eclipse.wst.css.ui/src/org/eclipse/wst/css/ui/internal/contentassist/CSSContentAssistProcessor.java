@@ -70,7 +70,7 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 			IStructuredModel cssModel = getCSSModel(xNode);
 			if (cssModel != null) {
 				// adjust offsets for embedded style
-				int offset = documentPosition;
+				int offset = documentPosition + fDocumentOffset;
 				int pos = 0;
 				IndexedRegion keyIndexedNode = cssModel.getIndexedRegion(pos);
 				if (keyIndexedNode == null) {
