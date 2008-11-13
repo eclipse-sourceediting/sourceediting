@@ -15,8 +15,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -114,37 +112,37 @@ public class XSLLaunchingTests extends TestCase {
 		assertEquals("root-out", doc.getDocumentElement().getNodeName());
 	}
 
-	public void testTransformComments() throws CoreException, InterruptedException,
-			ParserConfigurationException, SAXException, IOException {
-		IPath folder = _testProject.getFullPath();
-		_env.addFileFromResource(folder, "input.xml", "testCommentInput.xml");
-		_env.addFileFromResource(folder, "transform.xsl", "testComments.xsl");
-		_env.addFileFromResource(folder, "expected.xml", "testCommentsExpected.xml");
-
-		String launchXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-				+ "<launchConfiguration type=\"org.eclipse.wst.xsl.launching.launchConfigurationType\">"
-				+ "<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_ATTRIBUTES\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Attributes/&gt;&#13;&#10;\"/>"
-				+ "<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_OUTPUT_PROPERTIES\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Properties/&gt;&#13;&#10;\"/>"
-				+ "<booleanAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_USE_DEFAULT_PROCESSOR\" value=\"true\"/>"
-				+ "<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.INVOKER_DESCRIPTOR\" value=\"org.eclipse.wst.xsl.launching.jaxp.invoke\"/>"
-				+ "<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_FORMAT_FILE\" value=\"false\"/>"
-				+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_INPUT_FILE\" value=\"${workspace_loc:/XSLTestProject/input.xml}\"/>"
-				+ "<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OPEN_FILE\" value=\"true\"/>"
-				+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FILENAME\" value=\"output.xml\"/>"
-				+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_PIPELINE\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Pipeline&gt;&#13;&#10;&lt;OutputProperties/&gt;&#13;&#10;&lt;Transform path=&quot;/XSLTestProject/transform.xsl&quot; pathType=&quot;resource&quot;&gt;&#13;&#10;&lt;Parameters/&gt;&#13;&#10;&lt;/Transform&gt;&#13;&#10;&lt;/Pipeline&gt;&#13;&#10;\"/>"
-				+ "<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_DEFAULT_OUTPUT_FILE\" value=\"false\"/>"
-				+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FOLDER\" value=\"${workspace_loc:/XSLTestProject}\"/>"
-				+ "</launchConfiguration>";
-
-		launchConfiguration(folder, launchXml);
-		IFile output = _testProject.getFile("output.xml");
-		IFile expected = _testProject.getFile("expected.xml");
-		
-		String result = readFile(output.getContents());
-		String wanted = readFile(expected.getContents());
-		
-		assertEquals("Unexpected results:", wanted, result);
-	}
+//	public void testTransformComments() throws CoreException, InterruptedException,
+//			ParserConfigurationException, SAXException, IOException {
+//		IPath folder = _testProject.getFullPath();
+//		_env.addFileFromResource(folder, "input.xml", "testCommentInput.xml");
+//		_env.addFileFromResource(folder, "transform.xsl", "testComments.xsl");
+//		_env.addFileFromResource(folder, "expected.xml", "testCommentsExpected.xml");
+//
+//		String launchXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
+//				+ "<launchConfiguration type=\"org.eclipse.wst.xsl.launching.launchConfigurationType\">"
+//				+ "<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_ATTRIBUTES\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Attributes/&gt;&#13;&#10;\"/>"
+//				+ "<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_OUTPUT_PROPERTIES\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Properties/&gt;&#13;&#10;\"/>"
+//				+ "<booleanAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_USE_DEFAULT_PROCESSOR\" value=\"true\"/>"
+//				+ "<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.INVOKER_DESCRIPTOR\" value=\"org.eclipse.wst.xsl.launching.jaxp.invoke\"/>"
+//				+ "<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_FORMAT_FILE\" value=\"false\"/>"
+//				+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_INPUT_FILE\" value=\"${workspace_loc:/XSLTestProject/input.xml}\"/>"
+//				+ "<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OPEN_FILE\" value=\"true\"/>"
+//				+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FILENAME\" value=\"output.xml\"/>"
+//				+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_PIPELINE\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Pipeline&gt;&#13;&#10;&lt;OutputProperties/&gt;&#13;&#10;&lt;Transform path=&quot;/XSLTestProject/transform.xsl&quot; pathType=&quot;resource&quot;&gt;&#13;&#10;&lt;Parameters/&gt;&#13;&#10;&lt;/Transform&gt;&#13;&#10;&lt;/Pipeline&gt;&#13;&#10;\"/>"
+//				+ "<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_DEFAULT_OUTPUT_FILE\" value=\"false\"/>"
+//				+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FOLDER\" value=\"${workspace_loc:/XSLTestProject}\"/>"
+//				+ "</launchConfiguration>";
+//
+//		launchConfiguration(folder, launchXml);
+//		IFile output = _testProject.getFile("output.xml");
+//		IFile expected = _testProject.getFile("expected.xml");
+//		
+//		String result = readFile(output.getContents());
+//		String wanted = readFile(expected.getContents());
+//		
+//		assertEquals("Unexpected results:", wanted, result);
+//	}
 
 	private String readFile(InputStream input) {
 		String str;
