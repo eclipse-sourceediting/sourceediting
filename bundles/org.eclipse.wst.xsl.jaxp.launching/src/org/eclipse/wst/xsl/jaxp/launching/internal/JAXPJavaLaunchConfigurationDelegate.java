@@ -353,19 +353,19 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate impl
 			if (tfactory != null)
 				vmargs += " -Djavax.xml.transform.TransformerFactory=" + tfactory; //$NON-NLS-1$
 			
-			if (ILaunchManager.DEBUG_MODE.equals(mode))
-			{
-				// in debug mode, set the logging to ERROR. This prevents the console from popping up on top of the result view!
-				try
-				{
-					URL url = FileLocator.resolve(FileLocator.find(Platform.getBundle(JAXPLaunchingPlugin.PLUGIN_ID), new Path("/log4j.debug.properties"), null));
-					vmargs += " -Dlog4j.configuration=\""+url.toExternalForm()+"\""; //$NON-NLS-1$
-				}
-				catch (IOException e)
-				{
-					JAXPLaunchingPlugin.log(e);
-				}
-			}
+//			if (ILaunchManager.DEBUG_MODE.equals(mode))
+//			{
+//				// in debug mode, set the logging to ERROR. This prevents the console from popping up on top of the result view!
+//				try
+//				{
+//					URL url = FileLocator.resolve(FileLocator.find(Platform.getBundle(JAXPLaunchingPlugin.PLUGIN_ID), new Path("/log4j.debug.properties"), null));
+//					vmargs += " -Dlog4j.configuration=\""+url.toExternalForm()+"\""; //$NON-NLS-1$
+//				}
+//				catch (IOException e)
+//				{
+//					JAXPLaunchingPlugin.log(e);
+//				}
+//			}
 		}
 		return vmargs;
 	}
