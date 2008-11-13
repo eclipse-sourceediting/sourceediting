@@ -38,6 +38,8 @@ import org.eclipse.wst.xsl.jaxp.debug.invoker.IProcessorInvoker;
 import org.eclipse.wst.xsl.jaxp.debug.invoker.TransformationException;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
 
 /**
@@ -165,8 +167,16 @@ public class JAXPSAXProcessorInvoker implements IProcessorInvoker
 
 		if (th != null)
 			th.setResult(new SAXResult(newTh));
-		else
+		else {
 			reader.setContentHandler(newTh);
+			try {
+				reader.setProperty("http://xml.org/sax/properties/lexical-handler", newTh);
+			} catch (SAXNotRecognizedException ex) {
+				log.warn("Unable to set lexical content handler.  Comments and Processing instructions may be skipped");
+			} catch (SAXNotSupportedException e) {
+				log.warn("Lexical property not supported.  Comments and Processing instructions may be skipped");
+			}
+		}
 		th = newTh;
 		return th.getTransformer();
 	}
