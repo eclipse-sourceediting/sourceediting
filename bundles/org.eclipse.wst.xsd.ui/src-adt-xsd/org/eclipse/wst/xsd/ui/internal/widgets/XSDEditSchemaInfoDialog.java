@@ -28,6 +28,10 @@ import org.eclipse.wst.xml.ui.internal.nsedit.CommonEditNamespacesTargetFieldDia
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.xsd.XSDForm;
 
+/**
+ * @deprecated.  To be removed
+ *
+ */
 public class XSDEditSchemaInfoDialog extends EditSchemaInfoDialog implements SelectionListener {
 	String targetNamespace;
 	CommonEditNamespacesTargetFieldDialog editNamespacesControl;
@@ -40,27 +44,6 @@ public class XSDEditSchemaInfoDialog extends EditSchemaInfoDialog implements Sel
 		super(parentShell, resourceLocation);
 		this.targetNamespace = targetNamespace;
 	}
-/*
-	// in super
-	protected CommonEditNamespacesDialog createCommonEditNamespacesDialog(Composite dialogArea)
-	{
-	  return new CommonEditNamespacesDialog(dialogArea, resourceLocation, XMLUIPlugin.getResourceString("%_UI_NAMESPACE_DECLARATIONS"), false, true); //$NON-NLS-1$				
-	}
-	
-	// in super
-	protected Control createDialogArea(Composite parent) {
-		Composite dialogArea = (Composite) super.createDialogArea(parent);
-		CommonEditNamespacesDialog editNamespacesControl = createCommonEditNamespacesDialog(dialogArea); 
-		editNamespacesControl.setNamespaceInfoList(namespaceInfoList);
-		editNamespacesControl.updateErrorMessage(namespaceInfoList);
-		return dialogArea;
-	}
-	
-	// in this
-	protected CommonEditNamespacesDialog createCommonEditNamespacesDialog(Composite dialogArea)
-	{
-	  return new CommonEditNamespacesTargetFieldDialog(dialogArea, resourceLocation); //$NON-NLS-1$				
-	}	*/
 	
 	// this is copy of ....
     protected Control __internalCreateDialogArea(Composite parent) {

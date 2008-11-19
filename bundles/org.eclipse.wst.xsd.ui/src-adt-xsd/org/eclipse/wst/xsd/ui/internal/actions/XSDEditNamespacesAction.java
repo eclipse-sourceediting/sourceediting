@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,11 +24,9 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xml.ui.internal.actions.ReplacePrefixAction;
 import org.eclipse.wst.xml.ui.internal.util.XMLCommonResources;
+import org.eclipse.wst.xsd.ui.internal.dialogs.XSDEditSchemaNS;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.nsedit.SchemaPrefixChangeHandler;
-import org.eclipse.wst.xsd.ui.internal.nsedit.TargetNamespaceChangeHandler;
-import org.eclipse.wst.xsd.ui.internal.widgets.XSDEditSchemaInfoDialog;
-import org.eclipse.xsd.XSDForm;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
@@ -59,12 +57,8 @@ public class XSDEditNamespacesAction extends Action {
 		if (element != null)
 		{   
 		      Shell shell = XMLCommonResources.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
-		      String targetNamespace = null;
-		      if (xsdSchema != null) {
-		      	targetNamespace = xsdSchema.getTargetNamespace();
-		      }
-		      XSDEditSchemaInfoDialog dialog = new XSDEditSchemaInfoDialog(shell, new Path(resourceLocation), targetNamespace); 
-
+		      XSDEditSchemaNS dialog = new XSDEditSchemaNS(shell, new Path(resourceLocation)); 
+		      
 		      List namespaceInfoList = namespaceInfoManager.getNamespaceInfoList(element);
 		      List oldNamespaceInfoList = NamespaceInfo.cloneNamespaceInfoList(namespaceInfoList);
 
@@ -77,22 +71,11 @@ public class XSDEditNamespacesAction extends Action {
 		        NamespaceInfo oldCopy = new NamespaceInfo(info);
 		        info.setProperty("oldCopy", oldCopy); //$NON-NLS-1$
 		      }
-          
-          String currentElementFormQualified = "";
-          String currentAttributeFormQualified = "";
-          
-          boolean hasElementForm = element.hasAttribute(XSDConstants.ELEMENTFORMDEFAULT_ATTRIBUTE);
-          if (hasElementForm) currentElementFormQualified = element.getAttribute(XSDConstants.ELEMENTFORMDEFAULT_ATTRIBUTE);
-          
-          boolean hasAttributeForm = element.hasAttribute(XSDConstants.ATTRIBUTEFORMDEFAULT_ATTRIBUTE);
-          if (hasAttributeForm) currentAttributeFormQualified = element.getAttribute(XSDConstants.ATTRIBUTEFORMDEFAULT_ATTRIBUTE);
 		                              
 		      dialog.setNamespaceInfoList(namespaceInfoList);   
 		      dialog.create();      
 		      dialog.getShell().setSize(500, 400);
 		      dialog.getShell().setText(XMLCommonResources.getInstance().getString("_UI_MENU_EDIT_SCHEMA_INFORMATION_TITLE")); //$NON-NLS-1$
-          dialog.setIsElementQualified(currentElementFormQualified);
-          dialog.setIsAttributeQualified(currentAttributeFormQualified);
 		      dialog.setBlockOnOpen(true);                                 
 		      dialog.open();
           String xsdPrefix = "";     //$NON-NLS-1$
@@ -137,7 +120,6 @@ public class XSDEditNamespacesAction extends Action {
                   xsdSchema.setSchemaForSchemaQNamePrefix(xsdPrefix);
                 }
 
-                xsdSchema.setTargetNamespace(dialog.getTargetNamespace());
                 xsdSchema.update();
                 
                 SchemaPrefixChangeHandler spch = new SchemaPrefixChangeHandler(xsdSchema, xsdPrefix);
@@ -152,9 +134,6 @@ public class XSDEditNamespacesAction extends Action {
                 // don't need these any more?
 			          ReplacePrefixAction replacePrefixAction = new ReplacePrefixAction(null, element, prefixMapping);
 			          replacePrefixAction.run();
-                
-                TargetNamespaceChangeHandler targetNamespaceChangeHandler = new TargetNamespaceChangeHandler(xsdSchema, targetNamespace, dialog.getTargetNamespace());
-                targetNamespaceChangeHandler.resolve();
 				    	}
               catch (Exception e)
               { 
@@ -167,56 +146,6 @@ public class XSDEditNamespacesAction extends Action {
 			     		}
 		        }
             
-            String attributeFormQualified = dialog.getAttributeFormQualified();
-            String elementFormQualified = dialog.getElementFormQualified();
-
-            boolean elementFormChanged = true;
-            boolean attributeFormChanged = true;
-            if (elementFormQualified.equals(currentElementFormQualified))
-            {
-              elementFormChanged = false;
-            }
-            if (attributeFormQualified.equals(currentAttributeFormQualified))
-            {
-              attributeFormChanged = false;
-            }
-            if (elementFormChanged)
-            {
-              doc.getModel().beginRecording(this, XSDEditorPlugin.getXSDString("_UI_SCHEMA_ELEMENTFORMDEFAULT_CHANGE"));
-              if (elementFormQualified.equals(XSDForm.QUALIFIED_LITERAL.getName()))
-              {
-                xsdSchema.setElementFormDefault(XSDForm.QUALIFIED_LITERAL);
-              }
-              else if (elementFormQualified.equals(XSDForm.UNQUALIFIED_LITERAL.getName()))
-              {
-                xsdSchema.setElementFormDefault(XSDForm.UNQUALIFIED_LITERAL);
-              }
-              else
-              {
-                // Model should allow us to remove the attribute
-                xsdSchema.getElement().removeAttribute(XSDConstants.ELEMENTFORMDEFAULT_ATTRIBUTE);
-              }
-              doc.getModel().endRecording(this);
-            }
-            if (attributeFormChanged)
-            {
-              doc.getModel().beginRecording(this, XSDEditorPlugin.getXSDString("_UI_SCHEMA_ATTRIBUTEFORMDEFAULT_CHANGE"));
-              if (attributeFormQualified.equals(XSDForm.QUALIFIED_LITERAL.getName()))
-              {
-                xsdSchema.setAttributeFormDefault(XSDForm.QUALIFIED_LITERAL);
-              }
-              else if (attributeFormQualified.equals(XSDForm.UNQUALIFIED_LITERAL.getName()))
-              {
-                xsdSchema.setAttributeFormDefault(XSDForm.UNQUALIFIED_LITERAL);
-              }
-              else
-              {
-                // Model should allow us to remove the attribute
-                xsdSchema.getElement().removeAttribute(XSDConstants.ATTRIBUTEFORMDEFAULT_ATTRIBUTE);
-              }
-              
-              doc.getModel().endRecording(this);
-            }
 		   }      
           
 		}
@@ -261,26 +190,4 @@ public class XSDEditNamespacesAction extends Action {
 	    }        
 	    return map;
 	  }
-   
-//    private void updateAllNodes(Element element, String prefix)
-//    {
-//      element.setPrefix(prefix);
-//      NodeList list = element.getChildNodes();
-//      if (list != null)
-//      {
-//        for (int i=0; i < list.getLength(); i++)
-//        {
-//          Node child = list.item(i);
-//          if (child != null && child instanceof Element)
-//          {
-//            child.setPrefix(prefix);
-//            if (child.hasChildNodes())
-//            {
-//              updateAllNodes((Element)child, prefix);
-//            }
-//          }
-//        }
-//      }   
-//    }
-
 }

@@ -21,12 +21,19 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
+import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
 import org.eclipse.wst.xsd.ui.internal.adt.design.ImageOverlayDescriptor;
+import org.eclipse.wst.xsd.ui.internal.common.properties.sections.AbstractSection;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDAttributeDeclaration;
@@ -555,4 +562,29 @@ public class XSDCommonUIUtils
     }
   }
 
+  public static CCombo getNewPropertiesCombo(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory,
+      AbstractSection listener, String[] items, String helpID)
+  {
+    CCombo combo = widgetFactory.createCCombo(composite);
+    combo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    combo.setEditable(false);
+    combo.setItems(items);
+    combo.addSelectionListener(listener);    
+    PlatformUI.getWorkbench().getHelpSystem().setHelp(combo, helpID);
+    return combo;
+  }
+  
+  public static CLabel getNewPropertiesLabel(Composite composite, TabbedPropertySheetWidgetFactory widgetFactory,
+      String labelText)
+  {
+    // Create label
+    CLabel label;    
+    label = widgetFactory.createCLabel(composite, labelText);
+    GridData data = new GridData();
+    data.horizontalAlignment = GridData.HORIZONTAL_ALIGN_BEGINNING;
+    data.grabExcessHorizontalSpace = false;
+    label.setLayoutData(data);
+    
+    return label;
+  }
 }

@@ -120,7 +120,9 @@ public class Messages extends NLS
   public static String _UI_ACTION_ADD_ATTRIBUTE_AFTER;
   public static String _UI_ACTION_ADD_ATTRIBUTE_REF;
 
+  // TODO: TO REMOVE
   public static String _UI_LABEL_ELEMENTFORMDEFAULT;
+  // TODO: TO REMOVE
   public static String _UI_LABEL_ATTRIBUTEFORMDEFAULT;
   public static String _UI_LABEL_CREATE_ANON_TYPE;  
   public static String _UI_STRUCTURED_TEXT_EDITOR_PREFS_LINK;

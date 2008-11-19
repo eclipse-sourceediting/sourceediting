@@ -110,7 +110,7 @@ public class XSDSchemaSection extends AbstractSection
       		XSDEditorCSHelpIds.GENERAL_TAB__SCHEMA__TARGETNAMESPACE);
 
     // Advanced Button
-    editButton = getWidgetFactory().createButton(composite, XSDEditorPlugin.getXSDString("_UI_SECTION_ADVANCED_ATTRIBUTES") + "...", SWT.PUSH); //$NON-NLS-1$ //$NON-NLS-2$
+    editButton = getWidgetFactory().createButton(composite, XSDEditorPlugin.getXSDString("_UI_ACTION_EDIT_NAMESPACES"), SWT.PUSH); //$NON-NLS-1$
     data = new GridData(SWT.END, SWT.CENTER, true, false);
     data.horizontalSpan = 2;
     editButton.setLayoutData(data);

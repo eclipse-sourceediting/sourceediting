@@ -77,6 +77,8 @@ public class Messages extends NLS
   public static String _UI_LABEL_MAXIMUM_VALUE;
   public static String _UI_LABEL_CONTRAINTS_ON;
   public static String _UI_LABEL_TYPE;
+  public static String _UI_LABEL_BLOCKDEFAULT;
+  public static String _UI_LABEL_FINALDEFAULT;
   public static String _UI_ACTION_CONSTRAIN_LENGTH;
   public static String _UI_ACTION_UPDATE_BOUNDS;
   public static String _UI_ACTION_COLLAPSE_WHITESPACE;
@@ -127,4 +129,7 @@ public class Messages extends NLS
   public static String _UI_LABEL_VALUE;
   public static String _UI_LABEL_FORM;
   public static String _UI_LABEL_NILLABLE;
+  public static String _UI_LABEL_ELEMENTFORMDEFAULT;
+  public static String _UI_LABEL_ATTRIBUTEFORMDEFAULT;
+
 }

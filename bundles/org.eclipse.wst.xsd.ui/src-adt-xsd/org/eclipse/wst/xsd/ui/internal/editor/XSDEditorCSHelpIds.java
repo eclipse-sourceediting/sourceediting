@@ -87,6 +87,11 @@ public class XSDEditorCSHelpIds
   public static final String GENERAL_TAB__SCHEMA__TARGETNAMESPACE = PLUGIN_NAME + ".xsdup0210";
   public static final String GENERAL_TAB__SCHEMA__ADVANCED = PLUGIN_NAME + ".xsdup0220";
   
+  public static final String ADVANCE_TAB__SCHEMA_ELEMENT_FORM_DEFAULT = PLUGIN_NAME + ".xsdup0450";
+  public static final String ADVANCE_TAB__SCHEMA_ATTRIBUTE_FORM_DEFAULT = PLUGIN_NAME + ".xsdup0460";
+  public static final String ADVANCE_TAB__SCHEMA_BLOCK_DEFAULT = PLUGIN_NAME + ".xsdup0470";
+  public static final String ADVANCE_TAB__SCHEMA_FINAL_DEFAULT = PLUGIN_NAME + ".xsdup0480";
+  
   public static final String GENERAL_TAB__ELEMENT__NAME = PLUGIN_NAME + ".xsdup0230";
   public static final String GENERAL_TAB__ELEMENT__TYPE = PLUGIN_NAME + ".xsdup0240";
   public static final String GENERAL_TAB__ELEMENT__REFERENCE = PLUGIN_NAME + ".xsdup0250";

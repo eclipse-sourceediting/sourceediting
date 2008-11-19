@@ -137,6 +137,12 @@
 	    <input type="org.eclipse.xsd.XSDSchema">
 	    </input>
 	 </propertySection>
+	 <propertySection tab="property.tab.advanced" 
+        class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDSchemaAdvancedSection"  
+	 	id="prop.section.XSDSchemaSection">
+	    <input type="org.eclipse.xsd.XSDSchema">
+	    </input>
+	 </propertySection>
 	 <propertySection tab="property.tab.general" 
         class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.SchemaLocationSection" 
 	 	id="prop.section.SchemaLocationSection">
