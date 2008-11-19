@@ -17,15 +17,27 @@ import org.eclipse.debug.core.model.IVariable;
 
 public class XSLValue extends XSLDebugElement implements IValue
 {
-	private final String fValue;
+	private String fValue;
 	private final String type;
+	private boolean hasVariables;
+	private XSLVariable variable;
 
 	public XSLValue(IDebugTarget target, String type, String value)
 	{
 		super(target);
 		this.type = type;
+		if (type.equals("nodeset")) {
+			hasVariables = true;
+		} else {
+			hasVariables = false;
+		}
+		if (value.equals("<EMPTY NODESET>")) {
+			hasVariables = false;
+		}
 		fValue = value;
 	}
+	
+
 
 	public String getReferenceTypeName() throws DebugException
 	{
@@ -51,6 +63,6 @@ public class XSLValue extends XSLDebugElement implements IValue
 
 	public boolean hasVariables() throws DebugException
 	{
-		return false;
+		return hasVariables; 
 	}
 }
