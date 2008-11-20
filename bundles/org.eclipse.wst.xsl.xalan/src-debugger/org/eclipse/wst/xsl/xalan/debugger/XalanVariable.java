@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 214235 - Allows nodes to be expanded.
  *******************************************************************************/
 package org.eclipse.wst.xsl.xalan.debugger;
 
@@ -19,135 +20,182 @@ import org.apache.xpath.VariableStack;
 import org.apache.xpath.objects.XNodeSet;
 import org.apache.xpath.objects.XObject;
 import org.eclipse.wst.xsl.jaxp.debug.debugger.Variable;
+import org.w3c.dom.Attr;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-public class XalanVariable extends Variable implements Comparable
-{
+public class XalanVariable extends Variable implements Comparable {
 	private final Log log = LogFactory.getLog(XalanVariable.class);
 	private final ElemVariable elemVariable;
 	private final VariableStack varStack;
 	private int stackFrame;
+	private XObject xobject;
 
-	public XalanVariable(XalanStyleFrame xalanStyleFrame, VariableStack varStack, String scope, int slotNumber, ElemVariable elemVariable)
-	{
-		super(getName(elemVariable,scope,xalanStyleFrame), scope, slotNumber+varStack.getStackFrame());
+	public XalanVariable(XalanStyleFrame xalanStyleFrame,
+			VariableStack varStack, String scope, int slotNumber,
+			ElemVariable elemVariable) {
+		super(getName(elemVariable, scope, xalanStyleFrame), scope, slotNumber
+				+ varStack.getStackFrame());
 		this.elemVariable = elemVariable;
 		this.varStack = varStack;
 		// get the stack frame at this current point in time
 		this.stackFrame = varStack.getStackFrame();
+		try {
+			xobject = getXObject();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
-	private static String getName(ElemVariable elemVariable, String scope, XalanStyleFrame xalanStyleFrame)
-	{
+	private static String getName(ElemVariable elemVariable, String scope,
+			XalanStyleFrame xalanStyleFrame) {
 		String name = elemVariable.getName().getLocalName();
 		String systemId = elemVariable.getStylesheet().getSystemId();
-		if (GLOBAL_SCOPE.equals(scope) && systemId != null)
-		{
+		if (GLOBAL_SCOPE.equals(scope) && systemId != null) {
 			int index;
 			if ((index = systemId.lastIndexOf('/')) > 0)
 				name += " (" + systemId.substring(index + 1) + ")";
 			else
 				name += " (" + systemId + ")";
 		}
-//		else if (LOCAL_SCOPE.equals(scope))
-//		{
-//			name += " (" + xalanStyleFrame.getName() + ")";
-//		}
+		// else if (LOCAL_SCOPE.equals(scope))
+		// {
+		// name += " (" + xalanStyleFrame.getName() + ")";
+		// }
 		return name;
 	}
-	
-	public String getType()
-	{
+
+	public String getType() {
 		String value = UNKNOWN;
-		try
-		{
-			XObject xobject = getXObject();
-			if (xobject != null)
-			{
-				int xalanType = xobject.getType();
-				switch (xalanType)
-				{
-					case XObject.CLASS_UNRESOLVEDVARIABLE:
-						value = UNRESOLVED;
-						break;
-					case XObject.CLASS_NODESET:
-						value = NODESET;
-						break;
-					case XObject.CLASS_BOOLEAN:
-						value = BOOLEAN;
-						break;
-					case XObject.CLASS_NUMBER:
-						value = NUMBER;
-						break;
-					case XObject.CLASS_UNKNOWN:
-						value = UNKNOWN;
-						break;
-					case XObject.CLASS_STRING:
-					default:
-						value = STRING;
-						break;
-				}
+		// XObject xobject = getXObject();
+		if (xobject != null) {
+			int xalanType = xobject.getType();
+			switch (xalanType) {
+			case XObject.CLASS_UNRESOLVEDVARIABLE:
+				value = UNRESOLVED;
+				break;
+			case XObject.CLASS_NODESET:
+				value = NODESET;
+				break;
+			case XObject.CLASS_BOOLEAN:
+				value = BOOLEAN;
+				break;
+			case XObject.CLASS_NUMBER:
+				value = NUMBER;
+				break;
+			case XObject.CLASS_UNKNOWN:
+				value = UNKNOWN;
+				break;
+			case XObject.CLASS_STRING:
+			default:
+				value = STRING;
+				break;
 			}
 		}
-		catch (TransformerException e)
-		{
-			e.printStackTrace();
-		}
+		// catch (TransformerException e)
+		// {
+		// e.printStackTrace();
+		// }
 		return value;
 	}
 
-	public String getValue()
-	{
+	public String getValue() {
 		String value = "???";
-		try
-		{
-			XObject xobject = getXObject();
-			if (xobject != null)
-			{
+		try {
+			xobject = getXObject();
+			if (xobject != null) {
 				int xalanType = xobject.getType();
-				switch (xalanType)
-				{
-					case XObject.CLASS_UNRESOLVEDVARIABLE:
-						value = "";
-						break;
-					case XObject.CLASS_NODESET:
-						XNodeSet xns = (XNodeSet) xobject;
-						if (xns.nodelist().getLength() > 0)
-							value = ((XNodeSet) xobject).nodelist().item(0).toString();
-						else
-							value = "<EMPTY NODESET>";
-						break;
-					case XObject.CLASS_BOOLEAN:
-					case XObject.CLASS_NUMBER:
-					case XObject.CLASS_STRING:
-					case XObject.CLASS_UNKNOWN:
-					default:
-						value = xobject.toString();
-						break;
+				switch (xalanType) {
+				case XObject.CLASS_UNRESOLVEDVARIABLE:
+					value = "";
+					break;
+				case XObject.CLASS_NODESET:
+					XNodeSet xns = (XNodeSet) xobject;
+					if (xns.nodelist().getLength() > 0) {
+					    value = convertNode(xns);
+//						value = ((XNodeSet) xobject).nodelist().item(0)
+//								.toString();
+					}
+					else
+						value = "<EMPTY NODESET>";
+					break;
+				case XObject.CLASS_BOOLEAN:
+				case XObject.CLASS_NUMBER:
+				case XObject.CLASS_STRING:
+				case XObject.CLASS_UNKNOWN:
+				default:
+					value = xobject.toString();
+					break;
 				}
 			}
-		}
-		catch (TransformerException e)
-		{
+		} catch (TransformerException e) {
 			e.printStackTrace();
 		}
-//		value = getScope()+"."+getSlotNumber()+")"+getName();	
-//		log.debug(getScope()+"."+getSlotNumber()+")"+getName() + "=" + value);
+		// value = getScope()+"."+getSlotNumber()+")"+getName();
+		// log.debug(getScope()+"."+getSlotNumber()+")"+getName() + "=" +
+		// value);
 		return value;
 	}
 
-	private XObject getXObject() throws TransformerException
-	{
+	private String convertNode(XNodeSet xns) throws TransformerException {
+		NodeList nodeList = xns.nodelist();
+		String value = processNodeList(nodeList);
+		return value;
+	}
+
+	private String processNodeList(NodeList nodeList) {
+		String value = "";
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			Node node = nodeList.item(i);
+			if (node.getNodeType() == Node.ELEMENT_NODE) {
+				value = value + "<";
+				if (node.getPrefix() != null && node.getPrefix().length() > 0) {
+					value = value + node.getPrefix() + ":";
+				}
+				if (node.getNodeName() != null) {
+					value = value + node.getNodeName();
+					if (node.hasAttributes()) {
+						NamedNodeMap attr = node.getAttributes();
+						value = value + buildAttributes(attr);
+					}
+					
+					value = value + ">" + node.getNodeValue();
+				}
+				if (node.hasChildNodes()) {
+					value = value + processNodeList(node.getChildNodes());
+				}
+				value = value + "</" + node.getLocalName() + ">";
+			}
+		}
+		return value;
+	}
+	
+	private String buildAttributes(NamedNodeMap attributes) {
+		String value = " ";
+		for (int a = 0; a < attributes.getLength(); a++) {
+			Attr attribute = (Attr)attributes.item(a);
+			if (attribute.getPrefix() != null) {
+				value = value + attribute.getPrefix() + ":";
+			}
+			value = value + attribute.getName() + "=\"" + attribute.getValue() + "\"";
+		}
+		value = value + " ";
+		return value;
+	}
+
+	private XObject getXObject() throws TransformerException {
 		XObject xvalue;
 		if (elemVariable.getIsTopLevel())
 			xvalue = varStack.elementAt(slotNumber);
 		else
-			xvalue = varStack.getLocalVariable(elemVariable.getIndex(), stackFrame);
+			xvalue = varStack.getLocalVariable(elemVariable.getIndex(),
+					stackFrame);
 		return xvalue;
 	}
 
-	public int compareTo(Object arg0)
-	{
-		XalanVariable xvar = (XalanVariable)arg0;
+	public int compareTo(Object arg0) {
+		XalanVariable xvar = (XalanVariable) arg0;
 		int comp = xvar.stackFrame - stackFrame;
 		if (comp == 0)
 			comp = slotNumber - xvar.slotNumber;

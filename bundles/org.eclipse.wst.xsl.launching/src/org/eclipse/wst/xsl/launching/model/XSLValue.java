@@ -14,6 +14,7 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
+import org.w3c.dom.NodeList;
 
 public class XSLValue extends XSLDebugElement implements IValue
 {
@@ -25,6 +26,7 @@ public class XSLValue extends XSLDebugElement implements IValue
 	public XSLValue(IDebugTarget target, String type, String value)
 	{
 		super(target);
+		IXSLDebugTarget xslDebugTarget = (IXSLDebugTarget) target;
 		this.type = type;
 		if (type.equals("nodeset")) {
 			hasVariables = true;
@@ -58,6 +60,7 @@ public class XSLValue extends XSLDebugElement implements IValue
 
 	public IVariable[] getVariables() throws DebugException
 	{
+		
 		return new IVariable[0];
 	}
 
