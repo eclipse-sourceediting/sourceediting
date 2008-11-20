@@ -155,6 +155,9 @@ public class XSDMultiPageEditorContributor extends MultiPageEditorActionBarContr
     {
       zoomComboContributionItem.setVisible(!isSource);
       zoomComboContributionItem.update();
+      // Bug 254772 - parent contribution manager should not be null.  We added this item already.
+      // Force the ToolBarManager to update/redraw the items
+      zoomComboContributionItem.getParent().update(true);
     }
   }
   
