@@ -40,7 +40,7 @@ public class SimpleWebFacetInstallDelegate implements IDelegate {
 		try {
 			IDataModel model = (IDataModel) config;
 			addNatures(project);
-			final IVirtualComponent c = ComponentCore.createComponent(project);
+			final IVirtualComponent c = ComponentCore.createComponent(project, false);
 			c.create(0, null);
 			
 			final IWorkspace ws = ResourcesPlugin.getWorkspace();
