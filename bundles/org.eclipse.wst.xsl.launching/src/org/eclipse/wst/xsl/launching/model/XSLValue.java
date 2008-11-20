@@ -7,28 +7,59 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 214235 - Node List expansion
  *******************************************************************************/
 package org.eclipse.wst.xsl.launching.model;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringBufferInputStream;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class XSLValue extends XSLDebugElement implements IValue
 {
 	private String fValue;
-	private final String type;
+	private String type;
 	private boolean hasVariables;
 	private XSLVariable variable;
+	private Node actualNode;
 
+	public XSLValue(IDebugTarget target, String type, Node node) {
+		super(target);
+		String value = "";
+		if (node.getNodeValue() != null) {
+			value = node.getNodeValue();
+		}
+		init(target, type, value);
+	}
 	public XSLValue(IDebugTarget target, String type, String value)
 	{
 		super(target);
-		IXSLDebugTarget xslDebugTarget = (IXSLDebugTarget) target;
+		init(target, type, value);
+	}
+	
+	private void init(IDebugTarget target, String type, String value) {
 		this.type = type;
-		if (type.equals("nodeset")) {
+		if (actualNode != null) {
+			hasVariables = actualNode.hasChildNodes();
+		} else 	if (type.equals("nodeset")) {
 			hasVariables = true;
 		} else {
 			hasVariables = false;
@@ -60,8 +91,42 @@ public class XSLValue extends XSLDebugElement implements IValue
 
 	public IVariable[] getVariables() throws DebugException
 	{
-		
+		if (actualNode != null) {
+			return getNodeListVariables(actualNode.getChildNodes());
+		}
+		if (type.equals("nodeset") && !(fValue.equals("<EMPTY NODESET>"))) {
+			DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+			NodeList nodeList = null;
+			try {
+				DocumentBuilder builder = builderFactory.newDocumentBuilder();
+				InputStream is = new ByteArrayInputStream(fValue.getBytes());
+				Document doc = builder.parse(is);
+				nodeList = doc.getChildNodes();
+				return getNodeListVariables(nodeList);
+			} catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SAXException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return new IVariable[0];
+	}
+	private IVariable[] getNodeListVariables(NodeList nodeList) {
+		List<IVariable> variableList = new ArrayList<IVariable>();
+		IVariable[] returnVars = new IVariable[nodeList.getLength()];
+		if (nodeList != null) {
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				Node node = nodeList.item(i);
+				IVariable variable = new NodeListVariable(getDebugTarget(), node);
+				variableList.add(variable);
+			}
+		}
+		return 	variableList.toArray(returnVars);
 	}
 
 	public boolean hasVariables() throws DebugException
