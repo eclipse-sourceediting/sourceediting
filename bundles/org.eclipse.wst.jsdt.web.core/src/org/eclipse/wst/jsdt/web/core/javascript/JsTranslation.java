@@ -255,6 +255,11 @@ public class JsTranslation implements IJsTranslation {
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation#getCompilationUnit()
 	 */
 	public IJavaScriptUnit getCompilationUnit() {
+        // Genuitec Begin Fix 6149: Exception opening external HTML file
+	    if (!getJavaProject().exists()) {
+	        return null;
+	    }
+	    // Genuitec End Fix 6149: Exception opening external HTML file
 		synchronized (fLock) {
 			try {
 				if (fCompilationUnit == null) {
