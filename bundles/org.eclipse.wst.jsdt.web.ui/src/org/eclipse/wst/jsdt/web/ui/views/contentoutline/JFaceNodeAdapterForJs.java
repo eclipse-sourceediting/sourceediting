@@ -241,6 +241,11 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 			startOffset = ((NodeImpl) node).getStartOffset();
 			endOffset = ((NodeImpl) node).getEndOffset();
 			IJavaScriptUnit unit = getLazyCu(node);
+	        // Genuitec Begin Fix 6149: Exception opening external HTML file
+			if (unit == null) {
+			    return new Object[0];
+			}
+	        // Genuitec End Fix 6149: Exception opening external HTML file
 			try {
 				if(ensureConsistant) unit.makeConsistent(getProgressMonitor());
 			} catch (JavaScriptModelException ex1) {
@@ -327,6 +332,8 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 			IJsTranslation tran = getTranslation(node);
 			if(tran== null) return null;
 			lazyCu = tran.getCompilationUnit();
+			if(lazyCu==null) return null;
+			
 			try {
 				lazyCu.makeConsistent( new NullProgressMonitor() );
 			} catch (JavaScriptModelException e) {
