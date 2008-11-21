@@ -99,9 +99,11 @@ public class XSLValue extends XSLDebugElement implements IValue
 		NodeList nodeList = null;
 		try {
 			DocumentBuilder builder = builderFactory.newDocumentBuilder();
-			InputStream is = new ByteArrayInputStream(fValue.getBytes());
+			String nodeSet = "<nodeset>" + fValue + "</nodeset>";
+			InputStream is = new ByteArrayInputStream(nodeSet.getBytes());
 			Document doc = builder.parse(is);
-			nodeList = doc.getChildNodes();
+			Node firstChild = doc.getFirstChild();
+			nodeList = firstChild.getChildNodes();
 			variableList.addAll(getNodeListVariables(nodeList));
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
