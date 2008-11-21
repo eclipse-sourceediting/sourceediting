@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     bug:244839 - eugene@genuitec.com
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.ui.views.contentoutline;
 
