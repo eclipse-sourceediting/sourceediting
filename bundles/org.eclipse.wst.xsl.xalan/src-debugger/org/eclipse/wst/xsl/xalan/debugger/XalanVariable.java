@@ -24,6 +24,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.ProcessingInstruction;
 
 public class XalanVariable extends Variable implements Comparable {
 	private final Log log = LogFactory.getLog(XalanVariable.class);
@@ -114,8 +115,6 @@ public class XalanVariable extends Variable implements Comparable {
 					XNodeSet xns = (XNodeSet) xobject;
 					if (xns.nodelist().getLength() > 0) {
 					    value = convertNode(xns);
-//						value = ((XNodeSet) xobject).nodelist().item(0)
-//								.toString();
 					}
 					else
 						value = "<EMPTY NODESET>";
@@ -148,26 +147,41 @@ public class XalanVariable extends Variable implements Comparable {
 		String value = "";
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			Node node = nodeList.item(i);
+			int nodeType = node.getNodeType();
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
-				value = value + "<";
-				if (node.getPrefix() != null && node.getPrefix().length() > 0) {
-					value = value + node.getPrefix() + ":";
-				}
-				if (node.getNodeName() != null) {
-					value = value + node.getNodeName();
-					if (node.hasAttributes()) {
-						NamedNodeMap attr = node.getAttributes();
-						value = value + buildAttributes(attr);
-					}
-					
-					value = value + ">" + node.getNodeValue();
-				}
-				if (node.hasChildNodes()) {
-					value = value + processNodeList(node.getChildNodes());
-				}
-				value = value + "</" + node.getLocalName() + ">";
+				value = createElement(value, node);
+			}
+			if (nodeType == Node.COMMENT_NODE ) {
+				value = value + "<!-- " + node.getNodeValue() + " -->";
+			}
+			if (nodeType == Node.PROCESSING_INSTRUCTION_NODE) {
+				ProcessingInstruction pi = (ProcessingInstruction) node;
+				value = value + "<?" + pi.getData() + " ?>";
 			}
 		}
+		return value;
+	}
+
+	private String createElement(String value, Node node) {
+		value = value + "<";
+		if (node.getPrefix() != null && node.getPrefix().length() > 0) {
+			value = value + node.getPrefix() + ":";
+		}
+		if (node.getNodeName() != null) {
+			value = value + node.getNodeName();
+			if (node.hasAttributes()) {
+				NamedNodeMap attr = node.getAttributes();
+				value = value + buildAttributes(attr);
+			}
+			value = value + ">";
+			if (node.getNodeValue() != null) {
+				value = value + node.getNodeValue();
+			}
+		}
+		if (node.hasChildNodes()) {
+			value = value + processNodeList(node.getChildNodes());
+		}
+		value = value + "</" + node.getLocalName() + ">";
 		return value;
 	}
 	

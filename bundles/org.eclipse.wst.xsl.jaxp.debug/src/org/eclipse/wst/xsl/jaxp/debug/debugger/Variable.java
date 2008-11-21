@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 214235 - Changed max value size to 2meg.
  *******************************************************************************/
 package org.eclipse.wst.xsl.jaxp.debug.debugger;
 
@@ -14,6 +15,7 @@ package org.eclipse.wst.xsl.jaxp.debug.debugger;
  * An abstract class that XSL processor implementations can subclass for their variables.
  * 
  * @author Doug Satchwell
+ * @author David Carver
  */
 public abstract class Variable
 {
@@ -32,7 +34,7 @@ public abstract class Variable
 	 */
 	public static final String GLOBAL_SCOPE = "G"; //$NON-NLS-1$
 
-	protected final static int MAXIMUM_VALUE_SIZE = 100;
+	protected final static int MAXIMUM_VALUE_SIZE = 2097152;
 
 	protected static final String UNRESOLVED = "unresolved"; //$NON-NLS-1$
 	protected static final String BOOLEAN = "boolean"; //$NON-NLS-1$

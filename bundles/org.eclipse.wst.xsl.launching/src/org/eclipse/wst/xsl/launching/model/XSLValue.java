@@ -14,9 +14,6 @@ package org.eclipse.wst.xsl.launching.model;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
-import java.io.StringBufferInputStream;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,11 +35,11 @@ public class XSLValue extends XSLDebugElement implements IValue
 	private String fValue;
 	private String type;
 	private boolean hasVariables;
-	private XSLVariable variable;
 	private Node actualNode;
 
 	public XSLValue(IDebugTarget target, String type, Node node) {
 		super(target);
+		actualNode = node;
 		String value = "";
 		if (node.getNodeValue() != null) {
 			value = node.getNodeValue();
@@ -57,16 +54,6 @@ public class XSLValue extends XSLDebugElement implements IValue
 	
 	private void init(IDebugTarget target, String type, String value) {
 		this.type = type;
-		if (actualNode != null) {
-			hasVariables = actualNode.hasChildNodes();
-		} else 	if (type.equals("nodeset")) {
-			hasVariables = true;
-		} else {
-			hasVariables = false;
-		}
-		if (value.equals("<EMPTY NODESET>")) {
-			hasVariables = false;
-		}
 		fValue = value;
 	}
 	
@@ -104,13 +91,10 @@ public class XSLValue extends XSLDebugElement implements IValue
 				nodeList = doc.getChildNodes();
 				return getNodeListVariables(nodeList);
 			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SAXException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -131,6 +115,18 @@ public class XSLValue extends XSLDebugElement implements IValue
 
 	public boolean hasVariables() throws DebugException
 	{
+		hasVariables = false;
+		if (actualNode != null) {
+			hasVariables = actualNode.hasChildNodes();
+		} else 	if (type.equals("nodeset")) {
+			hasVariables = true;
+		} else {
+			hasVariables = false;
+		}
+		if (fValue.equals("<EMPTY NODESET>")) {
+			hasVariables = false;
+		}
+		
 		return hasVariables; 
 	}
 }
