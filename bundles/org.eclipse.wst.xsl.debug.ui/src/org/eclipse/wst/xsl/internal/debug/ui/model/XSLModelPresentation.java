@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 214235 - Added NodeList specific images.
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.model;
 
@@ -22,7 +23,11 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIConstants;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
+import org.eclipse.wst.xsl.launching.model.NodeListVariable;
 import org.eclipse.wst.xsl.launching.model.XSLVariable;
+import org.w3c.dom.Node;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.util.SharedXMLEditorPluginImageHelper;
 
 /**
  * An <code>IDebugModelPresentation</code> for XSL debugging. 
@@ -47,6 +52,37 @@ public class XSLModelPresentation extends LabelProvider implements IDebugModelPr
 			{
 				if (localImg == null)
 					localImg = XSLDebugUIPlugin.getImageDescriptor("/icons/localvariable_obj.gif").createImage(); //$NON-NLS-1$
+				return localImg;
+			}
+		}
+		if (element instanceof NodeListVariable) {
+			NodeListVariable nodeVar = (NodeListVariable) element;
+			if (nodeVar.getNode() != null) {
+				Node node = nodeVar.getNode();
+				if (node.getNodeType() == Node.ELEMENT_NODE) {
+					localImg = SharedXMLEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_ELEMENT);
+				}
+				if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
+					localImg = SharedXMLEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_ATTRIBUTE);
+				}
+				if (node.getNodeType() == Node.COMMENT_NODE) {
+					localImg = SharedXMLEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_COMMENT);
+				}
+				if (node.getNodeType() == Node.PROCESSING_INSTRUCTION_NODE) {
+					localImg = SharedXMLEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_PROCESSINGINSTRUCTION);
+				}
+				if (node.getNodeType() == Node.CDATA_SECTION_NODE) {
+					localImg = SharedXMLEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_CDATASECTION);
+				}
+				if (node.getNodeType() == Node.ENTITY_NODE) {
+					localImg = SharedXMLEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_ENTITY);
+				}
+				if (node.getNodeType() == Node.ENTITY_REFERENCE_NODE) {
+					localImg = SharedXMLEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_ENTITY_REFERENCE);
+				}
+				if (node.getNodeType() == Node.TEXT_NODE) {
+					localImg = SharedXMLEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_TXTEXT);
+				}
 				return localImg;
 			}
 		}

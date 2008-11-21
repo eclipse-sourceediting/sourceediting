@@ -19,6 +19,7 @@ import org.w3c.dom.Node;
 public class NodeListVariable extends XSLDebugElement implements IVariable {
 	
 	private Node node = null;
+
 	private IDebugTarget debugTarget;
 	
 	public NodeListVariable(IDebugTarget target, Node nodeListNode) {
@@ -81,6 +82,10 @@ public class NodeListVariable extends XSLDebugElement implements IVariable {
 	public void setValue(IValue value) throws DebugException {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public Node getNode() {
+		return node;
 	}
 
 }
