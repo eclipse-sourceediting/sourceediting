@@ -211,6 +211,9 @@ public class EditNamespaceInfoDialog extends Dialog {
 							uri = URIHelper.getRelativeURI(file.getLocation(), location);
 						}
 					}
+					else {
+					  uri = URIHelper.getRelativeURI(file.getLocation(), resourceLocation);
+					}
 					grammarURI = file.getLocation().toOSString();
 				}
 				else {
