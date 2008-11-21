@@ -164,9 +164,9 @@ public class XalanVariable extends Variable implements Comparable {
 
 	private String createElement(String value, Node node) {
 		value = value + "<";
-		if (node.getPrefix() != null && node.getPrefix().length() > 0) {
-			value = value + node.getPrefix() + ":";
-		}
+//		if (node.getPrefix() != null && node.getPrefix().length() > 0) {
+//			value = value + node.getPrefix() + ":";
+//		}
 		if (node.getNodeName() != null) {
 			value = value + node.getNodeName();
 			if (node.hasAttributes()) {
@@ -181,7 +181,7 @@ public class XalanVariable extends Variable implements Comparable {
 		if (node.hasChildNodes()) {
 			value = value + processNodeList(node.getChildNodes());
 		}
-		value = value + "</" + node.getLocalName() + ">";
+		value = value + "</" + node.getNodeName() + ">";
 		return value;
 	}
 	
@@ -189,10 +189,10 @@ public class XalanVariable extends Variable implements Comparable {
 		String value = " ";
 		for (int a = 0; a < attributes.getLength(); a++) {
 			Attr attribute = (Attr)attributes.item(a);
-			if (attribute.getPrefix() != null) {
-				value = value + attribute.getPrefix() + ":";
-			}
-			value = value + attribute.getName() + "=\"" + attribute.getValue() + "\"";
+//			if (attribute.getPrefix() != null) {
+//				value = value + attribute.getPrefix() + ":";
+//			}
+			value = value + attribute.getName() + "=\"" + attribute.getValue() + "\" ";
 		}
 		value = value + " ";
 		return value;

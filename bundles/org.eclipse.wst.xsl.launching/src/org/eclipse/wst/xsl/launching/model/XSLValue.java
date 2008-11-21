@@ -25,7 +25,9 @@ import org.eclipse.debug.core.DebugException;
 import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -78,39 +80,59 @@ public class XSLValue extends XSLDebugElement implements IValue
 
 	public IVariable[] getVariables() throws DebugException
 	{
+		List<IVariable> variableList = new ArrayList<IVariable>();
 		if (actualNode != null) {
-			return getNodeListVariables(actualNode.getChildNodes());
+			if (actualNode.hasAttributes()) {
+				getAttributes(variableList, actualNode);
+			}
+			variableList.addAll(getNodeListVariables(actualNode.getChildNodes()));
 		}
 		if (type.equals("nodeset") && !(fValue.equals("<EMPTY NODESET>"))) {
-			DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-			NodeList nodeList = null;
-			try {
-				DocumentBuilder builder = builderFactory.newDocumentBuilder();
-				InputStream is = new ByteArrayInputStream(fValue.getBytes());
-				Document doc = builder.parse(is);
-				nodeList = doc.getChildNodes();
-				return getNodeListVariables(nodeList);
-			} catch (ParserConfigurationException e) {
-				e.printStackTrace();
-			} catch (SAXException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			createNodeSetVariables(variableList);
 		}
-		return new IVariable[0];
+		IVariable[] variables = new IVariable[variableList.size()];
+		variableList.toArray(variables);
+		return variables;
 	}
-	private IVariable[] getNodeListVariables(NodeList nodeList) {
+	private void createNodeSetVariables(List<IVariable> variableList) {
+		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+		NodeList nodeList = null;
+		try {
+			DocumentBuilder builder = builderFactory.newDocumentBuilder();
+			InputStream is = new ByteArrayInputStream(fValue.getBytes());
+			Document doc = builder.parse(is);
+			nodeList = doc.getChildNodes();
+			variableList.addAll(getNodeListVariables(nodeList));
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	private List<IVariable> getNodeListVariables(NodeList nodeList) {
 		List<IVariable> variableList = new ArrayList<IVariable>();
 		IVariable[] returnVars = new IVariable[nodeList.getLength()];
 		if (nodeList != null) {
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				Node node = nodeList.item(i);
+//				if (node.hasAttributes()) {
+//					getAttributes(variableList, node);
+//				}
 				IVariable variable = new NodeListVariable(getDebugTarget(), node);
 				variableList.add(variable);
 			}
 		}
-		return 	variableList.toArray(returnVars);
+		return variableList;
+	}
+	private void getAttributes(List<IVariable> variableList, Node node) {
+		NamedNodeMap nodeMap = node.getAttributes();
+		for (int item = 0; item < nodeMap.getLength(); item++) {
+			Attr attribute = (Attr) nodeMap.item(item);
+			IVariable variable = new NodeListVariable(getDebugTarget(), attribute);
+			variableList.add(variable);
+		}
 	}
 
 	public boolean hasVariables() throws DebugException
