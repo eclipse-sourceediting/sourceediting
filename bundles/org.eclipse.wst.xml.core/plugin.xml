@@ -112,7 +112,7 @@
 	<!--  https://bugs.eclipse.org/bugs/show_bug.cgi?id=103083 -->\
 	<!--  FYI: this xmi type *should* be defined in EMF, but, since isn't
 			we will here. In future versions is could be removed -->
-	<extension point="org.eclipse.core.runtime.contentTypes">
+	<extension point="org.eclipse.core.contenttype.contentTypes">
 		<content-type
 			file-extensions="xmi"
 			priority="low"

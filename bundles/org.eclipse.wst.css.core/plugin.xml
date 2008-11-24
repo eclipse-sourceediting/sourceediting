@@ -71,7 +71,7 @@
 		</processor>
 	</extension>
 
-	<extension point="org.eclipse.core.runtime.contentTypes">
+	<extension point="org.eclipse.core.contenttype.contentTypes">
 		<content-type
 			file-extensions="css"
 			priority="high"
