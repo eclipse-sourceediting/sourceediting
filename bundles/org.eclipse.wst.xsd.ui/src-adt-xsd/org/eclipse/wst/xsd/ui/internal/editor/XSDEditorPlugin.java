@@ -239,6 +239,7 @@ public class XSDEditorPlugin extends AbstractUIPlugin
     store.setDefault(CONST_DEFAULT_TARGET_NAMESPACE, DEFAULT_TARGET_NAMESPACE);
     store.setDefault(CONST_SHOW_EXTERNALS, false);
     store.setDefault(CONST_XSD_IMPORT_CLEANUP, false);
+    store.setDefault(CONST_XSD_AUTO_OPEN_SCHEMA_LOCATION_DIALOG, true);
     
     //Even the last item in the list must contain a trailing List separator
     store.setDefault(CONST_PREFERED_BUILT_IN_TYPES,     		
