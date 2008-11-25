@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,8 +18,21 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 
 
+/**
+ * Adapter interface to provide JFace-style children and property information.
+ * The factory returning this adapter is expected to implement
+ * IJFaceNodeAdapterFactory
+ * 
+ */
 public interface IJFaceNodeAdapter extends INodeAdapter {
 
+    /**
+     * Returns the child elements of the given parent element.
+     * The result is not modified by the viewer.
+     *
+     * @param node the parent object
+     * @return an array of child elements
+     */
 	public Object[] getChildren(Object node);
 
 	/**
