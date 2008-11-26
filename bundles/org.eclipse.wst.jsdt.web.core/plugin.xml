@@ -8,7 +8,7 @@
    
    
    <!-- Full blown JSDT FACET -->
-  
+  <!--
    <extension point="org.eclipse.wst.common.project.facet.core.facets">
 	    <category id="jsdt.category">
 	    <label>JavaScript Development Toolkit</label>
@@ -49,7 +49,7 @@
 	  </supported>
 
 	</extension>
-   
+   -->
    
    
    
