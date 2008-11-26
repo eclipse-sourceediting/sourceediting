@@ -10,6 +10,11 @@ import org.eclipse.wst.xml.xpath.ui.internal.XPathUIMessages;
 @SuppressWarnings("restriction")
 public class XPathPrefencePage extends AbstractPreferencePage {
 	
+	/**
+	 * (non-Javadoc)
+	 * @see org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage#createContents(org.eclipse.swt.widgets.Composite)
+	 * @deprecated
+	 */
 	protected Control createContents(Composite parent) {
 		Composite composite = createScrolledComposite(parent);
 
