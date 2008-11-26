@@ -51,8 +51,10 @@ public class XMLPerspectiveFactory implements IPerspectiveFactory {
         layout.createFolder("left", IPageLayout.LEFT, (float) 0.26, editorArea); //$NON-NLS-1$
 		left.addView(ProjectExplorer.VIEW_ID);
 		
-		IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, (float) 0.75, editorArea); //$NON-NLS-1$
+		IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, (float) 0.50, editorArea); //$NON-NLS-1$
 		right.addView(IPageLayout.ID_OUTLINE);
+		IFolderLayout bottomRight = layout.createFolder("bottom-right", IPageLayout.BOTTOM, (float) 0.50, "right");
+		bottomRight.addView("org.eclipse.ui.texteditor.TemplatesView");
 		
 		// Add Outline to the bottom-left
 		IFolderLayout bottomLeft = 
