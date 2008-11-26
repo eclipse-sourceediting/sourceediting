@@ -413,6 +413,7 @@ public final class TaglibIndex {
 	 * Finds all of the visible ITaglibRecords for the given path in the
 	 * workspace. Taglib mappings from web.xml files are only visible to paths
 	 * within the web.xml's corresponding web content folder.
+	 * This method will almost certainly require a workspace lock to complete.
 	 * 
 	 * @param fullPath -
 	 *            a path within the workspace
@@ -476,16 +477,17 @@ public final class TaglibIndex {
 
 	/**
 	 * Finds a matching ITaglibRecord given the reference. Typically the
-	 * result will have to be cast to a subiinterface of ITaglibRecord.
+	 * result will have to be cast to a subinterface of ITaglibRecord. This
+	 * method will almost certainly require a workspace lock to complete.
 	 * 
-	 * @param basePath -
-	 *            the workspace-relative path for IResources, full filesystem
-	 *            path otherwise
-	 * @param reference -
-	 *            the URI to lookup, for example the uri value from a taglib
+	 * @param basePath
+	 *            - the workspace-relative path for IResources, full
+	 *            filesystem path otherwise
+	 * @param reference
+	 *            - the URI to lookup, for example the uri value from a taglib
 	 *            directive
-	 * @param crossProjects -
-	 *            whether to search across projects (currently ignored)
+	 * @param crossProjects
+	 *            - whether to search across projects (currently ignored)
 	 * 
 	 * @return a visible ITaglibRecord or null if the reference points to no
 	 *         known tag library descriptor
