@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -32,6 +33,8 @@ import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkingSet;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetDataModelProperties;
@@ -385,6 +388,21 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
 	 * @see org.eclipse.wst.common.frameworks.internal.ui.wizard.WTPWizard#postPerformFinish()
 	 */
 	protected void postPerformFinish() throws InvocationTargetException {
+		String projName = getProjectName();
+		IProject newProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projName);
+		IWorkbench workbench = WSTWebUIPlugin.getDefault().getWorkbench();
+		
+		// add to the selected working sets
+		if (newProject != null && 
+				beginingPages != null && 
+				beginingPages.length > 0 && 
+				beginingPages[0] instanceof DataModelFacetCreationWizardPage) {
+			DataModelFacetCreationWizardPage mainPage = (DataModelFacetCreationWizardPage) beginingPages[0];
+			IWorkingSet[] workingSets = mainPage.getSelectedWorkingSets();
+			workbench.getWorkingSetManager().addToWorkingSets(newProject, workingSets);
+		}
+		
+		// open the "final" perspective
 		if (getFinalPerspectiveID() != null && getFinalPerspectiveID().length() > 0) {
 			final IConfigurationElement element = new DelegateConfigurationElement(configurationElement) {
 				public String getAttribute(String aName) {
@@ -398,8 +416,8 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
 		} else
 			BasicNewProjectResourceWizard.updatePerspective(configurationElement);
 
-		String projName = getProjectName();
-		BasicNewResourceWizard.selectAndReveal(ResourcesPlugin.getWorkspace().getRoot().getProject(projName), WSTWebUIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow());
+		// select and reveal
+		BasicNewResourceWizard.selectAndReveal(newProject, workbench.getActiveWorkbenchWindow());
 	}
 
 	protected IDataModelOperation getFacetProjectNotificationOperation() {

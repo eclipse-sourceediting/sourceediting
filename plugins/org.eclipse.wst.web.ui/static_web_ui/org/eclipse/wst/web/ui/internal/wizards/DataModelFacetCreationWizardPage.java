@@ -19,6 +19,8 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -32,7 +34,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.WorkingSetConfigurationBlock;
+import org.eclipse.ui.dialogs.WorkingSetGroup;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetProjectCreationDataModelProperties;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelEvent;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelPropertyDescriptor;
@@ -67,8 +72,13 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 	private static final String NULL_RUNTIME = "NULL_RUNTIME"; //$NON-NLS-1$
 	private static final String MRU_RUNTIME_STORE = "MRU_RUNTIME_STORE"; //$NON-NLS-1$
 	
+	private static final String RESOURCE_WORKING_SET = "org.eclipse.ui.resourceWorkingSetPage"; //$NON-NLS-1$
+	private static final String JAVA_WORKING_SET = "org.eclipse.jdt.ui.JavaWorkingSetPage"; //$NON-NLS-1$
+	
 	protected IProjectFacet primaryProjectFacet = null;
 	protected Combo primaryVersionCombo = null;
+	
+	protected WorkingSetGroup workingSetGroup;
 	
 	protected Set<IProjectFacetVersion> getFacetConfiguration( final IProjectFacetVersion primaryFacetVersion )
 	{
@@ -117,6 +127,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		createServerTargetComposite(top);
 		createPrimaryFacetComposite(top);
         createPresetPanel(top);
+        createWorkingSetGroupPanel(top);
         return top;
 	}
 	
@@ -629,4 +640,30 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		return null;
 	}
 	
+	protected WorkingSetGroup createWorkingSetGroup(Composite composite,
+			IStructuredSelection selection, String[] supportedWorkingSetTypes) {
+		if (workingSetGroup != null)
+			return workingSetGroup;
+		workingSetGroup = new WorkingSetGroup(composite, selection,
+				supportedWorkingSetTypes);
+		return workingSetGroup;
+	}
+	
+	protected WorkingSetGroup createWorkingSetGroupPanel(Composite composite) {
+		IStructuredSelection structuredSelection = null;
+		ISelection currentSelection = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow().getSelectionService()
+				.getSelection();
+		if (currentSelection instanceof IStructuredSelection) {
+			structuredSelection = (IStructuredSelection) currentSelection;
+		}
+		WorkingSetGroup group = createWorkingSetGroup(composite, structuredSelection, 
+				new String[] { RESOURCE_WORKING_SET, JAVA_WORKING_SET });
+		return group;
+	} 
+	
+	public IWorkingSet[] getSelectedWorkingSets() {
+		return workingSetGroup == null ? new IWorkingSet[0] : workingSetGroup
+				.getSelectedWorkingSets();
+	}
 }
