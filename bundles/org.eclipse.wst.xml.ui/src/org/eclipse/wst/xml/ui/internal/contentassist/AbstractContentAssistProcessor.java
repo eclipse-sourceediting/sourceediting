@@ -328,7 +328,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				// attribute is known, prompt with values from the declaration
 				proposedInfo = getAdditionalInfo(elementDecl, attrDecl);
 				List possibleValues = getPossibleDataTypeValues(node, attrDecl);
-				if (possibleValues.size() > 0) {
+				String defaultValue = attrDecl.getAttrType().getImpliedValue();
+				if (possibleValues.size() > 0 || defaultValue != null) {
 					// ENUMERATED VALUES
 					String matchString = contentAssistRequest.getMatchString();
 					if (matchString == null) {
@@ -343,20 +344,23 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					// enumerated values as they probably won't help
 					boolean existingComplicatedValue = (contentAssistRequest.getRegion() != null) && (contentAssistRequest.getRegion() instanceof ITextRegionContainer);
 					if (!existingComplicatedValue) {
+						int rOffset = contentAssistRequest.getReplacementBeginPosition();
+						int rLength = contentAssistRequest.getReplacementLength();
 						for (Iterator j = possibleValues.iterator(); j.hasNext();) {
 							String possibleValue = (String) j.next();
-							currentValid = currentValid || possibleValue.equals(currentValue);
-							if ((matchString.length() == 0) || possibleValue.startsWith(matchString)) {
-
-								String rString = "\"" + possibleValue + "\""; //$NON-NLS-2$//$NON-NLS-1$
-								int rOffset = contentAssistRequest.getReplacementBeginPosition();
-								int rLength = contentAssistRequest.getReplacementLength();
-								int cursorAfter = possibleValue.length() + 1;
-								String displayString = "\"" + possibleValue + "\""; //$NON-NLS-2$//$NON-NLS-1$
-
-								CustomCompletionProposal proposal = new CustomCompletionProposal(rString, rOffset, rLength, cursorAfter, image, displayString, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
-								contentAssistRequest.addProposal(proposal);
+							if(!possibleValue.equals(defaultValue)) {
+								currentValid = currentValid || possibleValue.equals(currentValue);
+								if ((matchString.length() == 0) || possibleValue.startsWith(matchString)) {
+									String rString = "\"" + possibleValue + "\""; //$NON-NLS-2$//$NON-NLS-1$
+									CustomCompletionProposal proposal = new CustomCompletionProposal(rString, rOffset, rLength, possibleValue.length() + 1, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ENUM), rString, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
+									contentAssistRequest.addProposal(proposal);
+								}
 							}
+						}
+						if(defaultValue != null && ((matchString.length() == 0) || defaultValue.startsWith(matchString))) {
+							String rString = "\"" + defaultValue + "\""; //$NON-NLS-2$//$NON-NLS-1$
+							CustomCompletionProposal proposal = new CustomCompletionProposal(rString, rOffset, rLength, defaultValue.length() + 1, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_DEFAULT), rString, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
+							contentAssistRequest.addProposal(proposal);
 						}
 					}
 				}
@@ -855,7 +859,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				CMDataType childType = parentDecl.getDataType();
 				if (childType != null) {
 					String[] childStrings = childType.getEnumeratedValues();
-					if (childStrings != null) {
+					String defaultValue = childType.getImpliedValue();
+					if (childStrings != null || defaultValue != null) {
 						// the content string is the sole valid child...so
 						// replace the rest
 						int begin = contentAssistRequest.getReplacementBeginPosition();
@@ -868,7 +873,14 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						}
 						String proposedInfo = getAdditionalInfo(parentDecl, childType);
 						for (int i = 0; i < childStrings.length; i++) {
-							CustomCompletionProposal textProposal = new CustomCompletionProposal(childStrings[i], begin, length, childStrings[i].length(), XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ENUM), childStrings[i], null, proposedInfo, XMLRelevanceConstants.R_TAG_INSERTION);
+							if(!childStrings[i].equals(defaultValue))
+							{
+								CustomCompletionProposal textProposal = new CustomCompletionProposal(childStrings[i], begin, length, childStrings[i].length(), XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ENUM), childStrings[i], null, proposedInfo, XMLRelevanceConstants.R_TAG_INSERTION);
+								contentAssistRequest.addProposal(textProposal);
+							}
+						}
+						if(defaultValue != null) {
+							CustomCompletionProposal textProposal = new CustomCompletionProposal(defaultValue, begin, length, defaultValue.length(), XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_DEFAULT), defaultValue, null, proposedInfo, XMLRelevanceConstants.R_TAG_INSERTION);
 							contentAssistRequest.addProposal(textProposal);
 						}
 					}

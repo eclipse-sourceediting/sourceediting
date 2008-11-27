@@ -75,6 +75,12 @@ public class MarkupTagInfoProvider {
 			sb.append(dataTypeName);
 			sb.append(PARAGRAPH_END);
 		}
+		String defaultValue = dataType.getImpliedValue();
+		if(defaultValue != null) {
+			sb.append(PARAGRAPH_START + BOLD_START + XMLUIMessages.Default_Value____6 + SPACE + BOLD_END);
+			sb.append(defaultValue);
+			sb.append(PARAGRAPH_END);
+		}
 		String[] enumeratedValue = dataType.getEnumeratedValues();
 		if ((enumeratedValue != null) && (enumeratedValue.length > 0)) {
 			sb.append(PARAGRAPH_START + BOLD_START + XMLUIMessages.Enumerated_Values____5 + SPACE + BOLD_END);

@@ -55,4 +55,6 @@ public class XMLEditorPluginImages {
 	public static final String IMG_OVR_WARN = "icons/full/ovr16/warn_ovr.gif"; //$NON-NLS-1$
 
 	public static final String IMG_WIZBAN_GENERATEXML = "icons/full/wizban/generatexml_wiz.png"; //$NON-NLS-1$
+	
+	public static final String IMG_OBJ_DEFAULT = "icons/full/obj16/default.gif"; //$NON-NLS-1$
 }
