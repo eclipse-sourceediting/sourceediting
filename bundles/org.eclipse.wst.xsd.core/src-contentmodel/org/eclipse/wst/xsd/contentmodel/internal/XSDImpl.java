@@ -398,7 +398,12 @@ public class XSDImpl
           case XSDVariety.LIST:
             {
               XSDSimpleTypeDefinition itemTypeDefinition = ((XSDSimpleTypeDefinition) type).getItemTypeDefinition();
-              getEnumeratedValuesForSimpleType(itemTypeDefinition, result);
+              String[] values = getEnumeratedValuesForType(itemTypeDefinition);
+              for (int j = 0; j < values.length; j++) {
+            	  if(result.indexOf(values[j]) == -1) {
+            		  result.add(values[j]);
+            	  }
+              }
             }
             break;
           case XSDVariety.UNION:
