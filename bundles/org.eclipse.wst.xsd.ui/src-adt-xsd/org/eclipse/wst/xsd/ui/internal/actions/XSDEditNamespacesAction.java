@@ -78,22 +78,11 @@ public class XSDEditNamespacesAction extends Action {
 		        NamespaceInfo oldCopy = new NamespaceInfo(info);
 		        info.setProperty("oldCopy", oldCopy); //$NON-NLS-1$
 		      }
-          
-//          String currentElementFormQualified = "";
-//          String currentAttributeFormQualified = "";
-          
-//          boolean hasElementForm = element.hasAttribute(XSDConstants.ELEMENTFORMDEFAULT_ATTRIBUTE);
-//          if (hasElementForm) currentElementFormQualified = element.getAttribute(XSDConstants.ELEMENTFORMDEFAULT_ATTRIBUTE);
-//          
-//          boolean hasAttributeForm = element.hasAttribute(XSDConstants.ATTRIBUTEFORMDEFAULT_ATTRIBUTE);
-//          if (hasAttributeForm) currentAttributeFormQualified = element.getAttribute(XSDConstants.ATTRIBUTEFORMDEFAULT_ATTRIBUTE);
-		                              
+          		                              
 		      dialog.setNamespaceInfoList(namespaceInfoList);   
 		      dialog.create();      
 		      dialog.getShell().setSize(500, 400);
 		      dialog.getShell().setText(XMLCommonResources.getInstance().getString("_UI_MENU_EDIT_SCHEMA_INFORMATION_TITLE")); //$NON-NLS-1$
-//          dialog.setIsElementQualified(currentElementFormQualified);
-//          dialog.setIsAttributeQualified(currentAttributeFormQualified);
 		      dialog.setBlockOnOpen(true);                                 
 		      dialog.open();
 
@@ -224,59 +213,7 @@ public class XSDEditNamespacesAction extends Action {
                 doc.getModel().endRecording(this);
 			     		}
 		        }
-            
-//            String attributeFormQualified = dialog.getAttributeFormQualified();
-//            String elementFormQualified = dialog.getElementFormQualified();
-//
-//            boolean elementFormChanged = true;
-//            boolean attributeFormChanged = true;
-//            if (elementFormQualified.equals(currentElementFormQualified))
-//            {
-//              elementFormChanged = false;
-//            }
-//            if (attributeFormQualified.equals(currentAttributeFormQualified))
-//            {
-//              attributeFormChanged = false;
-//            }
-//            if (elementFormChanged)
-//            {
-//              doc.getModel().beginRecording(this, XSDEditorPlugin.getXSDString("_UI_SCHEMA_ELEMENTFORMDEFAULT_CHANGE"));
-//              if (elementFormQualified.equals(XSDForm.QUALIFIED_LITERAL.getName()))
-//              {
-//                xsdSchema.setElementFormDefault(XSDForm.QUALIFIED_LITERAL);
-//              }
-//              else if (elementFormQualified.equals(XSDForm.UNQUALIFIED_LITERAL.getName()))
-//              {
-//                xsdSchema.setElementFormDefault(XSDForm.UNQUALIFIED_LITERAL);
-//              }
-//              else
-//              {
-//                // Model should allow us to remove the attribute
-//                xsdSchema.getElement().removeAttribute(XSDConstants.ELEMENTFORMDEFAULT_ATTRIBUTE);
-//              }
-//              doc.getModel().endRecording(this);
-//            }
-//            if (attributeFormChanged)
-//            {
-//              doc.getModel().beginRecording(this, XSDEditorPlugin.getXSDString("_UI_SCHEMA_ATTRIBUTEFORMDEFAULT_CHANGE"));
-//              if (attributeFormQualified.equals(XSDForm.QUALIFIED_LITERAL.getName()))
-//              {
-//                xsdSchema.setAttributeFormDefault(XSDForm.QUALIFIED_LITERAL);
-//              }
-//              else if (attributeFormQualified.equals(XSDForm.UNQUALIFIED_LITERAL.getName()))
-//              {
-//                xsdSchema.setAttributeFormDefault(XSDForm.UNQUALIFIED_LITERAL);
-//              }
-//              else
-//              {
-//                // Model should allow us to remove the attribute
-//                xsdSchema.getElement().removeAttribute(XSDConstants.ATTRIBUTEFORMDEFAULT_ATTRIBUTE);
-//              }
-//              
-//              doc.getModel().endRecording(this);
-//            }
 		   }      
-          
 		}
 	}
 	
