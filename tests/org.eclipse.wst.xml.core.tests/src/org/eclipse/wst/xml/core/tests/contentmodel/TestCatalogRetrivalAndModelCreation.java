@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -108,14 +108,14 @@ public class TestCatalogRetrivalAndModelCreation extends TestCase {
 	public void testExternalDTD() throws MalformedURLException, IOException {
 		doCM_directURITest("http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd");
 	}
-// Bug 123547 - temporarily comment these tests out.
-//	public void test2001SchemaCMDirect() throws MalformedURLException, IOException {
-//		doCM_directURITest("http://www.w3.org/2001/XMLSchema.xsd");
-//	}
-//	
-//	public void test2001SchemaCMCatalog() throws MalformedURLException, IOException {
-//		doURI_CMTest("http://www.w3.org/2001/XMLSchema");
-//	}
+
+	public void test2001SchemaCMDirect() throws MalformedURLException, IOException {
+		doCM_directURITest("http://www.w3.org/2001/XMLSchema.xsd");
+	}
+	
+	public void test2001SchemaCMCatalog() throws MalformedURLException, IOException {
+		doURI_CMTest("http://www.w3.org/2001/XMLSchema");
+	}
 	
 	public void testInvoiceRemote() throws MalformedURLException, IOException {
 		doCM_directURITest_checkElementCount("http://www.eclipse.org/webtools/wst/components/xsd/tests/dtd-references/Invoice.dtd", 18);
