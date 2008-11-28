@@ -116,6 +116,10 @@ public class AnnotationSection extends AbstractSection
             simpleText.setText(doSerialize(docElement));
           }
         }
+        else
+        {
+          simpleText.setText("");
+        }
       }
       catch (Exception e)
       {
