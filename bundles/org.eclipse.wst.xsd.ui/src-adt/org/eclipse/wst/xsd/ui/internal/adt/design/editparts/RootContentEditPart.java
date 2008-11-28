@@ -167,4 +167,18 @@ public class RootContentEditPart extends BaseEditPart
     }
 
   }
+  
+  // https://bugs.eclipse.org/bugs/show_bug.cgi?id=252589
+  public void activate()
+  {
+    super.activate();
+    Object model = getModel();
+    // The schema adapter doesn't have to notify the RootContentEditPart of it changes
+    if (model instanceof IADTObject)
+    {
+      IADTObject object = (IADTObject)model;
+      object.unregisterListener(this);
+    }
+  }
+
 }
