@@ -57,6 +57,7 @@ public class Messages extends NLS
   public static String _UI_ACTION_DELETE_APPINFO_ATTRIBUTE;
   public static String _UI_ACTION_CHANGE_CONTENT_MODEL;
   public static String _UI_ACTION_RENAME;
+  public static String _UI_ACTION_CHANGE_ENUMERATION_VALUE;
   public static String _UI_ERROR_INVALID_NAME;
   public static String _UI_LABEL_NAME;
   public static String _UI_LABEL_REFERENCE;

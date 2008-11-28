@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,13 @@ public class SetXSDFacetValueCommand extends BaseCommand
   {
     super(label);
     this.facet = facet;
+  }
+  
+  public SetXSDFacetValueCommand(String label, XSDFacet facet, String value)
+  {
+    super(label);
+    this.facet = facet;
+    this.value = value;
   }
   
   public void setValue(String value)

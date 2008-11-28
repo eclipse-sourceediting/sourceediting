@@ -240,6 +240,12 @@
 	    <input type="org.eclipse.xsd.XSDImport">
 	    </input>
 	 </propertySection>
+	 <propertySection tab="property.tab.general" 
+	 	class="org.eclipse.wst.xsd.ui.internal.common.properties.sections.XSDEnumerationFacetSection" 
+	 	id="prop.section.general">
+	    <input type="org.eclipse.xsd.XSDEnumerationFacet">
+	    </input>
+	 </propertySection>	 
   </propertySections>
 </extension>
 
