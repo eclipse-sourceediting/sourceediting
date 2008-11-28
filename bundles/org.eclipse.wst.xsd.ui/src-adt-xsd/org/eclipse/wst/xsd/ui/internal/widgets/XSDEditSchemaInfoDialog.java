@@ -21,25 +21,22 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.xml.ui.internal.dialogs.EditSchemaInfoDialog;
 import org.eclipse.wst.xml.ui.internal.nsedit.CommonEditNamespacesTargetFieldDialog;
-import org.eclipse.wst.xsd.ui.internal.editor.Messages;
-import org.eclipse.xsd.XSDForm;
 
-/**
- * @deprecated.  To be removed
- *
- */
 public class XSDEditSchemaInfoDialog extends EditSchemaInfoDialog implements SelectionListener {
 	String targetNamespace;
 	CommonEditNamespacesTargetFieldDialog editNamespacesControl;
+  /**
+   * @deprecated - These have been moved to the Advanced Properties Tab 
+   */
   Combo elementFormCombo, attributeFormCombo;
+  /**
+   * @deprecated 
+   */
   String elementFormQualified = "", attributeFormQualified = ""; //$NON-NLS-1$ //$NON-NLS-2$
   
-  private String [] formQualification = { "", XSDForm.QUALIFIED_LITERAL.getLiteral(), XSDForm.UNQUALIFIED_LITERAL.getLiteral() };  //$NON-NLS-1$
-	
 	public XSDEditSchemaInfoDialog(Shell parentShell, IPath resourceLocation, String targetNamespace) {
 		super(parentShell, resourceLocation);
 		this.targetNamespace = targetNamespace;
@@ -68,34 +65,7 @@ public class XSDEditSchemaInfoDialog extends EditSchemaInfoDialog implements Sel
 		}
 		editNamespacesControl.setNamespaceInfoList(namespaceInfoList);
 		editNamespacesControl.updateErrorMessage(namespaceInfoList);
-    
-    Label separator = new Label(dialogArea, SWT.SEPARATOR | SWT.HORIZONTAL);
-    GridData gd = new GridData(GridData.FILL_BOTH);
-    separator.setLayoutData(gd);
-    
-    Composite otherAttributesComposite = new Composite(dialogArea, SWT.NONE);
-    GridLayout layout = new GridLayout(2, false);
-    otherAttributesComposite.setLayout(layout);
-    GridData data = new GridData();
-    data.grabExcessHorizontalSpace = true;
-    data.horizontalAlignment = SWT.FILL;
-    otherAttributesComposite.setLayoutData(data);
-    
-    Label elementFormLabel = new Label(otherAttributesComposite, SWT.LEFT);
-    elementFormLabel.setText(Messages._UI_LABEL_ELEMENTFORMDEFAULT);
 
-    elementFormCombo = new Combo(otherAttributesComposite, SWT.NONE);
-    elementFormCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    elementFormCombo.setItems(formQualification);
-    elementFormCombo.addSelectionListener(this);
-    
-    Label attributeFormLabel = new Label(otherAttributesComposite, SWT.LEFT);
-    attributeFormLabel.setText(Messages._UI_LABEL_ATTRIBUTEFORMDEFAULT);
-    
-    attributeFormCombo = new Combo(otherAttributesComposite, SWT.NONE);
-    attributeFormCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    attributeFormCombo.setItems(formQualification);
-    attributeFormCombo.addSelectionListener(this);
     applyDialogFont(parent);
 		return dialogArea;
 	}	
@@ -104,33 +74,51 @@ public class XSDEditSchemaInfoDialog extends EditSchemaInfoDialog implements Sel
 		return editNamespacesControl.getTargetNamespace();
 	}
   
+  /**
+   * @deprecated 
+   */
   public void setIsElementQualified(String state)
   {
     elementFormCombo.setText(state);
     elementFormQualified = state;
   }
   
+  /**
+   * @deprecated 
+   */
   public void setIsAttributeQualified(String state)
   {
     attributeFormCombo.setText(state);
     attributeFormQualified = state;
   }
   
+  /**
+   * @deprecated 
+   */
   public String getElementFormQualified()
   {
     return elementFormQualified;
   }
   
+  /**
+   * @deprecated 
+   */
   public String getAttributeFormQualified()
   {
     return attributeFormQualified;
   }
   
+  /**
+   * @deprecated 
+   */
   public void widgetDefaultSelected(SelectionEvent e)
   {
    
   }
   
+  /**
+   * @deprecated 
+   */
   public void widgetSelected(SelectionEvent e)
   {
     if (e.widget == attributeFormCombo)
