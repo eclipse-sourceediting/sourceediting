@@ -95,6 +95,7 @@ import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeDeclaration
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeGroupDefinitionAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDComplexTypeDefinitionAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDEnumerationFacetAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupDefinitionAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDSchemaDirectiveAction;
@@ -734,6 +735,11 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     action = new AddXSDSchemaDirectiveAction(this, AddXSDSchemaDirectiveAction.INCLUDE_ID, Messages._UI_ACTION_ADD_INCLUDE);
     action.setSelectionProvider(getSelectionManager());
     action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDInclude.gif"));
+    registry.registerAction(action);
+
+    action = new AddXSDEnumerationFacetAction(this);
+    action.setSelectionProvider(getSelectionManager());
+    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDSimpleEnum.gif"));
     registry.registerAction(action);
 
     action = new AddXSDSchemaDirectiveAction(this, AddXSDSchemaDirectiveAction.IMPORT_ID, Messages._UI_ACTION_ADD_IMPORT);
