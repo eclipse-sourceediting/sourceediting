@@ -40,13 +40,16 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 	public static String getFactoryId() {
 		return ID;
 	}
+	
+	/**
+	 * Use {@link #createModules(IProject)} instead.
+	 * @deprecated
+	 * @param nature
+	 * @return
+	 */
 	protected IModule[] createModules(ModuleCoreNature nature) {
-		IProject project = nature.getProject();
-		try {
-			IVirtualComponent comp = ComponentCore.createComponent(project);
-			return createModuleDelegates(comp);
-		} catch (Exception e) {
-			Logger.getLogger().write(e);
+		if(nature != null){
+			return createModules(nature.getProject());
 		}
 		return null;
 	}
@@ -85,19 +88,21 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 	}
 
 	protected IModule[] createModules(IProject project) {
-		try {
-			if (project.exists()) {
-			ModuleCoreNature nature = (ModuleCoreNature) project.getNature(IModuleConstants.MODULE_NATURE_ID);
-			if (nature != null)
-				return createModules(nature);
+		IVirtualComponent component = ComponentCore.createComponent(project);
+		if(component != null){
+			try {
+				return createModuleDelegates(component);
+			} catch (CoreException e) {
+				Logger.getLogger().write(e);
 			}
-		} catch (CoreException e) {
-			Logger.getLogger().write(e);
 		}
 		return null;
 	}
 
 	protected IModule[] createModuleDelegates(IVirtualComponent component) throws CoreException {
+		if(component == null){
+			return null;
+		}
 		StaticWebDeployable moduleDelegate = null;
 		IModule module = null;
 		try {
