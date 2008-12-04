@@ -19,6 +19,6 @@
   <template name="%Templates.xslpi.name" description="%Templates.xslpi.desc" id="org.eclipse.wst.xml.ui.internal.templates.xslpi" context="xml_tag" enabled="true">&lt;?xml-stylesheet type="text/xsl" href="${cursor}"?&gt;</template>
   <template name="%Templates.xsinsp.name" description="%Templates.xsinsp.desc" id="org.eclipse.wst.xml.ui.internal.templates.xsinsp" context="xml_attribute" enabled="true">xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"</template>
   <template name="%Templates.schemaLoc.name" description="%Templates.schemaLoc.desc" id="org.eclipse.wst.xml.ui.internal.templates.schemaLoc" context="xml_attribute" enabled="true">xsi:schemaLocation="{namespace} {location}"</template>
-  <template name="%Templates.noschemaLoc.name" description="%Templates.noschemaLoc.desc" id="org.eclipse.wst.xml.ui.internal.templates.noschemaLoc" context="xml_attribute" enabled="true">xsi:schemaLocation="{namespace} {location}"</template>
+  <template name="%Templates.noschemaLoc.name" description="%Templates.noschemaLoc.desc" id="org.eclipse.wst.xml.ui.internal.templates.noschemaLoc" context="xml_attribute" enabled="true">xsi:noNamespaceSchemaLocation="{location}"</template>
   <template name="%Templates.defaultnsp.name" description="%Templates.defaultnsp.desc" id="org.eclipse.wst.xml.ui.internal.templates.defaultnsp" context="xml_attribute" enabled="true">xmlns="default namespace"</template>
 </templates>
