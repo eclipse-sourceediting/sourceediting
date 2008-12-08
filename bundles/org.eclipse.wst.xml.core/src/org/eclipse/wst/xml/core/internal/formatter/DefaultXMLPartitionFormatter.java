@@ -755,7 +755,8 @@ public class DefaultXMLPartitionFormatter {
 				if (characterRunLength > 0) {
 					// indent if word is too long or forcing initial
 					// indent
-					availableLineWidth = availableLineWidth - characterRunLength;
+					// [243091] - characterRunLength should only be subtracted once or text formatting wraps prematurely
+					// availableLineWidth = availableLineWidth - characterRunLength;
 					if ((whitespaceMode == XMLFormattingConstraints.IGNORE || whitespaceMode == XMLFormattingConstraints.IGNOREANDTRIM) && (forceInitialIndent || (availableLineWidth <= 0))) {
 						// indent if not already indented
 						availableLineWidth = indentIfNotAlreadyIndented(textEdit, currentRegion, indentLevel, currentRegion.getStartOffset(), whitespaceRun);
