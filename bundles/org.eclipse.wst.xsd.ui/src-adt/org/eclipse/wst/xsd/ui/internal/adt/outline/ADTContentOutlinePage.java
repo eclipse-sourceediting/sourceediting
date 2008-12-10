@@ -80,10 +80,6 @@ public class ADTContentOutlinePage extends ExtensibleContentOutlinePage
     // getSite().registerContextMenu("org.eclipse.wst.xsdeditor.ui.popup.outline",
     // menuManager, xsdEditor.getSelectionManager());
 
-    // cs... why are we doing this from the outline view?
-    //
-    // xsdTextEditor.getXSDEditor().getSelectionManager().setSelection(new
-    // StructuredSelection(xsdTextEditor.getXSDSchema()));
     // drill down from outline view
     getTreeViewer().getControl().addMouseListener(new MouseAdapter()
     {
@@ -137,19 +133,16 @@ public class ADTContentOutlinePage extends ExtensibleContentOutlinePage
   // }
   public void setSelectionManager(MultiPageSelectionProvider newSelectionManager)
   {
-//    TreeViewer treeViewer = getTreeViewer();
     // disconnect from old one
     if (selectionManager != null)
     {
       selectionManager.removeSelectionChangedListener(selectionManagerSelectionChangeListener);
-//      treeViewer.removeSelectionChangedListener(treeSelectionChangeListener);
     }
     selectionManager = newSelectionManager;
     // connect to new one
     if (selectionManager != null)
     {
       selectionManager.addSelectionChangedListener(selectionManagerSelectionChangeListener);
-//      treeViewer.addSelectionChangedListener(treeSelectionChangeListener);
     }
   }
 
