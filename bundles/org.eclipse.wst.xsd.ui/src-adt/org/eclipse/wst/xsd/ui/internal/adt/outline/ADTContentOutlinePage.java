@@ -266,7 +266,15 @@ public class ADTContentOutlinePage extends ExtensibleContentOutlinePage
               }
             }
           }
-          getTreeViewer().setSelection(event.getSelection(), true);
+          // Bug 251474 - We will restrict selection to only one item
+          if (selectionLength == 1)
+          {
+            getTreeViewer().setSelection(event.getSelection(), true);
+          }
+          else
+          {
+            getTreeViewer().setSelection(new StructuredSelection(structuredSelection.getFirstElement()), true);
+          }
         }
       }
     }
