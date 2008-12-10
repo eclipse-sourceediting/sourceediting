@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2006 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,25 +8,24 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.tests;
 
+package org.eclipse.jface.text.tests.reconciler;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.wst.sse.ui.tests.viewer.TestViewerConfiguration;
 
-public class SSEUITestSuite extends TestSuite {
+/**
+ *
+ * @since 3.0
+ */
+public class ReconcilerTestSuite {
+
 	public static Test suite() {
-		return new SSEUITestSuite();
-	}
-
-	public SSEUITestSuite() {
-		super("SSE UI Test Suite");
-		addTest(new TestSuite(VerifyEditorPlugin.class));
-		addTest(new TestSuite(CommonEditorPreferencesTest.class));
-		addTest(new TestSuite(TestViewerConfiguration.class));
-		addTest(new TestSuite(TestStructuredTextEditor.class));
-//		addTest(JFaceTextTestSuite.suite());
+		TestSuite suite= new TestSuite("Test Suite org.eclipse.jface.text.tests.reconciler");
+		//$JUnit-BEGIN$
+		suite.addTestSuite(AbstractReconcilerTest.class);
+		//$JUnit-END$
+		return suite;
 	}
 }

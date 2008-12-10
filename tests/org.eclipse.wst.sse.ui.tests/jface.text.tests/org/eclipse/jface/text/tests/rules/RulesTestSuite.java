@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2000, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,25 +8,27 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.tests;
-
+package org.eclipse.jface.text.tests.rules;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.wst.sse.ui.tests.viewer.TestViewerConfiguration;
 
-public class SSEUITestSuite extends TestSuite {
+/**
+ * @since 3.0
+ */
+public class RulesTestSuite {
+
 	public static Test suite() {
-		return new SSEUITestSuite();
-	}
-
-	public SSEUITestSuite() {
-		super("SSE UI Test Suite");
-		addTest(new TestSuite(VerifyEditorPlugin.class));
-		addTest(new TestSuite(CommonEditorPreferencesTest.class));
-		addTest(new TestSuite(TestViewerConfiguration.class));
-		addTest(new TestSuite(TestStructuredTextEditor.class));
-//		addTest(JFaceTextTestSuite.suite());
+		TestSuite suite= new TestSuite(
+				"Test Suite org.eclipse.jface.text.tests.rules");
+		// $JUnit-BEGIN$
+		suite.addTestSuite(FastPartitionerTest.class);
+		suite.addTestSuite(DefaultPartitionerTest.class);
+		suite.addTestSuite(DefaultPartitionerZeroLengthTest.class);
+		suite.addTestSuite(WordRuleTest.class);
+		suite.addTestSuite(ScannerColumnTest.class);
+		// $JUnit-END$
+		return suite;
 	}
 }
