@@ -211,7 +211,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		// The descriptor class used here is also used in
 		// updatePropertyDescriptors()
 		TextPropertyDescriptor descriptor = new TextPropertyDescriptor(attributeName, attributeName);
-		descriptor.setCategory(getCategory(null));
+		descriptor.setCategory(getCategory(null, null));
 		descriptor.setDescription(attributeName);
 		if (hideOnFilter && fSetExpertFilter) {
 			descriptor.setFilterFlags(new String[]{IPropertySheetEntry.FILTER_ID_EXPERT});
@@ -227,11 +227,11 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 	 * exists and it is a valid value, a combo box featuring the correct
 	 * values with the current one visible is returned
 	 */
-	private IPropertyDescriptor createEnumeratedPropertyDescriptor(CMAttributeDeclaration attrDecl, CMDataType valuesHelper) {
+	private IPropertyDescriptor createEnumeratedPropertyDescriptor(CMAttributeDeclaration attrDecl, CMDataType valuesHelper, Attr attr) {
 		// the displayName MUST be set
 		String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
 		EnumeratedStringPropertyDescriptor descriptor = new EnumeratedStringPropertyDescriptor(attrName, attrName, _getValidStrings(attrDecl, valuesHelper));
-		descriptor.setCategory(getCategory(attrDecl));
+		descriptor.setCategory(getCategory(attrDecl, attr));
 		descriptor.setDescription(attrName);
 		if ((attrDecl.getUsage() != CMAttributeDeclaration.REQUIRED) && fSetExpertFilter) {
 			descriptor.setFilterFlags(new String[]{IPropertySheetEntry.FILTER_ID_EXPERT});
@@ -247,35 +247,35 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 	 * is the fixed/default value, no cell editor is provided "locking" the
 	 * value in
 	 */
-	private IPropertyDescriptor createFixedPropertyDescriptor(CMAttributeDeclaration attrDecl, CMDataType helper) {
+	private IPropertyDescriptor createFixedPropertyDescriptor(CMAttributeDeclaration attrDecl, CMDataType helper, Attr attr) {
 		// the displayName MUST be set
 		String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
 		EnumeratedStringPropertyDescriptor descriptor = new EnumeratedStringPropertyDescriptor(attrName, attrName, _getValidFixedStrings(attrDecl, helper));
-		descriptor.setCategory(getCategory(attrDecl));
+		descriptor.setCategory(getCategory(attrDecl, attr));
 		descriptor.setDescription(DOMNamespaceHelper.computeName(attrDecl, fNode, null));
 		return descriptor;
 	}
 
-	protected IPropertyDescriptor createPropertyDescriptor(CMAttributeDeclaration attrDecl) {
+	protected IPropertyDescriptor createPropertyDescriptor(CMAttributeDeclaration attrDecl, Attr attr) {
 		IPropertyDescriptor descriptor = null;
 		CMDataType attrType = attrDecl.getAttrType();
 
 		if (attrType != null) {
 			// handle declarations that provide FIXED/ENUMERATED values
 			if ((attrType.getEnumeratedValues() != null) && (attrType.getEnumeratedValues().length > 0)) {
-				descriptor = createEnumeratedPropertyDescriptor(attrDecl, attrType);
+				descriptor = createEnumeratedPropertyDescriptor(attrDecl, attrType, attr);
 			}
 			else if (((attrDecl.getUsage() == CMAttributeDeclaration.FIXED) || (attrType.getImpliedValueKind() == CMDataType.IMPLIED_VALUE_FIXED)) && (attrType.getImpliedValue() != null)) {
-				descriptor = createFixedPropertyDescriptor(attrDecl, attrType);
+				descriptor = createFixedPropertyDescriptor(attrDecl, attrType, attr);
 			}
 			else {
 				// plain text
-				descriptor = createTextPropertyDescriptor(attrDecl);
+				descriptor = createTextPropertyDescriptor(attrDecl, attr);
 			}
 		}
 		else {
 			// no extra information given
-			descriptor = createTextPropertyDescriptor(attrDecl);
+			descriptor = createTextPropertyDescriptor(attrDecl, attr);
 		}
 		return descriptor;
 	}
@@ -289,7 +289,8 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		CMNamedNodeMap attrMap = null;
 		CMElementDeclaration ed = getDeclaration();
 		if (ed != null) {
-			CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl();
+			attrMap = ed.getAttributes();
+			CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attrMap);
 			List nodes = ModelQueryUtil.getModelQuery(fNode.getOwnerDocument()).getAvailableContent((Element) fNode, ed, ModelQuery.INCLUDE_ATTRIBUTES);
 			for (int k = 0; k < nodes.size(); k++) {
 				CMNode cmnode = (CMNode) nodes.get(k);
@@ -334,7 +335,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 				if (attrDecl != null) {
 					String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
 					if (!names.contains(attrName)) {
-						descriptor = createPropertyDescriptor(attrDecl);
+						descriptor = createPropertyDescriptor(attrDecl, attr);
 						if (descriptor != null)
 							names.add(attrName);
 					}
@@ -358,7 +359,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 				attrDecl = (CMAttributeDeclaration) attrMap.item(i);
 				String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
 				if (!names.contains(attrName)) {
-					IPropertyDescriptor holdDescriptor = createPropertyDescriptor(attrDecl);
+					IPropertyDescriptor holdDescriptor = createPropertyDescriptor(attrDecl, null);
 					if (holdDescriptor != null) {
 						names.add(attrName);
 						descriptorList.add(holdDescriptor);
@@ -376,7 +377,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 					attrDecl = (CMAttributeDeclaration) node;
 					String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
 					if (!names.contains(attrName)) {
-						IPropertyDescriptor holdDescriptor = createPropertyDescriptor(attrDecl);
+						IPropertyDescriptor holdDescriptor = createPropertyDescriptor(attrDecl, null);
 						if (holdDescriptor != null) {
 							names.add(attrName);
 							descriptorList.add(holdDescriptor);
@@ -394,10 +395,10 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		return descriptors;
 	}
 
-	private IPropertyDescriptor createTextPropertyDescriptor(CMAttributeDeclaration attrDecl) {
+	private IPropertyDescriptor createTextPropertyDescriptor(CMAttributeDeclaration attrDecl, Attr attr) {
 		String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
 		TextPropertyDescriptor descriptor = new TextPropertyDescriptor(attrName, attrName);
-		descriptor.setCategory(getCategory(attrDecl));
+		descriptor.setCategory(getCategory(attrDecl, attr));
 		descriptor.setDescription(attrName);
 		if ((attrDecl.getUsage() != CMAttributeDeclaration.REQUIRED) && fSetExpertFilter) {
 			descriptor.setFilterFlags(new String[]{IPropertySheetEntry.FILTER_ID_EXPERT});
@@ -405,7 +406,14 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		return descriptor;
 	}
 
-	private String getCategory(CMAttributeDeclaration attrDecl) {
+	private String getCategory(CMAttributeDeclaration attrDecl, Attr attr) {
+		if (attr != null) {
+			String namespaceURI = attr.getNamespaceURI();
+			if (namespaceURI == null)
+				namespaceURI = attr.getOwnerElement().getNamespaceURI();
+			if (namespaceURI != null)
+				return namespaceURI;
+		}
 		if (attrDecl != null) {
 			if (attrDecl.supports("category")) { //$NON-NLS-1$
 				return (String) attrDecl.getProperty("category"); //$NON-NLS-1$
@@ -506,36 +514,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 	}
 
 	public boolean isPropertyResettable(Object id) {
-		boolean resettable = false;
-		String property = id.toString();
-		CMNamedNodeMap attrDecls = null;
-
-		CMElementDeclaration ed = getDeclaration();
-		if (ed != null) {
-			attrDecls = ed.getAttributes();
-			CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attrDecls);
-			List nodes = ModelQueryUtil.getModelQuery(fNode.getOwnerDocument()).getAvailableContent((Element) fNode, ed, ModelQuery.INCLUDE_ATTRIBUTES);
-			for (int k = 0; k < nodes.size(); k++) {
-				CMNode cmnode = (CMNode) nodes.get(k);
-				if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
-					allAttributes.put(cmnode);
-				}
-			}
-			attrDecls = allAttributes;
-		}
-
-		if (attrDecls != null) {
-			CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) attrDecls.getNamedItem(property);
-			if (attrDecl != null) {
-				if (attrDecl.getAttrType() != null) {
-					CMDataType helper = attrDecl.getAttrType();
-					if ((helper.getImpliedValueKind() != CMDataType.IMPLIED_VALUE_NONE) && (helper.getImpliedValue() != null)) {
-						resettable = true;
-					}
-				}
-			}
-		}
-		return resettable;
+		return fNode != null && fNode.getNodeType() == Node.ELEMENT_NODE;
 	}
 
 	/**
@@ -579,7 +558,6 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 
 	/**
 	 * Resets the specified property's value to its default value.
-	 * 
 	 */
 	public void resetPropertyValue(Object propertyObject) {
 		String property = propertyObject.toString();
@@ -615,11 +593,13 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 				((Attr) attrMap.getNamedItem(property)).setValue(defValue);
 			}
 			else {
-				attrMap.removeNamedItem(property);
+				// remember, this method is for reset, not remove
+				((Attr) attrMap.getNamedItem(property)).setValue(""); //$NON-NLS-1$
 			}
 		}
 		else {
-			attrMap.removeNamedItem(property);
+			// remember, this method is for reset, not remove
+			((Attr) attrMap.getNamedItem(property)).setValue(""); //$NON-NLS-1$
 		}
 	}
 
@@ -740,7 +720,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 						}
 						// Replace with better descriptor
 						else if ((validValues != null) && (validValues.length > 0)) {
-							fDescriptors[j] = createPropertyDescriptor(attrDecl);
+							fDescriptors[j] = createPropertyDescriptor(attrDecl, null);
 						}
 					}
 				}
@@ -781,7 +761,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 				String attrName = DOMNamespaceHelper.computeName(attrDecl, fNode, null);
 				if (fCaseSensitive) {
 					if (!descriptorNames.contains(attrName)) {
-						IPropertyDescriptor descriptor = createPropertyDescriptor(attrDecl);
+						IPropertyDescriptor descriptor = createPropertyDescriptor(attrDecl, null);
 						if (descriptor != null) {
 							descriptorNames.add(attrName);
 							descriptors.add(descriptor);
@@ -795,7 +775,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 					}
 					if (!exists) {
 						descriptorNames.add(attrName);
-						IPropertyDescriptor descriptor = createPropertyDescriptor(attrDecl);
+						IPropertyDescriptor descriptor = createPropertyDescriptor(attrDecl, null);
 						if (descriptor != null) {
 							descriptorNames.add(attrName);
 							descriptors.add(descriptor);

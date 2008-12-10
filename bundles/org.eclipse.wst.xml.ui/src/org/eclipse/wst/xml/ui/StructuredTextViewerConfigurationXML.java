@@ -39,6 +39,7 @@ import org.eclipse.wst.xml.ui.internal.contentassist.NoRegionContentAssistProces
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.eclipse.wst.xml.ui.internal.style.LineStyleProviderForXML;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 
 /**
@@ -203,7 +204,12 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 						if (node.getNodeType() != Node.DOCUMENT_NODE) {
 							s.insert(0, super.getText(node));
 						}
-						node = node.getParentNode();
+
+						if (node.getNodeType() == Node.ATTRIBUTE_NODE)
+							node = ((Attr) node).getOwnerElement();
+						else
+							node = node.getParentNode();
+					
 						if (node != null && node.getNodeType() != Node.DOCUMENT_NODE) {
 							s.insert(0, IPath.SEPARATOR);
 						}
