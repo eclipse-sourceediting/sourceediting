@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -60,16 +60,16 @@ public class CaptureScreenAction extends Action
 
   public class ImageExporter
   {
-    private static final String FILE_FORMATS = "*.jpg;*.jpeg;*.bmp;*.tif";
-	private static final String FILE_SEPARATOR = "file.separator";
+    private static final String FILE_FORMATS = "*.jpeg;*.jfif;*.jpg;*.jpe;*.png;*.bmp;*.ico"; //$NON-NLS-1$
+  	private static final String FILE_SEPARATOR = "file.separator"; //$NON-NLS-1$
 
-	public boolean save(IEditorPart editorPart, GraphicalViewer viewer, String saveFilePath, int format)
+	  public boolean save(IEditorPart editorPart, GraphicalViewer viewer, String saveFilePath, int format)
     {
       Assert.isNotNull(editorPart, "null editorPart passed to ImageExporter.save"); //$NON-NLS-1$
       Assert.isNotNull(viewer, "null viewer passed to ImageExporter.save"); //$NON-NLS-1$
       Assert.isNotNull(saveFilePath, "null saveFilePath passed to ImageExporter.save"); //$NON-NLS-1$
 
-      if (format != SWT.IMAGE_BMP && format != SWT.IMAGE_JPEG && format != SWT.IMAGE_ICO)
+      if (format != SWT.IMAGE_BMP && format != SWT.IMAGE_JPEG && format != SWT.IMAGE_ICO && format != SWT.IMAGE_PNG)
         throw new IllegalArgumentException(Messages._UI_ACTION_CAPTURE_SCREEN_FORMAT_NOT_SUPPORTED);
 
       try
@@ -103,19 +103,24 @@ public class CaptureScreenAction extends Action
         }
       }
 
-      int format = SWT.IMAGE_JPEG;
-      if (saveFilePath.endsWith(".bmp")) //$NON-NLS-1$
+      int format = -1;
+      String saveFilePathLowerCase = saveFilePath.toLowerCase(); 
+      if (saveFilePathLowerCase.endsWith(".jpeg") || saveFilePathLowerCase.endsWith(".jpg") || saveFilePathLowerCase.endsWith(".jpe") || saveFilePathLowerCase.endsWith(".jfif")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    	format = SWT.IMAGE_JPEG;
+      else if (saveFilePathLowerCase.endsWith(".bmp")) //$NON-NLS-1$
         format = SWT.IMAGE_BMP;
-      else if (saveFilePath.endsWith(".ico")) //$NON-NLS-1$
+      else if (saveFilePathLowerCase.endsWith(".ico")) //$NON-NLS-1$
         format = SWT.IMAGE_ICO;
-      else if (saveFilePath.endsWith(".png")) //$NON-NLS-1$
+      else if (saveFilePathLowerCase.endsWith(".png")) //$NON-NLS-1$
         format = SWT.IMAGE_PNG;
-      else if (saveFilePath.endsWith(".gif")) //$NON-NLS-1$
+      else if (saveFilePathLowerCase.endsWith(".gif")) //$NON-NLS-1$
         format = SWT.IMAGE_GIF;
-      else if (saveFilePath.endsWith(".tiff")) //$NON-NLS-1$
-        format = SWT.IMAGE_TIFF;
 
-      return save(editorPart, viewer, saveFilePath, format);
+      if(format != -1) {
+    	  return save(editorPart, viewer, saveFilePath, format);
+      } else {
+    	  return false;
+      }
 
     }
 
@@ -145,7 +150,7 @@ public class CaptureScreenAction extends Action
 	      else
 	      {
 		      LAST_SCREEN_CAPTURE_FILE_NAME = fileName;
-		      LAST_SCREEN_CAPTURE_FILE_EXTENSION = "";
+		      LAST_SCREEN_CAPTURE_FILE_EXTENSION = ""; //$NON-NLS-1$
 	      }
       }
       return filePath;
