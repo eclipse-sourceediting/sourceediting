@@ -117,8 +117,7 @@ public class TestContentTypeDetectionForXML extends TestContentTypeDetection {
 
 	public void testFile120WS() throws CoreException, IOException {
 		// whitespace (CRLF) before xml declaration
-		// [251748] Leading newlines can now be picked up by the XMLContentDescriber
-		doTest(expectedXMLContentType, "testfiles/xml/testWSBeforeXMLDecl.xml", null);
+		doTest(expectedCustomXMLContentType, "testfiles/xml/testWSBeforeXMLDecl.xml", null);
 	}
 
 	public void testFile120WS2() throws CoreException, IOException {

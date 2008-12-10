@@ -19,7 +19,6 @@ import org.eclipse.wst.xml.tests.encoding.read.TestCodedReader;
 import org.eclipse.wst.xml.tests.encoding.read.TestCodedReaderOnGennedFiles;
 import org.eclipse.wst.xml.tests.encoding.read.TestContentDescription;
 import org.eclipse.wst.xml.tests.encoding.read.TestContentTypeDescriptionOnGennedFiles;
-import org.eclipse.wst.xml.tests.encoding.read.TestContentTypeDetectionForXML;
 import org.eclipse.wst.xml.tests.encoding.read.TestContentTypes;
 import org.eclipse.wst.xml.tests.encoding.write.TestCodedWrite;
 import org.eclipse.wst.xml.tests.encoding.xml.XMLEncodingTests;
@@ -29,7 +28,9 @@ import org.eclipse.wst.xml.tests.encoding.xml.XMLHeadTokenizerTester;
 public class EncodingTestSuite extends TestSuite {
 
 	// FIXME: commented out lang. spec. tests, until all migrated to org.eclipse 
-	private static Class[] classes = new Class[]{TestOverrides.class, TestCodedReader.class, TestCodedWrite.class, XMLEncodingTests.class, XMLHeadTokenizerTester.class, TestContentTypeDescriptionOnGennedFiles.class, TestCodedReaderOnGennedFiles.class, TestContentDescription.class, TestContentTypes.class, TestCommonNames.class, TestContentTypeDetectionForXML.class};
+	// [258343] jUnit failures after org.eclipse.core.runtime.xml content type is disabled
+	//private static Class[] classes = new Class[]{TestOverrides.class, TestCodedReader.class, TestCodedWrite.class, XMLEncodingTests.class, XMLHeadTokenizerTester.class, TestContentTypeDescriptionOnGennedFiles.class, TestCodedReaderOnGennedFiles.class, TestContentDescription.class, TestContentTypes.class, TestCommonNames.class, TestContentTypeDetectionForXML.class};
+	private static Class[] classes = new Class[]{TestOverrides.class, TestCodedReader.class, TestCodedWrite.class, XMLEncodingTests.class, XMLHeadTokenizerTester.class, TestContentTypeDescriptionOnGennedFiles.class, TestCodedReaderOnGennedFiles.class, TestContentDescription.class, TestContentTypes.class, TestCommonNames.class};
 	//private static Class[] classes = new Class[]{TestOverrides.class, CSSEncodingTester.class, CSSHeadTokenizerTester.class, HTMLEncodingTests.class, HTMLHeadTokenizerTester.class, JSPEncodingTests.class, JSPHeadTokenizerTester.class, TestCodedReader.class, TestCodedWrite.class, XMLEncodingTests.class, XMLHeadTokenizerTester.class, XMLMalformedInputTests.class, TestContentTypeDescriptionOnGennedFiles.class, TestCodedReaderOnGennedFiles.class, TestContentTypeDetection.class, TestContentDescription.class, TestContentTypes.class, TestCommonNames.class};
 	public EncodingTestSuite() {
 		super("Encoding Test Suite");
