@@ -577,7 +577,7 @@ public class EditCatalogEntryDialog extends Dialog {
 					}
 				}
 				// Any files are now supported with Resource URI
-				// selectSingleFileView.setFilterExtensions(createStringArray(list));
+				selectSingleFileView.setFilterExtensions(createStringArray(list));
 			}
 			else {
 				if (fileType.extensions != null) {
