@@ -500,9 +500,6 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	}
 
 	/**
-	 * StructuredTextViewer currently does not support presentation
-	 * reconciler, so clients cannot override this method to provide their own
-	 * presentation reconciler. <br />
 	 * See <code>getLineStyleProviders(ISourceViewer, String)</code> for
 	 * alternative way to provide highlighting information.
 	 * 
@@ -511,7 +508,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * @return always returns null
 	 * @see #getLineStyleProviders(ISourceViewer, String)
 	 */
-	final public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
+	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
 		StructuredPresentationReconciler reconciler = new StructuredPresentationReconciler();
 		reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 		
