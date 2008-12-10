@@ -156,6 +156,7 @@ public class XSDSimpleTypeSection extends RefactoringSection
     typesCombo.setEditable(false);
     typesCombo.setLayoutData(data);
     typesCombo.addSelectionListener(this);
+    typesCombo.addListener(SWT.Traverse, this);
 
     
     data = new GridData();
@@ -281,7 +282,33 @@ public class XSDSimpleTypeSection extends RefactoringSection
 
   }
 
+  public void doWidgetDefaultSelected(SelectionEvent e)
+  {
+    if (e.widget == typesCombo)
+    {
+      String selection = typesCombo.getText();
+      if (shouldPerformComboSelection(SWT.DefaultSelection, selection))
+        handleWidgetSelection(e);
+    } else
+    {
+      handleWidgetSelection(e);
+    }
+  }
+
   public void doWidgetSelected(SelectionEvent e)
+  {
+    if (e.widget == typesCombo)
+    {
+      String selection = typesCombo.getText();
+      if (shouldPerformComboSelection(SWT.Selection, selection))
+        handleWidgetSelection(e);
+    } else
+    {
+      handleWidgetSelection(e);
+    }
+  }
+
+  private void handleWidgetSelection(SelectionEvent e)
   {
     if (e.widget == typesCombo)
     {
@@ -654,6 +681,12 @@ public class XSDSimpleTypeSection extends RefactoringSection
   // TODO: Common this up with element declaration
   public void doHandleEvent(Event event) 
   {
+    if (event.type == SWT.Traverse) {
+      if (event.detail == SWT.TRAVERSE_ARROW_NEXT || event.detail == SWT.TRAVERSE_ARROW_PREVIOUS) {
+        isTraversing = true;
+        return;
+      }
+    }
     if (event.widget == nameText)
     {
       if (!nameText.getEditable())
@@ -757,6 +790,11 @@ public class XSDSimpleTypeSection extends RefactoringSection
     }
     return null;
   }
-
-
+  
+  public void dispose()
+  {
+    if (typesCombo != null && !typesCombo.isDisposed())
+      typesCombo.removeListener(SWT.Traverse, this);
+    super.dispose();
+  }
 }

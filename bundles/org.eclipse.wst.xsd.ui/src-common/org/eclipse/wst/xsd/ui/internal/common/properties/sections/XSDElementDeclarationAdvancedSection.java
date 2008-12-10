@@ -13,6 +13,7 @@
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionEvent;
@@ -149,6 +150,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
     substGroupCombo.setLayoutData(data);
     substGroupCombo.setEditable(true);
     substGroupCombo.addSelectionListener(this);
+    substGroupCombo.addListener(SWT.Traverse, this);
     applyAllListeners(substGroupCombo);
     
     // ------------------------------------------------------------------
@@ -180,6 +182,14 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
   {
     if (e.widget == substGroupCombo)
     {
+      if (e.type == SWT.Traverse) {
+        if (e.detail == SWT.TRAVERSE_ARROW_NEXT || e.detail == SWT.TRAVERSE_ARROW_PREVIOUS)
+        {
+          isTraversing = true;
+          return;
+        }
+      }
+		
       XSDElementDeclaration eleDec = (XSDElementDeclaration) input;
       String value = substGroupCombo.getText();
       String oldValue = eleDec.getElement().getAttribute(XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE);
@@ -194,7 +204,33 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
     }
   }
 
+  public void doWidgetDefaultSelected(SelectionEvent e)
+  {
+    if (e.widget == substGroupCombo)
+    {
+      String selection = substGroupCombo.getText();
+      if (shouldPerformComboSelection(SWT.DefaultSelection, selection))
+        handleWidgetSelection(e);
+    } else
+    {
+      handleWidgetSelection(e);
+    }
+  }
+
   public void doWidgetSelected(SelectionEvent e)
+  {
+    if (e.widget == substGroupCombo)
+    {
+      String selection = substGroupCombo.getText();
+      if (shouldPerformComboSelection(SWT.Selection, selection))
+        handleWidgetSelection(e);
+    } else
+    {
+      handleWidgetSelection(e);
+    }
+  }
+
+  private void handleWidgetSelection(SelectionEvent e)
   {
     if (e.widget == blockCombo)
     {
@@ -226,7 +262,7 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
     {
       IEditorPart editor = getActiveEditor();
       if (editor == null) return;
-      ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDSubstitutionGroupEditManager.class);    
+      ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDSubstitutionGroupEditManager.class);
 
       String selection = substGroupCombo.getText();
       ComponentSpecification newValue;
@@ -268,7 +304,6 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
         command.setDeleteIfEmpty(true);
         getCommandStack().execute(command);
     }
-
   }
 
   public void refresh()
@@ -404,6 +439,15 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
       }
     }
     return null;
+  }
+  
+  public void dispose()
+  {
+  	if (substGroupCombo != null && !substGroupCombo.isDisposed())
+  	{
+		substGroupCombo.removeListener(SWT.Traverse, this);
+	}
+	super.dispose();
   }
 
 }

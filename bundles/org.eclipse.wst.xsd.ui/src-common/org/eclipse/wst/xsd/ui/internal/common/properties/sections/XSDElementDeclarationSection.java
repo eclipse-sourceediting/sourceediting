@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -125,6 +125,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
 
       componentNameCombo = getWidgetFactory().createCCombo(composite, SWT.FLAT);
       componentNameCombo.addSelectionListener(this);
+      componentNameCombo.addListener(SWT.Traverse, this);
       componentNameCombo.setLayoutData(data);
       
       PlatformUI.getWorkbench().getHelpSystem().setHelp(componentNameCombo,
@@ -149,6 +150,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     typeCombo.setEditable(false);
     typeCombo.setLayoutData(data);
     typeCombo.addSelectionListener(this);
+    typeCombo.addListener(SWT.Traverse, this);
     PlatformUI.getWorkbench().getHelpSystem().setHelp(typeCombo,
     		XSDEditorCSHelpIds.GENERAL_TAB__ELEMENT__TYPE);
     
@@ -357,14 +359,49 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     return false;
   }
 
+  public void doWidgetDefaultSelected(SelectionEvent e)
+  {
+    if (e.widget == typeCombo)
+    {
+      String selection = typeCombo.getText();
+      if (shouldPerformComboSelection(SWT.DefaultSelection, selection))
+        handleWidgetSelection(e);
+    } else if (e.widget == componentNameCombo)
+    {
+      String selection = componentNameCombo.getText();
+      if (shouldPerformComboSelection(SWT.DefaultSelection, selection))
+        handleWidgetSelection(e);
+    } else
+    {
+      handleWidgetSelection(e);
+    }
+  }
+
   public void doWidgetSelected(SelectionEvent e)
+  {
+    if (e.widget == typeCombo)
+    {
+      String selection = typeCombo.getText();
+      if (shouldPerformComboSelection(SWT.Selection, selection))
+        handleWidgetSelection(e);
+    } else if (e.widget == componentNameCombo)
+    {
+      String selection = componentNameCombo.getText();
+      if (shouldPerformComboSelection(SWT.Selection, selection))
+        handleWidgetSelection(e);
+    } else
+    {
+      handleWidgetSelection(e);
+    }
+  }
+
+  private void handleWidgetSelection(SelectionEvent e)
   {
     if (e.widget == typeCombo)
     {
       IEditorPart editor = getActiveEditor();
       if (editor == null) return;
-      ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDTypeReferenceEditManager.class);    
-
+      ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDTypeReferenceEditManager.class);
       String selection = typeCombo.getText();
       ComponentSpecification newValue;
       IComponentDialog dialog= null;
@@ -403,7 +440,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
     {
       IEditorPart editor = getActiveEditor();
       if (editor == null) return;
-      ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDElementReferenceEditManager.class);    
+      ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDElementReferenceEditManager.class);
 
       String selection = componentNameCombo.getText();
       ComponentSpecification newValue;
@@ -435,7 +472,6 @@ public class XSDElementDeclarationSection extends MultiplicitySection
         if (newValue != null)
           manager.modifyComponentReference(input, newValue);
       }
-
     }
     else if (e.widget == maxCombo)
     {
@@ -472,6 +508,12 @@ public class XSDElementDeclarationSection extends MultiplicitySection
 
   public void doHandleEvent(Event event)
   {
+    if (event.type == SWT.Traverse) {
+      if (event.detail == SWT.TRAVERSE_ARROW_NEXT || event.detail == SWT.TRAVERSE_ARROW_PREVIOUS) {
+        isTraversing = true;
+        return;
+      }
+    }
     super.doHandleEvent(event);
     if (event.widget == nameText)
     {
@@ -523,13 +565,19 @@ public class XSDElementDeclarationSection extends MultiplicitySection
   public void dispose()
   {
     if (componentNameCombo != null && !componentNameCombo.isDisposed())
+    {
       componentNameCombo.removeSelectionListener(this);
+      componentNameCombo.removeListener(SWT.Traverse, this);
+    }
     if (minCombo != null && !minCombo.isDisposed())
       minCombo.removeSelectionListener(this);
     if (maxCombo != null && !maxCombo.isDisposed())
       maxCombo.removeSelectionListener(this);
     if (typeCombo != null && !typeCombo.isDisposed())
+    {
       typeCombo.removeSelectionListener(this);
+      typeCombo.removeListener(SWT.Traverse, this);
+    }
     if (nameText != null && !nameText.isDisposed())
       removeListeners(nameText);
     super.dispose();
@@ -587,5 +635,4 @@ public class XSDElementDeclarationSection extends MultiplicitySection
       componentNameCombo.setText(attrValue);
     }
   }
-
 }

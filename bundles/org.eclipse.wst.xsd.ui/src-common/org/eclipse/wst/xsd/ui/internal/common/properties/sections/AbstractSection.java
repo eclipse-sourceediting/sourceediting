@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,6 +42,7 @@ import org.eclipse.ui.forms.FormColors;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.views.properties.tabbed.AbstractPropertySection;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDConcreteComponent;
@@ -59,6 +60,7 @@ public abstract class AbstractSection extends AbstractPropertySection implements
   protected CustomListener customListener = new CustomListener();
   protected IEditorPart owningEditor;
   private IStatusLineManager statusLine;
+  protected boolean isTraversing = false;
   
   public static final Image ICON_ERROR = XSDEditorPlugin.getDefault().getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
   
@@ -362,5 +364,33 @@ public abstract class AbstractSection extends AbstractPropertySection implements
         }
       }
     }
+    
+    protected boolean shouldPerformComboSelection(int eventType, Object selectedItem)
+    {
+      // if traversing through combobox, don't automatically pop up
+      // the browse and new dialog boxes
+      boolean wasTraversing = isTraversing;
+      if (isTraversing)
+        isTraversing = false;
 
+      // we only care about default selecting (hitting enter in combobox)
+      // for browse.. and new.. otherwise, selection event will be fired
+      if (eventType == SWT.DefaultSelection)
+      {
+        if (selectedItem instanceof String && ((Messages._UI_ACTION_BROWSE.equals(selectedItem) || Messages._UI_ACTION_NEW.equals(selectedItem))))
+          return true;
+        return false;
+      }
+
+      // if was traversing and got selection event, do nothing if it's 
+      // browse.. or new..
+      if (wasTraversing && selectedItem instanceof String)
+      {
+        if (Messages._UI_ACTION_BROWSE.equals(selectedItem) || Messages._UI_ACTION_NEW.equals(selectedItem))
+        {
+          return false;
+        }
+      }
+      return true;
+    }
 }

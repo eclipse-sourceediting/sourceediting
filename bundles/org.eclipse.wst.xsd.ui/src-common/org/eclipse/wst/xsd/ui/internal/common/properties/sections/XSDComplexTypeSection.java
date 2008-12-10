@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -109,6 +109,7 @@ public class XSDComplexTypeSection extends RefactoringSection implements Selecti
     baseTypeCombo.setEditable(false);
     baseTypeCombo.setLayoutData(data);
     baseTypeCombo.addSelectionListener(this);
+    baseTypeCombo.addListener(SWT.Traverse, this);
     PlatformUI.getWorkbench().getHelpSystem().setHelp(baseTypeCombo,
     		XSDEditorCSHelpIds.GENERAL_TAB__COMPLEX_TYPE__INHERIT_FROM);
 
@@ -220,16 +221,39 @@ public class XSDComplexTypeSection extends RefactoringSection implements Selecti
     }
   }
 
-  /**
-   * @see org.eclipse.swt.events.SelectionListener#widgetSelected(SelectionEvent)
-   */
+  public void doWidgetDefaultSelected(SelectionEvent e)
+  {
+    if (e.widget == baseTypeCombo)
+    {
+      String selection = baseTypeCombo.getText();
+      if (shouldPerformComboSelection(SWT.DefaultSelection, selection))
+        handleWidgetSelection(e);
+    } else
+    {
+      handleWidgetSelection(e);
+    }
+  }
+
   public void doWidgetSelected(SelectionEvent e)
+  {
+    if (e.widget == baseTypeCombo)
+    {
+      String selection = baseTypeCombo.getText();
+      if (shouldPerformComboSelection(SWT.Selection, selection))
+        handleWidgetSelection(e);
+    } else
+    {
+      handleWidgetSelection(e);
+    }
+  }
+  
+  private void handleWidgetSelection(SelectionEvent e)
   {
     if (e.widget == baseTypeCombo)
     {
       IEditorPart editor = getActiveEditor();
       if (editor == null) return;
-      ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDComplexTypeBaseTypeEditManager.class);    
+      ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDComplexTypeBaseTypeEditManager.class);
 
       String selection = baseTypeCombo.getText();
       ComponentSpecification newValue;
@@ -261,7 +285,7 @@ public class XSDComplexTypeSection extends RefactoringSection implements Selecti
       XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) input;
       String value = derivedByCombo.getText();
       Command command = new UpdateComplexTypeDerivationBy(complexType, value);
-      
+
       if (getCommandStack() != null)
       {
         getCommandStack().execute(command);
@@ -283,10 +307,18 @@ public class XSDComplexTypeSection extends RefactoringSection implements Selecti
   public void dispose()
   {
     super.dispose();
+    if (baseTypeCombo != null && !baseTypeCombo.isDisposed())
+      baseTypeCombo.removeListener(SWT.Traverse, this);
   }
 
   public void doHandleEvent(Event event)
   {
+    if (event.type == SWT.Traverse) {
+      if (event.detail == SWT.TRAVERSE_ARROW_NEXT || event.detail == SWT.TRAVERSE_ARROW_PREVIOUS) {
+        isTraversing = true;
+        return;
+      }
+    }
     super.doHandleEvent(event);
     if (event.widget == nameText)
     {
@@ -353,5 +385,4 @@ public class XSDComplexTypeSection extends RefactoringSection implements Selecti
         baseTypeCombo.add(currentTypeName);
     }
   }
-
 }
