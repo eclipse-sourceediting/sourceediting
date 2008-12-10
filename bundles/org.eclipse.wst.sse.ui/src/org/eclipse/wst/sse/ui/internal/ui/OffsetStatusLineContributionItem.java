@@ -536,12 +536,16 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 						}
 						NumberFormat formatter = NumberFormat.getIntegerInstance();
 						final String regioncount = "Count: " + formatter.format(structuredDocumentRegions.length) + " document regions containing " + formatter.format(regionCount) + " text regions representing " + formatter.format(length) + " characters";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-						display.syncExec(new Runnable() {
+						display.asyncExec(new Runnable() {
 							public void run() {
-								counts.setText(regioncount);
-								counts.setEnabled(true);
-								bomLabel.setText("Byte Order Mark: " + getBOMText(fTextEditor.getEditorInput())); //$NON-NLS-1$
-								bomLabel.setEnabled(true);
+								if (!counts.isDisposed()) {
+									counts.setText(regioncount);
+									counts.setEnabled(true);
+								}
+								if (!bomLabel.isDisposed()) {
+									bomLabel.setText("Byte Order Mark: " + getBOMText(fTextEditor.getEditorInput())); //$NON-NLS-1$
+									bomLabel.setEnabled(true);
+								}
 							}
 						});
 						return Status.OK_STATUS;
