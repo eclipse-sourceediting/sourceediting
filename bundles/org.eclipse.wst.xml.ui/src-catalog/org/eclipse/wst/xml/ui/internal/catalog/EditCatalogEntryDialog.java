@@ -22,12 +22,10 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -40,8 +38,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
@@ -64,7 +60,9 @@ public class EditCatalogEntryDialog extends Dialog {
 
 	protected class CatalogEntryPage extends CatalogElementPage {
 
-		protected Button browseButton;
+		protected Button browseWorkspaceButton;
+		
+		protected Button browseFileSystemButton;
 
 		protected ICatalogEntry catalogEntry;
 
@@ -168,7 +166,7 @@ public class EditCatalogEntryDialog extends Dialog {
 			gd = new GridData(GridData.FILL_HORIZONTAL);
 			group.setLayoutData(gd);
 
-			layout = new GridLayout(3, false);
+			layout = new GridLayout(2, false);
 			group.setLayout(layout);
 
 			Label resourceLocationLabel = new Label(group, SWT.NONE);
@@ -186,12 +184,52 @@ public class EditCatalogEntryDialog extends Dialog {
 			// XMLBuilderContextIds.XMLP_ENTRY_URI);
 			resourceLocationField.addModifyListener(modifyListener);
 
-
-			browseButton = createBrowseButton(group);
 			// WorkbenchHelp.setHelp(browseButton,
 			// XMLBuilderContextIds.XMLP_ENTRY_BROWSE);
-			browseButton.addSelectionListener(new DropDownSelectionListener(resourceLocationField));
 
+			Composite browseButtonsComposite = new Composite(group, SWT.NONE);
+			gd = new GridData(GridData.FILL_HORIZONTAL);
+			gd.horizontalSpan = 2;
+			gd.horizontalAlignment = GridData.END;
+			browseButtonsComposite.setLayoutData(gd);
+			
+			layout = new GridLayout();
+			layout.numColumns = 2;
+			layout.marginWidth = 0;
+			layout.marginHeight = 0;
+			layout.marginBottom = 5;
+			browseButtonsComposite.setLayout(layout);
+			
+			browseWorkspaceButton = new Button(browseButtonsComposite, SWT.PUSH);
+			browseWorkspaceButton.setText(XMLCatalogMessages.UI_BUTTON_MENU_BROWSE_WORKSPACE);
+			browseWorkspaceButton.addSelectionListener(new SelectionListener(){
+
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+
+				public void widgetSelected(SelectionEvent e) {
+					String value = invokeWorkspaceFileSelectionDialog();
+					if(value != null) {
+						resourceLocationField.setText(value);
+					}
+				}
+			});
+			
+			browseFileSystemButton = new Button(browseButtonsComposite, SWT.PUSH);
+			browseFileSystemButton.setText(XMLCatalogMessages.UI_BUTTON_MENU_BROWSE_FILE_SYSTEM);
+			browseFileSystemButton.addSelectionListener(new SelectionListener(){
+
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+
+				public void widgetSelected(SelectionEvent e) {
+					String value = invokeFileSelectionDialog();
+					if(value != null) {
+						resourceLocationField.setText(value);
+					}
+				}
+			});
+			
 			// Key Type
 			//
 			Label keyTypeLabel = new Label(group, SWT.NONE);
@@ -206,10 +244,6 @@ public class EditCatalogEntryDialog extends Dialog {
 			keyTypeCombo.addModifyListener(modifyListener);
 			// WorkbenchHelp.setHelp(keyTypeCombo,
 			// XMLBuilderContextIds.XMLP_ENTRY_KEY_TYPE);
-
-			// a placeholder to fill the 3rd column
-			Button placeHolder = new Button(group, SWT.NONE);
-			placeHolder.setVisible(false);
 
 			// Key
 			// 
@@ -564,8 +598,11 @@ public class EditCatalogEntryDialog extends Dialog {
 	}
 
 	protected class NextCatalogPage extends CatalogElementPage {
-		protected Button browseButton;
-
+		
+		protected Button browseWorkspaceButton;
+		
+		protected Button browseFileSystemButton;
+		
 		protected Text catalogLocationField;
 
 		protected INextCatalog nextCatalog;
@@ -623,14 +660,11 @@ public class EditCatalogEntryDialog extends Dialog {
 			gd = new GridData(GridData.FILL_HORIZONTAL);
 			group.setLayoutData(gd);
 
-			layout = new GridLayout(2, false);
+			layout = new GridLayout();
 			group.setLayout(layout);
 
 			Label resourceLocationLabel = new Label(group, SWT.NONE);
 			resourceLocationLabel.setText(XMLCatalogMessages.UI_LABEL_CATALOG_URI_COLON);
-
-			// filler
-			new Label(group, SWT.NONE);
 
 			catalogLocationField = new Text(group, SWT.SINGLE | SWT.BORDER);
 			catalogLocationField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -638,9 +672,49 @@ public class EditCatalogEntryDialog extends Dialog {
 			// WorkbenchHelp.setHelp(resourceLocationField,
 			// XMLBuilderContextIds.XMLP_ENTRY_URI);
 			catalogLocationField.addModifyListener(modifyListener);
+			
+			Composite browseButtonsComposite = new Composite(group, SWT.FLAT);
+			gd = new GridData(GridData.FILL_HORIZONTAL);
+			gd.horizontalSpan = 2;
+			gd.horizontalAlignment = GridData.END;
+			browseButtonsComposite.setLayoutData(gd);
+			
+			layout = new GridLayout();
+			layout.numColumns = 2;
+			layout.marginWidth = 0;
+			layout.marginHeight = 0;
+			layout.marginBottom = 5;
+			browseButtonsComposite.setLayout(layout);
+			
+			browseWorkspaceButton = new Button(browseButtonsComposite, SWT.PUSH);
+			browseWorkspaceButton.setText(XMLCatalogMessages.UI_BUTTON_MENU_BROWSE_WORKSPACE);
+			browseWorkspaceButton.addSelectionListener(new SelectionListener(){
 
-			browseButton = createBrowseButton(group);
-			browseButton.addSelectionListener(new DropDownSelectionListener(catalogLocationField));
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+
+				public void widgetSelected(SelectionEvent e) {
+					String value = invokeWorkspaceFileSelectionDialog();
+					if(value != null) {
+						catalogLocationField.setText(value);
+					}
+				}
+			});
+			
+			browseFileSystemButton = new Button(browseButtonsComposite, SWT.PUSH);
+			browseFileSystemButton.setText(XMLCatalogMessages.UI_BUTTON_MENU_BROWSE_FILE_SYSTEM);
+			browseFileSystemButton.addSelectionListener(new SelectionListener(){
+
+				public void widgetDefaultSelected(SelectionEvent e) {
+				}
+
+				public void widgetSelected(SelectionEvent e) {
+					String value = invokeFileSelectionDialog();
+					if(value != null) {
+						catalogLocationField.setText(value);
+					}
+				}
+			});
 
 			errorMessageLabel = new Label(group, SWT.NONE);
 			errorMessageLabel.setForeground(color);
@@ -943,7 +1017,7 @@ public class EditCatalogEntryDialog extends Dialog {
 	}
 
 	protected Button createBrowseButton(Composite composite) {
-		Button browseButton = new Button(composite, SWT.FLAT);
+		Button browseButton = new Button(composite, SWT.PUSH);
 		// browseButton.setText(XMLCatalogMessages.
 		// UI_BUTTON_BROWSE"));
 		browseButton.setImage(borwseImage);
@@ -958,96 +1032,40 @@ public class EditCatalogEntryDialog extends Dialog {
 		return browseButton;
 
 	}
+	
+	protected Button createWorkspaceBrowseButton(Composite composite) {
+		Button browseWorkspaceButton = new Button(composite, SWT.PUSH);
+		browseWorkspaceButton.setText(XMLCatalogMessages.UI_BUTTON_MENU_BROWSE_WORKSPACE);
+		return browseWorkspaceButton;
+	}
+	
+	protected Button createFileSystemBrowseButton(Composite composite) {
+		Button browseFileSystemButton = new Button(composite, SWT.PUSH);
+		browseFileSystemButton.setText(XMLCatalogMessages.UI_BUTTON_MENU_BROWSE_WORKSPACE);
+		return browseFileSystemButton;
+	}
 
-	class DropDownSelectionListener extends SelectionAdapter {
-		private Menu menu = null;
-		private Control control;
-
-		public DropDownSelectionListener(Control aControl) {
-			super();
-			this.control = aControl;
-		}
-
-		public void widgetSelected(SelectionEvent event) {
-			// Create the menu if it has not already been created
-			if (menu == null) {
-				// Lazy create the menu.
-				menu = new Menu(getShell());
-				MenuItem menuItem = new MenuItem(menu, SWT.NONE);
-				menuItem.setText(XMLCatalogMessages.UI_BUTTON_MENU_BROWSE_WORKSPACE);
-				/*
-				 * Add a menu selection listener so that the menu is hidden
-				 * when the user selects an item from the drop down menu.
-				 */
-				menuItem.addSelectionListener(new SelectionAdapter() {
-					public void widgetSelected(SelectionEvent e) {
-						setMenuVisible(false);
-						invokeWorkspaceFileSelectionDialog();
-					}
-				});
-
-				menuItem = new MenuItem(menu, SWT.NONE);
-				menuItem.setText(XMLCatalogMessages.UI_BUTTON_MENU_BROWSE_FILE_SYSTEM);
-				/*
-				 * Add a menu selection listener so that the menu is hidden
-				 * when the user selects an item from the drop down menu.
-				 */
-				menuItem.addSelectionListener(new SelectionAdapter() {
-					public void widgetSelected(SelectionEvent e) {
-						setMenuVisible(false);
-						invokeFileSelectionDialog();
-					}
-				});
-
-			}
-
-			// Position the menu below and vertically aligned with the the
-			// drop down tool button.
-			Button button = (Button) event.widget;
-
-			// set location
-			Point ptBrowse = button.getLocation();
-			Rectangle rcBrowse = button.getBounds();
-			ptBrowse.y += rcBrowse.height;
-			ptBrowse = button.getParent().toDisplay(ptBrowse);
-			menu.setLocation(ptBrowse.x, ptBrowse.y);
-
-			setMenuVisible(true);
-
-		}
-
-		void setMenuVisible(boolean visible) {
-			menu.setVisible(visible);
-			// this.visible = visible;
-		}
-
-		void invokeWorkspaceFileSelectionDialog() {
-			FilterableSelectSingleFileDialog dialog = new FilterableSelectSingleFileDialog(getShell());
-			dialog.createAndOpen();
-
-			IFile file = dialog.getFile();
-			if (file != null) {
-				// remove leading slash from the value to avoid the
-				// whole leading slash ambiguity problem
-				//                    
-				String uri = file.getFullPath().toString();
-				while (uri.startsWith("/") || uri.startsWith("\\")) { //$NON-NLS-1$ //$NON-NLS-2$
-					uri = uri.substring(1);
-				}
-				if (control instanceof Text) {
-					((Text) control).setText(uri);
-				}
-
+	
+	String invokeWorkspaceFileSelectionDialog() {
+		FilterableSelectSingleFileDialog dialog = new FilterableSelectSingleFileDialog(getShell());
+		dialog.createAndOpen();
+		IFile file = dialog.getFile();
+		String uri = null;
+		if (file != null) {
+			// remove leading slash from the value to avoid the
+			// whole leading slash ambiguity problem
+			//                    
+			uri = file.getFullPath().toString();
+			while (uri.startsWith("/") || uri.startsWith("\\")) { //$NON-NLS-1$ //$NON-NLS-2$
+				uri = uri.substring(1);
 			}
 		}
+		return uri;
+	}
 
-		void invokeFileSelectionDialog() {
-			FileDialog dialog = new FileDialog(getShell(), SWT.SINGLE);
-			String file = dialog.open();
-			if ((control instanceof Text) && (file != null)) {
-				((Text) control).setText(file);
-			}
-		}
+	String invokeFileSelectionDialog() {
+		FileDialog dialog = new FileDialog(getShell(), SWT.SINGLE);
+		return dialog.open();
 	}
 
 }
