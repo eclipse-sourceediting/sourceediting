@@ -544,9 +544,7 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 			List selectionList = new ArrayList();
 			if (selection instanceof IStructuredSelection) {
 				IStructuredSelection es = (IStructuredSelection) selection;
-				for (Iterator i = es.iterator(); i.hasNext();) {
-					selectionList.add(i.next());
-				}
+				selectionList.addAll(es.toList());
 			}
 
 			contributeActions(menuManager, selectionList);
