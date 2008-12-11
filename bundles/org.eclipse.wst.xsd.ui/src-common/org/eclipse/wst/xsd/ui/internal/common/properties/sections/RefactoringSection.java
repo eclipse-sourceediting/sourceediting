@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorPart;
@@ -39,7 +40,7 @@ public abstract class RefactoringSection extends AbstractSection implements IHyp
   {
     IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
     XSDSchema schema = (XSDSchema) editor.getAdapter(XSDSchema.class);
-    ISelection selection = editor.getSite().getSelectionProvider().getSelection();
+    ISelection selection = new StructuredSelection(input);
     ISelectionMapper mapper = (ISelectionMapper) editor.getAdapter(ISelectionMapper.class);
     selection = mapper != null ? mapper.mapSelection(selection) : selection;
     RenameComponentAction action = new RenameComponentAction(selection, schema);
