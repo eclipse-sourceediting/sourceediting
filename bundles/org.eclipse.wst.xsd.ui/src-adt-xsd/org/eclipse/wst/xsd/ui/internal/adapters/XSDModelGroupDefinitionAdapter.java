@@ -98,7 +98,7 @@ public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implement
     // Bug246036 - need to stop showing element content in a cycle.
     // And, we should not show any element content for references otherwise there will be two
     // entries in the tree viewer for the same item
-    if (def.getContainer() instanceof XSDSchema && !def.isModelGroupDefinitionReference())
+    if (!def.isModelGroupDefinitionReference())
     {
       XSDModelGroup xsdModelGroup = ((XSDModelGroupDefinition) target).getResolvedModelGroupDefinition().getModelGroup();
       if (xsdModelGroup != null)
