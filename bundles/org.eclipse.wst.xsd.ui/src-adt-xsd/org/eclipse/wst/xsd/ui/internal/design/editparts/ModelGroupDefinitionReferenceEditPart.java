@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,10 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.gef.EditPart;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDModelGroupDefinitionAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.CenteredConnectionAnchor;
+import org.eclipse.wst.xsd.ui.internal.design.editparts.model.TargetConnectionSpaceFiller;
 import org.eclipse.wst.xsd.ui.internal.design.figures.GenericGroupFigure;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
@@ -95,9 +97,33 @@ public class ModelGroupDefinitionReferenceEditPart extends ConnectableEditPart
     List list = new ArrayList();
 
     XSDModelGroupDefinitionAdapter adapter = (XSDModelGroupDefinitionAdapter)getModel();
-    XSDModelGroup xsdModelGroup = ((XSDModelGroupDefinition) adapter.getTarget()).getResolvedModelGroupDefinition().getModelGroup();
-    if (xsdModelGroup != null)
+    XSDModelGroupDefinition groupDef = ((XSDModelGroupDefinition) adapter.getTarget());
+    XSDModelGroupDefinition resolvedGroupDef = groupDef.getResolvedModelGroupDefinition();
+    XSDModelGroup xsdModelGroup = resolvedGroupDef.getModelGroup();
+    
+    ArrayList listOfVisibleGroupRefs = new ArrayList();
+    for (EditPart ep = getParent(); ep != null; )
+    {
+      Object object = ep.getModel();
+      if (object instanceof XSDModelGroupDefinitionAdapter)
+      {
+        Object model = ((XSDModelGroupDefinitionAdapter)object).getTarget();
+        if (model instanceof XSDModelGroupDefinition)
+        {
+          listOfVisibleGroupRefs.add(((XSDModelGroupDefinition)model).getResolvedModelGroupDefinition());          
+        }
+      }
+      ep = ep.getParent();
+    }
+    
+    boolean isCyclic = (listOfVisibleGroupRefs.contains(resolvedGroupDef));
+    
+    if (xsdModelGroup != null && !isCyclic)
       list.add(XSDAdapterFactory.getInstance().adapt(xsdModelGroup));
+    
+    if (isCyclic)
+      list.add(new TargetConnectionSpaceFiller(null));
+
     return list;
   }
 
@@ -106,12 +132,17 @@ public class ModelGroupDefinitionReferenceEditPart extends ConnectableEditPart
     ReferenceConnection connectionFigure = new ReferenceConnection();
 
     connectionFigure.setSourceAnchor(new CenteredConnectionAnchor(((GenericGroupFigure)getFigure()).getIconFigure(), CenteredConnectionAnchor.RIGHT, 0, 0));
-
     if (child instanceof ModelGroupEditPart)
     {
       connectionFigure.setTargetAnchor(new CenteredConnectionAnchor(((ModelGroupEditPart) child).getTargetFigure(), CenteredConnectionAnchor.LEFT, 0, 0));
     }
+    else // for the cyclic group references
+    {
+      connectionFigure.setTargetAnchor(new CenteredConnectionAnchor(((GenericGroupFigure) getFigure()).getIconFigure(), CenteredConnectionAnchor.RIGHT, 0, 0));
+    }
+    
     connectionFigure.setHighlight(false);
+
     return connectionFigure;
   }
 }

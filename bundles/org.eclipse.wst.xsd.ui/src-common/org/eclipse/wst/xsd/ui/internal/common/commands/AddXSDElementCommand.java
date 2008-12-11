@@ -224,6 +224,7 @@ public class AddXSDElementCommand extends BaseCommand
 
     XSDConcreteComponent comp = xsdModelGroup.getContainer();
     ArrayList usedAttributeNames = new ArrayList();
+    XSDCommonUIUtils.resetVisitedGroupsStack();
     usedAttributeNames.addAll(XSDCommonUIUtils.getChildElements(xsdModelGroup));    
     while (comp != null)
     {

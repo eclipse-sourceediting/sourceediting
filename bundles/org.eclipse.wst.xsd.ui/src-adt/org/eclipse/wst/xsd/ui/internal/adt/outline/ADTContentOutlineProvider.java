@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -123,14 +123,20 @@ public class ADTContentOutlineProvider implements ITreeContentProvider, IADTObje
   private void removeListener(IADTObject model)
   {
     model.unregisterListener(this);
-    Object[] children = getChildren(model);
+    Object[] children = null;
+    
+    if (model instanceof ITreeElement)
+    {
+      children = ((ITreeElement) model).getChildren();
+    }
+    
     if (children != null)
     {
       int length = children.length;
       for (int i = 0; i < length; i++)
       {
         Object child = children[i];
-        if (child instanceof IADTObject)
+        if (child instanceof IADTObject && model != child)
         {
           removeListener((IADTObject) child);
         }

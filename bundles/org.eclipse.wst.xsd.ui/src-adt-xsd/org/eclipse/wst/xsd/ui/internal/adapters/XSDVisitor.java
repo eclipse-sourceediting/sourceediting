@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal.adapters;
 
 import java.util.Iterator;
+import java.util.Stack;
 
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
@@ -33,9 +34,13 @@ public class XSDVisitor
 {
   public XSDVisitor()
   {
+    circularDefinitionFound = false;
+    visitedGroups = new Stack();
   }
   
+  public boolean circularDefinitionFound = false;
   protected XSDSchema schema;
+  protected Stack visitedGroups = new Stack();
   
   public void visitSchema(XSDSchema schema)
   {
@@ -116,16 +121,33 @@ public class XSDVisitor
     {
       if (modelGroupDef.getModelGroup() != null)
       {
+        if ((visitedGroups.contains(modelGroupDef.getResolvedModelGroupDefinition().getModelGroup())))
+        {
+          circularDefinitionFound = true;
+          return;
+        }
+        visitedGroups.push(modelGroupDef.getModelGroup());
         visitModelGroup(modelGroupDef.getModelGroup());
+        visitedGroups.pop();
       }
     }
     else
     {
-      XSDModelGroup modelGroup = modelGroupDef.getResolvedModelGroupDefinition().getModelGroup();
+      XSDModelGroupDefinition resolvedGroupDef = modelGroupDef.getResolvedModelGroupDefinition();
+      XSDModelGroup modelGroup = resolvedGroupDef.getModelGroup();
+
+      if ((visitedGroups.contains(modelGroup)))
+      {
+        circularDefinitionFound = true;
+        return;
+      }
+
+      visitedGroups.push(modelGroup);
       if (modelGroup != null)
       {
         visitModelGroup(modelGroup);
       }
+      visitedGroups.pop();
     }
   }
 

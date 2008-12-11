@@ -34,6 +34,7 @@ import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicityAction;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
+import org.eclipse.wst.xsd.ui.internal.design.editparts.model.SpaceFiller;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDModelGroup;
@@ -85,16 +86,24 @@ public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implement
   public String getText()
   {
     XSDModelGroupDefinition xsdModelGroupDefinition = (XSDModelGroupDefinition) target;
+    if (xsdModelGroupDefinition.getResolvedModelGroupDefinition().getContainer() == null) return "";   // Removed
     String result = xsdModelGroupDefinition.isModelGroupDefinitionReference() ? xsdModelGroupDefinition.getQName() : xsdModelGroupDefinition.getName();
     return result == null ? Messages._UI_LABEL_ABSENT : result;
   }
 
   public ITreeElement[] getChildren()
   {
+    XSDModelGroupDefinition def = (XSDModelGroupDefinition)target;
     List list = new ArrayList();
-    XSDModelGroup xsdModelGroup = ((XSDModelGroupDefinition) target).getResolvedModelGroupDefinition().getModelGroup();
-    if (xsdModelGroup != null)
-      list.add(xsdModelGroup);
+    // Bug246036 - need to stop showing element content in a cycle.
+    // And, we should not show any element content for references otherwise there will be two
+    // entries in the tree viewer for the same item
+    if (def.getContainer() instanceof XSDSchema && !def.isModelGroupDefinitionReference())
+    {
+      XSDModelGroup xsdModelGroup = ((XSDModelGroupDefinition) target).getResolvedModelGroupDefinition().getModelGroup();
+      if (xsdModelGroup != null)
+        list.add(xsdModelGroup);
+    }
 
     List adapterList = new ArrayList();
     populateAdapterList(list, adapterList);
@@ -187,7 +196,7 @@ public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implement
   {
     List fields = new ArrayList();
     otherThingsToListenTo = new ArrayList();
-    XSDVisitorForFields visitor = new XSDVisitorForFields();
+    XSDVisitorForFields visitor = new XSDVisitorForGroupFieldsWithSpaceFillers();
     visitor.visitModelGroupDefinition(getXSDModelGroupDefinition());
     populateAdapterList(visitor.concreteComponentList, fields);
     
@@ -204,6 +213,34 @@ public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implement
       }
     }
     return fields;
+  }
+
+  protected class XSDVisitorForGroupFieldsWithSpaceFillers extends XSDVisitorForFields
+  {
+    public XSDVisitorForGroupFieldsWithSpaceFillers()
+    {
+      super();
+    }
+
+    public void visitModelGroup(XSDModelGroup modelGroup)
+    {
+      int numOfChildren = modelGroup.getContents().size();
+      if (numOfChildren == 0)
+      {
+        concreteComponentList.add(new SpaceFiller("element")); //$NON-NLS-1$
+      }
+      super.visitModelGroup(modelGroup);
+    }
+    
+    public void visitModelGroupDefinition(XSDModelGroupDefinition modelGroupDef)
+    {
+      XSDModelGroupDefinition resolvedModelGroupDef = modelGroupDef.getResolvedModelGroupDefinition();
+      if (visitedGroups.contains(resolvedModelGroupDef.getModelGroup()))
+      {
+        concreteComponentList.add(new SpaceFiller("element")); //$NON-NLS-1$
+      }
+      super.visitModelGroupDefinition(modelGroupDef);
+    }
   }
 
   public IModel getModel()

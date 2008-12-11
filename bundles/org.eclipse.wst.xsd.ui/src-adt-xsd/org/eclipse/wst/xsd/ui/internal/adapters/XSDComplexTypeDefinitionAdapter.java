@@ -50,6 +50,7 @@ import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDComplexTypeContent;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDModelGroup;
+import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDParticleContent;
 import org.eclipse.xsd.XSDSchema;
@@ -165,6 +166,16 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
         concreteComponentList.add(new SpaceFiller("element")); //$NON-NLS-1$
       }
       super.visitModelGroup(modelGroup);
+    }
+    
+    public void visitModelGroupDefinition(XSDModelGroupDefinition modelGroupDef)
+    {
+      XSDModelGroupDefinition resolvedModelGroupDef = modelGroupDef.getResolvedModelGroupDefinition();
+      if (visitedGroups.contains(resolvedModelGroupDef.getModelGroup()))
+      {
+        concreteComponentList.add(new SpaceFiller("element")); //$NON-NLS-1$
+      }
+      super.visitModelGroupDefinition(modelGroupDef);
     }
   }
 

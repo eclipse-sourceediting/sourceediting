@@ -15,6 +15,7 @@ package org.eclipse.wst.xsd.ui.internal.common.util;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -427,22 +428,35 @@ public class XSDCommonUIUtils
     return anonymousSimpleType;
   }
 
+  // bug246036 - check for cyclic groups.  We should refactor out this static class.
+  private static Stack visitedGroups = new Stack();
+  
+  public static void resetVisitedGroupsStack()
+  {
+    visitedGroups.clear();
+  }
+
   public static List getChildElements(XSDModelGroup group)
   {
     List children = new ArrayList();
+    visitedGroups.push(group);
     if (group == null) return children;
+    
     for (Iterator i = group.getContents().iterator(); i.hasNext();)
     {
       XSDParticle next = (XSDParticle) i.next();
       if (next.getContent() instanceof XSDFeature)
       {
+        if (children.contains(next.getContent())) break;
         children.add(next.getContent());
       }
       else if (next.getTerm() instanceof XSDModelGroup)
       {
+        if (!visitedGroups.contains(group))
         children.addAll(getChildElements((XSDModelGroup) next.getTerm()));
       }
     }
+    visitedGroups.pop();
     return children;
   }
 

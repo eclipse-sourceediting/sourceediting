@@ -33,6 +33,7 @@ public class XSDVisitorForFields extends XSDVisitor
 {
   public XSDVisitorForFields()
   {
+    super();
   }
 
   public List concreteComponentList = new ArrayList();
@@ -91,15 +92,17 @@ public class XSDVisitorForFields extends XSDVisitor
   
   public void visitModelGroupDefinition(XSDModelGroupDefinition modelGroupDef)
   {
+    // listen to definition in case it changes
+    XSDModelGroupDefinition resolvedModelGroupDef = modelGroupDef.getResolvedModelGroupDefinition();
+    if (visitedGroups.contains(resolvedModelGroupDef.getModelGroup())) return;
+   
     if (modelGroupDef.isModelGroupDefinitionReference())
     {
       // if it's a reference we need to listen to the reference incase it changes
-      thingsWeNeedToListenTo.add(modelGroupDef);      
-    }    
-    // listen to definition incase it changes
-    XSDModelGroupDefinition resolvedModelGroupDef = modelGroupDef.getResolvedModelGroupDefinition();
-    thingsWeNeedToListenTo.add(resolvedModelGroupDef);
-    super.visitModelGroupDefinition(modelGroupDef);      
+      if (!thingsWeNeedToListenTo.contains(modelGroupDef))
+        thingsWeNeedToListenTo.add(modelGroupDef);      
+    }
+    super.visitModelGroupDefinition(modelGroupDef);
   }
   
   public void visitModelGroup(XSDModelGroup modelGroup)
