@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,15 +17,11 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.part.IPageSite;
+import org.eclipse.ui.part.PageBookView;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.IPropertySource;
@@ -147,7 +143,12 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage {
 		if (_DEBUG) {
 			_DEBUG_TIME = System.currentTimeMillis();
 		}
-		if (getControl() != null && getControl().isVisible() && !getControl().isFocusControl()) {
+		// skip if we're the source of this selection
+		if (part != null && part instanceof PageBookView) {
+			if (((PageBookView) part).getCurrentPage() == this)
+				return;
+		}
+		if (getControl() != null && getControl().isVisible()) {
 			ISelection preferredSelection = getConfiguration().getInputSelection(part, selection);
 			/*
 			 * Do some minor caching of the selection.
@@ -195,20 +196,5 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage {
 
 	public void setFocus() {
 		super.setFocus();
-
-		IWorkbenchWindow workbenchWindow = getSite().getWorkbenchWindow();
-		IWorkbenchPage activePage = workbenchWindow.getActivePage();
-		if (activePage != null) {
-			IEditorPart activeEditor = activePage.getActiveEditor();
-			if (activeEditor != null) {
-				IEditorSite editorSite = activeEditor.getEditorSite();
-				if (editorSite != null) {
-					ISelectionProvider selectionProvider = editorSite.getSelectionProvider();
-					if (selectionProvider != null) {
-						selectionChanged(activeEditor, selectionProvider.getSelection());
-					}
-				}
-			}
-		}
 	}
 }

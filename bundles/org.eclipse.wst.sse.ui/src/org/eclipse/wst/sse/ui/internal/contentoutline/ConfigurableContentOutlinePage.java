@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -152,15 +152,21 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 			if (_DEBUG) {
 				_DEBUG_TIME = System.currentTimeMillis();
 			} /*
-				 * Bug 136310, unless this page is that part's
-				 * IContentOutlinePage, ignore the selection change
-				 */
+			 * Bug 136310, unless this page is that part's
+			 * IContentOutlinePage, ignore the selection change
+			 */
 			if (part == null || part.getAdapter(IContentOutlinePage.class) == ConfigurableContentOutlinePage.this) {
 				ISelection validContentSelection = getConfiguration().getSelection(getTreeViewer(), selection);
 
 				boolean isLinked = getConfiguration().isLinkedWithEditor(getTreeViewer());
 				if (isLinked) {
-					getTreeViewer().setSelection(validContentSelection, true);
+					try {
+						fIsReceivingSelection = true;
+						getTreeViewer().setSelection(validContentSelection, true);
+					}
+					finally {
+						fIsReceivingSelection = false;
+					}
 				}
 			}
 			if (_DEBUG) {
@@ -176,7 +182,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	private class SelectionProvider implements IPostSelectionProvider {
 		private class PostSelectionChangedListener implements ISelectionChangedListener {
 			public void selectionChanged(SelectionChangedEvent event) {
-				if (!isFiringSelection()) {
+				if (!isFiringSelection() && !fIsReceivingSelection) {
 					fireSelectionChanged(event, postListeners);
 					updateStatusLine(getSite().getActionBars().getStatusLineManager(), event.getSelection());
 				}
@@ -185,7 +191,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 
 		private class SelectionChangedListener implements ISelectionChangedListener {
 			public void selectionChanged(SelectionChangedEvent event) {
-				if (!isFiringSelection()) {
+				if (!isFiringSelection() && !fIsReceivingSelection) {
 					fireSelectionChanged(event, listeners);
 				}
 			}
@@ -321,6 +327,8 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 
 	SelectionProvider fSelectionProvider = null;
 
+	boolean fIsReceivingSelection;
+
 	/**
 	 * A ContentOutlinePage that abstract as much behavior as possible away
 	 * from the Controls and varies it by content type.
@@ -335,8 +343,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	 * Adds a listener to a list of those notified when someone double-clicks
 	 * in the page.
 	 * 
-	 * @param newListener -
-	 *            the listener to add
+	 * @param newListener - the listener to add
 	 */
 	public void addDoubleClickListener(IDoubleClickListener newListener) {
 		if (fDoubleClickProvider == null) {
@@ -470,7 +477,9 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.part.IPageBookViewPage#init(org.eclipse.ui.part.IPageSite)
+	 * @see
+	 * org.eclipse.ui.part.IPageBookViewPage#init(org.eclipse.ui.part.IPageSite
+	 * )
 	 */
 	public void init(IPageSite pageSite) {
 		super.init(pageSite);
@@ -481,13 +490,22 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	 * Removes a listener to a list of those notified when someone
 	 * double-clicks in the page.
 	 * 
-	 * @param oldListener -
-	 *            the listener to remove
+	 * @param oldListener - the listener to remove
 	 */
 	public void removeDoubleClickListener(IDoubleClickListener oldListener) {
 		if (fDoubleClickProvider != null) {
 			fDoubleClickProvider.removeDoubleClickListener(oldListener);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.views.contentoutline.ContentOutlinePage#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent event) {
+		if (!fIsReceivingSelection)
+			super.selectionChanged(event);
 	}
 
 	/**
@@ -649,8 +667,7 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	}
 
 	/**
-	 * @param id -
-	 *            the content type identifier to use for further extension
+	 * @param id - the content type identifier to use for further extension
 	 */
 	public void setInputContentTypeIdentifier(String id) {
 		fInputContentTypeIdentifier = id;

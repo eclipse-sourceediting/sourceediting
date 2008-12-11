@@ -56,6 +56,7 @@ import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdFo
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 
 /**
@@ -343,7 +344,6 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		if (fStatusLineLabelProvider == null) {
 			fStatusLineLabelProvider = new JFaceNodeLabelProvider() {
 				public String getText(Object element) {
-
 					if (element == null)
 						return null;
 
@@ -353,7 +353,12 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 						if (node.getNodeType() != Node.DOCUMENT_NODE) {
 							s.insert(0, super.getText(node));
 						}
-						node = node.getParentNode();
+
+						if (node.getNodeType() == Node.ATTRIBUTE_NODE)
+							node = ((Attr) node).getOwnerElement();
+						else
+							node = node.getParentNode();
+					
 						if (node != null && node.getNodeType() != Node.DOCUMENT_NODE) {
 							s.insert(0, IPath.SEPARATOR);
 						}
