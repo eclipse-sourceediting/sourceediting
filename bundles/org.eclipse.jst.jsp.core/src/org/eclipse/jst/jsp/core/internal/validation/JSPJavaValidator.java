@@ -53,7 +53,7 @@ public class JSPJavaValidator extends JSPValidator {
 	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspvalidator")).booleanValue(); //$NON-NLS-1$
 	private IValidator fMessageOriginator;
 
-	private IPreferencesService fPreferencesService = null;
+	private IPreferencesService fPreferencesService = Platform.getPreferencesService();
 	private static final String PREFERENCE_NODE_QUALIFIER = JSPCorePlugin.getDefault().getBundle().getSymbolicName();
 	private IScopeContext[] fScopes = null;
 	
@@ -184,6 +184,7 @@ public class JSPJavaValidator extends JSPValidator {
 					sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_JAVA_UNUSED_IMPORT);
 				}
 					break;
+				case IProblem.UnusedPrivateField:
 				case IProblem.MissingSerialVersion : {
 					// JSP files don't get serialized...right?
 					sev = ValidationMessage.IGNORE;
@@ -276,7 +277,6 @@ public class JSPJavaValidator extends JSPValidator {
 	private void loadPreferences(IFile file) {
 		fScopes = new IScopeContext[]{new InstanceScope(), new DefaultScope()};
 
-		fPreferencesService = Platform.getPreferencesService();
 		if (file != null && file.isAccessible()) {
 			ProjectScope projectScope = new ProjectScope(file.getProject());
 			if (projectScope.getNode(PREFERENCE_NODE_QUALIFIER).getBoolean(JSPCorePreferenceNames.VALIDATION_USE_PROJECT_SETTINGS, false)) {
@@ -367,7 +367,6 @@ public class JSPJavaValidator extends JSPValidator {
 	}
 
 	private void unloadPreferences() {
-		fPreferencesService = null;
 		fScopes = null;
 	}
 
