@@ -239,6 +239,7 @@ public class JSPIndexManager {
 				return Status.CANCEL_STATUS;
 			}
 
+			Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 			long start = System.currentTimeMillis();
 
 			try {

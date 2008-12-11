@@ -123,6 +123,7 @@ public class IndexWorkspaceJob extends Job {
 	protected IStatus run(IProgressMonitor monitor) {
 		
 		IStatus status = Status.OK_STATUS;
+		Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 		
 		if(monitor.isCanceled()) {
 			setCanceledState();
