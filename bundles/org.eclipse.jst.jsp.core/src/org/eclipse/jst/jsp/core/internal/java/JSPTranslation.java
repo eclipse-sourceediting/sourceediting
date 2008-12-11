@@ -469,7 +469,7 @@ public class JSPTranslation implements IJSPTranslation {
 				return null;
 		}
 		
-		ICompilationUnit cu = packageFragment.getCompilationUnit(getClassname() + ".java").getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor()); //$NON-NLS-1$
+		ICompilationUnit cu = packageFragment.getCompilationUnit(getClassname() + ".java").getWorkingCopy(getWorkingCopyOwner(), getProgressMonitor()); //$NON-NLS-1$
 		setContents(cu);
 
 		if(DEBUG) {

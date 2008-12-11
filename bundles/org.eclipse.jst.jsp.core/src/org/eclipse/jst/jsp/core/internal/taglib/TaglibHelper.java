@@ -30,6 +30,8 @@ import javax.servlet.jsp.tagext.TagLibraryInfo;
 import javax.servlet.jsp.tagext.ValidationMessage;
 import javax.servlet.jsp.tagext.VariableInfo;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -636,7 +638,7 @@ public class TaglibHelper {
 				IJavaProject project = JavaCore.create(p);
 
 				try {
-					IClasspathEntry[] entries = project.getRawClasspath();
+					IClasspathEntry[] entries = project.getResolvedClasspath(true);
 					addDefaultDirEntry(loader, project);
 					addClasspathEntries(loader, project, entries);
 				}
@@ -758,7 +760,7 @@ public class TaglibHelper {
 	private void addDefaultDirEntry(TaglibClassLoader loader, IJavaProject project) throws JavaModelException {
 		// add default bin directory for the project
 		IPath outputPath = project.getOutputLocation();
-		loader.addPath(outputPath);
+		loader.addFolder(outputPath);
 	}
 
 	/**
@@ -766,14 +768,33 @@ public class TaglibHelper {
 	 * @param entry
 	 */
 	private void addLibraryEntry(TaglibClassLoader loader, IPath libPath) {
-		String jarPathString = libPath.toString();
-		File file = new File(libPath.toOSString());
+		String libPathString = libPath.toString();
+		File file = new File(libPathString);
 
-		if (!file.exists()) {
-			loader.addPath(libPath);
+		if (file.exists()) {
+			if (file.isDirectory()) {
+				loader.addDirectory(libPathString);
+			}
+			else {
+				loader.addJar(libPathString);
+			}
 		}
 		else {
-			loader.addDirectory(jarPathString);
+			if (libPath.segmentCount() > 1) {
+				IFile ifile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
+				if (ifile != null && ifile.isAccessible()) {
+					loader.addFile(libPath);
+				}
+				else {
+					IFolder ifolder = ResourcesPlugin.getWorkspace().getRoot().getFolder(libPath);
+					if (ifolder != null && ifolder.isAccessible()) {
+						loader.addFolder(libPath);
+					}
+				}
+			}
+			else {
+				loader.addFolder(libPath);
+			}
 		}
 	}
 
@@ -786,7 +807,7 @@ public class TaglibHelper {
 		// one
 		IPath outputLocation = entry.getOutputLocation();
 		if (outputLocation != null) {
-			loader.addPath(outputLocation);
+			loader.addFolder(outputLocation);
 		}
 	}
 

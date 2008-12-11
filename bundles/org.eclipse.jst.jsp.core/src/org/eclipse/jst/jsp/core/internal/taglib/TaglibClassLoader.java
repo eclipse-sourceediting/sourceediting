@@ -35,10 +35,38 @@ public class TaglibClassLoader extends URLClassLoader {
 	}
 
 	public void addDirectory(String dirPath) {
-		addFile(dirPath + "/"); //$NON-NLS-1$
+		addJavaFile(dirPath + "/"); //$NON-NLS-1$
 	}
 
-	private void addFile(String filename) {
+	public void addFile(IPath filePath) {
+		try {
+			URL url = new URL(RESOURCE + filePath.toString()); //$NON-NLS-1$
+			super.addURL(url);
+			if (DEBUG)
+				System.out.println("added: [" + url + "] to classpath"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		catch (MalformedURLException e) {
+			Logger.logException(filePath.toString(), e);
+		}
+	}
+
+	public void addFolder(IPath folderPath) {
+		try {
+			URL url = new URL(RESOURCE + folderPath.toString() + "/"); //$NON-NLS-1$
+			super.addURL(url);
+			if (DEBUG)
+				System.out.println("added: [" + url + "] to classpath"); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		catch (MalformedURLException e) {
+			Logger.logException(folderPath.toString(), e);
+		}
+	}
+
+	public void addJar(String filename) {
+		addJavaFile(filename);
+	}
+
+	void addJavaFile(String filename) {
 		try {
 			URL url = new URL(FILE + filename);
 			super.addURL(url);
@@ -47,22 +75,6 @@ public class TaglibClassLoader extends URLClassLoader {
 		}
 		catch (MalformedURLException e) {
 			Logger.logException(filename, e);
-		}
-	}
-
-	public void addJar(String filename) {
-		addFile(filename);
-	}
-
-	public void addPath(IPath resourcePath) {
-		try {
-			URL url = new URL(RESOURCE + resourcePath.toString() + "/"); //$NON-NLS-1$
-			super.addURL(url);
-			if (DEBUG)
-				System.out.println("added: [" + url + "] to classpath"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		catch (MalformedURLException e) {
-			Logger.logException(resourcePath.toString(), e);
 		}
 	}
 

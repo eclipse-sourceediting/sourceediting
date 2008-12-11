@@ -30,6 +30,7 @@ import javax.servlet.jsp.tagext.VariableInfo;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -909,7 +910,7 @@ public class JSPTranslator {
 				 * start tag, its absence now means an unbalanced end tag.
 				 * Extras will be checked later to flag unbalanced start tags.
 				 */
-				IJSPProblem missingStartTag = createJSPProblem(IJSPProblem.StartCustomTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, "", customTag.getStartOffset(), customTag.getEndOffset());
+				IJSPProblem missingStartTag = createJSPProblem(IJSPProblem.StartCustomTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, "No start tag for " + tagToAdd, customTag.getStartOffset(), customTag.getEndOffset());
 				fTranslationProblems.add(missingStartTag);
 			}
 		}
@@ -1001,6 +1002,12 @@ public class JSPTranslator {
 		buildResult();
 	}
 
+ 	/**
+	 * Translates a region container (and XML JSP container, or <% JSP
+	 * container). This method should only be called in this class and for
+	 * containers in the primary structured document as all buffer appends
+	 * will be direct.
+	 */
 	protected void setDocumentContent(IDocument document, InputStream contentStream, String charset) {
 		Reader in = null;
 		try {
@@ -1100,7 +1107,7 @@ public class JSPTranslator {
 
 			// content assist was not showing up in JSP inside a javascript
 			// region
-			if (type == DOMRegionContext.BLOCK_TEXT) {
+			if (DOMRegionContext.BLOCK_TEXT.equals(type)) {
 				// check if it's nested jsp in a script tag...
 				if (region instanceof ITextRegionContainer) {
 					// pass in block text's container & iterator
@@ -1158,7 +1165,7 @@ public class JSPTranslator {
 	 * jsp:scriptlet, jsp:expression, and jsp:declaration @param blockText
 	 * @return
 	 */
-	private void decodeScriptBlock(String blockText, int startOfBlock) {
+	void decodeScriptBlock(String blockText, int startOfBlock) {
 		XMLJSPRegionHelper helper = new XMLJSPRegionHelper(this, false);
 		helper.addBlockMarker(new BlockMarker("jsp:scriptlet", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
 		helper.addBlockMarker(new BlockMarker("jsp:expression", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
@@ -1484,6 +1491,11 @@ public class JSPTranslator {
 				// embedded
 				// jsp...iterate
 				// regions...
+			}
+			else if (DOMRegionContext.XML_COMMENT_TEXT.equals(commentRegion.getType())) {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=222215
+				// support custom tags hidden in a comment region
+				decodeScriptBlock(node.getFullText(commentRegion), node.getStartOffset(commentRegion));
 			}
 		}
 	}
@@ -2064,7 +2076,7 @@ public class JSPTranslator {
 	protected void translateExpression(ITextRegionCollection region) {
 		String newText = getUnescapedRegionText(region, EXPRESSION);
 		appendToBuffer(EXPRESSION_PREFIX, fUserCode, false, region);
-		appendToBuffer(newText, fUserCode, true, fCurrentNode);
+		appendToBuffer(newText, fUserCode, true, region);
 		appendToBuffer(EXPRESSION_SUFFIX, fUserCode, false, region);
 	}
 
@@ -2706,6 +2718,12 @@ public class JSPTranslator {
 				IType type = p.findType(typeName);
 				if (type == null || !type.exists()) {
 					collectedNamesNotFound.add(typeName);
+				}
+				else {
+					IResource typeResource = type.getResource();
+					if(typeResource != null) {
+						
+					}
 				}
 			}
 		}
