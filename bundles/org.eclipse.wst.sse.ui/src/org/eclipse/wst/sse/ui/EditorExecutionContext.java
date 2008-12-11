@@ -12,74 +12,144 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.wst.sse.core.internal.IExecutionDelegate;
-
-
+import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 class EditorExecutionContext implements IExecutionDelegate {
 
+	/**
+	 * Reusable runnable for the Display execution queue to cut down on
+	 * garbage creation. Will make use of the progress service if possible.
+	 */
+	private static class ReusableUIRunner implements Runnable, IRunnableWithProgress {
+		private StructuredTextEditor editor;
+		private Runnable fRunnable = null;
+
+		ReusableUIRunner(StructuredTextEditor part) {
+			super();
+			editor = part;
+		}
+
+		/*
+		 * Expected to only be run by Display queue in the UI Thread
+		 * 
+		 * @see java.lang.Runnable#run()
+		 */
+		public void run() {
+			IWorkbenchPartSite site = editor.getEditorPart().getSite();
+			final IWorkbenchWindow workbenchWindow = (site == null) ? null : site.getWorkbenchWindow();
+			final IWorkbenchSiteProgressService jobService = (IWorkbenchSiteProgressService) ((site == null) ? null : site.getAdapter(IWorkbenchSiteProgressService.class));
+			/*
+			 * Try to use the progress service so the workbench can give more
+			 * feedback to the user (although editors seem to make less use of
+			 * the service than views -
+			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=86221 .
+			 */
+			if (workbenchWindow != null && jobService != null) {
+				/*
+				 * Doc is ambiguous, but it must be run from the UI thread -
+				 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=165180
+				 */
+				try {
+					jobService.runInUI(workbenchWindow, this, (ISchedulingRule) editor.getEditorPart().getEditorInput().getAdapter(IResource.class));
+				}
+				catch (InvocationTargetException e) {
+					Logger.logException(e);
+				}
+				catch (InterruptedException e) {
+					Logger.logException(e);
+				}
+			}
+			else {
+				/*
+				 * Run it directly and direct the UI of the editor. See
+				 * StructuredTextEditor's begin/end background job for other
+				 * activities to best accommodate (for example, there is a
+				 * "timed delay" before the editor itself leaves
+				 * background-update mode). NOTE: this execute method itself
+				 * is always called from inside of an ILock block, so another
+				 * block is not not needed here for all these sycnExec's.
+				 */
+				IWorkbench workbench = SSEUIPlugin.getInstance().getWorkbench();
+				final Display display = workbench.getDisplay();
+				if (display != null && !display.isDisposed()) {
+					editor.beginBackgroundOperation();
+					try {
+						/*
+						 * Here's where the document update/modification
+						 * occurs
+						 */
+						fRunnable.run();
+					}
+					finally {
+						/*
+						 * This 'end' is just a signal to editor that this
+						 * particular update is done. Its up to the editor to
+						 * decide exactly when to leave its "background mode"
+						 */
+						editor.endBackgroundOperation();
+					}
+				}
+				fRunnable = null;
+			}
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see
+		 * org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse
+		 * .core.runtime.IProgressMonitor)
+		 */
+		public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+			if (fRunnable != null)
+				fRunnable.run();
+		}
+
+		void setRunnable(Runnable r) {
+			fRunnable = r;
+		}
+	}
 
 	StructuredTextEditor fEditor;
+	private ReusableUIRunner fReusableRunner;
 
 	public EditorExecutionContext(StructuredTextEditor editor) {
 		super();
 		fEditor = editor;
+		fReusableRunner = new ReusableUIRunner(fEditor);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.sse.core.internal.document.IExecutionDelegate#execute(java.lang.Runnable)
+	 * @see
+	 * org.eclipse.wst.sse.core.internal.IExecutionDelegate#execute(java.lang
+	 * .Runnable)
 	 */
 	public void execute(final Runnable runnable) {
-		IWorkbench workbench = PlatformUI.getWorkbench();
+		IWorkbench workbench = SSEUIPlugin.getInstance().getWorkbench();
 		final Display display = workbench.getDisplay();
 		if (display.getThread() == Thread.currentThread()) {
-			// if already in display thread, we can simply run, "as usual"
+			// *If already in display thread, we can simply run, "as usual"*/
 			runnable.run();
-		} else {
-			// this is the part that's really new, that
-			// accomidate's a change in a document
-			// from background thread, by forcing it on
-			// the display thread.
-			final StructuredTextEditor editor = fEditor;
-			// if not in display thread, we "force" to run on display thread.
-			// see editors begin/end background job for other
-			// activities to best accomidate (for example, there
-			// is a "timed delay" before the editor itself leaves
-			// background-update mode).
-			// NOTE: this execute method itself is always called from
-			// inside of an ILock block, so another
-			// block is not not needed here for all these sycnExec's
-			display.syncExec(new Runnable() {
-				public void run() {
-					if (display != null && !display.isDisposed()) {
-						editor.beginBackgroundOperation();
-						try {
-							// here's where the document update/modification
-							// occurs
-							runnable.run();
-
-							// for future, possibly explore solutions such as
-							// this
-							//							IWorkbenchSiteProgressService jobService =
-							// (IWorkbenchSiteProgressService)
-							// editor.getEditorPart().getSite().getAdapter(IWorkbenchSiteProgressService.class);
-							//							jobService.runInUI(xxxxx)
-						} finally {
-							// this 'end' is just a signal to editor that this
-							// particular update is done. Its up to the editor
-							// to decide exactly when to leave its "background
-							// mode"
-							editor.endBackgroundOperation();
-						}
-					}
-				}
-			});
+		}
+		else {
+			// *otherwise run through the reusable runner */
+			fReusableRunner.setRunnable(runnable);
+			display.syncExec(fReusableRunner);
 		}
 	}
 }
-
