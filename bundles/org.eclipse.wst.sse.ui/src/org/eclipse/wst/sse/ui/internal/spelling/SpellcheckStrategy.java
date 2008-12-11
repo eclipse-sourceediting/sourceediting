@@ -43,6 +43,7 @@ import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.Logger;
@@ -229,7 +230,7 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 			IStructuredDocumentRegion documentRegion = ((IStructuredDocument) document).getRegionAtCharacterOffset(problem.getOffset());
 			if (documentRegion != null) {
 				ITextRegion textRegion = documentRegion.getRegionAtCharacterOffset(problem.getOffset());
-				if (textRegion != null && isSupportedContext(textRegion.getType())) {
+				if (textRegion != null && isSupportedContext(textRegion.getType()) && !(textRegion instanceof ITextRegionCollection)) {
 					return true;
 				}
 				if (documentRegion.getFirstRegion() instanceof ForeignRegion)
