@@ -22,7 +22,8 @@ import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
  * asked for encoding information before defaulting to the superclass
  * implementation, but will be told to set the encoding after the superclass
  * has. Delegates should not duplicate any functionality in the
- * DefaultEncodingSupport implementation.
+ * DefaultEncodingSupport implementation as they may be executed in addition
+ * to the default behavior.
  */
 class EncodingSupport extends DefaultEncodingSupport {
 	private String[] fConfigurationPoints = null;
