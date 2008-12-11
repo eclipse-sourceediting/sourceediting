@@ -13,8 +13,6 @@
 package org.eclipse.wst.sse.ui;
 
 import java.io.IOException;
-import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -45,7 +43,6 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -168,6 +165,7 @@ import org.eclipse.wst.sse.ui.internal.debug.ToggleBreakpointsTarget;
 import org.eclipse.wst.sse.ui.internal.derived.HTMLTextPresenter;
 import org.eclipse.wst.sse.ui.internal.editor.EditorModelUtil;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
+import org.eclipse.wst.sse.ui.internal.editor.SelectionConvertor;
 import org.eclipse.wst.sse.ui.internal.editor.StructuredModelDocumentProvider;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
 import org.eclipse.wst.sse.ui.internal.hyperlink.OpenHyperlinkAction;
@@ -361,7 +359,7 @@ public class StructuredTextEditor extends TextEditor {
 			}
 		}
 	}
-
+	
 	/**
 	 * Listens to double-click and selection from the outline page
 	 */
@@ -504,35 +502,22 @@ public class StructuredTextEditor extends TextEditor {
 	 */
 	private static class StructuredSelectionProvider implements IPostSelectionProvider, ISelectionValidator {
 		/**
-		 * A "hybrid" text and structured selection class. Converts the source
-		 * viewer text selection to a generic "getIndexedRegion"-derived
-		 * structured selection, allowing selection changed listeners to
-		 * possibly not need to reference the model directly.
+		 * A "hybrid" text and structured selection class containing the text
+		 * selection and a list of selected model objects. The determination
+		 * of which model objects matches the text selection is responsibility
+		 * of the StructuredSelectionProvider which created this selection
+		 * object.
 		 */
-		private static class StructuredTextSelection extends TextSelection implements IStructuredSelection, ITextSelection {
-			private Reference selectedStructured;
-			private InternalTextSelection fInternalTextSelection;
-
-			StructuredTextSelection(ITextSelection selection, IDocument document, IStructuredModel model) {
-				// note: we do not currently use super class at all, but, only
-				// subclass TextSelection,
-				// because some infrastructure code uses "instanceof
-				// TextSelection" instead of ITextSelection.
-				super(selection.getOffset(), selection.getLength());
-				fInternalTextSelection = new InternalTextSelection(document, selection.getOffset(), selection.getLength());
-				selectedStructured = new SoftReference(initializeInferredSelectedObjects(selection, model));
-			}
-
-			StructuredTextSelection(ITextSelection selection, Object[] selectedObjects, IDocument document) {
-				super(selection.getOffset(), selection.getLength());
-				fInternalTextSelection = new InternalTextSelection(document, selection.getOffset(), selection.getLength());
-				selectedStructured = new SoftReference(selectedObjects);
-			}
+		private static class StructuredTextSelection extends TextSelection implements IStructuredSelection {
+			private Object[] selectedStructured;
 
 			StructuredTextSelection(IDocument document, int offset, int length, Object[] selectedObjects) {
-				super(offset, length);
-				fInternalTextSelection = new InternalTextSelection(document, offset, length);
-				selectedStructured = new SoftReference(selectedObjects);
+				super(document, offset, length);
+				selectedStructured = selectedObjects;
+			}
+
+			StructuredTextSelection(IDocument document, ITextSelection selection, Object[] selectedObjects) {
+				this(document, selection.getOffset(), selection.getLength(), selectedObjects);
 			}
 
 			public Object getFirstElement() {
@@ -541,45 +526,12 @@ public class StructuredTextEditor extends TextEditor {
 			}
 
 			private Object[] getSelectedStructures() {
-				Object[] selectedStructures = (Object[]) selectedStructured.get();
-				if (selectedStructures == null) {
-					selectedStructures = new Object[0];
-				}
-				return selectedStructures;
-			}
-
-			private Object[] initializeInferredSelectedObjects(ITextSelection selection, IStructuredModel model) {
-				Object[] localSelectedStructures = null;
-				if (model != null) {
-					IndexedRegion region = model.getIndexedRegion(selection.getOffset());
-					int end = selection.getOffset() + selection.getLength();
-					if (region != null) {
-						if (end <= region.getEndOffset()) {
-							// single selection
-							localSelectedStructures = new Object[1];
-							localSelectedStructures[0] = region;
-						}
-						else {
-							// multiple selection
-							int maxLength = model.getStructuredDocument().getLength();
-							List structures = new ArrayList(2);
-							while (region != null && region.getEndOffset() <= end && region.getEndOffset() < maxLength) {
-								structures.add(region);
-								region = model.getIndexedRegion(region.getEndOffset() + 1);
-							}
-							localSelectedStructures = structures.toArray();
-						}
-					}
-				}
-				if (localSelectedStructures == null) {
-					localSelectedStructures = new Object[0];
-				}
-				return localSelectedStructures;
+				return (selectedStructured != null) ? selectedStructured : new Object[0];
 			}
 
 			public boolean isEmpty() {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=191327
-				return fInternalTextSelection.isEmpty() || getSelectedStructures().length == 0;
+				return super.isEmpty() || getSelectedStructures().length == 0;
 			}
 
 			public Iterator iterator() {
@@ -587,7 +539,7 @@ public class StructuredTextEditor extends TextEditor {
 			}
 
 			public int size() {
-				return getSelectedStructures().length;
+				return (selectedStructured != null) ? selectedStructured.length : 0;
 			}
 
 			public Object[] toArray() {
@@ -599,209 +551,10 @@ public class StructuredTextEditor extends TextEditor {
 			}
 
 			public String toString() {
-				return fInternalTextSelection.getOffset() + ":" + fInternalTextSelection.getLength() + "@" + getSelectedStructures(); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-
-
-			private static class InternalTextSelection implements ITextSelection {
-
-
-				private SoftReference weakDocument;
-
-				/** Offset of the selection */
-				private int fOffset;
-				/** Length of the selection */
-				private int fLength;
-
-				/**
-				 * Creates a text selection for the given range. This
-				 * selection object describes generically a text range and is
-				 * intended to be an argument for the
-				 * <code>setSelection</code> method of selection providers.
-				 * 
-				 * @param offset
-				 *            the offset of the range
-				 * @param length
-				 *            the length of the range
-				 */
-				InternalTextSelection(int offset, int length) {
-					this(null, offset, length);
-				}
-
-				/**
-				 * Creates a text selection for the given range of the given
-				 * document. This selection object is created by selection
-				 * providers in responds <code>getSelection</code>.
-				 * 
-				 * @param document
-				 *            the document whose text range is selected in a
-				 *            viewer
-				 * @param offset
-				 *            the offset of the selected range
-				 * @param length
-				 *            the length of the selected range
-				 */
-				InternalTextSelection(IDocument document, int offset, int length) {
-					weakDocument = new SoftReference(document);
-					fOffset = offset;
-					fLength = length;
-				}
-
-				/**
-				 * 
-				 * Returns true if the offset and length are smaller than 0. A
-				 * selection of length 0, is a valid text selection as it
-				 * describes, e.g., the cursor position in a viewer.
-				 * 
-				 * @return <code>true</code> if this selection is empty
-				 * @see org.eclipse.jface.viewers.ISelection#isEmpty()
-				 */
-				public boolean isEmpty() {
-					return fOffset < 0 || fLength < 0;
-				}
-
-				/*
-				 * @see org.eclipse.jface.text.ITextSelection#getOffset()
-				 */
-				public int getOffset() {
-					return fOffset;
-				}
-
-				/*
-				 * @see org.eclipse.jface.text.ITextSelection#getLength()
-				 */
-				public int getLength() {
-					return fLength;
-				}
-
-				/*
-				 * @see org.eclipse.jface.text.ITextSelection#getStartLine()
-				 */
-				public int getStartLine() {
-
-					IDocument document = (IDocument) weakDocument.get();
-					try {
-						if (document != null)
-							return document.getLineOfOffset(fOffset);
-					}
-					catch (BadLocationException x) {
-					}
-
-					return -1;
-				}
-
-				/*
-				 * @see org.eclipse.jface.text.ITextSelection#getEndLine()
-				 */
-				public int getEndLine() {
-					IDocument document = (IDocument) weakDocument.get();
-					try {
-						if (document != null) {
-							int endOffset = fOffset + fLength;
-							if (fLength != 0)
-								endOffset--;
-							return document.getLineOfOffset(endOffset);
-						}
-					}
-					catch (BadLocationException x) {
-					}
-
-					return -1;
-				}
-
-				/*
-				 * @see org.eclipse.jface.text.ITextSelection#getText()
-				 */
-				public String getText() {
-					IDocument document = (IDocument) weakDocument.get();
-					try {
-						if (document != null)
-							return document.get(fOffset, fLength);
-					}
-					catch (BadLocationException x) {
-					}
-
-					return null;
-				}
-
-				/*
-				 * @see java.lang.Object#equals(Object)
-				 */
-				public boolean equals(Object obj) {
-					if (obj == this)
-						return true;
-
-					if (obj == null || getClass() != obj.getClass())
-						return false;
-
-					InternalTextSelection s = (InternalTextSelection) obj;
-					boolean sameRange = (s.fOffset == fOffset && s.fLength == fLength);
-					if (sameRange) {
-
-						IDocument document = (IDocument) weakDocument.get();
-						IDocument sDocument = s.getDocument();
-
-						// ISSUE: why does not IDocument .equals suffice?
-						if (sDocument == null && document == null)
-							return true;
-						if (sDocument == null || document == null)
-							return false;
-
-						try {
-							// ISSUE: pricey! (a cached hash might be in
-							// order, if this
-							// was ever really ever used very often.
-							String sContent = sDocument.get(fOffset, fLength);
-							String content = document.get(fOffset, fLength);
-							return sContent.equals(content);
-						}
-						catch (BadLocationException x) {
-							// return false, can not be equal
-						}
-					}
-
-					return false;
-				}
-
-				/*
-				 * @see java.lang.Object#hashCode()
-				 */
-				public int hashCode() {
-					IDocument document = (IDocument) weakDocument.get();
-					int low = document != null ? document.hashCode() : 0;
-					return (fOffset << 24) | (fLength << 16) | low;
-				}
-
-				private IDocument getDocument() {
-					if (weakDocument == null)
-						return null;
-					return (IDocument) weakDocument.get();
-				}
-			}
-
-			public int getOffset() {
-				return fInternalTextSelection.getOffset();
-			}
-
-
-			public int getLength() {
-				return fInternalTextSelection.getLength();
-			}
-
-			public int getStartLine() {
-				return fInternalTextSelection.getStartLine();
-			}
-
-			public int getEndLine() {
-				return fInternalTextSelection.getEndLine();
-			}
-
-			public String getText() {
-				return fInternalTextSelection.getText();
+				return getOffset() + ":" + getLength() + "@" + getSelectedStructures(); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
-
-		private SoftReference weakDocument;
+		
 		private ISelectionProvider fParentProvider = null;
 		private boolean isFiringSelection = false;
 		private ListenerList listeners = new ListenerList();
@@ -809,16 +562,17 @@ public class StructuredTextEditor extends TextEditor {
 		private ISelection fLastSelection = null;
 		private ISelectionProvider fLastSelectionProvider = null;
 		private SelectionChangedEvent fLastUpdatedSelectionChangedEvent = null;
-		private SoftReference weakEditor;
-
-
+		private StructuredTextEditor fEditor;
+		/*
+		 * Responsible for finding the selected objects within a text
+		 * selection. Set/reset by the StructuredTextEditor based on a
+		 * per-model adapter on input.
+		 */
+		SelectionConvertor selectionConvertor = new SelectionConvertor();
+		
 		StructuredSelectionProvider(ISelectionProvider parentProvider, StructuredTextEditor structuredTextEditor) {
 			fParentProvider = parentProvider;
-			weakEditor = new SoftReference(structuredTextEditor);
-			IDocument document = structuredTextEditor.getDocumentProvider().getDocument(structuredTextEditor.getEditorInput());
-			if (document != null) {
-				setDocument(document);
-			}
+			fEditor = structuredTextEditor;
 			fParentProvider.addSelectionChangedListener(new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent event) {
 					handleSelectionChanged(event);
@@ -839,6 +593,13 @@ public class StructuredTextEditor extends TextEditor {
 
 		public void addSelectionChangedListener(ISelectionChangedListener listener) {
 			listeners.add(listener);
+		}
+
+		public void dispose() {
+			fEditor = null;
+			listeners.clear();
+			postListeners.clear();
+			selectionConvertor = null;
 		}
 
 		private void fireSelectionChanged(final SelectionChangedEvent event, ListenerList listenerList) {
@@ -870,25 +631,26 @@ public class StructuredTextEditor extends TextEditor {
 			 */
 			ISelection selection = getParentProvider().getSelection();
 			if (!(selection instanceof IStructuredSelection) && selection instanceof ITextSelection) {
-				IStructuredModel model = null;
+				IStructuredModel structuredModel = null;
 				StructuredTextEditor localEditor = getStructuredTextEditor();
 				if (localEditor != null) {
-					model = localEditor.getModel();
-					selection = new StructuredTextSelection((ITextSelection) selection, getDocument(), model);
+					structuredModel = localEditor.getInternalModel();
+					if (structuredModel != null) {
+						int start = ((ITextSelection) selection).getOffset();
+						int end = start + ((ITextSelection) selection).getLength();
+						selection = new StructuredTextSelection(getDocument(), (ITextSelection) selection, selectionConvertor.getElements(structuredModel, start, end));
+					}
 				}
-				else {
-					selection = new StructuredTextSelection((ITextSelection) selection, getDocument(), null);
+				if (selection == null) {
+					selection = new StructuredTextSelection(getDocument(), (ITextSelection) selection, new Object[0]);
 				}
 			}
+			
 			return selection;
 		}
 
 		private StructuredTextEditor getStructuredTextEditor() {
-			StructuredTextEditor editor = null;
-			if (weakEditor != null) {
-				editor = (StructuredTextEditor) weakEditor.get();
-			}
-			return editor;
+			return fEditor;
 		}
 
 		void handlePostSelectionChanged(SelectionChangedEvent event) {
@@ -900,7 +662,7 @@ public class StructuredTextEditor extends TextEditor {
 				updatedEvent = updateEvent(event);
 			}
 			// only update the range indicator on post selection
-			StructuredTextEditor localEditor = (StructuredTextEditor) weakEditor.get();
+			StructuredTextEditor localEditor = fEditor;
 
 			if (localEditor != null) {
 				localEditor.updateRangeIndication(updatedEvent.getSelection());
@@ -919,11 +681,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 
 		IDocument getDocument() {
-			IDocument document = null;
-			if (weakDocument != null) {
-				document = (IDocument) weakDocument.get();
-			}
-			return document;
+			return fEditor.getDocumentProvider().getDocument(fEditor.getEditorInput());
 		}
 
 
@@ -986,8 +744,14 @@ public class StructuredTextEditor extends TextEditor {
 				StructuredTextEditor localEditor = getStructuredTextEditor();
 				if (localEditor != null) {
 					structuredModel = localEditor.getInternalModel();
+					if (structuredModel != null) {
+						int start = ((ITextSelection) selection).getOffset();
+						int end = start + ((ITextSelection) selection).getLength();
+						selection = new StructuredTextSelection(getDocument(), (ITextSelection) event.getSelection(), selectionConvertor.getElements(structuredModel, start, end));
+					}
 				}
-				selection = new StructuredTextSelection((ITextSelection) event.getSelection(), getDocument(), structuredModel);
+				if (selection == null)
+					selection = new StructuredTextSelection(getDocument(), (ITextSelection) event.getSelection(), new Object[0]);
 			}
 			SelectionChangedEvent newEvent = new SelectionChangedEvent(event.getSelectionProvider(), selection);
 			return newEvent;
@@ -1039,10 +803,6 @@ public class StructuredTextEditor extends TextEditor {
 			}
 			return updated;
 		}
-
-		public void setDocument(IDocument document) {
-			weakDocument = new SoftReference(document);
-		}
 	}
 
 	class TimeOutExpired extends TimerTask {
@@ -1092,7 +852,7 @@ public class StructuredTextEditor extends TextEditor {
 	/**
 	 * Not API. May be removed in the future.
 	 */
-	public static final String GROUP_NAME_ADDITIONS = "additions"; //$NON-NLS-1$
+	public static final String GROUP_NAME_ADDITIONS = IWorkbenchActionConstants.MB_ADDITIONS; //$NON-NLS-1$
 
 	private static final String REDO_ACTION_DESC = SSEUIMessages.Redo___0___UI_; //$NON-NLS-1$ = "Redo: {0}."
 	private static final String REDO_ACTION_DESC_DEFAULT = SSEUIMessages.Redo_Text_Change__UI_; //$NON-NLS-1$ = "Redo Text Change."
@@ -1164,7 +924,7 @@ public class StructuredTextEditor extends TextEditor {
 	private ILabelProvider fStatusLineLabelProvider;
 
 	private boolean fSelectionChangedFromGoto = false;
-	
+
 	/**
 	 * Creates a new Structured Text Editor.
 	 */
@@ -1458,7 +1218,7 @@ public class StructuredTextEditor extends TextEditor {
     if (handlerService != null)
       handlerService.activateHandler(ActionDefinitionIds.GOTO_MATCHING_BRACKET, handler);
 
-		fShowPropertiesAction = new ShowPropertiesAction();
+		fShowPropertiesAction = new ShowPropertiesAction(getEditorPart(), getSelectionProvider());
 		fFoldingGroup = new FoldingActionGroup(this, getSourceViewer());
 	}
 
@@ -1502,7 +1262,13 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	protected void createModelDependentFields() {
-		// none at this level
+		if (fStructuredSelectionProvider != null) {
+			SelectionConvertor convertor = (SelectionConvertor) fStructuredModel.getAdapter(SelectionConvertor.class);
+			if (convertor != null)
+				fStructuredSelectionProvider.selectionConvertor = convertor;
+			else
+				fStructuredSelectionProvider.selectionConvertor = new SelectionConvertor();
+		}
 	}
 
 	/**
@@ -1517,8 +1283,8 @@ public class StructuredTextEditor extends TextEditor {
 	public void createPartControl(Composite parent) {
 		IContextService contextService = (IContextService) getSite().getService(IContextService.class);
 		if (contextService != null)
-		  contextService.activateContext(EDITOR_KEYBINDING_SCOPE_ID);
-		
+			contextService.activateContext(EDITOR_KEYBINDING_SCOPE_ID);
+
 		if (getSourceViewerConfiguration() == null) {
 			ConfigurationAndTarget cat = createSourceViewerConfiguration();
 			fViewerConfigurationTargetId = cat.getTargetId();
@@ -1806,13 +1572,17 @@ public class StructuredTextEditor extends TextEditor {
 
 		setPreferenceStore(null);
 
-		// strictly speaking, but following null outs
-		// should not be needed,
-		// but in the event of a memory leak, they make the
-		// memory leak less
-		// severe
+		/*
+		 * Strictly speaking, but following null outs should not be needed,
+		 * but in the event of a memory leak, they make the memory leak less
+		 * severe
+		 */
 		fDropAdapter = null;
 		fDropTarget = null;
+
+		if (fStructuredSelectionProvider != null) {
+			fStructuredSelectionProvider.dispose();
+		}
 
 		super.dispose();
 
@@ -1838,7 +1608,8 @@ public class StructuredTextEditor extends TextEditor {
 	 * here.
 	 */
 	private void disposeModelDependentFields() {
-		// none at this level
+		if(fStructuredSelectionProvider != null)
+			fStructuredSelectionProvider.selectionConvertor = new SelectionConvertor();
 	}
 
 	/*
@@ -1883,8 +1654,6 @@ public class StructuredTextEditor extends TextEditor {
 	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#doSetInput(org.eclipse.ui.IEditorInput)
 	 */
 	protected void doSetInput(IEditorInput input) throws CoreException {
-		// TODO: if opened in more than one editor, this will cause
-		// problems.
 		IEditorInput oldInput = getEditorInput();
 		if (oldInput != null) {
 			IDocument olddoc = getDocumentProvider().getDocument(oldInput);
@@ -2252,7 +2021,7 @@ public class StructuredTextEditor extends TextEditor {
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88714
 		return SWT.LEFT_TO_RIGHT;
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -2268,6 +2037,12 @@ public class StructuredTextEditor extends TextEditor {
 						updateStatusLine(event.getSelection());
 					}
 				});
+				if (fStructuredModel != null) {
+					SelectionConvertor convertor = (SelectionConvertor) fStructuredModel.getAdapter(SelectionConvertor.class);
+					if (convertor != null) {
+						fStructuredSelectionProvider.selectionConvertor = convertor;
+					}
+				}
 			}
 		}
 		if (fStructuredSelectionProvider == null) {
@@ -2994,10 +2769,6 @@ public class StructuredTextEditor extends TextEditor {
 			updateStatusLine(null);
 		}
 
-		if (fStructuredSelectionProvider != null) {
-			fStructuredSelectionProvider.setDocument(getInternalModel().getStructuredDocument());
-		}
-		
 		if (fEncodingSupport != null && fEncodingSupport instanceof EncodingSupport) {
 			((EncodingSupport) fEncodingSupport).reinitialize(getConfigurationPoints());
 		}
@@ -3099,16 +2870,17 @@ public class StructuredTextEditor extends TextEditor {
 			IStructuredDocument doc = internalModel.getStructuredDocument();
 			EncodingMemento memento = doc.getEncodingMemento();
 			IDocumentCharsetDetector detector = internalModel.getModelHandler().getEncodingDetector();
-			if (memento != null && detector != null)
+			if (memento != null && detector != null) {
 				detector.set(doc);
-			try {
-				String newEncoding = detector.getEncoding();
-				if (newEncoding != null) {
-					memento.setDetectedCharsetName(newEncoding);
+				try {
+					String newEncoding = detector.getEncoding();
+					if (newEncoding != null) {
+						memento.setDetectedCharsetName(newEncoding);
+					}
 				}
-			}
-			catch (IOException e) {
-				failed = true;
+				catch (IOException e) {
+					failed = true;
+				}
 			}
 			/**
 			 * Be sure to use the new value but only if no exception
@@ -3207,37 +2979,41 @@ public class StructuredTextEditor extends TextEditor {
 				// get undo command
 				Command undoCommand = undoManager.getUndoCommand();
 				// set undo label and description
-				undoAction.setEnabled(undoManager.undoable());
-				if (undoCommand != null) {
-					String label = undoCommand.getLabel();
-					if (label != null) {
-						String customText = MessageFormat.format(UNDO_ACTION_TEXT, new String[]{label});
-						updateActions = updateActions || customText == null || previousUndoText == null || !customText.equals(previousUndoText);
-						undoAction.setText(customText);
-					}
-					String desc = undoCommand.getDescription();
-					if (desc != null) {
-						String customDesc = MessageFormat.format(UNDO_ACTION_DESC, new String[]{desc});
-						updateActions = updateActions || customDesc == null || previousRedoDesc == null || !customDesc.equals(previousUndoDesc);
-						undoAction.setDescription(customDesc);
+				if (undoAction != null) {
+					undoAction.setEnabled(undoManager.undoable());
+					if (undoCommand != null) {
+						String label = undoCommand.getLabel();
+						if (label != null) {
+							String customText = MessageFormat.format(UNDO_ACTION_TEXT, new String[]{label});
+							updateActions = updateActions || customText == null || previousUndoText == null || !customText.equals(previousUndoText);
+							undoAction.setText(customText);
+						}
+						String desc = undoCommand.getDescription();
+						if (desc != null) {
+							String customDesc = MessageFormat.format(UNDO_ACTION_DESC, new String[]{desc});
+							updateActions = updateActions || customDesc == null || previousRedoDesc == null || !customDesc.equals(previousUndoDesc);
+							undoAction.setDescription(customDesc);
+						}
 					}
 				}
 				// get redo command
 				Command redoCommand = undoManager.getRedoCommand();
 				// set redo label and description
-				redoAction.setEnabled(undoManager.redoable());
-				if (redoCommand != null) {
-					String label = redoCommand.getLabel();
-					if (label != null) {
-						String customText = MessageFormat.format(REDO_ACTION_TEXT, new String[]{label});
-						updateActions = updateActions || customText == null || previousRedoText == null || !customText.equals(previousRedoText);
-						redoAction.setText(customText);
-					}
-					String desc = redoCommand.getDescription();
-					if (desc != null) {
-						String customDesc = MessageFormat.format(REDO_ACTION_DESC, new String[]{desc});
-						updateActions = updateActions || customDesc == null || previousRedoDesc == null || !customDesc.equals(previousRedoDesc);
-						redoAction.setDescription(customDesc);
+				if (redoAction != null) {
+					redoAction.setEnabled(undoManager.redoable());
+					if (redoCommand != null) {
+						String label = redoCommand.getLabel();
+						if (label != null) {
+							String customText = MessageFormat.format(REDO_ACTION_TEXT, new String[]{label});
+							updateActions = updateActions || customText == null || previousRedoText == null || !customText.equals(previousRedoText);
+							redoAction.setText(customText);
+						}
+						String desc = redoCommand.getDescription();
+						if (desc != null) {
+							String customDesc = MessageFormat.format(REDO_ACTION_DESC, new String[]{desc});
+							updateActions = updateActions || customDesc == null || previousRedoDesc == null || !customDesc.equals(previousRedoDesc);
+							redoAction.setDescription(customDesc);
+						}
 					}
 				}
 			}
