@@ -19,7 +19,7 @@ public class Checks {
 	public static RefactoringStatus checkName(String name) {
 		RefactoringStatus result= new RefactoringStatus();
 		if ("".equals(name)) //$NON-NLS-1$
-			return RefactoringStatus.createFatalErrorStatus("RefactoringMessages.Checks_Choose_name");  //$NON-NLS-1$
+			return RefactoringStatus.createFatalErrorStatus(RefactoringMessages.getString("Checks_Choose_name"));  //$NON-NLS-1$
 		return result;
 	}
 	
@@ -29,8 +29,8 @@ public class Checks {
 	
 	public static RefactoringStatus checkComponentName(String name) {
 		RefactoringStatus result= new RefactoringStatus();
-		if (!NameValidator.isValid(name)) //$NON-NLS-1$
-			return RefactoringStatus.createFatalErrorStatus("RefactoringMessages.Checks_Choose_name");  //$NON-NLS-1$
+		if (!NameValidator.isValid(name))
+			return RefactoringStatus.createFatalErrorStatus(RefactoringMessages.getString("Checks_Choose_name"));  //$NON-NLS-1$
 
 		return result;
 	}

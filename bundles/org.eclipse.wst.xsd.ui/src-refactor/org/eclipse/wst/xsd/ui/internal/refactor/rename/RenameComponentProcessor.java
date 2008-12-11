@@ -280,7 +280,7 @@ public class RenameComponentProcessor extends RenameProcessor implements INameUp
 		final RefactoringStatus result = Checks.checkName(name);
 		result.merge(Checks.checkComponentName(name));
 		if (Checks.isAlreadyNamed(selectedComponent, name))
-			result.addFatalError("RefactoringMessages.RenameComponentRefactoring_another_name");
+			result.addFatalError(RefactoringMessages.getString("RenameComponentRefactoring_another_name")); //$NON-NLS-1$
 		return result;
 	}
 
