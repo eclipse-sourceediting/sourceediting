@@ -146,6 +146,21 @@ public class AnchorHyperlinkDetector extends AbstractHyperlinkDetector {
 										}
 									}
 
+									anchors = ((IDOMModel) model).getDocument().getElementsByTagName("*"); //$NON-NLS-1$
+									for (int i = 0; i < anchors.getLength() && start < 0; i++) {
+										Node item = anchors.item(i);
+										Node nameNode = item.getAttributes().getNamedItem(HTML40Namespace.ATTR_NAME_NAME);
+										if (nameNode == null)
+											nameNode = item.getAttributes().getNamedItem(HTML40Namespace.ATTR_NAME_ID);
+										if (nameNode != null) {
+											String name = nameNode.getNodeValue();
+											if (anchorName.equals(name) && nameNode instanceof IndexedRegion) {
+												start = ((IndexedRegion) nameNode).getStartOffset();
+												end = ((IndexedRegion) nameNode).getEndOffset();
+											}
+										}
+									}
+
 								}
 								return open(basePath.toString(), targetFile, start, end);
 							}
@@ -338,6 +353,13 @@ public class AnchorHyperlinkDetector extends AbstractHyperlinkDetector {
 				links.add(new InternalElementHyperlink(textViewer, linkRegion, nameNode));
 			}
 		}
+		nameNode = anchor.getAttributes().getNamedItem(HTML40Namespace.ATTR_NAME_ID);
+		if (nameNode != null) {
+			String name = nameNode.getNodeValue();
+			if (anchorName.equals(name) && nameNode instanceof IndexedRegion) {
+				links.add(new InternalElementHyperlink(textViewer, linkRegion, nameNode));
+			}
+		}
 	}
 
 	/**
@@ -355,12 +377,16 @@ public class AnchorHyperlinkDetector extends AbstractHyperlinkDetector {
 		// >1 guards the substring-ing
 		if (anchorName.length() > 1 && anchorName.startsWith("#")) { //$NON-NLS-1$
 			// an anchor in this document
-			NodeList anchors = element.getOwnerDocument().getElementsByTagNameNS("*", HTML40Namespace.ElementName.A); //$NON-NLS-1$
+			NodeList anchors = null;//element.getOwnerDocument().getElementsByTagNameNS("*", HTML40Namespace.ElementName.A); //$NON-NLS-1$
 			String internalAnchorName = anchorName.substring(1);
-			for (int i = 0; i < anchors.getLength(); i++) {
-				addHyperLinkForName(textViewer, hyperlinkRegion, element, internalAnchorName, links, anchors.item(i));
-			}
-			anchors = element.getOwnerDocument().getElementsByTagName(HTML40Namespace.ElementName.A);
+//			for (int i = 0; i < anchors.getLength(); i++) {
+//				addHyperLinkForName(textViewer, hyperlinkRegion, element, internalAnchorName, links, anchors.item(i));
+//			}
+//			anchors = element.getOwnerDocument().getElementsByTagName(HTML40Namespace.ElementName.A);
+//			for (int i = 0; i < anchors.getLength(); i++) {
+//				addHyperLinkForName(textViewer, hyperlinkRegion, element, internalAnchorName, links, anchors.item(i));
+//			}
+			anchors = element.getOwnerDocument().getElementsByTagName("*"); //$NON-NLS-1$
 			for (int i = 0; i < anchors.getLength(); i++) {
 				addHyperLinkForName(textViewer, hyperlinkRegion, element, internalAnchorName, links, anchors.item(i));
 			}
@@ -380,11 +406,15 @@ public class AnchorHyperlinkDetector extends AbstractHyperlinkDetector {
 		List links = new ArrayList(1);
 		if (nameValue.length() > 0) {
 			String target = "#" + nameValue; //$NON-NLS-1$
-			NodeList anchors = element.getOwnerDocument().getElementsByTagNameNS("*", HTML40Namespace.ElementName.A); //$NON-NLS-1$
-			for (int i = 0; i < anchors.getLength(); i++) {
-				addHyperLinkForHref(textViewer, hyperlinkRegion, element, target, links, anchors.item(i));
-			}
-			anchors = element.getOwnerDocument().getElementsByTagName(HTML40Namespace.ElementName.A);
+			NodeList anchors = null;//element.getOwnerDocument().getElementsByTagNameNS("*", HTML40Namespace.ElementName.A); //$NON-NLS-1$
+//			for (int i = 0; i < anchors.getLength(); i++) {
+//				addHyperLinkForHref(textViewer, hyperlinkRegion, element, target, links, anchors.item(i));
+//			}
+//			anchors = element.getOwnerDocument().getElementsByTagName(HTML40Namespace.ElementName.A);
+//			for (int i = 0; i < anchors.getLength(); i++) {
+//				addHyperLinkForHref(textViewer, hyperlinkRegion, element, target, links, anchors.item(i));
+//			}
+			anchors = element.getOwnerDocument().getElementsByTagName("*"); //$NON-NLS-1$
 			for (int i = 0; i < anchors.getLength(); i++) {
 				addHyperLinkForHref(textViewer, hyperlinkRegion, element, target, links, anchors.item(i));
 			}
@@ -402,7 +432,6 @@ public class AnchorHyperlinkDetector extends AbstractHyperlinkDetector {
 				Node currentNode = getCurrentNode(document, region.getOffset());
 				if (currentNode != null && currentNode.getNodeType() == Node.ELEMENT_NODE) {
 					Element element = (Element) currentNode;
-					if (element.getTagName().equalsIgnoreCase(HTML40Namespace.ElementName.A) || element.getLocalName().equalsIgnoreCase(HTML40Namespace.ElementName.A)) {
 						IStructuredDocumentRegion documentRegion = ((IStructuredDocument) document).getRegionAtCharacterOffset(region.getOffset());
 						ITextRegion textRegion = documentRegion.getRegionAtCharacterOffset(region.getOffset());
 						ITextRegion nameRegion = null;
@@ -438,11 +467,10 @@ public class AnchorHyperlinkDetector extends AbstractHyperlinkDetector {
 							if (HTML40Namespace.ATTR_NAME_HREF.equalsIgnoreCase(name) && value.indexOf("#") >= 0) { //$NON-NLS-1$
 								return createHyperlinksToAnchorNamed(textViewer, createHyperlinkRegion(documentRegion, valueRegion), element, value, canShowMultipleHyperlinks);
 							}
-							if (HTML40Namespace.ATTR_NAME_NAME.equalsIgnoreCase(name)) {
+							if (HTML40Namespace.ATTR_NAME_NAME.equalsIgnoreCase(name)||HTML40Namespace.ATTR_NAME_ID.equalsIgnoreCase(name)) {
 								return createReferrerHyperlinks(textViewer, createHyperlinkRegion(documentRegion, valueRegion), element, value, canShowMultipleHyperlinks);
 							}
 						}
-					}
 				}
 			}
 		}
