@@ -1453,6 +1453,11 @@ public class JSPTranslator {
 				// jsp...iterate
 				// regions...
 			}
+			else if (DOMRegionContext.XML_COMMENT_TEXT.equals(commentRegion.getType())) {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=222215
+				// support custom tags hidden in a comment
+				decodeScriptBlock(node.getFullText(commentRegion), node.getStartOffset(commentRegion));
+			}
 		}
 	}
 
