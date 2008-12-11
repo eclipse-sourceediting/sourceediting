@@ -15,7 +15,6 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.net.URL;
 import java.util.List;
-import com.ibm.icu.util.StringTokenizer;
 import java.util.Vector;
 
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
@@ -27,6 +26,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.ext.LexicalHandler;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * A helper class for the XML validator.
@@ -255,8 +256,11 @@ public class ValidatorHelper
         }
         
         location = URIResolverPlugin.createResolver().resolve(baseURI, rootElementNamespace, location);    
-        location = URIResolverPlugin.createResolver().resolvePhysicalLocation(baseURI, rootElementNamespace, location);                                                    
-        location = URIHelper.addImpliedFileProtocol(location);
+        location = URIResolverPlugin.createResolver().resolvePhysicalLocation(baseURI, rootElementNamespace, location);
+        if (location != null)
+        {
+          location = URIHelper.addImpliedFileProtocol(location);
+        }
         
         schemaLocationString = location;
         
