@@ -36,6 +36,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredTextReconcilingStrategy;
@@ -184,10 +185,22 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		if (file != null) {
 			for (Iterator it = ValidationFramework.getDefault().getDisabledValidatorsFor(file).iterator(); it.hasNext();) {
 				Validator v = (Validator) it.next();
-				IValidator iv = v.asIValidator();
+				IValidator iv = null;
+				try {
+					iv = v.asIValidator();
+				}
+				catch (Exception e) {
+					Logger.logException(e);
+				}
 				if (iv != null && v.getSourceId() != null)
 					disabledValsBySourceId.add(v.getSourceId());
-				Validator.V1 v1 = v.asV1Validator();
+				Validator.V1 v1 = null;
+				try {
+					v1 = v.asV1Validator();
+				}
+				catch (Exception e) {
+					Logger.logException(e);
+				}
 				if (v1 != null)
 					disabledValsByClass.add(v1.getId());
 			}

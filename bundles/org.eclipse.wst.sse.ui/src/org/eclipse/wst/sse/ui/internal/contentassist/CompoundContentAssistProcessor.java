@@ -36,6 +36,7 @@ import org.eclipse.jface.text.contentassist.IContextInformationPresenter;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
+import org.eclipse.wst.sse.ui.internal.Logger;
 
 /**
  * A processor that aggregates the proposals of multiple other processors.
@@ -297,17 +298,24 @@ class CompoundContentAssistProcessor implements IContentAssistProcessor, ISubjec
 		List ret = new LinkedList();
 		for (Iterator it = fProcessors.iterator(); it.hasNext();) {
 			IContentAssistProcessor p = (IContentAssistProcessor) it.next();
-			ICompletionProposal[] proposals = p.computeCompletionProposals(viewer, documentOffset);
-			if (proposals != null && proposals.length > 0) {
-				ret.addAll(Arrays.asList(proposals));
-				fErrorMessage = null; // Hide previous errors
-			} else {
-				if (fErrorMessage == null && ret.isEmpty()) {
-					String errorMessage = p.getErrorMessage();
-					if (errorMessage != null) {
-						fErrorMessage = errorMessage;
+			try {
+				// isolate calls to each processor
+				ICompletionProposal[] proposals = p.computeCompletionProposals(viewer, documentOffset);
+				if (proposals != null && proposals.length > 0) {
+					ret.addAll(Arrays.asList(proposals));
+					fErrorMessage = null; // Hide previous errors
+				}
+				else {
+					if (fErrorMessage == null && ret.isEmpty()) {
+						String errorMessage = p.getErrorMessage();
+						if (errorMessage != null) {
+							fErrorMessage = errorMessage;
+						}
 					}
 				}
+			}
+			catch (Exception e) {
+				Logger.logException(e);
 			}
 		}
 		return (ICompletionProposal[]) ret.toArray(new ICompletionProposal[ret.size()]);
