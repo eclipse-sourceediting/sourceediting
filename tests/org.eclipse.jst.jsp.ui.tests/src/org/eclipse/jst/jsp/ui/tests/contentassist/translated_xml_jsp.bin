@@ -29,5 +29,7 @@ myFunc2()
 javax.swing.AbstractButton jb = new javax.swing.JButton();
 String includedString = "incd";
    jb. 
+{ // <logic:iterate>
+} // </logic:iterate>
  } catch (java.lang.Exception e) {} 
 }}
