@@ -63,8 +63,6 @@ import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDFeature;
 import org.eclipse.xsd.XSDPatternFacet;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
-import org.eclipse.xsd.util.XSDConstants;
-import org.w3c.dom.Element;
 
 public class SpecificConstraintsWidget implements SelectionListener, Listener
 {
@@ -296,8 +294,6 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
   public void widgetSelected(SelectionEvent e)
   {
     XSDSimpleTypeDefinition st = input;
-    Element element = st.getElement();
-
     if (e.widget == addButton)
     {
       List enumList = st.getEnumerationFacets();
@@ -521,7 +517,6 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
           if (result == Window.OK)
           {
             String newPattern = wizard.getPattern();
-            element.setAttribute(XSDConstants.VALUE_ATTRIBUTE, newPattern);
             pattern.setLexicalValue(newPattern);
             constraintsTableViewer.refresh();
           }
