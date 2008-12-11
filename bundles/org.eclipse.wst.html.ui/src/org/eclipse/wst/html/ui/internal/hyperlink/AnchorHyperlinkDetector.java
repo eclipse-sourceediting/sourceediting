@@ -121,6 +121,8 @@ public class AnchorHyperlinkDetector extends AbstractHyperlinkDetector {
 									for (int i = 0; i < anchors.getLength() && start < 0; i++) {
 										Node item = anchors.item(i);
 										Node nameNode = item.getAttributes().getNamedItem(HTML40Namespace.ATTR_NAME_NAME);
+										if (nameNode == null)
+											nameNode = item.getAttributes().getNamedItem(HTML40Namespace.ATTR_NAME_ID);
 										if (nameNode != null) {
 											String name = nameNode.getNodeValue();
 											if (anchorName.equals(name) && nameNode instanceof IndexedRegion) {
@@ -133,6 +135,8 @@ public class AnchorHyperlinkDetector extends AbstractHyperlinkDetector {
 									for (int i = 0; i < anchors.getLength() && start < 0; i++) {
 										Node item = anchors.item(i);
 										Node nameNode = item.getAttributes().getNamedItem(HTML40Namespace.ATTR_NAME_NAME);
+										if (nameNode == null)
+											nameNode = item.getAttributes().getNamedItem(HTML40Namespace.ATTR_NAME_ID);
 										if (nameNode != null) {
 											String name = nameNode.getNodeValue();
 											if (anchorName.equals(name) && nameNode instanceof IndexedRegion) {
