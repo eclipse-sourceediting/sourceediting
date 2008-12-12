@@ -16,9 +16,5 @@ public class TestXSLCore extends TestCase {
 	public void testisXSLNamespaceNullFalse() {
 		assertFalse(XSLCore.isXSLNamespace(null));
 	}
-	
-	public void testFakeTestToTestTests() {
-		assertFalse(true);
-	}
-	
+		
 }
