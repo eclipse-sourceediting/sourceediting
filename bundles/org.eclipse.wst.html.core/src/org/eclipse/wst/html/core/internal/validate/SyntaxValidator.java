@@ -214,7 +214,12 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		}
 		else {
 			if (info.isXHTML) { // XHTML
-				if (!info.target.isEmptyTag()) {
+				if (!info.target.isEmptyTag() && DOMRegionContext.XML_TAG_OPEN.equals(info.target.getStartStructuredDocumentRegion().getFirstRegion().getType())) {
+					/*
+					 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=248963 :
+					 * report empty tags not written as such, but only when
+					 * they follow actual XML/HTML syntax
+					 */
 					if (isEmptyContent(info.decl)) {
 						// EMPTY element should be written in <.../> form.
 						Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG);
@@ -229,7 +234,7 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 			}
 			else { // HTML
 				if (info.hasStartTag) {
-					if (info.decl != null && CMUtil.isHTML(info.decl) && !info.target.isEmptyTag() && !CMUtil.isEndTagOmissible(info.decl)) {
+					if (info.decl != null && CMUtil.isHTML(info.decl) && !info.target.isEmptyTag() && !CMUtil.isEndTagOmissible(info.decl) && info.target.getStartStructuredDocumentRegion().getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN) {
 						// Set the error mark to the end of the element.
 						Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG);
 						report(MISSING_END_TAG_ERROR, errorSeg, info.target);
