@@ -416,10 +416,10 @@ public class TestContentDescription extends TestCase {
 	public void testFile103() throws CoreException, IOException {
 		doTest("UTF-8", "testfiles/xml/EmptyFile.xml", null);
 	}
-//	[254504] XMLContentDescriber defaults to UTF-8 for euc-JP and Shift_JIS
-//	public void testFile104() throws CoreException, IOException {
-//		doTest("EUC-JP", "testfiles/xml/eucjp.xml", null);
-//	}
+
+	public void testFile104() throws CoreException, IOException {
+		doTest("EUC-JP", "testfiles/xml/eucjp.xml", null);
+	}
 
 //	public void testFile105() throws CoreException, IOException {
 //		doTest("ISO-8859-1", "testfiles/xml/IllformedNormalNonDefault.xml", null);
@@ -440,10 +440,10 @@ public class TestContentDescription extends TestCase {
 	public void testFile109() throws CoreException, IOException {
 		doTest("ISO-8859-1", "testfiles/xml/NormalNonDefault.xml", null);
 	}
-//	[254504] XMLContentDescriber defaults to UTF-8 for euc-JP and Shift_JIS
-//	public void testFile110() throws CoreException, IOException {
-//		doTest("Shift_JIS", "testfiles/xml/shiftjis.xml", null);
-//	}
+
+	public void testFile110() throws CoreException, IOException {
+		doTest("Shift_JIS", "testfiles/xml/shiftjis.xml", null);
+	}
 
 	public void testFile111() throws CoreException, IOException {
 		doTest("ISO-8859-1", "testfiles/xml/testExtraJunk.xml", null);
@@ -460,14 +460,14 @@ public class TestContentDescription extends TestCase {
 	public void testFile114() throws CoreException, IOException {
 		doTest("UTF-8", "testfiles/xml/testIllFormed2.xml", null);
 	}
-//  [251659] - XMLContentDescriber no longer returns content types for invalid encodings
+//  [249214] - XMLContentDescriber no longer returns content types for invalid encodings
 //	public void testFile115() throws CoreException, IOException {
 //		doTest("UTF-8 standalone=", "testfiles/xml/testIllFormed3.xml", java.nio.charset.IllegalCharsetNameException.class);
 //	}
-//	[254504] XMLContentDescriber determines this Illformed encoding as INVALID
-//	public void testFile116() throws CoreException, IOException {
-//		doTest("UTF-8", "testfiles/xml/testIllFormed4.xml", null);
-//	}
+
+	public void testFile116() throws CoreException, IOException {
+		doTest("UTF-8", "testfiles/xml/testIllFormed4.xml", null);
+	}
 
 	public void testFile117() throws CoreException, IOException {
 		doTest("ISO-8859-1", "testfiles/xml/testMultiLine.xml", null);
