@@ -33,6 +33,9 @@ section   title" />
 			<param name="chapter.autolabel" expression="0"/>
 			<param name="section.autolabel" expression="0"/>
 			<param name="html.stylesheet" expression="book.css ../book.css"/>
+			<param name="chunk.section.depth" expression="3"/>
+			<param name="toc.section.depth" expression="5"/>
+			<param name="toc.list.type" expression="ul"/>
 		</xslt>
 		
 		<replace file="${current-loc}/toc.xml" token="${current-loc}/" value=""/>
