@@ -41,6 +41,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.DocumentEvent;
+import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.Position;
 import org.eclipse.wst.jsdt.core.IBuffer;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -64,7 +65,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  * 
  * @author childsb
  */
-public class JsTranslator extends Job implements IJsTranslator{
+public class JsTranslator extends Job implements IJsTranslator, IDocumentListener {
 	
 	protected static final boolean DEBUG;
 	private static final boolean DEBUG_SAVE_OUTPUT = false;  //"true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jstranslationstodisk")); //$NON-NLS-1$  //$NON-NLS-2$
@@ -87,7 +88,7 @@ public class JsTranslator extends Job implements IJsTranslator{
 	protected ArrayList importLocationsInHtml = new ArrayList();
 	/* use java script by default */
 	protected boolean fIsGlobalJs = true;
-	protected ArrayList rawImports = new ArrayList(); // traslated
+	protected ArrayList rawImports = new ArrayList(); // translated
 	protected ArrayList scriptLocationInHtml = new ArrayList();
 	protected int scriptOffset = 0;
 	
@@ -118,7 +119,7 @@ public class JsTranslator extends Job implements IJsTranslator{
 	
 	protected void advanceNextNode() {
 		setCurrentNode(getCurrentNode().getNext());
-	}
+	}	
 	
 	protected void cleanupXmlQuotes() {
 		if(REMOVE_XML_COMMENT) {
@@ -273,13 +274,16 @@ public class JsTranslator extends Job implements IJsTranslator{
 		//setCurrentNode(fStructuredDocument.getFirstStructuredDocumentRegion());
 		
 		synchronized(finished) {
+			if(getCurrentNode() != null) {
+			NodeHelper nh = new NodeHelper(getCurrentNode());
 			while (getCurrentNode() != null && !isCanceled()) {
+				nh.setDocumentRegion(getCurrentNode());
+				
 				// System.out.println("Translator Looking at Node
 				// type:"+getCurrentNode().getType()+"---------------------------------:");
 				// System.out.println(new NodeHelper(getCurrentNode()));
 				// i.println("/---------------------------------------------------");
 				if (getCurrentNode().getType() == DOMRegionContext.XML_TAG_NAME) {
-					NodeHelper nh = new NodeHelper(getCurrentNode());
 					if ((!nh.isEndTag() || nh.isSelfClosingTag()) && nh.nameEquals("script")) { //$NON-NLS-1$
 						/*
 						 * Handles the following cases: <script
@@ -301,7 +305,7 @@ public class JsTranslator extends Job implements IJsTranslator{
 							}
 						} // End search for <script> sections
 					} else if (nh.containsAttribute(JsDataTypes.HTMLATREVENTS)) {
-						/* Check for embeded JS events in any tags */
+						/* Check for embedded JS events in any tags */
 						translateInlineJSNode(getCurrentNode());
 					} else if (nh.nameEquals("META") && nh.attrEquals("http-equiv", "Content-Script-Type") && nh.containsAttribute(new String[] { "content" })) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 						// <META http-equiv="Content-Script-Type" content="type">
@@ -315,7 +319,7 @@ public class JsTranslator extends Job implements IJsTranslator{
 			if(getCompUnitBuffer()!=null) getCompUnitBuffer().setContents(fScriptText.toString());
 		}
 		finishedTranslation();
-	
+		}
 	}
 	
 	protected void finishedTranslation() {
@@ -367,12 +371,12 @@ public class JsTranslator extends Job implements IJsTranslator{
 					
 				}
 			}
-			
 		}
 		
-		cleanupXmlQuotes();
-	
+//		cleanupXmlQuotes();
+
 	}
+	
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#translateInlineJSNode(org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion)
@@ -471,28 +475,60 @@ public class JsTranslator extends Job implements IJsTranslator{
 			// region
 			
 			//System.out.println("Region text: " + container.getText().substring(region.getStart(), region.getEnd()));
-			boolean isBlockRegion = region instanceof ITextRegionContainer;
+			boolean isContainerRegion = region instanceof ITextRegionContainer;
 			/* make sure its not a sub container region, probably JSP */
 			if (type == DOMRegionContext.BLOCK_TEXT ) {
 				int scriptStart = container.getStartOffset();
-				int scriptTextEnd = container.getEndOffset() - container.getStartOffset();
-				String regionText = container.getText().substring(region.getStart(), region.getEnd());
-				int regionLength = regionText.length();
-				// /Position inScript = new Position(scriptOffset,
-				// regionLength);
-				
+				int scriptTextLength = container.getLength();
+				String regionText = container.getFullText(region);
+				int regionLength = region.getLength();
 				
 				spaces = Util.getPad(scriptStart - scriptOffset);
 				fScriptText.append(spaces); 	
 				// fJsToHTMLRanges.put(inScript, inHtml);
-				if(isBlockRegion && REPLACE_INNER_BLOCK_SECTIONS_WITH_SPACE) {
+				if(isContainerRegion && REPLACE_INNER_BLOCK_SECTIONS_WITH_SPACE) {
 					spaces = Util.getPad(regionLength);
 					fScriptText.append(spaces); 	
-				}else if(isBlockRegion){
+				}
+				// Bug 241794 - Validation shows errors when using JSP Expressions inside JavaScript code
+				else if (regionText.indexOf(XML_COMMENT_START) >= 0) {
+					int index = regionText.indexOf(XML_COMMENT_START);
+					int leadingTrim = index + XML_COMMENT_START.length();
+					for (int i = 0; i < index; i++) {
+						/*
+						 * ignore the comment start when it's preceded only
+						 * by white space
+						 */
+						if (!Character.isWhitespace(regionText.charAt(i))) {
+							leadingTrim = 0;
+							break;
+						}
+					}
+					spaces = Util.getPad(leadingTrim);
+					fScriptText.append(spaces);
+					fScriptText.append(regionText.substring(leadingTrim));
+				}
+//				// Bug 241794 - Validation shows errors when using JSP Expressions inside JavaScript code
+//				else if (regionText.indexOf(XML_COMMENT_END) >= 0) {
+//					int index = regionText.indexOf(XML_COMMENT_END);
+//					int trailingTrim = index + XML_COMMENT_END.length();
+//					for (int i = index; i < trailingTrim; i++) {
+//						/*
+//						 * ignore the comment end when it's followed only
+//						 * by white space
+//						 */
+//						if (!Character.isWhitespace(regionText.charAt(i))) {
+//							trailingTrim = 0;
+//							break;
+//						}
+//					}
+//					spaces = Util.getPad(trailingTrim);
+//					fScriptText.append(spaces);
+//					fScriptText.append(regionText.substring(0, trailingTrim));
+//				}
+				else {
 					fScriptText.append(regionText);
-				}else {
-					fScriptText.append(regionText);
-					Position inHtml = new Position(scriptStart, scriptTextEnd);
+					Position inHtml = new Position(scriptStart, scriptTextLength);
 					scriptLocationInHtml.add(inHtml);
 				}
 				
