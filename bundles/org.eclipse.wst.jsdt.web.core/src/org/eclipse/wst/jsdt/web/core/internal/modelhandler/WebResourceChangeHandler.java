@@ -20,12 +20,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.model.ModelLifecycleEvent;
 import org.eclipse.wst.sse.core.internal.provisional.IModelLifecycleListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 /**
 *
 * Provisional API: This class/interface is part of an interim API that is still under development and expected to
@@ -44,7 +42,7 @@ public class WebResourceChangeHandler implements IResourceChangeListener, IDocum
 	 * setting to true may speed things up.
 	 * 
 	 */
-	private static final boolean CHECK_INTREST_LEVEL = false;
+//	private static final boolean CHECK_INTREST_LEVEL = false;
 	private static Hashtable instances = new Hashtable();
 	private static final boolean SIGNAL_MODEL = false;
 	
@@ -79,7 +77,7 @@ public class WebResourceChangeHandler implements IResourceChangeListener, IDocum
 			if (!WebResourceChangeHandler.SIGNAL_MODEL) {
 				return;
 			}
-			IDOMModel xmlModel = null;
+			IStructuredModel xmlModel = null;
 			Object modelRef = getModel();
 			if (modelRef == null) {
 				return;
@@ -88,19 +86,23 @@ public class WebResourceChangeHandler implements IResourceChangeListener, IDocum
 // for(int i =0;i<fchangeListener.size();i++) {
 // ((IWebResourceChangedListener)fchangeListener.get(i)).resourceChanged();
 // }
-				xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForEdit(((IStructuredModel) modelRef).getBaseLocation());
+				xmlModel = (IStructuredModel) modelRef;//(IDOMModel) StructuredModelManager.getModelManager().getExistingModelForEdit(((IStructuredModel) modelRef).getBaseLocation());
 				if (xmlModel != null) {
 					IStructuredDocument doc = xmlModel.getStructuredDocument();
-					xmlModel.aboutToChangeModel();
+					try {
+						xmlModel.aboutToChangeModel();
 					// xmlModel.setReinitializeNeeded(true);
 					// (doc).replace(0, doc.getLength(),doc.get());
-					xmlModel.changedModel();
+					}
+					finally {
+						xmlModel.changedModel();
+					}
 				}
 			} catch (Exception e) {
 				System.out.println(Messages.getString("WebResourceChangeHandler.0")); //$NON-NLS-1$
 			} finally {
 				if (xmlModel != null) {
-					xmlModel.releaseFromEdit();
+//					xmlModel.releaseFromEdit();
 				}
 			}
 		}

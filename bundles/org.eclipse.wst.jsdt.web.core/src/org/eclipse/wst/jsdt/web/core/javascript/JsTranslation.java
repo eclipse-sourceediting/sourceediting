@@ -26,28 +26,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import org.eclipse.core.filebuffers.FileBuffers; // import
-													// org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile; // import
-											// org.eclipse.core.resources.IProject;
-// import org.eclipse.core.resources.IResource;
+import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.wst.jsdt.core.IBuffer;
-import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.core.IJavaScriptProject;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IPackageFragmentRoot;
 import org.eclipse.wst.jsdt.core.ISourceRange;
-import org.eclipse.wst.jsdt.core.JavaScriptModelException; // import
-														// org.eclipse.wst.jsdt.core.LibrarySuperType;
+import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
 import org.eclipse.wst.jsdt.internal.core.DocumentContextFragmentRoot;
 import org.eclipse.wst.jsdt.internal.core.Member;
@@ -83,8 +78,8 @@ public class JsTranslation implements IJsTranslation {
 	protected String fModelBaseLocation;
 
 
-	private static final String SUPER_TYPE_NAME = "Window"; //$NON-NLS-1$
-	private static final String SUPER_TYPE_LIBRARY = "org.eclipse.wst.jsdt.launching.baseBrowserLibrary"; //$NON-NLS-1$
+//	private static final String SUPER_TYPE_NAME = "Window"; //$NON-NLS-1$
+//	private static final String SUPER_TYPE_LIBRARY = "org.eclipse.wst.jsdt.launching.baseBrowserLibrary"; //$NON-NLS-1$
 
 	protected IJsTranslator fTranslator;
 

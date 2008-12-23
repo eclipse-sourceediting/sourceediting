@@ -98,8 +98,7 @@
 	    -->  
 	   
 	   <extension id="embeded.javascript" name="%extension.name.1" point="org.eclipse.core.resources.builders">       
-		   	<builder hasNature="true" callOnEmptyDelta="true">
-		   	      
+		   	<builder hasNature="true" callOnEmptyDelta="true">		   	      
 		   	<run class="org.eclipse.wst.jsdt.web.core.internal.IncrementalBuilder"/>      
 		   </builder>    
 	   </extension>
@@ -116,48 +115,35 @@
 	</extension>
 	-->
 	
-	<extension point="org.eclipse.wst.sse.core.formatProcessors">
-		<processor
-			class="org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl"
-			contentTypeId="org.eclipse.wst.html.core.htmlsource">
-		</processor>
-	</extension>
-	
-
 	<!--======================================================================================-->
-	<!-- JSP batch validation                                       						  -->
+	<!-- JS batch validation in Web files                                                     -->
 	<!--======================================================================================-->
 	<extension
 		id="JsBatchValidator"
 		name="%javascript.validator"
-		point="org.eclipse.wst.validation.validator">
-		<validator>
-			<projectNature id="org.eclipse.wst.jsdt.core.jsNature" />
-
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.html">
-			</filter>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.htm">
-			</filter>
-			
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				nameFilter="*.jsp">
-			</filter>
-			 
-
-			<helper
-				class="org.eclipse.wst.validation.internal.operations.WorkbenchContext">
-			</helper>
-
-			<run
-				enabled="false"
-				class="org.eclipse.wst.jsdt.web.core.internal.validation.JsBatchValidator">
-			</run>
-		</validator>
+		point="org.eclipse.wst.validation.validatorV2">
+      <validator
+            build="true"
+			class="org.eclipse.wst.jsdt.web.core.internal.validation.JsValidator"
+            manual="true"
+            sourceid="org.eclipse.wst.jsdt.web.jssourcevalidator"
+            version="1"
+            markerId="org.eclipse.wst.jsdt.core.problem">
+         <include>
+            <rules>
+				<projectNature id="org.eclipse.wst.jsdt.core.jsNature" />
+				<contentType id="org.eclipse.wst.html.core.htmlsource"></contentType>
+				<fileext caseSensitive="false" ext="html"/>
+				<fileext caseSensitive="false" ext="xhtml"/>
+				<fileext caseSensitive="false" ext="htm"/>
+				<fileext caseSensitive="false" ext="htpl"/>
+				<fileext caseSensitive="false" ext="wml"/>
+				<fileext caseSensitive="false" ext="jsp"/>
+				<fileext caseSensitive="false" ext="jspf"/>
+			</rules>
+         </include>
+         <group id="org.eclipse.wst.sse.core.structuredModelGroup"/>
+      </validator>
 	</extension>
 	
 	<extension  point="org.eclipse.wst.jsdt.core.JsGlobalScopeContainerInitializer">

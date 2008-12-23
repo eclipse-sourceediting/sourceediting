@@ -57,7 +57,6 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 	private String baseLocation;
 	private boolean listenForChanges=false;
 	private static final String PRIORITY_ATTRIB = "priority";
-	private static final String CLASS_ATTRIB = "class";
 	private IJsTranslation fTranslationElement;
 	
 	public JsTranslationAdapter(IDOMModel xmlModel) {

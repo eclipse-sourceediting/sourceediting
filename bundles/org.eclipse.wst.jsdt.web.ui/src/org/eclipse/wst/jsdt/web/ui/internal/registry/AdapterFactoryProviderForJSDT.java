@@ -11,7 +11,6 @@
 package org.eclipse.wst.jsdt.web.ui.internal.registry;
 
 import org.eclipse.wst.html.core.internal.modelhandler.ModelHandlerForHTML;
-import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapterFactory;
 import org.eclipse.wst.jsdt.web.ui.views.contentoutline.JFaceNodeAdapterFactoryForJSDT;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
@@ -51,11 +50,8 @@ public class AdapterFactoryProviderForJSDT implements AdapterFactoryProvider {
 			factory = new JFaceNodeAdapterFactoryForJSDT(IJFaceNodeAdapter.class, true);
 			factoryRegistry.addFactory(factory);
 		}
-		factory = factoryRegistry.getFactoryFor(IJsTranslation.class);
-		if (factory == null) {
-			factory = new JsTranslationAdapterFactory();
-			factoryRegistry.addFactory(factory);
-		}
+		
+		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
 	}
 	
 	protected void addPropagatingAdapters(IStructuredModel structuredModel) {}

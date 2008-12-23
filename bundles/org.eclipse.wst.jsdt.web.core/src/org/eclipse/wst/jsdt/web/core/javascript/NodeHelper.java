@@ -60,7 +60,7 @@ public class NodeHelper {
 		char lastChar = string.charAt(lastIndex);
 		return (((firstChar == NodeHelper.SINGLE_QUOTE_CHAR) && (lastChar == NodeHelper.SINGLE_QUOTE_CHAR)) || ((firstChar == NodeHelper.DOUBLE_QUOTE_CHAR) && (lastChar == NodeHelper.DOUBLE_QUOTE_CHAR)));
 	}
-	protected final IStructuredDocumentRegion region;
+	protected IStructuredDocumentRegion region;
 	
 	public NodeHelper(IStructuredDocumentRegion region) {
 		this.region = region;
@@ -76,17 +76,15 @@ public class NodeHelper {
 		if (region == null) {
 			return null;
 		}
-		// For debuging
+		// For debugging
 		ITextRegionList t = region.getRegions();
 		ITextRegion r;
 		Iterator regionIterator = t.iterator();
-		String StructuredValue = Messages.getString("NodeHelper.0") + getTagName() + Messages.getString("NodeHelper.1"); //$NON-NLS-1$ //$NON-NLS-2$
+		String StructuredValue = Messages.NodeHelper00 + getTagName() + Messages.NodeHelper01; //$NON-NLS-1$ //$NON-NLS-2$
 		while (regionIterator.hasNext()) {
 			r = (ITextRegion) regionIterator.next();
 			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
-				int start = r.getStart();
-				int offset = r.getTextEnd();
-				StructuredValue += "\t\t" + region.getText().substring(start, offset); //$NON-NLS-1$
+				StructuredValue += "\t\t" + region.getText(r); //$NON-NLS-1$
 				/*
 				 * Theres a XML_TAG_ATTRIBUTE_EQUALS after the
 				 * XML_TAG_ATTRIBUTE_NAME we have to get rid of
@@ -94,14 +92,13 @@ public class NodeHelper {
 				if (regionIterator.hasNext()) {
 					regionIterator.next();
 				}
-				if (regionIterator.hasNext()) {
-					r = ((ITextRegion) regionIterator.next());
-				}
-				System.out.println(Messages.getString("NodeHelper.3")); //$NON-NLS-1$
-				if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
-					int valStart = r.getStart();
-					int valOffset = r.getTextEnd();
-					StructuredValue += "\t\t" + stripEndQuotes(region.getText().substring(valStart, valOffset)) + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
+				if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+					if (regionIterator.hasNext()) {
+						r = ((ITextRegion) regionIterator.next());
+					}
+					if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+						StructuredValue += "\t\t" + stripEndQuotes(region.getText(r)) + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
+					}
 				}
 			}
 		}
@@ -121,9 +118,7 @@ public class NodeHelper {
 		while (regionIterator.hasNext()) {
 			r = (ITextRegion) regionIterator.next();
 			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
-				int start = r.getStart();
-				int offset = r.getTextEnd();
-				String tagname = region.getText().substring(start, offset).trim();
+				String tagname = region.getText(r).trim();
 				/* Attribute values aren't case sensative */
 				if (NodeHelper.isInArray(name, tagname)) {
 					return true;
@@ -146,9 +141,7 @@ public class NodeHelper {
 		while (regionIterator.hasNext()) {
 			r = (ITextRegion) regionIterator.next();
 			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
-				int start = r.getStart();
-				int offset = r.getTextEnd();
-				String tagname = region.getText().substring(start, offset).trim();
+				String tagname = region.getText(r).trim();
 				/*
 				 * Attribute values aren't case sensative, also make sure next
 				 * region is attrib value
@@ -161,9 +154,7 @@ public class NodeHelper {
 						r = ((ITextRegion) regionIterator.next());
 					}
 					if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
-						int valStart = r.getStart();
-						int valOffset = r.getTextEnd();
-						return stripEndQuotes(region.getText().substring(valStart, valOffset));
+						return stripEndQuotes(region.getText(r));
 					}
 				}
 			}
@@ -196,9 +187,7 @@ public class NodeHelper {
 		while (regionIterator.hasNext()) {
 			r = (ITextRegion) regionIterator.next();
 			if (r.getType() == DOMRegionContext.XML_TAG_NAME) {
-				int start = r.getStart();
-				int offset = r.getTextEnd();
-				return region.getText().substring(start, offset);
+				return region.getText(r);
 			}
 		}
 		return null;
@@ -208,28 +197,14 @@ public class NodeHelper {
 		if (region == null) {
 			return false;
 		}
-		ITextRegionList t = region.getRegions();
-		ITextRegion r;
-		Iterator regionIterator = t.iterator();
-		while (regionIterator.hasNext()) {
-			r = (ITextRegion) regionIterator.next();
-			if (r.getType() == DOMRegionContext.XML_END_TAG_OPEN) {
-				return true;
-			}
-		}
-		return false;
+		return DOMRegionContext.XML_END_TAG_OPEN.equals(region.getFirstRegion().getType());
 	}
 	
 	public boolean isSelfClosingTag() {
 		if (region == null) {
 			return false;
 		}
-		if (region == null) {
-			return false;
-		}
-		ITextRegionList regions = region.getRegions();
-		ITextRegion r = regions.get(regions.size() - 1);
-		return r.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE;
+		return DOMRegionContext.XML_EMPTY_TAG_CLOSE.equals(region.getLastRegion().getType());
 	}
 	
 	public boolean nameEquals(String name) {
@@ -238,6 +213,12 @@ public class NodeHelper {
 		}
 		String tagName;
 		return ((tagName = getTagName()) != null && tagName.equalsIgnoreCase(name));
+	}
+	
+	public void setDocumentRegion(IStructuredDocumentRegion newRegion) {
+		if (newRegion == null)
+			throw new IllegalArgumentException();
+		region = newRegion;
 	}
 	
 	public String stripEndQuotes(String text) {
@@ -258,7 +239,7 @@ public class NodeHelper {
 		while (regionIterator.hasNext()) {
 			ITextRegion r = (ITextRegion) regionIterator.next();
 			String nodeType = r.getType();
-			nodeText += (Messages.getString("NodeHelper.11") + nodeType + Messages.getString("NodeHelper.12") + region.getText().substring(r.getStart(), r.getTextEnd()) + "\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			nodeText += (Messages.NodeHelper11 + nodeType + Messages.NodeHelper12 + region.getText(r) + "\n"); //$NON-NLS-1$
 		}
 		return nodeText;
 	}

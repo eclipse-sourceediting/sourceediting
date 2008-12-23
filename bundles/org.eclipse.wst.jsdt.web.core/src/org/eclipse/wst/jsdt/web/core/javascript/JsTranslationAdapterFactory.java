@@ -41,7 +41,6 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 public class JsTranslationAdapterFactory extends AbstractAdapterFactory {
 	// for debugging
 	private static final boolean DEBUG;
-	private boolean listenForProjectChanges;
 	
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jstranslation"); //$NON-NLS-1$
@@ -51,7 +50,6 @@ public class JsTranslationAdapterFactory extends AbstractAdapterFactory {
 	
 	public JsTranslationAdapterFactory() {
 		super(IJsTranslation.class, true);
-		listenForProjectChanges = true;
 	}
 	
 	
