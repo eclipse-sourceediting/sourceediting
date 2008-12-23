@@ -1,7 +1,6 @@
 package org.eclipse.wst.jsdt.web.core.test.translation;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -10,13 +9,14 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
+import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
+import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapterFactory;
 import org.eclipse.wst.jsdt.web.core.tests.Activator;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 
 
@@ -32,26 +32,29 @@ public class TestHtmlTranslation extends TestCase {
 	public void testHTMLFormat() {
 		// get model
 		IStructuredModel structuredModel = getModel("test1.html");
-
+		assertNotNull("missing test model", structuredModel);
 		
 		// compare
 		String formatted = structuredModel.getStructuredDocument().get();
 		String expectedFileName = "test1.html";
 		String expected = getFile(expectedFileName);
 		
+		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
+		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
+		IJsTranslation translation = translationAdapter.getJSPTranslation(false);
+		assertTrue("expected function definition is missing", translation.getJsText().indexOf("function blah()") >= 0);
 
 		// release model
 		structuredModel.releaseFromRead();
 	}
 
-	protected String readFile(String fileName) {
-		
-		
+	protected String readFile(String fileName) {		
 		String inputString = null;
 		InputStream fileInputStream = null;
 
 		try {
-			fileInputStream =  FileLocator.openStream(Platform.getBundle(Activator.PLUGIN_ID),new Path(fileName), false);
+			URL url = Activator.getDefault().getBundle().getEntry(fileName);
+			fileInputStream = url.openStream();
 
 			byte[] inputBuffer = new byte[1024];
 			inputString = new String();
@@ -114,6 +117,6 @@ public class TestHtmlTranslation extends TestCase {
 	}
 
 	protected String getFile(String fileName) {
-		return readFile("testfiles/".concat(fileName));
+		return readFile("/testfiles/".concat(fileName));
 	}
 }
