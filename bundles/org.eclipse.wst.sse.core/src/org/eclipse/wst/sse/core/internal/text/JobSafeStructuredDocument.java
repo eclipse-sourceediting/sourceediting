@@ -16,6 +16,7 @@ import java.util.Stack;
 
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentRewriteSession;
 import org.eclipse.jface.text.DocumentRewriteSessionType;
 import org.eclipse.wst.sse.core.internal.IExecutionDelegate;
@@ -70,12 +71,89 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 	protected final void releaseLock() {
 		getLockObject().release();
 	}
-
+	
 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.core.text.IStructuredDocument#replaceText(java.lang.Object,
-	 *      int, int, java.lang.String, boolean)
+	 * @see org.eclipse.jface.text.IDocument.replace(int, int, String)
+	 */
+	public void replace(final int offset, final int length, final String text) throws BadLocationException {
+		IExecutionDelegate delegate = getExecutionDelegate();
+		if (delegate == null) {
+			super.replace(offset, length, text);
+		}
+		else {
+			final Object[] resultSlot = new Object[1];
+			Runnable runnable = new Runnable() {
+				public void run() {
+					try {
+						JobSafeStructuredDocument.super.replace(offset, length, text);
+					}
+					catch (Throwable e) {
+						resultSlot[0] = e;
+					}
+				}
+			};
+			delegate.execute(runnable);
+		}
+	}
+	
+	/*
+	 * @see org.eclipse.jface.text.IDocumentExtension4.replace(int, int, String, long)
+	 */
+	public void replace(final int offset, final int length, final String text, final long modificationStamp) throws BadLocationException {
+		IExecutionDelegate delegate = getExecutionDelegate();
+		if (delegate == null) {
+			super.replace(offset, length, text, modificationStamp);
+		}
+		else {
+			final Object[] resultSlot = new Object[1];
+			Runnable runnable = new Runnable() {
+				public void run() {
+					try {
+						JobSafeStructuredDocument.super.replace(offset, length, text, modificationStamp);
+					}
+					catch (Throwable e) {
+						resultSlot[0] = e;
+					}
+				}
+			};
+			delegate.execute(runnable);
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument#replaceText(java.lang.Object, int, int, java.lang.String)
+	 */
+	public StructuredDocumentEvent replaceText(final Object requester, final int start, final int replacementLength, final String changes) {
+		StructuredDocumentEvent event = null;
+		IExecutionDelegate delegate = getExecutionDelegate();
+		if (delegate == null) {
+			event = super.replaceText(requester, start, replacementLength, changes);
+		}
+		else {
+			final Object[] resultSlot = new Object[1];
+			Runnable runnable = new Runnable() {
+				public void run() {
+					try {
+						resultSlot[0] = JobSafeStructuredDocument.super.replaceText(requester, start, replacementLength, changes);
+					}
+					catch (Throwable e) {
+						resultSlot[0] = e;
+					}
+				}
+			};
+			delegate.execute(runnable);
+			if (resultSlot[0] instanceof Throwable) {
+				throw new RuntimeException((Throwable) resultSlot[0]);
+			}
+			else {
+				event = (StructuredDocumentEvent) resultSlot[0];
+			}
+		}
+		return event;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument#replaceText(java.lang.Object, int, int, java.lang.String, boolean)
 	 */
 	public StructuredDocumentEvent replaceText(final Object requester, final int start, final int replacementLength, final String changes, final boolean ignoreReadOnlySettings) {
 		StructuredDocumentEvent event = null;

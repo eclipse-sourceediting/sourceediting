@@ -9,6 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     Jesper Steen Møller - initial IDocumentExtension4 support - #102822
+ *                           (see also #239115)
  *     
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.text;
@@ -335,7 +336,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	public BasicStructuredDocument() {
 		super();
 		fCurrentDocumnetRegionCache = new CurrentDocumentRegionCache();
-		fStore = new StructuredDocumentTextStore(50, 300);
+		setTextStore(new StructuredDocumentTextStore(50, 300));
 		setLineTracker(new DefaultLineTracker());
 		NULL_DOCUMENT_EVENT = new NullDocumentEvent();
 
@@ -458,7 +459,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 						((IDocumentListener) holdListeners[i]).documentChanged(NULL_DOCUMENT_EVENT);
 					}
 					else {
-						fDocumentEvent.fModificationStamp = getModificationStamp();
 						((IDocumentListener) holdListeners[i]).documentChanged(fDocumentEvent);
 					}
 				}
@@ -1807,7 +1807,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	}
 
 	private ITextStore getStore() {
-		Assert.isNotNull(fStore);
 		return fStore;
 	}
 
@@ -1894,9 +1893,11 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * @param start
 	 * @param replacementLength
 	 * @param changes
+	 * @param modificationStamp
+	 * @param ignoreReadOnlySettings
 	 * @return
 	 */
-	private StructuredDocumentEvent internalReplaceText(Object requester, int start, int replacementLength, String changes, boolean ignoreReadOnlySettings) {
+	private StructuredDocumentEvent internalReplaceText(Object requester, int start, int replacementLength, String changes, long modificationStamp, boolean ignoreReadOnlySettings) {
 		StructuredDocumentEvent result = null;
 
 		stopPostNotificationProcessing();
@@ -1944,12 +1945,14 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			// fireStructuredDocumentEvent must be called in order to end
 			// documentAboutToBeChanged state
 
+
 			// increment modification stamp if modifications were made
 			if (result != null && !(result instanceof NoChangeEvent)) {
-				fModificationStamp++;
+				fModificationStamp= modificationStamp;
 				fNextModificationStamp= Math.max(fModificationStamp, fNextModificationStamp);
+				fDocumentEvent.fModificationStamp = fModificationStamp;
 			}
-
+				
 			if (result == null) {
 				// result should not be null, but if an exception was thrown,
 				// it will be
@@ -1996,6 +1999,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 					}
 				}
 			}
+
 			if (Debug.perfTest || Debug.perfTestStructuredDocumentOnly) {
 				long stopStreamTime = System.currentTimeMillis();
 				System.out.println("\n\t\t\t\t Total Time for IStructuredDocument event signaling/processing in replaceText: " + (stopStreamTime - startStreamTime)); //$NON-NLS-1$
@@ -2355,11 +2359,11 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * @exception BadLocationException
 	 *                If position is not a valid range in the document
 	 */
-	public void replace(int pos, int length, String string) throws BadLocationException {
+	public void replace(int offset, int length, String text) throws BadLocationException {
 		if (Debug.displayWarnings) {
 			System.out.println("Note: IStructuredDocument::replace(int, int, String) .... its better to use replaceText(source, string, int, int) API for structuredDocument updates"); //$NON-NLS-1$
 		}
-		replaceText(this, pos, length, string);
+		replaceText(this, offset, length, text);
 	}
 
 	/**
@@ -2367,13 +2371,13 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * length of "replaceLength".
 	 * <p>
 	 * 
-	 * @param start
+	 * @param pos
 	 *            start offset of text to replace None of the offsets include
 	 *            delimiters of preceeding lines. Offset 0 is the first
 	 *            character of the document.
-	 * @param replaceLength
+	 * @param length
 	 *            start offset of text to replace
-	 * @param newText
+	 * @param text
 	 *            start offset of text to replace
 	 *            <p>
 	 *            Implementors have to notify TextChanged listeners after the
@@ -2395,8 +2399,11 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	/**
 	 * One of the APIs to manipulate the IStructuredDocument in terms of text.
 	 */
-	public StructuredDocumentEvent replaceText(Object requester, int start, int replacementLength, String changes) {
-		return replaceText(requester, start, replacementLength, changes, true);
+	public StructuredDocumentEvent replaceText(Object requester, int pos, int length, String text) {
+		if (length == 0 && (text == null || text.length() == 0))
+			return replaceText(requester, pos, length, text, getModificationStamp(), true);
+		else
+			return replaceText(requester, pos, length, text, getNextModificationStamp(), true);
 	}
 
 	public StructuredDocumentEvent replaceText(Object requester, int start, int replacementLength, String changes, boolean ignoreReadOnlySettings) {
@@ -2407,13 +2414,11 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		else
 			modificationStamp = getNextModificationStamp();
 		
-		return replaceText(requester, start, replacementLength, changes, ignoreReadOnlySettings, modificationStamp);
+		return replaceText(requester, start, replacementLength, changes, modificationStamp, ignoreReadOnlySettings);
 	}
 	
-	private StructuredDocumentEvent replaceText(Object requester, int start, int replacementLength, String changes, boolean ignoreReadOnlySettings, long modificationStamp) {
-		StructuredDocumentEvent event = internalReplaceText(requester, start, replacementLength, changes, ignoreReadOnlySettings);
-		fModificationStamp = modificationStamp;
-		fNextModificationStamp= Math.max(fModificationStamp, fNextModificationStamp);
+	private StructuredDocumentEvent replaceText(Object requester, int start, int replacementLength, String changes, long modificationStamp, boolean ignoreReadOnlySettings) {
+		StructuredDocumentEvent event = internalReplaceText(requester, start, replacementLength, changes, modificationStamp, ignoreReadOnlySettings);
 		return event;
 	}
 
@@ -2599,9 +2604,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 */
 	public StructuredDocumentEvent setText(Object requester, String theString) {
 		StructuredDocumentEvent result = null;
-
-		result = replaceText(requester, 0, getLength(), theString, true, getNextModificationStamp());
-
+		result = replaceText(requester, 0, getLength(), theString, getNextModificationStamp(), true);
 		return result;
 	}
 
@@ -2613,6 +2616,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 *            the document's text store
 	 */
 	private void setTextStore(ITextStore store) {
+		Assert.isNotNull(store);
 		fStore = store;
 	}
 
@@ -2916,7 +2920,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 *      java.lang.String, long)
 	 */
 	public void replace(int offset, int length, String text, long modificationStamp) throws BadLocationException {
-		replaceText(this, offset, length, text, false, modificationStamp);
+		replaceText(this, offset, length, text, modificationStamp, true);
 	}
 
 	/*
@@ -2927,7 +2931,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 */
 	public void set(String text, long modificationStamp) {
 		// bug 151069 - overwrite read only regions when setting entire document
-		 replaceText(null, 0, getLength(), text, true, modificationStamp);
+		 replaceText(null, 0, getLength(), text, modificationStamp, true);
 	}
 
 	/*
