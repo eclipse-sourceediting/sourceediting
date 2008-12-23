@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -215,7 +215,7 @@ public interface IStructuredModel extends IAdaptable {
 	/**
 	 * Get URI resolution helper
 	 * 
-	 * @deprecated
+	 * @deprecated - use org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin.createResolver(*) instead
 	 */
 	URIResolver getResolver();
 
