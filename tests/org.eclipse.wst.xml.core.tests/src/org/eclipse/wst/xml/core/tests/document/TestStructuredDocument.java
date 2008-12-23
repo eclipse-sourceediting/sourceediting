@@ -321,7 +321,7 @@ public class TestStructuredDocument extends TestCase {
 			
 			modificationStamp = -1;
 			if (sDoc instanceof IDocumentExtension4) {
-				modificationStamp = ((IDocumentExtension4)sDoc).getModificationStamp();
+				modificationStamp = ((IDocumentExtension4)sDoc).getModificationStamp() + 1;
 			}
 			
 			sDoc.replaceText(this, 0, sDoc.getLength(), "replaced", true);

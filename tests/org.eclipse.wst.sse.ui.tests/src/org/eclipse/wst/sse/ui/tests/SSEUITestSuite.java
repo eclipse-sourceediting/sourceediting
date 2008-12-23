@@ -14,6 +14,7 @@ package org.eclipse.wst.sse.ui.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.jface.text.tests.JFaceTextTestSuite;
 import org.eclipse.wst.sse.ui.tests.viewer.TestViewerConfiguration;
 
 public class SSEUITestSuite extends TestSuite {
@@ -27,6 +28,6 @@ public class SSEUITestSuite extends TestSuite {
 		addTest(new TestSuite(CommonEditorPreferencesTest.class));
 		addTest(new TestSuite(TestViewerConfiguration.class));
 		addTest(new TestSuite(TestStructuredTextEditor.class));
-//		addTest(JFaceTextTestSuite.suite());
+		addTest(JFaceTextTestSuite.suite());
 	}
 }
