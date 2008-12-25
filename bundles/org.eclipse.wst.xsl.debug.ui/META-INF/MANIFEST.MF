@@ -20,5 +20,11 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Localization: plugin
 Bundle-Vendor: %Bundle-Vendor.0
-Export-Package: org.eclipse.wst.xsl.debug.ui,
- org.eclipse.wst.xsl.internal.debug.ui
+Export-Package: org.eclipse.wst.xsl.debug.internal.util;x-internal:=true,
+ org.eclipse.wst.xsl.debug.ui,
+ org.eclipse.wst.xsl.internal.debug.ui;x-internal:=true,
+ org.eclipse.wst.xsl.internal.debug.ui.actions;x-internal:=true,
+ org.eclipse.wst.xsl.internal.debug.ui.breakpoint;x-internal:=true,
+ org.eclipse.wst.xsl.internal.debug.ui.model;x-internal:=true,
+ org.eclipse.wst.xsl.internal.debug.ui.tabs.main;x-internal:=true,
+ org.eclipse.wst.xsl.internal.debug.ui.tabs.output;x-internal:=true

@@ -41,6 +41,8 @@ import org.eclipse.wst.xsl.launching.config.BaseLaunchHelper;
  */
 public class XSLDebugUILaunchListener implements ILaunchesListener2
 {
+	public static final String XSL_LAUNCH_CONFIGURATION_TYPE = "org.eclipse.wst.xsl.launching.launchConfigurationType";
+
 	/**
 	 * Starts the launch listening
 	 */
@@ -70,7 +72,7 @@ public class XSLDebugUILaunchListener implements ILaunchesListener2
 			{
 				// do nothing
 			}
-			if (configType != null && "org.eclipse.wst.xsl.launching.launchConfigurationType".equals(configType.getIdentifier()))
+			if (configType != null && XSL_LAUNCH_CONFIGURATION_TYPE.equals(configType.getIdentifier()))
 			{
 				try
 				{

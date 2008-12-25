@@ -25,10 +25,11 @@ import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
-import org.eclipse.core.runtime.content.IContentTypeMatcher;
+
 
 public class InputFileBlock extends ResourceSelectionBlock
 {
+	private static final String XMLSOURCE_CONTENTTYPE = "org.eclipse.wst.xml.core.xmlsource";
 	private final IFile defaultFile;
 	IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
 
@@ -41,7 +42,7 @@ public class InputFileBlock extends ResourceSelectionBlock
 	@Override
 	protected String[] getFileExtensions()
 	{
-		IContentType contentType = contentTypeManager.getContentType("org.eclipse.core.runtime.xml"); //$NON-NLS-1$
+		IContentType contentType = contentTypeManager.getContentType(XMLSOURCE_CONTENTTYPE); //$NON-NLS-1$
 		String[] xmlContentTypes = contentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 		
 		return xmlContentTypes;

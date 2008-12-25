@@ -11,6 +11,12 @@
 package org.eclipse.wst.xsl.internal.debug.ui;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+
+import javax.xml.transform.URIResolver;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -438,9 +444,10 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 				try
 				{
 					path = manager.performStringSubstitution(path, false);
+					URI pathURI = new URL(path).toURI();
 					if (resourceType == IResource.FOLDER)
 					{
-						IContainer[] containers = root.findContainersForLocation(new Path(path));
+						IContainer[] containers = root.findContainersForLocationURI(pathURI); 
 						if (containers.length > 0)
 						{
 							res = containers[0];
@@ -448,7 +455,7 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 					}
 					else if (resourceType == IResource.FILE)
 					{
-						IFile[] files = root.findFilesForLocation(new Path(path));
+						IFile[] files = root.findFilesForLocationURI(pathURI);
 						if (files.length > 0)
 						{
 							res = files[0];
@@ -457,6 +464,12 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 				}
 				catch (CoreException e)
 				{
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (URISyntaxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 			else
