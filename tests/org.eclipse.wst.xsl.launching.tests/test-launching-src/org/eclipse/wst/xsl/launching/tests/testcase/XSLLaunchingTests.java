@@ -88,7 +88,7 @@ public class XSLLaunchingTests extends TestCase {
 
 		ILaunch launch = mine.launch(ILaunchManager.RUN_MODE,
 				new NullProgressMonitor());
-		for (int i = 0; i < 200 && !launch.isTerminated(); ++i) {
+		for (int i = 0; i < 400 && !launch.isTerminated(); ++i) {
 			System.out.println("waiting");
 			Thread.sleep(100);
 		}

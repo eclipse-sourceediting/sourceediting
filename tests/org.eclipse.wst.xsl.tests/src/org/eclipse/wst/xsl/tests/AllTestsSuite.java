@@ -26,10 +26,10 @@ public class AllTestsSuite extends TestSuite {
 
 	public AllTestsSuite() {
 		super("All XSL Test Suites");
-		addTest(LaunchingSuite.suite());
 		addTest(XSLUITestSuite.suite());
 		addTest(XSLCoreTestSuite.suite());
 		addTest(XPathCoreTests.suite());
+		addTest(LaunchingSuite.suite());
 	}
 
 	/**
