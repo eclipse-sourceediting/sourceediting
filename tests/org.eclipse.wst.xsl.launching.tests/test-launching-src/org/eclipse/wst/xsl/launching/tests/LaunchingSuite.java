@@ -3,6 +3,7 @@ package org.eclipse.wst.xsl.launching.tests;
 import junit.framework.TestSuite;
 
 import org.eclipse.wst.xsl.launching.tests.testcase.XSLLaunchingTests;
+import org.eclipse.wst.xsl.launching.ui.tests.TestInputFileBlock;
 
 /*******************************************************************************
  * Copyright (c) 2008 IBM Corporation and others.
@@ -34,6 +35,7 @@ public class LaunchingSuite extends TestSuite {
 		for (int i = 0; i < classes.length; i++) {
 			addTest(new TestSuite(classes[i], classes[i].getName()));
 		}
+		addTest(new TestSuite(TestInputFileBlock.class));
 	}
 
 	public LaunchingSuite(Class theClass, String name) {
