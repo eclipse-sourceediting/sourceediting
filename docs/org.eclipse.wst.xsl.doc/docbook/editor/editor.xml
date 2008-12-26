@@ -38,6 +38,8 @@
             no proposals are available an message will be displayed in the status bar.
         </para>
         <section id="ed_XSLProposals">
+<?dbhtml filename="editor/xsleditor_contentassist_xsl.html" ?>
+        
             <title>XSLT Element Proposals</title>
             <para>
                 Since XSLT is a templating language, it's elements must be able to be
@@ -57,6 +59,7 @@
             </figure>
         </section>
         <section id="SelectTest">
+<?dbhtml filename="editor/xsleditor_contentassist_selecttest.html" ?>
             <title>Select, Test, and Match Attributes</title>
             <para>
                 Where ever an xsl element supports a
@@ -97,6 +100,8 @@
                 available assistance.</para>
         </section>
         <section id="ExcludeResultPrefixesContentAssist">
+<?dbhtml filename="editor/xsleditor_contentassist_exclude.html" ?>
+        
             <title>Exclude-Result-Prefixes</title>
             <para>
                 The
@@ -144,6 +149,8 @@
             </note>
         </section>
         <section id="ed_ModeAssist">
+<?dbhtml filename="editor/xsleditor_contentassist_modeassist.html" ?>
+        
             <title>Mode attribute assistance</title>
             <para>
                 Content assistance is available for those xsl elements that support the
@@ -174,6 +181,8 @@
             </para>
         </section>
         <section id="ed_NamedTemplateAssist">
+<?dbhtml filename="editor/xsleditor_contentassist_namedtemplate.html" ?>
+        
             <title>Named Template Assistance</title>
             <para>
                 Call Named templates have content assistance available for their
@@ -192,6 +201,8 @@
             </figure>
         </section>
         <section id="ed_CallTemplateAssist">
+<?dbhtml filename="editor/xsleditor_contentassist_calltemplate.html" ?>
+        
             <title>Call-Template Assistance</title>
             <para>
                 Any
@@ -212,6 +223,8 @@
             </figure>
         </section>
         <section id="ed_href">
+<?dbhtml filename="editor/xsleditor_contentassist_include.html" ?>
+        
             <title>
                 Include and Import
                 <emphasis>href</emphasis>
@@ -290,6 +303,8 @@
             annotations provide additional information about the templates and XSLT
             elements in the stylesheet.</para>
         <section id="xsltOverRide">
+<?dbhtml filename="editor/xsleditor_contentassist_xsltOverride.html" ?>
+        
             <title>Template Override</title>
             <para>The XSLT editor will mark templates that have overriden an imported
                 template of the same name.</para>
