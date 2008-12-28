@@ -6,9 +6,9 @@
  *http://www.eclipse.org/legal/epl-v10.html
  *
  *Contributors:
- *    David Carver (STAR) - bug 243575 - initial API and implementation
+ *    David Carver (STAR) - bug 243577 - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.ui.tests.editor;
+package org.eclipse.wst.xsl.ui.tests.contentassist;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +42,7 @@ import org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL;
 import org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistProcessor;
 import org.eclipse.wst.xsl.ui.tests.AbstractXSLUITest;
 
-public class TestCallTemplateCompletionProposal extends AbstractXSLUITest {
+public class TestNamedTemplateCompletionProposal extends AbstractXSLUITest {
 	
 	protected String projectName = null;
 	protected String fileName = null;
@@ -146,29 +146,19 @@ public class TestCallTemplateCompletionProposal extends AbstractXSLUITest {
     	return new XSLContentAssistProcessor().computeCompletionProposals(sourceViewer, offset); 
 	}
 	
+	private void setupTestFile(String fileName) throws ResourceAlreadyExists,
+			ResourceInUse, IOException, CoreException {
+		String xslFilePath = projectName + File.separator + fileName;
+		loadFileForTesting(xslFilePath);
+	}
 
     public void testXSLPropsoalAvailable() throws Exception {
-		fileName = "calltemplateTest.xsl";
-		String xslFilePath = projectName + File.separator + fileName;
-		loadFileForTesting(xslFilePath);
-		int offset = 790;
+		setupTestFile("TestNamedTemplatesAssist.xsl");
+		int offset = 1810;
 		
     	ICompletionProposal[] proposals = getProposals(offset);
-    	assertNotNull("Did not find proposals.", proposals);
+    	assertEquals("Missing Proposals", 3, proposals.length);
     	sourceViewer = null;
-    }
-    
-    public void testUtilsProposalAvailable() throws Exception {
-		fileName = "calltemplateTest.xsl";
-		String xslFilePath = projectName + File.separator + fileName;
-		loadFileForTesting(xslFilePath);
-		int offset = 790;
-		
-    	ICompletionProposal[] proposals = getProposals(offset);
-    	assertNotNull("Did not find proposals.", proposals);
-    	assertEquals("Wrong proposal found.", "long_date", proposals[0].getDisplayString());
-    	sourceViewer = null;
-		
     }
     
 }

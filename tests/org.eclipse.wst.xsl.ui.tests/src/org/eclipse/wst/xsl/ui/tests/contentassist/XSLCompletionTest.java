@@ -1,14 +1,15 @@
 /*******************************************************************************
- *Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
- *All rights reserved. This program and the accompanying materials
- *are made available under the terms of the Eclipse Public License v1.0
- *which accompanies this distribution, and is available at
- *http://www.eclipse.org/legal/epl-v10.html
- *
- *Contributors:
- *    David Carver (STAR) - bug 243577 - initial API and implementation
+ * Copyright (c) Standards for Technology in Automotive Retail and others
+ * All rights reserved. This program and the accompanying materials 
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     David Carver - STAR - intial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.ui.tests.editor;
+
+package org.eclipse.wst.xsl.ui.tests.contentassist;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,13 +38,19 @@ import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyE
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.internal.encoding.XMLDocumentLoader;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL;
 import org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistProcessor;
 import org.eclipse.wst.xsl.ui.tests.AbstractXSLUITest;
 
-public class TestNamedTemplateCompletionProposal extends AbstractXSLUITest {
-	
+/**
+ * Tests everything about code completion and code assistance.
+ * 
+ */
+public class XSLCompletionTest extends AbstractXSLUITest {
+
 	protected String projectName = null;
 	protected String fileName = null;
 	protected IFile file = null;
@@ -54,20 +61,23 @@ public class TestNamedTemplateCompletionProposal extends AbstractXSLUITest {
 	protected IStructuredDocument document = null;
 	protected StructuredTextViewer sourceViewer = null;
 	
+	public XSLCompletionTest() {
+		// TODO Auto-generated constructor stub
+	}
+	
 	/**
 	 * Setup the necessary projects, files, and source viewer for the
 	 * tests.
 	 */
 	@Override
 	protected void setUp() throws Exception {
+		// TODO Auto-generated method stub
 		super.setUp();
-		setupProject();
+		projectName = "xsltestfiles";
+		fileName = "utils.xsl";
 		
-	}
-
-	protected void loadFileForTesting(String xslFilePath)
-			throws ResourceAlreadyExists, ResourceInUse, IOException,
-			CoreException {
+        // Setup the Project and File to be used during the test.
+		String xslFilePath = setupProject();
 		file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(xslFilePath));
 		if (file != null && !file.exists()) {
 			Assert.fail("Unable to locate " + fileName + " stylesheet.");
@@ -116,8 +126,8 @@ public class TestNamedTemplateCompletionProposal extends AbstractXSLUITest {
 		document = model.getStructuredDocument();
 	}
 
-	protected void setupProject() {
-		projectName = "xsltestfiles";
+	protected String setupProject() {
+		String xslFilePath = projectName + File.separator + fileName;
 		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(projectName);
 
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
@@ -128,6 +138,7 @@ public class TestNamedTemplateCompletionProposal extends AbstractXSLUITest {
 		catch (CoreException e) {
 			
 		}
+		return xslFilePath;
 	}
 	
 	@Override
@@ -145,20 +156,73 @@ public class TestNamedTemplateCompletionProposal extends AbstractXSLUITest {
 	private ICompletionProposal[] getProposals(int offset) throws Exception {
     	return new XSLContentAssistProcessor().computeCompletionProposals(sourceViewer, offset); 
 	}
-	
-	private void setupTestFile(String fileName) throws ResourceAlreadyExists,
-			ResourceInUse, IOException, CoreException {
-		String xslFilePath = projectName + File.separator + fileName;
-		loadFileForTesting(xslFilePath);
-	}
-
-    public void testXSLPropsoalAvailable() throws Exception {
-		setupTestFile("TestNamedTemplatesAssist.xsl");
-		int offset = 1810;
 		
-    	ICompletionProposal[] proposals = getProposals(offset);
-    	assertEquals("Missing Proposals", 3, proposals.length);
-    	sourceViewer = null;
+	
+	public void testGetNodeAtLine15() throws Exception {
+		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer, 631);
+		assertEquals("Wrong node name returned:", "xsl:stylesheet", node.getNodeName());
+		
+	}
+	
+	public void testGetNodeAtLine16() throws Exception {
+		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer, 712);
+		assertEquals("Wrong node name returned:", "xsl:template", node.getNodeName());
+	}
+	
+	public void testGetNodeAtLine17() throws Exception {
+		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer, 748);
+		assertEquals("Wrong node name returned:", "xsl:param", node.getNodeName());
+	}
+	
+	public void testAttributeNotValueAvailable() throws Exception {
+    	ICompletionProposal[] proposals = getProposals(838);
+    	
+    	assertTrue(proposals.length > 1);
+    	ICompletionProposal proposal = proposals[0];
+    	assertFalse("Found \"number(substring($date, 6, 2))\".", proposal.getDisplayString().equals("\"number(substring($date, 6, 2))\""));
+	}
+    
+    public void testSelectAttributeProposalsAvailable() throws Exception {
+    	int offset = sourceViewer.getDocument().getLineOffset(18) + 44;
+    	String s = sourceViewer.getDocument().get(offset-1, 6 );
+    	assertEquals("number",s);
+
+    	
+    	ICompletionProposal[] proposals = getProposals(838);
+    	
+    	assertTrue(proposals.length > 1);
+    	ICompletionProposal proposal = proposals[3];
+    	assertEquals("Wrong select item returned: ", "..", proposal.getDisplayString());
     }
+ 
+    /**
+     * Bug 240170
+     * @throws Exception
+     */
+    public void testSelectAttributeProposalsNarrow() throws Exception {
+    	int offset = sourceViewer.getDocument().getLineOffset(18) + 44;
+    	String s = sourceViewer.getDocument().get(offset-9,9);
+    	assertEquals("select=\"n",s);
+    	
+    	ICompletionProposal[] proposals = getProposals(offset);
+    	assertEquals("Wrong xpath item returned: ", "name(node-set)", proposals[0].getDisplayString());
+    	assertEquals("Wrong Number of items returned: ", 6, proposals.length);
+    }
+
+    public void testTestAttributeProposalsAvailable() throws Exception {
+    	ICompletionProposal[] proposals = getProposals(1753);
+    	assertTrue(proposals.length >= 1);
+    	ICompletionProposal proposal = proposals[0];
+    	assertTrue("Wrong attribute proposal returned:", proposal.getDisplayString().contains("disable-output-escaping"));
+    }
+    
+    public void testXSLElementProposalsAvailable() throws Exception {
+    	ICompletionProposal[] proposals = getProposals(1569);
+    	assertTrue(proposals.length >= 2);
+    	
+    	ICompletionProposal proposal = proposals[1];
+    	assertTrue("Can't find XSL element proposals.", proposal.getDisplayString().equals("xsl:otherwise"));
+    }
+    
     
 }

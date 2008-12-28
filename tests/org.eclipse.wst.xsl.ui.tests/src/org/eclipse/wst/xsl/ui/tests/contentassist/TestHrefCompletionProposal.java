@@ -8,7 +8,7 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.ui.tests.editor;
+package org.eclipse.wst.xsl.ui.tests.contentassist;
 
 import java.io.IOException;
 

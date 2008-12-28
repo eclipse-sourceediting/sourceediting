@@ -16,17 +16,19 @@ import junit.framework.TestSuite;
 
 import org.eclipse.wst.xsl.ui.internal.contentassist.CallTemplateContentAssistRequest;
 import org.eclipse.wst.xsl.ui.internal.validation.TestDelegatingSourceValidatorForXSL;
-import org.eclipse.wst.xsl.ui.tests.editor.TestCallTemplateCompletionProposal;
-import org.eclipse.wst.xsl.ui.tests.editor.TestElementCompletionProposal;
-import org.eclipse.wst.xsl.ui.tests.editor.TestExcludeResultPrefixesCompletionProposal;
-import org.eclipse.wst.xsl.ui.tests.editor.TestHrefCompletionProposal;
-import org.eclipse.wst.xsl.ui.tests.editor.TestNamedTemplateCompletionProposal;
-import org.eclipse.wst.xsl.ui.tests.editor.TestTemplateModeCompletionProposal;
-import org.eclipse.wst.xsl.ui.tests.editor.XSLCompletionTest;
+import org.eclipse.wst.xsl.ui.tests.contentassist.TestCallTemplateCompletionProposal;
+import org.eclipse.wst.xsl.ui.tests.contentassist.TestElementCompletionProposal;
+import org.eclipse.wst.xsl.ui.tests.contentassist.TestExcludeResultPrefixesCompletionProposal;
+import org.eclipse.wst.xsl.ui.tests.contentassist.TestHrefCompletionProposal;
+import org.eclipse.wst.xsl.ui.tests.contentassist.TestNamedTemplateCompletionProposal;
+import org.eclipse.wst.xsl.ui.tests.contentassist.TestTemplateModeCompletionProposal;
+import org.eclipse.wst.xsl.ui.tests.contentassist.TestXPathXMLCompletionProposal;
+import org.eclipse.wst.xsl.ui.tests.contentassist.XSLCompletionTest;
 import org.eclipse.wst.xsl.ui.tests.hyperlinkdetector.TestXSLHyperlinkDetector;
 import org.eclipse.wst.xsl.ui.tests.style.TestXMLRegionMap;
 import org.eclipse.wst.xsl.ui.tests.style.TestXSLLineStyleProvider;
 import org.eclipse.wst.xsl.ui.tests.style.TestXSLRegionMap;
+import org.eclipse.wst.xsl.ui.tests.templates.TestTemplateContextTypeXSL;
 
 
 public class XSLUITestSuite extends TestSuite {
@@ -48,5 +50,7 @@ public class XSLUITestSuite extends TestSuite {
 		addTestSuite(TestXSLHyperlinkDetector.class);
 		addTestSuite(TestNamedTemplateCompletionProposal.class);
 		addTestSuite(TestCallTemplateCompletionProposal.class);
+		addTestSuite(TestXPathXMLCompletionProposal.class);
+		addTestSuite(TestTemplateContextTypeXSL.class);
 	}
 }

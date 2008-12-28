@@ -9,7 +9,7 @@
  *     David Carver - STAR - bug 244978 - intial API and implementation
  *******************************************************************************/
 
-package org.eclipse.wst.xsl.ui.tests.editor;
+package org.eclipse.wst.xsl.ui.tests.contentassist;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.eclipse.wst.xsl.ui.tests
+Bundle-SymbolicName: org.eclipse.wst.xsl.ui.tests;singleton:=true
 Bundle-Version: 1.0.0.qualifer
 Bundle-Activator: org.eclipse.wst.xsl.ui.tests.Activator
 Require-Bundle: org.eclipse.ui;bundle-version="[3.4.0,4.0.0)",
@@ -28,13 +28,7 @@ Export-Package: org.eclipse.wst.xsl.ui.internal.validation;x-internal:=true,
    junit.framework,
    org.eclipse.core.resources,
    org.eclipse.core.runtime",
- org.eclipse.wst.xsl.ui.tests.editor;
-  uses:="org.eclipse.wst.sse.core.internal.provisional.text,
-   org.eclipse.wst.xml.core.internal.encoding,
-   org.eclipse.ui.texteditor,
-   org.eclipse.core.resources,
-   org.eclipse.wst.xsl.ui.tests,
-   org.eclipse.wst.sse.ui.internal,
-   org.eclipse.ui",
+ org.eclipse.wst.xsl.ui.tests.contentassist,
+ org.eclipse.wst.xsl.ui.tests.hyperlinkdetector,
  org.eclipse.wst.xsl.ui.tests.style
 Bundle-Localization: plugin

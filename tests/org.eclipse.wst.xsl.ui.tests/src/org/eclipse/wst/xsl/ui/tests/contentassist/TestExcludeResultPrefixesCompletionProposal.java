@@ -9,7 +9,7 @@
  *     David Carver - STAR - bug 230136 - intial API and implementation
  *******************************************************************************/
 
-package org.eclipse.wst.xsl.ui.tests.editor;
+package org.eclipse.wst.xsl.ui.tests.contentassist;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,7 +51,7 @@ import org.eclipse.wst.xsl.ui.tests.XSLUITestsPlugin;
  * Tests everything about code completion and code assistance.
  * 
  */
-public class TestTemplateModeCompletionProposal extends AbstractXSLUITest {
+public class TestExcludeResultPrefixesCompletionProposal extends AbstractXSLUITest {
 
 	protected String projectName = null;
 	protected String fileName = null;
@@ -63,7 +63,7 @@ public class TestTemplateModeCompletionProposal extends AbstractXSLUITest {
 	protected IStructuredDocument document = null;
 	protected StructuredTextViewer sourceViewer = null;
 	
-	public TestTemplateModeCompletionProposal() {
+	public TestExcludeResultPrefixesCompletionProposal() {
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -159,27 +159,107 @@ public class TestTemplateModeCompletionProposal extends AbstractXSLUITest {
     	return new XSLContentAssistProcessor().computeCompletionProposals(sourceViewer, offset); 
 	}
 	
-    public void testModeProposals() throws Exception {
-		fileName = "modeTest.xsl";
+    public void testAllDefaultValueNoProposals() throws Exception {
+		fileName = "TestResultPrefixes.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
 		// Column is off by one when calculating for the offset position
-		int column = 36;
-		int line = 16;
+		int column = 29;
+		int line = 2;
 		
 		int offset = document.getLineOffset(line) + column;
-		//assertEquals("Wrong offset returned", 471, offset);
+		
+		System.out.println(document.get(document.getLineOffset(line), column));
+
+		
+//		assertEquals("Line Offset incorrect:", 147, offset);
     	
     	ICompletionProposal[] proposals = getProposals(offset);
-    	assertEquals("Wrong number of mode proposals returned.", 5, proposals.length);
-    	assertEquals("Unexpected mode proposal.", "\"#all\"", proposals[0].getDisplayString());
-    	assertEquals("Unexecpted mode proposal.", "\"#default\"", proposals[1].getDisplayString());
-    	assertEquals("Unexpected mode proposal.", "mode1", proposals[2].getDisplayString());
-    	assertEquals("Unexpected mode proposal.", "mode2", proposals[3].getDisplayString());
-    	assertEquals("Unexpected mode proposal.", "mode3", proposals[4].getDisplayString());
-
+    	assertEquals("Found proposals when #all already in result value.", 0, proposals.length);  
     	sourceViewer = null;
     }
+    
+    public void testXHTMLNamespacePropsoalAvailable() throws Exception {
+		fileName = "TestResultPrefixesEmpty.xsl";
+		String xslFilePath = projectName + File.separator + fileName;
+		loadFileForTesting(xslFilePath);
+		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
+		// Column is off by one when calculating for the offset position
+		int column = 29;
+		int line = 2;
+		
+		int offset = document.getLineOffset(line) + column;
+		assertEquals("Line Offset incorrect:", 147, offset);
+		
+    	ICompletionProposal[] proposals = getProposals(offset);
+    	assertNotNull("Did not find proposals.", proposals);
+    	assertEquals("Proposal length not 2.", 2, proposals.length );
+    	assertEquals("Proposal did not find xhtml as proposal value.", "xhtml", proposals[1].getDisplayString());
+    	sourceViewer = null;
+    	
+    }
+    
+    public void testAllPropsoalAvailable() throws Exception {
+		fileName = "TestResultPrefixesEmpty.xsl";
+		String xslFilePath = projectName + File.separator + fileName;
+		loadFileForTesting(xslFilePath);
+		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
+		// Column is off by one when calculating for the offset position
+		int column = 29;
+		int line = 2;
+		
+		int offset = document.getLineOffset(line) + column;
+		assertEquals("Line Offset incorrect:", 147, offset);
+		
+    	ICompletionProposal[] proposals = getProposals(offset);
+    	assertNotNull("Did not find proposals.", proposals);
+    	assertEquals("Proposal length not 2.", 2, proposals.length );
+    	assertEquals("Proposal did not find xhtml as proposal value.", "#all", proposals[0].getDisplayString());
+    	sourceViewer = null;
+    	
+    }
+    
+    public void testExcludeXHTMLProposal() throws Exception {
+		fileName = "TestResultPrefixesWithXhtml.xsl";
+		String xslFilePath = projectName + File.separator + fileName;
+		loadFileForTesting(xslFilePath);
+		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
+		// Column is off by one when calculating for the offset position
+		int column = 35;
+		int line = 2;
+		int offset = document.getLineOffset(line) + column;
+		
+    	ICompletionProposal[] proposals = getProposals(offset);
+    	assertNotNull("Did not find proposals.", proposals);
+    	
+    	for (int cnt = 0; cnt < proposals.length; cnt++) {
+    		if (proposals[cnt].getDisplayString().equals("xhtml")) {
+    	    	sourceViewer = null;
+    			fail("XHTML Proposal found, when it should not have been!");
+    		}
+    	}
+    	sourceViewer = null;
+    }
+    
+    public void testTestProposal() throws Exception {
+		fileName = "TestResultPrefixesWithXhtml.xsl";
+		String xslFilePath = projectName + File.separator + fileName;
+		loadFileForTesting(xslFilePath);
+		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
+		// Column is off by one when calculating for the offset position
+		int column = 35;
+		int line = 2;
+		int offset = document.getLineOffset(line) + column;
+		
+    	ICompletionProposal[] proposals = getProposals(offset);
+    	assertNotNull("Did not find proposals.", proposals);
+    	assertFalse("Proposals returned more than one.", proposals.length > 1);
+    	assertEquals("Did not find test in proposal list", "test", proposals[0].getDisplayString());
+    	
+    	sourceViewer = null;
+    }
+    
+    
     
 }

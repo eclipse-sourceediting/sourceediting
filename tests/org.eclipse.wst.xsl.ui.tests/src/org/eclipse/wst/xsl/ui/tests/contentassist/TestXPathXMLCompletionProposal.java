@@ -6,13 +6,16 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- *     David Carver - STAR - bug 230136 - intial API and implementation
+ *     David Carver - STAR - bug 244978 - intial API and implementation
  *******************************************************************************/
 
-package org.eclipse.wst.xsl.ui.tests.editor;
+package org.eclipse.wst.xsl.ui.tests.contentassist;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -21,7 +24,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -40,6 +42,12 @@ import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.catalog.Catalog;
+import org.eclipse.wst.xml.core.internal.catalog.CatalogSet;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
 import org.eclipse.wst.xml.core.internal.encoding.XMLDocumentLoader;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL;
@@ -51,7 +59,7 @@ import org.eclipse.wst.xsl.ui.tests.XSLUITestsPlugin;
  * Tests everything about code completion and code assistance.
  * 
  */
-public class TestExcludeResultPrefixesCompletionProposal extends AbstractXSLUITest {
+public class TestXPathXMLCompletionProposal extends AbstractXSLUITest {
 
 	protected String projectName = null;
 	protected String fileName = null;
@@ -62,8 +70,17 @@ public class TestExcludeResultPrefixesCompletionProposal extends AbstractXSLUITe
 	protected XMLDocumentLoader xmlDocumentLoader = null;
 	protected IStructuredDocument document = null;
 	protected StructuredTextViewer sourceViewer = null;
-	
-	public TestExcludeResultPrefixesCompletionProposal() {
+    private CatalogSet catalogSet = new CatalogSet();
+    
+    protected ICatalog systemCatalog;
+
+    protected ICatalog userCatalog;
+
+    protected ICatalog defaultCatalog;
+    
+    protected boolean catalogLoaded = false;
+    
+	public TestXPathXMLCompletionProposal() {
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -74,9 +91,43 @@ public class TestExcludeResultPrefixesCompletionProposal extends AbstractXSLUITe
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+ 
+//		if (catalogLoaded == false) {
+//			initCatalogs();
+//		    ICatalog XHTMLUserCatalog = new Catalog(null, "xhtml", null);
+//	        XHTMLUserCatalog.addEntriesFromCatalog(userCatalog);
+//	        ICatalogEntry catalogEntry = (ICatalogEntry)userCatalog.createCatalogElement(ICatalogEntry.ENTRY_TYPE_URI);
+//	        catalogEntry.setKey("http://www.w3.org/1999/xhtml");
+//	        catalogEntry.setURI("http://www.w3.org/2002/08/xhtml/xhtml1-strict.xsd");
+//	        userCatalog.save();
+//		}
 		setupProject();
 		
 	}
+	
+    public void initCatalogs()
+    {
+        defaultCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
+        INextCatalog[] nextCatalogs = defaultCatalog.getNextCatalogs();
+        for (int i = 0; i < nextCatalogs.length; i++)
+        {
+            INextCatalog catalog = nextCatalogs[i];
+            ICatalog referencedCatalog = catalog.getReferencedCatalog();
+            if (referencedCatalog != null)
+            {
+                if (XMLCorePlugin.SYSTEM_CATALOG_ID
+                        .equals(referencedCatalog.getId()))
+                {
+                    systemCatalog = referencedCatalog;
+                } else if (XMLCorePlugin.USER_CATALOG_ID
+                        .equals(referencedCatalog.getId()))
+                {
+                    userCatalog = referencedCatalog;
+                }
+            }
+        }
+    }
+	
 
 	protected void loadFileForTesting(String xslFilePath)
 			throws ResourceAlreadyExists, ResourceInUse, IOException,
@@ -159,107 +210,24 @@ public class TestExcludeResultPrefixesCompletionProposal extends AbstractXSLUITe
     	return new XSLContentAssistProcessor().computeCompletionProposals(sourceViewer, offset); 
 	}
 	
-    public void testAllDefaultValueNoProposals() throws Exception {
-		fileName = "TestResultPrefixes.xsl";
+     
+    public void testProposalsIncludeXHTML() throws Exception {
+		fileName = "TestXPathXMLProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
-		// Column is off by one when calculating for the offset position
-		int column = 29;
-		int line = 2;
 		
-		int offset = document.getLineOffset(line) + column;
-		
-		System.out.println(document.get(document.getLineOffset(line), column));
-
-		
-//		assertEquals("Line Offset incorrect:", 147, offset);
-    	
-    	ICompletionProposal[] proposals = getProposals(offset);
-    	assertEquals("Found proposals when #all already in result value.", 0, proposals.length);  
-    	sourceViewer = null;
-    }
-    
-    public void testXHTMLNamespacePropsoalAvailable() throws Exception {
-		fileName = "TestResultPrefixesEmpty.xsl";
-		String xslFilePath = projectName + File.separator + fileName;
-		loadFileForTesting(xslFilePath);
-		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
-		// Column is off by one when calculating for the offset position
-		int column = 29;
-		int line = 2;
-		
-		int offset = document.getLineOffset(line) + column;
-		assertEquals("Line Offset incorrect:", 147, offset);
-		
-    	ICompletionProposal[] proposals = getProposals(offset);
-    	assertNotNull("Did not find proposals.", proposals);
-    	assertEquals("Proposal length not 2.", 2, proposals.length );
-    	assertEquals("Proposal did not find xhtml as proposal value.", "xhtml", proposals[1].getDisplayString());
-    	sourceViewer = null;
-    	
-    }
-    
-    public void testAllPropsoalAvailable() throws Exception {
-		fileName = "TestResultPrefixesEmpty.xsl";
-		String xslFilePath = projectName + File.separator + fileName;
-		loadFileForTesting(xslFilePath);
-		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
-		// Column is off by one when calculating for the offset position
-		int column = 29;
-		int line = 2;
-		
-		int offset = document.getLineOffset(line) + column;
-		assertEquals("Line Offset incorrect:", 147, offset);
-		
-    	ICompletionProposal[] proposals = getProposals(offset);
-    	assertNotNull("Did not find proposals.", proposals);
-    	assertEquals("Proposal length not 2.", 2, proposals.length );
-    	assertEquals("Proposal did not find xhtml as proposal value.", "#all", proposals[0].getDisplayString());
-    	sourceViewer = null;
-    	
-    }
-    
-    public void testExcludeXHTMLProposal() throws Exception {
-		fileName = "TestResultPrefixesWithXhtml.xsl";
-		String xslFilePath = projectName + File.separator + fileName;
-		loadFileForTesting(xslFilePath);
-		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
-		// Column is off by one when calculating for the offset position
-		int column = 35;
-		int line = 2;
-		int offset = document.getLineOffset(line) + column;
+		int offset = 251;
 		
     	ICompletionProposal[] proposals = getProposals(offset);
     	assertNotNull("Did not find proposals.", proposals);
     	
-    	for (int cnt = 0; cnt < proposals.length; cnt++) {
-    		if (proposals[cnt].getDisplayString().equals("xhtml")) {
-    	    	sourceViewer = null;
-    			fail("XHTML Proposal found, when it should not have been!");
+    	for (int i = 0; i < proposals.length; i++) {
+    		if (proposals[i].getDisplayString().contains("xhtml:")) {
+    			return;
     		}
     	}
     	sourceViewer = null;
+    	fail("Did not find XHTML proposals.");
     }
-    
-    public void testTestProposal() throws Exception {
-		fileName = "TestResultPrefixesWithXhtml.xsl";
-		String xslFilePath = projectName + File.separator + fileName;
-		loadFileForTesting(xslFilePath);
-		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
-		// Column is off by one when calculating for the offset position
-		int column = 35;
-		int line = 2;
-		int offset = document.getLineOffset(line) + column;
-		
-    	ICompletionProposal[] proposals = getProposals(offset);
-    	assertNotNull("Did not find proposals.", proposals);
-    	assertFalse("Proposals returned more than one.", proposals.length > 1);
-    	assertEquals("Did not find test in proposal list", "test", proposals[0].getDisplayString());
-    	
-    	sourceViewer = null;
-    }
-    
-    
-    
 }
