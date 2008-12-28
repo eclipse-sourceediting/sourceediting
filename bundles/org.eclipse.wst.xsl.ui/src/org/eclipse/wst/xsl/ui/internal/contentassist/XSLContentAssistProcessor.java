@@ -133,7 +133,7 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor {
 
 	private ArrayList<ICompletionProposal> getAdditionalXSLElementProposals() {
 		if (!XSLCore.isXSLNamespace(xmlNode)) {
-			additionalProposals = new ElementContentAssistRequest(xmlNode,
+			additionalProposals = new XSLElementContentAssistRequest(xmlNode,
 					sdRegion, completionRegion, cursorPosition, 0, matchString,
 					textViewer).getCompletionProposals();
 		}

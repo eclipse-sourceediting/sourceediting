@@ -1,13 +1,3 @@
-/*******************************************************************************
- *Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
- *All rights reserved. This program and the accompanying materials
- *are made available under the terms of the Eclipse Public License v1.0
- *which accompanies this distribution, and is available at
- *http://www.eclipse.org/legal/epl-v10.html
- *
- *Contributors:
- *    David Carver (STAR) - bug 244978 - initial API and implementation
- *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
 import java.util.ArrayList;
@@ -16,7 +6,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -26,8 +15,9 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQueryAction;
+import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
 import org.eclipse.wst.xml.ui.internal.editor.CMImageUtil;
@@ -41,25 +31,21 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * This class provides content assistance proposals outside of the XSL namespace.  Normal
- * XML editor content assistance only provides proposals for items within the same namespace
- * or if an element has children elements.   This class extends this functionality by checking
- * for the first XSL ancestor and uses that to determine what proposals should be
- * provided in the way of xsl elements.
+ * Adopters can extend this class to implement their own content assistance for Element
+ * proposals using the XML Content Model.
  * 
  * @author David Carver
- * @since 1.0
+ *
  */
-public class ElementContentAssistRequest extends
-		AbstractXSLContentAssistRequest {
+public abstract class AbstractXMLElementContentAssistRequest extends AbstractXSLContentAssistRequest {
 
-	private XSLContentModelGenerator contentModel;
-	private static final String XPATH_FIRST_XSLANCESTOR_NODE = "ancestor::xsl:*[1]";
-	private MarkupTagInfoProvider infoProvider = null;
-
+	protected static final String XPATH_FIRST_XSLANCESTOR_NODE = "ancestor::xsl:*[1]";
+	protected MarkupTagInfoProvider infoProvider = null;
+	protected XSLContentModelGenerator contentModel;
+	
 	/**
+	 *
 	 * @param node
-	 * @param parent
 	 * @param documentRegion
 	 * @param completionRegion
 	 * @param begin
@@ -67,74 +53,90 @@ public class ElementContentAssistRequest extends
 	 * @param filter
 	 * @param textViewer
 	 */
-	public ElementContentAssistRequest(Node node,
+	public AbstractXMLElementContentAssistRequest(Node node,
 			IStructuredDocumentRegion documentRegion,
 			ITextRegion completionRegion, int begin, int length, String filter,
 			ITextViewer textViewer) {
-		super(node, documentRegion, completionRegion, begin, length,
-				filter, textViewer);
-		contentModel = new XSLContentModelGenerator();
+		super(node, documentRegion, completionRegion, begin, length, filter, textViewer);
 	}
 
-	/**
-	 * Provides a list of possible proposals for the XSL Elements within the current
-	 * scope.
-	 */
-	@Override
-	public ArrayList<ICompletionProposal> getCompletionProposals() {
-
-		if (region.getType() == DOMRegionContext.XML_TAG_OPEN) {
-			computeTagOpenProposals();
-		} else if (region.getType() == DOMRegionContext.XML_TAG_NAME) {
-			computeTagNameProposals();
-		}
-		return getAllCompletionProposals();
+	protected Iterator<CMNode> getAvailableContentNodes(IDOMDocument domDocument, Node ancestorNode, int includeOptions) {
+		ModelQuery modelQuery = ModelQueryUtil.getModelQuery(domDocument);
+		CMElementDeclaration cmElementDec = modelQuery.getCMElementDeclaration((Element)ancestorNode);
+		List <CMNode> cmNodeList = modelQuery.getAvailableContent((Element)ancestorNode, cmElementDec, includeOptions);
+		Iterator <CMNode> cmNodeIt = cmNodeList.iterator();
+		return cmNodeIt;
 	}
 
-	/**
-	 * Calculate proposals for open content regions.
-	 */
-	protected void computeTagOpenProposals() {
-
-		if (replacementBeginPosition == documentRegion.getStartOffset(region)) {
-			if (node.getNodeType() == Node.ELEMENT_NODE) {
-				// at the start of an existing tag, right before the '<'
-				computeTagNameProposals();
+	protected CustomCompletionProposal createProposal(String proposedText, String additionalInfo, int offset,
+			Image image, int startLength) {
+				CustomCompletionProposal proposal = new CustomCompletionProposal(
+						proposedText, offset, 0, startLength + proposedText.length(), 
+						image, proposedText, null, additionalInfo, 0);
+				return proposal;
 			}
-		} else {
-			// within the white space
-			ITextRegion name = getNameRegion(((IDOMNode) node)
-					.getStartStructuredDocumentRegion());
-			if ((name != null)
-					&& ((documentRegion.getStartOffset(name) <= replacementBeginPosition) && (documentRegion
-							.getEndOffset(name) >= replacementBeginPosition))) {
-				// replace the existing name
-				replacementBeginPosition = documentRegion.getStartOffset(name);
-				replacementLength = name.getTextLength();
-			} else {
-				// insert a valid new name, or possibly an end tag
-				// addEndTagProposals(contentAssistRequest);
-				setReplacementLength(0);
-			}
-			addTagNameProposals(getElementPosition(node));
+
+	protected Image getCMNodeImage(CMNode cmNode) {
+		Image image = CMImageUtil.getImage(cmNode);
+		if (image == null) {
+			image = XMLEditorPluginImageHelper
+					.getInstance()
+					.getImage(
+							XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);
 		}
+		return image;
+	}
+
+	protected String getRequiredName(Node ownerNode, CMNode cmnode) {
+		if (ownerNode != null) {
+			return DOMNamespaceHelper.computeName(cmnode, ownerNode, null);
+		}
+		return cmnode.getNodeName();
 	}
 
 	/**
-	 * Calculates the proposals for the XML Tag Name Region.
+	 * Retrieves cmnode's documentation to display in the completion proposal's
+	 * additional info. If no documentation exists for cmnode, try displaying
+	 * parentOrOwner's documentation
+	 * 
+	 * String any documentation information to display for cmnode.
+	 * <code>null</code> if there is nothing to display.
 	 */
-	protected void computeTagNameProposals() {
-		// completing the *first* tag in "<tagname1 |<tagname2"
-		
-		// Ignore attributes
-		if (inAttributeRegion()) {
-			return;
+	protected String getAdditionalInfo(CMNode parentOrOwner, CMNode cmnode) {
+		String addlInfo = null;
+	
+		if (cmnode == null) {
+			if (Debug.displayWarnings) {
+				new IllegalArgumentException("Null declaration!").printStackTrace(); //$NON-NLS-1$
+			}
+			return null;
 		}
-		
-		IDOMNode actualNode = (IDOMNode) node;
-		addTagNameProposals(this.getElementPosition(node));
-		// addEndTagNameProposals();
+	
+		addlInfo = getInfoProvider().getInfo(cmnode);
+		if ((addlInfo == null) && (parentOrOwner != null)) {
+			addlInfo = getInfoProvider().getInfo(parentOrOwner);
+		}
+		return addlInfo;
+	}
 
+	/**
+	 * Gets the infoProvider.
+	 * 
+	 * fInfoProvider and if fInfoProvider was <code>null</code> create a new
+	 * instance
+	 */
+	protected MarkupTagInfoProvider getInfoProvider() {
+		if (infoProvider == null) {
+			infoProvider = new MarkupTagInfoProvider();
+		}
+		return infoProvider;
+	}
+
+	protected boolean beginsWith(String aString, String prefix) {
+		if ((aString == null) || (prefix == null)) {
+			return true;
+		}
+		return aString.toLowerCase().startsWith(prefix.toLowerCase());
 	}
 
 	/**
@@ -151,7 +153,7 @@ public class ElementContentAssistRequest extends
 	 * @param position
 	 */
 	protected void addTagNameProposals(int position) {
-
+	
 		Node ancestorNode = null;
 		try {
 			ancestorNode = XSLTXPathHelper.selectSingleNode(getNode(),
@@ -159,9 +161,9 @@ public class ElementContentAssistRequest extends
 		} catch (Exception ex) {
 			return;
 		}
-
+	
 		List<CMNode> cmnodes = null;
-
+	
 		if (ancestorNode.getNodeType() == Node.ELEMENT_NODE) {
 			cmnodes = getAvailableChildElementDeclarations(
 					(Element) ancestorNode, 0);
@@ -182,11 +184,11 @@ public class ElementContentAssistRequest extends
 					// only add proposals for the child element's that begin
 					// with the matchstring
 					String proposedText = null;
-
+	
 					proposedText = contentModel.getRequiredName(ancestorNode,
 							elementDecl);
 					int cursorAdjustment = proposedText.length();
-
+	
 					if (elementDecl instanceof CMElementDeclaration) {
 						CMElementDeclaration ed = (CMElementDeclaration) elementDecl;
 						if (ed.getContentType() == CMElementDeclaration.EMPTY) {
@@ -201,7 +203,7 @@ public class ElementContentAssistRequest extends
 							// only return the rest of the tag
 							proposedText = sb.toString().substring(1);
 							cursorAdjustment = getCursorPositionForProposedText(proposedText);
-
+	
 						}
 					}
 					if (beginsWith(proposedText, matchString)) {
@@ -225,9 +227,8 @@ public class ElementContentAssistRequest extends
 				}
 			}
 		}
-
+	
 	}
-
 
 	/** Returns a list of CMNodes that are available within this parent context
 	 * Given the grammar shown below and a snippet of XML code (where the '|'
@@ -245,43 +246,42 @@ public class ElementContentAssistRequest extends
 	 */
 	protected List<CMNode> getAvailableChildElementDeclarations(Element parent,
 			int childPosition) {
-		List modelQueryActions = getAvailableChildrenAtIndex(parent,
-				childPosition, ModelQuery.VALIDITY_NONE);
-		Iterator iterator = modelQueryActions.iterator();
-		List<CMNode> cmnodes = new Vector();
-		while (iterator.hasNext()) {
-			ModelQueryAction action = (ModelQueryAction) iterator.next();
-			if ((childPosition < 0)
-					|| (((action.getStartIndex() <= childPosition) && (childPosition <= action
-							.getEndIndex())))) {
-				CMNode actionCMNode = action.getCMNode();
-				if ((actionCMNode != null) && !cmnodes.contains(actionCMNode)) {
-					cmnodes.add(actionCMNode);
+				List modelQueryActions = getAvailableChildrenAtIndex(parent,
+						childPosition, ModelQuery.VALIDITY_NONE);
+				Iterator iterator = modelQueryActions.iterator();
+				List<CMNode> cmnodes = new Vector();
+				while (iterator.hasNext()) {
+					ModelQueryAction action = (ModelQueryAction) iterator.next();
+					if ((childPosition < 0)
+							|| (((action.getStartIndex() <= childPosition) && (childPosition <= action
+									.getEndIndex())))) {
+						CMNode actionCMNode = action.getCMNode();
+						if ((actionCMNode != null) && !cmnodes.contains(actionCMNode)) {
+							cmnodes.add(actionCMNode);
+						}
+					}
 				}
+				return cmnodes;
 			}
-		}
-		return cmnodes;
-	}
 
-	// returns a list of ModelQueryActions
 	protected List getAvailableChildrenAtIndex(Element parent, int index,
 			int validityChecking) {
-		List list = new ArrayList();
-		CMElementDeclaration parentDecl = getCMElementDeclaration(parent);
-		if (parentDecl != null) {
-			ModelQuery modelQuery = ModelQueryUtil.getModelQuery(parent
-					.getOwnerDocument());
-			// taken from ActionManagers
-			// int editMode = modelQuery.getEditMode();
-			int editMode = ModelQuery.EDIT_MODE_UNCONSTRAINED;
-			int ic = (editMode == ModelQuery.EDIT_MODE_CONSTRAINED_STRICT) ? ModelQuery.INCLUDE_CHILD_NODES
-					| ModelQuery.INCLUDE_SEQUENCE_GROUPS
-					: ModelQuery.INCLUDE_CHILD_NODES;
-			modelQuery.getInsertActions(parent, parentDecl, index, ic,
-					validityChecking, list);
-		}
-		return list;
-	}
+				List list = new ArrayList();
+				CMElementDeclaration parentDecl = getCMElementDeclaration(parent);
+				if (parentDecl != null) {
+					ModelQuery modelQuery = ModelQueryUtil.getModelQuery(parent
+							.getOwnerDocument());
+					// taken from ActionManagers
+					// int editMode = modelQuery.getEditMode();
+					int editMode = ModelQuery.EDIT_MODE_UNCONSTRAINED;
+					int ic = (editMode == ModelQuery.EDIT_MODE_CONSTRAINED_STRICT) ? ModelQuery.INCLUDE_CHILD_NODES
+							| ModelQuery.INCLUDE_SEQUENCE_GROUPS
+							: ModelQuery.INCLUDE_CHILD_NODES;
+					modelQuery.getInsertActions(parent, parentDecl, index, ic,
+							validityChecking, list);
+				}
+				return list;
+			}
 
 	protected CMElementDeclaration getCMElementDeclaration(Node node) {
 		CMElementDeclaration result = null;
@@ -300,13 +300,13 @@ public class ElementContentAssistRequest extends
 		if (parent == null) {
 			return 0;
 		}
-
+	
 		NodeList children = parent.getChildNodes();
 		if (children == null) {
 			return 0;
 		}
 		int count = 0;
-
+	
 		for (int i = 0; i < children.getLength(); i++) {
 			if (children.item(i) == child) {
 				return count;
@@ -319,51 +319,6 @@ public class ElementContentAssistRequest extends
 	}
 
 	/**
-	 * Retreives cmnode's documentation to display in the completion proposal's
-	 * additional info. If no documentation exists for cmnode, try displaying
-	 * parentOrOwner's documentation
-	 * 
-	 * String any documentation information to display for cmnode.
-	 * <code>null</code> if there is nothing to display.
-	 */
-	protected String getAdditionalInfo(CMNode parentOrOwner, CMNode cmnode) {
-		String addlInfo = null;
-
-		if (cmnode == null) {
-			if (Debug.displayWarnings) {
-				new IllegalArgumentException("Null declaration!").printStackTrace(); //$NON-NLS-1$
-			}
-			return null;
-		}
-
-		addlInfo = getInfoProvider().getInfo(cmnode);
-		if ((addlInfo == null) && (parentOrOwner != null)) {
-			addlInfo = getInfoProvider().getInfo(parentOrOwner);
-		}
-		return addlInfo;
-	}
-
-	/**
-	 * Gets the infoProvider.
-	 * 
-	 * fInfoProvider and if fInfoProvider was <code>null</code> create a new
-	 * instance
-	 */
-	public MarkupTagInfoProvider getInfoProvider() {
-		if (infoProvider == null) {
-			infoProvider = new MarkupTagInfoProvider();
-		}
-		return infoProvider;
-	}
-
-	protected boolean beginsWith(String aString, String prefix) {
-		if ((aString == null) || (prefix == null)) {
-			return true;
-		}
-		return aString.toLowerCase().startsWith(prefix.toLowerCase());
-	}
-
-	/**
 	 * This is the position the cursor should be in after the proposal is
 	 * applied
 	 * 
@@ -371,7 +326,7 @@ public class ElementContentAssistRequest extends
 	 * @return the position the cursor should be in after the proposal is
 	 *         applied
 	 */
-	private int getCursorPositionForProposedText(String proposedText) {
+	protected int getCursorPositionForProposedText(String proposedText) {
 		int cursorAdjustment;
 		cursorAdjustment = proposedText.indexOf("\"\"") + 1; //$NON-NLS-1$
 		// otherwise, after the first tag
@@ -381,7 +336,7 @@ public class ElementContentAssistRequest extends
 		if (cursorAdjustment == 0) {
 			cursorAdjustment = proposedText.length() + 1;
 		}
-
+	
 		return cursorAdjustment;
 	}
 

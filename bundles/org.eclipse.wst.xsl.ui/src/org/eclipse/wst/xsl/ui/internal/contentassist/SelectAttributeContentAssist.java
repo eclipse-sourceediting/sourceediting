@@ -96,7 +96,7 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 		adjustXPathStart();
 		
 		int offset = getReplacementBeginPosition();
-		IDOMAttr attrNode = (IDOMAttr)((IDOMElement)getNode()).getAttributeNode("select");
+		IDOMAttr attrNode = getAttribute("select");
 		
 		this.matchString = extractXPathMatchString(attrNode, getRegion(), getReplacementBeginPosition());
 		
@@ -104,6 +104,11 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 
 		return  getAllCompletionProposals();
     }
+
+
+	private IDOMAttr getAttribute(String attrName) {
+		return (IDOMAttr)((IDOMElement)getNode()).getAttributeNode(attrName);
+	}
 	
 	
 
@@ -145,6 +150,7 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 
 
 	protected void addSelectProposals(Element rootElement, int offset) {
+			addContentModelProposals();
 			addGlobalProposals(rootElement, offset);
 			addLocalProposals(getNode(), offset);
 			addTemplates(TemplateContextTypeIdsXPath.AXIS, offset);
@@ -152,6 +158,16 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 			addTemplates(TemplateContextTypeIdsXPath.CUSTOM, offset);
 			addTemplates(TemplateContextTypeIdsXPath.OPERATOR, offset);
 	}
+
+
+	private void addContentModelProposals() {
+		AbstractXMLElementContentAssistRequest xpathXMLproposals =
+			new XPathElementContentAssist(node, documentRegion, getRegion(), getReplacementBeginPosition(), getReplacementLength(), getMatchString(), textViewer);
+		ArrayList<ICompletionProposal> xmlProposals = xpathXMLproposals.getCompletionProposals();
+		proposals.addAll(xmlProposals);
+	}
+	
+	
 	
 	/**
 	 * Adds XPath related templates to the list of proposals
