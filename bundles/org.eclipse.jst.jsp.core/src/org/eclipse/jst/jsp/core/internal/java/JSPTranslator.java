@@ -157,6 +157,7 @@ public class JSPTranslator {
 	 * the ones needed for AT_END variable support.
 	 */
 	private StackMap fTagToVariableMap = null;
+	private Stack fUseBeansStack = new Stack();
 
 	private StringBuffer fResult; // the final traslated java document
 	// string buffer
@@ -959,6 +960,12 @@ public class JSPTranslator {
 			appendToBuffer("}", fUserCode, false, fStructuredDocument.getLastStructuredDocumentRegion());
 		}
 		fTagToVariableMap.clear();
+
+		// Now do the same for jsp:useBean tags, whose contents get their own {/}
+		while (!fUseBeansStack.isEmpty()) {
+			appendToBuffer("}", fUserCode, false, fStructuredDocument.getLastStructuredDocumentRegion());
+			fUseBeansStack.pop();
+		}
 
 		buildResult();
 	}
@@ -2541,6 +2548,14 @@ public class JSPTranslator {
 		ITextRegion classnameRegion = null;
 		String beanName = null;
 		ITextRegion beanNameRegion = null;
+		
+		if (DOMRegionContext.XML_END_TAG_OPEN.equals(container.getFirstRegion().getType())) {
+			if (!fUseBeansStack.isEmpty()) {
+				fUseBeansStack.pop();
+				appendToBuffer("}", fUserCode, false, fCurrentNode); //$NON-NLS-1$ 
+			}
+			return;
+		}
 
 		Iterator regions = container.getRegions().iterator();
 		while (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && (r.getType() != DOMRegionContext.XML_TAG_CLOSE || r.getType() != DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
@@ -2593,9 +2608,10 @@ public class JSPTranslator {
 				Object problem = createJSPProblem(IJSPProblem.UseBeanAmbiguousType, IProblem.AmbiguousType, JSPCoreMessages.JSPTranslator_2, container.getStartOffset(nameRegion), container.getTextEndOffset(nameRegion) - 1);
 				fTranslationProblems.add(problem);
 			}
-			// Only have a class or a beanName at this point, and potentially
-			// a type
-			// has id w/ type and/or classname/beanName
+			/*
+			 * Only have a class or a beanName at this point, and potentially
+			 * a type has id w/ type and/or classname/beanName
+			 */
 			// Type id = new Classname/Beanname();
 			// or
 			// Type id = null; // if there is no classname or beanname
@@ -2605,6 +2621,7 @@ public class JSPTranslator {
 					typeRegion = classnameRegion;
 				}
 
+				/* Now check the types (multiple of generics may be involved) */
 				List errorTypeNames = new ArrayList(2);
 				if (!isTypeFound(type, errorTypeNames)) {
 					for (int i = 0; i < errorTypeNames.size(); i++) {
@@ -2619,9 +2636,18 @@ public class JSPTranslator {
 						suffix = "new " + className + "();" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$
 					else if (beanName != null)
 						suffix = "(" + type + ") java.beans.Beans.instantiate(getClass().getClassLoader(), \"" + beanName + "\");" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					
 					appendToBuffer(prefix + suffix, fUserCode, true, fCurrentNode);
 				}
 			}
+		}
+		/*
+		 * Add a brace and remember the start tag regardless of whether a
+		 * variable was correctly created
+		 */
+		if (!DOMRegionContext.XML_EMPTY_TAG_CLOSE.equals(container.getLastRegion().getType())) {
+			fUseBeansStack.push(container);
+			appendToBuffer("{", fUserCode, false, fCurrentNode); //$NON-NLS-1$ 
 		}
 	}
 
