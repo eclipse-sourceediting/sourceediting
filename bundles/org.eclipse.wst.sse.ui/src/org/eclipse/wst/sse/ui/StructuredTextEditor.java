@@ -2950,7 +2950,12 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	private void updateMenuText() {
-		if (fStructuredModel != null && !fStructuredModel.isModelStateChanging() && getTextViewer().getTextWidget() != null) {
+		ITextViewer viewer = getTextViewer();
+		StyledText widget = null;
+		if (viewer != null)
+			widget = viewer.getTextWidget();
+
+		if (fStructuredModel != null && !fStructuredModel.isModelStateChanging() && viewer != null && widget != null && !widget.isDisposed()) {
 			// performance: don't force an update of the action bars unless
 			// required as it is expensive
 			String previousUndoText = null;
