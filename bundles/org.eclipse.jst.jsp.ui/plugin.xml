@@ -944,7 +944,7 @@
 		<hyperlinkDetector
 			class="org.eclipse.jst.jsp.ui.internal.hyperlink.JSPJavaHyperlinkDetector"
 			id="org.eclipse.jst.jsp.ui.internal.hyperlink.JSPJavaHyperlinkDetector"
-			name="%JSPJava_hyperlink"
+			name="%Java_Element_hyperlink"
 			targetId="org.eclipse.jst.jsp.core.jspsource">
 		</hyperlinkDetector>
 		<hyperlinkDetector
@@ -952,6 +952,12 @@
 			id="org.eclipse.jst.jsp.ui.internal.hyperlink.TaglibHyperlinkDetector"
 			name="%Taglib_hyperlink"
 			targetId="org.eclipse.jst.jsp.core.jspsource">
+		</hyperlinkDetector>
+		<hyperlinkDetector
+			class="org.eclipse.jst.jsp.ui.internal.hyperlink.XMLJavaHyperlinkDetector"
+			id="org.eclipse.jst.jsp.ui.internal.hyperlink.XMLJavaHyperlinkDetector"
+			name="%Java_Element_hyperlink"
+			targetId="org.eclipse.core.runtime.xml">
 		</hyperlinkDetector>
    </extension>
    

@@ -541,7 +541,7 @@
 		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
 		<target
 			id="org.eclipse.wst.html.core.htmlsource"
-			name="%HTML_Source_target_name">
+			name="%HTML_Editors_target_name">
 		</target>
 	</extension>
 	
