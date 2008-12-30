@@ -172,14 +172,27 @@ public class TestTemplateModeCompletionProposal extends AbstractXSLUITest {
 		//assertEquals("Wrong offset returned", 471, offset);
     	
     	ICompletionProposal[] proposals = getProposals(offset);
-    	assertEquals("Wrong number of mode proposals returned.", 5, proposals.length);
-    	assertEquals("Unexpected mode proposal.", "\"#all\"", proposals[0].getDisplayString());
-    	assertEquals("Unexecpted mode proposal.", "\"#default\"", proposals[1].getDisplayString());
-    	assertEquals("Unexpected mode proposal.", "mode1", proposals[2].getDisplayString());
-    	assertEquals("Unexpected mode proposal.", "mode2", proposals[3].getDisplayString());
-    	assertEquals("Unexpected mode proposal.", "mode3", proposals[4].getDisplayString());
+    	assertProposalExists("\"#all\"", proposals);
+    	assertProposalExists("mode1", proposals);
+    	assertProposalExists("mode2", proposals);
+    	assertProposalExists("mode3", proposals);
 
     	sourceViewer = null;
+    }
+    
+    private void assertProposalExists(String expected, ICompletionProposal[] proposal) throws Exception {
+    	assertNotNull("No proposals.", proposal);
+    	boolean foundsw = false;
+    	for (int i = 0; i < proposal.length; i++) {
+    		if (proposal[i].getDisplayString().equals(expected)) {
+    			foundsw = true;
+    			break;
+    		}
+    	}
+    	
+    	if (!foundsw) {
+    		fail("Proposal " + expected + " was not found in the proposal list.");
+    	}
     }
     
 }
