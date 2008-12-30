@@ -1822,7 +1822,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * @return the document's line tracker
 	 */
 	private ILineTracker getTracker() {
-		Assert.isNotNull(fTracker);
 		return fTracker;
 	}
 
@@ -2573,6 +2572,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 *            the document's line tracker
 	 */
 	private void setLineTracker(ILineTracker tracker) {
+		Assert.isNotNull(tracker);
 		fTracker = tracker;
 	}
 
