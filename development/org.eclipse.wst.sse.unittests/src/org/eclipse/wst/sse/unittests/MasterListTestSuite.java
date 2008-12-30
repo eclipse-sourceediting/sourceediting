@@ -39,6 +39,8 @@ import org.eclipse.wst.xsd.core.tests.internal.AllXSDCoreTests;
 import org.eclipse.wst.xsd.validation.tests.internal.AllXSDTests;
 
 public class MasterListTestSuite extends TestSuite {
+	private static final String CLASS = "class";
+	private static final String EXTENSION_POINT_ID = "org.eclipse.wst.sse.unittests.additionalTests";
 
 	public MasterListTestSuite() {
 		super("All Tests");
@@ -72,25 +74,29 @@ public class MasterListTestSuite extends TestSuite {
 		// addTest(RegressionBucket.suite());
 		// addTest(AllTestCases.suite());
 
-		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.eclipse.wst.sse.unittests.additionalTests");
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(EXTENSION_POINT_ID);
 		for (int i = 0; i < elements.length; i++) {
 			if (elements[i].getName().equals("suite")) {
 				TestSuite suite;
 				try {
-					suite = (TestSuite) elements[i].createExecutableExtension("class");
-					addTest(new TestSuite(suite.getClass()));
+					suite = (TestSuite) elements[i].createExecutableExtension(CLASS);
+					addTestSuite(suite.getClass());
+					System.err.println("Adding TestSuite " + suite.getClass().getName());
 				}
 				catch (CoreException e) {
+					e.printStackTrace(System.err);
 					Platform.getLog(Platform.getBundle("org.eclipse.wst.sse.unittests")).log(e.getStatus());
 				}
 			}
 			else if (elements[i].getName().equals("test")) {
 				Test test;
 				try {
-					test = (Test) elements[i].createExecutableExtension("class");
+					test = (Test) elements[i].createExecutableExtension(CLASS);
 					addTest(new TestSuite(test.getClass()));
+					System.err.println("Adding TestCase " + test.getClass().getName());
 				}
 				catch (CoreException e) {
+					e.printStackTrace(System.err);
 					Platform.getLog(Platform.getBundle("org.eclipse.wst.sse.unittests")).log(e.getStatus());
 				}
 			}
