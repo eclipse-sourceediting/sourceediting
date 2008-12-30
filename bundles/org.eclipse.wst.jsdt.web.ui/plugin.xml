@@ -29,16 +29,6 @@
 			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENTHANDLER" />
 	</extension>
 	
-	<extension
-		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
-		<hyperlinkDetector
-			class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
-			id="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
-			name="%hyperlinkDetector.name.2"
-			targetId="org.eclipse.wst.html.core.htmlsource">
-		</hyperlinkDetector>
-		
-   </extension>
 	
 	
 	
@@ -83,9 +73,15 @@
       <hyperlinkDetector
             class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
             id="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.script.event.JSPJavaHyperlinkDetector"
-            name="%hyperlinkDetector.name.1"
+            name="%hyperlinkDetector.name.0"
             targetId="org.eclipse.wst.html.SCRIPT.EVENTHANDLER">
       </hyperlinkDetector>  
+      <hyperlinkDetector
+			class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
+			id="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
+			name="%hyperlinkDetector.name.0"
+			targetId="org.eclipse.wst.html.core.htmlsource">
+      </hyperlinkDetector>
    </extension>
   
   
