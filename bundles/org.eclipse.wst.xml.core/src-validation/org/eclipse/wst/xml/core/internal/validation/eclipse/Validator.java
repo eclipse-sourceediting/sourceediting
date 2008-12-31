@@ -66,15 +66,7 @@ public class Validator extends AbstractNestedValidator
       // TODO: Unable to set the preference. Log this problem.
     }
     
-    XMLValidationReport valreport = null;
-    if (inputstream != null)
-    {
-      valreport = validator.validate(uri, inputstream, configuration, result, context);
-    }
-    else
-    {
-      valreport = validator.validate(uri, null, configuration, result, context);
-    }
+    XMLValidationReport valreport = validator.validate(uri, inputstream, configuration, result, context);
               
     return valreport;
   }
