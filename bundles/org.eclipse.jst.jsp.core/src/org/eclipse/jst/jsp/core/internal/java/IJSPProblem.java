@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2008, 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.java;
 
 import org.eclipse.jdt.core.compiler.IProblem;
@@ -16,6 +26,8 @@ public interface IJSPProblem extends IProblem {
 	int UseBeanAmbiguousType  = F_PROBLEM_ID_LITERAL + 8;
 	int StartCustomTagMissing  = F_PROBLEM_ID_LITERAL + 9;
 	int EndCustomTagMissing  = F_PROBLEM_ID_LITERAL + 10;
+	int UseBeanStartTagMissing  = F_PROBLEM_ID_LITERAL + 11;
+	int UseBeanEndTagMissing  = F_PROBLEM_ID_LITERAL + 12;
 	
 	/**
 	 * @return the ID of this JSP problem
