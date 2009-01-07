@@ -14,6 +14,7 @@ package org.eclipse.wst.sse.ui.internal.reconcile.validator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -183,26 +184,40 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 		Set disabledValsByClass = new HashSet(20);
 		IFile file = getFile();
 		if (file != null) {
-			for (Iterator it = ValidationFramework.getDefault().getDisabledValidatorsFor(file).iterator(); it.hasNext();) {
-				Validator v = (Validator) it.next();
-				IValidator iv = null;
-				try {
-					iv = v.asIValidator();
+			Collection disabledValidators = null;
+			try {
+				/*
+				 * Take extra care when calling this external code, as it
+				 * can indirectly cause bundles to start
+				 */
+				disabledValidators = ValidationFramework.getDefault().getDisabledValidatorsFor(file);
+			}
+			catch (Exception e) {
+				Logger.logException(e);
+			}
+
+			if (disabledValidators != null) {
+				for (Iterator it = disabledValidators.iterator(); it.hasNext();) {
+					Validator v = (Validator) it.next();
+					IValidator iv = null;
+					try {
+						iv = v.asIValidator();
+					}
+					catch (Exception e) {
+						Logger.logException(e);
+					}
+					if (iv != null && v.getSourceId() != null)
+						disabledValsBySourceId.add(v.getSourceId());
+					Validator.V1 v1 = null;
+					try {
+						v1 = v.asV1Validator();
+					}
+					catch (Exception e) {
+						Logger.logException(e);
+					}
+					if (v1 != null)
+						disabledValsByClass.add(v1.getId());
 				}
-				catch (Exception e) {
-					Logger.logException(e);
-				}
-				if (iv != null && v.getSourceId() != null)
-					disabledValsBySourceId.add(v.getSourceId());
-				Validator.V1 v1 = null;
-				try {
-					v1 = v.asV1Validator();
-				}
-				catch (Exception e) {
-					Logger.logException(e);
-				}
-				if (v1 != null)
-					disabledValsByClass.add(v1.getId());
 			}
 		}
 				
