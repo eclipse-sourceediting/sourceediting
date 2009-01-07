@@ -14,7 +14,9 @@ package org.eclipse.wst.xml.core.internal.commentelement.impl;
 
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -40,28 +42,24 @@ public class CommentElementConfiguration {
 	private String[] fPrefix = null;
 	private boolean fXMLComment;
 
-	CommentElementConfiguration() {
-		super();
-	}
-
 	CommentElementConfiguration(IConfigurationElement element) {
 		super();
 		fElement = element;
-		fCustom = (element.getName().equalsIgnoreCase("handler-custom")) ? true : false; //$NON-NLS-1$
+		fCustom = element.getName().equalsIgnoreCase("handler-custom"); //$NON-NLS-1$
 
 		fillAttributes(element);
 
 		fXMLComment = fJSPComment = false;
 		String commentType = getProperty("commenttype"); //$NON-NLS-1$
-		if (commentType.equalsIgnoreCase("xml")) { //$NON-NLS-1$
+		if ("xml".equalsIgnoreCase(commentType)) { //$NON-NLS-1$
 			fXMLComment = true;
-		} else if (commentType.equalsIgnoreCase("jsp")) { //$NON-NLS-1$
+		} else if ("jsp".equalsIgnoreCase(commentType)) { //$NON-NLS-1$
 			fJSPComment = true;
-		} else if (commentType.equalsIgnoreCase("both")) { //$NON-NLS-1$
+		} else if ("both".equalsIgnoreCase(commentType)) { //$NON-NLS-1$
 			fXMLComment = fJSPComment = true;
 		}
 		String empty = getProperty("isempty"); //$NON-NLS-1$
-		fEmpty = (empty != null && !empty.equals("false")) ? true : false; //$NON-NLS-1$
+		fEmpty = Boolean.valueOf(empty).booleanValue(); //$NON-NLS-1$
 	}
 
 	public boolean acceptJSPComment() {
@@ -108,7 +106,9 @@ public class CommentElementConfiguration {
 						fHandler = (CommentElementHandler) fElement.createExecutableExtension("class"); //$NON-NLS-1$
 					} else {
 						String elementName = getProperty("elementname"); //$NON-NLS-1$
-						fHandler = new BasicCommentElementHandler(elementName, fEmpty);
+						if (elementName != null) {
+							fHandler = new BasicCommentElementHandler(elementName, fEmpty);
+						}
 					}
 					//					((AbstractCommentElementHandler)fHandler).setElementPrefix(fElement.getAttribute("prefix"));
 				} catch (Exception e) {
@@ -175,10 +175,14 @@ public class CommentElementConfiguration {
 				if (isCustom()) { // custom
 					IConfigurationElement[] prefixes = fElement.getChildren("startwith"); //$NON-NLS-1$	
 					if (prefixes != null) {
-						fPrefix = new String[prefixes.length];
+						List prefixValues = new ArrayList(prefixes.length);
 						for (int i = 0; i < prefixes.length; i++) {
-							fPrefix[i] = prefixes[i].getAttribute("prefix"); //$NON-NLS-1$	
+							String prefix = prefixes[i].getAttribute("prefix"); //$NON-NLS-1$
+							if (prefix != null)
+								prefixValues.add(prefix);
 						}
+						if (!prefixValues.isEmpty())
+							fPrefix = (String[]) prefixValues.toArray(new String[prefixValues.size()]);
 					}
 				} else { // basic
 					String name = getProperty("elementname"); //$NON-NLS-1$
@@ -196,8 +200,7 @@ public class CommentElementConfiguration {
 			}
 		}
 		if (fPrefix == null) {
-			fPrefix = new String[1];
-			fPrefix[0] = ""; //$NON-NLS-1$
+			fPrefix = new String[]{""}; //$NON-NLS-1$
 		}
 		return fPrefix;
 	}
