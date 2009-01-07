@@ -105,6 +105,15 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 							language = StringUtils.strip(node.getText(region));
 						else if (attrName.equalsIgnoreCase(HTML40Namespace.ATTR_NAME_TYPE)) {
 							type = StringUtils.strip(node.getText(region));
+							/*
+							 * Avoid partition names built with MIME subtypes,
+							 * e.g. type="text/javascript;e4x=1"
+							 */
+							if (type != null) {
+								int index = type.indexOf(';');
+								if (index > 1)
+									type = type.substring(0, index);
+							}
 							break;
 						}
 						attrNameRegion = null;
