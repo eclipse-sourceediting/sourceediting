@@ -1091,8 +1091,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, startOfChanges, lengthToReplace, changes);
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-		assertTrue("part 1: text update", result);
+		assertEquals("part 1: text update", expectedString, resultString);
 		assertTrue("part 1: event type", eventResult);
 
 		// step 2
@@ -1108,8 +1107,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, startOfChanges, lengthToReplace, changes);
 		resultString = fModel.getText();
 
-		result = (expectedString.equals(resultString));
-		assertTrue("part 2: text update", result);
+		assertEquals("part 2: text update", expectedString, resultString);
 		assertTrue("part 2: event type", eventResult);
 
 		eventCase = 29;
@@ -1122,8 +1120,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, startOfChanges, lengthToReplace, changes);
 		resultString = fModel.getText();
 
-		result = (expectedString.equals(resultString));
-		assertTrue("part 3: text update", result);
+		assertEquals("part 3: text update", expectedString, resultString);
 		assertTrue("part 3: event type", eventResult);
 
 		eventCase = 30;
@@ -1136,8 +1133,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, startOfChanges, lengthToReplace, changes);
 		resultString = fModel.getText();
 
-		result = (expectedString.equals(resultString));
-		assertTrue("part 4: text update", result);
+		assertEquals("part 4: text update", expectedString, resultString);
 		assertTrue("part 4: event type", eventResult);
 	}
 
@@ -1268,9 +1264,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, 9, 9, "");
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 	}
 
@@ -1290,9 +1284,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, 5, 9, "");
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 	}
 
@@ -1312,9 +1304,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, 14, 9, "");
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 	}
 
@@ -1334,9 +1324,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, 5, 5, "<JKL>");
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 	}
 
@@ -1356,9 +1344,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, 4, 3, "");
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 	}
 
@@ -1378,9 +1364,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, 5, 0, " ");
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 	}
 
@@ -1400,9 +1384,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, 6, 0, "z");
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 	}
 
@@ -1422,9 +1404,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, 6, 1, "z=\"t\"");
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 	}
 
@@ -1444,9 +1424,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, 4, 3, "c z");
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 	}
 
@@ -1465,9 +1443,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, 20, 0, "Q");
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 
 	}
@@ -1489,9 +1465,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, 28, 1, "\rBODY {\r\r}");
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 	}
 
@@ -1512,9 +1486,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, 343, 1, "\rBODY {\r\r}");
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 	}
 
@@ -1534,9 +1506,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, 0, 9, "");
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 	}
 
@@ -1564,9 +1534,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, startOfChanges, lengthToReplace, changes);
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 	}
 
@@ -1586,9 +1554,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, 0, 15, "<ABC><JKL><GHI>");
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 	}
 
@@ -1607,9 +1573,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, 10, 0, "");
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 	}
 
@@ -1629,9 +1593,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, 0, 15, "<ABC><DEF><GHI>");
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 	}
 
@@ -1651,9 +1613,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, 3, 0, "<B></B>");
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 	}
 
@@ -1673,9 +1633,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, 6, 0, "<B></B>");
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 	}
 
@@ -1695,9 +1653,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, 10, 0, "<P>");
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 	}
 
@@ -1724,10 +1680,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, startOfChanges, lengthToReplace, changes);
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		//  ?	assertTrue(result); // && eventResult);
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 
 	}
@@ -1749,10 +1702,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, startOfChanges, lengthToReplace, changes);
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		//	assertTrue(result); // && eventResult);
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 
 	}
@@ -1774,10 +1724,7 @@ public class UnitTests extends TestCase {
 		fModel.replaceText(null, startOfChanges, lengthToReplace, changes);
 		String resultString = fModel.getText();
 
-		boolean result = (expectedString.equals(resultString));
-
-		//	assertTrue(result); // && eventResult);
-		assertTrue("text update", result);
+		assertEquals(expectedString, resultString);
 		assertTrue("event type", eventResult);
 
 	}
