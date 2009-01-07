@@ -213,7 +213,7 @@ public class JSPTaglibDirectiveContentAssistProcessor extends JSPDummyContentAss
 								Logger.logException(e);
 							}
 						}
-						String additionalInfo = descriptor.getDescription() + "<br/>" + descriptor.getTlibVersion();
+						String additionalInfo = descriptor.getDisplayName() + "<br/>" + descriptor.getDescription() + "<br/>" + descriptor.getTlibVersion();
 						Image image = null;
 						try {
 							image = JSPUIPlugin.getInstance().getImageRegistry().get(url);
