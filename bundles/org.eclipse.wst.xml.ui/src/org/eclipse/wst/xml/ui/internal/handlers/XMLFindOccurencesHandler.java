@@ -30,6 +30,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.search.FindOccurrencesProcessor;
 import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
@@ -94,12 +95,26 @@ public class XMLFindOccurencesHandler extends AbstractHandler implements IHandle
 		String partition = tr != null ? tr.getType() : ""; //$NON-NLS-1$
 
 		Iterator it = getProcessors().iterator();
-		FindOccurrencesProcessor action = null;
+		FindOccurrencesProcessor processor = null;
 		while (it.hasNext()) {
-			action = (FindOccurrencesProcessor) it.next();
+			processor = (FindOccurrencesProcessor) it.next();
 			// we just choose the first action that can handle the partition
-			if (action.enabledForParitition(partition))
-				return action;
+			if (processor.enabledForParitition(partition))
+				return processor;
+		}
+
+		List extendedFindOccurrencesProcessors = ExtendedConfigurationBuilder.getInstance().getConfigurations(FindOccurrencesProcessor.class.getName(), partition);
+		for (int i = 0; i < extendedFindOccurrencesProcessors.size(); i++) {
+			Object o = extendedFindOccurrencesProcessors.get(i);
+			if (o instanceof FindOccurrencesProcessor) {
+				/*
+				 * We just choose the first registered processor that
+				 * explicitly says it can handle the partition
+				 */
+				processor = (FindOccurrencesProcessor) it.next();
+				if (processor.enabledForParitition(partition))
+					return processor;
+			}
 		}
 		return null;
 	}
