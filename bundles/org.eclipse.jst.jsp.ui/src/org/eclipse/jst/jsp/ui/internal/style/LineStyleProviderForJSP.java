@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -101,6 +101,8 @@ public class LineStyleProviderForJSP extends AbstractLineStyleProvider implement
 					result = (TextAttribute) getTextAttributes().get(IStyleConstantsXML.XML_CONTENT);
 				else if (type == DOMRegionContext.BLOCK_TEXT)
 					result = (TextAttribute) getTextAttributes().get(IStyleConstantsXML.CDATA_TEXT);
+				else if (type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE||type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE)
+					result = (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
 			}
 		}
 		// default, return null to signal "not handled"

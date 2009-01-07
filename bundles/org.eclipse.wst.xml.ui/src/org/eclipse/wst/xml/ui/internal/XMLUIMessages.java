@@ -31,6 +31,7 @@ public class XMLUIMessages extends NLS {
 	public static String Tag_Delimiters_UI_;
 	public static String Tag_Names_UI_;
 	public static String Attribute_Names_UI_;
+	public static String Attribute_Equals_UI_;
 	public static String Attribute_Values_UI_;
 	public static String Declaration_Delimiters_UI_;
 	public static String Content_UI_;

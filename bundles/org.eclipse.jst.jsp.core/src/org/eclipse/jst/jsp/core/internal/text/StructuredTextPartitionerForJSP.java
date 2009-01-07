@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -243,6 +243,8 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			result = IJSPPartitions.JSP_DEFAULT_EL;
 		else if (region_type == DOMJSPRegionContexts.JSP_VBL_OPEN || region_type == DOMJSPRegionContexts.JSP_VBL_CONTENT || region_type == DOMJSPRegionContexts.JSP_VBL_CLOSE || region_type == DOMJSPRegionContexts.JSP_VBL_DQUOTE || region_type == DOMJSPRegionContexts.JSP_VBL_SQUOTE || region_type == DOMJSPRegionContexts.JSP_VBL_QUOTED_CONTENT)
 			result = IJSPPartitions.JSP_DEFAULT_EL2;
+		else if (region_type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE || region_type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE)
+			result = IJSPPartitions.JSP_DEFAULT;
 		else if (region_type == DOMRegionContext.XML_CDATA_TEXT) {
 			// BUG131463: possibly between <jsp:scriptlet>, <jsp:expression>,
 			// <jsp:declaration>
@@ -261,6 +263,15 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			else
 				result = getDefaultPartitionType();
 		}
+//		else if (region_type == DOMRegionContext.BLOCK_TEXT) {
+			// possibly between <jsp:scriptlet>, <jsp:expression>,
+			// <jsp:declaration>
+//			IStructuredDocumentRegion sdRegion = this.fStructuredDocument.getRegionAtCharacterOffset(offset);
+//			if (isJspJavaActionName(getParentName(sdRegion)))
+//				result = getPartitionTypeForDocumentLanguage();
+//			else
+//				result = getDefaultPartitionType();
+//		}
 		else {
 			result = getEmbeddedPartitioner().getPartitionType(region, offset);
 		}

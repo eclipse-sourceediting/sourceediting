@@ -671,6 +671,7 @@ public final class XMLSyntaxColoringPage extends PreferencePage implements IWork
 			styles.add(IStyleConstantsXML.TAG_BORDER);
 			styles.add(IStyleConstantsXML.TAG_NAME);
 			styles.add(IStyleConstantsXML.TAG_ATTRIBUTE_NAME);
+			styles.add(IStyleConstantsXML.TAG_ATTRIBUTE_EQUALS);
 			styles.add(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
 			styles.add(IStyleConstantsXML.COMMENT_BORDER);
 			styles.add(IStyleConstantsXML.COMMENT_TEXT);
@@ -772,6 +773,7 @@ public final class XMLSyntaxColoringPage extends PreferencePage implements IWork
 		fContextToStyleMap.put(DOMRegionContext.XML_END_TAG_OPEN, IStyleConstantsXML.TAG_BORDER);
 		fContextToStyleMap.put(DOMRegionContext.XML_TAG_NAME, IStyleConstantsXML.TAG_NAME);
 		fContextToStyleMap.put(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME, IStyleConstantsXML.TAG_ATTRIBUTE_NAME);
+		fContextToStyleMap.put(DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS, IStyleConstantsXML.TAG_ATTRIBUTE_EQUALS);
 		fContextToStyleMap.put(DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE, IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
 		fContextToStyleMap.put(DOMRegionContext.XML_TAG_CLOSE, IStyleConstantsXML.TAG_BORDER);
 		fContextToStyleMap.put(DOMRegionContext.XML_EMPTY_TAG_CLOSE, IStyleConstantsXML.TAG_BORDER);
@@ -814,6 +816,7 @@ public final class XMLSyntaxColoringPage extends PreferencePage implements IWork
 		fStyleToDescriptionMap.put(IStyleConstantsXML.TAG_BORDER, XMLUIMessages.Tag_Delimiters_UI_);
 		fStyleToDescriptionMap.put(IStyleConstantsXML.TAG_NAME, XMLUIMessages.Tag_Names_UI_);
 		fStyleToDescriptionMap.put(IStyleConstantsXML.TAG_ATTRIBUTE_NAME, XMLUIMessages.Attribute_Names_UI_);
+		fStyleToDescriptionMap.put(IStyleConstantsXML.TAG_ATTRIBUTE_EQUALS, XMLUIMessages.Attribute_Equals_UI_);
 		fStyleToDescriptionMap.put(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE, XMLUIMessages.Attribute_Values_UI_);
 		fStyleToDescriptionMap.put(IStyleConstantsXML.DECL_BORDER, XMLUIMessages.Declaration_Delimiters_UI_);
 		fStyleToDescriptionMap.put(IStyleConstantsXML.XML_CONTENT, XMLUIMessages.Content_UI_);
