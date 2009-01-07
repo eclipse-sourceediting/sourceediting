@@ -51,7 +51,7 @@ public class TestStructuredPartitionerJSP extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example01.jsp");
 		assertEquals("wrong number of partitions", expectedPartitions, nPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{IJSPPartitions.JSP_DIRECTIVE, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_DIRECTIVE, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, IHTMLPartitions.HTML_DEFAULT});
+		verifyPartitionTypes(partitions, new String[]{IJSPPartitions.JSP_DIRECTIVE, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_DIRECTIVE, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_DEFAULT, IHTMLPartitions.HTML_DEFAULT});
 	}
 
 	public void testJSP2() throws IOException, BadLocationException {
@@ -59,7 +59,7 @@ public class TestStructuredPartitionerJSP extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example02.jsp");
 		assertEquals("wrong number of partitions", expectedPartitions, nPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.HTML_COMMENT, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, IHTMLPartitions.HTML_DEFAULT});
+		verifyPartitionTypes(partitions, new String[]{IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.HTML_COMMENT, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_DEFAULT, IHTMLPartitions.HTML_DEFAULT});
 	}
 
 	public void testJSP3() throws IOException, BadLocationException {
