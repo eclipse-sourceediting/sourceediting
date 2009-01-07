@@ -277,6 +277,26 @@
          <group id="org.eclipse.wst.sse.core.structuredModelGroup"/>
       </validator>
    </extension>
+   
+   <extension id="TLDValidator" name="%TLDValidator.name" point="org.eclipse.wst.validation.validatorV2">
+      <validator
+            build="false"
+            class="org.eclipse.jst.jsp.core.taglib.TLDValidator"
+            manual="false"
+            version="1"
+            markerId="org.eclipse.jst.jsp.core.validationMarker">
+         <include>
+            <rules>
+				<contentType id="org.eclipse.jst.jsp.core.tldsource"/>
+               <fileext
+                     caseSensitive="false"
+                     ext="tld">
+               </fileext>
+           </rules>
+         </include>
+         <group id="org.eclipse.wst.sse.core.structuredModelGroup"/>
+      </validator>
+   </extension>
 		
     <extension
        point="org.eclipse.jst.jsp.core.elTranslator">
