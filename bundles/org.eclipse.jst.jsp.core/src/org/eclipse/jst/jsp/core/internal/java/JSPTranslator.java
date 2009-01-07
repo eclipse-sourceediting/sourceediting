@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -157,6 +157,7 @@ public class JSPTranslator {
 	 * the ones needed for AT_END variable support.
 	 */
 	private StackMap fTagToVariableMap = null;
+	private Stack fUseBeansStack = new Stack();
 
 	private StringBuffer fResult; // the final traslated java document
 	// string buffer
@@ -998,6 +999,17 @@ public class JSPTranslator {
 			appendToBuffer("}", fUserCode, false, fStructuredDocument.getLastStructuredDocumentRegion());
 		}
 		fTagToVariableMap.clear();
+
+		/*
+		 * Now do the same for jsp:useBean tags, whose contents get their own
+		 * { & }
+		 */
+		while (!fUseBeansStack.isEmpty()) {
+			appendToBuffer("}", fUserCode, false, fStructuredDocument.getLastStructuredDocumentRegion());
+			ITextRegionCollection extraStartRegion = (ITextRegionCollection) fUseBeansStack.pop();
+			IJSPProblem missingEndTag = createJSPProblem(IJSPProblem.UseBeanEndTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, "", extraStartRegion.getStartOffset(), extraStartRegion.getEndOffset());
+			fTranslationProblems.add(missingEndTag);
+		}
 
 		buildResult();
 	}
@@ -2581,6 +2593,20 @@ public class JSPTranslator {
 		String beanName = null;
 		ITextRegion beanNameRegion = null;
 
+		if (DOMRegionContext.XML_END_TAG_OPEN.equals(container.getFirstRegion().getType())) {
+			if (!fUseBeansStack.isEmpty()) {
+				fUseBeansStack.pop();
+				appendToBuffer("}", fUserCode, false, fCurrentNode); //$NON-NLS-1$ 
+			}
+			else {
+				// no useBean start tag being remembered
+				ITextRegionCollection extraEndRegion = (ITextRegionCollection) fUseBeansStack.pop();
+				IJSPProblem missingStartTag = createJSPProblem(IJSPProblem.UseBeanStartTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, "", extraEndRegion.getStartOffset(), extraEndRegion.getEndOffset());
+				fTranslationProblems.add(missingStartTag);
+			}
+			return;
+		}
+
 		Iterator regions = container.getRegions().iterator();
 		while (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && (r.getType() != DOMRegionContext.XML_TAG_CLOSE || r.getType() != DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
 			attrName = attrValue = null;
@@ -2663,6 +2689,14 @@ public class JSPTranslator {
 					appendToBuffer(prefix + suffix, fUserCode, true, fCurrentNode);
 				}
 			}
+		}
+		/*
+		 * Add a brace and remember the start tag regardless of whether a
+		 * variable was correctly created
+		 */
+		if (!DOMRegionContext.XML_EMPTY_TAG_CLOSE.equals(container.getLastRegion().getType())) {
+			fUseBeansStack.push(container);
+			appendToBuffer("{", fUserCode, false, fCurrentNode); //$NON-NLS-1$ 
 		}
 	}
 
