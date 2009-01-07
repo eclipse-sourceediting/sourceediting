@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,77 +36,80 @@ public class LineStyleProviderForXML extends AbstractLineStyleProvider implement
 		if (region == null) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.CDATA_TEXT);
 		}
+		
 		String type = region.getType();
 		if ((type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_DOCTYPE_INTERNAL_SUBSET)) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.XML_CONTENT);
 		}
-		else if ((type == DOMRegionContext.XML_TAG_OPEN) || (type == DOMRegionContext.XML_END_TAG_OPEN) || (type == DOMRegionContext.XML_TAG_CLOSE) || (type == DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
+		if ((type == DOMRegionContext.XML_TAG_OPEN) || (type == DOMRegionContext.XML_END_TAG_OPEN) || (type == DOMRegionContext.XML_TAG_CLOSE) || (type == DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_BORDER);
 		}
-		else if ((type == DOMRegionContext.XML_CDATA_OPEN) || (type == DOMRegionContext.XML_CDATA_CLOSE)) {
+		if ((type == DOMRegionContext.XML_CDATA_OPEN) || (type == DOMRegionContext.XML_CDATA_CLOSE)) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.CDATA_BORDER);
 		}
-		else if (type == DOMRegionContext.XML_CDATA_TEXT) {
+		if (type == DOMRegionContext.XML_CDATA_TEXT) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.CDATA_TEXT);
 		}
-		else if (type == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+		if (type == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_ATTRIBUTE_NAME);
 		}
-		else if (type == DOMRegionContext.XML_DOCTYPE_DECLARATION) {
+		if (type == DOMRegionContext.XML_DOCTYPE_DECLARATION) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_NAME);
 		}
-		else if (type == DOMRegionContext.XML_TAG_NAME) {
+		if (type == DOMRegionContext.XML_TAG_NAME) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_NAME);
 		}
-		else if ((type == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
+		if ((type == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
 		}
-		else if (type == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+		if (type == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_ATTRIBUTE_EQUALS);
 		}
-		else if ((type == DOMRegionContext.XML_COMMENT_OPEN) || (type == DOMRegionContext.XML_COMMENT_CLOSE)) {
+		if ((type == DOMRegionContext.XML_COMMENT_OPEN) || (type == DOMRegionContext.XML_COMMENT_CLOSE)) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.COMMENT_BORDER);
 		}
-		else if (type == DOMRegionContext.XML_COMMENT_TEXT) {
+		if (type == DOMRegionContext.XML_COMMENT_TEXT) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.COMMENT_TEXT);
 		}
-		else if (type == DOMRegionContext.XML_DOCTYPE_NAME) {
+		if (type == DOMRegionContext.XML_DOCTYPE_NAME) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.DOCTYPE_NAME);
 		}
-		else if ((type == DOMRegionContext.XML_CHAR_REFERENCE) || (type == DOMRegionContext.XML_ENTITY_REFERENCE) || (type == DOMRegionContext.XML_PE_REFERENCE)) {
+		if ((type == DOMRegionContext.XML_CHAR_REFERENCE) || (type == DOMRegionContext.XML_ENTITY_REFERENCE) || (type == DOMRegionContext.XML_PE_REFERENCE)) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.ENTITY_REFERENCE);
 		}
-		else if (type == DOMRegionContext.XML_PI_CONTENT) {
+		if (type == DOMRegionContext.XML_PI_CONTENT) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.PI_CONTENT);
 		}
-		else if ((type == DOMRegionContext.XML_PI_OPEN) || (type == DOMRegionContext.XML_PI_CLOSE)) {
+		if ((type == DOMRegionContext.XML_PI_OPEN) || (type == DOMRegionContext.XML_PI_CLOSE)) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.PI_BORDER);
 		}
-		else if ((type == DOMRegionContext.XML_DECLARATION_OPEN) || (type == DOMRegionContext.XML_DECLARATION_CLOSE)) {
+		if ((type == DOMRegionContext.XML_DECLARATION_OPEN) || (type == DOMRegionContext.XML_DECLARATION_CLOSE)) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.DECL_BORDER);
 		}
-		else if (type == DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSREF) {
+		if (type == DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSREF) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_SYSREF);
 		}
-		else if (type == DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_PUBREF) {
+		if (type == DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_PUBREF) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_PUBREF);
 		}
-		else if ((type == DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_PUBLIC) || (type == DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSTEM)) {
+		if ((type == DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_PUBLIC) || (type == DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSTEM)) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID);
 		}
-		else if (type == DOMRegionContext.UNDEFINED) {
+		if (type == DOMRegionContext.UNDEFINED) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.CDATA_TEXT);
 		}
-		else if (type == DOMRegionContext.WHITE_SPACE) {
-			// white space is normall not on its own ... but when it is, we'll
-			// treat as content
+		if (type == DOMRegionContext.WHITE_SPACE) {
+			/*
+			 * White space is normally not on its own ... but when it is,
+			 * we'll treat as content
+			 */
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.XML_CONTENT);
 		}
-		else {
-			// default, return null to signal "not handled"
-			// in which case, other factories should be tried
-			return null;
-		}
+		/*
+		 * default, return null to signal "not handled" in which case, other
+		 * providers should be tried
+		 */
+		return null;
 	}
 
 	protected IPreferenceStore getColorPreferences() {
