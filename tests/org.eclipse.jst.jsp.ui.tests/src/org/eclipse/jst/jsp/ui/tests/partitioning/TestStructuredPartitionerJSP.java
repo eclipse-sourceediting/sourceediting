@@ -47,7 +47,7 @@ public class TestStructuredPartitionerJSP extends TestCase {
 	public void testJSP1() throws IOException, BadLocationException { // DW 05/01/2003 I modified this test, after creating test6, 
 		// and changing partioner to pick up end *> as part of page directive
 		// partition (for highlighting to work right).
-		int expectedPartitions = 8;
+		int expectedPartitions = 10;
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example01.jsp");
 		assertEquals("wrong number of partitions", expectedPartitions, nPartitions);
 		checkSeams();
@@ -55,7 +55,7 @@ public class TestStructuredPartitionerJSP extends TestCase {
 	}
 
 	public void testJSP2() throws IOException, BadLocationException {
-		int expectedPartitions = 11;
+		int expectedPartitions = 13;
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example02.jsp");
 		assertEquals("wrong number of partitions", expectedPartitions, nPartitions);
 		checkSeams();
