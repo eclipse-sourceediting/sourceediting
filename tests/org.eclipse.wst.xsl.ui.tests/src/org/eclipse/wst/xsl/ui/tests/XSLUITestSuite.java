@@ -14,7 +14,6 @@ package org.eclipse.wst.xsl.ui.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.wst.xsl.ui.internal.contentassist.CallTemplateContentAssistRequest;
 import org.eclipse.wst.xsl.ui.internal.validation.TestDelegatingSourceValidatorForXSL;
 import org.eclipse.wst.xsl.ui.tests.contentassist.TestCallTemplateCompletionProposal;
 import org.eclipse.wst.xsl.ui.tests.contentassist.TestElementCompletionProposal;
