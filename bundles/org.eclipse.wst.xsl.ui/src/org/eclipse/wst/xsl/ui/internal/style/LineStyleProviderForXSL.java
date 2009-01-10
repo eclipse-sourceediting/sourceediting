@@ -24,12 +24,14 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.Debug;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.internal.provisional.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.style.Highlighter;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
@@ -37,6 +39,7 @@ import org.eclipse.wst.sse.ui.internal.provisional.style.ReconcilerHighlighter;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
+import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 
 /**
  * This implements a Syntax Line Style Provider for XSL. It leverages some
@@ -47,16 +50,29 @@ import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
  * @since 1.0
  * 
  */
-public class LineStyleProviderForXSL extends AbstractLineStyleProvider
-		implements LineStyleProvider {
+public class LineStyleProviderForXSL extends AbstractLineStyleProvider implements LineStyleProvider {
 
 	protected IStructuredDocument structuredDocument;
 	protected Highlighter highlighter;
 	private boolean initialized;
-	protected PropertyChangeListener preferenceListener = new PropertyChangeListener();
 	protected ReconcilerHighlighter recHighlighter = null;
 
 	private IPreferenceStore xmlPreferenceStore = null;
+	private IPreferenceStore xslPreferenceStore = null;
+	private IPreferenceStore combinedPreferenceStore = null;
+	private IPropertyChangeListener preferenceListener  = new PropertyChangeListener();
+	
+	private class PropertyChangeListener implements IPropertyChangeListener {
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+		 */
+		public void propertyChange(PropertyChangeEvent event) {
+			// have to do it this way so others can override the method
+			handlePropertyChange(event);
+		}
+	}	
 
 	protected void commonInit(IStructuredDocument document,
 			Highlighter highlighter) {
@@ -191,10 +207,6 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider
 								previousAttr);
 					}
 				}
-
-				if (Debug.syntaxHighlighting && !handled) {
-					System.out.println("not handled in prepareRegions"); //$NON-NLS-1$
-				}
 			}
 			structuredDocumentRegion = structuredDocumentRegion.getNext();
 		}
@@ -290,29 +302,69 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider
 		if (styleKey == null)
 			return;
 
-		// addXSLTextAttribute(styleKey);
+		if (styleKey != null) {
+			// overwrite style preference with new value
+			addTextAttribute(styleKey);
+		}
+		
+		if(recHighlighter != null)
+			recHighlighter.refreshDisplay();
+		
 	}
+	
+	/**
+	 * Looks up the colorKey in the preference store and adds the style
+	 * information to list of TextAttributes
+	 * 
+	 * @param colorKey
+	 */
+	protected void addTextAttribute(String colorKey) {
+		if (getColorPreferences() != null) {
+			String prefString = getColorPreferences().getString(colorKey);
+			String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
+			if (stylePrefs != null) {
+				RGB foreground = ColorHelper.toRGB(stylePrefs[0]);
+				RGB background = ColorHelper.toRGB(stylePrefs[1]);
+				boolean bold = Boolean.valueOf(stylePrefs[2]).booleanValue();
+				boolean italic = Boolean.valueOf(stylePrefs[3]).booleanValue();
+				boolean strikethrough = Boolean.valueOf(stylePrefs[4]).booleanValue();
+				boolean underline = Boolean.valueOf(stylePrefs[5]).booleanValue();
+				int style = SWT.NORMAL;
+				if (bold) {
+					style = style | SWT.BOLD;
+				}
+				if (italic) {
+					style = style | SWT.ITALIC;
+				}
+				if (strikethrough) {
+					style = style | TextAttribute.STRIKETHROUGH;
+				}
+				if (underline) {
+					style = style | TextAttribute.UNDERLINE;
+				}
 
-	private class PropertyChangeListener implements IPropertyChangeListener {
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see
-		 * org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org
-		 * .eclipse.jface.util.PropertyChangeEvent)
-		 */
-		public void propertyChange(PropertyChangeEvent event) {
-			// have to do it this way so others can override the method
-			handlePropertyChange(event);
+				updateTextAttribute(colorKey, foreground, background, style);
+			}
 		}
 	}
 
-	protected IPreferenceStore getXMLColorPreferences() {
-		if (xmlPreferenceStore == null) {
-			xmlPreferenceStore = XMLUIPlugin.getDefault().getPreferenceStore();
+	private void updateTextAttribute(String colorKey, RGB foreground,
+			RGB background, int style) {
+		TextAttribute createTextAttribute = createTextAttribute(foreground, background, style);
+		
+		TextAttribute textAttribute =
+			XSLTextAttributeMap.getInstance().getTextAttributeMap().get(colorKey);
+		if (textAttribute != null) {
+			XSLTextAttributeMap.getInstance().getTextAttributeMap().put(colorKey, createTextAttribute);
+			return;
 		}
-		return xmlPreferenceStore;
-	}
+		
+		textAttribute =
+				XMLTextAttributeMap.getInstance().getTextAttributeMap().get(colorKey);
+		if (textAttribute != null) {
+			XMLTextAttributeMap.getInstance().getTextAttributeMap().put(colorKey, createTextAttribute);
+		}
+	}	
 
 	/*
 	 * (non-Javadoc)
@@ -375,15 +427,18 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider
 		setInitialized(false);
 	}
 
-	@Override
 	protected void unRegisterPreferenceManager() {
-		// TODO: Implement listening for Preference Changes.
+		IPreferenceStore pref = getColorPreferences();
+		if (pref != null) {
+			pref.removePropertyChangeListener(preferenceListener);
+		}
 	}
 
-	@Override
 	protected void registerPreferenceManager() {
-		// TODO: Implement listen for Preference Changes...does this belong
-		// here, or elsewhere?
+		IPreferenceStore pref = getColorPreferences();
+		if (pref != null) {
+			pref.addPropertyChangeListener(preferenceListener  );
+		}
 	}
 
 	/**
@@ -410,46 +465,40 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider
 	}
 
 	/**
-	 * This is now part of the TextAttributeMap classes, left here to override
-	 * AbstractStyleClasses
 	 */
-	@Deprecated
-	@Override
-	protected TextAttribute createTextAttribute(RGB foreground, RGB background,
-			boolean bold) {
-		return null;
+	protected Highlighter getHighlighter() {
+		return highlighter;
 	}
-
-	/**
-	 * This is now part of the TextAttributeMap classes, left here to override
-	 * AbstractStyleClasses
-	 */
-	@Deprecated
-	@Override
-	protected TextAttribute createTextAttribute(RGB foreground, RGB background,
-			int style) {
-		return new TextAttribute((foreground != null) ? EditorUtility
-				.getColor(foreground) : null,
-				(background != null) ? EditorUtility.getColor(background)
-						: null, style);
-	}
-
-	@Override
-	@Deprecated
-	protected TextAttribute getAttributeFor(ITextRegion region) {
-		return null;
-	}
-
-	@Override
-	@Deprecated
+	
 	protected IPreferenceStore getColorPreferences() {
+		if (xmlPreferenceStore == null) {
+			xmlPreferenceStore = XMLUIPlugin.getDefault().getPreferenceStore();
+		}
+		if (xslPreferenceStore == null) {
+			xslPreferenceStore = XSLUIPlugin.getDefault().getPreferenceStore();
+		}
+		combinedPreferenceStore = new ChainedPreferenceStore(new IPreferenceStore[] { xmlPreferenceStore, xslPreferenceStore });
+		return combinedPreferenceStore;
+	}
+
+	protected TextAttribute createTextAttribute(RGB foreground, RGB background, boolean bold) {
+		return new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, bold ? SWT.BOLD : SWT.NORMAL);
+	}
+
+	protected TextAttribute createTextAttribute(RGB foreground, RGB background, int style) {
+		return new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, style);
+	}
+
+	@Override
+	protected TextAttribute getAttributeFor(ITextRegion region) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	@Deprecated
 	protected void loadColors() {
-
+		// TODO Auto-generated method stub
+		
 	}
-
+	
 }

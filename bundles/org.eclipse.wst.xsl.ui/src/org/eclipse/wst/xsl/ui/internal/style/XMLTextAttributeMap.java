@@ -34,7 +34,7 @@ public class XMLTextAttributeMap {
 	private static XMLTextAttributeMap xmlTextAttributeMap = new XMLTextAttributeMap(); 
 	private static IPreferenceStore xmlPreferenceStore;
 	
-	private static IPreferenceStore getXslPreferenceStore() {
+	private static IPreferenceStore getXMLPreferenceStore() {
 		return xmlPreferenceStore;
 	}
 	private XMLTextAttributeMap() {
@@ -76,8 +76,8 @@ public class XMLTextAttributeMap {
 	}
 	
 	private void addXMLTextAttribute(String colorKey) {
-		if (getXslPreferenceStore() != null) {
-			String prefString = getXslPreferenceStore().getString(colorKey);
+		if (getXMLPreferenceStore() != null) {
+			String prefString = getXMLPreferenceStore().getString(colorKey);
 			String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
 			if (stylePrefs != null) {
 				RGB foreground = ColorHelper.toRGB(stylePrefs[0]);
