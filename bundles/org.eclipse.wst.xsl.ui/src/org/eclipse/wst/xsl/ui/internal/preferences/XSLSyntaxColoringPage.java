@@ -84,6 +84,7 @@ import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 import org.eclipse.wst.xsl.ui.internal.style.IStyleConstantsXSL;
 import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
+import org.eclipse.wst.xsl.ui.internal.Messages;
 
 import com.ibm.icu.text.Collator;
 
@@ -241,8 +242,7 @@ public class XSLSyntaxColoringPage extends PreferencePage implements
 				IHelpContextIds.XML_PREFWEBX_STYLES_HELPID);
 
 		Link link = new Link(pageComponent, SWT.WRAP);
-		//String linkText = SSEUIMessages.SyntaxColoring_Description + XSLPreferencesMessages.getString("XSLSyntaxColoringPage.2"); //$NON-NLS-1$
-		link.setText(XSLPreferencesMessages.getString("XSLSyntaxColoringPage.2"));
+		link.setText(Messages.XSLSyntaxColoringPage);
 		link.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				PreferencesUtil.createPreferenceDialogOn(parent.getShell(),

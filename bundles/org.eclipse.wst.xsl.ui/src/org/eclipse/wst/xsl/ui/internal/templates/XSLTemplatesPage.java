@@ -4,48 +4,31 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITextViewer;
-
 import org.eclipse.jface.text.IDocument;
-
 import org.eclipse.jface.text.ITextSelection;
-
 import org.eclipse.jface.text.ITextViewerExtension;
-
 import org.eclipse.jface.text.Region;
-
 import org.eclipse.jface.text.TextSelection;
-
 import org.eclipse.jface.text.source.ISourceViewer;
-
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
-
 import org.eclipse.jface.text.templates.DocumentTemplateContext;
-
 import org.eclipse.jface.text.templates.Template;
-
 import org.eclipse.jface.text.templates.TemplateContextType;
-
-import org.eclipse.jface.text.templates.TemplateProposal;
-
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
-
 import org.eclipse.ui.texteditor.templates.AbstractTemplatesPage;
-
 import org.eclipse.wst.xml.xpath.ui.internal.XPathUIPlugin;
-import org.eclipse.wst.xml.xpath.ui.internal.contentassist.CustomTemplateProposal;
 import org.eclipse.wst.xml.xpath.ui.internal.templates.TemplateContextTypeIdsXPath;
 import org.eclipse.wst.xsl.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xsl.ui.internal.editor.XSLEditor;
-import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper;
-import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages;
 
 /**
  * The XSL Templates Page is used by the TemplatesViewer to display available
- * XSL Templates for use within a XSL Structured Text Editor.  It is provided 
- * as an example on how other SSE editors can contribute their templates to
- * the page.
+ * XSL Templates for use within a XSL Structured Text Editor. It is provided as
+ * an example on how other SSE editors can contribute their templates to the
+ * page.
+ * 
  * @author dcarver
- *
+ * 
  */
 
 public class XSLTemplatesPage extends AbstractTemplatesPage {
@@ -72,7 +55,7 @@ public class XSLTemplatesPage extends AbstractTemplatesPage {
 	protected String[] getContextTypeIds(IDocument document, int offset) {
 		return new String[] { TemplateContextTypeIdsXPath.XPATH,
 				TemplateContextTypeIdsXPath.AXIS,
-				TemplateContextTypeIdsXPath.OPERATOR};
+				TemplateContextTypeIdsXPath.OPERATOR };
 	}
 
 	@Override
@@ -95,7 +78,7 @@ public class XSLTemplatesPage extends AbstractTemplatesPage {
 		return TEMPLATE_STORE;
 	}
 
-	// This code based on the JavaTemplatesPage code.  Modified to work with
+	// This code based on the JavaTemplatesPage code. Modified to work with
 	// SSE
 
 	@Override
@@ -169,7 +152,7 @@ public class XSLTemplatesPage extends AbstractTemplatesPage {
 				return;
 			}
 		}
-	
+
 		ITextViewer viewer = fTextEditor.getTextViewer();
 		int offset = viewer.getTextWidget().getCaretOffset();
 		int startLength = offset - region.getOffset();
@@ -177,7 +160,6 @@ public class XSLTemplatesPage extends AbstractTemplatesPage {
 		CustomCompletionProposal proposal = new CustomCompletionProposal(
 				pattern, offset, 0, startLength + pattern.length(),
 				getImage(template), template.getName(), null, null, 0);
-
 
 		fTextEditor.getSite().getPage().activate(fTextEditor);
 		proposal.apply(fTextEditor.getTextViewer(), ' ', 0, offset);

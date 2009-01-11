@@ -48,7 +48,7 @@
 
    <extension
          id="problem"
-         name="XSL Problem"
+         name="%XSLProblem"
          point="org.eclipse.core.resources.markers">
 		<super type="org.eclipse.wst.xml.core.validationMarker"/>
 		<persistent value="true"/>

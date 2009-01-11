@@ -31,6 +31,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.AbstractContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xsl.core.XSLCore;
+import org.eclipse.wst.xsl.ui.internal.Messages;
 import org.w3c.dom.Node;
 
 /**
@@ -96,7 +97,7 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor {
 		ICompletionProposal[] combinedProposals = combineProposals(proposalList);
 
 		if (combinedProposals == null || combinedProposals.length == 0) {
-			setErrorMessage(Messages.getString("NoContentAssistance"));
+			setErrorMessage(Messages.NoContentAssistance);
 		}
 
 		return combinedProposals;

@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.wst.xsl.ui.internal.Messages;
 
 /**
  * 
@@ -56,37 +57,8 @@ public class MainPreferencePage extends PreferencePage implements IWorkbenchPref
 		ancestor.setLayout(layout);
 
 		Label label = new Label(ancestor, SWT.NONE);
-		label.setText(XSLPreferencesMessages.getString("MainPreferencePage.0")); //$NON-NLS-1$
-
-		// Label label = new Label(ancestor,SWT.NONE);
-		// label.setText("Resolve URI's relative to:");
-		//		
-		// Button radio1 = new Button(ancestor,SWT.RADIO);
-		// radio1.setText("working directory");
-		//		
-		// Button radio2 = new Button(ancestor,SWT.RADIO);
-		// radio2.setText("stylesheet");
-		//		
-		// Button radio3 = new Button(ancestor,SWT.RADIO);
-		// radio3.setText("input file");
-		//
-		// Button radio4 = new Button(ancestor,SWT.RADIO);
-		// radio4.setText("specific location");
-		//
-		// label = new Label(ancestor,SWT.NONE);
-		// label.setText("Default output directory:");
-		//		
-		// radio1 = new Button(ancestor,SWT.RADIO);
-		// radio1.setText("temp user.dir");
-		//		
-		// radio2 = new Button(ancestor,SWT.RADIO);
-		// radio2.setText("same as working directory");
-		//		
-		// radio3 = new Button(ancestor,SWT.RADIO);
-		// radio3.setText("specific location");
-
-		// TODO PlatformUI.getWorkbench().getHelpSystem().setHelp...
-
+		label.setText(Messages.MainPreferencePage);
+		
 		applyDialogFont(ancestor);
 		return ancestor;
 	}

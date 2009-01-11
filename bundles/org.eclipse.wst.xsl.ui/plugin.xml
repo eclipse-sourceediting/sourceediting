@@ -303,7 +303,7 @@
          point="org.eclipse.ui.editors.markerAnnotationSpecification">
 	  <specification
             annotationType="org.eclipse.wst.xsl.ui.override"
-            label="Override"
+            label="%specification.label.0"
             icon="$nl$/icons/full/over_co.gif"
 			annotationImageProvider ="org.eclipse.wst.xsl.ui.internal.editor.OverrideIndicatorImageProvider"
             textPreferenceKey="overrideIndicator"

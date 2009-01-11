@@ -23,6 +23,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xsl.core.XSLCore;
+import org.eclipse.wst.xsl.ui.internal.Messages;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages;
 import org.w3c.dom.Node;
@@ -41,7 +42,7 @@ import org.w3c.dom.Node;
 public class ExcludeResultPrefixesContentAssist extends AbstractXSLContentAssistRequest {
 	private static final String EXCLUDE_RESULT_PREFIXES = "exclude-result-prefixes"; //$NON-NLS-1$
 	private static final String DEFAULT = "#all"; //$NON-NLS-1$
-	private static final String ADDITIONAL_INFO = Messages.getString("ExcludeResultPrefixesContentAssist.2"); //$NON-NLS-1$
+	private static final String ADDITIONAL_INFO = Messages.ExcludeResultPrefixesContentAssist;
 	protected String[] tokens = null;
 
 	/**
