@@ -280,9 +280,9 @@
    
    <extension id="TLDValidator" name="%TLDValidator.name" point="org.eclipse.wst.validation.validatorV2">
       <validator
-            build="false"
-            class="org.eclipse.jst.jsp.core.taglib.TLDValidator"
-            manual="false"
+            build="true"
+            class="org.eclipse.jst.jsp.core.internal.validation.TLDValidator"
+            manual="true"
             version="1"
             markerId="org.eclipse.jst.jsp.core.validationMarker">
          <include>
