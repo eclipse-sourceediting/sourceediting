@@ -144,7 +144,7 @@ public class TLDContentOutlineConfiguration extends XMLContentOutlineConfigurati
 						 * Currently not externalized since it's analagous to
 						 * a decorator.
 						 */
-						return name + " [" + value + "]"; //$NON-NLS-1$
+						return fParentProvider.getText(domElement) + " [" + value + "]"; //$NON-NLS-1$
 					}
 				}
 
@@ -176,7 +176,7 @@ public class TLDContentOutlineConfiguration extends XMLContentOutlineConfigurati
 				showContents = showContents || JSP12TLDNames.LARGE_ICON.equals(name);
 
 				if (showContents) {
-					return name + ": " + getContainedText(domElement); //$NON-NLS-1$
+					return fParentProvider.getText(domElement) + ": " + getContainedText(domElement); //$NON-NLS-1$
 				}
 
 				if (JSP11TLDNames.TAGLIB.equals(name)) {
@@ -186,7 +186,7 @@ public class TLDContentOutlineConfiguration extends XMLContentOutlineConfigurati
 						 * Currently not externalized since it's analagous to
 						 * a decorator.
 						 */
-						return name + " [" + value + "]"; //$NON-NLS-1$
+						return fParentProvider.getText(domElement) + " [" + value + "]"; //$NON-NLS-1$
 					}
 				}
 			}
