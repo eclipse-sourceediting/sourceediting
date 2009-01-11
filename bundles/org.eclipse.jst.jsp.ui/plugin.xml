@@ -74,6 +74,10 @@
 			type="activecontexts"
 			value="org.eclipse.jst.jsp.core.jspsource, org.eclipse.jst.jsp.ui.structured.text.editor.jsp.scope, org.eclipse.wst.html.core.htmlsource, org.eclipse.core.runtime.xml, org.eclipse.wst.xml.navigation, org.eclipse.wst.xml.comments, org.eclipse.wst.xml.selection"
         	target="org.eclipse.jst.jsp.core.jspsource" />
+
+		<contentOutlineConfiguration
+			class="org.eclipse.jst.jsp.ui.internal.views.contentoutline.TLDContentOutlineConfiguration"
+			target="org.eclipse.jst.jsp.core.tldsource" />
 	</extension>
 
 	<!--======================================================================================-->

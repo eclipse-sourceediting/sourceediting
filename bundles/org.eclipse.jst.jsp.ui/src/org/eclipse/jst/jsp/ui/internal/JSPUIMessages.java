@@ -176,4 +176,5 @@ public class JSPUIMessages extends NLS {
 	public static String Open;
 	public static String TLDHyperlink_hyperlinkText;
 	public static String CustomTagHyperlink_hyperlinkText;
+	public static String TLDContentOutlineConfiguration_0;
 }
