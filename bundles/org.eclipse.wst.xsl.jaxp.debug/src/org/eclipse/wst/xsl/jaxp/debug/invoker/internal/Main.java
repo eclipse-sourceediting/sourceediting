@@ -19,6 +19,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.wst.xsl.jaxp.debug.invoker.IProcessorInvoker;
+import org.eclipse.wst.xsl.jaxp.debug.invoker.Messages;
 import org.eclipse.wst.xsl.jaxp.debug.invoker.PipelineDefinition;
 
 /**
@@ -53,7 +54,7 @@ public class Main
 		String src = args[2];
 		String target = args[3];
 
-		log.info(Messages.getString("Main.4") + launchFile); //$NON-NLS-1$
+		log.info(Messages.Main_4 + launchFile); //$NON-NLS-1$
 
 		// create the invoker
 		IProcessorInvoker invoker = null;
@@ -64,7 +65,7 @@ public class Main
 		}
 		catch (Exception e)
 		{
-			handleFatalError(Messages.getString("Main.5") + invokerClassName, e); //$NON-NLS-1$
+			handleFatalError(Messages.Main_5 + invokerClassName, e); //$NON-NLS-1$
 		}
 		try
 		{
