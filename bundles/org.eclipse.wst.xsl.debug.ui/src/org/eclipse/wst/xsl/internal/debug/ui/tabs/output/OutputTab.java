@@ -16,6 +16,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.xsl.debug.internal.util.XSLDebugPluginImages;
 import org.eclipse.wst.xsl.debug.internal.util.XSLPluginImageHelper;
+import org.eclipse.wst.xsl.debug.ui.Messages;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLLaunchConfigurationTab;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.XSLMainTab;
 

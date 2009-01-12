@@ -92,7 +92,7 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 	protected boolean required;
 	protected String defaultResource;
 	protected String resource;
-	protected String fileLabel = Messages.getString("ResourceSelectionBlock.0"); //$NON-NLS-1$
+	protected String fileLabel = Messages.ResourceSelectionBlock_0; //$NON-NLS-1$
 
 	private final ISelectionStatusValidator validator = new ISelectionStatusValidator()
 	{

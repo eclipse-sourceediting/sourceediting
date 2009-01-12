@@ -7,11 +7,12 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - updated to meet Galileo requirements
  *******************************************************************************/
 package org.eclipse.wst.xsl.debug.ui;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+
+import org.eclipse.osgi.util.NLS;
 
 /**
  * Messages for the debug.ui package.
@@ -19,8 +20,7 @@ import java.util.ResourceBundle;
  * @author Doug Satchwell
  * @since 1.0
  */
-public class Messages
-{
+public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.xsl.debug.ui.messages"; //$NON-NLS-1$
 
 	/**
@@ -97,9 +97,9 @@ public class Messages
 	 * A label for the <code>AddParameterAction</code> value text box.
 	 */
 	public static String AddParameterAction_Dialog_Value;
-	
+
 	public static String XSLBreakpointProvider_0;
-	
+
 	public static String StylesheetEntryLabelProvider_Invalid_path;
 
 	public static String TransformsBlock_0;
@@ -137,7 +137,7 @@ public class Messages
 	public static String TransformsBlock_ParametersLabel;
 
 	public static String TransformsBlock_StylesheetsLabel;
-	
+
 	public static String ParametersBlock_0;
 	public static String ParametersBlock_1;
 	public static String ParametersBlock_10;
@@ -150,7 +150,7 @@ public class Messages
 	public static String ParametersBlock_7;
 	public static String ParametersBlock_8;
 	public static String ParametersBlock_9;
-	
+
 	public static String OutputPropertiesBlock_0;
 	public static String OutputPropertiesBlock_1;
 	public static String OutputPropertiesBlock_13;
@@ -162,7 +162,7 @@ public class Messages
 	public static String OutputPropertiesBlock_9;
 	public static String OutputTab_0;
 	public static String OutputTab_1;
-	
+
 	public static String OutputTypeBlock_Group_Name;
 
 	public static String OutputFileBlock_0;
@@ -227,29 +227,22 @@ public class Messages
 
 	public static String OutputFOFileBlock_WORKSPACE_DIALOG_TITLE;
 
-	public static String OutputFOFileBlock_Exception_occurred_saving_configuration;	
+	public static String OutputFOFileBlock_Exception_occurred_saving_configuration;
 	
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+	public static String ResourceSelectionBlock_0;
+    public static String XSLLaunchShortcut_0;
+	public static String XSLLaunchShortcut_1;
+	public static String XSLLaunchShortcut_2;
+	public static String XSLLaunchShortcut_6;
+	public static String XSLSelectExisting;
+	
+	
 
-	private Messages()
-	{
+	private Messages() {
 	}
 
-	/**
-	 * Get the message for the given key.
-	 * 
-	 * @param key the message key
-	 * @return the message
-	 */
-	public static String getString(String key)
-	{
-		try
-		{
-			return RESOURCE_BUNDLE.getString(key);
-		}
-		catch (MissingResourceException e)
-		{
-			return '!' + key + '!';
-		}
+	static {
+		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
 	}
+
 }

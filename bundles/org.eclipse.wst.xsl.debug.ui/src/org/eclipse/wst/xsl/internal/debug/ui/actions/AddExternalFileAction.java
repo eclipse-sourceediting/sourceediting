@@ -38,7 +38,7 @@ public class AddExternalFileAction extends OpenDialogAction
 	 */
 	public AddExternalFileAction(StylesheetViewer viewer, String dialogSettingsPrefix)
 	{
-		super(Messages.getString("AddExternalFileAction_Text"), viewer, dialogSettingsPrefix);
+		super(Messages.AddExternalFileAction_Text, viewer, dialogSettingsPrefix);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class AddExternalFileAction extends OpenDialogAction
 			lastUsedPath = ""; //$NON-NLS-1$
 		}
 		FileDialog dialog = new FileDialog(getShell(), SWT.MULTI);
-		dialog.setText(Messages.getString("AddExternalFileAction_Selection_3"));
+		dialog.setText(Messages.AddExternalFileAction_Selection_3);
 		dialog.setFilterPath(lastUsedPath);
 		IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
 		IContentType contentType = contentTypeManager.getContentType("org.eclipse.wst.xml.core.xslsource"); //$NON-NLS-1$

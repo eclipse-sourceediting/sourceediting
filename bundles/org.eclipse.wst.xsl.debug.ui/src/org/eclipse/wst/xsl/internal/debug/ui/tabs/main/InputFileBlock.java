@@ -20,6 +20,7 @@ import org.eclipse.core.variables.IStringVariableManager;
 import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.wst.xsl.debug.ui.Messages;
 import org.eclipse.wst.xsl.internal.debug.ui.ResourceSelectionBlock;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
@@ -69,7 +70,7 @@ public class InputFileBlock extends ResourceSelectionBlock
 		}
 		catch (CoreException e)
 		{
-			setErrorMessage(MainTabMessages.InputFileBlock_Exception_occurred_reading_configuration + e.getStatus().getMessage());
+			setErrorMessage(Messages.InputFileBlock_Exception_occurred_reading_configuration + e.getStatus().getMessage());
 			XSLDebugUIPlugin.log(e);
 		}
 	}
@@ -81,14 +82,16 @@ public class InputFileBlock extends ResourceSelectionBlock
 
 	public String getName()
 	{
-		return MainTabMessages.InputFileBlock_Name;
+		return Messages.InputFileBlock_Name;
 	}
 
 	@Override
-	protected void setDefaultResource()
-	{
+	protected void setDefaultResource() {
+		// TODO Auto-generated method stub
+		
 	}
-
+	
+	
 	@Override
 	protected void textModified()
 	{
@@ -118,27 +121,27 @@ public class InputFileBlock extends ResourceSelectionBlock
 		switch (type)
 		{
 			case ERROR_DIRECTORY_NOT_SPECIFIED:
-				return MainTabMessages.InputFileBlock_DIRECTORY_NOT_SPECIFIED;
+				return Messages.InputFileBlock_DIRECTORY_NOT_SPECIFIED;
 			case ERROR_DIRECTORY_DOES_NOT_EXIST:
-				return MainTabMessages.InputFileBlock_DIRECTORY_DOES_NOT_EXIST;
+				return Messages.InputFileBlock_DIRECTORY_DOES_NOT_EXIST;
 			case GROUP_NAME:
-				return MainTabMessages.InputFileBlock_GROUP_NAME;
+				return Messages.InputFileBlock_GROUP_NAME;
 			case USE_DEFAULT_RADIO:
-				return MainTabMessages.InputFileBlock_DEFAULT_RADIO;
+				return Messages.InputFileBlock_DEFAULT_RADIO;
 			case USE_OTHER_RADIO:
-				return MainTabMessages.InputFileBlock_OTHER_RADIO;
+				return Messages.InputFileBlock_OTHER_RADIO;
 			case DIRECTORY_DIALOG_MESSAGE:
-				return MainTabMessages.InputFileBlock_DIALOG_MESSAGE;
+				return Messages.InputFileBlock_DIALOG_MESSAGE;
 			case WORKSPACE_DIALOG_MESSAGE:
-				return MainTabMessages.InputFileBlock_WORKSPACE_DIALOG_MESSAGE;
+				return Messages.InputFileBlock_WORKSPACE_DIALOG_MESSAGE;
 			case VARIABLES_BUTTON:
-				return MainTabMessages.InputFileBlock_VARIABLES_BUTTON;
+				return Messages.InputFileBlock_VARIABLES_BUTTON;
 			case FILE_SYSTEM_BUTTON:
-				return MainTabMessages.InputFileBlock_FILE_SYSTEM_BUTTON;
+				return Messages.InputFileBlock_FILE_SYSTEM_BUTTON;
 			case WORKSPACE_BUTTON:
-				return MainTabMessages.InputFileBlock_WORKSPACE_BUTTON;
+				return Messages.InputFileBlock_WORKSPACE_BUTTON;
 			case WORKSPACE_DIALOG_TITLE:
-				return MainTabMessages.InputFileBlock_WORKSPACE_DIALOG_TITLE;
+				return Messages.InputFileBlock_WORKSPACE_DIALOG_TITLE;
 		}
 		return "" + type; //$NON-NLS-1$
 	}

@@ -133,7 +133,7 @@ public class TransformsBlock extends AbstractTableBlock implements IStylesheetEn
 
 	public String getName()
 	{
-		return Messages.getString("TransformsBlock_Name");
+		return Messages.TransformsBlock_Name;
 	}
 
 	public void setPipeline(LaunchPipeline pipeline)

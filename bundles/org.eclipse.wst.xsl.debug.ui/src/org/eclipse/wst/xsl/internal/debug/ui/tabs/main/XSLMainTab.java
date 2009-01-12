@@ -33,6 +33,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.debug.internal.util.XSLDebugPluginImages;
 import org.eclipse.wst.xsl.debug.internal.util.XSLPluginImageHelper;
+import org.eclipse.wst.xsl.debug.ui.Messages;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLLaunchConfigurationTab;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
@@ -140,7 +141,7 @@ public class XSLMainTab extends XSLLaunchConfigurationTab
 
 	public String getName()
 	{
-		return MainTabMessages.XSLMainTab_TabName;
+		return Messages.XSLMainTab_TabName;
 	}
 
 	private static IResource[] getContext()

@@ -30,16 +30,16 @@ public class AddParameterAction extends AbstractParameterAction
 	 */
 	public AddParameterAction(ParameterViewer viewer)
 	{
-		super(Messages.getString("AddParameterAction"), viewer);
+		super(Messages.AddParameterAction, viewer);
 	}
 
 	@Override
 	public void run()
 	{
-		MultipleInputDialog dialog = new MultipleInputDialog(getShell(), Messages.getString("AddParameterAction_Dialog"));
-		String namelabel = Messages.getString("AddParameterAction_Dialog_Name");
+		MultipleInputDialog dialog = new MultipleInputDialog(getShell(), Messages.AddParameterAction_Dialog);
+		String namelabel = Messages.AddParameterAction_Dialog_Name;
 		dialog.addTextField(namelabel, null, false);
-		String variableslabel = Messages.getString("AddParameterAction_Dialog_Value");
+		String variableslabel = Messages.AddParameterAction_Dialog_Value;
 		dialog.addVariablesField(variableslabel, null, false);
 		dialog.open();
 

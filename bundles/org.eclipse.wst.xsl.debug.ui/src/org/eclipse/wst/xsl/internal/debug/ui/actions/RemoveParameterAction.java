@@ -32,7 +32,7 @@ public class RemoveParameterAction extends AbstractParameterAction
 	 */
 	public RemoveParameterAction(ParameterViewer viewer)
 	{
-		super(Messages.getString("RemoveParameterAction"), viewer);
+		super(Messages.RemoveParameterAction, viewer);
 	}
 
 	@Override

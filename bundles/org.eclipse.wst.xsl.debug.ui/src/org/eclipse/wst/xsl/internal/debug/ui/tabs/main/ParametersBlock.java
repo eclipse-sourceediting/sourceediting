@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.wst.xsl.debug.ui.Messages;
 import org.eclipse.wst.xsl.internal.debug.ui.AbstractTableBlock;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIConstants;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
@@ -112,12 +113,12 @@ public class ParametersBlock extends AbstractTableBlock
 		TableColumn column1 = new TableColumn(fTable, SWT.NONE);
 		column1.setWidth(150);
 		column1.setResizable(true);
-		column1.setText(Messages.getString("ParametersBlock.0")); //$NON-NLS-1$
+		column1.setText(Messages.ParametersBlock_0); //$NON-NLS-1$
 
 		TableColumn column3 = new TableColumn(fTable, SWT.NONE);
 		column3.setWidth(250);
 		column3.setResizable(true);
-		column3.setText(Messages.getString("ParametersBlock.2")); //$NON-NLS-1$
+		column3.setText(Messages.ParametersBlock_2); //$NON-NLS-1$
 
 		parametersViewer = new ParameterViewer(fTable);
 		parametersViewer.setLabelProvider(new ParametersLabelProvider());
@@ -214,7 +215,7 @@ public class ParametersBlock extends AbstractTableBlock
 
 	public String getName()
 	{
-		return Messages.getString("ParametersBlock.9"); //$NON-NLS-1$
+		return Messages.ParametersBlock_9; //$NON-NLS-1$
 	}
 
 	public void initializeFrom(ILaunchConfiguration configuration)
