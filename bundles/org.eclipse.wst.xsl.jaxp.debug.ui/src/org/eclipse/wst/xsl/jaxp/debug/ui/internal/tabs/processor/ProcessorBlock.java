@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
+import org.eclipse.wst.xsl.jaxp.debug.ui.internal.Messages;
 import org.eclipse.wst.xsl.jaxp.debug.ui.internal.preferences.ProcessorsPreferencePage;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorInstall;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorType;
@@ -71,7 +72,7 @@ public class ProcessorBlock extends AbstractLaunchConfigurationTab
 //		group.setText(ProcessorMessages.ProcessorBlock_0);
 
 		usePreferencesRadio = new Button(group, SWT.RADIO);
-		usePreferencesRadio.setText(ProcessorMessages.ProcessorBlock_1);
+		usePreferencesRadio.setText(Messages.ProcessorBlock_1);
 		usePreferencesRadio.addSelectionListener(new SelectionAdapter()
 		{
 			@Override
@@ -83,7 +84,7 @@ public class ProcessorBlock extends AbstractLaunchConfigurationTab
 		});
 
 		alterPreferencesButton = new Button(group, SWT.PUSH);
-		alterPreferencesButton.setText(ProcessorMessages.ProcessorBlock_2);
+		alterPreferencesButton.setText(Messages.ProcessorBlock_2);
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_END);
 		gd.widthHint = 150;
 		alterPreferencesButton.setLayoutData(gd);
@@ -98,7 +99,7 @@ public class ProcessorBlock extends AbstractLaunchConfigurationTab
 		});
 
 		overridePreferencesRadio = new Button(group, SWT.RADIO);
-		overridePreferencesRadio.setText(ProcessorMessages.ProcessorBlock_4);
+		overridePreferencesRadio.setText(Messages.ProcessorBlock_4);
 		overridePreferencesRadio.addSelectionListener(new SelectionAdapter()
 		{
 			@Override
@@ -110,7 +111,7 @@ public class ProcessorBlock extends AbstractLaunchConfigurationTab
 		});
 
 		installedProcessorsButton = new Button(group, SWT.PUSH);
-		installedProcessorsButton.setText(ProcessorMessages.ProcessorsComboBlock_1);
+		installedProcessorsButton.setText(Messages.ProcessorsComboBlock_1);
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_END);
 		gd.widthHint = 150;
 		installedProcessorsButton.setLayoutData(gd);
@@ -135,7 +136,7 @@ public class ProcessorBlock extends AbstractLaunchConfigurationTab
 		settingsComp.setFont(font);
 
 		Label label = new Label(settingsComp, SWT.NONE);
-		label.setText(ProcessorMessages.ProcessorBlock_6);
+		label.setText(Messages.ProcessorBlock_6);
 		runCombo = new Combo(settingsComp, SWT.READ_ONLY | SWT.SINGLE);
 		runCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		runComboViewer = new ComboViewer(runCombo);
@@ -263,7 +264,7 @@ public class ProcessorBlock extends AbstractLaunchConfigurationTab
 
 	public String getName()
 	{
-		return ProcessorMessages.ProcessorBlock_7;
+		return Messages.ProcessorBlock_7;
 	}
 
 	public void initializeFrom(ILaunchConfiguration configuration)

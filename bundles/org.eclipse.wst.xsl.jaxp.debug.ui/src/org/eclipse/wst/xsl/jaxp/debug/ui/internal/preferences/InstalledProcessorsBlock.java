@@ -56,6 +56,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.wst.xsl.internal.debug.ui.AbstractTableBlock;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIConstants;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
+import org.eclipse.wst.xsl.jaxp.debug.ui.internal.Messages;
 import org.eclipse.wst.xsl.jaxp.debug.ui.internal.tabs.processor.InstallStandin;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorInstall;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorType;

@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
+import org.eclipse.wst.xsl.jaxp.debug.ui.internal.Messages;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorInstall;
 
 public class ProcessorDetailsDialog extends Dialog
@@ -39,7 +40,7 @@ public class ProcessorDetailsDialog extends Dialog
 	protected void configureShell(Shell newShell)
 	{
 		super.configureShell(newShell);
-		newShell.setText(ProcessorMessages.ProcessorDetailsDialog_Title);
+		newShell.setText(Messages.ProcessorDetailsDialog_Title);
 		// TODO PlatformUI.getWorkbench().getHelpSystem().setHelp...
 	}
 
@@ -51,15 +52,15 @@ public class ProcessorDetailsDialog extends Dialog
 		parent.setLayout(layout);
 
 		// type
-		createLabel(parent, ProcessorMessages.ProcessorDetailsDialog_installType);
+		createLabel(parent, Messages.ProcessorDetailsDialog_installType);
 		createLabel(parent, install.getProcessorType().getLabel());
 
 		// name
-		createLabel(parent, ProcessorMessages.ProcessorDetailsDialog_installName);
+		createLabel(parent, Messages.ProcessorDetailsDialog_installName);
 		createLabel(parent, install.getName());
 
 		// jars
-		Label label = createLabel(parent, ProcessorMessages.ProcessorDetailsDialog_installClasspath);
+		Label label = createLabel(parent, Messages.ProcessorDetailsDialog_installClasspath);
 		GridData gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING | GridData.HORIZONTAL_ALIGN_BEGINNING);
 		label.setLayoutData(gd);
 		TableViewer libraryViewer = new TableViewer(parent);

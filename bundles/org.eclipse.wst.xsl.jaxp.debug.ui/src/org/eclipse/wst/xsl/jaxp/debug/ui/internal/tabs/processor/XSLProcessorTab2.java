@@ -21,12 +21,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLLaunchConfigurationTab;
 import org.eclipse.wst.xsl.jaxp.debug.ui.internal.JAXPDebugUIPlugin;
+import org.eclipse.wst.xsl.jaxp.debug.ui.internal.Messages;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorInvoker;
 import org.eclipse.wst.xsl.jaxp.launching.JAXPLaunchConfigurationConstants;
 import org.eclipse.wst.xsl.jaxp.launching.JAXPRuntime;
 
 public class XSLProcessorTab2 extends XSLLaunchConfigurationTab
 {
+	private static final String ORG_ECLIPSE_WST_XSL_DEBUG_UI_JAXP_TABS_PROCESSOR = "org.eclipse.wst.xsl.debug.ui.jaxp.tabs.processor";
 	private final ProcessorBlock processorBlock;
 	private final AttributesBlock attributesBlock;
 	private final OutputPropertiesBlock outputPropertiesBlock;
@@ -67,13 +69,13 @@ public class XSLProcessorTab2 extends XSLLaunchConfigurationTab
 
 	public String getName()
 	{
-		return Messages.getString("XSLProcessorTab.0"); //$NON-NLS-1$
+		return Messages.XSLProcessorTab_0; //$NON-NLS-1$
 	}
 	
 	@Override
 	public String getId()
 	{
-		return "org.eclipse.wst.xsl.debug.ui.jaxp.tabs.processor";
+		return ORG_ECLIPSE_WST_XSL_DEBUG_UI_JAXP_TABS_PROCESSOR;
 	}
 
 	@Override

@@ -48,6 +48,7 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
+import org.eclipse.wst.xsl.jaxp.debug.ui.internal.Messages;
 import org.eclipse.wst.xsl.jaxp.debug.ui.internal.tabs.processor.InstallStandin;
 import org.eclipse.wst.xsl.jaxp.debug.ui.internal.tabs.processor.JarContentProvider;
 import org.eclipse.wst.xsl.jaxp.debug.ui.internal.tabs.processor.JarLabelProvider;
