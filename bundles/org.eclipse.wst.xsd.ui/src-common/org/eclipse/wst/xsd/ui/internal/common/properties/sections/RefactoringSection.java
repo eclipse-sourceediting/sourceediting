@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,6 +32,8 @@ public abstract class RefactoringSection extends AbstractSection implements IHyp
    * Clicking on it invokes the refactor->rename action.
    */
   private ImageHyperlink renameHyperlink;
+  
+  protected boolean hideHyperLink;
 
   /**
    * Invokes the refactor->rename action on the current selection.
@@ -48,6 +50,11 @@ public abstract class RefactoringSection extends AbstractSection implements IHyp
     action.run();
   }
 
+  protected void showLink(boolean isVisible)
+  {
+	  renameHyperlink.setVisible(isVisible);
+  }
+  
   /**
    * Creates the refactor/rename hyperlink shown beside a component name.
    * Clicking on the hyperlink invokes the refactor/rename action.

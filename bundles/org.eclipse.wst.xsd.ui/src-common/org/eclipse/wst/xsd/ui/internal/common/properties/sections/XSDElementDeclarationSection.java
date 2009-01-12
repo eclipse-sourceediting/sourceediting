@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -101,8 +101,15 @@ public class XSDElementDeclarationSection extends MultiplicitySection
       // ------------------------------------------------------------------
       // Refactor/rename hyperlink 
       // ------------------------------------------------------------------
-      createRenameHyperlink(composite);
-      setRenameHyperlinkEnabled(!isElementReference);
+      if (!hideHyperLink)
+      {
+        createRenameHyperlink(composite);
+        setRenameHyperlinkEnabled(!isElementReference);
+      }
+      else
+      {
+        getWidgetFactory().createCLabel(composite, "");
+      }
 
     // ------------------------------------------------------------------
     // Ref Label
@@ -131,6 +138,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
       PlatformUI.getWorkbench().getHelpSystem().setHelp(componentNameCombo,
       		XSDEditorCSHelpIds.GENERAL_TAB__ELEMENT__REFERENCE);
 
+      // dummy
       getWidgetFactory().createCLabel(composite, ""); //$NON-NLS-1$
     }
 
@@ -226,6 +234,7 @@ public class XSDElementDeclarationSection extends MultiplicitySection
       XSDElementDeclaration xsdElementDeclaration = (XSDElementDeclaration) input;
       isElementReference = xsdElementDeclaration.isElementDeclarationReference();
 
+      hideHyperLink = !xsdElementDeclaration.isGlobal() || isElementReference;
       typeDefinition = xsdElementDeclaration.getResolvedElementDeclaration().getTypeDefinition();
     }
   }

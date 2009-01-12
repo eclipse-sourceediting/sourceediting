@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.common.properties.sections;
 
 import org.apache.xerces.util.XMLChar;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -25,6 +26,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
@@ -37,6 +39,7 @@ import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDDerivationMethod;
 import org.eclipse.xsd.XSDNamedComponent;
+import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 
@@ -160,6 +163,7 @@ public class XSDComplexTypeSection extends RefactoringSection implements Selecti
       return;
 
     setListenerEnabled(false);
+    showLink(!hideHyperLink);
 
     try
     {
@@ -369,7 +373,21 @@ public class XSDComplexTypeSection extends RefactoringSection implements Selecti
 
     return true;
   }
-
+  
+  public void setInput(IWorkbenchPart part, ISelection selection)
+  {
+    super.setInput(part, selection);
+    setListenerEnabled(false);
+    if (input instanceof XSDComplexTypeDefinition)
+    {
+    	XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) input;
+      hideHyperLink = !(complexType.getContainer() instanceof XSDSchema);
+      
+    }    
+    
+    setListenerEnabled(true);
+  }
+  
   private void fillTypesCombo()
   {
     baseTypeCombo.removeAll();

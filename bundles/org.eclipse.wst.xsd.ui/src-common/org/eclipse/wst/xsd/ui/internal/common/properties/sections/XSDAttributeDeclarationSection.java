@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -97,8 +97,16 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
     // ------------------------------------------------------------------
     // Refactor/rename hyperlink
     // ------------------------------------------------------------------
-    createRenameHyperlink(composite);
-    setRenameHyperlinkEnabled(!isAttributeReference);
+    if (!hideHyperLink) 
+    {
+    	createRenameHyperlink(composite);
+		  setRenameHyperlinkEnabled(!isAttributeReference);
+    }
+    else
+    {
+   	  getWidgetFactory().createCLabel(composite, "");
+    }
+    
 
     // ------------------------------------------------------------------
     // Ref Label
@@ -127,6 +135,7 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
       PlatformUI.getWorkbench().getHelpSystem().setHelp(componentNameCombo,
           XSDEditorCSHelpIds.GENERAL_TAB__ATTRIBUTE__NAME);
 
+      // dummy
       getWidgetFactory().createCLabel(composite, ""); //$NON-NLS-1$
     }
     
@@ -790,6 +799,7 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
     {
       XSDAttributeDeclaration xsdAttribute = (XSDAttributeDeclaration) input;
       isAttributeReference = xsdAttribute.isAttributeDeclarationReference();
+      hideHyperLink = !xsdAttribute.isGlobal() || isAttributeReference;
     }
   }
 

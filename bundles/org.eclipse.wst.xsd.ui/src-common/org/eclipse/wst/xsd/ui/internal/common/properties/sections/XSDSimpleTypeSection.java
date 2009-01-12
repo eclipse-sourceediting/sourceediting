@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -48,6 +48,7 @@ import org.eclipse.wst.xsd.ui.internal.editor.XSDTypeReferenceEditManager;
 import org.eclipse.wst.xsd.ui.internal.editor.search.XSDSearchListDialogDelegate;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDNamedComponent;
+import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDVariety;
@@ -168,12 +169,6 @@ public class XSDSimpleTypeSection extends RefactoringSection
     		XSDEditorCSHelpIds.GENERAL_TAB__SIMPLE_TYPE__BASE_TYPE);
 
   }
-  
-  public void setInput(IWorkbenchPart part, ISelection selection)
-  {
-    super.setInput(part, selection);
-    relayout();
-  }
 
   protected void relayout()
   {
@@ -203,6 +198,7 @@ public class XSDSimpleTypeSection extends RefactoringSection
     super.refresh();
 
     setListenerEnabled(false);
+    showLink(!hideHyperLink);
 
     nameText.setText(""); //$NON-NLS-1$
     varietyCombo.setText(""); //$NON-NLS-1$
@@ -376,114 +372,6 @@ public class XSDSimpleTypeSection extends RefactoringSection
         }
       }
     }
-//    else if (e.widget == button)
-//    {
-//      Shell shell = Display.getCurrent().getActiveShell();
-//      Element element = ((XSDConcreteComponent) input).getElement();
-//      Dialog dialog = null;
-//      String property = "";
-//      Element secondaryElement = null;
-
-//      IFile currentIFile = ((IFileEditorInput) getActiveEditor().getEditorInput()).getFile();
-      
-      // issue (cs) need to move to common.ui's selection dialog
-/*
-      XSDComponentSelectionProvider provider = new XSDComponentSelectionProvider(currentIFile, xsdSchema);
-      dialog = new XSDComponentSelectionDialog(shell, XSDEditorPlugin.getXSDString("_UI_LABEL_SET_TYPE"), provider);
-      provider.setDialog((XSDComponentSelectionDialog) dialog);
-*/
-//      if (input instanceof XSDSimpleTypeDefinition)
-//      {
-//        XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition) input;
-//        Element simpleTypeElement = st.getElement();
-//        if (st.getVariety() == XSDVariety.LIST_LITERAL)
-//        {
-//          Element listElement = (Element) itemTypeDefinition.getElement();
-//          // dialog = new TypesDialog(shell, listElement,
-//          // XSDConstants.ITEMTYPE_ATTRIBUTE, xsdSchema);
-//          // dialog.showComplexTypes = false;
-//          provider.showComplexTypes(false);
-//
-//          secondaryElement = listElement;
-//          property = XSDConstants.ITEMTYPE_ATTRIBUTE;
-//        }
-//        else if (st.getVariety() == XSDVariety.ATOMIC_LITERAL)
-//        {
-//          Element derivedByElement = (Element) baseTypeDefinition.getElement();
-//          if (derivedByElement != null)
-//          {
-//            // dialog = new TypesDialog(shell, derivedByElement,
-//            // XSDConstants.BASE_ATTRIBUTE, xsdSchema);
-//            // dialog.showComplexTypes = false;
-//            provider.showComplexTypes(false);
-//
-//            secondaryElement = derivedByElement;
-//            property = XSDConstants.BASE_ATTRIBUTE;
-//          }
-//          else
-//          {
-//            return;
-//          }
-//        }
-//        if (st.getVariety() == XSDVariety.UNION_LITERAL)
-//        {
-//          SimpleContentUnionMemberTypesDialog unionDialog = new SimpleContentUnionMemberTypesDialog(shell, st);
-//          unionDialog.setBlockOnOpen(true);
-//          unionDialog.create();
-//
-//          int result = unionDialog.open();
-//          if (result == Window.OK)
-//          {
-//            String newValue = unionDialog.getResult();
-//            // beginRecording(XSDEditorPlugin.getXSDString("_UI_LABEL_MEMBERTYPES_CHANGE"),
-//            // element); //$NON-NLS-1$
-//            Element unionElement = memberTypeDefinition.getElement();
-//            unionElement.setAttribute(XSDConstants.MEMBERTYPES_ATTRIBUTE, newValue);
-//
-//            if (newValue.length() > 0)
-//            {
-//              unionElement.setAttribute(XSDConstants.MEMBERTYPES_ATTRIBUTE, newValue);
-//            }
-//            else
-//            {
-//              unionElement.removeAttribute(XSDConstants.MEMBERTYPES_ATTRIBUTE);
-//            }
-//            // endRecording(unionElement);
-//            refresh();
-//          }
-//          return;
-//        }
-//        else
-//        {
-//          property = "type";
-//        }
-//      }
-//      else
-//      {
-//        property = "type";
-//      }
-      // beginRecording(XSDEditorPlugin.getXSDString("_UI_TYPE_CHANGE"),
-      // element); //$NON-NLS-1$
-//      dialog.setBlockOnOpen(true);
-//      dialog.create();
-//      int result = dialog.open();
-//
-//      if (result == Window.OK)
-//      {
-//        if (secondaryElement == null)
-//        {
-//          secondaryElement = element;
-//        }
-//        XSDSetTypeHelper helper = new XSDSetTypeHelper(currentIFile, xsdSchema);
-//        helper.setType(secondaryElement, property, ((XSDComponentSelectionDialog) dialog).getSelection());
-
-//        XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition) input;
-//        st.setElement(element);
-//        updateSimpleTypeFacets();*/
-//      }
-      // endRecording(element);
-//    }  
-//    refresh();
   }
 
   public boolean shouldUseExtraSpace()
@@ -628,56 +516,6 @@ public class XSDSimpleTypeSection extends RefactoringSection
     return stringName;
   }
 
-//  private void updateSimpleTypeFacets()
-//  {
-//    XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition) input;
-//    Element simpleTypeElement = st.getElement();
-//    Element derivedByElement = baseTypeDefinition.getElement();
-//    if (derivedByElement != null)
-//    {
-//      List nodesToRemove = new ArrayList();
-//      NodeList childList = derivedByElement.getChildNodes();
-//      int length = childList.getLength();
-//      for (int i = 0; i < length; i++)
-//      {
-//        Node child = childList.item(i);
-//        if (child instanceof Element)
-//        {
-//          Element elementChild = (Element) child;
-//          if (!(elementChild.getLocalName().equals("pattern") || elementChild.getLocalName().equals("enumeration") || //$NON-NLS-1$ //$NON-NLS-2$
-//              XSDDOMHelper.inputEquals(elementChild, XSDConstants.SIMPLETYPE_ELEMENT_TAG, false) || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ANNOTATION_ELEMENT_TAG, false)
-//              || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ATTRIBUTE_ELEMENT_TAG, false) || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ATTRIBUTE_ELEMENT_TAG, true)
-//              || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG, false) || XSDDOMHelper.inputEquals(elementChild, XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG, true) || XSDDOMHelper.inputEquals(elementChild,
-//              XSDConstants.ANYATTRIBUTE_ELEMENT_TAG, false)))
-//          {
-//            nodesToRemove.add(child);
-//          }
-//        }
-//      }
-//      Iterator iter = nodesToRemove.iterator();
-//      while (iter.hasNext())
-//      {
-//        Element facetToRemove = (Element) iter.next();
-//        String facetName = facetToRemove.getLocalName();
-//        Iterator it = st.getValidFacets().iterator();
-//        boolean doRemove = true;
-//        while (it.hasNext())
-//        {
-//          String aValidFacet = (String) it.next();
-//          if (aValidFacet.equals(facetName))
-//          {
-//            doRemove = false;
-//            break;
-//          }
-//        }
-//        if (doRemove)
-//        {
-//          XSDDOMHelper.removeNodeAndWhitespace(facetToRemove);
-//        }
-//      }
-//    }
-//  }
-
   // TODO: Common this up with element declaration
   public void doHandleEvent(Event event) 
   {
@@ -736,6 +574,19 @@ public class XSDSimpleTypeSection extends RefactoringSection
     return true;
   }
   
+  public void setInput(IWorkbenchPart part, ISelection selection)
+  {
+    super.setInput(part, selection);
+    setListenerEnabled(false);
+    if (input instanceof XSDSimpleTypeDefinition)
+    {
+    	XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) input;
+      hideHyperLink = !(simpleType.getContainer() instanceof XSDSchema);
+      
+    }    
+    // Don't have to call relayout() here
+    setListenerEnabled(true);
+  }
   
   private void fillTypesCombo()
   {

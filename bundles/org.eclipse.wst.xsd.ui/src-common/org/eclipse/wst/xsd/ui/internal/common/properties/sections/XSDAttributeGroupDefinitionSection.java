@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -109,8 +109,16 @@ public class XSDAttributeGroupDefinitionSection extends RefactoringSection
 
       // ------------------------------------------------------------------
       // Refactor/rename hyperlink 
-      // ------------------------------------------------------------------
-      createRenameHyperlink(composite);
+      // ------------------------------------------------------------------      
+      if (!hideHyperLink)
+      {
+        createRenameHyperlink(composite);
+        setRenameHyperlinkEnabled(!isReference);
+      }
+      else
+      {
+        getWidgetFactory().createCLabel(composite, "");
+      }
     }
   }
 
@@ -203,6 +211,7 @@ public class XSDAttributeGroupDefinitionSection extends RefactoringSection
     {
       XSDAttributeGroupDefinition group = (XSDAttributeGroupDefinition) input;
       isReference = group.isAttributeGroupDefinitionReference();
+      hideHyperLink = isReference;
     }
   }
   
