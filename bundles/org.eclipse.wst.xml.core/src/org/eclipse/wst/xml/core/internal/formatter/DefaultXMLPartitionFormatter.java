@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -789,8 +789,8 @@ public class DefaultXMLPartitionFormatter {
 		// tag name should always be the first text region
 		if (currentType == DOMRegionContext.XML_TAG_NAME) {
 			ITextRegion nextTextRegion = textRegions.get(currentTextRegionIndex + 1);
-			String nextType = nextTextRegion.getType();
-			if (nextType == DOMRegionContext.XML_TAG_CLOSE) {
+			// Bug 221279 - Some non well-formed documents will not contribute a next region
+			if (nextTextRegion != null && nextTextRegion.getType() == DOMRegionContext.XML_TAG_CLOSE) {
 				// calculate available line width
 				int tagNameLineWidth = currentTextRegion.getTextLength() + 3;
 				availableLineWidth -= tagNameLineWidth;
