@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -115,14 +115,11 @@ public class DesignViewContextMenuProvider extends ContextMenuProvider
         menu.add(new Separator());       
         menu.add(new Separator("search-slot"));        //$NON-NLS-1$
         menu.add(new Separator());
+        menu.add(new Separator("endDesignMenu-slot"));  // $NON-NLS-1$
+        menu.add(new Separator());
       }
     }    
     menu.add(new Separator());
-    //menu.add(registry.getAction("org.eclipse.wst.xsd.DeleteAction"));
-    //menu.add(new Separator());
-    //ShowPropertiesViewAction showPropertiesAction = (ShowPropertiesViewAction) registry.getAction(ShowPropertiesViewAction.ACTION_ID);
-    //showPropertiesAction.setPage(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage());
-    //menu.add(showPropertiesAction);
   }
 
   protected IMenuManager getParentMenu(IMenuManager root, IMenuManager child) {
