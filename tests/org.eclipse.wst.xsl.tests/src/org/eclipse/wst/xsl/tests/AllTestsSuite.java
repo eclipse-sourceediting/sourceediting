@@ -29,7 +29,7 @@ public class AllTestsSuite extends TestSuite {
 		addTest(XSLUITestSuite.suite());
 		addTest(XSLCoreTestSuite.suite());
 		addTest(XPathCoreTests.suite());
-	//	addTest(LaunchingSuite.suite());
+		addTest(LaunchingSuite.suite());
 	}
 
 	/**
