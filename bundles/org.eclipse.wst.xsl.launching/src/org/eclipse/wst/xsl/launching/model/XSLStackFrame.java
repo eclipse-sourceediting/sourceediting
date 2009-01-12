@@ -20,6 +20,7 @@ import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IVariable;
 import org.eclipse.wst.xsl.internal.launching.LaunchingPlugin;
+import org.eclipse.wst.xsl.internal.launching.Messages;
 
 /**
  * XSL stack frame.
@@ -118,7 +119,7 @@ public class XSLStackFrame extends XSLDebugElement implements IStackFrame
 
 	public String getName() throws DebugException
 	{
-		return name + Messages.getString("XSLStackFrame.5") + lineNumber; //$NON-NLS-1$
+		return name + Messages.XSLStackFrame_5 + lineNumber; //$NON-NLS-1$
 	}
 
 	public IRegisterGroup[] getRegisterGroups() throws DebugException

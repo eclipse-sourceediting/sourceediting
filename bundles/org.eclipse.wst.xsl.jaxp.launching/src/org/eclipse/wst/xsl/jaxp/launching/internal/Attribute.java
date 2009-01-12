@@ -13,6 +13,7 @@ package org.eclipse.wst.xsl.jaxp.launching.internal;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.xsl.jaxp.launching.IAttribute;
+import org.eclipse.wst.xsl.jaxp.launching.Messages;
 
 public class Attribute implements IAttribute, Comparable<Object>
 {
@@ -49,7 +50,7 @@ public class Attribute implements IAttribute, Comparable<Object>
 		{
 			boolean valid = "true".equals(value) || "false".equals(value); //$NON-NLS-1$ //$NON-NLS-2$
 			if (!valid)
-				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.getString("Attribute.2"), null); //$NON-NLS-1$
+				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_2, null); //$NON-NLS-1$
 		}
 		else if (TYPE_INT.equals(type))
 		{
@@ -59,7 +60,7 @@ public class Attribute implements IAttribute, Comparable<Object>
 			}
 			catch (NumberFormatException e)
 			{
-				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.getString("Attribute.1"), null); //$NON-NLS-1$
+				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_1, null); //$NON-NLS-1$
 			}
 		}
 		else if (TYPE_DOUBLE.equals(type))
@@ -70,7 +71,7 @@ public class Attribute implements IAttribute, Comparable<Object>
 			}
 			catch (NumberFormatException e)
 			{
-				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.getString("Attribute.0"), null); //$NON-NLS-1$
+				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_0, null); //$NON-NLS-1$
 			}
 		}
 		else if (TYPE_FLOAT.equals(type))
@@ -81,7 +82,7 @@ public class Attribute implements IAttribute, Comparable<Object>
 			}
 			catch (NumberFormatException e)
 			{
-				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.getString("Attribute.5"), null); //$NON-NLS-1$
+				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_5, null); //$NON-NLS-1$
 			}
 		}
 		else if (TYPE_CLASS.equals(type) || TYPE_OBJECT.equals(type))

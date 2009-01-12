@@ -17,6 +17,7 @@ Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ClassPath: .
 Bundle-Localization: plugin
 Bundle-Vendor: %Bundle-Vendor.0
-Export-Package: org.eclipse.wst.xsl.launching,
+Export-Package: org.eclipse.wst.xsl.internal.launching;x-internal:=true,
+ org.eclipse.wst.xsl.launching,
  org.eclipse.wst.xsl.launching.config,
  org.eclipse.wst.xsl.launching.model

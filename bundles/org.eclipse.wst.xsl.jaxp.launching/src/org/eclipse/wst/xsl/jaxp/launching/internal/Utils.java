@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.wst.xsl.jaxp.launching.Messages;
 
 public class Utils
 {
@@ -29,7 +30,7 @@ public class Utils
 		}
 		catch (IOException e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.getString("Utils.0") + path + Messages.getString("Utils.1") + bundleId, e)); //$NON-NLS-1$ //$NON-NLS-2$
+			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.Utils_0 + path + Messages.Utils_1 + bundleId, e)); //$NON-NLS-1$ //$NON-NLS-2$
 		} 
 		return location;
 	}
@@ -49,7 +50,7 @@ public class Utils
 		}
 		catch (IOException e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.getString("Utils.0") + bundleId + Messages.getString("Utils.1") + bundleId, e)); //$NON-NLS-1$ //$NON-NLS-2$
+			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.Utils_0 + bundleId + Messages.Utils_1 + bundleId, e)); //$NON-NLS-1$ //$NON-NLS-2$
 		} 
 		return location;
 	}

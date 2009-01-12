@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorJar;
+import org.eclipse.wst.xsl.jaxp.launching.Messages;
 import org.osgi.framework.Bundle;
 
 public class PluginProcessorJar implements IProcessorJar
@@ -73,6 +74,6 @@ public class PluginProcessorJar implements IProcessorJar
 	@Override
 	public String toString()
 	{
-		return "Plugin " + pluginId + Messages.getString("PluginProcessorJar.0") + path; //$NON-NLS-1$ //$NON-NLS-2$
+		return "Plugin " + pluginId + Messages.PluginProcessorJar_0 + path; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

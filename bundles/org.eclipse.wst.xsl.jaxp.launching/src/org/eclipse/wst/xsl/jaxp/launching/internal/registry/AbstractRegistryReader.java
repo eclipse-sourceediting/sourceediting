@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.wst.xsl.jaxp.launching.Messages;
 import org.eclipse.wst.xsl.jaxp.launching.internal.JAXPLaunchingPlugin;
 
 public abstract class AbstractRegistryReader
@@ -32,24 +33,24 @@ public abstract class AbstractRegistryReader
 	{
 		IExtension extension = element.getDeclaringExtension();
 		StringBuffer buf = new StringBuffer();
-		buf.append("Plugin " + extension.getNamespaceIdentifier() + Messages.getString("AbstractRegistryReader.3") + extension.getExtensionPointUniqueIdentifier()); //$NON-NLS-1$ //$NON-NLS-2$
+		buf.append("Plugin " + extension.getNamespaceIdentifier() + Messages.AbstractRegistryReader_3 + extension.getExtensionPointUniqueIdentifier()); //$NON-NLS-1$ //$NON-NLS-2$
 		buf.append("\n" + text); //$NON-NLS-1$
 		JAXPLaunchingPlugin.log(new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.OK, buf.toString(), null)));
 	}
 
 	protected static void logMissingAttribute(IConfigurationElement element, String attributeName)
 	{
-		logError(element, Messages.getString("AbstractRegistryReader.5") + attributeName + Messages.getString("AbstractRegistryReader.6")); //$NON-NLS-1$ //$NON-NLS-2$
+		logError(element, Messages.AbstractRegistryReader_5 + attributeName + Messages.AbstractRegistryReader_6); 
 	}
 
 	protected static void logMissingElement(IConfigurationElement element, String elementName)
 	{
-		logError(element, Messages.getString("AbstractRegistryReader.7") + elementName + Messages.getString("AbstractRegistryReader.8")); //$NON-NLS-1$ //$NON-NLS-2$
+		logError(element, Messages.AbstractRegistryReader_7 + elementName + Messages.AbstractRegistryReader_8);
 	}
 
 	protected static void logUnknownElement(IConfigurationElement element)
 	{
-		logError(element, Messages.getString("AbstractRegistryReader.9") + element.getName()); //$NON-NLS-1$
+		logError(element, Messages.AbstractRegistryReader_9 + element.getName()); //$NON-NLS-1$
 	}
 
 	public static IExtension[] orderExtensions(IExtension[] extensions)

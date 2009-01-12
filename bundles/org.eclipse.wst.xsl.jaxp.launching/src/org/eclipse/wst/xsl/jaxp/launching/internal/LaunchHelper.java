@@ -38,10 +38,10 @@ import org.eclipse.wst.xsl.jaxp.launching.JAXPLaunchConfigurationConstants;
 import org.eclipse.wst.xsl.jaxp.launching.JAXPRuntime;
 import org.eclipse.wst.xsl.jaxp.launching.LaunchAttributes;
 import org.eclipse.wst.xsl.jaxp.launching.LaunchProperties;
+import org.eclipse.wst.xsl.jaxp.launching.Messages;
 import org.eclipse.wst.xsl.launching.config.BaseLaunchHelper;
 import org.eclipse.wst.xsl.launching.config.LaunchAttribute;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
-import org.eclipse.wst.xsl.launching.config.Messages;
 import org.eclipse.wst.xsl.launching.config.PreferenceUtil;
 import org.w3c.dom.Document;
 
@@ -115,11 +115,11 @@ public class LaunchHelper extends BaseLaunchHelper
 		}
 		catch (FileNotFoundException e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.getString("LaunchHelper.0"), e)); //$NON-NLS-1$
+			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.LaunchHelper_0, e)); //$NON-NLS-1$
 		}
 		catch (IOException e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.getString("LaunchHelper.1"), e)); //$NON-NLS-1$
+			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.LaunchHelper_1, e)); //$NON-NLS-1$
 		}
 		catch (ParserConfigurationException e)
 		{

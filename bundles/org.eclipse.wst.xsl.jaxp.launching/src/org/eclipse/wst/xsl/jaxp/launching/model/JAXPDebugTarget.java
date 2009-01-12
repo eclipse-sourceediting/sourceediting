@@ -44,11 +44,11 @@ import org.eclipse.debug.core.model.IStackFrame;
 import org.eclipse.debug.core.model.IThread;
 import org.eclipse.debug.core.model.IValue;
 import org.eclipse.wst.xsl.jaxp.debug.debugger.DebugConstants;
+import org.eclipse.wst.xsl.jaxp.launching.Messages;
 import org.eclipse.wst.xsl.jaxp.launching.internal.JAXPLaunchingPlugin;
 import org.eclipse.wst.xsl.launching.config.BaseLaunchHelper;
 import org.eclipse.wst.xsl.launching.model.IXSLConstants;
 import org.eclipse.wst.xsl.launching.model.IXSLDebugTarget;
-import org.eclipse.wst.xsl.launching.model.Messages;
 import org.eclipse.wst.xsl.launching.model.XSLDebugElement;
 import org.eclipse.wst.xsl.launching.model.XSLStackFrame;
 import org.eclipse.wst.xsl.launching.model.XSLThread;
@@ -101,7 +101,7 @@ public class JAXPDebugTarget extends XSLDebugElement implements IXSLDebugTarget 
 				this.requestReader = new BufferedReader(new InputStreamReader(requestSocket.getInputStream()));
 				this.generateReader = new InputStreamReader(generateSocket.getInputStream());
 			} catch (IOException e) {
-				abort(Messages.getString("XSLDebugTarget.0"), e); //$NON-NLS-1$
+				abort(Messages.XSLDebugTarget_0, e); //$NON-NLS-1$
 			}
 			this.thread = new XSLThread(this);
 			this.threads = new IThread[] { thread };
@@ -133,7 +133,7 @@ public class JAXPDebugTarget extends XSLDebugElement implements IXSLDebugTarget 
 				break;
 			try {
 				socket = new Socket(
-						Messages.getString("XSLDebugTarget.1"), port); //$NON-NLS-1$
+						Messages.XSLDebugTarget_1, port); //$NON-NLS-1$
 			} catch (ConnectException e) {
 			} catch (IOException e) {
 			}
@@ -149,7 +149,7 @@ public class JAXPDebugTarget extends XSLDebugElement implements IXSLDebugTarget 
 					new Status(
 							Status.ERROR,
 							JAXPLaunchingPlugin.PLUGIN_ID,
-							Messages.getString("XSLDebugTarget.2") + port + Messages.getString("XSLDebugTarget.3") + CONNECT_ATTEMPTS + Messages.getString("XSLDebugTarget.4"))); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							Messages.XSLDebugTarget_2 + port + Messages.XSLDebugTarget_3 + CONNECT_ATTEMPTS + Messages.XSLDebugTarget_4)); 
 		return socket;
 	}
 
@@ -470,7 +470,7 @@ public class JAXPDebugTarget extends XSLDebugElement implements IXSLDebugTarget 
 //					System.out.println("RESPONSE: " + response);
 //				}
 			} catch (IOException e) {
-				abort(Messages.getString("XSLDebugTarget.19") + request, e); //$NON-NLS-1$
+				abort(Messages.XSLDebugTarget_19 + request, e); //$NON-NLS-1$
 			}
 		}
 		return response;
@@ -507,7 +507,7 @@ public class JAXPDebugTarget extends XSLDebugElement implements IXSLDebugTarget 
 	private class EventDispatchJob extends Job {
 
 		public EventDispatchJob() {
-			super(Messages.getString("XSLDebugTarget.20")); //$NON-NLS-1$
+			super(Messages.XSLDebugTarget_20); //$NON-NLS-1$
 			setSystem(true);
 		}
 

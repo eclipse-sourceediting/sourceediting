@@ -16,5 +16,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %Bundle-Vendor.0
 Export-Package: org.eclipse.wst.xsl.jaxp.launching,
+ org.eclipse.wst.xsl.jaxp.launching.internal;x-internal:=true,
+ org.eclipse.wst.xsl.jaxp.launching.internal.registry;x-internal:=true,
  org.eclipse.wst.xsl.jaxp.launching.model
 Bundle-Localization: plugin

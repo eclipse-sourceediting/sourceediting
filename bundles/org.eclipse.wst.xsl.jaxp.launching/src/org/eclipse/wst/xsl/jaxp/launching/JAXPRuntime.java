@@ -210,7 +210,7 @@ public class JAXPRuntime
 			return;
 		try
 		{
-			monitor.beginTask(Messages.getString("XSLTRuntime.5"), 100); //$NON-NLS-1$
+			monitor.beginTask(Messages.XSLTRuntime_5, 100); //$NON-NLS-1$
 			FeaturePreferences prefs = new FeaturePreferences();
 			Map<String,Map<String,String>> typeIdFeatures = new HashMap<String,Map<String,String>>(typeFeatures.size());
 			for (IProcessorType type : typeFeatures.keySet())
@@ -232,7 +232,7 @@ public class JAXPRuntime
 		}
 		catch (Exception e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR,JAXPLaunchingPlugin.PLUGIN_ID,Messages.getString("XSLTRuntime.6"),e)); //$NON-NLS-1$
+			throw new CoreException(new Status(IStatus.ERROR,JAXPLaunchingPlugin.PLUGIN_ID,Messages.XSLTRuntime_6,e)); //$NON-NLS-1$
 		}
 		finally
 		{
@@ -246,7 +246,7 @@ public class JAXPRuntime
 			return;
 		try
 		{
-			monitor.beginTask(Messages.getString("XSLTRuntime.7"), 100); //$NON-NLS-1$
+			monitor.beginTask(Messages.XSLTRuntime_7, 100); //$NON-NLS-1$
 			OutputPropertyPreferences prefs = new OutputPropertyPreferences();
 			for (IProcessorType type : typeProperties.keySet())
 			{
@@ -265,7 +265,7 @@ public class JAXPRuntime
 		}
 		catch (Exception e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR,JAXPLaunchingPlugin.PLUGIN_ID,Messages.getString("XSLTRuntime.8"),e)); //$NON-NLS-1$
+			throw new CoreException(new Status(IStatus.ERROR,JAXPLaunchingPlugin.PLUGIN_ID,Messages.XSLTRuntime_8,e)); //$NON-NLS-1$
 		}
 		finally
 		{
@@ -279,7 +279,7 @@ public class JAXPRuntime
 			return;
 		try
 		{
-			monitor.beginTask(Messages.getString("XSLTRuntime.9"), 100); //$NON-NLS-1$
+			monitor.beginTask(Messages.XSLTRuntime_9, 100); //$NON-NLS-1$
 			ProcessorPreferences prefs = new ProcessorPreferences();
 			if (defaultInstall != null)
 				prefs.setDefaultProcessorId(defaultInstall.getId());
@@ -297,7 +297,7 @@ public class JAXPRuntime
 		}
 		catch (Exception e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR,JAXPLaunchingPlugin.PLUGIN_ID,Messages.getString("XSLTRuntime.10"),e)); //$NON-NLS-1$
+			throw new CoreException(new Status(IStatus.ERROR,JAXPLaunchingPlugin.PLUGIN_ID,Messages.XSLTRuntime_10,e)); //$NON-NLS-1$
 		}
 		finally
 		{

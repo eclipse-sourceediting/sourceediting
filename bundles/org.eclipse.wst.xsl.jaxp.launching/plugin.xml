@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-   <extension-point id="debugger" name="debugger" schema="schema/debugger.exsd"/>
-   <extension-point id="invoke" name="invoke" schema="schema/invoke.exsd"/>
-   <extension-point id="processor" name="processor" schema="schema/processor.exsd"/>
-   <extension-point id="processorType" name="processorType" schema="schema/processorType.exsd"/>
+   <extension-point id="debugger" name="%debugger" schema="schema/debugger.exsd"/>
+   <extension-point id="invoke" name="%invoke" schema="schema/invoke.exsd"/>
+   <extension-point id="processor" name="%processor" schema="schema/processor.exsd"/>
+   <extension-point id="processorType" name="%processorType" schema="schema/processorType.exsd"/>
  <extension
        point="org.eclipse.debug.core.launchDelegates">
     <launchDelegate

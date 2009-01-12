@@ -27,6 +27,7 @@ import org.eclipse.wst.xsl.jaxp.launching.IOutputProperty;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorType;
 import org.eclipse.wst.xsl.jaxp.launching.ITransformerFactory;
 import org.eclipse.wst.xsl.jaxp.launching.JAXPRuntime;
+import org.eclipse.wst.xsl.jaxp.launching.Messages;
 
 public class ProcessorType implements IProcessorType
 {
@@ -141,8 +142,8 @@ public class ProcessorType implements IProcessorType
 					}
 					else
 					{
-						JAXPLaunchingPlugin.log(new CoreException(new Status(IStatus.WARNING, JAXPLaunchingPlugin.PLUGIN_ID, Messages.getString("ProcessorType.2") + outputPropertiesURL //$NON-NLS-1$
-								+ Messages.getString("ProcessorType.3") + key))); //$NON-NLS-1$
+						JAXPLaunchingPlugin.log(new CoreException(new Status(IStatus.WARNING, JAXPLaunchingPlugin.PLUGIN_ID, Messages.ProcessorType_2 + outputPropertiesURL //$NON-NLS-1$
+								+ Messages.ProcessorType_3 + key))); //$NON-NLS-1$
 					}
 				}
 			}
@@ -193,8 +194,8 @@ public class ProcessorType implements IProcessorType
 					}
 					else
 					{
-						JAXPLaunchingPlugin.log(new CoreException(new Status(IStatus.WARNING, JAXPLaunchingPlugin.PLUGIN_ID, Messages.getString("ProcessorType.4") + attributePropertiesURL //$NON-NLS-1$
-								+ Messages.getString("ProcessorType.5") + key))); //$NON-NLS-1$
+						JAXPLaunchingPlugin.log(new CoreException(new Status(IStatus.WARNING, JAXPLaunchingPlugin.PLUGIN_ID, Messages.ProcessorType_4 + attributePropertiesURL
+								+ Messages.ProcessorType_5 + key))); 
 					}
 				}
 			}

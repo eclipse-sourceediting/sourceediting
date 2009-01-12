@@ -50,6 +50,7 @@ import org.eclipse.wst.xsl.jaxp.launching.IProcessorJar;
 import org.eclipse.wst.xsl.jaxp.launching.ITransformerFactory;
 import org.eclipse.wst.xsl.jaxp.launching.JAXPLaunchConfigurationConstants;
 import org.eclipse.wst.xsl.jaxp.launching.JAXPRuntime;
+import org.eclipse.wst.xsl.jaxp.launching.Messages;
 import org.eclipse.wst.xsl.jaxp.launching.model.JAXPDebugTarget;
 import org.eclipse.wst.xsl.launching.model.IXSLConstants;
 
@@ -151,9 +152,9 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate impl
 
 						IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 						
-						String title = Messages.getString("XSLTLaunchConfigurationDelegate.0"); //$NON-NLS-1$
-						String message = Messages.getString("XSLTLaunchConfigurationDelegate.1") + install.getName() + Messages.getString("XSLTLaunchConfigurationDelegate.2") //$NON-NLS-1$ //$NON-NLS-2$
-								+ Messages.getString("XSLTLaunchConfigurationDelegate.3") + processor.getName() + Messages.getString("XSLTLaunchConfigurationDelegate.4");//$NON-NLS-1$ //$NON-NLS-2$
+						String title = Messages.XSLTLaunchConfigurationDelegate_0; //$NON-NLS-1$
+						String message = Messages.XSLTLaunchConfigurationDelegate_1 + install.getName() + Messages.XSLTLaunchConfigurationDelegate_2
+								+ Messages.XSLTLaunchConfigurationDelegate_3 + processor.getName() + Messages.XSLTLaunchConfigurationDelegate_4;
 						
 						MessageDialog dialog = new MessageDialog(dw.getShell(), title, null, message, MessageDialog.QUESTION,
 								new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0); // yes is the default
@@ -175,7 +176,7 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate impl
 						{
 							IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 							
-							String title = Messages.getString("Change Transformer Factory");
+							String title = "Change Transformer Factory";
 							String message = install.getName() + " must use the " + launchHelper.getTransformerFactory().getName() + " transformer factory when debugging.\n"
 									+ "Be aware that this may give different results to the " + launchHelper.getTransformerFactory().getName() + " transformer factory configured for this launch configuration.";
 							
@@ -342,7 +343,7 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate impl
 			{
 				URL entry = jars[i].asURL();
 				if (entry == null)
-					throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.getString("XSLTLaunchConfigurationDelegate.23") + jars[i], null)); //$NON-NLS-1$
+					throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.XSLTLaunchConfigurationDelegate_23 + jars[i], null)); //$NON-NLS-1$
 				File file = new File(tempDir, "END_" + i + ".jar"); //$NON-NLS-1$ //$NON-NLS-2$
 				moveFile(entry, file);
 			}
@@ -410,7 +411,7 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate impl
 		}
 		catch (IOException e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.getString("XSLTLaunchConfigurationDelegate.7") + src + Messages.getString("XSLTLaunchConfigurationDelegate.31") + target, e)); //$NON-NLS-1$ //$NON-NLS-2$
+			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.XSLTLaunchConfigurationDelegate_7 + src + Messages.XSLTLaunchConfigurationDelegate_31 + target, e)); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		finally
 		{
