@@ -54,7 +54,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.wst.xsl.internal.debug.ui.AbstractTableBlock;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.jaxp.debug.ui.internal.JAXPDebugUIPlugin;
-import org.eclipse.wst.xsl.jaxp.debug.ui.internal.Messages;
 import org.eclipse.wst.xsl.jaxp.launching.IAttribute;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorType;
 import org.eclipse.wst.xsl.jaxp.launching.JAXPLaunchConfigurationConstants;
@@ -297,7 +296,7 @@ public class AttributesBlock extends AbstractTableBlock
 
 	public String getName()
 	{
-		return Messages.AttributesBlock_16; //$NON-NLS-1$
+		return Messages.getString("AttributesBlock.16"); //$NON-NLS-1$
 	}
 
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)

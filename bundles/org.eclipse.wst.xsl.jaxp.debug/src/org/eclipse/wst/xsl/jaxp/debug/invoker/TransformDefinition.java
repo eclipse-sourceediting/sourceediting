@@ -173,7 +173,7 @@ public class TransformDefinition
 	public Element asXML(Document doc)
 	{
 		Element tdefEl = doc.createElement("Transform"); //$NON-NLS-1$
-		tdefEl.setAttribute(Messages.TransformDefinition_1, stylesheetURL); //$NON-NLS-1$
+		tdefEl.setAttribute(Messages.getString("TransformDefinition.1"), stylesheetURL); //$NON-NLS-1$
 		if (resolverClass != null)
 			tdefEl.setAttribute("uriResolver", resolverClass); //$NON-NLS-1$
 		Element opEl = doc.createElement("OutputProperties"); //$NON-NLS-1$
@@ -227,16 +227,16 @@ public class TransformDefinition
 			}
 		}
 
-		Element paramsEl = (Element) transformEl.getElementsByTagName(Messages.TransformDefinition_18).item(0); //$NON-NLS-1$
+		Element paramsEl = (Element) transformEl.getElementsByTagName(Messages.getString("TransformDefinition.18")).item(0); //$NON-NLS-1$
 		if (paramsEl != null)
 		{
-			NodeList paramEls = paramsEl.getElementsByTagName(Messages.TransformDefinition_19); //$NON-NLS-1$
+			NodeList paramEls = paramsEl.getElementsByTagName(Messages.getString("TransformDefinition.19")); //$NON-NLS-1$
 			for (int i = 0; i < paramEls.getLength(); i++)
 			{
 				Element paramEl = (Element) paramEls.item(i);
-				String name = paramEl.getAttribute(Messages.TransformDefinition_20); //$NON-NLS-1$
-				String type = paramEl.getAttribute(Messages.TransformDefinition_21); //$NON-NLS-1$
-				String value = paramEl.getAttribute(Messages.TransformDefinition_22); //$NON-NLS-1$
+				String name = paramEl.getAttribute(Messages.getString("TransformDefinition.20")); //$NON-NLS-1$
+				String type = paramEl.getAttribute(Messages.getString("TransformDefinition.21")); //$NON-NLS-1$
+				String value = paramEl.getAttribute(Messages.getString("TransformDefinition.22")); //$NON-NLS-1$
 				tdef.addParameter(new TypedValue(name, type, value));
 			}
 		}

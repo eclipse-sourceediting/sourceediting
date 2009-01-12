@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
-import org.eclipse.wst.xsl.jaxp.debug.ui.internal.Messages;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorInstall;
 import org.eclipse.wst.xsl.jaxp.launching.JAXPRuntime;
 

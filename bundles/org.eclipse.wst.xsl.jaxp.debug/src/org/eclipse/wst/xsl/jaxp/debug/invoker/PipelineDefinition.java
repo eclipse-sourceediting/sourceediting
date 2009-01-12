@@ -146,7 +146,7 @@ public class PipelineDefinition
 			}
 			catch (CreationException e)
 			{
-				throw new ConfigurationException(Messages.PipelineDefinition_8, e); //$NON-NLS-1$
+				throw new ConfigurationException(Messages.getString("PipelineDefinition.8"), e); //$NON-NLS-1$
 			}
 			URL url = null;
 			try
@@ -155,7 +155,7 @@ public class PipelineDefinition
 			}
 			catch (MalformedURLException e)
 			{
-				throw new ConfigurationException(Messages.PipelineDefinition_9 + tdef.getStylesheetURL(), e); //$NON-NLS-1$
+				throw new ConfigurationException(Messages.getString("PipelineDefinition.9") + tdef.getStylesheetURL(), e); //$NON-NLS-1$
 			}
 			Properties properties = tdef.getOutputProperties();
 			try
@@ -164,7 +164,7 @@ public class PipelineDefinition
 			}
 			catch (TransformerConfigurationException e)
 			{
-				throw new ConfigurationException(Messages.PipelineDefinition_10 + tdef.getStylesheetURL(), null); //$NON-NLS-1$
+				throw new ConfigurationException(Messages.getString("PipelineDefinition.10") + tdef.getStylesheetURL(), null); //$NON-NLS-1$
 			}
 		}
 	}

@@ -71,7 +71,7 @@ public class TypedValue
 			}
 			catch (NumberFormatException e)
 			{
-				throw new CreationException(Messages.TypedValue_9 + value + Messages.TypedValue_10, e); //$NON-NLS-1$ //$NON-NLS-2$
+				throw new CreationException(Messages.getString("TypedValue.9") + value + Messages.getString("TypedValue.10"), e); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		else if (TYPE_DOUBLE.equals(type))
@@ -82,7 +82,7 @@ public class TypedValue
 			}
 			catch (NumberFormatException e)
 			{
-				throw new CreationException(Messages.TypedValue_11 + value + Messages.TypedValue_12, e); //$NON-NLS-1$ //$NON-NLS-2$
+				throw new CreationException(Messages.getString("TypedValue.11") + value + Messages.getString("TypedValue.12"), e); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		else if (TYPE_FLOAT.equals(type))
@@ -93,7 +93,7 @@ public class TypedValue
 			}
 			catch (NumberFormatException e)
 			{
-				throw new CreationException(Messages.TypedValue_13 + value + Messages.TypedValue_14, e); //$NON-NLS-1$ //$NON-NLS-2$
+				throw new CreationException(Messages.getString("TypedValue.13") + value + Messages.getString("TypedValue.14"), e); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		else if (TYPE_CLASS.equals(type))
@@ -104,7 +104,7 @@ public class TypedValue
 			}
 			catch (ClassNotFoundException e)
 			{
-				throw new CreationException(Messages.TypedValue_15 + value + Messages.TypedValue_16, e); //$NON-NLS-1$ //$NON-NLS-2$
+				throw new CreationException(Messages.getString("TypedValue.15") + value + Messages.getString("TypedValue.16"), e); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		else if (TYPE_OBJECT.equals(type))
@@ -116,20 +116,20 @@ public class TypedValue
 			}
 			catch (ClassNotFoundException e)
 			{
-				throw new CreationException(Messages.TypedValue_17 + value + Messages.TypedValue_18, e); //$NON-NLS-1$ //$NON-NLS-2$
+				throw new CreationException(Messages.getString("TypedValue.17") + value + Messages.getString("TypedValue.18"), e); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			catch (InstantiationException e)
 			{
-				throw new CreationException(Messages.TypedValue_19 + value + Messages.TypedValue_20, e); //$NON-NLS-1$ //$NON-NLS-2$
+				throw new CreationException(Messages.getString("TypedValue.19") + value + Messages.getString("TypedValue.20"), e); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			catch (IllegalAccessException e)
 			{
-				throw new CreationException(Messages.TypedValue_21 + value + Messages.TypedValue_22, e); //$NON-NLS-1$ //$NON-NLS-2$
+				throw new CreationException(Messages.getString("TypedValue.21") + value + Messages.getString("TypedValue.22"), e); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		else
 		{
-			throw new CreationException(Messages.TypedValue_23 + type + Messages.TypedValue_24); //$NON-NLS-1$ //$NON-NLS-2$
+			throw new CreationException(Messages.getString("TypedValue.23") + type + Messages.getString("TypedValue.24")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return o;
 	}

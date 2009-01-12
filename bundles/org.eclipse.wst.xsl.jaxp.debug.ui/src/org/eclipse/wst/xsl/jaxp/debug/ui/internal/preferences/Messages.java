@@ -1,10 +1,10 @@
-package org.eclipse.wst.xsl.jaxp.debug.ui.internal;
+package org.eclipse.wst.xsl.jaxp.debug.ui.internal.preferences;
 
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS
 {
-	private static final String BUNDLE_NAME = "org.eclipse.wst.xsl.jaxp.debug.ui.internal.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.wst.xsl.jaxp.debug.ui.internal.preferences.messages"; //$NON-NLS-1$
 	static
 	{
 		// initialize resource bundle
@@ -44,31 +44,7 @@ public class Messages extends NLS
 	public static String ProcessorsPreferencePage_0;
 	public static String ProcessorsPreferencePage_1;
 	public static String ProcessorsPreferencePage_2;
-	
-	public static String AttributesBlock_1;
-	public static String AttributesBlock_10;
-	public static String AttributesBlock_11;
-	public static String AttributesBlock_12;
-	public static String AttributesBlock_16;
-	public static String AttributesBlock_3;
-	public static String AttributesBlock_4;
-	public static String AttributesBlock_5;
-	public static String AttributesBlock_6;
-	public static String AttributesBlock_9;
-	public static String XSLProcessorTab_0;	
 
-	public static String ProcessorBlock_0;
-	public static String ProcessorBlock_1;
-	public static String ProcessorBlock_2;
-	public static String ProcessorBlock_4;
-	public static String ProcessorBlock_6;
-	public static String ProcessorBlock_7;
-	public static String ProcessorsComboBlock_1;
-	public static String ProcessorDetailsDialog_Title;
-	public static String ProcessorDetailsDialog_installName;
-	public static String ProcessorDetailsDialog_installType;
-	public static String ProcessorDetailsDialog_installClasspath;
-	
 	private Messages()
 	{
 	}

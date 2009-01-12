@@ -8,19 +8,19 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.jaxp.debug.invoker;
+package org.eclipse.wst.xsl.jaxp.debug.invoker.internal;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * Messages for the configuration.
+ * Messages for the transformation.
  * 
  * @author Doug Satchwell
  */
-class Messages
+public class Messages
 {
-	private static final String BUNDLE_NAME = "org.eclipse.wst.xsl.jaxp.debug.invoker.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.wst.xsl.jaxp.debug.invoker.internal.messages"; //$NON-NLS-1$
 
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 

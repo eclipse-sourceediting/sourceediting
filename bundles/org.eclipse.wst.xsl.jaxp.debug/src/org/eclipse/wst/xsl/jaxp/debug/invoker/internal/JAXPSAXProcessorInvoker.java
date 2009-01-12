@@ -11,7 +11,6 @@
 package org.eclipse.wst.xsl.jaxp.debug.invoker.internal;
 
 import java.net.URL;
-
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
@@ -42,7 +41,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXNotSupportedException;
 import org.xml.sax.XMLReader;
-import org.eclipse.wst.xsl.jaxp.debug.invoker.Messages;
 
 /**
  * An implementation of <code>IProcessorInvoker</code> that uses JAXP as the underlying
@@ -84,7 +82,7 @@ public class JAXPSAXProcessorInvoker implements IProcessorInvoker
 			Map.Entry entry = (Map.Entry) iter.next();
 			String uri = (String) entry.getKey();
 			Object value = entry.getValue();
-			log.info(Messages.JAXPSAXProcessorInvoker_0 + uri + Messages.JAXPSAXProcessorInvoker_1 + value); //$NON-NLS-1$ //$NON-NLS-2$
+			log.info(Messages.getString("JAXPSAXProcessorInvoker.0") + uri + Messages.getString("JAXPSAXProcessorInvoker.1") + value); //$NON-NLS-1$ //$NON-NLS-2$
 			tFactory.setAttribute(uri, value);
 		}
 	}
@@ -148,7 +146,7 @@ public class JAXPSAXProcessorInvoker implements IProcessorInvoker
 				Map.Entry entry = (Map.Entry) iter.next();
 				String name = (String) entry.getKey();
 				Object value = entry.getValue();
-				log.info(Messages.JAXPSAXProcessorInvoker_2 + name + Messages.JAXPSAXProcessorInvoker_3 + value); //$NON-NLS-1$ //$NON-NLS-2$
+				log.info(Messages.getString("JAXPSAXProcessorInvoker.2") + name + Messages.getString("JAXPSAXProcessorInvoker.3") + value); //$NON-NLS-1$ //$NON-NLS-2$
 				transformer.setParameter(name, value);
 			}
 		}
@@ -162,7 +160,7 @@ public class JAXPSAXProcessorInvoker implements IProcessorInvoker
 			}
 			if (outputProperties.size() > 0)
 			{
-				log.info(Messages.JAXPSAXProcessorInvoker_6 + sb.toString()); //$NON-NLS-1$
+				log.info(Messages.getString("JAXPSAXProcessorInvoker.6") + sb.toString()); //$NON-NLS-1$
 				transformer.setOutputProperties(outputProperties);
 			}
 		}
@@ -213,14 +211,14 @@ public class JAXPSAXProcessorInvoker implements IProcessorInvoker
 					}
 					else
 					{
-						throw new TransformationException(Messages.JAXPSAXProcessorInvoker_7 + inputsource.getSystemId());
+						throw new TransformationException(Messages.getString("JAXPSAXProcessorInvoker.7") + inputsource.getSystemId()); //$NON-NLS-1$
 					}
 				}
 			}
 			th.setResult(res);
-			log.info(Messages.JAXPSAXProcessorInvoker_8); 
+			log.info(Messages.getString("JAXPSAXProcessorInvoker.8")); //$NON-NLS-1$
 			reader.parse(inputsource);
-			log.info(Messages.JAXPSAXProcessorInvoker_9);
+			log.info(Messages.getString("JAXPSAXProcessorInvoker.9")); //$NON-NLS-1$
 		}
 		catch (Exception e)
 		{
