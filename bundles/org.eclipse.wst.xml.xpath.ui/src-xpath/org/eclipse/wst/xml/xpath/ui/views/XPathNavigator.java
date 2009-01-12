@@ -83,7 +83,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceTable;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
 import org.eclipse.wst.xml.ui.internal.provisional.IDOMSourceEditingTextTools;
-import org.eclipse.wst.xml.xpath.ui.XPathUIMessages;
+import org.eclipse.wst.xml.xpath.messages.Messages;
 import org.eclipse.wst.xml.xpath.ui.internal.XPathUIPlugin;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
@@ -114,7 +114,7 @@ public class XPathNavigator extends ViewPart
             
             if( documents.getSelection().isEmpty())
             {
-                MessageDialog.openInformation( getSite().getShell(), XPathUIMessages.XPathNavigator_XPath_Navigator, XPathUIMessages.XPathNavigator_Select_source_first);
+                MessageDialog.openInformation( getSite().getShell(), Messages.XPathNavigator_XPath_Navigator, Messages.XPathNavigator_Select_source_first);
                 documents.getCombo().setFocus();
                 return;
             }
@@ -280,12 +280,12 @@ public class XPathNavigator extends ViewPart
             }
             catch( XPathExpressionException pex) 
             {
-                MessageDialog.openError( getSite().getShell(), XPathUIMessages.XPathNavigator_XPath_Navigator, XPathUIMessages.XPathNavigator_XPath_Eval_Failed + pex.getCause().getMessage());                    
+                MessageDialog.openError( getSite().getShell(), Messages.XPathNavigator_XPath_Navigator, Messages.XPathNavigator_XPath_Eval_Failed + pex.getCause().getMessage());                    
                 XPathUIPlugin.log(pex);
             }
             catch( Exception ex) 
             {
-                MessageDialog.openError( getSite().getShell(), XPathUIMessages.XPathNavigator_XPath_Navigator, XPathUIMessages.XPathNavigator_XPath_Eval_Failed + ex.getMessage());                    
+                MessageDialog.openError( getSite().getShell(), Messages.XPathNavigator_XPath_Navigator, Messages.XPathNavigator_XPath_Eval_Failed + ex.getMessage());                    
                 XPathUIPlugin.log(ex);
             }
         }        
@@ -357,7 +357,7 @@ public class XPathNavigator extends ViewPart
         comp.setLayout(gridLayout);
 
         Label label = new Label(comp, SWT.NONE);
-        label.setText(XPathUIMessages.XPathNavigator_XML_Source_Document);
+        label.setText(Messages.XPathNavigator_XML_Source_Document);
         GridData data = new GridData();
         data.horizontalAlignment = GridData.FILL;
         data.horizontalIndent = gridLayout.horizontalSpacing / 2;
@@ -377,7 +377,7 @@ public class XPathNavigator extends ViewPart
         documents.setInput( Boolean.TRUE);        
 
         Group queryGroup = new Group( comp, SWT.SHADOW_NONE);
-        queryGroup.setText( XPathUIMessages.XPathNavigator_Context);
+        queryGroup.setText(Messages.XPathNavigator_Context);
         data = new GridData();
         data.horizontalAlignment = GridData.FILL;
         data.grabExcessHorizontalSpace = true;
@@ -389,15 +389,15 @@ public class XPathNavigator extends ViewPart
         queryGroup.setLayout( _gridLayout);
 
         queryByContext = new Button( queryGroup, SWT.RADIO);
-        queryByContext.setText( XPathUIMessages.XPathNavigator_Selection);
+        queryByContext.setText(Messages.XPathNavigator_Selection);
 
         queryByDocument = new Button( queryGroup, SWT.RADIO);
-        queryByDocument.setText( XPathUIMessages.XPathNavigator_Document);
+        queryByDocument.setText(Messages.XPathNavigator_Document);
         queryByDocument.setSelection( true);
         
         namespaceButton = new Button( queryGroup, SWT.PUSH);
-        namespaceButton.setText(XPathUIMessages.XPathNavigator_Namespaces);
-        namespaceButton.setToolTipText(XPathUIMessages.XPathNavigator_Namespaces_Tip);
+        namespaceButton.setText(Messages.XPathNavigator_Namespaces);
+        namespaceButton.setToolTipText(Messages.XPathNavigator_Namespaces_Tip);
         namespaceButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -420,7 +420,7 @@ public class XPathNavigator extends ViewPart
         });
         
         label = new Label(comp, SWT.NONE);
-        label.setText(XPathUIMessages.XPathNavigator_Expression);
+        label.setText(Messages.XPathNavigator_Expression);
         data = new GridData();
         data.horizontalAlignment = GridData.FILL;
         data.horizontalIndent = gridLayout.horizontalSpacing;
@@ -487,7 +487,7 @@ public class XPathNavigator extends ViewPart
             }
         );
         CTabItem item = new CTabItem( resultTabs, SWT.NULL);
-        item.setText ( XPathUIMessages.XPathNavigator_DOM_Tree);
+        item.setText (Messages.XPathNavigator_DOM_Tree);
         item.setControl( viewer.getControl());
 
         resultTabs.setSelection( item);
@@ -497,7 +497,7 @@ public class XPathNavigator extends ViewPart
         text.setEditable( false);
         text.setBackground( white);
         item = new CTabItem( resultTabs, SWT.NULL);
-        item.setText ( XPathUIMessages.XPathNavigator_Text);
+        item.setText (Messages.XPathNavigator_Text);
         item.setControl( text);
 
         makeActions();
@@ -611,18 +611,18 @@ public class XPathNavigator extends ViewPart
     private void makeActions()
     {
         query = new XPathAction();
-        query.setText(XPathUIMessages.XPathNavigator_Run_XPath_Query);
-        query.setToolTipText(XPathUIMessages.XPathNavigator_Run_on_selected);
+        query.setText(Messages.XPathNavigator_Run_XPath_Query);
+        query.setToolTipText(Messages.XPathNavigator_Run_on_selected);
         query.setImageDescriptor(XPathUIPlugin.getDefault().getImageRegistry().getDescriptor("run")); //$NON-NLS-1$
         
         refresh = new RefreshAction();
-        refresh.setText(XPathUIMessages.XPathNavigator_Refresh_Source_Docs);
-        refresh.setToolTipText(XPathUIMessages.XPathNavigator_Refresh_Source_Docs_Tip);
+        refresh.setText(Messages.XPathNavigator_Refresh_Source_Docs);
+        refresh.setToolTipText(Messages.XPathNavigator_Refresh_Source_Docs_Tip);
         refresh.setImageDescriptor( XPathUIPlugin.getDefault().getImageRegistry().getDescriptor( "refresh")); //$NON-NLS-1$
 
         showInSource = new ShowInSourceAction();
-        showInSource.setText(XPathUIMessages.XPathNavigator_Show_In_Source);
-        showInSource.setToolTipText(XPathUIMessages.XPathNavigator_Show_In_Source_Tip);
+        showInSource.setText(Messages.XPathNavigator_Show_In_Source);
+        showInSource.setToolTipText(Messages.XPathNavigator_Show_In_Source_Tip);
     }
     
     protected Document getSelectedDocument()
@@ -650,7 +650,7 @@ public class XPathNavigator extends ViewPart
                 try {
                   n = idsett.getNode(idsett.getCaretOffset());
                 } catch (BadLocationException e) {
-                  MessageDialog.openInformation( getSite().getShell(), XPathUIMessages.XPathNavigator_XPath_Navigator, XPathUIMessages.XPathNavigator_Node_could_not_be_selected);
+                  MessageDialog.openInformation( getSite().getShell(), Messages.XPathNavigator_XPath_Navigator, Messages.XPathNavigator_Node_could_not_be_selected);
                 }
               
                 // Go upwards to an element
@@ -661,7 +661,7 @@ public class XPathNavigator extends ViewPart
                 
                 if (n == null)
                 {
-                    MessageDialog.openInformation( getSite().getShell(), XPathUIMessages.XPathNavigator_XPath_Navigator, XPathUIMessages.XPathNavigator_Nothing_selected);
+                    MessageDialog.openInformation( getSite().getShell(), Messages.XPathNavigator_XPath_Navigator, Messages.XPathNavigator_Nothing_selected);
                     structuredTextEditor.setFocus();
                     return null;                    
                 }

@@ -21,7 +21,6 @@ Require-Bundle: org.eclipse.ui;bundle-version="[3.2.0,4.0.0)",
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.wst.xml.xpath.messages,
- org.eclipse.wst.xml.xpath.ui,
  org.eclipse.wst.xml.xpath.ui.internal;x-internal:=true,
  org.eclipse.wst.xml.xpath.ui.internal.contentassist;x-internal:=true,
  org.eclipse.wst.xml.xpath.ui.internal.preferences;x-internal:=true,

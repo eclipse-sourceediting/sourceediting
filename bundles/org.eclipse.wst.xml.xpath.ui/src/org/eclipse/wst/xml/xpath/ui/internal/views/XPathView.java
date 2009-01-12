@@ -284,58 +284,6 @@ public class XPathView extends ViewPart
 		updateLocationText();
 	}
 
-//	private static String calculateXPathToNode(Node node)
-//	{
-//		StringBuffer sb = new StringBuffer();
-//		while (node != null)
-//		{
-//			switch (node.getNodeType())
-//			{
-//				case Node.ATTRIBUTE_NODE:
-//					sb.insert(0, node.getNodeName());
-//					sb.insert(0, "/@"); //$NON-NLS-1$
-//					node = ((Attr)node).getOwnerElement();
-//					break;
-//				case Node.ELEMENT_NODE:
-//					Node sibling = node;
-//					int position = 1;
-//					while ((sibling = sibling.getPreviousSibling()) != null)
-//					{
-//						if (sibling.getNodeType() == Node.ELEMENT_NODE && sibling.getNodeName().equals(node.getNodeName()))
-//						{
-//							++position;
-//						}
-//					}
-//					if (position > 1)
-//						sb.insert(0, "[" + position + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-//					else
-//					{
-//						sibling = node;
-//						boolean following = false;
-//						while ((sibling = sibling.getNextSibling()) != null)
-//						{
-//							if (sibling.getNodeType() == Node.ELEMENT_NODE && sibling.getNodeName().equals(node.getNodeName()))
-//							{
-//								following = true;
-//								break;
-//							}
-//						}
-//						if (following)
-//						{
-//							sb.insert(0, "[1]"); //$NON-NLS-1$
-//						}
-//					}
-//					sb.insert(0, node.getNodeName());
-//					sb.insert(0, Messages.XPathView_8);
-//					node = node.getParentNode();
-//					break;
-//				default:
-//					node = node.getParentNode();
-//			}
-//		}
-//		return sb.toString();
-//	}
-
 	private void recomputeXPath()
 	{
 		if (activeEditor != null)

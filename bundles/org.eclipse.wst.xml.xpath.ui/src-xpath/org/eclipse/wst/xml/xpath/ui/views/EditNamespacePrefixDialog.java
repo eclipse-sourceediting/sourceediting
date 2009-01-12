@@ -27,7 +27,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.ui.internal.dialogs.NamespaceInfoErrorHelper;
 import org.eclipse.wst.xml.ui.internal.dialogs.UpdateListener;
 import org.eclipse.wst.xml.ui.internal.nsedit.CommonEditNamespacesDialog;
-import org.eclipse.wst.xml.xpath.ui.XPathUIMessages;
+import org.eclipse.wst.xml.xpath.messages.Messages;
 
 public class EditNamespacePrefixDialog extends Dialog implements UpdateListener {
 	// protected NamespaceInfoTable namespaceInfoTable;
@@ -50,12 +50,12 @@ public class EditNamespacePrefixDialog extends Dialog implements UpdateListener 
 		Composite dialogArea = (Composite) super.createDialogArea(parent);
 //		PlatformUI.getWorkbench().getHelpSystem().setHelp(dialogArea, XMLCommonUIContextIds.XCUI_SCHEMA_INFO_DIALOG);
 
-		CommonEditNamespacesDialog editNamespacesControl = new CommonEditNamespacesDialog(dialogArea, resourceLocation, XPathUIMessages.XPathNavigator_Namespace_Prefixes, false, true);
+		CommonEditNamespacesDialog editNamespacesControl = new CommonEditNamespacesDialog(dialogArea, resourceLocation, Messages.XPathNavigator_Namespace_Prefixes, false, true);
 		editNamespacesControl.setNamespaceInfoList(namespaceInfoList);
 
 		editNamespacesControl.updateErrorMessage(namespaceInfoList);
 
-		getShell().setText(XPathUIMessages.XPathNavigator_Namespace_Prefixes);
+		getShell().setText(Messages.XPathNavigator_Namespace_Prefixes);
 		return dialogArea;
 	}
 
