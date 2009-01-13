@@ -64,6 +64,7 @@ public class TestTaglibCMTests extends TestCase {
 
 	public void testLoadCustomTagsThroughJSPSyntax() throws IOException, CoreException {
 		IFile jspFile = ResourcesPlugin.getWorkspace().getRoot().getFile(Path.ROOT.append(PROJECT_NAME).append("web stuff/test1.jsp"));
+		assertTrue("test file " + jspFile.getFullPath() + " does not exist", jspFile.exists());
 
 		IDOMModel model = null;
 		try {
@@ -84,6 +85,7 @@ public class TestTaglibCMTests extends TestCase {
 
 	public void testLoadCustomTagsThroughXMLSyntax() throws IOException, CoreException {
 		IFile jspFile = ResourcesPlugin.getWorkspace().getRoot().getFile(Path.ROOT.append(PROJECT_NAME).append("web stuff/testX.jsp"));
+		assertTrue("test file " + jspFile.getFullPath() + " does not exist", jspFile.exists());
 
 		IDOMModel model = null;
 		try {
@@ -113,6 +115,7 @@ public class TestTaglibCMTests extends TestCase {
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
 		IFile jspFile = ResourcesPlugin.getWorkspace().getRoot().getFile(Path.ROOT.append("DynamicWebProject/WebContent/index.jsp"));
+		assertTrue("test file " + jspFile.getFullPath() + " does not exist", jspFile.exists());
 
 		IDOMModel model = null;
 		try {
