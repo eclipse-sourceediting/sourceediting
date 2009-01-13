@@ -22,6 +22,8 @@ import java.io.StringWriter;
 import junit.framework.TestCase;
 
 import org.eclipse.jst.jsp.core.internal.parser.internal.JSPTokenizer;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 public class JSPTokenizerTest extends TestCase {
 	private JSPTokenizer tokenizer = null;
@@ -131,5 +133,27 @@ public class JSPTokenizerTest extends TestCase {
 		}
 		// success if StackOverFlowError does not occur with tokenizer.
 		assertTrue(true);
+	}
+	
+	public void test26004() {
+		String input = "<c:set var=\"foo\" value=\"${foo} bar #\" /> <div id=\"container\" >Test</div>";
+		try {
+			reset(new StringReader(input));
+			ITextRegion region = tokenizer.getNextToken();
+			assertTrue("empty input", region != null);
+			while (region != null) {
+				if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+					region = tokenizer.getNextToken();
+					assertNotNull("document consumed by trailing $ or #", region);
+				}
+				else
+					region = tokenizer.getNextToken();
+			}
+		}
+		catch (IOException e) {
+			StringWriter s = new StringWriter();
+			e.printStackTrace(new PrintWriter(s));
+			fail(s.toString());
+		}
 	}
 }
