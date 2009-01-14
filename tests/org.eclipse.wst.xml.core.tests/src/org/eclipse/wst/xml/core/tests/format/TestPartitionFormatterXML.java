@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -317,5 +317,11 @@ public class TestPartitionFormatterXML extends TestCase {
 		XMLFormattingPreferences prefs = new XMLFormattingPreferences();
 		prefs.setClearAllBlankLines(true);
 		formatAndAssertEquals("testfiles/xml/xml-keep-blank-lines.xml", "testfiles/xml/xml-clear-blank-lines-fmt.xml", prefs);
+	}
+	
+	public void testFormatMalformedEndTag() throws UnsupportedEncodingException, IOException, CoreException {
+		// Bug 221279
+		// Test that malformed end tags do not cause a NPE and format the document
+		formatAndAssertEquals("testfiles/xml/xml-221279.xml", "testfiles/xml/xml-221279-fmt.xml");
 	}
 }
