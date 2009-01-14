@@ -308,6 +308,12 @@ public class XSLTXPathHelper {
 		return functionTable;
 	}
 	
+	/**
+	 * Returns a XPath expression given a DOM Node.
+	 * 
+	 * @param node The DOM Node to create the XPath expression.
+	 * @since 1.0
+	 */
 	public static String calculateXPathToNode(Node node)
 	{
 		StringBuffer sb = new StringBuffer();
