@@ -28,9 +28,9 @@ import org.eclipse.wst.xml.ui.internal.doubleclick.XMLDoubleClickStrategy;
  * 
  */
 public class XSLDoubleClickStrategy extends XMLDoubleClickStrategy {
-	protected static final char[] XML_DELIMITERS = { ' ', '\'', '\"', '[', ']',
+	static final char[] XML_DELIMITERS = { ' ', '\'', '\"', '[', ']',
 			'|', '(', ')', '{', '}', '=', '!' };
-	protected static final char[] XML_PARENTHESIS = { '[', ']', '(', ')', '{',
+	static final char[] XML_PARENTHESIS = { '[', ']', '(', ')', '{',
 			'}' };
 
 	@Override

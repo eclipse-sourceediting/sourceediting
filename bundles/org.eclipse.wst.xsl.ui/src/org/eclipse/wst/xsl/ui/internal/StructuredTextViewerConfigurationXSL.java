@@ -40,7 +40,7 @@ public class StructuredTextViewerConfigurationXSL extends
 
 	private String[] fConfiguredContentTypes;
 	private LineStyleProvider fLineStyleProviderForXSL;
-	private LineStyleProvider fLineStyleProviderForXML;
+//	private LineStyleProvider fLineStyleProviderForXML;
 
 	/**
 	 * Configuration for XSL Content Types
@@ -57,11 +57,11 @@ public class StructuredTextViewerConfigurationXSL extends
 			ISourceViewer sourceViewer, String partitionType) {
 		IContentAssistProcessor[] processors = null;
 
-		if ((partitionType == IStructuredPartitions.DEFAULT_PARTITION)
-				|| (partitionType == IXMLPartitions.XML_DEFAULT)
-				|| (partitionType == IXSLPartitions.XSL_XPATH)) {
+		if ((partitionType.equals(IStructuredPartitions.DEFAULT_PARTITION))
+				|| (partitionType.equals(IXMLPartitions.XML_DEFAULT))
+				|| (partitionType.equals(IXSLPartitions.XSL_XPATH))) {
 			processors = new IContentAssistProcessor[] { new XSLContentAssistProcessor() };
-		} else if (partitionType == IStructuredPartitions.UNKNOWN_PARTITION) {
+		} else if (partitionType.equals(IStructuredPartitions.UNKNOWN_PARTITION)) {
 			processors = new IContentAssistProcessor[] { new NoRegionContentAssistProcessor() };
 		}
 		return processors;
@@ -118,12 +118,12 @@ public class StructuredTextViewerConfigurationXSL extends
 	}
 
 	private boolean isXMLPartition(String partitionType) {
-		return partitionType == IXMLPartitions.XML_DEFAULT
-				|| partitionType == IXMLPartitions.XML_CDATA
-				|| partitionType == IXMLPartitions.XML_COMMENT
-				|| partitionType == IXMLPartitions.XML_DECLARATION
-				|| partitionType == IXMLPartitions.XML_PI
-				|| partitionType == IXSLPartitions.XSL_XPATH;
+		return partitionType.equals(IXMLPartitions.XML_DEFAULT)
+				|| partitionType.equals(IXMLPartitions.XML_CDATA)
+				|| partitionType.equals(IXMLPartitions.XML_COMMENT)
+				|| partitionType.equals(IXMLPartitions.XML_DECLARATION)
+				|| partitionType.equals(IXMLPartitions.XML_PI)
+				|| partitionType.equals(IXSLPartitions.XSL_XPATH);
 	}
 	
 	protected LineStyleProvider getLineStyleProviderForXSL() {

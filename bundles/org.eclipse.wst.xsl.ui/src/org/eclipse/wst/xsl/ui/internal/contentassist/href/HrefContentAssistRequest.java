@@ -8,7 +8,7 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.ui.internal.contentassist;
+package org.eclipse.wst.xsl.ui.internal.contentassist.href;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +29,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
+import org.eclipse.wst.xsl.ui.internal.contentassist.AbstractXSLContentAssistRequest;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages;
 import org.w3c.dom.Node;
@@ -46,31 +47,6 @@ import org.w3c.dom.Node;
 public class HrefContentAssistRequest extends AbstractXSLContentAssistRequest
 {
 	private List<IPath> pathList = new ArrayList<IPath>();
-
-	private final class PathComparator implements Comparator<IPath>
-	{
-		public int compare(IPath o1, IPath o2)
-		{
-			int countComp = o1.segmentCount() - o2.segmentCount();
-			if (countComp != 0)
-				return countComp;
-			
-			for(int i=0;i<o1.segmentCount();i++)
-			{
-				String seg1 = o1.segment(i);
-				String seg2 = o2.segment(i);
-				if (!seg1.equals(seg2))
-				{
-					if (seg1.equals(".."))
-						return 1;
-					if (seg2.equals(".."))
-						return -1;
-				}
-			}
-			
-			return o1.toString().compareTo(o2.toString());
-		}
-	}
 
 	private final class XSLFileResourceVisitor implements IResourceVisitor
 	{

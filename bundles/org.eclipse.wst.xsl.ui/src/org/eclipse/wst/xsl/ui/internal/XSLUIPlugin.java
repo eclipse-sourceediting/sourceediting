@@ -40,7 +40,7 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 	private TemplateStore fTemplateStore;
 
 	
-    private ScopedPreferenceStore preferenceStore;
+    //private ScopedPreferenceStore preferenceStore;
     
 	/**
 	 * The template context type registry for the xml editor.
@@ -50,7 +50,7 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 	/**
 	 * The plugin id for this plugin.
 	 */
-	static public String PLUGIN_ID = "org.eclipse.wst.xsl.ui"; //$NON-NLS-1$
+	static final public String PLUGIN_ID = "org.eclipse.wst.xsl.ui"; //$NON-NLS-1$
 
 	// The shared instance
 	private static XSLUIPlugin plugin;

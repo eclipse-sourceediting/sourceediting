@@ -154,14 +154,14 @@ public class Validator extends AbstractNestedValidator
 		if (node.getNodeType() == XSLNode.ATTRIBUTE_NODE)
 		{
 			message.setAttribute("ERROR_SIDE", "ERROR_SIDE_RIGHT");  //$NON-NLS-1$//$NON-NLS-2$
-			message.setAttribute(COLUMN_NUMBER_ATTRIBUTE, new Integer(validationMessage.getColumnNumber()));
+			message.setAttribute(COLUMN_NUMBER_ATTRIBUTE, Integer.valueOf(validationMessage.getColumnNumber()));
 			message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "ATTRIBUTE_VALUE"); // whether to squiggle the element, attribute or text //$NON-NLS-1$
 			message.setAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE, ((XSLAttribute) node).getName());
 		}
 		else if (node.getNodeType() == XSLNode.ELEMENT_NODE)
 		{
 			message.setAttribute("ERROR_SIDE", "ERROR_SIDE_RIGHT");  //$NON-NLS-1$//$NON-NLS-2$
-			message.setAttribute(COLUMN_NUMBER_ATTRIBUTE, new Integer(validationMessage.getColumnNumber()));
+			message.setAttribute(COLUMN_NUMBER_ATTRIBUTE, Integer.valueOf(validationMessage.getColumnNumber()));
 			message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, "START_TAG"); // whether to squiggle the element, attribute or text //$NON-NLS-1$
 		}
 	}

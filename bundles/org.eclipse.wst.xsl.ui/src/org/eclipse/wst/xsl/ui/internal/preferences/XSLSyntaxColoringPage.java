@@ -365,6 +365,7 @@ public class XSLSyntaxColoringPage extends PreferencePage implements
 		} catch (Exception ex) {
 			XSLUIPlugin.log(ex);
 		}
+		
 		viewer.setDocument(document);
 
 		top.setWeights(new int[] { 1, 1 });

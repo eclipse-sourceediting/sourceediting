@@ -113,7 +113,7 @@ public class XSLTemplatesPage extends AbstractTemplatesPage {
 						textSelection.getOffset(), textSelection.getLength());
 
 				if (prefix.length() > 0
-						&& !template.getName().startsWith(prefix.toString())) {
+						&& !template.getName().startsWith(prefix)) {
 					return;
 				}
 

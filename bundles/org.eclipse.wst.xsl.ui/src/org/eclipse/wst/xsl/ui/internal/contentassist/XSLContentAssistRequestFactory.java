@@ -16,6 +16,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xsl.ui.internal.contentassist.href.HrefContentAssistRequest;
 import org.w3c.dom.NamedNodeMap;
 
 /**

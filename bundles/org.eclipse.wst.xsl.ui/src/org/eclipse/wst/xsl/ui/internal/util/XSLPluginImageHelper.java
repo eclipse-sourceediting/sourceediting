@@ -47,7 +47,6 @@ public class XSLPluginImageHelper {
 	// save a descriptor for each image
 	@SuppressWarnings("unchecked")
 	private HashMap fImageDescRegistry = null;
-	private final String PLUGINID = XSLUIPlugin.PLUGIN_ID;
 
 	/**
 	 * Creates an image from the given resource and adds the image to the
@@ -83,7 +82,7 @@ public class XSLPluginImageHelper {
 	 */
 	@SuppressWarnings("unchecked")
 	private ImageDescriptor createImageDescriptor(String imageFilePath) {
-		ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(PLUGINID, imageFilePath);
+		ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(XSLUIPlugin.PLUGIN_ID, imageFilePath);
 		if (imageDescriptor != null) {
 			getImageDescriptorRegistry().put(imageFilePath, imageDescriptor);
 		}

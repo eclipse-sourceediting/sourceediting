@@ -25,26 +25,6 @@ import org.xml.sax.helpers.DefaultHandler;
  * A simple XML parser to find the XSL version of a given XML file, expectedly a XSLT stylesheet.
  */
 public final class XSLVersionHandler extends DefaultHandler implements LexicalHandler, ErrorHandler {
-	/**
-	 * An exception indicating that the parsing should stop. This is usually
-	 * triggered when the top-level element has been found.
-	 * 
-	 * @since 3.0
-	 */
-	private class StopParsingException extends SAXException {
-		/**
-		 * All serializable objects should have a stable serialVersionUID
-		 */
-		private static final long serialVersionUID = 1L;
-
-		/**
-		 * Constructs an instance of <code>StopParsingException</code> with a
-		 * <code>null</code> detail message.
-		 */
-		public StopParsingException() {
-			super((String) null);
-		}
-	}
 
 	private static final String XSLT_STYLESHEET = "stylesheet"; //$NON-NLS-1$
 

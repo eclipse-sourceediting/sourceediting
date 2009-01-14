@@ -33,13 +33,16 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.model.StylesheetModel;
-import org.eclipse.wst.xsl.core.model.XSLModelObject;
 import org.eclipse.wst.xsl.core.model.XSLNode;
 
+/**
+ * 
+ *
+ */
 public class StylesheetView extends ViewPart
 {
 	private IEditorPart activeEditor;
-	private boolean isFiringSelection;
+	//private boolean isFiringSelection;
 	private TreeViewer tv;
 	private IPartListener partListener = new IPartListener(){
 		
@@ -128,7 +131,7 @@ public class StylesheetView extends ViewPart
 	{
 		if (activeEditor != null)
 		{
-			isFiringSelection = true;
+//			isFiringSelection = true;
 			if (selection.getFirstElement() instanceof XSLNode)
 			{
 				XSLNode node = (XSLNode)selection.getFirstElement();
@@ -142,7 +145,7 @@ public class StylesheetView extends ViewPart
 						// textEditor.setHighlightRange(node.getOffset(), 0, true);
 				}
 			}
-			isFiringSelection = false;
+//			isFiringSelection = false;
 		}
 	}
 

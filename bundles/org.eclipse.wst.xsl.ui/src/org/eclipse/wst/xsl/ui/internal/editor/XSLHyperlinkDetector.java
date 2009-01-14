@@ -69,7 +69,7 @@ public class XSLHyperlinkDetector extends AbstractHyperlinkDetector
 		{
 			return detectHyperlinks(textViewer.getDocument(), region, canShowMultipleHyperlinks);
 		}
-		return hyperlink == null ? null : new IHyperlink[]{hyperlink};
+		return new IHyperlink[]{hyperlink};
 	}
 
 	/**

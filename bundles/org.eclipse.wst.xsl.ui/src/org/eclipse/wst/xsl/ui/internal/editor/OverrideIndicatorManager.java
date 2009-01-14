@@ -34,63 +34,6 @@ import org.eclipse.wst.xsl.core.model.Template;
 public class OverrideIndicatorManager
 {
 
-	/**
-	 * Overwrite and override indicator annotation.
-	 * 
-	 * @since 3.0
-	 */
-	class OverrideIndicator extends Annotation
-	{
-
-		private String fAstNodeKey;
-
-		/**
-		 * Creates a new override annotation.
-		 * 
-		 * @param isOverwriteIndicator
-		 *            <code>true</code> if this annotation is an overwrite indicator, <code>false</code> otherwise
-		 * @param text
-		 *            the text associated with this annotation
-		 * @param key
-		 *            the method binding key
-		 * @since 3.0
-		 */
-		OverrideIndicator(String text, String key)
-		{
-			super(ANNOTATION_TYPE, false, text);
-			fAstNodeKey = key;
-		}
-
-		/**
-		 * Opens and reveals the defining method.
-		 */
-		public void open()
-		{
-			// CompilationUnit ast= SharedASTProvider.getAST(fJavaElement, SharedASTProvider.WAIT_ACTIVE_ONLY, null);
-			// if (ast != null) {
-			// ASTNode node= ast.findDeclaringNode(fAstNodeKey);
-			// if (node instanceof MethodDeclaration) {
-			// try {
-			// IMethodBinding methodBinding= ((MethodDeclaration)node).resolveBinding();
-			// IMethodBinding definingMethodBinding= Bindings.findOverriddenMethod(methodBinding, true);
-			// if (definingMethodBinding != null) {
-			// IJavaElement definingMethod= definingMethodBinding.getJavaElement();
-			// if (definingMethod != null) {
-			// JavaUI.openInEditor(definingMethod, true, true);
-			// return;
-			// }
-			// }
-			// } catch (CoreException e) {
-			// ExceptionHandler.handle(e, JavaEditorMessages.OverrideIndicatorManager_open_error_title, JavaEditorMessages.OverrideIndicatorManager_open_error_messageHasLogEntry);
-			// return;
-			// }
-			// }
-			// }
-			// String title= JavaEditorMessages.OverrideIndicatorManager_open_error_title;
-			// String message= JavaEditorMessages.OverrideIndicatorManager_open_error_message;
-			// MessageDialog.openError(JavaPlugin.getActiveWorkbenchShell(), title, message);
-		}
-	}
 
 	static final String ANNOTATION_TYPE = "org.eclipse.wst.xsl.ui.override"; //$NON-NLS-1$
 
@@ -123,7 +66,7 @@ public class OverrideIndicatorManager
 	 * @param annotationModel
 	 *            the annotation model
 	 * @return the annotation model's lock object
-	 * @since 3.0
+	 * @since 1.0
 	 */
 	private Object getLockObject(IAnnotationModel annotationModel)
 	{
@@ -143,7 +86,7 @@ public class OverrideIndicatorManager
 	 *            the compilation unit AST
 	 * @param progressMonitor
 	 *            the progress monitor
-	 * @since 3.0
+	 * @since 1.0
 	 */
 	public void updateAnnotations()
 	{

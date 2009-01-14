@@ -110,7 +110,6 @@ public class XSLElementContentAssistRequest extends
 			return;
 		}
 		
-		IDOMNode actualNode = (IDOMNode) node;
 		addTagNameProposals(this.getElementPosition(node));
 		// addEndTagNameProposals();
 

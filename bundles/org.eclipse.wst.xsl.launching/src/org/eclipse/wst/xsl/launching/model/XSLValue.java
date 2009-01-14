@@ -39,6 +39,9 @@ public class XSLValue extends XSLDebugElement implements IValue
 	private boolean hasVariables;
 	private Node actualNode;
 
+	/**
+	 * @since 1.0
+	 */
 	public XSLValue(IDebugTarget target, String type, Node node) {
 		super(target);
 		actualNode = node;

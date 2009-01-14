@@ -50,7 +50,7 @@ public class StructuredTextPartitionerForXSL extends StructuredTextPartitionerFo
 	}
 	
 	public static String[] getConfiguredContentTypes() {
-		return configuredContentTypes;
+		return configuredContentTypes.clone();
 	}
 	
 	@Override

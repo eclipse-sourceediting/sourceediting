@@ -16,6 +16,12 @@ import org.eclipse.debug.core.model.IValue;
 import org.eclipse.debug.core.model.IVariable;
 import org.w3c.dom.Node;
 
+/**
+ * NodeListVariable represents a XSL Nodeset.  This is typically a group of nodes that
+ * matched a particular XPath expression, and are stored in an XSLT variable.
+ * 
+ * @since 1.0
+ */
 public class NodeListVariable extends XSLDebugElement implements IVariable {
 	
 	private Node node = null;

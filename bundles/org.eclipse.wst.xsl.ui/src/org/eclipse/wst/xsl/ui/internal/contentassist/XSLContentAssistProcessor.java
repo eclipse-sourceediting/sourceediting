@@ -371,9 +371,9 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor {
 
 	private boolean hasNoMatchString(int offset, String regionType,
 			int totalRegionOffset) {
-		return regionType == DOMRegionContext.XML_CONTENT
-				|| regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS
-				|| regionType == DOMRegionContext.XML_TAG_OPEN
+		return regionType.equals(DOMRegionContext.XML_CONTENT)
+				|| regionType.equals(DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS)
+				|| regionType.equals(DOMRegionContext.XML_TAG_OPEN)
 				|| offset > totalRegionOffset;
 	}
 

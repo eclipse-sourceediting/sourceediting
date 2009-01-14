@@ -406,46 +406,5 @@ public class NewXSLFileTemplatesWizardPage extends WizardPage
 		}
 	}
 	
-	private class TemplateContentProvider implements IStructuredContentProvider
-	{
-		private TemplateStore fStore;
 
-		public void dispose()
-		{
-			fStore = null;
-		}
-
-		public Object[] getElements(Object input)
-		{
-			return fStore.getTemplates(XSLUIConstants.TEMPLATE_CONTEXT_XSL_NEW);
-		}
-
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
-		{
-			fStore = (TemplateStore) newInput;
-		}
-	}
-
-	private class TemplateLabelProvider extends LabelProvider implements ITableLabelProvider
-	{
-		public Image getColumnImage(Object element, int columnIndex)
-		{
-			return null;
-		}
-
-		public String getColumnText(Object element, int columnIndex)
-		{
-			Template template = (Template) element;
-
-			switch (columnIndex)
-			{
-			case 0:
-				return template.getName();
-			case 1:
-				return template.getDescription();
-			default:
-				return "";
-			}
-		}
-	}
 }
