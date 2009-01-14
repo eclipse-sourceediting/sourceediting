@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.web.ui.internal.wizards;
 
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.common.componentcore.internal.util.IModuleConstants;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.web.internal.ResourceHandler;
@@ -27,6 +28,13 @@ public class SimpleWebProjectFirstPage extends DataModelFacetCreationWizardPage 
 	
 	protected String getModuleTypeID() {
 		return IModuleConstants.WST_WEB_MODULE;
+	}
+
+	@Override
+	protected Composite createTopLevelComposite(Composite parent) {
+        final Composite top = super.createTopLevelComposite(parent);
+        createWorkingSetGroupPanel(top, new String[] { RESOURCE_WORKING_SET });
+		return top;
 	}
 
 }

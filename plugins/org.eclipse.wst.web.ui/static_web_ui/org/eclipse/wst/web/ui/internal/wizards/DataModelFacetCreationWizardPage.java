@@ -72,8 +72,8 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 	private static final String NULL_RUNTIME = "NULL_RUNTIME"; //$NON-NLS-1$
 	private static final String MRU_RUNTIME_STORE = "MRU_RUNTIME_STORE"; //$NON-NLS-1$
 	
-	private static final String RESOURCE_WORKING_SET = "org.eclipse.ui.resourceWorkingSetPage"; //$NON-NLS-1$
-	private static final String JAVA_WORKING_SET = "org.eclipse.jdt.ui.JavaWorkingSetPage"; //$NON-NLS-1$
+	protected static final String RESOURCE_WORKING_SET = "org.eclipse.ui.resourceWorkingSetPage"; //$NON-NLS-1$
+	protected static final String JAVA_WORKING_SET = "org.eclipse.jdt.ui.JavaWorkingSetPage"; //$NON-NLS-1$
 	
 	protected IProjectFacet primaryProjectFacet = null;
 	protected Combo primaryVersionCombo = null;
@@ -127,7 +127,6 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		createServerTargetComposite(top);
 		createPrimaryFacetComposite(top);
         createPresetPanel(top);
-        createWorkingSetGroupPanel(top);
         return top;
 	}
 	
@@ -649,7 +648,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		return workingSetGroup;
 	}
 	
-	protected WorkingSetGroup createWorkingSetGroupPanel(Composite composite) {
+	protected WorkingSetGroup createWorkingSetGroupPanel(Composite composite, String[] workingSetTypes) {
 		IStructuredSelection structuredSelection = null;
 		ISelection currentSelection = PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow().getSelectionService()
@@ -657,8 +656,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		if (currentSelection instanceof IStructuredSelection) {
 			structuredSelection = (IStructuredSelection) currentSelection;
 		}
-		WorkingSetGroup group = createWorkingSetGroup(composite, structuredSelection, 
-				new String[] { RESOURCE_WORKING_SET, JAVA_WORKING_SET });
+		WorkingSetGroup group = createWorkingSetGroup(composite, structuredSelection, workingSetTypes);
 		return group;
 	} 
 	
