@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -741,6 +741,16 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     action.setSelectionProvider(getSelectionManager());
     action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDSimpleEnum.gif"));
     registry.registerAction(action);
+    
+    action = new AddXSDEnumerationFacetAction(this, AddXSDEnumerationFacetAction.BEFORE_SELECTED_ID, Messages._UI_ACTION_ADD_ENUMERATION_BEFORE);
+    action.setSelectionProvider(getSelectionManager());
+    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDSimpleEnum.gif"));
+    registry.registerAction(action);       
+
+    action = new AddXSDEnumerationFacetAction(this, AddXSDEnumerationFacetAction.AFTER_SELECTED_ID, Messages._UI_ACTION_ADD_ENUMERATION_AFTER);
+    action.setSelectionProvider(getSelectionManager());
+    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDSimpleEnum.gif"));
+    registry.registerAction(action);       
 
     action = new AddXSDSchemaDirectiveAction(this, AddXSDSchemaDirectiveAction.IMPORT_ID, Messages._UI_ACTION_ADD_IMPORT);
     action.setSelectionProvider(getSelectionManager());

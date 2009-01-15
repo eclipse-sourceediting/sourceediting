@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,6 +44,7 @@ import org.eclipse.xsd.XSDComplexTypeContent;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDEnumerationFacet;
 import org.eclipse.xsd.XSDFacet;
 import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDFeature;
@@ -318,6 +319,23 @@ public class XSDCommonUIUtils
     for (Iterator i = elements.iterator(); i.hasNext();)
     {
       usedNames.add(getDisplayName((XSDNamedComponent) i.next()));
+    }
+
+    int i = 1;
+    String testName = prefix;
+    while (usedNames.contains(testName))
+    {
+      testName = prefix + i++;
+    }
+    return testName;
+  }
+  
+  public static String createUniqueEnumerationValue(String prefix, List elements)
+  {
+    ArrayList usedNames = new ArrayList();
+    for (Iterator i = elements.iterator(); i.hasNext();)
+    {
+      usedNames.add(((XSDEnumerationFacet) i.next()).getLexicalValue());
     }
 
     int i = 1;

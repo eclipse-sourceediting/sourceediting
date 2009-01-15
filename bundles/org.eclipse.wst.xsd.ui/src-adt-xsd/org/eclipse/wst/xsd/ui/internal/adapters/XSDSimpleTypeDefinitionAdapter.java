@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,8 @@ import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
+import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
+import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDEnumerationFacetAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
@@ -124,7 +126,7 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter
 
   public boolean hasChildren()
   {
-    return false;
+    return true;
   }
   
   public boolean isComplexType()
@@ -149,6 +151,8 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter
   public String[] getActions(Object object)
   {
     List list = new ArrayList();
+    list.add(AddXSDEnumerationFacetAction.ID);
+    list.add(BaseSelectionAction.SEPARATOR_ID);
     list.add(DeleteAction.ID);
     list.add(BaseSelectionAction.SEPARATOR_ID);
     Object schema = getEditorSchema();
@@ -191,4 +195,12 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter
     return (IModel)adapter;
   }
 
+  public ITreeElement[] getChildren()
+  {
+    List adapterList = new ArrayList();
+    XSDSimpleTypeDefinition xsdSimpleTypeDefinition = (XSDSimpleTypeDefinition) target;
+    List list = xsdSimpleTypeDefinition.getEnumerationFacets();
+    populateAdapterList(list, adapterList);
+    return (ITreeElement[]) adapterList.toArray(new ITreeElement[0]);
+  }
 }

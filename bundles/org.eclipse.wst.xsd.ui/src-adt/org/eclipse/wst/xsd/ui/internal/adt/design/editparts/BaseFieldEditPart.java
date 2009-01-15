@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,7 +51,7 @@ import org.eclipse.wst.xsd.ui.internal.design.editparts.model.TargetConnectionSp
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.GraphNodeDragTracker;
 import org.eclipse.xsd.XSDNamedComponent;
 
-public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INamedEditPart
+public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INamedEditPart, IAutoDirectEdit
 {
   protected TypeReferenceConnection connectionFigure;
   protected ADTDirectEditPolicy adtDirectEditPolicy = new ADTDirectEditPolicy();

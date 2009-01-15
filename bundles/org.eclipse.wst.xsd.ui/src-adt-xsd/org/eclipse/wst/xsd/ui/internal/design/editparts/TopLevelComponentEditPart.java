@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,6 +42,7 @@ import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaDirectiveAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.IAutoDirectEdit;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.INamedEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IFeedbackHandler;
@@ -65,7 +66,7 @@ import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.impl.XSDImportImpl;
 
-public class TopLevelComponentEditPart extends BaseEditPart implements IFeedbackHandler, INamedEditPart
+public class TopLevelComponentEditPart extends BaseEditPart implements IFeedbackHandler, INamedEditPart, IAutoDirectEdit
 {
   protected Label label;
   // protected Label arrowLabel;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.actions;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -20,12 +19,22 @@ import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddEnumerationsCommand;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
 import org.eclipse.xsd.XSDEnumerationFacet;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 
 public class AddXSDEnumerationFacetAction extends XSDBaseAction
 {
   public static String ID = "org.eclipse.wst.xsd.ui.AddXSDEnumerationFacetAction"; //$NON-NLS-1$
+  public static String BEFORE_SELECTED_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDEnumerationFacetAction.BEFORE_SELECTED_ID"; //$NON-NLS-1$
+  public static String AFTER_SELECTED_ID = "org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDEnumerationFacetAction.AFTER_SELECTED_ID"; //$NON-NLS-1$
+  
+  public AddXSDEnumerationFacetAction(IWorkbenchPart part, String id, String label)
+  {
+    super(part);
+    setText(label);
+    setId(id);
+  }
   
   public AddXSDEnumerationFacetAction(IWorkbenchPart part)
   {
@@ -41,32 +50,35 @@ public class AddXSDEnumerationFacetAction extends XSDBaseAction
     if (selection instanceof XSDBaseAdapter)
     {
       selection = ((XSDBaseAdapter) selection).getTarget();
-
-      XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition)selection;
-      List enumList = st.getEnumerationFacets();
-      StringBuffer newName = new StringBuffer("value1"); //$NON-NLS-1$
-      int suffix = 1;
-      for (Iterator i = enumList.iterator(); i.hasNext();)
+      
+      AddEnumerationsCommand command = null;
+      XSDSimpleTypeDefinition st = null;
+      if (selection instanceof XSDSimpleTypeDefinition)
       {
-        XSDEnumerationFacet enumFacet = (XSDEnumerationFacet) i.next();
-        String value = enumFacet.getLexicalValue();
-        if (value != null)
-        {
-          if (value.equals(newName.toString()))
-          {
-            suffix++;
-            newName = new StringBuffer("value" + String.valueOf(suffix)); //$NON-NLS-1$
-          }
-        }
+        st = (XSDSimpleTypeDefinition)selection;
+      }
+      else if (selection instanceof XSDEnumerationFacet)
+      {
+        st = ((XSDEnumerationFacet)selection).getSimpleTypeDefinition();
+        doDirectEdit = true;
+      }
+      else // null
+      {
+        return;
       }
       
-      AddEnumerationsCommand command = new AddEnumerationsCommand(Messages._UI_ACTION_ADD_ENUMERATION, st);
-      command.setValue(newName.toString());
+      List enumList = st.getFacetContents();
+      
+      String newName = XSDCommonUIUtils.createUniqueEnumerationValue("value", enumList); //$NON-NLS-1$
+      
+//      AddEnumerationsCommand command = new AddEnumerationsCommand(Messages._UI_ACTION_ADD_ENUMERATION, st);
+      int index = st.getEnumerationFacets().indexOf(selection); 
+      command = new AddEnumerationsCommand(getText(), st, getId(), index);
+      command.setValue(newName);
       getCommandStack().execute(command);
       addedComponent = command.getAddedComponent();
       Adapter adapter = XSDAdapterFactory.getInstance().adapt(addedComponent);
       selectAddedComponent(adapter);
     }
   }
-  
 }

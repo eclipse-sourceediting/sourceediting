@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -297,21 +297,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
     if (e.widget == addButton)
     {
       List enumList = st.getEnumerationFacets();
-      StringBuffer newName = new StringBuffer("value1"); //$NON-NLS-1$
-      int suffix = 1;
-      for (Iterator i = enumList.iterator(); i.hasNext();)
-      {
-        XSDEnumerationFacet enumFacet = (XSDEnumerationFacet) i.next();
-        String value = enumFacet.getLexicalValue();
-        if (value != null)
-        {
-          if (value.equals(newName.toString()))
-          {
-            suffix++;
-            newName = new StringBuffer("value" + String.valueOf(suffix)); //$NON-NLS-1$
-          }
-        }
-      }
+      String newName = XSDCommonUIUtils.createUniqueEnumerationValue("value", enumList); //$NON-NLS-1$
 
       if (kind == ENUMERATION)
       {
@@ -338,7 +324,7 @@ public class SpecificConstraintsWidget implements SelectionListener, Listener
         }
 
         AddEnumerationsCommand command = new AddEnumerationsCommand(Messages._UI_ACTION_ADD_ENUMERATION, targetSimpleType);
-        command.setValue(newName.toString());
+        command.setValue(newName);
         compoundCommand.add(command);
         commandStack.execute(compoundCommand);
         setInput(input);

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import org.eclipse.ui.views.contentoutline.ContentOutline;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseFieldEditPart;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.IAutoDirectEdit;
 import org.eclipse.wst.xsd.ui.internal.design.editparts.TopLevelComponentEditPart;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDSchema;
@@ -71,6 +72,10 @@ public class XSDBaseAction extends BaseSelectionAction
     {
       BaseFieldEditPart editPart = (BaseFieldEditPart)obj;
       editPart.doEditName(!(part instanceof ContentOutline));
+    }
+    else if (obj instanceof IAutoDirectEdit)
+    {
+      ((IAutoDirectEdit)obj).doEditName(!(part instanceof ContentOutline));
     }
   }
 }

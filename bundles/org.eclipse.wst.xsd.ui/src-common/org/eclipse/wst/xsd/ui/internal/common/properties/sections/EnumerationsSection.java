@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,6 +46,7 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.AddEnumerationsCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.SetXSDFacetValueCommand;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.widgets.EnumerationsDialog;
 import org.eclipse.xsd.XSDEnumerationFacet;
@@ -74,24 +75,10 @@ public class EnumerationsSection extends AbstractSection
     if (e.widget == addButton)
     {
       List enumList = st.getEnumerationFacets();
-      StringBuffer newName = new StringBuffer("value1"); //$NON-NLS-1$
-      int suffix = 1;
-      for (Iterator i = enumList.iterator(); i.hasNext();)
-      {
-        XSDEnumerationFacet enumFacet = (XSDEnumerationFacet) i.next();
-        String value = enumFacet.getLexicalValue();
-        if (value != null)
-        {
-          if (value.equals(newName.toString()))
-          {
-            suffix++;
-            newName = new StringBuffer("value" + String.valueOf(suffix)); //$NON-NLS-1$
-          }
-        }
-      }
+      String newName = XSDCommonUIUtils.createUniqueEnumerationValue("value", enumList); //$NON-NLS-1$
 
       AddEnumerationsCommand command = new AddEnumerationsCommand(Messages._UI_ACTION_ADD_ENUMERATION, (XSDSimpleTypeDefinition) input);
-      command.setValue(newName.toString());
+      command.setValue(newName);
       getCommandStack().execute(command);
 
       enumerationsTable.refresh();
