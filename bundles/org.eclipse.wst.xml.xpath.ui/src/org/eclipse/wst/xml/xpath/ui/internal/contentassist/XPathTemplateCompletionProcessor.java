@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath.ui.internal.contentassist;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -46,7 +47,10 @@ import org.eclipse.wst.xml.xpath.ui.internal.util.XPathPluginImages;
  * templates.
  */
 public class XPathTemplateCompletionProcessor extends TemplateCompletionProcessor {
-	private static final class ProposalComparator implements Comparator {
+	private static final class ProposalComparator implements Comparator, Serializable {
+		
+		private static final long serialVersionUID = 1686588609390747536L;
+
 		public int compare(Object o1, Object o2) {
 			return ((TemplateProposal) o2).getRelevance() - ((TemplateProposal) o1).getRelevance();
 		}
