@@ -12,38 +12,12 @@
 package org.eclipse.wst.xsl.ui.tests.contentassist;
 
 import java.io.File;
-import java.io.IOException;
 
-import junit.framework.Assert;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyExists;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
-import org.eclipse.wst.xml.core.internal.encoding.XMLDocumentLoader;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
-import org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL;
-import org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistProcessor;
 import org.eclipse.wst.xsl.ui.tests.AbstractXSLUITest;
 import org.eclipse.wst.xsl.ui.tests.XSLUITestsPlugin;
 
@@ -51,216 +25,140 @@ import org.eclipse.wst.xsl.ui.tests.XSLUITestsPlugin;
  * Tests everything about code completion and code assistance.
  * 
  */
-public class TestElementCompletionProposal extends AbstractXSLUITest {
+public class TestElementCompletionProposal extends
+		AbstractCompletionProposalTest {
 
-	protected String projectName = null;
-	protected String fileName = null;
-	protected IFile file = null;
-	protected IEditorPart textEditorPart = null;
-	protected ITextEditor editor = null;
-
-	protected XMLDocumentLoader xmlDocumentLoader = null;
-	protected IStructuredDocument document = null;
-	protected StructuredTextViewer sourceViewer = null;
-	
 	public TestElementCompletionProposal() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	/**
-	 * Setup the necessary projects, files, and source viewer for the
-	 * tests.
-	 */
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		setupProject();
-		
-	}
 
-	protected void loadFileForTesting(String xslFilePath)
-			throws ResourceAlreadyExists, ResourceInUse, IOException,
-			CoreException {
-		file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(xslFilePath));
-		if (file != null && !file.exists()) {
-			Assert.fail("Unable to locate " + fileName + " stylesheet.");
-		}
-		
-		loadXSLFile();
-		
-		initializeSourceViewer();
-	}
+	public void testXSLPropsoalAvailable() throws Exception {
+		fileName = "testElementProposals.xsl";
+		String xslFilePath = projectName + File.separator + fileName;
+		loadFileForTesting(xslFilePath);
+		IStructuredDocument document = (IStructuredDocument) sourceViewer
+				.getDocument();
+		// Column is off by one when calculating for the offset position
+		int column = 16;
+		int line = 5;
 
-	protected void initializeSourceViewer() {
-		// some test environments might not have a "real" display
-		if(Display.getCurrent() != null) {
-			
-			Shell shell = null;
-			Composite parent = null;
-			
-			if(PlatformUI.isWorkbenchRunning()) {
-				shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-			}
-			else {	
-				shell = new Shell(Display.getCurrent());
-			}
-			parent = new Composite(shell, SWT.NONE);
-			
-			// dummy viewer
-			sourceViewer = new StructuredTextViewer(parent, null, null, false, SWT.NONE);
-		}
-		else {
-			Assert.fail("Unable to run the test as a display must be available.");
-		}
-		
-		configureSourceViewer();
-	}
-
-	protected void configureSourceViewer() {
-		sourceViewer.configure(new StructuredTextViewerConfigurationXSL());
-		
-        sourceViewer.setDocument(document);
-	}
-
-	protected void loadXSLFile() throws ResourceAlreadyExists, ResourceInUse,
-			IOException, CoreException {
-		IModelManager modelManager = StructuredModelManager.getModelManager();
-		IStructuredModel model = modelManager.getNewModelForEdit(file, true);
-		document = model.getStructuredDocument();
-	}
-
-	protected void setupProject() {
-		projectName = "xsltestfiles";
-		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(projectName);
-
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 		try {
-			project.create(description, new NullProgressMonitor());
-			project.open(new NullProgressMonitor());
+			int offset = document.getLineOffset(line) + column;
+
+			ICompletionProposal[] proposals = getProposals(offset);
+			assertNotNull("Did not find proposals.", proposals);
+		} catch (Exception ex) {
+			model.releaseFromEdit();
+			throw ex;
+		} finally {
+			model.releaseFromEdit();
 		}
-		catch (CoreException e) {
-			
+		sourceViewer = null;
+
+	}
+
+	public void testXSLApplyTemplatesPropsoalAvailable() throws Exception {
+		fileName = "testElementProposals.xsl";
+		String xslFilePath = projectName + File.separator + fileName;
+		loadFileForTesting(xslFilePath);
+		IStructuredDocument document = (IStructuredDocument) sourceViewer
+				.getDocument();
+		// Column is off by one when calculating for the offset position
+		int column = 16;
+		int line = 5;
+
+		try {
+			int offset = document.getLineOffset(line) + column;
+
+			ICompletionProposal[] proposals = getProposals(offset);
+			assertNotNull("Did not find proposals.", proposals);
+
+			String proposalName = "";
+			for (int cnt = 0; cnt < proposals.length; cnt++) {
+				if (proposals[cnt].getDisplayString().equals(
+						"xsl:apply-templates")) {
+					proposalName = proposals[cnt].getDisplayString();
+				}
+			}
+
+			assertEquals("Did not find expected proposal.",
+					"xsl:apply-templates", proposalName);
+		} catch (Exception ex) {
+			model.releaseFromEdit();
+			throw ex;
+		} finally {
+			model.releaseFromEdit();
 		}
+
+		sourceViewer = null;
+
 	}
-	
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+
+	public void testXSLChoosePropsoalAvailable() throws Exception {
+		fileName = "testElementProposals.xsl";
+		String xslFilePath = projectName + File.separator + fileName;
+		loadFileForTesting(xslFilePath);
+		IStructuredDocument document = (IStructuredDocument) sourceViewer
+				.getDocument();
+		// Column is off by one when calculating for the offset position
+		int column = 16;
+		int line = 5;
+
+		try {
+			int offset = document.getLineOffset(line) + column;
+
+			ICompletionProposal[] proposals = getProposals(offset);
+			assertNotNull("Did not find proposals.", proposals);
+
+			String proposalName = "";
+			for (int cnt = 0; cnt < proposals.length; cnt++) {
+				if (proposals[cnt].getDisplayString().equals("xsl:choose")) {
+					proposalName = proposals[cnt].getDisplayString();
+				}
+			}
+
+			assertEquals("Did not find expected proposal.", "xsl:choose",
+					proposalName);
+		} catch (Exception ex) {
+			model.releaseFromEdit();
+			throw ex;
+		} finally {
+			model.releaseFromEdit();
+		}
+
+		sourceViewer = null;
 	}
-	
-	/**
-	 * Get the content completion proposals at <code>lineNumber</code>, <code>columnNumber</code>.
-	 * @param lineNumber
-	 * @param columnNumber
-	 * @return
-	 * @throws Exception
-	 */
-	private ICompletionProposal[] getProposals(int offset) throws Exception {
-    	return new XSLContentAssistProcessor().computeCompletionProposals(sourceViewer, offset); 
+
+	public void testXSLWhenPropsoalNotAvailable() throws Exception {
+		fileName = "testElementProposals.xsl";
+		String xslFilePath = projectName + File.separator + fileName;
+		loadFileForTesting(xslFilePath);
+		IStructuredDocument document = (IStructuredDocument) sourceViewer
+				.getDocument();
+		// Column is off by one when calculating for the offset position
+		int column = 16;
+		int line = 5;
+
+		try {
+			int offset = document.getLineOffset(line) + column;
+
+			ICompletionProposal[] proposals = getProposals(offset);
+			assertNotNull("Did not find proposals.", proposals);
+
+			String proposalName = "";
+			for (int cnt = 0; cnt < proposals.length; cnt++) {
+				if (proposals[cnt].getDisplayString().equals("xsl:when")) {
+					proposalName = proposals[cnt].getDisplayString();
+				}
+			}
+
+			assertFalse("xsl:when proposal found when it shouldn't have been.",
+					proposalName.equals("xsl:when"));
+		} catch (Exception ex) {
+			model.releaseFromEdit();
+			throw ex;
+		}
+		sourceViewer = null;
 	}
-	
-     
-    public void testXSLPropsoalAvailable() throws Exception {
-		fileName = "testElementProposals.xsl";
-		String xslFilePath = projectName + File.separator + fileName;
-		loadFileForTesting(xslFilePath);
-		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
-		// Column is off by one when calculating for the offset position
-		int column = 16;
-		int line = 5;
-		
-		int offset = document.getLineOffset(line) + column;
-		
-		
-		System.out.println(document.get(document.getLineOffset(line), document.getLineLength(line)));
-		
-		// assertEquals("Line Offset incorrect:", 189, offset);
-		
-    	ICompletionProposal[] proposals = getProposals(offset);
-    	assertNotNull("Did not find proposals.", proposals);
-    	sourceViewer = null;
-    	
-    }
-    
-    public void testXSLApplyTemplatesPropsoalAvailable() throws Exception {
-		fileName = "testElementProposals.xsl";
-		String xslFilePath = projectName + File.separator + fileName;
-		loadFileForTesting(xslFilePath);
-		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
-		// Column is off by one when calculating for the offset position
-		int column = 16;
-		int line = 5;
-		
-		int offset = document.getLineOffset(line) + column;
-		// assertEquals("Line Offset incorrect:", 189, offset);
-		
-    	ICompletionProposal[] proposals = getProposals(offset);
-    	assertNotNull("Did not find proposals.", proposals);
 
-    	String proposalName = "";
-    	for (int cnt = 0; cnt < proposals.length; cnt++) {
-    		if (proposals[cnt].getDisplayString().equals("xsl:apply-templates")) {
-    			proposalName = proposals[cnt].getDisplayString();
-    		}
-    	}
-
-    	assertEquals("Did not find expected proposal.", "xsl:apply-templates", proposalName);
-    	
-    	sourceViewer = null;
-    	
-    }
-    
-    public void testXSLChoosePropsoalAvailable() throws Exception {
-		fileName = "testElementProposals.xsl";
-		String xslFilePath = projectName + File.separator + fileName;
-		loadFileForTesting(xslFilePath);
-		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
-		// Column is off by one when calculating for the offset position
-		int column = 16;
-		int line = 5;
-		
-		int offset = document.getLineOffset(line) + column;
-		// assertEquals("Line Offset incorrect:", 189, offset);
-		
-    	ICompletionProposal[] proposals = getProposals(offset);
-    	assertNotNull("Did not find proposals.", proposals);
-
-    	String proposalName = "";
-    	for (int cnt = 0; cnt < proposals.length; cnt++) {
-    		if (proposals[cnt].getDisplayString().equals("xsl:choose")) {
-    			proposalName = proposals[cnt].getDisplayString();
-    		}
-    	}
-
-    	assertEquals("Did not find expected proposal.", "xsl:choose", proposalName);
-    	sourceViewer = null;
-    }
-    
-    public void testXSLWhenPropsoalNotAvailable() throws Exception {
-		fileName = "testElementProposals.xsl";
-		String xslFilePath = projectName + File.separator + fileName;
-		loadFileForTesting(xslFilePath);
-		IStructuredDocument document = (IStructuredDocument) sourceViewer.getDocument();
-		// Column is off by one when calculating for the offset position
-		int column = 16;
-		int line = 5;
-		
-		int offset = document.getLineOffset(line) + column;
-		// assertEquals("Line Offset incorrect:", 189, offset);
-		
-    	ICompletionProposal[] proposals = getProposals(offset);
-    	assertNotNull("Did not find proposals.", proposals);
-
-    	String proposalName = "";
-    	for (int cnt = 0; cnt < proposals.length; cnt++) {
-    		if (proposals[cnt].getDisplayString().equals("xsl:when")) {
-    			proposalName = proposals[cnt].getDisplayString();
-    		}
-    	}
-    	
-    	assertFalse("xsl:when proposal found when it shouldn't have been.", proposalName.equals("xsl:when"));
-    	sourceViewer = null;
-    }
-
-    
 }
