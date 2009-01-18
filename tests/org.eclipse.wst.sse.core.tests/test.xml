@@ -48,13 +48,13 @@
          There are some properties that must be provided by caller. 
     -->
     <fail
-        message="Error: missing property. eclipse-home must be proved"
+        message="Error: missing property. eclipse-home must be provided"
         unless="eclipse-home" />
     <fail
-        message="Error: missing property. buildDirectory must be proved"
+        message="Error: missing property. buildDirectory must be provided"
         unless="buildDirectory" />
     <fail
-        message="Error: missing property. buildLabel must be proved"
+        message="Error: missing property. buildLabel must be provided"
         unless="buildLabel" />
     <echo
         message="basedir: ${basedir}" />
