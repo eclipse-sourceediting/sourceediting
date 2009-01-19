@@ -10,9 +10,11 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.contentassist;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposal;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.contentassist.ICompletionProposalExtension5;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
@@ -22,7 +24,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
  *
  * @plannedfor 1.0
  */
-public class JSPCompletionProposal extends CustomCompletionProposal implements IJavaCompletionProposal  {
+public class JSPCompletionProposal extends CustomCompletionProposal implements IJavaCompletionProposal, ICompletionProposalExtension5 {
 
 	/*
 	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=124483
@@ -54,12 +56,28 @@ public class JSPCompletionProposal extends CustomCompletionProposal implements I
 	}
 	
 	public String getAdditionalProposalInfo() {
-		
 		String additionalInfo = super.getAdditionalProposalInfo();
 		ICompletionProposal javaProposal = getJavaCompletionProposal();
 		if(javaProposal != null)
 			additionalInfo = javaProposal.getAdditionalProposalInfo();
 		
+		return additionalInfo;
+	}
+
+	/* 
+	 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension5#getAdditionalProposalInfo(org.eclipse.core.runtime.IProgressMonitor)
+	 */
+	public Object getAdditionalProposalInfo(IProgressMonitor monitor) {
+		Object additionalInfo = super.getAdditionalProposalInfo();
+		ICompletionProposal javaProposal = getJavaCompletionProposal();
+		if (javaProposal != null) {
+			if (javaProposal instanceof ICompletionProposalExtension5)
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=260951
+				additionalInfo = ((ICompletionProposalExtension5) javaProposal).getAdditionalProposalInfo(monitor);
+			else
+				additionalInfo = javaProposal.getAdditionalProposalInfo();
+		}
+
 		return additionalInfo;
 	}
 }
