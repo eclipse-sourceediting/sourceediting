@@ -35,6 +35,8 @@ import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
@@ -76,6 +78,7 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
   protected SimpleDirectEditPolicy simpleDirectEditPolicy = new SimpleDirectEditPolicy();
   protected boolean isReadOnly;
   protected boolean isSelected;
+  private Font italicFont;
 
   protected IFigure createFigure()
   {
@@ -120,6 +123,11 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
 
   public void deactivate()
   {
+    if (italicFont != null)
+    {
+      italicFont.dispose();
+      italicFont = null;
+    }
     super.deactivate();
   }
 
@@ -138,6 +146,25 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
       }
       // arrowLabel.setVisible(Boolean.TRUE.equals(adapter.getProperty(getModel(),
       // "drillDown")));
+      
+      if (adapter.isAbstract())
+      {
+        if (italicFont == null)
+        {
+          Font font = label.getFont();
+          FontData [] fd = font.getFontData();
+          if (fd.length > 0)
+          {
+            fd[0].setStyle(fd[0].getStyle() | SWT.ITALIC);
+            italicFont = new Font(font.getDevice(), fd);
+          }
+        }
+        label.setFont(italicFont);
+      }
+      else
+      {
+        label.setFont(label.getParent().getFont());
+      }
     }
     else
     {

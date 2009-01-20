@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -225,5 +225,14 @@ public class XSDBaseAdapter extends AdapterImpl implements IADTObject, ITreeElem
     if (adapter instanceof IADTObject)
       return (IADTObject)adapter;
     return null;
+  }
+
+  /**
+   * Indicates the presence of an abstract attribute
+   * @return true if the component's abstract attribute is true
+   */
+  public boolean isAbstract()
+  {
+    return false;
   }
 }
