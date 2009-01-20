@@ -15,6 +15,10 @@ package org.eclipse.wst.xml.xpath2.processor;
  * Error caused by static name.
  */
 public class StaticNameError extends StaticError {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4363370082563106074L;
 	public static final String NAME_NOT_FOUND = "XP0008";
 
 	/**

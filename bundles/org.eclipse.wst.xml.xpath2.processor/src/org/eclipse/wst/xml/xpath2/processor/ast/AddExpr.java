@@ -11,7 +11,6 @@
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
-import java.util.*;
 /**
  * Class for binary operation Add, takes 2 inputs and returns the combined value.
  */	
@@ -30,6 +29,7 @@ public class AddExpr extends BinExpr {
 	 * Support for Visitor interface.
 	 * @return Result of Visitor operation.
 	 */
+	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}

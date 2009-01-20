@@ -10,8 +10,6 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
-
-import org.eclipse.wst.xml.xpath2.processor.*;
 /**
  * Class for a XPathNode object.
  */

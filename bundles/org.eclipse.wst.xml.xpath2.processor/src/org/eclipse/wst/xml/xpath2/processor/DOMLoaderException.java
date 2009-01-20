@@ -17,6 +17,11 @@ package org.eclipse.wst.xml.xpath2.processor;
 public class DOMLoaderException extends XPathException {
 	
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7652865222211067201L;
+
+	/**
 	 * Constructor for DOM loader exception.
  	 * @param reason is the reason for the exception.
  	 */

@@ -10,8 +10,6 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.types;
-
-import org.eclipse.wst.xml.xpath2.processor.*;
 /**
  * A representation of the UntypedAtomic datatype which is used to represent
  * untyped atomic nodes.
@@ -29,6 +27,7 @@ public class UntypedAtomic extends AnyAtomicType {
 	 * Retrieves the datatype's full pathname
 	 * @return "xdt:untypedAtomic" which is the datatype's full pathname
 	 */
+	@Override
 	public String string_type() {
 		return "xdt:untypedAtomic";
 	}
@@ -36,6 +35,7 @@ public class UntypedAtomic extends AnyAtomicType {
 	 * Retrieves a String representation of the value of this untyped atomic node
 	 * @return String representation of the value of this untyped atomic node
 	 */
+	@Override
 	public String string_value() {
 		return _value;
 	}

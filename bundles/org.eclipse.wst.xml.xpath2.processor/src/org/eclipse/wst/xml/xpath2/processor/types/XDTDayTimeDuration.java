@@ -57,7 +57,7 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 
 		if (_seconds >= 60) {
 			int isec = (int) _seconds;
-			double rem = _seconds - ((double) isec);
+			double rem = _seconds - (isec);
 
 			_minutes += isec / 60;
 			_seconds = isec % 60;
@@ -97,6 +97,7 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @return New XDTDayTimeDuration representing the duration of time stored
 	 * @throws CloneNotSupportedException
 	 */
+	@Override
 	public Object clone() throws CloneNotSupportedException {
 		return new XDTDayTimeDuration(days(), hours(), minutes(), seconds(),
 				negative());
@@ -203,6 +204,7 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 * 
 	 * @return "dayTimeDuration" which is the datatype's name
 	 */
+	@Override
 	public String type_name() {
 		return "dayTimeDuration";
 	}
@@ -216,6 +218,7 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @return New ResultSequence consisting of the time duration extracted
 	 * @throws DynamicError
 	 */
+	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -288,6 +291,7 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 * 
 	 * @return String representation of the duration of time stored
 	 */
+	@Override
 	public String string_value() {
 		String ret = "";
 		boolean did_something = false; // this should be constant ;D
@@ -330,6 +334,7 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 * 
 	 * @return "xdt:dayTimeDuration" which is the datatype's full pathname
 	 */
+	@Override
 	public String string_type() {
 		return "xdt:dayTimeDuration";
 	}

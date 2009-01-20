@@ -11,7 +11,6 @@
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
-import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.XSInteger;
 
 /**
@@ -36,6 +35,7 @@ public class IntegerLiteral extends NumericLiteral {
 	 * 
 	 * @return Result of Visitor operation.
 	 */
+	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}

@@ -16,6 +16,10 @@ package org.eclipse.wst.xml.xpath2.processor;
  *
  */
 public class StaticError extends XPathException {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7870866130837870971L;
 	// errorcode specified in http://www.w3.org/2004/10/xqt-errors i fink
 	private String _code;
 

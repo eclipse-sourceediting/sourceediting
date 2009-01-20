@@ -40,6 +40,7 @@ public class XSBoolean extends CtrType implements CmpEq,
 	 * Retrieve the full type pathname of this datatype
 	 * @return "xs:boolean", the full datatype pathname
 	 */
+	@Override
 	public String string_type() {
 		return "xs:boolean";
 	}
@@ -48,6 +49,7 @@ public class XSBoolean extends CtrType implements CmpEq,
 	 * Retrieve the datatype name
 	 * @return "boolean", which is the datatype name.
 	 */
+	@Override
 	public String type_name() {
 		return "boolean";
 	}
@@ -56,6 +58,7 @@ public class XSBoolean extends CtrType implements CmpEq,
 	 * Retrieve the String representation of the boolean value stored
 	 * @return the String representation of the boolean value stored
 	 */
+	@Override
 	public String string_value() {
 		return ""+_value;
 	}
@@ -72,7 +75,8 @@ public class XSBoolean extends CtrType implements CmpEq,
          * @throws DynamicError
          * @return A new result sequence consisting of the boolean value supplied.
          */
-        public ResultSequence constructor(ResultSequence arg) throws DynamicError {
+        @Override
+		public ResultSequence constructor(ResultSequence arg) throws DynamicError {
                 ResultSequence rs = ResultSequenceFactory.create_new();
 
                 if(arg.empty())

@@ -61,7 +61,8 @@ public class XSDouble extends NumericType {
 		 * @throws DynamicError
 		 * @return A new result sequence consisting of the double number supplied.
 		 */
-        public ResultSequence constructor(ResultSequence arg) throws DynamicError {
+        @Override
+		public ResultSequence constructor(ResultSequence arg) throws DynamicError {
                 ResultSequence rs = ResultSequenceFactory.create_new();
 
                 if(arg.empty())
@@ -81,6 +82,7 @@ public class XSDouble extends NumericType {
 	 * Retrieves the datatype's full pathname
 	 * @return "xs:double" which is the datatype's full pathname
 	 */
+	@Override
 	public String string_type() {
 		return "xs:double";
 	}
@@ -88,6 +90,7 @@ public class XSDouble extends NumericType {
 	 * Retrieves the datatype's name
 	 * @return "double" which is the datatype's name
 	 */
+	@Override
 	public String type_name() {
 		return "double";
 	}
@@ -95,6 +98,7 @@ public class XSDouble extends NumericType {
 	 * Retrieves a String representation of the Decimal value stored
 	 * @return String representation of the Decimal value stored
 	 */
+	@Override
 	public String string_value() {
 		return ""+_value;
 	}
@@ -109,6 +113,7 @@ public class XSDouble extends NumericType {
 	 * Check for whether this XSDouble represents 0
 	 * @return True if this XSDouble represents 0. False otherwise.
 	 */
+	@Override
 	public boolean zero() {
 		return _value == 0.0;
 	}
@@ -227,7 +232,8 @@ public class XSDouble extends NumericType {
 		 * Negation of the number stored 
 		 * @return A XSDouble representing the negation of this XSDecimal
 		 */
-        public ResultSequence unary_minus() {
+        @Override
+		public ResultSequence unary_minus() {
                 return ResultSequenceFactory.create_new(new XSDouble(-1*double_value()));
         }
 
@@ -236,35 +242,40 @@ public class XSDouble extends NumericType {
 		 * Absolutes the number stored
 		 * @return A XSDouble representing the absolute value of the number stored
 		 */
-        public NumericType abs() {
+        @Override
+		public NumericType abs() {
                 return new XSDouble(Math.abs(double_value()));
         }
         /**
 		* Returns the smallest integer greater than the number stored
 		* @return A XSDouble representing the smallest integer greater than the number stored
 		*/
-        public NumericType ceiling() {
+        @Override
+		public NumericType ceiling() {
                 return new XSDouble(Math.ceil(double_value()));
         }
         /**
 		* Returns the largest integer smaller than the number stored
 		* @return A XSDouble representing the largest integer smaller than the number stored
 		*/
-        public NumericType floor() {
+        @Override
+		public NumericType floor() {
                 return new XSDouble(Math.floor(double_value()));
         }
         /**
 		* Returns the closest integer of the number stored.
 		* @return A XSDouble representing the closest long of the number stored.
 		 */
-        public NumericType round() {
+        @Override
+		public NumericType round() {
                 return new XSDouble(Math.round(double_value()));
         }
         /**
 		* Returns the closest integer of the number stored.
 		* @return A XSDouble representing the closest long of the number stored.
 		*/
-        public NumericType round_half_to_even() {
+        @Override
+		public NumericType round_half_to_even() {
                 return new XSDouble(Math.rint(double_value()));
         }
 }

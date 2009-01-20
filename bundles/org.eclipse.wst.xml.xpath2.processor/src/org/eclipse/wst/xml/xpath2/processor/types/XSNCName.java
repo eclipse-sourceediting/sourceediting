@@ -12,9 +12,6 @@
 package org.eclipse.wst.xml.xpath2.processor.types;
 
 import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.function.*;
-
-import java.util.*;
 /**
  * A representation of the NCName datatype
  */
@@ -36,6 +33,7 @@ public class XSNCName extends XSString {
 	 * Retrieves the datatype's full pathname
 	 * @return "xs:NCName" which is the datatype's full pathname
 	 */
+	@Override
 	public String string_type() {
 		return "xs:NCName";
 	}
@@ -43,6 +41,7 @@ public class XSNCName extends XSString {
 	 * Retrieves the datatype's name
 	 * @return "NCName" which is the datatype's name
 	 */
+	@Override
 	public String type_name() {
 		return "NCName";
 	}
@@ -53,6 +52,7 @@ public class XSNCName extends XSString {
 	 * @return New ResultSequence consisting of the NCName supplied
 	 * @throws DynamicError
 	 */
+	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 

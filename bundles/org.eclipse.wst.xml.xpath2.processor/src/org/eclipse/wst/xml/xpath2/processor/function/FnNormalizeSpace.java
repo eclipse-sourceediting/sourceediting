@@ -46,6 +46,7 @@ public class FnNormalizeSpace extends Function {
 	 * @throws DynamicError Dynamic error.
 	 * @return The evaluation of the space in the arguments being normalized.
 	 */
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return normalize_space(args);
 	}

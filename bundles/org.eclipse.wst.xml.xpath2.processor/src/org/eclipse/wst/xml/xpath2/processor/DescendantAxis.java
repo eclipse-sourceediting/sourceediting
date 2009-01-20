@@ -11,7 +11,6 @@
 
 package org.eclipse.wst.xml.xpath2.processor;
 
-import org.w3c.dom.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
@@ -27,6 +26,7 @@ public class DescendantAxis extends ChildAxis {
 	 * @param dc is the dynamic context.
 	 * @return The descendants of the context node.
 	 */
+	@Override
 	public ResultSequence iterate(NodeType node, DynamicContext dc) {
 		// get the children
 		ResultSequence rs = super.iterate(node, dc);

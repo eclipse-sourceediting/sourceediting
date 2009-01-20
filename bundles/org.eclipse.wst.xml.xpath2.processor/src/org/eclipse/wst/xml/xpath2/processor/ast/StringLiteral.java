@@ -40,6 +40,7 @@ public class StringLiteral extends Literal {
 	 * 
 	 * @return Result of Visitor operation.
 	 */
+	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}

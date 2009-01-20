@@ -11,7 +11,6 @@
 
 package org.eclipse.wst.xml.xpath2.processor;
 
-import org.w3c.dom.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 /**

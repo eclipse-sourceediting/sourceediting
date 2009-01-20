@@ -57,7 +57,8 @@ public class XSTime extends CalendarType implements CmpEq,
 		 * @return New XSTime representing the copy of the time and timezone
 		 * @throws CloneNotSupportedException
 		 */
-        public Object clone() throws CloneNotSupportedException {
+        @Override
+		public Object clone() throws CloneNotSupportedException {
                 Calendar c = (Calendar) calendar().clone();
                 XDTDayTimeDuration t = tz();
                 
@@ -71,6 +72,7 @@ public class XSTime extends CalendarType implements CmpEq,
      * Retrieves the datatype's name
      * @return "time" which is the datatype's name
      */
+	@Override
 	public String type_name() {
 		return "time";
 	}
@@ -108,6 +110,7 @@ public class XSTime extends CalendarType implements CmpEq,
 	 * @return New ResultSequence consisting of the supplied time
 	 * @throws DynamicError
 	 */
+	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
                 ResultSequence rs = ResultSequenceFactory.create_new();
                                         
@@ -162,6 +165,7 @@ public class XSTime extends CalendarType implements CmpEq,
 	 * Retrieves a String representation of the time stored
 	 * @return String representation of the time stored
 	 */
+	@Override
 	public String string_value() {
 		String ret = "";
 
@@ -174,7 +178,7 @@ public class XSTime extends CalendarType implements CmpEq,
                 int isecond = (int) second();
                 double sec = second();
 
-                if( (sec - ((double) isecond) ) == 0.0)
+                if( (sec - (isecond) ) == 0.0)
                         ret += XSDateTime.pad_int(isecond, 2);
                 else {
                         if(sec < 10.0)
@@ -192,6 +196,7 @@ public class XSTime extends CalendarType implements CmpEq,
 	 * Retrieves the datatype's full pathname
 	 * @return "xs:time" which is the datatype's full pathname
 	 */
+	@Override
 	public String string_type() {
 		return "xs:time";
 	}

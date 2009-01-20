@@ -13,7 +13,6 @@ package org.eclipse.wst.xml.xpath2.processor.types;
 
 import org.w3c.dom.*;
 import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.ast.*;
 /**
  * A representation of the CommentType datatype
  */
@@ -32,11 +31,13 @@ public class CommentType extends NodeType {
 	 * Retrieves the datatype's full pathname
 	 * @return "comment" which is the datatype's full pathname
 	 */
+	@Override
 	public String string_type() { return "comment"; }
 	/**
 	 * Retrieves a String representation of the comment being stored
 	 * @return String representation of the comment being stored
 	 */
+	@Override
 	public String string_value() {
 		return _value.getNodeValue();
 	}
@@ -44,6 +45,7 @@ public class CommentType extends NodeType {
 	 * Creates a new ResultSequence consisting of the comment stored
 	 * @return New ResultSequence consisting of the comment stored
 	 */
+	@Override
 	public ResultSequence typed_value() {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -55,5 +57,6 @@ public class CommentType extends NodeType {
 	 * Unsupported method for this node.
 	 * @return null
 	 */
+	@Override
 	public QName node_name() { return null; }
 }

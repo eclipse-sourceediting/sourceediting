@@ -34,6 +34,7 @@ public class FnYearsFromDuration extends Function {
          * @throws DynamicError Dynamic error.
          * @return Result of evaluation.
          */
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return years_from_duration(args);
 	}

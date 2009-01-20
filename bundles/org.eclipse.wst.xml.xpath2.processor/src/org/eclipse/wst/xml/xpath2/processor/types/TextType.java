@@ -13,7 +13,6 @@ package org.eclipse.wst.xml.xpath2.processor.types;
 
 import org.w3c.dom.*;
 import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.ast.*;
 /**
  * A representation of the TextType datatype
  */
@@ -32,11 +31,13 @@ public class TextType extends NodeType {
 	 * Retrieves the datatype's name
 	 * @return "text" which is the datatype's name
 	 */
+	@Override
 	public String string_type() { return "text"; }
 	/**
 	 * Retrieves a String representation of the actual value stored
 	 * @return String representation of the actual value stored
 	 */
+	@Override
 	public String string_value() {
 		return _value.getNodeValue();
 	}
@@ -44,6 +45,7 @@ public class TextType extends NodeType {
 	 * Creates a new ResultSequence consisting of the Text value stored
 	 * @return New ResultSequence consisting of the Text value stored
 	 */
+	@Override
 	public ResultSequence typed_value() {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -55,6 +57,7 @@ public class TextType extends NodeType {
 	 * Unsupported method for this nodetype. 
 	 * @return null (no user defined name for this node gets defined)
 	 */
+	@Override
 	public QName node_name() {
 		return null;
 	}

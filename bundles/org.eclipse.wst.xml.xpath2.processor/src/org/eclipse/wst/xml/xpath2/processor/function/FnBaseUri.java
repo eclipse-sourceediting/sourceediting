@@ -42,6 +42,7 @@ public class FnBaseUri extends Function {
          * @throws DynamicError Dynamic error.
          * @return Result of evaluation.
          */
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return base_uri(args);
 	}

@@ -47,6 +47,7 @@ public class FnSubstring extends Function {
 	 * @throws DynamicError Dynamic error.
 	 * @return The evaluation of the substring obtained from the arguments.
 	 */
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return substring(args);
 	}

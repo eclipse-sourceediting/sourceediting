@@ -17,6 +17,10 @@ package org.eclipse.wst.xml.xpath2.processor;
 public class XPathParserException extends StaticError {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4974805230489762419L;
+	/**
 	 * The type of exception.
 	 */
 	public static final String INVALID_XPATH_EXPRESSION = "XP0003";

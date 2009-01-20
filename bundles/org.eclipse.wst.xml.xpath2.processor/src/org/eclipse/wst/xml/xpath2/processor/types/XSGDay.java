@@ -42,6 +42,7 @@ public class XSGDay extends CalendarType implements CmpEq {
 	 * Retrieves the datatype's name
 	 * @return "gDay" which is the datatype's name
 	 */
+	@Override
 	public String type_name() {
 		return "gDay";
 	}
@@ -86,6 +87,7 @@ public class XSGDay extends CalendarType implements CmpEq {
 	 * @return New ResultSequence consisting of the supplied day
 	 * @throws DynamicError
 	 */
+	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
                 ResultSequence rs = ResultSequenceFactory.create_new();
                                         
@@ -120,6 +122,7 @@ public class XSGDay extends CalendarType implements CmpEq {
 	 * Retrieves a String representation of the stored day
 	 * @return String representation of the stored day
 	 */
+	@Override
 	public String string_value() {
 		String ret = "";
 
@@ -134,6 +137,7 @@ public class XSGDay extends CalendarType implements CmpEq {
 	 * Retrieves the datatype's full pathname
 	 * @return "xs:gDay" which is the datatype's full pathname
 	 */
+	@Override
 	public String string_type() {
 		return "xs:gDay";
 	}

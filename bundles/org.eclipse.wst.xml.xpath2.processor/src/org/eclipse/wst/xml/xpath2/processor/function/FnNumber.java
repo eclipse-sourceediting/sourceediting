@@ -15,7 +15,6 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
-import org.w3c.dom.*;
 /**
  * Returns the value indicated by $arg or, if $arg is not specified, the context item
  * after atomization, converted to an xs:double. If $arg or the context item cannot be
@@ -35,6 +34,7 @@ public class FnNumber extends Function {
          * @throws DynamicError Dynamic error.
          * @return Result of evaluation.
          */
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		
 		assert args.size() == arity();

@@ -20,6 +20,7 @@ public class AnyKindTest extends KindTest {
 	 * Support for Visitor interface.
 	 * @return Result of Visitor operation.
 	 */
+	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}

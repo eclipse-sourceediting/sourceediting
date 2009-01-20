@@ -13,7 +13,6 @@ package org.eclipse.wst.xml.xpath2.processor;
 
 import java.util.*;
 
-import org.eclipse.wst.xml.xpath2.processor.ast.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 /**
@@ -46,6 +45,7 @@ public class RangeResultSequence extends ResultSequence {
  	 *  item is an integer to add to the range.
  	 * @param item is an integer.
  	 */
+	@Override
 	public void add(AnyType item) {
 		_tail.add(item);
 	}
@@ -54,6 +54,7 @@ public class RangeResultSequence extends ResultSequence {
  	 *  remove the tail from the range given.
  	 * @param rs is the range
  	 */
+	@Override
 	public void concat(ResultSequence rs) {
 		_tail.concat(rs);
 	}
@@ -62,6 +63,7 @@ public class RangeResultSequence extends ResultSequence {
  	 *  interate through range.
 	 * @return tail 
  	 */
+	@Override
 	public ListIterator iterator() {
 		// XXX life is getting hard...
 		if(_size != 0) {
@@ -86,6 +88,7 @@ public class RangeResultSequence extends ResultSequence {
 	/**
 	 * @return item from range
  	 */
+	@Override
 	public AnyType get(int i) {
 		if(i < _size)
 			return new XSInteger(_start + i);
@@ -96,6 +99,7 @@ public class RangeResultSequence extends ResultSequence {
 	/**
 	 * @return size
  	 */
+	@Override
 	public int size() {
 		return _size + _tail.size();
 	}
@@ -103,6 +107,7 @@ public class RangeResultSequence extends ResultSequence {
 	/**
 	 * clear range
  	 */
+	@Override
 	public void clear() {
 		_size = 0;
 		_tail.clear();
@@ -112,6 +117,7 @@ public class RangeResultSequence extends ResultSequence {
 	 * create new result sequence
 	 * @return null
  	 */
+	@Override
 	public ResultSequence create_new() {
 		assert false;
 		return null;
@@ -120,6 +126,7 @@ public class RangeResultSequence extends ResultSequence {
 	/**
 	 * @return first item in range
  	 */
+	@Override
 	public AnyType first() {
 		return get(0);
 	}
@@ -128,6 +135,7 @@ public class RangeResultSequence extends ResultSequence {
 	 * asks if the range is empty?
 	 * @return boolean
  	 */
+	@Override
 	public boolean empty() {
 		return size() == 0;
 	}
@@ -135,6 +143,7 @@ public class RangeResultSequence extends ResultSequence {
 	/**
 	 * release
  	 */
+	@Override
 	public void release() {
 	}
 }

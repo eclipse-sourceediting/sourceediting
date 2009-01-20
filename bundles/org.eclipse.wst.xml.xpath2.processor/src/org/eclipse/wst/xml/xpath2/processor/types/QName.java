@@ -77,7 +77,8 @@ public class QName extends CtrType implements CmpEq {
 		 * @return New ResultSequence consisting of the QName supplied
 		 * @throws DynamicError
 		 */
-        public ResultSequence constructor(ResultSequence arg) throws DynamicError {
+        @Override
+		public ResultSequence constructor(ResultSequence arg) throws DynamicError {
                 ResultSequence rs = ResultSequenceFactory.create_new();
 
                 if(arg.empty())
@@ -103,16 +104,19 @@ public class QName extends CtrType implements CmpEq {
      * identical to string()
      * @return String representation of the node name
      */
+	@Override
 	public String string_value() { return string(); }
 	/**
 	 * Retrieves the datatype's full pathname
 	 * @return "xs:QName" which is the datatype's full pathname
 	 */
+	@Override
 	public String string_type() { return "xs:QName"; }
 	/**
 	 * Retrieves the datatype's name
 	 * @return "QName" which is the datatype's name
 	 */
+	@Override
 	public String type_name() { return "QName"; }
 	/**
      * Retrieves a String representation of the node name. This method is functionally
@@ -182,6 +186,7 @@ public class QName extends CtrType implements CmpEq {
 	 * @param obj The object to compare with. Should be of type QName
 	 * @return True if the two represent the same node. False otherwise
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		
 		// make sure we are comparing a qname
@@ -227,6 +232,7 @@ public class QName extends CtrType implements CmpEq {
 	 * Calculates the hashcode for the full pathname
 	 * @return The hashcode for the full pathname
 	 */
+	@Override
 	public int hashCode() {
 		int namespace = 3;
 		int local = 4;

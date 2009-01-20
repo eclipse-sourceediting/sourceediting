@@ -11,9 +11,6 @@
 
 package org.eclipse.wst.xml.xpath2.processor.types;
 
-import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.function.*;
-
 /**
  * Common base for every time duration class
  */

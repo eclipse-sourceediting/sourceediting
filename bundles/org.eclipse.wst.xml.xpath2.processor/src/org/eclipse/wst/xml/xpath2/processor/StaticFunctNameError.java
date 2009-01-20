@@ -16,6 +16,10 @@ package org.eclipse.wst.xml.xpath2.processor;
  */
 public class StaticFunctNameError extends StaticNameError {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3804565876770376444L;
 	public static final String FUNCTION_NOT_FOUND = "XP0017";
 	
 	/**

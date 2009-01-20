@@ -10,8 +10,6 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
-
-import java.util.*;
 /**
  * Class for Modular operation.
  */
@@ -28,6 +26,7 @@ public class ModExpr extends BinExpr {
 	 * Support for Visitor interface.
 	 * @return Result of Visitor operation.
 	 */
+	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}

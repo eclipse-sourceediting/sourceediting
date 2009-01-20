@@ -56,6 +56,7 @@ public class XSDate extends CalendarType implements CmpEq,
 	 * Retrieves the datatype name
 	 * @return "date" which is the dataype name
 	 */
+	@Override
 	public String type_name() {
 		return "date";
 	}
@@ -64,7 +65,8 @@ public class XSDate extends CalendarType implements CmpEq,
 		 * Creates a copy of this date representation
 		 * @return A copy of this date representation
 		 */
-        public Object clone() throws CloneNotSupportedException {
+        @Override
+		public Object clone() throws CloneNotSupportedException {
                 Calendar c = (Calendar) calendar().clone();
                 XDTDayTimeDuration t = tz();
 
@@ -128,6 +130,7 @@ public class XSDate extends CalendarType implements CmpEq,
 	  * @throws DynamicError
 	  * @return A new result sequence consisting of the date value supplied.
 	  */
+	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
                 ResultSequence rs = ResultSequenceFactory.create_new();
                                         
@@ -182,6 +185,7 @@ public class XSDate extends CalendarType implements CmpEq,
 	 * Retrieves a String representation of the date stored
 	 * @return String representation of the date stored
 	 */
+	@Override
 	public String string_value() {
 		String ret = "";
 
@@ -203,6 +207,7 @@ public class XSDate extends CalendarType implements CmpEq,
 	 * Retrive the datatype full pathname
 	 * @return "xs:date" which is the datatype full pathname
 	 */
+	@Override
 	public String string_type() {
 		return "xs:date";
 	}

@@ -11,7 +11,6 @@
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
-import java.util.*;
 /**
  * Support for Integer division.
  */
@@ -28,6 +27,7 @@ public class IDivExpr extends BinExpr {
 	 * Support for Visitor interface.
 	 * @return Result of Visitor operation.
 	 */
+	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}

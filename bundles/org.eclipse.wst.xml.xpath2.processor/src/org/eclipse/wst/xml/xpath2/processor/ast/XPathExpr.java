@@ -11,12 +11,6 @@
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
-import java.util.*;
-
-import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.function.*;
-import org.eclipse.wst.xml.xpath2.processor.types.*;
-
 
 /**
  * Path expression walks tries to walk the path specified in its
@@ -45,6 +39,7 @@ public class XPathExpr extends Expr {
 	 * 
 	 * @return Result of Visitor operation.
 	 */
+	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}

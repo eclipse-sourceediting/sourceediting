@@ -16,6 +16,11 @@ package org.eclipse.wst.xml.xpath2.processor;
  */
 public class StaticNsNameError extends StaticNameError {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6873980377966290062L;
+
 	public StaticNsNameError(String reason) {
 		super(reason);
 	}

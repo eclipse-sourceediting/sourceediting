@@ -43,6 +43,7 @@ public class FnStringJoin extends Function {
 	 * @throws DynamicError Dynamic error.
 	 * @return The evaluation of the joining of the arguments.
 	 */
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return string_join(args);
 	}

@@ -15,6 +15,10 @@ package org.eclipse.wst.xml.xpath2.processor;
  * This error is thrown when there is a problem with an XPath exception.
  */
 public class XPathError extends Error {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6624631792087303209L;
 	private String _reason;
 
 	/**

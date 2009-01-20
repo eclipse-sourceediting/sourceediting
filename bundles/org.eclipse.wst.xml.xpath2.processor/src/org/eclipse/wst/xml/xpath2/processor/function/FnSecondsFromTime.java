@@ -36,6 +36,7 @@ public class FnSecondsFromTime extends Function {
          * @throws DynamicError Dynamic error.
          * @return Result of evaluation.
          */
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return seconds_from_time(args);
 	}

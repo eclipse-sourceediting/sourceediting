@@ -33,6 +33,7 @@ public class OpUnion extends Function {
          * @throws DynamicError Dynamic error.
          * @return Result of evaluation.
          */
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		assert args.size() == arity();
 

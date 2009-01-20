@@ -11,7 +11,6 @@
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
-import java.util.*;
 /**
  * A class that creates a new value of a specific type based on an existing value.
  * A cast expression takes two operands: an input expression and a target type. 
@@ -36,6 +35,7 @@ public class CastExpr extends BinExpr {
 	 * Support for Visitor interface.
 	 * @return Result of Visitor operation.
 	 */
+	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}

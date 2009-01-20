@@ -16,7 +16,6 @@ import org.eclipse.wst.xml.xpath2.processor.function.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
-import java.io.*;
 
 /**
  * Normalizer that uses XPathVisitor.

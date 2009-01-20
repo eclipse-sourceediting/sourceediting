@@ -43,6 +43,7 @@ public class FnUpperCase extends Function {
 	 * @throws DynamicError Dynamic error.
 	 * @return The evaluation of the arguments being converted to upper case.
 	 */	
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return upper_case(args);
 	}

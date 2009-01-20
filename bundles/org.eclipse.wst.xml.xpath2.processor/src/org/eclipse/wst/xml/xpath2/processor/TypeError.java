@@ -15,6 +15,10 @@ package org.eclipse.wst.xml.xpath2.processor;
  * Error caused by bad types.
  */
 public class TypeError extends XPathException {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 932275035706936883L;
 	// errorcode specified in http://www.w3.org/2004/10/xqt-errors i fink
 	private String _code;
 

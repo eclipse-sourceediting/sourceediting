@@ -12,9 +12,6 @@
 package org.eclipse.wst.xml.xpath2.processor.types;
 
 import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.function.*;
-
-import java.util.*;
 /**
  * Represents a Universal Resource Identifier (URI) reference
  */
@@ -41,6 +38,7 @@ public class XSAnyURI extends CtrType {
 	 * Retrieve full type pathname of this datatype
 	 * @return "xs:anyURI", the full type pathname of this datatype
 	 */
+	@Override
 	public String string_type() {
 		return "xs:anyURI";
 	}
@@ -49,6 +47,7 @@ public class XSAnyURI extends CtrType {
 	 * Retrieve type name of this datatype
 	 * @return "anyURI", the type name of this datatype
 	 */
+	@Override
 	public String type_name() {
 		return "anyURI";
 	}
@@ -57,6 +56,7 @@ public class XSAnyURI extends CtrType {
 	 * Transforms and retrieves the URI value of this URI datatype in String format
 	 * @return the URI value held by this instance of the URI datatype as a String
 	 */
+	@Override
 	public String string_value() {
 		return _value;
 	}
@@ -67,6 +67,7 @@ public class XSAnyURI extends CtrType {
 	 * @throws DynamicError
 	 * @return new result sequence consisting of the URI supplied
 	 */
+	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 

@@ -13,7 +13,6 @@ package org.eclipse.wst.xml.xpath2.processor.types;
 
 import org.w3c.dom.*;
 import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.ast.*;
 /**
  * A representation of the ProcessingInstruction datatype
  */
@@ -37,11 +36,13 @@ public class PIType extends NodeType {
 	 * Retrieves the datatype's full pathname
 	 * @return "processing-instruction" which is the datatype's full pathname
 	 */
+	@Override
 	public String string_type() { return "processing instruction"; }
 	/**
 	 * Retrieves a String representation of the actual processing instruction stored
 	 * @return String representation of the actual processing instruction stored
 	 */
+	@Override
 	public String string_value() {
 		return _value.getData();
 	}
@@ -49,6 +50,7 @@ public class PIType extends NodeType {
 	 * Creates a new ResultSequence consisting of the processing instruction stored
 	 * @return New ResultSequence consisting of the processing instruction stored
 	 */
+	@Override
 	public ResultSequence typed_value() {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -60,6 +62,7 @@ public class PIType extends NodeType {
 	 * Constructs the node's name
 	 * @return A QName representation of the node's name
 	 */
+	@Override
 	public QName node_name() {
 		QName name = new QName(null, _value.getTarget());
 

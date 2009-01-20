@@ -8,10 +8,6 @@ Bundle-ClassPath: processor.jar,
  contrib/lib/xerces.jar,
  contrib/lib/xml-apis.jar,
  contrib/lib/junit.jar
-Export-Package: org.eclipse.wst.xml.xpath2.processor,
- org.eclipse.wst.xml.xpath2.processor.ast,
- org.eclipse.wst.xml.xpath2.processor.function,
- org.eclipse.wst.xml.xpath2.processor.types
 Require-Bundle: java_cup.runtime;bundle-version="0.10.0",
  org.apache.xerces;bundle-version="[2.9.0,3.0.0)"
-Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

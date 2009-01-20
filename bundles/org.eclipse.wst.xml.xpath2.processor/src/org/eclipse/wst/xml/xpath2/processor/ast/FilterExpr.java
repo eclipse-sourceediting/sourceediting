@@ -13,8 +13,6 @@ package org.eclipse.wst.xml.xpath2.processor.ast;
 
 import java.util.*;
 
-import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.function.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 /**
@@ -48,6 +46,7 @@ public class FilterExpr extends StepExpr {
 	 * Support for Visitor interface.
 	 * @return Result of Visitor operation.
 	 */
+	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}

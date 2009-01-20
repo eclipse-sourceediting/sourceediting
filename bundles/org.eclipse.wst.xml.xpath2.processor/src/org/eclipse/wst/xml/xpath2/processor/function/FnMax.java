@@ -34,6 +34,7 @@ public class FnMax extends Function {
          * @throws DynamicError Dynamic error.
          * @return Result of evaluation.
          */
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return max(args);
 	}
@@ -87,7 +88,7 @@ public class FnMax extends Function {
 		if(arg.empty())
 			return arg;
 
-		AnyType at = (AnyType) arg.first();
+		AnyType at = arg.first();
 
 		// check for operator
 		// XXX ok this is wrong... [promotion, and other reasons]

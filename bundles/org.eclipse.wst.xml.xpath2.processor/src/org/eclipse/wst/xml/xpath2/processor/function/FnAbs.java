@@ -38,6 +38,7 @@ public class FnAbs extends Function {
 	 * @throws DynamicError Dynamic error.
 	 * @return Result of evaluation.
 	 */
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		// 1 argument only!
 		assert args.size() == arity();

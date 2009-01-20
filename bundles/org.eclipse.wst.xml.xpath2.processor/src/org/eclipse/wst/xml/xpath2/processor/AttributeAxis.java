@@ -53,6 +53,7 @@ public class AttributeAxis extends ForwardAxis {
 	 * Retrieves the node's principle node kind.
 	 * @return The type of node.
 	 */
+	@Override
 	public NodeType principal_node_kind() {
 		return new AttrType();
 	}

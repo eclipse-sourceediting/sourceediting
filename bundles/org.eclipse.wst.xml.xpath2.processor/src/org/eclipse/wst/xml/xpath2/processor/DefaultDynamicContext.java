@@ -164,7 +164,8 @@ public class DefaultDynamicContext extends DefaultStaticContext
 	 * @param fl Function library to add.
  	 * 
  	 */
-        public void add_function_library(FunctionLibrary fl) {
+        @Override
+		public void add_function_library(FunctionLibrary fl) {
 		super.add_function_library(fl);
 		fl.set_dynamic_context(this);
 	}
@@ -207,6 +208,7 @@ public class DefaultDynamicContext extends DefaultStaticContext
 	 * @param var Variable name.
 	 * @param val Variable value.
  	 */
+	@Override
 	public void set_variable(QName var, AnyType val) {
 		super.set_variable(var, val);
 	}

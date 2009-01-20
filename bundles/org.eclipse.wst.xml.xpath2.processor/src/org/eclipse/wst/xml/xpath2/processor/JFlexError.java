@@ -17,6 +17,11 @@ package org.eclipse.wst.xml.xpath2.processor;
 public class JFlexError extends XPathError {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7154784482417833297L;
+
+	/**
 	 * Constructor for JFlex error.
 	 * @param reason is the reason for the error.
  	 */

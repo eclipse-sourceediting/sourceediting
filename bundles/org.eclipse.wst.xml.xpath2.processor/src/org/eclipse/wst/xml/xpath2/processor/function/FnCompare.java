@@ -49,6 +49,7 @@ public class FnCompare extends Function {
 	 * @throws DynamicError Dynamic error.
 	 * @return The evaluation of the comparison of the arguments.
 	 */
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return compare(args);
 	}

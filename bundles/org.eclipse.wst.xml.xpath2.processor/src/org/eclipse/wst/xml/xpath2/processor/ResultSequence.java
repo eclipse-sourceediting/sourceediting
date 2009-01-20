@@ -13,7 +13,6 @@ package org.eclipse.wst.xml.xpath2.processor;
 
 import java.util.*;
 
-import org.eclipse.wst.xml.xpath2.processor.ast.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 /**

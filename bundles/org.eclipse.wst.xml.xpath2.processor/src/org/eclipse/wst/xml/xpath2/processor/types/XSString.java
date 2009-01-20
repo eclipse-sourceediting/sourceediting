@@ -40,6 +40,7 @@ public class XSString extends CtrType implements CmpEq,
 	 * Retrieves the datatype's full pathname
 	 * @return "xs:string" which is the datatype's full pathname
 	 */
+	@Override
 	public String string_type() {
 		return "xs:string";
 	}
@@ -47,6 +48,7 @@ public class XSString extends CtrType implements CmpEq,
 	 * Retrieves the datatype's name
 	 * @return "string" which is the datatype's name
 	 */
+	@Override
 	public String type_name() {
 		return "string";
 	}
@@ -55,6 +57,7 @@ public class XSString extends CtrType implements CmpEq,
 	 * This method is functionally identical to value()
 	 * @return The String stored
 	 */
+	@Override
 	public String string_value() {
 		return _value;
 	}
@@ -71,6 +74,7 @@ public class XSString extends CtrType implements CmpEq,
 	 * @return New ResultSequence consisting of the supplied String
 	 * @throws DynamicError
 	 */
+	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 

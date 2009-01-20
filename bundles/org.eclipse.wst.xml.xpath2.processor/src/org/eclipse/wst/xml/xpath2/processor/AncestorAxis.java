@@ -26,6 +26,7 @@ public class AncestorAxis extends ParentAxis {
 	 * @return The nodes that are ancestors of the context node.
  	 */
 	// XXX unify this with descendants axis ?
+	@Override
 	public ResultSequence iterate(NodeType node, DynamicContext dc) {
 
 	  //get the parent

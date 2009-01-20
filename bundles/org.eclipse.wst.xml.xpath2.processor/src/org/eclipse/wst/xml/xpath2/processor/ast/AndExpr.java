@@ -11,7 +11,6 @@
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
-import java.util.*;
 /**
  * Class for binary operation And.
  * The value of an and-expression is determined by the effective boolean values 
@@ -32,6 +31,7 @@ public class AndExpr extends BinExpr {
 	 * Support for Visitor interface.
 	 * @return Result of Visitor operation.
 	 */
+	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}

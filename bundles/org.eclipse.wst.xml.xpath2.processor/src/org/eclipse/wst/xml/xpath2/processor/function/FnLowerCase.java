@@ -43,6 +43,7 @@ public class FnLowerCase extends Function {
 	 * @throws DynamicError Dynamic error.
 	 * @return The evaluation of the arguments being converted to lower case.
 	 */
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return lower_case(args);
 	}

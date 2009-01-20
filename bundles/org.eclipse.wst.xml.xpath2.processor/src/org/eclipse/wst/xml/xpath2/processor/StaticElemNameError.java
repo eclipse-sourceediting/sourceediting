@@ -17,6 +17,11 @@ package org.eclipse.wst.xml.xpath2.processor;
 public class StaticElemNameError extends StaticNameError {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1871575671871755673L;
+
+	/**
 	 * Constructor for static element name error
 	 * @param reason is the reason for the error.
  	 */

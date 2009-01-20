@@ -13,7 +13,6 @@ package org.eclipse.wst.xml.xpath2.processor.types;
 
 import org.w3c.dom.*;
 import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.ast.*;
 /**
  * A representation of the DocumentType datatype
  */
@@ -39,11 +38,13 @@ public class DocType extends NodeType {
 	 * Retrieves the datatype's full pathname
 	 * @return "document" which is the datatype's full pathname
 	 */
+	@Override
 	public String string_type() { return "document"; }
 	/**
 	 * Retrieves a String representation of the document being stored
 	 * @return String representation of the document being stored
 	 */
+	@Override
 	public String string_value() {
 		// XXX caching
 		if(_string_value == null)
@@ -55,6 +56,7 @@ public class DocType extends NodeType {
 	 * Creates a new ResultSequence consisting of the document being stored
 	 * @return New ResultSequence consisting of the document being stored
 	 */
+	@Override
 	public ResultSequence typed_value() {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -67,6 +69,7 @@ public class DocType extends NodeType {
 	 * Retrieves the name of the node
 	 * @return QName representation of the name of the node
 	 */
+	@Override
 	public QName node_name() {
 		return null;
 	}

@@ -34,6 +34,7 @@ public class FnMinutesFromDateTime extends Function {
          * @throws DynamicError Dynamic error.
          * @return Result of evaluation.
          */
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return minutes_from_date_time(args);
 	}

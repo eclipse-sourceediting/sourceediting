@@ -13,7 +13,6 @@ package org.eclipse.wst.xml.xpath2.processor.types;
 
 import org.w3c.dom.*;
 import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.ast.*;
 /**
  * A representation of the AttributeType datatype
  */
@@ -41,11 +40,13 @@ public class AttrType extends NodeType {
 	 * Retrieves the datatype's full pathname
 	 * @return "attribute" which is the datatype's full pathname
 	 */
+	@Override
 	public String string_type() { return "attribute"; }
 	/**
 	 * Retrieves a String representation of the attribute being stored
 	 * @return String representation of the attribute being stored
 	 */
+	@Override
 	public String string_value() {
 		return _value.getValue();
 	}
@@ -53,6 +54,7 @@ public class AttrType extends NodeType {
 	 * Creates a new ResultSequence consisting of the attribute being stored
 	 * @return New ResultSequence consisting of the attribute being stored
 	 */
+	@Override
 	public ResultSequence typed_value() {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -65,6 +67,7 @@ public class AttrType extends NodeType {
 	 * Retrieves the name of the node
 	 * @return Name of the node
 	 */
+	@Override
 	public QName node_name() {
 		QName name = new QName(_value.getName());
 

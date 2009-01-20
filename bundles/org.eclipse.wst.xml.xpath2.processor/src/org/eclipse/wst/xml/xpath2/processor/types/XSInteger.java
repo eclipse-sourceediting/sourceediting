@@ -36,6 +36,7 @@ public class XSInteger extends XSDecimal {
 	 * Retrieves the datatype's full pathname
 	 * @return "xs:integer" which is the datatype's full pathname
 	 */
+	@Override
 	public String string_type() {
 		return "xs:integer";
 	}
@@ -43,19 +44,22 @@ public class XSInteger extends XSDecimal {
 	 * Retrieves the datatype's name
 	 * @return "integer" which is the datatype's name
 	 */
+	@Override
 	public String type_name() {
 		return "integer";
 	}
 	/**
 	 * Retrieves a String representation of the integer stored
 	 * @return String representation of the integer stored
-	 */	public String string_value() {
+	 */	@Override
+	public String string_value() {
 		return ""+_value;
 	}
 	 /**
 	  * Check whether the integer represented is 0
 	  * @return True is the integer represented is 0. False otherwise
 	  */
+	@Override
 	public boolean zero() {
 		return _value == 0;
 	}
@@ -66,7 +70,8 @@ public class XSInteger extends XSDecimal {
 		 * @return New ResultSequence consisting of the integer supplied
 		 * @throws DynamicError
 		 */
-        public ResultSequence constructor(ResultSequence arg) throws DynamicError {
+        @Override
+		public ResultSequence constructor(ResultSequence arg) throws DynamicError {
                 ResultSequence rs = ResultSequenceFactory.create_new();
 
                 if(arg.empty())
@@ -105,7 +110,8 @@ public class XSInteger extends XSDecimal {
 		 * @param arg The ResultSequence to perform an addition with
 		 * @return A XSInteger consisting of the result of the mathematical addition.
 		 */
-        public ResultSequence plus(ResultSequence arg) throws DynamicError {
+        @Override
+		public ResultSequence plus(ResultSequence arg) throws DynamicError {
                 AnyType at = get_single_arg(arg);
                 if( !(at instanceof XSInteger) )
                         DynamicError.throw_type_error();
@@ -119,7 +125,8 @@ public class XSInteger extends XSDecimal {
 		 * @param arg The ResultSequence to perform a subtraction with
 		 * @return A XSInteger consisting of the result of the mathematical subtraction.
 		 */
-        public ResultSequence minus(ResultSequence arg) throws DynamicError {
+        @Override
+		public ResultSequence minus(ResultSequence arg) throws DynamicError {
                 XSInteger val = (XSInteger) get_single_type(arg, XSInteger.class);
                 return ResultSequenceFactory.create_new(new XSInteger(int_value() - val.int_value()));
         }
@@ -129,7 +136,8 @@ public class XSInteger extends XSDecimal {
 		 * @param arg The ResultSequence to perform a multiplication with
 		 * @return A XSInteger consisting of the result of the mathematical multiplication.
 		 */
-        public ResultSequence times(ResultSequence arg) throws DynamicError {
+        @Override
+		public ResultSequence times(ResultSequence arg) throws DynamicError {
                 XSInteger val = (XSInteger) get_single_type(arg, XSInteger.class);
                 return ResultSequenceFactory.create_new(new XSInteger(int_value() * val.int_value()));
         }
@@ -139,7 +147,8 @@ public class XSInteger extends XSDecimal {
 		 * @param arg The ResultSequence to perform a modulus with
 		 * @return A XSInteger consisting of the result of the mathematical modulus.
 		 */
-        public ResultSequence mod(ResultSequence arg) throws DynamicError {
+        @Override
+		public ResultSequence mod(ResultSequence arg) throws DynamicError {
                 XSInteger val = (XSInteger) get_single_type(arg, XSInteger.class);
                 return ResultSequenceFactory.create_new(new XSInteger(int_value() % val.int_value()));
         }
@@ -147,7 +156,8 @@ public class XSInteger extends XSDecimal {
          * Negates the integer stored
          * @return New XSInteger representing the negation of the integer stored
          */
-        public ResultSequence unary_minus() {
+        @Override
+		public ResultSequence unary_minus() {
                 return ResultSequenceFactory.create_new(new XSInteger(-1*int_value()));
         }
 
@@ -155,7 +165,8 @@ public class XSInteger extends XSDecimal {
          * Absolutes the integer stored
          * @return New XSInteger representing the abolsute of the integer stored
          */
-        public NumericType abs() {
+        @Override
+		public NumericType abs() {
                 return new XSInteger(Math.abs(int_value()));
         }
 

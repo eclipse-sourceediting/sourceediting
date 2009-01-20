@@ -10,8 +10,6 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
-
-import java.util.*;
 /**
  * Class for Or operation.
  */
@@ -28,6 +26,7 @@ public class OrExpr extends BinExpr {
 	 * Support for Visitor interface.
 	 * @return Resulf of Visitor operation.
  	 */
+	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}

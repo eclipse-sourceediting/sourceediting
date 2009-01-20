@@ -10,8 +10,6 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
-
-import java.util.*;
 /**
  * The boolean operator 'instance of' takes the value of its first
  * operand and matches its type to the SequenceType in its second 
@@ -32,6 +30,7 @@ public class InstOfExpr extends BinExpr {
 	 * 
 	 * @return Result of Visitor operation.
 	 */
+	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}

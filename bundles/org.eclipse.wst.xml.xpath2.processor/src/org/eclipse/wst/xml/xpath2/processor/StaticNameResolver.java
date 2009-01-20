@@ -15,13 +15,17 @@ import org.eclipse.wst.xml.xpath2.processor.ast.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
-import java.io.*;
 
 /**
  * This class resolves static names.
  */
 public class StaticNameResolver implements XPathVisitor, StaticChecker {
 	private class DummyError extends Error {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 3898564402981741950L;
 	}
 
 	private StaticContext _sc;

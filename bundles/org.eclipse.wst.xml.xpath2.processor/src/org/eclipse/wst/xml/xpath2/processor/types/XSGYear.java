@@ -42,6 +42,7 @@ public class XSGYear extends CalendarType implements CmpEq {
 	 * Retrieves the datatype's name
 	 * @return "gYear" which is the datatype's name
 	 */
+	@Override
 	public String type_name() {
 		return "gYear";
 	}
@@ -86,6 +87,7 @@ public class XSGYear extends CalendarType implements CmpEq {
 	 * @return New ResultSequence consisting of the supplied year
 	 * @throws DynamicError
 	 */
+	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
                 ResultSequence rs = ResultSequenceFactory.create_new();
                                         
@@ -123,6 +125,7 @@ public class XSGYear extends CalendarType implements CmpEq {
 	 * Retrieves a String representation of the stored year
 	 * @return String representation of the stored year
 	 */
+	@Override
 	public String string_value() {
 		String ret = "";
 
@@ -137,6 +140,7 @@ public class XSGYear extends CalendarType implements CmpEq {
 	 * Retrieves the datatype's full pathname
 	 * @return "xs:gYear" which is the datatype's full pathname
 	 */
+	@Override
 	public String string_type() {
 		return "xs:gYear";
 	}

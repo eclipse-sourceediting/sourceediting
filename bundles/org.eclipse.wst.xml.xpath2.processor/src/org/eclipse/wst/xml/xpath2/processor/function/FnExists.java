@@ -32,6 +32,7 @@ public class FnExists extends Function {
          * @throws DynamicError Dynamic error.
          * @return Result of evaluation.
          */
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return exists(args);
 	}

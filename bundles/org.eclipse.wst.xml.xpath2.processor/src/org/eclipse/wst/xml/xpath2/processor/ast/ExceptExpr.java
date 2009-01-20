@@ -11,7 +11,6 @@
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
-import java.util.*;
 /**
  * The except operator takes two node sequences as operands and returns a sequence 
  * containing all the nodes that occur in the first operand but not in the second operand.
@@ -31,6 +30,7 @@ public class ExceptExpr extends BinExpr {
 	 * Support for Visitor interface.
 	 * @return Result of Visitor operation.
 	 */
+	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}

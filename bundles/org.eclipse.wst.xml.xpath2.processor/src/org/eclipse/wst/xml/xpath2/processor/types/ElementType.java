@@ -13,7 +13,6 @@ package org.eclipse.wst.xml.xpath2.processor.types;
 
 import org.w3c.dom.*;
 import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.ast.*;
 /**
  * A representation of the ElementType datatype
  */
@@ -50,6 +49,7 @@ public class ElementType extends NodeType {
 	 * Retrieves the datatype's full pathname
 	 * @return "element" which is the datatype's full pathname
 	 */
+	@Override
 	public String string_type() { return "element"; }
 
 
@@ -57,6 +57,7 @@ public class ElementType extends NodeType {
 	 * Retrieves a String representation of the element being stored
 	 * @return String representation of the element being stored
 	 */
+	@Override
 	public String string_value() {
 		// XXX can we cache ?
 		if(_string_value != null)
@@ -70,6 +71,7 @@ public class ElementType extends NodeType {
 	 * Creates a new ResultSequence consisting of the element stored
 	 * @return New ResultSequence consisting of the element stored
 	 */
+	@Override
 	public ResultSequence typed_value() {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -109,6 +111,7 @@ public class ElementType extends NodeType {
 	 * Retrieves the name of the node
 	 * @return QName representation of the name of the node
 	 */
+	@Override
 	public QName node_name() {
 		QName name = new QName(_value.getTagName());
 
@@ -117,6 +120,7 @@ public class ElementType extends NodeType {
 		return name;
 	}
 
+	@Override
 	public ResultSequence nilled() {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 

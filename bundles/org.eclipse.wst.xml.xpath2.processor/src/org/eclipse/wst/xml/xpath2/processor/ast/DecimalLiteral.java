@@ -35,6 +35,7 @@ public class DecimalLiteral extends NumericLiteral {
 	 * 
 	 * @return Result of Visitor operation.
 	 */
+	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}

@@ -56,6 +56,7 @@ public class FnTranslate extends Function {
 	 * @throws DynamicError Dynamic error.
 	 * @return The evaluation of the arguments being translated.
 	 */
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return translate(args);
 	}

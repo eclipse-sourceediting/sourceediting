@@ -72,6 +72,7 @@ public class FnEscapeUri extends Function {
 	 * @throws DynamicError Dynamic error.
 	 * @return The evaluation of the arguments after application of the URI escaping rules.
 	 */
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return escape_uri(args);
 	}

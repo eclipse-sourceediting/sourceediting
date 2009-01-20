@@ -11,8 +11,6 @@
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
-import java.util.*;
-
 /**
  * The comparison of expression operator takes the value of its left
  * operand and compares (dependant on type) against its right 
@@ -99,6 +97,7 @@ public class CmpExpr extends BinExpr {
 	 * 
 	 * @return Result of Visitor operation.
 	 */
+	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}

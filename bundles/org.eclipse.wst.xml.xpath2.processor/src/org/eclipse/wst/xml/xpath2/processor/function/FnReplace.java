@@ -35,6 +35,7 @@ public class FnReplace extends Function {
          * @throws DynamicError Dynamic error.
          * @return Result of evaluation.
          */
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return replace(args);
 	}

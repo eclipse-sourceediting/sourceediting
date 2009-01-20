@@ -162,6 +162,7 @@ public class XDTYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 * 
 	 * @return "yearMonthDuration" which is the datatype's name
 	 */
+	@Override
 	public String type_name() {
 		return "yearMonthDuration";
 	}
@@ -175,6 +176,7 @@ public class XDTYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @return New ResultSequence consisting of the time duration extracted
 	 * @throws DynamicError
 	 */
+	@Override
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -227,6 +229,7 @@ public class XDTYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 * 
 	 * @return String representation of the duration of time stored
 	 */
+	@Override
 	public String string_value() {
 		String strval = "";
 
@@ -254,6 +257,7 @@ public class XDTYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 * 
 	 * @return "xdt:yearMonthDuration" which is the datatype's full pathname
 	 */
+	@Override
 	public String string_type() {
 		return "xdt:yearMonthDuration";
 	}

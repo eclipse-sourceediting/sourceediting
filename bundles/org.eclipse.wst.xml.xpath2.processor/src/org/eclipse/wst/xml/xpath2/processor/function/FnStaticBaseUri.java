@@ -34,6 +34,7 @@ public class FnStaticBaseUri extends Function {
          * @throws DynamicError Dynamic error.
          * @return Result of evaluation.
          */
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return static_base_uri(args, static_context());
 	}

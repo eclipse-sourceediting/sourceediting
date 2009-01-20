@@ -11,7 +11,6 @@
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
-import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 /**
  * Class for Name test operation.
@@ -29,6 +28,7 @@ public class NameTest extends NodeTest {
 	 * Support for Visitor interface.
  	 * @return Result of Visitor operation.
  	 */
+	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}

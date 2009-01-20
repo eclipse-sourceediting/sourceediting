@@ -36,6 +36,7 @@ public class FnData extends Function {
          * @param args argument expressions.
          * @return Result of evaluation.
          */
+	@Override
 	public ResultSequence evaluate(Collection args) {
 		// 1 argument only!
 		assert args.size() == arity();

@@ -11,14 +11,11 @@
 
 package org.eclipse.wst.xml.xpath2.processor;
 
-import org.apache.xerces.xs.*;
-import org.eclipse.wst.xml.xpath2.processor.function.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 
 import java.util.*;
 import org.w3c.dom.*;
-import java.io.*;
 
 /**
   * Interface for dynamic context.

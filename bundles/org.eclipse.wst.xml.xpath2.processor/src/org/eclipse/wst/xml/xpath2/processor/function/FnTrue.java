@@ -15,7 +15,6 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
-import java.util.regex.*;
 /**
  * Returns the xs:boolean value true. Equivalent to xs:boolean("1").
  */
@@ -32,6 +31,7 @@ public class FnTrue extends Function {
          * @throws DynamicError Dynamic error.
          * @return Result of evaluation.
          */
+	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return fn_true(args);
 	}

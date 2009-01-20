@@ -35,6 +35,7 @@ public class XSDecimal extends NumericType {
 	 * Retrieves the datatype's full pathname
 	 * @return "xs:decimal" which is the datatype's full pathname
 	 */
+	@Override
 	public String string_type() {
 		return "xs:decimal";
 	}
@@ -42,6 +43,7 @@ public class XSDecimal extends NumericType {
 	 * Retrieves the datatype's name
 	 * @return "decimal" which is the datatype's name
 	 */
+	@Override
 	public String type_name() {
 		return "decimal";
 	}
@@ -49,6 +51,7 @@ public class XSDecimal extends NumericType {
 	 * Retrieves a String representation of the Decimal value stored
 	 * @return String representation of the Decimal value stored
 	 */
+	@Override
 	public String string_value() {
 		return ""+_value;
 	}
@@ -56,6 +59,7 @@ public class XSDecimal extends NumericType {
 	 * Check if this XSDecimal represents 0
 	 * @return True if this XSDecimal represents 0. False otherwise
 	 */
+	@Override
 	public boolean zero() {
 		return _value == 0.0;
 	}
@@ -66,7 +70,8 @@ public class XSDecimal extends NumericType {
 	  * @throws DynamicError
 	  * @return A new result sequence consisting of the decimal number supplied.
 	  */
-        public ResultSequence constructor(ResultSequence arg) throws DynamicError {
+        @Override
+		public ResultSequence constructor(ResultSequence arg) throws DynamicError {
                 ResultSequence rs = ResultSequenceFactory.create_new();
 
                 if(arg.empty())
@@ -212,6 +217,7 @@ public class XSDecimal extends NumericType {
 	 * Negation of the number stored 
 	 * @return A XSDecimal representing the negation of this XSDecimal
 	 */
+	@Override
 	public ResultSequence unary_minus() {
 		return ResultSequenceFactory.create_new(new XSDecimal(-1*double_value()));
 	}
@@ -222,6 +228,7 @@ public class XSDecimal extends NumericType {
 	 * Absolutes the number stored
 	 * @return A XSDecimal representing the absolute value of the number stored
 	 */
+	@Override
 	public NumericType abs() {
 		return new XSDecimal(Math.abs(double_value()));
 	}
@@ -229,6 +236,7 @@ public class XSDecimal extends NumericType {
 	 * Returns the smallest integer greater than the number stored
 	 * @return A XSDecimal representing the smallest integer greater than the number stored
 	 */
+	@Override
 	public NumericType ceiling() {
 		return new XSDecimal(Math.ceil(double_value()));
 	}
@@ -236,6 +244,7 @@ public class XSDecimal extends NumericType {
 	 * Returns the largest integer smaller than the number stored
 	 * @return A XSDecimal representing the largest integer smaller than the number stored
 	 */
+	@Override
 	public NumericType floor() {
 		return new XSDecimal(Math.floor(double_value()));
 	}
@@ -243,6 +252,7 @@ public class XSDecimal extends NumericType {
 	 * Returns the closest integer of the number stored.
 	 * @return A XSDecimal representing the closest long of the number stored.
 	 */
+	@Override
 	public NumericType round() {
 		return new XSDecimal(Math.round(double_value()));
 	}
@@ -250,6 +260,7 @@ public class XSDecimal extends NumericType {
 	 * Returns the closest integer of the number stored.
 	 * @return A XSDecimal representing the closest long of the number stored.
 	 */
+	@Override
 	public NumericType round_half_to_even() {
 		return new XSDecimal(Math.rint(double_value()));
 	}
