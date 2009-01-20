@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,9 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.ADTDirectEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.ADTSelectionFeedbackEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
@@ -25,6 +28,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.BoxFigure;
 public class TopLevelFieldEditPart extends BoxEditPart implements INamedEditPart
 {
   protected ADTDirectEditPolicy adtDirectEditPolicy = new ADTDirectEditPolicy();
+  private Font italicFont;
   
   protected boolean shouldDrawConnection()
   {
@@ -64,8 +68,37 @@ public class TopLevelFieldEditPart extends BoxEditPart implements INamedEditPart
   {
     IField field = (IField)getModel();
     BoxFigure boxFigure = (BoxFigure)getFigure();
-    boxFigure.getNameLabel().setText(field.getName());
+    Label label = boxFigure.getNameLabel();
+    label.setText(field.getName());
+    if (field.isAbstract())
+    {
+      if (italicFont == null)
+      {
+        Font font = label.getFont();
+        FontData [] fd = font.getFontData();
+        if (fd.length > 0)
+        {
+          fd[0].setStyle(fd[0].getStyle() | SWT.ITALIC);
+          italicFont = new Font(font.getDevice(), fd);
+        }
+      }
+      label.setFont(italicFont);
+    }
+    else
+    {
+      label.setFont(label.getParent().getFont());
+    }
     super.refreshVisuals();
+  }
+  
+  public void deactivate()
+  {
+    if (italicFont != null)
+    {
+      italicFont.dispose();
+      italicFont = null;
+    }
+    super.deactivate();
   }
   
   public Label getNameLabelFigure()

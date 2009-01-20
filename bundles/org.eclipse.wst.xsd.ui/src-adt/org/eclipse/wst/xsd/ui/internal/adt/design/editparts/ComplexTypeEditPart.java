@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,15 +12,21 @@ package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
 import java.util.Iterator;
 
+import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.FocusTypeColumn;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
 
 public class ComplexTypeEditPart extends StructureEditPart
-{   
+{
+  private Font italicFont;
+
   protected boolean shouldDrawConnection()
   {
     if (getParent().getModel() instanceof FocusTypeColumn)
@@ -80,5 +86,40 @@ public class ComplexTypeEditPart extends StructureEditPart
       }
     }    
     return connectionFigure;
-  }  
+  }
+
+  protected void refreshVisuals()
+  {
+    super.refreshVisuals();
+    Label label = getNameLabelFigure();
+    IComplexType complexType = (IComplexType)getModel();
+    if (complexType.isAbstract())
+    {
+      if (italicFont == null)
+      {
+        Font font = label.getFont();
+        FontData [] fd = font.getFontData();
+        if (fd.length > 0)
+        {
+          fd[0].setStyle(fd[0].getStyle() | SWT.ITALIC);
+          italicFont = new Font(font.getDevice(), fd);
+        }
+      }
+      label.setFont(italicFont);
+    }
+    else
+    {
+      label.setFont(label.getParent().getFont());
+    }
+  }
+  
+  public void deactivate()
+  {
+    if (italicFont != null)
+    {
+      italicFont.dispose();
+      italicFont = null;
+    }
+    super.deactivate();
+  }
 }
