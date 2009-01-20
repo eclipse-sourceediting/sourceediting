@@ -15,6 +15,7 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
  * Class for Less than or equal to function.
  */
@@ -25,12 +26,16 @@ public class FsLe extends Function {
 	public FsLe() {
 		super(new QName("le"), 2);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		assert args.size() == arity();
@@ -39,31 +44,40 @@ public class FsLe extends Function {
 	}
 
 	/**
-         * Operation on the values of the arguments.
-         * @param args input arguments.
-         * @throws DynamicError Dynamic error.
-         * @return Result of the operation.
-         */
-	public static ResultSequence fs_le_value(Collection args) throws DynamicError {
+	 * Operation on the values of the arguments.
+	 * 
+	 * @param args
+	 *            input arguments.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of the operation.
+	 */
+	public static ResultSequence fs_le_value(Collection args)
+			throws DynamicError {
 		ResultSequence less = FsLt.fs_lt_value(args);
 
-		if( ((XSBoolean)less.first()).value())
+		if (((XSBoolean) less.first()).value())
 			return less;
-	
+
 		ResultSequence equal = FsEq.fs_eq_value(args);
 
-		if( ((XSBoolean)equal.first()).value())
+		if (((XSBoolean) equal.first()).value())
 			return equal;
 
 		return ResultSequenceFactory.create_new(new XSBoolean(false));
 	}
+
 	/**
-         * General operation on the arguments.
-         * @param args input arguments.
-         * @throws DynamicError Dynamic error.
-         * @return Result of the operation.
-         */
-        public static ResultSequence fs_le_general(Collection args) throws DynamicError {
-                return FsEq.do_cmp_general_op(args, FsLe.class, "fs_le_value");
-        }
+	 * General operation on the arguments.
+	 * 
+	 * @param args
+	 *            input arguments.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of the operation.
+	 */
+	public static ResultSequence fs_le_general(Collection args)
+			throws DynamicError {
+		return FsEq.do_cmp_general_op(args, FsLe.class, "fs_le_value");
+	}
 }

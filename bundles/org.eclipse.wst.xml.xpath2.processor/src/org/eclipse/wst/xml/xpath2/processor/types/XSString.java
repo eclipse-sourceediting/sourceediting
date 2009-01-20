@@ -15,62 +15,78 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.function.*;
 
 import java.util.*;
+
 /**
  * A representation of the String datatype
  */
-public class XSString extends CtrType implements CmpEq,
-					         CmpGt,
-						 CmpLt {
+public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 
 	private String _value;
+
 	/**
 	 * Initialises using the supplied String
-	 * @param x The String to initialise to
+	 * 
+	 * @param x
+	 *            The String to initialise to
 	 */
 	public XSString(String x) {
 		_value = x;
 	}
+
 	/**
 	 * Initialises to null
 	 */
 	public XSString() {
 		this(null);
 	}
+
 	/**
 	 * Retrieves the datatype's full pathname
+	 * 
 	 * @return "xs:string" which is the datatype's full pathname
 	 */
 	@Override
 	public String string_type() {
 		return "xs:string";
 	}
+
 	/**
 	 * Retrieves the datatype's name
+	 * 
 	 * @return "string" which is the datatype's name
 	 */
 	@Override
 	public String type_name() {
 		return "string";
 	}
+
 	/**
-	 * Retrieves a String representation of the string stored.
-	 * This method is functionally identical to value()
+	 * Retrieves a String representation of the string stored. This method is
+	 * functionally identical to value()
+	 * 
 	 * @return The String stored
 	 */
 	@Override
 	public String string_value() {
 		return _value;
 	}
+
 	/**
-	 * Retrieves a String representation of the string stored.
-	 * This method is functionally identical to string_value()
+	 * Retrieves a String representation of the string stored. This method is
+	 * functionally identical to string_value()
+	 * 
 	 * @return The String stored
 	 */
-	public String value() { return _value; }
+	public String value() {
+		return _value;
+	}
+
 	/**
 	 * Creates a new ResultSequence consisting of the extractable String in the
 	 * supplied ResultSequence
-	 * @param arg The ResultSequence from which to extract the String
+	 * 
+	 * @param arg
+	 *            The ResultSequence from which to extract the String
 	 * @return New ResultSequence consisting of the supplied String
 	 * @throws DynamicError
 	 */
@@ -78,9 +94,9 @@ public class XSString extends CtrType implements CmpEq,
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
-		if(arg.empty())
+		if (arg.empty())
 			return rs;
-		
+
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 
 		rs.add(new XSString(aat.string_value()));
@@ -88,72 +104,81 @@ public class XSString extends CtrType implements CmpEq,
 		return rs;
 	}
 
-
 	// comparisons
 
 	// 666 indicates death [compare returned empty seq]
 	private int do_compare(AnyType arg) throws DynamicError {
 		Collection args = new ArrayList();
 
-                ResultSequence rs = ResultSequenceFactory.create_new(this);
+		ResultSequence rs = ResultSequenceFactory.create_new(this);
 		args.add(rs);
-		args.add( ResultSequenceFactory.create_new(arg));
+		args.add(ResultSequenceFactory.create_new(arg));
 
 		rs = FnCompare.compare(args);
 
-		if(rs.empty())
+		if (rs.empty())
 			return 666;
 
 		XSInteger i = (XSInteger) rs.first();
 
 		return i.int_value();
 	}
-		/**
-		 * Equality comparison between this and the supplied representation which
-		 * must be of type String
-		 * @param arg The representation to compare with
-		 * @return True if the two representation are of the same String. False otherwise
-		 * @throws DynamicError
-		 */
-        public boolean eq(AnyType arg) throws DynamicError {
+
+	/**
+	 * Equality comparison between this and the supplied representation which
+	 * must be of type String
+	 * 
+	 * @param arg
+	 *            The representation to compare with
+	 * @return True if the two representation are of the same String. False
+	 *         otherwise
+	 * @throws DynamicError
+	 */
+	public boolean eq(AnyType arg) throws DynamicError {
 		int cmp = do_compare(arg);
 
 		// XXX im not sure what to do here!!! because eq has to return
 		// something i fink....
-		if(cmp == 666)
+		if (cmp == 666)
 			assert false;
 
 		return cmp == 0;
-        }
-        /**
-		 * Comparison between this and the supplied representation which
-		 * must be of type String
-		 * @param arg The representation to compare with
-		 * @return True if this String is lexographically greater than that supplied.
-		 * False otherwise
-		 * @throws DynamicError
-		 */
-        public boolean gt(AnyType arg) throws DynamicError {
+	}
+
+	/**
+	 * Comparison between this and the supplied representation which must be of
+	 * type String
+	 * 
+	 * @param arg
+	 *            The representation to compare with
+	 * @return True if this String is lexographically greater than that
+	 *         supplied. False otherwise
+	 * @throws DynamicError
+	 */
+	public boolean gt(AnyType arg) throws DynamicError {
 		int cmp = do_compare(arg);
 
 		assert cmp != 666;
 
 		return cmp > 0;
-        }
-        /**
-		 * Comparison between this and the supplied representation which
-		 * must be of type String
-		 * @param arg The representation to compare with
-		 * @return True if this String is lexographically less than that supplied.
-		 * False otherwise
-		 * @throws DynamicError
-		 */
-        public boolean lt(AnyType arg) throws DynamicError {
+	}
+
+	/**
+	 * Comparison between this and the supplied representation which must be of
+	 * type String
+	 * 
+	 * @param arg
+	 *            The representation to compare with
+	 * @return True if this String is lexographically less than that supplied.
+	 *         False otherwise
+	 * @throws DynamicError
+	 */
+	public boolean lt(AnyType arg) throws DynamicError {
 		int cmp = do_compare(arg);
 
 		assert cmp != 666;
 
 		return cmp < 0;
-        }
+	}
 
 }

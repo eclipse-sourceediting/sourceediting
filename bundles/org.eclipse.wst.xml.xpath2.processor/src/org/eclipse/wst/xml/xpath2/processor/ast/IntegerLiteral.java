@@ -14,22 +14,23 @@ package org.eclipse.wst.xml.xpath2.processor.ast;
 import org.eclipse.wst.xml.xpath2.processor.types.XSInteger;
 
 /**
- * The value of a numeric literal containing no "." anad no e or E character
- * is an atomic value of type xs:integer
- *
+ * The value of a numeric literal containing no "." anad no e or E character is
+ * an atomic value of type xs:integer
+ * 
  */
 public class IntegerLiteral extends NumericLiteral {
 	private XSInteger _value;
 
-        /** 
+	/**
 	 * Constructor for IntegerLiteral
-	 *
-	 * @param value integer value
+	 * 
+	 * @param value
+	 *            integer value
 	 */
 	public IntegerLiteral(int value) {
 		_value = new XSInteger(value);
 	}
-	
+
 	/**
 	 * Support for Visitor interface.
 	 * 
@@ -43,5 +44,7 @@ public class IntegerLiteral extends NumericLiteral {
 	/**
 	 * @return xs:integer value
 	 */
-	public XSInteger value() { return _value; }
+	public XSInteger value() {
+		return _value;
+	}
 }

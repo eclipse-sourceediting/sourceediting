@@ -17,15 +17,24 @@ import org.eclipse.wst.xml.xpath2.processor.types.*;
 import java.util.*;
 
 /**
- * <p>Conversion to lower-case function.</p>
- *
- * <p>Usage: fn:lower-case($arg as xs:string?) as xs:string</p>
- *
- * <p>This class returns the value of $arg after translating every character to its
- * lower-case correspondent. Every character that does not have an lower-case correspondent
- * is included in the returned value in its original form.</p>
- *
- * <p>If the value of $arg is the empty sequence, the zero-length string is returned.</p>
+ * <p>
+ * Conversion to lower-case function.
+ * </p>
+ * 
+ * <p>
+ * Usage: fn:lower-case($arg as xs:string?) as xs:string
+ * </p>
+ * 
+ * <p>
+ * This class returns the value of $arg after translating every character to its
+ * lower-case correspondent. Every character that does not have an lower-case
+ * correspondent is included in the returned value in its original form.
+ * </p>
+ * 
+ * <p>
+ * If the value of $arg is the empty sequence, the zero-length string is
+ * returned.
+ * </p>
  */
 public class FnLowerCase extends Function {
 	private static Collection _expected_args = null;
@@ -39,8 +48,11 @@ public class FnLowerCase extends Function {
 
 	/**
 	 * Evaluate the arguments.
-	 * @param args are evaluated.
-	 * @throws DynamicError Dynamic error.
+	 * 
+	 * @param args
+	 *            are evaluated.
+	 * @throws DynamicError
+	 *             Dynamic error.
 	 * @return The evaluation of the arguments being converted to lower case.
 	 */
 	@Override
@@ -50,39 +62,42 @@ public class FnLowerCase extends Function {
 
 	/**
 	 * Convert arguments to lower case.
-	 * @param args are converted to lower case.
-	 * @throws DynamicError Dynamic error.
+	 * 
+	 * @param args
+	 *            are converted to lower case.
+	 * @throws DynamicError
+	 *             Dynamic error.
 	 * @return The result of converting the arguments to lower case.
 	 */
-	public static ResultSequence lower_case(Collection args) throws DynamicError {
-		Collection cargs = Function.convert_arguments(args,
-                                                              expected_args());
+	public static ResultSequence lower_case(Collection args)
+			throws DynamicError {
+		Collection cargs = Function.convert_arguments(args, expected_args());
 
 		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
-		if(arg1.empty()) {
+		if (arg1.empty()) {
 			rs.add(new XSString(""));
 			return rs;
 		}
 
-		String str = ((XSString)arg1.first()).value();
+		String str = ((XSString) arg1.first()).value();
 
 		rs.add(new XSString(str.toLowerCase()));
-	
+
 		return rs;
 	}
 
 	/**
 	 * Calculate the expected arguments.
+	 * 
 	 * @return The expected arguments.
 	 */
 	public static Collection expected_args() {
-		if(_expected_args == null) {
+		if (_expected_args == null) {
 			_expected_args = new ArrayList();
-			_expected_args.add(new SeqType(new XSString(),
-						       SeqType.OCC_QMARK));
+			_expected_args.add(new SeqType(new XSString(), SeqType.OCC_QMARK));
 		}
 
 		return _expected_args;

@@ -12,6 +12,7 @@
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
 import java.util.*;
+
 /**
  * Support for IF expressions.
  */
@@ -19,38 +20,57 @@ public class IfExpr extends Expr {
 	private Collection _exprs;
 	private Expr _then;
 	private Expr _else;
+
 	/**
 	 * Constructor for IfExpr.
-	 * @param exps Condition expressions.
-	 * @param t If true expressions.
-	 * @param e If false/else expressions.
+	 * 
+	 * @param exps
+	 *            Condition expressions.
+	 * @param t
+	 *            If true expressions.
+	 * @param e
+	 *            If false/else expressions.
 	 */
 	public IfExpr(Collection exps, Expr t, Expr e) {
 		_exprs = exps;
 		_then = t;
 		_else = e;
 	}
+
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}
+
 	/**
 	 * Support for Iterator interface.
+	 * 
 	 * @return Result of Iterator operation.
 	 */
-	public Iterator iterator() { return _exprs.iterator(); }
+	public Iterator iterator() {
+		return _exprs.iterator();
+	}
+
 	/**
 	 * Support for Expression interface.
+	 * 
 	 * @return Result of Expr operation.
 	 */
-	public Expr then_clause() { return _then; }
+	public Expr then_clause() {
+		return _then;
+	}
+
 	/**
-         * Support for Expression interface.
-         * @return Result of Expr operation.
-         */
-	public Expr else_clause() { return _else; }
+	 * Support for Expression interface.
+	 * 
+	 * @return Result of Expr operation.
+	 */
+	public Expr else_clause() {
+		return _else;
+	}
 }

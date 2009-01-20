@@ -20,17 +20,22 @@ import java.io.InputStream;
 public interface DOMLoader {
 
 	/**
- 	 * The DOM loader loads the XML docuemnt 
-	 * @param in is the input stream.
-	 * @throws DOMLoaderException DOM loader exception.
+	 * The DOM loader loads the XML docuemnt
+	 * 
+	 * @param in
+	 *            is the input stream.
+	 * @throws DOMLoaderException
+	 *             DOM loader exception.
 	 * @return The loaded document.
- 	 */
+	 */
 	public Document load(InputStream in) throws DOMLoaderException;
 
 	/**
- 	 * Set validating boolean.
-	 * @param val is the validating boolean.
- 	 */
+	 * Set validating boolean.
+	 * 
+	 * @param val
+	 *            is the validating boolean.
+	 */
 	// XXX: default is false ?! [document it ?]
 	public void set_validating(boolean val);
 

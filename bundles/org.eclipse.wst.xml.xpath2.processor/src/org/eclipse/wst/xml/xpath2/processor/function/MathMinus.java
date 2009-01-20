@@ -12,15 +12,19 @@
 package org.eclipse.wst.xml.xpath2.processor.function;
 
 import org.eclipse.wst.xml.xpath2.processor.*;
+
 /**
  * Support for Mathematical Subtraction.
  */
 public interface MathMinus {
 	/**
-         * Subtraction operation.
-         * @param arg input argument.
-         * @throws DynamicError Dynamic error.
-         * @return Result of operation.
-         */
+	 * Subtraction operation.
+	 * 
+	 * @param arg
+	 *            input argument.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of operation.
+	 */
 	public ResultSequence minus(ResultSequence arg) throws DynamicError;
 }

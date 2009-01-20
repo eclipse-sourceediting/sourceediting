@@ -21,59 +21,67 @@ import java.util.*;
  */
 public class OpIntersect extends Function {
 	private static Collection _expected_args = null;
+
 	/**
 	 * Constructor for OpIntersect.
 	 */
 	public OpIntersect() {
 		super(new QName("intersect"), 2);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		assert args.size() == arity();
 
 		return op_intersect(args);
 	}
+
 	/**
-         * Op-Intersect operation.
-         * @param args Result from the expressions evaluation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of operation.
-         */
-	public static ResultSequence op_intersect(Collection args) throws DynamicError {
+	 * Op-Intersect operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of operation.
+	 */
+	public static ResultSequence op_intersect(Collection args)
+			throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		// convert arguments
-		Collection cargs = Function.convert_arguments(args,
-							      expected_args());
+		Collection cargs = Function.convert_arguments(args, expected_args());
 
 		// get arguments
 		Iterator iter = cargs.iterator();
 		ResultSequence one = (ResultSequence) iter.next();
 		ResultSequence two = (ResultSequence) iter.next();
 
-
 		// XXX lame
-		for(Iterator i = one.iterator(); i.hasNext();) {
+		for (Iterator i = one.iterator(); i.hasNext();) {
 			NodeType node = (NodeType) i.next();
 			boolean found = false;
 
 			// death
-			for(Iterator j = two.iterator(); j.hasNext();) {
+			for (Iterator j = two.iterator(); j.hasNext();) {
 				NodeType node2 = (NodeType) j.next();
 
-				if(node.node_value() == node2.node_value()) {
+				if (node.node_value() == node2.node_value()) {
 					found = true;
 					break;
 				}
 
 			}
-			if(found)
+			if (found)
 				rs.add(node);
 		}
 		rs = NodeType.eliminate_dups(rs);
@@ -81,12 +89,14 @@ public class OpIntersect extends Function {
 
 		return rs;
 	}
+
 	/**
-         * Obtain a list of expected arguments.
-         * @return Result of operation.
-         */
+	 * Obtain a list of expected arguments.
+	 * 
+	 * @return Result of operation.
+	 */
 	public static Collection expected_args() {
-		if(_expected_args == null) {
+		if (_expected_args == null) {
 			_expected_args = new ArrayList();
 
 			SeqType st = new SeqType(SeqType.OCC_STAR);

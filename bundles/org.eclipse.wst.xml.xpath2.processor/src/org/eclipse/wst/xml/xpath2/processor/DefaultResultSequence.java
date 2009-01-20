@@ -17,7 +17,7 @@ import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 /**
  * Default implementation of a result sequence.
- *
+ * 
  */
 public class DefaultResultSequence extends ResultSequence {
 
@@ -25,7 +25,7 @@ public class DefaultResultSequence extends ResultSequence {
 
 	/**
 	 * Constructor.
-	 *
+	 * 
 	 * an empty array is created
 	 */
 	public DefaultResultSequence() {
@@ -33,7 +33,8 @@ public class DefaultResultSequence extends ResultSequence {
 	}
 
 	/**
-	 * @param item is added
+	 * @param item
+	 *            is added
 	 */
 	public DefaultResultSequence(AnyType item) {
 		this();
@@ -41,7 +42,8 @@ public class DefaultResultSequence extends ResultSequence {
 	}
 
 	/**
-	 * @param item is added to array _seq
+	 * @param item
+	 *            is added to array _seq
 	 */
 	@Override
 	public void add(AnyType item) {
@@ -50,11 +52,12 @@ public class DefaultResultSequence extends ResultSequence {
 	}
 
 	/**
-	 * @param rs ResultSequence
+	 * @param rs
+	 *            ResultSequence
 	 */
 	@Override
 	public void concat(ResultSequence rs) {
-		for(Iterator i = rs.iterator(); i.hasNext();)
+		for (Iterator i = rs.iterator(); i.hasNext();)
 			_seq.add(i.next());
 	}
 
@@ -70,10 +73,13 @@ public class DefaultResultSequence extends ResultSequence {
 	 * @return integer of the size of array _seq
 	 */
 	@Override
-	public int size() { return _seq.size(); }
+	public int size() {
+		return _seq.size();
+	}
 
 	/**
-	 * @param i is the position of the array item that is wanted.
+	 * @param i
+	 *            is the position of the array item that is wanted.
 	 * @return item i from array _seq
 	 */
 	@Override
@@ -86,15 +92,16 @@ public class DefaultResultSequence extends ResultSequence {
 	 */
 	@Override
 	public AnyType first() {
-		if(_seq.size() == 0)
+		if (_seq.size() == 0)
 			return null;
 
-		return get(0);	
+		return get(0);
 	}
 
 	/**
- 	 * Whether or not array _seq is empty
-	 * @return a boolean 
+	 * Whether or not array _seq is empty
+	 * 
+	 * @return a boolean
 	 */
 	@Override
 	public boolean empty() {
@@ -111,10 +118,11 @@ public class DefaultResultSequence extends ResultSequence {
 
 	/**
 	 * Create a new sequence.
+	 * 
 	 * @return The new sequence.
 	 */
 	@Override
-	public ResultSequence create_new() { 
+	public ResultSequence create_new() {
 		return new DefaultResultSequence();
 	}
 }

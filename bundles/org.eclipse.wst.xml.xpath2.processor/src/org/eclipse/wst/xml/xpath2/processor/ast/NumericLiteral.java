@@ -13,7 +13,7 @@ package org.eclipse.wst.xml.xpath2.processor.ast;
 
 /**
  * NumericLiteral is a value of typpe xs:integer, xs:decimal or xs:double
- *
+ * 
  */
 public abstract class NumericLiteral extends Literal {
 }

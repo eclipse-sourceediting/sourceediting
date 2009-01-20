@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
+
 /**
  * Class for Node test operation.
  */

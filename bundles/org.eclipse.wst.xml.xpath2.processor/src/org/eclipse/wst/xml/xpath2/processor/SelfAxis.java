@@ -20,10 +20,13 @@ public class SelfAxis extends ForwardAxis {
 
 	/**
 	 * create new rs and add the context node to it
-	 * @param node is the node type
- 	 * @param dc is the dynamic context
+	 * 
+	 * @param node
+	 *            is the node type
+	 * @param dc
+	 *            is the dynamic context
 	 * @return rs containing node
- 	 */
+	 */
 	public ResultSequence iterate(NodeType node, DynamicContext dc) {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 

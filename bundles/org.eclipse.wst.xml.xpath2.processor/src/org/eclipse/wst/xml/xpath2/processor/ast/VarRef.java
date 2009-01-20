@@ -12,30 +12,40 @@
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
 import org.eclipse.wst.xml.xpath2.processor.types.*;
+
 /**
- * Support for Variable Reference. 
- * A QName preceded by a $-sign is a variable reference.
+ * Support for Variable Reference. A QName preceded by a $-sign is a variable
+ * reference.
  */
 public class VarRef extends PrimaryExpr {
 	private QName _varname;
+
 	/**
 	 * Constructor for VarRef.
-	 * @param name QName.
+	 * 
+	 * @param name
+	 *            QName.
 	 */
 	public VarRef(QName name) {
 		_varname = name;
 	}
+
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}
+
 	/**
 	 * Support for QName interface.
+	 * 
 	 * @return Result of QName operation.
 	 */
-	public QName name() { return _varname; }
+	public QName name() {
+		return _varname;
+	}
 }

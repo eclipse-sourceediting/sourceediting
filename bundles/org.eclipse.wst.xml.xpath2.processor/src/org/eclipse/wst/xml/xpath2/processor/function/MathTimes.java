@@ -12,15 +12,19 @@
 package org.eclipse.wst.xml.xpath2.processor.function;
 
 import org.eclipse.wst.xml.xpath2.processor.*;
+
 /**
  * Support for Mathematical Multiplication.
  */
 public interface MathTimes {
 	/**
-         * Multiplication operation.
-         * @param arg input argument.
-         * @throws DynamicError Dynamic error.
-         * @return Result of operation.
-         */
+	 * Multiplication operation.
+	 * 
+	 * @param arg
+	 *            input argument.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of operation.
+	 */
 	public ResultSequence times(ResultSequence arg) throws DynamicError;
 }

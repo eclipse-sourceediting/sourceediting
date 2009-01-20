@@ -13,6 +13,7 @@ package org.eclipse.wst.xml.xpath2.processor.types;
 
 import org.w3c.dom.*;
 import org.eclipse.wst.xml.xpath2.processor.*;
+
 /**
  * A representation of the AttributeType datatype
  */
@@ -27,31 +28,43 @@ public class AttrType extends NodeType {
 	public AttrType() {
 		this(null, 0);
 	}
+
 	/**
 	 * Initialises according to the supplied parameters
-	 * @param v The attribute being represented
-	 * @param doc_order The document order
+	 * 
+	 * @param v
+	 *            The attribute being represented
+	 * @param doc_order
+	 *            The document order
 	 */
 	public AttrType(Attr v, int doc_order) {
 		super(v, doc_order);
 		_value = v;
 	}
+
 	/**
 	 * Retrieves the datatype's full pathname
+	 * 
 	 * @return "attribute" which is the datatype's full pathname
 	 */
 	@Override
-	public String string_type() { return "attribute"; }
+	public String string_type() {
+		return "attribute";
+	}
+
 	/**
 	 * Retrieves a String representation of the attribute being stored
+	 * 
 	 * @return String representation of the attribute being stored
 	 */
 	@Override
 	public String string_value() {
 		return _value.getValue();
 	}
+
 	/**
 	 * Creates a new ResultSequence consisting of the attribute being stored
+	 * 
 	 * @return New ResultSequence consisting of the attribute being stored
 	 */
 	@Override
@@ -63,8 +76,10 @@ public class AttrType extends NodeType {
 
 		return rs;
 	}
+
 	/**
 	 * Retrieves the name of the node
+	 * 
 	 * @return Name of the node
 	 */
 	@Override
@@ -72,9 +87,9 @@ public class AttrType extends NodeType {
 		QName name = new QName(_value.getName());
 
 		String ns = _value.getNamespaceURI();
-		
+
 		name.set_namespace(ns);
-		
+
 		return name;
 	}
 }

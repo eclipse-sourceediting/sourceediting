@@ -16,70 +16,80 @@ import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
 import org.w3c.dom.*;
+
 /**
- * Returns the root of the tree to which $arg belongs.
- * This will usually, but not necessarily, be a document node.
+ * Returns the root of the tree to which $arg belongs. This will usually, but
+ * not necessarily, be a document node.
  */
 public class FnRoot extends Function {
 	/**
 	 * Constructor for FnRoot.
-	 */	
+	 */
 	public FnRoot() {
 		super(new QName("root"), 1);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		
+
 		assert args.size() == arity();
 
 		ResultSequence argument = (ResultSequence) args.iterator().next();
 
 		return fn_root(argument, dynamic_context());
 	}
+
 	/**
-         * Root operation.
-         * @param arg Result from the expressions evaluation.
-	 * @param dc Result of dynamic context operation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of fn:root operation.
-         */
-	public static ResultSequence fn_root(ResultSequence arg, 
-					     DynamicContext dc) throws DynamicError {
+	 * Root operation.
+	 * 
+	 * @param arg
+	 *            Result from the expressions evaluation.
+	 * @param dc
+	 *            Result of dynamic context operation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of fn:root operation.
+	 */
+	public static ResultSequence fn_root(ResultSequence arg, DynamicContext dc)
+			throws DynamicError {
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		// sanity check arg
-		if(arg.size() == 0)
+		if (arg.size() == 0)
 			return rs;
 
-		if(arg.size() > 1)
+		if (arg.size() > 1)
 			throw new DynamicError(TypeError.invalid_type(null));
-		
+
 		AnyType aa = arg.first();
 
-		if(!(aa instanceof NodeType))
+		if (!(aa instanceof NodeType))
 			throw new DynamicError(TypeError.invalid_type(null));
-		
+
 		NodeType nt = (NodeType) aa;
 
 		// ok we got a sane argument... own it.
 
 		Node root = nt.node_value();
 
-		while(root != null) {
+		while (root != null) {
 			Node newroot = root.getParentNode();
 
 			// found it
-			if(newroot == null)
+			if (newroot == null)
 				break;
 
-			root = newroot;	
+			root = newroot;
 		}
 
 		rs.add(NodeType.dom_to_xpath(root, dc.node_position(root)));

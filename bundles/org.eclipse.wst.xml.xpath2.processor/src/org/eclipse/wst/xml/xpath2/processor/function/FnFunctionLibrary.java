@@ -20,6 +20,7 @@ public class FnFunctionLibrary extends FunctionLibrary {
 	 * Path to xpath functions specification.
 	 */
 	public static final String XPATH_FUNCTIONS_NS = "http://www.w3.org/2004/10/xpath-functions";
+
 	/**
 	 * Constructor for FnFunctionLibrary.
 	 */
@@ -113,7 +114,6 @@ public class FnFunctionLibrary extends FunctionLibrary {
 
 		// XXX implement hex & binary & notations
 
-		
 		// node functions
 		add_function(new FnName());
 		add_function(new FnLocalName());

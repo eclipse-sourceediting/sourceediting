@@ -12,14 +12,18 @@
 package org.eclipse.wst.xml.xpath2.processor.function;
 
 import org.eclipse.wst.xml.xpath2.processor.*;
+
 /**
  * Support for Mathematical division.
  */
 public interface MathDiv {
 	/**
 	 * Division operation.
-	 * @param arg input argument.
-	 * @throws DynamicError Dynamic error.
+	 * 
+	 * @param arg
+	 *            input argument.
+	 * @throws DynamicError
+	 *             Dynamic error.
 	 * @return Result of operation.
 	 */
 	public ResultSequence div(ResultSequence arg) throws DynamicError;

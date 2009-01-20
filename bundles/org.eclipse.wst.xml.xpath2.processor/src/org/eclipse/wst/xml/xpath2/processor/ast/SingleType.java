@@ -12,6 +12,7 @@
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
 import org.eclipse.wst.xml.xpath2.processor.types.*;
+
 /**
  * Support for Single types.
  */
@@ -19,37 +20,52 @@ public class SingleType extends XPathNode {
 
 	private QName _type;
 	private boolean _qmark;
+
 	/**
 	 * Constructor for SingleType.
-	 * @param type QName type.
-	 * @param qmark optional type? (true/false).
+	 * 
+	 * @param type
+	 *            QName type.
+	 * @param qmark
+	 *            optional type? (true/false).
 	 */
 	public SingleType(QName type, boolean qmark) {
 		_type = type;
 		_qmark = qmark;
 	}
+
 	/**
 	 * Default Constructor for SingleType.
 	 */
 	public SingleType(QName type) {
-		this(type,false);
+		this(type, false);
 	}
+
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}
+
 	/**
 	 * Set optional type.
+	 * 
 	 * @return optional type value.
 	 */
-	public boolean qmark() { return _qmark; }
+	public boolean qmark() {
+		return _qmark;
+	}
+
 	/**
 	 * Support for QName interface.
+	 * 
 	 * @return Result of QName operation.
 	 */
-	public QName type() { return _type; }
+	public QName type() {
+		return _type;
+	}
 }

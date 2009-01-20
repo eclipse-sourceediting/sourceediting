@@ -21,39 +21,47 @@ import java.util.*;
  */
 public class OpTo extends Function {
 	private static Collection _expected_args = null;
+
 	/**
 	 * Constructor for OpTo.
 	 */
 	public OpTo() {
 		super(new QName("to"), 2);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		assert args.size() == 2;
 
-//		Iterator i = args.iterator();
+		// Iterator i = args.iterator();
 
-//		return op_to( (ResultSequence) i.next(), (ResultSequence) i.next());
+		// return op_to( (ResultSequence) i.next(), (ResultSequence) i.next());
 		return op_to(args);
 	}
+
 	/**
-         * Op-To operation.
-         * @param args Result from the expressions evaluation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of operation.
-         */
+	 * Op-To operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of operation.
+	 */
 	public static ResultSequence op_to(Collection args) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		// convert arguments
-		Collection cargs = Function.convert_arguments(args,
-							      expected_args());
+		Collection cargs = Function.convert_arguments(args, expected_args());
 
 		// get arguments
 		Iterator iter = cargs.iterator();
@@ -62,30 +70,30 @@ public class OpTo extends Function {
 		r = (ResultSequence) iter.next();
 		int two = ((XSInteger) r.first()).int_value();
 
-		if(one > two)
+		if (one > two)
 			return rs;
-	
+
 		// inclusive first and last
 		rs.add(new XSInteger(one));
 
-		if(one == two) {
+		if (one == two) {
 			return rs;
 		}
-/*
-		for(one++; one <= two; one++) {
-			rs.add(new XSInteger(one));
-		}
-
-		return rs;
-*/
+		/*
+		 * for(one++; one <= two; one++) { rs.add(new XSInteger(one)); }
+		 * 
+		 * return rs;
+		 */
 		return new RangeResultSequence(one, two);
 	}
+
 	/**
-         * Obtain a list of expected arguments.
-         * @return Result of operation.
-         */
+	 * Obtain a list of expected arguments.
+	 * 
+	 * @return Result of operation.
+	 */
 	public static Collection expected_args() {
-		if(_expected_args == null) {
+		if (_expected_args == null) {
 			_expected_args = new ArrayList();
 
 			SeqType st = new SeqType(new XSInteger());

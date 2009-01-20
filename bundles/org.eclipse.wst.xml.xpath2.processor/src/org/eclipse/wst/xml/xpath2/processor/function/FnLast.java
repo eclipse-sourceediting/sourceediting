@@ -15,36 +15,47 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
  * Returns an xs:integer indicating the number of items in the sequence of items
- * currently being processed. If the context item is undefined, an error is raised
- * [err:FONC0001].
+ * currently being processed. If the context item is undefined, an error is
+ * raised [err:FONC0001].
  */
 public class FnLast extends Function {
 	/**
 	 * Constructor for FnLast.
-	 */	
+	 */
 	public FnLast() {
 		super(new QName("last"), 0);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return last(args, dynamic_context());
 	}
+
 	/**
-         * Last operation.
-         * @param args Result from the expressions evaluation.
-	 * @param dc Result of dynamic context operation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of fn:last operation.
-         */
-	public static ResultSequence last(Collection args, DynamicContext dc) throws DynamicError {
+	 * Last operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @param dc
+	 *            Result of dynamic context operation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of fn:last operation.
+	 */
+	public static ResultSequence last(Collection args, DynamicContext dc)
+			throws DynamicError {
 		assert args.size() == 0;
 
 		int last = dc.last();

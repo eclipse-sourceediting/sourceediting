@@ -15,6 +15,7 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
  * Selects an item from the input sequence $arg whose value is greater than or
  * equal to the value of every other item in the input sequence. If there are
@@ -28,80 +29,93 @@ public class FnMax extends Function {
 	public FnMax() {
 		super(new QName("max"), 1);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return max(args);
 	}
+
 	/**
-         * Max operation.
-         * @param args Result from the expressions evaluation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of fn:max operation.
-         */
+	 * Max operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of fn:max operation.
+	 */
 	public static ResultSequence max(Collection args) throws DynamicError {
 
 		// XXX fix this
 		ResultSequence arg = get_arg(args, CmpGt.class);
-		if(arg.empty())
+		if (arg.empty())
 			return ResultSequenceFactory.create_new();
 
 		CmpGt max = null;
 
-		for(Iterator i = arg.iterator(); i.hasNext();) {
+		for (Iterator i = arg.iterator(); i.hasNext();) {
 			AnyType at = (AnyType) i.next();
 
-			if( !(at instanceof CmpGt))
+			if (!(at instanceof CmpGt))
 				DynamicError.throw_type_error();
-			
+
 			CmpGt item = (CmpGt) at;
 
-			if(max == null)
+			if (max == null)
 				max = item;
 			else {
-				boolean res = item.gt( (AnyType) max);
-				
-				if(res)
+				boolean res = item.gt((AnyType) max);
+
+				if (res)
 					max = item;
 			}
 		}
 
-		return ResultSequenceFactory.create_new( (AnyType) max);
+		return ResultSequenceFactory.create_new((AnyType) max);
 	}
+
 	/**
 	 * Obtain arguments.
-	 * @param args input expressions.
-	 * @param op input class.
-	 * @throws DynamicError Dynamic error.
+	 * 
+	 * @param args
+	 *            input expressions.
+	 * @param op
+	 *            input class.
+	 * @throws DynamicError
+	 *             Dynamic error.
 	 * @return Result of operation.
 	 */
-	public static ResultSequence get_arg(Collection args, Class op) throws DynamicError {
+	public static ResultSequence get_arg(Collection args, Class op)
+			throws DynamicError {
 		assert args.size() == 1;
 
 		ResultSequence arg = (ResultSequence) args.iterator().next();
-		
-		if(arg.empty())
+
+		if (arg.empty())
 			return arg;
 
 		AnyType at = arg.first();
 
 		// check for operator
 		// XXX ok this is wrong... [promotion, and other reasons]
-		if( op.isInstance(at) && !(at instanceof NumericType )) {
+		if (op.isInstance(at) && !(at instanceof NumericType)) {
 			Class type = at.getClass();
 
-			for(Iterator i = arg.iterator(); i.hasNext();) {
+			for (Iterator i = arg.iterator(); i.hasNext();) {
 				at = (AnyType) i.next();
-				if( !(type.isInstance(at)))
+				if (!(type.isInstance(at)))
 					DynamicError.throw_type_error();
 			}
-		}
-		else {
+		} else {
 			arg = FnAvg.get_arg(args);
 		}
 

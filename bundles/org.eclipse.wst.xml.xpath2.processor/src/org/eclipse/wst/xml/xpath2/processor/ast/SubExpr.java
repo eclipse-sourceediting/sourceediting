@@ -10,20 +10,26 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
+
 /**
  * Support for Subtraction operation.
  */
 public class SubExpr extends BinExpr {
 	/**
 	 * Constructor for SubExpr.
-	 * @param l left input.
-	 * @param r right input.
+	 * 
+	 * @param l
+	 *            left input.
+	 * @param r
+	 *            right input.
 	 */
 	public SubExpr(Expr l, Expr r) {
-		super(l,r);
+		super(l, r);
 	}
+
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override

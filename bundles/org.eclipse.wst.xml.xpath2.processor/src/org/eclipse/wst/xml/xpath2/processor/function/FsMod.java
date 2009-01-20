@@ -15,6 +15,7 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
  * Class for Modular function.
  */
@@ -25,12 +26,16 @@ public class FsMod extends Function {
 	public FsMod() {
 		super(new QName("mod"), 2);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		assert args.size() == arity();
@@ -39,11 +44,14 @@ public class FsMod extends Function {
 	}
 
 	/**
-         * General operation on the arguments.
-         * @param args input arguments.
-         * @throws DynamicError Dynamic error.
-         * @return Result of the operation.
-         */
+	 * General operation on the arguments.
+	 * 
+	 * @param args
+	 *            input arguments.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of the operation.
+	 */
 	public static ResultSequence fs_mod(Collection args) throws DynamicError {
 		return FsPlus.do_math_op(args, MathMod.class, "mod");
 	}

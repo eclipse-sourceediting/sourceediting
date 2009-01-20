@@ -12,23 +12,26 @@
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
 /**
- * A class that tests whether a given value is castable
- * into a given type. This can be used to select an
- * appropriate type for processing a given value.
+ * A class that tests whether a given value is castable into a given type. This
+ * can be used to select an appropriate type for processing a given value.
  */
 public class CastableExpr extends BinExpr {
-	
+
 	/**
 	 * Constructor of CastableExpr
-	 * @param l input xpath expression/variable.
-	 * @param r SingleType to check l against.
+	 * 
+	 * @param l
+	 *            input xpath expression/variable.
+	 * @param r
+	 *            SingleType to check l against.
 	 */
 	public CastableExpr(Expr l, SingleType r) {
-		super(l,r);
+		super(l, r);
 	}
 
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override

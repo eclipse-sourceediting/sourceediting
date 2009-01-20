@@ -15,34 +15,36 @@ import org.w3c.dom.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 /**
- * The attribute axis contains the attributes of the context node.
- * The axis will be empty unless the context node is an element.
+ * The attribute axis contains the attributes of the context node. The axis will
+ * be empty unless the context node is an element.
  */
 public class AttributeAxis extends ForwardAxis {
 
 	/**
 	 * Retrieves the context node's attributes.
-	 * @param node is the type of node.
-	 * @param dc is the dynamic context.
+	 * 
+	 * @param node
+	 *            is the type of node.
+	 * @param dc
+	 *            is the dynamic context.
 	 * @return The attibutes of the context node.
 	 */
 	public ResultSequence iterate(NodeType node, DynamicContext dc) {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		// only elements have attributes
-		if(!(node instanceof ElementType))
+		if (!(node instanceof ElementType))
 			return rs;
-	
+
 		// get attributes
 		ElementType elem = (ElementType) node;
 		NamedNodeMap attrs = elem.value().getAttributes();
 
 		// add attributes
-		for(int i = 0; i < attrs.getLength(); i++) {
+		for (int i = 0; i < attrs.getLength(); i++) {
 			Attr attr = (Attr) attrs.item(i);
 
-			rs.add(NodeType.dom_to_xpath(attr,
-						     dc.node_position(attr)));
+			rs.add(NodeType.dom_to_xpath(attr, dc.node_position(attr)));
 		}
 
 		return rs;
@@ -51,6 +53,7 @@ public class AttributeAxis extends ForwardAxis {
 
 	/**
 	 * Retrieves the node's principle node kind.
+	 * 
 	 * @return The type of node.
 	 */
 	@Override

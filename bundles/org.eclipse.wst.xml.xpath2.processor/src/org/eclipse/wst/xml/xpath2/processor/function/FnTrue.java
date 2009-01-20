@@ -15,32 +15,41 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
  * Returns the xs:boolean value true. Equivalent to xs:boolean("1").
  */
 public class FnTrue extends Function {
 	/**
- 	 * Constructor for FnTrue.
+	 * Constructor for FnTrue.
 	 */
 	public FnTrue() {
 		super(new QName("true"), 0);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return fn_true(args);
 	}
+
 	/**
-         * True operation.
-         * @param args Result from the expressions evaluation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of fn:true operation.
-         */
+	 * True operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of fn:true operation.
+	 */
 	public static ResultSequence fn_true(Collection args) throws DynamicError {
 		assert args.size() == 0;
 

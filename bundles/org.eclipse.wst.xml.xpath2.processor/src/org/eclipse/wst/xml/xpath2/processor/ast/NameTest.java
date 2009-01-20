@@ -12,29 +12,39 @@
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
 import org.eclipse.wst.xml.xpath2.processor.types.*;
+
 /**
  * Class for Name test operation.
  */
 public class NameTest extends NodeTest {
 	private QName _name;
+
 	/**
 	 * Constructor for NameTest.
-	 * @param name QName to test.
+	 * 
+	 * @param name
+	 *            QName to test.
 	 */
 	public NameTest(QName name) {
 		_name = name;
 	}
+
 	/**
 	 * Support for Visitor interface.
- 	 * @return Result of Visitor operation.
- 	 */
+	 * 
+	 * @return Result of Visitor operation.
+	 */
 	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}
+
 	/**
 	 * Support for QName interface.
+	 * 
 	 * @return Resulf of QName operation.
 	 */
-	public QName name() { return _name; }
+	public QName name() {
+		return _name;
+	}
 }

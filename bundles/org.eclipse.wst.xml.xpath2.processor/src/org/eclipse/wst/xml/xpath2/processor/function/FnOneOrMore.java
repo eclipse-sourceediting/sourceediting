@@ -15,9 +15,10 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
- * Returns $arg if it contains one or more items. Otherwise, raises an error [err:FORG0004].
- * The type of the result depends on the type of $arg.
+ * Returns $arg if it contains one or more items. Otherwise, raises an error
+ * [err:FORG0004]. The type of the result depends on the type of $arg.
  */
 public class FnOneOrMore extends Function {
 	/**
@@ -26,33 +27,42 @@ public class FnOneOrMore extends Function {
 	public FnOneOrMore() {
 		super(new QName("one-or-more"), 1);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return one_or_more(args);
 	}
+
 	/**
-         * One-or-More operation.
-         * @param args Result from the expressions evaluation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of fn:one-or-more operation.
-         */
-	public static ResultSequence one_or_more(Collection args) throws DynamicError {
+	 * One-or-More operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of fn:one-or-more operation.
+	 */
+	public static ResultSequence one_or_more(Collection args)
+			throws DynamicError {
 
 		assert args.size() == 1;
-			
+
 		// get args
 		Iterator citer = args.iterator();
 		ResultSequence arg = (ResultSequence) citer.next();
 
-		if(arg.empty())
+		if (arg.empty())
 			throw DynamicError.empty_seq(null);
-		
+
 		return arg;
 	}
 }

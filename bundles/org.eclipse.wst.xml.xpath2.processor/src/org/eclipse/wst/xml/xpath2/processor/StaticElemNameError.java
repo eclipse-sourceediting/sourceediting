@@ -23,8 +23,10 @@ public class StaticElemNameError extends StaticNameError {
 
 	/**
 	 * Constructor for static element name error
-	 * @param reason is the reason for the error.
- 	 */
+	 * 
+	 * @param reason
+	 *            is the reason for the error.
+	 */
 	public StaticElemNameError(String reason) {
 		super(reason);
 	}

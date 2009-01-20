@@ -11,10 +11,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
-
 /**
- * Path expression walks tries to walk the path specified in its
- * argument
+ * Path expression walks tries to walk the path specified in its argument
  */
 public class XPathExpr extends Expr {
 	private int _slashes;
@@ -24,9 +22,10 @@ public class XPathExpr extends Expr {
 	private XPathExpr _next;
 
 	/**
-	 * @param slashes is copied to _slashes
-	 * @param expr is copied to _expr
-	 * _next is made null as a result.
+	 * @param slashes
+	 *            is copied to _slashes
+	 * @param expr
+	 *            is copied to _expr _next is made null as a result.
 	 */
 	public XPathExpr(int slashes, StepExpr expr) {
 		_slashes = slashes;
@@ -51,19 +50,20 @@ public class XPathExpr extends Expr {
 	public void add_tail(int slashes, StepExpr expr) {
 		XPathExpr last = this;
 		XPathExpr next = _next;
-		
-		while(next != null) {
+
+		while (next != null) {
 			last = next;
 			next = last.next();
 		}
 
-		XPathExpr item = new XPathExpr(slashes,expr);
+		XPathExpr item = new XPathExpr(slashes, expr);
 		last.set_next(item);
-	
+
 	}
-	
+
 	/**
-	 * @param count is copied to _slashes
+	 * @param count
+	 *            is copied to _slashes
 	 */
 	public void set_slashes(int count) {
 		_slashes = count;
@@ -72,21 +72,29 @@ public class XPathExpr extends Expr {
 	/**
 	 * @return XPath expression _next
 	 */
-	public XPathExpr next() { return _next; }
+	public XPathExpr next() {
+		return _next;
+	}
 
 	/**
 	 * an XPath expression, n is copied to _next
 	 */
-	public void set_next(XPathExpr n) { _next = n; }
+	public void set_next(XPathExpr n) {
+		_next = n;
+	}
 
 	/**
 	 * @return Step expression _expr
 	 */
-	public StepExpr expr() { return _expr; }
+	public StepExpr expr() {
+		return _expr;
+	}
 
 	/**
 	 * @return int _slashes
 	 */
-	public int slashes() { return _slashes; }
+	public int slashes() {
+		return _slashes;
+	}
 
 }

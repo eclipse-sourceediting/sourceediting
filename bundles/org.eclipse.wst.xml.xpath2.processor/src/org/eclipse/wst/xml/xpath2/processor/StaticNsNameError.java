@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.xpath2.processor;
  * Static namespace name error class.
  */
 public class StaticNsNameError extends StaticNameError {
-	
+
 	/**
 	 * 
 	 */
@@ -27,13 +27,15 @@ public class StaticNsNameError extends StaticNameError {
 
 	/**
 	 * Constructor.
-	 * @param pref is the unknown prefix.
+	 * 
+	 * @param pref
+	 *            is the unknown prefix.
 	 * @return the error.
 	 */
 	public static StaticNsNameError unknown_prefix(String pref) {
 		String error = "Unknown prefix";
 
-		if(pref != null)
+		if (pref != null)
 			error += ": " + pref;
 		error += ".";
 

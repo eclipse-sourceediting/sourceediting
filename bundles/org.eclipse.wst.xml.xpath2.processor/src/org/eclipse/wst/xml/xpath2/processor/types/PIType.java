@@ -13,42 +13,62 @@ package org.eclipse.wst.xml.xpath2.processor.types;
 
 import org.w3c.dom.*;
 import org.eclipse.wst.xml.xpath2.processor.*;
+
 /**
  * A representation of the ProcessingInstruction datatype
  */
 public class PIType extends NodeType {
 	private ProcessingInstruction _value;
+
 	/**
 	 * Initialises according to the supplied parameters
-	 * @param v The processing instruction this node represents
-	 * @param doc_order The document order
+	 * 
+	 * @param v
+	 *            The processing instruction this node represents
+	 * @param doc_order
+	 *            The document order
 	 */
 	public PIType(ProcessingInstruction v, int doc_order) {
 		super(v, doc_order);
 		_value = v;
 	}
+
 	/**
 	 * Retrieves the actual processing instruction this node represents
+	 * 
 	 * @return Actual processing instruction this node represents
 	 */
-	public ProcessingInstruction value() { return _value; }
+	public ProcessingInstruction value() {
+		return _value;
+	}
+
 	/**
 	 * Retrieves the datatype's full pathname
+	 * 
 	 * @return "processing-instruction" which is the datatype's full pathname
 	 */
 	@Override
-	public String string_type() { return "processing instruction"; }
+	public String string_type() {
+		return "processing instruction";
+	}
+
 	/**
-	 * Retrieves a String representation of the actual processing instruction stored
+	 * Retrieves a String representation of the actual processing instruction
+	 * stored
+	 * 
 	 * @return String representation of the actual processing instruction stored
 	 */
 	@Override
 	public String string_value() {
 		return _value.getData();
 	}
+
 	/**
-	 * Creates a new ResultSequence consisting of the processing instruction stored
-	 * @return New ResultSequence consisting of the processing instruction stored
+	 * Creates a new ResultSequence consisting of the processing instruction
+	 * stored
+	 * 
+	 * @return New ResultSequence consisting of the processing instruction
+	 *         stored
 	 */
 	@Override
 	public ResultSequence typed_value() {
@@ -58,8 +78,10 @@ public class PIType extends NodeType {
 
 		return rs;
 	}
+
 	/**
 	 * Constructs the node's name
+	 * 
 	 * @return A QName representation of the node's name
 	 */
 	@Override

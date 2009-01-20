@@ -15,6 +15,7 @@ import java.util.*;
 
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
+
 /**
  * Class for Function Library support.
  */
@@ -23,9 +24,12 @@ public class FunctionLibrary {
 	private Map _functions;
 	private StaticContext _sc;
 	private DynamicContext _dc;
+
 	/**
 	 * Constructor for FunctionLibrary.
-	 * @param ns namespace.
+	 * 
+	 * @param ns
+	 *            namespace.
 	 */
 	public FunctionLibrary(String ns) {
 		_namespace = ns;
@@ -33,97 +37,118 @@ public class FunctionLibrary {
 		_sc = null;
 		_dc = null;
 	}
+
 	/**
 	 * Add a function.
-	 * @param x function to add.
+	 * 
+	 * @param x
+	 *            function to add.
 	 */
 	public void add_function(Function x) {
 		x.name().set_namespace(_namespace);
 		x.set_function_library(this);
-		_functions.put(x.signature(),x);
+		_functions.put(x.signature(), x);
 	}
+
 	/**
 	 * Checks whether the function exists or not.
-	 * @param name QName of function.
-	 * @param arity arity of the function.
+	 * 
+	 * @param name
+	 *            QName of function.
+	 * @param arity
+	 *            arity of the function.
 	 * @return Result of the test.
 	 */
 	public boolean function_exists(QName name, int arity) {
 		boolean result = false;
 
-		result = _functions.containsKey(Function.signature(name,arity));
+		result = _functions.containsKey(Function.signature(name, arity));
 
 		// found it
-		if(result)
+		if (result)
 			return true;
 
 		// check if its a varg function
-		result = _functions.containsKey(Function.signature(name,-1));
+		result = _functions.containsKey(Function.signature(name, -1));
 
 		// nope
-		if(!result)
+		if (!result)
 			return false;
-		
+
 		// maybe... lets make sure the requirements are good...
 		Function f = function(name, -1);
 
-		// make sure we got at least  arity arguments	
-		if(arity >= (f.arity()*-1))
+		// make sure we got at least arity arguments
+		if (arity >= (f.arity() * -1))
 			return true;
 
-		// bye bye	
-		return false;	
+		// bye bye
+		return false;
 	}
+
 	/**
 	 * Function support.
-	 * @param name QName.
-	 * @param arity arity of the function.
+	 * 
+	 * @param name
+	 *            QName.
+	 * @param arity
+	 *            arity of the function.
 	 * @return The new function.
 	 */
 	public Function function(QName name, int arity) {
 		Function f = (Function) _functions.get(Function.signature(name, arity));
-		
-		if(f != null || arity == -1)
+
+		if (f != null || arity == -1)
 			return f;
-		
+
 		// see if we got a varg one
 		f = function(name, -1);
 
 		// nope
-		if(f == null)
+		if (f == null)
 			return null;
 
-		if(arity >= (f.arity()*-1))
+		if (arity >= (f.arity() * -1))
 			return f;
-		
+
 		return null;
 	}
+
 	/**
 	 * Support for namespace.
+	 * 
 	 * @return Namespace.
 	 */
-	public String namespace() { return _namespace; }
+	public String namespace() {
+		return _namespace;
+	}
+
 	/**
 	 * Set static context on function.
 	 */
 	public void set_static_context(StaticContext sc) {
 		_sc = sc;
 	}
+
 	/**
 	 * Set dynamic context on function.
 	 */
 	public void set_dynamic_context(DynamicContext dc) {
 		_dc = dc;
 	}
+
 	/**
 	 * Support for Static context.
+	 * 
 	 * @return Result of static context.
 	 */
 	public StaticContext static_context() {
 		return _sc;
 	}
+
 	/**
 	 * Support for Dynamic context.
+	 * 
 	 * @return Result of dynamic context.
 	 */
 	public DynamicContext dynamic_context() {

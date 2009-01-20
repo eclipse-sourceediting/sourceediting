@@ -15,6 +15,7 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
  * Class for Interger division function.
  */
@@ -25,12 +26,16 @@ public class FsIDiv extends Function {
 	public FsIDiv() {
 		super(new QName("idiv"), 2);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		assert args.size() == arity();
@@ -39,11 +44,14 @@ public class FsIDiv extends Function {
 	}
 
 	/**
-         * IDiv operation on the arguments.
-         * @param args input arguments.
-         * @throws DynamicError Dynamic error.
-         * @return Result of the operation.
-         */
+	 * IDiv operation on the arguments.
+	 * 
+	 * @param args
+	 *            input arguments.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of the operation.
+	 */
 	public static ResultSequence fs_idiv(Collection args) throws DynamicError {
 		return FsPlus.do_math_op(args, MathIDiv.class, "idiv");
 	}

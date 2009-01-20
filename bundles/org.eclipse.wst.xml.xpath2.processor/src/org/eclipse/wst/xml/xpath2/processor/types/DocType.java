@@ -13,47 +13,64 @@ package org.eclipse.wst.xml.xpath2.processor.types;
 
 import org.w3c.dom.*;
 import org.eclipse.wst.xml.xpath2.processor.*;
+
 /**
  * A representation of the DocumentType datatype
  */
 public class DocType extends NodeType {
 	private Document _value;
 	private String _string_value;
+
 	/**
 	 * Initialises according to the supplied parameters
-	 * @param v The document being represented
-	 * @param doc_order The document order
+	 * 
+	 * @param v
+	 *            The document being represented
+	 * @param doc_order
+	 *            The document order
 	 */
 	public DocType(Document v, int doc_order) {
 		super(v, doc_order);
 		_value = v;
 		_string_value = null;
 	}
+
 	/**
 	 * Retrieves the actual document being represented
+	 * 
 	 * @return Actual document being represented
 	 */
-	public Document value() { return _value; }
+	public Document value() {
+		return _value;
+	}
+
 	/**
 	 * Retrieves the datatype's full pathname
+	 * 
 	 * @return "document" which is the datatype's full pathname
 	 */
 	@Override
-	public String string_type() { return "document"; }
+	public String string_type() {
+		return "document";
+	}
+
 	/**
 	 * Retrieves a String representation of the document being stored
+	 * 
 	 * @return String representation of the document being stored
 	 */
 	@Override
 	public String string_value() {
 		// XXX caching
-		if(_string_value == null)
+		if (_string_value == null)
 			_string_value = ElementType.textnode_strings(_value);
 
 		return _string_value;
 	}
+
 	/**
 	 * Creates a new ResultSequence consisting of the document being stored
+	 * 
 	 * @return New ResultSequence consisting of the document being stored
 	 */
 	@Override
@@ -65,8 +82,10 @@ public class DocType extends NodeType {
 
 		return rs;
 	}
+
 	/**
 	 * Retrieves the name of the node
+	 * 
 	 * @return QName representation of the name of the node
 	 */
 	@Override

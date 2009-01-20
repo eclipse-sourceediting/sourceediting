@@ -10,12 +10,14 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
+
 /**
  * Class to match any text node.
  */
 public class TextTest extends KindTest {
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override

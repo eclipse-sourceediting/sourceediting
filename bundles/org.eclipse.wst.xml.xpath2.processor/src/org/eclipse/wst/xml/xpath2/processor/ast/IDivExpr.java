@@ -17,14 +17,19 @@ package org.eclipse.wst.xml.xpath2.processor.ast;
 public class IDivExpr extends BinExpr {
 	/**
 	 * Constructor for IDivExpr.
-	 * @param l left value.
-	 * @param r right value.
+	 * 
+	 * @param l
+	 *            left value.
+	 * @param r
+	 *            right value.
 	 */
 	public IDivExpr(Expr l, Expr r) {
-		super(l,r);
+		super(l, r);
 	}
+
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override

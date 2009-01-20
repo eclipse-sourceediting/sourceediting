@@ -13,14 +13,18 @@ package org.eclipse.wst.xml.xpath2.processor.function;
 
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
+
 /**
  * Class for compare for greater than operation.
  */
 public interface CmpGt {
 	/**
 	 * Constructor for CmpGt
-	 * @param arg argument of any type.
-	 * @throws DynamicError Dynamic error.
+	 * 
+	 * @param arg
+	 *            argument of any type.
+	 * @throws DynamicError
+	 *             Dynamic error.
 	 * @return Result of operation, true/false.
 	 */
 	public boolean gt(AnyType arg) throws DynamicError;

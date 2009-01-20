@@ -12,6 +12,7 @@
 package org.eclipse.wst.xml.xpath2.processor.types;
 
 import org.eclipse.wst.xml.xpath2.processor.*;
+
 /**
  * Represents a Universal Resource Identifier (URI) reference
  */
@@ -21,21 +22,24 @@ public class XSAnyURI extends CtrType {
 
 	/**
 	 * Arity 1 Constructor
-	 * @param x String representation of the URI
+	 * 
+	 * @param x
+	 *            String representation of the URI
 	 */
 	public XSAnyURI(String x) {
 		_value = x;
 	}
-	
+
 	/**
 	 * Arity 0 Constructor. Initiates URI to null.
 	 */
 	public XSAnyURI() {
 		this(null);
 	}
-	
+
 	/**
 	 * Retrieve full type pathname of this datatype
+	 * 
 	 * @return "xs:anyURI", the full type pathname of this datatype
 	 */
 	@Override
@@ -45,6 +49,7 @@ public class XSAnyURI extends CtrType {
 
 	/**
 	 * Retrieve type name of this datatype
+	 * 
 	 * @return "anyURI", the type name of this datatype
 	 */
 	@Override
@@ -53,8 +58,11 @@ public class XSAnyURI extends CtrType {
 	}
 
 	/**
-	 * Transforms and retrieves the URI value of this URI datatype in String format
-	 * @return the URI value held by this instance of the URI datatype as a String
+	 * Transforms and retrieves the URI value of this URI datatype in String
+	 * format
+	 * 
+	 * @return the URI value held by this instance of the URI datatype as a
+	 *         String
 	 */
 	@Override
 	public String string_value() {
@@ -62,8 +70,11 @@ public class XSAnyURI extends CtrType {
 	}
 
 	/**
-	 * Creation of a result sequence consisting of a URI from a previous result sequence.
-	 * @param arg previous result sequence
+	 * Creation of a result sequence consisting of a URI from a previous result
+	 * sequence.
+	 * 
+	 * @param arg
+	 *            previous result sequence
 	 * @throws DynamicError
 	 * @return new result sequence consisting of the URI supplied
 	 */
@@ -71,9 +82,9 @@ public class XSAnyURI extends CtrType {
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
-		if(arg.empty())
+		if (arg.empty())
 			return rs;
-		
+
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 
 		rs.add(new XSAnyURI(aat.string_value()));

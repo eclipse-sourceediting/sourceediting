@@ -18,4 +18,3 @@ package org.eclipse.wst.xml.xpath2.processor.types;
  */
 public abstract class CalendarType extends CtrType {
 }
-

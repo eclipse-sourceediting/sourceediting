@@ -15,6 +15,7 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
  * Returns the xs:boolean value false. Equivalent to xs:boolean("0").
  */
@@ -25,22 +26,30 @@ public class FnFalse extends Function {
 	public FnFalse() {
 		super(new QName("false"), 0);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return fn_false(args);
 	}
+
 	/**
-         * False operation.
-         * @param args Result from the expressions evaluation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of fn:false operation.
-         */
+	 * False operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of fn:false operation.
+	 */
 	public static ResultSequence fn_false(Collection args) throws DynamicError {
 		assert args.size() == 0;
 

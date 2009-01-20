@@ -15,44 +15,54 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
- * Returns an xs:integer representing the minutes component in the canonical lexical
- * representation of the value of $arg. The result may be negative.
- * If $arg is the empty sequence, returns the empty sequence.
+ * Returns an xs:integer representing the minutes component in the canonical
+ * lexical representation of the value of $arg. The result may be negative. If
+ * $arg is the empty sequence, returns the empty sequence.
  */
 public class FnMinutesFromDuration extends Function {
 	private static Collection _expected_args = null;
+
 	/**
 	 * Constructor for FnMinutesFromDuration.
 	 */
 	public FnMinutesFromDuration() {
 		super(new QName("minutes-from-duration"), 1);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return minutes_from_duration(args);
 	}
+
 	/**
-         * Minutes-from-Duration operation.
-         * @param args Result from the expressions evaluation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of fn:minutes-from-duration operation.
-         */
-	public static ResultSequence minutes_from_duration(Collection args) throws DynamicError {
-		Collection cargs = Function.convert_arguments(args,
-                                                              expected_args());
+	 * Minutes-from-Duration operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of fn:minutes-from-duration operation.
+	 */
+	public static ResultSequence minutes_from_duration(Collection args)
+			throws DynamicError {
+		Collection cargs = Function.convert_arguments(args, expected_args());
 
 		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
-		if(arg1.empty()) {
+		if (arg1.empty()) {
 			return rs;
 		}
 
@@ -60,22 +70,24 @@ public class FnMinutesFromDuration extends Function {
 
 		int res = dtd.minutes();
 
-		if(dtd.negative())
+		if (dtd.negative())
 			res *= -1;
 
-		rs.add(new XSInteger(res));	
+		rs.add(new XSInteger(res));
 
 		return rs;
 	}
+
 	/**
-         * Obtain a list of expected arguments.
-         * @return Result of operation.
-         */
+	 * Obtain a list of expected arguments.
+	 * 
+	 * @return Result of operation.
+	 */
 	public static Collection expected_args() {
-		if(_expected_args == null) {
+		if (_expected_args == null) {
 			_expected_args = new ArrayList();
 			_expected_args.add(new SeqType(new XDTDayTimeDuration(),
-						       SeqType.OCC_QMARK));
+					SeqType.OCC_QMARK));
 		}
 
 		return _expected_args;

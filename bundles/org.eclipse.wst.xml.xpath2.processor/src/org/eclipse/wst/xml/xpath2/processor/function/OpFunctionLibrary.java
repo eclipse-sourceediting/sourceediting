@@ -14,14 +14,14 @@ package org.eclipse.wst.xml.xpath2.processor.function;
 // this is the equivalent of libc =D
 /**
  * Maintains a library of built-in operators as functions.
- *
+ * 
  * This is necessary if normalization is being used.
  */
 public class OpFunctionLibrary extends FunctionLibrary {
-	
+
 	// XXX should be internal
 	public static final String XPATH_OP_NS = "http://www.w3.org/TR/2003/WD-xquery-semantics-20030502/";
-	
+
 	/**
 	 * Constructor for OpFunctionLibrary.
 	 */

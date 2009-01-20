@@ -14,42 +14,61 @@ package org.eclipse.wst.xml.xpath2.processor.ast;
 import java.util.*;
 
 import org.eclipse.wst.xml.xpath2.processor.types.*;
+
 /**
  * Class for Function Call support.
  */
 public class FunctionCall extends PrimaryExpr {
 	private QName _name;
-	private Collection _args; 
+	private Collection _args;
+
 	/**
 	 * Constructor for FunctionCall.
-	 * @param name QName.
-	 * @param args Collection of arguments.
+	 * 
+	 * @param name
+	 *            QName.
+	 * @param args
+	 *            Collection of arguments.
 	 */
 	public FunctionCall(QName name, Collection args) {
 		_name = name;
 		_args = args;
 	}
+
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}
+
 	/**
 	 * Support for QName interface.
+	 * 
 	 * @return Result of QName operation.
 	 */
-	public QName name() { return _name; }
+	public QName name() {
+		return _name;
+	}
+
 	/**
 	 * Support for Iterator interface.
+	 * 
 	 * @return Result of Iterator operation.
 	 */
-	public Iterator iterator() { return _args.iterator(); }
+	public Iterator iterator() {
+		return _args.iterator();
+	}
+
 	/**
 	 * Support for Arity interface.
+	 * 
 	 * @return Result of Arity operation.
 	 */
-	public int arity() { return _args.size(); }
+	public int arity() {
+		return _args.size();
+	}
 }

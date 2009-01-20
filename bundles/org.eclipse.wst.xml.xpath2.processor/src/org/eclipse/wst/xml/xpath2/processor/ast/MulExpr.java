@@ -10,20 +10,26 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
+
 /**
  * Class for Multiply operation.
  */
 public class MulExpr extends BinExpr {
 	/**
 	 * Constructor for MulExpr.
-	 * @param l input1 xpath expression/variable.
-	 * @param r input2 xpath expression/variable.
+	 * 
+	 * @param l
+	 *            input1 xpath expression/variable.
+	 * @param r
+	 *            input2 xpath expression/variable.
 	 */
 	public MulExpr(Expr l, Expr r) {
-		super(l,r);
+		super(l, r);
 	}
+
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override

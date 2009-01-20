@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
+
 /**
  * Visitor class for XPath expressions.
  */
@@ -18,200 +19,249 @@ public interface XPathVisitor {
 	 * Visit XPath.
 	 */
 	public Object visit(XPath xp);
-        /**
-         * Visit ForExpr.
-         */
+
+	/**
+	 * Visit ForExpr.
+	 */
 	public Object visit(ForExpr fex);
-        /**
-         * Visit QuantifiedExpr.
-         */
+
+	/**
+	 * Visit QuantifiedExpr.
+	 */
 	public Object visit(QuantifiedExpr qex);
-        /**
-         * Visit IfExpr.
-         */
+
+	/**
+	 * Visit IfExpr.
+	 */
 	public Object visit(IfExpr ifex);
-        /**
-         * Visit OrExpr.
-         */
+
+	/**
+	 * Visit OrExpr.
+	 */
 	public Object visit(OrExpr orex);
-        /**
-         * Visit AndExpr.
-         */
+
+	/**
+	 * Visit AndExpr.
+	 */
 	public Object visit(AndExpr andex);
-        /**
-         * Visit CmpExpr.
-         */
+
+	/**
+	 * Visit CmpExpr.
+	 */
 	public Object visit(CmpExpr cmpex);
-        /**
-         * Visit RangeExpr.
-         */
+
+	/**
+	 * Visit RangeExpr.
+	 */
 	public Object visit(RangeExpr rex);
-        /**
-         * Visit AddExpr.
-         */
+
+	/**
+	 * Visit AddExpr.
+	 */
 	public Object visit(AddExpr addex);
-        /**
-         * Visit SubExpr.
-         */
+
+	/**
+	 * Visit SubExpr.
+	 */
 	public Object visit(SubExpr subex);
-        /**
-         * Visit MulExpr.
-         */
+
+	/**
+	 * Visit MulExpr.
+	 */
 	public Object visit(MulExpr mulex);
-        /**
-         * Visit DivExpr.
-         */
+
+	/**
+	 * Visit DivExpr.
+	 */
 	public Object visit(DivExpr mulex);
-        /**
-         * Visit IDivExpr.
-         */
+
+	/**
+	 * Visit IDivExpr.
+	 */
 	public Object visit(IDivExpr mulex);
-        /**
-         * Visit ModExpr.
-         */
+
+	/**
+	 * Visit ModExpr.
+	 */
 	public Object visit(ModExpr mulex);
-        /**
-         * Visit UnionExpr.
-         */
+
+	/**
+	 * Visit UnionExpr.
+	 */
 	public Object visit(UnionExpr unex);
-        /**
-         * Visit PipeExpr.
-         */
+
+	/**
+	 * Visit PipeExpr.
+	 */
 	public Object visit(PipeExpr pipex);
-        /**
-         * Visit IntersectExpr.
-         */
+
+	/**
+	 * Visit IntersectExpr.
+	 */
 	public Object visit(IntersectExpr iexpr);
-        /**
-         * Visit ExceptExpr.
-         */
+
+	/**
+	 * Visit ExceptExpr.
+	 */
 	public Object visit(ExceptExpr eexpr);
-        /**
-         * Visit InstOfExpr.
-         */
+
+	/**
+	 * Visit InstOfExpr.
+	 */
 	public Object visit(InstOfExpr ioexp);
-        /**
-         * Visit TreatAsExpr.
-         */
+
+	/**
+	 * Visit TreatAsExpr.
+	 */
 	public Object visit(TreatAsExpr taexp);
-        /**
-         * Visit CastableExpr.
-         */
+
+	/**
+	 * Visit CastableExpr.
+	 */
 	public Object visit(CastableExpr cexp);
-        /**
-         * Visit CastExpr.
-         */
+
+	/**
+	 * Visit CastExpr.
+	 */
 	public Object visit(CastExpr cexp);
-        /**
-         * Visit MinusExpr.
-         */
+
+	/**
+	 * Visit MinusExpr.
+	 */
 	public Object visit(MinusExpr e);
-        /**
-         * Visit PlusExpr.
-         */
+
+	/**
+	 * Visit PlusExpr.
+	 */
 	public Object visit(PlusExpr e);
-        /**
-         * Visit XPathExpr.
-         */
+
+	/**
+	 * Visit XPathExpr.
+	 */
 	public Object visit(XPathExpr e);
-        /**
-         * Visit ForwardStep.
-         */
+
+	/**
+	 * Visit ForwardStep.
+	 */
 	public Object visit(ForwardStep e);
-        /**
-         * Visit ReverseStep.
-         */
+
+	/**
+	 * Visit ReverseStep.
+	 */
 	public Object visit(ReverseStep e);
-        /**
-         * Visit NameTest.
-         */
+
+	/**
+	 * Visit NameTest.
+	 */
 	public Object visit(NameTest e);
-        /**
-         * Visit VarRef.
-         */
+
+	/**
+	 * Visit VarRef.
+	 */
 	public Object visit(VarRef e);
-        /**
-         * Visit StringLiteral.
-         */
+
+	/**
+	 * Visit StringLiteral.
+	 */
 	public Object visit(StringLiteral e);
-        /**
-         * Visit IntegerLiteral.
-         */
+
+	/**
+	 * Visit IntegerLiteral.
+	 */
 	public Object visit(IntegerLiteral e);
-        /**
-         * Visit DoubleLiteral.
-         */
+
+	/**
+	 * Visit DoubleLiteral.
+	 */
 	public Object visit(DoubleLiteral e);
-        /**
-         * Visit DecimalLiteral.
-         */
+
+	/**
+	 * Visit DecimalLiteral.
+	 */
 	public Object visit(DecimalLiteral e);
-        /**
-         * Visit ParExpr.
-         */
+
+	/**
+	 * Visit ParExpr.
+	 */
 	public Object visit(ParExpr e);
-        /**
-         * Visit CntxItemExpr.
-         */
+
+	/**
+	 * Visit CntxItemExpr.
+	 */
 	public Object visit(CntxItemExpr e);
-        /**
-         * Visit FunctionCall.
-         */
+
+	/**
+	 * Visit FunctionCall.
+	 */
 	public Object visit(FunctionCall e);
-        /**
-         * Visit SingleType.
-         */
+
+	/**
+	 * Visit SingleType.
+	 */
 	public Object visit(SingleType e);
-        /**
-         * Visit SequenceType.
-         */
+
+	/**
+	 * Visit SequenceType.
+	 */
 	public Object visit(SequenceType e);
-        /**
-         * Visit ItemType.
-         */
+
+	/**
+	 * Visit ItemType.
+	 */
 	public Object visit(ItemType e);
-        /**
-         * Visit AnyKindTest.
-         */
+
+	/**
+	 * Visit AnyKindTest.
+	 */
 	public Object visit(AnyKindTest e);
-        /**
-         * Visit DocumentTest.
-         */
+
+	/**
+	 * Visit DocumentTest.
+	 */
 	public Object visit(DocumentTest e);
-        /**
-         * Visit TextTest.
-         */
+
+	/**
+	 * Visit TextTest.
+	 */
 	public Object visit(TextTest e);
-        /**
-         * Visit CommentTest.
-         */
+
+	/**
+	 * Visit CommentTest.
+	 */
 	public Object visit(CommentTest e);
-        /**
-         * Visit PITest.
-         */
+
+	/**
+	 * Visit PITest.
+	 */
 	public Object visit(PITest e);
-        /**
-         * Visit AttributeTest.
-         */
+
+	/**
+	 * Visit AttributeTest.
+	 */
 	public Object visit(AttributeTest e);
-        /**
-         * Visit SchemaAttrTest.
-         */
+
+	/**
+	 * Visit SchemaAttrTest.
+	 */
 	public Object visit(SchemaAttrTest e);
-        /**
-         * Visit ElementTest.
-         */
+
+	/**
+	 * Visit ElementTest.
+	 */
 	public Object visit(ElementTest e);
-        /**
-         * Visit SchemElemTest.
-         */
+
+	/**
+	 * Visit SchemElemTest.
+	 */
 	public Object visit(SchemaElemTest e);
-        /**
-         * Visit AxisStep.
-         */
+
+	/**
+	 * Visit AxisStep.
+	 */
 	public Object visit(AxisStep e);
-        /**
-         * Visit FilterExpr.
-         */
+
+	/**
+	 * Visit FilterExpr.
+	 */
 	public Object visit(FilterExpr e);
 }

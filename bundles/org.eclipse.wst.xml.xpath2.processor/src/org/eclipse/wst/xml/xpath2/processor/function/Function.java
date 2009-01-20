@@ -15,6 +15,7 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
  * Support for functions.
  */
@@ -22,88 +23,118 @@ public abstract class Function {
 
 	protected QName _name;
 	protected int _arity; // if negative, need to have "at least"
-			      // abs(_arity) args
-			      // variable args basically...
+	// abs(_arity) args
+	// variable args basically...
 	protected FunctionLibrary _fl;
+
 	/**
 	 * Constructor for Function.
-	 * @param name QName.
-	 * @param arity the arity of a specific function.
+	 * 
+	 * @param name
+	 *            QName.
+	 * @param arity
+	 *            the arity of a specific function.
 	 */
 	public Function(QName name, int arity) {
 		_name = name;
 		_arity = arity;
 		_fl = null;
 	}
+
 	/**
 	 * Support for QName interface.
+	 * 
 	 * @return Result of QName operation.
 	 */
-	public QName name() { return _name; }
+	public QName name() {
+		return _name;
+	}
+
 	/**
 	 * Support for int interface.
+	 * 
 	 * @return Result of int operation.
 	 */
-	public int arity() { return _arity; }
+	public int arity() {
+		return _arity;
+	}
+
 	/**
 	 * Default constructor for signature.
+	 * 
 	 * @return Signature.
 	 */
 	public String signature() {
 		return signature(this);
 	}
+
 	/**
 	 * Obtain the function name and arity from signature.
-	 * @param f current function.
+	 * 
+	 * @param f
+	 *            current function.
 	 * @return Signature.
 	 */
 	public static String signature(Function f) {
-		return signature(f.name(),f.arity());
+		return signature(f.name(), f.arity());
 	}
+
 	/**
 	 * Apply the name and arity to signature.
-	 * @param name QName.
-	 * @param arity arity of the function.	
+	 * 
+	 * @param name
+	 *            QName.
+	 * @param arity
+	 *            arity of the function.
 	 * @return Signature.
 	 */
 	public static String signature(QName name, int arity) {
 		String n = name.expanded_name();
-		if(n == null)
+		if (n == null)
 			return null;
 
 		n += "_";
 
-		if(arity < 0)
+		if (arity < 0)
 			n += "x";
-		else	
+		else
 			n += arity;
 
 		return n;
 	}
-	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
-	public abstract ResultSequence evaluate(Collection args) throws DynamicError;
 
+	/**
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
+	public abstract ResultSequence evaluate(Collection args)
+			throws DynamicError;
 
 	// convert argument according to section 3.1.5 of xpath 2.0 spec
 	/**
 	 * Convert the input argument according to section 3.1.5 of specification.
-	 * @param arg input argument.
-	 * @param expected Expected Sequence type.
-	 * @throws DynamicError Dynamic error.
+	 * 
+	 * @param arg
+	 *            input argument.
+	 * @param expected
+	 *            Expected Sequence type.
+	 * @throws DynamicError
+	 *             Dynamic error.
 	 * @return Converted argument.
 	 */
-	public static ResultSequence convert_argument(ResultSequence arg, SeqType expected) throws DynamicError {
+	public static ResultSequence convert_argument(ResultSequence arg,
+			SeqType expected) throws DynamicError {
 		ResultSequence result = arg;
 
 		AnyType expected_type = expected.type();
 
 		// expected is atomic
-		if(expected_type instanceof AnyAtomicType) {
+		if (expected_type instanceof AnyAtomicType) {
 			AnyAtomicType expected_aat = (AnyAtomicType) expected_type;
 
 			// atomize
@@ -111,27 +142,27 @@ public abstract class Function {
 
 			// cast untyped to expected type
 			result = ResultSequenceFactory.create_new();
-			for(Iterator i = rs.iterator(); i.hasNext(); ) {
+			for (Iterator i = rs.iterator(); i.hasNext();) {
 				AnyType item = (AnyType) i.next();
 
-				if(item instanceof UntypedAtomic) {
+				if (item instanceof UntypedAtomic) {
 					// create a new item of the expected
 					// type initialized with from the string
 					// value of the item
-					ResultSequence converted = ResultSequenceFactory.create_new(item);
+					ResultSequence converted = ResultSequenceFactory
+							.create_new(item);
 					result.concat(converted);
 				}
 
 				// numeric type promotion
-				else if(item instanceof NumericType) {
+				else if (item instanceof NumericType) {
 					// XXX TODO numeric type promotion
 					result.add(item);
-				}
-				else
+				} else
 					result.add(item);
 			}
 		}
-		
+
 		// do sequence type matching on converted arguments
 		return expected.match(result);
 	}
@@ -140,14 +171,17 @@ public abstract class Function {
 	// returns collection of arguments
 	/**
 	 * Convert arguments.
-	 * @param args input arguments.
-	 * @param expected expected arguments.
-	 * @throws DynamicError Dynamic error.
+	 * 
+	 * @param args
+	 *            input arguments.
+	 * @param expected
+	 *            expected arguments.
+	 * @throws DynamicError
+	 *             Dynamic error.
 	 * @return Converted arguments.
 	 */
-	public static Collection convert_arguments(Collection args, 
-						   Collection expected) 
-						   throws DynamicError {
+	public static Collection convert_arguments(Collection args,
+			Collection expected) throws DynamicError {
 		Collection result = new ArrayList();
 
 		assert args.size() == expected.size();
@@ -156,31 +190,35 @@ public abstract class Function {
 		Iterator expi = expected.iterator();
 
 		// convert all arguments
-		while(argi.hasNext()) {
-			result.add(convert_argument( (ResultSequence) argi.next(),
-						    (SeqType) expi.next()) );
+		while (argi.hasNext()) {
+			result.add(convert_argument((ResultSequence) argi.next(),
+					(SeqType) expi.next()));
 		}
 
 		return result;
 	}
+
 	/**
 	 * Set the function library variable.
-	 * @param fl Function Library.	
+	 * 
+	 * @param fl
+	 *            Function Library.
 	 */
 	public void set_function_library(FunctionLibrary fl) {
 		_fl = fl;
 	}
 
 	protected StaticContext static_context() {
-		if(_fl == null)
+		if (_fl == null)
 			return null;
-		
+
 		return _fl.static_context();
 	}
+
 	protected DynamicContext dynamic_context() {
-		if(_fl == null)
+		if (_fl == null)
 			return null;
-		
+
 		return _fl.dynamic_context();
 	}
 

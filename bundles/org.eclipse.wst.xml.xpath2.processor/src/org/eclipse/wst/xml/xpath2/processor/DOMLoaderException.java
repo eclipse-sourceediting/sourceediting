@@ -12,10 +12,10 @@
 package org.eclipse.wst.xml.xpath2.processor;
 
 /**
-  * Exception caused by DOM loader.
-  */
+ * Exception caused by DOM loader.
+ */
 public class DOMLoaderException extends XPathException {
-	
+
 	/**
 	 * 
 	 */
@@ -23,8 +23,10 @@ public class DOMLoaderException extends XPathException {
 
 	/**
 	 * Constructor for DOM loader exception.
- 	 * @param reason is the reason for the exception.
- 	 */
+	 * 
+	 * @param reason
+	 *            is the reason for the exception.
+	 */
 	public DOMLoaderException(String reason) {
 		super(reason);
 	}

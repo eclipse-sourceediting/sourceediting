@@ -12,15 +12,19 @@
 package org.eclipse.wst.xml.xpath2.processor.function;
 
 import org.eclipse.wst.xml.xpath2.processor.*;
+
 /**
  * Support for Mathematical Modular operation.
  */
 public interface MathMod {
 	/**
-         * Modular operation.
-         * @param arg input argument.
-         * @throws DynamicError Dynamic error.
-         * @return Result of operation.
-         */
+	 * Modular operation.
+	 * 
+	 * @param arg
+	 *            input argument.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of operation.
+	 */
 	public ResultSequence mod(ResultSequence arg) throws DynamicError;
 }

@@ -15,6 +15,7 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
  * Returns the items of $sourceSeq in a non-deterministic order.
  */
@@ -25,44 +26,52 @@ public class FnUnordered extends Function {
 	public FnUnordered() {
 		super(new QName("unordered"), 1);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return unordered(args);
 	}
+
 	/**
-         * Unordered operation.
-         * @param args Result from the expressions evaluation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of fn:unordered operation.
-         */
+	 * Unordered operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of fn:unordered operation.
+	 */
 	public static ResultSequence unordered(Collection args) throws DynamicError {
 
 		assert args.size() == 1;
-			
+
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		// get args
 		Iterator citer = args.iterator();
 		ResultSequence arg = (ResultSequence) citer.next();
 
-		if(arg.empty())
+		if (arg.empty())
 			return rs;
 
 		// XXX lame
 		ArrayList tmp = new ArrayList();
-		for(Iterator i = arg.iterator(); i.hasNext();)
+		for (Iterator i = arg.iterator(); i.hasNext();)
 			tmp.add(i.next());
-		
+
 		Collections.shuffle(tmp);
 
-		for(Iterator i = tmp.iterator(); i.hasNext();)
-			rs.add( (AnyType) i.next());
+		for (Iterator i = tmp.iterator(); i.hasNext();)
+			rs.add((AnyType) i.next());
 
 		return rs;
 	}

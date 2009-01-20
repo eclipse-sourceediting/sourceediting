@@ -12,30 +12,40 @@
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
 import org.eclipse.wst.xml.xpath2.processor.types.*;
+
 /**
  * Support for Schema Element Test.
  */
 public class SchemaElemTest extends KindTest {
 	private QName _arg;
+
 	/**
 	 * Constructor for SchemaElemTest.
-	 * @param arg QName argument.
+	 * 
+	 * @param arg
+	 *            QName argument.
 	 */
 	public SchemaElemTest(QName arg) {
 		_arg = arg;
 	}
+
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}
+
 	/**
 	 * Support for QName interface.
- 	 * @return Result of QName operation.
+	 * 
+	 * @return Result of QName operation.
 	 */
-	public QName name() { return _arg; }
+	public QName name() {
+		return _arg;
+	}
 
 }

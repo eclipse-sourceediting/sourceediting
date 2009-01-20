@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.types;
+
 /**
  * Common base for every atomic type
  */

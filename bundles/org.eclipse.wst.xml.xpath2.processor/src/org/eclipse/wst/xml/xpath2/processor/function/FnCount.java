@@ -15,9 +15,10 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
- * Returns the number of items in the value of $arg.
- * Returns 0 if $arg is the empty sequence.
+ * Returns the number of items in the value of $arg. Returns 0 if $arg is the
+ * empty sequence.
  */
 public class FnCount extends Function {
 	/**
@@ -26,26 +27,34 @@ public class FnCount extends Function {
 	public FnCount() {
 		super(new QName("count"), 1);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return count(args);
 	}
+
 	/**
-         * Count operation.
-         * @param args Result from the expressions evaluation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of fn:count operation.
-         */
+	 * Count operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of fn:count operation.
+	 */
 	public static ResultSequence count(Collection args) throws DynamicError {
 
 		assert args.size() == 1;
-			
+
 		// get args
 		Iterator citer = args.iterator();
 		ResultSequence arg = (ResultSequence) citer.next();

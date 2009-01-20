@@ -15,10 +15,11 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
- * $arg is first reduced to an effective boolean value by applying the fn:boolean() function.
- * Returns true if the effective boolean value is false, and false if the effective boolean
- * value is true.
+ * $arg is first reduced to an effective boolean value by applying the
+ * fn:boolean() function. Returns true if the effective boolean value is false,
+ * and false if the effective boolean value is true.
  */
 public class FnNot extends Function {
 	/**
@@ -27,11 +28,14 @@ public class FnNot extends Function {
 	public FnNot() {
 		super(new QName("not"), 1);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) {
 		// 1 argument only!
@@ -41,11 +45,14 @@ public class FnNot extends Function {
 
 		return fn_not(argument);
 	}
+
 	/**
-         * Not operation.
-         * @param arg Result from the expressions evaluation.
-         * @return Result of fn:note operation.
-         */
+	 * Not operation.
+	 * 
+	 * @param arg
+	 *            Result from the expressions evaluation.
+	 * @return Result of fn:note operation.
+	 */
 	public static ResultSequence fn_not(ResultSequence arg) {
 		ResultSequence rs = FnBoolean.fn_boolean(arg);
 
@@ -53,7 +60,7 @@ public class FnNot extends Function {
 
 		boolean answer = false;
 
-		if(ret.value() == false)
+		if (ret.value() == false)
 			answer = true;
 
 		return ResultSequenceFactory.create_new(new XSBoolean(answer));

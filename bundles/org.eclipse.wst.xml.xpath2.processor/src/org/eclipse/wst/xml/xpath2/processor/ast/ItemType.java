@@ -12,6 +12,7 @@
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
 import org.eclipse.wst.xml.xpath2.processor.types.*;
+
 /**
  * Support for Item node type.
  */
@@ -36,8 +37,11 @@ public class ItemType extends XPathNode {
 	// XXX: polymorphism
 	/**
 	 * Constructor for ItemType.
-	 * @param type Type.
-	 * @param value Object value.
+	 * 
+	 * @param type
+	 *            Type.
+	 * @param value
+	 *            Object value.
 	 */
 	public ItemType(int type, Object value) {
 		_qname = null;
@@ -45,36 +49,50 @@ public class ItemType extends XPathNode {
 
 		_type = type;
 
-		switch(type) {
-			case QNAME:
-				_qname = (QName) value;
-				break;
-			case KINDTEST:
-				_ktest = (KindTest) value;
-				break;
+		switch (type) {
+		case QNAME:
+			_qname = (QName) value;
+			break;
+		case KINDTEST:
+			_ktest = (KindTest) value;
+			break;
 		}
 	}
+
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}
+
 	/**
 	 * Support for Type interface.
+	 * 
 	 * @return Result of Type operation.
 	 */
-	public int type() { return _type; }
+	public int type() {
+		return _type;
+	}
+
 	/**
 	 * Support for QName interface.
+	 * 
 	 * @return Result of QName operation.
 	 */
-	public QName qname() { return _qname; }
+	public QName qname() {
+		return _qname;
+	}
+
 	/**
 	 * Support KindTest interface.
+	 * 
 	 * @return Result of KindTest operation.
 	 */
-	public KindTest kind_test() { return _ktest; }
+	public KindTest kind_test() {
+		return _ktest;
+	}
 }

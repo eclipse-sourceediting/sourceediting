@@ -12,6 +12,7 @@
 package org.eclipse.wst.xml.xpath2.processor.function;
 
 import org.eclipse.wst.xml.xpath2.processor.types.*;
+
 /**
  * XML Schema control library support.
  */
@@ -20,6 +21,7 @@ public class XSCtrLibrary extends ConstructorFL {
 	 * Path to W3.org XML Schema specification.
 	 */
 	public static final String XML_SCHEMA_NS = "http://www.w3.org/2001/XMLSchema";
+
 	/**
 	 * Constructor for XSCtrLibrary.
 	 */

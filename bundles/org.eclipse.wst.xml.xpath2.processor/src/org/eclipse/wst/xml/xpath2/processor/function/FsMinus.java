@@ -15,6 +15,7 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
  * Class for Minus function.
  */
@@ -25,12 +26,16 @@ public class FsMinus extends Function {
 	public FsMinus() {
 		super(new QName("minus"), 2);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		assert args.size() == arity();
@@ -39,33 +44,40 @@ public class FsMinus extends Function {
 	}
 
 	/**
-         * General operation on the arguments.
-         * @param args input arguments.
-         * @throws DynamicError Dynamic error.
-         * @return Result of the operation.
-         */
+	 * General operation on the arguments.
+	 * 
+	 * @param args
+	 *            input arguments.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of the operation.
+	 */
 	public static ResultSequence fs_minus(Collection args) throws DynamicError {
 		return FsPlus.do_math_op(args, MathMinus.class, "minus");
 	}
+
 	/**
-         * Unary operation on the values of the arguments.
-         * @param args input arguments.
-         * @throws DynamicError Dynamic error.
-         * @return Result of the operation.
-         */
-	public static ResultSequence fs_minus_unary(Collection args) throws DynamicError {
-                // make sure we got only one arg
-                if(args.size() != 1)
-                        DynamicError.throw_type_error();
-                ResultSequence arg = (ResultSequence) args.iterator().next();
+	 * Unary operation on the values of the arguments.
+	 * 
+	 * @param args
+	 *            input arguments.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of the operation.
+	 */
+	public static ResultSequence fs_minus_unary(Collection args)
+			throws DynamicError {
+		// make sure we got only one arg
+		if (args.size() != 1)
+			DynamicError.throw_type_error();
+		ResultSequence arg = (ResultSequence) args.iterator().next();
 
-                // make sure we got only one numeric atom
-                if(arg.size() != 1)
-                        DynamicError.throw_type_error();
-                AnyType at = arg.first();
-                if( !(at instanceof NumericType) )
-                        DynamicError.throw_type_error();
-
+		// make sure we got only one numeric atom
+		if (arg.size() != 1)
+			DynamicError.throw_type_error();
+		AnyType at = arg.first();
+		if (!(at instanceof NumericType))
+			DynamicError.throw_type_error();
 
 		NumericType nt = (NumericType) at;
 

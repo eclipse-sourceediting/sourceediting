@@ -10,19 +10,23 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
+
 /**
- * The boolean operator 'instance of' takes the value of its first
- * operand and matches its type to the SequenceType in its second 
- * operand, according to the rules for SequenceType matching.
+ * The boolean operator 'instance of' takes the value of its first operand and
+ * matches its type to the SequenceType in its second operand, according to the
+ * rules for SequenceType matching.
  */
 public class InstOfExpr extends BinExpr {
-	/** 
+	/**
 	 * Constructor for InstOfExpr.
-	 * @param l input xpath expression/variable.
-	 * @param r SequenceType to check l against.
+	 * 
+	 * @param l
+	 *            input xpath expression/variable.
+	 * @param r
+	 *            SequenceType to check l against.
 	 */
 	public InstOfExpr(Expr l, SequenceType r) {
-		super(l,r);
+		super(l, r);
 	}
 
 	/**

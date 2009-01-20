@@ -10,20 +10,26 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
+
 /**
  * Support for Range expressions.
  */
 public class RangeExpr extends BinExpr {
 	/**
 	 * Constructor for RangeExpr.
-	 * @param l left expression.
-	 * @param r right expression.
+	 * 
+	 * @param l
+	 *            left expression.
+	 * @param r
+	 *            right expression.
 	 */
 	public RangeExpr(Expr l, Expr r) {
-		super(l,r);
+		super(l, r);
 	}
+
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override

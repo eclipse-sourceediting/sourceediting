@@ -14,15 +14,16 @@ package org.eclipse.wst.xml.xpath2.processor;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 /**
- * An axis that only ever contains the context node or nodes that are 
- * after the context node in document order is a forward axis.
+ * An axis that only ever contains the context node or nodes that are after the
+ * context node in document order is a forward axis.
  */
 public abstract class ForwardAxis implements Axis {
 
 	/**
- 	 * Return the new Element Type
+	 * Return the new Element Type
+	 * 
 	 * @return The element type.
- 	 */
+	 */
 	// "default" type is element....
 	// remember to override for attribute and namespce axis tho!
 	public NodeType principal_node_kind() {

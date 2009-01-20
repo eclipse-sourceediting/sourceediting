@@ -24,75 +24,87 @@ public class TypeError extends XPathException {
 
 	/**
 	 * Constructor for type error.
-	 * @param code is the error code.
-	 * @param err is the reason for the error.
+	 * 
+	 * @param code
+	 *            is the error code.
+	 * @param err
+	 *            is the reason for the error.
 	 */
 	public TypeError(String code, String err) {
 		super(err);
 		_code = code;
 	}
-	
+
 	/**
 	 * Get the error code.
+	 * 
 	 * @return The error code.
 	 */
-	public String code() { return _code; }
-
+	public String code() {
+		return _code;
+	}
 
 	/**
 	 * "Factory" for building errors
-	 * @param err is the reason for the error.
+	 * 
+	 * @param err
+	 *            is the reason for the error.
 	 * @return the error.
 	 */
 	public static TypeError ci_not_node(String err) {
 		String error = "Context item is not a node.";
 
-		if(err != null)
+		if (err != null)
 			error += " " + err;
 
-		
 		return new TypeError("XP0020", error);
 	}
 
 	/**
 	 * "Factory" for building errors
-	 * @param err is the reason for the error.
+	 * 
+	 * @param err
+	 *            is the reason for the error.
 	 * @return the error.
 	 */
 	public static TypeError mixed_vals(String err) {
 		String error = "The result of the last step in a path expression contains both nodes and atomic values.";
 
-		if(err != null)
+		if (err != null)
 			error += " " + err;
-		
+
 		return new TypeError("XP0018", error);
 	}
 
 	/**
 	 * "Factory" for building errors
-	 * @param err is the reason for the error.
+	 * 
+	 * @param err
+	 *            is the reason for the error.
 	 * @return the error.
-	 */	
+	 */
 	public static TypeError step_conatins_atoms(String err) {
 		String error = "The result of an step (other than the last step) in a path expression contains an atomic value.";
 
-		if(err != null)
+		if (err != null)
 			error += " " + err;
-		
+
 		return new TypeError("XP0019", error);
 	}
 
 	/**
 	 * "Factory" for building errors
-	 * @param err is the reason for the error.
+	 * 
+	 * @param err
+	 *            is the reason for the error.
 	 * @return the error.
-	 */	
+	 */
 	public static TypeError invalid_type(String err) {
 		String error = "Value does not match a required type.";
 
-		if(err != null)
+		if (err != null)
 			error += " " + err;
-		
+
 		return new TypeError("XP0006", error);
 	}
 }

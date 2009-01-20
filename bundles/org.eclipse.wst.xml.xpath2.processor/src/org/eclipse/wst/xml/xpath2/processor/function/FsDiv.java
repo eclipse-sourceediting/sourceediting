@@ -15,6 +15,7 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
  * Class for the Division function.
  */
@@ -25,12 +26,16 @@ public class FsDiv extends Function {
 	public FsDiv() {
 		super(new QName("div"), 2);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		assert args.size() == arity();
@@ -39,11 +44,14 @@ public class FsDiv extends Function {
 	}
 
 	/**
-         * Div operation.
-         * @param args Result from the expressions evaluation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of fs:div operation.
-         */
+	 * Div operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of fs:div operation.
+	 */
 	public static ResultSequence fs_div(Collection args) throws DynamicError {
 		return FsPlus.do_math_op(args, MathDiv.class, "div");
 	}

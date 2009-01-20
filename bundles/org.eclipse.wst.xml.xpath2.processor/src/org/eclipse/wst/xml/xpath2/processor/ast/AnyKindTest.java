@@ -10,14 +10,15 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
+
 /**
- * Class to test a type of any kind.
- * This matches any node in the expression.
+ * Class to test a type of any kind. This matches any node in the expression.
  */
 public class AnyKindTest extends KindTest {
 
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override

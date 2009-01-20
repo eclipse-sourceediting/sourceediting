@@ -15,39 +15,48 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
- * Returns the value of the base-uri property from the static context.
- * If the base-uri property is undefined, the empty sequence is returned. Components of
- * the static context are discussed in Section C.1 Static Context Components in the
- * specification.
+ * Returns the value of the base-uri property from the static context. If the
+ * base-uri property is undefined, the empty sequence is returned. Components of
+ * the static context are discussed in Section C.1 Static Context Components in
+ * the specification.
  */
 public class FnStaticBaseUri extends Function {
 	/**
- 	 * Constructor for FnStaticBaseUri.
-	 */	
+	 * Constructor for FnStaticBaseUri.
+	 */
 	public FnStaticBaseUri() {
 		super(new QName("static-base-uri"), 0);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return static_base_uri(args, static_context());
 	}
+
 	/**
-         * Static-base-Uri operation.
-         * @param args Result from the expressions evaluation.
-	 * @param sc Result of static context operation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of fn:static-base-uri operation.
-         */
+	 * Static-base-Uri operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @param sc
+	 *            Result of static context operation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of fn:static-base-uri operation.
+	 */
 	public static ResultSequence static_base_uri(Collection args,
-						     StaticContext sc) 
-						     throws DynamicError {
+			StaticContext sc) throws DynamicError {
 		assert args.size() == 0;
 		assert sc != null;
 

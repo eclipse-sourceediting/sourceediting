@@ -12,23 +12,26 @@
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
 /**
- * Class for binary operation And.
- * The value of an and-expression is determined by the effective boolean values 
- * (EBV's) of its operands.
+ * Class for binary operation And. The value of an and-expression is determined
+ * by the effective boolean values (EBV's) of its operands.
  */
 public class AndExpr extends BinExpr {
 
 	/**
 	 * Constructor for AndExpr.
-	 * @param l input1 xpath expression.
-	 * @param r input2 xpath expression.
+	 * 
+	 * @param l
+	 *            input1 xpath expression.
+	 * @param r
+	 *            input2 xpath expression.
 	 */
 	public AndExpr(Expr l, Expr r) {
-		super(l,r);
+		super(l, r);
 	}
 
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override

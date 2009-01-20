@@ -21,12 +21,14 @@ public class StaticFunctNameError extends StaticNameError {
 	 */
 	private static final long serialVersionUID = 3804565876770376444L;
 	public static final String FUNCTION_NOT_FOUND = "XP0017";
-	
+
 	/**
 	 * Constructor for static function name error
-	 * @param reason is the reason for the error.
- 	 */
+	 * 
+	 * @param reason
+	 *            is the reason for the error.
+	 */
 	public StaticFunctNameError(String reason) {
-		super(FUNCTION_NOT_FOUND,reason);
+		super(FUNCTION_NOT_FOUND, reason);
 	}
 }

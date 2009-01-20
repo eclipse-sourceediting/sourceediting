@@ -10,17 +10,21 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.types;
+
 /**
  * Common base for every type
  */
 public abstract class AnyType {
 	/**
 	 * Retrieves the datatype's full pathname
+	 * 
 	 * @return Datatype's full pathname
 	 */
 	public abstract String string_type();
+
 	/**
 	 * Retrieves the datatype's name
+	 * 
 	 * @return Datatype's name
 	 */
 	public abstract String string_value();

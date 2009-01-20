@@ -12,21 +12,26 @@
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
 /**
- * Class for binary operation Add, takes 2 inputs and returns the combined value.
- */	
+ * Class for binary operation Add, takes 2 inputs and returns the combined
+ * value.
+ */
 public class AddExpr extends BinExpr {
 
 	/**
 	 * Constructor for AddExpr
-	 * @param l input1 xpath expression/variable.
-	 * @param r input2 xpath expression/variable.
+	 * 
+	 * @param l
+	 *            input1 xpath expression/variable.
+	 * @param r
+	 *            input2 xpath expression/variable.
 	 */
 	public AddExpr(Expr l, Expr r) {
-		super(l,r);
+		super(l, r);
 	}
 
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override

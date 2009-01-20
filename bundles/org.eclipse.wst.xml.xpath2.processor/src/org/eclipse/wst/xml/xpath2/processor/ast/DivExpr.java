@@ -17,14 +17,19 @@ package org.eclipse.wst.xml.xpath2.processor.ast;
 public class DivExpr extends BinExpr {
 	/**
 	 * Constructor for DivExpr.
-	 * @param l input1 xpath expression/variable.
-	 * @param r input2 xpath expression/variable.
+	 * 
+	 * @param l
+	 *            input1 xpath expression/variable.
+	 * @param r
+	 *            input2 xpath expression/variable.
 	 */
 	public DivExpr(Expr l, Expr r) {
-		super(l,r);
+		super(l, r);
 	}
+
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override

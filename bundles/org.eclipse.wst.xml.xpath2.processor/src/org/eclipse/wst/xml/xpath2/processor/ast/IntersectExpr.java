@@ -10,23 +10,28 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
+
 /**
- * The intersect operator takes two node sequences as operands and returns a sequence 
- * containing all the nodes that occur in both operands.
+ * The intersect operator takes two node sequences as operands and returns a
+ * sequence containing all the nodes that occur in both operands.
  */
 public class IntersectExpr extends BinExpr {
 
 	/**
 	 * Constructor for IntersectExpr.
-	 * @param l input1 xpath expression/variable.
-	 * @param r input2 xpath expression/variable.
+	 * 
+	 * @param l
+	 *            input1 xpath expression/variable.
+	 * @param r
+	 *            input2 xpath expression/variable.
 	 */
 	public IntersectExpr(Expr l, Expr r) {
-		super(l,r);
+		super(l, r);
 	}
 
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override

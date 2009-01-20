@@ -28,15 +28,15 @@ public class DefaultRSFactory extends ResultSequenceFactory {
 	 * 
 	 */
 	public DefaultRSFactory() {
-		for(int i = 0; i < POOL_SIZE; i++)
+		for (int i = 0; i < POOL_SIZE; i++)
 			_rs_pool[i] = _rs_creator.create_new();
-			
+
 		_head_pos = POOL_SIZE - 1;
 	}
 
 	@Override
 	protected ResultSequence fact_create_new() {
-		if(_head_pos > 0) {
+		if (_head_pos > 0) {
 			return _rs_pool[_head_pos--];
 		}
 
@@ -47,9 +47,9 @@ public class DefaultRSFactory extends ResultSequenceFactory {
 	protected void fact_release(ResultSequence rs) {
 		int new_pos = _head_pos + 1;
 
-		if( new_pos < POOL_SIZE) {
+		if (new_pos < POOL_SIZE) {
 			rs.clear();
-			
+
 			_head_pos = new_pos;
 			_rs_pool[new_pos] = rs;
 		}

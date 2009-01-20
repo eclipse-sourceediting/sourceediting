@@ -16,6 +16,7 @@ import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
 import org.w3c.dom.*;
+
 /**
  * This function tests whether the language of $node, or the context node if the
  * second argument is omitted, as specified by xml:lang attributes is the same
@@ -28,32 +29,40 @@ import org.w3c.dom.*;
  */
 public class FnLang extends Function {
 	private static Collection _expected_args = null;
+
 	/**
 	 * Constructor for FnLang.
 	 */
 	public FnLang() {
 		super(new QName("lang"), 2);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return lang(args);
 	}
+
 	/**
-         * Language operation.
-         * @param args Result from the expressions evaluation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of fn:lang operation.
-         */
+	 * Language operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of fn:lang operation.
+	 */
 	public static ResultSequence lang(Collection args) throws DynamicError {
 
-		Collection cargs = Function.convert_arguments(args,
-                                                              expected_args());
+		Collection cargs = Function.convert_arguments(args, expected_args());
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -64,54 +73,58 @@ public class FnLang extends Function {
 
 		String lang = "";
 
-		if(!arg1.empty()) {
+		if (!arg1.empty()) {
 			lang = ((XSString) arg1.first()).value();
-		}	
-		
+		}
+
 		NodeType an = (NodeType) arg2.first();
-		
-		
+
 		rs.add(new XSBoolean(test_lang(an.node_value(), lang)));
 
 		return rs;
 	}
+
 	/**
 	 * Language test operation.
-	 * @param node Node to test.
-	 * @param lang Language to test for.
+	 * 
+	 * @param node
+	 *            Node to test.
+	 * @param lang
+	 *            Language to test for.
 	 * @return Boolean result of operation.
 	 */
 	private static boolean test_lang(Node node, String lang) {
 		NamedNodeMap attrs = node.getAttributes();
 
-		if(attrs != null) {
-			for(int i = 0; i < attrs.getLength(); i++) {
+		if (attrs != null) {
+			for (int i = 0; i < attrs.getLength(); i++) {
 				Attr attr = (Attr) attrs.item(i);
 
-				if(! "xml:lang".equals(attr.getName()) )
+				if (!"xml:lang".equals(attr.getName()))
 					continue;
-	
-				if(lang.equals(attr.getValue()))
+
+				if (lang.equals(attr.getValue()))
 					return true;
 			}
 		}
 
 		Node parent = node.getParentNode();
-		if(parent == null)
+		if (parent == null)
 			return false;
-		
+
 		return test_lang(parent, lang);
 	}
+
 	/**
-         * Obtain a list of expected arguments.
-         * @return Result of operation.
-         */
+	 * Obtain a list of expected arguments.
+	 * 
+	 * @return Result of operation.
+	 */
 	public static Collection expected_args() {
-		if(_expected_args == null) {
+		if (_expected_args == null) {
 			_expected_args = new ArrayList();
 
-			_expected_args.add(new SeqType(new XSString(),
-					   SeqType.OCC_QMARK));
+			_expected_args.add(new SeqType(new XSString(), SeqType.OCC_QMARK));
 			_expected_args.add(new SeqType(SeqType.OCC_NONE));
 		}
 

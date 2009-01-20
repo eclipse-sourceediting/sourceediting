@@ -14,16 +14,20 @@ package org.eclipse.wst.xml.xpath2.processor;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 /**
- * The descendant-or-self axis contains the context node and the descendants of the context
- * node.
+ * The descendant-or-self axis contains the context node and the descendants of
+ * the context node.
  */
 // multiple inheretance might be cool here =D
 public class DescendantOrSelfAxis extends ForwardAxis {
 
 	/**
-	 * Retrieve the the descendants of the context node and the context node itself.
-	 * @param node is the type of node.
-	 * @param dc is the dynamic context.
+	 * Retrieve the the descendants of the context node and the context node
+	 * itself.
+	 * 
+	 * @param node
+	 *            is the type of node.
+	 * @param dc
+	 *            is the dynamic context.
 	 * @return The context node and its descendants.
 	 */
 	public ResultSequence iterate(NodeType node, DynamicContext dc) {

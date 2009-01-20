@@ -27,9 +27,11 @@ public class XPathParserException extends StaticError {
 
 	/**
 	 * Constructor for XPathParserException.
-	 * @param reason is the reason why the exception has been thrown. 
+	 * 
+	 * @param reason
+	 *            is the reason why the exception has been thrown.
 	 */
 	public XPathParserException(String reason) {
-		super(INVALID_XPATH_EXPRESSION,reason);
+		super(INVALID_XPATH_EXPRESSION, reason);
 	}
 }

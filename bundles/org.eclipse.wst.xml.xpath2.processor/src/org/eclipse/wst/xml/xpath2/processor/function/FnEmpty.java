@@ -15,9 +15,10 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
- * If the value of $arg is the empty sequence, the function returns true; otherwise,
- * the function returns false.
+ * If the value of $arg is the empty sequence, the function returns true;
+ * otherwise, the function returns false.
  */
 public class FnEmpty extends Function {
 	/**
@@ -26,37 +27,45 @@ public class FnEmpty extends Function {
 	public FnEmpty() {
 		super(new QName("empty"), 1);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return empty(args);
 	}
+
 	/**
-         * Empty operation.
-         * @param args Result from the expressions evaluation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of fn:empty operation.
-         */
+	 * Empty operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of fn:empty operation.
+	 */
 	public static ResultSequence empty(Collection args) throws DynamicError {
 
 		assert args.size() == 1;
-			
+
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		// get args
 		Iterator citer = args.iterator();
 		ResultSequence arg1 = (ResultSequence) citer.next();
 
-		if(arg1.empty())
+		if (arg1.empty())
 			rs.add(new XSBoolean(true));
 		else
 			rs.add(new XSBoolean(false));
-		
+
 		return rs;
 	}
 }

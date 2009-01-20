@@ -10,23 +10,28 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
+
 /**
- * The union class takes two node sequences as operands and return a sequence 
+ * The union class takes two node sequences as operands and return a sequence
  * containing all the nodes that occur in either of the operands.
  */
 public class UnionExpr extends BinExpr {
 
 	/**
 	 * Constructor for UnionExpr.
-	 * @param l input1 xpath expression/variable.
-	 * @param r unput2 xpath expression/variable.
+	 * 
+	 * @param l
+	 *            input1 xpath expression/variable.
+	 * @param r
+	 *            unput2 xpath expression/variable.
 	 */
 	public UnionExpr(Expr l, Expr r) {
-		super(l,r);
+		super(l, r);
 	}
 
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override

@@ -20,6 +20,7 @@ public abstract class ResultSequenceFactory {
 	private static final ResultSequenceFactory _factory = new DefaultRSFactory();
 
 	protected abstract ResultSequence fact_create_new();
+
 	protected abstract void fact_release(ResultSequence rs);
 
 	protected ResultSequence fact_create_new(AnyType item) {
@@ -27,35 +28,37 @@ public abstract class ResultSequenceFactory {
 		rs.add(item);
 		return rs;
 	}
+
 	protected void fact_print_debug() {
 	}
 
 	/**
 	 * @return the creation of a new result sequence
- 	 */
+	 */
 	public static ResultSequence create_new() {
 		return _factory.fact_create_new();
 	}
 
 	/**
- 	 * @param item is an item of any type.
+	 * @param item
+	 *            is an item of any type.
 	 * @return factory creating new item
- 	 */
+	 */
 	public static ResultSequence create_new(AnyType item) {
 		return _factory.fact_create_new(item);
 	}
 
 	/**
- 	 * @param rs is the result sequence
-	 * factory release rs
- 	 */
+	 * @param rs
+	 *            is the result sequence factory release rs
+	 */
 	public static void release(ResultSequence rs) {
 		_factory.fact_release(rs);
 	}
 
 	/**
- 	 * factory debug
- 	 */
+	 * factory debug
+	 */
 	public static void print_debug() {
 		_factory.fact_print_debug();
 	}

@@ -17,11 +17,14 @@ import org.eclipse.wst.xml.xpath2.processor.ast.*;
  * interface to Evaluator
  */
 public interface Evaluator {
-	
+
 	/**
 	 * Evaluate the root node.
-	 * @param root is the XPath node.
-	 * @throws DynamicError dynamic error.
+	 * 
+	 * @param root
+	 *            is the XPath node.
+	 * @throws DynamicError
+	 *             dynamic error.
 	 * @return Result of evaluation.
 	 */
 	public ResultSequence evaluate(XPathNode root) throws DynamicError;

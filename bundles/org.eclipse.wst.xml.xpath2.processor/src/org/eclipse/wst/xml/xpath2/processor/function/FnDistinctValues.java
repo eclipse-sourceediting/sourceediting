@@ -15,12 +15,14 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
- * Returns the sequence that results from removing from $arg all but one of a set of
- * values that are eq to one other. Values that cannot be compared, i.e. the eq operator
- * is not defined for their types, are considered to be distinct. Values of type
- * xdt:untypedAtomic are compared as if they were of type xs:string. The order in which
- * the sequence of values is returned is implementation dependent.
+ * Returns the sequence that results from removing from $arg all but one of a
+ * set of values that are eq to one other. Values that cannot be compared, i.e.
+ * the eq operator is not defined for their types, are considered to be
+ * distinct. Values of type xdt:untypedAtomic are compared as if they were of
+ * type xs:string. The order in which the sequence of values is returned is
+ * implementation dependent.
  */
 public class FnDistinctValues extends Function {
 	/**
@@ -29,51 +31,66 @@ public class FnDistinctValues extends Function {
 	public FnDistinctValues() {
 		super(new QName("distinct-values"), 1);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return distinct_values(args);
 	}
+
 	/**
 	 * Support for Contains interface.
-	 * @param rs input1 expression sequence.
-	 * @param item input2 expression of any atomic type.
-	 * @throws DynamicError Dynamic error.
+	 * 
+	 * @param rs
+	 *            input1 expression sequence.
+	 * @param item
+	 *            input2 expression of any atomic type.
+	 * @throws DynamicError
+	 *             Dynamic error.
 	 * @return Result of operation.
 	 */
-	private static boolean contains(ResultSequence rs, AnyAtomicType item) throws DynamicError {
-		if( !(item instanceof CmpEq) )
+	private static boolean contains(ResultSequence rs, AnyAtomicType item)
+			throws DynamicError {
+		if (!(item instanceof CmpEq))
 			return false;
 
-		for(Iterator i = rs.iterator(); i.hasNext();) {
+		for (Iterator i = rs.iterator(); i.hasNext();) {
 			AnyType at = (AnyType) i.next();
 
-			if( !(item instanceof CmpEq))
+			if (!(item instanceof CmpEq))
 				continue;
-			
+
 			CmpEq cmp = (CmpEq) at;
 
-			if(cmp.eq(item))
+			if (cmp.eq(item))
 				return true;
 
 		}
 		return false;
 	}
+
 	/**
-         * Distinct-values operation.
-         * @param args Result from the expressions evaluation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of fn:distinct-values operation.
-         */
-	public static ResultSequence distinct_values(Collection args) throws DynamicError {
+	 * Distinct-values operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of fn:distinct-values operation.
+	 */
+	public static ResultSequence distinct_values(Collection args)
+			throws DynamicError {
 
 		assert args.size() == 1;
-			
+
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		// get args
@@ -81,13 +98,13 @@ public class FnDistinctValues extends Function {
 		ResultSequence arg1 = (ResultSequence) citer.next();
 
 		// XXX lame
-		for(Iterator i = arg1.iterator(); i.hasNext();) {
+		for (Iterator i = arg1.iterator(); i.hasNext();) {
 			AnyType at = (AnyType) i.next();
 
-			if( !(at instanceof AnyAtomicType) )
+			if (!(at instanceof AnyAtomicType))
 				DynamicError.throw_type_error();
 
-			if(!contains(rs, (AnyAtomicType) at))
+			if (!contains(rs, (AnyAtomicType) at))
 				rs.add(at);
 		}
 

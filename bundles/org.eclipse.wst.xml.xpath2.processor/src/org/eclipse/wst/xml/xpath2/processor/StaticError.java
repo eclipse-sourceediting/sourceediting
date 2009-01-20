@@ -13,7 +13,7 @@ package org.eclipse.wst.xml.xpath2.processor;
 
 /**
  * Base class for all static errors as defined by the XPath 2.0 specification
- *
+ * 
  */
 public class StaticError extends XPathException {
 	/**
@@ -25,17 +25,21 @@ public class StaticError extends XPathException {
 
 	/**
 	 * Constructor for a generic static error
-	 *
-	 * @param code The error code as specified in XPath 2.0
-	 * @param err Humar readable error message
+	 * 
+	 * @param code
+	 *            The error code as specified in XPath 2.0
+	 * @param err
+	 *            Humar readable error message
 	 */
 	public StaticError(String code, String err) {
 		super(err);
 		_code = code;
 	}
-	
+
 	/**
 	 * @return error code which represents the error
 	 */
-	public String code() { return _code; }
+	public String code() {
+		return _code;
+	}
 }

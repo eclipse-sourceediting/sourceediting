@@ -16,18 +16,21 @@ import org.eclipse.wst.xml.xpath2.processor.types.*;
 import java.util.*;
 
 /**
- * the following axis contains the context node's following siblings, 
- * those children of the context node's parent that occur after the context 
- * node in document order.
+ * the following axis contains the context node's following siblings, those
+ * children of the context node's parent that occur after the context node in
+ * document order.
  */
 public class FollowingAxis extends ForwardAxis {
 
 	/**
- 	 * Return the result of FollowingAxis expression
- 	 * @param node is the type of node.
-	 * @param dc is the dynamic context.
+	 * Return the result of FollowingAxis expression
+	 * 
+	 * @param node
+	 *            is the type of node.
+	 * @param dc
+	 *            is the dynamic context.
 	 * @return The result of FollowingAxis.
- 	 */
+	 */
 	public ResultSequence iterate(NodeType node, DynamicContext dc) {
 		ResultSequence result = ResultSequenceFactory.create_new();
 
@@ -38,20 +41,18 @@ public class FollowingAxis extends ForwardAxis {
 		NodeType parent = null;
 		ParentAxis pa = new ParentAxis();
 		ResultSequence rs = pa.iterate(node, dc);
-		if(rs.size() == 1)
+		if (rs.size() == 1)
 			parent = (NodeType) rs.get(0);
 
-	
 		// get the following siblings of this node, and add them
 		FollowingSiblingAxis fsa = new FollowingSiblingAxis();
 		rs = fsa.iterate(node, dc);
 		result.concat(rs);
-		
 
 		// for each sibling, get all its descendants
 		DescendantAxis da = new DescendantAxis();
-		for(Iterator i = rs.iterator(); i.hasNext();) {
-			ResultSequence desc = da.iterate((NodeType)i.next(), dc);
+		for (Iterator i = rs.iterator(); i.hasNext();) {
+			ResultSequence desc = da.iterate((NodeType) i.next(), dc);
 
 			// add all descendants to the result
 			result.concat(desc);
@@ -59,7 +60,7 @@ public class FollowingAxis extends ForwardAxis {
 
 		// if we got a parent, we gotta repeat the story for the parent
 		// and add the results
-		if(parent != null) {
+		if (parent != null) {
 			rs = iterate(parent, dc);
 			result.concat(rs);
 		}

@@ -14,22 +14,23 @@ package org.eclipse.wst.xml.xpath2.processor.ast;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 /**
- * The value of a string literal is an atomic value whose type
- * is xs:string and whose value is the string denoted by the characters
- * between the delimiting apostrophes or quotation marks. If the literal
- * is delimited by apostrophes, two adjacent apostrophes within the literal
- * are interpreted as a single apostrophe. Similarly, if the literal is delimited
- * by quotation marks, two adjacent quotation marks within the literal are 
- * interpreted as one quotation mark
- *
+ * The value of a string literal is an atomic value whose type is xs:string and
+ * whose value is the string denoted by the characters between the delimiting
+ * apostrophes or quotation marks. If the literal is delimited by apostrophes,
+ * two adjacent apostrophes within the literal are interpreted as a single
+ * apostrophe. Similarly, if the literal is delimited by quotation marks, two
+ * adjacent quotation marks within the literal are interpreted as one quotation
+ * mark
+ * 
  */
 public class StringLiteral extends Literal {
 	private XSString _value;
 
-	/** 
+	/**
 	 * Constructor for StringLiteral
-	 *
-	 * @param value string value
+	 * 
+	 * @param value
+	 *            string value
 	 */
 	public StringLiteral(String value) {
 		_value = new XSString(value);
@@ -48,10 +49,14 @@ public class StringLiteral extends Literal {
 	/**
 	 * @return string value
 	 */
-	public String string() { return _value.value(); }
-	
+	public String string() {
+		return _value.value();
+	}
+
 	/**
 	 * @return xs:string value
 	 */
-	public XSString value() { return _value; }
+	public XSString value() {
+		return _value;
+	}
 }

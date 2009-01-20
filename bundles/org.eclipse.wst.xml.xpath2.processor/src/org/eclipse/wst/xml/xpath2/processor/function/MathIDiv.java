@@ -12,15 +12,19 @@
 package org.eclipse.wst.xml.xpath2.processor.function;
 
 import org.eclipse.wst.xml.xpath2.processor.*;
+
 /**
  * Support for Mathematical Integer Division.
  */
 public interface MathIDiv {
 	/**
-         * Integer Division operation.
-         * @param arg input argument.
-         * @throws DynamicError Dynamic error.
-         * @return Result of operation.
-         */
+	 * Integer Division operation.
+	 * 
+	 * @param arg
+	 *            input argument.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of operation.
+	 */
 	public ResultSequence idiv(ResultSequence arg) throws DynamicError;
 }

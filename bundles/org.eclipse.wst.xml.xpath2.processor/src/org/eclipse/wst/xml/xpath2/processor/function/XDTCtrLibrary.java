@@ -12,6 +12,7 @@
 package org.eclipse.wst.xml.xpath2.processor.function;
 
 import org.eclipse.wst.xml.xpath2.processor.types.*;
+
 /**
  * Data Types control library support.
  */
@@ -20,6 +21,7 @@ public class XDTCtrLibrary extends ConstructorFL {
 	 * Path to W3.org data types specification.
 	 */
 	public static final String XDT_NS = "http://www.w3.org/2004/10/xpath-datatypes";
+
 	/**
 	 * Constructor for XDTCtrLibrary.
 	 */

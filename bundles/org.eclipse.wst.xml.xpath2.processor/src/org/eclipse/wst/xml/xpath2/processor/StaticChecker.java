@@ -20,8 +20,10 @@ public interface StaticChecker {
 
 	/**
 	 * checks XPathNode
+	 * 
 	 * @throws static error.
-	 * @param root is an XPath node.
- 	 */
+	 * @param root
+	 *            is an XPath node.
+	 */
 	public void check(XPathNode root) throws StaticError;
 }

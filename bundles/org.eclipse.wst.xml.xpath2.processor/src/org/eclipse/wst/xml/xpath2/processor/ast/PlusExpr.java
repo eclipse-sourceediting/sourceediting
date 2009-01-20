@@ -10,19 +10,24 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
+
 /**
  * Class for Plus expression support.
  */
 public class PlusExpr extends UnExpr {
 	/**
 	 * Constructor for PlusExpr.
-	 * @param arg Arguments.
+	 * 
+	 * @param arg
+	 *            Arguments.
 	 */
 	public PlusExpr(Expr arg) {
 		super(arg);
 	}
+
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override

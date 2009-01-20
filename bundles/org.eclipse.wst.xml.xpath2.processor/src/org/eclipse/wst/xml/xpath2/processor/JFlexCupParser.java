@@ -22,25 +22,27 @@ import org.eclipse.wst.xml.xpath2.processor.ast.*;
 public class JFlexCupParser implements XPathParser {
 
 	/**
- 	 * Tries to parse the xpath expression
- 	 * @param xpath is the xpath string.
+	 * Tries to parse the xpath expression
+	 * 
+	 * @param xpath
+	 *            is the xpath string.
 	 * @throws XPathParserException.
 	 * @return the xpath value.
- 	 */
+	 */
 	public XPath parse(String xpath) throws XPathParserException {
 
 		XPathFlex lexer = new XPathFlex(new StringReader(xpath));
-		
+
 		parser p = new parser(lexer);
 		try {
 			Symbol res = p.parse();
 			return (XPath) res.value;
-		
-		} catch(JFlexError e) {
+
+		} catch (JFlexError e) {
 			throw new XPathParserException("JFlex lexer error: " + e.reason());
-		} catch(CupError e) {
+		} catch (CupError e) {
 			throw new XPathParserException("CUP parser error: " + e.reason());
-		} catch(Exception e) {
+		} catch (Exception e) {
 			String err = "Unknown error at line " + lexer.lineno();
 
 			err += " col " + lexer.colno();

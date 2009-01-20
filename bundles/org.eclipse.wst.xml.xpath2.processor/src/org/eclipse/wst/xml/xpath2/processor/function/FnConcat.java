@@ -17,22 +17,29 @@ import org.eclipse.wst.xml.xpath2.processor.types.*;
 import java.util.*;
 
 /**
- * <p>Sequence concatenation function.</p>
- *
- * <p>Usage: fn:concat($arg1 as xdt:anyAtomicType?,
- *                  $arg2 as xdt:anyAtomicType?,
- *                  ...  ) as xs:string</p>
- *
- * <p>This class accepts two or more xdt:anyAtomicType arguments and converts them to
- * xs:string. It then returns the xs:string that is the concatenation of the values of
- * its arguments after conversion. If any of the arguments is the empty sequence, the
- * argument is treated as the zero-length string.</p>
- *
- * <p>The concat() function is specified to allow an arbitrary number of arguments that are
- * concatenated together.</p>
+ * <p>
+ * Sequence concatenation function.
+ * </p>
+ * 
+ * <p>
+ * Usage: fn:concat($arg1 as xdt:anyAtomicType?, $arg2 as xdt:anyAtomicType?,
+ * ... ) as xs:string
+ * </p>
+ * 
+ * <p>
+ * This class accepts two or more xdt:anyAtomicType arguments and converts them
+ * to xs:string. It then returns the xs:string that is the concatenation of the
+ * values of its arguments after conversion. If any of the arguments is the
+ * empty sequence, the argument is treated as the zero-length string.
+ * </p>
+ * 
+ * <p>
+ * The concat() function is specified to allow an arbitrary number of arguments
+ * that are concatenated together.
+ * </p>
  */
 public class FnConcat extends Function {
-	
+
 	/**
 	 * Constructor for FnConcat.
 	 */
@@ -42,8 +49,11 @@ public class FnConcat extends Function {
 
 	/**
 	 * Evaluate the arguments.
-	 * @param args is evaluated.
-	 * @throws DynamicError Dynamic error.
+	 * 
+	 * @param args
+	 *            is evaluated.
+	 * @throws DynamicError
+	 *             Dynamic error.
 	 * @return The evaluation of the concatenation of the arguments.
 	 */
 	@Override
@@ -53,40 +63,41 @@ public class FnConcat extends Function {
 
 	/**
 	 * Concatenate the arguments.
-	 * @param args are concatenated.
-	 * @throws DynamicError Dynamic error.
+	 * 
+	 * @param args
+	 *            are concatenated.
+	 * @throws DynamicError
+	 *             Dynamic error.
 	 * @return The result of the concatenation of the arguments.
 	 */
 	public static ResultSequence concat(Collection args) throws DynamicError {
-	
+
 		// sanity check
-		if(args.size() < 2)
+		if (args.size() < 2)
 			DynamicError.throw_type_error();
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
-
 		String result = "";
 
-
 		// go through args
-		for(Iterator argi = args.iterator(); argi.hasNext(); ) {
+		for (Iterator argi = args.iterator(); argi.hasNext();) {
 			ResultSequence arg = (ResultSequence) argi.next();
 
 			int size = arg.size();
 
 			// sanity check
-			if(size > 1)
+			if (size > 1)
 				DynamicError.throw_type_error();
-			
-			if(size == 0) {
+
+			if (size == 0) {
 				continue;
 			}
 
 			AnyType at = arg.first();
 
 			result += at.string_value();
-				
+
 		}
 
 		rs.add(new XSString(result));

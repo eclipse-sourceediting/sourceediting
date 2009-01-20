@@ -11,22 +11,24 @@
 
 package org.eclipse.wst.xml.xpath2.processor;
 
-
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 /**
- * The ancestor-or-self axis contains the context node and the 
- * ancestors of the context node, this always includes the root node.
+ * The ancestor-or-self axis contains the context node and the ancestors of the
+ * context node, this always includes the root node.
  */
 // multiple inheretance might be cool here =D
 public class AncestorOrSelfAxis extends ReverseAxis {
 
 	/**
 	 * Get ancestor nodes of the context node and the context node itself.
- 	 * @param node is the type of node.
-	 * @param dc is the dynamic context.
+	 * 
+	 * @param node
+	 *            is the type of node.
+	 * @param dc
+	 *            is the dynamic context.
 	 * @return The context node and its ancestors.
- 	 */
+	 */
 	public ResultSequence iterate(NodeType node, DynamicContext dc) {
 		// get ancestors
 		AncestorAxis aa = new AncestorAxis();

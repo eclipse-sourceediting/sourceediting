@@ -16,18 +16,22 @@ import org.eclipse.wst.xml.xpath2.processor.types.*;
 import java.util.*;
 
 /**
- * The following-sibling axis contains the context node's following siblings, those children of the context node's parent that
- * occur after the context node in document order; if the context node is an attribute nodeor namespace node, the  
- * following-sibling axis is empty.
+ * The following-sibling axis contains the context node's following siblings,
+ * those children of the context node's parent that occur after the context node
+ * in document order; if the context node is an attribute nodeor namespace node,
+ * the following-sibling axis is empty.
  */
 public class FollowingSiblingAxis extends ForwardAxis {
 
 	/**
- 	 * Return the result of FollowingSiblingAxis expression
- 	 * @param node is the type of node.
-	 * @param dc is the dynamic context.
+	 * Return the result of FollowingSiblingAxis expression
+	 * 
+	 * @param node
+	 *            is the type of node.
+	 * @param dc
+	 *            is the dynamic context.
 	 * @return The result of FollowingSiblingAxis.
- 	 */
+	 */
 	public ResultSequence iterate(NodeType node, DynamicContext dc) {
 		// XXX check for attribute / namespace node... if so return
 		// empty sequence
@@ -37,17 +41,16 @@ public class FollowingSiblingAxis extends ForwardAxis {
 		ResultSequence rs = pa.iterate(node, dc);
 
 		// XXX: if no parent, out of luck i guess
-		if(rs.size() == 0)
+		if (rs.size() == 0)
 			return rs;
-	
+
 		// get the children of the parent [siblings]
 		ChildAxis ca = new ChildAxis();
 		NodeType parent = (NodeType) rs.get(0);
 		rs = ca.iterate(parent, dc);
 
-
 		// get the following siblings
-		for(Iterator i = rs.iterator(); i.hasNext(); ) {
+		for (Iterator i = rs.iterator(); i.hasNext();) {
 			NodeType n = (NodeType) i.next();
 
 			// if we haven't found the node yet, remove elements
@@ -58,10 +61,10 @@ public class FollowingSiblingAxis extends ForwardAxis {
 
 			// check reference of DOM object... should be correct ?!
 			// dunno... XXX
-			if(n.node_value() == node.node_value())
+			if (n.node_value() == node.node_value())
 				break;
 		}
-	
+
 		return rs;
 	}
 

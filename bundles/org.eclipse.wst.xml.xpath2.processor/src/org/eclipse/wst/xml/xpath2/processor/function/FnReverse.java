@@ -17,15 +17,21 @@ import org.eclipse.wst.xml.xpath2.processor.types.*;
 import java.util.*;
 
 /**
- * <p>Sequence reverse function.</p>
- *
- * <p>Usage: fn:reverse($arg as item()*) as item()*</p>
- *
- * <p>This class reverses the order of items in a sequence. If $arg is the empty sequence,
- * the empty sequence is returned.</p>
+ * <p>
+ * Sequence reverse function.
+ * </p>
+ * 
+ * <p>
+ * Usage: fn:reverse($arg as item()*) as item()*
+ * </p>
+ * 
+ * <p>
+ * This class reverses the order of items in a sequence. If $arg is the empty
+ * sequence, the empty sequence is returned.
+ * </p>
  */
 public class FnReverse extends Function {
-	
+
 	/**
 	 * Constructor for FnReverse.
 	 */
@@ -35,8 +41,11 @@ public class FnReverse extends Function {
 
 	/**
 	 * Evaluate the arguments.
-	 * @param args are evaluated.
-	 * @throws DynamicError Dynamic error.
+	 * 
+	 * @param args
+	 *            are evaluated.
+	 * @throws DynamicError
+	 *             Dynamic error.
 	 * @return The evaluation of the reversal of the arguments.
 	 */
 	@Override
@@ -46,31 +55,34 @@ public class FnReverse extends Function {
 
 	/**
 	 * Reverse the arguments.
-	 * @param args are reversed.
-	 * @throws DynamicError Dynamic error.
+	 * 
+	 * @param args
+	 *            are reversed.
+	 * @throws DynamicError
+	 *             Dynamic error.
 	 * @return The result of the reversal of the arguments.
 	 */
 	public static ResultSequence reverse(Collection args) throws DynamicError {
 
 		assert args.size() == 1;
-			
+
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		// get args
 		Iterator citer = args.iterator();
 		ResultSequence arg = (ResultSequence) citer.next();
 
-		if(arg.empty())
+		if (arg.empty())
 			return rs;
 
 		// XXX lame
 		ListIterator i = arg.iterator();
 
-		while(i.hasNext())
+		while (i.hasNext())
 			i.next();
 
-		while(i.hasPrevious())
-			rs.add( (AnyType) i.previous());
+		while (i.hasPrevious())
+			rs.add((AnyType) i.previous());
 
 		return rs;
 	}

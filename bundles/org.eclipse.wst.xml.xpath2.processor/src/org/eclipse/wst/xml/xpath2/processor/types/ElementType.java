@@ -13,6 +13,7 @@ package org.eclipse.wst.xml.xpath2.processor.types;
 
 import org.w3c.dom.*;
 import org.eclipse.wst.xml.xpath2.processor.*;
+
 /**
  * A representation of the ElementType datatype
  */
@@ -29,10 +30,14 @@ public class ElementType extends NodeType {
 	public ElementType() {
 		this(null, 0);
 	}
+
 	/**
 	 * Initialises according to the supplied parameters
-	 * @param v The element being represented
-	 * @param doc_order The document order
+	 * 
+	 * @param v
+	 *            The element being represented
+	 * @param doc_order
+	 *            The document order
 	 */
 	public ElementType(Element v, int doc_order) {
 		super(v, doc_order);
@@ -40,35 +45,45 @@ public class ElementType extends NodeType {
 
 		_string_value = null;
 	}
+
 	/**
 	 * Retrieves the actual element value being represented
+	 * 
 	 * @return Actual element value being represented
 	 */
-	public Element value() { return _value; }
+	public Element value() {
+		return _value;
+	}
+
 	/**
 	 * Retrieves the datatype's full pathname
+	 * 
 	 * @return "element" which is the datatype's full pathname
 	 */
 	@Override
-	public String string_type() { return "element"; }
-
+	public String string_type() {
+		return "element";
+	}
 
 	/**
 	 * Retrieves a String representation of the element being stored
+	 * 
 	 * @return String representation of the element being stored
 	 */
 	@Override
 	public String string_value() {
 		// XXX can we cache ?
-		if(_string_value != null)
+		if (_string_value != null)
 			return _string_value;
 
 		_string_value = textnode_strings(_value);
-	
+
 		return _string_value;
 	}
+
 	/**
 	 * Creates a new ResultSequence consisting of the element stored
+	 * 
 	 * @return New ResultSequence consisting of the element stored
 	 */
 	@Override
@@ -81,17 +96,18 @@ public class ElementType extends NodeType {
 		return rs;
 	}
 
-
 	// recursively concatenate TextNode strings
 	/**
 	 * Recursively concatenate TextNode strings
-	 * @param node Node to recurse
+	 * 
+	 * @param node
+	 *            Node to recurse
 	 * @return String representation of the node supplied
 	 */
 	public static String textnode_strings(Node node) {
 		String result = "";
 
-		if(node.getNodeType() == Node.TEXT_NODE) {
+		if (node.getNodeType() == Node.TEXT_NODE) {
 			Text tn = (Text) node;
 			result += tn.getData();
 		}
@@ -99,7 +115,7 @@ public class ElementType extends NodeType {
 		NodeList nl = node.getChildNodes();
 
 		// concatenate children
-		for(int i = 0; i < nl.getLength(); i++) {
+		for (int i = 0; i < nl.getLength(); i++) {
 			Node n = nl.item(i);
 
 			result += textnode_strings(n);
@@ -107,8 +123,10 @@ public class ElementType extends NodeType {
 
 		return result;
 	}
+
 	/**
 	 * Retrieves the name of the node
+	 * 
 	 * @return QName representation of the name of the node
 	 */
 	@Override
@@ -116,7 +134,7 @@ public class ElementType extends NodeType {
 		QName name = new QName(_value.getTagName());
 
 		name.set_namespace(_value.getNamespaceURI());
-		
+
 		return name;
 	}
 

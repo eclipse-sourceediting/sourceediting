@@ -16,6 +16,7 @@ import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
 import java.lang.reflect.*;
+
 /**
  * Class for Plus function.
  */
@@ -26,12 +27,16 @@ public class FsPlus extends Function {
 	public FsPlus() {
 		super(new QName("plus"), 2);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		assert args.size() == arity();
@@ -41,129 +46,142 @@ public class FsPlus extends Function {
 
 	/**
 	 * Convert arguments for operation.
-	 * @param args input arguments.
-	 * @throws DynamicError Dynamic error.
+	 * 
+	 * @param args
+	 *            input arguments.
+	 * @throws DynamicError
+	 *             Dynamic error.
 	 * @return Result of conversion.
 	 */
 	private static Collection convert_args(Collection args) throws DynamicError {
 		Collection result = new ArrayList();
 
-                // atomize arguments 
-                for(Iterator i = args.iterator(); i.hasNext();) {
-                        ResultSequence rs = FnData.atomize((ResultSequence)i.next());
-                        
-			if(rs.empty())
-                                return new ArrayList();
+		// atomize arguments
+		for (Iterator i = args.iterator(); i.hasNext();) {
+			ResultSequence rs = FnData.atomize((ResultSequence) i.next());
 
-                        if(rs.size() > 1)
-                                throw new DynamicError(TypeError.invalid_type(null));
+			if (rs.empty())
+				return new ArrayList();
 
-                        AnyType arg = rs.first();
+			if (rs.size() > 1)
+				throw new DynamicError(TypeError.invalid_type(null));
 
-                        if(arg instanceof UntypedAtomic) {
-                                arg = new XSDouble(arg.string_value());
-			}	
+			AnyType arg = rs.first();
 
-			
+			if (arg instanceof UntypedAtomic) {
+				arg = new XSDouble(arg.string_value());
+			}
+
 			rs = ResultSequenceFactory.create_new();
 			rs.add(arg);
 			result.add(rs);
-                }
+		}
 
 		return result;
 	}
+
 	/**
-         * General operation on the arguments.
-         * @param args input arguments.
-         * @throws DynamicError Dynamic error.
-         * @return Result of the operation.
-         */
+	 * General operation on the arguments.
+	 * 
+	 * @param args
+	 *            input arguments.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of the operation.
+	 */
 	public static ResultSequence fs_plus(Collection args) throws DynamicError {
 		return do_math_op(args, MathPlus.class, "plus");
 	}
+
 	/**
-         * Unary operation on the arguments.
-         * @param args input arguments.
-         * @throws DynamicError Dynamic error.
-         * @return Result of the operation.
-         */
-	public static ResultSequence fs_plus_unary(Collection args) throws DynamicError {
-		
+	 * Unary operation on the arguments.
+	 * 
+	 * @param args
+	 *            input arguments.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of the operation.
+	 */
+	public static ResultSequence fs_plus_unary(Collection args)
+			throws DynamicError {
+
 		// make sure we got only one arg
-		if(args.size() != 1)
+		if (args.size() != 1)
 			DynamicError.throw_type_error();
 		ResultSequence arg = (ResultSequence) args.iterator().next();
 
 		// make sure we got only one numeric atom
-		if(arg.size() != 1)
+		if (arg.size() != 1)
 			DynamicError.throw_type_error();
 		AnyType at = arg.first();
-		if( !(at instanceof NumericType) )
+		if (!(at instanceof NumericType))
 			DynamicError.throw_type_error();
 
 		// no-op
-		return arg;	
+		return arg;
 	}
 
 	// voodoo
 	/**
 	 * Mathematical operation on the arguments.
-	 * @param args input arguments.
-	 * @param type type of arguments.
-	 * @param mname Method name for template simulation.
-	 * @throws DynamicError Dynamic error.
+	 * 
+	 * @param args
+	 *            input arguments.
+	 * @param type
+	 *            type of arguments.
+	 * @param mname
+	 *            Method name for template simulation.
+	 * @throws DynamicError
+	 *             Dynamic error.
 	 * @return Result of operation.
 	 */
-	public static ResultSequence do_math_op(Collection args, 
-						Class type,
-						String mname) throws DynamicError {
+	public static ResultSequence do_math_op(Collection args, Class type,
+			String mname) throws DynamicError {
 
 		// sanity check args + convert em
-		if(args.size() != 2)
+		if (args.size() != 2)
 			DynamicError.throw_type_error();
-		
+
 		Collection cargs = convert_args(args);
 
 		ResultSequence result = ResultSequenceFactory.create_new();
-	
-		if(cargs.size() == 0)
+
+		if (cargs.size() == 0)
 			return result;
 
 		// make sure arugments are good [at least the first one]
 		Iterator argi = cargs.iterator();
-		AnyType arg = ((ResultSequence)argi.next()).first();
-		ResultSequence arg2 = (ResultSequence)argi.next();
+		AnyType arg = ((ResultSequence) argi.next()).first();
+		ResultSequence arg2 = (ResultSequence) argi.next();
 
-		if( !(type.isInstance(arg)) )
+		if (!(type.isInstance(arg)))
 			DynamicError.throw_type_error();
 
 		// here is da ownage
 		try {
 			Class margsdef[] = { ResultSequence.class };
 			Method method = null;
-		
-			method  = type.getMethod(mname, margsdef);
+
+			method = type.getMethod(mname, margsdef);
 
 			Object margs[] = { arg2 };
 			return (ResultSequence) method.invoke(arg, margs);
 
-		} catch(NoSuchMethodException err) {
-			System.out.println("NoSuchMethodException: " +
-		 			   err.getMessage());
+		} catch (NoSuchMethodException err) {
+			System.out.println("NoSuchMethodException: " + err.getMessage());
 			assert false;
-		} catch(IllegalAccessException err) {
-			System.out.println("IllegalAccessException: " +
-					   err.getMessage());
+		} catch (IllegalAccessException err) {
+			System.out.println("IllegalAccessException: " + err.getMessage());
 			assert false;
-		} catch(InvocationTargetException err) {
+		} catch (InvocationTargetException err) {
 			Throwable ex = err.getTargetException();
 
-			if(ex instanceof DynamicError)
+			if (ex instanceof DynamicError)
 				throw (DynamicError) ex;
 			else {
 				ex.printStackTrace();
 				System.exit(1);
-			}	
+			}
 		}
 		return null; // unreach!
 	}

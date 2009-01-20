@@ -35,12 +35,11 @@ public class DefaultStaticContext implements StaticContext {
 	private Map _functions;
 
 	// XXX collations
-	
+
 	private XSAnyURI _base_uri;
 	private Map _documents;
 	private Map _collections;
 	private String _default_collection_type;
-
 
 	// Variables are held like this:
 	// A stack of maps of variables....
@@ -48,12 +47,14 @@ public class DefaultStaticContext implements StaticContext {
 	// a stack of scopes each containing a symbol table
 	// or in other terms:
 	// a pile full of crap
-	// XXX vars contain AnyType... should they be ResultSequence ?	
+	// XXX vars contain AnyType... should they be ResultSequence ?
 	private Stack _scopes;
-	
+
 	/**
 	 * Constructor.
-	 * @param schema Schema information from document. May be null.
+	 * 
+	 * @param schema
+	 *            Schema information from document. May be null.
 	 */
 	public DefaultStaticContext(XSModel schema) {
 		_xpath1_compatible = false;
@@ -70,13 +71,13 @@ public class DefaultStaticContext implements StaticContext {
 		_scopes = new Stack();
 		new_scope();
 
-		if(_schema != null)
+		if (_schema != null)
 			init_schema(schema);
 
 		_base_uri = new XSAnyURI();
 
 		// XXX wildcard prefix
-		add_namespace("*","*");
+		add_namespace("*", "*");
 
 	}
 
@@ -93,101 +94,117 @@ public class DefaultStaticContext implements StaticContext {
 
 	/**
 	 * return the base URI
-	 * @return XSAnyURI 
+	 * 
+	 * @return XSAnyURI
 	 */
-	public XSAnyURI base_uri() { return _base_uri; }
+	public XSAnyURI base_uri() {
+		return _base_uri;
+	}
 
 	/**
 	 * is it xpath1 compatible?
+	 * 
 	 * @return boolean
 	 */
-	public boolean xpath1_compatible() { return _xpath1_compatible; }
+	public boolean xpath1_compatible() {
+		return _xpath1_compatible;
+	}
 
 	/**
 	 * adds namespace
-	 *
-	 * @param prefix namespace prefix
-	 * @param namespace namespace URI
-	 *
+	 * 
+	 * @param prefix
+	 *            namespace prefix
+	 * @param namespace
+	 *            namespace URI
+	 * 
 	 */
 	public void add_namespace(String prefix, String namespace) {
 		// XXX are these reserved ?
 		// refer to formal semantics section 2.5.1
-		if(prefix.equals("fs") || prefix.equals("op") || prefix.equals("dm"))
+		if (prefix.equals("fs") || prefix.equals("op") || prefix.equals("dm"))
 			return;
-		_namespaces.put(prefix,namespace);
+		_namespaces.put(prefix, namespace);
 	}
-	
+
 	/**
 	 * Retrieves the default namespace, when one is not allocated
+	 * 
 	 * @return string
 	 */
-	public String default_namespace() { return _default_namespace; }
-	
+	public String default_namespace() {
+		return _default_namespace;
+	}
+
 	/**
 	 * Retrieves the defaul function namespace
+	 * 
 	 * @return string
 	 */
-	public String default_function_namespace() { 
+	public String default_function_namespace() {
 		return _default_function_namespace;
 	}
 
 	/**
 	 * Adds a function to the library.
-	 *
-	 * @param fl Function library to add.
+	 * 
+	 * @param fl
+	 *            Function library to add.
 	 */
 	public void add_function_library(FunctionLibrary fl) {
 		fl.set_static_context(this);
-		_functions.put(fl.namespace(),fl);
+		_functions.put(fl.namespace(), fl);
 	}
 
 	/**
 	 * Check for existance of function.
 	 * 
-	 * @param name function name.
-	 * @param arity arity of function. 
+	 * @param name
+	 *            function name.
+	 * @param arity
+	 *            arity of function.
 	 * @return true if function exists. False otherwise.
 	 */
 	public boolean function_exists(QName name, int arity) {
 		String ns = name.namespace();
-		if(!_functions.containsKey(ns))
+		if (!_functions.containsKey(ns))
 			return false;
 
 		FunctionLibrary fl = (FunctionLibrary) _functions.get(ns);
-		
-		return fl.function_exists(name,arity);
+
+		return fl.function_exists(name, arity);
 	}
-	
+
 	protected Function function(QName name, int arity) {
 		String ns = name.namespace();
-		if(!_functions.containsKey(ns))
+		if (!_functions.containsKey(ns))
 			return null;
 
 		FunctionLibrary fl = (FunctionLibrary) _functions.get(ns);
-		
-		return fl.function(name,arity);
+
+		return fl.function(name, arity);
 	}
 
 	/**
 	 * 
-	 * Creates an atomic from a specific type name initialized with a
-	 * default value.
-	 *
-	 * @param name name of type to create
+	 * Creates an atomic from a specific type name initialized with a default
+	 * value.
+	 * 
+	 * @param name
+	 *            name of type to create
 	 * @return Atomic type of desired type.
 	 */
 	public AnyAtomicType make_atomic(QName name) {
 		String ns = name.namespace();
 
-		if(!_functions.containsKey(ns))
+		if (!_functions.containsKey(ns))
 			return null;
-			
+
 		FunctionLibrary fl = (FunctionLibrary) _functions.get(ns);
 
-		if( !(fl instanceof ConstructorFL))
+		if (!(fl instanceof ConstructorFL))
 			return null;
-		
+
 		ConstructorFL cfl = (ConstructorFL) fl;
 
 		return cfl.atomic_type(name);
@@ -196,23 +213,24 @@ public class DefaultStaticContext implements StaticContext {
 	private boolean expand_qname(QName name, String def) {
 		String prefix = name.prefix();
 
-		if(prefix == null) {
+		if (prefix == null) {
 			name.set_namespace(def);
 			return true;
 		}
 
-		if(!prefix_exists(prefix))
+		if (!prefix_exists(prefix))
 			return false;
-		
+
 		name.set_namespace(resolve_prefix(prefix));
 		return true;
-	
+
 	}
 
 	/**
 	 * Expands the qname's prefix into a namespace.
-	 *
-	 * @param name qname to expand.
+	 * 
+	 * @param name
+	 *            qname to expand.
 	 * @return true on success.
 	 */
 	public boolean expand_qname(QName name) {
@@ -220,10 +238,10 @@ public class DefaultStaticContext implements StaticContext {
 	}
 
 	/**
-	 * Expands a qname and uses the default function namespace if
-	 * unprefixed.
-	 *
-	 * @param name qname to expand.
+	 * Expands a qname and uses the default function namespace if unprefixed.
+	 * 
+	 * @param name
+	 *            qname to expand.
 	 * @return true on success.
 	 */
 	public boolean expand_function_qname(QName name) {
@@ -233,8 +251,9 @@ public class DefaultStaticContext implements StaticContext {
 	/**
 	 * Expands a qname and uses the default type/element namespace if
 	 * unprefixed.
-	 *
-	 * @param name qname to expand.
+	 * 
+	 * @param name
+	 *            qname to expand.
 	 * @return true on success.
 	 */
 	public boolean expand_elem_type_qname(QName name) {
@@ -243,107 +262,114 @@ public class DefaultStaticContext implements StaticContext {
 
 	/**
 	 * 
-	 * Checks whether the type is defined in the in scope schema
-	 * definitions.
-	 *
-	 * @param qname type name.
+	 * Checks whether the type is defined in the in scope schema definitions.
+	 * 
+	 * @param qname
+	 *            type name.
 	 * @return true if type is defined.
 	 */
 	public boolean type_defined(QName qname) {
 
 		// we got no schema definitions...
 		// XXX: should have built in ones
-		if(_schema == null)
-			return false;
-	
-		XSTypeDefinition td = _schema.getTypeDefinition(qname.local(),
-								qname.namespace());
-		if(td == null)
+		if (_schema == null)
 			return false;
 
-		return true;	
+		XSTypeDefinition td = _schema.getTypeDefinition(qname.local(), qname
+				.namespace());
+		if (td == null)
+			return false;
+
+		return true;
 	}
 
 	/**
-	 * Checks whether the type is defined in the in scope schema
-	 * definitions.
-	 *
-	 * @param ns namespace of type.
-	 * @param type name of type.
+	 * Checks whether the type is defined in the in scope schema definitions.
+	 * 
+	 * @param ns
+	 *            namespace of type.
+	 * @param type
+	 *            name of type.
 	 * @return true if type is defined.
 	 * 
 	 */
 	public boolean type_defined(String ns, String type) {
-		return type_defined(new QName(ns,type));
+		return type_defined(new QName(ns, type));
 	}
 
 	/**
 	 * is element declared?
-	 * @param elem name of element.
+	 * 
+	 * @param elem
+	 *            name of element.
 	 * @return true if element declared.
 	 */
 	public boolean element_declared(QName elem) {
-		if(_schema == null)
+		if (_schema == null)
 			return false;
-		
-		XSElementDeclaration ed = _schema.getElementDeclaration(
-						    elem.local(), elem.namespace());
 
-		if(ed == null)
+		XSElementDeclaration ed = _schema.getElementDeclaration(elem.local(),
+				elem.namespace());
+
+		if (ed == null)
 			return false;
-		
+
 		return true;
 	}
 
 	/**
 	 * Obtains schema definition of the type of an element.
-	 *
-	 * @param elem name of element who's type is desired.
+	 * 
+	 * @param elem
+	 *            name of element who's type is desired.
 	 * @return schema definition of type
 	 */
 	public XSTypeDefinition element_type_definition(QName elem) {
-		XSElementDeclaration ed = _schema.getElementDeclaration(
-						    elem.local(), elem.namespace());
-	
+		XSElementDeclaration ed = _schema.getElementDeclaration(elem.local(),
+				elem.namespace());
+
 		return ed.getTypeDefinition();
 	}
 
 	/**
 	 * Checks if an attribute is in the in-scope schema definitions.
-	 *
-	 * @param attr name of attribute.
+	 * 
+	 * @param attr
+	 *            name of attribute.
 	 * @return true if attribute is declared.
 	 */
 	public boolean attribute_declared(QName attr) {
-		if(_schema == null)
+		if (_schema == null)
 			return false;
-		
-		XSAttributeDeclaration ad = _schema.getAttributeDeclaration(
-						     attr.local(), attr.namespace());
 
+		XSAttributeDeclaration ad = _schema.getAttributeDeclaration(attr
+				.local(), attr.namespace());
 
-		if(ad == null)
+		if (ad == null)
 			return false;
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Retrieves type definition of the attribute in an element.
 	 * 
-	 * @param elem element name
+	 * @param elem
+	 *            element name
 	 * @return schema definition of the type of the attribute
 	 */
 	public XSTypeDefinition attribute_type_definition(QName elem) {
-		XSAttributeDeclaration ad = _schema.getAttributeDeclaration(elem.local(), 
-									    elem.namespace());
-	
+		XSAttributeDeclaration ad = _schema.getAttributeDeclaration(elem
+				.local(), elem.namespace());
+
 		return ad.getTypeDefinition();
 	}
 
 	/**
 	 * does prefix exist?
-	 * @param pref prefix name.
+	 * 
+	 * @param pref
+	 *            prefix name.
 	 * @return true if it does.
 	 */
 	public boolean prefix_exists(String pref) {
@@ -352,8 +378,9 @@ public class DefaultStaticContext implements StaticContext {
 
 	/**
 	 * Resolves a prefix into a namespace URI.
-	 *
-	 * @param pref prefix name
+	 * 
+	 * @param pref
+	 *            prefix name
 	 * @return uri prefix is resolved to or null.
 	 */
 	public String resolve_prefix(String pref) {
@@ -362,9 +389,11 @@ public class DefaultStaticContext implements StaticContext {
 
 	/**
 	 * Checks if an XML node derives from a specified type.
-	 *
-	 * @param at node actual type
-	 * @param et name of expected type
+	 * 
+	 * @param at
+	 *            node actual type
+	 * @param et
+	 *            name of expected type
 	 * @return true if a derivation exists
 	 */
 	// XXX fix this
@@ -375,16 +404,15 @@ public class DefaultStaticContext implements StaticContext {
 		short method = 0;
 
 		// XXX
-		if(!et.expanded()) {
+		if (!et.expanded()) {
 			String pre = et.prefix();
 
-			if(pre != null) {
-				if(prefix_exists(pre)) {
+			if (pre != null) {
+				if (prefix_exists(pre)) {
 					et.set_namespace(resolve_prefix(pre));
-				}
-				else assert false;
-			}
-			else
+				} else
+					assert false;
+			} else
 				et.set_namespace(default_namespace());
 		}
 
@@ -393,9 +421,11 @@ public class DefaultStaticContext implements StaticContext {
 
 	/**
 	 * Checks if an XML node derives from a specified type definition.
-	 *
-	 * @param at node actual type.
-	 * @param et type definition of expected type.
+	 * 
+	 * @param at
+	 *            node actual type.
+	 * @param et
+	 *            type definition of expected type.
 	 * @return true if a derivation exists.
 	 */
 	public boolean derives_from(NodeType at, XSTypeDefinition et) {
@@ -430,8 +460,9 @@ public class DefaultStaticContext implements StaticContext {
 
 	/**
 	 * does variable exist in current scope ?
-	 *
-	 * @param var variable name.
+	 * 
+	 * @param var
+	 *            variable name.
 	 * @return true if it does.
 	 */
 	public boolean variable_exists(QName var) {
@@ -442,16 +473,17 @@ public class DefaultStaticContext implements StaticContext {
 
 	/**
 	 * checks to see if variable is in scope
-	 *
-	 * @param var variable name.
+	 * 
+	 * @param var
+	 *            variable name.
 	 * @return true if variable is in current or above scope.
 	 */
 	public boolean variable_in_scope(QName var) {
 		// order doesn't matter..
-		for(Iterator i = _scopes.iterator(); i.hasNext();) {
+		for (Iterator i = _scopes.iterator(); i.hasNext();) {
 			Map scope = (Map) i.next();
 
-			if(scope.containsKey(var))
+			if (scope.containsKey(var))
 				return true;
 		}
 		return false;
@@ -459,9 +491,11 @@ public class DefaultStaticContext implements StaticContext {
 
 	/**
 	 * Adds a variable to current scope.
-	 *
+	 * 
 	 * used for static checking.... i.e. presence of variables
-	 * @param var variable name to add.
+	 * 
+	 * @param var
+	 *            variable name to add.
 	 */
 	public void add_variable(QName var) {
 		set_variable(var, null);
@@ -476,19 +510,20 @@ public class DefaultStaticContext implements StaticContext {
 
 	/**
 	 * Deletes a variable from current scope.
-	 *
-	 * @param var variable name to delete.
+	 * 
+	 * @param var
+	 *            variable name to delete.
 	 * @return false if variable doesn't exist.
 	 */
 	public boolean del_variable(QName var) {
-		if(!variable_exists(var))
+		if (!variable_exists(var))
 			return false;
-	
+
 		Map scope = current_scope();
-		if(scope.remove(var)== null)
+		if (scope.remove(var) == null)
 			return false;
-		return true;	
-		
+		return true;
+
 	}
 
 	// return null if "not found"
@@ -497,11 +532,11 @@ public class DefaultStaticContext implements StaticContext {
 		// would be nice here...
 
 		int pos = _scopes.size();
-		while(--pos >= 0) {
+		while (--pos >= 0) {
 			Map scope = (Map) _scopes.get(pos);
 
 			// gotcha
-			if(scope.containsKey(var)) {
+			if (scope.containsKey(var)) {
 				return (AnyType) scope.get(var);
 			}
 		}
@@ -516,23 +551,23 @@ public class DefaultStaticContext implements StaticContext {
 	public void debug_print_vars() {
 		int level = 0;
 
-		for(Iterator i = _scopes.iterator(); i.hasNext();) {
+		for (Iterator i = _scopes.iterator(); i.hasNext();) {
 			Map scope = (Map) i.next();
 
 			System.out.println("Scope level " + level);
-			for(Iterator j = scope.keySet().iterator(); j.hasNext();) {
+			for (Iterator j = scope.keySet().iterator(); j.hasNext();) {
 				QName varname = (QName) j.next();
 
 				AnyType val = (AnyType) scope.get(varname);
 
 				String string_val = "null";
 
-				if(val != null)
+				if (val != null)
 					string_val = val.string_value();
 
-				System.out.println("Varname: " + varname.string() + 
-						   " expanded=" + varname.expanded() + 
-						   " Value: " + string_val);
+				System.out.println("Varname: " + varname.string()
+						+ " expanded=" + varname.expanded() + " Value: "
+						+ string_val);
 
 			}
 

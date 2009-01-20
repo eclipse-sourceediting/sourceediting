@@ -21,42 +21,49 @@ import java.util.*;
  */
 public class OpUnion extends Function {
 	private static Collection _expected_args = null;
+
 	/**
 	 * Constructor for OpUnion.
 	 */
 	public OpUnion() {
 		super(new QName("union"), 2);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		assert args.size() == arity();
 
 		return op_union(args);
 	}
+
 	/**
-         * Op-Union operation.
-         * @param args Result from the expressions evaluation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of operation.
-         */
+	 * Op-Union operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of operation.
+	 */
 	public static ResultSequence op_union(Collection args) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		// convert arguments
-		Collection cargs = Function.convert_arguments(args,
-							      expected_args());
+		Collection cargs = Function.convert_arguments(args, expected_args());
 
 		// get arguments
 		Iterator iter = cargs.iterator();
 		ResultSequence one = (ResultSequence) iter.next();
 		ResultSequence two = (ResultSequence) iter.next();
-
 
 		// XXX i don't fink u've ever seen anything lamer than this
 		rs.concat(one);
@@ -66,12 +73,14 @@ public class OpUnion extends Function {
 
 		return rs;
 	}
+
 	/**
-         * Obtain a list of expected arguments.
-         * @return Result of operation.
-         */
+	 * Obtain a list of expected arguments.
+	 * 
+	 * @return Result of operation.
+	 */
 	public static Collection expected_args() {
-		if(_expected_args == null) {
+		if (_expected_args == null) {
 			_expected_args = new ArrayList();
 
 			SeqType st = new SeqType(SeqType.OCC_STAR);

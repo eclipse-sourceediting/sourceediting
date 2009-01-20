@@ -12,28 +12,36 @@
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
 import java.util.*;
+
 /**
  * Support for XPath (duh).
  */
 public class XPath extends XPathNode {
 	private Collection _exprs;
+
 	/**
 	 * Constructor for XPath.
-	 * @param exprs XPath expressions.
+	 * 
+	 * @param exprs
+	 *            XPath expressions.
 	 */
 	public XPath(Collection exprs) {
 		_exprs = exprs;
 	}
+
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}
+
 	/**
 	 * Support for Iterator interface.
+	 * 
 	 * @return Result of Iterator operation.
 	 */
 	public Iterator iterator() {

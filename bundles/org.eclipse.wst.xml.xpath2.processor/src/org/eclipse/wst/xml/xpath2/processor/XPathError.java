@@ -22,16 +22,19 @@ public class XPathError extends Error {
 	private String _reason;
 
 	/**
- 	 * Constructor for XPathError
-	 * @param reason Is the reason why the error has been thrown.
- 	 */
+	 * Constructor for XPathError
+	 * 
+	 * @param reason
+	 *            Is the reason why the error has been thrown.
+	 */
 	public XPathError(String reason) {
 		_reason = reason;
 	}
 
 	/**
 	 * The reason why the error has been thrown.
-	 * @return the reason why the error has been throw. 
+	 * 
+	 * @return the reason why the error has been throw.
 	 */
 	public String reason() {
 		return _reason;

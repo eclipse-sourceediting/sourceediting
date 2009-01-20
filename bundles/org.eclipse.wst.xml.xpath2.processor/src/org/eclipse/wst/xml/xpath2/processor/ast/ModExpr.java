@@ -10,20 +10,26 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
+
 /**
  * Class for Modular operation.
  */
 public class ModExpr extends BinExpr {
 	/**
 	 * Constructor for ModExpr.
-	 * @param l input1 xpath expression/variable.
-	 * @param r input2 xpath expression/variable.
+	 * 
+	 * @param l
+	 *            input1 xpath expression/variable.
+	 * @param r
+	 *            input2 xpath expression/variable.
 	 */
 	public ModExpr(Expr l, Expr r) {
-		super(l,r);
+		super(l, r);
 	}
+
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override

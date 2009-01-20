@@ -15,62 +15,73 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
- * Returns an xs:NCNAME representing the local part of $arg. If $arg is the empty sequence,
- * returns the empty sequence.
+ * Returns an xs:NCNAME representing the local part of $arg. If $arg is the
+ * empty sequence, returns the empty sequence.
  */
 public class FnLocalNameFromQName extends Function {
 	private static Collection _expected_args = null;
+
 	/**
 	 * Constructor for FnLocalNameFromQName.
 	 */
 	public FnLocalNameFromQName() {
 		super(new QName("local-name-from-QName"), 1);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return local_name(args);
 	}
-	/**
-         * Local-Name-from-QName operation.
-         * @param args Result from the expressions evaluation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of fn:local-name-from-QName operation.
-         */
-	public static ResultSequence local_name(Collection args) throws DynamicError {
 
-		Collection cargs = Function.convert_arguments(args,
-                                                              expected_args());
+	/**
+	 * Local-Name-from-QName operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of fn:local-name-from-QName operation.
+	 */
+	public static ResultSequence local_name(Collection args)
+			throws DynamicError {
+
+		Collection cargs = Function.convert_arguments(args, expected_args());
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		// get arg
 		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
 
-		if(arg1.empty())
+		if (arg1.empty())
 			return rs;
-		
+
 		QName qname = (QName) arg1.first();
-	
+
 		rs.add(new XSNCName(qname.local()));
 
 		return rs;
 	}
+
 	/**
-         * Obtain a list of expected arguments.
-         * @return Result of operation.
-         */
+	 * Obtain a list of expected arguments.
+	 * 
+	 * @return Result of operation.
+	 */
 	public static Collection expected_args() {
-		if(_expected_args == null) {
+		if (_expected_args == null) {
 			_expected_args = new ArrayList();
-			SeqType arg = new SeqType(new QName(), 
-						  SeqType.OCC_QMARK);
+			SeqType arg = new SeqType(new QName(), SeqType.OCC_QMARK);
 			_expected_args.add(arg);
 		}
 

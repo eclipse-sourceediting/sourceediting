@@ -15,14 +15,16 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
- * The fn:error function causes the evaluation of the outermost XQuery or transformation
- * to stop. While this function never returns a value, an error, if it occurs, is
- * returned to the external processing environment as an xs:anyURI or an xs:QName.
- * The error xs:anyURI is derived from the error xs:QName. An error xs:QName with
- * namespace URI NS and local part LP will be returned as the xs:anyURI NS#LP. The
- * method by which the xs:anyURI or xs:QName is returned to the external processing
- * environment is implementation dependent.
+ * The fn:error function causes the evaluation of the outermost XQuery or
+ * transformation to stop. While this function never returns a value, an error,
+ * if it occurs, is returned to the external processing environment as an
+ * xs:anyURI or an xs:QName. The error xs:anyURI is derived from the error
+ * xs:QName. An error xs:QName with namespace URI NS and local part LP will be
+ * returned as the xs:anyURI NS#LP. The method by which the xs:anyURI or
+ * xs:QName is returned to the external processing environment is implementation
+ * dependent.
  */
 public class FnError extends Function {
 
@@ -33,24 +35,32 @@ public class FnError extends Function {
 	public FnError() {
 		super(new QName("error"), 0);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return error(args);
 	}
+
 	/**
-         * Error operation.
-         * @param args Result from the expressions evaluation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of fn:error operation.
-         */
+	 * Error operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of fn:error operation.
+	 */
 	public static ResultSequence error(Collection args) throws DynamicError {
-		
+
 		throw DynamicError.user_error(null);
 	}
 }

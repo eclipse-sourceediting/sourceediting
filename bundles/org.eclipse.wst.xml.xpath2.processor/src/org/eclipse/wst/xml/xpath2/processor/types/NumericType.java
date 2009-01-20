@@ -13,30 +13,28 @@ package org.eclipse.wst.xml.xpath2.processor.types;
 
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.function.*;
+
 /**
  * A representation of the NumericType datatype
  */
-public abstract class NumericType extends CtrType 
+public abstract class NumericType extends CtrType
 
-				  implements CmpEq,
-				  	     CmpGt,
-					     CmpLt,
-					     
-				             MathPlus,
-					     MathMinus,
-					     MathTimes,
-					     MathDiv,
-					     MathIDiv,
-					     MathMod {
+implements CmpEq, CmpGt, CmpLt,
+
+MathPlus, MathMinus, MathTimes, MathDiv, MathIDiv, MathMod {
 
 	// XXX needed for fn:boolean
 	/**
 	 * Check whether node represnts 0
+	 * 
 	 * @return True if node represnts 0. False otherwise
 	 */
 	public abstract boolean zero();
+
 	/**
-	 * Creates a new ResultSequence representing the negation of the number stored
+	 * Creates a new ResultSequence representing the negation of the number
+	 * stored
+	 * 
 	 * @return New ResultSequence representing the negation of the number stored
 	 */
 	public abstract ResultSequence unary_minus();
@@ -44,67 +42,90 @@ public abstract class NumericType extends CtrType
 	// numeric functions
 	/**
 	 * Absolutes the number stored
+	 * 
 	 * @return New NumericType representing the absolute of the number stored
 	 */
 	public abstract NumericType abs();
+
 	/**
-	* Returns the smallest integer greater than the number stored
-	* @return A NumericType representing the smallest integer greater than the number stored
-	*/
+	 * Returns the smallest integer greater than the number stored
+	 * 
+	 * @return A NumericType representing the smallest integer greater than the
+	 *         number stored
+	 */
 	public abstract NumericType ceiling();
+
 	/**
-	* Returns the largest integer smaller than the number stored
-	* @return A NumericType representing the largest integer smaller than the number stored
-	*/
+	 * Returns the largest integer smaller than the number stored
+	 * 
+	 * @return A NumericType representing the largest integer smaller than the
+	 *         number stored
+	 */
 	public abstract NumericType floor();
+
 	/**
-	* Returns the closest integer of the number stored.
-	* @return A NumericType representing the closest long of the number stored.
+	 * Returns the closest integer of the number stored.
+	 * 
+	 * @return A NumericType representing the closest long of the number stored.
 	 */
 	public abstract NumericType round();
+
 	/**
-	* Returns the closest integer of the number stored.
-	* @return A NumericType representing the closest long of the number stored.
+	 * Returns the closest integer of the number stored.
+	 * 
+	 * @return A NumericType representing the closest long of the number stored.
 	 */
 	public abstract NumericType round_half_to_even();
 
-	
 	protected AnyType get_single_arg(ResultSequence rs) throws DynamicError {
-		if(rs.size() != 1)
+		if (rs.size() != 1)
 			DynamicError.throw_type_error();
 
-		return rs.first();	
+		return rs.first();
 	}
+
 	/***
 	 * Check whether the supplied node is of the supplied type
-	 * @param at The node being tested
-	 * @param type The type expected
+	 * 
+	 * @param at
+	 *            The node being tested
+	 * @param type
+	 *            The type expected
 	 * @return The node being tested
-	 * @throws DynamicError If node being tested is not of expected type
+	 * @throws DynamicError
+	 *             If node being tested is not of expected type
 	 */
-	public static AnyType get_single_type(AnyType at, Class type) throws DynamicError {
-		
-		if(!type.isInstance(at))
+	public static AnyType get_single_type(AnyType at, Class type)
+			throws DynamicError {
+
+		if (!type.isInstance(at))
 			DynamicError.throw_type_error();
-		
+
 		return at;
 	}
+
 	/***
-	 * Check whether first node in supplied ResultSequence is of the supplied type
-	 * @param rs The node being tested
-	 * @param type The type expected
+	 * Check whether first node in supplied ResultSequence is of the supplied
+	 * type
+	 * 
+	 * @param rs
+	 *            The node being tested
+	 * @param type
+	 *            The type expected
 	 * @return The node being tested
-	 * @throws DynamicError If node being tested is not of expected type
+	 * @throws DynamicError
+	 *             If node being tested is not of expected type
 	 */
-	public static AnyType get_single_type(ResultSequence rs, Class type) throws DynamicError {
-		if(rs.size() != 1)
+	public static AnyType get_single_type(ResultSequence rs, Class type)
+			throws DynamicError {
+		if (rs.size() != 1)
 			DynamicError.throw_type_error();
-		
+
 		AnyType at = rs.first();
-	
-		if(!type.isInstance(at))
+
+		if (!type.isInstance(at))
 			DynamicError.throw_type_error();
-		
+
 		return at;
 	}
 }

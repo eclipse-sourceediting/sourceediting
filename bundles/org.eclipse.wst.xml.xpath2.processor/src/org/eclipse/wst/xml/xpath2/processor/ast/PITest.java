@@ -10,36 +10,47 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
+
 /**
  * Class for Processing Instruction support.
  */
 public class PITest extends KindTest {
 	private String _arg;
+
 	/**
 	 * Constructor for PITest.
-	 * @param arg instruction argument.
+	 * 
+	 * @param arg
+	 *            instruction argument.
 	 */
 	public PITest(String arg) {
 		_arg = arg;
 	}
+
 	/**
 	 * Default Constructor for PITest.
 	 */
 	public PITest() {
 		this(null);
 	}
+
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}
+
 	/**
 	 * Support for String arguments.
+	 * 
 	 * @return Result of String operation.
 	 */
-	public String arg() { return _arg; }
+	public String arg() {
+		return _arg;
+	}
 
 }

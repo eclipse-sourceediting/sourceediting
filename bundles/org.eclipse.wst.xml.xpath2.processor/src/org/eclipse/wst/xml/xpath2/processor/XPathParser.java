@@ -17,11 +17,14 @@ import org.eclipse.wst.xml.xpath2.processor.ast.*;
  * This is an interface class for the XPath parser.
  */
 public interface XPathParser {
-	
+
 	/**
 	 * Constructor for the XPath parser interface.
-	 * @param xpath is the input XPath to be parsed.
-	 * @throws XPathParserException XPath parser exception.
+	 * 
+	 * @param xpath
+	 *            is the input XPath to be parsed.
+	 * @throws XPathParserException
+	 *             XPath parser exception.
 	 * @return The parsed XPath.
 	 */
 	public XPath parse(String xpath) throws XPathParserException;

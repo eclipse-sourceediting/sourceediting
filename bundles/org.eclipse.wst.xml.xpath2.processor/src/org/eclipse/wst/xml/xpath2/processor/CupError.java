@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.xpath2.processor;
  * Error caused by CUP Parser.
  */
 public class CupError extends XPathError {
-	
+
 	/**
 	 * 
 	 */
@@ -23,8 +23,10 @@ public class CupError extends XPathError {
 
 	/**
 	 * Constructor for CUP error.
-	 * @param reason is the reason for the error.
- 	 */
+	 * 
+	 * @param reason
+	 *            is the reason for the error.
+	 */
 	public CupError(String reason) {
 		super(reason);
 	}

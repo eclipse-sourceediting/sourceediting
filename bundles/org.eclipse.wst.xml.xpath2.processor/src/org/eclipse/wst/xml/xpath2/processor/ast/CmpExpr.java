@@ -12,82 +12,86 @@
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
 /**
- * The comparison of expression operator takes the value of its left
- * operand and compares (dependant on type) against its right 
- * operand, according to the rules of the particular comparison rule
+ * The comparison of expression operator takes the value of its left operand and
+ * compares (dependant on type) against its right operand, according to the
+ * rules of the particular comparison rule
  */
 public class CmpExpr extends BinExpr {
 	/**
 	 * Set internal value for EQUALS operation.
 	 */
 	public static final int EQUALS = 0;
-        /**
-         * Set internal value for NOTEQUALS operation.
-         */
+	/**
+	 * Set internal value for NOTEQUALS operation.
+	 */
 	public static final int NOTEQUALS = 1;
-        /**
-         * Set internal value for LESSTHAN operation.
-         */
+	/**
+	 * Set internal value for LESSTHAN operation.
+	 */
 	public static final int LESSTHAN = 2;
-        /**
-         * Set internal value for LESSEQUAL operation.
-         */
+	/**
+	 * Set internal value for LESSEQUAL operation.
+	 */
 	public static final int LESSEQUAL = 3;
-        /**
-         * Set internal value for GREATER operation.
-         */
+	/**
+	 * Set internal value for GREATER operation.
+	 */
 	public static final int GREATER = 4;
-        /**
-         * Set internal value for GREATEREQUAL operation.
-         */
-	public static final int GREATEREQUAL =5;
-        /**
-         * Set internal value for EQ operation.
-         */
+	/**
+	 * Set internal value for GREATEREQUAL operation.
+	 */
+	public static final int GREATEREQUAL = 5;
+	/**
+	 * Set internal value for EQ operation.
+	 */
 	public static final int EQ = 6;
-        /**
-         * Set internal value for NE operation.
-         */
+	/**
+	 * Set internal value for NE operation.
+	 */
 	public static final int NE = 7;
-        /**
-         * Set internal value for LT operation.
-         */
+	/**
+	 * Set internal value for LT operation.
+	 */
 	public static final int LT = 8;
-        /**
-         * Set internal value for LE operation.
-         */
+	/**
+	 * Set internal value for LE operation.
+	 */
 	public static final int LE = 9;
-        /**
-         * Set internal value for GT operation.
-         */
+	/**
+	 * Set internal value for GT operation.
+	 */
 	public static final int GT = 10;
-        /**
-         * Set internal value for GE operation.
-         */
+	/**
+	 * Set internal value for GE operation.
+	 */
 	public static final int GE = 11;
-        /**
-         * Set internal value for IS operation.
-         */
+	/**
+	 * Set internal value for IS operation.
+	 */
 	public static final int IS = 12;
-        /**
-         * Set internal value for LESS_LESS operation.
-         */
+	/**
+	 * Set internal value for LESS_LESS operation.
+	 */
 	public static final int LESS_LESS = 13;
-        /**
-         * Set internal value for GREATER_GREATER operation.
-         */
+	/**
+	 * Set internal value for GREATER_GREATER operation.
+	 */
 	public static final int GREATER_GREATER = 14;
 
 	private int _type;
 
-	/** 
+	/**
 	 * Constructor for CmpExpr
-	 * @param l input xpath left expression/variable
-	 * @param r input xpath right expression/variable
-	 * @param type what comparison to use l against r.
+	 * 
+	 * @param l
+	 *            input xpath left expression/variable
+	 * @param r
+	 *            input xpath right expression/variable
+	 * @param type
+	 *            what comparison to use l against r.
 	 */
 	public CmpExpr(Expr l, Expr r, int type) {
-		super(l,r);
+		super(l, r);
 
 		_type = type;
 	}
@@ -105,5 +109,7 @@ public class CmpExpr extends BinExpr {
 	/**
 	 * @return comparison type
 	 */
-	public int type() { return _type; }
+	public int type() {
+		return _type;
+	}
 }

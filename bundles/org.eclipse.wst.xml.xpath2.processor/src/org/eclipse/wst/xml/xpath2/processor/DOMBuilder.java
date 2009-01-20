@@ -30,51 +30,57 @@ public class DOMBuilder implements DOMLoader {
 	}
 
 	/**
-	 * Loads The XML document. 
-	 * @param in is the input stream.
-	 * @throws DOMLoaderException DOM loader exception.
+	 * Loads The XML document.
+	 * 
+	 * @param in
+	 *            is the input stream.
+	 * @throws DOMLoaderException
+	 *             DOM loader exception.
 	 * @return The loaded document.
 	 */
 	// XXX: fix error reporting
 	public Document load(InputStream in) throws DOMLoaderException {
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		
+
 		factory.setNamespaceAware(true);
 		factory.setValidating(_validating);
 
 		try {
 			DocumentBuilder builder = factory.newDocumentBuilder();
-		
-//			if(_validating) {
-				builder.setErrorHandler(new ErrorHandler() {
-					public void fatalError(SAXParseException e) throws SAXException {
-						throw e;
-       					}
-					public void error(SAXParseException e) throws SAXParseException {
-						throw e;
-					}
-       					public void warning(SAXParseException e) throws SAXParseException {
-						throw e; // XXX
-					}
-						         });
-//			}
+
+			// if(_validating) {
+			builder.setErrorHandler(new ErrorHandler() {
+				public void fatalError(SAXParseException e) throws SAXException {
+					throw e;
+				}
+
+				public void error(SAXParseException e) throws SAXParseException {
+					throw e;
+				}
+
+				public void warning(SAXParseException e)
+						throws SAXParseException {
+					throw e; // XXX
+				}
+			});
+			// }
 			return builder.parse(in);
-		} catch(SAXException e) {
-			throw new DOMLoaderException("SAX exception: " +
-						     e.getMessage());
-		} catch(ParserConfigurationException e) {
-			throw new DOMLoaderException("Parser configuration exception: " +
-						     e.getMessage());
-		} catch(IOException e) {
-			throw new DOMLoaderException("IO exception: " +
-						     e.getMessage());
+		} catch (SAXException e) {
+			throw new DOMLoaderException("SAX exception: " + e.getMessage());
+		} catch (ParserConfigurationException e) {
+			throw new DOMLoaderException("Parser configuration exception: "
+					+ e.getMessage());
+		} catch (IOException e) {
+			throw new DOMLoaderException("IO exception: " + e.getMessage());
 		}
 	}
 
 	/**
 	 * Set validating boolean.
-	 * @param x is the value to set the validating boolean to.
+	 * 
+	 * @param x
+	 *            is the value to set the validating boolean to.
 	 */
 	public void set_validating(boolean x) {
 		_validating = x;

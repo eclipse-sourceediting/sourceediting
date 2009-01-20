@@ -22,8 +22,11 @@ public class DescendantAxis extends ChildAxis {
 
 	/**
 	 * Using the context node retrieve the descendants of this node
-	 * @param node is the type of node.
-	 * @param dc is the dynamic context.
+	 * 
+	 * @param node
+	 *            is the type of node.
+	 * @param dc
+	 *            is the dynamic context.
 	 * @return The descendants of the context node.
 	 */
 	@Override
@@ -34,14 +37,14 @@ public class DescendantAxis extends ChildAxis {
 		ArrayList descendants = new ArrayList();
 
 		// get descendants of all children
-		for(Iterator i = rs.iterator(); i.hasNext();) {
+		for (Iterator i = rs.iterator(); i.hasNext();) {
 			NodeType n = (NodeType) i.next();
 
 			descendants.add(iterate(n, dc));
 		}
 
 		// add descendants to result
-		for(Iterator i = descendants.iterator(); i.hasNext();) {
+		for (Iterator i = descendants.iterator(); i.hasNext();) {
 			ResultSequence desc = (ResultSequence) i.next();
 
 			rs.concat(desc);

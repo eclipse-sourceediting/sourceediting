@@ -21,23 +21,29 @@ import java.util.*;
  */
 public class Constructor extends Function {
 	private CtrType _atomic_type;
+
 	/**
 	 * Constructor for Constructor class.
-	 * @param aat input of any atomic type.
+	 * 
+	 * @param aat
+	 *            input of any atomic type.
 	 */
 	public Constructor(CtrType aat) {
 		super(new QName(aat.type_name()), 1);
 
 		_atomic_type = aat;
 	}
-	
+
 	// XXX IN GENRAL, I THIUNK WE NEED TO PULL SANITY CHECKING OUTSIDE!
 	// PLUS I AM NOT ATOMIZING/ETC ETC HERE!!! BAD CODE
 	// BUG XXX HACK DEATH
 	/**
 	 * Evaluate arguments.
-	 * @param args argument expressions.
-	 * @throws DynamicError Dynamic error.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
 	 * @return Result of evaluation.
 	 */
 	@Override
@@ -47,13 +53,13 @@ public class Constructor extends Function {
 		// sanity checks
 		ResultSequence arg = (ResultSequence) args.iterator().next();
 
-		if(arg.size() > 1)
+		if (arg.size() > 1)
 			DynamicError.throw_type_error();
 
-		for(Iterator i = arg.iterator(); i.hasNext();) {
+		for (Iterator i = arg.iterator(); i.hasNext();) {
 			AnyType at = (AnyType) i.next();
 
-			if( !(at instanceof CtrType) )
+			if (!(at instanceof CtrType))
 				DynamicError.throw_type_error();
 		}
 

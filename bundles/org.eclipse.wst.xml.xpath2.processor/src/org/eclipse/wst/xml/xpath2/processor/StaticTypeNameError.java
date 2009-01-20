@@ -23,9 +23,11 @@ public class StaticTypeNameError extends StaticNameError {
 
 	/**
 	 * Constructor.
-	 * @param reason is the reason for the error.
-	 */	
+	 * 
+	 * @param reason
+	 *            is the reason for the error.
+	 */
 	public StaticTypeNameError(String reason) {
-		super(TYPE_NOT_FOUND,reason);
+		super(TYPE_NOT_FOUND, reason);
 	}
 }

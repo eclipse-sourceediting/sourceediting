@@ -23,8 +23,10 @@ public class StaticAttrNameError extends StaticNameError {
 
 	/**
 	 * Constructor for static attribute name error
-	 * @param reason is the reason for the error.
- 	 */
+	 * 
+	 * @param reason
+	 *            is the reason for the error.
+	 */
 	public StaticAttrNameError(String reason) {
 		super(reason);
 	}

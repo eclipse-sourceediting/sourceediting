@@ -12,6 +12,7 @@
 package org.eclipse.wst.xml.xpath2.processor.types;
 
 import org.eclipse.wst.xml.xpath2.processor.*;
+
 /**
  * A representation of the CtrType datatype
  */
@@ -20,12 +21,17 @@ public abstract class CtrType extends AnyAtomicType {
 	// arg is either empty sequence, or 1 anyatomictype
 	/**
 	 * Used for constructor function.
-	 * @param arg Either an empty sequence or 1 atomic type
+	 * 
+	 * @param arg
+	 *            Either an empty sequence or 1 atomic type
 	 * @return The resulting ResultSequence
 	 */
-	public abstract ResultSequence constructor(ResultSequence arg) throws DynamicError;
+	public abstract ResultSequence constructor(ResultSequence arg)
+			throws DynamicError;
+
 	/**
 	 * Retrieves the datatype's name
+	 * 
 	 * @return String representation of the datatype's name
 	 */
 	public abstract String type_name();

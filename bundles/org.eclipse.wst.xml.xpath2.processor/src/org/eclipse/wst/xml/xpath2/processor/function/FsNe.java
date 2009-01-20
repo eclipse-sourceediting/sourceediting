@@ -15,6 +15,7 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
  * Class for Not equal function.
  */
@@ -25,12 +26,16 @@ public class FsNe extends Function {
 	public FsNe() {
 		super(new QName("ne"), 2);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		assert args.size() == arity();
@@ -39,22 +44,31 @@ public class FsNe extends Function {
 	}
 
 	/**
-         * Operation on the values of the arguments.
-         * @param args input arguments.
-         * @throws DynamicError Dynamic error.
-         * @return Result of the operation.
-         */
-	public static ResultSequence fs_ne_value(Collection args) throws DynamicError {
+	 * Operation on the values of the arguments.
+	 * 
+	 * @param args
+	 *            input arguments.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of the operation.
+	 */
+	public static ResultSequence fs_ne_value(Collection args)
+			throws DynamicError {
 		return FnNot.fn_not(FsEq.fs_eq_value(args));
 	}
+
 	/**
-         * General operation on the arguments.
-         * @param args input arguments.
-         * @throws DynamicError Dynamic error.
-         * @return Result of the operation.
-         */
-        public static ResultSequence fs_ne_general(Collection args) throws DynamicError {
-                return FsEq.do_cmp_general_op(args, FsNe.class, "fs_ne_value");
-        }
+	 * General operation on the arguments.
+	 * 
+	 * @param args
+	 *            input arguments.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of the operation.
+	 */
+	public static ResultSequence fs_ne_general(Collection args)
+			throws DynamicError {
+		return FsEq.do_cmp_general_op(args, FsNe.class, "fs_ne_value");
+	}
 
 }

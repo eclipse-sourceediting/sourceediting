@@ -22,16 +22,19 @@ public class XPathException extends Exception {
 	private String _reason;
 
 	/**
- 	 * Constructor for XPathException
-	 * @param reason Is the reason why the exception has been thrown.
- 	 */
+	 * Constructor for XPathException
+	 * 
+	 * @param reason
+	 *            Is the reason why the exception has been thrown.
+	 */
 	public XPathException(String reason) {
 		_reason = reason;
 	}
-	
+
 	/**
 	 * The reason why the exception has been thrown.
-	 * @return the reason why the exception has been throw. 
+	 * 
+	 * @return the reason why the exception has been throw.
 	 */
 	public String reason() {
 		return _reason;

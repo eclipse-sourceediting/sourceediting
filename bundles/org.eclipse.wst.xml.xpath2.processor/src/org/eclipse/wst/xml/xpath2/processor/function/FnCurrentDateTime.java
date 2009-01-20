@@ -15,39 +15,50 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
- * Returns the xs:dateTime (with timezone) from the dynamic context.
- * (See Section C.2 Dynamic Context ComponentsXP.) This is a xs:dateTime that is current
- * at some time during the evaluation of a query or transformation in which
- * fn:current-dateTime() is executed. This function is stable. The precise instant
- * during the query or transformation represented by the value of fn:current-dateTime()
- * is implementation dependent.
+ * Returns the xs:dateTime (with timezone) from the dynamic context. (See
+ * Section C.2 Dynamic Context ComponentsXP.) This is a xs:dateTime that is
+ * current at some time during the evaluation of a query or transformation in
+ * which fn:current-dateTime() is executed. This function is stable. The precise
+ * instant during the query or transformation represented by the value of
+ * fn:current-dateTime() is implementation dependent.
  */
 public class FnCurrentDateTime extends Function {
 	/**
 	 * Constructor for FnCurrentDateTime.
-	 */	
+	 */
 	public FnCurrentDateTime() {
 		super(new QName("current-dateTime"), 0);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return current_dateTime(args, dynamic_context());
 	}
+
 	/**
-         * Current-Date-Time operation.
-         * @param args Result from the expressions evaluation.
-	 * @param dc Result of dynamic context operation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of fn:current-dateTime operation.
-         */
-	public static ResultSequence current_dateTime(Collection args, DynamicContext dc) throws DynamicError {
+	 * Current-Date-Time operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @param dc
+	 *            Result of dynamic context operation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of fn:current-dateTime operation.
+	 */
+	public static ResultSequence current_dateTime(Collection args,
+			DynamicContext dc) throws DynamicError {
 		assert args.size() == 0;
 
 		AnyType res = new XSDateTime(new GregorianCalendar(), dc.tz());

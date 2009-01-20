@@ -15,44 +15,54 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
- * Returns an xs:integer between 1 and 31, both inclusive, representing the
- * day component in the localized value of $arg.
- * If $arg is the empty sequence, returns the empty sequence.
+ * Returns an xs:integer between 1 and 31, both inclusive, representing the day
+ * component in the localized value of $arg. If $arg is the empty sequence,
+ * returns the empty sequence.
  */
 public class FnDayFromDateTime extends Function {
 	private static Collection _expected_args = null;
+
 	/**
 	 * Constructor for FnDayFromDateTime.
 	 */
 	public FnDayFromDateTime() {
 		super(new QName("day-from-dateTime"), 1);
 	}
+
 	/**
-         * Evaluate arguments.
-         * @param args argument expressions.
-         * @throws DynamicError Dynamic error.
-         * @return Result of evaluation.
-         */
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return day_from_date_time(args);
 	}
+
 	/**
-         * Day-From-DateTime operation.
-         * @param args Result from the expressions evaluation.
-         * @throws DynamicError Dynamic error.
-         * @return Result of fn:day-from-datetime operation.
-         */
-	public static ResultSequence day_from_date_time(Collection args) throws DynamicError {
-		Collection cargs = Function.convert_arguments(args,
-                                                              expected_args());
+	 * Day-From-DateTime operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of fn:day-from-datetime operation.
+	 */
+	public static ResultSequence day_from_date_time(Collection args)
+			throws DynamicError {
+		Collection cargs = Function.convert_arguments(args, expected_args());
 
 		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
-		if(arg1.empty()) {
+		if (arg1.empty()) {
 			return rs;
 		}
 
@@ -60,19 +70,21 @@ public class FnDayFromDateTime extends Function {
 
 		int res = dt.day();
 
-		rs.add(new XSInteger(res));	
+		rs.add(new XSInteger(res));
 
 		return rs;
 	}
+
 	/**
-         * Obtain a list of expected arguments.
-         * @return Result of operation.
-         */
+	 * Obtain a list of expected arguments.
+	 * 
+	 * @return Result of operation.
+	 */
 	public static Collection expected_args() {
-		if(_expected_args == null) {
+		if (_expected_args == null) {
 			_expected_args = new ArrayList();
-			_expected_args.add(new SeqType(new XSDateTime(),
-						       SeqType.OCC_QMARK));
+			_expected_args
+					.add(new SeqType(new XSDateTime(), SeqType.OCC_QMARK));
 		}
 
 		return _expected_args;

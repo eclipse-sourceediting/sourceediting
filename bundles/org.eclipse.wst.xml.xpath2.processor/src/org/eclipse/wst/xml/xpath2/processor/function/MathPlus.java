@@ -12,15 +12,19 @@
 package org.eclipse.wst.xml.xpath2.processor.function;
 
 import org.eclipse.wst.xml.xpath2.processor.*;
+
 /**
  * Support for Mathematical Addition.
  */
 public interface MathPlus {
 	/**
-         * Addition operation.
-         * @param arg input argument.
-         * @throws DynamicError Dynamic error.
-         * @return Result of operation.
-         */
+	 * Addition operation.
+	 * 
+	 * @param arg
+	 *            input argument.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of operation.
+	 */
 	public ResultSequence plus(ResultSequence arg) throws DynamicError;
 }

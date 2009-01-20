@@ -13,7 +13,7 @@ package org.eclipse.wst.xml.xpath2.processor.ast;
 
 /**
  * Literal is either a NumericLiteral or a StringLiteral
- *
- */ 
+ * 
+ */
 public abstract class Literal extends PrimaryExpr {
 }

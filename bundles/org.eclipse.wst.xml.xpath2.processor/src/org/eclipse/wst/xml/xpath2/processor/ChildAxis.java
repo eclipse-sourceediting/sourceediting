@@ -21,26 +21,29 @@ public class ChildAxis extends ForwardAxis {
 
 	/**
 	 * Retrieves the context node's children.
-	 * @param node is the type of node.
-	 * @param dc is the dynamic context.
- 	 * @return The context node's children.
- 	 */
+	 * 
+	 * @param node
+	 *            is the type of node.
+	 * @param dc
+	 *            is the dynamic context.
+	 * @return The context node's children.
+	 */
 	public ResultSequence iterate(NodeType node, DynamicContext dc) {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 		NodeList nl = null;
 
 		// only document and element nodes have children
-		if(node instanceof DocType)
-			nl = ((DocType)node).value().getChildNodes();
-		if(node instanceof ElementType)
-			nl = ((ElementType)node).value().getChildNodes();
-		
+		if (node instanceof DocType)
+			nl = ((DocType) node).value().getChildNodes();
+		if (node instanceof ElementType)
+			nl = ((ElementType) node).value().getChildNodes();
+
 		// add the children to the result
-		if(nl != null) {
-			for(int i = 0; i < nl.getLength(); i++) {
+		if (nl != null) {
+			for (int i = 0; i < nl.getLength(); i++) {
 				Node dnode = nl.item(i);
-				NodeType n = NodeType.dom_to_xpath(dnode,
-								   dc.node_position(dnode));
+				NodeType n = NodeType.dom_to_xpath(dnode, dc
+						.node_position(dnode));
 
 				// XXX assert that children may not be attr,
 				// namespace, document

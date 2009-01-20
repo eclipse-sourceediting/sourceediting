@@ -14,36 +14,46 @@ package org.eclipse.wst.xml.xpath2.processor.function;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 import java.util.*;
+
 /**
  * Constructor class for the functions library.
  */
 public class ConstructorFL extends FunctionLibrary {
 
 	private Hashtable _types;
+
 	/**
 	 * Constructor for ConstructorFL.
-	 * @param ns input string.
+	 * 
+	 * @param ns
+	 *            input string.
 	 */
 	public ConstructorFL(String ns) {
 		super(ns);
 
 		_types = new Hashtable();
 	}
+
 	/**
 	 * Adds a type into the functions library.
-	 * @param at input of any atomic type.
+	 * 
+	 * @param at
+	 *            input of any atomic type.
 	 */
 	public void add_type(CtrType at) {
 		QName name = new QName(at.type_name());
 		name.set_namespace(namespace());
 
 		_types.put(name, at);
-	
+
 		add_function(new Constructor(at));
 	}
+
 	/**
 	 * Support for QName interface.
-	 * @param name variable name.
+	 * 
+	 * @param name
+	 *            variable name.
 	 * @return type of input variable.
 	 */
 	public AnyAtomicType atomic_type(QName name) {

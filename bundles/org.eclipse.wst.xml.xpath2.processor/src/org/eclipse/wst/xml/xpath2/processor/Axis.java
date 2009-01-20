@@ -15,22 +15,26 @@ import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 /**
  * This is the interface class for an Axis.
- *
- * An axis defines the "direction of movement" for a step between a context
- * node and another node that is reachable via the axis.
- */ 
+ * 
+ * An axis defines the "direction of movement" for a step between a context node
+ * and another node that is reachable via the axis.
+ */
 public interface Axis {
 	/**
 	 * Get elements and attributes.
- 	 * @param node is the type of node.
-	 * @param dc is the dynamic context.
+	 * 
+	 * @param node
+	 *            is the type of node.
+	 * @param dc
+	 *            is the dynamic context.
 	 * @return The result sequence.
- 	 */
+	 */
 	public ResultSequence iterate(NodeType node, DynamicContext dc);
 
 	/**
 	 * Get the principle kind of node.
- 	 * @return The principle node kind.
- 	 */
+	 * 
+	 * @return The principle node kind.
+	 */
 	public NodeType principal_node_kind();
 }

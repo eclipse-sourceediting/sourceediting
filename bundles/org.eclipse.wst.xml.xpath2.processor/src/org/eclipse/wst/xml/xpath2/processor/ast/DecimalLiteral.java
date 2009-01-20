@@ -14,17 +14,18 @@ package org.eclipse.wst.xml.xpath2.processor.ast;
 import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 /**
- *The value of a numeric literal containing "." but no e or E 
- *character is an atomic value of type xs:decimal
- *
+ *The value of a numeric literal containing "." but no e or E character is an
+ * atomic value of type xs:decimal
+ * 
  */
 public class DecimalLiteral extends NumericLiteral {
 	private XSDecimal _value;
-	
-	/** 
+
+	/**
 	 * Constructor for DecimalLiteral
-	 *
-	 * @param value double value
+	 * 
+	 * @param value
+	 *            double value
 	 */
 	public DecimalLiteral(double value) {
 		_value = new XSDecimal(value);
@@ -39,9 +40,11 @@ public class DecimalLiteral extends NumericLiteral {
 	public Object accept(XPathVisitor v) {
 		return v.visit(this);
 	}
-	
+
 	/**
 	 * @return xs:decimal value
 	 */
-	public XSDecimal value() { return _value; }
+	public XSDecimal value() {
+		return _value;
+	}
 }

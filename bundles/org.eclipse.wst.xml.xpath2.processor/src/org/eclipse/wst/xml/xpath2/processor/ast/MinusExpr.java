@@ -10,19 +10,24 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.ast;
+
 /**
  * Class for Minus expressions.
  */
 public class MinusExpr extends UnExpr {
 	/**
 	 * Constructor for MinusExpr
-	 * @param arg argument expressions.
+	 * 
+	 * @param arg
+	 *            argument expressions.
 	 */
 	public MinusExpr(Expr arg) {
 		super(arg);
 	}
+
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override

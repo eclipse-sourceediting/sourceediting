@@ -12,22 +12,27 @@
 package org.eclipse.wst.xml.xpath2.processor.ast;
 
 /**
- * The except operator takes two node sequences as operands and returns a sequence 
- * containing all the nodes that occur in the first operand but not in the second operand.
+ * The except operator takes two node sequences as operands and returns a
+ * sequence containing all the nodes that occur in the first operand but not in
+ * the second operand.
  */
 public class ExceptExpr extends BinExpr {
 
 	/**
 	 * Constructor for ExceptExpr.
-	 * @param l input1 xpath expression/variable.
-	 * @param r input2 xpath expression/variable.
+	 * 
+	 * @param l
+	 *            input1 xpath expression/variable.
+	 * @param r
+	 *            input2 xpath expression/variable.
 	 */
 	public ExceptExpr(Expr l, Expr r) {
-		super(l,r);
+		super(l, r);
 	}
 
 	/**
 	 * Support for Visitor interface.
+	 * 
 	 * @return Result of Visitor operation.
 	 */
 	@Override
