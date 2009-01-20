@@ -30,5 +30,6 @@ Export-Package: org.eclipse.wst.xsl.ui.internal.validation;x-internal:=true,
    org.eclipse.core.runtime",
  org.eclipse.wst.xsl.ui.tests.contentassist,
  org.eclipse.wst.xsl.ui.tests.hyperlinkdetector,
- org.eclipse.wst.xsl.ui.tests.style
+ org.eclipse.wst.xsl.ui.tests.style,
+ org.eclipse.wst.xsl.ui.tests.templates
 Bundle-Localization: plugin

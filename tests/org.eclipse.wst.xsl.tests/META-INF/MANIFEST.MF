@@ -13,4 +13,3 @@ Require-Bundle: org.junit;bundle-version="[3.8.0,4.0.0)",
  org.eclipse.wst.xml.xpath.core.tests;bundle-version="[1.0.0,2.0.0)"
 Export-Package: org.eclipse.wst.xsl.tests
 Bundle-ClassPath: .
-Eclipse-LazyStart: true
