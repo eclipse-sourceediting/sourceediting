@@ -90,7 +90,7 @@ public class XSLLaunchingTests extends TestCase {
 				new NullProgressMonitor());
 		for (int i = 0; i < 400 && !launch.isTerminated(); ++i) {
 			System.out.println("waiting");
-			Thread.sleep(100);
+			Thread.sleep(200);
 		}
 		assertTrue("Launch did not complete within a 20 second time period",
 				launch.isTerminated());
