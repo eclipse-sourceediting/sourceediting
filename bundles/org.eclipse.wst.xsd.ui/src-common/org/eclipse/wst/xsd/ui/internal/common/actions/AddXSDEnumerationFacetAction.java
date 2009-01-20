@@ -67,11 +67,10 @@ public class AddXSDEnumerationFacetAction extends XSDBaseAction
         return;
       }
       
-      List enumList = st.getFacetContents();
+      List enumList = st.getEnumerationFacets();
       
       String newName = XSDCommonUIUtils.createUniqueEnumerationValue("value", enumList); //$NON-NLS-1$
       
-//      AddEnumerationsCommand command = new AddEnumerationsCommand(Messages._UI_ACTION_ADD_ENUMERATION, st);
       int index = st.getEnumerationFacets().indexOf(selection); 
       command = new AddEnumerationsCommand(getText(), st, getId(), index);
       command.setValue(newName);

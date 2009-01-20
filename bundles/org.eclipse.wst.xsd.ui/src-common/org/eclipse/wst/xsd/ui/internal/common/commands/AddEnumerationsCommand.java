@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 
+import java.util.List;
+
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDEnumerationFacetAction;
 import org.eclipse.xsd.XSDEnumerationFacet;
 import org.eclipse.xsd.XSDFactory;
@@ -55,13 +57,14 @@ public class AddEnumerationsCommand extends BaseCommand
       enumerationFacet.setLexicalValue(value);
       
       index = getInsertionIndex();
-      if (index >=0 && index < simpleType.getEnumerationFacets().size())
+      List facets = simpleType.getEnumerationFacets();
+      if (index >=0 && index < facets.size())
       {
-        simpleType.getFacetContents().add(index, enumerationFacet);
+        facets.add(index, enumerationFacet);
       }
       else
       {
-        simpleType.getFacetContents().add(enumerationFacet);
+        facets.add(enumerationFacet);
       }
       formatChild(simpleType.getElement());
       addedXSDConcreteComponent = enumerationFacet;
