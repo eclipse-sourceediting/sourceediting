@@ -8,7 +8,8 @@
  *Contributors:
  *    David Carver - bug 214228 - Verify that File Extensions available for input block
  *******************************************************************************/
-package org.eclipse.wst.xsl.launching.ui.tests;
+package org.eclipse.wst.xsl.launching.tests.testcase;
+
 import junit.framework.TestCase;
 
 

@@ -17,6 +17,5 @@ Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Vendor: %Bundle-Vendor.0
 Export-Package: org.eclipse.wst.xsl.launching.tests,
- org.eclipse.wst.xsl.launching.tests.testcase,
- org.eclipse.wst.xsl.launching.ui.tests
+ org.eclipse.wst.xsl.launching.tests.testcase
 
