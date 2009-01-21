@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -148,6 +148,15 @@ public class DOMObserver {
 	private Job timer = new TimerJob();
 	protected Document fDocument;
 	protected boolean isGrammarInferenceEnabled;
+	/**
+	 * If true, DOMObserver is currently disabled and not loading the content
+	 * model
+	 */
+	private boolean fIsDisabled = false;
+	/**
+	 * If true, DOMObserver is currently trying to load the content model
+	 */
+	private boolean fIsLoading = false;
 
 	public DOMObserver(IStructuredModel model) {
 		fDocument = (model instanceof IDOMModel) ? ((IDOMModel) model).getDocument() : null;
@@ -163,6 +172,15 @@ public class DOMObserver {
 				CMDocumentManager cmDocumentManager = modelQuery.getCMDocumentManager();
 				cmDocumentManager.setPropertyEnabled(CMDocumentManager.PROPERTY_AUTO_LOAD, false);
 			}
+			
+			// attach a dom observer adapter to the document so others have access to
+			// domobserver if needed
+			INodeAdapter domObserverAdapter = ((INodeNotifier)fDocument).getExistingAdapter(DOMObserverAdapter.class);
+			if (domObserverAdapter == null) {
+				domObserverAdapter = new DOMObserverAdapter();
+				((INodeNotifier)fDocument).addAdapter(domObserverAdapter);
+			}
+			((DOMObserverAdapter)domObserverAdapter).setDOMObserver(this);
 		}
 	}
 
@@ -175,18 +193,45 @@ public class DOMObserver {
 	}
 
 	public void invokeCMDocumentLoad() {
-		ModelQuery modelQuery = ModelQueryUtil.getModelQuery(fDocument);
-		if ((modelQuery != null) && (modelQuery.getCMDocumentManager() != null)) {
-			CMDocumentLoader loader = isGrammarInferenceEnabled ? new InferredGrammarBuildingCMDocumentLoader(fDocument, modelQuery) : new CMDocumentLoader(fDocument, modelQuery);
-			loader.loadCMDocuments();
+		if (fIsDisabled) return;
+		try {
+			fIsLoading = true;
+			
+			ModelQuery modelQuery = ModelQueryUtil.getModelQuery(fDocument);
+			if ((modelQuery != null) && (modelQuery.getCMDocumentManager() != null)) {
+				CMDocumentLoader loader = isGrammarInferenceEnabled ? new InferredGrammarBuildingCMDocumentLoader(fDocument, modelQuery) : new CMDocumentLoader(fDocument, modelQuery);
+				loader.loadCMDocuments();
+			}
+		} finally {
+			fIsLoading = false;
 		}
 	}
 
 	public void invokeDelayedCMDocumentLoad() {
+		if (fIsDisabled) return;
 		timer.schedule(2000);
 	}
 
 	public void setGrammarInferenceEnabled(boolean isEnabled) {
 		isGrammarInferenceEnabled = isEnabled;
+	}
+	
+	boolean setDisabled(boolean isDisabled, boolean forced) {
+		boolean success = true;
+		
+		if (fIsDisabled != isDisabled) {
+			fIsDisabled = isDisabled;
+			if (forced) {
+				if (isDisabled)
+					success = timer.cancel();
+				else
+					invokeCMDocumentLoad();
+			}
+		}
+		return success;
+	}
+	
+	boolean isLoading() {
+		return fIsLoading;
 	}
 }
