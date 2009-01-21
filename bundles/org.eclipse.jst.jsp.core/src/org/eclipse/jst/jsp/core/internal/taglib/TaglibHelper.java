@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Thomas de Grenier de Latour - 245044 - Incomplete classpath when validating JSP tags 
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.taglib;
 
@@ -720,8 +721,8 @@ public class TaglibHelper {
 		IClasspathContainer container = JavaCore.getClasspathContainer(entry.getPath(), project);
 		if (container != null) {
 			// avoid infinite recursion
-			if (!fContainerEntries.contains(container.getPath().toString())) {
-				fContainerEntries.add(container.getPath().toString());
+			if (!fContainerEntries.contains(project.getProject().getFullPath().toString() + ":" + container.getPath().toString())) {
+				fContainerEntries.add(project.getProject().getFullPath().toString() + ":" + container.getPath().toString());
 
 				IClasspathEntry[] cpes = container.getClasspathEntries();
 				// recursive call here
