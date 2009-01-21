@@ -1,5 +1,5 @@
 /*******************************************************************************
- *Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
+ *Copyright (c) 2008, 2009 Standards for Technology in Automotive Retail and others.
  *All rights reserved. This program and the accompanying materials
  *are made available under the terms of the Eclipse Public License v1.0
  *which accompanies this distribution, and is available at
@@ -7,6 +7,8 @@
  *
  *Contributors:
  *    David Carver (STAR) - bug 240170 - initial API and implementation
+ *                          bug 259575 - fixed replacement issue and XPath tokenizer
+ *                                       position adjuster for matchString.
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
@@ -132,25 +134,44 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 	protected String extractXPathMatchString(IDOMAttr node, ITextRegion aRegion, int offset) {
 		if (node == null || node.getValue().length() == 0)	return "";
 		
-		if (matchString.length() == 1) {
+		if (matchString.length() < 1) {
 			return matchString;
 		}
 		
 		int column = offset - node.getValueRegionStartOffset() - 1;
 		String nodeValue = node.getValue();
-		XPathParser parser = new XPathParser(nodeValue);
-		int tokenStart = parser.getTokenStartOffset(1, column);
+
+		int seperatorPos = getXPathSeperatorPos(column, nodeValue);
 		
-		if (tokenStart >= column) {
+		if (seperatorPos >= column) {
 			return "";
 		}
+				
+		return node.getValue().substring(seperatorPos, column);
+	}
+
+
+	private int getXPathSeperatorPos(int column, String nodeValue) {
+		char [] keyTokens = { '/', '[', ']', '(', ')', ' '};
 		
-		return node.getValue().substring(tokenStart - 1, column);
+		int seperatorPos = 0;
+		for (int cnt = 0; cnt < keyTokens.length; cnt++) {
+			int keyPos = nodeValue.lastIndexOf(keyTokens[cnt]);
+			if (keyPos >= 0 && keyPos <= column - 1) {
+				seperatorPos = keyPos + 1;
+			}
+		}
+		
+		int axisPos = nodeValue.indexOf("::");
+		if (axisPos > seperatorPos && axisPos <= column -1) {
+			seperatorPos = axisPos + 1;
+		}
+		return seperatorPos;
 	}
 
 
 	protected void addSelectProposals(Element rootElement, int offset) {
-			addContentModelProposals();
+			addContentModelProposals(offset);
 			addGlobalProposals(rootElement, offset);
 			addLocalProposals(getNode(), offset);
 			addTemplates(TemplateContextTypeIdsXPath.AXIS, offset);
@@ -160,9 +181,9 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 	}
 
 
-	private void addContentModelProposals() {
+	private void addContentModelProposals(int offset) {
 		AbstractXMLElementContentAssistRequest xpathXMLproposals =
-			new XPathElementContentAssist(node, documentRegion, getRegion(), getReplacementBeginPosition(), getReplacementLength(), getMatchString(), textViewer);
+			new XPathElementContentAssist(node, documentRegion, getRegion(), offset - getMatchString().length(), getReplacementLength(), getMatchString(), textViewer);
 		ArrayList<ICompletionProposal> xmlProposals = xpathXMLproposals.getCompletionProposals();
 		proposals.addAll(xmlProposals);
 	}

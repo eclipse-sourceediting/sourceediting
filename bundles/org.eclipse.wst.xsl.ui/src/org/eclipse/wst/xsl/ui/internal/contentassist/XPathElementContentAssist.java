@@ -1,5 +1,5 @@
 /*******************************************************************************
- *Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
+ *Copyright (c) 2008, 2009 Standards for Technology in Automotive Retail and others.
  *All rights reserved. This program and the accompanying materials
  *are made available under the terms of the Eclipse Public License v1.0
  *which accompanies this distribution, and is available at
@@ -7,12 +7,13 @@
  *
  *Contributors:
  *    David Carver (STAR) - bug 244978 - initial API and implementation
+ *                          bug 259575 - replaces text if MatchString has a length with XML Content Model
+ *                                       proposals.
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
 
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -32,7 +33,6 @@ import org.eclipse.wst.xml.ui.internal.taginfo.MarkupTagInfoProvider;
 import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * This class provides XML Element proposals within XPath related items like
@@ -101,7 +101,7 @@ public class XPathElementContentAssist extends
 			CMNode cmNode = cmNodeIt.next();
 			String proposedText = getRequiredName(ancestorNode, cmNode);
 			if (!(proposedText.contains("xsl:") || proposedText.contains("xslt:"))) {
-				int offset = getCursorPosition();
+				int offset = getReplacementBeginPosition();
 				Image image = getCMNodeImage(cmNode);
 				int startLength = getCursorPosition() - offset;
 				String additionalInfo = getInfoProvider().getInfo(cmNode);
