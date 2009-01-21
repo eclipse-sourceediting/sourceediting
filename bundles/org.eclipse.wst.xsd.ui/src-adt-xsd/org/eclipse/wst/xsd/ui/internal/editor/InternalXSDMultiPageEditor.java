@@ -75,6 +75,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.actions.AddFieldAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseDirectEditAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
+import org.eclipse.wst.xsd.ui.internal.adt.actions.DesignSelectAll;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.SetInputToGraphView;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewGraphicalViewer;
@@ -621,6 +622,10 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     action.setSelectionProvider(getSelectionManager());
     registry.registerAction(action);
     action = new DeleteAction(this);
+    action.setSelectionProvider(getSelectionManager());
+    registry.registerAction(action);
+    
+    action = new DesignSelectAll(this);
     action.setSelectionProvider(getSelectionManager());
     registry.registerAction(action);
 

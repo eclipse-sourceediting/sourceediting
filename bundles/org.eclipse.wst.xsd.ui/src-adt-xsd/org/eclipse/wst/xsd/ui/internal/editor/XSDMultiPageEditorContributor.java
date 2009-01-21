@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -139,6 +139,7 @@ public class XSDMultiPageEditorContributor extends MultiPageEditorActionBarContr
           actionBars.setGlobalActionHandler(GEFActionConstants.ZOOM_IN, registry.getAction(GEFActionConstants.ZOOM_IN));
           actionBars.setGlobalActionHandler(GEFActionConstants.ZOOM_OUT, registry.getAction(GEFActionConstants.ZOOM_OUT));
           actionBars.setGlobalActionHandler(ActionFactory.PRINT.getId(), registry.getAction(ActionFactory.PRINT.getId()));
+          actionBars.setGlobalActionHandler(ActionFactory.SELECT_ALL.getId(), registry.getAction(ActionFactory.SELECT_ALL.getId()));
           zoomInRetargetAction.setEnabled(true);
           zoomOutRetargetAction.setEnabled(true);
           captureScreenAction.setEnabled(true);
