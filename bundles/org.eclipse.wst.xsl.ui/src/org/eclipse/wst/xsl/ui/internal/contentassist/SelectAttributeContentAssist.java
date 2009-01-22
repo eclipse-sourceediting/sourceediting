@@ -152,11 +152,14 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 
 
 	private int getXPathSeperatorPos(int column, String nodeValue) {
-		char [] keyTokens = { '/', '[', ']', '(', ')', ' '};
+		char [] keyTokens = { '/', '[', ']', '(', ')', ',', ' '};
 		
 		int seperatorPos = 0;
+		
+		String potentialMatchString = nodeValue.substring(0, column);
+		
 		for (int cnt = 0; cnt < keyTokens.length; cnt++) {
-			int keyPos = nodeValue.lastIndexOf(keyTokens[cnt]);
+			int keyPos = potentialMatchString.lastIndexOf(keyTokens[cnt]);
 			if (keyPos >= 0 && keyPos <= column - 1) {
 				seperatorPos = keyPos + 1;
 			}
