@@ -1045,6 +1045,11 @@ class ProjectDescription {
 				records.addAll(fTagDirReferences.values());
 			}
 
+			IPath localWebXML = new Path(getLocalRoot(path.toString())).append("/WEB-INF/web.xml"); //$NON-NLS-1$ 
+			WebXMLRecord webxmlRecord = (WebXMLRecord) fWebXMLReferences.get(localWebXML.toString());
+			if(webxmlRecord != null)
+				records.addAll(webxmlRecord.getTLDRecords());
+
 			records.addAll(getCatalogRecords());
 		}
 		finally {
@@ -1582,21 +1587,36 @@ class ProjectDescription {
 
 			LOCK.acquire();
 
+			String localRoot = getLocalRoot(basePath);
 			/**
 			 * Workaround for problem in URIHelper; uris starting with '/' are
 			 * returned as-is.
 			 */
 			if (path == null) {
 				if (reference.startsWith("/")) { //$NON-NLS-1$
-					path = getLocalRoot(basePath) + reference;
+					path = localRoot + reference;
 				}
 				else {
-					path = URIHelper.normalize(reference, basePath, getLocalRoot(basePath));
+					path = URIHelper.normalize(reference, basePath, localRoot);
 				}
 			}
 
 			// order dictated by JSP spec 2.0 section 7.2.3
-			record = (ITaglibRecord) fJARReferences.get(path);
+			IPath localWebXML = new Path(localRoot).append("/WEB-INF/web.xml"); //$NON-NLS-1$ 
+			WebXMLRecord webxmlRecord = (WebXMLRecord) fWebXMLReferences.get(localWebXML.toString());
+			if (webxmlRecord != null) {
+				for (int i = 0; i < webxmlRecord.tldRecords.size(); i++) {
+					ITaglibRecord record2 = (ITaglibRecord) webxmlRecord.tldRecords.get(i);
+					ITaglibDescriptor descriptor = record2.getDescriptor();
+					if (reference.equals(descriptor.getURI())) {
+						record = record2;
+					}
+				}
+			}
+
+			if (record == null) {
+				record = (ITaglibRecord) fJARReferences.get(path);
+			}
 
 			// only if 1.1 TLD was found
 			if (jspVersion < 1.1 || (record instanceof JarRecord && !((JarRecord) record).has11TLD)) {
@@ -1660,7 +1680,7 @@ class ProjectDescription {
 			 * If no records were found and no local-root applies, check ALL
 			 * of the web.xml files as a fallback
 			 */
-			if (record == null && fProject.getFullPath().toString().equals(getLocalRoot(basePath))) {
+			if (record == null && fProject.getFullPath().toString().equals(localRoot)) {
 				WebXMLRecord[] webxmls = (WebXMLRecord[]) fWebXMLReferences.values().toArray(new WebXMLRecord[0]);
 				for (int i = 0; i < webxmls.length; i++) {
 					if (record != null)
