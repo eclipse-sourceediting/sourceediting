@@ -56,7 +56,7 @@ public class TestXPathXMLCompletionProposal extends
 		try {
 			loadFileForTesting(xslFilePath);
 
-			int offset = 451;
+			int offset = 475;
 
 			ICompletionProposal[] proposals = getProposals(offset);
 			assertNotNull("Did not find proposals.", proposals);

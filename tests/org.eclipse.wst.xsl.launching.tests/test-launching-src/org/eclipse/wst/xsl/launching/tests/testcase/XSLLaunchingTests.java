@@ -120,22 +120,22 @@ public class XSLLaunchingTests extends TestCase {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-	public void testTransformComments() throws CoreException, InterruptedException,
-			ParserConfigurationException, SAXException, IOException {
-		IPath folder = _testProject.getFullPath();
-		_env.addFileFromResource(folder, "input.xml", "testCommentInput.xml");
-		_env.addFileFromResource(folder, "transform.xsl", "testComments.xsl");
-		_env.addFileFromResource(folder, "expected.xml", "testCommentsExpected.xml");
-
-		launchConfiguration(folder, launchXml);
-		IFile output = _testProject.getFile("output.xml");
-		IFile expected = _testProject.getFile("expected.xml");
-		
-		String result = readFile(output.getContents());
-		String wanted = readFile(expected.getContents());
-		
-		assertEquals("Unexpected results:", wanted, result);
-	}
+//	public void testTransformComments() throws CoreException, InterruptedException,
+//			ParserConfigurationException, SAXException, IOException {
+//		IPath folder = _testProject.getFullPath();
+//		_env.addFileFromResource(folder, "input.xml", "testCommentInput.xml");
+//		_env.addFileFromResource(folder, "transform.xsl", "testComments.xsl");
+//		_env.addFileFromResource(folder, "expected.xml", "testCommentsExpected.xml");
+//
+//		launchConfiguration(folder, launchXml);
+//		IFile output = _testProject.getFile("output.xml");
+//		IFile expected = _testProject.getFile("expected.xml");
+//		
+//		String result = readFile(output.getContents());
+//		String wanted = readFile(expected.getContents());
+//		
+//		assertEquals("Unexpected results:", wanted, result);
+//	}
 
 	private String readFile(InputStream input) {
 		String str;
