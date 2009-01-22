@@ -491,7 +491,7 @@ public class BaseFieldEditPart extends BaseTypeConnectingEditPart implements INa
   public void addFeedback()
   {
     // Put back connection figure so it won't get overlayed by other non highlighted connections
-    if (connectionFigure != null)
+    if (connectionFigure != null && !isSelected)
     {
       connectionFeedbackFigure = new TypeReferenceConnection();
       connectionFeedbackFigure.setSourceAnchor(connectionFigure.getSourceAnchor());
