@@ -22,6 +22,7 @@ import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
@@ -56,6 +57,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.typeviz.design.figures.FieldFigure;
 import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
+import org.eclipse.wst.xsd.ui.internal.design.editpolicies.GraphNodeDragTracker;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.SelectionHandlesEditPolicyImpl;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.TopLevelComponentLabelCellEditorLocator;
 import org.eclipse.wst.xsd.ui.internal.design.editpolicies.TopLevelNameDirectEditManager;
@@ -452,5 +454,10 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
     super.setFocus(b);
     hasFocus = b;
     getFigure().repaint();
+  }
+  
+  public DragTracker getDragTracker(Request request)
+  {
+    return new GraphNodeDragTracker(this);
   }
 }

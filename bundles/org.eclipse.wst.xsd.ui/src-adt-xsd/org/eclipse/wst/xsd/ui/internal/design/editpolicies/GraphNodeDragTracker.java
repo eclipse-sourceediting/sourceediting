@@ -16,7 +16,7 @@ import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.tools.DragEditPartsTracker;
-import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseFieldEditPart;
+import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.BaseEditPart;
 
                                    
 public class GraphNodeDragTracker extends DragEditPartsTracker 
@@ -60,8 +60,7 @@ public class GraphNodeDragTracker extends DragEditPartsTracker
       if (size > 0)
       {
         Object lastSelected = currentSelected.get(size - 1);
-        // we are concerned about fields
-        if (lastSelected instanceof BaseFieldEditPart)
+        if (lastSelected instanceof BaseEditPart)
         {
           // Here, we determine the upper and lower limit of the indices
           int lowerIndex = -1, upperIndex = -1;
