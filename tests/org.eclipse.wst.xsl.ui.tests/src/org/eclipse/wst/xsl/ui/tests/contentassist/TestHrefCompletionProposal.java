@@ -39,9 +39,6 @@ public class TestHrefCompletionProposal extends AbstractCompletionProposalTest {
 			ICompletionProposal[] proposals = getProposals(offset);
 			assertTrue("Incorrect number of proposals", proposals.length > 3);
 			doCommonTests(proposals);
-		} catch (Exception ex) {
-			model.releaseFromEdit();
-			throw ex;
 		} finally {
 			model.releaseFromEdit();
 		}

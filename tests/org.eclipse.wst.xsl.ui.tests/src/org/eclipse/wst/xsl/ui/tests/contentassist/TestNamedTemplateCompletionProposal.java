@@ -35,9 +35,6 @@ public class TestNamedTemplateCompletionProposal extends
 		try {
 			ICompletionProposal[] proposals = getProposals(offset);
 			assertEquals("Missing Proposals", 3, proposals.length);
-		} catch (Exception ex) {
-			model.releaseFromEdit();
-			throw ex;
 		} finally {
 			model.releaseFromEdit();
 		}

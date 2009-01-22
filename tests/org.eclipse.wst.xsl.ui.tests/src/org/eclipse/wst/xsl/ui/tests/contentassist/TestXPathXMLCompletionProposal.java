@@ -24,7 +24,6 @@ public class TestXPathXMLCompletionProposal extends
 		AbstractCompletionProposalTest {
 
 	public TestXPathXMLCompletionProposal() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public void testProposalsIncludeXHTML() throws Exception {
@@ -43,9 +42,6 @@ public class TestXPathXMLCompletionProposal extends
 					return;
 				}
 			}
-		} catch (Exception ex) {
-			model.releaseFromEdit();
-			throw ex;
 		} finally {
 			model.releaseFromEdit();
 		}
@@ -53,4 +49,54 @@ public class TestXPathXMLCompletionProposal extends
 		sourceViewer = null;
 		fail("Did not find XHTML proposals.");
 	}
+	
+	public void testProposalsIncludeXHTMLAfterColon() throws Exception {
+		fileName = "TestXPathXMLProposals.xsl";
+		String xslFilePath = projectName + File.separator + fileName;
+		try {
+			loadFileForTesting(xslFilePath);
+
+			int offset = 451;
+
+			ICompletionProposal[] proposals = getProposals(offset);
+			assertNotNull("Did not find proposals.", proposals);
+
+			for (int i = 0; i < proposals.length; i++) {
+				if (proposals[i].getDisplayString().contains("xhtml:")) {
+					return;
+				}
+			}
+		} finally {
+			model.releaseFromEdit();
+		}
+
+		sourceViewer = null;
+		fail("Did not find XHTML proposals.");
+	}
+	
+	public void testProposalsIncludeXHTMLAfterForwardSlash() throws Exception {
+		fileName = "TestXPathXMLProposals.xsl";
+		String xslFilePath = projectName + File.separator + fileName;
+		try {
+			loadFileForTesting(xslFilePath);
+
+			int offset = 373;
+
+			ICompletionProposal[] proposals = getProposals(offset);
+			assertNotNull("Did not find proposals.", proposals);
+
+			for (int i = 0; i < proposals.length; i++) {
+				if (proposals[i].getDisplayString().contains("xhtml:")) {
+					return;
+				}
+			}
+		} finally {
+			model.releaseFromEdit();
+		}
+
+		sourceViewer = null;
+		fail("Did not find XHTML proposals.");
+	}
+	
+	
 }

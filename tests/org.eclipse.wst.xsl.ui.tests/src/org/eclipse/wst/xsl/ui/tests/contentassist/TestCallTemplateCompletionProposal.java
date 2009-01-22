@@ -27,9 +27,6 @@ public class TestCallTemplateCompletionProposal extends
 		try {
 			ICompletionProposal[] proposals = getProposals(offset);
 			assertNotNull("Did not find proposals.", proposals);
-		} catch (Exception ex) {
-			model.releaseFromEdit();
-			throw ex;
 		} finally {
 			model.releaseFromEdit();
 		}
@@ -47,9 +44,6 @@ public class TestCallTemplateCompletionProposal extends
 			assertNotNull("Did not find proposals.", proposals);
 			assertEquals("Wrong proposal found.", "long_date", proposals[0]
 					.getDisplayString());
-		} catch (Exception ex) {
-			model.releaseFromEdit();
-			throw ex;
 		} finally {
 			model.releaseFromEdit();
 		}

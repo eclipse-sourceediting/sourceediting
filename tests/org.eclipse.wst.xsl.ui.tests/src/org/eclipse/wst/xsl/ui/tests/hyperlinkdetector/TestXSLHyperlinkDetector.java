@@ -174,10 +174,12 @@ public class TestXSLHyperlinkDetector extends AbstractXSLUITest {
 				.getDocumentPartitioner());
 	}
 
+	private IStructuredModel model = null;
+
 	protected void loadXSLFile() throws ResourceAlreadyExists, ResourceInUse,
 			IOException, CoreException {
 		IModelManager modelManager = StructuredModelManager.getModelManager();
-		IStructuredModel model = modelManager.getNewModelForEdit(file, true);
+		model = modelManager.getNewModelForEdit(file, true);
 		document = model.getStructuredDocument();
 		IDocumentPartitioner partitioner = defaultPartitioner.newInstance();
 		partitioner.connect(document);
@@ -186,48 +188,64 @@ public class TestXSLHyperlinkDetector extends AbstractXSLUITest {
 
 	public void testDetectHyperlinksDocument() throws Exception {
 		setUpTest("DraftReleaseCRs.xsl");
-		XSLHyperlinkDetector linkDetector = new XSLHyperlinkDetector();
-		int offset = 1200;
-		IRegion region = new Region(offset, 0);
 
-		boolean canShowMultipleLinks = true;
-		IHyperlink[] links = linkDetector.detectHyperlinks(document, region,
-				canShowMultipleLinks);
-		assertNotNull("No links returned", links);
-		assertEquals("Unexpected number of links", 1, links.length);
+		try {
+			XSLHyperlinkDetector linkDetector = new XSLHyperlinkDetector();
+			int offset = 1200;
+			IRegion region = new Region(offset, 0);
+
+			boolean canShowMultipleLinks = true;
+			IHyperlink[] links = linkDetector.detectHyperlinks(document,
+					region, canShowMultipleLinks);
+			assertNotNull("No links returned", links);
+			assertEquals("Unexpected number of links", 1, links.length);
+		} finally {
+			model.releaseFromEdit();
+		}
 
 		sourceViewer = null;
 	}
 
 	public void testDetectHyperlinksViewer() throws Exception {
 		setUpTest("DraftReleaseCRs.xsl");
-		XSLHyperlinkDetector linkDetector = new XSLHyperlinkDetector();
-		int offset = 1200;
-		IRegion region = new Region(offset, 0);
 
-		boolean canShowMultipleLinks = true;
-		IHyperlink[] links = linkDetector.detectHyperlinks(sourceViewer,
-				region, canShowMultipleLinks);
-		assertNotNull("No links returned", links);
-		assertEquals("Unexpected number of links", 1, links.length);
+		try {
+			XSLHyperlinkDetector linkDetector = new XSLHyperlinkDetector();
+			int offset = 1200;
+			IRegion region = new Region(offset, 0);
+
+			boolean canShowMultipleLinks = true;
+			IHyperlink[] links = linkDetector.detectHyperlinks(sourceViewer,
+					region, canShowMultipleLinks);
+			assertNotNull("No links returned", links);
+			assertEquals("Unexpected number of links", 1, links.length);
+		} finally {
+			model.releaseFromEdit();
+		}
 
 		sourceViewer = null;
 	}
-	
+
 	public void testWithParmVariableLink() throws Exception {
 		setUpTest("DraftReleaseCRs.xsl");
-		XSLHyperlinkDetector linkDetector = new XSLHyperlinkDetector();
-		int offset = 2741;
-		IRegion region = new Region(offset, 0);
 
-		boolean canShowMultipleLinks = true;
-		IHyperlink[] links = linkDetector.detectHyperlinks(sourceViewer,
-				region, canShowMultipleLinks);
-		assertNotNull("No links returned", links);
-		assertEquals("Unexpected number of links", 1, links.length);
-		IHyperlink link = links[0];
-		assertTrue("Wrong file returned.", link.getHyperlinkText().contains("utils.xsl"));
+		try {
+			XSLHyperlinkDetector linkDetector = new XSLHyperlinkDetector();
+			int offset = 2741;
+			IRegion region = new Region(offset, 0);
+
+			boolean canShowMultipleLinks = true;
+			IHyperlink[] links = linkDetector.detectHyperlinks(sourceViewer,
+					region, canShowMultipleLinks);
+			assertNotNull("No links returned", links);
+			assertEquals("Unexpected number of links", 1, links.length);
+			IHyperlink link = links[0];
+			assertTrue("Wrong file returned.", link.getHyperlinkText()
+					.contains("utils.xsl"));
+		} finally {
+			model.releaseFromEdit();
+		}
 		sourceViewer = null;
 	}
-	
+
 }

@@ -32,10 +32,14 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 
+		try {
 		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer,
 				631);
 		assertEquals("Wrong node name returned:", "xsl:stylesheet", node
 				.getNodeName());
+		} finally {
+			model.releaseFromEdit();
+		}
 
 	}
 
@@ -44,11 +48,16 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
+		
+		try {
 
 		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer,
 				712);
 		assertEquals("Wrong node name returned:", "xsl:template", node
 				.getNodeName());
+		} finally {
+			model.releaseFromEdit();
+		}
 	}
 
 	public void testGetNodeAtLine17() throws Exception {
@@ -57,10 +66,14 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
 
+		try {
 		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer,
 				748);
 		assertEquals("Wrong node name returned:", "xsl:param", node
 				.getNodeName());
+		} finally {
+			model.releaseFromEdit();
+		}
 	}
 
 	public void testAttributeNotValueAvailable() throws Exception {
@@ -77,9 +90,6 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 			assertFalse("Found \"number(substring($date, 6, 2))\".", proposal
 					.getDisplayString().equals(
 							"\"number(substring($date, 6, 2))\""));
-		} catch (Exception ex) {
-			model.releaseFromEdit();
-			throw ex;
 		} finally {
 			model.releaseFromEdit();
 		}
@@ -102,9 +112,6 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 			ICompletionProposal proposal = proposals[3];
 			assertEquals("Wrong select item returned: ", "..", proposal
 					.getDisplayString());
-		} catch (Exception ex) {
-			model.releaseFromEdit();
-			throw ex;
 		} finally {
 			model.releaseFromEdit();
 		}
@@ -131,9 +138,6 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 					proposals[0].getDisplayString());
 			assertEquals("Wrong Number of items returned: ", 6,
 					proposals.length);
-		} catch (Exception ex) {
-			model.releaseFromEdit();
-			throw ex;
 		} finally {
 			model.releaseFromEdit();
 		}
@@ -151,9 +155,8 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 			ICompletionProposal proposal = proposals[0];
 			assertTrue("Wrong attribute proposal returned:", proposal
 					.getDisplayString().contains("disable-output-escaping"));
-		} catch (Exception ex) {
+		} finally {
 			model.releaseFromEdit();
-			throw ex;
 		}
 	}
 
@@ -170,12 +173,28 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 			ICompletionProposal proposal = proposals[1];
 			assertTrue("Can't find XSL element proposals.", proposal
 					.getDisplayString().equals("xsl:otherwise"));
-		} catch (Exception ex) {
-			model.releaseFromEdit();
-			throw ex;
 		} finally {
 			model.releaseFromEdit();
 		}
+	}
+	
+	/*
+	 * Bug 259575
+	 */
+	public void testXPathProposalAvaialbleAfterComma() throws Exception {
+		projectName = "xsltestfiles";
+		fileName = "utils.xsl";
+		String xslFilePath = projectName + File.separator + fileName;
+		loadFileForTesting(xslFilePath);
+
+		try {
+			ICompletionProposal[] proposals = getProposals(861);
+			assertTrue(proposals.length > 0);
+
+		} finally {
+			model.releaseFromEdit();
+		}
+		
 	}
 
 }

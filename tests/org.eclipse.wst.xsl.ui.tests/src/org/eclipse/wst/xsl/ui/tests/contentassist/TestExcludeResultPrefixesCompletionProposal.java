@@ -29,7 +29,7 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 		AbstractCompletionProposalTest {
 
 	public TestExcludeResultPrefixesCompletionProposal() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public void testAllDefaultValueNoProposals() throws Exception {
@@ -48,9 +48,6 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 			ICompletionProposal[] proposals = getProposals(offset);
 			assertEquals("Found proposals when #all already in result value.",
 					0, proposals.length);
-		} catch (Exception ex) {
-			model.releaseFromEdit();
-			throw ex;
 		} finally {
 			model.releaseFromEdit();
 		}
@@ -76,9 +73,6 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 			assertEquals("Proposal length not 2.", 2, proposals.length);
 			assertEquals("Proposal did not find xhtml as proposal value.",
 					"xhtml", proposals[1].getDisplayString());
-		} catch (Exception ex) {
-			model.releaseFromEdit();
-			throw ex;
 		} finally {
 			model.releaseFromEdit();
 		}
@@ -105,9 +99,6 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 			assertEquals("Proposal length not 2.", 2, proposals.length);
 			assertEquals("Proposal did not find xhtml as proposal value.",
 					"#all", proposals[0].getDisplayString());
-		} catch (Exception ex) {
-			model.releaseFromEdit();
-			throw ex;
 		} finally {
 			model.releaseFromEdit();
 		}
@@ -137,9 +128,6 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 					fail("XHTML Proposal found, when it should not have been!");
 				}
 			}
-		} catch (Exception ex) {
-			model.releaseFromEdit();
-			throw ex;
 		} finally {
 			model.releaseFromEdit();
 		}
@@ -164,9 +152,6 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 					proposals.length > 1);
 			assertEquals("Did not find test in proposal list", "test",
 					proposals[0].getDisplayString());
-		} catch (Exception ex) {
-			model.releaseFromEdit();
-			throw ex;
 		} finally {
 			model.releaseFromEdit();
 		}

@@ -29,7 +29,6 @@ public class TestTemplateModeCompletionProposal extends
 		AbstractCompletionProposalTest {
 
 	public TestTemplateModeCompletionProposal() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public void testModeProposals() throws Exception {
@@ -51,9 +50,6 @@ public class TestTemplateModeCompletionProposal extends
 			assertProposalExists("mode1", proposals);
 			assertProposalExists("mode2", proposals);
 			assertProposalExists("mode3", proposals);
-		} catch (Exception ex) {
-			model.releaseFromEdit();
-			throw ex;
 		} finally {
 			model.releaseFromEdit();
 		}

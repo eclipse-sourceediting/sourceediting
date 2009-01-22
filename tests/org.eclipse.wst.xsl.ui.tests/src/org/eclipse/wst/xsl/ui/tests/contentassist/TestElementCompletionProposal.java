@@ -47,9 +47,6 @@ public class TestElementCompletionProposal extends
 
 			ICompletionProposal[] proposals = getProposals(offset);
 			assertNotNull("Did not find proposals.", proposals);
-		} catch (Exception ex) {
-			model.releaseFromEdit();
-			throw ex;
 		} finally {
 			model.releaseFromEdit();
 		}
@@ -83,9 +80,6 @@ public class TestElementCompletionProposal extends
 
 			assertEquals("Did not find expected proposal.",
 					"xsl:apply-templates", proposalName);
-		} catch (Exception ex) {
-			model.releaseFromEdit();
-			throw ex;
 		} finally {
 			model.releaseFromEdit();
 		}
