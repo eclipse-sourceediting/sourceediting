@@ -26,19 +26,19 @@ public class TestXPathXMLCompletionProposal extends
 	public TestXPathXMLCompletionProposal() {
 	}
 
-	public void testProposalsIncludeXHTML() throws Exception {
+	public void testProposalsIncludeXSD() throws Exception {
 		fileName = "TestXPathXMLProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		try {
 			loadFileForTesting(xslFilePath);
 
-			int offset = 251;
+			int offset = 253;
 
 			ICompletionProposal[] proposals = getProposals(offset);
 			assertNotNull("Did not find proposals.", proposals);
 
 			for (int i = 0; i < proposals.length; i++) {
-				if (proposals[i].getDisplayString().contains("xhtml:")) {
+				if (proposals[i].getDisplayString().contains("xsd:")) {
 					return;
 				}
 			}
@@ -47,22 +47,22 @@ public class TestXPathXMLCompletionProposal extends
 		}
 
 		sourceViewer = null;
-		fail("Did not find XHTML proposals.");
+		fail("Did not find XSD proposals.");
 	}
 	
-	public void testProposalsIncludeXHTMLAfterColon() throws Exception {
+	public void testProposalsIncludeAfterColon() throws Exception {
 		fileName = "TestXPathXMLProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		try {
 			loadFileForTesting(xslFilePath);
 
-			int offset = 475;
+			int offset = 386;
 
 			ICompletionProposal[] proposals = getProposals(offset);
 			assertNotNull("Did not find proposals.", proposals);
 
 			for (int i = 0; i < proposals.length; i++) {
-				if (proposals[i].getDisplayString().contains("xhtml:")) {
+				if (proposals[i].getDisplayString().contains("xsd:")) {
 					return;
 				}
 			}
@@ -71,22 +71,22 @@ public class TestXPathXMLCompletionProposal extends
 		}
 
 		sourceViewer = null;
-		fail("Did not find XHTML proposals.");
+		fail("Did not find XSD proposals.");
 	}
 	
-	public void testProposalsIncludeXHTMLAfterForwardSlash() throws Exception {
+	public void testProposalsIncludeXSDAfterForwardSlash() throws Exception {
 		fileName = "TestXPathXMLProposals.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		try {
 			loadFileForTesting(xslFilePath);
 
-			int offset = 373;
+			int offset = 318;
 
 			ICompletionProposal[] proposals = getProposals(offset);
 			assertNotNull("Did not find proposals.", proposals);
 
 			for (int i = 0; i < proposals.length; i++) {
-				if (proposals[i].getDisplayString().contains("xhtml:")) {
+				if (proposals[i].getDisplayString().contains("xsd:")) {
 					return;
 				}
 			}
@@ -95,7 +95,7 @@ public class TestXPathXMLCompletionProposal extends
 		}
 
 		sourceViewer = null;
-		fail("Did not find XHTML proposals.");
+		fail("Did not find XSD proposals.");
 	}
 	
 	

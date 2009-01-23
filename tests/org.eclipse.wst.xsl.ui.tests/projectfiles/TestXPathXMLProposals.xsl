@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     exclude-result-prefixes="#all"
-    xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<xsl:template match="/">
 		<xsl:for-each select="">
-			
+		
 		</xsl:for-each>
-		<xsl:for-each select="xhtml:tfoot/">
-			
+		<xsl:for-each select="/xsd:complexType/">
+		
 		</xsl:for-each>
-		<xsl:for-each select="xhtml:tfoot/">
-			<xhtml:tfoot>
-				
-			</xhtml:tfoot>
-		</xsl:for-each>
-		<xsl:for-each select="xhtml:html/xhtml:">
+		<xsl:for-each select="xsd:complexType/xsd:">
 		
 		</xsl:for-each>
 	</xsl:template>
