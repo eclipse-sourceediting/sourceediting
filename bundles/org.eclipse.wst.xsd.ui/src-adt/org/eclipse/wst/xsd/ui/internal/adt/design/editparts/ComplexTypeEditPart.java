@@ -16,9 +16,7 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.ManhattanConnectionRouter;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.FocusTypeColumn;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IComplexType;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
@@ -98,14 +96,12 @@ public class ComplexTypeEditPart extends StructureEditPart
       if (italicFont == null)
       {
         Font font = label.getFont();
-        FontData [] fd = font.getFontData();
-        if (fd.length > 0)
-        {
-          fd[0].setStyle(fd[0].getStyle() | SWT.ITALIC);
-          italicFont = new Font(font.getDevice(), fd);
-        }
+        italicFont = getItalicFont(font);
       }
-      label.setFont(italicFont);
+      if (italicFont != null)
+      {
+        label.setFont(italicFont);
+      }
     }
     else
     {

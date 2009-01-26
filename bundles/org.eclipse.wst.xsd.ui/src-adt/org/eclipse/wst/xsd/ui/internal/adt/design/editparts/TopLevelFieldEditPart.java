@@ -16,9 +16,7 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.ADTDirectEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editpolicies.ADTSelectionFeedbackEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IField;
@@ -75,14 +73,12 @@ public class TopLevelFieldEditPart extends BoxEditPart implements INamedEditPart
       if (italicFont == null)
       {
         Font font = label.getFont();
-        FontData [] fd = font.getFontData();
-        if (fd.length > 0)
-        {
-          fd[0].setStyle(fd[0].getStyle() | SWT.ITALIC);
-          italicFont = new Font(font.getDevice(), fd);
-        }
+        italicFont = getItalicFont(font);
       }
-      label.setFont(italicFont);
+      if (italicFont != null)
+      {
+        label.setFont(italicFont);
+      }
     }
     else
     {

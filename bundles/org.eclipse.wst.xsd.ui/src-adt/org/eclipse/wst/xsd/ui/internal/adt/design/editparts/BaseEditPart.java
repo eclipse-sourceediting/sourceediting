@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,9 @@ import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.gef.editparts.ZoomListener;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -267,5 +270,24 @@ public abstract class BaseEditPart extends AbstractGraphicalEditPart implements 
       }
     }
     return true;
+  }
+  
+  /**
+   * Try to get the italic font for the current font
+   * @param font
+   * @return
+   */
+  protected Font getItalicFont(Font font)
+  {
+    if (font != null && !font.isDisposed())
+    {
+      FontData[] fd = font.getFontData();
+      if (fd.length > 0)
+      {
+        fd[0].setStyle(fd[0].getStyle() | SWT.ITALIC);
+        return new Font(font.getDevice(), fd);
+      }
+    }
+    return font;
   }
 }

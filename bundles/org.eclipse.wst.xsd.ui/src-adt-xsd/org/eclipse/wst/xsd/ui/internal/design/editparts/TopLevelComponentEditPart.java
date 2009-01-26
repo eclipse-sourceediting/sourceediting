@@ -37,7 +37,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
@@ -154,14 +153,12 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
         if (italicFont == null)
         {
           Font font = label.getFont();
-          FontData [] fd = font.getFontData();
-          if (fd.length > 0)
-          {
-            fd[0].setStyle(fd[0].getStyle() | SWT.ITALIC);
-            italicFont = new Font(font.getDevice(), fd);
-          }
+          italicFont = getItalicFont(font);
         }
-        label.setFont(italicFont);
+        if (italicFont != null)
+        {
+          label.setFont(italicFont);
+        }
       }
       else
       {
