@@ -23,11 +23,6 @@
       <discovery label="Web Tools Platform (WTP) Updates" url="http://download.eclipse.org/webtools/updates"/>
    </url>
 
-   <requires>
-      <import feature="org.eclipse.wst.xml_ui.feature" version="3.0.0"/>
-      <import feature="org.eclipse.jdt" version="3.4.0"/>
-   </requires>
-
    <plugin
          id="org.eclipse.wst.xsl.core"
          download-size="0"
