@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,7 +55,7 @@ public abstract class DTDEntityContentImpl extends EObjectImpl implements DTDEnt
 	 * @generated This field/method will be replaced during code generation
 	 */
 	public DTDEntity getDTDEntity() {
-		if (eContainerFeatureID != DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY)
+		if (eContainerFeatureID() != DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY)
 			return null;
 		return (DTDEntity) eContainer;
 	}
@@ -64,7 +64,7 @@ public abstract class DTDEntityContentImpl extends EObjectImpl implements DTDEnt
 	 * @generated This field/method will be replaced during code generation.
 	 */
 	public void setDTDEntity(DTDEntity newDTDEntity) {
-		if (newDTDEntity != eContainer || (eContainerFeatureID != DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY && newDTDEntity != null)) {
+		if (newDTDEntity != eContainer || (eContainerFeatureID() != DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY && newDTDEntity != null)) {
 			if (EcoreUtil.isAncestor(this, newDTDEntity))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + "."); //$NON-NLS-1$ //$NON-NLS-2$
 			NotificationChain msgs = null;
@@ -124,15 +124,15 @@ public abstract class DTDEntityContentImpl extends EObjectImpl implements DTDEnt
 	 * @generated
 	 */
 	public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
-		if (eContainerFeatureID >= 0) {
-			switch (eContainerFeatureID) {
+		if (eContainerFeatureID() >= 0) {
+			switch (eContainerFeatureID()) {
 				case DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY :
 					return eContainer.eInverseRemove(this, DTDPackage.DTD_ENTITY__CONTENT, DTDEntity.class, msgs);
 				default :
 					return eDynamicBasicRemoveFromContainer(msgs);
 			}
 		}
-		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
+		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID(), null, msgs);
 	}
 
 	/**

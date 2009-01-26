@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -187,7 +187,7 @@ public abstract class DTDElementContentImpl extends EObjectImpl implements DTDEl
 	 * @generated
 	 */
 	public DTDGroupContent getGroup() {
-		if (eContainerFeatureID != DTDPackage.DTD_ELEMENT_CONTENT__GROUP)
+		if (eContainerFeatureID() != DTDPackage.DTD_ELEMENT_CONTENT__GROUP)
 			return null;
 		return (DTDGroupContent) eContainer;
 	}
@@ -198,7 +198,7 @@ public abstract class DTDElementContentImpl extends EObjectImpl implements DTDEl
 	 * @generated
 	 */
 	public void setGroup(DTDGroupContent newGroup) {
-		if (newGroup != eContainer || (eContainerFeatureID != DTDPackage.DTD_ELEMENT_CONTENT__GROUP && newGroup != null)) {
+		if (newGroup != eContainer || (eContainerFeatureID() != DTDPackage.DTD_ELEMENT_CONTENT__GROUP && newGroup != null)) {
 			if (EcoreUtil.isAncestor(this, newGroup))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + "."); //$NON-NLS-1$ //$NON-NLS-2$
 			NotificationChain msgs = null;
@@ -220,7 +220,7 @@ public abstract class DTDElementContentImpl extends EObjectImpl implements DTDEl
 	 * @generated
 	 */
 	public DTDElement getElement() {
-		if (eContainerFeatureID != DTDPackage.DTD_ELEMENT_CONTENT__ELEMENT)
+		if (eContainerFeatureID() != DTDPackage.DTD_ELEMENT_CONTENT__ELEMENT)
 			return null;
 		return (DTDElement) eContainer;
 	}
@@ -231,7 +231,7 @@ public abstract class DTDElementContentImpl extends EObjectImpl implements DTDEl
 	 * @generated
 	 */
 	public void setElement(DTDElement newElement) {
-		if (newElement != eContainer || (eContainerFeatureID != DTDPackage.DTD_ELEMENT_CONTENT__ELEMENT && newElement != null)) {
+		if (newElement != eContainer || (eContainerFeatureID() != DTDPackage.DTD_ELEMENT_CONTENT__ELEMENT && newElement != null)) {
 			if (EcoreUtil.isAncestor(this, newElement))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + "."); //$NON-NLS-1$ //$NON-NLS-2$
 			NotificationChain msgs = null;
@@ -297,8 +297,8 @@ public abstract class DTDElementContentImpl extends EObjectImpl implements DTDEl
 	 * @generated
 	 */
 	public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
-		if (eContainerFeatureID >= 0) {
-			switch (eContainerFeatureID) {
+		if (eContainerFeatureID() >= 0) {
+			switch (eContainerFeatureID()) {
 				case DTDPackage.DTD_ELEMENT_CONTENT__GROUP :
 					return eContainer.eInverseRemove(this, DTDPackage.DTD_GROUP_CONTENT__CONTENT, DTDGroupContent.class, msgs);
 				case DTDPackage.DTD_ELEMENT_CONTENT__ELEMENT :
@@ -307,7 +307,7 @@ public abstract class DTDElementContentImpl extends EObjectImpl implements DTDEl
 					return eDynamicBasicRemoveFromContainer(msgs);
 			}
 		}
-		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
+		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID(), null, msgs);
 	}
 
 	/**

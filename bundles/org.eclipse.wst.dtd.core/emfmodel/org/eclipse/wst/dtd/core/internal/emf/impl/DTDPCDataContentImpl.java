@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -88,8 +88,8 @@ public class DTDPCDataContentImpl extends DTDElementContentImpl implements DTDPC
 	 * @generated
 	 */
 	public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
-		if (eContainerFeatureID >= 0) {
-			switch (eContainerFeatureID) {
+		if (eContainerFeatureID() >= 0) {
+			switch (eContainerFeatureID()) {
 				case DTDPackage.DTD_PC_DATA_CONTENT__GROUP :
 					return eContainer.eInverseRemove(this, DTDPackage.DTD_GROUP_CONTENT__CONTENT, DTDGroupContent.class, msgs);
 				case DTDPackage.DTD_PC_DATA_CONTENT__ELEMENT :
@@ -98,7 +98,7 @@ public class DTDPCDataContentImpl extends DTDElementContentImpl implements DTDPC
 					return eDynamicBasicRemoveFromContainer(msgs);
 			}
 		}
-		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
+		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID(), null, msgs);
 	}
 
 	/**

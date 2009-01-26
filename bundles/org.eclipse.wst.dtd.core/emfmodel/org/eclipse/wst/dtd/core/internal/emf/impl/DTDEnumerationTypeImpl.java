@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -121,7 +121,7 @@ public class DTDEnumerationTypeImpl extends EEnumImpl implements DTDEnumerationT
 	 * @generated This field/method will be replaced during code generation
 	 */
 	public DTDFile getDTDFile() {
-		if (eContainerFeatureID != DTDPackage.DTD_ENUMERATION_TYPE__DTD_FILE)
+		if (eContainerFeatureID() != DTDPackage.DTD_ENUMERATION_TYPE__DTD_FILE)
 			return null;
 		return (DTDFile) eContainer;
 	}
@@ -130,7 +130,7 @@ public class DTDEnumerationTypeImpl extends EEnumImpl implements DTDEnumerationT
 	 * @generated This field/method will be replaced during code generation.
 	 */
 	public void setDTDFile(DTDFile newDTDFile) {
-		if (newDTDFile != eContainer || (eContainerFeatureID != DTDPackage.DTD_ENUMERATION_TYPE__DTD_FILE && newDTDFile != null)) {
+		if (newDTDFile != eContainer || (eContainerFeatureID() != DTDPackage.DTD_ENUMERATION_TYPE__DTD_FILE && newDTDFile != null)) {
 			if (EcoreUtil.isAncestor(this, newDTDFile))
 				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + "."); //$NON-NLS-1$ //$NON-NLS-2$
 			NotificationChain msgs = null;
@@ -204,8 +204,8 @@ public class DTDEnumerationTypeImpl extends EEnumImpl implements DTDEnumerationT
 	 * @generated
 	 */
 	public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
-		if (eContainerFeatureID >= 0) {
-			switch (eContainerFeatureID) {
+		if (eContainerFeatureID() >= 0) {
+			switch (eContainerFeatureID()) {
 				case DTDPackage.DTD_ENUMERATION_TYPE__EPACKAGE :
 					return eContainer.eInverseRemove(this, EcorePackage.EPACKAGE__ECLASSIFIERS, EPackage.class, msgs);
 				case DTDPackage.DTD_ENUMERATION_TYPE__DTD_FILE :
@@ -214,7 +214,7 @@ public class DTDEnumerationTypeImpl extends EEnumImpl implements DTDEnumerationT
 					return eDynamicBasicRemoveFromContainer(msgs);
 			}
 		}
-		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID, null, msgs);
+		return eContainer.eInverseRemove(this, EOPPOSITE_FEATURE_BASE - eContainerFeatureID(), null, msgs);
 	}
 
 	/**

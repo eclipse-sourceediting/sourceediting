@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,7 @@
 package org.eclipse.wst.dtd.core.internal.emf.impl;
 
 import java.text.CharacterIterator;
-import com.ibm.icu.text.StringCharacterIterator;
+import java.text.StringCharacterIterator;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -153,7 +153,7 @@ public class DTDInternalEntityImpl extends DTDEntityContentImpl implements DTDIn
 	 * @generated
 	 */
 	public NotificationChain eBasicRemoveFromContainer(NotificationChain msgs) {
-		if (eContainerFeatureID >= 0) {
+		if (eContainerFeatureID() >= 0) {
 			switch (eContainerFeatureID) {
 				case DTDPackage.DTD_INTERNAL_ENTITY__DTD_ENTITY :
 					return eContainer.eInverseRemove(this, DTDPackage.DTD_ENTITY__CONTENT, DTDEntity.class, msgs);
