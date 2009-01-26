@@ -41,11 +41,6 @@
          id="org.eclipse.wst.ws_core.feature"
          version="0.0.0"/>
 
-   <requires>
-      <import feature="org.eclipse.platform" version="3.4.0"/>
-      <import feature="org.eclipse.emf.ecore" version="2.4.0"/>
-   </requires>
-
    <plugin
          id="org.eclipse.wst.css.core"
          download-size="0"
