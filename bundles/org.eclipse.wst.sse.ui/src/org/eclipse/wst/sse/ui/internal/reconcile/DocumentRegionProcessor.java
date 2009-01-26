@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -54,6 +54,8 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 	 */
 	private ValidatorStrategy fValidatorStrategy;
 
+	private IReconcilingStrategy fSemanticHighlightingStrategy;
+	
 	private final String SSE_UI_ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
 
 
@@ -76,6 +78,11 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 		IDocument document = getDocument();
 		if (spellingStrategy != null && document != null) {
 			getSpellcheckStrategy().reconcile(new Region(0, document.getLength()));
+		}
+		
+		IReconcilingStrategy semanticHighlightingStrategy = getSemanticHighlightingStrategy();
+		if (semanticHighlightingStrategy != null && document != null) {
+			semanticHighlightingStrategy.reconcile(new Region(0, document.getLength()));
 		}
 	}
 
@@ -161,6 +168,15 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 			fValidatorStrategy = validatorStrategy;
 		}
 		return fValidatorStrategy;
+	}
+	
+	public void setSemanticHighlightingStrategy(IReconcilingStrategy semanticHighlightingStrategy) {
+		fSemanticHighlightingStrategy = semanticHighlightingStrategy;
+		fSemanticHighlightingStrategy.setDocument(getDocument());
+	}
+	
+	protected IReconcilingStrategy getSemanticHighlightingStrategy() {
+		return fSemanticHighlightingStrategy;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -176,6 +176,7 @@ import org.eclipse.wst.sse.ui.internal.properties.ShowPropertiesAction;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ConfigurationPointCalculator;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.NullSourceEditingTextTools;
+import org.eclipse.wst.sse.ui.internal.provisional.style.SemanticHighlightingManager;
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
 import org.eclipse.wst.sse.ui.internal.text.DocumentRegionEdgeMatcher;
 import org.eclipse.wst.sse.ui.internal.util.Assert;
@@ -923,6 +924,8 @@ public class StructuredTextEditor extends TextEditor {
 
 	private ILabelProvider fStatusLineLabelProvider;
 
+	private SemanticHighlightingManager fSemanticManager;
+	
 	private boolean fSelectionChangedFromGoto = false;
 
 	/**
@@ -1318,6 +1321,8 @@ public class StructuredTextEditor extends TextEditor {
 		fInformationPresenter = new InformationPresenter(informationControlCreator);
 		fInformationPresenter.setSizeConstraints(60, 10, true, true);
 		fInformationPresenter.install(getSourceViewer());
+
+		installSemanticHighlighting();
 	}
 
 	protected PropertySheetConfiguration createPropertySheetConfiguration() {
@@ -1569,6 +1574,8 @@ public class StructuredTextEditor extends TextEditor {
 
 		if (fDropTarget != null)
 			fDropTarget.dispose();
+		
+		uninstallSemanticHighlighting();
 
 		setPreferenceStore(null);
 
@@ -3241,5 +3248,25 @@ public class StructuredTextEditor extends TextEditor {
 		 * actually caused Bug [219776] Wrong annotation display on macs. We forced the
 		 * Squiggles strategy, even when the native problem underline was specified for annotations */
 		return super.getSourceViewerDecorationSupport(viewer);
+	}
+	
+	/**
+	 * Installs semantic highlighting on the editor
+	 */
+	private void installSemanticHighlighting() {
+		if (fSemanticManager == null) {
+			fSemanticManager = new SemanticHighlightingManager();
+			fSemanticManager.install(this, (StructuredTextViewer) getSourceViewer(), getPreferenceStore(), getSourceViewerConfiguration(), getInternalModel().getContentTypeIdentifier());
+		}
+	}
+	
+	/**
+	 * Uninstalls semantic highlighting on the editor and performs cleanup
+	 */
+	private void uninstallSemanticHighlighting() {
+		if (fSemanticManager != null) {
+			fSemanticManager.uninstall();
+			fSemanticManager = null;
+		}
 	}
 }

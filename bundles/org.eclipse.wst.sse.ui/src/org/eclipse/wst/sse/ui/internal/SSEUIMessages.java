@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2009 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
@@ -274,6 +274,7 @@ public class SSEUIMessages extends NLS {
 
 	public static String EditStructuredTextEditorPreferencesAction_0;
 	public static String StructuredTextEditorPreferencePage_0;
+	public static String StructuredTextEditorPreferencePage_1;
 	public static String PreferenceManager_0;
 
 	public static String OccurrencesSearchQuery_0;
@@ -319,6 +320,7 @@ public class SSEUIMessages extends NLS {
 	public static String An_error_has_occurred_when_ERROR_;
 	public static String Problems_During_Save_As_UI_;
 	public static String Save_could_not_be_complete_UI_;
+	public static String SemanticHighlightingReconciler_0;
 	public static String ManageBreakpoints_error_removing_title1;
 	public static String ManageBreakpoints_error_removing_message1;
 	public static String ManageBreakpoints_error_retrieving_message;

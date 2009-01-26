@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2007 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -145,4 +145,12 @@ public class EditorPreferenceNames {
 	 * @see org.eclipse.jface.preference.PreferenceConverter
 	 */
 	public final static String CODEASSIST_PARAMETERS_FOREGROUND = "content_assist_parameters_foreground"; //$NON-NLS-1$
+	
+	/**
+	 * A named preference that controls whether semantic highlighting is turned on or off
+	 * <p>
+	 * Value is of type <code>Boolean</code>.
+	 * </p>
+	 */
+	public final static String SEMANTIC_HIGHLIGHTING = "semanticHighlighting"; //$NON-NLS-1$
 }

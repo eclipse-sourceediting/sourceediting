@@ -15,6 +15,10 @@
 		id="editorConfiguration"
 		name="%Extended_Editor_Configuration_Extension.name"
 		schema="schema/editorconfiguration.exsd" ></extension-point>
+	<extension-point
+		id="semanticHighlighting"
+		name="%Semantic_Highlighting_Extension.name"
+		schema="schema/semanticHighlighting.exsd" ></extension-point>
 
 
 	<!-- Make sure default preference values are set at runtime -->

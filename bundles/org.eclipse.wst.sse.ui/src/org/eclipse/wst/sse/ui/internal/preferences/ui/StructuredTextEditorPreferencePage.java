@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -158,6 +158,9 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 
 		label = SSEUIMessages.StructuredTextEditorPreferencePage_3;
 		addCheckBox(appearanceComposite, label, IStructuredTextFoldingProvider.FOLDING_ENABLED, 0);
+		
+		label = SSEUIMessages.StructuredTextEditorPreferencePage_1;
+		addCheckBox(appearanceComposite, label, EditorPreferenceNames.SEMANTIC_HIGHLIGHTING, 0);
 
 		Label l = new Label(appearanceComposite, SWT.LEFT);
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -294,6 +297,8 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, IStructuredTextFoldingProvider.FOLDING_ENABLED));
 		
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, EditorPreferenceNames.SEMANTIC_HIGHLIGHTING));
+
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND));
