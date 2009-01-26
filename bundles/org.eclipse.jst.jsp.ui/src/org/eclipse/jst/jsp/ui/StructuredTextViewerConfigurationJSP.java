@@ -34,7 +34,6 @@ import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.jst.jsp.ui.internal.autoedit.AutoEditStrategyForTabs;
 import org.eclipse.jst.jsp.ui.internal.autoedit.StructuredAutoEditStrategyJSP;
-import org.eclipse.jst.jsp.ui.internal.autoedit.StructuredAutoEditStrategyJSPJava;
 import org.eclipse.jst.jsp.ui.internal.contentassist.JSPContentAssistProcessor;
 import org.eclipse.jst.jsp.ui.internal.contentassist.JSPELContentAssistProcessor;
 import org.eclipse.jst.jsp.ui.internal.contentassist.JSPJavaContentAssistProcessor;
@@ -56,7 +55,6 @@ import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdFo
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 
 /**
@@ -117,9 +115,6 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			// jsp java autoedit strategies
 			List allStrategies = new ArrayList(0);
 
-			// add the scritplet autoedit strategy first
-			allStrategies.add(new StructuredAutoEditStrategyJSPJava());
-			
 			IAutoEditStrategy[] javaStrategies = getJavaSourceViewerConfiguration().getAutoEditStrategies(sourceViewer, IJavaPartitions.JAVA_PARTITIONING);
 			for (int i = 0; i < javaStrategies.length; i++) {
 				allStrategies.add(javaStrategies[i]);
@@ -347,18 +342,17 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 					if (element == null)
 						return null;
 
+					if (!(element instanceof Node)) {
+						return super.getText(element);
+					}
+
 					StringBuffer s = new StringBuffer();
 					Node node = (Node) element;
 					while (node != null) {
 						if (node.getNodeType() != Node.DOCUMENT_NODE) {
 							s.insert(0, super.getText(node));
 						}
-
-						if (node.getNodeType() == Node.ATTRIBUTE_NODE)
-							node = ((Attr) node).getOwnerElement();
-						else
-							node = node.getParentNode();
-					
+						node = node.getParentNode();
 						if (node != null && node.getNodeType() != Node.DOCUMENT_NODE) {
 							s.insert(0, IPath.SEPARATOR);
 						}

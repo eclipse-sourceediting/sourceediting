@@ -55,6 +55,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextStore;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.SequentialRewriteTextStore;
 import org.eclipse.jface.text.TypedRegion;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
@@ -1821,6 +1822,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * @return the document's line tracker
 	 */
 	private ILineTracker getTracker() {
+		Assert.isNotNull(fTracker);
 		return fTracker;
 	}
 
@@ -2571,7 +2573,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 *            the document's line tracker
 	 */
 	private void setLineTracker(ILineTracker tracker) {
-		Assert.isNotNull(tracker);
 		fTracker = tracker;
 	}
 
@@ -2633,10 +2634,9 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	}
 
 
-	/*
-	 * {@inheritDoc}
-	 */
 	public void startSequentialRewrite(boolean normalized) {
+		ITextStore store = new SequentialRewriteTextStore(getStore());
+		setTextStore(store);
 	}
 
 	/*
@@ -2649,10 +2649,13 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	}
 
 
-	/*
-	 * {@inheritDoc}
-	 */
 	public void stopSequentialRewrite() {
+		if (getStore() instanceof SequentialRewriteTextStore) {
+			SequentialRewriteTextStore srws = (SequentialRewriteTextStore) getStore();
+			ITextStore source = srws.getSourceStore();
+			setTextStore(source);
+			srws.dispose();
+		}
 	}
 
 	/*

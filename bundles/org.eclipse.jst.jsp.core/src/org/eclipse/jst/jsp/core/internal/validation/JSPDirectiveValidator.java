@@ -39,12 +39,10 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
-import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.util.FacetModuleCoreSupport;
-import org.eclipse.jst.jsp.core.taglib.IJarRecord;
 import org.eclipse.jst.jsp.core.taglib.ITLDRecord;
 import org.eclipse.jst.jsp.core.taglib.ITagDirRecord;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
@@ -57,7 +55,6 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.text.IRegionComparible;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
@@ -222,24 +219,12 @@ public class JSPDirectiveValidator extends JSPValidator {
 		fPrefixValueRegionToDocumentRegionMap.clear();
 		fTaglibPrefixesInUse.clear();
 
-		IRegionComparible comparer = null;
-		if (sDoc instanceof IRegionComparible)
-			comparer = (IRegionComparible) sDoc;
-		
 		// iterate all document regions
 		IStructuredDocumentRegion region = sDoc.getFirstStructuredDocumentRegion();
 		while (region != null && !reporter.isCancelled()) {
 			// only checking directives
 			if (region.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
 				processDirective(reporter, f, sDoc, region);
-			}
-			// requires tag name, attribute, equals, and value
-			else if (comparer != null && region.getNumberOfRegions() > 4) {
-				ITextRegion nameRegion = region.getRegions().get(1);
-				if (comparer.regionMatches(region.getStartOffset(nameRegion), nameRegion.getTextLength(), "jsp:include")) {
-					processIncludeDirective(reporter, f, sDoc, region);
-				}
-
 			}
 			region = region.getNext();
 		}
@@ -260,7 +245,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 		if (directiveName.equals("taglib")) { //$NON-NLS-1$
 			processTaglibDirective(reporter, file, sDoc, documentRegion);
 		}
-		else if (directiveName.equals("include")||directiveName.equals("jsp:include")) { //$NON-NLS-1$ //$NON-NLS-2$
+		else if (directiveName.equals("include")) { //$NON-NLS-1$
 			processIncludeDirective(reporter, file, sDoc, documentRegion);
 		}
 		else if (directiveName.equals("page")) { //$NON-NLS-1$
@@ -270,8 +255,6 @@ public class JSPDirectiveValidator extends JSPValidator {
 
 	private void processIncludeDirective(IReporter reporter, IFile file, IStructuredDocument sDoc, IStructuredDocumentRegion documentRegion) {
 		ITextRegion fileValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_FILE);
-		if (fileValueRegion == null)
-			fileValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_PAGE);
 		if (fileValueRegion != null) {
 			// file specified
 			String fileValue = documentRegion.getText(fileValueRegion);
@@ -387,14 +370,6 @@ public class JSPDirectiveValidator extends JSPValidator {
 								addDependsOn(tldfile);
 							}
 								break;
-							case (ITaglibRecord.JAR) : {
-								IJarRecord record = (IJarRecord) reference;
-								IFile[] foundFilesForLocation = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(record.getLocation());
-								for (int i = 0; i < foundFilesForLocation.length; i++) {
-									addDependsOn(foundFilesForLocation[i]);
-								}
-							}
-								break;
 							case (ITaglibRecord.TAGDIR) : {
 								ITagDirRecord record = (ITagDirRecord) reference;
 								IPath path = record.getPath();
@@ -419,28 +394,16 @@ public class JSPDirectiveValidator extends JSPValidator {
 					}
 					if (reference == null && fSeverityTaglibUnresolvableURI != ValidationMessage.IGNORE) {
 						// URI specified but does not resolve
-						String msgText = null;
-						// provide better messages for typical "http:*" URIs
-						if (uri.startsWith("http:") && DeploymentDescriptorPropertyCache.getInstance().getJSPVersion(file.getFullPath()) < 1.2) { //$NON-NLS-1$
-							if (FacetModuleCoreSupport.isDynamicWebProject(file.getProject())) {
-								msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_9, uri);
-							}
-							else {
-								msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_10, uri);
-							}
-						}
-						else {
-							msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_1, uri);
-						}
+						String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_1, uri);
 						LocalizedMessage message = new LocalizedMessage(fSeverityTaglibUnresolvableURI, msgText, file);
 						int start = documentRegion.getStartOffset(uriValueRegion);
 						int length = uriValueRegion.getTextLength();
 						int lineNo = sDoc.getLineOfOffset(start);
-						message.setLineNo(lineNo + 1);
+						message.setLineNo(lineNo);
 						message.setOffset(start);
 						message.setLength(length);
 
-						message.setAttribute("PROBLEM_ID", new Integer(611)); //$NON-NLS-1$
+						message.setAttribute("PROBLEM_ID", new Integer(611));
 
 						reporter.addMessage(fMessageOriginator, message);
 					}

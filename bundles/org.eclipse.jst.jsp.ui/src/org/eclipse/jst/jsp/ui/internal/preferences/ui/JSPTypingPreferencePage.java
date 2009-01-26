@@ -26,7 +26,6 @@ public class JSPTypingPreferencePage extends AbstractPreferencePage {
 
 	private Button fCloseBraces;
 	private Button fCloseScriptlets;
-	private Button fCloseComments;
 	
 	protected Control createContents(Composite parent) {
 		Composite composite = super.createComposite(parent, 1);
@@ -47,11 +46,9 @@ public class JSPTypingPreferencePage extends AbstractPreferencePage {
 		fCloseBraces = createCheckBox(group, JSPUIMessages.JSPTyping_Complete_Braces);
 		((GridData) fCloseBraces.getLayoutData()).horizontalSpan = 2;
 		
-		fCloseComments = createCheckBox(group, JSPUIMessages.JSPTyping_Complete_Comments);
-		((GridData) fCloseComments.getLayoutData()).horizontalSpan = 2;
-		
 		fCloseScriptlets = createCheckBox(group, JSPUIMessages.JSPTyping_Complete_Scriptlets);
 		((GridData) fCloseScriptlets.getLayoutData()).horizontalSpan = 2;
+		
 	}
 	
 	public boolean performOk() {
@@ -65,13 +62,11 @@ public class JSPTypingPreferencePage extends AbstractPreferencePage {
 	protected void initializeValues() {
 		initCheckbox(fCloseBraces, JSPUIPreferenceNames.TYPING_COMPLETE_EL_BRACES);
 		initCheckbox(fCloseScriptlets, JSPUIPreferenceNames.TYPING_COMPLETE_SCRIPTLETS);
-		initCheckbox(fCloseComments, JSPUIPreferenceNames.TYPING_COMPLETE_COMMENTS);
 	}
 	
 	protected void performDefaults() {
 		defaultCheckbox(fCloseBraces, JSPUIPreferenceNames.TYPING_COMPLETE_EL_BRACES);
 		defaultCheckbox(fCloseScriptlets, JSPUIPreferenceNames.TYPING_COMPLETE_SCRIPTLETS);
-		defaultCheckbox(fCloseComments, JSPUIPreferenceNames.TYPING_COMPLETE_COMMENTS);
 	}
 	
 	private void initCheckbox(Button box, String key) {
@@ -87,7 +82,6 @@ public class JSPTypingPreferencePage extends AbstractPreferencePage {
 	protected void storeValues() {
 		getPreferenceStore().setValue(JSPUIPreferenceNames.TYPING_COMPLETE_EL_BRACES, (fCloseBraces != null) ? fCloseBraces.getSelection() : false);
 		getPreferenceStore().setValue(JSPUIPreferenceNames.TYPING_COMPLETE_SCRIPTLETS, (fCloseScriptlets != null) ? fCloseScriptlets.getSelection() : false);
-		getPreferenceStore().setValue(JSPUIPreferenceNames.TYPING_COMPLETE_COMMENTS, (fCloseComments != null) ? fCloseComments.getSelection() : false);
 	}
 	
 	protected IPreferenceStore doGetPreferenceStore() {

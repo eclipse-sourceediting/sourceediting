@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.preferences.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
@@ -177,9 +174,9 @@ public class JSPValidationPreferencePage extends AbstractValidationSettingsPage 
 			new PreferenceLinkArea(section, SWT.WRAP | SWT.MULTI | SWT.LEFT_TO_RIGHT, JAVA_SEVERITY_PREFERENCE_PAGE, JSPUIMessages.VALIDATION_JAVA_NOTICE, (IWorkbenchPreferenceContainer) getContainer(), null).getControl().setLayoutData(GridDataFactory.fillDefaults().span(2, 1).indent(0, 0).hint(150, SWT.DEFAULT).create());
 		}
 		else {
-			Map data = new HashMap();
-			data.put(DATA_NO_LINK, Boolean.TRUE);
-			new PreferenceLinkArea(section, SWT.WRAP | SWT.MULTI | SWT.LEFT_TO_RIGHT, JAVA_SEVERITY_PROPERTY_PAGE, JSPUIMessages.VALIDATION_JAVA_NOTICE, (IWorkbenchPreferenceContainer) getContainer(), data).getControl().setLayoutData(GridDataFactory.fillDefaults().span(2, 1).indent(0, 0).hint(150, SWT.DEFAULT).create());
+//			Map data = new HashMap();
+//			data.put(DATA_NO_LINK, Boolean.TRUE);
+//			new PreferenceLinkArea(section, SWT.WRAP | SWT.MULTI | SWT.LEFT_TO_RIGHT, JAVA_SEVERITY_PROPERTY_PAGE, JSPUIMessages.VALIDATION_JAVA_NOTICE, (IWorkbenchPreferenceContainer) getContainer(), data).getControl().setLayoutData(GridDataFactory.fillDefaults().span(2, 1).indent(0, 0).hint(150, SWT.DEFAULT).create());
 			// open in same shell?
 			// PreferencesUtil.createPropertyDialogOn(getShell(), getProject(), JAVA_SEVERITY_PROPERTY_PAGE, new String[] { JAVA_SEVERITY_PROPERTY_PAGE }, data).open();
 		}

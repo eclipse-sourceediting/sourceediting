@@ -262,7 +262,6 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		}
 	}
 
-
 	public void resetNodes() {
 		// do nothing
 	}
@@ -472,23 +471,13 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	}
 
 	protected boolean isPossibleCustomTag(String tagName) {
-//		int colonIndex = tagName.indexOf(":");
-//		if (colonIndex > 0) {
-//			String prefix = tagName.substring(0, colonIndex);
-//			if (prefix.equals("jsp")) { //$NON-NLS-1$
-//				return false;
-//			}
-//			if (prefix.length() > 0) {
-//				TagMarker[] prefixes = (TagMarker[]) fLocalParser.getNestablePrefixes().toArray(new TagMarker[0]);
-//				for (int i = 0; i < prefixes.length; i++) {
-//					if (prefix.equals(prefixes[i].getTagName())) {
-//						return true;
-//					}
-//				}
-//			}
-//		}
-//		return false;
-		return tagName.indexOf(':') > -1 && !tagName.startsWith(JSPTranslator.JSP_PREFIX);
+		int colonIndex = tagName.indexOf(":");
+		boolean isPossible = false;
+		if (colonIndex > 0) {
+			String prefix = tagName.substring(0, colonIndex);
+			isPossible = !prefix.equals("jsp"); //$NON-NLS-1$
+		}
+		return isPossible;
 	}
 
 	protected boolean isTaglibDirective(String tagName) {

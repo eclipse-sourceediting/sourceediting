@@ -668,7 +668,7 @@ class ProjectDescription {
 					Iterator implicitRecords = rootReferences[j].values().iterator();
 					while (implicitRecords.hasNext()) {
 						ITaglibRecord record = (ITaglibRecord) implicitRecords.next();
-						if (record.getRecordType() == ITaglibRecord.TLD && ((ITLDRecord) record).getURI() != null && ((ITLDRecord) record).getURI().length() > 0) {
+						if (record.getRecordType() == ITaglibRecord.TLD && ((ITLDRecord) record).getURI() != null) {
 							references.put(((ITLDRecord) record).getURI(), record);
 						}
 					}
@@ -847,7 +847,7 @@ class ProjectDescription {
 		JarRecord record = new JarRecord();
 		record.info = new TaglibInfo();
 		record.location = new Path(fileLocation);
-		record.urlRecords = new ArrayList();
+		record.urlRecords = new ArrayList(0);
 		return record;
 	}
 
@@ -1044,6 +1044,11 @@ class ProjectDescription {
 			if (jspVersion >= 2.0) {
 				records.addAll(fTagDirReferences.values());
 			}
+
+			IPath localWebXML = new Path(getLocalRoot(path.toString())).append("/WEB-INF/web.xml"); //$NON-NLS-1$ 
+			WebXMLRecord webxmlRecord = (WebXMLRecord) fWebXMLReferences.get(localWebXML.toString());
+			if(webxmlRecord != null)
+				records.addAll(webxmlRecord.getTLDRecords());
 
 			records.addAll(getCatalogRecords());
 		}
@@ -1582,21 +1587,36 @@ class ProjectDescription {
 
 			LOCK.acquire();
 
+			String localRoot = getLocalRoot(basePath);
 			/**
 			 * Workaround for problem in URIHelper; uris starting with '/' are
 			 * returned as-is.
 			 */
 			if (path == null) {
 				if (reference.startsWith("/")) { //$NON-NLS-1$
-					path = getLocalRoot(basePath) + reference;
+					path = localRoot + reference;
 				}
 				else {
-					path = URIHelper.normalize(reference, basePath, getLocalRoot(basePath));
+					path = URIHelper.normalize(reference, basePath, localRoot);
 				}
 			}
 
 			// order dictated by JSP spec 2.0 section 7.2.3
-			record = (ITaglibRecord) fJARReferences.get(path);
+			IPath localWebXML = new Path(localRoot).append("/WEB-INF/web.xml"); //$NON-NLS-1$ 
+			WebXMLRecord webxmlRecord = (WebXMLRecord) fWebXMLReferences.get(localWebXML.toString());
+			if (webxmlRecord != null) {
+				for (int i = 0; i < webxmlRecord.tldRecords.size(); i++) {
+					ITaglibRecord record2 = (ITaglibRecord) webxmlRecord.tldRecords.get(i);
+					ITaglibDescriptor descriptor = record2.getDescriptor();
+					if (reference.equals(descriptor.getURI())) {
+						record = record2;
+					}
+				}
+			}
+
+			if (record == null) {
+				record = (ITaglibRecord) fJARReferences.get(path);
+			}
 
 			// only if 1.1 TLD was found
 			if (jspVersion < 1.1 || (record instanceof JarRecord && !((JarRecord) record).has11TLD)) {
@@ -1660,7 +1680,7 @@ class ProjectDescription {
 			 * If no records were found and no local-root applies, check ALL
 			 * of the web.xml files as a fallback
 			 */
-			if (record == null && fProject.getFullPath().toString().equals(getLocalRoot(basePath))) {
+			if (record == null && fProject.getFullPath().toString().equals(localRoot)) {
 				WebXMLRecord[] webxmls = (WebXMLRecord[]) fWebXMLReferences.values().toArray(new WebXMLRecord[0]);
 				for (int i = 0; i < webxmls.length; i++) {
 					if (record != null)
@@ -1837,9 +1857,7 @@ class ProjectDescription {
 										}
 										catch (IOException e) {
 										}
-										if (urlRecord.getURI() != null && urlRecord.getURI().length() > 0) {
-											fClasspathReferences.put(urlRecord.getURI(), urlRecord);
-										}
+										fClasspathReferences.put(urlRecord.getURI(), urlRecord);
 									}
 									else if (BUILDPATH_PROJECT.equalsIgnoreCase(tokenType)) {
 										String projectName = toker.nextToken();
@@ -2018,7 +2036,7 @@ class ProjectDescription {
 										urlRecord.url = new URL("jar:file:" + libraryLocation + "!/" + z.getName()); //$NON-NLS-1$ //$NON-NLS-2$
 										libraryRecord.urlRecords.add(urlRecord);
 										TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, urlRecord, deltaKind));
-										fClasspathReferences.put(info.uri, urlRecord);
+										fClasspathReferences.put(urlRecord.getURI(), urlRecord);
 										if (_debugIndexCreation)
 											Logger.log(Logger.INFO, "created record for " + urlRecord.getURI() + "@" + urlRecord.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
 									}
@@ -2087,7 +2105,7 @@ class ProjectDescription {
 								taglibDeltaKind = ITaglibIndexDelta.CHANGED;
 							}
 
-							getImplicitReferences(jar.getFullPath().toString()).put(info.uri, record);
+							getImplicitReferences(jar.getFullPath().toString()).put(record.getURI(), record);
 							TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, taglibDeltaKind));
 							if (_debugIndexCreation)
 								Logger.log(Logger.INFO, "created record for " + record.getURI() + "@" + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -2160,7 +2178,7 @@ class ProjectDescription {
 			Logger.log(Logger.INFO, "creating record for " + tld.getFullPath()); //$NON-NLS-1$
 		TLDRecord record = createTLDRecord(tld);
 		fTLDReferences.put(tld.getFullPath().toString(), record);
-		if (record.getURI() != null && record.getURI().length() > 0) {
+		if (record.getURI() != null) {
 			getImplicitReferences(tld.getFullPath().toString()).put(record.getURI(), record);
 		}
 		TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, record, deltaKind));

@@ -5,7 +5,6 @@ import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jst.jsp.core.taglib.IJarRecord;
 import org.eclipse.jst.jsp.core.taglib.ITaglibRecord;
 import org.eclipse.jst.jsp.core.taglib.IURLRecord;
-import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 
 /**
  * Hyperlink for taglib files in jars or specified by urls.
@@ -62,7 +61,19 @@ class TaglibJarUriHyperlink implements IHyperlink {
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getHyperlinkText()
 	 */
 	public String getHyperlinkText() {
-		return JSPUIMessages.TLDHyperlink_hyperlinkText;
+		if (fTaglibRecord != null) {
+			switch (fTaglibRecord.getRecordType()) {
+				case (ITaglibRecord.JAR) : {
+					IJarRecord record = (IJarRecord) fTaglibRecord;
+					return record.getLocation().toString();
+				}
+				case (ITaglibRecord.URL) : {
+					IURLRecord record = (IURLRecord) fTaglibRecord;
+					return record.getBaseLocation();
+				}
+			}
+		}
+		return null;
 	}
 
 	public void open() {

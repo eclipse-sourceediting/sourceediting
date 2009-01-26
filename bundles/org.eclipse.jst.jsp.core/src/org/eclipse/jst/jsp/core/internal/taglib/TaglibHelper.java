@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Thomas de Grenier de Latour - 245044 - Incomplete classpath when validating JSP tags 
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.taglib;
 
@@ -41,6 +42,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.IDocument;
@@ -72,6 +74,8 @@ import com.ibm.icu.text.MessageFormat;
 
 /**
  * This class helps find TaglibVariables in a JSP file.
+ * 
+ * @author pavery
  */
 public class TaglibHelper {
 
@@ -211,7 +215,7 @@ public class TaglibHelper {
 			}
 			if (varName != null) {
 				String varClass = "java.lang.String"; // the default
-				// class...//$NON-NLS-1$
+														// class...//$NON-NLS-1$
 				if (var.getVariableClass() != null) {
 					varClass = var.getVariableClass();
 				}
@@ -329,10 +333,6 @@ public class TaglibHelper {
 		}
 		catch (Error e) {
 			// this is 3rd party code, need to catch all errors
-			Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TEIClassNotInstantiated, JSPCoreMessages.TaglibHelper_1, teiClassname, true);
-			if (createdProblem != null) {
-				problems.add(createdProblem);
-			}
 			if (DEBUG)
 				logException(teiClassname, e);
 		}
@@ -451,7 +451,7 @@ public class TaglibHelper {
 
 		final int end;
 		if (customTag.getNumberOfRegions() > 3) {
-			end = customTag.getTextEndOffset(customTag.getRegions().get(customTag.getNumberOfRegions() - 2)) - 1;
+			end = customTag.getTextEndOffset(customTag.getRegions().get(customTag.getNumberOfRegions() - 2));
 		}
 		else if (customTag.getNumberOfRegions() > 1) {
 			end = customTag.getTextEndOffset(customTag.getRegions().get(1)) - 1;
@@ -638,7 +638,7 @@ public class TaglibHelper {
 				IJavaProject project = JavaCore.create(p);
 
 				try {
-					IClasspathEntry[] entries = project.getResolvedClasspath(true);
+					IClasspathEntry[] entries = project.getRawClasspath();
 					addDefaultDirEntry(loader, project);
 					addClasspathEntries(loader, project, entries);
 				}
@@ -720,14 +720,9 @@ public class TaglibHelper {
 
 		IClasspathContainer container = JavaCore.getClasspathContainer(entry.getPath(), project);
 		if (container != null) {
-			String uniqueProjectAndContainerPath = project.getProject().getFullPath().append(container.getPath()).toString();
-			/*
-			 * Avoid infinite recursion, but track containers for each project
-			 * separately as they may return different values. This may mean
-			 * indexing JREs multiple times, however.
-			 */
-			if (!fContainerEntries.contains(uniqueProjectAndContainerPath)) {
-				fContainerEntries.add(uniqueProjectAndContainerPath);
+			// avoid infinite recursion
+			if (!fContainerEntries.contains(project.getProject().getFullPath().toString() + ":" + container.getPath().toString())) {
+				fContainerEntries.add(project.getProject().getFullPath().toString() + ":" + container.getPath().toString());
 
 				IClasspathEntry[] cpes = container.getClasspathEntries();
 				// recursive call here
@@ -741,6 +736,7 @@ public class TaglibHelper {
 	 * @param entry
 	 */
 	private void addProjectEntry(TaglibClassLoader loader, IClasspathEntry entry) {
+
 		if (DEBUG)
 			System.out.println(" -> project entry: [" + entry + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -760,7 +756,25 @@ public class TaglibHelper {
 	private void addDefaultDirEntry(TaglibClassLoader loader, IJavaProject project) throws JavaModelException {
 		// add default bin directory for the project
 		IPath outputPath = project.getOutputLocation();
-		loader.addFolder(outputPath);
+		String outputLocation = null;
+		if (!outputPath.toFile().exists()) {
+			if (outputPath.segmentCount() > 1) {
+				IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(outputPath);
+				if (folder.getLocation() != null) {
+					outputLocation = folder.getLocation().toString();
+				}
+			}
+			else {
+				IProject iproject = ResourcesPlugin.getWorkspace().getRoot().getProject(outputPath.segment(0));
+				if (iproject.getLocation() != null) {
+					outputLocation = iproject.getLocation().toString();
+				}
+			}
+		}
+		else {
+			outputLocation = outputPath.toString();
+		}
+		loader.addDirectory(outputLocation);
 	}
 
 	/**
@@ -768,32 +782,27 @@ public class TaglibHelper {
 	 * @param entry
 	 */
 	private void addLibraryEntry(TaglibClassLoader loader, IPath libPath) {
-		String libPathString = libPath.toString();
-		File file = new File(libPathString);
+		String jarPathString = libPath.toString();
+		File file = new File(libPath.toOSString());
 
-		if (file.exists()) {
-			if (file.isDirectory()) {
-				loader.addDirectory(libPathString);
-			}
-			else {
-				loader.addJar(libPathString);
+		// if not absolute path, it's workspace relative
+		if (!file.exists() && libPath.segmentCount() > 1) {
+			IFile jarFile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
+			if (jarFile.isAccessible() && jarFile.getLocation() != null) {
+				jarPathString = jarFile.getLocation().toString();
 			}
 		}
-		else {
-			if (libPath.segmentCount() > 1) {
-				IFile ifile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
-				if (ifile != null && ifile.isAccessible()) {
-					loader.addFile(libPath);
-				}
-				else {
-					IFolder ifolder = ResourcesPlugin.getWorkspace().getRoot().getFolder(libPath);
-					if (ifolder != null && ifolder.isAccessible()) {
-						loader.addFolder(libPath);
-					}
-				}
+
+		if (jarPathString != null) {
+			if (jarPathString.endsWith(".jar")) { //$NON-NLS-1$ 
+				loader.addJar(jarPathString);
 			}
-			else {
-				loader.addFolder(libPath);
+			else if (file.isDirectory()) {
+				/*
+				 * unlikely, the UI prevents adding folder variables to the
+				 * classpath - it's actually a folder containing binaries
+				 */
+				loader.addDirectory(jarPathString);
 			}
 		}
 	}
@@ -806,8 +815,12 @@ public class TaglibHelper {
 		// add bin directory for specific entry if it has
 		// one
 		IPath outputLocation = entry.getOutputLocation();
-		if (outputLocation != null) {
-			loader.addFolder(outputLocation);
+		if (outputLocation != null && outputLocation.segmentCount() > 1) {
+			IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(outputLocation);
+			if (folder != null && folder.isAccessible()) {
+				outputLocation = folder.getLocation();
+				loader.addDirectory(outputLocation.toString());
+			}
 		}
 	}
 
@@ -864,7 +877,7 @@ public class TaglibHelper {
 		}
 
 		String tagClassname = decl.getTagclass();
-		Object tagClass = null;
+		IType tagClass = null;
 		if (tagClassname != null && tagClassname.length() > 0 && fJavaProject != null) {
 			try {
 				tagClass = fJavaProject.findType(tagClassname, new NullProgressMonitor());

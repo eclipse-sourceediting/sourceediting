@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2009 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,8 +29,6 @@ public class JSPCoreMessages extends NLS {
 	public static String JSPDirectiveValidator_6;
 	public static String JSPDirectiveValidator_7;
 	public static String JSPDirectiveValidator_8;
-	public static String JSPDirectiveValidator_9;
-	public static String JSPDirectiveValidator_10;
 	public static String JSPActionValidator_0;
 	public static String JSPIndexManager_0;
 	public static String JSPIndexManager_2;
@@ -49,11 +47,6 @@ public class JSPCoreMessages extends NLS {
 	public static String JSPTranslator_1;
 	public static String JSPTranslator_2;
 	public static String JSPTranslator_3;
-	public static String JSPTranslator_4;
-	public static String JSPTranslator_5;
-	public static String TLDValidator_MissingValidator;
-	public static String TLDValidator_MissingVariable;
-	public static String TLDValidator_MissingListener;
 	
 	/**
 	 * @deprecated

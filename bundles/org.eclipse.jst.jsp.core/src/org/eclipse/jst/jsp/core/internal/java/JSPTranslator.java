@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Frits Jalvingh - contributions for bug 150794
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.java;
 
@@ -30,7 +31,6 @@ import javax.servlet.jsp.tagext.VariableInfo;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -90,16 +90,18 @@ import com.ibm.icu.text.MessageFormat;
 import com.ibm.icu.util.StringTokenizer;
 
 /**
- * Translates a JSP document into a HttpServlet subclass. Keeps two way mapping from
+ * Translates a JSP document into a HttpServlet. Keeps two way mapping from
  * Java translation to the original JSP source, which can be obtained through
  * getJava2JspRanges() and getJsp2JavaRanges().
  */
 public class JSPTranslator {
+
 	// the name of the element in the extension point
 	private static final String EL_TRANSLATOR_EXTENSION_NAME = "elTranslator"; //$NON-NLS-1$
+
 	private static final String ELTRANSLATOR_PROP_NAME = "ELTranslator"; //$NON-NLS-1$
 
-	// Default EL Translator extension ID
+	// Default EL Translator
 	private static final String DEFAULT_JSP_EL_TRANSLATOR_ID = "org.eclipse.jst.jsp.defaultJSP20"; //$NON-NLS-1$
 
 	// handy plugin ID constant
@@ -127,7 +129,6 @@ public class JSPTranslator {
 	String fSuperclass = null;
 
 	private String fTryCatchStart = ENDL + "try {" + ENDL; //$NON-NLS-1$
-	static final String JSP_PREFIX = "jsp:"; //$NON-NLS-1$
 	private List fTranslationProblems = new ArrayList();
 	private String fTryCatchEnd = " } catch (java.lang.Exception e) {} " + ENDL; //$NON-NLS-1$
 
@@ -239,24 +240,9 @@ public class JSPTranslator {
 	private ArrayList fELProblems = new ArrayList();
 
 	/**
-	 * EL Translator ID (pluggable)
+	 * EL Translator ID
 	 */
 	private String fELTranslatorID;
-	
-	/**
-	 * A structure for holding a region collection marker and list of variable
-	 * information. The region can be used later for positioning validation
-	 * messages.
-	 */
-	static class RegionTaglibVariables {
-		ITextRegionCollection region;
-		TaglibVariable[] variables;
-
-		RegionTaglibVariables(ITextRegionCollection region, TaglibVariable[] variables) {
-			this.region = region;
-			this.variables = variables;
-		}
-	}
 
 	public JSPTranslator() {
 		super();
@@ -382,7 +368,7 @@ public class JSPTranslator {
 
 	/**
 	 * @param node
-	 * @return the simple class name, not fully qualified
+	 * @return
 	 */
 	private String createClassname(IDOMNode node) {
 		String classname = ""; //$NON-NLS-1$
@@ -793,12 +779,13 @@ public class JSPTranslator {
 	}
 
 	/**
-	 * Add the server-side scripting variables used by this tag, along with
-	 * any scoping.
-	 * 
+	 * @deprecated
 	 * @param tagToAdd
-	 * @param customTag
 	 */
+	protected void addTaglibVariables(String tagToAdd) {
+		addTaglibVariables(tagToAdd, getCurrentNode());
+	}
+
 	protected void addTaglibVariables(String tagToAdd, ITextRegionCollection customTag) {
 		IFile f = getFile();
 
@@ -806,13 +793,16 @@ public class JSPTranslator {
 			return;
 
 		TaglibHelper helper = TaglibHelperManager.getInstance().getTaglibHelper(f);
+		/*
+		 * Variables can declare as available when NESTED, AT_BEGIN, or
+		 * AT_END. For AT_END variables, store the entire list of variables in
+		 * the map field so it can be used on the end tag.
+		 */
 		String decl = ""; //$NON-NLS-1$
 		if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_TAG_OPEN)) {
-			/*
-			 * Start tag
-			 */
 			TaglibVariable[] taglibVars = helper.getTaglibVariables(tagToAdd, getStructuredDocument(), customTag);
-			fTranslationProblems.addAll(helper.getProblems(f.getFullPath()));
+
+			// Bug 199047
 			/*
 			 * Add AT_BEGIN variables
 			 */
@@ -822,41 +812,37 @@ public class JSPTranslator {
 					appendToBuffer(decl, fUserCode, false, customTag);
 				}
 			}
-			/*
-			 * Add a single  { to limit the scope of NESTED variables
+
+			/**
+			 * Add opening curly brace
 			 */
+
 			StringBuffer text = new StringBuffer();
 			text.append("{ // <"); //$NON-NLS-1$
 			text.append(tagToAdd);
-			if (customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
-				text.append("/>\n"); //$NON-NLS-1$
-			}
-			else {
-				text.append(">\n"); //$NON-NLS-1$
-			}
+			text.append(">\n"); //$NON-NLS-1$
 			appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
 
+			/**
+			 * Add NESTED variables
+			 */
 			for (int i = 0; i < taglibVars.length; i++) {
 				if (taglibVars[i].getScope() == VariableInfo.NESTED) {
 					decl = taglibVars[i].getDeclarationString();
 					appendToBuffer(decl, fUserCode, false, customTag);
 				}
 			}
-			/*
-			 * For empty tags, add the corresponding } and AT_END variables immediately.  
+
+			/**
+			 * If empty, pop from stack, add ending curly brace and AT_END
+			 * variables
 			 */
 			if (customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
 				text = new StringBuffer();
-				text.append("} // <"); //$NON-NLS-1$
+				text.append("} // </"); //$NON-NLS-1$
 				text.append(tagToAdd);
-				if (customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
-					text.append("/>\n"); //$NON-NLS-1$
-				}
-				else {
-					text.append(">\n"); //$NON-NLS-1$
-				}
+				text.append("/>\n"); //$NON-NLS-1$
 				appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
-				/* Treat this as the end for empty tags */
 				for (int i = 0; i < taglibVars.length; i++) {
 					if (taglibVars[i].getScope() == VariableInfo.AT_END) {
 						decl = taglibVars[i].getDeclarationString();
@@ -866,38 +852,30 @@ public class JSPTranslator {
 			}
 			else {
 				/*
-				 * For non-empty tags, remember the variable information
+				 * Store for use at end tag and for accurate pairing even with
+				 * extra end tags (with empty non-null array)
 				 */
-				fTagToVariableMap.push(tagToAdd, new RegionTaglibVariables(customTag, taglibVars));
+				fTagToVariableMap.push(tagToAdd, taglibVars);
 			}
 		}
+		/**
+		 * Pop from stack, add ending curly brace and AT_END variables
+		 */
 		else if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_END_TAG_OPEN)) {
-			/*
-			 * End tag
-			 */
-			RegionTaglibVariables regionAndTaglibVars = (RegionTaglibVariables) fTagToVariableMap.pop(tagToAdd);
-			if (regionAndTaglibVars != null) {
-				/*
-				 * Even an empty array of variables will indicate a need for a
-				 * closing brace, so add one. If "regionAndTaglibVars" is
-				 * null, that means there was no start tag for use with this
-				 * end tag. Adding a '}' even then would cause a Java
-				 * translation fault, but that's not particularly helpful to a
-				 * user who may only know how to use custom tags. Ultimately
-				 * unbalanced custom tags should just be reported as
-				 * unbalanced tags.
-				 */
-				TaglibVariable[] taglibVars = regionAndTaglibVars.variables;
+			// pop the variables
+			TaglibVariable[] taglibVars = (TaglibVariable[]) fTagToVariableMap.pop(tagToAdd);
+			if (taglibVars != null) {
+				// even an empty array will indicate a need for a closing
+				// brace
 				StringBuffer text = new StringBuffer();
 				text.append("} // </"); //$NON-NLS-1$
 				text.append(tagToAdd);
-				if (customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
-					text.append("/>\n"); //$NON-NLS-1$
-				}
-				else {
-					text.append(">\n"); //$NON-NLS-1$
-				}
+				text.append(">\n"); //$NON-NLS-1$
 				appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
+
+				/*
+				 * Add AT_END variables
+				 */
 				for (int i = 0; i < taglibVars.length; i++) {
 					if (taglibVars[i].getScope() == VariableInfo.AT_END) {
 						decl = taglibVars[i].getDeclarationString();
@@ -906,13 +884,7 @@ public class JSPTranslator {
 				}
 			}
 			else {
-				/*
-				 * Since something should have been in the map because of a
-				 * start tag, its absence now means an unbalanced end tag.
-				 * Extras will be checked later to flag unbalanced start tags.
-				 */
-				IJSPProblem missingStartTag = createJSPProblem(IJSPProblem.StartCustomTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, "No start tag for " + tagToAdd, customTag.getStartOffset(), customTag.getEndOffset());
-				fTranslationProblems.add(missingStartTag);
+				// report an unmatched end tag in fTranslationProblems ?
 			}
 		}
 	}
@@ -982,33 +954,18 @@ public class JSPTranslator {
 		translateCodas();
 
 		/*
-		 * Any contents left in the map indicate start tags that never had end
-		 * tags. While the '{' that is present without the matching '}' should
-		 * cause a Java translation fault, that's not particularly helpful to
-		 * a user who may only know how to use custom tags as tags. Ultimately
-		 * unbalanced custom tags should just be reported as unbalanced tags,
-		 * and unbalanced '{'/'}' only reported when the user actually
-		 * unbalanced them with scriptlets.
+		 * Make sure any extra custom tag start tags won't cause compiler
+		 * problems, they should instead be reported as unbalanced tags
 		 */
-		Iterator regionAndTaglibVariables = fTagToVariableMap.values().iterator();
-		while (regionAndTaglibVariables.hasNext()) {
-			ITextRegionCollection extraStartRegion = ((RegionTaglibVariables) regionAndTaglibVariables.next()).region;
-			IJSPProblem missingEndTag = createJSPProblem(IJSPProblem.EndCustomTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, "", extraStartRegion.getStartOffset(), extraStartRegion.getEndOffset());
-			fTranslationProblems.add(missingEndTag);
-
+		for (int i = 0; i < fTagToVariableMap.size(); i++) {
 			appendToBuffer("}", fUserCode, false, fStructuredDocument.getLastStructuredDocumentRegion());
 		}
 		fTagToVariableMap.clear();
 
-		/*
-		 * Now do the same for jsp:useBean tags, whose contents get their own
-		 * { & }
-		 */
+		// Now do the same for jsp:useBean tags, whose contents get their own {/}
 		while (!fUseBeansStack.isEmpty()) {
 			appendToBuffer("}", fUserCode, false, fStructuredDocument.getLastStructuredDocumentRegion());
-			ITextRegionCollection extraStartRegion = (ITextRegionCollection) fUseBeansStack.pop();
-			IJSPProblem missingEndTag = createJSPProblem(IJSPProblem.UseBeanEndTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, "", extraStartRegion.getStartOffset(), extraStartRegion.getEndOffset());
-			fTranslationProblems.add(missingEndTag);
+			fUseBeansStack.pop();
 		}
 
 		buildResult();
@@ -1246,7 +1203,7 @@ public class JSPTranslator {
 
 			{
 				String fullTagName = container.getText(r);
-				if (fullTagName.indexOf(':') > -1 && !fullTagName.startsWith(JSP_PREFIX)) {
+				if (fullTagName.indexOf(':') > -1 && !fullTagName.startsWith("jsp:")) {
 					addTaglibVariables(fullTagName, container); // it
 					// may
 					// be a
@@ -1506,7 +1463,7 @@ public class JSPTranslator {
 			}
 			else if (DOMRegionContext.XML_COMMENT_TEXT.equals(commentRegion.getType())) {
 				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=222215
-				// support custom tags hidden in a comment region
+				// support custom tags hidden in a comment
 				decodeScriptBlock(node.getFullText(commentRegion), node.getStartOffset(commentRegion));
 			}
 		}
@@ -1645,18 +1602,21 @@ public class JSPTranslator {
 		ITextRegion delim = null;
 		ITextRegion content = null;
 		String type = null;
+		String quotetype = null;
 		for (int i = 0; i < embeddedRegions.size(); i++) {
 
 			// possible delimiter, check later
 			delim = embeddedRegions.get(i);
 			type = delim.getType();
+			if(type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE || type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE
+				|| type == DOMJSPRegionContexts.JSP_TAG_ATTRIBUTE_VALUE_DQUOTE || type == DOMJSPRegionContexts.JSP_TAG_ATTRIBUTE_VALUE_SQUOTE)
+				quotetype = type;
 
 			// check next region to see if it's content
 			if (i + 1 < embeddedRegions.size()) {
 				String regionType = embeddedRegions.get(i + 1).getType();
 				if (regionType == DOMJSPRegionContexts.JSP_CONTENT || regionType == DOMJSPRegionContexts.JSP_EL_CONTENT)
 					content = embeddedRegions.get(i + 1);
-
 			}
 
 			if (content != null) {
@@ -1672,7 +1632,7 @@ public class JSPTranslator {
 					fLastJSPType = EXPRESSION;
 					// translateExpressionString(embeddedContainer.getText(content),
 					// fCurrentNode, contentStart, content.getLength());
-					translateExpressionString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength(), false);
+					translateExpressionString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength(), quotetype);
 				}
 				else if (type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN) {
 					fLastJSPType = SCRIPTLET;
@@ -2065,6 +2025,44 @@ public class JSPTranslator {
 		appendToBuffer(newText, fUserCode, true, embeddedContainer, jspPositionStart, jspPositionLength, isIndirect);
 		appendToBuffer(EXPRESSION_SUFFIX, fUserCode, false, embeddedContainer);
 	}
+	
+	protected void translateExpressionString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength, String quotetype) {
+		if(quotetype == null || quotetype == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE ||quotetype == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE ) {
+			translateExpressionString(newText, embeddedContainer, jspPositionStart, jspPositionLength, false);
+			return;
+		}
+
+		//-- This is a quoted attribute. We need to unquote as per the JSP spec: JSP 2.0 page 1-36
+		appendToBuffer(EXPRESSION_PREFIX, fUserCode, false, embeddedContainer);
+
+		int length = newText.length();
+		int runStart = 0;
+		int i = 0;
+		for ( ; i < length; i++) {
+			//-- collect a new run
+			char c = newText.charAt(i);
+			if (c == '\\') {
+				//-- Escaped value. Add the run, then unescape
+				int runLength = i-runStart;
+				if (runLength > 0) {
+					appendToBuffer(newText.substring(runStart, i), fUserCode, true, embeddedContainer, jspPositionStart, runLength, true, true);
+					jspPositionStart += runLength + 1;
+					jspPositionLength -= runLength + 1;
+				}
+				runStart = ++i;
+				if (i >= length) { // Escape but no data follows?!
+					//- error.
+					break;
+				}
+				c = newText.charAt(i);				// The escaped character, copied verbatim
+			}
+		}
+		//-- Copy last-run
+		int runLength = i - runStart;
+		if (runLength > 0)
+			appendToBuffer(newText.substring(runStart, i), fUserCode, true, embeddedContainer, jspPositionStart, runLength, true, false);
+		appendToBuffer(EXPRESSION_SUFFIX, fUserCode, false, embeddedContainer);
+	}
 
 	protected void translateDeclarationString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength, boolean isIndirect) {
 		appendToBuffer(newText, fUserDeclarations, true, embeddedContainer, jspPositionStart, jspPositionLength, isIndirect);
@@ -2124,6 +2122,11 @@ public class JSPTranslator {
 		}
 		appendToBuffer(newText, buffer, addToMap, jspReferenceRegion, start, length, false);
 	}
+	
+	private void appendToBuffer(String newText, StringBuffer buffer, boolean addToMap, ITextRegionCollection jspReferenceRegion, int jspPositionStart, int jspPositionLength, boolean isIndirect) {
+		appendToBuffer(newText, buffer, addToMap, jspReferenceRegion, jspPositionStart, jspPositionLength, isIndirect, false);
+	}
+
 
 	/**
 	 * Adds newText to the buffer passed in, and adds to translation mapping
@@ -2135,7 +2138,7 @@ public class JSPTranslator {
 	 * @param buffer
 	 * @param addToMap
 	 */
-	private void appendToBuffer(String newText, StringBuffer buffer, boolean addToMap, ITextRegionCollection jspReferenceRegion, int jspPositionStart, int jspPositionLength, boolean isIndirect) {
+	private void appendToBuffer(String newText, StringBuffer buffer, boolean addToMap, ITextRegionCollection jspReferenceRegion, int jspPositionStart, int jspPositionLength, boolean isIndirect, boolean nonl) {
 
 		int origNewTextLength = newText.length();
 
@@ -2144,7 +2147,7 @@ public class JSPTranslator {
 			return;
 
 		// add a newline so translation looks cleaner
-		if (!newText.endsWith(ENDL))
+		if (! nonl && !newText.endsWith(ENDL))
 			newText += ENDL;
 
 		if (buffer == fUserCode) {
@@ -2592,17 +2595,11 @@ public class JSPTranslator {
 		ITextRegion classnameRegion = null;
 		String beanName = null;
 		ITextRegion beanNameRegion = null;
-
+		
 		if (DOMRegionContext.XML_END_TAG_OPEN.equals(container.getFirstRegion().getType())) {
 			if (!fUseBeansStack.isEmpty()) {
 				fUseBeansStack.pop();
 				appendToBuffer("}", fUserCode, false, fCurrentNode); //$NON-NLS-1$ 
-			}
-			else {
-				// no useBean start tag being remembered
-				ITextRegionCollection extraEndRegion = (ITextRegionCollection) fUseBeansStack.pop();
-				IJSPProblem missingStartTag = createJSPProblem(IJSPProblem.UseBeanStartTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, "", extraEndRegion.getStartOffset(), extraEndRegion.getEndOffset());
-				fTranslationProblems.add(missingStartTag);
 			}
 			return;
 		}
@@ -2686,6 +2683,7 @@ public class JSPTranslator {
 						suffix = "new " + className + "();" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$
 					else if (beanName != null)
 						suffix = "(" + type + ") java.beans.Beans.instantiate(getClass().getClassLoader(), \"" + beanName + "\");" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					
 					appendToBuffer(prefix + suffix, fUserCode, true, fCurrentNode);
 				}
 			}
@@ -2704,15 +2702,15 @@ public class JSPTranslator {
 	 * @param type
 	 * @return
 	 */
-	private boolean isTypeFound(String rawTypeValue, List errorTypeNames) {
+	private boolean isTypeFound(String typeName, List errorTypes) {
 		IProject project = getFile().getProject();
 		IJavaProject p = JavaCore.create(project);
 		if (p.exists()) {
 			String types[] = new String[3];
-			if (rawTypeValue.indexOf('<') > 0) {
+			if (typeName.indexOf('<') > 0) {
 				// JSR 14 : Generics are being used, parse them out
 				try {
-					StringTokenizer toker = new StringTokenizer(rawTypeValue);
+					StringTokenizer toker = new StringTokenizer(typeName);
 					// generic
 					types[0] = toker.nextToken("<"); //$NON-NLS-1$
 					// type 1 or key
@@ -2725,7 +2723,7 @@ public class JSPTranslator {
 				}
 			}
 			else {
-				types[0] = rawTypeValue;
+				types[0] = typeName;
 			}
 
 			for (int i = 0; i < types.length; i++) {
@@ -2734,30 +2732,24 @@ public class JSPTranslator {
 					if (types[i].indexOf('[') > 0) {
 						types[i] = types[i].substring(0, types[i].indexOf('[')); //$NON-NLS-1$
 					}
-					// remove any "extends" prefixes (JSR 14)
+					// remove any "extends" prefixes 
 					if (types[i].indexOf("extends") > 0) {
 						types[i] = StringUtils.strip(types[i].substring(types[i].indexOf("extends"))); //$NON-NLS-1$
 					}
 
-					addNameToListIfTypeNotFound(p, types[i], errorTypeNames);
+					addNameToListIfTypeNotFound(p, types[i], errorTypes);
 				}
 			}
 		}
-		return errorTypeNames.isEmpty();
+		return errorTypes.isEmpty();
 	}
 	
-	private void addNameToListIfTypeNotFound(IJavaProject p, String typeName, List collectedNamesNotFound) {
+	private void addNameToListIfTypeNotFound(IJavaProject p, String typeName, List names) {
 		try {
 			if (typeName != null) {
 				IType type = p.findType(typeName);
 				if (type == null || !type.exists()) {
-					collectedNamesNotFound.add(typeName);
-				}
-				else {
-					IResource typeResource = type.getResource();
-					if(typeResource != null) {
-						
-					}
+					names.add(typeName);
 				}
 			}
 		}

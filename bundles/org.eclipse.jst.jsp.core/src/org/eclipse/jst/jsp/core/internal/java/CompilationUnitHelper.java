@@ -1,7 +1,5 @@
 package org.eclipse.jst.jsp.core.internal.java;
 
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IProblemRequestor;
 import org.eclipse.jdt.core.WorkingCopyOwner;
 
 /**
@@ -40,12 +38,6 @@ public class CompilationUnitHelper {
 
         if (fWorkingCopyOwner == null) {
             fWorkingCopyOwner = new WorkingCopyOwner() {
-            	/* (non-Javadoc)
-            	 * @see org.eclipse.jdt.core.WorkingCopyOwner#getProblemRequestor(org.eclipse.jdt.core.ICompilationUnit)
-            	 */
-            	public IProblemRequestor getProblemRequestor(ICompilationUnit workingCopy) {
-            		return CompilationUnitHelper.this.getProblemRequestor();
-            	}
                 public String toString() {
                     return "JSP Working copy owner"; //$NON-NLS-1$
                 }

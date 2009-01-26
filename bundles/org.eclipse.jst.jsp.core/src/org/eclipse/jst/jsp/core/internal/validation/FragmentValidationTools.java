@@ -19,11 +19,9 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 
-
 /**
- * Utility class for reading fragment validation preferences/properties.
- * JSPFContentProperties does not respect the project override preference.
- * 
+ * Utility class for reading fragment validation preferences/properties while
+ * respecting the project override preference.
  */
 class FragmentValidationTools {
 	/**

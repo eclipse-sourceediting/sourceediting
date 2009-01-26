@@ -32,7 +32,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
  * 
  * Clients should not implement.
  * 
- * @deprecated - was never used
+ * @plannedfor 1.0
  */
 public interface IStructuredDocumentProposed extends IDocument, IDocumentExtension, IAdaptable {
 

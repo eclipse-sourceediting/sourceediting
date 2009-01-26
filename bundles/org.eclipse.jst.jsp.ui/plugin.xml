@@ -74,10 +74,6 @@
 			type="activecontexts"
 			value="org.eclipse.jst.jsp.core.jspsource, org.eclipse.jst.jsp.ui.structured.text.editor.jsp.scope, org.eclipse.wst.html.core.htmlsource, org.eclipse.core.runtime.xml, org.eclipse.wst.xml.navigation, org.eclipse.wst.xml.comments, org.eclipse.wst.xml.selection"
         	target="org.eclipse.jst.jsp.core.jspsource" />
-
-		<contentOutlineConfiguration
-			class="org.eclipse.jst.jsp.ui.internal.views.contentoutline.TLDContentOutlineConfiguration"
-			target="org.eclipse.jst.jsp.core.tldsource" />
 	</extension>
 
 	<!--======================================================================================-->
@@ -109,8 +105,8 @@
 			id="org.eclipse.jst.jsp.jspelsourcevalidator">
 			<contentTypeIdentifier
 				id="org.eclipse.jst.jsp.core.jspsource">
-				<partitionType id="org.eclipse.jst.jsp.SCRIPT.JSP_EL">
-				</partitionType>
+				<partitionType id="org.eclipse.jst.jsp.SCRIPT.JSP_EL"/>
+				<partitionType id="org.eclipse.jst.jsp.JSP_DIRECTIVE"/>
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
@@ -136,7 +132,7 @@
 	<!--======================================================================================-->
 	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
 		<validator
-			scope="total"
+			scope="partial"
 			class="org.eclipse.jst.jsp.ui.internal.validation.JSPActionSourceValidator"
 			id="org.eclipse.jst.jsp.ui.internal.validation.jspactionvalidator">
 			<contentTypeIdentifier
@@ -948,7 +944,7 @@
 		<hyperlinkDetector
 			class="org.eclipse.jst.jsp.ui.internal.hyperlink.JSPJavaHyperlinkDetector"
 			id="org.eclipse.jst.jsp.ui.internal.hyperlink.JSPJavaHyperlinkDetector"
-			name="%Java_Element_hyperlink"
+			name="%JSPJava_hyperlink"
 			targetId="org.eclipse.jst.jsp.core.jspsource">
 		</hyperlinkDetector>
 		<hyperlinkDetector
@@ -956,12 +952,6 @@
 			id="org.eclipse.jst.jsp.ui.internal.hyperlink.TaglibHyperlinkDetector"
 			name="%Taglib_hyperlink"
 			targetId="org.eclipse.jst.jsp.core.jspsource">
-		</hyperlinkDetector>
-		<hyperlinkDetector
-			class="org.eclipse.jst.jsp.ui.internal.hyperlink.XMLJavaHyperlinkDetector"
-			id="org.eclipse.jst.jsp.ui.internal.hyperlink.XMLJavaHyperlinkDetector"
-			name="%Java_Element_hyperlink"
-			targetId="org.eclipse.core.runtime.xml">
 		</hyperlinkDetector>
    </extension>
    
