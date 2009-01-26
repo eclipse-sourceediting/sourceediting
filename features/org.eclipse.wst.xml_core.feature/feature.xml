@@ -21,13 +21,6 @@
       <update label="%updateSiteName" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
 
-   <requires>
-      <import feature="org.eclipse.platform" version="3.4.0"/>
-      <import feature="org.eclipse.emf.common" version="2.4.0"/>
-      <import feature="org.eclipse.emf.ecore" version="2.4.0"/>
-      <import feature="org.eclipse.xsd" version="2.4.0"/>
-   </requires>
-
    <plugin
          id="javax.xml"
          download-size="190"
