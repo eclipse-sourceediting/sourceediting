@@ -54,7 +54,7 @@ public class AutoEditStrategyForJs implements IAutoEditStrategy {
 		}
 		String partitioning = IHTMLPartitions.SCRIPT;
 		fStrategies = new IAutoEditStrategy[] { new JavaDocAutoIndentStrategy(partitioning), new SmartSemicolonAutoEditStrategy(partitioning),
-				new JavaAutoIndentStrategy(partitioning, getJavaProject(document)) };
+				new JavaAutoIndentStrategy(partitioning, getJavaProject(document), null) };
 		/* new AutoEditStrategyForTabs() */
 		return fStrategies;
 	}
