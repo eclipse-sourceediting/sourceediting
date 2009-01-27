@@ -426,7 +426,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 								msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_9, uri);
 							}
 							else {
-								msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_10, uri);
+								msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_1, uri);
 							}
 						}
 						else {
@@ -481,7 +481,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 				}
 				else if (TaglibIndex.resolve(file.getFullPath().toString(), tagdir, false) == null && fSeverityTagdirUnresolvableURI != ValidationMessage.IGNORE) {
 					// URI specified but does not resolve
-					String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_1, tagdir);
+					String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_10, tagdir);
 					LocalizedMessage message = new LocalizedMessage(fSeverityTaglibUnresolvableURI, msgText, file);
 					int start = documentRegion.getStartOffset(tagdirValueRegion);
 					int length = tagdirValueRegion.getTextLength();
