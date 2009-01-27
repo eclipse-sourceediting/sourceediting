@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -346,6 +346,8 @@ public class NewCSSTemplatesWizardPage extends WizardPage {
 		data = new GridData(GridData.FILL_BOTH);
 		data.horizontalSpan = 2;
 		data.heightHint = convertHeightInCharsToPixels(5);
+		// [261274] - source viewer was growing to fit the max line width of the template
+		data.widthHint = convertWidthInCharsToPixels(2);
 		control.setLayoutData(data);
 
 		return viewer;
