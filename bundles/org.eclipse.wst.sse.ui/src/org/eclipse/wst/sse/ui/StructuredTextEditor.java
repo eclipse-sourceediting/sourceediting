@@ -18,8 +18,10 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -45,6 +47,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.DocumentEvent;
+import org.eclipse.jface.text.IBlockTextSelection;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IInformationControl;
@@ -637,9 +640,31 @@ public class StructuredTextEditor extends TextEditor {
 				if (localEditor != null) {
 					structuredModel = localEditor.getInternalModel();
 					if (structuredModel != null) {
-						int start = ((ITextSelection) selection).getOffset();
-						int end = start + ((ITextSelection) selection).getLength();
-						selection = new StructuredTextSelection(getDocument(), (ITextSelection) selection, selectionConvertor.getElements(structuredModel, start, end));
+						if (localEditor.isBlockSelectionModeEnabled()) {
+							/*
+							 * Block selection handling - find the overlapping
+							 * objects on each line, keeping in mind that the
+							 * selected block may not overlap actual lines or
+							 * columns of the document.
+							 * IBlockTextSelection.getRegions() should handle
+							 * that for us...
+							 */
+							IBlockTextSelection blockSelection = (IBlockTextSelection) selection;
+							IRegion[] regions = blockSelection.getRegions();
+							Set blockObjects = new LinkedHashSet();
+							for (int i = 0; i < regions.length; i++) {
+								Object[] objects = selectionConvertor.getElements(structuredModel, regions[i].getOffset(), regions[i].getLength());
+								for (int j = 0; j < objects.length; j++) {
+									blockObjects.add(objects[j]);
+								}
+							}
+							selection = new StructuredTextSelection(getDocument(), (ITextSelection) selection, blockObjects.toArray());
+						}
+						else {
+							int start = ((ITextSelection) selection).getOffset();
+							int end = start + ((ITextSelection) selection).getLength();
+							selection = new StructuredTextSelection(getDocument(), (ITextSelection) selection, selectionConvertor.getElements(structuredModel, start, end));
+						}
 					}
 				}
 				if (selection == null) {
