@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath.ui.internal.views;
 
-
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
@@ -20,26 +19,46 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
+import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
-import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager;
-import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManagerListener;
-import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
-import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;
-import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xml.xpath.messages.Messages;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class XPathComputer {
-	private static final int UPDATE_DELAY = 200;
+public class XPathComputer
+{
+	private static final int UPDATE_DELAY = 500;
 	private static final byte[] XPATH_LOCK = new byte[0];
 	private XPathView xpathView;
-	private CMDocumentManager cmDocumentManager;
-	private CMDocumentManagerListener fCMDocumentManagerListener = new DocManagerListener();
+	private IModelStateListener modelStateListener = new IModelStateListener(){
+
+		public void modelAboutToBeChanged(IStructuredModel model)
+		{}
+
+		public void modelAboutToBeReinitialized(IStructuredModel structuredModel)
+		{}
+
+		public void modelChanged(IStructuredModel model)
+		{
+			updateXPath();
+			compute();
+		}
+
+		public void modelDirtyStateChanged(IStructuredModel model, boolean isDirty)
+		{}
+
+		public void modelReinitialized(IStructuredModel structuredModel)
+		{}
+
+		public void modelResourceDeleted(IStructuredModel model)
+		{}
+
+		public void modelResourceMoved(IStructuredModel oldModel, IStructuredModel newModel)
+		{}
+	};
 	private Node node;
 	private XPath path;
 	private IStructuredModel model;
@@ -47,70 +66,85 @@ public class XPathComputer {
 	private String text;
 	private NodeList nodeList;
 
-	public XPathComputer(XPathView xpathView) {
+	public XPathComputer(XPathView xpathView)
+	{
 		this.xpathView = xpathView;
 	}
 
-	public void setModel(IStructuredModel model) {
-		this.model = model;
-		if (this.cmDocumentManager != null) {
-			cmDocumentManager.removeListener(fCMDocumentManagerListener);
+	public void setModel(IStructuredModel model)
+	{
+		if (this.model != null)
+		{
+			this.model.removeModelStateListener(modelStateListener);
 		}
-		if (model != null) {
-			ModelQuery modelQuery = ModelQueryUtil.getModelQuery(model);
-			if (modelQuery != null) {
-				cmDocumentManager = modelQuery.getCMDocumentManager();
-				if (cmDocumentManager != null)
-					cmDocumentManager.addListener(fCMDocumentManagerListener);
-			}
+		this.model = model;
+		if (model != null)
+		{
+			model.addModelStateListener(modelStateListener);
 			updateXPath();
-		} else {
-			cmDocumentManager = null;
+		}
+		else
+		{
 			node = null;
 			path = null;
 		}
 	}
 
-	private void updateXPath() {
+	private void updateXPath()
+	{
 		Document doc = (Document) model.getAdapter(Document.class);
 		if (doc == null)
 			return;
 
-		try {
+		try
+		{
 			updateExpression();
-		} catch (XPathExpressionException e) {
+		}
+		catch (XPathExpressionException e)
+		{
 
 		}
 	}
 
-	private void updateExpression() throws XPathExpressionException {
-		synchronized (XPATH_LOCK) {
-			if (text != null) {
+	private void updateExpression() throws XPathExpressionException
+	{
+		synchronized (XPATH_LOCK)
+		{
+			if (text != null)
+			{
 				XSLTXPathHelper.compile(text);
 				this.expression = text;
-			} else {
+			}
+			else
+			{
 				this.expression = null;
 			}
 		}
 	}
 
-	public void setText(String text) throws XPathExpressionException {
+	public void setText(String text) throws XPathExpressionException
+	{
 		this.text = text;
 		updateExpression();
 	}
 
-	public void setSelectedNode(Node node) {
+	public void setSelectedNode(Node node)
+	{
 		this.node = node;
 	}
 
-	public void compute() {
+	public void compute()
+	{
 		final String[] xps = new String[1];
-		synchronized (XPATH_LOCK) {
+		synchronized (XPATH_LOCK)
+		{
 			xps[0] = expression;
 		}
-		Job refresh = new Job(Messages.XPathComputer_5) {
+		Job refresh = new Job(Messages.XPathComputer_5)
+		{
 			@Override
-			protected IStatus run(IProgressMonitor monitor) {
+			protected IStatus run(IProgressMonitor monitor)
+			{
 				if (xps[0] != expression)
 					return Status.CANCEL_STATUS;
 				return doCompute(xps[0]);
@@ -118,55 +152,49 @@ public class XPathComputer {
 		};
 		refresh.setSystem(true);
 		refresh.setPriority(Job.SHORT);
-		refresh.schedule(UPDATE_DELAY);
+		IWorkbenchSiteProgressService service = (IWorkbenchSiteProgressService)xpathView.getSite().getService(IWorkbenchSiteProgressService.class);
+		service.schedule(refresh, UPDATE_DELAY);
 	}
 
-	private IStatus doCompute(String xp) {
+	private IStatus doCompute(String xp)
+	{
 		IStatus status = executeXPath(xp);
 
-		xpathView.getSite().getShell().getDisplay().asyncExec(new Runnable() {
-
-			public void run() {
+		xpathView.getSite().getShell().getDisplay().asyncExec(new Runnable()
+		{
+			public void run()
+			{
 				xpathView.xpathRecomputed(nodeList);
 			}
 		});
 		return status;
 	}
 
-	private IStatus executeXPath(String xp) {
-		try {
-			if (xp != null && node != null) {
-				synchronized (XPATH_LOCK) {
-					this.nodeList = (NodeList) XSLTXPathHelper.selectNodeList(
-							node, xp);
+	private IStatus executeXPath(String xp)
+	{
+		try
+		{
+			if (xp != null && node != null)
+			{
+				synchronized (XPATH_LOCK)
+				{
+					this.nodeList = (NodeList) XSLTXPathHelper.selectNodeList(node, xp);
 				}
 			}
-		} catch (TransformerException e) {
+		}
+		catch (TransformerException e)
+		{
 			return Status.CANCEL_STATUS;
 		}
 		return Status.OK_STATUS;
 	}
 
-	private class DocManagerListener implements CMDocumentManagerListener {
-		public void propertyChanged(CMDocumentManager cmDocumentManager,
-				String propertyName) {
-			updateXPath();
-			compute();
-		}
-
-		public void cacheCleared(CMDocumentCache cache) {
-		}
-
-		public void cacheUpdated(CMDocumentCache cache, String uri,
-				int oldStatus, int newStatus, CMDocument cmDocument) {
-			updateXPath();
-			compute();
-		}
-	}
-
-	public void dispose() {
-		if (this.cmDocumentManager != null) {
-			cmDocumentManager.removeListener(fCMDocumentManagerListener);
+	public void dispose()
+	{
+		if (model != null)
+		{
+			model.removeModelStateListener(modelStateListener);
+			model = null;
 		}
 	}
 }

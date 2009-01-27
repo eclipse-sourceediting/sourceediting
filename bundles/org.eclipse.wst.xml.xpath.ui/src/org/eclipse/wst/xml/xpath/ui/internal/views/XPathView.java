@@ -65,7 +65,6 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xml.xpath.messages.Messages;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -216,14 +215,20 @@ public class XPathView extends ViewPart
 			isFiringSelection = true;
 			if (selection.getFirstElement() != null)
 			{
-				IDOMNode node = (IDOMNode)selection.getFirstElement();
-				ITextEditor textEditor = (ITextEditor)activeEditor.getAdapter(ITextEditor.class);
-				if (textEditor != null)
+				Object element = selection.getFirstElement();
+				if (element instanceof IDOMNode)
 				{
-					if (reveal)
-						textEditor.selectAndReveal(node.getStartOffset(), node.getEndOffset()-node.getStartOffset());
-					else
-						textEditor.setHighlightRange(node.getStartOffset(), 0, true);
+					IDOMNode node = (IDOMNode)element;
+					ITextEditor textEditor = (ITextEditor)activeEditor.getAdapter(ITextEditor.class);
+					
+					if (textEditor != null)
+					{
+						getSite().getWorkbenchWindow().getActivePage().bringToTop(textEditor);
+						if (reveal)
+							textEditor.selectAndReveal(node.getStartOffset(), node.getEndOffset()-node.getStartOffset());
+						else
+							textEditor.setHighlightRange(node.getStartOffset(), 0, true);
+					}
 				}
 			}
 			isFiringSelection = false;
@@ -363,11 +368,11 @@ public class XPathView extends ViewPart
 		if (part != activeEditor && part instanceof IEditorPart)
 		{
 			IEditorPart editor = (IEditorPart) part;
-			activeEditor = editor;
-			IStructuredModel model = getEditorModel(activeEditor);
-			xpathComputer.setModel(model);
+			IStructuredModel model = getEditorModel(editor);
 			if (model != null)
 			{
+				activeEditor = editor;
+				xpathComputer.setModel(model);
 				xpathComputer.setSelectedNode((Document) model.getAdapter(Document.class));
 			}
 			recomputeXPath();

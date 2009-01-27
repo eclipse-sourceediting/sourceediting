@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath.ui.internal.views;
 
+import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
@@ -21,6 +22,8 @@ import org.w3c.dom.NodeList;
 
 public class JFaceNodeContentProviderXPath implements ITreeContentProvider
 {
+	FontRegistry registry = new FontRegistry();
+	
 	protected IJFaceNodeAdapter getAdapter(Object adaptable)
 	{
 		if (adaptable instanceof INodeNotifier)
@@ -48,25 +51,24 @@ public class JFaceNodeContentProviderXPath implements ITreeContentProvider
 			Object topNode = ((IDOMModel) object).getDocument();
 			IJFaceNodeAdapter adapter = getAdapter(topNode);
 			if (adapter != null)
+			{
 				return adapter.getElements(topNode);
+			}
 		}
 		else if (object instanceof NodeList)
 		{
 			NodeList nodeList = (NodeList) object;
-			// List toReturn = new ArrayList(nodes.size());
-			// for (Iterator iter = nodes.iterator(); iter.hasNext();)
-			// {
-			// IDOMNode node = (IDOMNode) iter.next();
-			// //IJFaceNodeAdapter adapter = getAdapter(node);
-			// if (node!=null)
-			// toReturn.add(node);
-			// }
-			Node[] nodes = new Node[nodeList.getLength()];
-			for (int i=0;i<nodes.length;i++)
+			if (nodeList.getLength() == 0)
+				return new Object[]{new EmptyNodeList()};
+			else
 			{
-				nodes[i] = nodeList.item(i);
+				Node[] nodes = new Node[nodeList.getLength()];
+				for (int i=0;i<nodes.length;i++)
+				{
+					nodes[i] = nodeList.item(i);
+				}
+				return nodes;
 			}
-			return nodes;
 		}
 		return new Object[0];
 	}
