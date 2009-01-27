@@ -2117,7 +2117,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 <ST_XML_ATTRIBUTE_VALUE_DQUOTED> \x24\x7b {
 	int enterState = yystate();
 	yybegin(ST_JSP_DQUOTED_EL);
-	assembleEmbeddedContainer(JSP_EL_OPEN, new String[]{JSP_EL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_DQUOTE});
+	assembleEmbeddedContainer(JSP_EL_OPEN, new String[]{JSP_EL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_DQUOTE, JSP_TAG_ATTRIBUTE_VALUE_DQUOTE});
 	// abort early when an unescaped double quote is found in the EL
 	if(fEmbeddedContainer.getLastRegion().getType().equals(XML_TAG_ATTRIBUTE_VALUE_DQUOTE)) {
 		yybegin(ST_ABORT_EMBEDDED);
@@ -2131,7 +2131,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 <ST_XML_ATTRIBUTE_VALUE_DQUOTED> \x23\x7b {
 	int enterState = yystate();
 	yybegin(ST_JSP_DQUOTED_VBL);
-	assembleEmbeddedContainer(JSP_VBL_OPEN, new String[]{JSP_VBL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_DQUOTE});
+	assembleEmbeddedContainer(JSP_VBL_OPEN, new String[]{JSP_VBL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_DQUOTE, JSP_TAG_ATTRIBUTE_VALUE_DQUOTE});
 	// abort early when an unescaped double quote is found in the VBL
 	if(fEmbeddedContainer.getLastRegion().getType().equals(XML_TAG_ATTRIBUTE_VALUE_DQUOTE)) {
 		yybegin(ST_ABORT_EMBEDDED);
@@ -2145,7 +2145,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 <ST_XML_ATTRIBUTE_VALUE_SQUOTED> \x24\x7b {
 	int enterState = yystate();
 	yybegin(ST_JSP_SQUOTED_EL);
-	assembleEmbeddedContainer(JSP_EL_OPEN, new String[]{JSP_EL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_SQUOTE});
+	assembleEmbeddedContainer(JSP_EL_OPEN, new String[]{JSP_EL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_SQUOTE, JSP_TAG_ATTRIBUTE_VALUE_SQUOTE});
 	// abort early when an unescaped single quote is found in the EL
 	if(fEmbeddedContainer.getLastRegion().getType().equals(XML_TAG_ATTRIBUTE_VALUE_SQUOTE)) {
 		yybegin(ST_ABORT_EMBEDDED);
@@ -2159,7 +2159,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 <ST_XML_ATTRIBUTE_VALUE_SQUOTED> \x23\x7b {
 	int enterState = yystate();
 	yybegin(ST_JSP_SQUOTED_VBL);
-	assembleEmbeddedContainer(JSP_VBL_OPEN, new String[]{JSP_VBL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_SQUOTE});
+	assembleEmbeddedContainer(JSP_VBL_OPEN, new String[]{JSP_VBL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_SQUOTE, JSP_TAG_ATTRIBUTE_VALUE_SQUOTE});
 	// abort early when an unescaped single quote is found in the VBL
 	if(fEmbeddedContainer.getLastRegion().getType().equals(XML_TAG_ATTRIBUTE_VALUE_SQUOTE)) {
 		yybegin(ST_ABORT_EMBEDDED);
