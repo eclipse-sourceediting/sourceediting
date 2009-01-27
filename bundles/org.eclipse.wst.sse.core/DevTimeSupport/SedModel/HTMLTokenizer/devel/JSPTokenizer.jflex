@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Frits Jalvingh - contributions for bug 150794
  *******************************************************************************/
 
 package org.eclipse.jst.jsp.core.internal.parser.internal;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jst.jsp.core.internal.contenttype.BooleanStack;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
@@ -49,6 +51,9 @@ import org.eclipse.wst.xml.core.internal.parser.IntStack;
 	// a "hint" as to what state to enter once an embedded region has
 	//   been completed
 	private int fEmbeddedPostState = YYINITIAL;
+	
+	private BooleanStack fJspTagStack = new BooleanStack();
+	
 	// the container used to create embedded regions
 	private ContextRegionContainer fEmbeddedContainer = null;
 	private static final String PROXY_CONTEXT = "PROXY_CONTEXT";
@@ -852,6 +857,11 @@ private final String doBlockTagScan() throws IOException {
 		//  context as usual.
 		return doScan("--%>", false, false, true, JSP_COMMENT_TEXT, ST_JSP_COMMENT_END, ST_JSP_COMMENT_END);
 	}
+	
+	/* user method */
+	private boolean isJspTag() {
+	  return fJspTagStack.empty() ? false : fJspTagStack.peek();
+	}
 %}
 
 %eof{
@@ -920,6 +930,7 @@ private final String doBlockTagScan() throws IOException {
 %state ST_JSP_COMMENT
 %state ST_JSP_COMMENT_END
 
+%state ST_JSP_ATTRIBUTE_VALUE
 %state ST_XML_ATTRIBUTE_VALUE_SQUOTED
 %state ST_XML_ATTRIBUTE_VALUE_DQUOTED
 
@@ -990,6 +1001,9 @@ EntityValue = (\" ([^%&\"] | {PEReference} | {Reference})* \" |  \' ([^%&\'] | {
 // \x24 = '$', \x7b = '{', \x23 = '#'
 // [10] AttValue ::= '"' ([^<&"] | Reference)* '"' |  "'" ([^<&'] | Reference)* "'"
 AttValue = ( \"([^<"\x24\x23] | [\x24\x23][^\x7b"] | {Reference})*[\x24\x23]*\" | \'([^<'\x24\x23] | [\x24\x23][^\x7b'] | {Reference})*[\x24\x23]*\'  | ([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )*)
+
+// As Attvalue, but accepts escaped versions of the lead-in quote also
+QuotedAttValue = ( \"([^<"\x24\x23] | [\x24\x23][^\x7b"] | \\\" | {Reference})*[\x24\x23]*\" | \'([^<'\x24\x23] | [\x24\x23][^\x7b'] | \\\' | {Reference})*[\x24\x23]*\'  | ([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )*)
 
 // [11] SystemLiteral ::= ('"' [^"]* '"') | ("'" [^']* "'") 
 SystemLiteral = ((\" [^\"]* \") | (\' [^\']* \')) 
@@ -1338,7 +1352,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 %%
 
 /* white space within a tag */
-<ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_PI, ST_XML_PI_EQUALS, ST_XML_PI_ATTRIBUTE_NAME, ST_XML_PI_ATTRIBUTE_VALUE, ST_XML_DECLARATION, ST_XML_DOCTYPE_DECLARATION, ST_XML_ELEMENT_DECLARATION, ST_XML_ATTLIST_DECLARATION, ST_XML_DECLARATION_CLOSE, ST_XML_DOCTYPE_ID_PUBLIC, ST_XML_DOCTYPE_ID_SYSTEM, ST_XML_DOCTYPE_EXTERNAL_ID, ST_JSP_DIRECTIVE_NAME, ST_JSP_DIRECTIVE_ATTRIBUTE_NAME, ST_JSP_DIRECTIVE_EQUALS, ST_JSP_DIRECTIVE_ATTRIBUTE_VALUE,ST_XML_ATTRIBUTE_VALUE_DQUOTED,ST_XML_ATTRIBUTE_VALUE_SQUOTED,ST_DHTML_ATTRIBUTE_NAME,ST_DHTML_EQUALS,ST_DHTML_ATTRIBUTE_VALUE,ST_DHTML_TAG_CLOSE> {S}* {
+<ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_JSP_ATTRIBUTE_VALUE, ST_PI, ST_XML_PI_EQUALS, ST_XML_PI_ATTRIBUTE_NAME, ST_XML_PI_ATTRIBUTE_VALUE, ST_XML_DECLARATION, ST_XML_DOCTYPE_DECLARATION, ST_XML_ELEMENT_DECLARATION, ST_XML_ATTLIST_DECLARATION, ST_XML_DECLARATION_CLOSE, ST_XML_DOCTYPE_ID_PUBLIC, ST_XML_DOCTYPE_ID_SYSTEM, ST_XML_DOCTYPE_EXTERNAL_ID, ST_JSP_DIRECTIVE_NAME, ST_JSP_DIRECTIVE_ATTRIBUTE_NAME, ST_JSP_DIRECTIVE_EQUALS, ST_JSP_DIRECTIVE_ATTRIBUTE_VALUE,ST_XML_ATTRIBUTE_VALUE_DQUOTED,ST_XML_ATTRIBUTE_VALUE_SQUOTED,ST_DHTML_ATTRIBUTE_NAME,ST_DHTML_EQUALS,ST_DHTML_ATTRIBUTE_VALUE,ST_DHTML_TAG_CLOSE> {S}* {
 	if(Debug.debugTokenizer)
 		dump("white space");//$NON-NLS-1$
         return WHITE_SPACE;
@@ -1359,14 +1373,16 @@ jspDirectiveStart        = {jspScriptletStart}@
 /* VERY special cases for tags as values */
 /* quoted JSP */
 <ST_XML_ATTRIBUTE_VALUE_DQUOTED> ["] {
-	return XML_TAG_ATTRIBUTE_VALUE_DQUOTE;
+	return isJspTag()? JSP_TAG_ATTRIBUTE_VALUE_DQUOTE : XML_TAG_ATTRIBUTE_VALUE_DQUOTE;
 }
 <ST_XML_ATTRIBUTE_VALUE_SQUOTED> ['] {
-	return XML_TAG_ATTRIBUTE_VALUE_SQUOTE;
+	return isJspTag() ? JSP_TAG_ATTRIBUTE_VALUE_SQUOTE : XML_TAG_ATTRIBUTE_VALUE_SQUOTE;
 }
-<ST_XML_ATTRIBUTE_VALUE> ["] {
+<ST_XML_ATTRIBUTE_VALUE, ST_JSP_ATTRIBUTE_VALUE> ["] {
+	String type = yy_lexical_state == ST_XML_ATTRIBUTE_VALUE ? XML_TAG_ATTRIBUTE_VALUE_DQUOTE : JSP_TAG_ATTRIBUTE_VALUE_DQUOTE;
+
 	if (Debug.debugTokenizer) {
-		System.out.println("begin embedded region: " + fEmbeddedHint);//$NON-NLS-1$
+		System.out.println("begin embedded region: " + fEmbeddedHint+", "+type);//$NON-NLS-1$
 	}
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
 	fEmbeddedPostState = ST_XML_ATTRIBUTE_VALUE_DQUOTED;
@@ -1374,16 +1390,17 @@ jspDirectiveStart        = {jspScriptletStart}@
 	fStateStack.push(yystate());
 	if(Debug.debugTokenizer)
 		dump("JSP attribute value start - complex double quoted");//$NON-NLS-1$
-	assembleEmbeddedContainer(XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XML_TAG_ATTRIBUTE_VALUE_DQUOTE);
+	assembleEmbeddedContainer(type, type);
 	fStateStack.pop();
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
 	fEmbeddedPostState = ST_XML_EQUALS;
 	yybegin(ST_XML_ATTRIBUTE_NAME);
 	return PROXY_CONTEXT;
 }
-<ST_XML_ATTRIBUTE_VALUE> ['] {
+<ST_XML_ATTRIBUTE_VALUE, ST_JSP_ATTRIBUTE_VALUE> ['] {
+	String type = yy_lexical_state == ST_XML_ATTRIBUTE_VALUE ? XML_TAG_ATTRIBUTE_VALUE_SQUOTE : JSP_TAG_ATTRIBUTE_VALUE_SQUOTE;
 	if (Debug.debugTokenizer) {
-		System.out.println("begin embedded region: " + fEmbeddedHint);//$NON-NLS-1$
+		System.out.println("begin embedded region: " + fEmbeddedHint+", "+type);//$NON-NLS-1$
 	}
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
 	fEmbeddedPostState = ST_XML_ATTRIBUTE_VALUE_SQUOTED;
@@ -1391,7 +1408,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 	fStateStack.push(yystate());
 	if(Debug.debugTokenizer)
 		dump("JSP attribute value start - complex single quoted");//$NON-NLS-1$
-	assembleEmbeddedContainer(XML_TAG_ATTRIBUTE_VALUE_SQUOTE, XML_TAG_ATTRIBUTE_VALUE_SQUOTE);
+	assembleEmbeddedContainer(type, type);
 	fStateStack.pop();
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
 	fEmbeddedPostState = ST_XML_EQUALS;
@@ -1411,7 +1428,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 
 <ST_XML_ATTRIBUTE_VALUE_DQUOTED,ST_XML_ATTRIBUTE_VALUE_SQUOTED> {genericTagOpen} {
 	if (Debug.debugTokenizer) {
-		System.out.println("begin embedded region: " + fEmbeddedHint);//$NON-NLS-1$
+		System.out.println("begin embedded region: " + fEmbeddedHint+", genericTagOpen");//$NON-NLS-1$
 	}
 	int incomingState = yystate();
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
@@ -1426,7 +1443,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 }
 <ST_XML_ATTRIBUTE_VALUE_DQUOTED,ST_XML_ATTRIBUTE_VALUE_SQUOTED> {genericEndTagOpen} {
 	if (Debug.debugTokenizer) {
-		System.out.println("begin embedded region: " + fEmbeddedHint);//$NON-NLS-1$
+		System.out.println("begin embedded region: " + fEmbeddedHint+", genericEndTagOpen");//$NON-NLS-1$
 	}
 	int incomingState = yystate();
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
@@ -1443,7 +1460,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 /* unquoted */
 <ST_XML_ATTRIBUTE_VALUE> {genericTagOpen} {
 	if (Debug.debugTokenizer) {
-		System.out.println("begin embedded region: " + fEmbeddedHint);//$NON-NLS-1$
+		System.out.println("begin embedded region: " + fEmbeddedHint+", unquoted genericTagOpen");//$NON-NLS-1$
 	}
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
 	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
@@ -1459,7 +1476,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 	return PROXY_CONTEXT;
 }
 
-<YYINITIAL, ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_XML_DECLARATION> {genericEndTagOpen} {
+<YYINITIAL, ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_JSP_ATTRIBUTE_VALUE, ST_XML_DECLARATION> {genericEndTagOpen} {
 	if(Debug.debugTokenizer)
 		dump("\nend tag open");//$NON-NLS-1$
 	fEmbeddedHint = XML_TAG_NAME;
@@ -1488,6 +1505,8 @@ jspDirectiveStart        = {jspScriptletStart}@
 <ST_XML_TAG_NAME> {Name} {
 	if(Debug.debugTokenizer)
 		dump("tag name");//$NON-NLS-1$
+    String tagname = yytext();
+	fJspTagStack.push(tagname.indexOf(':') != -1);
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
 	fEmbeddedPostState = ST_XML_EQUALS;
         yybegin(ST_XML_ATTRIBUTE_NAME);
@@ -1509,11 +1528,11 @@ jspDirectiveStart        = {jspScriptletStart}@
 		dump("equals");//$NON-NLS-1$
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
 	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
-        yybegin(ST_XML_ATTRIBUTE_VALUE);
+        yybegin(isJspTag() ? ST_JSP_ATTRIBUTE_VALUE : ST_XML_ATTRIBUTE_VALUE);
         return XML_TAG_ATTRIBUTE_EQUALS;
 }
 /* the value was found, look for the next name */
-<ST_XML_ATTRIBUTE_VALUE> {AttValue} {
+<ST_XML_ATTRIBUTE_VALUE> {AttValue} { /* only allow for non-JSP tags for this does not obey JSP quoting rules */
 	if(Debug.debugTokenizer)
 		dump("attr value");//$NON-NLS-1$
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
@@ -1521,8 +1540,17 @@ jspDirectiveStart        = {jspScriptletStart}@
         yybegin(ST_XML_ATTRIBUTE_NAME);
         return XML_TAG_ATTRIBUTE_VALUE;
 }
+<ST_JSP_ATTRIBUTE_VALUE> {QuotedAttValue} { /* JSP attribute values have escape semantics */
+	if(Debug.debugTokenizer)
+		dump("jsp attr value");//$NON-NLS-1$
+	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
+	fEmbeddedPostState = ST_XML_EQUALS;
+	yybegin(ST_XML_ATTRIBUTE_NAME);
+	return XML_TAG_ATTRIBUTE_VALUE;
+}
+
 /* the tag's close was found */
-<ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE> {genericTagClose} {
+<ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_JSP_ATTRIBUTE_VALUE> {genericTagClose} {
 	if(Debug.debugTokenizer)
 		dump("tag close");//$NON-NLS-1$
 	fEmbeddedHint = UNDEFINED;
@@ -1533,14 +1561,18 @@ jspDirectiveStart        = {jspScriptletStart}@
 	}
 	else
         	yybegin(YYINITIAL);
+        if (!fJspTagStack.empty())
+			fJspTagStack.pop();
         return XML_TAG_CLOSE;
 }
 /* the tag's close was found, but the tag doesn't need a matching end tag */
-<ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE> {genericEmptyTagClose} {
+<ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_JSP_ATTRIBUTE_VALUE> {genericEmptyTagClose} {
         yybegin(YYINITIAL);
 	fEmbeddedHint = UNDEFINED;
 	if(Debug.debugTokenizer)
 		dump("empty tag close");//$NON-NLS-1$
+		if (!fJspTagStack.empty())
+			fJspTagStack.pop();
         return XML_EMPTY_TAG_CLOSE;
 }
 
@@ -1567,7 +1599,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 	 * If this tag can not be nested or we're already searching for an
 	 * attribute name, equals, or value, return immediately.
 	 */
-	if (!isNestable(tagName) || (!fStateStack.empty() && (fStateStack.peek() == ST_XML_ATTRIBUTE_NAME || fStateStack.peek() == ST_XML_EQUALS || fStateStack.peek() == ST_XML_ATTRIBUTE_VALUE))) {
+	if (!isNestable(tagName) || (!fStateStack.empty() && (fStateStack.peek() == ST_XML_ATTRIBUTE_NAME || fStateStack.peek() == ST_XML_EQUALS || fStateStack.peek() == ST_XML_ATTRIBUTE_VALUE || fStateStack.peek() == ST_JSP_ATTRIBUTE_VALUE))) {
 		yybegin(ST_XML_TAG_NAME);
 		return XML_TAG_OPEN;
 	}
@@ -1583,7 +1615,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 	yybegin(ST_XML_EQUALS);
 	return PROXY_CONTEXT;
 }
-<ST_XML_ATTRIBUTE_VALUE> <{Name} {
+<ST_XML_ATTRIBUTE_VALUE, ST_JSP_ATTRIBUTE_VALUE> <{Name} {
 	String tagName = yytext().substring(1);
 	// pushback to just after the opening bracket
 	yypushback(yylength() - 1);
@@ -1591,7 +1623,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 	 * If this tag can not be nested or we're already searching for an
 	 * attribute name, equals, or value, return immediately.
 	 */
-	if (!isNestable(tagName) || (!fStateStack.empty() && (fStateStack.peek() == ST_XML_ATTRIBUTE_NAME || fStateStack.peek() == ST_XML_EQUALS || fStateStack.peek() == ST_XML_ATTRIBUTE_VALUE))) {
+	if (!isNestable(tagName) || (!fStateStack.empty() && (fStateStack.peek() == ST_XML_ATTRIBUTE_NAME || fStateStack.peek() == ST_XML_EQUALS || fStateStack.peek() == ST_XML_ATTRIBUTE_VALUE || fStateStack.peek() == ST_JSP_ATTRIBUTE_VALUE))) {
 		yybegin(ST_XML_TAG_NAME);
 		return XML_TAG_OPEN;
 	}
@@ -1611,7 +1643,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 
 // XML & JSP Comments
 
-<YYINITIAL, ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_XML_DECLARATION, ST_JSP_DIRECTIVE_NAME, ST_JSP_DIRECTIVE_NAME_WHITESPACE, ST_JSP_DIRECTIVE_ATTRIBUTE_NAME, ST_JSP_DIRECTIVE_EQUALS, ST_JSP_DIRECTIVE_ATTRIBUTE_VALUE> {CommentStart} {
+<YYINITIAL, ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_JSP_ATTRIBUTE_VALUE, ST_XML_DECLARATION, ST_JSP_DIRECTIVE_NAME, ST_JSP_DIRECTIVE_NAME_WHITESPACE, ST_JSP_DIRECTIVE_ATTRIBUTE_NAME, ST_JSP_DIRECTIVE_EQUALS, ST_JSP_DIRECTIVE_ATTRIBUTE_VALUE> {CommentStart} {
 	if(Debug.debugTokenizer)
 		dump("\ncomment start");//$NON-NLS-1$
 	fEmbeddedHint = XML_COMMENT_TEXT;
@@ -1683,7 +1715,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 	}
 	else {
 		if (Debug.debugTokenizer) {
-			System.out.println("begin embedded region: " + fEmbeddedHint);//$NON-NLS-1$
+			System.out.println("begin embedded region: " + fEmbeddedHint+", jspScriptletStart");//$NON-NLS-1$
 		}
 		if(Debug.debugTokenizer)
 			dump("JSP scriptlet start");//$NON-NLS-1$
@@ -1714,6 +1746,11 @@ jspDirectiveStart        = {jspScriptletStart}@
 			fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
 			fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
 		}
+        else if(yystate() == ST_JSP_ATTRIBUTE_VALUE) {
+            fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
+            fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
+        }
+		
 		return PROXY_CONTEXT;
 	}
 }
@@ -1752,7 +1789,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 	}
 	else {
 		if (Debug.debugTokenizer) {
-			System.out.println("begin embedded region: " + fEmbeddedHint);//$NON-NLS-1$
+			System.out.println("begin embedded region: " + fEmbeddedHint+", jspExpressionStart");//$NON-NLS-1$
 		}
 		if(Debug.debugTokenizer)
 			dump("JSP expression start");//$NON-NLS-1$
@@ -1783,6 +1820,11 @@ jspDirectiveStart        = {jspScriptletStart}@
 			fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
 			fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
 		}
+		else if(yystate() == ST_JSP_ATTRIBUTE_VALUE) {
+			fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
+			fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
+		}
+		
 		return PROXY_CONTEXT;
 	}
 }
@@ -1821,7 +1863,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 	}
 	else {
 		if (Debug.debugTokenizer) {
-			System.out.println("begin embedded region: " + fEmbeddedHint);//$NON-NLS-1$
+			System.out.println("begin embedded region: " + fEmbeddedHint+", jspDeclarationStart");//$NON-NLS-1$
 		}
 		if(Debug.debugTokenizer)
 			dump("JSP declaration start");//$NON-NLS-1$
@@ -1849,6 +1891,10 @@ jspDirectiveStart        = {jspScriptletStart}@
 			fEmbeddedPostState = ST_XML_EQUALS;
 		}
 		else if(yystate() == ST_XML_ATTRIBUTE_VALUE) {
+			fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
+			fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
+		}
+		else if(yystate() == ST_JSP_ATTRIBUTE_VALUE) {
 			fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
 			fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
 		}
@@ -1896,7 +1942,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 	}
 	else {
 		if (Debug.debugTokenizer) {
-			System.out.println("begin embedded region: " + fEmbeddedHint);//$NON-NLS-1$
+			System.out.println("begin embedded region: " + fEmbeddedHint+", jspCommentStart");//$NON-NLS-1$
 		}
 		if(Debug.debugTokenizer)
 			dump("JSP comment start");//$NON-NLS-1$
@@ -1930,6 +1976,10 @@ jspDirectiveStart        = {jspScriptletStart}@
 			fEmbeddedPostState = ST_XML_EQUALS;
 		}
 		else if(yystate() == ST_XML_ATTRIBUTE_VALUE) {
+			fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
+			fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
+		}
+		else if(yystate() == ST_JSP_ATTRIBUTE_VALUE) {
 			fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
 			fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
 		}
@@ -1980,7 +2030,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 	}
 	else {
 		if (Debug.debugTokenizer) {
-			System.out.println("begin embedded region: " + fEmbeddedHint);//$NON-NLS-1$
+			System.out.println("begin embedded region: " + fEmbeddedHint+", jspDirectiveStart");//$NON-NLS-1$
 		}
 		if(Debug.debugTokenizer)
 			dump("JSP declaration start");//$NON-NLS-1$
@@ -2067,7 +2117,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 <ST_XML_ATTRIBUTE_VALUE_DQUOTED> \x24\x7b {
 	int enterState = yystate();
 	yybegin(ST_JSP_DQUOTED_EL);
-	assembleEmbeddedContainer(JSP_EL_OPEN, new String[]{JSP_EL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_DQUOTE});
+	assembleEmbeddedContainer(JSP_EL_OPEN, new String[]{JSP_EL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_DQUOTE, JSP_TAG_ATTRIBUTE_VALUE_DQUOTE});
 	// abort early when an unescaped double quote is found in the EL
 	if(fEmbeddedContainer.getLastRegion().getType().equals(XML_TAG_ATTRIBUTE_VALUE_DQUOTE)) {
 		yybegin(ST_ABORT_EMBEDDED);
@@ -2081,7 +2131,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 <ST_XML_ATTRIBUTE_VALUE_DQUOTED> \x23\x7b {
 	int enterState = yystate();
 	yybegin(ST_JSP_DQUOTED_VBL);
-	assembleEmbeddedContainer(JSP_VBL_OPEN, new String[]{JSP_VBL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_DQUOTE});
+	assembleEmbeddedContainer(JSP_VBL_OPEN, new String[]{JSP_VBL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_DQUOTE, JSP_TAG_ATTRIBUTE_VALUE_DQUOTE});
 	// abort early when an unescaped double quote is found in the VBL
 	if(fEmbeddedContainer.getLastRegion().getType().equals(XML_TAG_ATTRIBUTE_VALUE_DQUOTE)) {
 		yybegin(ST_ABORT_EMBEDDED);
@@ -2095,7 +2145,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 <ST_XML_ATTRIBUTE_VALUE_SQUOTED> \x24\x7b {
 	int enterState = yystate();
 	yybegin(ST_JSP_SQUOTED_EL);
-	assembleEmbeddedContainer(JSP_EL_OPEN, new String[]{JSP_EL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_SQUOTE});
+	assembleEmbeddedContainer(JSP_EL_OPEN, new String[]{JSP_EL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_SQUOTE, JSP_TAG_ATTRIBUTE_VALUE_SQUOTE});
 	// abort early when an unescaped single quote is found in the EL
 	if(fEmbeddedContainer.getLastRegion().getType().equals(XML_TAG_ATTRIBUTE_VALUE_SQUOTE)) {
 		yybegin(ST_ABORT_EMBEDDED);
@@ -2109,7 +2159,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 <ST_XML_ATTRIBUTE_VALUE_SQUOTED> \x23\x7b {
 	int enterState = yystate();
 	yybegin(ST_JSP_SQUOTED_VBL);
-	assembleEmbeddedContainer(JSP_VBL_OPEN, new String[]{JSP_VBL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_SQUOTE});
+	assembleEmbeddedContainer(JSP_VBL_OPEN, new String[]{JSP_VBL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_SQUOTE, JSP_TAG_ATTRIBUTE_VALUE_SQUOTE});
 	// abort early when an unescaped single quote is found in the VBL
 	if(fEmbeddedContainer.getLastRegion().getType().equals(XML_TAG_ATTRIBUTE_VALUE_SQUOTE)) {
 		yybegin(ST_ABORT_EMBEDDED);
@@ -2123,11 +2173,11 @@ jspDirectiveStart        = {jspScriptletStart}@
 
 // unescaped double quote, return as ending region
 <ST_JSP_DQUOTED_EL,ST_JSP_DQUOTED_VBL> ["] {
-	return XML_TAG_ATTRIBUTE_VALUE_DQUOTE;
+	return isJspTag() ? JSP_TAG_ATTRIBUTE_VALUE_DQUOTE: XML_TAG_ATTRIBUTE_VALUE_DQUOTE;
 }
 // unescaped single quote, return as ending region
 <ST_JSP_SQUOTED_EL,ST_JSP_SQUOTED_VBL> ['] {
-	return XML_TAG_ATTRIBUTE_VALUE_SQUOTE;
+	return isJspTag() ? JSP_TAG_ATTRIBUTE_VALUE_SQUOTE : XML_TAG_ATTRIBUTE_VALUE_SQUOTE;
 }
 
 
@@ -2307,9 +2357,9 @@ jspDirectiveStart        = {jspScriptletStart}@
 	return JSP_VBL_CONTENT;
 }
 // EL unquoted in tag (section 2.1 declares it as valid in template text (XML_CONTENT) or attribute values
-<ST_XML_ATTRIBUTE_VALUE> \x24\x7b[^\x7d]+/\x7d {
+<ST_XML_ATTRIBUTE_VALUE, ST_JSP_ATTRIBUTE_VALUE> \x24\x7b[^\x7d]+/\x7d {
 	if (Debug.debugTokenizer) {
-		System.out.println("begin embedded region: " + fEmbeddedHint);//$NON-NLS-1$
+		System.out.println("begin embedded region: " + fEmbeddedHint+", el-unquoted");//$NON-NLS-1$
 	}
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
 	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
@@ -2328,9 +2378,9 @@ jspDirectiveStart        = {jspScriptletStart}@
 	return PROXY_CONTEXT;
 }
 // VBL unquoted in tag or attribute values
-<ST_XML_ATTRIBUTE_VALUE> \x23\x7b[^\x7d]+/\x7d {
+<ST_XML_ATTRIBUTE_VALUE, ST_JSP_ATTRIBUTE_VALUE> \x23\x7b[^\x7d]+/\x7d {
 	if (Debug.debugTokenizer) {
-		System.out.println("begin embedded region: " + fEmbeddedHint);//$NON-NLS-1$
+		System.out.println("begin embedded region: " + fEmbeddedHint+", el-unquoted");//$NON-NLS-1$
 	}
 	fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
 	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
@@ -2528,7 +2578,7 @@ jspDirectiveStart        = {jspScriptletStart}@
 
 // XML declarations
 
-<YYINITIAL, ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE> {genericTagOpen}! {
+<YYINITIAL, ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_JSP_ATTRIBUTE_VALUE> {genericTagOpen}! {
 	fStateStack.push(yystate());
 	if(Debug.debugTokenizer)
 		dump("\ndeclaration start");//$NON-NLS-1$

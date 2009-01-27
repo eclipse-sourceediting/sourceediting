@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Frits Jalvingh - contributions for bug 150794
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.java;
 
@@ -1645,18 +1646,21 @@ public class JSPTranslator {
 		ITextRegion delim = null;
 		ITextRegion content = null;
 		String type = null;
+		String quotetype = null;
 		for (int i = 0; i < embeddedRegions.size(); i++) {
 
 			// possible delimiter, check later
 			delim = embeddedRegions.get(i);
 			type = delim.getType();
+			if(type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE || type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE
+				|| type == DOMJSPRegionContexts.JSP_TAG_ATTRIBUTE_VALUE_DQUOTE || type == DOMJSPRegionContexts.JSP_TAG_ATTRIBUTE_VALUE_SQUOTE)
+				quotetype = type;
 
 			// check next region to see if it's content
 			if (i + 1 < embeddedRegions.size()) {
 				String regionType = embeddedRegions.get(i + 1).getType();
 				if (regionType == DOMJSPRegionContexts.JSP_CONTENT || regionType == DOMJSPRegionContexts.JSP_EL_CONTENT)
 					content = embeddedRegions.get(i + 1);
-
 			}
 
 			if (content != null) {
@@ -1672,7 +1676,7 @@ public class JSPTranslator {
 					fLastJSPType = EXPRESSION;
 					// translateExpressionString(embeddedContainer.getText(content),
 					// fCurrentNode, contentStart, content.getLength());
-					translateExpressionString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength(), false);
+					translateExpressionString(embeddedContainer.getText(content), embeddedContainer, contentStart, content.getLength(), quotetype);
 				}
 				else if (type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN) {
 					fLastJSPType = SCRIPTLET;
@@ -2065,6 +2069,44 @@ public class JSPTranslator {
 		appendToBuffer(newText, fUserCode, true, embeddedContainer, jspPositionStart, jspPositionLength, isIndirect);
 		appendToBuffer(EXPRESSION_SUFFIX, fUserCode, false, embeddedContainer);
 	}
+	
+	protected void translateExpressionString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength, String quotetype) {
+		if(quotetype == null || quotetype == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE ||quotetype == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE ) {
+			translateExpressionString(newText, embeddedContainer, jspPositionStart, jspPositionLength, false);
+			return;
+		}
+
+		//-- This is a quoted attribute. We need to unquote as per the JSP spec: JSP 2.0 page 1-36
+		appendToBuffer(EXPRESSION_PREFIX, fUserCode, false, embeddedContainer);
+
+		int length = newText.length();
+		int runStart = 0;
+		int i = 0;
+		for ( ; i < length; i++) {
+			//-- collect a new run
+			char c = newText.charAt(i);
+			if (c == '\\') {
+				//-- Escaped value. Add the run, then unescape
+				int runLength = i-runStart;
+				if (runLength > 0) {
+					appendToBuffer(newText.substring(runStart, i), fUserCode, true, embeddedContainer, jspPositionStart, runLength, true, true);
+					jspPositionStart += runLength + 1;
+					jspPositionLength -= runLength + 1;
+				}
+				runStart = ++i;
+				if (i >= length) { // Escape but no data follows?!
+					//- error.
+					break;
+				}
+				c = newText.charAt(i);				// The escaped character, copied verbatim
+			}
+		}
+		//-- Copy last-run
+		int runLength = i - runStart;
+		if (runLength > 0)
+			appendToBuffer(newText.substring(runStart, i), fUserCode, true, embeddedContainer, jspPositionStart, runLength, true, false);
+		appendToBuffer(EXPRESSION_SUFFIX, fUserCode, false, embeddedContainer);
+	}
 
 	protected void translateDeclarationString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength, boolean isIndirect) {
 		appendToBuffer(newText, fUserDeclarations, true, embeddedContainer, jspPositionStart, jspPositionLength, isIndirect);
@@ -2124,6 +2166,11 @@ public class JSPTranslator {
 		}
 		appendToBuffer(newText, buffer, addToMap, jspReferenceRegion, start, length, false);
 	}
+	
+	private void appendToBuffer(String newText, StringBuffer buffer, boolean addToMap, ITextRegionCollection jspReferenceRegion, int jspPositionStart, int jspPositionLength, boolean isIndirect) {
+		appendToBuffer(newText, buffer, addToMap, jspReferenceRegion, jspPositionStart, jspPositionLength, isIndirect, false);
+	}
+
 
 	/**
 	 * Adds newText to the buffer passed in, and adds to translation mapping
@@ -2135,7 +2182,7 @@ public class JSPTranslator {
 	 * @param buffer
 	 * @param addToMap
 	 */
-	private void appendToBuffer(String newText, StringBuffer buffer, boolean addToMap, ITextRegionCollection jspReferenceRegion, int jspPositionStart, int jspPositionLength, boolean isIndirect) {
+	private void appendToBuffer(String newText, StringBuffer buffer, boolean addToMap, ITextRegionCollection jspReferenceRegion, int jspPositionStart, int jspPositionLength, boolean isIndirect, boolean nonl) {
 
 		int origNewTextLength = newText.length();
 
@@ -2144,7 +2191,7 @@ public class JSPTranslator {
 			return;
 
 		// add a newline so translation looks cleaner
-		if (!newText.endsWith(ENDL))
+		if (! nonl && !newText.endsWith(ENDL))
 			newText += ENDL;
 
 		if (buffer == fUserCode) {
