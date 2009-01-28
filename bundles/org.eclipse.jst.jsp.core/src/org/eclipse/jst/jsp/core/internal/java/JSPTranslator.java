@@ -918,6 +918,9 @@ public class JSPTranslator {
 		}
 	}
 
+	/**
+	 * @return the workspace file for this model, null otherwise
+	 */
 	private IFile getFile() {
 		IFile f = null;
 		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(getStructuredDocument());
@@ -2752,7 +2755,11 @@ public class JSPTranslator {
 	 * @return
 	 */
 	private boolean isTypeFound(String rawTypeValue, List errorTypeNames) {
-		IProject project = getFile().getProject();
+		IFile file = getFile();
+		if(file == null)
+			return true;
+		
+		IProject project = file.getProject();
 		IJavaProject p = JavaCore.create(project);
 		if (p.exists()) {
 			String types[] = new String[3];
