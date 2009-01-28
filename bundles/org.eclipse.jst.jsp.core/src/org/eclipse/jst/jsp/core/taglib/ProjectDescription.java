@@ -335,7 +335,7 @@ class ProjectDescription {
 		}
 
 		public String toString() {
-			return "TaglibInfo|" + shortName + "|" + tlibVersion + "|" + smallIcon + "|" + largeIcon + "|" + jspVersion + "|" + uri + "|" + description; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+			return "TaglibInfo|" + uri + "|" + shortName + "|" + tlibVersion + "|" + smallIcon + "|" + largeIcon + "|" + jspVersion + "|" + description; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 		}
 	}
 
@@ -523,7 +523,7 @@ class ProjectDescription {
 	private static final String BUILDPATH_DIRTY = "BUILDPATH_DIRTY"; //$NON-NLS-1$
 	private static final String BUILDPATH_ENTRIES = "BUILDPATH_ENTRIES"; //$NON-NLS-1$
 	private static final String BUILDPATH_PROJECT = "BUILDPATH_PROJECT"; //$NON-NLS-1$
-	private static final String SAVE_FORMAT_VERSION = "Tag Library Index 1.0.3"; //$NON-NLS-1$
+	private static final String SAVE_FORMAT_VERSION = "Tag Library Index 1.0.4"; //$NON-NLS-1$
 	private static final String WEB_INF = "WEB-INF"; //$NON-NLS-1$
 	private static final IPath WEB_INF_PATH = new Path(WEB_INF);
 	private static final String WEB_XML = "web.xml"; //$NON-NLS-1$
@@ -912,7 +912,7 @@ class ProjectDescription {
 		InputStream contents = null;
 		try {
 			if (tld.isAccessible()) {
-				contents = ((IFile) tld).getContents(true);
+				contents = ((IFile) tld).getContents();
 				String basePath = tld.getFullPath().toString();
 				TaglibInfo info = extractInfo(basePath, contents);
 				if (info != null) {
@@ -1026,7 +1026,7 @@ class ProjectDescription {
 			LOCK.acquire();
 
 			Collection implicitReferences = new HashSet(getImplicitReferences(path.toString()).values());
-			records = new ArrayList(fTLDReferences.size() + fTagDirReferences.size() + fJARReferences.size() + fWebXMLReferences.size());
+			records = new HashSet(fTLDReferences.size() + fTagDirReferences.size() + fJARReferences.size() + fWebXMLReferences.size());
 			records.addAll(fTLDReferences.values());
 			if (jspVersion >= 1.1) {
 				records.addAll(_getJSP11AndWebXMLJarReferences(fJARReferences.values()));
@@ -1040,10 +1040,19 @@ class ProjectDescription {
 				projectsProcessed.add(fProject);
 				addBuildPathReferences(buildPathReferences, projectsProcessed, false);
 				records.addAll(buildPathReferences.values());
+				
+				if(path.segmentCount() > 1) {
+					records.addAll(new HashSet(getImplicitReferences(fProject.getFullPath().toString()).values()));
+				}
 			}
 			if (jspVersion >= 2.0) {
 				records.addAll(fTagDirReferences.values());
 			}
+			
+			IPath localWebXML = new Path(getLocalRoot(path.toString())).append("/WEB-INF/web.xml"); //$NON-NLS-1$ 
+			WebXMLRecord webxmlRecord = (WebXMLRecord) fWebXMLReferences.get(localWebXML.toString());
+			if(webxmlRecord != null)
+				records.addAll(webxmlRecord.getTLDRecords());
 
 			records.addAll(getCatalogRecords());
 		}
@@ -1291,7 +1300,7 @@ class ProjectDescription {
 					}
 				}
 				catch (JavaModelException e) {
-					Logger.logException("Problem handling build path entry for " + element.getPath(), e); //$NON-NLS-1$
+					// IPackageFragmentRoot not part of the build path
 				}
 				if ((delta.getFlags() & IJavaElementDelta.F_ADDED_TO_CLASSPATH) > 0) {
 					fBuildPathEntryCount++;
@@ -1398,9 +1407,21 @@ class ProjectDescription {
 						 * table that will e returned to
 						 * getAvailableTaglibRecords().
 						 */
-						IFile libFile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
-						if (libFile != null && libFile.exists()) {
-							updateClasspathLibrary(libFile.getLocation().toString(), ITaglibIndexDelta.ADDED, entry.isExported());
+						IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(libPath);
+						if (resource != null && resource.isAccessible()) {
+							if (resource.getType() == IResource.FILE) {
+								if (resource.getLocation() != null) {
+									updateClasspathLibrary(resource.getLocation().toString(), ITaglibIndexDelta.ADDED, entry.isExported());
+								}
+							}
+							else if (resource.getType() == IResource.FOLDER) {
+								try {
+									resource.accept(new Indexer(), 0);
+								}
+								catch (CoreException e) {
+									Logger.logException(e);
+								}
+							}
 						}
 					}
 				}
@@ -1417,7 +1438,19 @@ class ProjectDescription {
 				}
 			}
 				break;
-			case IClasspathEntry.CPE_SOURCE :
+			case IClasspathEntry.CPE_SOURCE : {
+				IPath path = entry.getPath();
+				try {
+					IResource sourceFolder = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+					// could be a bad .classpath file
+					if(sourceFolder != null) {
+						sourceFolder.accept(new Indexer(), 0);
+					}
+				}
+				catch (CoreException e) {
+					Logger.logException(e);
+				}
+			}
 				break;
 			case IClasspathEntry.CPE_VARIABLE : {
 				IPath libPath = JavaCore.getResolvedVariablePath(entry.getPath());
@@ -1582,26 +1615,42 @@ class ProjectDescription {
 
 			LOCK.acquire();
 
+			String localRoot = getLocalRoot(basePath);
 			/**
 			 * Workaround for problem in URIHelper; uris starting with '/' are
 			 * returned as-is.
 			 */
 			if (path == null) {
 				if (reference.startsWith("/")) { //$NON-NLS-1$
-					path = getLocalRoot(basePath) + reference;
+					path = localRoot + reference;
 				}
 				else {
-					path = URIHelper.normalize(reference, basePath, getLocalRoot(basePath));
+					path = URIHelper.normalize(reference, basePath, localRoot);
 				}
 			}
 
-			// order dictated by JSP spec 2.0 section 7.2.3
-			record = (ITaglibRecord) fJARReferences.get(path);
-
-			// only if 1.1 TLD was found
-			if (jspVersion < 1.1 || (record instanceof JarRecord && !((JarRecord) record).has11TLD)) {
-				record = null;
+			IPath localWebXML = new Path(localRoot).append("/WEB-INF/web.xml"); //$NON-NLS-1$ 
+			WebXMLRecord webxmlRecord = (WebXMLRecord) fWebXMLReferences.get(localWebXML.toString());
+			if (webxmlRecord != null) {
+				for (int i = 0; i < webxmlRecord.tldRecords.size(); i++) {
+					ITaglibRecord record2 = (ITaglibRecord) webxmlRecord.tldRecords.get(i);
+					ITaglibDescriptor descriptor = record2.getDescriptor();
+					if (reference.equals(descriptor.getURI())) {
+						record = record2;
+					}
+				}
 			}
+
+			if (record == null) {
+				// order dictated by JSP spec 2.0 section 7.2.3
+				record = (ITaglibRecord) fJARReferences.get(path);
+
+				// only if 1.1 TLD was found
+				if (jspVersion < 1.1 || (record instanceof JarRecord && !((JarRecord) record).has11TLD)) {
+					record = null;
+				}
+			}
+			
 			if (record == null) {
 				record = (ITaglibRecord) fTLDReferences.get(path);
 			}
@@ -1629,7 +1678,7 @@ class ProjectDescription {
 				addBuildPathReferences(buildPathReferences, projectsProcessed, false);
 				record = (ITaglibRecord) buildPathReferences.get(reference);
 			}
-
+			
 			// Check the XML Catalog
 			if (record == null) {
 				ICatalog catalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
@@ -1655,12 +1704,12 @@ class ProjectDescription {
 					}
 				}
 			}
-
+			
 			/*
 			 * If no records were found and no local-root applies, check ALL
 			 * of the web.xml files as a fallback
 			 */
-			if (record == null && fProject.getFullPath().toString().equals(getLocalRoot(basePath))) {
+			if (record == null && fProject.getFullPath().toString().equals(localRoot)) {
 				WebXMLRecord[] webxmls = (WebXMLRecord[]) fWebXMLReferences.values().toArray(new WebXMLRecord[0]);
 				for (int i = 0; i < webxmls.length; i++) {
 					if (record != null)
@@ -1673,6 +1722,18 @@ class ProjectDescription {
 					}
 				}
 			}
+			/*
+			 * If no records were found, check the implicit references on the project itself as a fallback
+			 */
+			if (record == null && jspVersion >= 1.2) {
+				Object[] records = (Object[]) getImplicitReferences(fProject.getFullPath().toString()).get(reference);
+				if (records != null && records.length > 0) {
+					if (records.length > 1)
+						records = fTaglibSorter.sort(records);
+					record =  (ITaglibRecord) records[records.length - 1];
+				}
+			}
+
 		}
 		finally {
 			LOCK.release();
@@ -2155,6 +2216,11 @@ class ProjectDescription {
 		}
 	}
 
+	/**
+	 * 
+	 * @param tld
+	 * @param deltaKind
+	 */
 	void updateTLD(IResource tld, int deltaKind) {
 		if (_debugIndexCreation)
 			Logger.log(Logger.INFO, "creating record for " + tld.getFullPath()); //$NON-NLS-1$
@@ -2203,7 +2269,7 @@ class ProjectDescription {
 		NodeList taglibs = document.getElementsByTagName(JSP12TLDNames.TAGLIB);
 		for (int iTaglib = 0; iTaglib < taglibs.getLength(); iTaglib++) {
 			String taglibUri = readTextofChild(taglibs.item(iTaglib), "taglib-uri").trim(); //$NON-NLS-1$
-			// specified location is relative to root of the webapp
+			// specified location is relative to root of the web-app
 			String taglibLocation = readTextofChild(taglibs.item(iTaglib), "taglib-location").trim(); //$NON-NLS-1$
 			IPath path = null;
 			if (taglibLocation.startsWith("/")) { //$NON-NLS-1$
