@@ -1616,12 +1616,12 @@ class ProjectDescription {
 
 			if (record == null) {
 				record = (ITaglibRecord) fJARReferences.get(path);
+				// only if 1.1 TLD was found
+				if (jspVersion < 1.1 || (record instanceof JarRecord && !((JarRecord) record).has11TLD)) {
+					record = null;
+				}
 			}
 
-			// only if 1.1 TLD was found
-			if (jspVersion < 1.1 || (record instanceof JarRecord && !((JarRecord) record).has11TLD)) {
-				record = null;
-			}
 			if (record == null) {
 				record = (ITaglibRecord) fTLDReferences.get(path);
 			}
