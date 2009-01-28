@@ -43,6 +43,11 @@ import org.eclipse.wst.sse.core.utils.StringUtils;
 public class XMLJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	/**
+	 * 
+	 */
+	private static final String JAR_FILE_PROTOCOL = "jar:file:"; //$NON-NLS-1$
+
+	/**
 	 * Based on org.eclipse.jdt.internal.ui.javaeditor.JavaElementHyperlink
 	 */
 	static class JavaElementHyperlink implements IHyperlink {
@@ -99,8 +104,8 @@ public class XMLJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 			if (model != null) {
 				String baseLocation = model.getBaseLocation();
 				// URL fixup from the taglib index record
-				if (baseLocation.startsWith("jar:/file:")) {
-					baseLocation = StringUtils.replace(baseLocation, "jar:/", "jar:");
+				if (baseLocation.startsWith("jar:/file:")) { //$NON-NLS-1$
+					baseLocation = StringUtils.replace(baseLocation, "jar:/", "jar:"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				/*
 				 * Handle opened TLD files from JARs on the Java Build Path by
@@ -108,8 +113,8 @@ public class XMLJavaHyperlinkDetector extends AbstractHyperlinkDetector {
 				 * opening the class from there. Note that this might be from
 				 * a different Java project's build path than the TLD.
 				 */
-				if (baseLocation.startsWith("jar:file:") && baseLocation.indexOf('!') > 9) {
-					String baseFile = baseLocation.substring(9, baseLocation.indexOf('!'));
+				if (baseLocation.startsWith(JAR_FILE_PROTOCOL) && baseLocation.indexOf('!') > JAR_FILE_PROTOCOL.length()) {
+					String baseFile = baseLocation.substring(JAR_FILE_PROTOCOL.length(), baseLocation.indexOf('!'));
 					IPath basePath = new Path(baseFile);
 					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 					for (int i = 0; i < projects.length; i++) {
