@@ -129,7 +129,7 @@ public class JSPTranslationEditorInput implements IStorageEditorInput {
 	 * @see org.eclipse.ui.IEditorInput#getName()
 	 */
 	public String getName() {
-		return new Path(fModel.getBaseLocation()).lastSegment() + ".java";
+		return fStorage.getName();
 	}
 
 	/*
