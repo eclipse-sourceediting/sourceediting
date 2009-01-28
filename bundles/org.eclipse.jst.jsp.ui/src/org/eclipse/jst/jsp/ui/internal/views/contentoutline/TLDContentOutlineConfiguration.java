@@ -60,6 +60,44 @@ public class TLDContentOutlineConfiguration extends XMLContentOutlineConfigurati
 			fParentProvider.dispose();
 		}
 
+		private String firstLineOf(String text) {
+			if (text == null || text.length() < 1 || (text.indexOf('\r') < 0 && text.indexOf('\n') < 0)) {
+				return text;
+			}
+
+			int start = 0;
+			int maxLength = text.length();
+			while (start < maxLength && text.charAt(start) == '\r' || text.charAt(start) == '\n')
+				start++;
+			int endN = text.indexOf('\n', start);
+			int endR = text.indexOf('\r', start);
+			// no more line delimiters
+			if (endN < 0 && endR < 0) {
+				if (start == 0) {
+					// no leading line delimiters, return as-is
+					return text;
+				}
+				else {
+					// cut leading line delimiters
+					return text.substring(start);
+				}
+			}
+			if (endN < 0) {
+				/* no \r cut leading line delimiters up to first \r */
+				return text.substring(start, endR);
+			}
+			if (endR < 0) {
+				/* no \r cut leading line delimiters up to first \n */
+				return text.substring(start, endN);
+			}
+
+			/*
+			 * Both \n and \r, cut leading line delimiters up to whichever is
+			 * first
+			 */
+			return text.substring(start, Math.min(endN, endR));
+		}
+
 		private String getContainedText(Node parent) {
 			NodeList children = parent.getChildNodes();
 			if (children.getLength() == 1) {
@@ -144,7 +182,7 @@ public class TLDContentOutlineConfiguration extends XMLContentOutlineConfigurati
 						 * Currently not externalized since it's analagous to
 						 * a decorator.
 						 */
-						return fParentProvider.getText(domElement) + " [" + value + "]"; //$NON-NLS-1$
+						return fParentProvider.getText(domElement) + " [" + firstLineOf(value) + "]"; //$NON-NLS-1$
 					}
 				}
 
