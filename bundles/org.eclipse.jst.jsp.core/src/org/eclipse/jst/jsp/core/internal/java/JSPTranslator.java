@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Frits Jalvingh - contributions for bug 150794
+ *     Matthias Fuessel - JSPTranslator sometimes adds tags without prefix
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.java;
 
@@ -1233,13 +1234,17 @@ public class JSPTranslator {
 							if (st.hasMoreTokens()) {
 								String directiveName = st.nextToken();
 								if (directiveName.equals("taglib")) { //$NON-NLS-1$
-									while (r != null && regions.hasNext() && !r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
+									while (r != null && regions.hasNext()) {
 										r = (ITextRegion) regions.next();
-										if (container.getText(r).equals(JSP11Namespace.ATTR_NAME_PREFIX)) {
+										if (r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) && container.getText(r).equals(JSP11Namespace.ATTR_NAME_PREFIX)) {
 											String prefix = getAttributeValue(r, regions);
 											if (prefix != null) {
 												handleTaglib(prefix);
+												break;
 											}
+										}
+										if (r.getType().equals(DOMRegionContext.XML_TAG_CLOSE) || r.getType().equals(DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE)) {
+										    break;
 										}
 									}
 									return;
@@ -1712,7 +1717,19 @@ public class JSPTranslator {
 			regionText = getCurrentNode().getText(r);
 			if (regionText.equals("taglib")) { //$NON-NLS-1$
 				// add custom tag block markers here
-				handleTaglib();
+                while (r != null && regions.hasNext()) {
+                    r = (ITextRegion) regions.next();
+                    if (r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) && getCurrentNode().getText(r).equals(JSP11Namespace.ATTR_NAME_PREFIX)) {
+                        String prefix = getAttributeValue(r, regions);
+                        if (prefix != null) {
+                            handleTaglib(prefix);
+                            break;
+                        }
+                    }
+                    if (r.getType().equals(DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE)) {
+                        break;
+                    }
+                }
 				return;
 			}
 			else if (regionText.equals("include")) { //$NON-NLS-1$
@@ -1798,7 +1815,7 @@ public class JSPTranslator {
 		 */
 	}
 
-	/*
+	/**
 	 * This method should ideally only be called once per run through
 	 * JSPTranslator This is intended for use by inner helper classes that
 	 * need to add block markers to their own parsers. This method only adds
