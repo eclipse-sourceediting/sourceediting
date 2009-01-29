@@ -2820,7 +2820,7 @@ protected final boolean containsTagName(String markerTagName) {
 	yybegin(ST_JSP_DQUOTED_VBL);
 	assembleEmbeddedContainer(JSP_VBL_OPEN, new String[]{JSP_VBL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_DQUOTE, JSP_TAG_ATTRIBUTE_VALUE_DQUOTE});
 	// abort early when an unescaped double quote is found in the VBL
-	if(fEmbeddedContainer.getLastRegion().getType().equals(XML_TAG_ATTRIBUTE_VALUE_DQUOTE)) {
+	if(fEmbeddedContainer.getLastRegion().getType().equals(XML_TAG_ATTRIBUTE_VALUE_DQUOTE) || fEmbeddedContainer.getLastRegion().getType().equals(JSP_TAG_ATTRIBUTE_VALUE_DQUOTE)) {
 		yybegin(ST_ABORT_EMBEDDED);
 		fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
 	}
@@ -2836,7 +2836,7 @@ protected final boolean containsTagName(String markerTagName) {
 	yybegin(ST_JSP_DQUOTED_EL);
 	assembleEmbeddedContainer(JSP_EL_OPEN, new String[]{JSP_EL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_DQUOTE, JSP_TAG_ATTRIBUTE_VALUE_DQUOTE});
 	// abort early when an unescaped double quote is found in the EL
-	if(fEmbeddedContainer.getLastRegion().getType().equals(XML_TAG_ATTRIBUTE_VALUE_DQUOTE)) {
+	if(fEmbeddedContainer.getLastRegion().getType().equals(XML_TAG_ATTRIBUTE_VALUE_DQUOTE) || fEmbeddedContainer.getLastRegion().getType().equals(JSP_TAG_ATTRIBUTE_VALUE_DQUOTE)) {
 		yybegin(ST_ABORT_EMBEDDED);
 		fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
 	}
@@ -2852,7 +2852,7 @@ protected final boolean containsTagName(String markerTagName) {
 	yybegin(ST_JSP_SQUOTED_VBL);
 	assembleEmbeddedContainer(JSP_VBL_OPEN, new String[]{JSP_VBL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_SQUOTE, JSP_TAG_ATTRIBUTE_VALUE_SQUOTE});
 	// abort early when an unescaped single quote is found in the VBL
-	if(fEmbeddedContainer.getLastRegion().getType().equals(XML_TAG_ATTRIBUTE_VALUE_SQUOTE)) {
+	if(fEmbeddedContainer.getLastRegion().getType().equals(XML_TAG_ATTRIBUTE_VALUE_SQUOTE) || fEmbeddedContainer.getLastRegion().getType().equals(JSP_TAG_ATTRIBUTE_VALUE_SQUOTE)) {
 		yybegin(ST_ABORT_EMBEDDED);
 		fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
 	}
@@ -2868,7 +2868,7 @@ protected final boolean containsTagName(String markerTagName) {
 	yybegin(ST_JSP_SQUOTED_EL);
 	assembleEmbeddedContainer(JSP_EL_OPEN, new String[]{JSP_EL_CLOSE, XML_TAG_ATTRIBUTE_VALUE_SQUOTE, JSP_TAG_ATTRIBUTE_VALUE_SQUOTE});
 	// abort early when an unescaped single quote is found in the EL
-	if(fEmbeddedContainer.getLastRegion().getType().equals(XML_TAG_ATTRIBUTE_VALUE_SQUOTE)) {
+	if(fEmbeddedContainer.getLastRegion().getType().equals(XML_TAG_ATTRIBUTE_VALUE_SQUOTE) || fEmbeddedContainer.getLastRegion().getType().equals(JSP_TAG_ATTRIBUTE_VALUE_SQUOTE)) {
 		yybegin(ST_ABORT_EMBEDDED);
 		fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
 	}
