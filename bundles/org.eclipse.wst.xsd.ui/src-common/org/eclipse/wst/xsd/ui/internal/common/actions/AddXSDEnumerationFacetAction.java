@@ -20,6 +20,7 @@ import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddEnumerationsCommand;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
+import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDEnumerationFacet;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 
@@ -50,17 +51,25 @@ public class AddXSDEnumerationFacetAction extends XSDBaseAction
     if (selection instanceof XSDBaseAdapter)
     {
       selection = ((XSDBaseAdapter) selection).getTarget();
-      
+      int index = -1;
       AddEnumerationsCommand command = null;
       XSDSimpleTypeDefinition st = null;
       if (selection instanceof XSDSimpleTypeDefinition)
       {
         st = (XSDSimpleTypeDefinition)selection;
+        command = new AddEnumerationsCommand(getText(), st);
       }
       else if (selection instanceof XSDEnumerationFacet)
       {
         st = ((XSDEnumerationFacet)selection).getSimpleTypeDefinition();
+        index = st.getFacetContents().indexOf(selection);
         doDirectEdit = true;
+        command = new AddEnumerationsCommand(getText(), st, getId(), index);
+      }
+      else if (selection instanceof XSDComplexTypeDefinition)  // Support for Complex Type's simple Content with enumerations
+      {
+        st = ((XSDComplexTypeDefinition)selection).getSimpleType();
+        command = new AddEnumerationsCommand(getText(), st);
       }
       else // null
       {
@@ -70,9 +79,7 @@ public class AddXSDEnumerationFacetAction extends XSDBaseAction
       List enumList = st.getEnumerationFacets();
       
       String newName = XSDCommonUIUtils.createUniqueEnumerationValue("value", enumList); //$NON-NLS-1$
-      
-      int index = st.getEnumerationFacets().indexOf(selection); 
-      command = new AddEnumerationsCommand(getText(), st, getId(), index);
+
       command.setValue(newName);
       getCommandStack().execute(command);
       addedComponent = command.getAddedComponent();

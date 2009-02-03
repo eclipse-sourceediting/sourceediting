@@ -57,7 +57,7 @@ public class AddEnumerationsCommand extends BaseCommand
       enumerationFacet.setLexicalValue(value);
       
       index = getInsertionIndex();
-      List facets = simpleType.getEnumerationFacets();
+      List facets = simpleType.getFacetContents();
       if (index >=0 && index < facets.size())
       {
         facets.add(index, enumerationFacet);
