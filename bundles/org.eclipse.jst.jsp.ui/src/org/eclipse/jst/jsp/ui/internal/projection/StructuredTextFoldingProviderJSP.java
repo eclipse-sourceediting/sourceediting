@@ -24,6 +24,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xml.ui.internal.projection.ProjectionModelNodeAdapterXML;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -107,13 +108,12 @@ public class StructuredTextFoldingProviderJSP implements IStructuredTextFoldingP
 					IndexedRegion startNode = sModel.getIndexedRegion(startOffset);
 					if (startNode instanceof Node) {
 						int siblingLevel = 0;
-						Node nextSibling = (Node) startNode;
-						while (nextSibling != null && siblingLevel < MAX_SIBLINGS) {
-							Node currentNode = nextSibling;
-							nextSibling = currentNode.getNextSibling();
-
-							addAdapterToNodeAndChildren(currentNode, 0);
+						Node currentNode = (Node) startNode;
+						while ((currentNode != null) && (siblingLevel < MAX_SIBLINGS)) {
+							if (currentNode.getNodeType() == Node.ELEMENT_NODE)
+								addAdapterToNodeAndChildren(currentNode, 0);
 							++siblingLevel;
+							currentNode = currentNode.getNextSibling();
 						}
 					}
 				}
@@ -341,12 +341,17 @@ public class StructuredTextFoldingProviderJSP implements IStructuredTextFoldingP
 				notifier.removeAdapter(adapter2);
 			}
 
-			Node nextChild = node.getFirstChild();
-			while (nextChild != null) {
-				Node childNode = nextChild;
-				nextChild = childNode.getNextSibling();
+			INodeAdapter adapter3 = notifier.getExistingAdapter(ProjectionModelNodeAdapterXML.class);
+			if (adapter3 != null) {
+				notifier.removeAdapter(adapter3);
+			}
 
-				removeAdapterFromNodeAndChildren(childNode, level + 1);
+			Node childNode = node.getFirstChild();
+			while (childNode != null) {
+				if(childNode.getNodeType() == Node.ELEMENT_NODE) {
+					removeAdapterFromNodeAndChildren(childNode, level + 1);
+				}
+				childNode = childNode.getNextSibling();
 			}
 		}
 	}

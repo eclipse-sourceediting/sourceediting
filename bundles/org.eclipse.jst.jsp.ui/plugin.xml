@@ -78,6 +78,9 @@
 		<contentOutlineConfiguration
 			class="org.eclipse.jst.jsp.ui.internal.views.contentoutline.TLDContentOutlineConfiguration"
 			target="org.eclipse.jst.jsp.core.tldsource" />
+		<documentationTextHover
+        	class="org.eclipse.jst.jsp.ui.internal.taginfo.XMLJavadocHoverProcessor"
+        	target="org.eclipse.wst.xml.XML_DEFAULT"/>
 	</extension>
 
 	<!--======================================================================================-->

@@ -179,7 +179,7 @@ class URLFileRegionHyperlink implements IHyperlink {
 			IEditorInput input = new StorageEditorInput(new URLStorage(fURL));
 			IEditorDescriptor descriptor;
 			try {
-				descriptor = IDE.getEditorDescriptor(input.getName());
+				descriptor = IDE.getEditorDescriptor(input.getName(), true);
 				if (descriptor != null) {
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					IEditorPart openedEditor = IDE.openEditor(page, input, descriptor.getId(), true);

@@ -19,8 +19,10 @@ import org.eclipse.jface.text.Region;
  * Copied from org.eclipse.jdt.internal.ui.text.JavaWordFinder
  */
 class JavaWordFinder {
-	
 	public static IRegion findWord(IDocument document, int offset) {
+		return findWord(document, offset, false);
+	}
+	public static IRegion findWord(IDocument document, int offset, boolean searchQualified) {
 		
 		int start= -1;
 		int end= -1;
@@ -33,7 +35,7 @@ class JavaWordFinder {
 			
 			while (pos >= 0) {
 				c= document.getChar(pos);
-				if (!Character.isJavaIdentifierPart(c))
+				if (searchQualified ? !Character.isJavaIdentifierPart(c) && c != '.' : !Character.isJavaIdentifierPart(c))
 					break;
 				--pos;
 			}
@@ -45,7 +47,7 @@ class JavaWordFinder {
 			
 			while (pos < length) {
 				c= document.getChar(pos);
-				if (!Character.isJavaIdentifierPart(c))
+				if (searchQualified ? !Character.isJavaIdentifierPart(c) && c != '.' : !Character.isJavaIdentifierPart(c))
 					break;
 				++pos;
 			}
