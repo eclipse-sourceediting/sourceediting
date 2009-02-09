@@ -347,7 +347,7 @@ public class FileBufferModelManager {
 
 	static final void shutdown() {
 		if (instance != null) {
-			if (Logger.DEBUG_FILEBUFFERMODELMANAGEMENT) {
+			if (Logger.DEBUG_FILEBUFFERMODELMANAGEMENT || Logger.DEBUG_FILEBUFFERMODELLEAKS) {
 				IDocument[] danglingDocuments = (IDocument[]) instance.fDocumentMap.keySet().toArray(new IDocument[0]);
 				for (int i = 0; i < danglingDocuments.length; i++) {
 					DocumentInfo info = (DocumentInfo) instance.fDocumentMap.get(danglingDocuments[i]);
@@ -420,7 +420,8 @@ public class FileBufferModelManager {
 	/**
 	 * Registers "interest" in a document, or rather the file buffer that
 	 * backs it. Intentionally used to alter the reference count of the file
-	 * buffer so it is not accidentally disposed of.
+	 * buffer so it is not accidentally disposed of while we have a model open
+	 * on top of it.
 	 */
 	public boolean connect(IDocument document) {
 		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);

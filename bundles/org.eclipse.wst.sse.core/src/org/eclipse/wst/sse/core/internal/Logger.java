@@ -46,6 +46,11 @@ public class Logger {
 	 */
 	public static final boolean DEBUG_FILEBUFFERMODELMANAGEMENT = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/filebuffers/modelmanagement")); //$NON-NLS-1$ //$NON-NLS-2$
 	/**
+	 * true if platform and plugin are in debug mode and debugging file buffer
+	 * models not being released on shutdown
+	 */
+	public static final boolean DEBUG_FILEBUFFERMODELLEAKS = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/filebuffers/leaks")); //$NON-NLS-1$ //$NON-NLS-2$
+	/**
 	 * true if platform and plugin are in debug mode and debugging formatting
 	 */
 	public static final boolean DEBUG_FORMAT = DEBUG && "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/format")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -115,6 +120,17 @@ public class Logger {
 	public static final int INFO = IStatus.INFO;
 	public static final int WARNING = IStatus.WARNING;
 	public static final int ERROR = IStatus.ERROR;
+	public static final int OK_DEBUG = 200 + OK;
+	public static final int INFO_DEBUG = 200 + INFO;
+	public static final int WARNING_DEBUG = 200 + WARNING;
+	public static final int ERROR_DEBUG = 200 + ERROR;
+
+	/**
+	 * @return true if the platform is debugging
+	 */
+	private static boolean isDebugging() {
+		return Platform.inDebugMode();
+	}
 
 	/**
 	 * Adds message to log.
@@ -127,6 +143,10 @@ public class Logger {
 	 *            exception thrown
 	 */
 	private static void _log(int level, String message, Throwable exception) {
+		if (level == OK_DEBUG || level == INFO_DEBUG || level == WARNING_DEBUG || level == ERROR_DEBUG) {
+			if (!isDebugging())
+				return;
+		}
 		message = (message != null) ? message : ""; //$NON-NLS-1$
 		Status statusObj = new Status(level, PLUGIN_ID, level, message, exception);
 		Bundle bundle = Platform.getBundle(PLUGIN_ID);

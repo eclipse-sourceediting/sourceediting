@@ -108,12 +108,14 @@ public class JarUtilities {
 						}
 						catch (IOException ioe) {
 							// no cleanup can be done
+							Logger.log(Logger.ERROR_DEBUG, null, ioe);
 						}
 						finally {
 							try {
 								entryInputStream.close();
 							}
 							catch (IOException e) {
+								Logger.log(Logger.ERROR_DEBUG, null, e);
 							}
 						}
 					}
@@ -143,6 +145,7 @@ public class JarUtilities {
 			}
 			catch (IOException ioe) {
 				// no cleanup can be done
+				Logger.log(Logger.ERROR_DEBUG, null, ioe);
 			}
 		}
 		return cachedCopy;
