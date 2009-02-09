@@ -61,6 +61,8 @@ public class TestOpenEditorXML extends TestCase {
 			fIsSetup = true;
 		}
 
+		assertTrue("Input file not accessible: " + fFile.getFullPath(), fFile.isAccessible());
+
 		// editor is opened each time
 		if (fIsSetup && fEditor == null) {
 			IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -81,17 +83,13 @@ public class TestOpenEditorXML extends TestCase {
 		}
 	}
 
-	private void createProject(String projName) {
+	private void createProject(String projName) throws CoreException {
 		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(projName);
 
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projName);
-		try {
-			project.create(description, new NullProgressMonitor());
-			project.open(new NullProgressMonitor());
-		}
-		catch (CoreException e) {
-			e.printStackTrace();
-		}
+
+		project.create(description, new NullProgressMonitor());
+		project.open(new NullProgressMonitor());
 	}
 
 	private IFile getOrCreateFile(String filePath) {

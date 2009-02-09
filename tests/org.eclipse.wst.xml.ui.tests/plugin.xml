@@ -55,7 +55,7 @@
 		</editor>
 	</extension>
     <extension
-         point="org.eclipse.core.runtime.contentTypes">
+         point="org.eclipse.core.contenttype.contentTypes">
         <content-type
 			file-extensions="xml99"
 			priority="low"

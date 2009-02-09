@@ -48,10 +48,17 @@ public class TestEditorConfigurationXML extends TestCase {
 	}
 	
 	public void testGetDocumentationTextHover() {
-		Object o = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.DOCUMENTATIONTEXTHOVER, IXMLPartitions.XML_DEFAULT);
-		assertNotNull("no documentation text hover for " + IXMLPartitions.XML_DEFAULT, o);
-		// check for over-qualified subclasses
-		assertEquals("unexpected documentation text hover for " + IXMLPartitions.XML_DEFAULT, o.getClass(), XMLTagInfoHoverProcessor.class);
+		Object[] hovers = ExtendedConfigurationBuilder.getInstance().getConfigurations(ExtendedConfigurationBuilder.DOCUMENTATIONTEXTHOVER, IXMLPartitions.XML_DEFAULT).toArray();
+		assertTrue("no documentation text hover for " + IXMLPartitions.XML_DEFAULT, hovers.length > 0);
+//		// check for over-qualified subclasses
+//		assertEquals("unexpected documentation text hover for " + IXMLPartitions.XML_DEFAULT, o.getClass(), XMLTagInfoHoverProcessor.class);
+		Class required = XMLTagInfoHoverProcessor.class;
+		boolean requiredFound = false;
+		for (int i = 0; i < hovers.length; i++) {
+			if(required.equals(hovers[i].getClass()))
+				requiredFound = true;
+		}
+		assertTrue(required.getName() + " not loaded", requiredFound);
 	}
 	
 	public void testGetDoubleClickStrategy() {

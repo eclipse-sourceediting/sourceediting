@@ -74,7 +74,7 @@ public class TestPropertySheetConfiguration extends TestCase {
 					fEditor = (StructuredTextEditor) adapter;
 			}
 			if (fEditor == null)
-				assertTrue("Unable to open structured text editor", false);
+				assertTrue("Unable to open structured text editor " + ((fMainEditor != null) ? fMainEditor.getClass().getName() : ""), false);
 		}
 	}
 
