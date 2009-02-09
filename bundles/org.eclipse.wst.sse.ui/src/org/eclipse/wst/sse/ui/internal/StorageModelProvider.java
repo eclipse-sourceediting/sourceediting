@@ -68,6 +68,9 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 			}
 
 			StorageInfo info = (StorageInfo) getElementInfo(element);
+			
+			if (info == null)
+				return;
 
 			/**
 			 * Force a reload of the markers into annotations since their
@@ -75,7 +78,7 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 			 * reconnecting forces a call to the private catchupWithMarkers
 			 * method.
 			 */
-			if (info != null && info.fModel != null) {
+			if (info.fModel != null) {
 				info.fModel.disconnect(info.fDocument);
 			}
 
