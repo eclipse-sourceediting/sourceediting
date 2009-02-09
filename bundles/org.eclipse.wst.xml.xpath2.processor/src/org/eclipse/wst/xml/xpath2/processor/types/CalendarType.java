@@ -12,7 +12,7 @@
 package org.eclipse.wst.xml.xpath2.processor.types;
 
 // common base for anything that uses a calendar... basically stuff doing with
-// time... hopefully in the future shit may be factored out here
+// time... hopefully in the future this may be factored out here
 /**
  * Common base for all Calendar based classes
  */

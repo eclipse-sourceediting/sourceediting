@@ -45,8 +45,6 @@ public class DefaultStaticContext implements StaticContext {
 	// A stack of maps of variables....
 	// or in more human terms:
 	// a stack of scopes each containing a symbol table
-	// or in other terms:
-	// a pile full of crap
 	// XXX vars contain AnyType... should they be ResultSequence ?
 	private Stack _scopes;
 

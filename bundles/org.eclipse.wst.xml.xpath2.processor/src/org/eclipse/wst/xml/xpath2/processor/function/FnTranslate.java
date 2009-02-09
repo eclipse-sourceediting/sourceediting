@@ -111,7 +111,7 @@ public class FnTranslate extends Function {
 		String result = new String(str);
 
 		// ok the spec says that first occurence decides how to change
-		// it... so we gotta do this crap
+		// it... 
 		Map repmap = new Hashtable(256);
 		for (int i = 0; i < mapstr.length(); i++) {
 			String replace = "";

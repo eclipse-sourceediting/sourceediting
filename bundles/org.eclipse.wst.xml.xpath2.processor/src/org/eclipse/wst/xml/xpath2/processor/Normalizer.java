@@ -616,7 +616,6 @@ public class Normalizer implements XPathVisitor {
 	 *            is the xpath expression.
 	 * @return result.
 	 */
-	// XXX: fix this it looks like poo
 	public Object visit(XPathExpr e) {
 		XPathExpr xp = e;
 		int depth = 0; // indicates how many / we traversed

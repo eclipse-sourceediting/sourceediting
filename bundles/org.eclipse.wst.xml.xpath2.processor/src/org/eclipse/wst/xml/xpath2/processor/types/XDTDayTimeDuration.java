@@ -185,7 +185,7 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 				did_something = true;
 			}
 			if (did_something) {
-				// make sure we parsed it all [no extra shit]
+				// make sure we parsed it all
 				if (tstr.length() != 0)
 					return null;
 			} else {

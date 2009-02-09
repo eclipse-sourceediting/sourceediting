@@ -107,7 +107,6 @@ public abstract class NodeType extends AnyType {
 	}
 
 	public static ResultSequence eliminate_dups(ResultSequence rs) {
-		// XXX lameness
 		Hashtable added = new Hashtable(rs.size());
 
 		for (Iterator i = rs.iterator(); i.hasNext();) {
@@ -122,7 +121,6 @@ public abstract class NodeType extends AnyType {
 		return rs;
 	}
 
-	// XXX LAME
 	public static ResultSequence sort_document_order(ResultSequence rs) {
 		ArrayList res = new ArrayList(rs.size());
 
@@ -153,7 +151,6 @@ public abstract class NodeType extends AnyType {
 		return rs;
 	}
 
-	// XXX LAME [also, we assume nodes are in the same tree]
 	public static boolean same(NodeType a, NodeType b) {
 		return a.document_order() == b.document_order();
 	}
