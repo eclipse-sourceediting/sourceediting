@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -459,7 +459,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 *             extension point
 	 */
 	protected IInformationProvider getInformationProvider(ISourceViewer sourceViewer, String partitionType) {
-		ITextHover bestMatchHover = new BestMatchHover(createDocumentationHover(partitionType));
+		ITextHover bestMatchHover = new BestMatchHover(createDocumentationHovers(partitionType));
 		return new TextHoverInformationProvider(bestMatchHover);
 	}
 
@@ -624,20 +624,17 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	}
 
 	/**
-	 * Create a documentation hover based on hovers contributed via
+	 * Create documentation hovers based on hovers contributed via
 	 * <code>org.eclipse.wst.sse.ui.editorConfiguration</code> extension
 	 * point
 	 * 
 	 * @param partitionType
 	 * @return
 	 */
-	private ITextHover createDocumentationHover(String partitionType) {
-		ITextHover textHover = null;
-		Object extendedTextHover = ExtendedConfigurationBuilder.getInstance().getConfiguration(ExtendedConfigurationBuilder.DOCUMENTATIONTEXTHOVER, partitionType);
-		if (extendedTextHover instanceof ITextHover) {
-			textHover = (ITextHover) extendedTextHover;
-		}
-		return textHover;
+	private ITextHover[] createDocumentationHovers(String partitionType) {
+		List extendedTextHover = ExtendedConfigurationBuilder.getInstance().getConfigurations(ExtendedConfigurationBuilder.DOCUMENTATIONTEXTHOVER, partitionType);
+		ITextHover[] hovers = (ITextHover[]) extendedTextHover.toArray(new ITextHover[extendedTextHover.size()]);
+		return hovers;
 	}
 
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
@@ -657,9 +654,12 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 				else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType))
 					textHover = new AnnotationHoverProcessor();
 				else if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType))
-					textHover = new BestMatchHover(createDocumentationHover(contentType));
+					textHover = new BestMatchHover(createDocumentationHovers(contentType));
 				else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType)) {
-					textHover = createDocumentationHover(contentType);
+					ITextHover[] hovers = createDocumentationHovers(contentType);
+					if (hovers.length > 0) {
+						textHover = hovers[0];
+					}
 				}
 			}
 			i++;

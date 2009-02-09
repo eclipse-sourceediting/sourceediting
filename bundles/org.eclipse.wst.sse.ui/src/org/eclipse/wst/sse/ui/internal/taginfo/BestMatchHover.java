@@ -30,12 +30,16 @@ import org.eclipse.wst.sse.ui.internal.Logger;
  */
 public class BestMatchHover implements ITextHover, ITextHoverExtension {
 	private ITextHover fBestMatchHover; // current best match text hover
-	private ITextHover fTagInfoHover; // documentation/information hover
+	private ITextHover[] fTagInfoHovers; // documentation/information hover
 	private List fTextHovers; // list of text hovers to consider in best
 	// match
 
-	public BestMatchHover(ITextHover infotaghover) {
-		fTagInfoHover = infotaghover;
+	public BestMatchHover(ITextHover infoTagHover) {
+		this(new ITextHover[]{infoTagHover});
+	}
+
+	public BestMatchHover(ITextHover[] infoTagHovers) {
+		fTagInfoHovers = infoTagHovers;
 	}
 
 	/**
@@ -53,8 +57,11 @@ public class BestMatchHover implements ITextHover, ITextHoverExtension {
 		}
 
 		hoverList.add(new ProblemAnnotationHoverProcessor());
-		if (fTagInfoHover != null) {
-			hoverList.add(fTagInfoHover);
+		
+		if (fTagInfoHovers != null) {
+			for (int i = 0; i < fTagInfoHovers.length; i++) {
+				hoverList.add(fTagInfoHovers[i]);
+			}
 		}
 		hoverList.add(new AnnotationHoverProcessor());
 		return hoverList;
