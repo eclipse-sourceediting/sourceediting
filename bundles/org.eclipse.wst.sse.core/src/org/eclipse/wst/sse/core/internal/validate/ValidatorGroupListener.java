@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.Logger;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.validation.IValidatorGroupListener;
 import org.eclipse.wst.validation.ValidationState;
@@ -65,9 +66,13 @@ public class ValidatorGroupListener implements IValidatorGroupListener {
 				if (resource.getType() != IResource.FILE)
 					return;
 
-				IStructuredModel model = StructuredModelManager.getModelManager().getModelForRead((IFile) resource);
-				if (model != null) {
-					fDiagnosticMap.put(resource.getFullPath(), model);
+				IModelManager modelManager = StructuredModelManager.getModelManager();
+				// possible when shutting down
+				if (modelManager != null) {
+					IStructuredModel model = modelManager.getModelForRead((IFile) resource);
+					if (model != null) {
+						fDiagnosticMap.put(resource.getFullPath(), model);
+					}
 				}
 			}
 		}
