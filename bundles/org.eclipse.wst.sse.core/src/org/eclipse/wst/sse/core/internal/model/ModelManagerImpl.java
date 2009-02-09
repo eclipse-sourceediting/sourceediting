@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,7 +42,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.BadLocationException;
@@ -258,6 +260,7 @@ public class ModelManagerImpl implements IModelManager {
 	private void _doCommonCreateModel(IFile file, String id, IModelHandler handler,
 			URIResolver resolver, ReadEditType rwType, EncodingRule encodingRule,
 			SharedObject sharedObject) throws CoreException, IOException {
+		// XXX: Does not integrate with FileBuffers
 		boolean doRemove = false;
 		synchronized(sharedObject) {
 			InputStream inputStream = null;
@@ -360,6 +363,24 @@ public class ModelManagerImpl implements IModelManager {
 				handleProgramError(e);
 			}
 			if (model != null) {
+				/**
+				 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=264228
+				 * 
+				 * Ensure that the content type identifier field of the model
+				 * is properly set. This is normally handled by the
+				 * FileBufferModelManager when working with files as it knows
+				 * the content type in advance; here is where we handle it for
+				 * streams.
+				 */
+				if (model instanceof AbstractStructuredModel) {
+					DocumentReader reader = new DocumentReader(model.getStructuredDocument());
+					IContentDescription description = Platform.getContentTypeManager().getDescriptionFor(reader, id, new QualifiedName[0]);
+					reader.close();
+					if (description != null && description.getContentType() != null) {
+						((AbstractStructuredModel) model).setContentTypeIdentifier(description.getContentType().getId());
+					}
+				}
+
 				sharedObject.theSharedModel = model;
 				_initCount(sharedObject, rwType);
 			} else {
