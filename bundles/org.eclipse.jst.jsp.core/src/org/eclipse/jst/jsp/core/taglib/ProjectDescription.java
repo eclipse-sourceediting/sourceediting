@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -731,6 +731,7 @@ class ProjectDescription {
 			}
 			catch (MalformedURLException e) {
 				// not worth reporting
+				Logger.logException(e);
 			}
 			if (fileLocation != null) {
 				JarRecord jarRecord = createJARRecord(fileLocation);
@@ -754,6 +755,7 @@ class ProjectDescription {
 								contents.close();
 							}
 							catch (IOException e) {
+								Logger.logException(e);
 							}
 						}
 					}
@@ -794,12 +796,14 @@ class ProjectDescription {
 				}
 				catch (IOException ioe) {
 					// no cleanup can be done
+					Logger.logException(ioe);
 				}
 				finally {
 					try {
 						tldStream.close();
 					}
 					catch (IOException e) {
+						Logger.logException(e);
 					}
 				}
 
@@ -820,6 +824,7 @@ class ProjectDescription {
 					cachedContents.close();
 				}
 				catch (IOException e) {
+					Logger.logException(e);
 				}
 				record = urlRecord;
 			}
@@ -931,6 +936,7 @@ class ProjectDescription {
 			}
 			catch (IOException e) {
 				// ignore
+				Logger.logException(e);
 			}
 		}
 		return record;
@@ -1096,12 +1102,14 @@ class ProjectDescription {
 					}
 					catch (IOException ioe) {
 						// no cleanup can be done
+						Logger.logException(ioe);
 					}
 					finally {
 						try {
 							entryInputStream.close();
 						}
 						catch (IOException e) {
+							Logger.logException(e);
 						}
 					}
 				}
@@ -1834,6 +1842,7 @@ class ProjectDescription {
 													contents.close();
 												}
 												catch (IOException e) {
+													Logger.logException(e);
 												}
 											}
 										}
@@ -1880,12 +1889,14 @@ class ProjectDescription {
 										}
 										catch (IOException ioe) {
 											// no cleanup can be done
+											Logger.logException(ioe);
 										}
 										finally {
 											try {
 												tldStream.close();
 											}
 											catch (IOException e) {
+												Logger.logException(e);
 											}
 										}
 
@@ -1897,6 +1908,7 @@ class ProjectDescription {
 											cachedContents.close();
 										}
 										catch (IOException e) {
+											Logger.logException(e);
 										}
 										if (urlRecord.getURI() != null && urlRecord.getURI().length() > 0) {
 											fClasspathReferences.put(urlRecord.getURI(), urlRecord);
@@ -1944,6 +1956,7 @@ class ProjectDescription {
 							reader.close();
 						}
 						catch (IOException e) {
+							Logger.logException(e);
 						}
 					}
 				}
@@ -2015,6 +2028,7 @@ class ProjectDescription {
 			}
 		}
 		catch (IOException e) {
+			Logger.logException(e);
 		}
 		finally {
 			try {
@@ -2023,6 +2037,7 @@ class ProjectDescription {
 				}
 			}
 			catch (Exception e) {
+				Logger.logException(e);
 			}
 		}
 
@@ -2051,6 +2066,7 @@ class ProjectDescription {
 			}
 		}
 		if (deltaKind == ITaglibIndexDelta.ADDED || deltaKind == ITaglibIndexDelta.CHANGED) {
+			// XXX: runs on folders as well?!
 			libraryRecord = createJARRecord(libraryLocation);
 			libraryRecord.isExported = isExported;
 			fClasspathJars.put(libraryLocation, libraryRecord);
@@ -2092,6 +2108,7 @@ class ProjectDescription {
 									contents.close();
 								}
 								catch (IOException e) {
+									Logger.logException(e);
 								}
 							}
 						}
@@ -2162,6 +2179,7 @@ class ProjectDescription {
 						contents.close();
 					}
 					catch (IOException e) {
+						Logger.logException(e);
 					}
 				}
 				else {
@@ -2256,6 +2274,7 @@ class ProjectDescription {
 				}
 				catch (IOException e1) {
 					// ignore
+					Logger.logException(e1);
 				}
 		}
 		if (document == null)
@@ -2302,6 +2321,7 @@ class ProjectDescription {
 											contents.close();
 										}
 										catch (IOException e) {
+											Logger.logException(e);
 										}
 									}
 								}

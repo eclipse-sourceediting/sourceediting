@@ -146,7 +146,13 @@
 			name="%JSP_TLD_Content_Type_Extension_Element.name"
 			id="tldsource"
 			base-type="org.eclipse.core.runtime.xml"
-			default-charset="UTF-8"/>
+			default-charset="UTF-8">
+			<!-- add the describer so it's properly detected when opened from within .jar files -->
+			<describer class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber">
+				<parameter name="element" value="taglib"/>
+			</describer>
+		</content-type>
+		
 
   	<!--======================================================================================-->
 	<!-- minimal content-type css jsp support                                                 -->
