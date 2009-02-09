@@ -731,7 +731,7 @@ class ProjectDescription {
 			}
 			catch (MalformedURLException e) {
 				// not worth reporting
-				Logger.logException(e);
+				Logger.log(Logger.ERROR_DEBUG, null, e);
 			}
 			if (fileLocation != null) {
 				JarRecord jarRecord = createJARRecord(fileLocation);
@@ -755,7 +755,7 @@ class ProjectDescription {
 								contents.close();
 							}
 							catch (IOException e) {
-								Logger.logException(e);
+								Logger.log(Logger.ERROR_DEBUG, null, e);
 							}
 						}
 					}
@@ -796,14 +796,14 @@ class ProjectDescription {
 				}
 				catch (IOException ioe) {
 					// no cleanup can be done
-					Logger.logException(ioe);
+					Logger.log(Logger.ERROR_DEBUG, null, ioe);
 				}
 				finally {
 					try {
 						tldStream.close();
 					}
 					catch (IOException e) {
-						Logger.logException(e);
+						Logger.log(Logger.ERROR_DEBUG, null, e);
 					}
 				}
 
@@ -824,7 +824,7 @@ class ProjectDescription {
 					cachedContents.close();
 				}
 				catch (IOException e) {
-					Logger.logException(e);
+					Logger.log(Logger.ERROR_DEBUG, null, e);
 				}
 				record = urlRecord;
 			}
@@ -936,7 +936,7 @@ class ProjectDescription {
 			}
 			catch (IOException e) {
 				// ignore
-				Logger.logException(e);
+				Logger.log(Logger.ERROR_DEBUG, null, e);
 			}
 		}
 		return record;
@@ -1102,14 +1102,14 @@ class ProjectDescription {
 					}
 					catch (IOException ioe) {
 						// no cleanup can be done
-						Logger.logException(ioe);
+						Logger.log(Logger.ERROR_DEBUG, null, ioe);
 					}
 					finally {
 						try {
 							entryInputStream.close();
 						}
 						catch (IOException e) {
-							Logger.logException(e);
+							Logger.log(Logger.ERROR_DEBUG, null, e);
 						}
 					}
 				}
@@ -1842,7 +1842,7 @@ class ProjectDescription {
 													contents.close();
 												}
 												catch (IOException e) {
-													Logger.logException(e);
+													Logger.log(Logger.ERROR_DEBUG, null, e);
 												}
 											}
 										}
@@ -1889,14 +1889,14 @@ class ProjectDescription {
 										}
 										catch (IOException ioe) {
 											// no cleanup can be done
-											Logger.logException(ioe);
+											Logger.log(Logger.ERROR_DEBUG, null, ioe);
 										}
 										finally {
 											try {
 												tldStream.close();
 											}
 											catch (IOException e) {
-												Logger.logException(e);
+												Logger.log(Logger.ERROR_DEBUG, null, e);
 											}
 										}
 
@@ -1908,7 +1908,7 @@ class ProjectDescription {
 											cachedContents.close();
 										}
 										catch (IOException e) {
-											Logger.logException(e);
+											Logger.log(Logger.ERROR_DEBUG, null, e);
 										}
 										if (urlRecord.getURI() != null && urlRecord.getURI().length() > 0) {
 											fClasspathReferences.put(urlRecord.getURI(), urlRecord);
@@ -1956,7 +1956,7 @@ class ProjectDescription {
 							reader.close();
 						}
 						catch (IOException e) {
-							Logger.logException(e);
+							Logger.log(Logger.ERROR_DEBUG, null, e);
 						}
 					}
 				}
@@ -2028,7 +2028,7 @@ class ProjectDescription {
 			}
 		}
 		catch (IOException e) {
-			Logger.logException(e);
+			Logger.log(Logger.ERROR_DEBUG, null, e);
 		}
 		finally {
 			try {
@@ -2037,7 +2037,7 @@ class ProjectDescription {
 				}
 			}
 			catch (Exception e) {
-				Logger.logException(e);
+				Logger.log(Logger.ERROR_DEBUG, null, e);
 			}
 		}
 
@@ -2108,7 +2108,7 @@ class ProjectDescription {
 									contents.close();
 								}
 								catch (IOException e) {
-									Logger.logException(e);
+									Logger.log(Logger.ERROR_DEBUG, null, e);
 								}
 							}
 						}
@@ -2179,7 +2179,7 @@ class ProjectDescription {
 						contents.close();
 					}
 					catch (IOException e) {
-						Logger.logException(e);
+						Logger.log(Logger.ERROR_DEBUG, null, e);
 					}
 				}
 				else {
@@ -2274,7 +2274,7 @@ class ProjectDescription {
 				}
 				catch (IOException e1) {
 					// ignore
-					Logger.logException(e1);
+					Logger.log(Logger.ERROR_DEBUG, null, e1);
 				}
 		}
 		if (document == null)
@@ -2321,7 +2321,7 @@ class ProjectDescription {
 											contents.close();
 										}
 										catch (IOException e) {
-											Logger.logException(e);
+											Logger.log(Logger.ERROR_DEBUG, null, e);
 										}
 									}
 								}
