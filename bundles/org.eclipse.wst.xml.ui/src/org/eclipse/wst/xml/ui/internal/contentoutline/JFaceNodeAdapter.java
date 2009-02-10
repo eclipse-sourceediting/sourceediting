@@ -17,8 +17,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
@@ -97,7 +95,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 				break;
 			}
 			default : {
-				image = createXMLImageDescriptor(XMLEditorPluginImages.IMG_OBJ_ELEMENT);
+				image = createXMLImageDescriptor(XMLEditorPluginImages.IMG_OBJ_TXTEXT);
 				break;
 			}
 		}
@@ -142,17 +140,15 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 	public Image getLabelImage(Object node) {
 		Image image = null;
 		if (node instanceof Node) {
+			// check for an image from the content model
 			image = CMImageUtil.getImage(CMImageUtil.getDeclaration((Node) node));
-			if ((image == null) && (JFaceResources.getImageRegistry() != null)) {
-				ImageRegistry imageRegistry = JFaceResources.getImageRegistry();
-				String nodeName = getNodeName(node);
-				image = imageRegistry.get(nodeName);
-				if (image == null) {
-					image = createImage(node);
-					if (image != null) {
-						imageRegistry.put(nodeName, image);
-					}
-				}
+			if (image == null) {
+				/*
+				 * Create/get image based on Node type. Images are cached
+				 * transparently in this class, subclasses must do this for
+				 * themselves if they're going to return their own results.
+				 */
+				image = createImage(node);
 			}
 		}
 		return image;

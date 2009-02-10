@@ -14,7 +14,6 @@ import java.util.HashMap;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
@@ -102,7 +101,7 @@ public class HTMLEditorPluginImageHelper {
 	 * @return ImageRegistry - image registry for this plugin
 	 */
 	private ImageRegistry getImageRegistry() {
-		return JFaceResources.getImageRegistry();
+		return HTMLUIPlugin.getInstance().getImageRegistry();
 	}
 
 	/**

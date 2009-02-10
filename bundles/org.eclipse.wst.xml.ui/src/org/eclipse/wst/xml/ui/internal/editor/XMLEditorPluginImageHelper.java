@@ -16,7 +16,6 @@ import java.util.HashMap;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
@@ -155,6 +154,6 @@ public class XMLEditorPluginImageHelper {
 	 * @return ImageRegistry - image registry for this plugin
 	 */
 	private ImageRegistry getImageRegistry() {
-		return JFaceResources.getImageRegistry();
+		return XMLUIPlugin.getDefault().getImageRegistry();
 	}
 }

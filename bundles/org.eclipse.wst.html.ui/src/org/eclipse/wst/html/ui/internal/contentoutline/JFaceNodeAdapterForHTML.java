@@ -12,6 +12,8 @@ package org.eclipse.wst.html.ui.internal.contentoutline;
 
 
 
+import java.util.Locale;
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImageHelper;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImages;
@@ -42,25 +44,26 @@ public class JFaceNodeAdapterForHTML extends JFaceNodeAdapter {
 
 		Node node = (Node) object;
 		if (node.getNodeType() == Node.ELEMENT_NODE) {
-			if (node.getNodeName().equalsIgnoreCase("table")) //$NON-NLS-1$
+			String lowerName = node.getNodeName().toLowerCase(Locale.US);
+			if (lowerName.equals("table") || lowerName.endsWith(":table")) //$NON-NLS-1$
 				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TABLE);
-			else if (node.getNodeName().equalsIgnoreCase("a")) //$NON-NLS-1$
+			else if (lowerName.equals("a") || lowerName.endsWith(":a")) //$NON-NLS-1$
 				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG_ANCHOR);
-			else if (node.getNodeName().equalsIgnoreCase("body")) //$NON-NLS-1$
+			else if (lowerName.equals("body") || lowerName.endsWith(":body")) //$NON-NLS-1$
 				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG_BODY);
-			else if (node.getNodeName().equalsIgnoreCase("button")) //$NON-NLS-1$
+			else if (lowerName.equals("button") || lowerName.endsWith(":button")) //$NON-NLS-1$
 				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG_BUTTON);
-			else if (node.getNodeName().equalsIgnoreCase("font")) //$NON-NLS-1$
+			else if (lowerName.equals("font") || lowerName.endsWith(":font")) //$NON-NLS-1$
 				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG_FONT);
-			else if (node.getNodeName().equalsIgnoreCase("form")) //$NON-NLS-1$
+			else if (lowerName.equals("form") || lowerName.endsWith(":form")) //$NON-NLS-1$
 				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG_FORM);
-			else if (node.getNodeName().equalsIgnoreCase("html")) //$NON-NLS-1$
+			else if (lowerName.equals("html") || lowerName.endsWith(":html")) //$NON-NLS-1$
 				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG_HTML);
-			else if (node.getNodeName().equalsIgnoreCase("img")) //$NON-NLS-1$
+			else if (lowerName.equals("img") || lowerName.endsWith(":img")) //$NON-NLS-1$
 				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG_IMAGE);
-			else if (node.getNodeName().equalsIgnoreCase("map")) //$NON-NLS-1$
+			else if (lowerName.equals("map") || lowerName.endsWith(":map")) //$NON-NLS-1$
 				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG_IMAGE_MAP);
-			else if (node.getNodeName().equalsIgnoreCase("title")) //$NON-NLS-1$
+			else if (lowerName.equals("title") || lowerName.endsWith(":title")) //$NON-NLS-1$
 				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG_TITLE);
 			else
 				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TAG);
