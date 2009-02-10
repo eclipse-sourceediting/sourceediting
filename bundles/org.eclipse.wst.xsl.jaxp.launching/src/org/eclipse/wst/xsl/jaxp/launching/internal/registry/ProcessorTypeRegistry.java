@@ -85,7 +85,7 @@ public class ProcessorTypeRegistry
 
 			for (Iterator<IConfigurationElement> iter = elements.iterator(); iter.hasNext();)
 			{
-				IConfigurationElement element = (IConfigurationElement) iter.next();
+				IConfigurationElement element = iter.next();
 				String id = element.getAttribute(ProcessorTypeRegistryReader.ATT_ID);
 				String label = element.getAttribute(ProcessorTypeRegistryReader.ATT_LABEL);
 				Map<String, String> featureValues = new HashMap<String, String>();
@@ -125,7 +125,7 @@ public class ProcessorTypeRegistry
 			if (!type.isJREDefault())
 				exclTypes.add(type);
 		}
-		return (IProcessorType[]) exclTypes.toArray(new IProcessorType[0]);
+		return exclTypes.toArray(new IProcessorType[0]);
 	}
 
 	public void addType(IConfigurationElement element)

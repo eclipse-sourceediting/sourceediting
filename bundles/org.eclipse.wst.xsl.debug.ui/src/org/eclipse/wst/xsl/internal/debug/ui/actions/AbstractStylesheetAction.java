@@ -174,7 +174,7 @@ public abstract class AbstractStylesheetAction extends SelectionListenerAction
 
 	protected void setEntries(List<?> list)
 	{
-		getViewer().setEntries((LaunchTransform[]) list.toArray(new LaunchTransform[list.size()]));
+		getViewer().setEntries(list.toArray(new LaunchTransform[list.size()]));
 		// // update all selection listeners
 		// getViewer().setSelection(getViewer().getSelection());
 	}

@@ -189,7 +189,7 @@ public abstract class AbstractXMLElementContentAssistRequest extends AbstractXSL
 				return;
 			}
 			while (nodeIterator.hasNext()) {
-				CMNode elementDecl = (CMNode) nodeIterator.next();
+				CMNode elementDecl = nodeIterator.next();
 				if (elementDecl != null) {
 					// only add proposals for the child element's that begin
 					// with the matchstring

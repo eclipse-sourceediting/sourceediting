@@ -114,7 +114,7 @@ public class MultipleInputDialog extends Dialog
 
 		for (Iterator<FieldSummary> i = fieldList.iterator(); i.hasNext();)
 		{
-			FieldSummary field = (FieldSummary) i.next();
+			FieldSummary field = i.next();
 			switch (field.type)
 			{
 				case TEXT:
@@ -331,7 +331,7 @@ public class MultipleInputDialog extends Dialog
 	{
 		for (Iterator<Scrollable> i = controlList.iterator(); i.hasNext();)
 		{
-			Control control = (Control) i.next();
+			Control control = i.next();
 			if (control instanceof Text)
 			{
 				valueMap.put(control.getData(FIELD_NAME), ((Text) control).getText());
@@ -372,7 +372,7 @@ public class MultipleInputDialog extends Dialog
 	{
 		for (Iterator<Validator> i = validators.iterator(); i.hasNext();)
 		{
-			Validator validator = (Validator) i.next();
+			Validator validator = i.next();
 			if (!validator.validate())
 			{
 				getButton(IDialogConstants.OK_ID).setEnabled(false);

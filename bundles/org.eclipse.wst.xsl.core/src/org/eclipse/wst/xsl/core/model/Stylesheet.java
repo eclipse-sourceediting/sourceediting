@@ -149,6 +149,7 @@ public class Stylesheet extends XSLElement
 		globalVariables.add(var);
 	}
 	
+	@Override
 	public Type getModelType()
 	{
 		return Type.STYLESHEET;

@@ -37,6 +37,7 @@ class NewXSLFileWizardPage extends WizardNewFileCreationPage
 		setFileName("NewFile.xsl");
 	}
 
+	@Override
 	protected boolean validatePage()
 	{
 		setMessage(null);

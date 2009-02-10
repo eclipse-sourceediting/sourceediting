@@ -30,7 +30,7 @@ public class Utils
 		}
 		catch (IOException e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.Utils_0 + path + Messages.Utils_1 + bundleId, e)); //$NON-NLS-1$ //$NON-NLS-2$
+			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.Utils_0 + path + Messages.Utils_1 + bundleId, e)); 
 		} 
 		return location;
 	}
@@ -50,7 +50,7 @@ public class Utils
 		}
 		catch (IOException e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.Utils_0 + bundleId + Messages.Utils_1 + bundleId, e)); //$NON-NLS-1$ //$NON-NLS-2$
+			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.Utils_0 + bundleId + Messages.Utils_1 + bundleId, e)); 
 		} 
 		return location;
 	}

@@ -25,10 +25,7 @@ import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateContextType;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
@@ -41,7 +38,6 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
@@ -82,6 +78,7 @@ public class NewXSLFileTemplatesWizardPage extends WizardPage
 	{
 		parent.addControlListener(new ControlAdapter()
 		{
+			@Override
 			public void controlResized(ControlEvent e)
 			{
 				Rectangle area = parent.getClientArea();
@@ -133,6 +130,7 @@ public class NewXSLFileTemplatesWizardPage extends WizardPage
 		fUseTemplateButton.setLayoutData(data);
 		fUseTemplateButton.addSelectionListener(new SelectionAdapter()
 		{
+			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
 				enableTemplates();
@@ -156,6 +154,7 @@ public class NewXSLFileTemplatesWizardPage extends WizardPage
 		link.setLayoutData(data);
 		link.addSelectionListener(new SelectionAdapter()
 		{
+			@Override
 			public void widgetSelected(SelectionEvent e)
 			{
 				linkClicked();
@@ -187,6 +186,7 @@ public class NewXSLFileTemplatesWizardPage extends WizardPage
 
 		fTableViewer.setSorter(new ViewerSorter()
 		{
+			@Override
 			public int compare(Viewer viewer, Object object1, Object object2)
 			{
 				if ((object1 instanceof Template) && (object2 instanceof Template))
@@ -201,6 +201,7 @@ public class NewXSLFileTemplatesWizardPage extends WizardPage
 				return super.compare(viewer, object1, object2);
 			}
 
+			@Override
 			public boolean isSorterProperty(Object element, String property)
 			{
 				return true;
@@ -234,10 +235,12 @@ public class NewXSLFileTemplatesWizardPage extends WizardPage
 		SourceViewerConfiguration sourceViewerConfiguration = new StructuredTextViewerConfiguration() {
 			StructuredTextViewerConfiguration baseConfiguration = new StructuredTextViewerConfigurationXSL();
 
+			@Override
 			public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 				return baseConfiguration.getConfiguredContentTypes(sourceViewer);
 			}
 
+			@Override
 			public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
 				return baseConfiguration.getLineStyleProviders(sourceViewer, partitionType);
 			}

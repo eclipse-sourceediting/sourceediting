@@ -32,6 +32,7 @@ public class XSLMarkupValidator extends MarkupValidator implements IValidator, I
 	 *  (non-Javadoc)
 	 * @see org.eclipse.wst.validation.internal.provisional.core.IValidator#cleanup(org.eclipse.wst.validation.internal.provisional.core.IReporter)
 	 */
+	@Override
 	public void cleanup(IReporter reporter) {
 		// TODO Auto-generated method stub
 		super.cleanup(reporter);
@@ -45,6 +46,7 @@ public class XSLMarkupValidator extends MarkupValidator implements IValidator, I
 	 * @throws ValidationException 
 	 * 
 	 */
+	@Override
 	public void validate(IValidationContext helper, IReporter reporter)
 			throws ValidationException {
 		// TODO Auto-generated method stub
@@ -55,6 +57,7 @@ public class XSLMarkupValidator extends MarkupValidator implements IValidator, I
 	 * (non-Javadoc)
 	 * @see org.eclipse.wst.xml.ui.internal.validation.MarkupValidator#connect(org.eclipse.jface.text.IDocument)
 	 */
+	@Override
 	public void connect(IDocument document) {
         super.connect(document);
 	}
@@ -63,6 +66,7 @@ public class XSLMarkupValidator extends MarkupValidator implements IValidator, I
 	 * (non-Javadoc)
 	 * @see org.eclipse.wst.xml.ui.internal.validation.MarkupValidator#disconnect(org.eclipse.jface.text.IDocument)
 	 */
+	@Override
 	public void disconnect(IDocument document) {
 		super.disconnect(document);
 	}
@@ -71,6 +75,7 @@ public class XSLMarkupValidator extends MarkupValidator implements IValidator, I
 	 *  (non-Javadoc)
 	 * @see org.eclipse.wst.xml.ui.internal.validation.MarkupValidator#validate(org.eclipse.jface.text.IRegion, org.eclipse.wst.validation.internal.provisional.core.IValidationContext, org.eclipse.wst.validation.internal.provisional.core.IReporter)
 	 */
+	@Override
 	public void validate(IRegion dirtyRegion, IValidationContext helper,
 			IReporter reporter) {
 		super.validate(dirtyRegion, helper, reporter);

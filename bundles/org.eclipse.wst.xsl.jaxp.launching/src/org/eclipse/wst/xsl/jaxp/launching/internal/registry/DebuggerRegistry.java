@@ -28,12 +28,12 @@ public class DebuggerRegistry
 
 	public IDebugger getDebugger(String id)
 	{
-		return (IDebugger) debuggers.get(id);
+		return debuggers.get(id);
 	}
 
 	public IDebugger[] getDebuggers()
 	{
-		return (IDebugger[]) debuggers.values().toArray(new IDebugger[0]);
+		return debuggers.values().toArray(new IDebugger[0]);
 	}
 
 	public void addDebugger(DebuggerDescriptor desc)

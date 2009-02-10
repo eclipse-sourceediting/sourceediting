@@ -82,6 +82,7 @@ public class DelegatingSourceValidatorForXSL extends DelegatingSourceValidator
 		return _validator;
 	}
 
+	@Override
 	protected IValidator getDelegateValidator()
 	{
 		Validator v = getValidator();

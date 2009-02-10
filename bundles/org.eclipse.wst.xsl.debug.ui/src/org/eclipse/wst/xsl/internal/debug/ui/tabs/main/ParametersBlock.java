@@ -22,8 +22,6 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -39,7 +37,6 @@ import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIConstants;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.internal.debug.ui.actions.AbstractParameterAction;
 import org.eclipse.wst.xsl.internal.debug.ui.actions.AddParameterAction;
-import org.eclipse.wst.xsl.internal.debug.ui.actions.RemoveAction;
 import org.eclipse.wst.xsl.internal.debug.ui.actions.RemoveParameterAction;
 import org.eclipse.wst.xsl.launching.config.LaunchAttribute;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
@@ -113,12 +110,12 @@ public class ParametersBlock extends AbstractTableBlock
 		TableColumn column1 = new TableColumn(fTable, SWT.NONE);
 		column1.setWidth(150);
 		column1.setResizable(true);
-		column1.setText(Messages.ParametersBlock_0); //$NON-NLS-1$
+		column1.setText(Messages.ParametersBlock_0); 
 
 		TableColumn column3 = new TableColumn(fTable, SWT.NONE);
 		column3.setWidth(250);
 		column3.setResizable(true);
-		column3.setText(Messages.ParametersBlock_2); //$NON-NLS-1$
+		column3.setText(Messages.ParametersBlock_2); 
 
 		parametersViewer = new ParameterViewer(fTable);
 		parametersViewer.setLabelProvider(new ParametersLabelProvider());
@@ -132,6 +129,7 @@ public class ParametersBlock extends AbstractTableBlock
 			}
 		});
 		parametersViewer.getTable().addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent event) {
 				if (event.character == SWT.DEL && event.stateMask == 0) {
 					RemoveParameterAction ra = new RemoveParameterAction(parametersViewer);
@@ -151,7 +149,7 @@ public class ParametersBlock extends AbstractTableBlock
 		{
 			public boolean canModify(Object element, String property)
 			{
-				return "value".equals(property); //$NON-NLS-1$ //$NON-NLS-2$
+				return "value".equals(property); //$NON-NLS-1$ 
 			}
 
 			public Object getValue(Object element, String property)
@@ -215,7 +213,7 @@ public class ParametersBlock extends AbstractTableBlock
 
 	public String getName()
 	{
-		return Messages.ParametersBlock_9; //$NON-NLS-1$
+		return Messages.ParametersBlock_9; 
 	}
 
 	public void initializeFrom(ILaunchConfiguration configuration)

@@ -20,11 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.DebugPlugin;
@@ -80,7 +78,7 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate impl
 		super.launch(configuration, mode, launch, monitor);
 		
 		// now get the java source locator
-		final ISourceLocator javaSourceLookupDirector = (ISourceLocator)launch.getSourceLocator();
+		final ISourceLocator javaSourceLookupDirector = launch.getSourceLocator();
 		// now add our own participant to the java director
 		launch.setSourceLocator(new ISourceLocator(){
 
@@ -152,7 +150,7 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate impl
 
 						IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 						
-						String title = Messages.XSLTLaunchConfigurationDelegate_0; //$NON-NLS-1$
+						String title = Messages.XSLTLaunchConfigurationDelegate_0; 
 						String message = Messages.XSLTLaunchConfigurationDelegate_1 + install.getName() + Messages.XSLTLaunchConfigurationDelegate_2
 								+ Messages.XSLTLaunchConfigurationDelegate_3 + processor.getName() + Messages.XSLTLaunchConfigurationDelegate_4;
 						
@@ -306,7 +304,7 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate impl
 			}
 		}
 
-		String[] invokerClasspath = (String[]) invokerCP.toArray(new String[0]);
+		String[] invokerClasspath = invokerCP.toArray(new String[0]);
 
 		// add them together
 		String[] classpath = new String[userClasspath.length + invokerClasspath.length];
@@ -343,7 +341,7 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate impl
 			{
 				URL entry = jars[i].asURL();
 				if (entry == null)
-					throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.XSLTLaunchConfigurationDelegate_23 + jars[i], null)); //$NON-NLS-1$
+					throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.XSLTLaunchConfigurationDelegate_23 + jars[i], null)); 
 				File file = new File(tempDir, "END_" + i + ".jar"); //$NON-NLS-1$ //$NON-NLS-2$
 				moveFile(entry, file);
 			}
@@ -411,7 +409,7 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate impl
 		}
 		catch (IOException e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.XSLTLaunchConfigurationDelegate_7 + src + Messages.XSLTLaunchConfigurationDelegate_31 + target, e)); //$NON-NLS-1$ //$NON-NLS-2$
+			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.XSLTLaunchConfigurationDelegate_7 + src + Messages.XSLTLaunchConfigurationDelegate_31 + target, e)); 
 		}
 		finally
 		{

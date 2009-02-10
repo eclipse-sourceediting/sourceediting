@@ -44,7 +44,7 @@ public class LaunchAttributes
 	{
 		for (Iterator<LaunchAttribute> iter = attributes.iterator(); iter.hasNext();)
 		{
-			LaunchAttribute tv = (LaunchAttribute) iter.next();
+			LaunchAttribute tv = iter.next();
 			if (tv.uri.equals(uri))
 				return tv;
 		}
@@ -55,7 +55,7 @@ public class LaunchAttributes
 	{
 		for (Iterator<LaunchAttribute> iter = attributes.iterator(); iter.hasNext();)
 		{
-			LaunchAttribute attribute = (LaunchAttribute) iter.next();
+			LaunchAttribute attribute = iter.next();
 			if (attribute.uri.equals(uri))
 				iter.remove();
 		}
@@ -70,7 +70,7 @@ public class LaunchAttributes
 
 		for (Iterator<LaunchAttribute> iter = attributes.iterator(); iter.hasNext();)
 		{
-			LaunchAttribute attribute = (LaunchAttribute) iter.next();
+			LaunchAttribute attribute = iter.next();
 			Element attributeEl = doc.createElement("Attribute"); //$NON-NLS-1$
 			attributeEl.setAttribute("name", attribute.uri); //$NON-NLS-1$
 			attributeEl.setAttribute("type", attribute.type); //$NON-NLS-1$

@@ -142,8 +142,8 @@ public class ProcessorType implements IProcessorType
 					}
 					else
 					{
-						JAXPLaunchingPlugin.log(new CoreException(new Status(IStatus.WARNING, JAXPLaunchingPlugin.PLUGIN_ID, Messages.ProcessorType_2 + outputPropertiesURL //$NON-NLS-1$
-								+ Messages.ProcessorType_3 + key))); //$NON-NLS-1$
+						JAXPLaunchingPlugin.log(new CoreException(new Status(IStatus.WARNING, JAXPLaunchingPlugin.PLUGIN_ID, Messages.ProcessorType_2 + outputPropertiesURL 
+								+ Messages.ProcessorType_3 + key))); 
 					}
 				}
 			}
@@ -166,7 +166,7 @@ public class ProcessorType implements IProcessorType
 				}
 			}
 		}
-		return (IOutputProperty[]) outputs.toArray(new IOutputProperty[0]);
+		return outputs.toArray(new IOutputProperty[0]);
 	}
 
 	private IAttribute[] loadAttributes()
@@ -219,7 +219,7 @@ public class ProcessorType implements IProcessorType
 				}
 			}
 		}
-		IAttribute[] attributes = (IAttribute[]) attributesList.toArray(new IAttribute[0]);
+		IAttribute[] attributes = attributesList.toArray(new IAttribute[0]);
 		Arrays.sort(attributes);
 		return attributes;
 	}

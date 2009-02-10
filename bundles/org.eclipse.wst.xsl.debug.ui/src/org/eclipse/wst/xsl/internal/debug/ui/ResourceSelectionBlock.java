@@ -16,8 +16,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import javax.xml.transform.URIResolver;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -26,7 +24,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.variables.IStringVariableManager;
 import org.eclipse.core.variables.VariablesPlugin;
@@ -92,7 +89,7 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 	protected boolean required;
 	protected String defaultResource;
 	protected String resource;
-	protected String fileLabel = Messages.ResourceSelectionBlock_0; //$NON-NLS-1$
+	protected String fileLabel = Messages.ResourceSelectionBlock_0; 
 
 	private final ISelectionStatusValidator validator = new ISelectionStatusValidator()
 	{

@@ -21,7 +21,6 @@ import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider; // i
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 import org.eclipse.wst.xml.ui.internal.contentassist.NoRegionContentAssistProcessor;
-import org.eclipse.wst.xml.ui.internal.style.LineStyleProviderForXML;
 import org.eclipse.wst.xsl.core.internal.text.IXSLPartitions;
 import org.eclipse.wst.xsl.core.internal.text.rules.StructuredTextPartitionerForXSL;
 import org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistProcessor;

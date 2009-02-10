@@ -145,7 +145,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 				gd.verticalIndent = 5;
 				gd.widthHint = 380;
 				label.setLayoutData(gd);
-				label.setText(Messages.XSLLaunchShortcut_0); //$NON-NLS-1$
+				label.setText(Messages.XSLLaunchShortcut_0); 
 				
 				inputFileBlock.createControl(comp);
 				return comp;
@@ -165,7 +165,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 		};
 		dialog.setHelpAvailable(false);
 		dialog.setStatusLineAboveButtons(true);
-		dialog.setTitle(Messages.XSLLaunchShortcut_1); //$NON-NLS-1$
+		dialog.setTitle(Messages.XSLLaunchShortcut_1); 
 		dialog.open();
 	}
 
@@ -268,7 +268,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 		ILaunchConfiguration config = null;
 		int candidateCount = candidateConfigs.size();
 		if (candidateCount == 1)
-			config = (ILaunchConfiguration)candidateConfigs.get(0);
+			config = candidateConfigs.get(0);
 		else if (candidateCount > 1)
 			config = chooseConfiguration(candidateConfigs);
 		else
@@ -321,7 +321,7 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 		}
 		catch (CoreException exception)
 		{
-			MessageDialog.openError(getShell(), Messages.XSLLaunchShortcut_6, exception.getStatus().getMessage()); //$NON-NLS-1$
+			MessageDialog.openError(getShell(), Messages.XSLLaunchShortcut_6, exception.getStatus().getMessage()); 
 		}
 		return config;
 	}

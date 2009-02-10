@@ -69,7 +69,7 @@ public class ProcessorPreferences
 
 		for (Iterator<IProcessorInstall> iter = processors.iterator(); iter.hasNext();)
 		{
-			IProcessorInstall install = (IProcessorInstall) iter.next();
+			IProcessorInstall install = iter.next();
 			if (!install.isContributed())
 			{
 				Element vmTypeElement = installAsElement(doc, install);
@@ -148,7 +148,7 @@ public class ProcessorPreferences
 				jars.add(new ProcessorJar(Path.fromPortableString(path)));
 			}
 		}
-		return (IProcessorJar[]) jars.toArray(new IProcessorJar[0]);
+		return jars.toArray(new IProcessorJar[0]);
 	}
 
 	private static Element jarsAsElement(Document doc, IProcessorJar[] jars)

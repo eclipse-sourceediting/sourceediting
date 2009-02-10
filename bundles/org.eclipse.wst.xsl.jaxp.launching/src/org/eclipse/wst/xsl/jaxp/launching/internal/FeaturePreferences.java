@@ -110,8 +110,8 @@ public class FeaturePreferences
 		{
 			for (Map.Entry<String,String> entry2 : featureValues.entrySet())
 			{
-				String uri = (String) entry2.getKey();
-				String value = (String) entry2.getValue();
+				String uri = entry2.getKey();
+				String value = entry2.getValue();
 				Element element = doc.createElement("feature"); //$NON-NLS-1$
 				element.setAttribute("uri", uri); //$NON-NLS-1$
 				element.setAttribute("value", value); //$NON-NLS-1$

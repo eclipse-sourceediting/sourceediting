@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.xsl.core.model.Stylesheet;
 
 public class ListWorkbenchAdapter implements IWorkbenchAdapter
@@ -32,7 +33,7 @@ public class ListWorkbenchAdapter implements IWorkbenchAdapter
 			children = new Object[0];
 		text = label;
 		if (imgPath!=null)
-			image = XSLUIPlugin.imageDescriptorFromPlugin(XSLUIPlugin.PLUGIN_ID, imgPath);
+			image = AbstractUIPlugin.imageDescriptorFromPlugin(XSLUIPlugin.PLUGIN_ID, imgPath);
 	}
 	
 	public ImageDescriptor getImageDescriptor(Object object)

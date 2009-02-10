@@ -13,8 +13,6 @@ package org.eclipse.wst.xsl.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.wst.xsl.core.model.XSLModelObject.Type;
-
 /**
  * The <code>xsl:call-template</code> model element.
  * 
@@ -50,6 +48,7 @@ public class CallTemplate extends XSLElement
 	 * 
 	 * @return the template name, or null
 	 */
+	@Override
 	public String getName()
 	{
 		return getAttributeValue("name"); //$NON-NLS-1$
@@ -65,6 +64,7 @@ public class CallTemplate extends XSLElement
 		return parameters;
 	}
 	
+	@Override
 	public Type getModelType()
 	{
 		return Type.CALL_TEMPLATE;

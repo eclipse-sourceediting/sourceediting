@@ -35,6 +35,7 @@ public class NewWizardAction extends Action
 		this.id = id;
 	}
 
+	@Override
 	public void run()
 	{
 		IWizardDescriptor desc = PlatformUI.getWorkbench().getNewWizardRegistry().findWizard(id);

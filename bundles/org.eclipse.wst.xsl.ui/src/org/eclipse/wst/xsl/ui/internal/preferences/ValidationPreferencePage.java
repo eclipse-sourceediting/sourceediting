@@ -28,6 +28,7 @@ import org.eclipse.wst.xsl.core.ValidationPreferences;
  * @author Doug Satchwell
  * @deprecated  This has been replaced by XSLValidationPreferencePage
  */
+@Deprecated
 public class ValidationPreferencePage extends AbstractXSLPreferencePage
 {
 	private static final String[] ERRORS = new String[] { "Error", "Warning", "Ignore" };
@@ -54,6 +55,7 @@ public class ValidationPreferencePage extends AbstractXSLPreferencePage
 		setDescription("Configure validation preferences");
 	}
 
+	@Override
 	protected Composite createCommonContents(Composite parent)
 	{
 		GridLayout layout= new GridLayout();

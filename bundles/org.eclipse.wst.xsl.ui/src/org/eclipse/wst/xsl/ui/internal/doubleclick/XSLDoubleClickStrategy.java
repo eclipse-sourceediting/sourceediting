@@ -13,9 +13,6 @@
 package org.eclipse.wst.xsl.ui.internal.doubleclick;
 
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.doubleclick.XMLDoubleClickStrategy;
  
 

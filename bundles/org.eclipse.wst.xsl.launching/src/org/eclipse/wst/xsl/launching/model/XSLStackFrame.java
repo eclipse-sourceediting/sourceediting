@@ -119,7 +119,7 @@ public class XSLStackFrame extends XSLDebugElement implements IStackFrame
 
 	public String getName() throws DebugException
 	{
-		return name + Messages.XSLStackFrame_5 + lineNumber; //$NON-NLS-1$
+		return name + Messages.XSLStackFrame_5 + lineNumber; 
 	}
 
 	public IRegisterGroup[] getRegisterGroups() throws DebugException

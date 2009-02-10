@@ -43,7 +43,7 @@ public class InputFileBlock extends ResourceSelectionBlock
 	@Override
 	protected String[] getFileExtensions()
 	{
-		IContentType contentType = contentTypeManager.getContentType(XMLSOURCE_CONTENTTYPE); //$NON-NLS-1$
+		IContentType contentType = contentTypeManager.getContentType(XMLSOURCE_CONTENTTYPE); 
 		String[] xmlContentTypes = contentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 		
 		return xmlContentTypes;

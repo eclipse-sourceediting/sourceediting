@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.model;
 
-import org.eclipse.wst.xsl.core.model.XSLModelObject.Type;
-
 /**
  * The <code>xsl:variable</code> model element.
  * 
@@ -35,6 +33,7 @@ public class Variable extends XSLElement
 	 * 
 	 * @return the variable name, or null
 	 */
+	@Override
 	public String getName()
 	{
 		return getAttributeValue("name"); //$NON-NLS-1$
@@ -50,6 +49,7 @@ public class Variable extends XSLElement
 		return getAttributeValue("select"); //$NON-NLS-1$
 	}
 	
+	@Override
 	public Type getModelType()
 	{
 		return Type.VARIABLE;

@@ -83,7 +83,6 @@ import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 import org.eclipse.wst.xsl.ui.internal.style.IStyleConstantsXSL;
 import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
 import org.eclipse.wst.xsl.ui.internal.Messages;
 
 import com.ibm.icu.text.Collator;
@@ -230,6 +229,7 @@ public class XSLSyntaxColoringPage extends PreferencePage implements
 		return composite;
 	}
 
+	@Override
 	protected Control createContents(final Composite parent) {
 		initializeDialogUnits(parent);
 
@@ -244,6 +244,7 @@ public class XSLSyntaxColoringPage extends PreferencePage implements
 		Link link = new Link(pageComponent, SWT.WRAP);
 		link.setText(Messages.XSLSyntaxColoringPage);
 		link.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				PreferencesUtil.createPreferenceDialogOn(parent.getShell(),
 						e.text, null, null);
@@ -328,7 +329,7 @@ public class XSLSyntaxColoringPage extends PreferencePage implements
 		underline.setEnabled(false);
 		((GridData) underline.getLayoutData()).horizontalSpan = 2;
 		clearStyle = new Button(editingComposite, SWT.PUSH);
-		clearStyle.setText(SSEUIMessages.Restore_Default_UI_); //$NON-NLS-1$ = "Restore Default"
+		clearStyle.setText(SSEUIMessages.Restore_Default_UI_); // = "Restore Default"
 		clearStyle.setLayoutData(new GridData(SWT.BEGINNING));
 		((GridData) clearStyle.getLayoutData()).horizontalIndent = 20;
 		clearStyle.setEnabled(false);
@@ -337,7 +338,7 @@ public class XSLSyntaxColoringPage extends PreferencePage implements
 
 		((GridLayout) sampleArea.getLayout()).marginLeft = 5;
 		((GridLayout) sampleArea.getLayout()).marginTop = 5;
-		createLabel(sampleArea, SSEUIMessages.Sample_text__UI_); //$NON-NLS-1$ = "&Sample text:"
+		createLabel(sampleArea, SSEUIMessages.Sample_text__UI_); // = "&Sample text:"
 		SourceViewer viewer = new SourceViewer(sampleArea, null, SWT.BORDER
 				| SWT.LEFT_TO_RIGHT | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL
 				| SWT.READ_ONLY);
@@ -357,8 +358,8 @@ public class XSLSyntaxColoringPage extends PreferencePage implements
 		setAccessible(styledText, SSEUIMessages.Sample_text__UI_);
 
 		try {
-			File file = XSLUIPlugin.makeFileFor(this.XSLFILES_DIR,
-					this.SYNTAXCOLORING_XSL);
+			File file = XSLUIPlugin.makeFileFor(XSLSyntaxColoringPage.XSLFILES_DIR,
+					XSLSyntaxColoringPage.SYNTAXCOLORING_XSL);
 			document = StructuredModelManager.getModelManager()
 					.createStructuredDocumentFor(file.getAbsolutePath(),
 							new FileInputStream(file), null);
@@ -453,6 +454,7 @@ public class XSLSyntaxColoringPage extends PreferencePage implements
 		});
 
 		bold.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				super.widgetSelected(e);
 				// get current (newly old) style
@@ -478,6 +480,7 @@ public class XSLSyntaxColoringPage extends PreferencePage implements
 		});
 
 		italic.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				super.widgetSelected(e);
 				// get current (newly old) style
@@ -503,6 +506,7 @@ public class XSLSyntaxColoringPage extends PreferencePage implements
 		});
 
 		strike.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				super.widgetSelected(e);
 				// get current (newly old) style
@@ -528,6 +532,7 @@ public class XSLSyntaxColoringPage extends PreferencePage implements
 		});
 
 		underline.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				super.widgetSelected(e);
 				// get current (newly old) style
@@ -553,6 +558,7 @@ public class XSLSyntaxColoringPage extends PreferencePage implements
 		});
 
 		clearStyle.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (stylesViewer.getSelection().isEmpty())
 					return;
@@ -612,6 +618,7 @@ public class XSLSyntaxColoringPage extends PreferencePage implements
 		stylesViewer
 				.setComparator(new ViewerComparator(Collator.getInstance()));
 		stylesViewer.setLabelProvider(new LabelProvider() {
+			@Override
 			public String getText(Object element) {
 				Object description = styleToDescriptionMap.get(element);
 				if (description != null)
@@ -646,6 +653,7 @@ public class XSLSyntaxColoringPage extends PreferencePage implements
 		return stylesViewer;
 	}
 
+	@Override
 	public void dispose() {
 		if (overlayStore != null) {
 			overlayStore.stop();
@@ -653,6 +661,7 @@ public class XSLSyntaxColoringPage extends PreferencePage implements
 		super.dispose();
 	}
 
+	@Override
 	protected IPreferenceStore doGetPreferenceStore() {
 		return XSLUIPlugin.getDefault().getPreferenceStore();
 	}
@@ -869,6 +878,7 @@ public class XSLSyntaxColoringPage extends PreferencePage implements
 				XMLUIMessages.Attribute_Values_UI_);
 	}
 
+	@Override
 	protected void performDefaults() {
 		super.performDefaults();
 		getOverlayStore().loadDefaults();
@@ -878,6 +888,7 @@ public class XSLSyntaxColoringPage extends PreferencePage implements
 		styledText.redraw();
 	}
 
+	@Override
 	public boolean performOk() {
 		getOverlayStore().propagate();
 
@@ -905,6 +916,7 @@ public class XSLSyntaxColoringPage extends PreferencePage implements
 			return;
 		final String n = name;
 		control.getAccessible().addAccessibleListener(new AccessibleAdapter() {
+			@Override
 			public void getName(AccessibleEvent e) {
 				if (e.childID == ACC.CHILDID_SELF)
 					e.result = n;

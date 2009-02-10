@@ -44,7 +44,7 @@ public class ParametersContentProvider implements IStructuredContentProvider
 
 	public LaunchAttribute[] getParameters()
 	{
-		return (LaunchAttribute[]) stylesheetEntry.getParameters().toArray(new LaunchAttribute[0]);
+		return stylesheetEntry.getParameters().toArray(new LaunchAttribute[0]);
 	}
 
 	public void removeParameters(LaunchAttribute[] entries)

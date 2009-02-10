@@ -26,7 +26,6 @@ import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.model.NodeListVariable;
 import org.eclipse.wst.xsl.launching.model.XSLVariable;
 import org.w3c.dom.Node;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.util.SharedXMLEditorPluginImageHelper;
 
 /**

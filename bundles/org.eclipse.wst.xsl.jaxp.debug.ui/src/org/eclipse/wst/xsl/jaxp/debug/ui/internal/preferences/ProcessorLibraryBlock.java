@@ -327,7 +327,7 @@ public class ProcessorLibraryBlock implements SelectionListener, ISelectionChang
 		{
 			currentJars.remove(iter.next());
 		}
-		install.setProcessorJars((IProcessorJar[]) currentJars.toArray(new IProcessorJar[0]));
+		install.setProcessorJars(currentJars.toArray(new IProcessorJar[0]));
 		tableViewer.remove(selection.toArray());
 	}
 

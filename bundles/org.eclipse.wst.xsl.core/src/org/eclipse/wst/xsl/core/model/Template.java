@@ -13,8 +13,6 @@ package org.eclipse.wst.xsl.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.wst.xsl.core.model.XSLModelObject.Type;
-
 /**
  * The <code>xsl:template</code> model element.
  * 
@@ -61,6 +59,7 @@ public class Template extends XSLElement
 	 * 
 	 * @return the template name, or null
 	 */
+	@Override
 	public String getName()
 	{
 		return getAttributeValue("name"); //$NON-NLS-1$
@@ -174,6 +173,7 @@ public class Template extends XSLElement
 		return "file="+getStylesheet().getFile()+", name="+name+", match="+match; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 	
+	@Override
 	public Type getModelType()
 	{
 		return Type.TEMPLATE;

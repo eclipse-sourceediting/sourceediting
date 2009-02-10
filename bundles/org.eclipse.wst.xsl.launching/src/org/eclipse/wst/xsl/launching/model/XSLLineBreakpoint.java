@@ -40,7 +40,7 @@ public class XSLLineBreakpoint extends LineBreakpoint
 				setMarker(marker);
 				marker.setAttribute(IBreakpoint.ID, getModelIdentifier());
 				marker.setAttribute(IBreakpoint.ENABLED, Boolean.TRUE);
-				marker.setAttribute(IMarker.MESSAGE, Messages.XSLLineBreakpoint_0 + resource.getName() + " [line: " + lineNumber + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				marker.setAttribute(IMarker.MESSAGE, Messages.XSLLineBreakpoint_0 + resource.getName() + " [line: " + lineNumber + "]"); //$NON-NLS-1$ //$NON-NLS-2$ 
 
 				marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
 				marker.setAttribute(IMarker.CHAR_START, new Integer(charStart));

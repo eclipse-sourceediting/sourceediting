@@ -50,6 +50,7 @@ public class XIncludeTask extends Task {
 		this.outFile = outFile;
 	}
 
+	@Override
 	public void execute() {
 		validate();
 		log(Messages.XIncludeTask_2, Project.MSG_VERBOSE);

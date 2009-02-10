@@ -92,7 +92,7 @@ public class PreferenceUtil
 				}
 			}
 		}
-		return (Element[]) children.toArray(new Element[0]);
+		return children.toArray(new Element[0]);
 	}
 
 	public static String getNodeText(Node node)

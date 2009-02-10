@@ -44,7 +44,7 @@ public class ProcessorRegistry
 		// find the jre default
 		for (Iterator<ProcessorInstall> iter = contributedInstalls.iterator(); iter.hasNext();)
 		{
-			IProcessorInstall install = (IProcessorInstall) iter.next();
+			IProcessorInstall install = iter.next();
 			if (install.getId().equals(JAXPRuntime.JRE_DEFAULT_PROCESSOR_ID))
 			{
 				jreDefaultProcessor = install;
@@ -71,7 +71,7 @@ public class ProcessorRegistry
 				userInstalls = prefs.getProcessors();
 				for (Iterator<IProcessorInstall> iter = userInstalls.iterator(); iter.hasNext();)
 				{
-					IProcessorInstall install = (IProcessorInstall) iter.next();
+					IProcessorInstall install = iter.next();
 					if (install.getId().equals(defaultProcessorId))
 					{
 						defaultProcessor = install;
@@ -81,7 +81,7 @@ public class ProcessorRegistry
 				{
 					for (Iterator<ProcessorInstall> iter = contributedInstalls.iterator(); iter.hasNext();)
 					{
-						IProcessorInstall install = (IProcessorInstall) iter.next();
+						IProcessorInstall install = iter.next();
 						if (defaultProcessor == null && install.getId().equals(defaultProcessorId))
 						{
 							defaultProcessor = install;
@@ -136,12 +136,12 @@ public class ProcessorRegistry
 			int startIndex = 0;
 			for (int i = 0; i < contributedInstalls.size(); i++)
 			{
-				installs[i] = (IProcessorInstall) contributedInstalls.get(i);
+				installs[i] = contributedInstalls.get(i);
 				startIndex = i + 1;
 			}
 			for (int i = 0; i < userInstalls.size(); i++)
 			{
-				installs[startIndex + i] = (IProcessorInstall) userInstalls.get(i);
+				installs[startIndex + i] = userInstalls.get(i);
 			}
 		}
 		return installs;
@@ -156,7 +156,7 @@ public class ProcessorRegistry
 			if (type.getProcessorType().getId().equals(id))
 				result.add(type);
 		}
-		return (IProcessorInstall[]) result.toArray(new IProcessorInstall[0]);
+		return result.toArray(new IProcessorInstall[0]);
 	}
 
 	public void setDefaultProcessor(IProcessorInstall defaultInstall)
@@ -176,6 +176,6 @@ public class ProcessorRegistry
 
 	public IProcessorInstall[] getContributedProcessors()
 	{
-		return (IProcessorInstall[]) contributedInstalls.toArray(new IProcessorInstall[0]);
+		return contributedInstalls.toArray(new IProcessorInstall[0]);
 	}
 }

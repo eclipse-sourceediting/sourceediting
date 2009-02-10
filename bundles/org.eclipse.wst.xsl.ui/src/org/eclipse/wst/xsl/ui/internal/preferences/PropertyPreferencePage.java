@@ -75,6 +75,7 @@ abstract class PropertyPreferencePage extends PropertyPage implements IWorkbench
 		super();
 	}
 
+	@Override
 	public final void applyData(Object data) {
 		super.applyData(data);
 		if (data instanceof Map) {
@@ -85,6 +86,7 @@ abstract class PropertyPreferencePage extends PropertyPage implements IWorkbench
 
 	protected abstract Control createCommonContents(Composite composite);
 
+	@Override
 	public final Control createContents(Composite parent) {
 		Composite composite = new Composite(parent, SWT.NULL);
 
@@ -99,7 +101,7 @@ abstract class PropertyPreferencePage extends PropertyPage implements IWorkbench
 
 		if (getProject() != null) {
 			EnableProjectSettings = new Button(checkLinkComposite, SWT.CHECK);
-			EnableProjectSettings.setText(SSEUIMessages.EnableProjectSettings); //$NON-NLS-1$//$NON-NLS-2$
+			EnableProjectSettings.setText(SSEUIMessages.EnableProjectSettings); 
 			EnableProjectSettings.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false, false));
 			boolean enabledForProject = createPreferenceScopes()[0].getNode(getPreferenceNodeQualifier()).getBoolean(getProjectSettingsKey(), false);
 			EnableProjectSettings.setSelection(enabledForProject);
@@ -152,6 +154,7 @@ abstract class PropertyPreferencePage extends PropertyPage implements IWorkbench
 
 		if (EnableProjectSettings != null) {
 			SelectionAdapter selectionAdapter = new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent e) {
 					super.widgetSelected(e);
 					enablePreferenceContent(EnableProjectSettings.getSelection());
@@ -205,6 +208,7 @@ abstract class PropertyPreferencePage extends PropertyPage implements IWorkbench
 	void openProjectSettings() {
 		ListDialog dialog = new ListDialog(getShell()) {
 
+			@Override
 			protected Control createDialogArea(Composite container) {
 				Control area = super.createDialogArea(container);
 				getTableViewer().setSorter(new ResourceSorter(ResourceSorter.NAME));
@@ -243,6 +247,7 @@ abstract class PropertyPreferencePage extends PropertyPage implements IWorkbench
 		PreferencesUtil.createPreferenceDialogOn(getShell(), getPreferencePageID(), new String[]{getPreferencePageID()}, data).open();
 	}
 
+	@Override
 	public boolean performOk() {
 		boolean ok = super.performOk();
 		IScopeContext[] preferenceScopes = createPreferenceScopes();
@@ -255,7 +260,7 @@ abstract class PropertyPreferencePage extends PropertyPage implements IWorkbench
 			}
 			else {
 				if (_debugPreferences) {
-					System.out.println(getClass().getName() + " removing " + TaskTagPreferenceKeys.TASK_TAG_PER_PROJECT + " from scope " + preferenceScopes[0].getName() + ":" + preferenceScopes[0].getLocation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					System.out.println(getClass().getName() + " removing " + TaskTagPreferenceKeys.TASK_TAG_PER_PROJECT + " from scope " + preferenceScopes[0].getName() + ":" + preferenceScopes[0].getLocation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
 				}
 				preferenceScopes[0].getNode(getPreferenceNodeQualifier()).remove(getProjectSettingsKey());
 			}
@@ -263,6 +268,7 @@ abstract class PropertyPreferencePage extends PropertyPage implements IWorkbench
 		return ok;
 	}
 	
+	@Override
 	protected void performDefaults() {
 		if(getProject() != null && EnableProjectSettings != null) {
 			EnableProjectSettings.setSelection(false);

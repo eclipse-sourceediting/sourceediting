@@ -39,7 +39,7 @@ public class StylesheetViewer extends TableViewer
 				if (updateSelection(AbstractStylesheetAction.REMOVE, (IStructuredSelection) getSelection()) && event.character == SWT.DEL && event.stateMask == 0)
 				{
 					List<?> selection = getSelectionFromWidget();
-					getStylesheetContentProvider().removeEntries((LaunchTransform[]) selection.toArray(new LaunchTransform[0]));
+					getStylesheetContentProvider().removeEntries(selection.toArray(new LaunchTransform[0]));
 					notifyChanged();
 				}
 			}

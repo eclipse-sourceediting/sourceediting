@@ -115,11 +115,11 @@ public class LaunchHelper extends BaseLaunchHelper
 		}
 		catch (FileNotFoundException e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.LaunchHelper_0, e)); //$NON-NLS-1$
+			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.LaunchHelper_0, e)); 
 		}
 		catch (IOException e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.LaunchHelper_1, e)); //$NON-NLS-1$
+			throw new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.ERROR, Messages.LaunchHelper_1, e)); 
 		}
 		catch (ParserConfigurationException e)
 		{
@@ -154,8 +154,8 @@ public class LaunchHelper extends BaseLaunchHelper
 		{
 			for (Map.Entry<String, String> entry : pt.getOutputPropertyValues().entrySet())
 			{
-				String name = (String) entry.getKey();
-				String value = (String) entry.getValue();
+				String name = entry.getKey();
+				String value = entry.getValue();
 				properties.setProperty(name, value);
 			}
 		}
@@ -181,9 +181,9 @@ public class LaunchHelper extends BaseLaunchHelper
 			Map<String, String> fvals = pt.getAttributeValues();
 			for (Map.Entry<String, String> entry : fvals.entrySet())
 			{
-				String uri = (String) entry.getKey();
+				String uri = entry.getKey();
 				IAttribute attribute = getAttribute(pt.getAttributes(), uri);
-				attributes.addAttribute(new LaunchAttribute(uri, "string", (String) entry.getValue()));
+				attributes.addAttribute(new LaunchAttribute(uri, "string", entry.getValue()));
 			}
 		}
 		else

@@ -88,7 +88,7 @@ public class LaunchPipeline
 
 			for (Iterator<LaunchTransform> iter = transformDefs.iterator(); iter.hasNext();)
 			{
-				LaunchTransform tdef = (LaunchTransform) iter.next();
+				LaunchTransform tdef = iter.next();
 				Element tdefEl = tdef.asXML(doc);
 				rootEl.appendChild(tdefEl);
 			}

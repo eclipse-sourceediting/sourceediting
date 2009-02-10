@@ -41,6 +41,7 @@ public class Validator2 extends AbstractValidator implements IValidatorJob
 		super.clean(project, state, monitor);
 	}
 
+	@Override
 	public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor)
 	{
 		/*

@@ -69,6 +69,7 @@ public abstract class AbstractXSLPreferencePage extends AbstractPreferencePage
 		excomposite.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, cols, 1));
 		excomposite.addExpansionListener(new ExpansionAdapter()
 		{
+			@Override
 			public void expansionStateChanged(ExpansionEvent e)
 			{
 				expandedStateChanged((ExpandableComposite) e.getSource());
@@ -141,7 +142,7 @@ public abstract class AbstractXSLPreferencePage extends AbstractPreferencePage
 	{
 		for (int i = 0; i < fExpandables.size(); i++)
 		{
-			ExpandableComposite comp = (ExpandableComposite) fExpandables.get(i);
+			ExpandableComposite comp = fExpandables.get(i);
 			section.put(SETTINGS_EXPANDED + String.valueOf(i), comp.isExpanded());
 		}
 	}
@@ -167,7 +168,7 @@ public abstract class AbstractXSLPreferencePage extends AbstractPreferencePage
 	{
 		for (int i = 0; i < fExpandables.size(); i++)
 		{
-			ExpandableComposite excomposite = (ExpandableComposite) fExpandables.get(i);
+			ExpandableComposite excomposite = fExpandables.get(i);
 			if (settings == null)
 			{
 				excomposite.setExpanded(i == 0); // only expand the first node by default

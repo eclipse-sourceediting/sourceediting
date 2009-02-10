@@ -77,7 +77,7 @@ public class XSLTSourcePathComputerDelegate implements ISourcePathComputerDelega
 		// sourceContainer = new WorkspaceSourceContainer();
 		// }
 
-		return (ISourceContainer[]) containers.toArray(new ISourceContainer[0]);
+		return containers.toArray(new ISourceContainer[0]);
 	}
 
 	private static LaunchPipeline hydratePipeline(ILaunchConfiguration configuration) throws CoreException

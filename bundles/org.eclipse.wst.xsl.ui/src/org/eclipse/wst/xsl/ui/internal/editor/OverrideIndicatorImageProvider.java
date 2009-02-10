@@ -13,6 +13,7 @@ package org.eclipse.wst.xsl.ui.internal.editor;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.texteditor.IAnnotationImageProvider;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 
@@ -52,7 +53,7 @@ public class OverrideIndicatorImageProvider implements IAnnotationImageProvider
 	public ImageDescriptor getImageDescriptor(String imageDescritporId)
 	{
 		if (OVERRIDE_IMG_DESC_ID.equals(imageDescritporId))
-			return XSLUIPlugin.imageDescriptorFromPlugin(XSLUIPlugin.PLUGIN_ID, "icons/full/over_co.gif");
+			return AbstractUIPlugin.imageDescriptorFromPlugin(XSLUIPlugin.PLUGIN_ID, "icons/full/over_co.gif");
 		return null;
 	}
 

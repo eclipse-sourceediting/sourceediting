@@ -61,6 +61,7 @@ public class XSLValidationPreferencePage extends AbstractValidationSettingsPage 
 		ERROR_MAP.put(IMarker.SEVERITY_INFO, 2);
 	}
 	
+	@Override
 	protected Control createCommonContents(Composite parent) {
 		final Composite page = new Composite(parent, SWT.NULL);
 		
@@ -187,6 +188,7 @@ public class XSLValidationPreferencePage extends AbstractValidationSettingsPage 
 		return text;
 	}
 	
+	@Override
 	protected ExpandableComposite createTwistie(Composite parent, String label, int nColumns) {
 		ExpandableComposite excomposite= new ExpandableComposite(parent, SWT.NONE, ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT);
 		excomposite.setText(label);
@@ -194,6 +196,7 @@ public class XSLValidationPreferencePage extends AbstractValidationSettingsPage 
 		excomposite.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
 		excomposite.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, nColumns, 1));
 		excomposite.addExpansionListener(new ExpansionAdapter() {
+			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				expandedStateChanged((ExpandableComposite) e.getSource());
 			}
@@ -322,6 +325,7 @@ public class XSLValidationPreferencePage extends AbstractValidationSettingsPage 
 	protected void enableValues() {
 	}	
 	
+	@Override
 	protected void performDefaults() {
 		resetSeverities();
 		super.performDefaults();
@@ -330,6 +334,7 @@ public class XSLValidationPreferencePage extends AbstractValidationSettingsPage 
 	/** (non-Javadoc)
 	 * @see org.eclipse.wst.xsl.ui.internal.preferences.AbstractValidationSettingsPage#performOk()
 	 */
+	@Override
 	public boolean performOk() {
 		boolean result = super.performOk();
 		storeValues();

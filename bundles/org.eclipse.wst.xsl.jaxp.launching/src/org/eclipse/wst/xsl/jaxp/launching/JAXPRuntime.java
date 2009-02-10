@@ -210,7 +210,7 @@ public class JAXPRuntime
 			return;
 		try
 		{
-			monitor.beginTask(Messages.XSLTRuntime_5, 100); //$NON-NLS-1$
+			monitor.beginTask(Messages.XSLTRuntime_5, 100); 
 			FeaturePreferences prefs = new FeaturePreferences();
 			Map<String,Map<String,String>> typeIdFeatures = new HashMap<String,Map<String,String>>(typeFeatures.size());
 			for (IProcessorType type : typeFeatures.keySet())
@@ -232,7 +232,7 @@ public class JAXPRuntime
 		}
 		catch (Exception e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR,JAXPLaunchingPlugin.PLUGIN_ID,Messages.XSLTRuntime_6,e)); //$NON-NLS-1$
+			throw new CoreException(new Status(IStatus.ERROR,JAXPLaunchingPlugin.PLUGIN_ID,Messages.XSLTRuntime_6,e)); 
 		}
 		finally
 		{
@@ -246,7 +246,7 @@ public class JAXPRuntime
 			return;
 		try
 		{
-			monitor.beginTask(Messages.XSLTRuntime_7, 100); //$NON-NLS-1$
+			monitor.beginTask(Messages.XSLTRuntime_7, 100); 
 			OutputPropertyPreferences prefs = new OutputPropertyPreferences();
 			for (IProcessorType type : typeProperties.keySet())
 			{
@@ -265,7 +265,7 @@ public class JAXPRuntime
 		}
 		catch (Exception e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR,JAXPLaunchingPlugin.PLUGIN_ID,Messages.XSLTRuntime_8,e)); //$NON-NLS-1$
+			throw new CoreException(new Status(IStatus.ERROR,JAXPLaunchingPlugin.PLUGIN_ID,Messages.XSLTRuntime_8,e)); 
 		}
 		finally
 		{
@@ -279,7 +279,7 @@ public class JAXPRuntime
 			return;
 		try
 		{
-			monitor.beginTask(Messages.XSLTRuntime_9, 100); //$NON-NLS-1$
+			monitor.beginTask(Messages.XSLTRuntime_9, 100); 
 			ProcessorPreferences prefs = new ProcessorPreferences();
 			if (defaultInstall != null)
 				prefs.setDefaultProcessorId(defaultInstall.getId());
@@ -297,7 +297,7 @@ public class JAXPRuntime
 		}
 		catch (Exception e)
 		{
-			throw new CoreException(new Status(IStatus.ERROR,JAXPLaunchingPlugin.PLUGIN_ID,Messages.XSLTRuntime_10,e)); //$NON-NLS-1$
+			throw new CoreException(new Status(IStatus.ERROR,JAXPLaunchingPlugin.PLUGIN_ID,Messages.XSLTRuntime_10,e)); 
 		}
 		finally
 		{

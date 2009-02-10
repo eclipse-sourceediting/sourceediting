@@ -2,6 +2,7 @@ package org.eclipse.wst.xsl.ui.internal;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.xsl.core.model.Import;
 import org.eclipse.wst.xsl.core.model.Include;
 import org.eclipse.wst.xsl.core.model.Stylesheet;
@@ -51,7 +52,7 @@ class XSLWorkbenchAdapter implements IWorkbenchAdapter {
 			path = "icons/full/field_default_obj.gif";
 			break;
 		}
-		return path == null ? null : XSLUIPlugin.imageDescriptorFromPlugin(
+		return path == null ? null : AbstractUIPlugin.imageDescriptorFromPlugin(
 				XSLUIPlugin.PLUGIN_ID, path);
 	}
 

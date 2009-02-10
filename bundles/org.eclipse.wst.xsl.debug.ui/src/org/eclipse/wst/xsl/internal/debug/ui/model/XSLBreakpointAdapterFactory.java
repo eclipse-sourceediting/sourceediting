@@ -22,7 +22,7 @@ import org.eclipse.wst.xsl.core.XSLCore;
  */
 public class XSLBreakpointAdapterFactory implements IAdapterFactory
 {
-	@SuppressWarnings("unchecked") //$NON-NLS-1$
+	@SuppressWarnings("unchecked") 
 	public Object getAdapter(Object adaptableObject, Class adapterType)
 	{
 		if (adaptableObject instanceof ITextEditor)
@@ -40,7 +40,7 @@ public class XSLBreakpointAdapterFactory implements IAdapterFactory
 		return null;
 	}
 
-	@SuppressWarnings("unchecked") //$NON-NLS-1$
+	@SuppressWarnings("unchecked") 
 	public Class[] getAdapterList()
 	{
 		return new Class[]

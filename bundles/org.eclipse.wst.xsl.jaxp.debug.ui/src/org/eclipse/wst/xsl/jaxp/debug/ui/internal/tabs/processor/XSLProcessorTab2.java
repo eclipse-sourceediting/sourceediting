@@ -19,6 +19,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLLaunchConfigurationTab;
 import org.eclipse.wst.xsl.jaxp.debug.ui.internal.JAXPDebugUIPlugin;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorInvoker;
@@ -81,7 +82,7 @@ public class XSLProcessorTab2 extends XSLLaunchConfigurationTab
 	{
 		if (image == null)
 		{
-			ImageDescriptor id = JAXPDebugUIPlugin.imageDescriptorFromPlugin(JAXPDebugUIPlugin.PLUGIN_ID, "icons/xslt_processor.gif");
+			ImageDescriptor id = AbstractUIPlugin.imageDescriptorFromPlugin(JAXPDebugUIPlugin.PLUGIN_ID, "icons/xslt_processor.gif");
 			image = id.createImage();
 		}
 		return image;

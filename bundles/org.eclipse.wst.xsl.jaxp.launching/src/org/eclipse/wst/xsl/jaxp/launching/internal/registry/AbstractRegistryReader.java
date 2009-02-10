@@ -33,7 +33,7 @@ public abstract class AbstractRegistryReader
 	{
 		IExtension extension = element.getDeclaringExtension();
 		StringBuffer buf = new StringBuffer();
-		buf.append("Plugin " + extension.getNamespaceIdentifier() + Messages.AbstractRegistryReader_3 + extension.getExtensionPointUniqueIdentifier()); //$NON-NLS-1$ //$NON-NLS-2$
+		buf.append("Plugin " + extension.getNamespaceIdentifier() + Messages.AbstractRegistryReader_3 + extension.getExtensionPointUniqueIdentifier()); //$NON-NLS-1$ 
 		buf.append("\n" + text); //$NON-NLS-1$
 		JAXPLaunchingPlugin.log(new CoreException(new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, IStatus.OK, buf.toString(), null)));
 	}
@@ -50,7 +50,7 @@ public abstract class AbstractRegistryReader
 
 	protected static void logUnknownElement(IConfigurationElement element)
 	{
-		logError(element, Messages.AbstractRegistryReader_9 + element.getName()); //$NON-NLS-1$
+		logError(element, Messages.AbstractRegistryReader_9 + element.getName()); 
 	}
 
 	public static IExtension[] orderExtensions(IExtension[] extensions)

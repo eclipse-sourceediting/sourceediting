@@ -292,7 +292,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 				standins.add(new InstallStandin(install));
 			}
 		}
-		setProcessors((IProcessorInstall[]) standins.toArray(new IProcessorInstall[standins.size()]));
+		setProcessors(standins.toArray(new IProcessorInstall[standins.size()]));
 	}
 
 	private void fireSelectionChanged()
@@ -428,7 +428,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 
 	public IProcessorInstall[] getProcessors()
 	{
-		return (IProcessorInstall[]) processors.toArray(new IProcessorInstall[processors.size()]);
+		return processors.toArray(new IProcessorInstall[processors.size()]);
 	}
 
 	private void addProcessor()
@@ -452,7 +452,7 @@ public class InstalledProcessorsBlock extends AbstractTableBlock implements ISel
 	{
 		for (int i = 0; i < processors.size(); i++)
 		{
-			IProcessorInstall install = (IProcessorInstall) processors.get(i);
+			IProcessorInstall install = processors.get(i);
 			if (install.getName().equals(name))
 			{
 				return true;

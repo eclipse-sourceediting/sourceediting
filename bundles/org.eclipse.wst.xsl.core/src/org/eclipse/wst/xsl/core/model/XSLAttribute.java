@@ -40,6 +40,7 @@ public class XSLAttribute extends XSLNode
 	 * 
 	 * @return the attribute's name
 	 */
+	@Override
 	public String getName()
 	{
 		return name;
@@ -55,6 +56,7 @@ public class XSLAttribute extends XSLNode
 		return value;
 	}
 	
+	@Override
 	public Type getModelType()
 	{
 		return Type.ATTRIBUTE;

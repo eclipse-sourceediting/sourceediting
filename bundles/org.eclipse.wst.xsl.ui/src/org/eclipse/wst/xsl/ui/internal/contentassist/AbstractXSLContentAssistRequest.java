@@ -232,6 +232,7 @@ public abstract class AbstractXSLContentAssistRequest implements IContentAssistP
 	 * 
 	 * @return java.lang.String
 	 */
+	@Override
 	public java.lang.String toString() {
 		return "Node: " + getNode() //$NON-NLS-1$
 					+ "\nParent: " + getParent() //$NON-NLS-1$

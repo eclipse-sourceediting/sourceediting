@@ -12,7 +12,6 @@
 package org.eclipse.wst.xsl.ui.internal.style;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -30,7 +29,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
-import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.internal.provisional.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.style.Highlighter;
@@ -74,6 +72,7 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 		}
 	}	
 
+	@Override
 	protected void commonInit(IStructuredDocument document,
 			Highlighter highlighter) {
 
@@ -88,6 +87,7 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 	 * prepareRegions(org.eclipse.jface.text.ITypedRegion, int, int,
 	 * java.util.Collection)
 	 */
+	@Override
 	public boolean prepareRegions(ITypedRegion typedRegion,
 			int lineRequestStart, int lineRequestLength, Collection holdResults) {
 		final int partitionStartOffset = typedRegion.getOffset();
@@ -242,10 +242,11 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 
 	}
 
+	@Override
 	protected TextAttribute getAttributeFor(ITextRegionCollection collection,
 			ITextRegion textRegion) {
 		if (textRegion == null) {
-			return (TextAttribute) XMLTextAttributeMap.getInstance()
+			return XMLTextAttributeMap.getInstance()
 					.getTextAttributeMap().get(IStyleConstantsXML.CDATA_TEXT);
 		}
 
@@ -280,6 +281,7 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 		return textAttrMap.get(regionMap.get(type));
 	}
 
+	@Override
 	protected void handlePropertyChange(PropertyChangeEvent event) {
 		String styleKey = null;
 		if (event == null)
@@ -318,6 +320,7 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 	 * 
 	 * @param colorKey
 	 */
+	@Override
 	protected void addTextAttribute(String colorKey) {
 		if (getColorPreferences() != null) {
 			String prefString = getColorPreferences().getString(colorKey);
@@ -374,6 +377,7 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 	 * (org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument,
 	 * org.eclipse.wst.sse.ui.internal.provisional.style.Highlighter)
 	 */
+	@Override
 	public void init(IStructuredDocument document, Highlighter highlighter) {
 		commonInit(structuredDocument, highlighter);
 
@@ -394,6 +398,7 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 	 * init(org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument
 	 * , org.eclipse.jface.text.source.ISourceViewer)
 	 */
+	@Override
 	public void init(IStructuredDocument structuredDocument,
 			ISourceViewer sourceViewer) {
 		init(structuredDocument, (Highlighter) null);
@@ -409,6 +414,7 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 	 * ,
 	 * org.eclipse.wst.sse.ui.internal.provisional.style.ReconcilerHighlighter)
 	 */
+	@Override
 	public void init(IStructuredDocument structuredDocument,
 			ReconcilerHighlighter highlighter) {
 		this.structuredDocument = structuredDocument;
@@ -422,11 +428,13 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 		setInitialized(true);
 	}
 
+	@Override
 	public void release() {
 		unRegisterPreferenceManager();
 		setInitialized(false);
 	}
 
+	@Override
 	protected void unRegisterPreferenceManager() {
 		IPreferenceStore pref = getColorPreferences();
 		if (pref != null) {
@@ -434,6 +442,7 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 		}
 	}
 
+	@Override
 	protected void registerPreferenceManager() {
 		IPreferenceStore pref = getColorPreferences();
 		if (pref != null) {
@@ -446,6 +455,7 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 	 * 
 	 * @return boolean
 	 */
+	@Override
 	public boolean isInitialized() {
 		return initialized;
 	}
@@ -460,16 +470,19 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 		this.initialized = initialized;
 	}
 
+	@Override
 	protected IStructuredDocument getDocument() {
 		return structuredDocument;
 	}
 
 	/**
 	 */
+	@Override
 	protected Highlighter getHighlighter() {
 		return highlighter;
 	}
 	
+	@Override
 	protected IPreferenceStore getColorPreferences() {
 		if (xmlPreferenceStore == null) {
 			xmlPreferenceStore = XMLUIPlugin.getDefault().getPreferenceStore();
@@ -481,10 +494,12 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 		return combinedPreferenceStore;
 	}
 
+	@Override
 	protected TextAttribute createTextAttribute(RGB foreground, RGB background, boolean bold) {
 		return new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, bold ? SWT.BOLD : SWT.NORMAL);
 	}
 
+	@Override
 	protected TextAttribute createTextAttribute(RGB foreground, RGB background, int style) {
 		return new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, style);
 	}

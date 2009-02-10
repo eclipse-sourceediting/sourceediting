@@ -85,6 +85,7 @@ public class Include extends XSLElement
 		return XSLCore.resolveFile(getStylesheet().getFile(), getHref());
 	}
 
+	@Override
 	public Type getModelType()
 	{
 		return Type.INCLUDE;

@@ -178,7 +178,7 @@ public class XSLMainTab extends XSLLaunchConfigurationTab
 					if (element instanceof IResource)
 						resources.add(element);
 				}
-				return (IResource[]) resources.toArray(new IResource[0]);
+				return resources.toArray(new IResource[0]);
 			}
 			// use current editor to find the project
 			IEditorPart part = page.getActiveEditor();
@@ -212,7 +212,7 @@ public class XSLMainTab extends XSLLaunchConfigurationTab
 			if (resource instanceof IFile && XSLCore.isXSLFile((IFile)resource)) 
 				stylesheets.add(resource);
 		}
-		return (IFile[]) stylesheets.toArray(new IFile[0]);
+		return stylesheets.toArray(new IFile[0]);
 
 	}
 	

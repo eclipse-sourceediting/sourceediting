@@ -38,6 +38,7 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -113,6 +114,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 		table.setHeaderVisible(true);
 		table.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
 		table.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent event) {
 				if (event.character == SWT.DEL && event.stateMask == 0) {
 					performRemove();
@@ -147,7 +149,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 			public void widgetSelected(SelectionEvent e)
 			{
 				OutputPropertyDialog dialog = new OutputPropertyDialog(getShell(),properties);
-				if (dialog.open() == AttributeDialog.OK)
+				if (dialog.open() == Window.OK)
 				{
 					List<IOutputProperty> newProperties = dialog.getOutpuProperties();
 					String first = null;

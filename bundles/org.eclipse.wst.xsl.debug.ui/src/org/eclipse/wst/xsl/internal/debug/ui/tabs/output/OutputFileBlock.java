@@ -262,13 +262,14 @@ public class OutputFileBlock extends ResourceSelectionBlock
 		configuration.setAttribute(XSLLaunchConfigurationConstants.ATTR_FORMAT_FILE, false);
 	}
 	
+	@Override
 	protected void updateResourceText(boolean useDefault)
 	{
 		fileNameText.setEnabled(!useDefault);
 		if (useDefault)
 			fileNameText.setText(defaultOutputFileName == null ? "" : defaultOutputFileName); //$NON-NLS-1$
 		else
-			fileNameText.setText(outputFileName == null ? defaultOutputFileName : outputFileName); //$NON-NLS-1$
+			fileNameText.setText(outputFileName == null ? defaultOutputFileName : outputFileName); 
 		super.updateResourceText(useDefault);
 	}
 

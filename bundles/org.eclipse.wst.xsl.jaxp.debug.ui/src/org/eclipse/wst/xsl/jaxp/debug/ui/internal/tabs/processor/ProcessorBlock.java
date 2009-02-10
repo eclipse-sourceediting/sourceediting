@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.jaxp.debug.ui.internal.tabs.processor;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;

@@ -72,6 +72,7 @@ public class TransformsBlock extends AbstractTableBlock implements IStylesheetEn
 		stylesheetViewer.setLabelProvider(new StylesheetLabelProvider());
 		stylesheetViewer.setContentProvider(new StylesheetContentProvider());
 		stylesheetViewer.getTable().addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent event) {
 				if (event.character == SWT.DEL && event.stateMask == 0) {
 					RemoveAction ra = new RemoveAction(stylesheetViewer);

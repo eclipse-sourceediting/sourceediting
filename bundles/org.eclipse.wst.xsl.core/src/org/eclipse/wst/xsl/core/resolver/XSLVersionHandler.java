@@ -154,6 +154,7 @@ public final class XSLVersionHandler extends DefaultHandler implements LexicalHa
 	 * of the DTD is ok, as only the System ID of the DTD declaration is used.
 	 * @see org.xml.sax.helpers.DefaultHandler#resolveEntity(java.lang.String, java.lang.String)
 	 */
+	@Override
 	public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
 		return new InputSource(new StringReader("")); //$NON-NLS-1$
 	}
@@ -183,6 +184,7 @@ public final class XSLVersionHandler extends DefaultHandler implements LexicalHa
 	 * @see org.xml.sax.ContentHandler#startElement(java.lang.String,
 	 *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
 	 */
+	@Override
 	public final void startElement(final String uri, final String elementName, final String qualifiedName, final Attributes attributes) throws SAXException {
 		if (uri.equals(XSLCore.XSL_NAMESPACE_URI) && (XSLT_TEMPLATE.equals(elementName) || XSLT_STYLESHEET.equals(elementName))) {
 			versionAttribute = attributes.getValue(XSLT_VERSION);

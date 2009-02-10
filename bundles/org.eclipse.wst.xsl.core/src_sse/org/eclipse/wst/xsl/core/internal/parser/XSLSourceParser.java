@@ -40,6 +40,7 @@ public class XSLSourceParser extends XMLSourceParser {
 		super.setTokenizer(newTokenizer);
 	}
 	
+	@Override
 	protected IStructuredDocumentRegion parseNodes() {
 		// regions are initially reported as complete offsets within the
 		// scanned input

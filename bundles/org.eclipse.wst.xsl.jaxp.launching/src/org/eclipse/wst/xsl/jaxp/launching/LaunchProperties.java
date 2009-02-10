@@ -40,7 +40,7 @@ public class LaunchProperties
 
 	public String getProperty(String name)
 	{
-		return (String) properties.get(name);
+		return properties.get(name);
 	}
 
 	public void removeProperty(String name)

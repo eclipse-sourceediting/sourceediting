@@ -101,7 +101,7 @@ public class JAXPDebugTarget extends XSLDebugElement implements IXSLDebugTarget 
 				this.requestReader = new BufferedReader(new InputStreamReader(requestSocket.getInputStream()));
 				this.generateReader = new InputStreamReader(generateSocket.getInputStream());
 			} catch (IOException e) {
-				abort(Messages.XSLDebugTarget_0, e); //$NON-NLS-1$
+				abort(Messages.XSLDebugTarget_0, e); 
 			}
 			this.thread = new XSLThread(this);
 			this.threads = new IThread[] { thread };
@@ -133,7 +133,7 @@ public class JAXPDebugTarget extends XSLDebugElement implements IXSLDebugTarget 
 				break;
 			try {
 				socket = new Socket(
-						Messages.XSLDebugTarget_1, port); //$NON-NLS-1$
+						Messages.XSLDebugTarget_1, port); 
 			} catch (ConnectException e) {
 			} catch (IOException e) {
 			}
@@ -147,7 +147,7 @@ public class JAXPDebugTarget extends XSLDebugElement implements IXSLDebugTarget 
 		if (socket == null && !process.isTerminated())
 			throw new CoreException(
 					new Status(
-							Status.ERROR,
+							IStatus.ERROR,
 							JAXPLaunchingPlugin.PLUGIN_ID,
 							Messages.XSLDebugTarget_2 + port + Messages.XSLDebugTarget_3 + CONNECT_ATTEMPTS + Messages.XSLDebugTarget_4)); 
 		return socket;
@@ -308,15 +308,18 @@ public class JAXPDebugTarget extends XSLDebugElement implements IXSLDebugTarget 
 		}
 	}
 
+	@Override
 	public boolean canDisconnect() {
 		// TODO implement disconnect
 		return false;
 	}
 
+	@Override
 	public void disconnect() throws DebugException {
 		// TODO implement disconnect
 	}
 
+	@Override
 	public boolean isDisconnected() {
 		// TODO implement disconnect
 		return false;
@@ -432,7 +435,7 @@ public class JAXPDebugTarget extends XSLDebugElement implements IXSLDebugTarget 
 
 	public IValue getVariableValue(XSLVariable variable) throws DebugException {
 		synchronized (VALUE_MAP_LOCK) {
-			XSLValue value = (XSLValue) valueMapCache.get(variable);
+			XSLValue value = valueMapCache.get(variable);
 			if (value == null) {
 				if (isSuspended()) {
 					String res = sendRequest(DebugConstants.REQUEST_VALUE
@@ -470,7 +473,7 @@ public class JAXPDebugTarget extends XSLDebugElement implements IXSLDebugTarget 
 //					System.out.println("RESPONSE: " + response);
 //				}
 			} catch (IOException e) {
-				abort(Messages.XSLDebugTarget_19 + request, e); //$NON-NLS-1$
+				abort(Messages.XSLDebugTarget_19 + request, e); 
 			}
 		}
 		return response;
@@ -507,7 +510,7 @@ public class JAXPDebugTarget extends XSLDebugElement implements IXSLDebugTarget 
 	private class EventDispatchJob extends Job {
 
 		public EventDispatchJob() {
-			super(Messages.XSLDebugTarget_20); //$NON-NLS-1$
+			super(Messages.XSLDebugTarget_20); 
 			setSystem(true);
 		}
 

@@ -246,6 +246,7 @@ public class StylesheetModel extends XSLModelObject
 		}
 	}
 	
+	@Override
 	public Type getModelType()
 	{
 		return Type.STYLESHEET_MODEL;

@@ -1,17 +1,6 @@
 package org.eclipse.wst.xsl.jaxp.debug.ui.internal;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.IDebugEventSetListener;
-import org.eclipse.debug.core.ILaunch;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchConfigurationType;
-import org.eclipse.debug.core.ILaunchListener;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.xsl.launching.config.BaseLaunchHelper;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -35,6 +24,7 @@ public class JAXPDebugUIPlugin extends AbstractUIPlugin {
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
@@ -44,6 +34,7 @@ public class JAXPDebugUIPlugin extends AbstractUIPlugin {
 	 * (non-Javadoc)
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);

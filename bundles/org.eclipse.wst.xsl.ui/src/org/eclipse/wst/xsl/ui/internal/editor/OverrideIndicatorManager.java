@@ -144,7 +144,7 @@ public class OverrideIndicatorManager
 					fAnnotationModel.addAnnotation((Annotation) mapEntry.getKey(), (Position) mapEntry.getValue());
 				}
 			}
-			fOverrideAnnotations = (Annotation[]) annotationMap.keySet().toArray(new Annotation[annotationMap.keySet().size()]);
+			fOverrideAnnotations = annotationMap.keySet().toArray(new Annotation[annotationMap.keySet().size()]);
 		}
 	}
 

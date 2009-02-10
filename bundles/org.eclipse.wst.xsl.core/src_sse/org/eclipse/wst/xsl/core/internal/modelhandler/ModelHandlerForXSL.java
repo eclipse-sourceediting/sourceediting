@@ -45,14 +45,17 @@ public class ModelHandlerForXSL extends ModelHandlerForXML implements IModelHand
 		setAssociatedContentTypeId(AssociatedContentTypeID);
 	}
 
+	@Override
 	public IDocumentLoader getDocumentLoader() {
 		return new XSLDocumentLoader();
 	}
 
+	@Override
 	public IDocumentCharsetDetector getEncodingDetector() {
 		return new XMLDocumentCharsetDetector();
 	}
 
+	@Override
 	public IModelLoader getModelLoader() {
 		return new XSLModelLoader();
 	}

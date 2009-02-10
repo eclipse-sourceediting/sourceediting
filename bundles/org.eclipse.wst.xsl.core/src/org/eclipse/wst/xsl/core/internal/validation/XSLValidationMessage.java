@@ -92,6 +92,7 @@ public class XSLValidationMessage extends ValidationMessage
 		return realSeverity;
 	}
 	
+	@Override
 	public String toString()
 	{
 		return node.toString();

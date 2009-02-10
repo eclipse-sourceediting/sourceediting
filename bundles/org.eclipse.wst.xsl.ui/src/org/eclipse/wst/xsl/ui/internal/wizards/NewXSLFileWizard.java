@@ -35,6 +35,7 @@ public class NewXSLFileWizard extends Wizard implements INewWizard
 	private NewXSLFileTemplatesWizardPage fNewFileTemplatesPage;
 	private IStructuredSelection fSelection;
 
+	@Override
 	public void addPages()
 	{
 		fNewFilePage = new NewXSLFileWizardPage("NewFileCreationPage", new StructuredSelection(IDE.computeSelectedResources(fSelection))); //$NON-NLS-1$ 
@@ -57,6 +58,7 @@ public class NewXSLFileWizard extends Wizard implements INewWizard
 		// setDefaultPageImageDescriptor(descriptor);
 	}
 
+	@Override
 	public boolean performFinish()
 	{
 		boolean performedOK = false;

@@ -115,7 +115,7 @@ public class LaunchTransform
 		tdefEl.appendChild(paramsEl);
 		for (Iterator<LaunchAttribute> iter = parameters.iterator(); iter.hasNext();)
 		{
-			LaunchAttribute param = (LaunchAttribute) iter.next();
+			LaunchAttribute param = iter.next();
 			Element propEl = doc.createElement("Parameter"); //$NON-NLS-1$
 			propEl.setAttribute("name", param.uri); //$NON-NLS-1$
 			propEl.setAttribute("value", param.value); //$NON-NLS-1$

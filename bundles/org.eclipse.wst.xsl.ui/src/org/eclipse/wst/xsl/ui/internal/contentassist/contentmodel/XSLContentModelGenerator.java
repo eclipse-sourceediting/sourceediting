@@ -39,6 +39,7 @@ public class XSLContentModelGenerator extends AbstractContentModelGenerator {
 	 * (non-Javadoc)
 	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractContentModelGenerator#generateAttribute(org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration, java.lang.StringBuffer)
 	 */
+	@Override
 	public void generateAttribute(CMAttributeDeclaration attrDecl, StringBuffer buffer) {
 		if ((attrDecl == null) || (buffer == null)) {
 			return;
@@ -53,6 +54,7 @@ public class XSLContentModelGenerator extends AbstractContentModelGenerator {
 		return;
 	}
 
+	@Override
 	protected void generateEndTag(String tagName, Node parentNode, CMElementDeclaration elementDecl, StringBuffer buffer) {
 		if (elementDecl == null) {
 			return;
@@ -104,6 +106,7 @@ public class XSLContentModelGenerator extends AbstractContentModelGenerator {
 		return;
 	}
 
+	@Override
 	protected void generateStartTag(String tagName, Node parentNode, CMElementDeclaration elementDecl, StringBuffer buffer) {
 		if ((elementDecl == null) || (buffer == null)) {
 			return;
@@ -118,6 +121,7 @@ public class XSLContentModelGenerator extends AbstractContentModelGenerator {
 	 * (non-Javadoc)
 	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractContentModelGenerator#getMinimalStartTagLength(org.w3c.dom.Node, org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration)
 	 */
+	@Override
 	public int getMinimalStartTagLength(Node node, CMElementDeclaration elementDecl) {
 		if (elementDecl == null) {
 			return 0;
@@ -144,6 +148,7 @@ public class XSLContentModelGenerator extends AbstractContentModelGenerator {
 	 * (non-Javadoc)
 	 * @see org.eclipse.wst.xml.ui.internal.contentassist.AbstractContentModelGenerator#getStartTagClose(org.w3c.dom.Node, org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration)
 	 */
+	@Override
 	public String getStartTagClose(Node parentNode, CMElementDeclaration elementDecl) {
 		String other = getOtherClose(parentNode);
 		if (other != null) {

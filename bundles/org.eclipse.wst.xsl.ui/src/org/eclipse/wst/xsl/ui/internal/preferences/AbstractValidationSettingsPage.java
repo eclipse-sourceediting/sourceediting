@@ -210,6 +210,7 @@ abstract class AbstractValidationSettingsPage extends PropertyPreferencePage {
 		excomposite.setFont(JFaceResources.getFontRegistry().getBold(JFaceResources.DIALOG_FONT));
 		excomposite.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, nColumns, 1));
 		excomposite.addExpansionListener(new ExpansionAdapter() {
+			@Override
 			public void expansionStateChanged(ExpansionEvent e) {
 				expandedStateChanged((ExpandableComposite) e.getSource());
 			}
@@ -283,6 +284,7 @@ abstract class AbstractValidationSettingsPage extends PropertyPreferencePage {
 		return false;
 	}
 	
+	@Override
 	public boolean performOk() {
 		if(super.performOk() && shouldRevalidateOnSettingsChange()) {
 			MessageBox mb = new MessageBox(this.getShell(), SWT.APPLICATION_MODAL | SWT.YES | SWT.NO | SWT.CANCEL | SWT.ICON_INFORMATION | SWT.RIGHT);
@@ -313,6 +315,7 @@ abstract class AbstractValidationSettingsPage extends PropertyPreferencePage {
 			super(name);
 		}
 
+		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			IStatus status = Status.OK_STATUS;
 			try {

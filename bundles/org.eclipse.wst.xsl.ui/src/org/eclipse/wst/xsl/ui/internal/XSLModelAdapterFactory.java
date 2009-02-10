@@ -11,15 +11,7 @@
 package org.eclipse.wst.xsl.ui.internal;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
-import org.eclipse.wst.xsl.core.model.Import;
-import org.eclipse.wst.xsl.core.model.Include;
-import org.eclipse.wst.xsl.core.model.Stylesheet;
-import org.eclipse.wst.xsl.core.model.StylesheetModel;
-import org.eclipse.wst.xsl.core.model.Template;
-import org.eclipse.wst.xsl.core.model.Variable;
-import org.eclipse.wst.xsl.core.model.XSLModelObject;
 
 public class XSLModelAdapterFactory implements IAdapterFactory
 {

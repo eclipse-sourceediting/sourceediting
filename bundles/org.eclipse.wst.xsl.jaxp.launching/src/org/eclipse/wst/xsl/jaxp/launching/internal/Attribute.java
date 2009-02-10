@@ -50,7 +50,7 @@ public class Attribute implements IAttribute, Comparable<Object>
 		{
 			boolean valid = "true".equals(value) || "false".equals(value); //$NON-NLS-1$ //$NON-NLS-2$
 			if (!valid)
-				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_2, null); //$NON-NLS-1$
+				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_2, null); 
 		}
 		else if (TYPE_INT.equals(type))
 		{
@@ -60,7 +60,7 @@ public class Attribute implements IAttribute, Comparable<Object>
 			}
 			catch (NumberFormatException e)
 			{
-				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_1, null); //$NON-NLS-1$
+				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_1, null); 
 			}
 		}
 		else if (TYPE_DOUBLE.equals(type))
@@ -71,7 +71,7 @@ public class Attribute implements IAttribute, Comparable<Object>
 			}
 			catch (NumberFormatException e)
 			{
-				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_0, null); //$NON-NLS-1$
+				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_0, null); 
 			}
 		}
 		else if (TYPE_FLOAT.equals(type))
@@ -82,7 +82,7 @@ public class Attribute implements IAttribute, Comparable<Object>
 			}
 			catch (NumberFormatException e)
 			{
-				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_5, null); //$NON-NLS-1$
+				status = new Status(IStatus.ERROR, JAXPLaunchingPlugin.PLUGIN_ID, 0, Messages.Attribute_5, null); 
 			}
 		}
 		else if (TYPE_CLASS.equals(type) || TYPE_OBJECT.equals(type))

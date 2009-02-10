@@ -74,6 +74,6 @@ public class PluginProcessorJar implements IProcessorJar
 	@Override
 	public String toString()
 	{
-		return "Plugin " + pluginId + Messages.PluginProcessorJar_0 + path; //$NON-NLS-1$ //$NON-NLS-2$
+		return "Plugin " + pluginId + Messages.PluginProcessorJar_0 + path; //$NON-NLS-1$ 
 	}
 }

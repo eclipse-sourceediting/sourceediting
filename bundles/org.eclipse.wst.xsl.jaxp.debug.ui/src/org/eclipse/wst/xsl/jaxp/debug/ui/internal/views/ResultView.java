@@ -80,10 +80,12 @@ public class ResultView extends ViewPart implements IDebugEventSetListener
 		SourceViewerConfiguration sourceViewerConfiguration = new StructuredTextViewerConfiguration() {
 			StructuredTextViewerConfiguration baseConfiguration = new StructuredTextViewerConfigurationXSL();
 
+			@Override
 			public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 				return baseConfiguration.getConfiguredContentTypes(sourceViewer);
 			}
 
+			@Override
 			public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
 				return baseConfiguration.getLineStyleProviders(sourceViewer, partitionType);
 			}

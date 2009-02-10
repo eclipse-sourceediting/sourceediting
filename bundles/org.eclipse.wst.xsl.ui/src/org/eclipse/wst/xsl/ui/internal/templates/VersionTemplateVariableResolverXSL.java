@@ -27,6 +27,7 @@ public class VersionTemplateVariableResolverXSL extends SimpleTemplateVariableRe
 		super(VERSION_TYPE, "XSLT Version preference");
 	}
 
+	@Override
 	protected String resolve(TemplateContext context)
 	{
 		// TODO

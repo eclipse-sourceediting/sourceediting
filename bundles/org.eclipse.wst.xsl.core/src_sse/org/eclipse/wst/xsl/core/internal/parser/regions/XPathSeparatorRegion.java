@@ -81,6 +81,7 @@ public class XPathSeparatorRegion implements ITextRegion {
 		return fType;
 	}
 
+	@Override
 	public String toString() {
 		return RegionToStringUtil.toString(this);
 	}

@@ -27,12 +27,12 @@ public class InvokerRegistry
 
 	public IProcessorInvoker getProcessorInvoker(String id)
 	{
-		return (IProcessorInvoker) invokers.get(id);
+		return invokers.get(id);
 	}
 
 	public IProcessorInvoker[] getProcessorInvokers()
 	{
-		return (IProcessorInvoker[]) invokers.values().toArray(new IProcessorInvoker[0]);
+		return invokers.values().toArray(new IProcessorInvoker[0]);
 	}
 
 	public void addInvokerDescriptor(IProcessorInvoker desc)

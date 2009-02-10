@@ -10,11 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.jaxp.debug.debugger;
 
-import java.io.FileWriter;
 import java.io.Writer;
 import java.net.URL;
 
-import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 
