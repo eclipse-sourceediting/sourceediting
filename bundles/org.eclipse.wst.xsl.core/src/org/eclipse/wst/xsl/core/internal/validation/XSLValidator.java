@@ -110,7 +110,7 @@ public class XSLValidator
 		}
 		if (Debug.debugXSLModel) {
 			long end = System.currentTimeMillis();
-			System.out.println("VALIDATE "+xslFile+" in "+(end-start)+"ms");
+			System.out.println("VALIDATE "+xslFile+" in "+(end-start)+"ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 

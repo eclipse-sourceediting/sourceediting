@@ -93,6 +93,7 @@ public final class Debug {
 
 	/**
 	 * For tests and debug only
+	 * @param structuredDocument 
 	 */
 
 	public static final void dump(IStructuredDocument structuredDocument) {
@@ -120,6 +121,7 @@ public final class Debug {
 	}
 
 	/**
+	 * @param region 
 	 * @param flatNode
 	 * @param verbose
 	 */
@@ -152,6 +154,7 @@ public final class Debug {
 
 	/**
 	 * Simple utility to make sure println's are some what in order
+	 * @param msg 
 	 */
 	public static final synchronized void println(String msg) {
 		System.out.println(System.currentTimeMillis() + "\t" + msg); //$NON-NLS-1$

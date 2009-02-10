@@ -167,6 +167,7 @@ public class Stylesheet extends XSLElement
 
 	/**
 	 * Get the stylesheet version.
+	 * @return 
 	 */
 	public String getVersion()
 	{

@@ -61,8 +61,8 @@ public class Validator2 extends AbstractValidator implements IValidatorJob
 			{
 				XSLValidationMessage xslMsg = (XSLValidationMessage)message;
 				ValidatorMessage msg = ValidatorMessage.create(message.getMessage(), resource);
-				msg.setAttribute("lineNumber", xslMsg.getLineNumber());
-				msg.setAttribute("severity", xslMsg.getSeverity());
+				msg.setAttribute("lineNumber", xslMsg.getLineNumber()); //$NON-NLS-1$
+				msg.setAttribute("severity", xslMsg.getSeverity()); //$NON-NLS-1$
 				result.add(msg);
 			}
 		}

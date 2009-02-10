@@ -183,7 +183,7 @@ public class StylesheetModel extends XSLModelObject
 
 		if (Debug.debugXSLModel)
 		{
-			System.out.println("Fixing " + stylesheet.getFile() + "...");
+			System.out.println("Fixing " + stylesheet.getFile() + "..."); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		templates.addAll(stylesheet.getTemplates());
 		templateSet.addAll(stylesheet.getTemplates());
@@ -200,7 +200,7 @@ public class StylesheetModel extends XSLModelObject
 		if (Debug.debugXSLModel)
 		{
 			long end = System.currentTimeMillis();
-			System.out.println("FIX " + stylesheet.getFile() + " in " + (end - start) + "ms");
+			System.out.println("FIX " + stylesheet.getFile() + " in " + (end - start) + "ms");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 		}
 	}
 

@@ -80,7 +80,7 @@ public class StylesheetBuilder {
 	private Stylesheet build(IFile file) {
 		long start = System.currentTimeMillis();
 		if (Debug.debugXSLModel) {
-			System.out.println("Building " + file + "...");
+			System.out.println("Building " + file + "..."); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		Stylesheet stylesheet = null;
@@ -93,13 +93,13 @@ public class StylesheetBuilder {
 						.getModelForRead(file);
 				if (Debug.debugXSLModel) {
 					long endParse = System.currentTimeMillis();
-					System.out.println("PARSE " + file + " in "
-							+ (endParse - start) + "ms");
+					System.out.println("PARSE " + file + " in " //$NON-NLS-1$ //$NON-NLS-2$
+							+ (endParse - start) + "ms"); //$NON-NLS-1$
 				}
 			} else if (Debug.debugXSLModel) {
 				long endParse = System.currentTimeMillis();
-				System.out.println("NO-PARSE " + file + " in "
-						+ (endParse - start) + "ms");
+				System.out.println("NO-PARSE " + file + " in " //$NON-NLS-1$ //$NON-NLS-2$
+						+ (endParse - start) + "ms"); //$NON-NLS-1$
 			}
 			// start = System.currentTimeMillis();
 			if (smodel != null && smodel instanceof IDOMModel) {
@@ -116,7 +116,7 @@ public class StylesheetBuilder {
 		}
 		if (Debug.debugXSLModel) {
 			long end = System.currentTimeMillis();
-			System.out.println("BUILD " + file + " in " + (end - start) + "ms");
+			System.out.println("BUILD " + file + " in " + (end - start) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 		return stylesheet;
 	}
@@ -165,7 +165,7 @@ public class StylesheetBuilder {
 				if ("stylesheet".equals(elName) && elementStack.size() == 0) //$NON-NLS-1$
 				{
 					NamedNodeMap map = element.getAttributes();
-					String version = element.getAttribute("version");
+					String version = element.getAttribute("version"); //$NON-NLS-1$
 					sf.setVersion(version);
 					xslEl = sf;
 				} else if ("include".equals(elName) && elementStack.size() == 1) //$NON-NLS-1$
