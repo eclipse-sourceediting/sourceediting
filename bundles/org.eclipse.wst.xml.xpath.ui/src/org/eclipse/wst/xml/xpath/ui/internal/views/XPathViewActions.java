@@ -18,67 +18,68 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.xml.xpath.messages.Messages;
 import org.eclipse.wst.xml.xpath.ui.internal.XPathUIPlugin;
 
-class XPathViewActions
-{
-	private ImageDescriptor COLLAPSE_D = XPathUIPlugin.imageDescriptorFromPlugin(XPathUIPlugin.PLUGIN_ID, "icons/full/dlcl16/collapseall.gif");
-	private ImageDescriptor COLLAPSE_E = XPathUIPlugin.imageDescriptorFromPlugin(XPathUIPlugin.PLUGIN_ID, "icons/full/elcl16/collapseall.gif");
-	private ImageDescriptor SYNCED_D = XPathUIPlugin.imageDescriptorFromPlugin(XPathUIPlugin.PLUGIN_ID, "icons/full/dlcl16/synced.gif");
-	private ImageDescriptor SYNCED_E = XPathUIPlugin.imageDescriptorFromPlugin(XPathUIPlugin.PLUGIN_ID, "icons/full/elcl16/synced.gif");
+class XPathViewActions {
+	private ImageDescriptor COLLAPSE_D = AbstractUIPlugin
+			.imageDescriptorFromPlugin(XPathUIPlugin.PLUGIN_ID,
+					"icons/full/dlcl16/collapseall.gif");
+	private ImageDescriptor COLLAPSE_E = AbstractUIPlugin
+			.imageDescriptorFromPlugin(XPathUIPlugin.PLUGIN_ID,
+					"icons/full/elcl16/collapseall.gif");
+	private ImageDescriptor SYNCED_D = AbstractUIPlugin
+			.imageDescriptorFromPlugin(XPathUIPlugin.PLUGIN_ID,
+					"icons/full/dlcl16/synced.gif");
+	private ImageDescriptor SYNCED_E = AbstractUIPlugin
+			.imageDescriptorFromPlugin(XPathUIPlugin.PLUGIN_ID,
+					"icons/full/elcl16/synced.gif");
 
 	boolean linkWithEditor = false;
 	private CollapseTreeAction collapseAction;
 	private ToggleLinkAction toggleAction;
 
-	protected IAction[] createMenuContributions(TreeViewer viewer)
-	{
-		return new IAction[]{  };
+	protected IAction[] createMenuContributions(TreeViewer viewer) {
+		return new IAction[] {};
 	}
 
-	protected IAction[] createToolbarContributions(TreeViewer viewer)
-	{
+	protected IAction[] createToolbarContributions(TreeViewer viewer) {
 		this.collapseAction = new CollapseTreeAction(viewer);
 		this.toggleAction = new ToggleLinkAction();
 		toggleAction.setChecked(linkWithEditor);
-		return new IAction[]{ collapseAction,toggleAction };
+		return new IAction[] { collapseAction, toggleAction };
 	}
 
-	public ISelection getSelection(TreeViewer viewer, ISelection selection)
-	{
+	public ISelection getSelection(TreeViewer viewer, ISelection selection) {
 		return selection;
 	}
 
-	public boolean isLinkedWithEditor(TreeViewer treeViewer)
-	{
+	public boolean isLinkedWithEditor(TreeViewer treeViewer) {
 		return linkWithEditor;
 	}
 
-	void setLinkWithEditor(boolean isLinkWithEditor)
-	{
+	void setLinkWithEditor(boolean isLinkWithEditor) {
 		linkWithEditor = isLinkWithEditor;
 	}
-	
-	void fillContextMenu(IMenuManager manager)
-	{
-        manager.add(collapseAction);
-        manager.add(toggleAction);
-        manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+
+	void fillContextMenu(IMenuManager manager) {
+		manager.add(collapseAction);
+		manager.add(toggleAction);
+		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
-//	private static ImageDescriptor getImageDescriptor(String relativePath)
-//	{
-//		String iconPath = "icons/";
-//		return XMLUIPlugin.imageDescriptorFromPlugin(XMLUIPlugin.PLUGIN_ID, iconPath);
-//	}
+	// private static ImageDescriptor getImageDescriptor(String relativePath)
+	// {
+	// String iconPath = "icons/";
+	// return XMLUIPlugin.imageDescriptorFromPlugin(XMLUIPlugin.PLUGIN_ID,
+	// iconPath);
+	// }
 
-	private class CollapseTreeAction extends Action
-	{
+	private class CollapseTreeAction extends Action {
 		private TreeViewer fTreeViewer = null;
 
-		public CollapseTreeAction(TreeViewer viewer)
-		{
+		public CollapseTreeAction(TreeViewer viewer) {
 			super(Messages.XPathViewActions_0, AS_PUSH_BUTTON);
 			setImageDescriptor(COLLAPSE_E);
 			setDisabledImageDescriptor(COLLAPSE_D);
@@ -86,24 +87,20 @@ class XPathViewActions
 			fTreeViewer = viewer;
 		}
 
-		public void run()
-		{
+		public void run() {
 			fTreeViewer.collapseAll();
 		}
 	}
 
-	private class ToggleLinkAction extends Action
-	{
-		public ToggleLinkAction()
-		{
+	private class ToggleLinkAction extends Action {
+		public ToggleLinkAction() {
 			super(Messages.XPathViewActions_1, AS_CHECK_BOX);
 			setToolTipText(getText());
 			setDisabledImageDescriptor(SYNCED_D);
 			setImageDescriptor(SYNCED_E);
 		}
 
-		public void run()
-		{
+		public void run() {
 			setLinkWithEditor(isChecked());
 		}
 	}

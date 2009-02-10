@@ -16,13 +16,16 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.w3c.dom.Text;
 
-public class DOMViewerFilter extends ViewerFilter
-{
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
-     */
-    public boolean select(Viewer viewer, Object parentElement, Object element)
-    {
-        return !(( element instanceof Text) && (((Text)element).getData()).trim().length()==0);
-    }
+public class DOMViewerFilter extends ViewerFilter {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers
+	 * .Viewer, java.lang.Object, java.lang.Object)
+	 */
+	public boolean select(Viewer viewer, Object parentElement, Object element) {
+		return !((element instanceof Text) && ((((Text) element).getData())
+				.trim().length() == 0));
+	}
 }

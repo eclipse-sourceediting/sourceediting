@@ -16,8 +16,7 @@ public class Messages extends NLS {
 	public static String XPathViewActions_0;
 	public static String XPathViewActions_1;
 	public static String XPathPrefencePage_0;
-	
-	
+
 	public static String XPathNavigator_XPath_Navigator;
 	public static String XPathNavigator_Select_source_first;
 	public static String XPathNavigator_XPath_Eval_Failed;
@@ -40,7 +39,7 @@ public class Messages extends NLS {
 	public static String XPathNavigator_Namespaces;
 	public static String XPathNavigator_Namespaces_Tip;
 	public static String XPathNavigator_Namespace_Prefixes;
-	
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

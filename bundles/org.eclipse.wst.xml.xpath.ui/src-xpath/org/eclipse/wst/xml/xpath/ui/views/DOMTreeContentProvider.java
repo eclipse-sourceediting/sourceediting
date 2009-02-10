@@ -19,52 +19,45 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class DOMTreeContentProvider implements ITreeContentProvider
-{
-    Node node=null;
-    
-    static final Object[] NOTHING = new Object[0];
-    
-    private Object[] nodeList2Array( NodeList nl)
-    {
-        Object[] oa = new Object[ nl.getLength()];
-        for (int i = 0; i < nl.getLength(); i++)
-        {
-            oa[i] = nl.item( i);            
-        }
-        
-        return oa;
-    }
-    
-    public Object[] getChildren(Object parentElement)
-    {
-        return parentElement==null ? NOTHING : nodeList2Array( ((Node)parentElement).getChildNodes());
-    }
-    
-    public Object getParent(Object element)
-    {
-        return ((Node)element).getParentNode();
-    }
-    
-    public boolean hasChildren(Object element)
-    {
-        return ((Node)element).hasChildNodes();
-    }
-    
-    public Object[] getElements(Object inputElement)
-    {
-        return getChildren( inputElement);
-    }
-    
-    public void dispose()
-    {
-    }
-    
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
-    {
-        if( newInput instanceof Element)
-            node = (Element)newInput;
-        else if( newInput instanceof Document)
-            node = ((Document)newInput).getDocumentElement();
-    }
+public class DOMTreeContentProvider implements ITreeContentProvider {
+	Node node = null;
+
+	static final Object[] NOTHING = new Object[0];
+
+	private Object[] nodeList2Array(NodeList nl) {
+		Object[] oa = new Object[nl.getLength()];
+		for (int i = 0; i < nl.getLength(); i++) {
+			oa[i] = nl.item(i);
+		}
+
+		return oa;
+	}
+
+	public Object[] getChildren(Object parentElement) {
+		return parentElement == null ? NOTHING
+				: nodeList2Array(((Node) parentElement).getChildNodes());
+	}
+
+	public Object getParent(Object element) {
+		return ((Node) element).getParentNode();
+	}
+
+	public boolean hasChildren(Object element) {
+		return ((Node) element).hasChildNodes();
+	}
+
+	public Object[] getElements(Object inputElement) {
+		return getChildren(inputElement);
+	}
+
+	public void dispose() {
+	}
+
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		if (newInput instanceof Element) {
+			node = (Element) newInput;
+		} else if (newInput instanceof Document) {
+			node = ((Document) newInput).getDocumentElement();
+		}
+	}
 }

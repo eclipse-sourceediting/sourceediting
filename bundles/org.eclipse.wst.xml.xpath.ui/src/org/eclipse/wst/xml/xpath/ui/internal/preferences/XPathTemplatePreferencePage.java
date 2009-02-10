@@ -14,12 +14,11 @@ import org.eclipse.wst.xml.ui.internal.preferences.XMLTemplatePreferencePage;
 import org.eclipse.wst.xml.xpath.ui.internal.XPathUIPlugin;
 
 /**
- * XSLTemplatePreferencePage sets up the template preference page that
- * contains the templates for xpath, xpath 2.0, axis, operators, and 
- * exslt functions. 
+ * XSLTemplatePreferencePage sets up the template preference page that contains
+ * the templates for xpath, xpath 2.0, axis, operators, and exslt functions.
  * 
  * @author dcarver
- *
+ * 
  */
 public class XPathTemplatePreferencePage extends XMLTemplatePreferencePage {
 
@@ -29,9 +28,10 @@ public class XPathTemplatePreferencePage extends XMLTemplatePreferencePage {
 	public XPathTemplatePreferencePage() {
 		setPreferenceStore(XPathUIPlugin.getDefault().getPreferenceStore());
 		setTemplateStore(XPathUIPlugin.getDefault().getXPathTemplateStore());
-		setContextTypeRegistry(XPathUIPlugin.getDefault().getXPathTemplateContextRegistry());
+		setContextTypeRegistry(XPathUIPlugin.getDefault()
+				.getXPathTemplateContextRegistry());
 	}
-	
+
 	/**
 	 * (non-Javadoc)
 	 * 
@@ -42,5 +42,5 @@ public class XPathTemplatePreferencePage extends XMLTemplatePreferencePage {
 		boolean ok = super.performOk();
 		XPathUIPlugin.getDefault().savePluginPreferences();
 		return ok;
-	}	
+	}
 }

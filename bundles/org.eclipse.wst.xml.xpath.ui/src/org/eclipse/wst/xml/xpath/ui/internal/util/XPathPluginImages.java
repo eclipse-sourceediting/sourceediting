@@ -19,12 +19,12 @@ public class XPathPluginImages {
 	 * Path to the XPATH Images used for Content Assist
 	 */
 	public static final String IMG_XPATH_FUNCTION = "icons/full/function.gif"; //$NON-NLS-1$
-	
+
 	/**
 	 * Path to the XPATH Images used for Content Assist
 	 */
 	public static final String IMG_XPATH_AXIS = "icons/full/directional.gif"; //$NON-NLS-1$
-	
+
 	/**
 	 * Path to the XPATH Images used for Content Assist
 	 */
@@ -34,5 +34,5 @@ public class XPathPluginImages {
 	 * Path to the XPATH Images used for Content Assist
 	 */
 	public static final String IMG_OPERATOR = "icons/full/operation.gif"; //$NON-NLS-1$	
-	
+
 }

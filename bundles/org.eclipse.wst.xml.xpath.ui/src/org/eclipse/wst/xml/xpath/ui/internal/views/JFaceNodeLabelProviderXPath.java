@@ -23,59 +23,57 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 
-public class JFaceNodeLabelProviderXPath extends LabelProvider implements IFontProvider
-{
+public class JFaceNodeLabelProviderXPath extends LabelProvider implements
+		IFontProvider {
 	FontRegistry registry = new FontRegistry();
 
-	protected IJFaceNodeAdapter getAdapter(Object adaptable)
-	{
-		if (adaptable instanceof INodeNotifier)
-		{
-			INodeAdapter adapter = ((INodeNotifier) adaptable).getAdapterFor(IJFaceNodeAdapter.class);
-			if (adapter instanceof IJFaceNodeAdapter)
+	protected IJFaceNodeAdapter getAdapter(Object adaptable) {
+		if (adaptable instanceof INodeNotifier) {
+			INodeAdapter adapter = ((INodeNotifier) adaptable)
+					.getAdapterFor(IJFaceNodeAdapter.class);
+			if (adapter instanceof IJFaceNodeAdapter) {
 				return (IJFaceNodeAdapter) adapter;
+			}
 		}
 		return null;
 	}
 
-	public Image getImage(Object element)
-	{
-		if (element instanceof EmptyNodeList)
+	public Image getImage(Object element) {
+		if (element instanceof EmptyNodeList) {
 			return null;
+		}
 		return getAdapter(element).getLabelImage(element);
 	}
 
-	public String getText(Object element)
-	{
-		if (element instanceof EmptyNodeList)
+	public String getText(Object element) {
+		if (element instanceof EmptyNodeList) {
 			return "<No Matches>";
+		}
 		IJFaceNodeAdapter adapter = getAdapter(element);
 		StringBuffer sb = new StringBuffer(adapter.getLabelText(element));
-		if (element instanceof Element)
-		{
-			Element impl = (Element)element;
+		if (element instanceof Element) {
+			Element impl = (Element) element;
 			NamedNodeMap nnm = impl.getAttributes();
-			if (nnm.getLength() > 0)
-			{
-				Attr a = (Attr)nnm.item(0);
+			if (nnm.getLength() > 0) {
+				Attr a = (Attr) nnm.item(0);
 				String val = a.getNodeValue();
-				if (val.length() > 15)
-					val = val.substring(0,15);
+				if (val.length() > 15) {
+					val = val.substring(0, 15);
+				}
 				sb.append(" ").append(a.getName()).append("=").append(val);
 			}
 		}
 		return sb.toString();
 	}
 
-	public boolean isLabelProperty(Object element, String property)
-	{
+	public boolean isLabelProperty(Object element, String property) {
 		return false;
 	}
-	
-	public Font getFont(Object element)
-	{
+
+	public Font getFont(Object element) {
 		if (element instanceof EmptyNodeList) {
-			return registry.getItalic(Display.getCurrent().getSystemFont().getFontData()[0].getName());
+			return registry.getItalic(Display.getCurrent().getSystemFont()
+					.getFontData()[0].getName());
 		}
 		return null;
 	}

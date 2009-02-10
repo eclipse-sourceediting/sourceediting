@@ -10,6 +10,5 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath.ui.internal.views;
 
-public class EmptyNodeList
-{
+public class EmptyNodeList {
 }

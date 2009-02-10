@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath.ui.internal.contentassist;
 
-import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.TemplateContext;
@@ -25,15 +24,17 @@ import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceCompletionProposa
  * fit for an HTML viewer (by escaping characters)
  */
 @SuppressWarnings("restriction")
-public class CustomTemplateProposal extends TemplateProposal implements IRelevanceCompletionProposal {
+public class CustomTemplateProposal extends TemplateProposal implements
+		IRelevanceCompletionProposal {
 
 	private final Template fTemplate;
-	
-	public CustomTemplateProposal(Template template, TemplateContext context, IRegion region, Image image, int relevance) {
+
+	public CustomTemplateProposal(Template template, TemplateContext context,
+			IRegion region, Image image, int relevance) {
 		super(template, context, region, image, relevance);
 		this.fTemplate = template;
 	}
-	
+
 	@Override
 	public String getDisplayString() {
 		return fTemplate.getName();

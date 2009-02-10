@@ -32,12 +32,12 @@ public class XPathUIPlugin extends AbstractUIPlugin {
 
 	// The shared instance
 	private static XPathUIPlugin plugin;
-	
+
 	/**
 	 * The template store for xpath.
 	 */
 	private TemplateStore fXPathTemplateStore;
-	
+
 	/**
 	 * The template context type registry for xpath.
 	 */
@@ -52,7 +52,9 @@ public class XPathUIPlugin extends AbstractUIPlugin {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
+	 * 
+	 * @see
+	 * org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -61,7 +63,9 @@ public class XPathUIPlugin extends AbstractUIPlugin {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+	 * 
+	 * @see
+	 * org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
@@ -70,23 +74,22 @@ public class XPathUIPlugin extends AbstractUIPlugin {
 
 	/**
 	 * Returns the shared instance
-	 *
+	 * 
 	 * @return the shared instance
 	 */
 	public static XPathUIPlugin getDefault() {
 		return plugin;
 	}
 
-	public static void log(Exception e)
-	{
-		getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, 0, "", e)); //$NON-NLS-1$
+	public static void log(Exception e) {
+		getDefault().getLog().log(
+				new Status(IStatus.ERROR, PLUGIN_ID, 0, "", e)); //$NON-NLS-1$
 	}
 
-	public static void log(CoreException e)
-	{
+	public static void log(CoreException e) {
 		getDefault().getLog().log(e.getStatus());
 	}
-	
+
 	/**
 	 * Returns the template store for the xpath templates.
 	 * 
@@ -94,16 +97,17 @@ public class XPathUIPlugin extends AbstractUIPlugin {
 	 */
 	public TemplateStore getXPathTemplateStore() {
 		if (fXPathTemplateStore == null) {
-			fXPathTemplateStore = new ContributionTemplateStore(getXPathTemplateContextRegistry(), getPreferenceStore(), "org.eclipse.wst.xml.xpath.ui.xpath_custom_templates"); //$NON-NLS-1$
+			fXPathTemplateStore = new ContributionTemplateStore(
+					getXPathTemplateContextRegistry(), getPreferenceStore(),
+					"org.eclipse.wst.xml.xpath.ui.xpath_custom_templates"); //$NON-NLS-1$
 			try {
 				fXPathTemplateStore.load();
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 			}
 		}
 		return fXPathTemplateStore;
 	}
-	
+
 	/**
 	 * Returns the template context type registry for xpath
 	 * 

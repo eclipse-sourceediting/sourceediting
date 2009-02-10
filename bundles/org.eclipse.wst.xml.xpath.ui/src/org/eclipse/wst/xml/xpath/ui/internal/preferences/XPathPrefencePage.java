@@ -9,24 +9,25 @@ import org.eclipse.wst.xml.xpath.messages.Messages;
 
 @SuppressWarnings("restriction")
 public class XPathPrefencePage extends AbstractPreferencePage {
-	
+
 	/**
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 * @deprecated
 	 */
 	protected Control createContents(Composite parent) {
 		Composite composite = createScrolledComposite(parent);
 
-		String description = Messages.XPathPrefencePage_0; 
+		String description = Messages.XPathPrefencePage_0;
 		Text text = new Text(composite, SWT.READ_ONLY);
-		// some themes on GTK have different background colors for Text and Labels
+		// some themes on GTK have different background colors for Text and
+		// Labels
 		text.setBackground(composite.getBackground());
 		text.setText(description);
 
 		setSize(composite);
 		return composite;
 	}
-	
 
 }

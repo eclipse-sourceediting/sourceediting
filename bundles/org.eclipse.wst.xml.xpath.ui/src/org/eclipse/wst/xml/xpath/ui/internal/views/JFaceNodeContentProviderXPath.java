@@ -20,51 +20,43 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class JFaceNodeContentProviderXPath implements ITreeContentProvider
-{
+public class JFaceNodeContentProviderXPath implements ITreeContentProvider {
 	FontRegistry registry = new FontRegistry();
-	
-	protected IJFaceNodeAdapter getAdapter(Object adaptable)
-	{
-		if (adaptable instanceof INodeNotifier)
-		{
-			INodeAdapter adapter = ((INodeNotifier) adaptable).getAdapterFor(IJFaceNodeAdapter.class);
-			if (adapter instanceof IJFaceNodeAdapter)
+
+	protected IJFaceNodeAdapter getAdapter(Object adaptable) {
+		if (adaptable instanceof INodeNotifier) {
+			INodeAdapter adapter = ((INodeNotifier) adaptable)
+					.getAdapterFor(IJFaceNodeAdapter.class);
+			if (adapter instanceof IJFaceNodeAdapter) {
 				return (IJFaceNodeAdapter) adapter;
+			}
 		}
 
 		return null;
 	}
 
-	public Object[] getChildren(Object object)
-	{
+	public Object[] getChildren(Object object) {
 		IJFaceNodeAdapter adapter = getAdapter(object);
-		if (adapter != null)
+		if (adapter != null) {
 			return adapter.getChildren(object);
+		}
 		return new Object[0];
 	}
 
-	public Object[] getElements(Object object)
-	{
-		if (object instanceof IDOMModel)
-		{
+	public Object[] getElements(Object object) {
+		if (object instanceof IDOMModel) {
 			Object topNode = ((IDOMModel) object).getDocument();
 			IJFaceNodeAdapter adapter = getAdapter(topNode);
-			if (adapter != null)
-			{
+			if (adapter != null) {
 				return adapter.getElements(topNode);
 			}
-		}
-		else if (object instanceof NodeList)
-		{
+		} else if (object instanceof NodeList) {
 			NodeList nodeList = (NodeList) object;
-			if (nodeList.getLength() == 0)
-				return new Object[]{new EmptyNodeList()};
-			else
-			{
+			if (nodeList.getLength() == 0) {
+				return new Object[] { new EmptyNodeList() };
+			} else {
 				Node[] nodes = new Node[nodeList.getLength()];
-				for (int i=0;i<nodes.length;i++)
-				{
+				for (int i = 0; i < nodes.length; i++) {
 					nodes[i] = nodeList.item(i);
 				}
 				return nodes;
@@ -73,27 +65,25 @@ public class JFaceNodeContentProviderXPath implements ITreeContentProvider
 		return new Object[0];
 	}
 
-	public Object getParent(Object object)
-	{
+	public Object getParent(Object object) {
 		IJFaceNodeAdapter adapter = getAdapter(object);
-		if (adapter != null)
+		if (adapter != null) {
 			return adapter.getParent(object);
+		}
 		return null;
 	}
 
-	public boolean hasChildren(Object object)
-	{
+	public boolean hasChildren(Object object) {
 		IJFaceNodeAdapter adapter = getAdapter(object);
-		if (adapter != null)
+		if (adapter != null) {
 			return adapter.hasChildren(object);
+		}
 		return false;
 	}
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
-	{
+	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 
-	public void dispose()
-	{
+	public void dispose() {
 	}
 }

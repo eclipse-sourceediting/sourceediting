@@ -42,15 +42,20 @@ public class EditNamespacePrefixDialog extends Dialog implements UpdateListener 
 	}
 
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
+				true);
+		createButton(parent, IDialogConstants.CANCEL_ID,
+				IDialogConstants.CANCEL_LABEL, false);
 	}
 
 	protected Control createDialogArea(Composite parent) {
 		Composite dialogArea = (Composite) super.createDialogArea(parent);
-//		PlatformUI.getWorkbench().getHelpSystem().setHelp(dialogArea, XMLCommonUIContextIds.XCUI_SCHEMA_INFO_DIALOG);
+		// PlatformUI.getWorkbench().getHelpSystem().setHelp(dialogArea,
+		// XMLCommonUIContextIds.XCUI_SCHEMA_INFO_DIALOG);
 
-		CommonEditNamespacesDialog editNamespacesControl = new CommonEditNamespacesDialog(dialogArea, resourceLocation, Messages.XPathNavigator_Namespace_Prefixes, false, true);
+		CommonEditNamespacesDialog editNamespacesControl = new CommonEditNamespacesDialog(
+				dialogArea, resourceLocation,
+				Messages.XPathNavigator_Namespace_Prefixes, false, true);
 		editNamespacesControl.setNamespaceInfoList(namespaceInfoList);
 
 		editNamespacesControl.updateErrorMessage(namespaceInfoList);
@@ -73,11 +78,12 @@ public class EditNamespacePrefixDialog extends Dialog implements UpdateListener 
 
 	public void updateErrorMessage(List<NamespaceInfo> namespaceInfoList) {
 		NamespaceInfoErrorHelper helper = new NamespaceInfoErrorHelper();
-		String errorMessage = helper.computeErrorMessage(namespaceInfoList, null);
+		String errorMessage = helper.computeErrorMessage(namespaceInfoList,
+				null);
 		errorMessageLabel.setText(errorMessage != null ? errorMessage : ""); //$NON-NLS-1$
 	}
 
-	@SuppressWarnings("unchecked") //$NON-NLS-1$
+	@SuppressWarnings("unchecked")
 	public void updateOccured(Object object, Object arg) {
 		updateErrorMessage((List<NamespaceInfo>) arg);
 	}
