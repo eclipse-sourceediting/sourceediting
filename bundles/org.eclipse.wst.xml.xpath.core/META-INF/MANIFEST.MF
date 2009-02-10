@@ -8,7 +8,7 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Export-Package: org.eclipse.wst.xml.xpath.core;uses:="org.osgi.framework,org.eclipse.core.runtime",
- org.eclipse.wst.xml.xpath.core.internal.parser;x-internal:=true,
+ org.eclipse.wst.xml.xpath.core.internal.parser;x-friends:="org.eclipse.wst.xml.xpath.*,org.eclipse.wst.xsl.*",
  org.eclipse.wst.xml.xpath.core.util;
   uses:="org.apache.xml.utils,
    org.w3c.dom.traversal,
