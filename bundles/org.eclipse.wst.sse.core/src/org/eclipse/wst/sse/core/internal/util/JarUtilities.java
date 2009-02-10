@@ -54,7 +54,7 @@ public class JarUtilities {
 		}
 		catch (IOException ioe) {
 			// no cleanup can be done
-			Logger.logException("JarUtilities: Could not close file " + file.getName(), ioe); //$NON-NLS-1$
+			Logger.log(Logger.ERROR_DEBUG, "JarUtilities: Could not close file " + file.getName(), ioe); //$NON-NLS-1$
 		}
 	}
 
@@ -72,7 +72,7 @@ public class JarUtilities {
 			jarfile = new ZipFile(jarFilename);
 		}
 		catch (IOException ioExc) {
-			Logger.logException("JarUtilities: " + jarFilename, ioExc); //$NON-NLS-1$
+			Logger.log(Logger.ERROR_DEBUG, "JarUtilities: " + jarFilename, ioExc); //$NON-NLS-1$
 			closeJarFile(jarfile);
 		}
 
@@ -85,7 +85,7 @@ public class JarUtilities {
 						entryInputStream = jarfile.getInputStream(zentry);
 					}
 					catch (IOException ioExc) {
-						Logger.logException("JarUtilities: " + jarFilename, ioExc); //$NON-NLS-1$
+						Logger.log(Logger.ERROR_DEBUG, "JarUtilities: " + jarFilename, ioExc); //$NON-NLS-1$
 					}
 
 					if (entryInputStream != null) {
@@ -159,7 +159,7 @@ public class JarUtilities {
 				return getEntryNames(new ZipInputStream(((IFile)jarResource).getContents()), true);
 			}
 			catch (CoreException e) {
-				Logger.logException("Problem reading contents of " + jarResource.getFullPath(), e);  //$NON-NLS-1$
+				Logger.log(Logger.ERROR_DEBUG, "Problem reading contents of " + jarResource.getFullPath(), e);  //$NON-NLS-1$
 			}
 		}
 		return getEntryNames(jarResource.getLocation().toString());
@@ -180,10 +180,10 @@ public class JarUtilities {
 			}
 		}
 		catch (ZipException zExc) {
-			Logger.log(Logger.WARNING, "JarUtilities ZipException: (stream) " + zExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			Logger.log(Logger.WARNING_DEBUG, "JarUtilities ZipException: (stream) " + zExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		catch (IOException ioExc) {
-			Logger.log(Logger.WARNING, "JarUtilities IOException: (stream) " + ioExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			Logger.log(Logger.WARNING_DEBUG, "JarUtilities IOException: (stream) " + ioExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		finally {
 			closeStream(jarInputStream);
@@ -197,7 +197,7 @@ public class JarUtilities {
 			inputStream.close();
 		}
 		catch (IOException e) {
-			// nothing to do
+			Logger.log(Logger.WARNING_DEBUG, "JarUtilities IOException: (closing stream) " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -214,10 +214,10 @@ public class JarUtilities {
 			}
 		}
 		catch (ZipException zExc) {
-			Logger.log(Logger.WARNING, "JarUtilities ZipException: " + jarFilename + " " + zExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			Logger.log(Logger.WARNING_DEBUG, "JarUtilities ZipException: " + jarFilename + " " + zExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		catch (IOException ioExc) {
-			Logger.log(Logger.WARNING, "JarUtilities IOException: " + jarFilename + " " + ioExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			Logger.log(Logger.WARNING_DEBUG, "JarUtilities IOException: " + jarFilename + " " + ioExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		finally {
 			closeJarFile(jarfile);
@@ -236,7 +236,7 @@ public class JarUtilities {
 				return getInputStream(new ZipInputStream(zipStream), entryName);
 			}
 			catch (CoreException e) {
-				Logger.logException("Problem reading contents of " + jarResource.getFullPath(), e);  //$NON-NLS-1$
+				Logger.log(Logger.ERROR_DEBUG, "Problem reading contents of " + jarResource.getFullPath(), e);  //$NON-NLS-1$
 				return null;
 			}
 		}
@@ -255,10 +255,10 @@ public class JarUtilities {
 			}
 		}
 		catch (ZipException zExc) {
-			Logger.log(Logger.WARNING, "JarUtilities ZipException: (stream) " + zExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			Logger.log(Logger.WARNING_DEBUG, "JarUtilities ZipException: (stream) " + zExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		catch (IOException ioExc) {
-			Logger.log(Logger.WARNING, "JarUtilities IOException: (stream) " + ioExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			Logger.log(Logger.WARNING_DEBUG, "JarUtilities IOException: (stream) " + ioExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		finally {
 			closeStream(zip);
