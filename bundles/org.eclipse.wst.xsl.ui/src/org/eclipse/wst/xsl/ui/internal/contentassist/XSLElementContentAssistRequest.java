@@ -12,6 +12,7 @@
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -62,7 +63,7 @@ public class XSLElementContentAssistRequest extends
 	@Override
 	public ArrayList<ICompletionProposal> getCompletionProposals() {
 		if (region == null) {
-			return getAllCompletionProposals();
+			return new ArrayList<ICompletionProposal>();
 		}
 		
 		if (region.getType() == DOMRegionContext.XML_TAG_OPEN) {
