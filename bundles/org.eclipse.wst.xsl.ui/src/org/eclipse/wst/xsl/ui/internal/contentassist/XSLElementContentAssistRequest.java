@@ -7,6 +7,7 @@
  *
  *Contributors:
  *    David Carver (STAR) - bug 244978 - initial API and implementation
+ *                          bug 263843 - Fix null pointer exception on region
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
@@ -59,7 +60,10 @@ public class XSLElementContentAssistRequest extends
 	 */
 	@Override
 	public ArrayList<ICompletionProposal> getCompletionProposals() {
-
+		if (region == null) {
+			return getAllCompletionProposals();
+		}
+		
 		if (region.getType() == DOMRegionContext.XML_TAG_OPEN) {
 			computeTagOpenProposals();
 		} else if (region.getType() == DOMRegionContext.XML_TAG_NAME) {
