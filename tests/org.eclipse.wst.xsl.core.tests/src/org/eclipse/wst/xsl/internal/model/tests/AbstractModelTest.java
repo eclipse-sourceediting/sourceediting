@@ -67,6 +67,7 @@ public abstract class AbstractModelTest extends TestCase
 	private static boolean fTestProjectInitialized;
 	private static final String TEST_PROJECT_NAME = "testproject";
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
@@ -148,7 +149,7 @@ public abstract class AbstractModelTest extends TestCase
 			if (smodel != null && smodel instanceof IDOMModel)
 			{
 				IDOMModel model = (IDOMModel) smodel;
-				XPathExpression xp = XPathFactoryImpl.newInstance().newXPath().compile("//comment()"); 
+				XPathExpression xp = XPathFactory.newInstance().newXPath().compile("//comment()"); 
 				NodeList nodeSet = (NodeList)xp.evaluate(model.getDocument(), XPathConstants.NODESET);
 				for (int i=0; i<nodeSet.getLength(); i++)
 				{

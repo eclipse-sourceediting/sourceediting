@@ -55,6 +55,7 @@ public class XSLLaunchingTests extends TestCase {
 		+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FOLDER\" value=\"${workspace_loc:/XSLTestProject}\"/>"
 		+ "</launchConfiguration>";
 
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		_env = new TestEnvironment();
@@ -160,6 +161,7 @@ public class XSLLaunchingTests extends TestCase {
 		return builder.parse(contents);
 	}
 
+	@Override
 	protected void tearDown() throws Exception {
 		_env.dispose();
 		super.tearDown();

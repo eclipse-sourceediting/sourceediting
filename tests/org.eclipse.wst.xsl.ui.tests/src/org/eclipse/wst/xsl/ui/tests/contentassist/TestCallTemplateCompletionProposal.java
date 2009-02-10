@@ -13,7 +13,6 @@ package org.eclipse.wst.xsl.ui.tests.contentassist;
 import java.io.File;
 
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.wst.xsl.ui.tests.AbstractXSLUITest;
 
 public class TestCallTemplateCompletionProposal extends
 		AbstractCompletionProposalTest {

@@ -13,13 +13,8 @@ package org.eclipse.wst.xsl.ui.tests.contentassist;
 
 import java.io.File;
 
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
-import org.eclipse.wst.xsl.ui.tests.AbstractXSLUITest;
-import org.eclipse.wst.xsl.ui.tests.XSLUITestsPlugin;
 
 /**
  * Tests everything about code completion and code assistance.

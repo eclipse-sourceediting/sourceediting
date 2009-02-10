@@ -42,6 +42,7 @@ public abstract class AbstractXSLUITest extends TestCase
 	private static final String PROJECT_FILES = "projectfiles";
 	private static final String TEST_PROJECT_NAME = "xsltestfiles";
 
+	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();

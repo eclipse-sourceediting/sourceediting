@@ -194,7 +194,7 @@ public class TestXSLLineStyleProvider extends AbstractXSLUITest {
 	private IRegion getDocumentRangeFromWidgetRange(int offset, int length) {
 		IRegion styleRegion = null;
 		if (sourceViewer instanceof ITextViewerExtension5) {
-			ITextViewerExtension5 extension = (ITextViewerExtension5) sourceViewer;
+			ITextViewerExtension5 extension = sourceViewer;
 			styleRegion = extension.widgetRange2ModelRange(new Region(offset,
 					length));
 		} else {

@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyExists;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
-import org.eclipse.wst.xsl.ui.tests.AbstractXSLUITest;
 
 public class TestNamedTemplateCompletionProposal extends
 		AbstractCompletionProposalTest {

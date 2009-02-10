@@ -1,20 +1,15 @@
 package org.eclipse.wst.xsl.internal.model.tests;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.StylesheetBuilder;
 import org.eclipse.wst.xsl.core.model.Import;
 import org.eclipse.wst.xsl.core.model.Include;
 import org.eclipse.wst.xsl.core.model.Stylesheet;
-import org.eclipse.wst.xsl.core.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.model.Template;
 import org.eclipse.wst.xsl.core.model.Variable;
 import org.eclipse.wst.xsl.core.model.XSLAttribute;
-
-import junit.framework.TestCase;
 
 public class TestStylesheet extends AbstractModelTest {
 

@@ -7,7 +7,6 @@ import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.model.Template;
 import org.eclipse.wst.xsl.core.model.XSLAttribute;
-import org.eclipse.wst.xsl.core.model.XSLElement;
 
 public class TestStylesheetModel extends AbstractModelTest {
 
