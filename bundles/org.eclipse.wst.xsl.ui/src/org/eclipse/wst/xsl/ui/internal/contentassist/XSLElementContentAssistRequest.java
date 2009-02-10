@@ -56,23 +56,6 @@ public class XSLElementContentAssistRequest extends
 		contentModel = new XSLContentModelGenerator();
 	}
 
-	/**
-	 * Provides a list of possible proposals for the XSL Elements within the current
-	 * scope.
-	 */
-	@Override
-	public ArrayList<ICompletionProposal> getCompletionProposals() {
-		if (region == null) {
-			return new ArrayList<ICompletionProposal>();
-		}
-		
-		if (region.getType() == DOMRegionContext.XML_TAG_OPEN) {
-			computeTagOpenProposals();
-		} else if (region.getType() == DOMRegionContext.XML_TAG_NAME) {
-			computeTagNameProposals();
-		}
-		return getAllCompletionProposals();
-	}
 
 	/**
 	 * Calculate proposals for open content regions.
@@ -103,6 +86,25 @@ public class XSLElementContentAssistRequest extends
 		}
 	}
 
+	/**
+	 * Provides a list of possible proposals for the XSL Elements within the current
+	 * scope.
+	 */
+	@Override
+	public ArrayList<ICompletionProposal> getCompletionProposals() {
+		if (region == null) {
+			return new ArrayList<ICompletionProposal>();
+		}
+		
+		if (region.getType() == DOMRegionContext.XML_TAG_OPEN) {
+			computeTagOpenProposals();
+		} else if (region.getType() == DOMRegionContext.XML_TAG_NAME) {
+			computeTagNameProposals();
+		}
+		return getAllCompletionProposals();
+	}
+	
+	
 	/**
 	 * Calculates the proposals for the XML Tag Name Region.
 	 */
