@@ -21,6 +21,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xsl.ui.internal.contentassist.contentmodel.XSLContentModelGenerator;
 import org.w3c.dom.Node;
+ 
 
 /**
  * This class provides content assistance proposals outside of the XSL namespace.  Normal
