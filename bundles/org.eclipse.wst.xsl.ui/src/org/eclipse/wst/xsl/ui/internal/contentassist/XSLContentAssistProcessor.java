@@ -85,9 +85,7 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor {
 
 		ICompletionProposal[] xmlProposals = getXMLProposals();
 
-		if (completionRegion != null && sdRegion != null) {
-			additionalProposals = getAdditionalXSLElementProposals();
-		}
+		additionalProposals = getAdditionalXSLElementProposals();
 
 		xslProposals = getXSLNamespaceProposals();
 
