@@ -8,6 +8,7 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *     David Carver (STAR) - bug 230072 - Project level specific validation
+ *                         - bug 226245 - XPath 2.0 validation for XSLT
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.validation;
 
@@ -28,6 +29,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
+import org.eclipse.wst.xml.xpath.core.util.XPath20Helper;
 import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xsl.core.ValidationPreferences;
 import org.eclipse.wst.xsl.core.XSLCore;
@@ -51,6 +53,7 @@ import org.eclipse.wst.xsl.core.Messages;
  */
 public class XSLValidator
 {
+	private static final String XSLT2_Version = "2.0"; //$NON-NLS-1$
 	private static XSLValidator instance;
 	private IProject project;
 
@@ -166,8 +169,14 @@ public class XSLValidator
 		if (att != null && att.getValue() != null)
 		{
 			try
-			{
-				XSLTXPathHelper.compile(att.getValue());
+			{	
+				String xslVersion = xslEl.getStylesheet().getVersion();
+				String xpathExp = att.getValue();
+				if (xslVersion.equals(XSLT2_Version)) {
+					XPath20Helper.compile(xpathExp);
+				} else {
+					XSLTXPathHelper.compile(att.getValue());
+				}
 			}
 			catch (XPathExpressionException e)
 			{
