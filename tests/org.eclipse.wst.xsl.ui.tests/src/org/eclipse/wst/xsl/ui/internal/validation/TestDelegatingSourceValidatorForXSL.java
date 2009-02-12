@@ -56,10 +56,11 @@ public class TestDelegatingSourceValidatorForXSL extends AbstractXSLUITest
 	private String getxslTestFilesProjectName() {
 		return "xsltestfiles";
 	}
+	
 	/**
 	 * Test XPath 2.0 validation fails
 	 */
-	public void testXSLT2XPath20Fails()
+	public void testXSLT2XPathPasses()
 	{
 		String projName = getxslTestFilesProjectName();
 		String fileName1 = "ChangeRequestsByResponsibility.xsl";
@@ -93,7 +94,7 @@ public class TestDelegatingSourceValidatorForXSL extends AbstractXSLUITest
 			e.printStackTrace();
 		}
 		
-		assertTrue("No Messages were reported on file with invalid XPath 1.0.", reporter.isMessageReported());		
+		assertFalse("Messages were reported on file with valid XPath 2.0", reporter.isMessageReported());
 	}
 	
 	public void testValidXSLT()
