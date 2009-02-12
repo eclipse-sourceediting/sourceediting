@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     bug:244839 - eugene@genuitec.com
  *     
  * Provisional API: This class/interface is part of an interim API that is still under development and expected to 
  * change significantly before reaching stability. It is being made available at this early stage to solicit feedback 
@@ -49,6 +50,7 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException; // import
 														// org.eclipse.wst.jsdt.core.LibrarySuperType;
 import org.eclipse.wst.jsdt.core.WorkingCopyOwner;
 import org.eclipse.wst.jsdt.internal.core.DocumentContextFragmentRoot;
+import org.eclipse.wst.jsdt.internal.core.Member;
 import org.eclipse.wst.jsdt.internal.core.SourceRefElement;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
 import org.eclipse.wst.jsdt.web.core.internal.project.JsWebNature;
@@ -254,6 +256,11 @@ public class JsTranslation implements IJsTranslation {
 	 * @see org.eclipse.wst.jsdt.web.core.internal.java.IJsTranslation#getCompilationUnit()
 	 */
 	public IJavaScriptUnit getCompilationUnit() {
+        // Genuitec Begin Fix 6149: Exception opening external HTML file
+	    if (!getJavaProject().exists()) {
+	        return null;
+	    }
+	    // Genuitec End Fix 6149: Exception opening external HTML file
 		synchronized (fLock) {
 			try {
 				if (fCompilationUnit == null) {
@@ -348,7 +355,14 @@ public class JsTranslation implements IJsTranslation {
 	private ISourceRange getJSSourceRangeOf(IJavaScriptElement element) {
 		// returns the offset in html of given element
 		ISourceRange range = null;
-		if (element instanceof SourceRefElement) {
+		if (element instanceof Member) {
+			try {
+				range = ((Member) element).getNameRange();
+			} catch (JavaScriptModelException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if (element instanceof SourceRefElement) {
 			try {
 				range = ((SourceRefElement) element).getSourceRange();
 			}

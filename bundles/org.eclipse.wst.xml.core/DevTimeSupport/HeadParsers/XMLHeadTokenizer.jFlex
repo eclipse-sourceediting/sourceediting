@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -153,10 +153,14 @@ UTF83ByteBOM = \xEF\xBB\xBF
 // [3] S ::= (0x20 | 0x9 | 0xD | 0xA)+
 S = [\x20\x09\x0D\x0A]
 
-BeginAttribeValue = {S}* \= {S}*
+//BeginAttribeValue = {S}* \= {S}*
 
 LineTerminator = \r|\n
 
+// Z is the single-byte zero character to be used in parsing double-byte files
+Z = (\x00)?
+S_UTF = {Z}{S}{Z}
+BeginAttributeValueUTF = {S_UTF}* \= {S_UTF}*
 
 %state ST_XMLDecl
 %state QuotedAttributeValue
@@ -175,28 +179,28 @@ LineTerminator = \r|\n
 	^{UTF83ByteBOM}   	{if (yychar == 0 ) {hasMore = false; return EncodingParserConstants.UTF83ByteBOM;}}
 	
 	// force to be started on first line, but we do allow preceeding spaces
-	^ {S}* "<\?xml" {S}+ {if (yychar == 0 ) {yybegin(ST_XMLDecl); return XMLHeadTokenizerConstants.XMLDeclStart;}}
+	^ {S_UTF}* ({Z}<{Z}\?{Z}x{Z}m{Z}l{Z}){S_UTF}+ {if (yychar == 0 ) {yybegin(ST_XMLDecl); return XMLHeadTokenizerConstants.XMLDeclStart;}}
 	
 }	
 	
 <ST_XMLDecl> 
 {
-	"version" {BeginAttribeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDeclVersion;}
-	"encoding" {BeginAttribeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDelEncoding;}
+	({Z}v{Z}e{Z}r{Z}s{Z}i{Z}o{Z}n{Z}) {BeginAttributeValueUTF} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDeclVersion;}
+	({Z}e{Z}n{Z}c{Z}o{Z}d{Z}i{Z}n{Z}g{Z}) {BeginAttributeValueUTF} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDelEncoding;}
 	// note the "forced end" (via 'hasMore=false') once the end of XML Declaration found
 	// This is since non-ascii chars may follow and may cause IOExceptions which would not occur once stream is 
 	// read with incorrect encoding (such as if platform encoding is in effect until true encoding detected). 
-	"\?>"    {yybegin(YYINITIAL); hasMore = false; return XMLHeadTokenizerConstants.XMLDeclEnd;}
+	({Z}\?{Z}>{Z})    {yybegin(YYINITIAL); hasMore = false; return XMLHeadTokenizerConstants.XMLDeclEnd;}
 }	
 
 	
 
 <QuotedAttributeValue>
 {
-	\"                      { yybegin(DQ_STRING); string.setLength(0); }
-	\'			{ yybegin(SQ_STRING); string.setLength(0); }
+	{Z}\"{Z}        { yybegin(DQ_STRING); string.setLength(0); }
+	{Z}\'{Z}			{ yybegin(SQ_STRING); string.setLength(0); }
 	// in this state, anything other than a space character can start an undelimited string
-	{S}*.           { yypushback(1); yybegin(UnDelimitedString); string.setLength(0);}
+	{S_UTF}*.           { yypushback(1); yybegin(UnDelimitedString); string.setLength(0);}
 
 }	
 
@@ -204,51 +208,45 @@ LineTerminator = \r|\n
 <DQ_STRING>
 {
 
-	\"                      { popState(); valueText = string.toString(); return EncodingParserConstants.StringValue; }
-  	{LineTerminator}        { yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
-	"\?>"			{ yypushback(2); popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
-	'<'			{ yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
-	.			{ string.append( yytext() ); }
-
+	{Z}\"{Z}                      { popState(); valueText = string.toString(); return EncodingParserConstants.StringValue; }
+  	{Z}{LineTerminator}{Z}        { yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+	{Z}\?{Z}>{Z}			{ yypushback(yylength()); popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+	{Z}<{Z}			{ yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+	[^\x00]			{ string.append( yytext() ); }
 
 }
 
 <SQ_STRING>
 {
 
-	\'                      { popState(); valueText = string.toString(); return EncodingParserConstants.StringValue;}
-  	{LineTerminator}        { yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
-	"%>"			{ yypushback(2);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
-	'<'			{ yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
-	.			{ string.append( yytext() ); }
-
+	{Z}\'{Z}                      { popState(); valueText = string.toString(); return EncodingParserConstants.StringValue;}
+  	{Z}{LineTerminator}{Z}        { yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+	{Z}%{Z}>{Z}			{ yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+	{Z}<{Z}			{ yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+	[^\x00]			{ string.append( yytext() ); }
 
 }
 
 <UnDelimitedString>
 {
 
-	{S}                     { yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.UnDelimitedStringValue; }
-  	{LineTerminator}        { yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
-	"\?>"			{ yypushback(2);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
-	'<'	
-	{ yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+	{S_UTF}                     { yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.UnDelimitedStringValue; }
+  	{Z}{LineTerminator}{Z}        { yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+	{Z}\?{Z}>{Z}			{ yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+	{Z}<{Z}	
+	{ yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
 	// these are a bit special, since we started an undelimit string, but found a quote ... probably indicates a missing beginning quote
-	\'			{ yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTermintatedUnDelimitedStringValue;}
+	{Z}\'{Z}			{ yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTermintatedUnDelimitedStringValue;}
 	
-	\"			{ yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTermintatedUnDelimitedStringValue;}
+	{Z}\"{Z}			{ yypushback(yylength());popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTermintatedUnDelimitedStringValue;}
 	
-	.			{ string.append( yytext() ); }
+	[^\x00]			{ string.append( yytext() ); }
 
 }
 
 // The "match anything" rule should always be in effect except for when looking for end of string
 // (That is, remember to update state list if/when new states added)
-<YYINITIAL, ST_XMLDecl, QuotedAttributeValue>
-{
-// this is the fallback (match "anything") rule  (for this scanner, input is ignored, and position advanced, if not recognized)
-.|\n              {if (yychar > MAX_TO_SCAN) {hasMore=false; return EncodingParserConstants.MAX_CHARS_REACHED;}}
-}
+.|\n	{if(yychar > MAX_TO_SCAN) {hasMore=false; return EncodingParserConstants.MAX_CHARS_REACHED;}}
 
 // this rule always in effect
 <<EOF>>         {hasMore = false; return EncodingParserConstants.EOF;}

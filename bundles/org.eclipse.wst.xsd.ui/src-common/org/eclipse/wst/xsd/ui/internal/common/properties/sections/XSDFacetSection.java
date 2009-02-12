@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -690,9 +690,9 @@ public class XSDFacetSection extends AbstractSection
           }
           else
           {
-            if (xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("double").equals(xsdSimpleTypeDefinition) || //$NON-NLS-1$
-                xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("float").equals(xsdSimpleTypeDefinition) || //$NON-NLS-1$
-                xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("decimal").equals(xsdSimpleTypeDefinition)) //$NON-NLS-1$
+            if (xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("double").equals(xsdSimpleTypeDefinition.getBaseType()) || //$NON-NLS-1$
+                xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("float").equals(xsdSimpleTypeDefinition.getBaseType()) || //$NON-NLS-1$
+                xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("decimal").equals(xsdSimpleTypeDefinition.getBaseType())) //$NON-NLS-1$
             {
               BigDecimal bigDecimal = new BigDecimal(minValue);
               bigDecimal.toString();
@@ -764,9 +764,9 @@ public class XSDFacetSection extends AbstractSection
           }
           else
           {
-            if (xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("double").equals(xsdSimpleTypeDefinition) || //$NON-NLS-1$
-                xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("float").equals(xsdSimpleTypeDefinition) || //$NON-NLS-1$
-                xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("decimal").equals(xsdSimpleTypeDefinition)) //$NON-NLS-1$
+            if (xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("double").equals(xsdSimpleTypeDefinition.getBaseType()) || //$NON-NLS-1$
+                xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("float").equals(xsdSimpleTypeDefinition.getBaseType()) || //$NON-NLS-1$
+                xsdSchema.getSchemaForSchema().resolveSimpleTypeDefinition("decimal").equals(xsdSimpleTypeDefinition.getBaseType())) //$NON-NLS-1$
             {
               BigDecimal bigDecimal = new BigDecimal(maxValue);
               bigDecimal.toString();

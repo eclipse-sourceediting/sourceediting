@@ -48,6 +48,8 @@ public class JSDTHtmlCompletionProcessor {
 		/* add </script if necisary */
 	
 		IJsTranslation tran = getJSPTranslation(viewer);
+		if(tran==null) return null;
+		
 		int missingAtOffset = tran.getMissingTagStart();
 		
 		if(offset>=missingAtOffset&& missingAtOffset>-1) {

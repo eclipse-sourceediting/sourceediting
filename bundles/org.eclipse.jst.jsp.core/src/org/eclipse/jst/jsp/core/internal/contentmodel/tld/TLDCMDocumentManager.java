@@ -13,6 +13,7 @@ package org.eclipse.jst.jsp.core.internal.contentmodel.tld;
 import java.io.File;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -685,7 +686,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		if (record != null) {
 			return getUniqueIdentifier(record);
 		}
-		String location = URIResolverPlugin.createResolver().resolve(getCurrentBaseLocation().toString(), null, uri);
+		String location = URIResolverPlugin.createResolver().resolve(getCurrentBaseLocation(), null, uri);
 		return location;
 	}
 
@@ -855,12 +856,26 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	 * 
 	 * @return
 	 */
-	IPath getCurrentBaseLocation() {
-		IPath baseLocation = null;
+	String getCurrentBaseLocation() {
+		String baseLocation = null;
 		IPath path = getCurrentParserPath();
-		baseLocation = ResourcesPlugin.getWorkspace().getRoot().getFile(path).getLocation();
-		if (baseLocation == null) {
-			baseLocation = path;
+		if (path != null) {
+			if (path.segmentCount() > 1) {
+				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+				IPath location = file.getLocation();
+				if (location != null) {
+					baseLocation = location.toString();
+				}
+				else {
+					URI uriLocation = file.getLocationURI();
+					if (uriLocation != null) {
+						baseLocation = uriLocation.toString();
+					}
+				}
+				if (baseLocation == null) {
+					baseLocation = path.toString();
+				}
+			}
 		}
 		return baseLocation;
 	}
@@ -1055,9 +1070,9 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			}
 			else {
 				/* Not a very-often used code path (we hope) */
-				IPath currentBaseLocation = getCurrentBaseLocation();
+				String currentBaseLocation = getCurrentBaseLocation();
 				if (currentBaseLocation != null) {
-					String location = URIResolverPlugin.createResolver().resolve(currentBaseLocation.toString(), null, uri);
+					String location = URIResolverPlugin.createResolver().resolve(currentBaseLocation, null, uri);
 					if (location != null) {
 						if (_debug) {
 							System.out.println("Loading tags from " + uri + " at " + location); //$NON-NLS-2$//$NON-NLS-1$

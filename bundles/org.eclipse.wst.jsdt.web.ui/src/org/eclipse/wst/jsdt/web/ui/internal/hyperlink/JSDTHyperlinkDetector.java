@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -25,11 +25,11 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.wst.jsdt.core.IClassFile;
-import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IField;
-import org.eclipse.wst.jsdt.core.IJavaScriptElement;
-import org.eclipse.wst.jsdt.core.ILocalVariable;
 import org.eclipse.wst.jsdt.core.IFunction;
+import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.ILocalVariable;
 import org.eclipse.wst.jsdt.core.ISourceRange;
 import org.eclipse.wst.jsdt.core.ISourceReference;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
@@ -39,7 +39,6 @@ import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-//import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
@@ -196,11 +195,9 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 	private IFile getFile(String fileString) {
 		IFile file = null;
 		if (fileString != null) {
-			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(fileString));
-			for (int i = 0; i < files.length && file == null; i++) {
-				if (files[i].exists()) {
-					file = files[i];
-				}
+			IResource resource  = ResourcesPlugin.getWorkspace().getRoot().findMember(fileString);
+			if(resource!=null && resource instanceof IFile) {
+				file = (IFile)resource;
 			}
 		}
 		return file;

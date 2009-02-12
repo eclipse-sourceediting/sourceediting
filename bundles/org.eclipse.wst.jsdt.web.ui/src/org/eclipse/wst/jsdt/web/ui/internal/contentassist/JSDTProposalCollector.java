@@ -47,7 +47,7 @@ public class JSDTProposalCollector extends CompletionProposalCollector {
 // return fGeneratedFunctionNames;
 // }
 	public JSDTProposalCollector(IJsTranslation translation) {
-		super(translation.getCompilationUnit());
+		super(translation!=null?translation.getCompilationUnit():null);
 		if (translation == null) {
 			throw new IllegalArgumentException("JSPTranslation cannot be null"); //$NON-NLS-1$
 		}

@@ -55,6 +55,7 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
   protected Button defaultButton, fixedButton;
   protected String typeName = "", refName = ""; //$NON-NLS-1$
   boolean isAttributeReference;
+  private boolean isTraversing = false;
   
   public XSDAttributeDeclarationSection()
   {
@@ -121,6 +122,7 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
 
       componentNameCombo = getWidgetFactory().createCCombo(composite, SWT.FLAT);
       componentNameCombo.addSelectionListener(this);
+      componentNameCombo.addListener(SWT.Traverse, this);
       componentNameCombo.setLayoutData(data);
       
       PlatformUI.getWorkbench().getHelpSystem().setHelp(componentNameCombo,
@@ -143,6 +145,7 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
     typeCombo = getWidgetFactory().createCCombo(composite);
     typeCombo.setLayoutData(data);
     typeCombo.addSelectionListener(this);
+    typeCombo.addListener(SWT.Traverse, this);
     
     PlatformUI.getWorkbench().getHelpSystem().setHelp(typeCombo,
     		XSDEditorCSHelpIds.GENERAL_TAB__ATTRIBUTE__TYPE);
@@ -429,13 +432,49 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
     return false;
   }
   
+  public void doWidgetDefaultSelected(SelectionEvent e)
+  {
+    if (e.widget == typeCombo)
+    {
+      String selection = typeCombo.getText();
+      if (shouldPerformComboSelection(SWT.DefaultSelection, selection))
+        handleWidgetSelection(e);
+    } else if (e.widget == componentNameCombo)
+    {
+      String selection = componentNameCombo.getText();
+      if (shouldPerformComboSelection(SWT.DefaultSelection, selection))
+        handleWidgetSelection(e);
+    } else
+    {
+      handleWidgetSelection(e);
+    }
+  }
+
   public void doWidgetSelected(SelectionEvent e)
   {
     if (e.widget == typeCombo)
     {
+      String selection = typeCombo.getText();
+      if (shouldPerformComboSelection(SWT.Selection, selection))
+        handleWidgetSelection(e);
+    } else if (e.widget == componentNameCombo)
+    {
+      String selection = componentNameCombo.getText();
+      if (shouldPerformComboSelection(SWT.Selection, selection))
+        handleWidgetSelection(e);
+    } else
+    {
+      handleWidgetSelection(e);
+    }
+  }
+  
+  private void handleWidgetSelection(SelectionEvent e)
+  {
+    if (e.widget == typeCombo)
+    {
       IEditorPart editor = getActiveEditor();
-      if (editor == null) return;
-      ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDTypeReferenceEditManager.class);    
+      if (editor == null) return;    
+      ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDTypeReferenceEditManager.class);
 
       String selection = typeCombo.getText();
       ComponentSpecification newValue;
@@ -460,7 +499,7 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
           manager.modifyComponentReference(xsdAttribute, newValue);
         }
         else{
-        	typeCombo.setText(typeName);
+          typeCombo.setText(typeName);
         }
       }
       else //use the value from selected quickPick item
@@ -473,8 +512,8 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
     else if (e.widget == componentNameCombo)
     {
       IEditorPart editor = getActiveEditor();
-      if (editor == null) return;
-      ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDAttributeReferenceEditManager.class);    
+      if (editor == null) return;    
+      ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDAttributeReferenceEditManager.class);
 
       String selection = componentNameCombo.getText();
       ComponentSpecification newValue;
@@ -506,17 +545,16 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
         if (newValue != null)
           manager.modifyComponentReference(input, newValue);
       }
-
     }
     else 
     {
-    	XSDAttributeDeclaration xsdAttribute = (XSDAttributeDeclaration) input;
-    	Element element = xsdAttribute.getElement();
+      XSDAttributeDeclaration xsdAttribute = (XSDAttributeDeclaration) input;
+      Element element = xsdAttribute.getElement();
       if (e.widget == usageCombo)
-	    {	      
-	      final String newValue = usageCombo.getText();
-	      if (element != null)
-	      {
+      {	      
+        final String newValue = usageCombo.getText();
+        if (element != null)
+        {
           PropertiesChangeCommand command = new PropertiesChangeCommand(element, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_USAGE)
           {
             protected void doExecuteSteps()
@@ -528,13 +566,13 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
             }
           };
           getCommandStack().execute(command);
-	      }
-	    }
-	    else if (e.widget == formCombo)
-	    {
-	      final String newValue = formCombo.getText();
-	      if (element != null)
-	      {
+        }
+      }
+      else if (e.widget == formCombo)
+      {
+        final String newValue = formCombo.getText();
+        if (element != null)
+        {
           PropertiesChangeCommand command = new PropertiesChangeCommand(element, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_FORM)
           {
             protected void doExecuteSteps()
@@ -546,19 +584,19 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
             }
           };
           getCommandStack().execute(command);
-	      }
-	    }
-	    else if (e.widget == defaultButton)
-	    {
-	    	boolean newValue = defaultButton.getSelection();
-	    	if (element != null)
-	    	{
-	    		if (newValue)
-	    		{
-	    			if (element.hasAttribute(XSDConstants.FIXED_ATTRIBUTE))
-	    			{
-	            final String value = element.getAttribute(XSDConstants.FIXED_ATTRIBUTE);
-              
+        }
+      }
+      else if (e.widget == defaultButton)
+      {
+        boolean newValue = defaultButton.getSelection();
+        if (element != null)
+        {
+          if (newValue)
+          {
+            if (element.hasAttribute(XSDConstants.FIXED_ATTRIBUTE))
+            {
+              final String value = element.getAttribute(XSDConstants.FIXED_ATTRIBUTE);
+
               PropertiesChangeCommand command = new PropertiesChangeCommand(element, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_DEFAULT)
               {
                 protected void doExecuteSteps()
@@ -568,20 +606,20 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
                 }
               };
               getCommandStack().execute(command);
-	    			}
-	    		}
-	    	}
-	    }
-	    else if (e.widget == fixedButton)
-	    {
-	    	boolean newValue = fixedButton.getSelection();
-	    	if (element != null)
-	    	{
-	    		if (newValue)
-	    		{
-	    			if (element.hasAttribute(XSDConstants.DEFAULT_ATTRIBUTE))
-	    			{
-	            final String value = element.getAttribute(XSDConstants.DEFAULT_ATTRIBUTE);
+            }
+          }
+        }
+      }
+      else if (e.widget == fixedButton)
+      {
+        boolean newValue = fixedButton.getSelection();
+        if (element != null)
+        {
+          if (newValue)
+          {
+            if (element.hasAttribute(XSDConstants.DEFAULT_ATTRIBUTE))
+            {
+              final String value = element.getAttribute(XSDConstants.DEFAULT_ATTRIBUTE);
               PropertiesChangeCommand command = new PropertiesChangeCommand(element, org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_FIXED)
               {
                 protected void doExecuteSteps()
@@ -591,16 +629,22 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
                 }
               };
               getCommandStack().execute(command);
-	    			}
-	    		}
-	    	}
-	    }
+            }
+          }
+        }
+      }
     }
     super.doWidgetSelected(e);
   }
 
   protected void doHandleEvent(Event event)
   {
+    if (event.type == SWT.Traverse) {
+      if (event.detail == SWT.TRAVERSE_ARROW_NEXT || event.detail == SWT.TRAVERSE_ARROW_PREVIOUS) {
+        isTraversing = true;
+        return;
+      }
+    }
     super.doHandleEvent(event);
     if (event.widget == nameText)
     {
@@ -717,11 +761,17 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
   public void dispose()
   {
     if (componentNameCombo != null && !componentNameCombo.isDisposed())
+    {
       componentNameCombo.removeSelectionListener(this);
+      componentNameCombo.removeListener(SWT.Traverse, this);
+    }
     if (nameText != null && !nameText.isDisposed())
       removeListeners(nameText);
     if (typeCombo != null && !typeCombo.isDisposed())
+    {
       typeCombo.removeSelectionListener(this);
+      typeCombo.removeListener(SWT.Traverse, this);
+    }
     super.dispose();
   }
 
@@ -819,6 +869,35 @@ public class XSDAttributeDeclarationSection extends RefactoringSection
     } 
   }
 
+  private boolean shouldPerformComboSelection(int eventType, Object selectedItem)
+  {
+    // if traversing through combobox, don't automatically pop up
+    // the browse and new dialog boxes
+    boolean wasTraversing = isTraversing;
+    if (isTraversing)
+      isTraversing = false;
+
+    // we only care about default selecting (hitting enter in combobox)
+    // for browse.. and new.. otherwise, selection event will be fired
+    if (eventType == SWT.DefaultSelection)
+    {
+      if (selectedItem instanceof String && ((Messages._UI_ACTION_BROWSE.equals(selectedItem) || Messages._UI_ACTION_NEW.equals(selectedItem))))
+        return true;
+      return false;
+    }
+
+    // if was traversing and got selection event, do nothing if it's 
+    // browse.. or new..
+    if (wasTraversing && selectedItem instanceof String)
+    {
+      if (Messages._UI_ACTION_BROWSE.equals(selectedItem) || Messages._UI_ACTION_NEW.equals(selectedItem))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+  
   protected class PropertiesChangeCommand extends BaseCommand
   {
     protected Element element;

@@ -139,6 +139,9 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 								uri = URIHelper.getRelativeURI(file.getLocation(), location);
 							}
 						}
+	                    else {
+	                      uri = URIHelper.getRelativeURI(file.getLocation(), resourceLocation);
+	                    }
 						// grammarURI = file.getLocation().toOSString();
 					}
 					else {

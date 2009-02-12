@@ -188,6 +188,7 @@ public abstract class ADTMultiPageEditor extends CommonMultiPageEditor
    */
   public void setFocus()
   {
+    super.setFocus();
     if (getActivePage() == DESIGN_PAGE_INDEX)
     {
       if (graphicalViewer != null && graphicalViewer.getControl() != null)

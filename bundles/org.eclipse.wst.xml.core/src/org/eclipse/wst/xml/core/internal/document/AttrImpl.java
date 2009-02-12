@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,9 +26,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
-import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.IXMLCharEntity;
@@ -97,21 +95,16 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		CMElementDeclaration elementDecl = element.getDeclaration();
 		if (elementDecl == null)
 			return null;
-		CMNamedNodeMap attributes = elementDecl.getAttributes();
-		CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attributes);
+
 		List nodes = ModelQueryUtil.getModelQuery(getOwnerDocument()).getAvailableContent(getOwnerElement(), elementDecl, ModelQuery.INCLUDE_ATTRIBUTES);
+		String name = getName();
 		for (int k = 0; k < nodes.size(); k++) {
 			CMNode cmnode = (CMNode) nodes.get(k);
-			if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
-				allAttributes.put(cmnode);
+			if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION && name.equals(cmnode.getNodeName())) {
+				return (CMAttributeDeclaration) cmnode;
 			}
 		}
-		attributes = allAttributes;
-		
-
-		if (attributes == null)
-			return null;
-		return (CMAttributeDeclaration) attributes.getNamedItem(getName());
+		return null;
 	}
 
 	/**

@@ -316,9 +316,11 @@ public class CustomCompletionProposal implements ICompletionProposal, ICompletio
 
 			// if it's an attribute value, replacement offset is
 			// going to be one off from the actual cursor offset...
-			char firstChar = document.get().charAt(getReplacementOffset());
-			if (firstChar == '"' || firstChar == '\'')
-				fReplacementLength++;
+			// [253651] - The replacement length is already taking the opening quote
+			// into consideration
+			// char firstChar = document.get().charAt(getReplacementOffset());
+			// if (firstChar == '"' || firstChar == '\'')
+			// fReplacementLength++;
 		}
 		return validated;
 	}

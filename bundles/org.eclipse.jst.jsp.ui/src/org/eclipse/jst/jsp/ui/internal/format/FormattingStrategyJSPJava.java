@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,12 +13,11 @@ package org.eclipse.jst.jsp.ui.internal.format;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.ToolFactory;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentExtension4;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.TypedPosition;
 import org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy;
@@ -38,7 +37,8 @@ public class FormattingStrategyJSPJava extends ContextBasedFormattingStrategy {
 	/** Partitions to be formatted by this strategy */
 	private final LinkedList fPartitions = new LinkedList();
 	JSPTranslation translation = null;
-
+	/* Keep track of last JSP document modification to reduce formatting calls */
+	private long fLastModified = -1;
 	/**
 	 * Creates a new java formatting strategy.
 	 */
@@ -55,18 +55,27 @@ public class FormattingStrategyJSPJava extends ContextBasedFormattingStrategy {
 		final IDocument document = (IDocument) fDocuments.removeFirst();
 		final TypedPosition partition = (TypedPosition) fPartitions.removeFirst();
 
+		if (document instanceof IDocumentExtension4 && ((IDocumentExtension4) document).getModificationStamp() == fLastModified)
+			return;
+
 		if (document != null && partition != null) {
 			try {
-
 				JSPTranslationUtil translationUtil = new JSPTranslationUtil(document);
-				ICompilationUnit cu = translationUtil.getCompilationUnit();
-				if (cu != null) {
-					String cuSource = cu.getSource();
-					TextEdit textEdit = formatString(CodeFormatter.K_COMPILATION_UNIT, cuSource, 0, TextUtilities.getDefaultLineDelimiter(document), getPreferences());
+				IDocument javaDoc = translationUtil.getTranslation().getJavaDocument();
+
+				if (javaDoc != null) {
+					String javaSource = javaDoc.get();
+					TextEdit textEdit = formatString(CodeFormatter.K_COMPILATION_UNIT, javaSource, 0, TextUtilities.getDefaultLineDelimiter(document), getPreferences());
 
 					TextEdit jspEdit = translationUtil.getTranslation().getJspEdit(textEdit);
-					if (jspEdit != null && jspEdit.hasChildren())
+					if (jspEdit != null && jspEdit.hasChildren()) {
 						jspEdit.apply(document);
+
+						if (document instanceof IDocumentExtension4) {
+							fLastModified = ((IDocumentExtension4) document).getModificationStamp();
+						}
+					}
+
 				}
 
 			}
@@ -76,9 +85,6 @@ public class FormattingStrategyJSPJava extends ContextBasedFormattingStrategy {
 			catch (BadLocationException exception) {
 				// Can only happen on concurrent document modification - log
 				// and bail out
-				Logger.logException(exception);
-			}
-			catch (JavaModelException exception) {
 				Logger.logException(exception);
 			}
 		}

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,11 +29,20 @@ public class SchemaPrefixChangeHandler
 {
   String newPrefix;
   XSDSchema xsdSchema;
+  String namespace;
 
   public SchemaPrefixChangeHandler(XSDSchema xsdSchema, String newPrefix)
   {
     this.xsdSchema = xsdSchema;
     this.newPrefix= newPrefix;
+    namespace = XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001; 
+  }
+
+  public SchemaPrefixChangeHandler(XSDSchema xsdSchema, String newPrefix, String namespace)
+  {
+    this.xsdSchema = xsdSchema;
+    this.newPrefix= newPrefix;
+    this.namespace = namespace;
   }
   
   public void resolve()
@@ -81,8 +90,7 @@ public class SchemaPrefixChangeHandler
       {
         String ns = type.getTargetNamespace();
         if (ns == null) ns = "";
-//        if (ns.equals(xsdSchema.getSchemaForSchemaNamespace()))
-        if (ns.equals(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001))        
+        if (ns.equals(namespace))        
         {
           Element domElement = element.getElement();
           if (domElement != null && domElement instanceof IDOMNode)
@@ -106,8 +114,7 @@ public class SchemaPrefixChangeHandler
       {
         String ns = baseType.getTargetNamespace();
         if (ns == null) ns = "";
-//        if (ns.equals(xsdSchema.getSchemaForSchemaNamespace()))
-        if (ns.equals(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001))
+        if (ns.equals(namespace))
         {
           XSDDOMHelper domHelper = new XSDDOMHelper();
           Element derivedBy = domHelper.getDerivedByElement(simpleType.getElement());
@@ -127,7 +134,7 @@ public class SchemaPrefixChangeHandler
       {
         String ns = itemType.getTargetNamespace();
         if (ns == null) ns = "";
-        if (ns.equals(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001))
+        if (ns.equals(namespace))
         {
           XSDDOMHelper domHelper = new XSDDOMHelper();
           Node listNode = domHelper.getChildNode(simpleType.getElement(), XSDConstants.LIST_ELEMENT_TAG);
@@ -162,7 +169,7 @@ public class SchemaPrefixChangeHandler
               XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition)i.next();
               String ns = st.getTargetNamespace();
               if (ns == null) ns = "";
-              if (ns.equals(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001))
+              if (ns.equals(namespace))
               {
                 sb.append(getNewQName(st, st.getName(), newPrefix));                
               }
@@ -189,8 +196,7 @@ public class SchemaPrefixChangeHandler
       {
         String ns = type.getTargetNamespace();
         if (ns == null) ns = "";
-//        if (ns.equals(xsdSchema.getSchemaForSchemaNamespace()))
-        if (ns.equals(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001))
+        if (ns.equals(namespace))
         {
           Element domElement = attr.getElement();
           if (domElement != null && domElement instanceof IDOMNode)

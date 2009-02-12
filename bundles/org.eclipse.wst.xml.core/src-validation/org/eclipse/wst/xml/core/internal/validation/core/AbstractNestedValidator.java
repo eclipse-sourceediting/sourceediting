@@ -64,12 +64,25 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
   public ValidationResult validate(IResource resource, int kind, ValidationState state, IProgressMonitor monitor){
 	  ValidationResult result = new ValidationResult();  
 	  IReporter reporter = result.getReporter(monitor);
-	  NestedValidatorContext nestedcontext = new NestedValidatorContext();
-		setupValidation(nestedcontext);
 		IFile file = null;
 		if (resource instanceof IFile)file = (IFile)resource;
-		if (file != null)validate(file, null, result, reporter, nestedcontext);
-		teardownValidation(nestedcontext);
+		if (file != null)
+		{
+		  NestedValidatorContext nestedcontext = getNestedContext(state, false);
+	      boolean teardownRequired = false;
+	      if (nestedcontext == null)
+	      {
+	        // validationstart was not called, so manually setup and tear down
+	        nestedcontext = getNestedContext(state, true);
+	        setupValidation(nestedcontext);
+	        teardownRequired = true;
+	      }
+
+		  validate(file, null, result, reporter, nestedcontext);
+
+	      if (teardownRequired)
+	        teardownValidation(nestedcontext);
+		}
 	    return result;
   }
  
@@ -421,9 +434,28 @@ public abstract class AbstractNestedValidator extends AbstractValidator implemen
    */
   protected void addInfoToMessage (ValidationMessage validationmessage, IMessage message)
   { 
-	// This method may be overidden by subclasses
+	// This method may be overridden by subclasses
   }
-	  
+
+  /**
+   * Get the nested validation context.
+   * 
+   * @param state
+   *          the validation state.
+   * @param create
+   *          when true, a new context will be created if one is not found
+   * @return the nested validation context.
+   */
+  protected NestedValidatorContext getNestedContext(ValidationState state, boolean create)
+  {
+    NestedValidatorContext context = null;
+    if (create)
+    {
+      context = new NestedValidatorContext();
+    }
+    return context;
+  }
+
   /**
    * A localized message is a specialized type of IMessage that allows setting
    * and using a localized message string for a message.

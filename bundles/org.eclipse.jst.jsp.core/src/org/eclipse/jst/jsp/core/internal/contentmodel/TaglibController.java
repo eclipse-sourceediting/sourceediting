@@ -46,8 +46,6 @@ import org.eclipse.wst.sse.core.internal.util.Assert;
  * look up taglib references since the location is not yet knowable. Since
  * taglibs can affect the parsing of the document, a reparse is currently
  * required to react to custom tags with tagdependent content.
- * 
- * TODO: Remove the reparse penalty.
  */
 public class TaglibController implements IDocumentSetupParticipant, IDocumentSetupParticipantExtension {
 
@@ -129,6 +127,10 @@ public class TaglibController implements IDocumentSetupParticipant, IDocumentSet
 					info.textFileBuffer = (ITextFileBuffer) buffer;
 				}
 				else {
+					/*
+					 * Unlikely due to the addition of
+					 * IDocumentSetupParticipantExtension#setup()
+					 */
 					info = new DocumentInfo();
 					info.document = (IStructuredDocument) document;
 					info.textFileBuffer = (ITextFileBuffer) buffer;
@@ -348,8 +350,12 @@ public class TaglibController implements IDocumentSetupParticipant, IDocumentSet
 	 */
 	public void setup(IDocument document, IPath location, LocationKind locationKind) {
 		// if we've already shutdown, just ignore
-		if (isShutdown())
+		if (isShutdown()) {
+			if(Platform.inDevelopmentMode()) {
+				System.out.println("org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController.setup(" + location + ")");
+			}
 			return;
+		}
 		// reference the shared instance's documents directly
 		synchronized (_instance.fJSPdocuments) {
 			_instance.fJSPdocuments.add(document);

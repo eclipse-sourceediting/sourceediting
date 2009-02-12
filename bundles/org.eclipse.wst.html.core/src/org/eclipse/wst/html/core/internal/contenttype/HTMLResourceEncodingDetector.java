@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.wst.html.core.internal.contenttype;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.wst.sse.core.internal.encoding.CodedIO;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
@@ -38,15 +39,13 @@ public class HTMLResourceEncodingDetector extends AbstractResourceEncodingDetect
 			createEncodingMemento(enc, EncodingMemento.DETECTED_STANDARD_UNICODE_BYTES);
 			fEncodingMemento.setUTF83ByteBOMUsed(true);
 		}
-		else if (tokenType == EncodingParserConstants.UTF16BE) {
-			canHandleAsUnicodeStream = true;
-			String enc = "UTF-16BE"; //$NON-NLS-1$
-			createEncodingMemento(enc, EncodingMemento.DETECTED_STANDARD_UNICODE_BYTES);
-		}
-		else if (tokenType == EncodingParserConstants.UTF16LE) {
+		else if (tokenType == EncodingParserConstants.UTF16BE || tokenType == EncodingParserConstants.UTF16LE) {
 			canHandleAsUnicodeStream = true;
 			String enc = "UTF-16"; //$NON-NLS-1$
+			byte[] bom = (tokenType == EncodingParserConstants.UTF16BE) ? IContentDescription.BOM_UTF_16BE : IContentDescription.BOM_UTF_16LE;
 			createEncodingMemento(enc, EncodingMemento.DETECTED_STANDARD_UNICODE_BYTES);
+			fEncodingMemento.setUnicodeStream(true);
+			fEncodingMemento.setUnicodeBOM(bom);
 		}
 		return canHandleAsUnicodeStream;
 	}
@@ -176,7 +175,7 @@ public class HTMLResourceEncodingDetector extends AbstractResourceEncodingDetect
 			}
 		}
 		if (parts.length > 1) {
-			charset = parts[1];
+			charset = parts[1].trim();
 		}
 		
 		if (charset != null && charset.length() > 0) {

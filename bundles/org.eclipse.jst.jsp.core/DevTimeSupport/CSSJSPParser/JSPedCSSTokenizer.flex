@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others.
+ * Copyright (c) 2006, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -94,7 +94,9 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 						break;
 					}
 				}
-				if (context == CSS_JSP_SCRIPTLET){
+				// [236008] - Should not try and consider the token a
+				// comment unless  a comment was started
+				if (context == CSS_JSP_SCRIPTLET && nextTokenType == CSS_JSP_COMMENT){
 					while (nextTokenType != CSS_JSP_COMMENT_END) {
 //						text.append(yytext());
 						textLength += yylength();

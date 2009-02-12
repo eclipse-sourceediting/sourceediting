@@ -173,6 +173,8 @@ public class XSDDirectivesManager
    */
   protected void removeXSDDirective(XSDSchemaDirective xsdImport)
   {
+    XSDSchema schema = xsdImport.getSchema();
+    
     Element element = xsdImport.getElement();
     
     Document doc = element.getOwnerDocument();
@@ -191,7 +193,10 @@ public class XSDDirectivesManager
     finally
     {
       if (doc instanceof IDOMNode)
-       ((IDOMNode)doc).getModel().changedModel();
+      {
+        ((IDOMNode)doc).getModel().changedModel();
+      }
+      schema.update(true);
     }
 
   }
@@ -576,7 +581,10 @@ public class XSDDirectivesManager
           }
         }
         
-        if (!isUsed && !unusedDirectives.contains(directive))
+        // If resolved directives are determined unused
+        // If resolved directives are not already in the unused list
+        // Also any redefines should be considered used
+        if (!isUsed && !unusedDirectives.contains(directive) && !(directive instanceof XSDRedefine))
         {
           unusedDirectives.add(directive);
         }

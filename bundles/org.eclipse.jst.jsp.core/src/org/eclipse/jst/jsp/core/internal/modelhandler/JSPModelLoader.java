@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -468,15 +468,22 @@ public class JSPModelLoader extends AbstractModelLoader {
 		EmbeddedTypeHandler embeddedHandler = pageDirectiveAdapter.getEmbeddedType();
 		return embeddedHandler;
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.core.internal.model.AbstractModelLoader#initEmbeddedTypePre(org.eclipse.wst.sse.core.internal.provisional.IStructuredModel)
+	 */
 	protected void initEmbeddedTypePre(IStructuredModel model) {
+		JSPModelLoader.this.initEmbeddedTypePre(model, model.getStructuredDocument());
+	}
+
+	protected void initEmbeddedTypePre(IStructuredModel model, IStructuredDocument structuredDocument) {
 
 		// note: this will currently only work for models backed by files
 		EmbeddedTypeHandler embeddedContentType = null;
 		IDOMModel domModel = (IDOMModel) model;
 
 		if (embeddedContentType == null) {
-			IContentDescription desc = getContentDescription(model.getStructuredDocument());
+			IContentDescription desc = getContentDescription(structuredDocument);
 			if (desc != null) {
 				Object prop = null;
 
@@ -519,16 +526,18 @@ public class JSPModelLoader extends AbstractModelLoader {
 	}
 
 	/**
-	 * Method initEmbeddedType.
+	 * As part of the model cloning process, ensure that the new model has the
+	 * same embedded content type handler as the old model, and that it is
+	 * properly initialized
 	 */
 	protected void initEmbeddedType(IStructuredModel oldModel, IStructuredModel newModel) {
 		EmbeddedTypeHandler existingEmbeddedType = getEmbeddedType(oldModel);
-		EmbeddedTypeHandler newEmbeddedContentType = existingEmbeddedType.newInstance();
 		if (existingEmbeddedType == null) {
-			initEmbeddedTypePre(newModel);
+			initEmbeddedTypePre(newModel, newModel.getStructuredDocument());
 			initEmbeddedTypePost(newModel);
 		}
 		else {
+			EmbeddedTypeHandler newEmbeddedContentType = existingEmbeddedType.newInstance();
 			// initEmbeddedType(newModel);
 			initCloneOfEmbeddedType(newModel, existingEmbeddedType, newEmbeddedContentType);
 			setLanguageInPageDirective(newModel);
@@ -608,12 +617,12 @@ public class JSPModelLoader extends AbstractModelLoader {
 	public IStructuredModel createModel(IStructuredModel oldModel) {
 		IStructuredModel model = super.createModel(oldModel);
 		// For JSPs, the ModelQueryAdapter must be "attached" to the document
-		// before content is set in the model, so taglib initization can
+		// before content is set in the model, so taglib initialization can
 		// take place.
 		// In this "clone model" case, we create a ModelQuery adapter
 		// create a new instance from the old data. Note: I think this
-		// "forced fit" only works here since the implimentaiton of
-		// ModelQueryAdatper does not
+		// "forced fit" only works here since the implementation of
+		// ModelQueryAdapter does not
 		// have to be released.
 
 		ModelQueryAdapter modelQueryAdapter = getModelQueryAdapter(model);

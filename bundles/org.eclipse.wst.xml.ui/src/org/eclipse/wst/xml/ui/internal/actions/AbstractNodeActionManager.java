@@ -476,7 +476,7 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 
 	protected Action createAddProcessingInstructionAction(Node parent, int index) {
 		Node refChild = getRefChildNodeAtIndex(parent, index);
-		Action action = new EditProcessingInstructionAction(this, parent, refChild, XMLUIMessages._UI_MENU_ADD_PROCESSING_INSTRUCTION, XMLUIMessages.ADD_PROCESSING_INSTRUCTION);
+		Action action = new EditProcessingInstructionAction(this, parent, refChild, XMLUIMessages._UI_MENU_PROCESSING_INSTRUCTION, XMLUIMessages.ADD_PROCESSING_INSTRUCTION);
 		action.setImageDescriptor(imageDescriptorCache.getImageDescriptor(new Integer(Node.PROCESSING_INSTRUCTION_NODE)));
 		return action;
 	}

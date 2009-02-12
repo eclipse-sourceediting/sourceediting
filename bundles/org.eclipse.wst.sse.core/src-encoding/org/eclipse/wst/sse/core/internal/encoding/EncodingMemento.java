@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -73,6 +73,8 @@ public class EncodingMemento implements Cloneable {
 	private String fJavaCharsetName;
 	private boolean fUnicodeStream;
 	private boolean fUTF83ByteBOMUsed;
+	
+	private byte[] fBOM;
 
 	public EncodingMemento() {
 		super();
@@ -157,15 +159,8 @@ public class EncodingMemento implements Cloneable {
 		byte[] bom = null;
 		if (isUTF83ByteBOMUsed())
 			bom = IContentDescription.BOM_UTF_8;
-		else if (isUnicodeStream()) {
-			if (getJavaCharsetName().equals("UTF-16") || getJavaCharsetName().equals("UTF-16LE")) { //$NON-NLS-1$ //$NON-NLS-2$
-				bom = IContentDescription.BOM_UTF_16LE;
-			}
-			else if (getJavaCharsetName().equals("UTF-16BE")) { //$NON-NLS-1$
-				bom = IContentDescription.BOM_UTF_16BE;
-			}
-
-		}
+		else if (isUnicodeStream())
+			bom = fBOM;
 		return bom;
 	}
 
@@ -246,4 +241,7 @@ public class EncodingMemento implements Cloneable {
 		fUTF83ByteBOMUsed = uTF83ByteBOMUsed;
 	}
 
+	public void setUnicodeBOM(byte[] bom) {
+		fBOM = bom;
+	}
 }

@@ -46,7 +46,8 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 public class JSPELValidator extends JSPValidator {
 	private static final boolean DEBUG = Boolean.valueOf(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspvalidator")).booleanValue(); //$NON-NLS-1$		
 	private static final String PREFERENCE_NODE_QUALIFIER = JSPCorePlugin.getDefault().getBundle().getSymbolicName();
-
+	private static final int MAX_REGIONS = 1000;
+	
 	private IValidator fMessageOriginator;
 
 	public JSPELValidator() {
@@ -137,9 +138,52 @@ public class JSPELValidator extends JSPValidator {
 				Iterator childRegions = parentRegion.getRegions().iterator();
 				while (childRegions.hasNext() && !reporter.isCancelled()) {
 					ITextRegion childRegion = (ITextRegion) childRegions.next();
-					if (childRegion.getType() == DOMJSPRegionContexts.JSP_EL_CONTENT)
-						validateXMLNode(parentRegion, childRegion, reporter, file);
+					/* [136795] Validate everything in the EL container, not just JSP_EL_CONTENT */
+					if (childRegion.getType() == DOMJSPRegionContexts.JSP_EL_OPEN)
+						validateELContent(parentRegion, childRegion, childRegions, reporter, file);
 				}
+			}
+		}
+	}
+	
+	protected void validateELContent(ITextRegionCollection container, ITextRegion elOpenRegion, Iterator elRegions, IReporter reporter, IFile file) {
+		int contentStart = elOpenRegion.getEnd();
+		int contentDocStart = container.getEndOffset(elOpenRegion);
+		int contentLength = container.getLength();
+		int regionCount = 0;
+		ITextRegion elRegion = null;
+		/* Find the EL closing region, otherwise the last region will be used to calculate the EL content text */
+		while (elRegions != null && elRegions.hasNext() && (regionCount++ < MAX_REGIONS)) {
+			elRegion = (ITextRegion) elRegions.next();
+			if (elRegion.getType() == DOMJSPRegionContexts.JSP_EL_CLOSE)
+				break;
+		}
+		
+		String elText = container.getFullText().substring(contentStart, (elRegion != null) ? elRegion.getStart() : (contentLength - 1));
+		JSPELParser elParser = JSPELParser.createParser(elText);
+		try {
+			elParser.Expression();
+		}
+		catch (ParseException e) {
+			int sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_EL_SYNTAX);
+			if (sev != ValidationMessage.IGNORE) {
+				Token curTok = e.currentToken;
+				int problemStartOffset = contentDocStart + curTok.beginColumn;
+				Message message = new LocalizedMessage(sev, JSPCoreMessages.JSPEL_Syntax);
+				message.setOffset(problemStartOffset);
+				message.setLength(curTok.endColumn - curTok.beginColumn + 1);
+				message.setTargetObject(file);
+				reporter.addMessage(fMessageOriginator, message);
+			}
+		}
+		catch (TokenMgrError te) {
+			int sev = getMessageSeverity(JSPCorePreferenceNames.VALIDATION_EL_LEXER);
+			if (sev != ValidationMessage.IGNORE) {
+				Message message = new LocalizedMessage(IMessage.NORMAL_SEVERITY, JSPCoreMessages.JSPEL_Token);
+				message.setOffset(contentDocStart);
+				message.setLength(contentLength);
+				message.setTargetObject(file);
+				reporter.addMessage(fMessageOriginator, message);
 			}
 		}
 	}

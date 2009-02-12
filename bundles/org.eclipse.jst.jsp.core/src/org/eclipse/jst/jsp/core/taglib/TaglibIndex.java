@@ -245,6 +245,7 @@ public final class TaglibIndex {
 											Logger.log(Logger.INFO, "removing index of " + description.fProject.getName()); //$NON-NLS-1$
 										}
 										description.clear();
+										removeIndex(description.fProject);
 									}
 								}
 							}

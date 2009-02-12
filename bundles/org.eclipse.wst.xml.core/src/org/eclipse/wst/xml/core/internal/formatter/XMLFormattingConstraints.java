@@ -15,8 +15,10 @@ public class XMLFormattingConstraints {
 	public final static String PRESERVE = "PRESERVE"; //$NON-NLS-1$
 	public final static String COLLAPSE = "COLLAPSE"; //$NON-NLS-1$
 	public final static String IGNORE = "IGNORE"; //$NON-NLS-1$
+	public final static String IGNOREANDTRIM = "IGNOREANDTRIM"; //$NON-NLS-1$
 	public final static String DEFAULT = "DEFAULT"; //$NON-NLS-1$
-
+	public final static String REPLACE = "REPLACE"; //$NON-NLS-1$
+	
 	public final static String INDENT = "INDENT"; //$NON-NLS-1$
 	public final static String NEW_LINE = "NEW_LINE"; //$NON-NLS-1$
 	public final static String INLINE = "INLINE"; //$NON-NLS-1$

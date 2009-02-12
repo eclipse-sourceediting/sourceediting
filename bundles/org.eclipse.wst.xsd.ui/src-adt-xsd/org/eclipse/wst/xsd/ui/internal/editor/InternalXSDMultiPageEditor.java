@@ -358,7 +358,6 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     getSelectionManager().removeSelectionChangedListener(fXSDSelectionListener);
     XSDEditorPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(xsdPreferenceStoreListener);
     xsdPreferenceStoreListener = null;
-    structuredTextEditor.dispose();
     super.dispose();
   }
 
