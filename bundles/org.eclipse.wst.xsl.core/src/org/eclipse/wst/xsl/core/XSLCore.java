@@ -163,12 +163,13 @@ public class XSLCore
 	
 	
 	/**
-	 * Takes a given <code>IDOMNode</code> and returns whether it 
+	 * Takes a given <code>Node</code> and returns whether it 
 	 * is part of the the XSLT Namespace.
-	 * @param node  The IDOMNode to be checked.
+	 * @param node  The Node to be checked.
 	 * @return True if part of the XSLT namespace, false otherwise.
+	 * @since 1.0
 	 */
-	public static boolean isXSLNamespace(IDOMNode node) {
+	public static boolean isXSLNamespace(Node node) {
 		if (hasNamespace(node)) {
 			return false;
 		}
@@ -182,7 +183,7 @@ public class XSLCore
 	 * @param node
 	 * @return
 	 */
-	private static boolean hasNamespace(IDOMNode node) {
+	private static boolean hasNamespace(Node node) {
 		return node == null || node.getNamespaceURI() == null;
 	}
 	

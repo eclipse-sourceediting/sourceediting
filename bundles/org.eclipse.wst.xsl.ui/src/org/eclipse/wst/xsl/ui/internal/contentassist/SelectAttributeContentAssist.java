@@ -17,6 +17,7 @@ import java.util.List;
 
 import javax.xml.transform.TransformerException;
 
+import org.apache.xpath.compiler.XPathParser;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -24,7 +25,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xsl.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
-import org.eclipse.wst.xml.xpath.core.internal.parser.XPathParser;
 import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xml.xpath.ui.internal.contentassist.XPathTemplateCompletionProcessor;
 import org.eclipse.wst.xml.xpath.ui.internal.templates.TemplateContextTypeIdsXPath;
@@ -123,12 +123,21 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 	protected void adjustXPathStart() {
 	    IDOMElement elem = (IDOMElement)getNode();
 	    IDOMAttr xpathNode = (IDOMAttr)elem.getAttributeNode("select");
-		
-		if (xpathNode != null) {
-			XPathParser parser = new XPathParser(xpathNode.getValue());
-			int startOffset = xpathNode.getValueRegionStartOffset() + parser.getTokenStartOffset(1, getReplacementBeginPosition() - xpathNode.getValueRegionStartOffset()) - 1;
-			replacementLength = getReplacementBeginPosition() - startOffset;
+	    if (xpathNode == null) {
+	    	return;
+	    }
+	    
+		String xpathString = xpathNode.getValue();
+		if (xpathString.length() == 0) {
+			return;
 		}
+		
+		int startOffset = xpathNode.getValueRegionStartOffset();
+		int tokenOffset = getReplacementBeginPosition() - xpathNode.getValueRegionStartOffset();
+		int tokenPosition = getXPathSeperatorPos(tokenOffset - 1, xpathString);
+		int newStartOffset = startOffset + tokenPosition;
+		
+		replacementLength = getReplacementBeginPosition() - startOffset;
 	}
 		
 	protected String extractXPathMatchString(IDOMAttr node, ITextRegion aRegion, int offset) {
@@ -151,7 +160,7 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 	}
 
 
-	private int getXPathSeperatorPos(int column, String nodeValue) {
+	protected int getXPathSeperatorPos(int column, String nodeValue) {
 		char [] keyTokens = { '/', '[', ']', '(', ')', ',', ' '};
 		
 		int seperatorPos = 0;

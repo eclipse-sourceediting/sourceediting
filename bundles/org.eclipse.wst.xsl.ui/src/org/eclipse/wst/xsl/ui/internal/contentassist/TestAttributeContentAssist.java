@@ -18,7 +18,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
-import org.eclipse.wst.xml.xpath.core.internal.parser.XPathParser;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -81,8 +80,12 @@ public class TestAttributeContentAssist extends SelectAttributeContentAssist {
 	    IDOMAttr xpathNode = (IDOMAttr)elem.getAttributeNode(ATTR_TEST);
 		
 		if (xpathNode != null) {
-			XPathParser parser = new XPathParser(xpathNode.getValue());
-			int startOffset = xpathNode.getValueRegionStartOffset() + parser.getTokenStartOffset(1, getReplacementBeginPosition() - xpathNode.getValueRegionStartOffset()) - 1;
+			String xpathString = xpathNode.getValue();
+			int startOffset = xpathNode.getValueRegionStartOffset();
+			int tokenOffset = getReplacementBeginPosition() - xpathNode.getValueRegionStartOffset();
+			int tokenPosition = getXPathSeperatorPos(tokenOffset, xpathString);
+			int newStartOffset = startOffset + tokenPosition - 1;
+			
 			replacementLength = getReplacementBeginPosition() - startOffset;
 		}
 	}
