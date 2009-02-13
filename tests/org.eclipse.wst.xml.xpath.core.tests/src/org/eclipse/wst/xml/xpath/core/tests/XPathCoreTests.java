@@ -1,6 +1,5 @@
 package org.eclipse.wst.xml.xpath.core.tests;
 
-import org.eclipse.wst.xsl.internal.core.xpath.tests.TestXPathCoreXPathParser;
 import org.eclipse.wst.xsl.internal.core.xpath.tests.TestXSLXPathHelper;
 
 import junit.framework.Test;
@@ -13,7 +12,6 @@ public class XPathCoreTests {
 				"Test for org.eclipse.wst.xml.xpath.core.tests");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(TestXSLXPathHelper.class);
-		suite.addTestSuite(TestXPathCoreXPathParser.class);
 		//$JUnit-END$
 		return suite;
 	}
