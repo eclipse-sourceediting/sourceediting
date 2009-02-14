@@ -40,7 +40,7 @@ public class AllXMLTests extends junit.framework.TestSuite
    */
   public AllXMLTests()
   {
-    super("XMLTestsTestSuite");
+    super("XMLValidationTestSuite");
     addTest(XMLValidationConfigurationTest.suite());
     addTest(ValidatorTest.suite());
     addTest(XMLMessageInfoHelperTest.suite());
