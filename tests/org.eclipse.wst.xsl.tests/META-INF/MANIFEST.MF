@@ -11,6 +11,9 @@ Require-Bundle: org.junit;bundle-version="[3.8.0,4.0.0)",
  org.eclipse.wst.xsl.ui.tests;bundle-version="[1.0.0,2.0.0)",
  org.eclipse.wst.xsl.core.tests;bundle-version="[1.0.0,2.0.0)",
  org.eclipse.wst.xml.xpath.core.tests;bundle-version="[1.0.0,2.0.0)",
- org.eclipse.wst.xml.xpath2.processor.tests;bundle-version="[1.0.0,2.0.0)"
+ org.eclipse.wst.xml.xpath2.processor.tests;bundle-version="[1.0.0,2.0.0)",
+ org.eclipse.core.runtime;bundle-version="[3.4.0,4.0.0)"
 Export-Package: org.eclipse.wst.xsl.tests
 Bundle-ClassPath: .
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.eclipse.wst.xsl.tests.XSLTestPlugin
