@@ -1,13 +1,12 @@
-
+package org.eclipse.wst.jsdt.web.core.tests.translation;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class AllTests {
+public class AllWebCoreTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite(
-				"Tests for org.eclipse.wst.jsdt.web.core");
+		TestSuite suite = new TestSuite();
 		//$JUnit-BEGIN$
 
 		//$JUnit-END$

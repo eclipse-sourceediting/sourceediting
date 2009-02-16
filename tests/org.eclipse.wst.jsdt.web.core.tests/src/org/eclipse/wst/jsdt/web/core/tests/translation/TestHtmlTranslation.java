@@ -1,4 +1,4 @@
-package org.eclipse.wst.jsdt.web.core.test.translation;
+package org.eclipse.wst.jsdt.web.core.tests.translation;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class TestHtmlTranslation extends TestCase {
 		
 		JsTranslationAdapterFactory.setupAdapterFactory(structuredModel);
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) ((IDOMModel) structuredModel).getDocument().getAdapterFor(IJsTranslation.class);
-		IJsTranslation translation = translationAdapter.getJSPTranslation(false);
+		IJsTranslation translation = translationAdapter.getJsTranslation(false);
 		assertTrue("expected function definition is missing", translation.getJsText().indexOf("function blah()") >= 0);
 
 		// release model
@@ -105,11 +105,8 @@ public class TestHtmlTranslation extends TestCase {
 			try {
 				inputStream.close();
 			}
-			catch (Exception exception) {
-				// hopeless
-				StringWriter s = new StringWriter();
-				exception.printStackTrace(new PrintWriter(s));
-				fail(s.toString());
+			catch (IOException exception) {
+				// should already be closed
 			}
 		}
 

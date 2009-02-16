@@ -1,13 +1,24 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tests Plug-in
-Bundle-SymbolicName: org.eclipse.wst.jsdt.web.ui.tests
+Bundle-SymbolicName: org.eclipse.wst.jsdt.web.ui.tests;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: org.eclipse.wst.jsdt.web.ui.tests.Activator
 Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.commands,
  org.junit,
- org.eclipse.wst.sse.core;bundle-version="1.1.301",
- org.eclipse.wst.jsdt.web.core;bundle-version="1.0.1",
- org.eclipse.core.resources;bundle-version="3.4.0"
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+ org.eclipse.wst.sse.core,
+ org.eclipse.wst.sse.ui,
+ org.eclipse.wst.jsdt.core,
+ org.eclipse.wst.jsdt.ui,
+ org.eclipse.wst.jsdt.web.core,
+ org.eclipse.core.resources,
+ org.eclipse.ui.ide,
+ org.eclipse.jface,
+ org.eclipse.ui.workbench,
+ org.eclipse.wst.xml.core,
+ org.eclipse.wst.xml.ui
+Bundle-RequiredExecutionEnvironment: J2SE-1.4
 Bundle-ActivationPolicy: lazy
+Export-Package: org.eclipse.wst.jsdt.web.ui.tests,
+ org.eclipse.wst.jsdt.web.ui.tests.translation
