@@ -78,7 +78,7 @@ public class JsSearchDocument {
 	public char[] getCharContents() {
 		
 		if((fCachedCharContents == null) || isDirty()) {
-		    IJsTranslation trans = getJSPTranslation();    
+		    IJsTranslation trans = getJSTranslation();    
 		    fCachedCharContents = trans != null ? trans.getJsText().toCharArray() : new char[0];
 		    fCUPath = trans.getJavaPath();
 		}
@@ -101,7 +101,7 @@ public class JsSearchDocument {
 	 * @return the JSPTranslation for the jsp file, or null if it's an
 	 *         unsupported file.
 	 */
-	public final IJsTranslation getJSPTranslation() {
+	public final IJsTranslation getJSTranslation() {
 		IJsTranslation translation = null;
 		IFile jspFile = getFile();
 		if (!JsSearchSupport.isJsp(jspFile)) {
@@ -122,7 +122,7 @@ public class JsSearchDocument {
 				setupAdapterFactory(xmlModel);
 				IDOMDocument doc = xmlModel.getDocument();
 				JsTranslationAdapter adapter = (JsTranslationAdapter) doc.getAdapterFor(IJsTranslation.class);
-				translation = adapter.getJSPTranslation(false);
+				translation = adapter.getJsTranslation(false);
 			}
 		}
 		catch (IOException e) {
@@ -162,7 +162,7 @@ public class JsSearchDocument {
 	    // caching the path since it's expensive to get translation
 		// important that isDirty() check is second to cache modification stamp
 	    if((this.fCUPath == null) || isDirty() || (this.fCUPath == UNKNOWN_PATH)) {
-	        IJsTranslation trans = getJSPTranslation();
+	        IJsTranslation trans = getJSTranslation();
 	        if(trans != null) {
 	            this.fCUPath = trans.getJavaPath();
 	            // save since it's expensive to calculate again later

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -79,7 +79,7 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 				// get Java range, translate coordinate to JSP
 				try {
 					ISourceRange range = null;
-					IJsTranslation jspTranslation = getJSPTranslation(document);
+					IJsTranslation jspTranslation = getJsTranslation(document);
 					if (jspTranslation != null) {
 						// link to local variable definitions
 						if (element instanceof ILocalVariable) {
@@ -156,16 +156,11 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 		List hyperlinks = new ArrayList(0);
 		if (region != null && textViewer != null) {
 			IDocument document = textViewer.getDocument();
-			// check and make sure this is a valid Java type
-			IJsTranslation jspTranslation = getJSPTranslation(document);
-			if (jspTranslation != null) {
-				// check if we are in JSP Java content
-				// check that we are not in indirect Java content (like
-				// included files)
-				// get Java elements
-				IJavaScriptElement[] elements = jspTranslation.getElementsFromJsRange(region.getOffset(), region.getOffset() + region.getLength());
+			IJsTranslation jsTranslation = getJsTranslation(document);
+			if (jsTranslation != null) {
+				IJavaScriptElement[] elements = jsTranslation.getElementsFromJsRange(region.getOffset(), region.getOffset() + region.getLength());
 				if (elements != null && elements.length > 0) {
-					// create a JSPJavaHyperlink for each Java element
+					// create a hyperlink for each JavaScript element
 					for (int i = 0; i < elements.length; ++i) {
 						IJavaScriptElement element = elements[i];
 						// find hyperlink range for Java element
@@ -208,7 +203,7 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 	 * 
 	 * @return JSPTranslation if one exists, null otherwise
 	 */
-	private IJsTranslation getJSPTranslation(IDocument document) {
+	private IJsTranslation getJsTranslation(IDocument document) {
 		IJsTranslation translation = null;
 		IDOMModel xmlModel = null;
 		try {
@@ -217,7 +212,7 @@ public class JSDTHyperlinkDetector extends AbstractHyperlinkDetector {
 				IDOMDocument xmlDoc = xmlModel.getDocument();
 				JsTranslationAdapter adapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 				if (adapter != null) {
-					translation = adapter.getJSPTranslation(true);
+					translation = adapter.getJsTranslation(true);
 				}
 			}
 		} finally {

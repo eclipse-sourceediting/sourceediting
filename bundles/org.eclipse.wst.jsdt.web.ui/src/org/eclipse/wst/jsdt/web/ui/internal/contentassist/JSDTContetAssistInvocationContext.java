@@ -13,7 +13,6 @@ package org.eclipse.wst.jsdt.web.ui.internal.contentassist;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.wst.jsdt.ui.text.java.JavaContentAssistInvocationContext;
-
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -42,7 +41,7 @@ public class JSDTContetAssistInvocationContext extends JavaContentAssistInvocati
 			IDOMDocument xmlDoc = xmlModel.getDocument();
 			JsTranslationAdapter fTranslationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 			if (fTranslationAdapter != null) {
-				fTranslation = fTranslationAdapter.getJSPTranslation(true);
+				fTranslation = fTranslationAdapter.getJsTranslation(true);
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

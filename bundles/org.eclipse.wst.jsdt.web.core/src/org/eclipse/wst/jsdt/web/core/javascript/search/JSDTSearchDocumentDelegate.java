@@ -64,7 +64,7 @@ public class JSDTSearchDocumentDelegate extends JavaSearchDocument {
 	
 	public IJsTranslation getJspTranslation() {
 		
-		return this.fJSPSearchDoc.getJSPTranslation();
+		return this.fJSPSearchDoc.getJSTranslation();
 	}
 	
 //	public int getJspOffset(int javaOffset) {

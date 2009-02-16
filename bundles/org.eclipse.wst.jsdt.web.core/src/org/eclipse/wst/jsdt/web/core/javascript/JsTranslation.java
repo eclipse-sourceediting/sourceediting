@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -464,7 +464,7 @@ public class JsTranslation implements IJsTranslation {
 	/**
 	 * 
 	 * @return the problem requestor for the JavaScriptUnit in this
-	 *         JSPTranslation
+	 *         JsTranslation
 	 */
 	private JsProblemRequestor getProblemRequestor() {
 		return CompilationUnitHelper.getInstance().getProblemRequestor();
@@ -538,7 +538,7 @@ public class JsTranslation implements IJsTranslation {
 				try {
 					if (JsTranslation.DEBUG) {
 						System.out.println("------------------------------------------------------------------"); //$NON-NLS-1$
-						System.out.println("(-) JSPTranslation [" + this + "] discarding JavaScriptUnit: " + fCompilationUnit); //$NON-NLS-1$ //$NON-NLS-2$
+						System.out.println("(-) JsTranslation [" + this + "] discarding JavaScriptUnit: " + fCompilationUnit); //$NON-NLS-1$ //$NON-NLS-2$
 						System.out.println("------------------------------------------------------------------"); //$NON-NLS-1$
 					}
 					fCompilationUnit.discardWorkingCopy();

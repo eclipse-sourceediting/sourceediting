@@ -15,7 +15,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
-
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.ui.internal.JsUIMessages;
@@ -78,7 +77,7 @@ public class JSDTContentAssistantProcessor extends AbstractContentAssistProcesso
 				fTranslationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 			}
 			if (fTranslationAdapter != null) {
-				IJsTranslation translation = fTranslationAdapter.getJSPTranslation(true);
+				IJsTranslation translation = fTranslationAdapter.getJsTranslation(true);
 				fJavaPosition = getDocumentPosition();
 				try {
 					IJavaScriptUnit cu = translation.getCompilationUnit();

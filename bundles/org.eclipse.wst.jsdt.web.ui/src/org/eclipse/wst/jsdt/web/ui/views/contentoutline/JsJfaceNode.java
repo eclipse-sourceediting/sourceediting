@@ -19,7 +19,6 @@ import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.core.JavaElement;
 import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
-
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -262,7 +261,7 @@ public class JsJfaceNode extends ElementImpl implements IndexedRegion, INodeNoti
 			return null;
 		}
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
-		return translationAdapter.getJSPTranslation(true);
+		return translationAdapter.getJsTranslation(true);
 	}
 	
 	

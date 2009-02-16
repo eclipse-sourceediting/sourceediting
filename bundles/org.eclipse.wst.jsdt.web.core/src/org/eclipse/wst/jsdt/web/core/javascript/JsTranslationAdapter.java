@@ -88,11 +88,11 @@ public class JsTranslationAdapter implements INodeAdapter, IResourceChangeListen
 	}
 	
 	/**
-	 * Returns the JSPTranslation for this adapter.
+	 * Returns the IJsTranslation for this adapter.
 	 * 
-	 * @return a JSPTranslationExtension
+	 * @return a IJsTranslation
 	 */
-	public IJsTranslation getJSPTranslation(boolean listenForChanges) {
+	public IJsTranslation getJsTranslation(boolean listenForChanges) {
 		if (fJSPTranslation == null || (!this.listenForChanges && listenForChanges)) {
 			if(fJSPTranslation!=null) fJSPTranslation.release();
 			if(fTranslationElement==null) {

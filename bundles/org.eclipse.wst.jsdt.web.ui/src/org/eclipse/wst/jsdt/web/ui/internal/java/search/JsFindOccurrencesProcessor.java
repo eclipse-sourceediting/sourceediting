@@ -16,7 +16,6 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
-
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.jsdt.web.core.text.IJsPartitions;
@@ -56,7 +55,7 @@ public class JsFindOccurrencesProcessor extends FindOccurrencesProcessor {
 				IDOMDocument xmlDoc = ((IDOMModel) model).getDocument();
 				JsTranslationAdapter adapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 				if (adapter != null) {
-					IJsTranslation translation = adapter.getJSPTranslation(true);
+					IJsTranslation translation = adapter.getJsTranslation(true);
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=102211
 					elements = translation.getElementsFromJsRange(selection.getOffset(), selection.getOffset() + selection.getLength());
 				}

@@ -16,7 +16,6 @@ import org.eclipse.wst.jsdt.core.IJavaScriptElement;
 import org.eclipse.wst.jsdt.ui.JavaScriptElementLabelProvider;
 import org.eclipse.wst.jsdt.ui.StandardJavaScriptElementContentProvider;
 import org.eclipse.wst.jsdt.web.core.internal.Logger;
-
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -161,7 +160,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 			return null;
 		}
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
-		return translationAdapter.getJSPTranslation(true);
+		return translationAdapter.getJsTranslation(true);
 	}
 	
 	

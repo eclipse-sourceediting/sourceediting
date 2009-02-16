@@ -68,7 +68,7 @@ public class JsSearchSupport {
 
     private JsSearchParticipant fParticipant = null;
 
-    private IPath fJspPluginLocation = null;
+    private IPath fJsPluginLocation = null;
 
     // pa_TODO may be slow (esp for indexing entire workspace)
     private final CRC32 fChecksumCalculator = new CRC32();
@@ -534,12 +534,12 @@ public class JsSearchSupport {
     // copied from JDT IndexManager
     public IPath getModelJspPluginWorkingLocation() {
 
-        if (this.fJspPluginLocation != null) {
-			return this.fJspPluginLocation;
+        if (this.fJsPluginLocation != null) {
+			return this.fJsPluginLocation;
 		}
 
-        // Append the folder name "jspsearch" to keep the state location area cleaner
-        IPath stateLocation = JsCorePlugin.getDefault().getStateLocation().append("jspsearch");
+        // Append the folder name "jssearch" to keep the state location area cleaner
+        IPath stateLocation = JsCorePlugin.getDefault().getStateLocation().addTrailingSeparator().append("jssearch"); //$NON-NLS-1$
 
         // pa_TODO workaround for
         // https://bugs.eclipse.org/bugs/show_bug.cgi?id=62267
@@ -559,7 +559,7 @@ public class JsSearchSupport {
 			}
 		}
 
-        return this.fJspPluginLocation = stateLocation;
+        return this.fJsPluginLocation = stateLocation;
     }
 
     /**

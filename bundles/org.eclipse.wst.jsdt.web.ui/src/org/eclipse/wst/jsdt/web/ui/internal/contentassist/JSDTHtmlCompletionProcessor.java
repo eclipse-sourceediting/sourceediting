@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-
 import org.eclipse.wst.jsdt.web.core.javascript.IJsTranslation;
 import org.eclipse.wst.jsdt.web.core.javascript.JsTranslationAdapter;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -92,7 +91,7 @@ public class JSDTHtmlCompletionProcessor {
 			JsTranslationAdapter fTranslationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
 			
 			if (fTranslationAdapter != null) {
-				return fTranslationAdapter.getJSPTranslation(true);
+				return fTranslationAdapter.getJsTranslation(true);
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,9 +18,11 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.text.Position;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterForHTML;
-import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
 import org.eclipse.wst.jsdt.core.IJavaScriptElement;
+import org.eclipse.wst.jsdt.core.IJavaScriptUnit;
+import org.eclipse.wst.jsdt.core.IMember;
 import org.eclipse.wst.jsdt.core.ISourceRange;
+import org.eclipse.wst.jsdt.core.ISourceReference;
 import org.eclipse.wst.jsdt.core.IType;
 import org.eclipse.wst.jsdt.core.JavaScriptModelException;
 import org.eclipse.wst.jsdt.internal.core.JavaElement;
@@ -82,9 +84,9 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 						IJavaScriptElement javaElement = children[i];
 						ISourceRange range = null;
 						if (javaElement instanceof Member) {
-								range = ((Member) javaElement).getNameRange();
+								range = ((IMember) javaElement).getNameRange();
 						} else {
-								range = ((SourceRefElement) javaElement).getSourceRange();
+								range = ((ISourceReference) javaElement).getSourceRange();
 						}
 						int htmllength = range.getLength();
 						int htmloffset = range.getOffset();
@@ -370,7 +372,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 			return null;
 		}
 		JsTranslationAdapter translationAdapter = (JsTranslationAdapter) xmlDoc.getAdapterFor(IJsTranslation.class);
-		return translationAdapter.getJSPTranslation(true);
+		return translationAdapter.getJsTranslation(true);
 	}
 	
 	
