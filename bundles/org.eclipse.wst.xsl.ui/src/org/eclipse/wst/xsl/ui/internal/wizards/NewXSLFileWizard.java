@@ -15,6 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -34,11 +35,17 @@ public class NewXSLFileWizard extends Wizard implements INewWizard
 	private NewXSLFileWizardPage fNewFilePage;
 	private NewXSLFileTemplatesWizardPage fNewFileTemplatesPage;
 	private IStructuredSelection fSelection;
+	private IWorkbench workbench;
 
 	@Override
 	public void addPages()
 	{
-		fNewFilePage = new NewXSLFileWizardPage("NewFileCreationPage", new StructuredSelection(IDE.computeSelectedResources(fSelection))); //$NON-NLS-1$ 
+		IStructuredSelection ssel = new StructuredSelection(IDE.computeSelectedResources(fSelection));
+		// if no selection, then just select the first project we come across
+		if (ssel.isEmpty())
+			ssel = new StructuredSelection(ResourcesPlugin.getWorkspace().getRoot().getProjects()[0]);
+		
+		fNewFilePage = new NewXSLFileWizardPage("NewFileCreationPage", ssel); //$NON-NLS-1$ 
 		fNewFilePage.setTitle("XSL Stylesheet");
 		fNewFilePage.setDescription("Create a new XSL Stylesheet.");
 		addPage(fNewFilePage);
@@ -49,6 +56,7 @@ public class NewXSLFileWizard extends Wizard implements INewWizard
 
 	public void init(IWorkbench aWorkbench, IStructuredSelection aSelection)
 	{
+		this.workbench = aWorkbench;
 		fSelection = aSelection;
 		setWindowTitle("New XSL Stylesheet");
 

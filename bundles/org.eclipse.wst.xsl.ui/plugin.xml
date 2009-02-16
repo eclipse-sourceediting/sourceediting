@@ -347,6 +347,12 @@
 			</enabledWhen>
 		</page>		
 	</extension>
+ <extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="org.eclipse.wst.xsl.ui.internal.PreferenceInitializer">
+    </initializer>
+ </extension>
 	
    <!-- extension
          point="org.eclipse.wst.sse.ui.quickFixProcessor">

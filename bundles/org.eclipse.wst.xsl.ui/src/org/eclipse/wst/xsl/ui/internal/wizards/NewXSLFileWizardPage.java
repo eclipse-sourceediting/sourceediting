@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -34,7 +35,30 @@ class NewXSLFileWizardPage extends WizardNewFileCreationPage
 	public NewXSLFileWizardPage(String pageName, IStructuredSelection selection)
 	{
 		super(pageName, selection);
-		setFileName("NewFile.xsl");
+		// find an unused file name
+		setFileName(getUnusedFilename("NewStylesheet",selection));
+	}
+	
+	private String getUnusedFilename(String prefix, IStructuredSelection selection)
+	{
+		String name = prefix+".xsl";
+		if (selection.isEmpty())
+			return name;
+		Object element = selection.getFirstElement();
+		if (element instanceof IContainer)
+		{
+			IContainer c = (IContainer)element;
+			int i=0;
+			do
+			{
+				if (c.findMember(name) == null)
+					return name;
+				i++;
+				name = prefix+i+".xsl";
+			}
+			while(true);
+		}
+		return null;
 	}
 
 	@Override
@@ -83,7 +107,7 @@ class NewXSLFileWizardPage extends WizardNewFileCreationPage
 		}
 		return true;
 	}
-
+	
 	String addDefaultExtension(String filename)
 	{
 		StringBuffer newFileName = new StringBuffer(filename);
