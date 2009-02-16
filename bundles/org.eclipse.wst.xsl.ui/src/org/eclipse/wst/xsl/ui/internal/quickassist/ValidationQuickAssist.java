@@ -1,0 +1,46 @@
+package org.eclipse.wst.xsl.ui.internal.quickassist;
+
+import org.eclipse.jface.text.contentassist.CompletionProposal;
+import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.quickassist.IQuickAssistInvocationContext;
+import org.eclipse.jface.text.quickassist.IQuickAssistProcessor;
+import org.eclipse.jface.text.source.Annotation;
+
+public class ValidationQuickAssist implements IQuickAssistProcessor
+{
+	private String problemId;
+
+	public ValidationQuickAssist()
+	{
+		super();
+	}
+
+	public boolean canAssist(IQuickAssistInvocationContext invocationContext)
+	{
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	public boolean canFix(Annotation annotation)
+	{
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	public ICompletionProposal[] computeQuickAssistProposals(IQuickAssistInvocationContext invocationContext)
+	{
+		CompletionProposal proposal = new CompletionProposal("doug",5,10,11);
+		return new ICompletionProposal[]{proposal};
+	}
+
+	public String getErrorMessage()
+	{
+		return null;
+	}
+
+	public void setProblemId(String id)
+	{
+		this.problemId = id;
+	}
+
+}

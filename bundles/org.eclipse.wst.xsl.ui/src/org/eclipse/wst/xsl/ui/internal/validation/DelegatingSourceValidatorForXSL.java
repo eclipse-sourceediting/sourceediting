@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.validation;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.text.quickassist.IQuickAssistProcessor;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -19,11 +22,14 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.wst.validation.ValidationFramework;
 import org.eclipse.wst.validation.Validator;
 import org.eclipse.wst.validation.internal.core.ValidationException;
+import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidator;
 import org.eclipse.wst.xsl.ui.internal.editor.XSLEditor;
+import org.eclipse.wst.xsl.ui.internal.quickassist.ValidationQuickAssist;
 
 /**
  * This performs the as-you-type validation for xsl files
@@ -32,7 +38,8 @@ import org.eclipse.wst.xsl.ui.internal.editor.XSLEditor;
 public class DelegatingSourceValidatorForXSL extends DelegatingSourceValidator
 {
 	private final static String Id = "org.eclipse.wst.xsl.core.xsl"; //$NON-NLS-1$
-
+	private final String QUICKASSISTPROCESSOR = IQuickAssistProcessor.class.getName();
+	
 	private Validator _validator;
 
 	/**
@@ -40,15 +47,37 @@ public class DelegatingSourceValidatorForXSL extends DelegatingSourceValidator
 	 */
 	public DelegatingSourceValidatorForXSL()
 	{
+		super();
+	}
+	
+	@Override
+	protected void updateValidationMessages(List messages, IDOMDocument document, IReporter reporter)
+	{
+		super.updateValidationMessages(messages, document, reporter);
+		// insert the quick assist information as an attribute for the messages
+//		for (Object msg : reporter.getMessages())
+//		{
+//			IMessage message = (IMessage)msg;
+//
+//			ValidationQuickAssist processor = new ValidationQuickAssist();
+//			
+//			String id = (String)message.getAttribute("validationErrorId");
+//			processor.setProblemId(id);
+//			
+//			message.setAttribute(QUICKASSISTPROCESSOR, processor);
+//		}		
 	}
 
 	@Override
 	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException
 	{
 		super.validate(helper, reporter);
+		
 		// validating will refresh the model, so now calculate the overrides.
 		// (we only calculate overrides for source validation as we only want to do it for files open in an editor)
-		// There follows a very complicated way of creating the required annotations in an editor...
+		// There follows a very complicated way of creating the required annotations in an editor.
+		// TODO resolve this when bug 247222 is sorted
+		
 		String[] delta = helper.getURIs();
 		if (delta.length > 0)
 		{
