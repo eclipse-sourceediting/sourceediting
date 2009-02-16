@@ -27,58 +27,35 @@
 			type="autoeditstrategy"
 			class="org.eclipse.wst.jsdt.web.ui.internal.autoedit.AutoEditStrategyForJs"
 			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENTHANDLER" />
-	</extension>
+	</extension>		
 	
-	
-	
-	
-	<extension point = "org.eclipse.wst.sse.ui.extendedEditorActions">
-		<editorContribution 
-            targetID="com.ibm.sse.editor.StructuredTextEditor" 
-            id="com.ibm.sse.editor.extendedActions2"> 
-         <action 
-               popupmenuPath="group.add" 
-               label="Preferences2" 
-               class="com.ibm.sse.editor.preferences.ui.EditStructuredTextEditorPreferencesAction" 
-               id="com.ibm.sse.editor.preferences.ui.EditStructuredTextEditorPreferencesAction2"> 
-         </action> 
-      </editorContribution> 
-		
-	
-	</extension>
 	<extension
 		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
 		<target
 			id="org.eclipse.wst.html.SCRIPT"
-			name="%target.name.0">
-		</target>
-	</extension>
-	
-	<extension
-		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
+			name="%target.name.0"/>
 		<target
 			id="org.eclipse.wst.html.SCRIPT.EVENTHANDLER"
-			name="%target.name.1">
-		</target>
+			name="%target.name.1"/>
 	</extension>
 	
 	 <extension
          point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
-      <hyperlinkDetector
+      <hyperlinkDetector 
             class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
-            id="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.script.JSPJavaHyperlinkDetector"
+            id="org.eclipse.wst.jsdt.web.ui.JSDTHyperlinkDetector.SCRIPT"
             name="%hyperlinkDetector.name.0"
             targetId="org.eclipse.wst.html.SCRIPT">
       </hyperlinkDetector>
       <hyperlinkDetector
             class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
-            id="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.script.event.JSPJavaHyperlinkDetector"
+            id="org.eclipse.wst.jsdt.web.ui.JSDTHyperlinkDetector.SCRIPT.events"
             name="%hyperlinkDetector.name.0"
             targetId="org.eclipse.wst.html.SCRIPT.EVENTHANDLER">
       </hyperlinkDetector>  
       <hyperlinkDetector
 			class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
-			id="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
+			id="org.eclipse.wst.jsdt.web.ui.JSDTHyperlinkDetector.HTML"
 			name="%hyperlinkDetector.name.0"
 			targetId="org.eclipse.wst.html.core.htmlsource">
       </hyperlinkDetector>
@@ -91,7 +68,7 @@
       <objectContribution
             objectClass="org.eclipse.wst.jsdt.web.ui.views.contentoutline.IJavaWebNode"
             id="org.eclipse.wst.jsdt.web.ui.JavaActions">
-            <!-- Declerations Search Menu -->
+            <!-- Declarations Search Menu -->
             <menu
                 id="org.eclipse.wst.jsdt.web.declerations"
          		label="%menu.label.0"
@@ -662,6 +639,7 @@
 		</renameParticipant>
 
 	  </extension>
+
 	  <!--
   <extension point="org.eclipse.wst.jsdt.ui.JsGlobalScopeUIInitializer">
      <JsGlobalScopeUIInitializer
@@ -671,29 +649,22 @@
    </extension>
 -->
 
-
   	 <extension
          point="org.eclipse.ui.popupMenus">
   		<objectContribution
             objectClass="org.eclipse.core.resources.IProject"
             adaptable="true"
             id="org.eclipse.wst.jsdt.web.ui.jsdtSetup">
-            <menu
-               label="%menu.label.5"
-               id="org.eclipse.wst.jsdt.web.ui.project.tools">
-            <separator
-               name="group0">
-            </separator>
-         </menu>
          <action
             class="org.eclipse.wst.jsdt.web.ui.SetupProjectsWizzard"
             label="%action.label.21"
-            menubarPath="org.eclipse.wst.jsdt.web.ui.project.tools/group0"
+            menubarPath="org.eclipse.ui.projectConfigure/additions"
             enablesFor="+"
             id="org.eclipse.wst.jsdt.internal.web.ui.convertProjects">
       	</action>
    		</objectContribution>
    </extension> 
+
   	 <!-- Uncomment for Standalone + HTML as seperate options -->
   	 <!--
   	 <extension
