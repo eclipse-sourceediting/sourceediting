@@ -469,7 +469,10 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	 * @see org.eclipse.wst.sse.core.text.IStructuredDocumentRegion#setDelete(boolean)
 	 */
 	public void setDeleted(boolean isDeleted) {
-		fIsDeletedOrEnded = (byte) (isDeleted ? fIsDeletedOrEnded | MASK_IS_DELETED : 0);
+		if (isDeleted)
+			fIsDeletedOrEnded |= MASK_IS_DELETED;
+		else
+			fIsDeletedOrEnded &= ~MASK_IS_DELETED;
 	}
 
 	/**
@@ -478,7 +481,10 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 	 *            boolean
 	 */
 	public void setEnded(boolean newHasEnd) {
-		fIsDeletedOrEnded = (byte) (newHasEnd ? fIsDeletedOrEnded | MASK_IS_ENDED : 0);
+		if (newHasEnd)
+			fIsDeletedOrEnded |= MASK_IS_ENDED;
+		else
+			fIsDeletedOrEnded &= ~MASK_IS_ENDED;
 	}
 
 	public void setLength(int newLength) {
