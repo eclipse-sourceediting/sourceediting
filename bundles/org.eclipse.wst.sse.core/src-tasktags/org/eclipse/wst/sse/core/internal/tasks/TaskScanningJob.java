@@ -153,6 +153,14 @@ class TaskScanningJob extends Job {
 
 		IStatus status = null;
 		List currentQueue = retrieveQueue();
+		
+		try {
+			Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+		}
+		catch (SecurityException e) {
+			// not a critical problem
+		}
+		
 		List errors = null;
 		int ticks = currentQueue.size();
 		String taskName = null;
@@ -167,7 +175,7 @@ class TaskScanningJob extends Job {
 		IProgressMonitor scanMonitor = null;
 		while (!currentQueue.isEmpty()) {
 			Object o = currentQueue.remove(0);
-			if (frameworkIsShuttingDown())
+			if (frameworkIsShuttingDown() || monitor.isCanceled())
 				return Status.CANCEL_STATUS;
 			try {
 				scanMonitor = new SubProgressMonitor(monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);

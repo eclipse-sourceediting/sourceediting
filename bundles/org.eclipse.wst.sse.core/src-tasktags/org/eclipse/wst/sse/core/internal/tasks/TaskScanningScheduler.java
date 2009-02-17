@@ -28,7 +28,7 @@ import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 
 public class TaskScanningScheduler {
-	private class ListenerVisitor implements IResourceChangeListener, IResourceDeltaVisitor {
+	class ListenerVisitor implements IResourceChangeListener, IResourceDeltaVisitor {
 		public void resourceChanged(IResourceChangeEvent event) {
 			IResourceDelta delta = event.getDelta();
 			if (delta.getResource() != null) {
@@ -89,13 +89,19 @@ public class TaskScanningScheduler {
 	 */
 	public static void shutdown() {
 		if (scheduler != null) {
-			scheduler.fJob.cancel();
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(scheduler.visitor);
+			scheduler.fJob.cancel();
+			try {
+				scheduler.fJob.join();
+			}
+			catch (InterruptedException e) {
+				Logger.logException(e);
+			}
 		}
 	}
 
 	/**
-	 * Only for use by SSECorePlugin class
+	 * Only for use by SSEUIPlugin class, UI by nature of its output being meant for the user
 	 */
 	public static void startup() {
 		scheduler = new TaskScanningScheduler();
