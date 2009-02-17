@@ -13,6 +13,7 @@ package org.eclipse.wst.sse.core.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.wst.sse.core.tests.document.TestObjects;
 import org.eclipse.wst.sse.core.tests.events.TestAboutToBeChangedEvent;
 import org.eclipse.wst.sse.core.tests.events.TestNewDocumentContentEvent;
 import org.eclipse.wst.sse.core.tests.events.TestNewDocumentEvent;
@@ -44,7 +45,7 @@ public class SSEModelTestSuite extends TestSuite {
 	// TestDocumentReader.class, TestCharSequenceReader.class,
 	// TestRegionMatches.class};
 
-	private static Class[] classes = new Class[]{ExistenceTest.class, TestNewDocumentContentEvent.class, TestAboutToBeChangedEvent.class, TestNewDocumentEvent.class, TestNoChangeEvent.class, TestRegionChangedEvent.class,TestRegionsReplacedEvent.class,TestStructuredDocumentRegionsReplacedEvent.class};
+	private static Class[] classes = new Class[]{ExistenceTest.class, TestObjects.class, TestNewDocumentContentEvent.class, TestAboutToBeChangedEvent.class, TestNewDocumentEvent.class, TestNoChangeEvent.class, TestRegionChangedEvent.class,TestRegionsReplacedEvent.class,TestStructuredDocumentRegionsReplacedEvent.class};
 
 	public SSEModelTestSuite() {
 		super("SSE Model Basic Test Suite");
