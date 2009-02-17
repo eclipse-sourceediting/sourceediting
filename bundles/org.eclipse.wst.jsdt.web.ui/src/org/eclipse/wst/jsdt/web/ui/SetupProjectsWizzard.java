@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
@@ -52,7 +53,29 @@ public class SetupProjectsWizzard implements IObjectActionDelegate, IActionDeleg
 		boolean configured = false;
 		JsWebNature nature = new JsWebNature(project, monitor);
 		try {
+			boolean hadBasicNature = JsWebNature.hasNature(project);
+
 			nature.configure();
+
+			if (!hadBasicNature) {
+				/*
+				 * No nature before, so no existing build path. Define the
+				 * project itself as an include folder.
+				 */
+				IJavaScriptProject jp = JavaScriptCore.create(project);
+				IIncludePathEntry[] oldEntries = null;
+				try {
+					oldEntries = jp.getRawIncludepath();
+				}
+				catch (JavaScriptModelException ex1) {
+					Logger.log(Logger.ERROR_DEBUG, null, ex1);
+				}
+				IIncludePathEntry[] newEntries = new IIncludePathEntry[oldEntries.length + 1];
+				System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
+				IPath projectPath = project.getFullPath();
+				newEntries[oldEntries.length] = JavaScriptCore.newSourceEntry(projectPath);
+				jp.setRawIncludepath(newEntries, monitor);
+			}
 			configured = true;
 		}
 		catch (CoreException ex) {
@@ -99,9 +122,14 @@ public class SetupProjectsWizzard implements IObjectActionDelegate, IActionDeleg
 				final IProject project = ((IResource) fTarget[i]).getProject();
 
 				if (!JsWebNature.hasNature(project)) {
+					/* Doesn't have nature, do a full install. */
 					install(project, i == fTarget.length - 1);
 				}
 				else {
+					/*
+					 * Has nature, check for browser library on include path
+					 * and setup if not found.
+					 */
 					IJavaScriptProject jp = JavaScriptCore.create(project);
 					IIncludePathEntry[] rawClasspath = null;
 					try {
@@ -111,11 +139,6 @@ public class SetupProjectsWizzard implements IObjectActionDelegate, IActionDeleg
 						Logger.log(Logger.ERROR_DEBUG, null, ex1);
 					}
 
-
-					/*
-					 * see if project has web cp entry and if it does skip
-					 * install
-					 */
 					boolean browserFound = false;
 					for (int k = 0; rawClasspath != null && !browserFound && k < rawClasspath.length; k++) {
 						if (rawClasspath[k].getPath().equals(JsWebNature.VIRTUAL_BROWSER_CLASSPATH)) {
