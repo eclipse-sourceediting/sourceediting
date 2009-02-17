@@ -69,7 +69,7 @@ public class JSPTaglibDirectiveContentAssistProcessor extends JSPDummyContentAss
 				ITLDRecord record = (ITLDRecord) taglibRecord;
 				IResource file = ResourcesPlugin.getWorkspace().getRoot().getFile(record.getPath());
 				if (file.getLocation() != null && record.getDescriptor().getSmallIcon().length() > 0) {
-					url = "file:" + FacetModuleCoreSupport.resolve(file.getFullPath(), record.getDescriptor().getSmallIcon()); //$NON-NLS-1$
+					url = "platform:/resource/" + FacetModuleCoreSupport.resolve(file.getFullPath(), record.getDescriptor().getSmallIcon()); //$NON-NLS-1$
 				}
 			}
 				break;
