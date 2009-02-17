@@ -24,7 +24,8 @@ public class TestCallTemplateCompletionProposal extends
 		int offset = 790;
 
 		try {
-			ICompletionProposal[] proposals = getProposals(offset);
+			ICompletionProposal[] proposals = getProposals(16, 27);
+			
 			assertNotNull("Did not find proposals.", proposals);
 		} finally {
 			model.releaseFromEdit();
@@ -36,11 +37,11 @@ public class TestCallTemplateCompletionProposal extends
 		fileName = "calltemplateTest.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
-		int offset = 790;
 
 		try {
-			ICompletionProposal[] proposals = getProposals(offset);
+			ICompletionProposal[] proposals = getProposals(16,27);
 			assertNotNull("Did not find proposals.", proposals);
+			assertTrue("Empty proposals returned.", proposals.length > 0);
 			assertEquals("Wrong proposal found.", "long_date", proposals[0]
 					.getDisplayString());
 		} finally {

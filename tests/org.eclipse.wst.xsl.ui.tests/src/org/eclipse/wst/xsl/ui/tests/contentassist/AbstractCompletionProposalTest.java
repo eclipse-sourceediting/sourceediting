@@ -152,15 +152,27 @@ public class AbstractCompletionProposalTest extends AbstractXSLUITest {
 	}
 	
 	/**
-	 * Get the content completion proposals at <code>lineNumber</code>, <code>columnNumber</code>.
+	 * Get the content completion proposals at <code>lineNumber</code>, <code>numberOfCharacters</code>.
+	 * Number of characters refers to how many total characters from the starting offset of the line.  This is
+	 * not the same as the column number as tabs can cause the column number to be different from the number of
+	 * characters.
 	 * 
 	 * @param lineNumber
-	 * @param columnNumber
+	 * @param numberOfCharacters
 	 * @return
 	 * @throws BadLocationException 
 	 */
-	protected ICompletionProposal[] getProposals(int lineNumber, int columnNumber) throws BadLocationException {
-		return new XSLContentAssistProcessor().computeCompletionProposals(sourceViewer, sourceViewer.getDocument().getLineOffset(lineNumber) + columnNumber);
+	protected ICompletionProposal[] getProposals(int lineNumber, int numberOfCharacters) throws BadLocationException {
+		int offset = calculateOffset(lineNumber, numberOfCharacters);
+		return new XSLContentAssistProcessor().computeCompletionProposals(sourceViewer, offset);
+	}
+
+	protected int calculateOffset(int lineNumber, int columnNumber)
+			throws BadLocationException {
+		IDocument document = sourceViewer.getDocument();
+		int lineOffset = document.getLineOffset(lineNumber);
+		int offset = lineOffset + columnNumber;
+		return offset;
 	}	
 
 	/**
@@ -176,5 +188,7 @@ public class AbstractCompletionProposalTest extends AbstractXSLUITest {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 	}
+	
+	
 
 }

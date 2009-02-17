@@ -31,9 +31,7 @@ public class TestXPathXMLCompletionProposal extends
 		try {
 			loadFileForTesting(xslFilePath);
 
-			int offset = 253;
-
-			ICompletionProposal[] proposals = getProposals(offset);
+			ICompletionProposal[] proposals = getProposals(5,24);
 			assertNotNull("Did not find proposals.", proposals);
 
 			for (int i = 0; i < proposals.length; i++) {
@@ -54,10 +52,8 @@ public class TestXPathXMLCompletionProposal extends
 		String xslFilePath = projectName + File.separator + fileName;
 		try {
 			loadFileForTesting(xslFilePath);
-
-			int offset = 386;
-
-			ICompletionProposal[] proposals = getProposals(offset);
+			
+			ICompletionProposal[] proposals = getProposals(11,44);
 			assertNotNull("Did not find proposals.", proposals);
 
 			for (int i = 0; i < proposals.length; i++) {
@@ -79,9 +75,7 @@ public class TestXPathXMLCompletionProposal extends
 		try {
 			loadFileForTesting(xslFilePath);
 
-			int offset = 318;
-
-			ICompletionProposal[] proposals = getProposals(offset);
+			ICompletionProposal[] proposals = getProposals(8,41);
 			assertNotNull("Did not find proposals.", proposals);
 
 			for (int i = 0; i < proposals.length; i++) {
