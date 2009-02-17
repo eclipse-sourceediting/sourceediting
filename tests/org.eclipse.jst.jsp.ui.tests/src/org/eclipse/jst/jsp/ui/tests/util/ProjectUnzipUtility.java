@@ -141,7 +141,7 @@ public class ProjectUnzipUtility {
 	// specify buffer size for extraction
 	static final int BUFFER = 2048;
 
-	public void unzipAndImport(File inFile, String destinationDirectory) {
+	public void unzipAndImport(File inFile, String destinationDirectory) throws Exception {
 		try {
 			// Specify file to decompress
 			// (nsd) redundant?
@@ -216,13 +216,8 @@ public class ProjectUnzipUtility {
 			// fixes workspace metadata for the project
 			// for clean startup next run
 			if (currentProject != null) {
-				try {
-					Path projectLocation = new Path(Platform.getLocation().toOSString());
-					createProject(currentProject, projectLocation, new WorkspaceProgressMonitor());
-				}
-				catch (CoreException cex) {
-					cex.printStackTrace();
-				}
+				Path projectLocation = new Path(Platform.getLocation().toOSString());
+				createProject(currentProject, projectLocation, new WorkspaceProgressMonitor());
 			}
 		}
 		catch (IOException ioe) {

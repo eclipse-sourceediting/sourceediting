@@ -35,7 +35,7 @@ public class JSPCoreTestSuite extends TestSuite {
 	}
 
 	public JSPCoreTestSuite() {
-		super("SSE JSP Core Test Suite");
+		super("JSP Core Test Suite");
 
 		String noninteractive = System.getProperty("wtp.autotest.noninteractive");
 		String wtp_autotest_noninteractive = null;
@@ -49,21 +49,21 @@ public class JSPCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(TestContentTypeHandlers.class, "TestContentTypeHandlers"));
 		addTest(new TestSuite(TestModelManager.class, "TestModelManager"));
 		addTest(new TestSuite(FormatTester.class, "FormatTester"));
-		addTest(new TestSuite(TestModelRelease.class, "JSP Model Tests"));
-		addTest(new TestSuite(TestModelWithNoFile.class, "JSP Model with no file Tests"));
+		addTest(new TestSuite(TestModelRelease.class, "Model Tests"));
+		addTest(new TestSuite(TestModelWithNoFile.class, "Model with no file Tests"));
 		// temporarily removed since unstable, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=213754 
 		// addTest(new TestSuite(TestIndex.class, "TaglibIndex Tests"));
 		addTest(new TestSuite(JSPTokenizerTest.class, "Special Parsing Tests"));
-		addTest(new TestSuite(JSPJavaTranslatorCoreTest.class));
-		addTest(new TestSuite(TestModelIncludes.class));
-		addTest(new TestSuite(JSPCorePreferencesTest.class));
+		addTest(new TestSuite(JSPJavaTranslatorCoreTest.class, "Core Translator Tests"));
+		addTest(new TestSuite(TestModelIncludes.class, "Core Fragment Inclusion Tests"));
+		addTest(new TestSuite(JSPCorePreferencesTest.class, "Preference Tests"));
 		addTest(new TestSuite(JSPedCSSSourceParserTest.class, "Special Parsing Tests for JSP-CSS content"));
-		addTest(new TestSuite(JSPJavaValidatorTest.class, "JSP Java Validator Tests"));
+		addTest(new TestSuite(JSPJavaValidatorTest.class, "Java Validator Tests"));
 		addTest(new TestSuite(TestImportedNodes.class, "Imported Nodes Tests"));
 		addTest(new TestSuite(TestFixedCMDocuments.class, "Fixed CMDocument Creation Tests"));
 		addTest(new TestSuite(TestTaglibCMTests.class, "Custom Tag Library Content Model Tests"));
-		addTest(new TestSuite(JSPActionValidatorTest.class, "JSP Action Validator Tests"));
-		addTest(new TestSuite(JSPBatchValidatorTest.class, "JSP Batch Validator Tests"));
+		addTest(new TestSuite(JSPActionValidatorTest.class, "Action Validator Tests"));
+		addTest(new TestSuite(JSPBatchValidatorTest.class, "Batch Validator Tests"));
 
 		if (wtp_autotest_noninteractive != null)
 			System.setProperty("wtp.autotest.noninteractive", wtp_autotest_noninteractive);

@@ -189,6 +189,7 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 			Job.getJobManager().join(ResourcesPlugin.FAMILY_MANUAL_BUILD, new NullProgressMonitor());
 			Job.getJobManager().join(ValidatorManager.VALIDATOR_JOB_FAMILY, new NullProgressMonitor());
 			Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, new NullProgressMonitor());
+			Thread.sleep(200);
 			Job.getJobManager().beginRule(root = ResourcesPlugin.getWorkspace().getRoot(), null);
 		}
 		catch (InterruptedException e) {

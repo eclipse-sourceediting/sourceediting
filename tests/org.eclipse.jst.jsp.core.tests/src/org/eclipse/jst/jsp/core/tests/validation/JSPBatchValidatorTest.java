@@ -105,7 +105,7 @@ public class JSPBatchValidatorTest extends TestCase {
 		helper.setURIs(new String[]{filePath1, filePath2});
 
 		validator.validate(helper, reporter);
-		assertTrue("jsp errors were not found in both files", reporter.getMessages().size() == 2);
+		assertTrue("expected jsp errors were not found in both files: " + reporter.getMessages().size(), reporter.getMessages().size() >= 2);
 	}
 
 	public void testFragmentValidationPreferenceOnProject() throws Exception {

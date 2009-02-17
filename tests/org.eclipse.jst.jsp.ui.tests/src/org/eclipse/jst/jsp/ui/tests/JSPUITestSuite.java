@@ -37,31 +37,31 @@ public class JSPUITestSuite extends TestSuite {
 	}
 
 	public JSPUITestSuite() {
-		super("SSE JSP UI Test Suite");
+		super("JSP UI Test Suite");
 		
 		addTest(new TestSuite(ScannerUnitTests.class, "ScannerUnitTests"));
 		addTest(new TestSuite(UnitTests.class, "UnitTests"));
 		addTest(new TestSuite(TestStructuredPartitionerJSP.class, "TestStructuredPartioner"));
 		addTest(new TestSuite(ModelQueryTester.class, "ModelQueryTester"));
-		addTest(new TestSuite(JSPJavaTranslatorTest.class, "JSPJavaTranslatorTest"));
+		addTest(new TestSuite(JSPJavaTranslatorTest.class, "Mixed JavaScript Translator Tests"));
 		addTest(new TestSuite(TestEmailNotice.class, "TestEmailNotice"));
-		addTest(new TestSuite(BeanInfoProviderTest.class, "BeanInfoProviderTest"));
-		addTest(new TestSuite(JSPTranslationTest.class, "JSPTranslationTest"));
-		addTest(new TestSuite(AdapterFactoryRegistryTest.class, "AdapterFactoryRegistryText"));
-		addTest(new TestSuite(JSPUIPreferencesTest.class));
-		addTest(new TestSuite(TestViewerConfigurationJSP.class));
-		addTest(new TestSuite(TestEditorConfigurationJSP.class));
+		addTest(new TestSuite(BeanInfoProviderTest.class, "BeanInfo Provider Test"));
+		addTest(new TestSuite(JSPTranslationTest.class, "Translator Tests"));
+		addTest(new TestSuite(AdapterFactoryRegistryTest.class, "AdapterFactoryRegistry Tests"));
+		addTest(new TestSuite(JSPUIPreferencesTest.class, "Preference Tests"));
+		addTest(new TestSuite(TestViewerConfigurationJSP.class, "Source Viewer Configuration Tests"));
+		addTest(new TestSuite(TestEditorConfigurationJSP.class, "Editor Configuration Tests"));
 		
 		// moved from jsp core tests because they require UI
-		addTest(new TestSuite(TestPageDirective.class));
-		addTest(new TestSuite(FileBufferDocumentTester.class));
-		addTest(new TestSuite(TestModelClone.class));
+		addTest(new TestSuite(TestPageDirective.class, "Page Directive Tests"));
+		addTest(new TestSuite(FileBufferDocumentTester.class, "FileBuffer Document Tests"));
+		addTest(new TestSuite(TestModelClone.class, "Model Clone Tests"));
 		
-		addTest(new TestSuite(TestModelsFromFiles.class, "TestModelsFromFiles"));
-		addTest(new TestSuite(TestModelEmbeddedContentType.class, "TestModelEmbeddedContentType"));
+		addTest(new TestSuite(TestModelsFromFiles.class, "Test Models From Files"));
+		addTest(new TestSuite(TestModelEmbeddedContentType.class, "Test Model Embedded ContentType"));
 
 		addTest(new TestSuite(TestContentDescription.class, "Content Description Tests"));
-		addTest(new TestSuite(JSPHTMLValidatorTest.class, "JSPHTMLValidatorTest"));
+		addTest(new TestSuite(JSPHTMLValidatorTest.class, "JSP HTML Validator Test"));
 		// pa_TODO fix this test
 		//addTest(new TestSuite(JSPSearchTests.class));
 	}
