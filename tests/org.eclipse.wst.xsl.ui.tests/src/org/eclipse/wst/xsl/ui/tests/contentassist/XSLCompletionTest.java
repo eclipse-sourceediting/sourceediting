@@ -31,10 +31,10 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
-
+		
 		try {
 		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer,
-				631);
+				sourceViewer.getDocument().getLineOffset(14)+1);
 		assertEquals("Wrong node name returned:", "xsl:stylesheet", node
 				.getNodeName());
 		} finally {
@@ -52,7 +52,7 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 		try {
 
 		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer,
-				712);
+				sourceViewer.getDocument().getLineOffset(15)+11);
 		assertEquals("Wrong node name returned:", "xsl:template", node
 				.getNodeName());
 		} finally {
@@ -68,7 +68,7 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 
 		try {
 		IDOMNode node = (IDOMNode) ContentAssistUtils.getNodeAt(sourceViewer,
-				748);
+				sourceViewer.getDocument().getLineOffset(16)+14);
 		assertEquals("Wrong node name returned:", "xsl:param", node
 				.getNodeName());
 		} finally {
@@ -106,7 +106,7 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 			String s = sourceViewer.getDocument().get(offset - 1, 6);
 			assertEquals("number", s);
 
-			ICompletionProposal[] proposals = getProposals(838);
+			ICompletionProposal[] proposals = getProposals(18,43);
 
 			assertTrue(proposals.length > 1);
 			ICompletionProposal proposal = proposals[3];
@@ -150,7 +150,7 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 		loadFileForTesting(xslFilePath);
 
 		try {
-			ICompletionProposal[] proposals = getProposals(1753);
+			ICompletionProposal[] proposals = getProposals(37,18);
 			assertTrue(proposals.length >= 1);
 			ICompletionProposal proposal = proposals[0];
 			assertTrue("Wrong attribute proposal returned:", proposal
@@ -167,7 +167,7 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 		loadFileForTesting(xslFilePath);
 
 		try {
-			ICompletionProposal[] proposals = getProposals(1569);
+			ICompletionProposal[] proposals = getProposals(31,58);
 			assertTrue(proposals.length >= 2);
 
 			ICompletionProposal proposal = proposals[1];

@@ -35,7 +35,7 @@
         <xsl:text/> 
         <!-- Day -->
         <xsl:value-of select="number(substring($date, 9, 2))" />
-        <xsl:text>, </xsl:text>
+        <xsl:text >, </xsl:text>
         <!-- Year -->
         <xsl:value-of select="substring($date, 1, 4)" />
        </xsl:template>

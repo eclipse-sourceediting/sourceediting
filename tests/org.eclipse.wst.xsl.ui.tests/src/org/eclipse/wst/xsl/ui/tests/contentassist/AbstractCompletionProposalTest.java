@@ -21,6 +21,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -142,11 +144,24 @@ public class AbstractCompletionProposalTest extends AbstractXSLUITest {
 	 * @param columnNumber
 	 * @return
 	 * @throws Exception
+	 * @deprecated different operating systems can have different offsets depending on the line feed. Use getProposals(int, int) instead.
 	 */
 	protected ICompletionProposal[] getProposals(int offset) throws Exception {
 		return new XSLContentAssistProcessor().computeCompletionProposals(
 				sourceViewer, offset);
 	}
+	
+	/**
+	 * Get the content completion proposals at <code>lineNumber</code>, <code>columnNumber</code>.
+	 * 
+	 * @param lineNumber
+	 * @param columnNumber
+	 * @return
+	 * @throws BadLocationException 
+	 */
+	protected ICompletionProposal[] getProposals(int lineNumber, int columnNumber) throws BadLocationException {
+		return new XSLContentAssistProcessor().computeCompletionProposals(sourceViewer, sourceViewer.getDocument().getLineOffset(lineNumber) + columnNumber);
+	}	
 
 	/**
 	 * Setup the necessary projects, files, and source viewer for the tests.

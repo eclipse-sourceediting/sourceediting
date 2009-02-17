@@ -182,8 +182,7 @@ public class TestXSLHyperlinkDetector extends AbstractXSLUITest {
 
 		try {
 			XSLHyperlinkDetector linkDetector = new XSLHyperlinkDetector();
-			int offset = 1200;
-			IRegion region = new Region(offset, 0);
+			IRegion region = new Region(sourceViewer.getDocument().getLineOffset(28) + 54, 0);
 
 			boolean canShowMultipleLinks = true;
 			IHyperlink[] links = linkDetector.detectHyperlinks(document,
@@ -202,8 +201,7 @@ public class TestXSLHyperlinkDetector extends AbstractXSLUITest {
 
 		try {
 			XSLHyperlinkDetector linkDetector = new XSLHyperlinkDetector();
-			int offset = 1200;
-			IRegion region = new Region(offset, 0);
+			IRegion region = new Region(sourceViewer.getDocument().getLineOffset(28) + 54, 0);
 
 			boolean canShowMultipleLinks = true;
 			IHyperlink[] links = linkDetector.detectHyperlinks(sourceViewer,
@@ -222,8 +220,7 @@ public class TestXSLHyperlinkDetector extends AbstractXSLUITest {
 
 		try {
 			XSLHyperlinkDetector linkDetector = new XSLHyperlinkDetector();
-			int offset = 2741;
-			IRegion region = new Region(offset, 0);
+			IRegion region = new Region(sourceViewer.getDocument().getLineOffset(74) + 44, 0);
 
 			boolean canShowMultipleLinks = true;
 			IHyperlink[] links = linkDetector.detectHyperlinks(sourceViewer,

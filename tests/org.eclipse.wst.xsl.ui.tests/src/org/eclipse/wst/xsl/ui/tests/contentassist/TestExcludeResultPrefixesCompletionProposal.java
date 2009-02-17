@@ -60,10 +60,7 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 		int line = 2;
 
 		try {
-			int offset = document.getLineOffset(line) + column;
-			assertEquals("Line Offset incorrect:", 147, offset);
-
-			ICompletionProposal[] proposals = getProposals(offset);
+			ICompletionProposal[] proposals = getProposals(line, column);
 			assertNotNull("Did not find proposals.", proposals);
 			assertEquals("Proposal length not 2.", 2, proposals.length);
 			assertEquals("Proposal did not find xhtml as proposal value.",
@@ -86,10 +83,7 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 		int line = 2;
 
 		try {
-			int offset = document.getLineOffset(line) + column;
-			assertEquals("Line Offset incorrect:", 147, offset);
-
-			ICompletionProposal[] proposals = getProposals(offset);
+			ICompletionProposal[] proposals = getProposals(line,column);
 			assertNotNull("Did not find proposals.", proposals);
 			assertEquals("Proposal length not 2.", 2, proposals.length);
 			assertEquals("Proposal did not find xhtml as proposal value.",

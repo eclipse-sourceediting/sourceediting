@@ -29,10 +29,9 @@ public class TestNamedTemplateCompletionProposal extends
 
 	public void testXSLPropsoalAvailable() throws Exception {
 		setupTestFile("TestNamedTemplatesAssist.xsl");
-		int offset = 1810;
 
 		try {
-			ICompletionProposal[] proposals = getProposals(offset);
+			ICompletionProposal[] proposals = getProposals(30,51);
 			assertEquals("Missing Proposals", 3, proposals.length);
 		} finally {
 			model.releaseFromEdit();
