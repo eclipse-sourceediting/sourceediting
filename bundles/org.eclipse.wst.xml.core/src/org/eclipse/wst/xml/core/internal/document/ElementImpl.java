@@ -96,11 +96,15 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		}
 	}
 
+	private static final byte FLAG_COMMENT = 0x1;
+	private static final byte FLAG_EMPTY = 0x2;
+	private static final byte FLAG_JSP = 0x4;
+	
+	private byte fTagFlags = 0;
+	
 	NodeListImpl attrNodes = null;
 	private IStructuredDocumentRegion endStructuredDocumentRegion = null;
-	private boolean isCommentTag = false;
-	private boolean isEmptyTag = false;
-	private boolean isJSPTag = false;
+	
 	private String namespaceURI = null;
 
 	private String tagName = null;
@@ -123,9 +127,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 
 		if (that != null) {
 			this.tagName = that.tagName;
-			this.isEmptyTag = that.isEmptyTag;
-			this.isJSPTag = that.isJSPTag;
-			this.isCommentTag = that.isCommentTag;
+			this.fTagFlags = that.fTagFlags;
 
 			// clone attributes
 			that.cloneAttributes(this);
@@ -759,7 +761,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	/**
 	 */
 	public final boolean isCommentTag() {
-		return this.isCommentTag;
+		return (fTagFlags & FLAG_COMMENT) != 0;
 	}
 
 	/**
@@ -800,7 +802,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			return false;
 		if (!isXMLTag())
 			return false;
-		return this.isEmptyTag;
+		return (fTagFlags & FLAG_EMPTY) != 0;
 	}
 
 	/**
@@ -837,7 +839,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	 * @return boolean
 	 */
 	public final boolean isJSPTag() {
-		return this.isJSPTag;
+		return (fTagFlags & FLAG_JSP) != 0;
 	}
 
 	/**
@@ -1297,7 +1299,10 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
 		}
 
-		this.isCommentTag = isCommentTag;
+		if (isCommentTag)
+			fTagFlags |= FLAG_COMMENT;
+		else
+			fTagFlags &= ~FLAG_COMMENT;
 	}
 
 	/**
@@ -1312,7 +1317,10 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
 		}
 
-		this.isEmptyTag = isEmptyTag;
+		if (isEmptyTag)
+			fTagFlags |= FLAG_EMPTY;
+		else
+			fTagFlags &= ~FLAG_EMPTY;
 	}
 
 	/**
@@ -1341,7 +1349,10 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
 		}
 
-		this.isJSPTag = isJSPTag;
+		if (isJSPTag)
+			fTagFlags |= FLAG_JSP;
+		else
+			fTagFlags &= ~FLAG_JSP;
 	}
 
 	/**
