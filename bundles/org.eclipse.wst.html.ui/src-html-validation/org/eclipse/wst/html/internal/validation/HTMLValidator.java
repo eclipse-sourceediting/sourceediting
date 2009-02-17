@@ -273,7 +273,8 @@ public class HTMLValidator extends AbstractValidator implements IValidatorJob, I
 			}
 
 			if (document == null || !hasHTMLFeature(document)) {
-				model.releaseFromRead();
+				// handled in finally clause
+				// model.releaseFromRead();
 				return; //ignore
 			}
 			
