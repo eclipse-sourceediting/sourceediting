@@ -69,6 +69,9 @@
 									<test
 										property="org.eclipse.core.resources.contentTypeId"
 										value="org.eclipse.wst.xml.core.xslsource" />
+									<test
+										property="org.eclipse.core.resources.contentTypeId"
+										value="org.eclipse.wst.xsd.core.xsdsource" />
 								</or>
 							</adapt>
 						</iterate>
