@@ -36,7 +36,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.WorkingSetConfigurationBlock;
 import org.eclipse.ui.dialogs.WorkingSetGroup;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetProjectCreationDataModelProperties;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelEvent;
@@ -490,7 +489,15 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
         {
             public void handleEvent( final IFacetedProjectEvent event )
             {
-                validatePage();
+                final Runnable runnable = new Runnable()
+                {
+                    public void run()
+                    {
+                        validatePage();
+                    }
+                };
+                
+                getContainer().getShell().getDisplay().asyncExec( runnable );
             }
         };
         
