@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,7 +45,7 @@ public class DefaultCSSSourceFormatter extends AbstractCSSSourceFormatter {
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=73990
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=110539
 			// Formatting CSS file splits element.class into element . class
-			if (((prevType == CSSRegionContexts.CSS_SELECTOR_ELEMENT_NAME || prevType == CSSRegionContexts.CSS_SELECTOR_CLASS || prevType == CSSRegionContexts.CSS_SELECTOR_ID) && (nextType == CSSRegionContexts.CSS_SELECTOR_CLASS || nextType == CSSRegionContexts.CSS_SELECTOR_ID)) || ((prevType == CSSRegionContexts.CSS_SELECTOR_ELEMENT_NAME || prevType == CSSRegionContexts.CSS_SELECTOR_CLASS) && nextType == CSSRegionContexts.CSS_SELECTOR_PSEUDO) || (nextType == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_START)) {
+			if (((prevType == CSSRegionContexts.CSS_SELECTOR_ELEMENT_NAME || prevType == CSSRegionContexts.CSS_SELECTOR_CLASS || prevType == CSSRegionContexts.CSS_SELECTOR_ID) && (nextType == CSSRegionContexts.CSS_SELECTOR_CLASS || nextType == CSSRegionContexts.CSS_SELECTOR_ID)) || ((prevType == CSSRegionContexts.CSS_SELECTOR_ELEMENT_NAME || prevType == CSSRegionContexts.CSS_SELECTOR_CLASS || prevType == CSSRegionContexts.CSS_SELECTOR_PSEUDO) && nextType == CSSRegionContexts.CSS_SELECTOR_PSEUDO) || (nextType == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_START)) {
 				// Individually, SELECTOR_ELEMENT_NAME, SELECTOR_CLASS, and SELECTOR_ID can all be beginning types.
 				// But, we should not insert a space in between when they are followed by SELECTOR_CLASS or SELECTOR_ID.
 				// For example: H1.pastoral and H1#z98y and .pastoral.other and #myid.myclass
