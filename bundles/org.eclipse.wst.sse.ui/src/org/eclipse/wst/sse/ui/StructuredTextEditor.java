@@ -3279,9 +3279,10 @@ public class StructuredTextEditor extends TextEditor {
 	 * Installs semantic highlighting on the editor
 	 */
 	private void installSemanticHighlighting() {
-		if (fSemanticManager == null) {
+		IStructuredModel model = getInternalModel();
+		if (fSemanticManager == null && model != null) {
 			fSemanticManager = new SemanticHighlightingManager();
-			fSemanticManager.install(this, (StructuredTextViewer) getSourceViewer(), getPreferenceStore(), getSourceViewerConfiguration(), getInternalModel().getContentTypeIdentifier());
+			fSemanticManager.install(this, (StructuredTextViewer) getSourceViewer(), getPreferenceStore(), getSourceViewerConfiguration(), model.getContentTypeIdentifier());
 		}
 	}
 	
