@@ -1,11 +1,7 @@
 <html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>XSLT Concepts</title><link href="book.css" rel="stylesheet" type="text/css"><link href="../book.css" rel="stylesheet" type="text/css"><meta content="DocBook XSL Stylesheets V1.74.0" name="generator"><link rel="home" href="../index.html" title="XSL Tools User Documentation"><link rel="up" href="../index.html" title="XSL Tools User Documentation"><link rel="prev" href="../introduction/gettingstarted.html" title="Getting Started"><link rel="next" href="resources.html" title="Resources"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="N10019"></a>XSLT Concepts</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><ul><li><span class="section"><a href="concepts.html#ResucingXSLT">Rescuing XSLT From Niche Status</a></span><ul><li><span class="section"><a href="concepts.html#N10034">The Problem</a></span></li><li><span class="section"><a href="concepts.html#N1005A">The Solution</a></span></li><li><span class="section"><a href="concepts.html#N10081">Queries</a></span><ul><li><span class="section"><a href="concepts.html#N1008F">xsl:for-each</a></span></li><li><span class="section"><a href="concepts.html#N1009B">xsl:if</a></span></li><li><span class="section"><a href="concepts.html#N100A5">xsl:choose</a></span></li></ul></li><li><span class="section"><a href="concepts.html#N100AF">Conclusion</a></span></li></ul></li><li><span class="section"><a href="resources.html">Resources</a></span></li></ul></div><p>
          
    </p><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ResucingXSLT"></a>Rescuing XSLT From Niche Status</h2></div><div><h3 class="subtitle">A Gentle Introduction to XSLT through HTML Templates</h3></div></div></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
-         <span class="emphasis"><em>
-            Editors Note: This originally appeared at
-            <a class="ulink" href="http://www.xfront.com/rescuing-xslt.html" target="_top">XFront.com</a>
-            , and is republished here with permission. The article is written by David Jacobs.
-         </em></span>
+         <span class="emphasis"></span>
       </p></div><div class="abstract"><p class="title"><b>Abstract</b></p><p>
          XSLT is one of the most exciting technologies to come out of the XML family. Unfortunately, its incredible
          power and associated complexity can be overwhelming to new users preventing many from experimenting with it or
@@ -125,7 +121,7 @@
          capabilities as the need arises. In addition the resulting XSLT files are more intuitive and
          maintainable.
       </p><pre class="programlisting">
-<span class="bold"><strong>&lt;xsl:value-of&gt; and {}</strong></span>         
+<span class="bold"></span>         
       </pre><p>
          On to an example. Here is a very simple welcome page.         
       </p><pre class="programlisting">
@@ -239,7 +235,7 @@
           Welcome &lt;xsl:value-of select="member/name"/&gt;!
           &lt;br/&gt;
           Your home phone number is:
-          <span class="bold"><strong>&lt;xsl:value-of select="member/phone[@type=&rsquo;home&rsquo;]"/&gt;</strong></span>
+          <span class="bold"></span>
         &lt;/font&gt;
       &lt;/body
     &lt;/html
