@@ -1,14 +1,19 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>XSLT Concepts</title><link href="book.css" rel="stylesheet" type="text/css"><link href="../book.css" rel="stylesheet" type="text/css"><meta content="DocBook XSL Stylesheets V1.74.0" name="generator"><link rel="home" href="../index.html" title="XSL Tools User Documentation"><link rel="up" href="../index.html" title="XSL Tools User Documentation"><link rel="prev" href="../introduction/gettingstarted.html" title="Getting Started"><link rel="next" href="resources.html" title="Resources"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="N10019"></a>XSLT Concepts</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><ul><li><span class="section"><a href="concepts.html#ResucingXSLT">Rescuing XSLT From Niche Status</a></span><ul><li><span class="section"><a href="concepts.html#N10034">The Problem</a></span></li><li><span class="section"><a href="concepts.html#N1005A">The Solution</a></span></li><li><span class="section"><a href="concepts.html#N10081">Queries</a></span><ul><li><span class="section"><a href="concepts.html#N1008F">xsl:for-each</a></span></li><li><span class="section"><a href="concepts.html#N1009B">xsl:if</a></span></li><li><span class="section"><a href="concepts.html#N100A5">xsl:choose</a></span></li></ul></li><li><span class="section"><a href="concepts.html#N100AF">Conclusion</a></span></li></ul></li><li><span class="section"><a href="resources.html">Resources</a></span></li></ul></div><p>
-         
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>XSLT Concepts</title><link href="book.css" rel="stylesheet" type="text/css"><link href="../book.css" rel="stylesheet" type="text/css"><meta content="DocBook XSL Stylesheets V1.74.0" name="generator"><link rel="home" href="../index.html" title="XSL Tools User Documentation"><link rel="up" href="../index.html" title="XSL Tools User Documentation"><link rel="prev" href="../introduction/gettingstarted.html" title="Getting Started"><link rel="next" href="resources.html" title="Resources"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="N10028"></a>XSLT Concepts</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><ul><li><span class="section"><a href="concepts.html#ResucingXSLT">Rescuing XSLT From Niche Status</a></span><ul><li><span class="section"><a href="concepts.html#N10043">The Problem</a></span></li><li><span class="section"><a href="concepts.html#N10069">The Solution</a></span></li><li><span class="section"><a href="concepts.html#N10090">Queries</a></span><ul><li><span class="section"><a href="concepts.html#N1009E">xsl:for-each</a></span></li><li><span class="section"><a href="concepts.html#N100AA">xsl:if</a></span></li><li><span class="section"><a href="concepts.html#N100B4">xsl:choose</a></span></li></ul></li><li><span class="section"><a href="concepts.html#N100BE">Conclusion</a></span></li></ul></li><li><span class="section"><a href="resources.html">Resources</a></span></li></ul></div><p>
+         If you are new to XSLT or just need a refresher then this section may
+         help get you going.
    </p><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="ResucingXSLT"></a>Rescuing XSLT From Niche Status</h2></div><div><h3 class="subtitle">A Gentle Introduction to XSLT through HTML Templates</h3></div></div></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
-         <span class="emphasis"></span>
+         <span class="emphasis"><em>
+            Editors Note: This originally appeared at
+            <a class="ulink" href="http://www.xfront.com/rescuing-xslt.html" target="_top">XFront.com</a>
+            , and is republished here with permission. The article is written by David Jacobs.
+         </em></span>
       </p></div><div class="abstract"><p class="title"><b>Abstract</b></p><p>
          XSLT is one of the most exciting technologies to come out of the XML family. Unfortunately, its incredible
          power and associated complexity can be overwhelming to new users preventing many from experimenting with it or
          causing them to quickly give up in disgust. In fact, unless the method of teaching and the common style of use
          for XSLT is radically changed to make it more accessible, XSLT will be relegated to niche status like SGML and
          other powerful technologies.
-      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N10034"></a>The Problem</h3></div></div></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N10043"></a>The Problem</h3></div></div></div><p>
          The 1990&rsquo;s saw an incredible proliferation of new web related languages. Looking back we can see what
          features separated the winners and losers. The biggest key has been having a very low barrier to entry. Many
          languages accomplished this by following the following rules.
@@ -93,7 +98,7 @@
          worked. Clearly, if the barrier to entry is that high for an experienced programmer, the average web
          developer
          was not going to find this technology very useful.          
-      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N1005A"></a>The Solution</h3></div></div></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N10069"></a>The Solution</h3></div></div></div><p>
          So how do we solve this problem and help deliver XSLT&rsquo;s promise to the masses? For XSLT to be successful it
          must be
          presented and used in a way that adopts those attributes discussed earlier (reuse of knowledge, fast
@@ -121,7 +126,7 @@
          capabilities as the need arises. In addition the resulting XSLT files are more intuitive and
          maintainable.
       </p><pre class="programlisting">
-<span class="bold"></span>         
+<span class="bold"><strong>&lt;xsl:value-of&gt; and {}</strong></span>         
       </pre><p>
          On to an example. Here is a very simple welcome page.         
       </p><pre class="programlisting">
@@ -208,7 +213,7 @@
          same effect as
          &lt;xsl:value-of select="path" /&gt;
          used outside of attribute assignments.
-      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N10081"></a>Queries</h3></div></div></div><p>
+      </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N10090"></a>Queries</h3></div></div></div><p>
          Not all paths lead to a single node. For example, what if we wanted to put a person&rsquo;s home phone number on the
          page? Notice that the XML document contains two phone entries. If we simply used
          &lt;xsl:value-of select="member/phone" /&gt;
@@ -235,14 +240,14 @@
           Welcome &lt;xsl:value-of select="member/name"/&gt;!
           &lt;br/&gt;
           Your home phone number is:
-          <span class="bold"></span>
+          <span class="bold"><strong>&lt;xsl:value-of select="member/phone[@type=&rsquo;home&rsquo;]"/&gt;</strong></span>
         &lt;/font&gt;
       &lt;/body
     &lt;/html
   &lt;/xsl:template&gt;
 &lt;/xsl:stylesheet&gt;
 
-      </pre><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="N1008F"></a>xsl:for-each</h4></div></div></div><p>
+      </pre><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="N1009E"></a>xsl:for-each</h4></div></div></div><p>
             The previous example brings up another issue. What if this
             &lt;member&gt;
             entry had numerous phone numbers and we wanted to print them all on the web page. We could simply use
@@ -297,7 +302,7 @@
             address a parent element using a double period ("..") and can access any element in the
             document by starting
             over at the root element using a slash ("/").
-         </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="N1009B"></a>xsl:if</h4></div></div></div><p>
+         </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="N100AA"></a>xsl:if</h4></div></div></div><p>
             As a last enhancement to our page let&rsquo;s add a special offer to "platinum" level members. To do this requires
             the use of a new tag
             &lt;xsl:if&gt;
@@ -337,7 +342,7 @@
             Within the "test" attribute the full array of Boolean and relative operators are available. The only caveat
             is that since this is an XML document less than and greater than ("&lt;",
             "&gt;") signs must be escaped as "&amp;lt;" and "&amp;gt;".
-         </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="N100A5"></a>xsl:choose</h4></div></div></div><p>
+         </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="N100B4"></a>xsl:choose</h4></div></div></div><p>
             One nuance of the
             &lt;xsl:if&gt;
             tag that is not always obvious at first glance is the lack of an "else" statement. This means to have an
@@ -393,7 +398,7 @@
             in the
             &lt;xsl:choose&gt;
             block.
-         </p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N100AF"></a>Conclusion</h3></div></div></div><p>
+         </p></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="N100BE"></a>Conclusion</h3></div></div></div><p>
          With just these few commands (an admittedly small subset of XSLT) and a strong background in HTML (DHTML and
          JavaScript
          included), I believe web developers could meet the majority of their presentation needs. Obviously

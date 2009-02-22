@@ -5,7 +5,8 @@
    <?dbhtml filename="concepts/concepts.html" ?>
    <title>XSLT Concepts</title>
    <para>
-         
+         If you are new to XSLT or just need a refresher then this section may
+         help get you going.
    </para>
    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="RescuingXSLTfromNicheStatus.xml"/>
    <section id="concepts_Resources">

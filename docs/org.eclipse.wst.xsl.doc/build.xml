@@ -12,6 +12,8 @@
 	<!-- XSLT Chunking Properties -->
 	<property name="base.dir" value="${htmldir}"/>
 	
+	<taskdef name="xsl.include" classname="org.eclipse.wst.xsl.core.internal.ant.XIncludeTask"/>
+	
 	<target name="merge">
 		<xsl.xinclude in="${docbooksource}/xslhelp.dbk"
 		              out="${docbooksource}/xslhelpcombined.dbk"/>
