@@ -79,10 +79,6 @@ public class OutputFileBlock extends ResourceSelectionBlock
 	}
 
 	@Override
-	protected void setDefaultResource()
-	{}
-	
-	@Override
 	protected void createCheckboxAndText(Composite parent)
 	{
 		if (showDefault)

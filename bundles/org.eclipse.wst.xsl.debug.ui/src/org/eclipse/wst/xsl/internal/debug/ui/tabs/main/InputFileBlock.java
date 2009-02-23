@@ -84,13 +84,6 @@ public class InputFileBlock extends ResourceSelectionBlock
 	{
 		return Messages.InputFileBlock_Name;
 	}
-
-	@Override
-	protected void setDefaultResource() {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	
 	@Override
 	protected void textModified()

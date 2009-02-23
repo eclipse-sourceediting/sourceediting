@@ -489,8 +489,6 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 		}
 	}
 
-	protected abstract void setDefaultResource();
-
 	@Override
 	public boolean isValid(ILaunchConfiguration config)
 	{

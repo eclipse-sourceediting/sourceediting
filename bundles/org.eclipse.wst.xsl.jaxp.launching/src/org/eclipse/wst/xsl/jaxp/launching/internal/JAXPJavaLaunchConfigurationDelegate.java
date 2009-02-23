@@ -211,15 +211,7 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate impl
 	@Override
 	public IPath getWorkingDirectoryPath(ILaunchConfiguration configuration) throws CoreException
 	{
-		// TODO changes are afoot so that working directory can be gotten from the Common launch tab
-		
-//		String path = configuration.getAttribute(JAXPLaunchConfigurationConstants.ATTR_PROCESSOR_WORKING_DIR, (String) null);
-//		if (path != null)
-//		{
-//			path = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(path);
-//			return new Path(path);
-//		}
-		return null;
+		return launchHelper.getWorkingDir();
 	}
 
 	private IProcessorInvoker getProcessorInvokerDescriptor(ILaunchConfiguration configuration) throws CoreException
