@@ -79,9 +79,9 @@ public class Messages extends NLS
   public static String _UI_LABEL_NEW_ATTRIBUTE;
   public static String _UI_MENU_XSD_EDITOR;
   public static String _UI_LABEL_SOURCE;
+  public static String _UI_ACTION_BEFORE;
+  public static String _UI_ACTION_AFTER;
   public static String _UI_ACTION_ADD_ELEMENT;
-  public static String _UI_ACTION_ADD_ELEMENT_BEFORE;
-  public static String _UI_ACTION_ADD_ELEMENT_AFTER;
   public static String _UI_ACTION_ADD_ELEMENT_REF;
   public static String _UI_ACTION_NEW;
   public static String _UI_ACTION_BROWSE;
@@ -116,8 +116,6 @@ public class Messages extends NLS
   public static String _UI_ACTION_ADD_IMPORT;
   public static String _UI_ACTION_ADD_REDEFINE;
   public static String _UI_ACTION_ADD_ATTRIBUTE;
-  public static String _UI_ACTION_ADD_ATTRIBUTE_BEFORE;
-  public static String _UI_ACTION_ADD_ATTRIBUTE_AFTER;
   public static String _UI_ACTION_ADD_ATTRIBUTE_REF;
 
   // TODO: TO REMOVE
@@ -130,7 +128,5 @@ public class Messages extends NLS
   public static String _UI_TEXT_ENABLE_AUTO_IMPORT_CLEANUP;
   public static String _UI_TEXT_ENABLE_AUTO_OPEN_SCHEMA_DIALOG;
   
-  public static String _UI_ACTION_ADD_ENUMERATION_BEFORE;
-  public static String _UI_ACTION_ADD_ENUMERATION_AFTER;
-
+  
 }
