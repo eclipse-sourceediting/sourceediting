@@ -87,7 +87,7 @@
             <newWizardShortcut id="org.eclipse.jst.servlet.ui.project.facet.WebProjectWizard"/>
             <newWizardShortcut id="org.eclipse.wst.css.ui.internal.wizard.NewCSSWizard"/>
             <newWizardShortcut id="org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard"/>
-            <newWizardShortcut id="org.eclipse.wst.javascript.ui.internal.wizard.NewJSWizard"/>
+            <newWizardShortcut id="org.eclipse.wst.jsdt.ui.NewJSWizard"/>
             <newWizardShortcut id="org.eclipse.ui.wizards.new.folder"/>
             <newWizardShortcut id="org.eclipse.ui.wizards.new.file"/>
             
@@ -116,7 +116,7 @@
 					tooltip="%action.tooltip.CSS" />
 			<action
 					class="org.eclipse.wst.web.ui.internal.actions.OpenJSWizardAction"
-					icon="platform:/plugin/org.eclipse.wst.javascript.ui/icons/full/ctool16/newjscript_wiz.gif"
+					icon="platform:/plugin/org.eclipse.wst.jsdt.ui/icons/full/etool16/newjscript_wiz.gif"
 					id="org.eclipse.wst.web.ui.actions.newJSFile"
 					label="%action.label.JS"
 					style="push"
