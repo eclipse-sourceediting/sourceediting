@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -125,6 +125,15 @@ public class XMLUIPreferenceNames {
 	 * </p>
 	 */
 	public static final String TYPING_COMPLETE_END_TAGS = "completeEndTags"; //$NON-NLS-1$
+	
+	/**
+	 * The key to store the option for auto-completing the element after entering
+	 * <code>&gt;</code>
+	 * <p>
+	 * Value is of type <code>boolean</code>.
+	 * </p>
+	 */
+	public static final String TYPING_COMPLETE_ELEMENTS = "completeElements"; //$NON-NLS-1$
 	
 	/**
 	 * The key to store the option for removing an end-tag if the start tag is

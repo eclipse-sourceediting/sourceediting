@@ -1,5 +1,5 @@
 /**********************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2009 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
@@ -273,7 +273,10 @@ public class XMLUIMessages extends NLS {
 	public static String XMLTyping_Auto_Remove;
 	public static String XMLTyping_Complete_Comments;
 	public static String XMLTyping_Complete_End_Tags;
+	public static String XMLTyping_Complete_Elements;
 	public static String XMLTyping_Remove_End_Tags;
+	public static String XMLTyping_Start_Tag;
+	public static String XMLTyping_End_Tag;
 	public static String StructureSelectEnclosing_label;
 	public static String StructureSelectEnclosing_tooltip;
 	public static String StructureSelectEnclosing_description;

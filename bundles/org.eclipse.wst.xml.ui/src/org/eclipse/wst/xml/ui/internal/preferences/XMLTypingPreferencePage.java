@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -28,11 +28,14 @@ public class XMLTypingPreferencePage extends AbstractPreferencePage {
 	private Button fCloseComment;
 	private Button fCloseEndTag;
 	private Button fRemoveEndTag;
+	private Button fCloseElement;
 	
 	protected Control createContents(Composite parent) {
 		Composite composite = super.createComposite(parent, 1);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(composite, IHelpContextIds.XML_PREFWEBX_FILES_HELPID);
-		
+
+		createStartTagGroup(composite);
+		createEndTagGroup(composite);
 		createAutoComplete(composite);
 		createAutoRemove(composite);
 		
@@ -42,6 +45,24 @@ public class XMLTypingPreferencePage extends AbstractPreferencePage {
 		return composite;
 	}
 	
+	private void createStartTagGroup(Composite parent) {
+		Group group = createGroup(parent, 2);
+
+		group.setText(XMLUIMessages.XMLTyping_Start_Tag);
+
+		fCloseElement = createCheckBox(group, XMLUIMessages.XMLTyping_Complete_Elements);
+		((GridData) fCloseElement.getLayoutData()).horizontalSpan = 2;
+	}
+	
+	private void createEndTagGroup(Composite parent) {
+		Group group = createGroup(parent, 2);
+
+		group.setText(XMLUIMessages.XMLTyping_End_Tag);
+
+		fCloseEndTag = createCheckBox(group, XMLUIMessages.XMLTyping_Complete_End_Tags);
+		((GridData) fCloseEndTag.getLayoutData()).horizontalSpan = 2;
+	}
+	
 	private void createAutoComplete(Composite parent) {
 		Group group = createGroup(parent, 2);
 		
@@ -49,10 +70,6 @@ public class XMLTypingPreferencePage extends AbstractPreferencePage {
 		
 		fCloseComment = createCheckBox(group, XMLUIMessages.XMLTyping_Complete_Comments);
 		((GridData) fCloseComment.getLayoutData()).horizontalSpan = 2;
-		
-		fCloseEndTag = createCheckBox(group, XMLUIMessages.XMLTyping_Complete_End_Tags);
-		((GridData) fCloseEndTag.getLayoutData()).horizontalSpan = 2;
-		
 	}
 	
 	private void createAutoRemove(Composite parent) {
@@ -75,12 +92,14 @@ public class XMLTypingPreferencePage extends AbstractPreferencePage {
 	protected void initializeValues() {
 		initCheckbox(fCloseComment, XMLUIPreferenceNames.TYPING_COMPLETE_COMMENTS);
 		initCheckbox(fCloseEndTag, XMLUIPreferenceNames.TYPING_COMPLETE_END_TAGS);
+		initCheckbox(fCloseElement, XMLUIPreferenceNames.TYPING_COMPLETE_ELEMENTS);
 		initCheckbox(fRemoveEndTag, XMLUIPreferenceNames.TYPING_REMOVE_END_TAGS);
 	}
 	
 	protected void performDefaults() {
 		defaultCheckbox(fCloseComment, XMLUIPreferenceNames.TYPING_COMPLETE_COMMENTS);
 		defaultCheckbox(fCloseEndTag, XMLUIPreferenceNames.TYPING_COMPLETE_END_TAGS);
+		defaultCheckbox(fCloseElement, XMLUIPreferenceNames.TYPING_COMPLETE_ELEMENTS);
 		defaultCheckbox(fRemoveEndTag, XMLUIPreferenceNames.TYPING_REMOVE_END_TAGS);
 	}
 	
@@ -97,6 +116,7 @@ public class XMLTypingPreferencePage extends AbstractPreferencePage {
 	protected void storeValues() {
 		getPreferenceStore().setValue(XMLUIPreferenceNames.TYPING_COMPLETE_COMMENTS, (fCloseComment != null) ? fCloseComment.getSelection() : false);
 		getPreferenceStore().setValue(XMLUIPreferenceNames.TYPING_COMPLETE_END_TAGS, (fCloseEndTag != null) ? fCloseEndTag.getSelection() : false);
+		getPreferenceStore().setValue(XMLUIPreferenceNames.TYPING_COMPLETE_ELEMENTS, (fCloseElement != null) ? fCloseElement.getSelection() : false);
 		getPreferenceStore().setValue(XMLUIPreferenceNames.TYPING_REMOVE_END_TAGS, (fRemoveEndTag != null) ? fRemoveEndTag.getSelection() : false);
 	}
 	
