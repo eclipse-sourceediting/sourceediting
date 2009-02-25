@@ -47,11 +47,7 @@ public class ProjectionModelNodeAdapterCSS implements INodeAdapter {
 		public ICSSNode getNode() {
 			return fNode;
 		}
-
-		public void setNode(ICSSNode node) {
-			fNode = node;
-		}
-
+		
 		/**
 		 * Does not paint hidden annotations. Annotations are hidden when they
 		 * only span one line.
