@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -537,15 +537,6 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		int referenceCount;
 	}
 
-	private static class TLDCMDocumentDescriptor {
-		Object cacheKey;
-		CMDocument document;
-
-		TLDCMDocumentDescriptor() {
-			super();
-		}
-	}
-
 	private class TLDCMDocumentReference {
 		String prefix;
 		String uri;
@@ -740,10 +731,10 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				if (_debugCache) {
 					System.out.println("TLDCMDocument cache miss on " + cacheKey);
 				}
-				TLDCMDocumentDescriptor descriptor = loadTaglib(reference);
-				if (descriptor != null) {
+				CMDocument document = loadTaglib(reference);
+				if (document != null) {
 					TLDCacheEntry entry = new TLDCacheEntry();
-					doc = entry.document = descriptor.document;
+					doc = entry.document = document;
 					entry.referenceCount = 1;
 					entry.modificationStamp = getModificationStamp(reference);
 					getSharedDocumentCache().put(cacheKey, entry);
@@ -1039,19 +1030,13 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	 * Loads the taglib from the specified URI. It must point to a valid
 	 * taglib descriptor to work.
 	 */
-	protected TLDCMDocumentDescriptor loadTaglib(String uri) {
-		TLDCMDocumentDescriptor entry = null;
+	protected CMDocument loadTaglib(String uri) {
+		CMDocument document = null;
 		IPath currentPath = getCurrentParserPath();
 		if (currentPath != null) {
-			CMDocument document = null;
 			ITaglibRecord record = TaglibIndex.resolve(currentPath.toString(), uri, false);
 			if (record != null) {
 				document = getCMDocumentBuilder().createCMDocument(record);
-				if (document != null) {
-					entry = new TLDCMDocumentDescriptor();
-					entry.document = document;
-					entry.cacheKey = getUniqueIdentifier(record);
-				}
 			}
 			else {
 				/* Not a very-often used code path (we hope) */
@@ -1063,14 +1048,11 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 							System.out.println("Loading tags from " + uri + " at " + location); //$NON-NLS-2$//$NON-NLS-1$
 						}
 						document = getCMDocumentBuilder().createCMDocument(location);
-						entry = new TLDCMDocumentDescriptor();
-						entry.document = document;
-						entry.cacheKey = location;
 					}
 				}
 			}
 		}
-		return entry;
+		return document;
 	}
 
 	protected void resetTaglibTrackers() {
