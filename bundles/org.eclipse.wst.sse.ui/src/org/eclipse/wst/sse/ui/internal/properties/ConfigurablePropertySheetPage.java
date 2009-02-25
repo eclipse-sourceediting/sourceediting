@@ -72,6 +72,8 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage {
 	public void dispose() {
 		setConfiguration(null);
 		getSite().getWorkbenchWindow().getSelectionService().removePostSelectionListener(this);
+		fSelectedEntries = null;
+		fInput = null;
 		super.dispose();
 	}
 
