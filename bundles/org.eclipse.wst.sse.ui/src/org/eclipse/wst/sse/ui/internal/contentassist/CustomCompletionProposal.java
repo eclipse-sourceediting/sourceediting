@@ -281,7 +281,9 @@ public class CustomCompletionProposal implements ICompletionProposal, ICompletio
 			int length = offset - fReplacementOffset;
 			String start = document.get(fReplacementOffset, length);
 
-			return word.substring(0, length).equalsIgnoreCase(start);
+			if(word != null) {
+				return word.substring(0, length).equalsIgnoreCase(start);
+			}
 		}
 		catch (BadLocationException x) {
 		}

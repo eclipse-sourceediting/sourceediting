@@ -40,8 +40,8 @@ import org.osgi.framework.Bundle;
  * Queueing Job for processing deltas and projects.
  */
 class TaskScanningJob extends Job {
-	static final int JOB_DELAY_DELTA = 400;
-	private static final int JOB_DELAY_PROJECT = 2000;
+	static final int JOB_DELAY_DELTA = 1000;
+	private static final int JOB_DELAY_PROJECT = 5000;
 	static final String TASK_TAG_PROJECTS_ALREADY_SCANNED = "task-tag-projects-already-scanned"; //$NON-NLS-1$
 	private List fQueue = null;
 
