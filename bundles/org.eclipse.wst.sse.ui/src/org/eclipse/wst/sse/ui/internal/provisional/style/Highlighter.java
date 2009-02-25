@@ -83,7 +83,6 @@ public class Highlighter implements IHighlighter {
 
 			private NormalizedRGB normalizedRGB;
 
-			RGB originalRGB;
 			private double u = -1;
 			private double v = -1;
 			private double y = -1;
@@ -101,7 +100,6 @@ public class Highlighter implements IHighlighter {
 
 			public YUV(RGB rgb) {
 				this();
-				originalRGB = rgb;
 				normalizedRGB = new NormalizedRGB(rgb);
 				// force calculations
 				getY();

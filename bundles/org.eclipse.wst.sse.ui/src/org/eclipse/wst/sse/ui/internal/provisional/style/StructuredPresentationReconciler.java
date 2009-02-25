@@ -110,7 +110,6 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 
 			private NormalizedRGB normalizedRGB;
 
-			RGB originalRGB;
 			private double u = -1;
 			private double v = -1;
 			private double y = -1;
@@ -119,16 +118,17 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 				super();
 			}
 
+			/*
 			public YUV(double y, double u, double v) {
 				this();
 				this.y = y;
 				this.u = u;
 				this.v = v;
 			}
+			*/
 
 			public YUV(RGB rgb) {
 				this();
-				originalRGB = rgb;
 				normalizedRGB = new NormalizedRGB(rgb);
 				// force calculations
 				getY();
@@ -151,6 +151,7 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 			/**
 			 * @return RGB based on original RGB and current YUV values;
 			 */
+			/*
 			public RGB getRGB() {
 				RGB result = null;
 				double r = getY() + 1.14 * getV();
@@ -176,6 +177,7 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 				result = new RGB(red, green, blue);
 				return result;
 			}
+			*/
 
 			public double getU() {
 				if (u == -1) {
@@ -199,6 +201,7 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 				return y;
 			}
 
+			/*
 			double inverseGammaNormalized(double colorComponent) {
 				if (colorComponent < 0.018) {
 					return colorComponent * .222;
@@ -207,6 +210,7 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 					return Math.pow(((.9099 * colorComponent + 0.09)), 2.22);
 				}
 			}
+			*/
 
 		}
 
@@ -218,6 +222,7 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 			return new YUV(targetColor.getRGB()).getY();
 		}
 
+		/*
 		public RGB transformRGB(RGB originalRGB, double scaleFactor, double target) {
 			RGB transformedRGB = null;
 			// CCIR601 yuv = new CCIR601(originalRGB);
@@ -239,6 +244,7 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 			transformedRGB = newYUV.getRGB();
 			return transformedRGB;
 		}
+		*/
 
 		public RGB transformRGBToGrey(RGB originalRGB, double scaleFactor, double target) {
 			RGB transformedRGB = null;
