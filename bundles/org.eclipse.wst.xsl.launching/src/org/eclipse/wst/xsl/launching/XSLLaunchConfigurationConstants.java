@@ -34,4 +34,8 @@ public class XSLLaunchConfigurationConstants
 	 * @since 1.0
 	 */
 	public static final String ATTR_FORMAT_FILE = LaunchingPlugin.PLUGIN_ID + ".ATTR_FORMAT_FILE"; //$NON-NLS-1$
+	/**
+	 * @since 1.0
+	 */
+	public static final String ATTR_WORKING_DIR = LaunchingPlugin.PLUGIN_ID + ".ATTR_WORKING_DIR"; //$NON-NLS-1$;
 }

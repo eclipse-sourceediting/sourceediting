@@ -41,9 +41,11 @@ public class BaseLaunchHelper
 	private int generatePort = -1;
 	private final boolean openFileOnCompletion;
 	private final boolean formatFileOnCompletion;
+	private final IPath workingDir;
 
 	public BaseLaunchHelper(ILaunchConfiguration configuration) throws CoreException
 	{
+		workingDir = hydrateWorkingDir(configuration);
 		source = hydrateSourceFileURL(configuration);
 		target = hydrateOutputFile(configuration);
 		pipeline = hydratePipeline(configuration);
@@ -86,6 +88,11 @@ public class BaseLaunchHelper
 	{
 		return target;
 	}
+	
+	public IPath getWorkingDir()
+	{
+		return workingDir;
+	}
 
 	private static LaunchPipeline hydratePipeline(ILaunchConfiguration configuration) throws CoreException
 	{
@@ -105,6 +112,12 @@ public class BaseLaunchHelper
 		return pathToURL(sourceFile);
 	}
 	
+	private static IPath hydrateWorkingDir(ILaunchConfiguration configuration) throws CoreException
+	{
+		String expr = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_WORKING_DIR, (String) null);
+		return getSubstitutedPath(expr);
+	}
+
 	private static IPath hydrateSourceFile(ILaunchConfiguration configuration) throws CoreException
 	{
 		String sourceFileExpr = configuration.getAttribute(XSLLaunchConfigurationConstants.ATTR_INPUT_FILE, (String) null);
