@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,16 +21,20 @@ import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 public class HTMLTypingPreferencePage extends AbstractPreferencePage {
 
 	private Button fCloseComment;
 	private Button fCloseEndTag;
 	private Button fRemoveEndTag;
+	private Button fCloseElement;
 	
 	protected Control createContents(Composite parent) {
 		Composite composite = super.createComposite(parent, 1);
 		
+		createStartTagGroup(composite);
+		createEndTagGroup(composite);
 		createAutoComplete(composite);
 		createAutoRemove(composite);
 		
@@ -40,17 +44,31 @@ public class HTMLTypingPreferencePage extends AbstractPreferencePage {
 		return composite;
 	}
 	
+	private void createStartTagGroup(Composite parent) {
+		Group group = createGroup(parent, 2);
+
+		group.setText(XMLUIMessages.XMLTyping_Start_Tag);
+
+		fCloseElement = createCheckBox(group, XMLUIMessages.XMLTyping_Complete_Elements);
+		((GridData) fCloseElement.getLayoutData()).horizontalSpan = 2;
+	}
+	
+	private void createEndTagGroup(Composite parent) {
+		Group group = createGroup(parent, 2);
+
+		group.setText(XMLUIMessages.XMLTyping_End_Tag);
+
+		fCloseEndTag = createCheckBox(group, XMLUIMessages.XMLTyping_Complete_End_Tags);
+		((GridData) fCloseEndTag.getLayoutData()).horizontalSpan = 2;
+	}
+	
 	private void createAutoComplete(Composite parent) {
 		Group group = createGroup(parent, 2);
-		
+
 		group.setText(HTMLUIMessages.HTMLTyping_Auto_Complete);
-		
+
 		fCloseComment = createCheckBox(group, HTMLUIMessages.HTMLTyping_Complete_Comments);
 		((GridData) fCloseComment.getLayoutData()).horizontalSpan = 2;
-		
-		fCloseEndTag = createCheckBox(group, HTMLUIMessages.HTMLTyping_Complete_End_Tags);
-		((GridData) fCloseEndTag.getLayoutData()).horizontalSpan = 2;
-		
 	}
 	
 	private void createAutoRemove(Composite parent) {
@@ -73,12 +91,14 @@ public class HTMLTypingPreferencePage extends AbstractPreferencePage {
 	protected void initializeValues() {
 		initCheckbox(fCloseComment, HTMLUIPreferenceNames.TYPING_COMPLETE_COMMENTS);
 		initCheckbox(fCloseEndTag, HTMLUIPreferenceNames.TYPING_COMPLETE_END_TAGS);
+		initCheckbox(fCloseElement, HTMLUIPreferenceNames.TYPING_COMPLETE_ELEMENTS);
 		initCheckbox(fRemoveEndTag, HTMLUIPreferenceNames.TYPING_REMOVE_END_TAGS);
 	}
 	
 	protected void performDefaults() {
 		defaultCheckbox(fCloseComment, HTMLUIPreferenceNames.TYPING_COMPLETE_COMMENTS);
 		defaultCheckbox(fCloseEndTag, HTMLUIPreferenceNames.TYPING_COMPLETE_END_TAGS);
+		defaultCheckbox(fCloseElement, HTMLUIPreferenceNames.TYPING_COMPLETE_ELEMENTS);
 		defaultCheckbox(fRemoveEndTag, HTMLUIPreferenceNames.TYPING_REMOVE_END_TAGS);
 	}
 	
@@ -95,6 +115,7 @@ public class HTMLTypingPreferencePage extends AbstractPreferencePage {
 	protected void storeValues() {
 		getPreferenceStore().setValue(HTMLUIPreferenceNames.TYPING_COMPLETE_COMMENTS, (fCloseComment != null) ? fCloseComment.getSelection() : false);
 		getPreferenceStore().setValue(HTMLUIPreferenceNames.TYPING_COMPLETE_END_TAGS, (fCloseEndTag != null) ? fCloseEndTag.getSelection() : false);
+		getPreferenceStore().setValue(HTMLUIPreferenceNames.TYPING_COMPLETE_ELEMENTS, (fCloseElement != null) ? fCloseElement.getSelection() : false);
 		getPreferenceStore().setValue(HTMLUIPreferenceNames.TYPING_REMOVE_END_TAGS, (fRemoveEndTag != null) ? fRemoveEndTag.getSelection() : false);
 	}
 	

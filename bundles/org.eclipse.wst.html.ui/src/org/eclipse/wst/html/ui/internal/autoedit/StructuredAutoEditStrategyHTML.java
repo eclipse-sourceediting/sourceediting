@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.w3c.dom.Node;
 
@@ -51,6 +52,7 @@ public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
 			model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 			if (model != null) {
 				if (command.text != null) {
+					smartInsertCloseElement(command, document, model);
 					smartInsertForComment(command, document, model);
 					smartInsertForEndTag(command, document, model);
 					smartRemoveEndTag(command, document, model);
@@ -115,6 +117,37 @@ public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
 		}
 
 	}
+	
+	/**
+	 * Attempts to insert the end tag when completing a start-tag with the '&gt;' character.
+	 * 
+	 * @param command
+	 * @param document
+	 * @param model
+	 */
+	private void smartInsertCloseElement(DocumentCommand command, IDocument document, IStructuredModel model) {
+		try {
+			// Check terminating start tag, but ignore empty-element tags
+			if (command.text.equals(">") && document.getLength() > 0 && document.getChar(command.offset - 1) != '/' && isPreferenceEnabled(HTMLUIPreferenceNames.TYPING_COMPLETE_ELEMENTS)) { //$NON-NLS-1$
+				IDOMNode node = (IDOMNode) model.getIndexedRegion(command.offset - 1);
+				boolean isClosedByParent = false;
+				// Only insert an end-tag if necessary. Because of the way the document is parsed, it is possible for a child tag with the same
+				// name as an ancestor to be paired with the end-tag of an ancestor, so the ancestors must be checked for an unclosed tag.
+				if (node != null && node.getNodeType() == Node.ELEMENT_NODE && (!node.isClosed() || (isClosedByParent = hasUnclosedAncestor(node)))) {
+					IStructuredDocumentRegion region = node.getEndStructuredDocumentRegion();
+					if (region != null && region.getRegions().size() > 0 && region.getRegions().get(0).getType() == DOMRegionContext.XML_END_TAG_OPEN && !isClosedByParent)
+						return;
+				
+					command.text += "</" + node.getNodeName() + ">"; //$NON-NLS-1$ //$NON-NLS-2$
+					command.shiftsCaret = false;
+					command.caretOffset = command.offset + 1;
+				}
+				
+			}
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private void smartInsertForEndTag(DocumentCommand command, IDocument document, IStructuredModel model) {
 		try {
@@ -149,6 +182,22 @@ public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
 		}
 	}
 
+	/**
+	 * Checks if <code>node</code> has an unclosed ancestor by the same name
+	 * 
+	 * @param node the node to check
+	 * @return true if <code>node</code> has an unclosed parent with the same node name
+	 */
+	private boolean hasUnclosedAncestor(IDOMNode node) {
+		IDOMNode parent = (IDOMNode) node.getParentNode();
+		while (parent != null && parent.getNodeType() != Node.DOCUMENT_NODE && parent.getNodeName().equals(node.getNodeName())) {
+			if (!parent.isClosed())
+				return true;
+			parent = (IDOMNode) parent.getParentNode();
+		}
+		return false;
+	}
+	
 	/**
 	 * Return the active text editor if possible, otherwise the active editor
 	 * part.
