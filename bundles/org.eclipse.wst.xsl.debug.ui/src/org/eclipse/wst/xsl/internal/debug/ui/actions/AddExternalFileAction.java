@@ -55,6 +55,13 @@ public class AddExternalFileAction extends OpenDialogAction
 		IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
 		IContentType contentType = contentTypeManager.getContentType("org.eclipse.wst.xml.core.xslsource"); //$NON-NLS-1$
 		String[] xslContentTypes = contentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+		
+		// add *. to front
+		for (int i = 0; i < xslContentTypes.length; i++)
+		{
+			String string = xslContentTypes[i];
+			xslContentTypes[i] = "*."+string;
+		}
 
 		dialog.setFilterExtensions(xslContentTypes);
 		String res = dialog.open();

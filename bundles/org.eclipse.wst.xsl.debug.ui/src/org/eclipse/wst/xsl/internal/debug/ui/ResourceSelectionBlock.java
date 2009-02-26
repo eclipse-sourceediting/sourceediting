@@ -11,10 +11,6 @@
 package org.eclipse.wst.xsl.internal.debug.ui;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -435,45 +431,36 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 		{
 			IResource res = null;
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-			if (path.startsWith("${workspace_loc:"))  //$NON-NLS-1$
+			try
 			{
-				IStringVariableManager manager = VariablesPlugin.getDefault().getStringVariableManager();
-				try
+				if (path.startsWith("${workspace_loc:"))  //$NON-NLS-1$
 				{
+					IStringVariableManager manager = VariablesPlugin.getDefault().getStringVariableManager();
 					path = manager.performStringSubstitution(path, false);
-					URI pathURI = new URL(path).toURI();
-					if (resourceType == IResource.FOLDER)
-					{
-						IContainer[] containers = root.findContainersForLocationURI(pathURI); 
-						if (containers.length > 0)
-						{
-							res = containers[0];
-						}
-					}
-					else if (resourceType == IResource.FILE)
-					{
-						IFile[] files = root.findFilesForLocationURI(pathURI);
-						if (files.length > 0)
-						{
-							res = files[0];
-						}
-					}
 				}
-				catch (CoreException e)
+				File f = new File(path);
+				if (resourceType == IResource.FOLDER)
 				{
-				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (URISyntaxException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					IContainer[] containers = root.findContainersForLocationURI(f.toURI()); 
+					if (containers.length > 0)
+					{
+						res = containers[0];
+					}
 				}
+				else if (resourceType == IResource.FILE)
+				{
+					IFile[] files = root.findFilesForLocationURI(f.toURI());
+					if (files.length > 0)
+					{
+						res = files[0];
+					}
+				}
+				return res;
 			}
-			else
+			catch (CoreException e)
 			{
-				res = root.findMember(path);
+				XSLDebugUIPlugin.log(e);
 			}
-			return res;
 		}
 		return null;
 	}

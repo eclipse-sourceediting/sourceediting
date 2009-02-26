@@ -113,7 +113,7 @@ public class TransformsBlock extends AbstractTableBlock implements IStylesheetEn
 
 	public Viewer getStylesheetViewer()
 	{
-		return stylesheetViewer.getViewer();
+		return stylesheetViewer == null ? null : stylesheetViewer.getViewer();
 	}
 
 	protected Button createArrowButton(Composite pathButtonComp, AbstractStylesheetAction action, int updown)
