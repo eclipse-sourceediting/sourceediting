@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,7 +32,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
-import org.eclipse.wst.xml.core.internal.provisional.IXMLNamespace;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -96,6 +95,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		}
 	}
 
+//	private static final char[] XMLNS_PREFIX = IXMLNamespace.XMLNS_PREFIX.toCharArray();
 	private static final byte FLAG_COMMENT = 0x1;
 	private static final byte FLAG_EMPTY = 0x2;
 	private static final byte FLAG_JSP = 0x4;
@@ -105,9 +105,9 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	NodeListImpl attrNodes = null;
 	private IStructuredDocumentRegion endStructuredDocumentRegion = null;
 	
-	private String namespaceURI = null;
+	private char[] fNamespaceURI = null;
 
-	private String tagName = null;
+	private char[] fTagName = null;
 
 	/**
 	 * ElementImpl constructor
@@ -126,7 +126,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		super(that);
 
 		if (that != null) {
-			this.tagName = that.tagName;
+			this.fTagName = that.fTagName;
 			this.fTagFlags = that.fTagFlags;
 
 			// clone attributes
@@ -483,36 +483,44 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	/**
 	 */
 	public String getLocalName() {
-		if (this.tagName == null)
+		if (this.fTagName == null)
 			return null;
-		int index = this.tagName.indexOf(':');
+		int index = indexOf(this.fTagName, ':');
 		if (index < 0)
-			return this.tagName;
-		return this.tagName.substring(index + 1);
+			return new String(this.fTagName);
+		return new String(this.fTagName, index + 1, this.fTagName.length - index - 1);
 	}
 
-	/**
+	/* (non-Javadoc)
+	 * @see org.w3c.dom.Node#getNamespaceURI()
 	 */
 	public String getNamespaceURI() {
-		String nsAttrName = null;
-		String prefix = getPrefix();
-		if (prefix != null && prefix.length() > 0) {
-			nsAttrName = IXMLNamespace.XMLNS_PREFIX + prefix;
-		}
-		else {
-			nsAttrName = IXMLNamespace.XMLNS;
-		}
+		/*
+		 * "This is not a computed value that is the result of a namespace
+		 * lookup based on an examination of the namespace declarations in
+		 * scope. It is merely the namespace URI given at creation time."
+		 */
+//		String nsAttrName = IXMLNamespace.XMLNS;
+//		int colon = indexOf(fTagName, ':');
+//		if (colon > 0) {
+//			char[] value = new char[colon + XMLNS_PREFIX.length];
+//			System.arraycopy(fTagName, 0, value, 0, colon);
+//			System.arraycopy(XMLNS_PREFIX, 0, value, colon, XMLNS_PREFIX.length);
+//			nsAttrName = new String(value);
+//		}
+//
+//		for (Node node = this; node != null; node = node.getParentNode()) {
+//			if (node.getNodeType() != ELEMENT_NODE)
+//				break;
+//			Element element = (Element) node;
+//			Attr attr = element.getAttributeNode(nsAttrName);
+//			if (attr != null)
+//				return attr.getValue();
+//		}
 
-		for (Node node = this; node != null; node = node.getParentNode()) {
-			if (node.getNodeType() != ELEMENT_NODE)
-				break;
-			Element element = (Element) node;
-			Attr attr = element.getAttributeNode(nsAttrName);
-			if (attr != null)
-				return attr.getValue();
-		}
-
-		return this.namespaceURI;
+		if (this.fNamespaceURI != null)
+			return new String(this.fNamespaceURI);
+		return null;
 	}
 
 	/**
@@ -536,15 +544,15 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	/**
 	 */
 	public String getPrefix() {
-		if (this.tagName == null)
+		if (this.fTagName == null)
 			return null;
-		int index = this.tagName.indexOf(':');
+		int index = indexOf(this.fTagName, ':');
 		if (index <= 0)
 			return null;
-		// exclude JSP tag in tag name
-		if (this.tagName.charAt(0) == '<')
+		// exclude JSP tag in name
+		if (this.fTagName[0] == '<')
 			return null;
-		return this.tagName.substring(0, index);
+		return new String(this.fTagName, 0, index);
 	}
 
 	/**
@@ -585,9 +593,9 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	 * @return java.lang.String
 	 */
 	public String getTagName() {
-		if (this.tagName == null)
+		if (this.fTagName == null)
 			return new String();
-		return this.tagName;
+		return new String(fTagName);
 	}
 
 	/**
@@ -620,14 +628,9 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	/**
 	 */
 	protected final boolean hasPrefix() {
-		if (this.tagName == null)
+		if (this.fTagName == null || this.fTagName.length == 0)
 			return false;
-		if (this.tagName.indexOf(':') <= 0)
-			return false;
-		// exclude JSP tag in tag name
-		if (this.tagName.charAt(0) == '<')
-			return false;
-		return true;
+		return indexOf(this.fTagName, ':') > 0 && this.fTagName[0] != '<';
 	}
 
 	/**
@@ -649,6 +652,14 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			return !hasPrefix();
 		}
 		return false;
+	}
+
+	private int indexOf(char[] array, char c) {
+		for (int i = 0; i < array.length; i++) {
+			if (array[i] == c)
+				return i;
+		}
+		return -1;
 	}
 
 	/**
@@ -704,12 +715,12 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		if (model == null)
 			return false; // error
 		IStructuredDocument structuredDocument = model.getStructuredDocument();
-		if (structuredDocument == null)
+		if (structuredDocument == null || fTagName == null)
 			return false; // eror
 		RegionParser parser = structuredDocument.getParser();
 		if (parser == null || !(parser instanceof XMLSourceParser))
 			return false;
-		return (((XMLSourceParser) parser).getBlockMarker(this.tagName) != null);
+		return (((XMLSourceParser) parser).getBlockMarker(new String(this.fTagName)) != null);
 		/*
 		 * CMElementDeclaration decl = getDeclaration(); if (decl == null)
 		 * return false; if (decl instanceof CMNodeWrapper) { decl =
@@ -901,12 +912,15 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	 */
 	public boolean matchTagName(String tagName) {
 		if (tagName == null)
-			return (this.tagName == null);
-		if (this.tagName == null)
+			return (this.fTagName == null);
+		if (this.fTagName == null)
 			return false;
+		if (this.fTagName.length != tagName.length())
+			return false;
+		String stringName = new String(this.fTagName);
 		if (!ignoreCase())
-			return this.tagName.equals(tagName);
-		return this.tagName.equalsIgnoreCase(tagName);
+			return stringName.equals(tagName);
+		return stringName.equalsIgnoreCase(tagName);
 	}
 
 	/**
@@ -1358,7 +1372,10 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	/**
 	 */
 	protected void setNamespaceURI(String namespaceURI) {
-		this.namespaceURI = namespaceURI;
+		if (namespaceURI != null)
+			this.fNamespaceURI = namespaceURI.toCharArray();
+		else
+			this.fNamespaceURI = null;
 	}
 
 	/**
@@ -1427,7 +1444,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	 *            java.lang.String
 	 */
 	protected void setTagName(String tagName) {
-		this.tagName = tagName;
+		this.fTagName = tagName.toCharArray();
 	}
 
 	/**

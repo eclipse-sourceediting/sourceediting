@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,7 @@ import org.w3c.dom.Node;
  */
 public abstract class CharacterDataImpl extends NodeImpl implements CharacterData {
 
-	private String data = null;
+	private char[] data = null;
 
 	/**
 	 * CharacterDataImpl constructor
@@ -44,7 +44,7 @@ public abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
 		super(that);
 
 		if (that != null) {
-			this.data = that.getData();
+			this.data = that.getData().toCharArray();
 		}
 	}
 
@@ -116,7 +116,7 @@ public abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
 
 	/**
 	 */
-	protected final String getCharacterData() {
+	protected final char[] getCharacterData() {
 		return this.data;
 	}
 
@@ -126,7 +126,10 @@ public abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
 	 * @return java.lang.String
 	 */
 	public String getData() throws DOMException {
-		return getCharacterData();
+		char[] cdata = getCharacterData();
+		if (cdata != null)
+			return new String(cdata);
+		return null;
 	}
 
 	/**
@@ -260,7 +263,7 @@ public abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
 	/**
 	 */
 	void resetStructuredDocumentRegions() {
-		this.data = getData();
+		this.data = getData().toCharArray();
 		setStructuredDocumentRegion(null);
 	}
 
@@ -275,7 +278,7 @@ public abstract class CharacterDataImpl extends NodeImpl implements CharacterDat
 			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
 		}
 
-		this.data = data;
+		this.data = (data != null ? data.toCharArray() : null);
 
 		notifyValueChanged();
 	}

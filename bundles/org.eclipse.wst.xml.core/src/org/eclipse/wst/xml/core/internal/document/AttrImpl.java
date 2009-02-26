@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,10 +30,8 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.IXMLCharEntity;
-import org.eclipse.wst.xml.core.internal.provisional.IXMLNamespace;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
-import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -46,12 +44,12 @@ import org.w3c.dom.UserDataHandler;
 public class AttrImpl extends NodeImpl implements IDOMAttr {
 	private ITextRegion equalRegion = null;
 
-	private String name = null;
+	private char[] fName = null;
 	private ITextRegion nameRegion = null;
-	private String namespaceURI = null;
+	private char[] fNamespaceURI = null;
 	private ElementImpl ownerElement = null;
-	private ITextRegion valueRegion = null;
-	private String valueSource = null;
+	private ITextRegion fValueRegion = null;
+	private char[] valueSource = null;
 
 	/**
 	 * AttrImpl constructor
@@ -70,8 +68,8 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		super(that);
 
 		if (that != null) {
-			this.name = that.name;
-			this.valueSource = that.getValueSource();
+			this.fName = that.fName;
+			this.valueSource = that.valueSource;
 		}
 	}
 
@@ -116,8 +114,8 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		if (this.ownerElement == null)
 			return 0;
 		int offset = this.ownerElement.getStartOffset();
-		if (this.valueRegion != null) {
-			return (offset + this.valueRegion.getEnd());
+		if (this.fValueRegion != null) {
+			return (offset + this.fValueRegion.getEnd());
 		}
 		if (this.equalRegion != null) {
 			return (offset + this.equalRegion.getEnd());
@@ -133,15 +131,13 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		return this.equalRegion;
 	}
 
-	/**
-	 */
 	public String getLocalName() {
-		if (this.name == null)
+		if (this.fName == null)
 			return null;
-		int index = this.name.indexOf(':');
+		int index = indexOf(this.fName, ':');
 		if (index < 0)
-			return this.name;
-		return this.name.substring(index + 1);
+			return new String(this.fName);
+		return new String(this.fName, index + 1, this.fName.length - index - 1);
 	}
 
 	/**
@@ -150,9 +146,9 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	 * @return java.lang.String
 	 */
 	public String getName() {
-		if (this.name == null)
+		if (this.fName == null)
 			return new String();
-		return this.name;
+		return new String(this.fName);
 	}
 
 
@@ -207,37 +203,9 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	/**
 	 */
 	public String getNamespaceURI() {
-		String nsAttrName = null;
-		String prefix = getPrefix();
-		if (prefix != null && prefix.length() > 0) {
-			if (prefix.equals(IXMLNamespace.XMLNS)) {
-				// fixed URI
-				return IXMLNamespace.XMLNS_URI;
-			}
-			nsAttrName = IXMLNamespace.XMLNS_PREFIX + prefix;
-		}
-		else {
-			String name = getName();
-			if (name != null && name.equals(IXMLNamespace.XMLNS)) {
-				// fixed URI
-				return IXMLNamespace.XMLNS_URI;
-			}
-			// does not inherit namespace from owner element
-			// if (this.ownerElement != null) return
-			// this.ownerElement.getNamespaceURI();
-			return this.namespaceURI;
-		}
-
-		for (Node node = this.ownerElement; node != null; node = node.getParentNode()) {
-			if (node.getNodeType() != ELEMENT_NODE)
-				break;
-			Element element = (Element) node;
-			Attr attr = element.getAttributeNode(nsAttrName);
-			if (attr != null)
-				return attr.getValue();
-		}
-
-		return this.namespaceURI;
+		if (this.fNamespaceURI == null)
+			return null;
+		return new String(this.fNamespaceURI);
 	}
 
 	/**
@@ -279,15 +247,15 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	/**
 	 */
 	public String getPrefix() {
-		if (this.name == null)
+		if (this.fName == null)
 			return null;
-		int index = this.name.indexOf(':');
+		int index = indexOf(this.fName, ':');
 		if (index <= 0)
 			return null;
 		// exclude JSP tag in name
-		if (this.name.charAt(0) == '<')
+		if (this.fName[0] == '<')
 			return null;
-		return this.name.substring(0, index);
+		return new String(this.fName, 0, index);
 	}
 
 	/**
@@ -301,7 +269,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		// yet in the document, and any returned values, such as 
 		// an empty string or a default value are being supplied
 		// as per spec, not per what's in the users document.
-		return this.valueRegion != null;
+		return this.fValueRegion != null;
 	}
 
 	/**
@@ -319,8 +287,8 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		if (this.equalRegion != null) {
 			return (offset + this.equalRegion.getStart());
 		}
-		if (this.valueRegion != null) {
-			return (offset + this.valueRegion.getStart());
+		if (this.fValueRegion != null) {
+			return (offset + this.fValueRegion.getStart());
 		}
 		return 0;
 	}
@@ -371,7 +339,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	}
 
 	public ITextRegion getValueRegion() {
-		return this.valueRegion;
+		return this.fValueRegion;
 	}
 
 	/**
@@ -389,10 +357,10 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		if (structuredDocumentRegion == null)
 			return 0;
 		// ensure we never pass null to getStartOffset.
-		if (this.valueRegion == null) {
+		if (this.fValueRegion == null) {
 			return 0;
 		}
-		return structuredDocumentRegion.getStartOffset(this.valueRegion);
+		return structuredDocumentRegion.getStartOffset(this.fValueRegion);
 	}
 
 	public String getValueRegionText() {
@@ -403,16 +371,16 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		IStructuredDocumentRegion flatNode = this.ownerElement.getFirstStructuredDocumentRegion();
 		if (flatNode == null)
 			return null;
-		if (this.valueRegion == null)
+		if (this.fValueRegion == null)
 			return null;
-		return flatNode.getText(this.valueRegion);
+		return flatNode.getText(this.fValueRegion);
 	}
 
 	/**
 	 */
 	public String getValueSource() {
 		if (this.valueSource != null)
-			return this.valueSource;
+			return new String(this.valueSource);
 		// DW: 4/16/2003 due to change in structuredDocument ... we need a
 		// flatnode to
 		// get at region values. For now I'll assume this is always the first
@@ -431,21 +399,21 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		IStructuredDocumentRegion ownerRegion = this.ownerElement.getFirstStructuredDocumentRegion();
 		if (ownerRegion == null)
 			return null;
-		if (this.valueRegion != null)
-			return StructuredDocumentRegionUtil.getAttrValue(ownerRegion, this.valueRegion);
+		if (this.fValueRegion != null)
+			return StructuredDocumentRegionUtil.getAttrValue(ownerRegion, this.fValueRegion);
 		return new String();
 	}
 
 	private String getValueSource(ElementImpl ownerElement) {
 		if (this.valueSource != null)
-			return this.valueSource;
+			return new String(this.valueSource);
 		// DW: 4/16/2003 due to change in structuredDocument ... we need a
 		// flatnode to
 		// get at region values. For now I'll assume this is always the first
 		// flatnode .. may need to make smarter later (e.g. to search for
 		// the flatnode that this.valueRegion belongs to.
-		if (this.valueRegion != null)
-			return StructuredDocumentRegionUtil.getAttrValue(ownerElement.getStructuredDocumentRegion(), this.valueRegion);
+		if (this.fValueRegion != null)
+			return StructuredDocumentRegionUtil.getAttrValue(ownerElement.getStructuredDocumentRegion(), this.fValueRegion);
 		return new String();
 	}
 
@@ -480,11 +448,11 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	 * Check if Attr has JSP in value
 	 */
 	public boolean hasNestedValue() {
-		if (this.valueRegion == null)
+		if (this.fValueRegion == null)
 			return false;
-		if (!(this.valueRegion instanceof ITextRegionContainer))
+		if (!(this.fValueRegion instanceof ITextRegionContainer))
 			return false;
-		ITextRegionList regions = ((ITextRegionContainer) this.valueRegion).getRegions();
+		ITextRegionList regions = ((ITextRegionContainer) this.fValueRegion).getRegions();
 		if (regions == null)
 			return false;
 		Iterator e = regions.iterator();
@@ -503,20 +471,23 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	 * Check if Attr has only name but not equal sign nor value
 	 */
 	public boolean hasNameOnly() {
-		return (this.nameRegion != null && this.equalRegion == null && this.valueRegion == null);
+		return (this.nameRegion != null && this.equalRegion == null && this.fValueRegion == null);
 	}
 
 	/**
 	 */
 	protected final boolean hasPrefix() {
-		if (this.name == null)
+		if (this.fName == null || this.fName.length == 0)
 			return false;
-		if (this.name.indexOf(':') <= 0)
-			return false;
-		// exclude JSP tag in name
-		if (this.name.charAt(0) == '<')
-			return false;
-		return true;
+		return indexOf(this.fName, ':') > 0 && this.fName[0] != '<';
+	}
+	
+	private int indexOf(char[] array, char c) {
+		for (int i = 0; i < array.length; i++) {
+			if (array[i] == c)
+				return i;
+		}
+		return -1;
 	}
 
 	/**
@@ -575,14 +546,15 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	 */
 	protected boolean matchName(String name) {
 		if (name == null)
-			return (this.name == null);
-		if (this.name == null)
+			return (this.fName == null);
+		if (this.fName == null)
 			return false;
-		if (this.name.length() != name.length())
+		if (this.fName.length != name.length())
 			return false;
-		if (this.name.equals(name))
+		String stringName = new String(this.fName);
+		if (stringName.equals(name))
 			return true;
-		return this.name.equalsIgnoreCase(name) && ignoreCase();
+		return stringName.equalsIgnoreCase(name) && ignoreCase();
 	}
 
 
@@ -621,21 +593,21 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	 */
 	void removeRegions() {
 		this.nameRegion = null;
-		this.valueRegion = null;
+		this.fValueRegion = null;
 		this.equalRegion = null;
 	}
 
 	/**
 	 */
 	void resetRegions() {
-		this.valueSource = getValueSource();
+		this.valueSource = getValueSource().toCharArray();
 		removeRegions();
 	}
 
 	/**
 	 */
 	void resetRegions(ElementImpl ownerElement) {
-		this.valueSource = getValueSource(ownerElement);
+		this.valueSource = getValueSource(ownerElement).toCharArray();
 		removeRegions();
 	}
 
@@ -657,7 +629,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 			startOffset = this.ownerElement.getStartOffset();
 			this.ownerElement.notify(CHANGE, this, value, null, startOffset);
 		}
-		this.name = name;
+		this.fName = name.toCharArray();
 		if (this.ownerElement != null) {
 			this.ownerElement.notify(CHANGE, this, null, value, startOffset);
 		}
@@ -668,7 +640,10 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	}
 
 	protected void setNamespaceURI(String namespaceURI) {
-		this.namespaceURI = namespaceURI;
+		if (namespaceURI == null)
+			this.fNamespaceURI = null;
+		else
+			this.fNamespaceURI = namespaceURI.toCharArray();
 	}
 
 	/**
@@ -740,7 +715,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	}
 
 	void setValueRegion(ITextRegion valueRegion) {
-		this.valueRegion = valueRegion;
+		this.fValueRegion = valueRegion;
 		if (valueRegion != null)
 			this.valueSource = null;
 	}
@@ -749,7 +724,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		if (this.ownerElement != null && !this.ownerElement.isDataEditable()) {
 			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
 		}
-		this.valueSource = source;
+		this.valueSource = source.toCharArray();
 
 		notifyValueChanged();
 	}
