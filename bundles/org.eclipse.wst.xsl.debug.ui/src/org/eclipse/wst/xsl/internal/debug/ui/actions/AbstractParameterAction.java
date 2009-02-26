@@ -44,12 +44,12 @@ public abstract class AbstractParameterAction extends SelectionListenerAction
 	{
 		if (this.viewer != null)
 		{
-			this.viewer.removeSelectionChangedListener(this);
+			this.viewer.getViewer().removeSelectionChangedListener(this);
 		}
 		this.viewer = viewer;
 		if (viewer != null)
 		{
-			viewer.addSelectionChangedListener(this);
+			viewer.getViewer().addSelectionChangedListener(this);
 			update();
 		}
 	}
@@ -90,7 +90,7 @@ public abstract class AbstractParameterAction extends SelectionListenerAction
 
 	protected void update()
 	{
-		selectionChanged((IStructuredSelection) getViewer().getSelection());
+		selectionChanged((IStructuredSelection) getViewer().getViewer().getSelection());
 	}
 
 	protected Shell getShell()

@@ -10,45 +10,31 @@
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.tabs.main;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.xsl.internal.debug.ui.actions.AbstractStylesheetAction;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 
-public class StylesheetViewer extends TableViewer
+public class StylesheetViewer
 {
+	private TableViewer viewer;
 	private final ListenerList listenerList = new ListenerList();
 
 	public StylesheetViewer(Composite parent)
 	{
-		super(parent);
-
-		getTable().addKeyListener(new KeyAdapter()
-		{
-			@Override
-			public void keyPressed(KeyEvent event)
-			{
-				if (updateSelection(AbstractStylesheetAction.REMOVE, (IStructuredSelection) getSelection()) && event.character == SWT.DEL && event.stateMask == 0)
-				{
-					List<?> selection = getSelectionFromWidget();
-					getStylesheetContentProvider().removeEntries(selection.toArray(new LaunchTransform[0]));
-					notifyChanged();
-				}
-			}
-		});
+		viewer = new TableViewer(parent);
+	}
+	
+	public TableViewer getViewer(){
+		return viewer;
 	}
 
 	private StylesheetContentProvider getStylesheetContentProvider()
 	{
-		return (StylesheetContentProvider) super.getContentProvider();
+		return (StylesheetContentProvider) viewer.getContentProvider();
 	}
 
 	public void setEntries(LaunchTransform[] transforms)
@@ -64,7 +50,7 @@ public class StylesheetViewer extends TableViewer
 
 	public Shell getShell()
 	{
-		return getControl().getShell();
+		return viewer.getControl().getShell();
 	}
 
 	public boolean isEnabled()
@@ -88,13 +74,13 @@ public class StylesheetViewer extends TableViewer
 
 	public IStructuredSelection getSelectedEntries()
 	{
-		IStructuredSelection selection = (IStructuredSelection) getSelection();
+		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 		return selection;
 	}
 
 	public void addTransforms(LaunchTransform[] res)
 	{
-		IStructuredSelection sel = (IStructuredSelection) getSelection();
+		IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
 		Object beforeElement = sel.getFirstElement();
 		if (getEntries().length > 1 && beforeElement == null)
 			beforeElement = getEntries()[getEntries().length - 1];

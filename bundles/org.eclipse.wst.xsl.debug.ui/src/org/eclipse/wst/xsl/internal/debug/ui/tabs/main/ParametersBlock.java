@@ -69,16 +69,16 @@ public class ParametersBlock extends AbstractTableBlock
 
 	protected void setTransform(LaunchTransform transform)
 	{
-		parametersViewer.setInput(transform);
+		parametersViewer.getViewer().setInput(transform);
 	}
 
 	protected void updateEnabled()
 	{
 		IStructuredSelection stylesheetSelection = (IStructuredSelection) transformsBlock.getStylesheetViewer().getSelection();
 		boolean enabled = stylesheetSelection.size() == 1;
-		parametersViewer.getTable().setEnabled(enabled);
+		parametersViewer.getViewer().getTable().setEnabled(enabled);
 		addParameterButton.setEnabled(enabled);
-		IStructuredSelection parametersSelection = (IStructuredSelection) parametersViewer.getSelection();
+		IStructuredSelection parametersSelection = (IStructuredSelection) parametersViewer.getViewer().getSelection();
 		removeParameterButton.setEnabled(enabled && !parametersSelection.isEmpty());
 	}
 
@@ -118,8 +118,8 @@ public class ParametersBlock extends AbstractTableBlock
 		column3.setText(Messages.ParametersBlock_2); 
 
 		parametersViewer = new ParameterViewer(fTable);
-		parametersViewer.setLabelProvider(new ParametersLabelProvider());
-		parametersViewer.setContentProvider(new ParametersContentProvider());
+		parametersViewer.getViewer().setLabelProvider(new ParametersLabelProvider());
+		parametersViewer.getViewer().setContentProvider(new ParametersContentProvider());
 		parametersViewer.addParametersChangedListener(new IParametersChangedListener()
 		{
 
@@ -128,7 +128,7 @@ public class ParametersBlock extends AbstractTableBlock
 				updateLaunchConfigurationDialog();
 			}
 		});
-		parametersViewer.getTable().addKeyListener(new KeyAdapter() {
+		parametersViewer.getViewer().getTable().addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent event) {
 				if (event.character == SWT.DEL && event.stateMask == 0) {
@@ -139,13 +139,13 @@ public class ParametersBlock extends AbstractTableBlock
 			}
 		});
 
-		parametersViewer.setColumnProperties(new String[]
+		parametersViewer.getViewer().setColumnProperties(new String[]
 		{ "name", "value" }); //$NON-NLS-1$ //$NON-NLS-2$
 		TextCellEditor textEditor = new TextCellEditor(fTable);
 		CellEditor[] editors = new CellEditor[]
 		{ null, textEditor };
-		parametersViewer.setCellEditors(editors);
-		parametersViewer.setCellModifier(new ICellModifier()
+		parametersViewer.getViewer().setCellEditors(editors);
+		parametersViewer.getViewer().setCellModifier(new ICellModifier()
 		{
 			public boolean canModify(Object element, String property)
 			{
@@ -163,7 +163,7 @@ public class ParametersBlock extends AbstractTableBlock
 				Item item = (Item) element;
 				LaunchAttribute att = (LaunchAttribute) item.getData();
 				att.value = (String) value;
-				parametersViewer.update(att, null);
+				parametersViewer.getViewer().update(att, null);
 				updateLaunchConfigurationDialog();
 			}
 		});

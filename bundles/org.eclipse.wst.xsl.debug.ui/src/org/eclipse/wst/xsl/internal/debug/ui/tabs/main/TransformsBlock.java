@@ -66,12 +66,12 @@ public class TransformsBlock extends AbstractTableBlock implements IStylesheetEn
 
 		stylesheetViewer = new StylesheetViewer(group);
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
-		stylesheetViewer.getTable().setLayoutData(gd);
+		stylesheetViewer.getViewer().getTable().setLayoutData(gd);
 		stylesheetViewer.addEntriesChangedListener(this);
-		stylesheetViewer.getControl().setFont(font);
-		stylesheetViewer.setLabelProvider(new StylesheetLabelProvider());
-		stylesheetViewer.setContentProvider(new StylesheetContentProvider());
-		stylesheetViewer.getTable().addKeyListener(new KeyAdapter() {
+		stylesheetViewer.getViewer().getControl().setFont(font);
+		stylesheetViewer.getViewer().setLabelProvider(new StylesheetLabelProvider());
+		stylesheetViewer.getViewer().setContentProvider(new StylesheetContentProvider());
+		stylesheetViewer.getViewer().getTable().addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent event) {
 				if (event.character == SWT.DEL && event.stateMask == 0) {
@@ -113,7 +113,7 @@ public class TransformsBlock extends AbstractTableBlock implements IStylesheetEn
 
 	public Viewer getStylesheetViewer()
 	{
-		return stylesheetViewer;
+		return stylesheetViewer.getViewer();
 	}
 
 	protected Button createArrowButton(Composite pathButtonComp, AbstractStylesheetAction action, int updown)
@@ -144,10 +144,10 @@ public class TransformsBlock extends AbstractTableBlock implements IStylesheetEn
 
 	public void initializeFrom(ILaunchConfiguration configuration)
 	{
-		stylesheetViewer.setInput(pipeline);
+		stylesheetViewer.getViewer().setInput(pipeline);
 		if (pipeline.getTransformDefs().size() > 0)
 		{
-			stylesheetViewer.setSelection(new StructuredSelection(pipeline.getTransformDefs().get(0)));
+			stylesheetViewer.getViewer().setSelection(new StructuredSelection(pipeline.getTransformDefs().get(0)));
 		}
 	}
 
@@ -183,7 +183,7 @@ public class TransformsBlock extends AbstractTableBlock implements IStylesheetEn
 	@Override
 	protected Table getTable()
 	{
-		return stylesheetViewer == null ? null : stylesheetViewer.getTable();
+		return stylesheetViewer == null ? null : stylesheetViewer.getViewer().getTable();
 	}
 
 	@Override

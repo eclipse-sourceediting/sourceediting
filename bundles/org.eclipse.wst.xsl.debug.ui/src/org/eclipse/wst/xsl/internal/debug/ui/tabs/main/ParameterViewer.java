@@ -13,48 +13,34 @@ package org.eclipse.wst.xsl.internal.debug.ui.tabs.main;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.wst.xsl.internal.debug.ui.actions.AbstractStylesheetAction;
 import org.eclipse.wst.xsl.launching.config.LaunchAttribute;
 
-public class ParameterViewer extends TableViewer
+public class ParameterViewer
 {
+	private final TableViewer viewer;
 	private final ListenerList fListeners = new ListenerList();
 
 	public ParameterViewer(Table table)
 	{
-		super(table);
-
-		table.addKeyListener(new KeyAdapter()
-		{
-			@Override
-			public void keyPressed(KeyEvent event)
-			{
-				// TODO - removal
-				// if (updateSelection(AbstractStylesheetAction.REMOVE,
-				// (IStructuredSelection)getSelection()) && event.character ==
-				// SWT.DEL && event.stateMask == 0)
-				// {
-				// List selection = getSelectionFromWidget();
-				// getStylesheetContentProvider().removeEntries((IStylesheetEntry[])selection.toArray(new
-				// IStylesheetEntry[0]));
-				// notifyChanged();
-				// }
-			}
-		});
+		viewer = new TableViewer(table);
+	}
+	
+	public TableViewer getViewer()
+	{
+		return viewer;
 	}
 
 	private ParametersContentProvider getParametersContentProvider()
 	{
-		return (ParametersContentProvider) super.getContentProvider();
+		return (ParametersContentProvider) viewer.getContentProvider();
 	}
 
 	public Shell getShell()
 	{
-		return getControl().getShell();
+		return viewer.getControl().getShell();
 	}
 
 	public boolean isEnabled()
@@ -78,7 +64,7 @@ public class ParameterViewer extends TableViewer
 
 	public IStructuredSelection getSelectedEntries()
 	{
-		IStructuredSelection selection = (IStructuredSelection) getSelection();
+		IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
 		return selection;
 	}
 

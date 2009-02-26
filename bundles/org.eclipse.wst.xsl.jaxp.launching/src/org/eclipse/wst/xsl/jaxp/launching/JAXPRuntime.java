@@ -58,7 +58,7 @@ public class JAXPRuntime
 		return processorTypeRegistry;
 	}
 
-	public static ProcessorRegistry getProcessorRegistry()
+	private static ProcessorRegistry getProcessorRegistry()
 	{
 		synchronized (REGISTRY_LOCK)
 		{

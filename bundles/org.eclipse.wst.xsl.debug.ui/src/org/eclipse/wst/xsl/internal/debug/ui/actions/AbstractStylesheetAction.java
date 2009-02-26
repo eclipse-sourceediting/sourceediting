@@ -76,12 +76,12 @@ public abstract class AbstractStylesheetAction extends SelectionListenerAction
 	{
 		if (this.viewer != null)
 		{
-			this.viewer.removeSelectionChangedListener(this);
+			this.viewer.getViewer().removeSelectionChangedListener(this);
 		}
 		this.viewer = viewer;
 		if (viewer != null)
 		{
-			viewer.addSelectionChangedListener(this);
+			viewer.getViewer().addSelectionChangedListener(this);
 			update();
 		}
 	}
@@ -122,7 +122,7 @@ public abstract class AbstractStylesheetAction extends SelectionListenerAction
 
 	protected void update()
 	{
-		selectionChanged((IStructuredSelection) getViewer().getSelection());
+		selectionChanged((IStructuredSelection) getViewer().getViewer().getSelection());
 	}
 
 	protected Shell getShell()
@@ -157,7 +157,7 @@ public abstract class AbstractStylesheetAction extends SelectionListenerAction
 
 	protected List<?> getOrderedSelection()
 	{
-		List<?> selection = ((IStructuredSelection) getViewer().getSelection()).toList();
+		List<?> selection = ((IStructuredSelection) getViewer().getViewer().getSelection()).toList();
 		return selection;
 	}
 
@@ -168,7 +168,7 @@ public abstract class AbstractStylesheetAction extends SelectionListenerAction
 		// for (int i = 0; i < entries.length; i++) {
 		// list.add(entries[i]);
 		// }
-		LaunchPipeline lp = (LaunchPipeline) getViewer().getInput();
+		LaunchPipeline lp = (LaunchPipeline) getViewer().getViewer().getInput();
 		return lp.getTransformDefs();
 	}
 

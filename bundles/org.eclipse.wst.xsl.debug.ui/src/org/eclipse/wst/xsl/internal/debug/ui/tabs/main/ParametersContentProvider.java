@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wst.xsl.launching.config.LaunchAttribute;
@@ -23,7 +24,7 @@ import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 public class ParametersContentProvider implements IStructuredContentProvider
 {
 	private LaunchTransform stylesheetEntry;
-	private ParameterViewer parameterViewer;
+	private TableViewer parameterViewer;
 
 	public Object[] getElements(Object inputElement)
 	{
@@ -35,7 +36,7 @@ public class ParametersContentProvider implements IStructuredContentProvider
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
 	{
 		stylesheetEntry = (LaunchTransform) newInput;
-		parameterViewer = (ParameterViewer) viewer;
+		parameterViewer = (TableViewer) viewer;
 	}
 
 	public void dispose()

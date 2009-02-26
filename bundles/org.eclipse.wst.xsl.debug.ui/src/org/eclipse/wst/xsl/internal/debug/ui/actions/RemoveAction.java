@@ -37,7 +37,7 @@ public class RemoveAction extends AbstractStylesheetAction
 	@Override
 	public void run()
 	{
-		IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
+		IStructuredSelection selection = (IStructuredSelection) getViewer().getViewer().getSelection();
 		getViewer().removeEntries((LaunchTransform[]) selection.toList().toArray(new LaunchTransform[0]));
 	}
 

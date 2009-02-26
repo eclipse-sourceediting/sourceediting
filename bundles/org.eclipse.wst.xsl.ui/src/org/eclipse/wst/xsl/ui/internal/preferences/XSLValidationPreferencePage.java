@@ -130,7 +130,7 @@ public class XSLValidationPreferencePage extends AbstractValidationSettingsPage 
 		inner = createInnerComposite(parent, twistie, columns);
 		
 		createCombo(inner, "Template name conflicts:", ValidationPreferences.TEMPLATE_CONFLICT);
-		createCombo(inner, "Duplicate parameterw:", ValidationPreferences.DUPLICATE_PARAMETER);
+		createCombo(inner, "Duplicate parameters:", ValidationPreferences.DUPLICATE_PARAMETER);
 		createCombo(inner, "Parameter without name attribute:", ValidationPreferences.NAME_ATTRIBUTE_MISSING);
 		createCombo(inner, "Parameter with empty name attribute:", ValidationPreferences.NAME_ATTRIBUTE_EMPTY);
 		
