@@ -29,6 +29,7 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -127,6 +128,7 @@ import org.eclipse.ui.texteditor.IStatusField;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
+import org.eclipse.ui.texteditor.ITextEditorExtension4;
 import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
@@ -239,9 +241,13 @@ public class StructuredTextEditor extends TextEditor {
 								boolean status = validateEditorInputState();
 								if (!status) {
 									if (internalModel != null) {
-										// change shouldnt have been made, so undo it
+										// change shouldnt have been made, so
+										// undo it
 										internalModel.getUndoManager().undo();
-										getSourceViewer().setSelectedRange(offset, 0);
+										ISourceViewer viewer = getSourceViewer();
+										if (viewer != null) {
+											viewer.setSelectedRange(offset, 0);
+										}
 										if (!fDirtyBeforeDocumentEvent) {
 											// reset dirty state if
 											// model not dirty before
@@ -290,7 +296,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 
 		public void modelChanged(IStructuredModel model) {
-			if (getTextViewer() != null) {
+			if (getSourceViewer() != null) {
 				// getTextViewer().setRedraw(true);
 				// Since the model can be changed on a background
 				// thread, we will update menus on display thread,
@@ -330,6 +336,11 @@ public class StructuredTextEditor extends TextEditor {
 				// so we don't freeze workbench (eg. during page language or
 				// content type change)
 				((ITextViewerExtension) getSourceViewer()).setRedraw(true);
+				
+				IWorkbenchSiteProgressService service = (IWorkbenchSiteProgressService) getSite().getService(IWorkbenchSiteProgressService.class);
+				if (service != null) {
+					service.warnOfContentChange();
+				}
 			}
 		}
 
@@ -1877,6 +1888,9 @@ public class StructuredTextEditor extends TextEditor {
 		else if (IToggleBreakpointsTarget.class.equals(required)) {
 			result = ToggleBreakpointsTarget.getInstance();
 		}
+		else if (ITextEditorExtension4.class.equals(required)) {
+			result = this;
+		}
 		else if (IShowInTargetList.class.equals(required)) {
 			result = new ShowInTargetListAdapter();
 		}
@@ -1885,6 +1899,12 @@ public class StructuredTextEditor extends TextEditor {
 				fSelectionHistory = new SelectionHistory(this);
 			result = fSelectionHistory;
 		}
+		else if (IResource.class.equals(required)) {
+			IEditorInput input = getEditorInput();
+			if (input != null) {
+				result = input.getAdapter(required);
+			}
+		}
 		else {
 			if (result == null && internalModel != null) {
 				result = internalModel.getAdapter(required);
@@ -1892,6 +1912,9 @@ public class StructuredTextEditor extends TextEditor {
 			// others
 			if (result == null)
 				result = super.getAdapter(required);
+		}
+		if (result == null) {
+			Logger.log(Logger.INFO_DEBUG, "StructuredTextEditor.getAdapter returning null for " + required); //$NON-NLS-1$
 		}
 		if (org.eclipse.wst.sse.core.internal.util.Debug.perfTestAdapterClassLoading) {
 			long stop = System.currentTimeMillis();
@@ -2157,8 +2180,10 @@ public class StructuredTextEditor extends TextEditor {
 		if (selection.getLength() < 0)
 			targetOffset -= selection.getLength();
 
-		sourceViewer.setSelectedRange(targetOffset, selection.getLength());
-		sourceViewer.revealRange(targetOffset, selection.getLength());
+		if (sourceViewer != null) {
+			sourceViewer.setSelectedRange(targetOffset, selection.getLength());
+			sourceViewer.revealRange(targetOffset, selection.getLength());
+		}
 	}
 	
 	/*
@@ -3083,7 +3108,7 @@ public class StructuredTextEditor extends TextEditor {
 				rangeUpdated = true;
 			}
 		}
-		if (!rangeUpdated) {
+		if (!rangeUpdated && getSourceViewer() != null) {
 			if (selection instanceof ITextSelection) {
 				getSourceViewer().setRangeIndication(((ITextSelection) selection).getOffset(), ((ITextSelection) selection).getLength(), false);
 			}
@@ -3194,10 +3219,11 @@ public class StructuredTextEditor extends TextEditor {
 
 		if (StructuredTextEditorActionConstants.STATUS_CATEGORY_OFFSET.equals(category)) {
 			IStatusField field = getStatusField(category);
-			if (field != null) {
-				Point selection = getTextViewer().getTextWidget().getSelection();
-				int offset1 = widgetOffset2ModelOffset(getSourceViewer(), selection.x);
-				int offset2 = widgetOffset2ModelOffset(getSourceViewer(), selection.y);
+			ISourceViewer sourceViewer = getSourceViewer();
+			if (field != null && sourceViewer != null) {
+				Point selection = sourceViewer.getTextWidget().getSelection();
+				int offset1 = widgetOffset2ModelOffset(sourceViewer, selection.x);
+				int offset2 = widgetOffset2ModelOffset(sourceViewer, selection.y);
 				String text = null;
 				if (offset1 != offset2)
 					text = "[" + offset1 + "-" + offset2 + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
