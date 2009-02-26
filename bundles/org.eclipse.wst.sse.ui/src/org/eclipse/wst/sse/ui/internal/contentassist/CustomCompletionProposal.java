@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -309,7 +309,6 @@ public class CustomCompletionProposal implements ICompletionProposal, ICompletio
 		boolean validated = startsWith(document, offset, fDisplayString);
 
 		if (fUpdateLengthOnValidate) {
-
 			// it would be better to use "originalCursorPosition" instead of
 			// getReplacementOffset(), but we don't have that info.
 			int newLength = offset - getReplacementOffset();
@@ -318,9 +317,14 @@ public class CustomCompletionProposal implements ICompletionProposal, ICompletio
 
 			// if it's an attribute value, replacement offset is
 			// going to be one off from the actual cursor offset...
-			char firstChar = document.get().charAt(getReplacementOffset());
-			if (firstChar == '"' || firstChar == '\'')
-				fReplacementLength++;
+			try {
+				char firstChar = document.getChar(getReplacementOffset());
+				if (firstChar == '"' || firstChar == '\'')
+					fReplacementLength++;
+			}
+			catch (BadLocationException e) {
+				// just don't increment
+			}
 		}
 		return validated;
 	}
