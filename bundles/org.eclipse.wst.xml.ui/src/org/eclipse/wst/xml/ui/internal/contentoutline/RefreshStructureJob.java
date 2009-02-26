@@ -132,6 +132,15 @@ class RefreshStructureJob extends Job {
 	private synchronized void addRefreshViewer(StructuredViewer viewer) {
 		fRefreshViewers.add(viewer);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.core.runtime.jobs.Job#canceling()
+	 */
+	protected void canceling() {
+		fUpdates.clear();
+		fUpdateViewers.clear();
+		super.canceling();
+	}
 
 	/**
 	 * Simple hierarchical containment relationship. Note, this method returns

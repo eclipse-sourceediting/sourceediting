@@ -29,6 +29,7 @@ import org.eclipse.wst.sse.core.internal.provisional.AbstractAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.util.Assert;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapterFactory;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
@@ -147,6 +148,9 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 	}
 
 	protected void initAdapter(INodeAdapter adapter, INodeNotifier node) {
+		Assert.isTrue(cmDocumentManager == null);
+		Assert.isTrue(fCMDocumentManagerListener == null);
+
 		// register for CMDocumentManager events
 		ModelQueryAdapter mqadapter = (ModelQueryAdapter) node.getAdapterFor(ModelQueryAdapter.class);
 		if (mqadapter != null) {
@@ -165,6 +169,12 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 			cmDocumentManager.removeListener(fCMDocumentManagerListener);
 		}
 		fListeners.clear();
+		if (singletonAdapter != null && singletonAdapter instanceof JFaceNodeAdapter) {
+			RefreshStructureJob refreshJob = ((JFaceNodeAdapter) singletonAdapter).fRefreshJob;
+			if (refreshJob != null) {
+				refreshJob.cancel();
+			}
+		}
 	}
 
 	public synchronized void removeListener(Object listener) {

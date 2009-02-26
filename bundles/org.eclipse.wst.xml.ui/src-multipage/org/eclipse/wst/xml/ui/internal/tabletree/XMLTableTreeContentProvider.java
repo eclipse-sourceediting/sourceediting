@@ -72,6 +72,17 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 	}
 
 	public void dispose() {
+		if (documentManager != null) {
+			documentManager.removeListener(this);
+		}
+		if (fViewer != null && fViewer.getInput() != null) {
+			if (fViewer.getInput() instanceof IDOMNode) {
+				IJFaceNodeAdapterFactory factory = (IJFaceNodeAdapterFactory) ((IDOMNode) fViewer.getInput()).getModel().getFactoryRegistry().getFactoryFor(IJFaceNodeAdapter.class);
+				if (factory != null) {
+					factory.removeListener(fViewer);
+				}
+			}
+		}
 	}
 
 	private void doDelayedRefreshForViewers() {

@@ -77,7 +77,7 @@ public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 	private class PropertiesRefreshJob extends UIJob {
 		public static final int UPDATE_DELAY = 200;
 
-		private Set propertySheetPages = null;
+		Set propertySheetPages = null;
 
 		public PropertiesRefreshJob() {
 			super(XMLUIMessages.JFaceNodeAdapter_1);
@@ -87,10 +87,18 @@ public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 		}
 
 		void addPropertySheetPage(IPropertySheetPage page) {
-			if (page != null) {
+			if (page != null && propertySheetPages != null) {
 				propertySheetPages.add(page);
 				schedule(UPDATE_DELAY);
 			}
+		}
+		
+		/* (non-Javadoc)
+		 * @see org.eclipse.core.runtime.jobs.Job#canceling()
+		 */
+		protected void canceling() {
+			propertySheetPages.clear();
+			super.canceling();
 		}
 
 		public IStatus runInUIThread(IProgressMonitor monitor) {
@@ -253,6 +261,10 @@ public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 		super.unconfigure();
 		for (int i = 0; i < fSelectedCMDocumentManagers.length; i++) {
 			fSelectedCMDocumentManagers[i].removeListener(fCMDocumentManagerListener);
+		}
+		if(fPropertiesRefreshJob != null) {
+			fPropertiesRefreshJob.cancel();
+			fPropertiesRefreshJob.propertySheetPages = null;
 		}
 		fPropertySheetPage = null;
 	}

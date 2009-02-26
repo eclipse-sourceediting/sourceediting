@@ -45,7 +45,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 	}
 
 	JFaceNodeAdapterFactory fAdapterFactory;
-	private RefreshStructureJob fRefreshJob = null;
+	RefreshStructureJob fRefreshJob = null;
 
 	public JFaceNodeAdapter(JFaceNodeAdapterFactory adapterFactory) {
 		super();
