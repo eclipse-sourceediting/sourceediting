@@ -51,10 +51,6 @@ public class ProjectionModelNodeAdapterHTML implements INodeAdapter {
 			return fNode;
 		}
 
-		public void setNode(Node node) {
-			fNode = node;
-		}
-
 		/**
 		 * Does not paint hidden annotations. Annotations are hidden when they
 		 * only span one line.

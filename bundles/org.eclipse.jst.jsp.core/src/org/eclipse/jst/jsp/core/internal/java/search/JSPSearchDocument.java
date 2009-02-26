@@ -44,14 +44,11 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
  * those fields are lightweight since it's possible for many JSP search
  * documents to exist in memory at one time (eg. after importing a project
  * with a large number of JSP files)
- * 
- * @author pavery
  */
 public class JSPSearchDocument {
 
-	private String UNKNOWN_PATH = "**path unknown**"; //$NON-NLS-1$
-	private String fJSPPathString = UNKNOWN_PATH;
-	private String fCUPath = UNKNOWN_PATH;
+	private String fJSPPathString = null;
+	private String fCUPath = null;
 	private SearchParticipant fParticipant = null;
 	private long fLastModifiedStamp;
 	private char[] fCachedCharContents;
@@ -62,7 +59,7 @@ public class JSPSearchDocument {
 	 * @throws CoreException
 	 */
 	public JSPSearchDocument(String filePath, SearchParticipant participant) {
-
+		//Assert.isNotNull(filePath, "Search support for JSP requires file paths"); //$NON-NLS-1$ 
 		this.fJSPPathString = filePath;
 		this.fParticipant = participant;
 	}
@@ -158,7 +155,7 @@ public class JSPSearchDocument {
 	public String getPath() {
 	    // caching the path since it's expensive to get translation
 		// important that isDirty() check is second to cache modification stamp
-	    if(this.fCUPath == null || isDirty() || this.fCUPath == UNKNOWN_PATH) {
+	    if(this.fCUPath == null || isDirty()) {
 	        JSPTranslation trans = getJSPTranslation();
 	        if(trans != null) {
 	            this.fCUPath = trans.getJavaPath();
@@ -166,7 +163,7 @@ public class JSPSearchDocument {
 	            fCachedCharContents = trans.getJavaText().toCharArray();
 	        }
 	    }
-		return fCUPath != null ? fCUPath : UNKNOWN_PATH;
+		return fCUPath;
 	}
 
 	public int getJspOffset(int javaOffset) {

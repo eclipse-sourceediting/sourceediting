@@ -90,8 +90,6 @@ public class JSPSearchSupport {
 
         int fMatchMode = SearchPattern.R_PATTERN_MATCH;
 
-        boolean fIsCaseSensitive = false;
-
         SearchRequestor fRequestor = null;
 
         IJavaElement fElement = null;
@@ -114,7 +112,6 @@ public class JSPSearchSupport {
             this.fSearchFor = searchFor;
             this.fLimitTo = limitTo;
             this.fMatchMode = matchMode;
-            this.fIsCaseSensitive = isCaseSensitive;
             this.fRequestor = requestor;
         }
 
@@ -174,8 +171,6 @@ public class JSPSearchSupport {
 
         int fMatchMode = SearchPattern.R_PATTERN_MATCH;
 
-        boolean fIsCaseSensitive = false;
-
         SearchRequestor fRequestor = null;
 
         IJavaElement fElement = null;
@@ -185,18 +180,6 @@ public class JSPSearchSupport {
 
             this.fElement = element;
             this.fScope = scope;
-            this.fRequestor = requestor;
-        }
-
-        // constructor w/ search text
-        public SearchRunnable(String searchText, IJavaSearchScope scope, int searchFor, int limitTo, int matchMode, boolean isCaseSensitive, SearchRequestor requestor) {
-
-            this.fSearchText = searchText;
-            this.fScope = scope;
-            this.fSearchFor = searchFor;
-            this.fLimitTo = limitTo;
-            this.fMatchMode = matchMode;
-            this.fIsCaseSensitive = isCaseSensitive;
             this.fRequestor = requestor;
         }
 
