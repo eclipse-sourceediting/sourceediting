@@ -56,8 +56,7 @@ public class BooleanStack {
 	}
 
 	private void initialize() {
-		for (int i = 0; i < list.length; i++)
-			list[i] = false;
+		size = 0;
 	}
 
 	/**
