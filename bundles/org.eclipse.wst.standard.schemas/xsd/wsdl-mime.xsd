@@ -37,7 +37,7 @@ No other rights are granted by implication, estoppel or otherwise.
 			<extension base="wsdl:tExtensibilityElement">
 				<sequence/>
 				<attribute name="type" type="string" use="optional"/>
-				<attribute name="part" type="NMTOKEN" use="required"/>
+				<attribute name="part" type="NMTOKEN" use="optional"/>
 			</extension>
 		</complexContent>
 	</complexType>
