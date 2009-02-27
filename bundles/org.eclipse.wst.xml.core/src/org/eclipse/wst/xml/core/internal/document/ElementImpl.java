@@ -32,6 +32,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
+import org.eclipse.wst.xml.core.internal.provisional.IXMLNamespace;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -105,9 +106,9 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	NodeListImpl attrNodes = null;
 	private IStructuredDocumentRegion endStructuredDocumentRegion = null;
 	
-	private char[] fNamespaceURI = null;
-
 	private char[] fTagName = null;
+
+	private char[] fNamespaceURI = null;
 
 	/**
 	 * ElementImpl constructor
@@ -491,36 +492,28 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		return new String(this.fTagName, index + 1, this.fTagName.length - index - 1);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.w3c.dom.Node#getNamespaceURI()
-	 */
 	public String getNamespaceURI() {
-		/*
-		 * "This is not a computed value that is the result of a namespace
-		 * lookup based on an examination of the namespace declarations in
-		 * scope. It is merely the namespace URI given at creation time."
-		 */
-//		String nsAttrName = IXMLNamespace.XMLNS;
-//		int colon = indexOf(fTagName, ':');
-//		if (colon > 0) {
-//			char[] value = new char[colon + XMLNS_PREFIX.length];
-//			System.arraycopy(fTagName, 0, value, 0, colon);
-//			System.arraycopy(XMLNS_PREFIX, 0, value, colon, XMLNS_PREFIX.length);
-//			nsAttrName = new String(value);
-//		}
-//
-//		for (Node node = this; node != null; node = node.getParentNode()) {
-//			if (node.getNodeType() != ELEMENT_NODE)
-//				break;
-//			Element element = (Element) node;
-//			Attr attr = element.getAttributeNode(nsAttrName);
-//			if (attr != null)
-//				return attr.getValue();
-//		}
+		String nsAttrName = null;
+		String prefix = getPrefix();
+		if (prefix != null && prefix.length() > 0) {
+			nsAttrName = IXMLNamespace.XMLNS_PREFIX + prefix;
+		}
+		else {
+			nsAttrName = IXMLNamespace.XMLNS;
+		}
 
-		if (this.fNamespaceURI != null)
-			return new String(this.fNamespaceURI);
-		return null;
+		for (Node node = this; node != null; node = node.getParentNode()) {
+			if (node.getNodeType() != ELEMENT_NODE)
+				break;
+			Element element = (Element) node;
+			Attr attr = element.getAttributeNode(nsAttrName);
+			if (attr != null)
+				return attr.getValue();
+		}
+
+		if (this.fNamespaceURI == null)
+			return null;
+		return new String(this.fNamespaceURI);
 	}
 
 	/**
@@ -1369,13 +1362,11 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			fTagFlags &= ~FLAG_JSP;
 	}
 
-	/**
-	 */
 	protected void setNamespaceURI(String namespaceURI) {
-		if (namespaceURI != null)
-			this.fNamespaceURI = namespaceURI.toCharArray();
-		else
+		if (namespaceURI == null)
 			this.fNamespaceURI = null;
+		else
+			this.fNamespaceURI = namespaceURI.toCharArray();
 	}
 
 	/**

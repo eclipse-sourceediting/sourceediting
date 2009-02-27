@@ -30,8 +30,10 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.IXMLCharEntity;
+import org.eclipse.wst.xml.core.internal.provisional.IXMLNamespace;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
+import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -46,10 +48,10 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 
 	private char[] fName = null;
 	private ITextRegion nameRegion = null;
-	private char[] fNamespaceURI = null;
 	private ElementImpl ownerElement = null;
 	private ITextRegion fValueRegion = null;
 	private char[] valueSource = null;
+	private char[] fNamespaceURI = null;
 
 	/**
 	 * AttrImpl constructor
@@ -200,9 +202,39 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		return flatNode.getTextEndOffset(this.nameRegion);
 	}
 
-	/**
-	 */
 	public String getNamespaceURI() {
+		String nsAttrName = null;
+		String prefix = getPrefix();
+		if (prefix != null && prefix.length() > 0) {
+			if (prefix.equals(IXMLNamespace.XMLNS)) {
+				// fixed URI
+				return IXMLNamespace.XMLNS_URI;
+			}
+			nsAttrName = IXMLNamespace.XMLNS_PREFIX + prefix;
+		}
+		else {
+			String name = getName();
+			if (name != null && name.equals(IXMLNamespace.XMLNS)) {
+				// fixed URI
+				return IXMLNamespace.XMLNS_URI;
+			}
+			// does not inherit namespace from owner element
+			// if (this.ownerElement != null) return
+			// this.ownerElement.getNamespaceURI();
+			if (this.fNamespaceURI == null)
+				return null;
+			return new String(this.fNamespaceURI);
+		}
+
+		for (Node node = this.ownerElement; node != null; node = node.getParentNode()) {
+			if (node.getNodeType() != ELEMENT_NODE)
+				break;
+			Element element = (Element) node;
+			Attr attr = element.getAttributeNode(nsAttrName);
+			if (attr != null)
+				return attr.getValue();
+		}
+
 		if (this.fNamespaceURI == null)
 			return null;
 		return new String(this.fNamespaceURI);
