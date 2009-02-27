@@ -55,7 +55,7 @@ public class AttrImplTests extends TestCase {
 		assertEquals("attribute local name was not as expected", "local", attribute.getLocalName());
 	}
 
-	public void testNamespaceURI() {
+	public void testNamespaceURIOnCreation() {
 		IDOMModel model = (IDOMModel) StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForXML.ContentTypeID_XML);
 		model.getStructuredDocument().set(contents);
 
