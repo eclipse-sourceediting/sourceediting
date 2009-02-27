@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo.custom;
 
 import java.util.HashMap;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -38,7 +39,6 @@ public class NodeCustomizationRegistry
     NodeFilter nodeFilter;    
     boolean nodeEditorProviderFailedToLoad = false;
     boolean labelProviderFailedToLoad = false;
-    boolean nodeFilterFailedToLoad = false;    
     
     Descriptor(IConfigurationElement element)
     {

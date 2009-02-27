@@ -139,11 +139,6 @@ public class SelectFromCatalogDialog extends Dialog
       this.extensions = extensions1;
     }
 
-    public boolean isFilterProperty(Object element, Object property)
-    {
-      return false;
-    }
-
     public boolean select(Viewer viewer, Object parent, Object element)
     {
       boolean result = false;
