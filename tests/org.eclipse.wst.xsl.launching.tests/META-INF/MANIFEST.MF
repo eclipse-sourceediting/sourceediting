@@ -9,8 +9,10 @@ Require-Bundle: org.eclipse.core.resources;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.debug.core;bundle-version="[3.4.0,4.0.0)",
  org.eclipse.wst.xsl.launching;bundle-version="[1.0.0,2.0.0)",
  org.eclipse.wst.xsl.debug.ui;bundle-version="[1.0.0,2.0.0)",
- org.eclipse.debug.ui;bundle-version="3.5.0",
- org.eclipse.swt;bundle-version="[3.4.0,4.0.0)"
+ org.eclipse.debug.ui;bundle-version="[3.4.0,4.0.0)",
+ org.eclipse.swt;bundle-version="[3.4.0,4.0.0)",
+ org.eclipse.ui;bundle-version="[3.4.0,4.0.0)",
+ org.eclipse.wst.xsl.jaxp.launching;bundle-version="1.0.0"
 Bundle-Activator: org.eclipse.wst.xsl.launching.tests.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin

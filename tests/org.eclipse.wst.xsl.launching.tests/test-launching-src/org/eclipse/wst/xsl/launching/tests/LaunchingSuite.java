@@ -1,10 +1,3 @@
-package org.eclipse.wst.xsl.launching.tests;
-
-import junit.framework.TestSuite;
-
-import org.eclipse.wst.xsl.launching.tests.testcase.TestInputFileBlock;
-import org.eclipse.wst.xsl.launching.tests.testcase.XSLLaunchingTests;
-
 /*******************************************************************************
  * Copyright (c) 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
@@ -14,7 +7,17 @@ import org.eclipse.wst.xsl.launching.tests.testcase.XSLLaunchingTests;
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver (STAR) - bug 262046 - refactored launching suite.  
  *******************************************************************************/
+
+package org.eclipse.wst.xsl.launching.tests;
+
+import junit.framework.TestSuite;
+
+import org.eclipse.wst.xsl.launching.tests.testcase.LaunchShortcutTests;
+import org.eclipse.wst.xsl.launching.tests.testcase.TestInputFileBlock;
+import org.eclipse.wst.xsl.launching.tests.testcase.XSLLaunchingTests;
+
 
 /**
  * This class does specifies all the classes in this bundle
@@ -31,6 +34,7 @@ public class LaunchingSuite extends TestSuite {
 		super("XSL Launching Test Suite");
 		addTest(new TestSuite(XSLLaunchingTests.class));
 		addTest(new TestSuite(TestInputFileBlock.class));
+		addTest(new TestSuite(LaunchShortcutTests.class));
 	}
 
 	public LaunchingSuite(Class theClass, String name) {

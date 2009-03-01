@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Jesper Steen Møller - initial XSL launching test
+ *     David Carver (STAR) - bug 262046 - refactored for better reliability.
  *******************************************************************************/
 
 package org.eclipse.wst.xsl.launching.tests.testcase;
@@ -25,91 +26,91 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationType;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.internal.ui.DebugUIPlugin;
+import org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationManager;
+import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
+import org.eclipse.wst.xsl.launching.tests.AbstractLaunchingTest;
 import org.eclipse.wst.xsl.launching.tests.TestEnvironment;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-public class XSLLaunchingTests extends TestCase {
+public class XSLLaunchingTests extends AbstractLaunchingTest {
 
-	private TestEnvironment _env;
-	private IProject _testProject;
-	private String launchXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>"
-		+ "<launchConfiguration type=\"org.eclipse.wst.xsl.launching.launchConfigurationType\">"
-		+ "<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_ATTRIBUTES\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Attributes/&gt;&#13;&#10;\"/>"
-		+ "<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_OUTPUT_PROPERTIES\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Properties/&gt;&#13;&#10;\"/>"
-		+ "<booleanAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.ATTR_USE_DEFAULT_PROCESSOR\" value=\"true\"/>"
-		+ "<stringAttribute key=\"org.eclipse.wst.xsl.jaxp.launching.INVOKER_DESCRIPTOR\" value=\"org.eclipse.wst.xsl.launching.jaxp.invoke\"/>"
-		+ "<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_FORMAT_FILE\" value=\"false\"/>"
-		+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_INPUT_FILE\" value=\"${workspace_loc:/XSLTestProject/input.xml}\"/>"
-		+ "<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OPEN_FILE\" value=\"true\"/>"
-		+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FILENAME\" value=\"output.xml\"/>"
-		+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_PIPELINE\" value=\"&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;Pipeline&gt;&#13;&#10;&lt;OutputProperties/&gt;&#13;&#10;&lt;Transform path=&quot;/XSLTestProject/transform.xsl&quot; pathType=&quot;resource&quot;&gt;&#13;&#10;&lt;Parameters/&gt;&#13;&#10;&lt;/Transform&gt;&#13;&#10;&lt;/Pipeline&gt;&#13;&#10;\"/>"
-		+ "<booleanAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_USE_DEFAULT_OUTPUT_FILE\" value=\"false\"/>"
-		+ "<stringAttribute key=\"org.eclipse.wst.xsl.launching.ATTR_OUTPUT_FOLDER\" value=\"${workspace_loc:/XSLTestProject}\"/>"
-		+ "</launchConfiguration>";
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		_env = new TestEnvironment();
-		_testProject = _env.createProject("XSLTestProject");
+		
+		IPath path = folder.getFullPath();
+		addLaunchConfiguration(path, "SimpleTransform.launch");
+		addLaunchConfiguration(path, "TransformComments.launch");
+		testProject.refreshLocal(2, new NullProgressMonitor());
 	}
 
-	private void launchConfiguration(IPath folder, String launchXml)
-			throws CoreException, UnsupportedEncodingException,
-			InterruptedException {
-		String name = "launch" + (int) (Math.random() * 1000);
-		_env.addFile(folder, name + ".launch", launchXml);
-
+	@Override
+	protected void tearDown() throws Exception {
+		env.dispose();
+		super.tearDown();
+	}
+	
+	
+	private ILaunch launch(String name)  throws Exception {
+		ILaunchConfiguration configuration =  getLaunchConfiguration(name);
+		ILaunch launch = configuration.launch(ILaunchManager.RUN_MODE, new NullProgressMonitor());
+		return launch;
+	}
+	
+	/**
+	 * Returns the launch configuration for the given main type
+	 * 
+	 * @param mainTypeName program to launch
+	 * @see ProjectCreationDecorator
+	 */
+	protected ILaunchConfiguration getLaunchConfiguration(String mainTypeName)  throws Exception {
 		ILaunchManager mgr = DebugPlugin.getDefault().getLaunchManager();
-		ILaunchConfiguration[] allConfigs = mgr.getLaunchConfigurations();
-		ILaunchConfiguration mine = null;
-		boolean found = false;
-		for (ILaunchConfiguration lc : allConfigs) {
-			if (lc.getName().equals(name)) {
-				found = true;
-				mine = lc;
-				assertEquals(
-						"bad launch config type?",
-						"org.eclipse.wst.xsl.launching.launchConfigurationType",
-						lc.getType().getIdentifier());
-				assertEquals("bad launch config plugin?",
-						"org.eclipse.wst.xsl.launching", lc.getType()
-								.getPluginIdentifier());
-			}
-		}
-		assertTrue("expected to find the launch config we just added", found);
+		IFile file = testProject.getProject().getFolder("launchConfigs").getFile(mainTypeName + ".launch");
+		ILaunchConfiguration mine =	mgr.getLaunchConfiguration(file);
+		assertEquals("Wrong type found: ", XSLLaunchConfigurationConstants.ID_LAUNCH_CONFIG_TYPE, mine.getType().getIdentifier());
 
-		ILaunch launch = mine.launch(ILaunchManager.RUN_MODE,
-				new NullProgressMonitor());
-		for (int i = 0; i < 400 && !launch.isTerminated(); ++i) {
-			System.out.println("waiting");
-			Thread.sleep(200);
-		}
-		assertTrue("Launch did not complete within a 20 second time period",
-				launch.isTerminated());
+		return mine;
+	}	
 
-		_testProject.refreshLocal(2, null);
+	public synchronized void testSimpleTransformation() throws Exception{
+		IPath folder = testProject.getFullPath();
+		env.addFileFromResource(folder, "1-input.xml", "1-input.xml");
+		env.addFileFromResource(folder, "1-transform.xsl", "1-transform.xsl");
+		refreshProject();
+
+		launchConfiguration("SimpleTransform");
+		IFile output = testProject.getFile("1-input.out.xml");
+		Document doc = parseXml(output.getContents(true));
+		assertEquals("root-out", doc.getDocumentElement().getNodeName());
 	}
 
-	public void testBuildConfig() throws CoreException, InterruptedException,
-			ParserConfigurationException, SAXException, IOException {
-		IPath folder = _testProject.getFullPath();
-		_env.addFileFromResource(folder, "input.xml", "1-input.xml");
-		_env.addFileFromResource(folder, "transform.xsl", "1-transform.xsl");
+	private void refreshProject() throws CoreException, InterruptedException {
+		testProject.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+		while (testProject.isSynchronized(IResource.DEPTH_INFINITE) == false) {
+			Thread.sleep(1000);
+		}
+	}
 
-		launchConfiguration(folder, launchXml);
-		IFile output = _testProject.getFile("output.xml");
-		Document doc = parseXml(output.getContents(true));
-
-		assertEquals("root-out", doc.getDocumentElement().getNodeName());
+	private void launchConfiguration(String launchConfigName) throws Exception, CoreException {
+		ILaunch launch = launch(launchConfigName);
+		// Wait until the launch configuration terminates.
+		while (launch.isTerminated() == false) {
+			Thread.sleep(1000);
+		}
+		refreshProject();
 	}
 
 	/**
@@ -121,22 +122,22 @@ public class XSLLaunchingTests extends TestCase {
 	 * @throws SAXException
 	 * @throws IOException
 	 */
-//	public void testTransformComments() throws CoreException, InterruptedException,
-//			ParserConfigurationException, SAXException, IOException {
-//		IPath folder = _testProject.getFullPath();
-//		_env.addFileFromResource(folder, "input.xml", "testCommentInput.xml");
-//		_env.addFileFromResource(folder, "transform.xsl", "testComments.xsl");
-//		_env.addFileFromResource(folder, "expected.xml", "testCommentsExpected.xml");
-//
-//		launchConfiguration(folder, launchXml);
-//		IFile output = _testProject.getFile("output.xml");
-//		IFile expected = _testProject.getFile("expected.xml");
-//		
-//		String result = readFile(output.getContents());
-//		String wanted = readFile(expected.getContents());
-//		
-//		assertEquals("Unexpected results:", wanted, result);
-//	}
+	public synchronized void testTransformComments() throws Exception{
+		IPath folder = testProject.getFullPath();
+		env.addFileFromResource(folder, "testCommentInput.xml", "testCommentInput.xml");
+		env.addFileFromResource(folder, "testComments.xsl", "testComments.xsl");
+		env.addFileFromResource(folder, "expected.xml", "testCommentsExpected.xml");
+		refreshProject();
+
+		launchConfiguration("TransformComments");
+		IFile output = testProject.getFile("testCommentInput.out.xml");
+		IFile expected = testProject.getFile("expected.xml");
+		
+		String result = readFile(output.getContents());
+		String wanted = readFile(expected.getContents());
+		
+		assertEquals("Unexpected results:", wanted, result);
+	}
 
 	private String readFile(InputStream input) {
 		String str;
@@ -161,9 +162,4 @@ public class XSLLaunchingTests extends TestCase {
 		return builder.parse(contents);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		_env.dispose();
-		super.tearDown();
-	}
 }
