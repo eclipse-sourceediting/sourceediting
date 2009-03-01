@@ -212,12 +212,12 @@ public class XSLLaunchShortcut implements ILaunchShortcut
 		}
 	}
 
-	private ILaunchManager getLaunchManager()
+	protected ILaunchManager getLaunchManager()
 	{
 		return DebugPlugin.getDefault().getLaunchManager();
 	}
 
-	private ILaunchConfigurationType getConfigurationType()
+	protected ILaunchConfigurationType getConfigurationType()
 	{
 		return getLaunchManager().getLaunchConfigurationType(XSLLaunchConfigurationConstants.ID_LAUNCH_CONFIG_TYPE);
 	}
