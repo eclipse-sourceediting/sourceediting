@@ -40,7 +40,13 @@ public class LaunchShortcutTests extends AbstractLaunchingTest {
 		// TODO Auto-generated method stub
 		super.setUp();
 		IPath path = folder.getFullPath();
-		addLaunchConfiguration(path, "SimpleTransform.launch");
+		copyConfigurationToWorkspace(path, "SimpleTransform.launch");
+	}
+	
+	@Override
+	protected void tearDown() throws Exception {
+		env.dispose();
+		super.tearDown();
 	}
 	
 	/**
