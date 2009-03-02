@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewGraphicalViewer;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
@@ -53,14 +54,27 @@ public class DeleteAction extends BaseSelectionAction
       if (selection instanceof IGraphElement)
       {
         IGraphElement xsdObj = (IGraphElement)selection;
-        topLevelContainer = xsdObj.getTopContainer();
-        if (topLevelContainer == selection)
+ 
+        if (xsdObj instanceof XSDBaseAdapter)
         {
-          doSetInput = true;
-          doSetModelAsInput = true;
+          XSDBaseAdapter baseAdapter = (XSDBaseAdapter)xsdObj;
+          
+          // Do not delete selected item if it is read-only, or if the item selected
+          // is null and the read only check cannot be completed
+          if (baseAdapter == null || baseAdapter.isReadOnly())
+          {
+            continue;
+          }
+          
+          topLevelContainer = xsdObj.getTopContainer();
+          if (topLevelContainer == selection)
+          {
+            doSetInput = true;
+            doSetModelAsInput = true;
+          }
+          command = xsdObj.getDeleteCommand();
+          model = xsdObj.getModel();         
         }
-        command = xsdObj.getDeleteCommand();
-        model = xsdObj.getModel();
       }
       
       if (command != null)
