@@ -93,9 +93,9 @@
 		name="%javascript.validator"
 		point="org.eclipse.wst.validation.validatorV2">
       <validator
-            build="true"
+            build="false"
 			class="org.eclipse.wst.jsdt.web.core.internal.validation.JsValidator"
-            manual="true"
+            manual="false"
             sourceid="org.eclipse.wst.jsdt.web.jssourcevalidator"
             version="1"
             markerId="org.eclipse.wst.jsdt.core.problem">
