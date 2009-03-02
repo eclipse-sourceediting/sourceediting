@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,15 +31,18 @@ import org.eclipse.wst.xsd.ui.internal.design.editparts.TargetConnectionSpacingF
 import org.eclipse.wst.xsd.ui.internal.design.editparts.XSDAttributesForAnnotationEditPart;
 import org.eclipse.wst.xsd.ui.internal.design.editparts.XSDBaseFieldEditPart;
 import org.eclipse.wst.xsd.ui.internal.design.figures.GenericGroupFigure;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDWildcard;
+import org.w3c.dom.Element;
 
 public class XSDAttributeDragAndDropCommand extends BaseDragAndDropCommand
 {
   public XSDAttributeDragAndDropCommand(EditPartViewer viewer, ChangeBoundsRequest request, GraphicalEditPart target, XSDBaseFieldEditPart itemToDrag, Point location)
   {
     super(viewer, request);
+    setLabel(Messages._UI_ACTION_DRAG_DROP_ATTRIBUTE);
     this.target = target;
     this.itemToDrag = itemToDrag;
     this.location = location;
@@ -49,6 +52,7 @@ public class XSDAttributeDragAndDropCommand extends BaseDragAndDropCommand
   public XSDAttributeDragAndDropCommand(XSDBaseFieldEditPart itemToDrag, XSDBaseFieldEditPart leftField, XSDBaseFieldEditPart rightField, int direction)
   {
     super(itemToDrag.getViewer(), null); 
+    setLabel(Messages._UI_ACTION_DRAG_DROP_ATTRIBUTE); 
     this.itemToDrag = itemToDrag;
     canExecute = false;
     handleKeyboardDragAndDrop(leftField, rightField, direction);
@@ -100,6 +104,18 @@ public class XSDAttributeDragAndDropCommand extends BaseDragAndDropCommand
       // Get 'left' and 'right' siblings
       doDrop(targetEditPartSiblings, itemToDrag);
     }
+  }  
+  
+  /*
+   * (non-Javadoc)
+   * @see org.eclipse.wst.xsd.ui.internal.commands.BaseDragAndDropCommand#getElement()
+   */
+  protected Element getElement()
+  {
+	  XSDAttributeDeclarationAdapter adapter = (XSDAttributeDeclarationAdapter) itemToDrag.getModel();
+	  XSDAttributeDeclaration target = (XSDAttributeDeclaration)adapter.getTarget();
+	  XSDConcreteComponent parent = (XSDConcreteComponent)target.eContainer();
+	  return parent.getElement();
   }
 
   protected void doDrop(List siblings, GraphicalEditPart movingEditPart)

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,10 +33,12 @@ import org.eclipse.wst.xsd.ui.internal.design.editparts.TargetConnectionSpacingF
 import org.eclipse.wst.xsd.ui.internal.design.editparts.XSDBaseFieldEditPart;
 import org.eclipse.wst.xsd.ui.internal.design.editparts.XSDGroupsForAnnotationEditPart;
 import org.eclipse.wst.xsd.ui.internal.design.figures.GenericGroupFigure;
+import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDWildcard;
+import org.w3c.dom.Element;
 
 
 public class XSDElementDragAndDropCommand extends BaseDragAndDropCommand
@@ -46,6 +48,7 @@ public class XSDElementDragAndDropCommand extends BaseDragAndDropCommand
   public XSDElementDragAndDropCommand(EditPartViewer viewer, ChangeBoundsRequest request, GraphicalEditPart target, XSDBaseFieldEditPart itemToDrag, Point location)
   {
     super(viewer, request);
+    setLabel(Messages._UI_ACTION_DRAG_DROP_ELEMENT);
     this.target = target;
     this.itemToDrag = itemToDrag;
     this.location = location;
@@ -55,6 +58,7 @@ public class XSDElementDragAndDropCommand extends BaseDragAndDropCommand
   public XSDElementDragAndDropCommand(XSDBaseFieldEditPart itemToDrag, XSDBaseFieldEditPart leftField, XSDBaseFieldEditPart rightField, int direction)
   {
     super(itemToDrag.getViewer(), null); 
+    setLabel(Messages._UI_ACTION_DRAG_DROP_ELEMENT); 
     this.itemToDrag = itemToDrag;
     canExecute = false;
     handleKeyboardDragAndDrop(leftField, rightField, direction);
@@ -106,7 +110,19 @@ public class XSDElementDragAndDropCommand extends BaseDragAndDropCommand
       doDrop(targetEditPartSiblings, itemToDrag);
     }
   }
-
+  
+  /*
+   * (non-Javadoc)
+   * @see org.eclipse.wst.xsd.ui.internal.commands.BaseDragAndDropCommand#getElement()
+   */
+  protected Element getElement()
+  {
+	  XSDElementDeclarationAdapter adapter = (XSDElementDeclarationAdapter) itemToDrag.getModel();
+	  XSDElementDeclaration target = (XSDElementDeclaration)adapter.getTarget();
+	  XSDConcreteComponent parent = (XSDConcreteComponent)target.eContainer();	  
+	  return parent.getElement();
+  }
+  
   protected void doDrop(List siblings, GraphicalEditPart movingEditPart)
   {
     commonSetup(siblings, movingEditPart);

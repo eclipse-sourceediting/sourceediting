@@ -117,6 +117,8 @@ public class Messages extends NLS
   public static String _UI_ACTION_ADD_REDEFINE;
   public static String _UI_ACTION_ADD_ATTRIBUTE;
   public static String _UI_ACTION_ADD_ATTRIBUTE_REF;
+  public static String _UI_ACTION_DRAG_DROP_ELEMENT;
+  public static String _UI_ACTION_DRAG_DROP_ATTRIBUTE;
 
   // TODO: TO REMOVE
   public static String _UI_LABEL_ELEMENTFORMDEFAULT;

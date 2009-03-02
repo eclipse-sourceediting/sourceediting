@@ -16,7 +16,7 @@
 
 	<extension point="org.eclipse.ui.editorActions">
         <editorContribution
-            targetID="org.eclipse.wst.xsd.core.xsdsource.source"
+            targetID="org.eclipse.wst.xsd.ui.internal.editor.InternalXSDMultiPageEditor"
             id="org.eclipse.wst.xsd.core.xsdsource.ruler.actions">
          <action
                label="%AddBookmark.label"

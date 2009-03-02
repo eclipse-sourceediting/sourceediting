@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,6 +37,7 @@ import org.eclipse.wst.xsd.ui.internal.design.editparts.TargetConnectionSpacingF
 import org.eclipse.wst.xsd.ui.internal.design.editparts.XSDBaseFieldEditPart;
 import org.eclipse.wst.xsd.ui.internal.design.figures.GenericGroupFigure;
 import org.eclipse.xsd.XSDConcreteComponent;
+import org.w3c.dom.Element;
 
 public abstract class BaseDragAndDropCommand extends BaseCommand
 {
@@ -70,6 +71,13 @@ public abstract class BaseDragAndDropCommand extends BaseCommand
   
   protected abstract void setup();
  
+  /**
+   * Provides the DOM element associated with the parent XSD component. 
+   * This element is used in the the undo/redo mechanism.   
+   * @return the DOM element associated with the parent XSD component.
+   */
+  protected abstract Element getElement();
+  
   public PointList getConnectionPoints(Rectangle draggedFigureBounds)
   {
     PointList pointList = null;
@@ -143,7 +151,10 @@ public abstract class BaseDragAndDropCommand extends BaseCommand
   {
     if (canExecute)
     {
-      action.run();
+    	// Wrap the drag and drop operation for easy undo and redo.
+    	beginRecording(this.getElement());
+		action.run();
+		endRecording();
     }
   }
   

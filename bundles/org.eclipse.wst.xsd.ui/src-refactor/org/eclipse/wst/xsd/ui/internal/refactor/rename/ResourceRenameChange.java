@@ -61,8 +61,6 @@ public class ResourceRenameChange extends Change {
 	 */
 	public Change perform(IProgressMonitor pm) throws CoreException {
 		try {
-			if (false)
-				throw new NullPointerException();
 			pm.beginTask(RefactoringMessages.getString("XSDRenameResourceChange.rename_resource"), 1); //$NON-NLS-1$
 
 			getResource().move(renamedResourcePath(fResourcePath, fNewName), getCoreRenameFlags(), pm);
