@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.io.InputStream;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.validation.ValidationResult;
 import org.eclipse.wst.validation.ValidationState;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
@@ -59,7 +60,10 @@ public class Validator extends AbstractNestedValidator
     XMLValidationConfiguration configuration = new XMLValidationConfiguration();
     try
     {
+      Preferences pluginPreferences = XMLCorePlugin.getDefault().getPluginPreferences();
       configuration.setFeature(XMLValidationConfiguration.INDICATE_NO_GRAMMAR, indicateNoGrammar);
+      configuration.setFeature(XMLValidationConfiguration.USE_XINCLUDE, pluginPreferences.getBoolean(XMLCorePreferenceNames.USE_XINCLUDE));
+      configuration.setFeature(XMLValidationConfiguration.HONOUR_ALL_SCHEMA_LOCATIONS, pluginPreferences.getBoolean(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS));
     }
     catch(Exception e)
     {

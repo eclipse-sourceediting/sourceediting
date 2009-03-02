@@ -167,7 +167,6 @@
 			class="org.eclipse.wst.xml.ui.internal.preferences.XMLFilesPreferencePage"
 			id="org.eclipse.wst.xml.ui.preferences.xml.xml">
          	<keywordReference id="org.eclipse.wst.xml.ui.files"/>
-         	<keywordReference id="org.eclipse.wst.xml.ui.severities"/>
         </page>
 		<!-- XML PREFERENCE PAGES -->
 		<page
@@ -204,6 +203,13 @@
 			class="org.eclipse.wst.xml.ui.internal.preferences.XMLTypingPreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.xml.typing">
 		</page>
+    	<page
+            name="%XML_Validator.name"
+            category="org.eclipse.wst.xml.ui.preferences.xml.xml"
+            class="org.eclipse.wst.xml.ui.internal.preferences.XMLValidatorPreferencePage"
+            id="org.eclipse.wst.sse.ui.preferences.xml.validation">
+       	    <keywordReference id="org.eclipse.wst.xml.ui.severities"/>
+    	</page>
 	</extension>
 	
 	<!-- Keywords for preference and properties pages -->

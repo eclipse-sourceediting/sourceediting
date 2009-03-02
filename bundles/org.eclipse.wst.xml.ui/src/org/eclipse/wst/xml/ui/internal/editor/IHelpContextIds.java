@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,6 +39,8 @@ public interface IHelpContextIds {
 	public static final String XML_PREFWEBX_STYLES_HELPID = PREFIX + "webx0062"; //$NON-NLS-1$
 	// XML Templates Preference page
 	public static final String XML_PREFWEBX_TEMPLATES_HELPID = PREFIX + "webx0063"; //$NON-NLS-1$
+    // XML Validator Preference page
+    public static final String XML_PREFWEBX_VALIDATOR_HELPID = PREFIX + "webx0064"; //$NON-NLS-1$
 
 	// XML Cleanup dialog
 	public static final String CLEANUP_XML_HELPID = PREFIX + "xmlm1200"; //$NON-NLS-1$

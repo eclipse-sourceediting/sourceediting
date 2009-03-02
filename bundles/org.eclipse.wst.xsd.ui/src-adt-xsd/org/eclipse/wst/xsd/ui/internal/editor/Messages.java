@@ -123,7 +123,8 @@ public class Messages extends NLS
   // TODO: TO REMOVE
   public static String _UI_LABEL_ATTRIBUTEFORMDEFAULT;
   public static String _UI_LABEL_CREATE_ANON_TYPE;  
-  public static String _UI_STRUCTURED_TEXT_EDITOR_PREFS_LINK;
+  public static String _UI_XML_TEXT_EDITOR_PREFS_LINK;
+  public static String _UI_XML_VALIDATOR_PREFS_LINK;
   
   public static String _UI_TEXT_ENABLE_AUTO_IMPORT_CLEANUP;
   public static String _UI_TEXT_ENABLE_AUTO_OPEN_SCHEMA_DIALOG;

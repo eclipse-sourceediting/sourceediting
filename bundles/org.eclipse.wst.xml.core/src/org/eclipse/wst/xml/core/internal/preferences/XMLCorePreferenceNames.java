@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -212,4 +212,15 @@ public class XMLCorePreferenceNames {
 	 * </p>
 	 */
 	public static final String SPACE_BEFORE_EMPTY_CLOSE_TAG = "spaceBeforeEmptyCloseTag";//$NON-NLS-1$
+	
+    /**
+     * Indicates whether or not all schema locations for XSD should be honoured
+     * during XSD validation of XML.
+     * <p>
+     * Value is of type <code>boolean</code>.<br />
+     * Possible values: {TRUE, FALSE}
+     * </p>
+     * 
+     */
+    public static final String HONOUR_ALL_SCHEMA_LOCATIONS = "honourAllSchemaLocations";//$NON-NLS-1$
 }

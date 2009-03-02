@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -457,4 +457,8 @@ public interface XSDEditorContextIds
   
   /* CONTEXT_ID xsdp0010 for XML Schema Preferences Page */
   public static final String XSDP_PREFERENCE_PAGE = PLUGIN_NAME + ".xsdp0010";
+  /* CONTEXT_ID xsdp0020 for XML Schema Editor Preferences Page */
+  public static final String XSDP_EDITOR_PREFERENCE_PAGE = PLUGIN_NAME + ".xsdp0020";
+  /* CONTEXT_ID xsdp0030 for XML Schema Validator Preferences Page */
+  public static final String XSDP_VALIDATOR_PREFERENCE_PAGE = PLUGIN_NAME + ".xsdp0030";
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator;
 import org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
@@ -34,7 +36,7 @@ public class Validator extends AbstractNestedValidator
   protected void setupValidation(NestedValidatorContext context) 
   {
 	XSDValidationConfiguration configuration = new XSDValidationConfiguration();
-	boolean honourAllSchemaLocations = XSDCorePlugin.getDefault().getPluginPreferences().getBoolean(XSDCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS);
+	boolean honourAllSchemaLocations = XMLCorePlugin.getDefault().getPluginPreferences().getBoolean(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS);
 	boolean fullSchemaConformance = XSDCorePlugin.getDefault().getPluginPreferences().getBoolean(XSDCorePreferenceNames.FULL_SCHEMA_CONFORMANCE);
 	try
 	{

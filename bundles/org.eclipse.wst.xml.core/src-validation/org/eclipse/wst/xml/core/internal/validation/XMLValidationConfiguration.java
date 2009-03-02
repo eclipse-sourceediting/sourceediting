@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,8 +24,13 @@ public class XMLValidationConfiguration
    */
   public static String WARN_NO_GRAMMAR = "WARN_NO_GRAMMAR"; //$NON-NLS-1$
   public static String INDICATE_NO_GRAMMAR = "INDICATE_NO_GRAMMAR"; //$NON-NLS-1$
+  public static String USE_XINCLUDE = "USE_XINCLUDE"; //$NON-NLS-1$
+  public static String HONOUR_ALL_SCHEMA_LOCATIONS = "HONOUR_ALL_SCHEMA_LOCATIONS"; //$NON-NLS-1$
+
   private boolean warn_no_grammar_value = false;
   private int indicate_no_grammar_value = 1;
+  private boolean use_xinclude = false;
+  private boolean honour_all_schema_locations_value = false;
   
   /**
    * Set a feature of this configuration.
@@ -41,6 +46,10 @@ public class XMLValidationConfiguration
   {
 	if(WARN_NO_GRAMMAR.equals(feature))
 	  warn_no_grammar_value = value;
+    else if(USE_XINCLUDE.equals(feature))
+      use_xinclude = value;
+    else if(HONOUR_ALL_SCHEMA_LOCATIONS.equals(feature))
+      honour_all_schema_locations_value = value;
 	else
 	  throw new Exception("Feature not recognized."); //$NON-NLS-1$
 	
@@ -81,7 +90,11 @@ public class XMLValidationConfiguration
   {
 	if(WARN_NO_GRAMMAR.equals(feature))
 	  return warn_no_grammar_value;
-	
+	else if(USE_XINCLUDE.equals(feature))
+      return use_xinclude;
+    if(HONOUR_ALL_SCHEMA_LOCATIONS.equals(feature))
+      return honour_all_schema_locations_value;
+			
 	throw new Exception("Feature not recognized."); //$NON-NLS-1$
   }
 

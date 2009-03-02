@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,6 @@ David Carver, Standards for Technology in Automotive Retail, bug 1147033
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.preferences;
 
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -30,11 +29,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.dialogs.PreferenceLinkArea;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
-import org.eclipse.wst.xsd.core.internal.XSDCorePlugin;
-import org.eclipse.wst.xsd.core.internal.preferences.XSDCorePreferenceNames;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorContextIds;
@@ -48,10 +43,6 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
   Text schemaNsPrefixField;
   Text defaultTargetNamespaceText;
   Button qualifyXSDLanguage;
-  private Button honourAllSchemaLocations = null;
-  private Button fullSchemaConformance = null;
-  private Button removeUnusedImports;
-  private Button automaticallyOpenSchemaLocationDialog;
 
   /**
    * Creates preference page controls on demand.
@@ -60,10 +51,6 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
   protected Control createContents(final Composite parent)
   {
     WorkbenchHelp.setHelp(parent, XSDEditorContextIds.XSDP_PREFERENCE_PAGE);
-
-	new PreferenceLinkArea(parent, SWT.WRAP | SWT.MULTI, "org.eclipse.wst.sse.ui.preferences.editor", Messages._UI_STRUCTURED_TEXT_EDITOR_PREFS_LINK,//$NON-NLS-1$
-				(IWorkbenchPreferenceContainer) getContainer(), null).getControl().setLayoutData(GridDataFactory.fillDefaults().hint(150, SWT.DEFAULT).create());
-	new Label(parent, SWT.NONE).setLayoutData(GridDataFactory.swtDefaults().create());
 
     Group group = createGroup(parent, 2);   
     group.setText(Messages._UI_TEXT_XSD_NAMESPACE_PREFIX);
@@ -91,10 +78,6 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     		XSDEditorCSHelpIds.XMLSCHEMAFILES_PREFERENCES__DEFAULT_TARGETNAMESPACE); 
     
     
-    createContentsForValidatingGroup(parent);
-    
-    createContentsForImportCleanup(parent);
-
     initializeValues();
 
     applyDialogFont(parent);
@@ -142,60 +125,6 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     label.setLayoutData(data);
     
     return label;
-  }
-  
-  protected void createContentsForValidatingGroup(Composite parent) 
-  {
-	Group validatingGroup = createGroup(parent, 1);
-	validatingGroup.setText(Messages._UI_VALIDATING_FILES);
-
-	//GridData
-	GridData data = new GridData(SWT.FILL);
-	data.verticalAlignment = SWT.CENTER;
-	data.horizontalAlignment = SWT.FILL;
-
-	if (honourAllSchemaLocations == null) 
-	{
-		honourAllSchemaLocations = new Button(validatingGroup, SWT.CHECK | SWT.LEFT);
-		honourAllSchemaLocations.setText(Messages._UI_TEXT_HONOUR_ALL_SCHEMA_LOCATIONS);
-		honourAllSchemaLocations.setLayoutData(data);
-		
-	    PlatformUI.getWorkbench().getHelpSystem().setHelp(honourAllSchemaLocations,
-	    		XSDEditorCSHelpIds.XMLSCHEMAFILES_PREFERENCES__HONOUR_ALL_SCHEMA_LOCATIONS); 
-
-	}
-	if (fullSchemaConformance == null) 
-	{
-		fullSchemaConformance = new Button(validatingGroup, SWT.CHECK | SWT.LEFT);
-		fullSchemaConformance.setLayoutData(GridDataFactory.copyData(data));
-		fullSchemaConformance.setText(Messages._UI_FULL_CONFORMANCE);
-	}
-
-  }
-  
-  private void createContentsForImportCleanup(Composite parent)
-  {
-    Group unusedImportGroup = createGroup(parent, 1);
-    unusedImportGroup.setText(Messages._UI_GRAPH_DIRECTIVES);
-
-    //GridData
-    GridData data = new GridData(SWT.FILL);
-    data.verticalAlignment = SWT.CENTER;
-    data.horizontalAlignment = SWT.FILL;
-
-    if (removeUnusedImports == null) 
-    {
-      removeUnusedImports = new Button(unusedImportGroup, SWT.CHECK | SWT.LEFT);
-      removeUnusedImports.setText(Messages._UI_TEXT_ENABLE_AUTO_IMPORT_CLEANUP);
-      removeUnusedImports.setLayoutData(data);
-      
-      PlatformUI.getWorkbench().getHelpSystem().setHelp(removeUnusedImports,
-      XSDEditorCSHelpIds.XMLSCHEMAFILES_PREFERENCES__IMPORT_CLEANUP);
-        
-      automaticallyOpenSchemaLocationDialog = new Button(unusedImportGroup, SWT.CHECK | SWT.LEFT);
-      automaticallyOpenSchemaLocationDialog.setText(Messages._UI_TEXT_ENABLE_AUTO_OPEN_SCHEMA_DIALOG);
-      automaticallyOpenSchemaLocationDialog.setLayoutData(GridDataFactory.copyData(data));      
-    }
   }
   
   /**
@@ -262,10 +191,6 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     schemaNsPrefixField.setText(getPreferenceStore().getDefaultString(XSDEditorPlugin.CONST_XSD_DEFAULT_PREFIX_TEXT));
     qualifyXSDLanguage.setSelection(getPreferenceStore().getDefaultBoolean(XSDEditorPlugin.CONST_XSD_LANGUAGE_QUALIFY));
     defaultTargetNamespaceText.setText(getPreferenceStore().getString(XSDEditorPlugin.CONST_DEFAULT_TARGET_NAMESPACE));
-    honourAllSchemaLocations.setSelection(XSDCorePlugin.getDefault().getPluginPreferences().getDefaultBoolean(XSDCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS));
-    fullSchemaConformance.setSelection(XSDCorePlugin.getDefault().getPluginPreferences().getDefaultBoolean(XSDCorePreferenceNames.FULL_SCHEMA_CONFORMANCE));
-    removeUnusedImports.setSelection(getPreferenceStore().getDefaultBoolean(XSDEditorPlugin.CONST_XSD_IMPORT_CLEANUP));
-    automaticallyOpenSchemaLocationDialog.setSelection(getPreferenceStore().getDefaultBoolean(XSDEditorPlugin.CONST_XSD_AUTO_OPEN_SCHEMA_LOCATION_DIALOG));    
   }
 
   /**
@@ -277,10 +202,6 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     schemaNsPrefixField.setText(store.getString(XSDEditorPlugin.CONST_XSD_DEFAULT_PREFIX_TEXT));
     qualifyXSDLanguage.setSelection(store.getBoolean(XSDEditorPlugin.CONST_XSD_LANGUAGE_QUALIFY));
     defaultTargetNamespaceText.setText(store.getString(XSDEditorPlugin.CONST_DEFAULT_TARGET_NAMESPACE));
-    honourAllSchemaLocations.setSelection(XSDCorePlugin.getDefault().getPluginPreferences().getBoolean(XSDCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS));
-    fullSchemaConformance.setSelection(XSDCorePlugin.getDefault().getPluginPreferences().getBoolean(XSDCorePreferenceNames.FULL_SCHEMA_CONFORMANCE));
-    removeUnusedImports.setSelection(store.getBoolean(XSDEditorPlugin.CONST_XSD_IMPORT_CLEANUP));
-    automaticallyOpenSchemaLocationDialog.setSelection(store.getBoolean(XSDEditorPlugin.CONST_XSD_AUTO_OPEN_SCHEMA_LOCATION_DIALOG));
   }
 
   /**
@@ -293,15 +214,8 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     store.setValue(XSDEditorPlugin.CONST_XSD_DEFAULT_PREFIX_TEXT, getXMLSchemaPrefix());
     store.setValue(XSDEditorPlugin.CONST_XSD_LANGUAGE_QUALIFY, getQualify());
     store.setValue(XSDEditorPlugin.CONST_DEFAULT_TARGET_NAMESPACE, getXMLSchemaTargetNamespace());
-    store.setValue(XSDEditorPlugin.CONST_XSD_IMPORT_CLEANUP, getRemoveImportSetting());
-    store.setValue(XSDEditorPlugin.CONST_XSD_AUTO_OPEN_SCHEMA_LOCATION_DIALOG, getAutomaticallyOpenSchemaLocationDialogSetting());
       
     XSDEditorPlugin.getPlugin().savePluginPreferences();
-    
-    XSDCorePlugin.getDefault().getPluginPreferences().setValue(XSDCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, honourAllSchemaLocations.getSelection());
-    XSDCorePlugin.getDefault().getPluginPreferences().setValue(XSDCorePreferenceNames.FULL_SCHEMA_CONFORMANCE, fullSchemaConformance.getSelection());
-    
-    XSDCorePlugin.getDefault().savePluginPreferences();
   }
 
   public String getXMLSchemaPrefix()
@@ -317,16 +231,6 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
   public boolean getQualify()
   {
     return qualifyXSDLanguage.getSelection();
-  }
-  
-  public boolean getRemoveImportSetting()
-  {
-    return removeUnusedImports.getSelection();
-  }
-  
-  public boolean getAutomaticallyOpenSchemaLocationDialogSetting()
-  {
-    return automaticallyOpenSchemaLocationDialog.getSelection();
   }
   
   /**

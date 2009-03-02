@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -167,7 +167,6 @@ public class XMLValidator
       reader.setFeature("http://xml.org/sax/features/namespaces", valinfo.isNamespaceEncountered());               //$NON-NLS-1$
       reader.setFeature("http://xml.org/sax/features/validation", valinfo.isGrammarEncountered());  //$NON-NLS-1$
       reader.setFeature("http://apache.org/xml/features/validation/schema", valinfo.isGrammarEncountered()); //$NON-NLS-1$
-   	  reader.setFeature("http://apache.org/xml/features/xinclude", valinfo.isUseXInclude()); //$NON-NLS-1$      
       reader.setContentHandler(new DefaultHandler()
       {
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -320,6 +319,15 @@ public class XMLValidator
         valinfo.setGrammarEncountered(helper.isGrammarEncountered);
         
         XMLReader reader = createXMLReader(valinfo, entityResolver);
+        // Set the configuration option
+        if (configuration.getFeature(XMLValidationConfiguration.HONOUR_ALL_SCHEMA_LOCATIONS))
+        {
+            reader.setFeature("http://apache.org/xml/features/honour-all-schemaLocations", true); //$NON-NLS-1$
+        }
+        if (configuration.getFeature(XMLValidationConfiguration.USE_XINCLUDE))
+        {
+          reader.setFeature("http://apache.org/xml/features/xinclude", true); //$NON-NLS-1$      
+        }
         XMLErrorHandler errorhandler = new XMLErrorHandler(valinfo);
         reader.setErrorHandler(errorhandler);
         
