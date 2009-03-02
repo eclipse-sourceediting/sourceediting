@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="urn:nsA" elementFormDefault="qualified"
+	xmlns="http://www.w3.org/2001/XMLSchema" xmlns:nsB="urn:nsB" xmlns:nsA="urn:nsA">
+
+    <import namespace="urn:nsB" schemaLocation="B1.xsd"/>
+	<import namespace="urn:nsB" schemaLocation="B2.xsd"/>
+	<element name="A">
+		<complexType>
+			<sequence>
+				<element ref="nsB:B1"></element>
+				<element ref="nsB:B2"></element>
+			</sequence>
+		</complexType>
+	</element>
+</schema>
