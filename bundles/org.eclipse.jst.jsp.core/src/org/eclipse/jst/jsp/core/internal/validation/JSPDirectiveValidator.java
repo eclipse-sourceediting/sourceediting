@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -57,6 +57,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.text.IRegionComparible;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.sse.core.utils.StringUtils;
@@ -272,7 +273,8 @@ public class JSPDirectiveValidator extends JSPValidator {
 		ITextRegion fileValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_FILE);
 		if (fileValueRegion == null)
 			fileValueRegion = getAttributeValueRegion(documentRegion, JSP11Namespace.ATTR_NAME_PAGE);
-		if (fileValueRegion != null) {
+		// There is a file and it isn't a nested region which could contain a JSP expression
+		if (fileValueRegion != null && !hasNestedRegion(fileValueRegion)) {
 			// file specified
 			String fileValue = documentRegion.getText(fileValueRegion);
 			fileValue = StringUtils.stripQuotes(fileValue);
@@ -313,7 +315,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 				}
 			}
 		}
-		else if (fSeverityIncludeFileNotSpecified != ValidationMessage.IGNORE) {
+		else if (fileValueRegion == null && fSeverityIncludeFileNotSpecified != ValidationMessage.IGNORE) {
 			// file is not specified at all
 			String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_3, JSP11Namespace.ATTR_NAME_FILE);
 			LocalizedMessage message = new LocalizedMessage(fSeverityIncludeFileNotSpecified, msgText, file);
@@ -642,6 +644,14 @@ public class JSPDirectiveValidator extends JSPValidator {
 	private void unloadPreferences() {
 		fPreferencesService = null;
 		fScopes = null;
+	}
+	
+	/**
+	 * True if container has nested regions, meaning container is probably too
+	 * complicated (like JSP expressions or EL) to validate with this validator.
+	 */
+	private boolean hasNestedRegion(ITextRegion container) {
+		return (container instanceof ITextRegionContainer && ((ITextRegionContainer) container).getRegions() != null);
 	}
 
 	/**
