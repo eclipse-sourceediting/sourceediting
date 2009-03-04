@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,21 +30,20 @@ public class LineStyleProviderForEmbeddedCSS extends LineStyleProviderForCSS {
 		IStructuredDocumentRegion wholeRegion = getDocument().getRegionAtCharacterOffset(regionStart);
 
 		List tokens;
-		int offset;
+		// [264597] - Using a cached offset caused shifted highlighting in <style> elements.
+		int offset = wholeRegion.getStartOffset();
 
-		ParserCache cache = getCachedParsingResult(wholeRegion);
+		List cache = getCachedParsingResult(wholeRegion);
 		if (cache == null) {
-			offset = wholeRegion.getStartOffset();
 			String content;
 			content = wholeRegion.getText();
 
 			CSSTextParser parser = new CSSTextParser(CSSTextParser.MODE_STYLESHEET, content);
 			tokens = parser.getTokenList();
-			cacheParsingResult(wholeRegion, new ParserCache(offset, tokens));
-		} else {
-			tokens = cache.tokens;
-			offset = cache.offset;
+			cacheParsingResult(wholeRegion, tokens);
 		}
+		else
+			tokens = cache;
 
 		boolean result = false;
 
@@ -95,14 +94,14 @@ public class LineStyleProviderForEmbeddedCSS extends LineStyleProviderForCSS {
 		fCacheResult = null;
 	}
 
-	private ParserCache getCachedParsingResult(IStructuredDocumentRegion region) {
+	private List getCachedParsingResult(IStructuredDocumentRegion region) {
 		if (fCacheKey == region.getText().hashCode()) {
 			return fCacheResult;
 		}
 		return null;
 	}
 
-	private void cacheParsingResult(IStructuredDocumentRegion region, ParserCache result) {
+	private void cacheParsingResult(IStructuredDocumentRegion region, List result) {
 		fCacheKey = region.getText().hashCode();
 		fCacheResult = result;
 	}
@@ -112,16 +111,6 @@ public class LineStyleProviderForEmbeddedCSS extends LineStyleProviderForCSS {
 		cleanupCache();
 	}
 
-	private class ParserCache {
-		ParserCache(int newOffset, List newTokens) {
-			offset = newOffset;
-			tokens = newTokens;
-		}
-
-		int offset;
-		List tokens;
-	}
-
 	int fCacheKey = -1;
-	ParserCache fCacheResult = null;
+	List fCacheResult = null;
 }
