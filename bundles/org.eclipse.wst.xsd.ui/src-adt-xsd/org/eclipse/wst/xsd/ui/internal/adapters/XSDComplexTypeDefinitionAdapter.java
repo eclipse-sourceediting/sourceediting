@@ -35,7 +35,9 @@ import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAnyElementAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeDeclarationAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDAttributeGroupDefinitionAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDEnumerationFacetAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.SetBaseTypeAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDElementCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
@@ -49,11 +51,14 @@ import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDComplexTypeContent;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
+import org.eclipse.xsd.XSDDerivationMethod;
+import org.eclipse.xsd.XSDEnumerationFacet;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDParticleContent;
 import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDWildcard;
 import org.eclipse.xsd.util.XSDConstants;
@@ -254,24 +259,60 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
     List list = new ArrayList();
     Object schema = getEditorSchema();
     
-    list.add(AddXSDElementAction.ID);
-    list.add(AddXSDElementAction.REF_ID);
-    list.add(AddXSDAnyElementAction.ID);
-    list.add(BaseSelectionAction.SEPARATOR_ID);
-    list.add(AddXSDAttributeDeclarationAction.ID);
-    list.add(AddXSDAttributeDeclarationAction.REF_ID);
-    list.add(AddXSDAttributeGroupDefinitionAction.REF_ID);
-    list.add(AddXSDAnyAttributeAction.ID);
-    list.add(BaseSelectionAction.SEPARATOR_ID);
-    list.add(AddXSDModelGroupAction.SEQUENCE_ID);
-    list.add(AddXSDModelGroupAction.CHOICE_ID);
-    list.add(AddXSDModelGroupAction.ALL_ID);
-    list.add(BaseSelectionAction.SEPARATOR_ID);
-    list.add(DeleteAction.ID);
-    list.add(BaseSelectionAction.SEPARATOR_ID);
-    if (getXSDComplexTypeDefinition().getSchema() == schema)
+    XSDComplexTypeDefinition complexType = getXSDComplexTypeDefinition();
+    Object contentType = getContentType();
+    XSDDerivationMethod derivation = complexType.getDerivationMethod();
+    if (contentType instanceof XSDSimpleTypeDefinition)
     {
-      if (getXSDComplexTypeDefinition().getContainer() == schema)
+      List fields = getFields();
+      boolean hasSimpleContentAttributes = false;
+      for (Iterator iterator = fields.iterator(); iterator.hasNext(); )
+      {
+        Object field = iterator.next();
+        // We have attributes, so we need to add the compartment for housing the attributes
+        if (field instanceof XSDAttributeDeclarationAdapter)
+        {
+          hasSimpleContentAttributes = true;
+          break;
+        }
+      }
+
+      if (hasSimpleContentAttributes || XSDDerivationMethod.EXTENSION_LITERAL.equals(derivation))
+      {
+        list.add(AddXSDAttributeDeclarationAction.ID);
+      }
+      else if (XSDDerivationMethod.RESTRICTION_LITERAL.equals(derivation) /*&& !(getXSDComplexTypeDefinition().getBaseType() instanceof XSDSimpleTypeDefinition)*/)
+      {
+        list.add(AddXSDEnumerationFacetAction.ID);
+      }
+      
+      list.add(BaseSelectionAction.SEPARATOR_ID);
+      list.add(DeleteAction.ID);
+      list.add(BaseSelectionAction.SEPARATOR_ID);
+    }
+    else
+    {
+      list.add(AddXSDElementAction.ID);
+      list.add(AddXSDElementAction.REF_ID);
+      list.add(AddXSDAnyElementAction.ID);
+      list.add(BaseSelectionAction.SEPARATOR_ID);
+      list.add(AddXSDAttributeDeclarationAction.ID);
+      list.add(AddXSDAttributeDeclarationAction.REF_ID);
+      list.add(AddXSDAttributeGroupDefinitionAction.REF_ID);
+      list.add(AddXSDAnyAttributeAction.ID);
+      list.add(BaseSelectionAction.SEPARATOR_ID);
+      list.add(AddXSDModelGroupAction.SEQUENCE_ID);
+      list.add(AddXSDModelGroupAction.CHOICE_ID);
+      list.add(AddXSDModelGroupAction.ALL_ID);
+      list.add(BaseSelectionAction.SEPARATOR_ID);
+      list.add(DeleteAction.ID);
+      list.add(BaseSelectionAction.SEPARATOR_ID);
+      list.add(SetBaseTypeAction.ID);
+      list.add(BaseSelectionAction.SEPARATOR_ID);
+    }
+    if (complexType.getSchema() == schema)
+    {
+      if (complexType.getContainer() == schema)
       {
         list.add(SetInputToGraphView.ID);
       }
@@ -322,6 +363,17 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
       else if (obj instanceof XSDAttributeGroupDefinition)
       {
         getAttributeUses((XSDAttributeGroupDefinition) obj, list);
+      }
+    }
+    // Add enumerations     
+    boolean canHaveEnumerations = xsdComplexTypeDefinition.getContentType() instanceof XSDSimpleTypeDefinition &&	
+    		XSDDerivationMethod.RESTRICTION_LITERAL.equals(xsdComplexTypeDefinition.getDerivationMethod());
+    if (canHaveEnumerations)
+    {
+      for (Iterator iterator = ((XSDSimpleTypeDefinition)getContentType()).getEnumerationFacets().iterator(); iterator.hasNext();)
+      {
+        XSDEnumerationFacet enumerationFacet = (XSDEnumerationFacet)iterator.next();
+        list.add(enumerationFacet);
       }
     }
     XSDWildcard anyAttr = xsdComplexTypeDefinition.getAttributeWildcard();
@@ -443,4 +495,8 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
     return getXSDComplexTypeDefinition().isAbstract();
   }
 
+  public Object getContentType()
+  {
+    return getXSDComplexTypeDefinition().getContent();
+  }
 }

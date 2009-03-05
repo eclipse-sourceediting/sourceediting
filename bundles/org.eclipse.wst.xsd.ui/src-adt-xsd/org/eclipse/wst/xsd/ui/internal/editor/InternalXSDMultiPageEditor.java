@@ -102,6 +102,7 @@ import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupDefinition
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDSchemaDirectiveAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDSimpleTypeDefinitionAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.SetBaseTypeAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicityAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.SetTypeAction;
@@ -628,7 +629,11 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     action = new DesignSelectAll(this);
     action.setSelectionProvider(getSelectionManager());
     registry.registerAction(action);
-
+    
+    action = new SetBaseTypeAction(this);
+    action.setSelectionProvider(getSelectionManager());
+    registry.registerAction(action);
+    
     action = new AddXSDElementAction(this, AddXSDElementAction.ID, Messages._UI_ACTION_ADD_ELEMENT, false);
     action.setSelectionProvider(getSelectionManager());
     action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDElement.gif"));

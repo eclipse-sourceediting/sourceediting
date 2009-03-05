@@ -15,4 +15,5 @@ package org.eclipse.wst.xsd.ui.internal.adt.facade;
 public interface IComplexType extends IType, IStructure
 {
   boolean isAbstract();
+  Object getContentType();
 }

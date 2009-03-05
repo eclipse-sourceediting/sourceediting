@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.internal.common.commands;
 
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
+import org.eclipse.xsd.XSDComplexTypeContent;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDDerivationMethod;
@@ -41,9 +42,11 @@ public class SetBaseTypeCommand extends BaseCommand
       beginRecording(concreteComponent.getElement());
       if (concreteComponent instanceof XSDComplexTypeDefinition)
       {
-        XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) concreteComponent;
-
-        if (baseType instanceof XSDSimpleTypeDefinition)
+        XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) concreteComponent;        
+        XSDComplexTypeContent contentType = (baseType instanceof XSDComplexTypeDefinition) ? ((XSDComplexTypeDefinition)baseType).getContentType() : null;
+        
+        // Complex type simple content
+        if (baseType instanceof XSDSimpleTypeDefinition || (contentType != null &&  contentType instanceof XSDSimpleTypeDefinition))
         {
           if (!(complexType.getContent() instanceof XSDSimpleTypeDefinition))
           {
@@ -51,9 +54,19 @@ public class SetBaseTypeCommand extends BaseCommand
             complexType.setContent(simpleContent);
           }
         }
-
+        // Complex type complex content
+        else if(baseType instanceof XSDComplexTypeDefinition)
+        {
+        	if(!(complexType.getContent() instanceof XSDComplexTypeDefinition))
+        	{
+        		XSDComplexTypeDefinition complexContent = XSDFactory.eINSTANCE.createXSDComplexTypeDefinition();
+        		complexType.setContent(complexContent.getContent());
+        	}
+        }        
         complexType.setBaseTypeDefinition(baseType);
         complexType.setDerivationMethod(XSDDerivationMethod.EXTENSION_LITERAL);
+        // vb This call should not be needed. The XSD Infoset model should reconcile itself properly.
+        complexType.updateElement(true);
         formatChild(complexType.getElement());
       }
       else if (concreteComponent instanceof XSDSimpleTypeDefinition)

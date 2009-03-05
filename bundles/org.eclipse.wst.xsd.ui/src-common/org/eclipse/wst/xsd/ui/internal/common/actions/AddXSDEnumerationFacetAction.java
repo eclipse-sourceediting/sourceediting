@@ -17,12 +17,14 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDComplexTypeDefinitionAdapter;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddEnumerationsCommand;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.common.util.XSDCommonUIUtils;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDEnumerationFacet;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
+import org.eclipse.xsd.XSDTypeDefinition;
 
 public class AddXSDEnumerationFacetAction extends XSDBaseAction
 {
@@ -68,7 +70,7 @@ public class AddXSDEnumerationFacetAction extends XSDBaseAction
       }
       else if (selection instanceof XSDComplexTypeDefinition)  // Support for Complex Type's simple Content with enumerations
       {
-        st = ((XSDComplexTypeDefinition)selection).getSimpleType();
+    	st = (XSDSimpleTypeDefinition) ((XSDComplexTypeDefinition)selection).getContent();
         command = new AddEnumerationsCommand(getText(), st);
       }
       else // null
@@ -87,4 +89,20 @@ public class AddXSDEnumerationFacetAction extends XSDBaseAction
       selectAddedComponent(adapter);
     }
   }
+  
+  protected boolean calculateEnabled() {
+		
+		boolean parentResult = super.calculateEnabled();
+		boolean endResult = true;
+		Object selection = ((IStructuredSelection) getSelection()).getFirstElement();
+		if (selection instanceof XSDComplexTypeDefinitionAdapter)
+		{
+			XSDComplexTypeDefinition definition = ((XSDComplexTypeDefinitionAdapter) selection).getXSDComplexTypeDefinition();
+			XSDTypeDefinition baseType = definition.getBaseType();
+			if (baseType instanceof XSDSimpleTypeDefinition)
+				endResult = false;
+		}
+		endResult = endResult & parentResult;
+		return endResult;
+	}
 }
