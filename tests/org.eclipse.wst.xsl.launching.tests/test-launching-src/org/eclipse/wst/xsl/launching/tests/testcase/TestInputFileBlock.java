@@ -22,7 +22,7 @@ public class TestInputFileBlock extends TestCase {
 		assertTrue("Did not find 'xml'", findExtension("xml", fileExtensions));
 		assertTrue("Did not find 'xsl'", findExtension("xsl", fileExtensions));
 		assertTrue("Did not find 'xslt'", findExtension("xslt", fileExtensions));
-		assertTrue("Did not find 'fragx'", findExtension("fragx", fileExtensions));
+		assertTrue("Did not find 'xmi'", findExtension("xmi", fileExtensions));
 	}
 	
 	private boolean findExtension(String extension, String[] exts) {

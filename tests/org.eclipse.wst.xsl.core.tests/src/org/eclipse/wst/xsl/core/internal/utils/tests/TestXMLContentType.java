@@ -26,7 +26,7 @@ public class TestXMLContentType extends TestCase {
 		assertTrue("Missing xslt extension.", findExtension("xslt", exts));
 		assertTrue("Missing xml extension.", findExtension("xml", exts));
 		assertTrue("Missing xsl extension.", findExtension("xsl", exts));
-		assertTrue("Missing fragx extension.", findExtension("fragx", exts));
+		assertTrue("Missing xmi extension.", findExtension("xmi", exts));
 		
 	}	
 	
