@@ -1,6 +1,6 @@
 number of errors      : 1
 
 ------------error list-------------------------------------------
-Referenced file contains errors (testresources/samples/Paths/Dash-InPath/DashInPathInvalid.xsd).  For more information, right click on the message and select "Show Details..." [1, 0]
+Referenced file contains errors (testresources/samples/Paths/Dash-InPath/DashInPathInvalid.xsd).  For more information, right click on the message in the Problems View and select "Show Details..." [1, 0]
 -> XML document structures must start and end within the same entity. [4, 1]
 -----------------------------------------------------------------
