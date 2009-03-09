@@ -41,6 +41,7 @@ public class Messages extends NLS
   public static String _UI_ACTION_EDIT_WITH_DOTS;
   public static String _UI_ACTION_CHANGE_PATTERN;
   public static String _UI_ACTION_ADD_ENUMERATION;
+  public static String _UI_ACTION_INSERT_ENUMERATION;
   public static String _UI_ACTION_ADD_PATTERN;
   public static String _UI_ACTION_ADD_ENUMERATIONS;
   public static String _UI_ACTION_DELETE_CONSTRAINTS;

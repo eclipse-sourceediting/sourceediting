@@ -274,7 +274,7 @@ public class XSDElementDeclarationAdapter extends XSDParticleAdapter implements 
 
     if (!isGlobal())
     {
-      list.add(BaseSelectionAction.SUBMENU_START_ID + Messages._UI_ACTION_ADD_ELEMENT);
+      list.add(BaseSelectionAction.SUBMENU_START_ID + Messages._UI_ACTION_INSERT_ELEMENT);
       list.add(AddXSDElementAction.BEFORE_SELECTED_ID);
       list.add(AddXSDElementAction.AFTER_SELECTED_ID);
       list.add(BaseSelectionAction.SUBMENU_END_ID);

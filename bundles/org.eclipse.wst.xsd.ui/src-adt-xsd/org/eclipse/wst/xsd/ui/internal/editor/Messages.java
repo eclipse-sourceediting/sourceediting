@@ -82,6 +82,7 @@ public class Messages extends NLS
   public static String _UI_ACTION_BEFORE;
   public static String _UI_ACTION_AFTER;
   public static String _UI_ACTION_ADD_ELEMENT;
+  public static String _UI_ACTION_INSERT_ELEMENT;
   public static String _UI_ACTION_ADD_ELEMENT_REF;
   public static String _UI_ACTION_NEW;
   public static String _UI_ACTION_BROWSE;
@@ -116,6 +117,7 @@ public class Messages extends NLS
   public static String _UI_ACTION_ADD_IMPORT;
   public static String _UI_ACTION_ADD_REDEFINE;
   public static String _UI_ACTION_ADD_ATTRIBUTE;
+  public static String _UI_ACTION_INSERT_ATTRIBUTE;
   public static String _UI_ACTION_ADD_ATTRIBUTE_REF;
   public static String _UI_ACTION_DRAG_DROP_ELEMENT;
   public static String _UI_ACTION_DRAG_DROP_ATTRIBUTE;

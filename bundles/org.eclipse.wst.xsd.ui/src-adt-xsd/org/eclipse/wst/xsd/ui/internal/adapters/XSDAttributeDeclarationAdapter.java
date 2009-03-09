@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -62,7 +62,7 @@ public class XSDAttributeDeclarationAdapter extends XSDBaseAttributeAdapter impl
     	defaultActions = Arrays.asList(super.getActions(object));
     	
     	ArrayList list = new ArrayList();
-    	list.add(BaseSelectionAction.SUBMENU_START_ID + Messages._UI_ACTION_ADD_ATTRIBUTE);
+    	list.add(BaseSelectionAction.SUBMENU_START_ID + Messages._UI_ACTION_INSERT_ATTRIBUTE);
     	list.add(AddXSDAttributeDeclarationAction.BEFORE_SELECTED_ID);
     	list.add(AddXSDAttributeDeclarationAction.AFTER_SELECTED_ID);
     	list.add(BaseSelectionAction.SUBMENU_END_ID);

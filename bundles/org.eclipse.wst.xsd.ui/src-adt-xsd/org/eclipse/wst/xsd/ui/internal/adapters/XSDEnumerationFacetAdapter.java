@@ -25,6 +25,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDEnumerationFacetAction;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDEnumerationFacet;
 
@@ -44,7 +45,7 @@ public class XSDEnumerationFacetAdapter extends XSDBaseAdapter implements IActio
   {
     List list = new ArrayList();
     
-    list.add(BaseSelectionAction.SUBMENU_START_ID + org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_ACTION_ADD_ENUMERATION);
+    list.add(BaseSelectionAction.SUBMENU_START_ID + Messages._UI_ACTION_INSERT_ENUMERATION);
     list.add(AddXSDEnumerationFacetAction.BEFORE_SELECTED_ID);
     list.add(AddXSDEnumerationFacetAction.AFTER_SELECTED_ID);
     list.add(BaseSelectionAction.SUBMENU_END_ID);
