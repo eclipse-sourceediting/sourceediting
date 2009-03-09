@@ -14,7 +14,6 @@ import junit.framework.TestCase;
 
 
 public class TestInputFileBlock extends TestCase {
-
 	
 	public void testXMLFileExtensions() throws Exception {
 		MockInputFileBlock fileBlock = new MockInputFileBlock(null);
@@ -23,6 +22,7 @@ public class TestInputFileBlock extends TestCase {
 		assertTrue("Did not find 'xml'", findExtension("xml", fileExtensions));
 		assertTrue("Did not find 'xsl'", findExtension("xsl", fileExtensions));
 		assertTrue("Did not find 'xslt'", findExtension("xslt", fileExtensions));
+		assertTrue("Did not find 'fragx'", findExtension("fragx", fileExtensions));
 	}
 	
 	private boolean findExtension(String extension, String[] exts) {
