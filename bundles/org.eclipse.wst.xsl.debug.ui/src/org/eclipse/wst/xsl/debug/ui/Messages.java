@@ -8,6 +8,7 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *     David Carver (STAR) - updated to meet Galileo requirements
+ *     Stuart Harper - added "open files" selector
  *******************************************************************************/
 package org.eclipse.wst.xsl.debug.ui;
 
@@ -125,6 +126,10 @@ public class Messages extends NLS {
 	public static String InputFileBlock_FILE_SYSTEM_BUTTON;
 
 	public static String InputFileBlock_WORKSPACE_BUTTON;
+	
+	public static String InputFileBlock_OPENFILES_BUTTON;
+	
+	public static String InputFileBlock_OPENFILES_DIALOG;
 
 	public static String InputFileBlock_Name;
 

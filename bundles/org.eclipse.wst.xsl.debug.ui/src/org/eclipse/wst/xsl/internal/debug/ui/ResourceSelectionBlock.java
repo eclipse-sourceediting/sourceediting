@@ -7,10 +7,15 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     Stuart Harper - bug 264788 - added "open files" selector
+ *     David Carver (STAR) - bug 264788 - pulled up getFileExtensions from InputFileBlock
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui;
 
 import java.io.File;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -20,12 +25,17 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.core.variables.IStringVariableManager;
 import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTab;
 import org.eclipse.debug.ui.StringVariableSelectionDialog;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
@@ -43,11 +53,17 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
+import org.eclipse.wst.xsl.core.internal.util.XMLContentType;
 import org.eclipse.wst.xsl.debug.ui.Messages;
 
 
@@ -71,10 +87,13 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 	protected static final int FILE_SYSTEM_BUTTON = 9;
 	protected static final int WORKSPACE_BUTTON = 10;
 	protected static final int WORKSPACE_DIALOG_TITLE = 11;
+	protected static final int OPENFILES_BUTTON = 12;
+	protected static final int OPENFILES_DIALOG_TITLE = 13;
 
 	protected Button fWorkspaceButton;
 	protected Button fFileSystemButton;
 	protected Button fVariablesButton;
+	protected Button fOpenFilesButton;
 	protected Button useDefaultCheckButton;
 	protected Text resourceText;
 	protected WidgetListener widgetListener = new WidgetListener();
@@ -85,7 +104,10 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 	protected boolean required;
 	protected String defaultResource;
 	protected String resource;
-	protected String fileLabel = Messages.ResourceSelectionBlock_0; 
+	protected String fileLabel = Messages.ResourceSelectionBlock_0;
+	
+	IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
+
 
 	private final ISelectionStatusValidator validator = new ISelectionStatusValidator()
 	{
@@ -133,6 +155,10 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 			else if (source == useDefaultCheckButton)
 			{
 				updateResourceText(useDefaultCheckButton.getSelection());
+			}
+			else if (source == fOpenFilesButton)
+			{
+				handleOpenFilesResourceBrowseButtonSelected();
 			}
 		}
 	}
@@ -267,7 +293,7 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 		new Label(parent, SWT.NONE);
 
 		Composite buttonComp = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout(3, false);
+		GridLayout layout = new GridLayout(4, false);
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		buttonComp.setLayout(layout);
@@ -284,6 +310,9 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 
 		fVariablesButton = createPushButton(buttonComp, getMessage(VARIABLES_BUTTON), null);
 		fVariablesButton.addSelectionListener(widgetListener);
+		
+		fOpenFilesButton = createPushButton(buttonComp, getMessage(OPENFILES_BUTTON), null);
+		fOpenFilesButton.addSelectionListener(widgetListener);
 	}
 
 	protected void updateResourceText(boolean useDefault)
@@ -357,9 +386,67 @@ public abstract class ResourceSelectionBlock extends AbstractLaunchConfiguration
 
 	protected String[] getFileExtensions()
 	{
-		return null;
+		return new XMLContentType().getFileExtensions();
+	}
+	
+	protected void handleOpenFilesResourceBrowseButtonSelected()
+	{
+		String path = openFileListResourceDialog();
+		if (path != null)
+			setText("${workspace_loc:" + path + "}");   //$NON-NLS-1$ //$NON-NLS-2$
+	}
+	/**
+	 * Opens a dialog displaying a list of all XML files in the editor and allows the user to select one of them.
+	 * @return The path to the selected XML file or null if none was chosen.
+	 */
+	protected String openFileListResourceDialog(){
+		IEditorReference[] editors = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
+				
+		WorkbenchContentProvider w = new WorkbenchContentProvider();
+		String[] paths = filterOpenEditorsByFileExtension(editors);
+		
+		ElementListSelectionDialog dialog = new ElementListSelectionDialog(getShell(), new LabelProvider());
+
+		dialog.setTitle(getMessage(OPENFILES_DIALOG_TITLE));
+		dialog.setElements(paths);
+		dialog.open();
+		
+		return (String)dialog.getFirstResult();
+		
 	}
 
+	private String[] filterOpenEditorsByFileExtension(IEditorReference[] editors) {
+		String [] paths = new String[editors.length];
+		String [] fileExts = getFileExtensions();
+		
+		for(int i =0; i<editors.length; i++){
+			IEditorReference currentEditor = editors[i];
+			IEditorPart editorPart = currentEditor.getEditor(true);
+			IFile file = (IFile) editorPart.getEditorInput().getAdapter(IFile.class);
+			if (file != null) {
+				IPath path = file.getFullPath();
+            	paths[i] = getEditorPath(path, fileExts);
+			}
+		}
+		return paths;
+	}
+
+	private String getEditorPath(IPath filePath, String[] fileExts) {
+		if (fileExts == null || fileExts.length == 0) {
+			return filePath.toOSString();
+		}
+		
+		String path = null;
+		for (int cnt = 0; cnt < fileExts.length; cnt++) {
+			if (filePath.getFileExtension().equals(fileExts[cnt])) {
+				path = filePath.toOSString();
+				break;
+			}
+		}		
+		return path;
+	}
+	
+	
 	protected void handleWorkspaceResourceBrowseButtonSelected()
 	{
 		IPath path = openWorkspaceResourceDialog();

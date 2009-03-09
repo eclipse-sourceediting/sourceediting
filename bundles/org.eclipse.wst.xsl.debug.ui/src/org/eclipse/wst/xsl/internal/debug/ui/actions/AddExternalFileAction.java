@@ -20,6 +20,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
+import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.debug.ui.Messages;
 
 
@@ -53,7 +54,7 @@ public class AddExternalFileAction extends OpenDialogAction
 		dialog.setText(Messages.AddExternalFileAction_Selection_3);
 		dialog.setFilterPath(lastUsedPath);
 		IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
-		IContentType contentType = contentTypeManager.getContentType("org.eclipse.wst.xml.core.xslsource"); //$NON-NLS-1$
+		IContentType contentType = contentTypeManager.getContentType(XSLCore.XSL_CONTENT_TYPE);
 		String[] xslContentTypes = contentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
 		
 		// add *. to front

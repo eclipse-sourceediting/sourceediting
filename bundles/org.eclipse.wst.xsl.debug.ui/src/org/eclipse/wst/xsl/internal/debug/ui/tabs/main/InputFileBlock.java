@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     Stuart Harper - added "open files" selector
  *******************************************************************************/
 package org.eclipse.wst.xsl.internal.debug.ui.tabs.main;
 
@@ -24,15 +25,11 @@ import org.eclipse.wst.xsl.debug.ui.Messages;
 import org.eclipse.wst.xsl.internal.debug.ui.ResourceSelectionBlock;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
-import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.core.runtime.content.IContentTypeManager;
 
 
 public class InputFileBlock extends ResourceSelectionBlock
 {
-	private static final String XMLSOURCE_CONTENTTYPE = "org.eclipse.wst.xml.core.xmlsource";
 	private final IFile defaultFile;
-	IContentTypeManager contentTypeManager = Platform.getContentTypeManager();
 
 	public InputFileBlock(IFile defaultFile)
 	{
@@ -40,14 +37,6 @@ public class InputFileBlock extends ResourceSelectionBlock
 		this.defaultFile = defaultFile;
 	}
 
-	@Override
-	protected String[] getFileExtensions()
-	{
-		IContentType contentType = contentTypeManager.getContentType(XMLSOURCE_CONTENTTYPE); 
-		String[] xmlContentTypes = contentType.getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
-		
-		return xmlContentTypes;
-	}
 
 	public void setDefaults(ILaunchConfigurationWorkingCopy configuration)
 	{
@@ -135,6 +124,10 @@ public class InputFileBlock extends ResourceSelectionBlock
 				return Messages.InputFileBlock_WORKSPACE_BUTTON;
 			case WORKSPACE_DIALOG_TITLE:
 				return Messages.InputFileBlock_WORKSPACE_DIALOG_TITLE;
+			case OPENFILES_BUTTON:
+				return Messages.InputFileBlock_OPENFILES_BUTTON;
+			case OPENFILES_DIALOG_TITLE:
+				return Messages.InputFileBlock_OPENFILES_DIALOG;	
 		}
 		return "" + type; //$NON-NLS-1$
 	}
