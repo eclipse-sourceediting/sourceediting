@@ -22,6 +22,7 @@ import org.eclipse.swt.graphics.Image;
 
 public class XMLCatalogFileType 
 {
+  public String id;
   public String description;
   public List extensions = new ArrayList();
   public String iconFileName;

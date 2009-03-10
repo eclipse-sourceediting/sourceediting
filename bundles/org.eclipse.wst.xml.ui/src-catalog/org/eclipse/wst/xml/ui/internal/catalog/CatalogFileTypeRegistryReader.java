@@ -61,7 +61,7 @@ public class CatalogFileTypeRegistryReader {
 					fileType = new XMLCatalogFileType();
 					hashMap.put(id, fileType);
 				}
-
+				fileType.id = id;
 				if (fileType.description == null) {
 					String description = element.getAttribute(ATT_DESCRIPTION);
 					fileType.description = description;
