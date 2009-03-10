@@ -809,6 +809,7 @@ private final String doBlockTagScan() throws IOException {
 		fBufferedStart = 1;
 		fBufferedLength = 0;
 		fStateStack = new IntStack();
+		fJspTagStack.clear();
 	
 		fLastInternalBlockStart = -1;
 	
