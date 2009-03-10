@@ -21,8 +21,14 @@ import java.io.StringWriter;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jst.jsp.core.internal.contenttype.BooleanStack;
 import org.eclipse.jst.jsp.core.internal.parser.internal.JSPTokenizer;
+import org.eclipse.jst.jsp.core.tests.taglibindex.BundleResourceUtil;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
@@ -180,6 +186,44 @@ public class JSPTokenizerTest extends TestCase {
 			StringWriter s = new StringWriter();
 			e.printStackTrace(new PrintWriter(s));
 			fail(s.toString());
+		}
+	}
+	
+	// Need to simulate typing characters into the document to cause the stack overflow.
+	public void test265380() throws Exception {
+		String projectName = "bug_265380";
+		int oldDepth = BooleanStack.maxDepth;
+		// Make the maxDepth equivalent to that we'd see in a normal editor
+		BooleanStack.maxDepth = 100;
+		// Create new project
+		IProject project = BundleResourceUtil.createSimpleProject(projectName, null, null);
+		assertTrue(project.exists());
+		BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + projectName, "/" + projectName);
+		IFile file = project.getFile("test265380.jsp");
+		assertTrue(file.exists());
+		
+		IStructuredModel model = StructuredModelManager.getModelManager().getModelForEdit(file);
+		
+		try {
+			IStructuredDocument jspDocument = model.getStructuredDocument();
+		
+			// offset in the document to begin inserting text
+			int offset = 414;
+			// String to insert character-by-character
+			String cif = "<c:out value=\"lorem ipsum\"></c:out>\n";
+			// It takes several tags to be inserted before the stack was overflowed
+			for (int i = 0; i < 10; i++) {
+				for (int j = 0; j < cif.length(); j++)
+					jspDocument.replace(offset++, 0, String.valueOf(cif.charAt(j)));
+			}
+		}
+		catch (StackOverflowError e) {
+			fail("Stack overflow encountered while editing document.");
+		}
+		finally {
+			if (model != null)
+				model.releaseFromEdit();
+			BooleanStack.maxDepth = oldDepth;
 		}
 	}
 }
