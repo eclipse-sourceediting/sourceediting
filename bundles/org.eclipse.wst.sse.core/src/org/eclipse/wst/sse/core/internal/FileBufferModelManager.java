@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -279,8 +279,7 @@ public class FileBufferModelManager {
 				DocumentInfo info = (DocumentInfo) fDocumentMap.get(textBuffer.getDocument());
 				if (info != null) {
 					info.bufferReferenceCount--;
-					if (info.bufferReferenceCount == 0 && info.modelReferenceCount == 0)
-						fDocumentMap.remove(textBuffer.getDocument());
+					checkReferenceCounts(info, textBuffer.getDocument());
 				}
 			}
 		}
@@ -743,6 +742,19 @@ public class FileBufferModelManager {
 		return new NullProgressMonitor();
 	}
 
+	/**
+	 * Will remove the entry corresponding to <code>document</code> if both
+	 * there are no more buffer or model reference counts for <code>info</code>
+	 * 
+	 * @param info the document info to check for reference counts
+	 * @param document the key to remove from the document map if there are no more
+	 * references
+	 */
+	private void checkReferenceCounts(DocumentInfo info, IDocument document) {
+		if (info.bufferReferenceCount == 0 && info.modelReferenceCount == 0)
+			fDocumentMap.remove(document);
+	}
+
 	public boolean isExistingBuffer(IDocument document) {
 		if (document == null) {
 			Exception iae = new IllegalArgumentException("can not check for an existing buffer without a document reference"); //$NON-NLS-1$ 
@@ -779,6 +791,11 @@ public class FileBufferModelManager {
 					Logger.logException("Error releasing model for " + location, e); //$NON-NLS-1$
 				}
 			}
+			// [265899]
+			// In some scenarios, a model can be held onto after the editor has been disposed even if the lifecycle is
+			// maintained properly (e.g., an editor being closed before a DirtyRegionProcessor has a chance to complete). Because of this,
+			// the manager cannot be reliant upon the FileBufferMapper having the sole responsibility of the fDocumentMap cleanup
+			checkReferenceCounts(info, document);
 		}
 	}
 
