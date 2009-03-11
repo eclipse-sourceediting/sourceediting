@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,6 +42,7 @@ import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDFileEditorInput;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDFeature;
+import org.eclipse.xsd.XSDRedefine;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.impl.XSDImportImpl;
@@ -114,7 +115,8 @@ public class OpenInNewEditor extends BaseSelectionAction
           fComponent = dir.getResolvedSchema();
         }
       } // Handle any other external components
-      else if (fComponent.getSchema() != null && fComponent.eContainer() instanceof XSDSchema || isReference)
+      else if (fComponent.getSchema() != null && fComponent.eContainer() instanceof XSDSchema ||
+          fComponent.eContainer() instanceof XSDRedefine || isReference)
       {
         schemaLocation = URIHelper.removePlatformResourceProtocol(fComponent.getSchema().getSchemaLocation());
         schemaPath = new Path(schemaLocation);

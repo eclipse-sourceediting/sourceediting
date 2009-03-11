@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IActionProvide
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.model.IGraphElement;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IType;
 import org.eclipse.xsd.XSDNamedComponent;
+import org.eclipse.xsd.XSDRedefine;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
 
@@ -28,16 +29,16 @@ public abstract class XSDTypeDefinitionAdapter extends XSDBaseAdapter implements
 
   public String getName()
   {
-    if (getXSDTypeDefinition().eContainer() instanceof XSDSchema)
+    EObject eContainer = getXSDTypeDefinition().eContainer();
+    if (eContainer instanceof XSDSchema || eContainer instanceof XSDRedefine)
     {  
       return getXSDTypeDefinition().getName();
     }
     else 
     {
-      EObject o = getXSDTypeDefinition().eContainer();
-      if (o instanceof XSDNamedComponent)
+      if (eContainer instanceof XSDNamedComponent)
       {
-         XSDNamedComponent ed = (XSDNamedComponent)o;
+         XSDNamedComponent ed = (XSDNamedComponent)eContainer;
          return "(" + ed.getName() + "Type)";                //$NON-NLS-1$ //$NON-NLS-2$
       }
     }

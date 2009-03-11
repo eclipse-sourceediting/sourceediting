@@ -24,6 +24,7 @@ import org.eclipse.xsd.XSDEnumerationFacet;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDParticle;
+import org.eclipse.xsd.XSDRedefine;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
@@ -125,6 +126,11 @@ public class XSDAdapterFactory extends AdapterFactoryImpl
       public Object caseXSDEnumerationFacet(XSDEnumerationFacet object)
       {
         return new XSDEnumerationFacetAdapter();
+      }
+      
+      public Object caseXSDRedefine(XSDRedefine object)
+      {
+        return new XSDRedefineAdapter();
       }
     };
     Object o = xsdSwitch.doSwitch((EObject) target);

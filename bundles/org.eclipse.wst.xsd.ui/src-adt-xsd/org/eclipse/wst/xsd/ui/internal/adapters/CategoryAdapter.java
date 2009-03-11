@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,7 +38,7 @@ public class CategoryAdapter extends XSDBaseAdapter implements IModelProxy, IAct
   protected Image image;
   protected Object parent;
   protected int groupType;
-  Collection children, allChildren;  // children from current schema, children from current schema and includes
+  protected Collection children, allChildren;  // children from current schema, children from current schema and includes
   XSDSchema xsdSchema;
 
   public CategoryAdapter(String label, Image image, Collection children, XSDSchema xsdSchema, int groupType)

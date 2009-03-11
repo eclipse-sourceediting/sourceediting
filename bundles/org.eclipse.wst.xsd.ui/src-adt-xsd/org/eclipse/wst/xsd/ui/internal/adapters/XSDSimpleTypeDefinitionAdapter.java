@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.gef.commands.Command;
 import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.DeleteAction;
@@ -29,6 +30,7 @@ import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
+import org.eclipse.xsd.XSDRedefine;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDVariety;
@@ -176,7 +178,9 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter
   public boolean isAnonymous()
   {
     XSDSimpleTypeDefinition xsdSimpleTypeDefinition = (XSDSimpleTypeDefinition) target;
-    return !(xsdSimpleTypeDefinition.eContainer() instanceof XSDSchema);
+    EObject eContainer = xsdSimpleTypeDefinition.eContainer();
+    return !(eContainer instanceof XSDSchema ||
+             eContainer instanceof XSDRedefine);
   }
 
   public IADTObject getTopContainer()

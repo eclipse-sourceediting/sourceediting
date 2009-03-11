@@ -69,6 +69,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsd.ui.internal.adapters.CategoryAdapter;
+import org.eclipse.wst.xsd.ui.internal.adapters.RedefineCategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.AddFieldAction;
@@ -99,6 +100,11 @@ import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDEnumerationFacetAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupDefinitionAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDRedefinableContentAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDRedefinedAttributeGroupAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDRedefinedComplexTypeAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDRedefinedModelGroupAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDRedefinedSimpleTypeAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDSchemaDirectiveAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDSimpleTypeDefinitionAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.DeleteXSDConcreteComponentAction;
@@ -630,6 +636,26 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     action.setSelectionProvider(getSelectionManager());
     registry.registerAction(action);
     
+    action = new AddXSDRedefinedComplexTypeAction(this, AddXSDRedefinableContentAction.COMPLEX_TYPE_ID, Messages._UI_ACTION_REDEFINE_COMPLEX_TYPE);
+    action.setSelectionProvider(getSelectionManager());
+    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, Messages._UI_IMAGE_COMPLEX_TYPE));
+    registry.registerAction(action);
+    
+    action = new AddXSDRedefinedSimpleTypeAction(this, AddXSDRedefinableContentAction.SIMPLE_TYPE_ID, Messages._UI_ACTION_REDEFINE_SIMPLE_TYPE);
+    action.setSelectionProvider(getSelectionManager());
+    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, Messages._UI_IMAGE_SIMPLE_TYPE));
+    registry.registerAction(action);
+    
+    action = new AddXSDRedefinedAttributeGroupAction(this, AddXSDRedefinableContentAction.ATTRIBUTE_GROUP_ID, Messages._UI_ACTION_REDEFINE_ATTRIBUTE_GROUP);
+    action.setSelectionProvider(getSelectionManager());
+    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, Messages._UI_IMAGE_ATTRIBUTE_GROUP));
+    registry.registerAction(action);
+    
+    action = new AddXSDRedefinedModelGroupAction(this, AddXSDRedefinableContentAction.MODEL_GROUP_ID, Messages._UI_ACTION_REDEFINE_MODEL_GROUP);
+    action.setSelectionProvider(getSelectionManager());
+    action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, Messages._UI_IMAGE_MODEL_GROUP));
+    registry.registerAction(action);
+    
     action = new SetBaseTypeAction(this);
     action.setSelectionProvider(getSelectionManager());
     registry.registerAction(action);
@@ -876,6 +902,10 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
       {
         node = ((XSDComponent) object).getElement();
       }
+      else if (object instanceof RedefineCategoryAdapter)
+      {
+        node = ((RedefineCategoryAdapter) object).getXSDRedefine().getElement();
+      }
       else if (object instanceof CategoryAdapter)
       {
         node = ((CategoryAdapter) object).getXSDSchema().getElement();
@@ -1043,6 +1073,11 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
       else if (object instanceof XSDComponent)
       {
         node = ((XSDComponent) object).getElement();
+      }
+      else if (object instanceof RedefineCategoryAdapter)
+      {
+        RedefineCategoryAdapter category = (RedefineCategoryAdapter)object;
+        node = category.getXSDRedefine().getElement();
       }
       else if (object instanceof CategoryAdapter)
       {

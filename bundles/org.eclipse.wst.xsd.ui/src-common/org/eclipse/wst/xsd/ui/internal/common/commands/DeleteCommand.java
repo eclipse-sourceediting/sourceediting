@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDVisitor;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
@@ -24,6 +25,7 @@ import org.eclipse.xsd.XSDEnumerationFacet;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDParticle;
+import org.eclipse.xsd.XSDRedefine;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
@@ -90,7 +92,10 @@ public class DeleteCommand extends BaseCommand
           visitor.visitSchema(target.getSchema());
           ((XSDSchema) parent).getContents().remove(target);
         }
-
+        else if (parent instanceof XSDRedefine)
+        {
+          ((XSDRedefine) parent).getContents().remove(target);
+        }      
       }
       else if (target instanceof XSDAttributeDeclaration)
       {
@@ -167,6 +172,12 @@ public class DeleteCommand extends BaseCommand
           doCleanup = true;
           visitor.visitSchema(target.getSchema());
           ((XSDSchema) parent).getContents().remove(target);
+        }
+        else if(parent instanceof XSDRedefine)
+        {
+          doCleanup = false;
+          EList contents = ((XSDRedefine)parent).getContents();           
+          contents.remove(target);
         }
       }
 

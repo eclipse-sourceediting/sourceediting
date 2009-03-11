@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,8 +37,10 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.design.editparts.model.SpaceFiller;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
+import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
+import org.eclipse.xsd.XSDRedefine;
 import org.eclipse.xsd.XSDSchema;
 
 public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implements IStructure, IActionProvider, IGraphElement, IADTObjectListener
@@ -282,7 +284,8 @@ public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implement
   public IADTObject getTopContainer()
   {
     XSDModelGroupDefinition group = getXSDModelGroupDefinition();
-    if (group.getContainer() instanceof XSDSchema)
+    XSDConcreteComponent container = group.getContainer();
+    if (container instanceof XSDSchema || container instanceof XSDRedefine)
       return this;
     else
       return getGlobalXSDContainer(group);

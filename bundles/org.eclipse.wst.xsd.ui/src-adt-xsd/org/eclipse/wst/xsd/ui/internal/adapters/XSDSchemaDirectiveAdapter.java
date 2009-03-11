@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,6 @@
 package org.eclipse.wst.xsd.ui.internal.adapters;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.Adapter;
@@ -29,17 +28,11 @@ import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
-import org.eclipse.xsd.XSDAttributeGroupDefinition;
-import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDImport;
 import org.eclipse.xsd.XSDInclude;
-import org.eclipse.xsd.XSDModelGroupDefinition;
-import org.eclipse.xsd.XSDRedefinableComponent;
 import org.eclipse.xsd.XSDRedefine;
-import org.eclipse.xsd.XSDRedefineContent;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
-import org.eclipse.xsd.XSDSimpleTypeDefinition;
 
 public class XSDSchemaDirectiveAdapter extends XSDBaseAdapter implements IActionProvider, IGraphElement
 {
@@ -93,39 +86,7 @@ public class XSDSchemaDirectiveAdapter extends XSDBaseAdapter implements IAction
   public ITreeElement[] getChildren()
   {
     List list = new ArrayList();
-    if (target instanceof XSDRedefine)
-    {
-      XSDRedefine redefine = (XSDRedefine) target;
-      for (Iterator i = redefine.getContents().iterator(); i.hasNext();)
-      {
-        XSDRedefineContent redefineContent = (XSDRedefineContent) i.next();
-        if (redefineContent instanceof XSDAttributeGroupDefinition ||
-        	redefineContent instanceof XSDModelGroupDefinition)
-        {
-          list.add(redefineContent);
-        }
-        else if (redefineContent instanceof XSDRedefinableComponent)
-        {
-          XSDRedefinableComponent comp = (XSDRedefinableComponent) redefineContent;
-          if (comp instanceof XSDAttributeGroupDefinition ||
-              comp instanceof XSDModelGroupDefinition ||
-              comp instanceof XSDComplexTypeDefinition ||
-              comp instanceof XSDSimpleTypeDefinition)
-          {
-            list.add(comp);
-          }
-        }
-        else if (redefineContent instanceof XSDComplexTypeDefinition)
-        {
-          list.add(redefineContent);
-        }
-        else if (redefineContent instanceof XSDSimpleTypeDefinition)
-        {
-          list.add(redefineContent);
-        }
-      }
 
-    }
     List adapterList = new ArrayList();
     populateAdapterList(list, adapterList);
     return (ITreeElement[]) adapterList.toArray(new ITreeElement[0]);

@@ -43,14 +43,17 @@ public class Messages extends NLS
   public static String UI_LABEL_COMPONENTS;
 
   public static String _UI_GRAPH_TYPES;
+  public static String _UI_GRAPH_REDEFINE_TYPES;
   public static String _UI_GRAPH_ELEMENTS;
   public static String _UI_GRAPH_ATTRIBUTES;
   public static String _UI_GRAPH_ATTRIBUTE_GROUPS;
+  public static String _UI_GRAPH_REDEFINE_ATTRIBUTE_GROUPS;
   public static String _UI_GRAPH_NOTATIONS;
   public static String _UI_GRAPH_IDENTITY_CONSTRAINTS;
   public static String _UI_GRAPH_ANNOTATIONS;
   public static String _UI_GRAPH_DIRECTIVES;
   public static String _UI_GRAPH_GROUPS;
+  public static String _UI_GRAPH_REDEFINE_GROUPS;
   
   public static String _UI_LABEL_NO_LOCATION_SPECIFIED;
   public static String _UI_NO_TYPE_DEFINED;
@@ -99,6 +102,7 @@ public class Messages extends NLS
   public static String _UI_LABEL_ATTRIBUTES_NAMESPACE;
   public static String _UI_LABEL_SET_ELEMENT_REFERENCE;
   public static String _UI_LABEL_SET_ATTRIBUTE_REFERENCE;
+  public static String _UI_LABEL_REDEFINE_COMPONENT;
   public static String _UI_LABEL_TYPES_COLON;
   public static String _UI_LABEL_SET_TYPE;
 
@@ -121,6 +125,15 @@ public class Messages extends NLS
   public static String _UI_ACTION_ADD_ATTRIBUTE_REF;
   public static String _UI_ACTION_DRAG_DROP_ELEMENT;
   public static String _UI_ACTION_DRAG_DROP_ATTRIBUTE;
+  public static String _UI_ACTION_REDEFINE_COMPLEX_TYPE;
+  public static String _UI_ACTION_REDEFINE_SIMPLE_TYPE;
+  public static String _UI_ACTION_REDEFINE_ATTRIBUTE_GROUP;
+  public static String _UI_ACTION_REDEFINE_MODEL_GROUP;
+  
+  public static String _UI_IMAGE_COMPLEX_TYPE;
+  public static String _UI_IMAGE_SIMPLE_TYPE;
+  public static String _UI_IMAGE_MODEL_GROUP;
+  public static String _UI_IMAGE_ATTRIBUTE_GROUP;
 
   // TODO: TO REMOVE
   public static String _UI_LABEL_ELEMENTFORMDEFAULT;
@@ -132,6 +145,5 @@ public class Messages extends NLS
   
   public static String _UI_TEXT_ENABLE_AUTO_IMPORT_CLEANUP;
   public static String _UI_TEXT_ENABLE_AUTO_OPEN_SCHEMA_DIALOG;
-  
-  
+  public static String _UI_GRAPH_REDEFINE_SCHEMA;
 }

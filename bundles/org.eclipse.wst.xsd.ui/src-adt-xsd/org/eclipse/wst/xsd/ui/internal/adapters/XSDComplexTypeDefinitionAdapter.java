@@ -57,6 +57,7 @@ import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDParticleContent;
+import org.eclipse.xsd.XSDRedefine;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
@@ -482,7 +483,8 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
   public boolean isAnonymous()
   {
     XSDComplexTypeDefinition xsdComplexTypeDefinition = (XSDComplexTypeDefinition) target;
-    return !(xsdComplexTypeDefinition.eContainer() instanceof XSDSchema);
+    return !(xsdComplexTypeDefinition.eContainer() instanceof XSDSchema ||
+             xsdComplexTypeDefinition.eContainer() instanceof XSDRedefine);
   }
 
   public IADTObject getTopContainer()
