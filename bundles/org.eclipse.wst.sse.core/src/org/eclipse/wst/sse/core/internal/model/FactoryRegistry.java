@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2009 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,9 +59,7 @@ public final class FactoryRegistry {
 	}
 
 	public void clearFactories() {
-		if (factories != null) {
-			factories.clear();
-		}
+		factories.clear();
 	}
 
 	/*
@@ -132,7 +130,7 @@ public final class FactoryRegistry {
 		// of factories, since some factories, during
 		// their release function, may remove
 		// themselves from the registry.
-		List localList = _getFactories();
+		List localList = getFactories();
 		for (int i = 0; i < localList.size(); i++) {
 			INodeAdapterFactory a = (INodeAdapterFactory) localList.get(i);
 			// To help bullet proof code, we'll catch and log
