@@ -41,6 +41,16 @@ public interface TLDElementDeclaration extends CMElementDeclaration {
 	 */
 	String getDisplayName();
 
+
+	/**
+	 * Indicates that the declared tag handler supports dynamic attributes. It
+	 * is not a guarantee that the class itself implements
+	 * javax.servlet.jsp.tagext.DynamicAttributes.
+	 * 
+	 * @see JSP 2.0
+	 */
+	String getDynamicAttributes();
+	
 	/**
 	 * Optional informal description of an example of a use of this tag
 	 * 

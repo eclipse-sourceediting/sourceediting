@@ -29,6 +29,7 @@ import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TaglibTracker;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.osgi.util.NLS;
@@ -51,6 +52,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
+import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMNodeWrapper;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -155,28 +157,40 @@ public class JSPActionValidator extends JSPValidator {
 		return false;
 	}
 
-	private boolean checkUnknownAttributes(IDOMElement element, CMNamedNodeMap cmAttrs, IReporter reporter, IFile file, IStructuredDocument document, IStructuredDocumentRegion documentRegion) {
+	private boolean checkUnknownAttributes(IDOMElement element, CMElementDeclaration elementDecl, CMNamedNodeMap cmAttrs, IReporter reporter, IFile file, IStructuredDocument document, IStructuredDocumentRegion documentRegion) {
 		boolean foundjspattribute = false;
+		boolean dynamicAttributesAllowed = false;
+		CMElementDeclaration decl = elementDecl;
+		if (decl instanceof CMNodeWrapper)
+			decl = (CMElementDeclaration) ((CMNodeWrapper) decl).getOriginNode();
+		if (decl instanceof TLDElementDeclaration) {
+			String dynamicAttributes = ((TLDElementDeclaration) decl).getDynamicAttributes();
+			dynamicAttributesAllowed = dynamicAttributes != null ? Boolean.valueOf(dynamicAttributes).booleanValue() : false;
+		}
 
 		NamedNodeMap attrs = element.getAttributes();
 		for (int i = 0; i < attrs.getLength(); i++) {
 			Attr a = (Attr) attrs.item(i);
 			CMAttributeDeclaration adec = (CMAttributeDeclaration) cmAttrs.getNamedItem(a.getName());
 			if (adec == null) {
-				// No attr declaration was found. That is, the attr name is
-				// undefined.
-				// but not regard it as undefined name if it includes JSP
+				/*
+				 * No attr declaration was found. That is, the attr name is
+				 * undefined. Disregard it includes JSP structure or this
+				 * element supports dynamic attributes
+				 */
 				if (!hasJSPRegion(((IDOMNode) a).getNameRegion()) && fSeverityUnknownAttribute != ValidationMessage.IGNORE) {
-					String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_6, a.getName());
-					LocalizedMessage message = new LocalizedMessage(fSeverityUnknownAttribute, msgText, file);
-					int start = ((IDOMAttr) a).getNameRegionStartOffset();
-					int length = ((IDOMAttr) a).getNameRegionEndOffset() - start;
-					int lineNo = document.getLineOfOffset(start);
-					message.setLineNo(lineNo);
-					message.setOffset(start);
-					message.setLength(length);
+					if (!!dynamicAttributesAllowed) {
+						String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_6, a.getName());
+						LocalizedMessage message = new LocalizedMessage(fSeverityUnknownAttribute, msgText, file);
+						int start = ((IDOMAttr) a).getNameRegionStartOffset();
+						int length = ((IDOMAttr) a).getNameRegionEndOffset() - start;
+						int lineNo = document.getLineOfOffset(start);
+						message.setLineNo(lineNo);
+						message.setOffset(start);
+						message.setLength(length);
 
-					reporter.addMessage(fMessageOriginator, message);
+						reporter.addMessage(fMessageOriginator, message);
+					}
 				}
 				else {
 					foundjspattribute = true;
@@ -340,7 +354,7 @@ public class JSPActionValidator extends JSPValidator {
 					}
 					cmAttributes = allAttributes;
 
-					boolean foundjspattribute = checkUnknownAttributes(element, cmAttributes, reporter, file, model.getStructuredDocument(), documentRegion);
+					boolean foundjspattribute = checkUnknownAttributes(element, cmElement, cmAttributes, reporter, file, model.getStructuredDocument(), documentRegion);
 					// required attributes could be hidden in jsp regions in
 					// tags, so if jsp regions were detected, do not check for
 					// missing required attributes
