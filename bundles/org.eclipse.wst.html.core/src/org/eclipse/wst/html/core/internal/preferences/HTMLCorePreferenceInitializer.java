@@ -86,7 +86,7 @@ public class HTMLCorePreferenceInitializer extends AbstractPreferenceInitializer
 		node.putInt(HTMLCorePreferenceNames.ELEM_INVALID_NAME, ValidationMessage.ERROR);
 		node.putInt(HTMLCorePreferenceNames.ELEM_START_INVALID_CASE, ValidationMessage.WARNING);
 		node.putInt(HTMLCorePreferenceNames.ELEM_END_INVALID_CASE, ValidationMessage.ERROR);
-		node.putInt(HTMLCorePreferenceNames.ELEM_MISSING_START, ValidationMessage.ERROR);
+		node.putInt(HTMLCorePreferenceNames.ELEM_MISSING_START, ValidationMessage.WARNING);
 		node.putInt(HTMLCorePreferenceNames.ELEM_MISSING_END, ValidationMessage.WARNING);
 		node.putInt(HTMLCorePreferenceNames.ELEM_UNNECESSARY_END, ValidationMessage.WARNING);
 		node.putInt(HTMLCorePreferenceNames.ELEM_INVALID_DIRECTIVE, ValidationMessage.ERROR);
