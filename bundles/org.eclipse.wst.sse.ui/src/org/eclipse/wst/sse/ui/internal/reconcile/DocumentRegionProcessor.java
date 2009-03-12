@@ -250,7 +250,10 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 					((IReleasable) validatorStrategy).release();
 			}
 			
-			fSpellcheckStrategy = null;
+			if (fSpellcheckStrategy != null) {
+				fSpellcheckStrategy.setDocument(null);
+				fSpellcheckStrategy = null;
+			}
 		}
 		super.uninstall();
 	}
