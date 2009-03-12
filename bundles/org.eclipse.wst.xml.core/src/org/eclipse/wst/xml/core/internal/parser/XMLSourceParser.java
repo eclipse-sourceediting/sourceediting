@@ -120,15 +120,15 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 		 * 
 		 * Protect the user's data above everything.
 		 */
-		try {
-			if (fCurrentNode != null && fStructuredDocumentRegionHandlers != null) {
-				for (int i = 0; i < fStructuredDocumentRegionHandlers.size(); i++) {
+		if (fCurrentNode != null && fStructuredDocumentRegionHandlers != null) {
+			for (int i = 0; i < fStructuredDocumentRegionHandlers.size(); i++) {
+				try {
 					((StructuredDocumentRegionHandler) fStructuredDocumentRegionHandlers.get(i)).nodeParsed(fCurrentNode);
 				}
+				catch (Exception e) {
+					Logger.log(Logger.ERROR, "Error occurred while firing Node Parsed event", e); //$NON-NLS-1$
+				}
 			}
-		}
-		catch (Exception e) {
-		    Logger.log(Logger.ERROR, "Error occurred while firing Node Parsed event", e); //$NON-NLS-1$
 		}
 	}
 
