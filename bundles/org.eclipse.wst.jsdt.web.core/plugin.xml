@@ -5,14 +5,9 @@
    
    <!-- Full blown JSDT FACET -->
    <extension point="org.eclipse.wst.common.project.facet.core.facets">
-	    <category id="jsdt.category">
-	    <label>JavaScript Development Toolkit</label>
-	    <description>Enables advanced JavaScript support.</description>
-	  </category>
-   
    		<project-facet id="wst.jsdt.web">
-			<label>JavaScript Toolkit</label>
-	  	 	<description>Adds advanced JavaScript editing support.</description>
+			<label>%facet.label</label>
+	  	 	<description>%facet.description</description>
 	  	  	<default-version version="1.0"/>
 		</project-facet>
 	
