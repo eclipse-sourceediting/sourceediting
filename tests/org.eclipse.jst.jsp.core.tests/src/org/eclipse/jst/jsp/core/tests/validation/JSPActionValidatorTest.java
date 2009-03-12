@@ -126,8 +126,15 @@ public class JSPActionValidatorTest extends TestCase {
 
 		helper.setURI(filePath);
 		validator.validate(helper, reporter);
+		
+		StringBuffer error = new StringBuffer("jsp action validator found errors when it should not have");
+		List messages = reporter.getMessages();
+		for (int i = 0; i < messages.size(); i++) {
+			error.append('\n');
+			error.append(((IMessage) messages.get(i)).getText());
+		}
 
-		assertTrue("jsp action validator found errors when it should not have", reporter.getMessages().isEmpty());
+		assertTrue(error.toString(), reporter.getMessages().isEmpty());
 	}
 
 	/**
