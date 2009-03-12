@@ -179,7 +179,7 @@ public class JSPActionValidator extends JSPValidator {
 				 * element supports dynamic attributes
 				 */
 				if (!hasJSPRegion(((IDOMNode) a).getNameRegion()) && fSeverityUnknownAttribute != ValidationMessage.IGNORE) {
-					if (!!dynamicAttributesAllowed) {
+					if (!dynamicAttributesAllowed) {
 						String msgText = NLS.bind(JSPCoreMessages.JSPDirectiveValidator_6, a.getName());
 						LocalizedMessage message = new LocalizedMessage(fSeverityUnknownAttribute, msgText, file);
 						int start = ((IDOMAttr) a).getNameRegionStartOffset();
