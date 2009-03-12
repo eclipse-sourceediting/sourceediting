@@ -139,8 +139,7 @@ public class TextRegionListImpl implements ITextRegionList {
 		if (index < 0 || index > fRegionsCount) {
 			throw new ArrayIndexOutOfBoundsException(index);
 		}
-		ITextRegion result = fRegions[index];
-		return result;
+		return fRegions[index];
 	}
 
 	public int indexOf(ITextRegion region) {
