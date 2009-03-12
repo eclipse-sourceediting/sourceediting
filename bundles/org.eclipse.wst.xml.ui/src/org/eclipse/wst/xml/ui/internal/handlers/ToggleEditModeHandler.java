@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2008, 2009 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -37,7 +37,6 @@ import org.eclipse.wst.xml.ui.internal.util.SharedXMLEditorPluginImageHelper;
 public class ToggleEditModeHandler extends AbstractHandler implements IElementUpdater {
 	protected ImageDescriptor onImage = SharedXMLEditorPluginImageHelper.getImageDescriptor(SharedXMLEditorPluginImageHelper.IMG_ETOOL_CONSTRAINON);
 	protected ImageDescriptor offImage = SharedXMLEditorPluginImageHelper.getImageDescriptor(SharedXMLEditorPluginImageHelper.IMG_ETOOL_CONSTRAINOFF);
-	protected ModelQuery modelQuery;
 
 	public ToggleEditModeHandler() {
 		super();
@@ -57,6 +56,7 @@ public class ToggleEditModeHandler extends AbstractHandler implements IElementUp
 			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 			if (model != null) {
+				ModelQuery modelQuery;
 				try {
 					modelQuery = ModelQueryUtil.getModelQuery(model);
 				}
@@ -109,6 +109,7 @@ public class ToggleEditModeHandler extends AbstractHandler implements IElementUp
 			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 			if (model != null) {
+			    ModelQuery modelQuery;
 				try {
 					modelQuery = ModelQueryUtil.getModelQuery(model);
 				}
