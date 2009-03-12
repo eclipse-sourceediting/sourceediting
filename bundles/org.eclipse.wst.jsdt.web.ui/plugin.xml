@@ -29,36 +29,23 @@
 			target="org.eclipse.wst.html.SCRIPT,org.eclipse.wst.html.SCRIPT.EVENTHANDLER" />
 	</extension>		
 	
-	<extension
-		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
-		<target
-			id="org.eclipse.wst.html.SCRIPT"
-			name="%target.name.0"/>
-		<target
-			id="org.eclipse.wst.html.SCRIPT.EVENTHANDLER"
-			name="%target.name.1"/>
-	</extension>
-	
 	 <extension
          point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
       <hyperlinkDetector 
             class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
             id="org.eclipse.wst.jsdt.web.ui.JSDTHyperlinkDetector.SCRIPT"
             name="%hyperlinkDetector.name.0"
-            targetId="org.eclipse.wst.html.SCRIPT">
-      </hyperlinkDetector>
+            targetId="org.eclipse.wst.html.SCRIPT"/>
       <hyperlinkDetector
             class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
             id="org.eclipse.wst.jsdt.web.ui.JSDTHyperlinkDetector.SCRIPT.events"
             name="%hyperlinkDetector.name.0"
-            targetId="org.eclipse.wst.html.SCRIPT.EVENTHANDLER">
-      </hyperlinkDetector>  
+            targetId="org.eclipse.wst.html.SCRIPT.EVENTHANDLER"/>  
       <hyperlinkDetector
 			class="org.eclipse.wst.jsdt.web.ui.internal.hyperlink.JSDTHyperlinkDetector"
 			id="org.eclipse.wst.jsdt.web.ui.JSDTHyperlinkDetector.HTML"
 			name="%hyperlinkDetector.name.0"
-			targetId="org.eclipse.wst.html.core.htmlsource">
-      </hyperlinkDetector>
+			targetId="org.eclipse.wst.html.core.htmlsource"/>
    </extension>
   
   
