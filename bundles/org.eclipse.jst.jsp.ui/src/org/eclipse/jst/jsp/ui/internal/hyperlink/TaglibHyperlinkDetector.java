@@ -149,57 +149,21 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 					// check if jsp tag/directive first
 					ITypedRegion partition = TextUtilities.getPartition(doc, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, region.getOffset(), false);
 					if (partition != null && partition.getType() == IJSPPartitions.JSP_DIRECTIVE) {
-						// check if jsp taglib directive
-						Node currentNode = getCurrentNode(doc, region.getOffset());
-						if (currentNode != null && currentNode.getNodeType() == Node.ELEMENT_NODE) {
-							String baseLocationForTaglib = getBaseLocationForTaglib(doc);
-							if (baseLocationForTaglib != null && JSP11Namespace.ElementName.DIRECTIVE_TAGLIB.equalsIgnoreCase(currentNode.getNodeName())) {
-								/**
-								 * The taglib directive itself
-								 */
-								// get the uri attribute
-								Attr taglibURINode = ((Element) currentNode).getAttributeNode(JSP11Namespace.ATTR_NAME_URI);
-								if (taglibURINode != null) {
-									ITaglibRecord reference = TaglibIndex.resolve(baseLocationForTaglib, taglibURINode.getValue(), false);
-									// when using a tagdir
-									// (ITaglibRecord.TAGDIR),
-									// there's nothing to link to
-									if (reference != null) {
-										// handle taglibs
-										switch (reference.getRecordType()) {
-											case (ITaglibRecord.TLD) : {
-												ITLDRecord record = (ITLDRecord) reference;
-												String uriString = record.getPath().toString();
-												IRegion hyperlinkRegion = getHyperlinkRegion(taglibURINode, region);
-												if (hyperlinkRegion != null) {
-													hyperlink = createHyperlink(uriString, hyperlinkRegion, doc, null);
-												}
-											}
-												break;
-											case (ITaglibRecord.JAR) :
-											case (ITaglibRecord.URL) : {
-												IRegion hyperlinkRegion = getHyperlinkRegion(taglibURINode, region);
-												if (hyperlinkRegion != null) {
-													hyperlink = new TaglibJarUriHyperlink(hyperlinkRegion, reference);
-												}
-											}
-										}
-									}
-								}
-							}
-							else if (baseLocationForTaglib != null && JSP12Namespace.ElementName.ROOT.equalsIgnoreCase(currentNode.getNodeName())) {
-								/**
-								 * The jsp:root element
-								 */
-								NamedNodeMap attrs = currentNode.getAttributes();
-								for (int i = 0; i < attrs.getLength(); i++) {
-									Attr attr = (Attr) attrs.item(i);
-									if (attr.getNodeName().startsWith(XMLNS)) {
-										String uri = StringUtils.strip(attr.getNodeValue());
-										if (uri.startsWith(URN_TLD)) {
-											uri = uri.substring(URN_TLD.length());
-										}
-										ITaglibRecord reference = TaglibIndex.resolve(baseLocationForTaglib, uri, false);
+						IStructuredModel sModel = null;
+						try {
+							sModel = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
+							// check if jsp taglib directive
+							Node currentNode = getCurrentNode(sModel, region.getOffset());
+							if (currentNode != null && currentNode.getNodeType() == Node.ELEMENT_NODE) {
+								String baseLocationForTaglib = getBaseLocationForTaglib(doc);
+								if (baseLocationForTaglib != null && JSP11Namespace.ElementName.DIRECTIVE_TAGLIB.equalsIgnoreCase(currentNode.getNodeName())) {
+									/**
+									 * The taglib directive itself
+									 */
+									// get the uri attribute
+									Attr taglibURINode = ((Element) currentNode).getAttributeNode(JSP11Namespace.ATTR_NAME_URI);
+									if (taglibURINode != null) {
+										ITaglibRecord reference = TaglibIndex.resolve(baseLocationForTaglib, taglibURINode.getValue(), false);
 										// when using a tagdir
 										// (ITaglibRecord.TAGDIR),
 										// there's nothing to link to
@@ -209,7 +173,7 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 												case (ITaglibRecord.TLD) : {
 													ITLDRecord record = (ITLDRecord) reference;
 													String uriString = record.getPath().toString();
-													IRegion hyperlinkRegion = getHyperlinkRegion(attr, region);
+													IRegion hyperlinkRegion = getHyperlinkRegion(taglibURINode, region);
 													if (hyperlinkRegion != null) {
 														hyperlink = createHyperlink(uriString, hyperlinkRegion, doc, null);
 													}
@@ -217,7 +181,7 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 													break;
 												case (ITaglibRecord.JAR) :
 												case (ITaglibRecord.URL) : {
-													IRegion hyperlinkRegion = getHyperlinkRegion(attr, region);
+													IRegion hyperlinkRegion = getHyperlinkRegion(taglibURINode, region);
 													if (hyperlinkRegion != null) {
 														hyperlink = new TaglibJarUriHyperlink(hyperlinkRegion, reference);
 													}
@@ -226,24 +190,64 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 										}
 									}
 								}
-							}
-							else {
-								/**
-								 * Hyperlink custom tag to its TLD or tag file
-								 */
-								TLDCMDocumentManager documentManager = TaglibController.getTLDCMDocumentManager(doc);
-								if (documentManager != null) {
-									List documentTrackers = documentManager.getCMDocumentTrackers(currentNode.getPrefix(), region.getOffset());
-									for (int i = 0; i < documentTrackers.size(); i++) {
-										TaglibTracker tracker = (TaglibTracker) documentTrackers.get(i);
-										CMElementDeclaration decl = (CMElementDeclaration) tracker.getElements().getNamedItem(currentNode.getNodeName());
-										if (decl != null) {
-											decl = (CMElementDeclaration) ((CMNodeWrapper) decl).getOriginNode();
-											if (decl instanceof CMElementDeclarationImpl) {
-												String base = ((CMElementDeclarationImpl) decl).getLocationString();
-												IRegion hyperlinkRegion = getHyperlinkRegion(currentNode, region);
-												if (hyperlinkRegion != null) {
-													hyperlink = createHyperlink(base, hyperlinkRegion, doc, currentNode);
+								else if (baseLocationForTaglib != null && JSP12Namespace.ElementName.ROOT.equalsIgnoreCase(currentNode.getNodeName())) {
+									/**
+									 * The jsp:root element
+									 */
+									NamedNodeMap attrs = currentNode.getAttributes();
+									for (int i = 0; i < attrs.getLength(); i++) {
+										Attr attr = (Attr) attrs.item(i);
+										if (attr.getNodeName().startsWith(XMLNS)) {
+											String uri = StringUtils.strip(attr.getNodeValue());
+											if (uri.startsWith(URN_TLD)) {
+												uri = uri.substring(URN_TLD.length());
+											}
+											ITaglibRecord reference = TaglibIndex.resolve(baseLocationForTaglib, uri, false);
+											// when using a tagdir
+											// (ITaglibRecord.TAGDIR),
+											// there's nothing to link to
+											if (reference != null) {
+												// handle taglibs
+												switch (reference.getRecordType()) {
+													case (ITaglibRecord.TLD) : {
+														ITLDRecord record = (ITLDRecord) reference;
+														String uriString = record.getPath().toString();
+														IRegion hyperlinkRegion = getHyperlinkRegion(attr, region);
+														if (hyperlinkRegion != null) {
+															hyperlink = createHyperlink(uriString, hyperlinkRegion, doc, null);
+														}
+													}
+														break;
+													case (ITaglibRecord.JAR) :
+													case (ITaglibRecord.URL) : {
+														IRegion hyperlinkRegion = getHyperlinkRegion(attr, region);
+														if (hyperlinkRegion != null) {
+															hyperlink = new TaglibJarUriHyperlink(hyperlinkRegion, reference);
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+								else {
+									/**
+									 * Hyperlink custom tag to its TLD or tag file
+									 */
+									TLDCMDocumentManager documentManager = TaglibController.getTLDCMDocumentManager(doc);
+									if (documentManager != null) {
+										List documentTrackers = documentManager.getCMDocumentTrackers(currentNode.getPrefix(), region.getOffset());
+										for (int i = 0; i < documentTrackers.size(); i++) {
+											TaglibTracker tracker = (TaglibTracker) documentTrackers.get(i);
+											CMElementDeclaration decl = (CMElementDeclaration) tracker.getElements().getNamedItem(currentNode.getNodeName());
+											if (decl != null) {
+												decl = (CMElementDeclaration) ((CMNodeWrapper) decl).getOriginNode();
+												if (decl instanceof CMElementDeclarationImpl) {
+													String base = ((CMElementDeclarationImpl) decl).getLocationString();
+													IRegion hyperlinkRegion = getHyperlinkRegion(currentNode, region);
+													if (hyperlinkRegion != null) {
+														hyperlink = createHyperlink(base, hyperlinkRegion, doc, currentNode);
+													}
 												}
 											}
 										}
@@ -251,6 +255,10 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 								}
 							}
 						}
+						finally {
+							if (sModel != null)
+								sModel.releaseFromRead();
+						}							
 					}
 				}
 				catch (BadLocationException e) {
@@ -414,30 +422,15 @@ public class TaglibHyperlinkDetector extends AbstractHyperlinkDetector {
 		return link;
 	}
 
-	/**
-	 * Returns the node the cursor is currently on in the document. null if no
-	 * node is selected
-	 * 
-	 * @param offset
-	 * @return Node either element, doctype, text, or null
-	 */
-	private Node getCurrentNode(IDocument document, int offset) {
+	private Node getCurrentNode(IStructuredModel model, int offset) {
 		// get the current node at the offset (returns either: element,
 		// doctype, text)
 		IndexedRegion inode = null;
-		IStructuredModel sModel = null;
-		try {
-			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-			if (sModel != null) {
-				inode = sModel.getIndexedRegion(offset);
-				if (inode == null) {
-					inode = sModel.getIndexedRegion(offset - 1);
-				}
+		if (model != null) {
+			inode = model.getIndexedRegion(offset);
+			if (inode == null) {
+				inode = model.getIndexedRegion(offset - 1);
 			}
-		}
-		finally {
-			if (sModel != null)
-				sModel.releaseFromRead();
 		}
 
 		if (inode instanceof Node) {
