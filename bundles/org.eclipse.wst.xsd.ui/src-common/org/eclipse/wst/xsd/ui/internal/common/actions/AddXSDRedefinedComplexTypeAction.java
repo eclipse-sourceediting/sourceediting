@@ -14,12 +14,15 @@ package org.eclipse.wst.xsd.ui.internal.common.actions;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.common.ui.internal.search.dialogs.IComponentList;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddRedefinedComponentCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.RedefineComplexTypeCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDRedefinableComponent;
 import org.eclipse.xsd.XSDRedefine;
@@ -28,11 +31,11 @@ import org.eclipse.xsd.XSDTypeDefinition;
 
 public class AddXSDRedefinedComplexTypeAction extends AddXSDRedefinableContentAction
 {
+  public static final String ID = "org.eclipse.wst.xsd.ui.actions.RedefineComplexType"; //$NON-NLS-1$
 
-  public AddXSDRedefinedComplexTypeAction(IWorkbenchPart part, String ID, String text)
+  public AddXSDRedefinedComplexTypeAction(IWorkbenchPart part)
   {
-    super(part, ID, text);
-    this.operationType = COMPLEX_TYPE_REDEFINE;
+    super(part, ID, Messages._UI_ACTION_REDEFINE_COMPLEX_TYPE);
   }
 
   protected AddRedefinedComponentCommand getCommand(XSDRedefine redefine, XSDRedefinableComponent redefinableComponent)
@@ -44,7 +47,7 @@ public class AddXSDRedefinedComplexTypeAction extends AddXSDRedefinableContentAc
     return command;
   }
 
-  protected void buildComponentsList(XSDRedefine xsdRedefine, List names, IComponentList componentList)
+  protected void buildComponentsList(XSDRedefine xsdRedefine, Set redefinedComponentsNames, IComponentList componentList)
   {
     List typeDefinitions = xsdRedefine.getIncorporatedSchema().getTypeDefinitions();
     Iterator iterator = typeDefinitions.iterator();
@@ -52,11 +55,15 @@ public class AddXSDRedefinedComplexTypeAction extends AddXSDRedefinableContentAc
     {
       XSDTypeDefinition typeDefinition = (XSDTypeDefinition)iterator.next();
       String typeDefinitionName = typeDefinition.getName();
-      if (typeDefinition instanceof XSDComplexTypeDefinition && !names.contains(typeDefinitionName))
+      if (typeDefinition instanceof XSDComplexTypeDefinition && !redefinedComponentsNames.contains(typeDefinitionName))
       {
         componentList.add(typeDefinition);
       }
     }
   }
-
+  
+  protected Image getRedefinedComponentImage()
+  {
+    return XSDEditorPlugin.getXSDImage(Messages._UI_IMAGE_COMPLEX_TYPE);
+  }
 }

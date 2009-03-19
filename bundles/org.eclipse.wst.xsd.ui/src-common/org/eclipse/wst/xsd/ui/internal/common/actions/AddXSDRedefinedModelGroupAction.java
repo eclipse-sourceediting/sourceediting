@@ -14,12 +14,15 @@ package org.eclipse.wst.xsd.ui.internal.common.actions;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.common.ui.internal.search.dialogs.IComponentList;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddRedefinedComponentCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.RedefineModelGroupCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDRedefinableComponent;
 import org.eclipse.xsd.XSDRedefine;
@@ -27,11 +30,11 @@ import org.eclipse.xsd.XSDRedefine;
 
 public class AddXSDRedefinedModelGroupAction extends AddXSDRedefinableContentAction
 {
+  public static final String ID = "org.eclipse.wst.xsd.ui.actions.RedefineModelGroup"; //$NON-NLS-1$
 
-  public AddXSDRedefinedModelGroupAction(IWorkbenchPart part, String ID, String text)
+  public AddXSDRedefinedModelGroupAction(IWorkbenchPart part)
   {
-    super(part, ID, text);
-    this.operationType = MODEL_GROUP_REDEFINE;
+    super(part, ID, Messages._UI_ACTION_REDEFINE_MODEL_GROUP);
   }
 
   protected AddRedefinedComponentCommand getCommand(XSDRedefine redefine, XSDRedefinableComponent redefinableComponent)
@@ -43,7 +46,7 @@ public class AddXSDRedefinedModelGroupAction extends AddXSDRedefinableContentAct
     return command;
   }
 
-  protected void buildComponentsList(XSDRedefine xsdRedefine, List names, IComponentList componentList)
+  protected void buildComponentsList(XSDRedefine xsdRedefine, Set redefinedComponentsNames, IComponentList componentList)
   {
     List modelGroupList = xsdRedefine.getIncorporatedSchema().getModelGroupDefinitions();
     Iterator iterator = modelGroupList.iterator();
@@ -51,11 +54,15 @@ public class AddXSDRedefinedModelGroupAction extends AddXSDRedefinableContentAct
     {
       XSDModelGroupDefinition modelGroupDefinition = (XSDModelGroupDefinition)iterator.next();
       String modelGroupDefinitionName = modelGroupDefinition.getName();
-      if (!names.contains(modelGroupDefinitionName))
+      if (!redefinedComponentsNames.contains(modelGroupDefinitionName))
       {
         componentList.add(modelGroupDefinition);
       }
     }
-
+  }
+  
+  protected Image getRedefinedComponentImage()
+  {
+    return XSDEditorPlugin.getXSDImage(Messages._UI_IMAGE_MODEL_GROUP);
   }
 }

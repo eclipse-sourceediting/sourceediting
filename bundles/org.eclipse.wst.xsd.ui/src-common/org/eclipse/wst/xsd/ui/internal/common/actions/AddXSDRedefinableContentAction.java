@@ -11,9 +11,10 @@
 package org.eclipse.wst.xsd.ui.internal.common.actions;
 
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -42,36 +43,14 @@ import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddRedefinedComponentCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
-import org.eclipse.xsd.XSDAttributeGroupDefinition;
-import org.eclipse.xsd.XSDComplexTypeDefinition;
-import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDRedefinableComponent;
 import org.eclipse.xsd.XSDRedefine;
-import org.eclipse.xsd.XSDSimpleTypeDefinition;
 
 
 public abstract class AddXSDRedefinableContentAction extends XSDBaseAction
 {
-  public static final String COMPLEX_TYPE_ID = "org.eclipse.wst.xsd.ui.actions.RedfineComplexType"; //$NON-NLS-1$
-
-  public static final String SIMPLE_TYPE_ID = "org.eclipse.wst.xsd.ui.actions.RedfineSimpleType"; //$NON-NLS-1$
-
-  public static final String ATTRIBUTE_GROUP_ID = "org.eclipse.wst.xsd.ui.actions.RedfineAttributeGroup"; //$NON-NLS-1$
-
-  public static final String MODEL_GROUP_ID = "org.eclipse.wst.xsd.ui.actions.RedfineModelGroup"; //$NON-NLS-1$
-
-  public static final int COMPLEX_TYPE_REDEFINE = 1;
-
-  public static final int SIMPLE_TYPE_REDEFINE = 2;
-
-  public static final int ATTRIBUTE_GROUP_REDEFINE = 3;
-
-  public static final int MODEL_GROUP_REDEFINE = 4;
-
-  protected int operationType;
-
-  public AddXSDRedefinableContentAction(IWorkbenchPart part, String ID, String text)
+  protected AddXSDRedefinableContentAction(IWorkbenchPart part, String ID, String text)
   {
     super(part);
     setText(text);
@@ -119,7 +98,7 @@ public abstract class AddXSDRedefinableContentAction extends XSDBaseAction
 
   protected abstract AddRedefinedComponentCommand getCommand(XSDRedefine redefine, XSDRedefinableComponent redefinableComponent);
   
-  protected abstract void buildComponentsList(XSDRedefine xsdRedefine, List names, IComponentList componentList);
+  protected abstract void buildComponentsList(XSDRedefine xsdRedefine, Set redefinedComponentsNames, IComponentList componentList);
   
   protected void buildRedefine(XSDRedefine redefine, ComponentSpecification selectedComponent)
   {
@@ -146,14 +125,15 @@ public abstract class AddXSDRedefinableContentAction extends XSDBaseAction
     public void populateComponentList(IComponentList list, SearchScope scope, IProgressMonitor pm)
     {      
       List currentRedefines = xsdRedefine.getContents();
-      List names = new ArrayList(currentRedefines.size());
+      Set redefinedComponentsNames = new HashSet(currentRedefines.size());
       Iterator redefinesIterator = currentRedefines.iterator();
       while (redefinesIterator.hasNext())
       {
         XSDRedefinableComponent component = (XSDRedefinableComponent)redefinesIterator.next();
-        names.add(component.getName());
+        String redefinedComponentName = component.getName();
+        redefinedComponentsNames.add(redefinedComponentName);
       }
-      action.buildComponentsList(xsdRedefine, names, list);      
+      action.buildComponentsList(xsdRedefine, redefinedComponentsNames, list);      
     }
   }
 
@@ -209,28 +189,14 @@ public abstract class AddXSDRedefinableContentAction extends XSDBaseAction
 
   }
 
+  protected abstract Image getRedefinedComponentImage();
+  
   class XSDRedefineComponentsLabelProvider implements ILabelProvider
   {
 
     public Image getImage(Object element)
     {
-      Image image = null;
-      if (element instanceof XSDComplexTypeDefinition)
-      {
-        image = XSDEditorPlugin.getXSDImage(Messages._UI_IMAGE_COMPLEX_TYPE);
-      }
-      else if (element instanceof XSDSimpleTypeDefinition)
-      {
-        image = XSDEditorPlugin.getXSDImage(Messages._UI_IMAGE_SIMPLE_TYPE);
-      }
-      else if (element instanceof XSDAttributeGroupDefinition)
-      {
-        image = XSDEditorPlugin.getXSDImage(Messages._UI_IMAGE_ATTRIBUTE_GROUP);
-      }
-      else if (element instanceof XSDModelGroupDefinition)
-      {
-        image = XSDEditorPlugin.getXSDImage(Messages._UI_IMAGE_MODEL_GROUP);
-      }
+      Image image = getRedefinedComponentImage();
       return image;
     }
 

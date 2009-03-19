@@ -202,7 +202,7 @@ public class XSDRedefineAdapter extends XSDSchemaDirectiveAdapter
     getChildren();
   }
 
-  private CategoryAdapter getCategory(int category)
+  public CategoryAdapter getCategory(int category)
   {
     if (children == null)
     {

@@ -100,7 +100,6 @@ import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDElementAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDEnumerationFacetAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDModelGroupDefinitionAction;
-import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDRedefinableContentAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDRedefinedAttributeGroupAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDRedefinedComplexTypeAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDRedefinedModelGroupAction;
@@ -636,22 +635,22 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     action.setSelectionProvider(getSelectionManager());
     registry.registerAction(action);
     
-    action = new AddXSDRedefinedComplexTypeAction(this, AddXSDRedefinableContentAction.COMPLEX_TYPE_ID, Messages._UI_ACTION_REDEFINE_COMPLEX_TYPE);
+    action = new AddXSDRedefinedComplexTypeAction(this);
     action.setSelectionProvider(getSelectionManager());
     action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, Messages._UI_IMAGE_COMPLEX_TYPE));
     registry.registerAction(action);
     
-    action = new AddXSDRedefinedSimpleTypeAction(this, AddXSDRedefinableContentAction.SIMPLE_TYPE_ID, Messages._UI_ACTION_REDEFINE_SIMPLE_TYPE);
+    action = new AddXSDRedefinedSimpleTypeAction(this);
     action.setSelectionProvider(getSelectionManager());
     action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, Messages._UI_IMAGE_SIMPLE_TYPE));
     registry.registerAction(action);
     
-    action = new AddXSDRedefinedAttributeGroupAction(this, AddXSDRedefinableContentAction.ATTRIBUTE_GROUP_ID, Messages._UI_ACTION_REDEFINE_ATTRIBUTE_GROUP);
+    action = new AddXSDRedefinedAttributeGroupAction(this);
     action.setSelectionProvider(getSelectionManager());
     action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, Messages._UI_IMAGE_ATTRIBUTE_GROUP));
     registry.registerAction(action);
     
-    action = new AddXSDRedefinedModelGroupAction(this, AddXSDRedefinableContentAction.MODEL_GROUP_ID, Messages._UI_ACTION_REDEFINE_MODEL_GROUP);
+    action = new AddXSDRedefinedModelGroupAction(this);
     action.setSelectionProvider(getSelectionManager());
     action.setImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, Messages._UI_IMAGE_MODEL_GROUP));
     registry.registerAction(action);

@@ -11,14 +11,9 @@
 package org.eclipse.wst.xsd.ui.internal.common.commands;
 
 
-import org.eclipse.xsd.XSDCompositor;
-import org.eclipse.xsd.XSDFactory;
-import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
-import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDRedefinableComponent;
 import org.eclipse.xsd.XSDRedefine;
-import org.eclipse.xsd.util.XSDSchemaBuildingTools;
 
 
 /**
@@ -34,14 +29,8 @@ public class RedefineModelGroupCommand extends AddRedefinedComponentCommand
 
   protected void doExecute()
   {
-    XSDModelGroupDefinition redefinedModelGroupDefinition = XSDFactory.eINSTANCE.createXSDModelGroupDefinition();
-    redefinedModelGroupDefinition.setName(redefinableComponent.getName());
-    XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
-    XSDParticle particle = factory.createXSDParticle();
-    XSDModelGroup modelGroup = factory.createXSDModelGroup();
-    modelGroup.setCompositor(XSDCompositor.SEQUENCE_LITERAL);
-    particle.setContent(modelGroup);
-    redefinedModelGroupDefinition.setModelGroup(modelGroup);
+    XSDModelGroupDefinition modelGroup = (XSDModelGroupDefinition) redefinableComponent;
+    XSDModelGroupDefinition redefinedModelGroupDefinition = (XSDModelGroupDefinition)modelGroup.cloneConcreteComponent(true, false);
     addedXSDConcreteComponent = redefinedModelGroupDefinition;
   }
 }
