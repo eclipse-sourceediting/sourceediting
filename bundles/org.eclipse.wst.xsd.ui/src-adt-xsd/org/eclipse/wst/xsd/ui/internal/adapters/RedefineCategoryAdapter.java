@@ -18,7 +18,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.ShowPropertiesViewAction;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
-import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDRedefinableContentAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDRedefinedAttributeGroupAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDRedefinedComplexTypeAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDRedefinedModelGroupAction;
+import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDRedefinedSimpleTypeAction;
 import org.eclipse.xsd.XSDRedefine;
 
 
@@ -46,23 +49,19 @@ public class RedefineCategoryAdapter extends CategoryAdapter
     {
       case TYPES:
       {
-        actionIDs.add(AddXSDRedefinableContentAction.COMPLEX_TYPE_ID);
-        actionIDs.add(AddXSDRedefinableContentAction.SIMPLE_TYPE_ID);
+        actionIDs.add(AddXSDRedefinedComplexTypeAction.ID);
+        actionIDs.add(AddXSDRedefinedSimpleTypeAction.ID);
         break;
       }
       case GROUPS:
       {
-        actionIDs.add(AddXSDRedefinableContentAction.MODEL_GROUP_ID);
+        actionIDs.add(AddXSDRedefinedModelGroupAction.ID);
         break;
       }
       case ATTRIBUTES:
-      {
-        actionIDs.add(AddXSDRedefinableContentAction.ATTRIBUTE_GROUP_ID);
-        break;
-      }
       case ATTRIBUTE_GROUPS:
       {
-        actionIDs.add(AddXSDRedefinableContentAction.ATTRIBUTE_GROUP_ID);
+        actionIDs.add(AddXSDRedefinedAttributeGroupAction.ID);
         break;
       }
     }

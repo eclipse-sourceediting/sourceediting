@@ -83,7 +83,7 @@ public class XSDRedefineAdapter extends XSDSchemaDirectiveAdapter
 
   public boolean isFocusAllowed()
   {
-    return false;
+    return true;
   }
 
   protected List types = null;
