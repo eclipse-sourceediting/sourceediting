@@ -71,7 +71,9 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 
 		if (that != null) {
 			this.fName = that.fName;
-			this.fValueSource = that.getValueSource().toCharArray();
+			String valueSource = that.getValueSource();
+			if (valueSource != null)
+				this.fValueSource = valueSource.toCharArray();
 		}
 	}
 
