@@ -50,7 +50,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	private ITextRegion nameRegion = null;
 	private ElementImpl ownerElement = null;
 	private ITextRegion fValueRegion = null;
-	private char[] valueSource = null;
+	private char[] fValueSource = null;
 	private char[] fNamespaceURI = null;
 
 	/**
@@ -71,7 +71,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 
 		if (that != null) {
 			this.fName = that.fName;
-			this.valueSource = that.valueSource;
+			this.fValueSource = that.getValueSource().toCharArray();
 		}
 	}
 
@@ -411,8 +411,8 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	/**
 	 */
 	public String getValueSource() {
-		if (this.valueSource != null)
-			return new String(this.valueSource);
+		if (this.fValueSource != null)
+			return new String(this.fValueSource);
 		// DW: 4/16/2003 due to change in structuredDocument ... we need a
 		// flatnode to
 		// get at region values. For now I'll assume this is always the first
@@ -437,8 +437,8 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	}
 
 	private String getValueSource(ElementImpl ownerElement) {
-		if (this.valueSource != null)
-			return new String(this.valueSource);
+		if (this.fValueSource != null)
+			return new String(this.fValueSource);
 		// DW: 4/16/2003 due to change in structuredDocument ... we need a
 		// flatnode to
 		// get at region values. For now I'll assume this is always the first
@@ -632,14 +632,14 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	/**
 	 */
 	void resetRegions() {
-		this.valueSource = getValueSource().toCharArray();
+		this.fValueSource = getValueSource().toCharArray();
 		removeRegions();
 	}
 
 	/**
 	 */
 	void resetRegions(ElementImpl ownerElement) {
-		this.valueSource = getValueSource(ownerElement).toCharArray();
+		this.fValueSource = getValueSource(ownerElement).toCharArray();
 		removeRegions();
 	}
 
@@ -749,14 +749,14 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	void setValueRegion(ITextRegion valueRegion) {
 		this.fValueRegion = valueRegion;
 		if (valueRegion != null)
-			this.valueSource = null;
+			this.fValueSource = null;
 	}
 
 	public void setValueSource(String source) {
 		if (this.ownerElement != null && !this.ownerElement.isDataEditable()) {
 			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
 		}
-		this.valueSource = source.toCharArray();
+		this.fValueSource = source.toCharArray();
 
 		notifyValueChanged();
 	}
