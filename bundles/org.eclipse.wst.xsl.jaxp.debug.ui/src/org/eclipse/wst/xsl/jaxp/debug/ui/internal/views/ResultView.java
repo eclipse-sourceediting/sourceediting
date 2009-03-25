@@ -34,6 +34,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
@@ -116,76 +117,8 @@ public class ResultView extends ViewPart implements IDebugEventSetListener
 	{
 		// first, clear the viewer
 		sv.setDocument(null);
-		
-		final Reader reader = xdt.getGenerateReader();
 		IWorkbenchSiteProgressService service = (IWorkbenchSiteProgressService)getSite().getService(IWorkbenchSiteProgressService.class);
-		service.schedule(new Job("Result view job"){
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				IStatus status = Status.OK_STATUS;
-				try
-				{
-					char[] c = new char[8192]; // this is the default BufferedWriter size, so we will usually get chunks of this size
-					int size;
-					while((size = reader.read(c)) != -1)
-					{
-						writeString(new String(c,0,size));
-					}
-				}
-				catch (IOException e)
-				{
-					// ignore
-				}
-				finally
-				{
-					monitor.done();
-				}
-				return status;
-			}
-			
-			private void writeString(final String s)
-			{
-				getSite().getShell().getDisplay().syncExec(new Runnable(){
-
-					public void run()
-					{
-						// if this is the first lot of data, determine the correct content type and set the appropriate document
-						if (sv.getDocument()  == null)
-						{
-							IDocument document;
-							if (s.startsWith("<!DOCTYPE html"))
-							{
-								String contentType = "org.eclipse.wst.html.core.htmlsource";
-								IStructuredModel scratchModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(contentType);
-								document = scratchModel.getStructuredDocument();
-							}
-							else if (s.startsWith("<?xml"))
-							{
-								String contentType = "org.eclipse.core.runtime.xml";
-								IStructuredModel scratchModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(contentType);
-								document = scratchModel.getStructuredDocument();
-							}
-							else
-							{
-								// TODO how to create a plain text Document??
-								document = null;
-							}
-							sv.setDocument(document);
-						}
-						try
-						{
-							sv.getDocument().replace(sv.getDocument().getLength(), 0, s);
-						}
-						catch (BadLocationException e)
-						{
-							XSLDebugUIPlugin.log(e);
-						}
-						sv.revealRange(sv.getDocument().getLength(),0);
-						PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(ResultView.this);
-					}
-				});
-			}
-		});
+		service.schedule(new ResultViewJob("Result view job", getSite(), xdt, sv));
 	}
 
 }
