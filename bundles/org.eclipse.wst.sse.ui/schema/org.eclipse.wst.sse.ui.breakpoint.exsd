@@ -49,8 +49,11 @@
          <attribute name="id" type="string">
             <annotation>
                <documentation>
-                  
+                  an optional identifier of the provider instance
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="identifier"/>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="class" type="string" use="required">
@@ -78,6 +81,16 @@
          <choice>
             <element ref="provider" minOccurs="1" maxOccurs="unbounded"/>
          </choice>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  an optional identifier of the contribution
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="identifier"/>
+               </appInfo>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 
