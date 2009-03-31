@@ -218,10 +218,38 @@
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</key>
 		<key
+			sequence="M2+M3+ARROW_RIGHT"
+			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			commandId=""
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			platform="carbon">
+		</key>
+		<key
+			sequence="M2+M4+ARROW_RIGHT"
+			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			commandId="org.eclipse.wst.sse.ui.structure.select.next"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			platform="carbon">
+		</key>
+		<key
 			sequence="M2+M3+ARROW_LEFT"
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.sse.ui.structure.select.previous"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+		</key>
+		<key
+			sequence="M2+M3+ARROW_LEFT"
+			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			commandId=""
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			platform="carbon">
+		</key>
+		<key
+			sequence="M2+M4+ARROW_LEFT"
+			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			commandId="org.eclipse.wst.sse.ui.structure.select.previous"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+			platform="carbon">
 		</key>
 		<key
 			sequence="M2+M3+ARROW_DOWN"
