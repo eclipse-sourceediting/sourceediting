@@ -7,7 +7,7 @@ import junit.framework.TestSuite;
 public class AllWebUITests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite();
+		TestSuite suite = new TestSuite("JSDT Web UI Tests");
 		// $JUnit-BEGIN$
 
 		// $JUnit-END$

@@ -6,7 +6,7 @@ import junit.framework.TestSuite;
 public class AllWebCoreTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite();
+		TestSuite suite = new TestSuite("JSDT Web Core Tests");
 		//$JUnit-BEGIN$
 
 		//$JUnit-END$

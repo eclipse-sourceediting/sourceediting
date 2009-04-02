@@ -34,7 +34,7 @@ public class EncodingTestSuite extends TestSuite {
 //	private static Class[] classes = new Class[]{TestOverrides.class, TestCodedReader.class, TestCodedWrite.class, XMLEncodingTests.class, XMLHeadTokenizerTester.class, TestContentTypeDescriptionOnGennedFiles.class, TestCodedReaderOnGennedFiles.class, TestContentDescription.class, TestContentTypes.class, TestCommonNames.class};
 	//private static Class[] classes = new Class[]{TestOverrides.class, CSSEncodingTester.class, CSSHeadTokenizerTester.class, HTMLEncodingTests.class, HTMLHeadTokenizerTester.class, JSPEncodingTests.class, JSPHeadTokenizerTester.class, TestCodedReader.class, TestCodedWrite.class, XMLEncodingTests.class, XMLHeadTokenizerTester.class, XMLMalformedInputTests.class, TestContentTypeDescriptionOnGennedFiles.class, TestCodedReaderOnGennedFiles.class, TestContentTypeDetection.class, TestContentDescription.class, TestContentTypes.class, TestCommonNames.class};
 	public EncodingTestSuite() {
-		super("Encoding Test Suite");
+		super("XML Encoding Test Suite");
 		for (int i = 0; i < classes.length; i++) {
 			addTest(new TestSuite(classes[i], classes[i].getName()));
 		}
