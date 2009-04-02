@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2004,2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * 
  * All rights reserved. This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License v1.0 which
@@ -29,6 +29,10 @@ import org.eclipse.wst.dtd.ui.tests.DTDUITestSuite;
 import org.eclipse.wst.html.core.tests.HTMLCoreTestSuite;
 import org.eclipse.wst.html.tests.encoding.HTMLEncodingTestSuite;
 import org.eclipse.wst.html.ui.tests.HTMLUITestSuite;
+import org.eclipse.wst.jsdt.core.tests.compiler.JSDTCompilerTests;
+import org.eclipse.wst.jsdt.core.tests.model.JSDTModelTests;
+import org.eclipse.wst.jsdt.web.core.tests.translation.AllWebCoreTests;
+import org.eclipse.wst.jsdt.web.ui.tests.AllWebUITests;
 import org.eclipse.wst.sse.core.tests.SSEModelTestSuite;
 import org.eclipse.wst.sse.ui.tests.SSEUITestSuite;
 import org.eclipse.wst.xml.core.tests.SSEModelXMLTestSuite;
@@ -48,18 +52,21 @@ public class MasterListTestSuite extends TestSuite {
 		System.setProperty("wtp.autotest.noninteractive", "true");
 
 		addTest(SSEModelTestSuite.suite());
+
 		addTest(SSEModelXMLTestSuite.suite());
 		addTest(CSSCoreTestSuite.suite());
 		addTest(HTMLCoreTestSuite.suite());
 		addTest(JSPCoreTestSuite.suite());
 		addTest(DTDCoreTestSuite.suite());
-
-		addTest(AllXMLTests.suite());
+		addTest(AllXSDCoreTests.suite());
 
 		addTest(EncodingTestSuite.suite());
 		addTest(CSSEncodingTestSuite.suite());
 		addTest(HTMLEncodingTestSuite.suite());
 		addTest(JSPEncodingTestSuite.suite());
+
+		addTest(AllXMLTests.suite());
+		addTest(AllXSDTests.suite());
 
 		addTest(CSSUITestSuite.suite());
 		addTest(HTMLUITestSuite.suite());
@@ -67,10 +74,17 @@ public class MasterListTestSuite extends TestSuite {
 		addTest(XMLUITestSuite.suite());
 		addTest(DTDUITestSuite.suite());
 		addTest(JSPUITestSuite.suite());
+		
+		addTest(JSDTModelTests.suite());
+		addTest(JSDTCompilerTests.suite());
+		addTest(AllWebCoreTests.suite());
+		addTest(AllWebUITests.suite());
+		
+		// compiler problem in org.eclipse.wst.xsl.tests?
+//		addTest(new AllTestsSuite());
 
-		addTest(AllXSDTests.suite());
-		addTest(AllXSDCoreTests.suite());
 
+		
 		// addTest(RegressionBucket.suite());
 		// addTest(AllTestCases.suite());
 
