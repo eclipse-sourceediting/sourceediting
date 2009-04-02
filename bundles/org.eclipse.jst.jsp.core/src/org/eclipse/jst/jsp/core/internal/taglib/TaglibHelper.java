@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,16 +11,13 @@
 package org.eclipse.jst.jsp.core.internal.taglib;
 
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagData;
@@ -30,16 +27,10 @@ import javax.servlet.jsp.tagext.TagLibraryInfo;
 import javax.servlet.jsp.tagext.ValidationMessage;
 import javax.servlet.jsp.tagext.VariableInfo;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jdt.core.IClasspathContainer;
-import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
@@ -83,17 +74,14 @@ public class TaglibHelper {
 	}
 
 	private IProject fProject = null;
-	private TaglibClassLoader fLoader = null;
+	private ClassLoader fLoader = null;
 
-	private Set fProjectEntries = null;
 	private Map fTranslationProblems = null;
-	private Set fContainerEntries = null;
 	private IJavaProject fJavaProject;
 
 	public TaglibHelper(IProject project) {
+		super();
 		setProject(project);
-		fProjectEntries = new HashSet();
-		fContainerEntries = new HashSet();
 		fTranslationProblems = new HashMap();
 	}
 
@@ -178,7 +166,6 @@ public class TaglibHelper {
 	 * @param node
 	 */
 	private void addVariables(List results, CMNode node, ITextRegionCollection customTag) {
-
 		List list = ((TLDElementDeclaration) node).getVariables();
 		Iterator it = list.iterator();
 		while (it.hasNext()) {
@@ -240,7 +227,7 @@ public class TaglibHelper {
 		if (teiClassname == null || teiClassname.length() == 0 || fJavaProject == null)
 			return;
 
-		TaglibClassLoader loader = getClassloader();
+		ClassLoader loader = getClassloader();
 
 		Class teiClass = null;
 		try {
@@ -611,204 +598,11 @@ public class TaglibHelper {
 		return tagDataTable;
 	}
 
-	private TaglibClassLoader getClassloader() {
+	private ClassLoader getClassloader() {
 		if (fLoader == null) {
-			fLoader = new TaglibClassLoader(this.getClass().getClassLoader());
-			fProjectEntries.clear();
-			fContainerEntries.clear();
-			addClasspathEntriesForProject(getProject(), fLoader);
+			fLoader = new BuildPathClassLoader(this.getClass().getClassLoader(), fJavaProject);
 		}
 		return fLoader;
-	}
-
-	/**
-	 * @param loader
-	 */
-	private void addClasspathEntriesForProject(IProject p, TaglibClassLoader loader) {
-
-		// avoid infinite recursion and closed project
-		if (!p.isAccessible() || fProjectEntries.contains(p.getFullPath().toString()))
-			return;
-		fProjectEntries.add(p.getFullPath().toString());
-
-		// add things on classpath that we are interested in
-		try {
-			if (p.hasNature(JavaCore.NATURE_ID)) {
-
-				IJavaProject project = JavaCore.create(p);
-
-				try {
-					IClasspathEntry[] entries = project.getResolvedClasspath(true);
-					addDefaultDirEntry(loader, project);
-					addClasspathEntries(loader, project, entries);
-				}
-				catch (JavaModelException e) {
-					Logger.logException(e);
-				}
-			}
-		}
-		catch (CoreException e) {
-			Logger.logException(e);
-		}
-	}
-
-	private void addClasspathEntries(TaglibClassLoader loader, IJavaProject project, IClasspathEntry[] entries) throws JavaModelException {
-		IClasspathEntry entry;
-		for (int i = 0; i < entries.length; i++) {
-
-			entry = entries[i];
-			if (DEBUG)
-				System.out.println("current entry is: " + entry); //$NON-NLS-1$
-
-			switch (entry.getEntryKind()) {
-				case IClasspathEntry.CPE_SOURCE :
-					addSourceEntry(loader, entry);
-					break;
-				case IClasspathEntry.CPE_LIBRARY :
-					addLibraryEntry(loader, entry.getPath());
-					break;
-				case IClasspathEntry.CPE_PROJECT :
-					addProjectEntry(loader, entry);
-					break;
-				case IClasspathEntry.CPE_VARIABLE :
-					addVariableEntry(loader, entry);
-					break;
-				case IClasspathEntry.CPE_CONTAINER :
-					addContainerEntry(loader, project, entry);
-					break;
-			}
-		}
-	}
-
-	/**
-	 * @param loader
-	 * @param entry
-	 */
-	private void addVariableEntry(TaglibClassLoader loader, IClasspathEntry entry) {
-		if (DEBUG)
-			System.out.println(" -> adding variable entry: [" + entry + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-
-		// variable should either be a project or a library entry
-
-		// BUG 169431
-		String variableName = entry.getPath().toString();
-		IPath variablePath = JavaCore.getResolvedVariablePath(entry.getPath());
-		variablePath = JavaCore.getClasspathVariable(variableName);
-
-		// RATLC01076854
-		// variable paths may not exist
-		// in that case null will be returned
-		if (variablePath != null) {
-			if (variablePath.segments().length == 1) {
-				IProject varProj = ResourcesPlugin.getWorkspace().getRoot().getProject(variablePath.toString());
-				if (varProj != null && varProj.exists()) {
-					addClasspathEntriesForProject(varProj, loader);
-					return;
-				}
-			}
-			addLibraryEntry(loader, variablePath);
-		}
-	}
-
-	/**
-	 * @param loader
-	 * @param project
-	 * @param entry
-	 * @throws JavaModelException
-	 */
-	private void addContainerEntry(TaglibClassLoader loader, IJavaProject project, IClasspathEntry entry) throws JavaModelException {
-
-		IClasspathContainer container = JavaCore.getClasspathContainer(entry.getPath(), project);
-		if (container != null) {
-			String uniqueProjectAndContainerPath = project.getProject().getFullPath().append(container.getPath()).toString();
-			/*
-			 * Avoid infinite recursion, but track containers for each project
-			 * separately as they may return different values. This may mean
-			 * indexing JREs multiple times, however.
-			 */
-			if (!fContainerEntries.contains(uniqueProjectAndContainerPath)) {
-				fContainerEntries.add(uniqueProjectAndContainerPath);
-
-				IClasspathEntry[] cpes = container.getClasspathEntries();
-				// recursive call here
-				addClasspathEntries(loader, project, cpes);
-			}
-		}
-	}
-
-	/**
-	 * @param loader
-	 * @param entry
-	 */
-	private void addProjectEntry(TaglibClassLoader loader, IClasspathEntry entry) {
-		if (DEBUG)
-			System.out.println(" -> project entry: [" + entry + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-
-		IPath path = entry.getPath();
-		IProject referenceProject = ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0));
-		if (referenceProject != null && referenceProject.isAccessible()) {
-			addClasspathEntriesForProject(referenceProject, loader);
-		}
-	}
-
-	/**
-	 * @param loader
-	 * @param project
-	 * @param projectLocation
-	 * @throws JavaModelException
-	 */
-	private void addDefaultDirEntry(TaglibClassLoader loader, IJavaProject project) throws JavaModelException {
-		// add default bin directory for the project
-		IPath outputPath = project.getOutputLocation();
-		loader.addFolder(outputPath);
-	}
-
-	/**
-	 * @param loader
-	 * @param entry
-	 */
-	private void addLibraryEntry(TaglibClassLoader loader, IPath libPath) {
-		String libPathString = libPath.toString();
-		File file = new File(libPathString);
-
-		if (file.exists()) {
-			if (file.isDirectory()) {
-				loader.addDirectory(libPathString);
-			}
-			else {
-				loader.addJar(libPathString);
-			}
-		}
-		else {
-			if (libPath.segmentCount() > 1) {
-				IFile ifile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
-				if (ifile != null && ifile.isAccessible()) {
-					loader.addFile(libPath);
-				}
-				else {
-					IFolder ifolder = ResourcesPlugin.getWorkspace().getRoot().getFolder(libPath);
-					if (ifolder != null && ifolder.isAccessible()) {
-						loader.addFolder(libPath);
-					}
-				}
-			}
-			else {
-				loader.addFolder(libPath);
-			}
-		}
-	}
-
-	/**
-	 * @param loader
-	 * @param entry
-	 */
-	private void addSourceEntry(TaglibClassLoader loader, IClasspathEntry entry) {
-		// add bin directory for specific entry if it has
-		// one
-		IPath outputLocation = entry.getOutputLocation();
-		if (outputLocation != null) {
-			loader.addFolder(outputLocation);
-		}
 	}
 
 	/**
@@ -879,5 +673,15 @@ public class TaglibHelper {
 				problems.add(createdProblem);
 			}
 		}
+	}
+
+	/**
+	 * 
+	 */
+	public void dispose() {
+		fLoader = null;
+		fJavaProject = null;
+		fProject = null;
+		fTranslationProblems = null;
 	}
 }

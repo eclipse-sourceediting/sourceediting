@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -129,9 +129,10 @@ class TaglibHelperCache {
         }
         if(fHelpers.size() > MAX_SIZE) {
             // one too many, remove last
-            Object removed = fHelpers.remove(fHelpers.size()-1);
+        	Entry removed = (Entry) fHelpers.remove(fHelpers.size()-1);
+        	removed.getHelper().dispose();
             if(DEBUG) {
-            	Logger.log(Logger.INFO, "(-) TaglibHelperCache removed: " + removed); //$NON-NLS-1$
+            	Logger.log(Logger.INFO, "(-) TaglibHelperCache removed: " + removed.getProjectName()); //$NON-NLS-1$
                 printCacheContents();
             }
         }
@@ -144,6 +145,7 @@ class TaglibHelperCache {
         while(it.hasNext()) {
             entry = (Entry)it.next();
             if(entry.getProjectName().equals(projectName)) {
+            	entry.getHelper().dispose();
                 fHelpers.remove(entry);
                 if(DEBUG) { 
                     Logger.log(Logger.INFO, "(-) TaglibHelperCache removed: " + entry); //$NON-NLS-1$
