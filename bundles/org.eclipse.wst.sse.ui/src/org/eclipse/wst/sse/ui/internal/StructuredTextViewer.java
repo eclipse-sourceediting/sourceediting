@@ -271,7 +271,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		if (fOverviewRulerAnnotationHover instanceof StructuredTextAnnotationHover) {
 			((StructuredTextAnnotationHover) fOverviewRulerAnnotationHover).release();
 		}
-		setOverviewRulerAnnotationHover(configuration.getAnnotationHover(this));
+		setOverviewRulerAnnotationHover(configuration.getOverviewRulerAnnotationHover(this));
 
 		getTextWidget().setTabs(configuration.getTabWidth(this));
 		setHoverControlCreator(configuration.getInformationControlCreator(this));

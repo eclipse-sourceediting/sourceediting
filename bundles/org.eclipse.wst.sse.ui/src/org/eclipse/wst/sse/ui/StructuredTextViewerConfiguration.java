@@ -538,7 +538,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	public IAnnotationHover getOverviewRulerAnnotationHover(ISourceViewer sourceViewer) {
 		return new StructuredTextAnnotationHover(true) {
 			protected boolean isIncluded(Annotation annotation) {
-				return isShowInVerticalRuler(annotation);
+				return isShowInOverviewRuler(annotation);
 			}
 		};
 	}
