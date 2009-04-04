@@ -157,4 +157,8 @@ public class TestFormatProcessorCSS extends TestCase {
 	public void testBUG248465combinedPseudoClass() throws UnsupportedEncodingException, IOException, CoreException {
 		formatAndAssertEquals("testfiles/bug248465-combined-pseudo-classes.css", "testfiles/bug248465-combined-pseudo-classes-fmt.css");
 	}
+	
+	public void testBUG196476selectorPseudoclassesFormat() throws UnsupportedEncodingException, IOException, CoreException {
+		formatAndAssertEquals("testfiles/bug196476-selector-pseudo-classes.css", "testfiles/bug196476-selector-pseudo-classes-fmt.css");
+	}
 }

@@ -1,0 +1,23 @@
+#block:after {
+	content: ".";
+}
+
+div.content #block:after {
+	content: ".";
+}
+
+#block::after {
+	content: ".";
+}
+
+div span.fix.clear {
+	clear: both;
+}
+
+div span.fix.clear:after {
+	content: both;
+}
+
+div:after {
+	content: ".";
+}
