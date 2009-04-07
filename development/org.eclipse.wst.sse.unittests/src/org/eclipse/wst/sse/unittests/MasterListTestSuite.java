@@ -41,6 +41,7 @@ import org.eclipse.wst.xml.ui.tests.XMLUITestSuite;
 import org.eclipse.wst.xml.validation.tests.internal.AllXMLTests;
 import org.eclipse.wst.xsd.core.tests.internal.AllXSDCoreTests;
 import org.eclipse.wst.xsd.validation.tests.internal.AllXSDTests;
+import org.eclipse.wst.xsl.tests.AllTestsSuite;
 
 public class MasterListTestSuite extends TestSuite {
 	private static final String CLASS = "class";
@@ -80,10 +81,7 @@ public class MasterListTestSuite extends TestSuite {
 		addTest(AllWebCoreTests.suite());
 		addTest(AllWebUITests.suite());
 		
-		// compiler problem in org.eclipse.wst.xsl.tests?
-//		addTest(new AllTestsSuite());
-
-
+		addTest(new AllTestsSuite());
 		
 		// addTest(RegressionBucket.suite());
 		// addTest(AllTestCases.suite());
