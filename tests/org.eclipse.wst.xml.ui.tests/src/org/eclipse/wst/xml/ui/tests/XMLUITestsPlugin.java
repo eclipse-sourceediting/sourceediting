@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,11 +7,14 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     David Carver (STAR) - bug 259447 - content assistance tests
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.tests;
 
 import java.util.ResourceBundle;
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -88,5 +91,26 @@ public class XMLUITestsPlugin extends AbstractUIPlugin {
 	    	return null;
 	    }
 	  }
+    
+	public static File getTestFile(String filepath) {
+		URL installURL = getInstallLocation();
+		//String scheme = installURL.getProtocol();
+		String path = installURL.getPath();
+		String location = path + filepath;
+		File result = new File(location);
+		return result;
+	}    
 
-	}
+	public static URL getInstallLocation() {
+		URL installLocation = pluginBundle.getEntry("/");
+		URL resolvedLocation = null;
+		try {
+			resolvedLocation = FileLocator.resolve(installLocation);
+		}
+		catch (IOException e) {
+			// impossible
+			throw new Error(e);
+		}
+		return resolvedLocation;
+	}	
+}

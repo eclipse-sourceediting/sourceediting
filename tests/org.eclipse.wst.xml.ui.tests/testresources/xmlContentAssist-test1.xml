@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:GolfCountryClub xmlns:tns="http://www.example.org/GolfCountryClub" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.example.org/GolfCountryClub Schema1.xsd ">
+  <GolfCourse>
+    <Name></Name>
+    <Yardage></Yardage>
+    <Par></Par>
+    <Handicap></Handicap>
+    <Slope></Slope>
+    
+  </GolfCourse>
+  <Member >
+  	   	
+  </Member>
+  <Employee >
+    <FirstName></FirstName>
+    <LastName></LastName>
+    <EmployeeNumber></EmployeeNumber>
+  </Employee>
+  <ProShop>
+    <GolfClub>
+      <ManufacturerName></ManufacturerName>
+      <Quantity></Quantity>
+      <ClubKind></ClubKind>
+      <Loft></Loft>
+      
+    </GolfClub>
+    <BoxOfBalls >
+      <ManufacturerName></ManufacturerName>
+      <Quantity></Quantity>
+      <ProductDetails></ProductDetails>
+    </BoxOfBalls>
+  </ProShop>
+</tns:GolfCountryClub>
