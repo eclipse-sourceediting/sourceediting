@@ -225,7 +225,7 @@
               icon="$nl$/icons/full/newdtd_wiz.gif"
               id="org.eclipse.wst.xsl.ui.newDTDFile"
               style="push"
-              tooltip="%commandTooltipNewXMLFile2">
+              tooltip="%commandTooltipNewDTDFile">
              <parameter
                    name="newWizardId"
                    value="org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard">
