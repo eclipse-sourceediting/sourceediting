@@ -43,6 +43,18 @@ public class TestDelegatingSourceValidatorForXSL extends AbstractXSLUITest
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+
+		String projName = getxslTestFilesProjectName();
+		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(projName);
+
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projName);
+		try {
+			project.create(description, new NullProgressMonitor());
+			project.open(new NullProgressMonitor());
+		}
+		catch (CoreException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -66,17 +78,6 @@ public class TestDelegatingSourceValidatorForXSL extends AbstractXSLUITest
 		String fileName1 = "ChangeRequestsByResponsibility.xsl";
 
 		String validateFilePath = projName + File.separator + fileName1;
-
-		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(projName);
-
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projName);
-		try {
-			project.create(description, new NullProgressMonitor());
-			project.open(new NullProgressMonitor());
-		}
-		catch (CoreException e) {
-			e.printStackTrace();
-		}
 		
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(validateFilePath));
 		if (file != null && !file.exists()) {
@@ -104,17 +105,6 @@ public class TestDelegatingSourceValidatorForXSL extends AbstractXSLUITest
 
 		String validateFilePath = projName + File.separator + fileName1;
 
-		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(projName);
-
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projName);
-		try {
-			project.create(description, new NullProgressMonitor());
-			project.open(new NullProgressMonitor());
-		}
-		catch (CoreException e) {
-			e.printStackTrace();
-		}
-		
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(validateFilePath));
 		if (file != null && !file.exists()) {
 			fail("Unable to locate " + fileName1 + " stylesheet.");
