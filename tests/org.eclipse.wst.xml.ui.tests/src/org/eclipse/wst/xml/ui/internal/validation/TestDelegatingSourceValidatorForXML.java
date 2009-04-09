@@ -48,15 +48,17 @@ public class TestDelegatingSourceValidatorForXML extends TestCase
 		String fileName1 = "international-instance.xml";
 		String fileName2 = "international.xsd";
 		
-		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(projName);
-
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projName);
-		try {
-			project.create(description, new NullProgressMonitor());
-			project.open(new NullProgressMonitor());
-		}
-		catch (CoreException e) {
-			e.printStackTrace();
+		if (!project.isAccessible()) {
+			IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(projName);
+
+			try {
+				project.create(description, new NullProgressMonitor());
+				project.open(new NullProgressMonitor());
+			}
+			catch (CoreException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(projName + "/" + fileName1));
