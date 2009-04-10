@@ -64,14 +64,15 @@ public class TestPluginXMLRequirements extends TestCase{
 	}
 
 	private void loadPluginXML() throws Exception {
-		File srcFile = getTestFile("/" + PLUGIN_XML);
+		URL url = getTestFile("plugin.xml");
+		url.openStream();
 		DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder domBuilder = domFactory.newDocumentBuilder();
-		pluginDoc = domBuilder.parse(srcFile);
+		pluginDoc = domBuilder.parse(url.openStream());
 	}
 	
-	protected URL getInstallLocation() {
-		URL installLocation = XSLUIPlugin.getDefault().getBundle().getEntry("/");
+	protected URL getInstallLocation(String path) {
+		URL installLocation = XSLUIPlugin.getDefault().getBundle().getEntry(path);
 		URL resolvedLocation = null;
 		try {
 			resolvedLocation = FileLocator.resolve(installLocation);
@@ -83,13 +84,9 @@ public class TestPluginXMLRequirements extends TestCase{
 		return resolvedLocation;
 	}
 
-	protected File getTestFile(String filepath) {
-		URL installURL = getInstallLocation();
-		//String scheme = installURL.getProtocol();
-		String path = installURL.getPath();
-		String location = path + filepath;
-		File result = new File(location);
-		return result;
+	protected URL getTestFile(String filepath) {
+		URL installURL = getInstallLocation("/" + filepath);
+		return installURL;
 	}
 	
 	
