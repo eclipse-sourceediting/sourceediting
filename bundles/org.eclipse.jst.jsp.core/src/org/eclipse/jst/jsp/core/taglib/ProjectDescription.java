@@ -25,7 +25,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -523,7 +522,7 @@ class ProjectDescription {
 	private static final String BUILDPATH_DIRTY = "BUILDPATH_DIRTY"; //$NON-NLS-1$
 	private static final String BUILDPATH_ENTRIES = "BUILDPATH_ENTRIES"; //$NON-NLS-1$
 	private static final String BUILDPATH_PROJECT = "BUILDPATH_PROJECT"; //$NON-NLS-1$
-	private static final String SAVE_FORMAT_VERSION = "Tag Library Index 1.0.4"; //$NON-NLS-1$
+	private static final String SAVE_FORMAT_VERSION = "Tag Library Index 1.1.0"; //$NON-NLS-1$
 	private static final String WEB_INF = "WEB-INF"; //$NON-NLS-1$
 	private static final IPath WEB_INF_PATH = new Path(WEB_INF);
 	private static final String WEB_XML = "web.xml"; //$NON-NLS-1$
@@ -771,44 +770,18 @@ class ProjectDescription {
 		// The rest are URLs into a plug-in...somewhere
 		else {
 			URL url = null;
-			ByteArrayInputStream cachedContents = null;
 			InputStream tldStream = null;
 			try {
 				url = new URL(urlString);
-				URLConnection connection = url.openConnection();
-				connection.setDefaultUseCaches(false);
-				tldStream = connection.getInputStream();
+				tldStream = JarUtilities.getInputStream(url);
 			}
 			catch (Exception e1) {
 				Logger.logException("Exception reading TLD contributed to the XML Catalog", e1);
 			}
 
 			if (tldStream != null) {
-				int c;
-				ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-				// array dim restriction?
-				byte bytes[] = new byte[2048];
-				try {
-					while ((c = tldStream.read(bytes)) >= 0) {
-						buffer.write(bytes, 0, c);
-					}
-					cachedContents = new ByteArrayInputStream(buffer.toByteArray());
-				}
-				catch (IOException ioe) {
-					// no cleanup can be done
-					Logger.log(Logger.ERROR_DEBUG, null, ioe);
-				}
-				finally {
-					try {
-						tldStream.close();
-					}
-					catch (IOException e) {
-						Logger.log(Logger.ERROR_DEBUG, null, e);
-					}
-				}
-
 				URLRecord urlRecord = null;
-				TaglibInfo info = extractInfo(urlString, cachedContents);
+				TaglibInfo info = extractInfo(urlString, tldStream);
 				if (info != null) {
 					/*
 					 * the record's reported URI should match the catalog
@@ -821,7 +794,7 @@ class ProjectDescription {
 					urlRecord.url = url; //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				try {
-					cachedContents.close();
+					tldStream.close();
 				}
 				catch (IOException e) {
 					Logger.log(Logger.ERROR_DEBUG, null, e);
@@ -1850,8 +1823,7 @@ class ProjectDescription {
 										fClasspathJars.put(libraryLocation, libraryRecord);
 									}
 									else if ("URL".equalsIgnoreCase(tokenType) && libraryRecord != null) { //$NON-NLS-1$
-										// relies on a previously declared JAR
-										// record
+										// relies on a previously declared JAR record
 										boolean exported = Boolean.valueOf(toker.nextToken()).booleanValue();
 										// make the rest the URL
 										String urlString = toker.nextToken();
@@ -1861,51 +1833,19 @@ class ProjectDescription {
 										urlString = urlString.trim();
 										// Append a URLrecord
 										URLRecord urlRecord = new URLRecord();
-										urlRecord.url = new URL(urlString); //$NON-NLS-1$ //$NON-NLS-2$
+										urlRecord.url = new URL(urlString);
 										urlRecord.isExported = exported;
 										urlRecord.baseLocation = libraryRecord.location.toString();
 										libraryRecord.urlRecords.add(urlRecord);
 
-										ByteArrayInputStream cachedContents = null;
-										InputStream tldStream = null;
-										try {
-											URLConnection connection = urlRecord.url.openConnection();
-											connection.setDefaultUseCaches(false);
-											tldStream = connection.getInputStream();
-										}
-										catch (IOException e1) {
-											Logger.logException(e1);
-										}
+										InputStream tldStream = JarUtilities.getInputStream(urlRecord.url);
 
-										int c;
-										ByteArrayOutputStream byteArrayOutput = new ByteArrayOutputStream();
-										// array dim restriction?
-										byte bytes[] = new byte[2048];
-										try {
-											while ((c = tldStream.read(bytes)) >= 0) {
-												byteArrayOutput.write(bytes, 0, c);
-											}
-											cachedContents = new ByteArrayInputStream(byteArrayOutput.toByteArray());
-										}
-										catch (IOException ioe) {
-											// no cleanup can be done
-											Logger.log(Logger.ERROR_DEBUG, null, ioe);
-										}
-										finally {
-											try {
-												tldStream.close();
-											}
-											catch (IOException e) {
-												Logger.log(Logger.ERROR_DEBUG, null, e);
-											}
-										}
-
-										TaglibInfo info = extractInfo(urlRecord.url.toString(), cachedContents);
+										TaglibInfo info = extractInfo(urlRecord.url.toString(), tldStream);
 										if (info != null) {
 											urlRecord.info = info;
 										}
 										try {
-											cachedContents.close();
+											tldStream.close();
 										}
 										catch (IOException e) {
 											Logger.log(Logger.ERROR_DEBUG, null, e);

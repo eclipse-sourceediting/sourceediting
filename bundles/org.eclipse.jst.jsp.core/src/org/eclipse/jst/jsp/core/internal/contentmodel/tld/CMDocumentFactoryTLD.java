@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -1042,35 +1041,26 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 				break;
 			case (ITaglibRecord.URL) : {
 				IURLRecord record = (IURLRecord) reference;
-				InputStream urlContents = null;
-				URLConnection connection = null;
-				try {
-					connection = record.getURL().openConnection();
-					if (connection != null) {
-						connection.setUseCaches(false);
-						urlContents = connection.getInputStream();
-						document = (CMDocumentImpl) buildCMDocument(record.getBaseLocation(), urlContents);
-						document.setLocationString(record.getURL().toString());
-						if (document.getSmallIcon() != null) {
-							String iconPath = URIHelper.normalize(((TLDDocument) document).getSmallIcon(), record.getURL().toString(), "/"); //$NON-NLS-1$
-							document.setProperty(JSP12TLDNames.SMALL_ICON, iconPath);
-						}
-						if (document.getLargeIcon() != null) {
-							String iconPath = URIHelper.normalize(((TLDDocument) document).getLargeIcon(), record.getURL().toString(), "/"); //$NON-NLS-1$
-							document.setProperty(JSP12TLDNames.LARGE_ICON, iconPath);
-						}
+				URL url = record.getURL();
+				InputStream urlContents = JarUtilities.getInputStream(url);
+				if (urlContents != null) {
+					document = (CMDocumentImpl) buildCMDocument(record.getBaseLocation(), urlContents);
+					String urlString = url.toString();
+					document.setLocationString(urlString);
+					if (document.getSmallIcon() != null) {
+						String iconPath = URIHelper.normalize(((TLDDocument) document).getSmallIcon(), urlString, "/"); //$NON-NLS-1$
+						document.setProperty(JSP12TLDNames.SMALL_ICON, iconPath);
+					}
+					if (document.getLargeIcon() != null) {
+						String iconPath = URIHelper.normalize(((TLDDocument) document).getLargeIcon(), urlString, "/"); //$NON-NLS-1$
+						document.setProperty(JSP12TLDNames.LARGE_ICON, iconPath);
 					}
 				}
-				catch (IOException e) {
-					// not uncommon given invalid URLs
-				}
-				finally {
-					if (urlContents != null) {
-						try {
-							urlContents.close();
-						}
-						catch (IOException e) {
-						}
+				if (urlContents != null) {
+					try {
+						urlContents.close();
+					}
+					catch (IOException e) {
 					}
 				}
 			}

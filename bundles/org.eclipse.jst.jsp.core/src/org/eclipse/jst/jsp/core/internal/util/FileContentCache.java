@@ -194,11 +194,13 @@ public class FileContentCache {
 	}
 
 	private void cleanup() {
-		Iterator iterator = fContentMap.entrySet().iterator();
-		while (iterator.hasNext()) {
-			Map.Entry entry = (Map.Entry) iterator.next();
-			if (entry.getValue() != null && ((Reference) entry.getValue()).get() == null) {
-				iterator.remove();
+		synchronized (fContentMap) {
+			Iterator iterator = fContentMap.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Map.Entry entry = (Map.Entry) iterator.next();
+				if (entry.getValue() != null && ((Reference) entry.getValue()).get() == null) {
+					iterator.remove();
+				}
 			}
 		}
 	}
@@ -215,7 +217,9 @@ public class FileContentCache {
 			if (DEBUG && entry != null && entry.isStale())
 				System.out.println("stale contents:" + filePath);
 			entry = new CacheEntry(filePath);
-			fContentMap.put(filePath, new SoftReference(entry));
+			synchronized (fContentMap) {
+				fContentMap.put(filePath, new SoftReference(entry));
+			}
 		}
 		cleanup();
 		return entry.contents;
