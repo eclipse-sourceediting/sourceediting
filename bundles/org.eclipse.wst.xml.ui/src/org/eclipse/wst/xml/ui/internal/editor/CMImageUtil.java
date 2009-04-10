@@ -15,12 +15,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWTException;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.wst.sse.core.internal.util.JarUtilities;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
@@ -78,9 +78,7 @@ public class CMImageUtil {
 			if (descriptor == null) {
 				try {
 					URL imageURL = new URL(imageURLString);
-					URLConnection connection = imageURL.openConnection();
-					connection.setUseCaches(false);
-					InputStream inputStream = connection.getInputStream();
+					InputStream inputStream = JarUtilities.getInputStream(imageURL);
 					try {
 						ImageData data = new ImageData(inputStream);
 						descriptor = ImageDescriptor.createFromImageData(data);
