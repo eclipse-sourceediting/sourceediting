@@ -141,8 +141,9 @@ public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 				fSource = (INodeNotifier) object;
 				fPropertySource = (IPropertySource) fSource.getAdapterFor(IPropertySource.class);
 				if (fPropertySource == null) {
-					fPropertySource = new XMLPropertySource((INodeNotifier) object){
+					fPropertySource = new XMLPropertySource((INodeNotifier) object) {
 						public void setPropertyValue(Object nameObject, Object value) {
+							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=218979
 							for (int i = 0; i < fSelectedNotifiers.length; i++) {
 								fSelectedNotifiers[i].removeAdapter(fRefreshAdapter);
 							}

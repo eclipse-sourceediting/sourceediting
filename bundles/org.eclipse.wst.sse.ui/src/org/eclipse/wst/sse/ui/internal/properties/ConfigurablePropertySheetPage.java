@@ -119,16 +119,21 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage {
 		if (fSelectedEntries != null) {
 			Object[] entries = fSelectedEntries;
 			ISelection selection = fInput;
+			boolean needsRefresh = false;
 			if (selection != null && !selection.isEmpty() && selection instanceof IStructuredSelection) {
 				IPropertySource source = getConfiguration().getPropertySourceProvider(this).getPropertySource(((IStructuredSelection) selection).getFirstElement());
 				if (source != null && source instanceof IPropertySourceExtension) {
 					for (int i = 0; i < entries.length; i++) {
 						if (entries[i] instanceof IPropertySheetEntry) {
 							IPropertySheetEntry entry = (IPropertySheetEntry) entries[i];
+							needsRefresh = true;
 							((IPropertySourceExtension) source).removeProperty(entry.getDisplayName());
 						}
 					}
 				}
+			}
+			if (needsRefresh) {
+				refresh();
 			}
 		}
 	}
