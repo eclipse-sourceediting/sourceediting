@@ -11,6 +11,7 @@
 package org.eclipse.wst.html.ui.internal.preferences.ui;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
+import org.eclipse.jface.layout.PixelConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -25,7 +26,6 @@ import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ScrolledPageContent;
-import org.eclipse.wst.sse.ui.internal.util.PixelConverter;
 
 public class HTMLValidationPreferencePage extends AbstractValidationSettingsPage {
 	
