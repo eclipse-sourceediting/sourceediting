@@ -24,9 +24,9 @@ final class PathComparator implements Comparator<IPath>, Serializable
 			String seg2 = o2.segment(i);
 			if (!seg1.equals(seg2))
 			{
-				if (seg1.equals(".."))
+				if (seg1.equals("..")) //$NON-NLS-1$
 					return 1;
-				if (seg2.equals(".."))
+				if (seg2.equals("..")) //$NON-NLS-1$
 					return -1;
 			}
 		}

@@ -20,16 +20,16 @@ class XSLWorkbenchAdapter implements IWorkbenchAdapter {
 			Stylesheet stylesheet = (Stylesheet) obj;
 			return new Object[] {
 					new ListWorkbenchAdapter(stylesheet, null, stylesheet
-							.getVersion(), "icons/full/xslt_launch.gif"),
+							.getVersion(), "icons/full/xslt_launch.gif"), //$NON-NLS-1$
 					new ListWorkbenchAdapter(stylesheet, stylesheet
-							.getImports(), "Imports", "icons/full/imports.gif"),
+							.getImports(), "Imports", "icons/full/imports.gif"), //$NON-NLS-1$ //$NON-NLS-2$
 					new ListWorkbenchAdapter(stylesheet, stylesheet
-							.getIncludes(), "Includes",
-							"icons/full/imports.gif"),
+							.getIncludes(), "Includes", //$NON-NLS-1$
+							"icons/full/imports.gif"), //$NON-NLS-1$
 					new ListWorkbenchAdapter(stylesheet, stylesheet
-							.getGlobalVariables(), "Variables", null),
+							.getGlobalVariables(), "Variables", null), //$NON-NLS-1$
 					new ListWorkbenchAdapter(stylesheet, stylesheet
-							.getTemplates(), "Templates", null) };
+							.getTemplates(), "Templates", null) }; //$NON-NLS-1$
 		}
 		return EMPTY;
 	}
@@ -39,17 +39,17 @@ class XSLWorkbenchAdapter implements IWorkbenchAdapter {
 		String path = null;
 		switch (obj.getModelType()) {
 		case STYLESHEET:
-			path = "icons/full/xslt_launch.gif";
+			path = "icons/full/xslt_launch.gif"; //$NON-NLS-1$
 			break;
 		case IMPORT:
 		case INCLUDE:
-			path = "icons/full/import.gif";
+			path = "icons/full/import.gif"; //$NON-NLS-1$
 			break;
 		case TEMPLATE:
-			path = "icons/full/methdef_obj.gif";
+			path = "icons/full/methdef_obj.gif"; //$NON-NLS-1$
 			break;
 		case VARIABLE:
-			path = "icons/full/field_default_obj.gif";
+			path = "icons/full/field_default_obj.gif"; //$NON-NLS-1$
 			break;
 		}
 		return path == null ? null : AbstractUIPlugin.imageDescriptorFromPlugin(
@@ -62,7 +62,7 @@ class XSLWorkbenchAdapter implements IWorkbenchAdapter {
 		switch (obj.getModelType()) {
 		case STYLESHEET:
 			Stylesheet stylesheet = (Stylesheet) obj;
-			label = stylesheet.getVersion() == null ? "?" : stylesheet
+			label = stylesheet.getVersion() == null ? "?" : stylesheet //$NON-NLS-1$
 					.getVersion();
 			break;
 		case IMPORT:
@@ -77,11 +77,11 @@ class XSLWorkbenchAdapter implements IWorkbenchAdapter {
 			Template t = (Template) obj;
 			StringBuffer sb = new StringBuffer();
 			if (t.getName() != null)
-				sb.append(t.getName()).append(" ");
+				sb.append(t.getName()).append(" "); //$NON-NLS-1$
 			if (t.getMatch() != null)
-				sb.append(t.getMatch()).append(" ");
+				sb.append(t.getMatch()).append(" "); //$NON-NLS-1$
 			if (t.getMode() != null)
-				sb.append("(").append(t.getMode()).append(")");
+				sb.append("(").append(t.getMode()).append(")");  //$NON-NLS-1$//$NON-NLS-2$
 			label = sb.toString();
 			break;
 		case VARIABLE:

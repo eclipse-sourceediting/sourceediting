@@ -17,12 +17,13 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 public class NewDTDFileWizardDelegate implements IWorkbenchWindowActionDelegate
 {
+	private static final String DTD_UI_INTERNAL_WIZARD_NEW_DTD_WIZARD_ID = "org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard"; //$NON-NLS-1$
 	private NewWizardAction openAction;
 	private ISelection selection;
 
 	public void init(IWorkbenchWindow window)
 	{
-		this.openAction = new NewWizardAction("org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard");
+		this.openAction = new NewWizardAction(DTD_UI_INTERNAL_WIZARD_NEW_DTD_WIZARD_ID);
 	}
 
 	public void run(IAction action)

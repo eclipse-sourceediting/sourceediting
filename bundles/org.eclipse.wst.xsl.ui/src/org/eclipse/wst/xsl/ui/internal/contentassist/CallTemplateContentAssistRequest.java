@@ -25,6 +25,7 @@ import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.model.Template;
 import org.eclipse.wst.xsl.core.model.XSLAttribute;
+import org.eclipse.wst.xsl.ui.internal.Messages;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages;
 import org.w3c.dom.Node;
@@ -40,8 +41,8 @@ import org.w3c.dom.Node;
 public class CallTemplateContentAssistRequest extends
 		AbstractXSLContentAssistRequest {
 	
-	private static final String ATTR_MODE = "mode";
-	private static final String ATTR_NAME = "name";
+	private static final String ATTR_MODE = "mode"; //$NON-NLS-1$
+	private static final String ATTR_NAME = "name"; //$NON-NLS-1$
 
 	/**
 	 * @param node
@@ -94,8 +95,8 @@ public class CallTemplateContentAssistRequest extends
 	protected String getAdditionalInfo(Template template) {
 		XSLAttribute nameAttribute = template.getAttribute(ATTR_NAME);
 		
-		String proposalInfo = "Template Name: " + nameAttribute.getValue() +
-		                      "\r\n" + "File:" + template.getStylesheet().getFile().getName();
+		String proposalInfo = Messages.CallTemplateContentAssistTemplateName + nameAttribute.getValue() +
+		                      "\r\n" + Messages.CallTemplateContentAssistTemplateNameFile + template.getStylesheet().getFile().getName(); //$NON-NLS-1$
 		
 		return proposalInfo;
 	}

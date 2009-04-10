@@ -25,7 +25,9 @@ import org.eclipse.ui.navigator.resources.ProjectExplorer;
  */
 public class XMLPerspectiveFactory implements IPerspectiveFactory {
 
-    /**
+    private static final String TEXTEDITOR_TEMPLATES_VIEW_ID = "org.eclipse.ui.texteditor.TemplatesView"; //$NON-NLS-1$
+
+	/**
      * Creates the initial layout.  This is what the layout is reset to
      * when the Reset Perspective is selected.   It takes as input a
      * IPageLayout object.
@@ -53,8 +55,8 @@ public class XMLPerspectiveFactory implements IPerspectiveFactory {
 		
 		IFolderLayout right = layout.createFolder("right", IPageLayout.RIGHT, (float) 0.50, editorArea); //$NON-NLS-1$
 		right.addView(IPageLayout.ID_OUTLINE);
-		IFolderLayout bottomRight = layout.createFolder("bottom-right", IPageLayout.BOTTOM, (float) 0.50, "right");
-		bottomRight.addView("org.eclipse.ui.texteditor.TemplatesView");
+		IFolderLayout bottomRight = layout.createFolder("bottom-right", IPageLayout.BOTTOM, (float) 0.50, "right");  //$NON-NLS-1$//$NON-NLS-2$
+		bottomRight.addView(TEXTEDITOR_TEMPLATES_VIEW_ID);
 		
 		// Add Outline to the bottom-left
 		IFolderLayout bottomLeft = 

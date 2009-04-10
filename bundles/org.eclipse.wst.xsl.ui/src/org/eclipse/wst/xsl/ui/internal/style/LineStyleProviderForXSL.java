@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2008, 2009 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,7 +7,6 @@
  * 
  * Contributors:
  * 		David Carver (STAR) - initial api and implementation
- *     
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.style;
 
@@ -251,7 +250,7 @@ public class LineStyleProviderForXSL extends AbstractLineStyleProvider implement
 		}
 
 		String type = textRegion.getType();
-		if (collection.getText().contains("xsl:")) {
+		if (collection.getText().contains("xsl:")) { //$NON-NLS-1$
 			return getXSLAttribute(type);
 		}
 

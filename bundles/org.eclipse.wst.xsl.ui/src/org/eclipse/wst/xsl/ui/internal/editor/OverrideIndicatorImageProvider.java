@@ -53,7 +53,7 @@ public class OverrideIndicatorImageProvider implements IAnnotationImageProvider
 	public ImageDescriptor getImageDescriptor(String imageDescritporId)
 	{
 		if (OVERRIDE_IMG_DESC_ID.equals(imageDescritporId))
-			return AbstractUIPlugin.imageDescriptorFromPlugin(XSLUIPlugin.PLUGIN_ID, "icons/full/over_co.gif");
+			return AbstractUIPlugin.imageDescriptorFromPlugin(XSLUIPlugin.PLUGIN_ID, "icons/full/over_co.gif"); //$NON-NLS-1$
 		return null;
 	}
 

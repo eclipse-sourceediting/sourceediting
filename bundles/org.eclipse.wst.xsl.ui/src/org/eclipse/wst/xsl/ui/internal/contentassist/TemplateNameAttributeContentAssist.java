@@ -34,7 +34,7 @@ import org.w3c.dom.Node;
  */
 public class TemplateNameAttributeContentAssist extends AbstractXSLContentAssistRequest {
 
-	private static final String ATTR_NAME = "name";
+	private static final String ATTR_NAME = "name"; //$NON-NLS-1$
 
 	/**
 	 * Provides content assistance for XSLT Named Templates.  Will provide a list

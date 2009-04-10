@@ -22,9 +22,11 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationModelExtension;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.model.StylesheetModel;
 import org.eclipse.wst.xsl.core.model.Template;
+import org.eclipse.wst.xsl.ui.internal.Messages;
 
 /**
  * Manages the override and overwrite indicators for the given Java element and annotation model.
@@ -105,21 +107,19 @@ public class OverrideIndicatorManager
 					{// the template overrides another templates as its name matches, or its match and mode matches
 						if (template.getName() != null)
 						{
-							String text = "overrides "+template.getName()+" in "+nestedFile.getName();
+							String text = NLS.bind(Messages.XSLEditorOverrideTemplate , template.getName(), nestedFile.getName());
 							annotationMap.put(
-								new OverrideIndicator(text, "binding.getKey()"), 
+								new OverrideIndicator(text, "binding.getKey()"),  //$NON-NLS-1$
 								new Position(template.getOffset(), template.getLength())
 							);
 						}
 						else
 						{
-							String text = "overrides \""+template.getMatch()+"\"";
-							String mode = template.getMode();
-							if (mode != null)
-								text += " ("+mode+")";
-							text += " in "+nestedFile.getName();
+							String[] overrideParms = { template.getMatch(),template.getMode(), nestedFile.getName() };
+							
+							String text = NLS.bind(Messages.XSLEditorOverrideTemplateMode, overrideParms);
 							annotationMap.put(
-								new OverrideIndicator(text, "binding.getKey()"), 
+								new OverrideIndicator(text, "binding.getKey()"),  //$NON-NLS-1$
 								new Position(template.getOffset(), template.getLength())
 							);
 						}

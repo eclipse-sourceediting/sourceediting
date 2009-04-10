@@ -23,7 +23,7 @@ class TemplateLabelProvider extends LabelProvider implements ITableLabelProvider
 		case 1:
 			return template.getDescription();
 		default:
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 	}
 }

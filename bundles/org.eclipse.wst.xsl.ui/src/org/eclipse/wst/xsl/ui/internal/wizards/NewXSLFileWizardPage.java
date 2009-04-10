@@ -26,9 +26,11 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.eclipse.wst.xsl.core.XSLCore;
+import org.eclipse.wst.xsl.ui.internal.Messages;
 
 class NewXSLFileWizardPage extends WizardNewFileCreationPage
 {
+	private static final String XSLExtension = ".xsl"; //$NON-NLS-1$
 	private IContentType fContentType;
 	private List fValidExtensions = null;
 
@@ -36,12 +38,12 @@ class NewXSLFileWizardPage extends WizardNewFileCreationPage
 	{
 		super(pageName, selection);
 		// find an unused file name
-		setFileName(getUnusedFilename("NewStylesheet",selection));
+		setFileName(getUnusedFilename("NewStylesheet",selection)); //$NON-NLS-1$
 	}
 	
 	private String getUnusedFilename(String prefix, IStructuredSelection selection)
 	{
-		String name = prefix+".xsl";
+		String name = prefix+XSLExtension;
 		if (selection.isEmpty())
 			return name;
 		Object element = selection.getFirstElement();
@@ -54,7 +56,7 @@ class NewXSLFileWizardPage extends WizardNewFileCreationPage
 				if (c.findMember(name) == null)
 					return name;
 				i++;
-				name = prefix+i+".xsl";
+				name = prefix+i+XSLExtension;
 			}
 			while(true);
 		}
@@ -79,7 +81,7 @@ class NewXSLFileWizardPage extends WizardNewFileCreationPage
 			// check that filename does not contain invalid extension
 			if (!extensionValidForContentType(fileName))
 			{
-				setErrorMessage(NLS.bind("The file name must end in one of the following extensions {0}.", getValidExtensions().toString()));
+				setErrorMessage(NLS.bind(Messages.NewXSLFileWizardExtensionError, getValidExtensions().toString()));
 				return false;
 			}
 			// no file extension specified so check adding default
@@ -100,7 +102,7 @@ class NewXSLFileWizardPage extends WizardNewFileCreationPage
 
 				if ((workspace.getRoot().getFolder(resourcePath).exists() || workspace.getRoot().getFile(resourcePath).exists()))
 				{
-					setErrorMessage("The same name already exists.");
+					setErrorMessage(Messages.NewXSLFileAlreadExistsError);
 					return false;
 				}
 			}
@@ -112,13 +114,8 @@ class NewXSLFileWizardPage extends WizardNewFileCreationPage
 	{
 		StringBuffer newFileName = new StringBuffer(filename);
 
-		// Preferences preference =
-		// XSLUIPlugin.getDefault().getPluginPreferences();
-		// String ext =
-		// preference.getString(JSPCorePreferenceNames.DEFAULT_EXTENSION);
-
-		String ext = "xsl";
-		newFileName.append(".");
+		String ext = "xsl"; //$NON-NLS-1$
+		newFileName.append("."); //$NON-NLS-1$
 		newFileName.append(ext);
 
 		return newFileName.toString();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2008, 2009 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,6 +47,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ScrolledPageContent;
 import org.eclipse.wst.validation.ValidationFramework;
+import org.eclipse.wst.xsl.ui.internal.Messages;
 import org.osgi.service.prefs.BackingStoreException;
 
 /**
@@ -288,15 +289,15 @@ abstract class AbstractValidationSettingsPage extends PropertyPreferencePage {
 	public boolean performOk() {
 		if(super.performOk() && shouldRevalidateOnSettingsChange()) {
 			MessageBox mb = new MessageBox(this.getShell(), SWT.APPLICATION_MODAL | SWT.YES | SWT.NO | SWT.CANCEL | SWT.ICON_INFORMATION | SWT.RIGHT);
-			mb.setText("XSL Validation");
+			mb.setText(Messages.AbstractValidationSettingsPageMbText);
 			/* Choose which message to use based on if its project or workspace settings */
-			String msg = (getProject() == null) ? "XSL Workspace Validation" : "XSL Project Level Validation";
+			String msg = (getProject() == null) ? Messages.AbstractValidationSettingsPageWorkspace : Messages.AbstractValidationSettingsPageProject;
 			mb.setMessage(msg);
 			switch(mb.open()) {
 				case SWT.CANCEL:
 					return false;
 				case SWT.YES:
-					ValidateJob job = new ValidateJob("XSL Validation Job");
+					ValidateJob job = new ValidateJob(Messages.AbstractValidationSettingsPageJob);
 					job.schedule();
 				case SWT.NO:
 				default:

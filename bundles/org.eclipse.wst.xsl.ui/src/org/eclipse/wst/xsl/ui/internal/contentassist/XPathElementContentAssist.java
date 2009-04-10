@@ -94,7 +94,7 @@ public class XPathElementContentAssist extends
 		while (cmNodeIt.hasNext()) {
 			CMNode cmNode = cmNodeIt.next();
 			String proposedText = getRequiredName(ancestorNode, cmNode);
-			if (!(proposedText.contains("xsl:") || proposedText.contains("xslt:"))) {
+			if (!(proposedText.contains("xsl:") || proposedText.contains("xslt:"))) { //$NON-NLS-1$ //$NON-NLS-2$
 				int offset = getReplacementBeginPosition();
 				Image image = getCMNodeImage(cmNode);
 				int startLength = getCursorPosition() - offset;

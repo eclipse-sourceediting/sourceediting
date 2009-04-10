@@ -16,10 +16,12 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 
 public class PreferenceInitializer extends AbstractPreferenceInitializer
 {
+	private static final String ORG_ECLIPSE_WST_XSLT_TEMPLATES_XSL_BASIC = "org.eclipse.wst.xslt.templates.xsl_basic"; //$NON-NLS-1$
+
 	@Override
 	public void initializeDefaultPreferences()
 	{
 		IEclipsePreferences node = new DefaultScope().getNode(XSLUIPlugin.getDefault().getBundle().getSymbolicName());
-		node.put(XSLUIConstants.NEW_FILE_TEMPLATE_NAME, "org.eclipse.wst.xslt.templates.xsl_basic"); // default to the basic stylesheet
+		node.put(XSLUIConstants.NEW_FILE_TEMPLATE_NAME, ORG_ECLIPSE_WST_XSLT_TEMPLATES_XSL_BASIC); // default to the basic stylesheet
 	}
 }

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     David Carver (STAR) - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.templates;
 
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -156,7 +166,7 @@ public class XSLTemplatesPage extends AbstractTemplatesPage {
 		ITextViewer viewer = fTextEditor.getTextViewer();
 		int offset = viewer.getTextWidget().getCaretOffset();
 		int startLength = offset - region.getOffset();
-		String pattern = template.getPattern().replace("${cursor}", "");
+		String pattern = template.getPattern().replace("${cursor}", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		CustomCompletionProposal proposal = new CustomCompletionProposal(
 				pattern, offset, 0, startLength + pattern.length(),
 				getImage(template), template.getName(), null, null, 0);

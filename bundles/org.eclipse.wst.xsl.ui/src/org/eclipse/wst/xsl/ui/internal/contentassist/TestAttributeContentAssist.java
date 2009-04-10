@@ -29,7 +29,7 @@ import org.w3c.dom.Node;
  */
 public class TestAttributeContentAssist extends SelectAttributeContentAssist {
 
-	private String ATTR_TEST = "test"; //$NON-NLS$
+	private String ATTR_TEST = "test";  //$NON-NLS-1$
 	/**
 	 * Constructor for the XSL content assistance for the test attribute.
 	 * 
@@ -59,7 +59,7 @@ public class TestAttributeContentAssist extends SelectAttributeContentAssist {
 		adjustXPathStart();
 		
 		int offset = getReplacementBeginPosition();
-		IDOMAttr attrNode = (IDOMAttr)((IDOMElement)getNode()).getAttributeNode("test");
+		IDOMAttr attrNode = (IDOMAttr)((IDOMElement)getNode()).getAttributeNode(ATTR_TEST);
 		
 		matchString = extractXPathMatchString(attrNode, getRegion(), getReplacementBeginPosition());
 		

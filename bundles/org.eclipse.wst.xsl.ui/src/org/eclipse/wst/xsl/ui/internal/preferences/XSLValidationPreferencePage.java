@@ -40,11 +40,14 @@ import org.eclipse.wst.sse.ui.internal.preferences.ui.ScrolledPageContent;
 import org.eclipse.wst.sse.ui.internal.util.PixelConverter;
 import org.eclipse.wst.xsl.core.ValidationPreferences;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
+import org.eclipse.wst.xsl.ui.internal.Messages;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 
 public class XSLValidationPreferencePage extends AbstractValidationSettingsPage implements ModifyListener {
 
-	private static final String[] ERRORS = new String[] { "Error", "Warning", "Ignore" };
+	private static final String XSL_UI_PROPERTY_PAGE_PROJECT_VALIDATION_ID = "org.eclipse.wst.xsl.ui.propertyPage.project.validation"; //$NON-NLS-1$
+	private static final String XSL_UI_PREFERENCES_VALIDATION_ID = "org.eclipse.wst.xsl.ui.preferences.Validation"; //$NON-NLS-1$
+	private static final String[] ERRORS = new String[] { Messages.ErrorLevelText, Messages.WarningLevelText, Messages.IgnoreLevelText };
 	private static final int[] ERROR_VALUES = new int[] { IMarker.SEVERITY_ERROR, IMarker.SEVERITY_WARNING, IMarker.SEVERITY_INFO };
 	private static final Map<Integer, Integer> ERROR_MAP = new HashMap<Integer, Integer>();
 	private Text maxErrorsText;
@@ -101,49 +104,50 @@ public class XSLValidationPreferencePage extends AbstractValidationSettingsPage 
 
 		GridData gd= new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1);
 		gd.horizontalIndent= 0;
+		
+		createLabel(body, Messages.XSLValidationPreferenceMaxErrorsLabel);
+		maxErrorsText = createTextField(body);
+		maxErrorsText.addModifyListener(this);
+
 
 		Label description = new Label(body, SWT.NONE);
-		description.setText("Select the serverity level for the following validation problems:");
+		description.setText(Messages.XSLValidationPageSeverityLevel);
 		description.setFont(pageContent.getFont());
 		description.setLayoutData(gd);
 		
 
-		createLabel(body, "Maximum number of errors reported per stylesheet:");
-		maxErrorsText = createTextField(body);
-		maxErrorsText.addModifyListener(this);
 
 		ExpandableComposite twistie;
 		
 		int columns = 3;
-		twistie = createTwistie(body,"Imports and Includes",columns);
+		twistie = createTwistie(body, Messages.XSLValidationPreferenceImportsIncludesLabel,columns);
 		Composite inner = createInnerComposite(parent, twistie, columns);
 		
-		String label = "Unresolved include/import:";
+		String label = Messages.XSLValidationPreferenceUnresolveImportIncludeLabel;
 		createCombo(inner, label, ValidationPreferences.MISSING_INCLUDE);
 
-		label = "Unresolved include/import:";
 		inner = createInnerComposite(parent, twistie, columns);
 		createCombo(inner, label, ValidationPreferences.MISSING_INCLUDE);
-		createCombo(inner, "Circular references:", ValidationPreferences.CIRCULAR_REF);
+		createCombo(inner, Messages.XSLValidationPreferenceCircularReferencesLabel, ValidationPreferences.CIRCULAR_REF);
 
-		twistie = createTwistie(body,"Named Templates",columns);
+		twistie = createTwistie(body, Messages.XSLValidationPreferenceNamedTemplatesLabel,columns);
 		inner = createInnerComposite(parent, twistie, columns);
 		
-		createCombo(inner, "Template name conflicts:", ValidationPreferences.TEMPLATE_CONFLICT);
-		createCombo(inner, "Duplicate parameters:", ValidationPreferences.DUPLICATE_PARAMETER);
-		createCombo(inner, "Parameter without name attribute:", ValidationPreferences.NAME_ATTRIBUTE_MISSING);
-		createCombo(inner, "Parameter with empty name attribute:", ValidationPreferences.NAME_ATTRIBUTE_EMPTY);
+		createCombo(inner, Messages.XSLValidationPreferenceTemplateConflictsLabel, ValidationPreferences.TEMPLATE_CONFLICT);
+		createCombo(inner, Messages.XSLValidationPreferenceDuplicateParameterLabel, ValidationPreferences.DUPLICATE_PARAMETER);
+		createCombo(inner, Messages.XSLValidationPreferenceParamtersWithoutValueLabel, ValidationPreferences.NAME_ATTRIBUTE_MISSING);
+		createCombo(inner, Messages.XSLValidationPreferenceMissingParameterAttributeLabel, ValidationPreferences.NAME_ATTRIBUTE_EMPTY);
 		
-		twistie = createTwistie(body,"Template Calls",columns);
+		twistie = createTwistie(body,Messages.XSLValidationPreferenceCallTemplatesLabel,columns);
 		inner = createInnerComposite(parent, twistie, columns);
 		
-		createCombo(inner, "Unresolved templates:", ValidationPreferences.CALL_TEMPLATES);
-		createCombo(inner, "Missing parameters:", ValidationPreferences.MISSING_PARAM);
-		createCombo(inner, "Parameters without value:", ValidationPreferences.EMPTY_PARAM);
+		createCombo(inner, Messages.XSLValidationPreferenceUnresolvedTemplatesLabel, ValidationPreferences.CALL_TEMPLATES);
+		createCombo(inner, Messages.XSLValidationPreferenceMissingParamtersLabel, ValidationPreferences.MISSING_PARAM);
+		createCombo(inner, Messages.XSLValidationPreferenceMissingParameterAttributeLabel, ValidationPreferences.EMPTY_PARAM);
 
-		twistie = createTwistie(body,"XPath Problems",columns);
+		twistie = createTwistie(body, Messages.XSLValidationPreferenceXPathLabel,columns);
 		inner = createInnerComposite(parent, twistie, columns);
-		createCombo(inner, "Incorrect XPath syntax:", ValidationPreferences.XPATHS);
+		createCombo(inner, Messages.XSLValidationPreferenceXPathSyntaxLabel, ValidationPreferences.XPATHS);
 		
 		return parent;
 	}
@@ -232,7 +236,7 @@ public class XSLValidationPreferencePage extends AbstractValidationSettingsPage 
 
 	@Override
 	protected String getPreferencePageID() {
-		return "org.eclipse.wst.xsl.ui.preferences.Validation";
+		return XSL_UI_PREFERENCES_VALIDATION_ID;
 	}
 
 	@Override
@@ -246,7 +250,7 @@ public class XSLValidationPreferencePage extends AbstractValidationSettingsPage 
 
 	@Override
 	protected String getPropertyPageID() {
-		return "org.eclipse.wst.xsl.ui.propertyPage.project.validation";
+		return XSL_UI_PROPERTY_PAGE_PROJECT_VALIDATION_ID;
 	}
 
 	public void init(IWorkbench workbench) {
@@ -312,11 +316,11 @@ public class XSLValidationPreferencePage extends AbstractValidationSettingsPage 
 		{
 			int maxErrors = Integer.parseInt(maxErrorsText.getText());
 			if (maxErrors < 0)
-				errorMessage = "Max errors must be a positive integer";
+				errorMessage = Messages.XSLValidationPreferenceMaxErrorsMsgError;
 		}
 		catch (NumberFormatException e)
 		{
-			errorMessage = "Max errors must be a positive integer";
+			errorMessage = Messages.XSLValidationPreferenceMaxErrorsMsgError;
 		}
 		setErrorMessage(errorMessage);
 		setValid(errorMessage == null);

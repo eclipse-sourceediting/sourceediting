@@ -17,12 +17,13 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 public class NewXSDFileWizardDelegate implements IWorkbenchWindowActionDelegate
 {
+	private static final String XSD_UI_INTERNAL_WIZARDS_NEW_XSD_WIZARD_ID = "org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard"; //$NON-NLS-1$
 	private NewWizardAction openAction;
 	private ISelection selection;
 
 	public void init(IWorkbenchWindow window)
 	{
-		this.openAction = new NewWizardAction("org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard");
+		this.openAction = new NewWizardAction(XSD_UI_INTERNAL_WIZARDS_NEW_XSD_WIZARD_ID);
 	}
 
 	public void run(IAction action)

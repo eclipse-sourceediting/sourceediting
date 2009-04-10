@@ -44,7 +44,7 @@ import org.w3c.dom.Node;
  */
 public class XSLContentAssistProcessor implements IContentAssistProcessor {
 
-	private String errorMessage = "";
+	private String errorMessage = ""; //$NON-NLS-1$
 	private ITextViewer textViewer = null;
 	private ArrayList<ICompletionProposal> xslProposals;
 	private ArrayList<ICompletionProposal> additionalProposals;
@@ -328,7 +328,7 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor {
 
 	private String getMatchString(IStructuredDocumentRegion parent,
 			ITextRegion aRegion, int offset) {
-		String matchString = "";
+		String matchString = ""; //$NON-NLS-1$
 		
 		if (isNotMatchStringRegion(parent, aRegion, offset)) {
 			return matchString; 
@@ -382,7 +382,7 @@ public class XSLContentAssistProcessor implements IContentAssistProcessor {
 		String matchString;
 		matchString = parent.getText(aRegion).substring(0,
 				offset - parent.getStartOffset(aRegion));
-		if (matchString.startsWith("\"")) {
+		if (matchString.startsWith("\"")) { //$NON-NLS-1$
 			matchString = matchString.substring(1);
 		}
 		return matchString;

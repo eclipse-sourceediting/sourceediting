@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2007, 2009 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - externalize strings
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.validation;
 
@@ -37,6 +38,7 @@ import org.eclipse.wst.xsl.ui.internal.quickassist.ValidationQuickAssist;
  */
 public class DelegatingSourceValidatorForXSL extends DelegatingSourceValidator
 {
+	private static final String XSL_UI_XSL_EDITOR_ID = "org.eclipse.wst.xsl.ui.XSLEditor"; //$NON-NLS-1$
 	private final static String Id = "org.eclipse.wst.xsl.core.xsl"; //$NON-NLS-1$
 	private final String QUICKASSISTPROCESSOR = IQuickAssistProcessor.class.getName();
 	
@@ -89,7 +91,7 @@ public class DelegatingSourceValidatorForXSL extends DelegatingSourceValidator
 				IWorkbenchPage page = workbenchWindow.getActivePage();
 				if (page != null)
 				{
-					IEditorReference[] refs = page.findEditors(new FileEditorInput(file), "org.eclipse.wst.xsl.ui.XSLEditor", IWorkbenchPage.MATCH_ID | IWorkbenchPage.MATCH_INPUT);
+					IEditorReference[] refs = page.findEditors(new FileEditorInput(file), XSL_UI_XSL_EDITOR_ID, IWorkbenchPage.MATCH_ID | IWorkbenchPage.MATCH_INPUT);
 					// lets hope we only have one XSL editor open on the file, or else we don't know which one started this validation...
 					if (refs.length == 1)
 					{

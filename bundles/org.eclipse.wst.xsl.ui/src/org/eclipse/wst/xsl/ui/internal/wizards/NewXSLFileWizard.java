@@ -30,6 +30,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xsl.ui.internal.Messages;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 
 public class NewXSLFileWizard extends Wizard implements INewWizard
@@ -45,8 +46,8 @@ public class NewXSLFileWizard extends Wizard implements INewWizard
 		IStructuredSelection ssel = new StructuredSelection(IDE.computeSelectedResources(fSelection));
 		
 		fNewFilePage = new NewXSLFileWizardPage("NewFileCreationPage", ssel); //$NON-NLS-1$ 
-		fNewFilePage.setTitle("XSL Stylesheet");
-		fNewFilePage.setDescription("Create a new XSL Stylesheet.");
+		fNewFilePage.setTitle(Messages.NewXSLFilePageTitle);
+		fNewFilePage.setDescription(Messages.NewXSLFilePageDescription);
 		addPage(fNewFilePage);
 
 		fNewFileTemplatesPage = new NewXSLFileTemplatesWizardPage();
@@ -57,12 +58,7 @@ public class NewXSLFileWizard extends Wizard implements INewWizard
 	{
 		this.workbench = aWorkbench;
 		fSelection = aSelection;
-		setWindowTitle("New XSL Stylesheet");
-
-		// TODO image for wizard
-		// ImageDescriptor descriptor =
-		// JSPEditorPluginImageHelper.getInstance().getImageDescriptor(JSPEditorPluginImages.IMG_OBJ_WIZBAN_NEWJSPFILE);
-		// setDefaultPageImageDescriptor(descriptor);
+		setWindowTitle(Messages.NewXSLFilePageWindowTitle);
 	}
 
 	@Override

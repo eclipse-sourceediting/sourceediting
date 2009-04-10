@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2008, 2009 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (bug 271916) STAR - externalize strings for New XSL.
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.wizards;
 
@@ -56,12 +57,15 @@ import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
+import org.eclipse.wst.xsl.ui.internal.Messages;
 import org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL;
 import org.eclipse.wst.xsl.ui.internal.XSLUIConstants;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 
 public class NewXSLFileTemplatesWizardPage extends WizardPage
 {
+	private static final String XSL_UI_TEMPLATE_PREFERENCE_PAGE = "org.eclipse.wst.xsl.ui.template.preferencePage"; //$NON-NLS-1$
+	private static final String NEW_STYLESHEET_TEMPLATES_WIZARD_PAGE = "NewStylesheetTemplatesWizardPage"; //$NON-NLS-1$
 	private String fLastSelectedTemplateName;
 	private SourceViewer fPatternViewer;
 	private TableViewer fTableViewer;
@@ -70,8 +74,8 @@ public class NewXSLFileTemplatesWizardPage extends WizardPage
 
 	public NewXSLFileTemplatesWizardPage()
 	{
-		super("NewStylesheetTemplatesWizardPage", "Select XSL Template", null); //$NON-NLS-1$
-		setDescription("Select a template as initial content for the stylesheet");
+		super(NEW_STYLESHEET_TEMPLATES_WIZARD_PAGE, Messages.NewXSLSelectTemplate, null); 
+		setDescription(Messages.NewXSLTemplateDescription);
 	}
 
 	private void configureTableResizing(final Composite parent, final Table table, final TableColumn column1, final TableColumn column2)
@@ -125,7 +129,7 @@ public class NewXSLFileTemplatesWizardPage extends WizardPage
 
 		// create checkbox for user to use JSP Template
 		fUseTemplateButton = new Button(parent, SWT.CHECK);
-		fUseTemplateButton.setText("Use template");
+		fUseTemplateButton.setText(Messages.NewXSLUseTemplateButtonText);
 		GridData data = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
 		fUseTemplateButton.setLayoutData(data);
 		fUseTemplateButton.addSelectionListener(new SelectionAdapter()
@@ -149,7 +153,7 @@ public class NewXSLFileTemplatesWizardPage extends WizardPage
 
 		// Create linked text to just to templates preference page
 		Link link = new Link(innerParent, SWT.NONE);
-		link.setText("Templates are 'New Stylesheet' templates found in the <a>XSL</a> preference page");
+		link.setText(Messages.NewXSLLinkPreferencePage);
 		data = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
 		link.setLayoutData(data);
 		link.addSelectionListener(new SelectionAdapter()
@@ -175,10 +179,10 @@ public class NewXSLFileTemplatesWizardPage extends WizardPage
 		table.setLayout(tableLayout);
 
 		TableColumn column1 = new TableColumn(table, SWT.NONE);
-		column1.setText("Name");
+		column1.setText(Messages.NewXSLColumnTemplateName);
 
 		TableColumn column2 = new TableColumn(table, SWT.NONE);
-		column2.setText("Description");
+		column2.setText(Messages.NewXSLColumnTemplateDescription);
 
 		fTableViewer = new TableViewer(table);
 		fTableViewer.setLabelProvider(new TemplateLabelProvider());
@@ -257,7 +261,7 @@ public class NewXSLFileTemplatesWizardPage extends WizardPage
 	private SourceViewer doCreateViewer(Composite parent)
 	{
 		Label label = new Label(parent, SWT.NONE);
-		label.setText("Preview");
+		label.setText(Messages.NewXSLTemplatePreviewTitle);
 		GridData data = new GridData();
 		data.horizontalSpan = 2;
 		label.setLayoutData(data);
@@ -336,7 +340,7 @@ public class NewXSLFileTemplatesWizardPage extends WizardPage
 
 	void linkClicked()
 	{
-		String pageId = "org.eclipse.wst.xsl.ui.template.preferencePage";
+		String pageId = XSL_UI_TEMPLATE_PREFERENCE_PAGE;
 		PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(getShell(), pageId, new String[] { pageId }, null);
 		dialog.open();
 		fTableViewer.refresh();

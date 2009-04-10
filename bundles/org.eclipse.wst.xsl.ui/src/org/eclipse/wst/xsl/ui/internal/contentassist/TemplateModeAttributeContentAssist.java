@@ -36,6 +36,8 @@ import org.w3c.dom.Node;
 public class TemplateModeAttributeContentAssist extends
 		AbstractXSLContentAssistRequest {
 
+	private static final String MODE_ATTRIBUTE = "mode"; //$NON-NLS-1$
+
 	/**
 	 * Constructor for creating the TemplateMode Content Assistance class.
 	 * 
@@ -81,7 +83,7 @@ public class TemplateModeAttributeContentAssist extends
 		ArrayList<String> modes = new ArrayList<String>();
 		
 		for (Template template : templates) {
-			XSLAttribute attribute = template.getAttribute("mode");
+			XSLAttribute attribute = template.getAttribute(MODE_ATTRIBUTE);
 			IDOMNode xmlNode = (IDOMNode)node;
 
 			if (attribute != null && xmlNode.getStartOffset() != template.getOffset()) {

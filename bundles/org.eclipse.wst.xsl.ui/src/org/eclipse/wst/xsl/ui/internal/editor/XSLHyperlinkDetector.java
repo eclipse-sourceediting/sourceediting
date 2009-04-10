@@ -49,9 +49,9 @@ import org.w3c.dom.Node;
  */
 public class XSLHyperlinkDetector extends AbstractHyperlinkDetector
 {
-	private static final String ELEM_WITH_PARAM = "with-param";
-	private static final String ATTR_NAME = "name";
-	private static final String ELM_CALL_TEMPLATE = "call-template";
+	private static final String ELEM_WITH_PARAM = "with-param"; //$NON-NLS-1$
+	private static final String ATTR_NAME = "name"; //$NON-NLS-1$
+	private static final String ELM_CALL_TEMPLATE = "call-template"; //$NON-NLS-1$
 
 	/**
 	 * Try to create hyperlinks for viewer and region

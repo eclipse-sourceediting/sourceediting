@@ -114,7 +114,7 @@ public class HrefContentAssistRequest extends AbstractXSLContentAssistRequest
 			if (length > 0 && text.length() > length + 1)
 				precedingText = text.substring(1,length);
 			else
-				precedingText = "";
+				precedingText = ""; //$NON-NLS-1$
 			IFile editorFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(getLocation()));
 			editorFile.getProject().accept(new XSLFileResourceVisitor(editorFile,precedingText));
 
@@ -169,7 +169,7 @@ public class HrefContentAssistRequest extends AbstractXSLContentAssistRequest
 			StringBuffer sb = new StringBuffer();
 			for (int i = 0; i < relativeToPath.segmentCount() - filePath.segmentCount(); i++)
 			{
-				sb.append("../");
+				sb.append("../"); //$NON-NLS-1$
 			}
 			sb.append(file.getName());
 			relPath = new Path(sb.toString());

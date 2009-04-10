@@ -138,11 +138,11 @@ public class XSLUIPlugin extends AbstractUIPlugin {
 	
 	public static File makeFileFor(String directory, String filename) throws IOException {
 		Bundle bundle = Platform.getBundle(XSLUIPlugin.PLUGIN_ID);
-		URL url = bundle.getEntry("/");
+		URL url = bundle.getEntry("/"); //$NON-NLS-1$
 		URL localURL = FileLocator.toFileURL(url);
 		String installPath = localURL.getPath();
 		String totalDirectory = installPath + directory;
-		String totalPath = totalDirectory + "/" + filename;
+		String totalPath = totalDirectory + "/" + filename; //$NON-NLS-1$
 		URL totalURL = new URL(url, totalPath);
 		//URL finalurl = Platform.asLocalURL(totalURL);
 		String finalFile = totalURL.getFile();

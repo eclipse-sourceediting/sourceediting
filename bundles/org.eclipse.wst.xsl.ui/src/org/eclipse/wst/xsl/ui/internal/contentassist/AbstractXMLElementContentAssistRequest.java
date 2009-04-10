@@ -49,7 +49,7 @@ import org.w3c.dom.NodeList;
  */
 public abstract class AbstractXMLElementContentAssistRequest extends AbstractXSLContentAssistRequest {
 
-	protected static final String XPATH_FIRST_XSLANCESTOR_NODE = "ancestor::xsl:*[1]";
+	protected static final String XPATH_FIRST_XSLANCESTOR_NODE = "ancestor::xsl:*[1]"; //$NON-NLS-1$
 	protected MarkupTagInfoProvider infoProvider = null;
 	protected XSLContentModelGenerator contentModel;
 	
@@ -181,7 +181,7 @@ public abstract class AbstractXMLElementContentAssistRequest extends AbstractXSL
 			// chop off any leading <'s and whitespace from the matchstring
 			while ((matchString.length() > 0)
 					&& (Character.isWhitespace(matchString.charAt(0)) || beginsWith(
-							matchString, "<"))) {
+							matchString, "<"))) { //$NON-NLS-1$
 				//$NON-NLS-1$
 				matchString = matchString.substring(1);
 			}

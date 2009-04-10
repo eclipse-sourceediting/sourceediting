@@ -44,6 +44,8 @@ import org.w3c.dom.NodeList;
  */
 public class SelectAttributeContentAssist extends AbstractXSLContentAssistRequest {
 	
+	private static final String SELECT_ATTRIBUTE = "select"; //$NON-NLS-1$
+
 	private static final String XPATH_GLOBAL_VARIABLES = "/xsl:stylesheet/xsl:variable"; //$NON-NLS-1$
 
 	/**
@@ -98,7 +100,7 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 		adjustXPathStart();
 		
 		int offset = getReplacementBeginPosition();
-		IDOMAttr attrNode = getAttribute("select");
+		IDOMAttr attrNode = getAttribute(SELECT_ATTRIBUTE); 
 		
 		this.matchString = extractXPathMatchString(attrNode, getRegion(), getReplacementBeginPosition());
 		
@@ -122,7 +124,7 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 	 */
 	protected void adjustXPathStart() {
 	    IDOMElement elem = (IDOMElement)getNode();
-	    IDOMAttr xpathNode = (IDOMAttr)elem.getAttributeNode("select");
+	    IDOMAttr xpathNode = (IDOMAttr)elem.getAttributeNode(SELECT_ATTRIBUTE);
 	    if (xpathNode == null) {
 	    	return;
 	    }
@@ -141,7 +143,7 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 	}
 		
 	protected String extractXPathMatchString(IDOMAttr node, ITextRegion aRegion, int offset) {
-		if (node == null || node.getValue().length() == 0)	return "";
+		if (node == null || node.getValue().length() == 0)	return ""; //$NON-NLS-1$
 		
 		if (matchString.length() < 1) {
 			return matchString;
@@ -153,7 +155,7 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 		int seperatorPos = getXPathSeperatorPos(column, nodeValue);
 		
 		if (seperatorPos >= column) {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 				
 		return node.getValue().substring(seperatorPos, column);
@@ -174,7 +176,7 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 			}
 		}
 		
-		int axisPos = nodeValue.indexOf("::");
+		int axisPos = nodeValue.indexOf("::"); //$NON-NLS-1$
 		if (axisPos > seperatorPos && axisPos <= column -1) {
 			seperatorPos = axisPos + 1;
 		}

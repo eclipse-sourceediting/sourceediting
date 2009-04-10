@@ -17,12 +17,13 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 public class NewWSDLFileWizardDelegate implements IWorkbenchWindowActionDelegate
 {
+	private static final String WSDL_UI_ID = "org.eclipse.wst.wsdl.ui"; //$NON-NLS-1$
 	private NewWizardAction openAction;
 	private ISelection selection;
 
 	public void init(IWorkbenchWindow window)
 	{
-		this.openAction = new NewWizardAction("org.eclipse.wst.wsdl.ui");
+		this.openAction = new NewWizardAction(WSDL_UI_ID);
 	}
 
 	public void run(IAction action)
