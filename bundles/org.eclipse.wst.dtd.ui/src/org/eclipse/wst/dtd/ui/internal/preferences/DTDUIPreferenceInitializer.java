@@ -14,6 +14,7 @@ package org.eclipse.wst.dtd.ui.internal.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ColorRegistry;
+import org.eclipse.jface.text.templates.Template;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.style.IStyleConstantsDTD;
@@ -61,5 +62,16 @@ public class DTDUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsDTD.DTD_SYMBOL, 128, 0, 0) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsDTD.DTD_SYMBOL, styleValue); // dark
 		// red
+
+		// set default new xml file template to use in new file wizard
+		/*
+		 * Need to find template name that goes with default template id (name
+		 * may change for differnt language)
+		 */
+		String templateName = ""; //$NON-NLS-1$
+		Template template = DTDUIPlugin.getDefault().getTemplateStore().findTemplateById("org.eclipse.wst.dtd.ui.internal.templates.xmldeclaration"); //$NON-NLS-1$
+		if (template != null)
+			templateName = template.getName();
+		store.setDefault(DTDUIPreferenceNames.NEW_FILE_TEMPLATE_NAME, templateName);
 	}
 }
