@@ -141,7 +141,17 @@ public class XMLPropertySheetConfiguration extends PropertySheetConfiguration {
 				fSource = (INodeNotifier) object;
 				fPropertySource = (IPropertySource) fSource.getAdapterFor(IPropertySource.class);
 				if (fPropertySource == null) {
-					fPropertySource = new XMLPropertySource((INodeNotifier) object);
+					fPropertySource = new XMLPropertySource((INodeNotifier) object){
+						public void setPropertyValue(Object nameObject, Object value) {
+							for (int i = 0; i < fSelectedNotifiers.length; i++) {
+								fSelectedNotifiers[i].removeAdapter(fRefreshAdapter);
+							}
+							super.setPropertyValue(nameObject, value);
+							for (int i = 0; i < fSelectedNotifiers.length; i++) {
+								fSelectedNotifiers[i].addAdapter(fRefreshAdapter);
+							}
+						}
+					};
 				}
 			}
 			else {
