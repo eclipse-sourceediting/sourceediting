@@ -242,7 +242,7 @@ class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileListener {
 		return true;// !nodeList.getListType().equals(DTDRegionTypes.ATTLIST_TAG);
 	}
 
-	public void nodeChanged(DTDNode node) {
+	public void nodeChanged(final DTDNode node) {
 		if (fViewer instanceof StructuredViewer) {
 			// System.out.println("node changed notified");
 			// System.out.println("selection before = " +
@@ -254,13 +254,50 @@ class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileListener {
 				while (iter.hasNext()) {
 					DTDNode currentNode = (DTDNode) iter.next();
 					if (currentNode.getName().equals(node.getName()) && currentNode instanceof Element) {
-						((StructuredViewer) fViewer).refresh(currentNode);
+						((StructuredViewer) fViewer).refresh(currentNode, true);
 					}
 				} // end of while ()
 			}
 			else {
 				// do standard stuff
-				((StructuredViewer) fViewer).refresh(node);
+				fViewer.getControl().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if (fViewer.getControl().isDisposed())
+							return;
+						if (node.getParentNode() != null) {
+							((StructuredViewer) fViewer).refresh(node.getParentNode(), true);
+						}
+						((StructuredViewer) fViewer).refresh(node, true);
+					}
+				});
+			}
+			
+			if (node instanceof Attribute) {
+				fViewer.getControl().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						if (fViewer.getControl().isDisposed())
+							return;
+						/*
+						 * go from the attribute to its list and then owning element
+						 * so we refresh the tree item there as well
+						 */
+						Object attrList = node.getParentNode();
+						if (attrList != null && attrList instanceof AttributeList) {
+							String attListName = ((AttributeList) attrList).getName();
+							Iterator iter = node.getDTDFile().getElementsAndParameterEntityReferences().getNodes().iterator();
+							Object parent = null;
+							while (iter.hasNext() && parent == null) {
+								DTDNode currentNode = (DTDNode) iter.next();
+								if (currentNode instanceof Element && currentNode.getName().equals(attListName)) {
+									parent = currentNode;
+								}
+							}
+							if (parent != null) {
+								((StructuredViewer) fViewer).refresh(parent, true);
+							}
+						}
+					}
+				});
 			}
 			// System.out.println("selection after = " +
 			// ((StructuredViewer)view).getSelection());
@@ -278,10 +315,10 @@ class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileListener {
 				oldSelectedNode = (DTDNode) firstObj;
 			}
 
-			AbstractTreeViewer abstractTreeViewer = (AbstractTreeViewer) fViewer;
+			final AbstractTreeViewer abstractTreeViewer = (AbstractTreeViewer) fViewer;
 			for (Iterator it = event.getNodes().iterator(); it.hasNext();) {
 				Object node = it.next();
-				Object parent = getParent(node);
+				final Object parent = getParent(node);
 				// Bug 111100 - If it is a top level node (ie. parent is a
 				// DTDFile),
 				// insert the node directly to improve performance
@@ -297,12 +334,24 @@ class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileListener {
 				// If the parent node is not a DTDFile, just refresh the
 				// parent for now
 				else if (parent != null) {
-					abstractTreeViewer.refresh(parent);
+					fViewer.getControl().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							if (fViewer.getControl().isDisposed())
+								return;
+							abstractTreeViewer.refresh(parent, true);
+						}
+					});
 				}
 				// You should never reach this block, if you do, just refresh
 				// the whole tree
 				else {
-					abstractTreeViewer.refresh();
+					fViewer.getControl().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							if (fViewer.getControl().isDisposed())
+								return;
+							abstractTreeViewer.refresh(true);
+						}
+					});
 				}
 			}
 
