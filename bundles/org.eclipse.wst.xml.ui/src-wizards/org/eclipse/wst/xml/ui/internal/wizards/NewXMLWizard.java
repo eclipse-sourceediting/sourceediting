@@ -317,7 +317,7 @@ public class NewXMLWizard extends NewModelWizard {
 		// Open editor on new file.
 		String editorId = null;
 		try {
-			IEditorDescriptor editor = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getLocation().toOSString(), file.getContentDescription().getContentType());
+			IEditorDescriptor editor = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getFullPath().toString(), file.getContentDescription().getContentType());
 			if (editor != null) {
 				editorId = editor.getId();
 			}
