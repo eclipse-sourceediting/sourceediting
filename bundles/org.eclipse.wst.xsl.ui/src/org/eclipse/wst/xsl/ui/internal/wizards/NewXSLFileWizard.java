@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2008, 2009 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 271883 - ArrayIndexOutOfBounds on New XSL with no projects
  *******************************************************************************/
 package org.eclipse.wst.xsl.ui.internal.wizards;
 
@@ -15,6 +16,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -41,9 +43,6 @@ public class NewXSLFileWizard extends Wizard implements INewWizard
 	public void addPages()
 	{
 		IStructuredSelection ssel = new StructuredSelection(IDE.computeSelectedResources(fSelection));
-		// if no selection, then just select the first project we come across
-		if (ssel.isEmpty())
-			ssel = new StructuredSelection(ResourcesPlugin.getWorkspace().getRoot().getProjects()[0]);
 		
 		fNewFilePage = new NewXSLFileWizardPage("NewFileCreationPage", ssel); //$NON-NLS-1$ 
 		fNewFilePage.setTitle("XSL Stylesheet");
