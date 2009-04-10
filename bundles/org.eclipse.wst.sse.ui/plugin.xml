@@ -500,10 +500,11 @@
 		</viewPage>
 	</extension>
 
-	<!-- extension point for breakpoint extension -->
+	<!-- extension point for toggling breakpoints -->
 	<extension-point
 		id="breakpoint"
-		name="%Breakpoint_Extension_Point.name" />
+		name="%Breakpoint_Extension_Point.name" 
+		schema="schema/org.eclipse.wst.sse.ui.breakpoint.exsd" />
 	<!-- extension point for source validation -->
 	<!-- interfaces for this extension point can be found in org.eclipse.wst.validation -->
 	<extension-point
