@@ -23,6 +23,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -346,6 +347,7 @@ public class JarUtilities {
 			}
 		}
 
+		InputStream input = null;
 		JarURLConnection jarUrlConnection = null;
 		try {
 			URLConnection openConnection = url.openConnection();
@@ -353,8 +355,15 @@ public class JarUtilities {
 			openConnection.setUseCaches(false);
 			if (openConnection instanceof JarURLConnection) {
 				jarUrlConnection = (JarURLConnection) openConnection;
+				JarFile jarFile = jarUrlConnection.getJarFile();
+				input = jarFile.getInputStream(jarUrlConnection.getJarEntry());
 			}
-			return copyAndCloseStream(openConnection.getInputStream());
+			else {
+				input = openConnection.getInputStream();
+			}
+			if (input != null) {
+				return copyAndCloseStream(input);
+			}
 		}
 		catch (IOException e) {
 			Logger.logException(e);
