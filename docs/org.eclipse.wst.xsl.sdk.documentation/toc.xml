@@ -4,27 +4,8 @@
          <topic href="doc/html/org.eclipse.wst.xml.xpath.core.XPathCorePlugin.html" label="org.eclipse.wst.xml.xpath.core.XPathCorePlugin"/>
       </topic>
       <topic label="org.eclipse.wst.xml.xpath.core.util">
+         <topic href="doc/html/org.eclipse.wst.xml.xpath.core.util.XPath20Helper.html" label="org.eclipse.wst.xml.xpath.core.util.XPath20Helper"/>
          <topic href="doc/html/org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper.html" label="org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper"/>
-      </topic>
-      <topic label="org.eclipse.wst.xml.xpath.ui">
-         <topic href="doc/html/org.eclipse.wst.xml.xpath.ui.XPathUIMessages.html" label="org.eclipse.wst.xml.xpath.ui.XPathUIMessages"/>
-      </topic>
-      <topic label="org.eclipse.wst.xml.xpath.ui.views">
-         <topic href="doc/html/org.eclipse.wst.xml.xpath.ui.views.DOMNodeLabelProvider.html" label="org.eclipse.wst.xml.xpath.ui.views.DOMNodeLabelProvider"/>
-         <topic href="doc/html/org.eclipse.wst.xml.xpath.ui.views.DOMTreeContentProvider.html" label="org.eclipse.wst.xml.xpath.ui.views.DOMTreeContentProvider"/>
-         <topic href="doc/html/org.eclipse.wst.xml.xpath.ui.views.DOMViewerFilter.html" label="org.eclipse.wst.xml.xpath.ui.views.DOMViewerFilter"/>
-         <topic href="doc/html/org.eclipse.wst.xml.xpath.ui.views.EditNamespacePrefixDialog.html" label="org.eclipse.wst.xml.xpath.ui.views.EditNamespacePrefixDialog"/>
-         <topic href="doc/html/org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.html" label="org.eclipse.wst.xml.xpath.ui.views.XPathNavigator"/>
-         <topic href="doc/html/org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.XPathAction.html" label="org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.XPathAction"/>
-         <topic href="doc/html/org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.RefreshAction.html" label="org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.RefreshAction"/>
-         <topic href="doc/html/org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.ShowInSourceAction.html" label="org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.ShowInSourceAction"/>
-         <topic href="doc/html/org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.XMLEditorsContentProvider.html" label="org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.XMLEditorsContentProvider"/>
-         <topic href="doc/html/org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.EditorReferenceLabelProvider.html" label="org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.EditorReferenceLabelProvider"/>
-         <topic href="doc/html/org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.XPathAction.html" label="org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.XPathAction"/>
-         <topic href="doc/html/org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.RefreshAction.html" label="org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.RefreshAction"/>
-         <topic href="doc/html/org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.ShowInSourceAction.html" label="org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.ShowInSourceAction"/>
-         <topic href="doc/html/org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.XMLEditorsContentProvider.html" label="org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.XMLEditorsContentProvider"/>
-         <topic href="doc/html/org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.EditorReferenceLabelProvider.html" label="org.eclipse.wst.xml.xpath.ui.views.XPathNavigator.EditorReferenceLabelProvider"/>
       </topic>
       <topic label="org.eclipse.wst.xsl.core">
          <topic href="doc/html/org.eclipse.wst.xsl.core.Messages.html" label="org.eclipse.wst.xsl.core.Messages"/>
@@ -33,6 +14,7 @@
       </topic>
       <topic label="org.eclipse.wst.xsl.core.resolver">
          <topic href="doc/html/org.eclipse.wst.xsl.core.resolver.ResolverExtension.html" label="org.eclipse.wst.xsl.core.resolver.ResolverExtension"/>
+         <topic href="doc/html/org.eclipse.wst.xsl.core.resolver.StopParsingException.html" label="org.eclipse.wst.xsl.core.resolver.StopParsingException"/>
          <topic href="doc/html/org.eclipse.wst.xsl.core.resolver.XSLVersionHandler.html" label="org.eclipse.wst.xsl.core.resolver.XSLVersionHandler"/>
       </topic>
       <topic label="org.eclipse.wst.xsl.xalan.debugger">

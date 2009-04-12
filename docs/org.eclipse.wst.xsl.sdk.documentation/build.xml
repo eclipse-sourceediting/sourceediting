@@ -30,7 +30,6 @@
   	  	 	<include name="org.eclipse.wst.xml.xpath.core/src/org/eclipse/wst/xml/xpath/core/*.java"/>
   	  	 	<include name="org.eclipse.wst.xml.xpath.core/src/org/eclipse/wst/xml/xpath/core/util/*.java"/>
   	  	 	<include name="org.eclipse.wst.xml.xpath.ui/src-xpath/org/eclipse/wst/xml/xpath/ui/*.java"/>
-  	  	 	<include name="org.eclipse.wst.xml.xpath.ui/src-xpath/org/eclipse/wst/xml/xpath/ui/views/*.java"/>
   	  	 </fileset>
   	     <doclet name="com.jeldoclet.JELDoclet"/>
   	  </javadoc>
@@ -63,7 +62,7 @@
 	  	  	 	<include name="org.eclipse.wst.xsl.ui/**/*.java"/>
 	  	  	 	<include name="org.eclipse.wst.xsl.xalan/src-debugger/**/*.java"/>
 	  	  	 	<include name="org.eclipse.wst.xml.xpath.core/src/**/*.java"/>
-	  	  	 	<include name="org.eclipse.wst.xml.xpath.ui/**/*.java"/>
+	  	  	 	<include name="org.eclipse.wst.xml.xpath.ui/src-xpath/org/eclipse/wst/xml/xpath/ui/*.java"/>
 	  	  	 </fileset>
 	  	     <doclet name="com.sun.tools.doclets.doccheck.DocCheck">
 	  	     	<param name="-execDepth" value="2"/>
