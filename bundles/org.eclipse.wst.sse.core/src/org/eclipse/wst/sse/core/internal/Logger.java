@@ -147,8 +147,22 @@ public class Logger {
 			if (!isDebugging())
 				return;
 		}
+		int severity = IStatus.OK;
+		switch (level) {
+			case INFO_DEBUG :
+			case INFO :
+				severity = IStatus.INFO;
+				break;
+			case WARNING_DEBUG :
+			case WARNING :
+				severity = IStatus.WARNING;
+				break;
+			case ERROR_DEBUG :
+			case ERROR :
+				severity = IStatus.ERROR;
+		}
 		message = (message != null) ? message : ""; //$NON-NLS-1$
-		Status statusObj = new Status(level, PLUGIN_ID, level, message, exception);
+		Status statusObj = new Status(severity, PLUGIN_ID, severity, message, exception);
 		Bundle bundle = Platform.getBundle(PLUGIN_ID);
 		if (bundle != null)
 			Platform.getLog(bundle).log(statusObj);
