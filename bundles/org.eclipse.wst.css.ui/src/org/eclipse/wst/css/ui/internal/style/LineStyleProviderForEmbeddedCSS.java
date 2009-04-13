@@ -29,6 +29,9 @@ public class LineStyleProviderForEmbeddedCSS extends LineStyleProviderForCSS {
 		int regionEnd = regionStart + typedRegion.getLength();
 		IStructuredDocumentRegion wholeRegion = getDocument().getRegionAtCharacterOffset(regionStart);
 
+		if (wholeRegion == null)
+			return false;
+
 		List tokens;
 		// [264597] - Using a cached offset caused shifted highlighting in <style> elements.
 		int offset = wholeRegion.getStartOffset();
