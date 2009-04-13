@@ -487,4 +487,12 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
 			((DataModelWizardPage) page).storeDefaultSettings();
 	}
 
+	@Override
+	public void dispose() {
+		if(this.model != null){
+			this.model.dispose();
+		}
+		super.dispose();
+	}
+	
 }
