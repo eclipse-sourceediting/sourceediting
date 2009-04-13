@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,8 +25,10 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.search.ui.IContextMenuConstants;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.editors.text.TextEditorActionContributor;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -208,6 +210,11 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 	 */
 	public void contributeToMenu(IMenuManager menu) {
 		super.contributeToMenu(menu);
+
+		IMenuManager editMenu= menu.findMenuUsingPath(IWorkbenchActionConstants.M_EDIT);
+		if (editMenu != null) {
+			editMenu.appendToGroup(IContextMenuConstants.GROUP_ADDITIONS, fToggleInsertModeAction);
+		}
 /*
 		addToMenu(menu);
 */
@@ -343,9 +350,9 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 		fPreviousAnnotation.setEditor(textEditor);
 		fNextAnnotation.setEditor(textEditor);
 		fGotoMatchingBracketAction.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_GOTO_MATCHING_BRACKET));
-
-		fToggleInsertModeAction.setAction(getAction(textEditor, ITextEditorActionConstants.TOGGLE_INSERT_MODE));
 */
+		fToggleInsertModeAction.setAction(getAction(textEditor, ITextEditorActionConstants.TOGGLE_INSERT_MODE));
+
 		if (extendedContributor != null) {
 			extendedContributor.setActiveEditor(activeEditor);
 		}
@@ -362,6 +369,7 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 	 * @see org.eclipse.wst.sse.ui.ISourceViewerActionBarContributor#setViewerSpecificContributionsEnabled(boolean)
 	 */
 	public void setViewerSpecificContributionsEnabled(boolean enabled) {
+		fToggleInsertModeAction.setEnabled(enabled);
 /*		fShiftRight.setEnabled(enabled);
 		fShiftLeft.setEnabled(enabled);
 		fNextAnnotation.setEnabled(enabled);
