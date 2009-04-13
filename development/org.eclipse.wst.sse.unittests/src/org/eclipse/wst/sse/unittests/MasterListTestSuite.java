@@ -29,10 +29,6 @@ import org.eclipse.wst.dtd.ui.tests.DTDUITestSuite;
 import org.eclipse.wst.html.core.tests.HTMLCoreTestSuite;
 import org.eclipse.wst.html.tests.encoding.HTMLEncodingTestSuite;
 import org.eclipse.wst.html.ui.tests.HTMLUITestSuite;
-import org.eclipse.wst.jsdt.core.tests.compiler.JSDTCompilerTests;
-import org.eclipse.wst.jsdt.core.tests.model.JSDTModelTests;
-import org.eclipse.wst.jsdt.web.core.tests.translation.AllWebCoreTests;
-import org.eclipse.wst.jsdt.web.ui.tests.AllWebUITests;
 import org.eclipse.wst.sse.core.tests.SSEModelTestSuite;
 import org.eclipse.wst.sse.ui.tests.SSEUITestSuite;
 import org.eclipse.wst.xml.core.tests.SSEModelXMLTestSuite;
@@ -41,7 +37,6 @@ import org.eclipse.wst.xml.ui.tests.XMLUITestSuite;
 import org.eclipse.wst.xml.validation.tests.internal.AllXMLTests;
 import org.eclipse.wst.xsd.core.tests.internal.AllXSDCoreTests;
 import org.eclipse.wst.xsd.validation.tests.internal.AllXSDTests;
-import org.eclipse.wst.xsl.tests.AllTestsSuite;
 
 public class MasterListTestSuite extends TestSuite {
 	private static final String CLASS = "class";
@@ -76,12 +71,8 @@ public class MasterListTestSuite extends TestSuite {
 		addTest(DTDUITestSuite.suite());
 		addTest(JSPUITestSuite.suite());
 		
-		addTest(JSDTModelTests.suite());
-		addTest(JSDTCompilerTests.suite());
-		addTest(AllWebCoreTests.suite());
-		addTest(AllWebUITests.suite());
-		
-		addTest(new AllTestsSuite());
+		addTest(org.eclipse.wst.jsdt.core.tests.compiler.JSDTTestAll.suite());
+		addTest(org.eclipse.wst.jsdt.core.tests.model.AllJavaModelTests.suite());
 		
 		// addTest(RegressionBucket.suite());
 		// addTest(AllTestCases.suite());
