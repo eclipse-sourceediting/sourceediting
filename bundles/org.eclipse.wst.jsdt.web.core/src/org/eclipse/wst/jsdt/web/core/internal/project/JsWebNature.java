@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,12 +23,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.wst.common.componentcore.ComponentCore;
+import org.eclipse.wst.common.componentcore.ModuleCoreNature;
+import org.eclipse.wst.common.componentcore.resources.IVirtualComponent;
 import org.eclipse.wst.jsdt.core.IAccessRule;
 import org.eclipse.wst.jsdt.core.IIncludePathAttribute;
 import org.eclipse.wst.jsdt.core.IIncludePathEntry;
 import org.eclipse.wst.jsdt.core.JavaScriptCore;
 import org.eclipse.wst.jsdt.core.LibrarySuperType;
-
 import org.eclipse.wst.jsdt.internal.core.JavaProject;
 //import org.eclipse.wst.jsdt.ui.PreferenceConstants;
 /**
@@ -114,7 +116,7 @@ public class JsWebNature implements IProjectNature {
 			}
 		}
 	}
-	private Vector classPathEntries = new Vector();
+	private Vector fClassPathEntries = new Vector();
 	private boolean DEBUG = false;
 	private IProject fCurrProject;
 	private JavaProject fJavaProject;
@@ -122,6 +124,7 @@ public class JsWebNature implements IProjectNature {
 	private IProgressMonitor monitor;
 	
 	public JsWebNature() {
+		super();
 		monitor = new NullProgressMonitor();
 	}
 	
@@ -144,8 +147,8 @@ public class JsWebNature implements IProjectNature {
 		if (hasProjectClassPathFile()) {
 			IIncludePathEntry[] entries = getRawClassPath();
 			if (entries != null && entries.length > 0) {
-				classPathEntries.removeAll(Arrays.asList(entries));
-				classPathEntries.addAll(Arrays.asList(entries));
+				fClassPathEntries.removeAll(Arrays.asList(entries));
+				fClassPathEntries.addAll(Arrays.asList(entries));
 			}
 		}
 		
@@ -153,11 +156,12 @@ public class JsWebNature implements IProjectNature {
 		fJavaProject = (JavaProject) JavaScriptCore.create(fCurrProject);
 		fJavaProject.setProject(fCurrProject);
 		try {
-			// , fOutputLocation
 			if (!hasProjectClassPathFile()) {
-				fJavaProject.setRawIncludepath((IIncludePathEntry[]) classPathEntries.toArray(new IIncludePathEntry[] {}), fOutputLocation, monitor);
+				// Create include path file
+				fJavaProject.setRawIncludepath((IIncludePathEntry[]) fClassPathEntries.toArray(new IIncludePathEntry[] {}), fOutputLocation, monitor);
 			}else{
-				fJavaProject.setRawIncludepath((IIncludePathEntry[]) classPathEntries.toArray(new IIncludePathEntry[] {}), monitor);
+				// Clear include path control file
+				fJavaProject.setRawIncludepath((IIncludePathEntry[]) fClassPathEntries.toArray(new IIncludePathEntry[] {}), monitor);
 			}
 		} catch (Exception e) {
 			System.out.println(e);
@@ -169,11 +173,21 @@ public class JsWebNature implements IProjectNature {
 	}
 	
 	private void createSourceClassPath() {
-		if (hasAValidSourcePath()) {
+		if (hasASourcePath()) {
 			return;
 		}
-		// IPath projectPath = fCurrProject.getFullPath();
-		// classPathEntries.add(JavaScriptCore.newSourceEntry(projectPath));
+
+		IPath sourceRoot = null;
+		// default to the deployable root
+		if (ModuleCoreNature.isFlexibleProject(fCurrProject)) {
+			IVirtualComponent component = ComponentCore.createComponent(fCurrProject);
+			if (component != null && component.exists()) {
+				sourceRoot = component.getRootFolder().getWorkspaceRelativePath();
+			}
+		}
+		if (sourceRoot == null)
+			sourceRoot = fCurrProject.getFullPath();
+		fClassPathEntries.add(JavaScriptCore.newSourceEntry(sourceRoot));
 	}
 	
 	public void deconfigure() throws CoreException {
@@ -215,7 +229,7 @@ public class JsWebNature implements IProjectNature {
 		return proj.readRawIncludepath();
 	}
 	
-	private boolean hasAValidSourcePath() {
+	private boolean hasASourcePath() {
 		if (hasProjectClassPathFile()) {
 			try {
 				IIncludePathEntry[] entries = getRawClassPath();
@@ -253,7 +267,7 @@ public class JsWebNature implements IProjectNature {
 					return;
 				}
 			}
-			classPathEntries.add(defaultJRELibrary);
+			fClassPathEntries.add(defaultJRELibrary);
 		} catch (Exception e) {
 			if (DEBUG) {
 				System.out.println(Messages.getString("JsWebNature.6") + e); //$NON-NLS-1$
@@ -263,9 +277,9 @@ public class JsWebNature implements IProjectNature {
 	
 	private IIncludePathEntry[] initLocalClassPath() {
 		
-		classPathEntries.add(JsWebNature.VIRTUAL_SCOPE_ENTRY);
+		fClassPathEntries.add(JsWebNature.VIRTUAL_SCOPE_ENTRY);
 		IIncludePathEntry browserLibrary = JavaScriptCore.newContainerEntry( VIRTUAL_BROWSER_CLASSPATH);
-		classPathEntries.add(browserLibrary);
+		fClassPathEntries.add(browserLibrary);
 		//IPath webRoot = WebRootFinder.getWebContentFolder(fCurrProject);
 	//	IIncludePathEntry source = JavaScriptCore.newSourceEntry(fCurrProject.getFullPath().append(webRoot).append("/"));
 	//	classPathEntries.add(source);
