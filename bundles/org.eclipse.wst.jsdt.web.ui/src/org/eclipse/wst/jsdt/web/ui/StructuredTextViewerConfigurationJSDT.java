@@ -10,16 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.jsdt.web.ui;
 
-import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
-import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
-import org.eclipse.wst.jsdt.web.ui.internal.contentassist.JSDTContentAssistant;
 import org.eclipse.wst.jsdt.web.ui.internal.format.FormattingStrategyJSDT;
-import org.eclipse.wst.jsdt.web.ui.internal.taginfo.JSDTInformationProvider;
 
 /**
 *
@@ -47,22 +43,6 @@ public class StructuredTextViewerConfigurationJSDT extends StructuredTextViewerC
 		super();
 	}
 	
-	/* Content assist processors are contributed by extension for SSE now */
-	
-	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
-		
-		IContentAssistProcessor[] processors = null;
-
-		if (IHTMLPartitions.SCRIPT.equals(partitionType) || IHTMLPartitions.SCRIPT_EVENTHANDLER.equals(partitionType)) {
-			processors = new IContentAssistProcessor[]{new JSDTContentAssistant()};
-		}
-		else{
-			processors = super.getContentAssistProcessors(sourceViewer, partitionType);
-		}
-		
-		return processors;
-	}
-	
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
 		final IContentFormatter formatter = super.getContentFormatter(sourceViewer);
 		if(formatter instanceof MultiPassContentFormatter) {
@@ -78,12 +58,5 @@ public class StructuredTextViewerConfigurationJSDT extends StructuredTextViewerC
 			}
 		}
 		return formatter;
-	}
-	
-	protected IInformationProvider getInformationProvider(ISourceViewer sourceViewer, String partitionType) {
-		if (IHTMLPartitions.SCRIPT.equals(partitionType) || IHTMLPartitions.SCRIPT_EVENTHANDLER.equals(partitionType)) {
-			return new JSDTInformationProvider();
-		}
-		return super.getInformationProvider(sourceViewer, partitionType);
 	}
 }
