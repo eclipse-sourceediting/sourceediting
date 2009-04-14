@@ -6,7 +6,14 @@
 		<sourceViewerConfiguration
 			class="org.eclipse.wst.jsdt.web.support.jsp.JSDTStructuredTextViewerConfigurationJSP"
 			target="org.eclipse.jst.jsp.core.jspsource.source" />
-	</extension>
+		<provisionalConfiguration
+			type="contentassistprocessor"
+			class="org.eclipse.wst.jsdt.web.ui.internal.contentassist.JSDTContentAssistant"
+			target="org.eclipse.jst.jsp.SCRIPT.JAVASCRIPT" />
+		<documentationTextHover
+			class="org.eclipse.wst.jsdt.web.ui.internal.taginfo.JSDTHoverProcessor"
+			target="org.eclipse.jst.jsp.SCRIPT.JAVASCRIPT" />
+ 	</extension>
 
 	
 	<extension

@@ -13,13 +13,8 @@
  */
 package org.eclipse.wst.jsdt.web.support.jsp;
 
-import org.eclipse.jface.text.ITextHover;
-import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
-import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
-import org.eclipse.jface.text.information.IInformationPresenter;
-import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP;
@@ -44,22 +39,6 @@ public class JSDTStructuredTextViewerConfigurationJSP extends StructuredTextView
 			fHTMLSourceViewerConfiguration = new StructuredTextViewerConfigurationJSDT();
 		}
 		return fHTMLSourceViewerConfiguration;
-	}
-	
-	protected IContentAssistProcessor[] getContentAssistProcessors(ISourceViewer sourceViewer, String partitionType) {
-		IContentAssistProcessor[] processors = null;
-
-		if (IHTMLPartitions.SCRIPT.equals(partitionType) || IJSPPartitions.JSP_CONTENT_JAVASCRIPT.equals(partitionType) || IHTMLPartitions.SCRIPT_EVENTHANDLER.equals(partitionType)) {
-			// HTML JavaScript
-			IContentAssistant htmlContentAssistant = getJSDTHTMLSourceViewerConfiguration().getContentAssistant(sourceViewer);
-			IContentAssistProcessor processor = htmlContentAssistant.getContentAssistProcessor(IHTMLPartitions.SCRIPT);
-			processors = new IContentAssistProcessor[]{processor};
-		}
-		else{
-			processors = super.getContentAssistProcessors(sourceViewer, partitionType);
-		}
-
-		return processors;
 	}
 	
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
@@ -88,19 +67,6 @@ public class JSDTStructuredTextViewerConfigurationJSP extends StructuredTextView
 		return indentations;
 	}
 	
-	protected IInformationProvider getInformationProvider(ISourceViewer sourceViewer, String partitionType) {
-		IInformationProvider provider = null;
-		if (IHTMLPartitions.SCRIPT.equals(partitionType) || IJSPPartitions.JSP_CONTENT_JAVASCRIPT.equals(partitionType) || IHTMLPartitions.SCRIPT_EVENTHANDLER.equals(partitionType)) {
-			// JavaScript
-			IInformationPresenter htmlPresenter = getJSDTHTMLSourceViewerConfiguration().getInformationPresenter(sourceViewer);
-			provider = htmlPresenter.getInformationProvider(IHTMLPartitions.SCRIPT);
-		}
-		if(provider == null){
-			provider = super.getInformationProvider(sourceViewer, partitionType);
-		}
-		return provider;
-	}
-	
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
 		LineStyleProvider[] providers = null;
 		if (IHTMLPartitions.SCRIPT.equals(partitionType) || IJSPPartitions.JSP_CONTENT_JAVASCRIPT.equals(partitionType) || IHTMLPartitions.SCRIPT_EVENTHANDLER.equals(partitionType)) {
@@ -111,19 +77,5 @@ public class JSDTStructuredTextViewerConfigurationJSP extends StructuredTextView
 		}
 
 		return providers;
-	}
-	
-	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
-		ITextHover hover = null;
-
-		if (IHTMLPartitions.SCRIPT.equals(contentType) || IJSPPartitions.JSP_CONTENT_JAVASCRIPT.equals(contentType) || IHTMLPartitions.SCRIPT_EVENTHANDLER.equals(contentType)) {
-			// html and javascript regions
-			hover = getJSDTHTMLSourceViewerConfiguration().getTextHover(sourceViewer, contentType, stateMask);
-		}
-		else {
-			hover = super.getTextHover(sourceViewer, contentType);
-		}
-	
-		return hover;
 	}
 }
