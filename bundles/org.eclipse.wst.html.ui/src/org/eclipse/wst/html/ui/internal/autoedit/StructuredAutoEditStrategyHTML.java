@@ -27,6 +27,7 @@ import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
@@ -137,8 +138,7 @@ public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
 					IStructuredDocumentRegion region = node.getEndStructuredDocumentRegion();
 					if (region != null && region.getRegions().size() > 0 && region.getRegions().get(0).getType() == DOMRegionContext.XML_END_TAG_OPEN && !isClosedByParent)
 						return;
-				
-					command.text += "</" + node.getNodeName() + ">"; //$NON-NLS-1$ //$NON-NLS-2$
+					command.text += "</" + getElementName(node, command.offset) + ">"; //$NON-NLS-1$ //$NON-NLS-2$
 					command.shiftsCaret = false;
 					command.caretOffset = command.offset + 1;
 				}
@@ -147,6 +147,32 @@ public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Get the element name that will be created by closing the start tag. Defaults
+	 * to the node's nodeName.
+	 * @param node the node that is being edited
+	 * @param offset the offset in the document where the start tag is closed
+	 * @return The element name of the tag
+	 */
+	private String getElementName(IDOMNode node, int offset) {
+		String name = null;
+		
+		IStructuredDocumentRegion region = node.getFirstStructuredDocumentRegion();
+		ITextRegion textRegion = region.getRegionAtCharacterOffset(offset);
+		if (textRegion != null && textRegion.getType() == DOMRegionContext.XML_TAG_NAME) {
+			int nameStart = region.getStartOffset(textRegion);
+			String regionText = region.getText(textRegion);
+			int length = offset - nameStart;
+			if (length <= regionText.length())
+				name = regionText.substring(0, length);
+		}
+		
+		// Default to the node name
+		if (name == null)
+			name = node.getNodeName();
+		return name;
 	}
 
 	private void smartInsertForEndTag(DocumentCommand command, IDocument document, IStructuredModel model) {
