@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -846,7 +846,10 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
      */
     public void partOpened(IWorkbenchPart part)
     {
-      // do nothing
+    	if (CommonMultiPageEditor.this.equals(part))
+    	{
+    		doPostEditorOpenTasks();
+    	}
     }
 
     /**
@@ -927,5 +930,13 @@ public abstract class CommonMultiPageEditor extends MultiPageEditorPart implemen
   public boolean isSourcePageActive()
   {
     return getActivePage() == SOURCE_PAGE_INDEX;
+  }
+  
+  /**
+   * Invoked during IPartListener#partOpened. Derived classes can override
+   * to provide specialized behaviour.  
+   */
+  protected void doPostEditorOpenTasks() {
+	  // Nothing to do in the base class.
   }
 }

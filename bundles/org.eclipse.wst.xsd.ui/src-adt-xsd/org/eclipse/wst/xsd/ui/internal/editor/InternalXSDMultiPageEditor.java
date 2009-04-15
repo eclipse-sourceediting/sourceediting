@@ -589,9 +589,6 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     fXSDSelectionListener = new XSDSelectionManagerSelectionListener();
     getSelectionManager().addSelectionChangedListener(fXSDSelectionListener);
     
-    // Select the schema to show the properties
-    getSelectionManager().setSelection(new StructuredSelection(getModel()));
-    
     xsdPreferenceStoreListener = new XSDPreferenceStoreListener();
     XSDEditorPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(xsdPreferenceStoreListener);
   }
@@ -1456,5 +1453,13 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
       }
     }
   }
-
+  
+  protected void doPostEditorOpenTasks() 
+  {
+		// Bug 204868: do the selection after the editor part is created, so that 
+		// AbstractTextEditor.markInNavigationHistory() won't cause the creation 
+        // of its own editor part.
+		// Select the schema to show the properties
+		getSelectionManager().setSelection(new StructuredSelection(getModel()));
+  }
 }  
