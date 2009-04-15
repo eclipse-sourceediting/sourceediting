@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.commentelement.CommentElementAdapter;
 import org.eclipse.wst.xml.core.internal.commentelement.CommentElementHandler;
@@ -178,11 +179,21 @@ public class CommentElementConfiguration {
 						List prefixValues = new ArrayList(prefixes.length);
 						for (int i = 0; i < prefixes.length; i++) {
 							String prefix = prefixes[i].getAttribute("prefix"); //$NON-NLS-1$
-							if (prefix != null)
+							if (prefix != null) {
 								prefixValues.add(prefix);
+							}
+							else {
+								try {
+									Logger.log(Logger.WARNING, "misconfigured comment element in" + fElement.getContributor().getName(), new IllegalArgumentException("startwith")); //$NON-NLS-1$ //$NON-NLS-2$
+								}
+								catch (InvalidRegistryObjectException e) {
+									// stale bundle?
+								}
+							}
 						}
-						if (!prefixValues.isEmpty())
+						if (!prefixValues.isEmpty()) {
 							fPrefix = (String[]) prefixValues.toArray(new String[prefixValues.size()]);
+						}
 					}
 				} else { // basic
 					String name = getProperty("elementname"); //$NON-NLS-1$
