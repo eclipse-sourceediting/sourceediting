@@ -39,23 +39,7 @@
 		</hyperlinkDetector>
 		
    </extension>
-
-	<extension
-		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
-		<target
-			id="org.eclipse.wst.html.SCRIPT"
-			name="%target.name.0">
-		</target>
-	</extension>
-	
-	<extension
-		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectorTargets">
-		<target
-			id="org.eclipse.wst.html.SCRIPT.EVENTHANDLER"
-			name="%target.name.1">
-		</target>
-	</extension>
-
+		
 	 <extension
          point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
       <hyperlinkDetector
