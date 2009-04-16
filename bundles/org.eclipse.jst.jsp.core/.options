@@ -1,0 +1,35 @@
+org.eclipse.jst.jsp.core/debug=true
+org.eclipse.jst.jsp.core/debug/tracefilter=
+org.eclipse.jst.jsp.core/debug/jspindexmanager=false
+org.eclipse.jst.jsp.core/debug/jsptranslation=false
+org.eclipse.jst.jsp.core/debug/jsptranslationstodisk=false
+org.eclipse.jst.jsp.core/debug/jspsearch=false
+
+org.eclipse.jst.jsp.core/taglib/resolve=false
+
+
+# org.eclipse.jst.jsp.core.contentmodel.tld.TLDCMDocumentManager._debug
+org.eclipse.jst.jsp.core/debug/tldcmdocument/manager=false
+org.eclipse.jst.jsp.core/debug/tldcmdocument/cache=false
+
+# org.eclipse.jst.jsp.core.contentmodel.tld.CMDocumentFactoryTLD._debug
+org.eclipse.jst.jsp.core/debug/tldcmdocument/factory=false
+
+#org.eclipse.jst.jsp.core.internal.contentmodel.ProjectDescription._debugIndexCreation
+org.eclipse.jst.jsp.core/taglib/indexcreation=false
+#org.eclipse.jst.jsp.core.internal.contentmodel.ProjectDescription._debugIndexTime
+org.eclipse.jst.jsp.core/taglib/indextime=false
+
+#org.eclipse.jst.jsp.core.internal.contentmodel.TaglibIndex._debugEvents
+org.eclipse.jst.jsp.core/taglib/events=false
+#org.eclipse.jst.jsp.core.internal.contentmodel.TaglibIndex._debugIndexCreation
+org.eclipse.jst.jsp.core/taglib/indexcreation=false
+#org.eclipse.jst.jsp.core.internal.contentmodel.TaglibIndex._debugResolution
+org.eclipse.jst.jsp.core/taglib/resolve=false
+
+org.eclipse.jst.jsp.core/debug/jspjavamapping=false
+
+org.eclipse.jst.jsp.core/debug/jspvalidator=false
+org.eclipse.jst.jsp.core/debug/taglibvars=false
+
+org.eclipse.jst.jsp.core/debug/taglibclassloader
