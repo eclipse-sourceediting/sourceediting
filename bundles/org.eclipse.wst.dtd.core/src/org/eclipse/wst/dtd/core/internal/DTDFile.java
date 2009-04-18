@@ -8,6 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Hajime Katayama  - bug 245216 - correction to get the best node when the ending
+ *                                     and starting offsets are equal, and they both
+ *                                     contain the offset range.
  *     
  *******************************************************************************/
 package org.eclipse.wst.dtd.core.internal;
@@ -378,13 +381,20 @@ public class DTDFile implements IndexedRegion {
 	}
 
 	public DTDNode getTopLevelNodeAt(int offset) {
+		DTDNode bestNode = null;
 		for (int i = 0; i < nodeList.size(); i++) {
 			DTDNode node = (DTDNode) nodeList.get(i);
 			if (node.contains(offset)) {
-				return node;
+				if(bestNode == null) {
+					bestNode = node;
+				} else {
+					if(node.getStartOffset() > bestNode.getStartOffset()) {
+						bestNode = node;
+					}
+				}
 			}
 		}
-		return null;
+		return bestNode;
 	}
 
 	public NodeList getUnrecognized() {
