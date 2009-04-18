@@ -83,7 +83,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceTable;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
 import org.eclipse.wst.xml.ui.internal.provisional.IDOMSourceEditingTextTools;
-import org.eclipse.wst.xml.xpath.messages.Messages;
+import org.eclipse.wst.xml.xpath.ui.internal.Messages;
 import org.eclipse.wst.xml.xpath.ui.internal.XPathUIPlugin;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;

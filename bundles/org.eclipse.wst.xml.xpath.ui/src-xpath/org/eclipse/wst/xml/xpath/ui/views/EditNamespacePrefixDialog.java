@@ -27,7 +27,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.ui.internal.dialogs.NamespaceInfoErrorHelper;
 import org.eclipse.wst.xml.ui.internal.dialogs.UpdateListener;
 import org.eclipse.wst.xml.ui.internal.nsedit.CommonEditNamespacesDialog;
-import org.eclipse.wst.xml.xpath.messages.Messages;
+import org.eclipse.wst.xml.xpath.ui.internal.Messages;
 
 public class EditNamespacePrefixDialog extends Dialog implements UpdateListener {
 	// protected NamespaceInfoTable namespaceInfoTable;

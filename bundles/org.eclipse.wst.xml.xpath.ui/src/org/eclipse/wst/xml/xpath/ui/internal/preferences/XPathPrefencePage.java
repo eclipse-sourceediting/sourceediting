@@ -5,7 +5,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
-import org.eclipse.wst.xml.xpath.messages.Messages;
+import org.eclipse.wst.xml.xpath.ui.internal.Messages;
 
 @SuppressWarnings("restriction")
 public class XPathPrefencePage extends AbstractPreferencePage {
