@@ -33,6 +33,7 @@ import org.eclipse.wst.xml.xpath.core.util.XPath20Helper;
 import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xsl.core.ValidationPreferences;
 import org.eclipse.wst.xsl.core.XSLCore;
+import org.eclipse.wst.xsl.core.internal.Messages;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.eclipse.wst.xsl.core.internal.util.Debug;
 import org.eclipse.wst.xsl.core.model.CallTemplate;
@@ -43,7 +44,6 @@ import org.eclipse.wst.xsl.core.model.Template;
 import org.eclipse.wst.xsl.core.model.XSLAttribute;
 import org.eclipse.wst.xsl.core.model.XSLElement;
 import org.eclipse.wst.xsl.core.model.XSLNode;
-import org.eclipse.wst.xsl.core.Messages;
 
 
 /**

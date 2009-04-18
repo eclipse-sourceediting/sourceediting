@@ -50,7 +50,6 @@ import org.eclipse.wst.xsl.launching.XSLLaunchConfigurationConstants;
 import org.eclipse.wst.xsl.launching.config.BaseLaunchHelper;
 import org.eclipse.wst.xsl.launching.config.LaunchPipeline;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
-import org.eclipse.wst.xsl.debug.ui.Messages;
 
 /**
  * <table border=1>

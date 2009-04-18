@@ -27,10 +27,10 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 import org.eclipse.wst.xsl.core.XSLCore;
+import org.eclipse.wst.xsl.internal.debug.ui.Messages;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
-import org.eclipse.wst.xsl.debug.ui.Messages;
 
 /**
  * An action that opens a dialog to allow the user to select a file in the workspace.

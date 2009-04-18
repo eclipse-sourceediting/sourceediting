@@ -36,8 +36,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wst.xsl.internal.debug.ui.Messages;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
-import org.eclipse.wst.xsl.debug.ui.Messages;
 
 /**
  * A dialog with handy methods for adding simple controls to itself.

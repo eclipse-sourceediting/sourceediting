@@ -38,7 +38,6 @@ import org.eclipse.wst.xsl.jaxp.launching.JAXPLaunchConfigurationConstants;
 import org.eclipse.wst.xsl.jaxp.launching.JAXPRuntime;
 import org.eclipse.wst.xsl.jaxp.launching.LaunchAttributes;
 import org.eclipse.wst.xsl.jaxp.launching.LaunchProperties;
-import org.eclipse.wst.xsl.jaxp.launching.Messages;
 import org.eclipse.wst.xsl.launching.config.BaseLaunchHelper;
 import org.eclipse.wst.xsl.launching.config.LaunchAttribute;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;

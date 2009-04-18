@@ -21,11 +21,10 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Localization: plugin
 Bundle-Vendor: %Bundle-Vendor.0
-Export-Package: org.eclipse.wst.xsl.debug.internal.util;x-friends:="org.eclipse.wst.xsl.jaxp.debug, org.eclipse.wst.jaxp.debug.ui, org.eclipse.wst.xsl.jaxp.launching",
- org.eclipse.wst.xsl.debug.ui,
- org.eclipse.wst.xsl.internal.debug.ui;x-friends:="org.eclipse.wst.xsl.jaxp.debug,org.eclipse.wst.jaxp.debug.ui, org.eclipse.wst.xsl.jaxp.launching",
- org.eclipse.wst.xsl.internal.debug.ui.actions;x-friends:="org.eclipse.wst.xsl.jaxp.debug, org.eclipse.wst.jaxp.debug.ui, org.eclipse.wst.xsl.jaxp.launching",
- org.eclipse.wst.xsl.internal.debug.ui.breakpoint;x-friends:="org.eclipse.wst.xsl.jaxp.debug, org.eclipse.wst.jaxp.debug.ui, org.eclipse.wst.xsl.jaxp.launching",
- org.eclipse.wst.xsl.internal.debug.ui.model;x-friends:="org.eclipse.wst.xsl.jaxp.debug, org.eclipse.wst.jaxp.debug.ui, org.eclipse.wst.xsl.jaxp.launching",
- org.eclipse.wst.xsl.internal.debug.ui.tabs.main;x-friends:="org.eclipse.wst.xsl.jaxp.debug, org.eclipse.wst.jaxp.debug.ui, org.eclipse.wst.xsl.jaxp.launching",
- org.eclipse.wst.xsl.internal.debug.ui.tabs.output;x-friends:="org.eclipse.wst.xsl.jaxp.debug, org.eclipse.wst.jaxp.debug.ui, org.eclipse.wst.xsl.jaxp.launching"
+Export-Package: org.eclipse.wst.xsl.debug.internal.util;x-friends:="org.eclipse.wst.xsl.jaxp.debug,org.eclipse.wst.jaxp.debug.ui,org.eclipse.wst.xsl.jaxp.launching",
+ org.eclipse.wst.xsl.internal.debug.ui;x-friends:="org.eclipse.wst.xsl.jaxp.debug,org.eclipse.wst.jaxp.debug.ui,org.eclipse.wst.xsl.jaxp.launching",
+ org.eclipse.wst.xsl.internal.debug.ui.actions;x-friends:="org.eclipse.wst.xsl.jaxp.debug,org.eclipse.wst.jaxp.debug.ui,org.eclipse.wst.xsl.jaxp.launching",
+ org.eclipse.wst.xsl.internal.debug.ui.breakpoint;x-friends:="org.eclipse.wst.xsl.jaxp.debug,org.eclipse.wst.jaxp.debug.ui,org.eclipse.wst.xsl.jaxp.launching",
+ org.eclipse.wst.xsl.internal.debug.ui.model;x-friends:="org.eclipse.wst.xsl.jaxp.debug,org.eclipse.wst.jaxp.debug.ui,org.eclipse.wst.xsl.jaxp.launching",
+ org.eclipse.wst.xsl.internal.debug.ui.tabs.main;x-friends:="org.eclipse.wst.xsl.jaxp.debug,org.eclipse.wst.jaxp.debug.ui,org.eclipse.wst.xsl.jaxp.launching",
+ org.eclipse.wst.xsl.internal.debug.ui.tabs.output;x-friends:="org.eclipse.wst.xsl.jaxp.debug,org.eclipse.wst.jaxp.debug.ui,org.eclipse.wst.xsl.jaxp.launching"

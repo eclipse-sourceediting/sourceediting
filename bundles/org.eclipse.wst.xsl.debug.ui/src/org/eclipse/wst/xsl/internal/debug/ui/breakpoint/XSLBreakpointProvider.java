@@ -32,9 +32,9 @@ import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakpointProvider;
+import org.eclipse.wst.xsl.internal.debug.ui.Messages;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.launching.model.XSLLineBreakpoint;
-import org.eclipse.wst.xsl.debug.ui.Messages;
 
 /**
  * An SSE <code>IBreakpointProvider</code> for XSL files.

@@ -12,9 +12,9 @@
 package org.eclipse.wst.xsl.internal.debug.ui.actions;
 
 import org.eclipse.jface.window.Window;
+import org.eclipse.wst.xsl.internal.debug.ui.Messages;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.ParameterViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchAttribute;
-import org.eclipse.wst.xsl.debug.ui.Messages;
 
 /**
  * An action that opens a dialog to allow the user to add a parameter to a transform.

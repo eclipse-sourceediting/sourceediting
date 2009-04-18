@@ -48,7 +48,6 @@ import org.eclipse.wst.xsl.jaxp.launching.IProcessorJar;
 import org.eclipse.wst.xsl.jaxp.launching.ITransformerFactory;
 import org.eclipse.wst.xsl.jaxp.launching.JAXPLaunchConfigurationConstants;
 import org.eclipse.wst.xsl.jaxp.launching.JAXPRuntime;
-import org.eclipse.wst.xsl.jaxp.launching.Messages;
 import org.eclipse.wst.xsl.jaxp.launching.model.JAXPDebugTarget;
 import org.eclipse.wst.xsl.launching.model.IXSLConstants;
 

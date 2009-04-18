@@ -13,9 +13,9 @@ package org.eclipse.wst.xsl.internal.debug.ui.actions;
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.wst.xsl.internal.debug.ui.Messages;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.StylesheetViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchTransform;
-import org.eclipse.wst.xsl.debug.ui.Messages;
 
 /**
  * The action for moving a stylesheet further down in the transformation pipeline.

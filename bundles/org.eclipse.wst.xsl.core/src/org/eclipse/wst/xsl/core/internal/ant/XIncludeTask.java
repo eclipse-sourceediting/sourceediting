@@ -18,8 +18,8 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.eclipse.wst.xsl.core.internal.Messages;
 import org.eclipse.wst.xsl.core.internal.xinclude.XIncluder;
-import org.eclipse.wst.xsl.core.Messages;
 
 /**
  * This class provides an XInclude ANT task definition.

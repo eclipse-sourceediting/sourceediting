@@ -14,9 +14,9 @@ package org.eclipse.wst.xsl.internal.debug.ui.actions;
 import java.util.Iterator;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.wst.xsl.internal.debug.ui.Messages;
 import org.eclipse.wst.xsl.internal.debug.ui.tabs.main.ParameterViewer;
 import org.eclipse.wst.xsl.launching.config.LaunchAttribute;
-import org.eclipse.wst.xsl.debug.ui.Messages;
 
 /**
  * An action that removes a selection from a viewer.

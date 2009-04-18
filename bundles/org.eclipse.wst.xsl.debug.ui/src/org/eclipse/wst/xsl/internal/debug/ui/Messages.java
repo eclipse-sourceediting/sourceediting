@@ -10,7 +10,7 @@
  *     David Carver (STAR) - updated to meet Galileo requirements
  *     Stuart Harper - added "open files" selector
  *******************************************************************************/
-package org.eclipse.wst.xsl.debug.ui;
+package org.eclipse.wst.xsl.internal.debug.ui;
 
 
 import org.eclipse.osgi.util.NLS;
@@ -22,7 +22,7 @@ import org.eclipse.osgi.util.NLS;
  * @since 1.0
  */
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.wst.xsl.debug.ui.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.wst.xsl.internal.debug.ui.messages"; //$NON-NLS-1$
 
 	/**
 	 * A name for the remove action.

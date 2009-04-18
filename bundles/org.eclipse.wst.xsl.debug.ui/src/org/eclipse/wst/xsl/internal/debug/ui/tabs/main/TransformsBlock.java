@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.wst.xsl.internal.debug.ui.AbstractTableBlock;
+import org.eclipse.wst.xsl.internal.debug.ui.Messages;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIConstants;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 import org.eclipse.wst.xsl.internal.debug.ui.actions.AbstractStylesheetAction;
@@ -36,7 +37,6 @@ import org.eclipse.wst.xsl.internal.debug.ui.actions.MoveDownAction;
 import org.eclipse.wst.xsl.internal.debug.ui.actions.MoveUpAction;
 import org.eclipse.wst.xsl.internal.debug.ui.actions.RemoveAction;
 import org.eclipse.wst.xsl.launching.config.LaunchPipeline;
-import org.eclipse.wst.xsl.debug.ui.Messages;
 
 public class TransformsBlock extends AbstractTableBlock implements IStylesheetEntriesChangedListener
 {

@@ -64,7 +64,6 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 import org.eclipse.wst.xsl.core.internal.util.XMLContentType;
-import org.eclipse.wst.xsl.debug.ui.Messages;
 
 
 /**

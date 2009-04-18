@@ -18,7 +18,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorJar;
-import org.eclipse.wst.xsl.jaxp.launching.Messages;
 import org.osgi.framework.Bundle;
 
 public class PluginProcessorJar implements IProcessorJar

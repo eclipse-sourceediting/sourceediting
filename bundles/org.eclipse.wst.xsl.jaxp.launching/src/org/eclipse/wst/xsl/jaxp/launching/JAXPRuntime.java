@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.xsl.jaxp.launching.internal.FeaturePreferences;
 import org.eclipse.wst.xsl.jaxp.launching.internal.JAXPLaunchingPlugin;
+import org.eclipse.wst.xsl.jaxp.launching.internal.Messages;
 import org.eclipse.wst.xsl.jaxp.launching.internal.OutputPropertyPreferences;
 import org.eclipse.wst.xsl.jaxp.launching.internal.ProcessorJar;
 import org.eclipse.wst.xsl.jaxp.launching.internal.ProcessorPreferences;

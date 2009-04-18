@@ -13,7 +13,6 @@ package org.eclipse.wst.xsl.jaxp.launching.internal;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.wst.xsl.jaxp.launching.IAttribute;
-import org.eclipse.wst.xsl.jaxp.launching.Messages;
 
 public class Attribute implements IAttribute, Comparable<Object>
 {

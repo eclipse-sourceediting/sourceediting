@@ -21,8 +21,8 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.wst.xsl.jaxp.launching.Messages;
 import org.eclipse.wst.xsl.jaxp.launching.internal.JAXPLaunchingPlugin;
+import org.eclipse.wst.xsl.jaxp.launching.internal.Messages;
 
 public abstract class AbstractRegistryReader
 {

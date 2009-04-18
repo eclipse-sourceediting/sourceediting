@@ -1,9 +1,9 @@
-package org.eclipse.wst.xsl.jaxp.launching;
+package org.eclipse.wst.xsl.jaxp.launching.internal;
 
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.wst.xsl.jaxp.launching.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.wst.xsl.jaxp.launching.internal.messages"; //$NON-NLS-1$
 
 	public static String XSLTRuntime_10;
 	public static String XSLTRuntime_5;

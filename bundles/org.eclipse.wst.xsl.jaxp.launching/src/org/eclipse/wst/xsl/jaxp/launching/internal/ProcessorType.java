@@ -27,7 +27,6 @@ import org.eclipse.wst.xsl.jaxp.launching.IOutputProperty;
 import org.eclipse.wst.xsl.jaxp.launching.IProcessorType;
 import org.eclipse.wst.xsl.jaxp.launching.ITransformerFactory;
 import org.eclipse.wst.xsl.jaxp.launching.JAXPRuntime;
-import org.eclipse.wst.xsl.jaxp.launching.Messages;
 
 public class ProcessorType implements IProcessorType
 {
