@@ -15,7 +15,6 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
@@ -54,7 +53,7 @@ public class ResultRunnable implements Runnable {
 			XSLDebugUIPlugin.log(e);
 		}
 		sourceViewer.revealRange(sourceViewer.getDocument().getLength(),0);
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().activate(viewSite.getPart());
+		viewSite.getPage().activate(viewSite.getPart());
 	}
 
 	protected IDocument createDocument() {
