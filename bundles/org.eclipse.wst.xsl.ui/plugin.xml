@@ -2,14 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
 
-	<extension point="org.eclipse.ui.perspectives">
-		<perspective id="org.eclipse.wst.xsl.ui.perspective"
-			class="org.eclipse.wst.xsl.ui.internal.perspective.XMLPerspectiveFactory"
-			icon="$nl$/icons/full/xml_perspective.gif" 
-			name="%perspectiveName">
-		</perspective>
-	</extension>
-	
 	<extension point="org.eclipse.ui.editors">
 		<editor name="%editorName" 
 			icon="$nl$/icons/full/xslt_file.gif"
@@ -75,6 +67,11 @@
 		<include file="templates/file_templates.xml" />
 	</extension>
 
+ <extension point="org.eclipse.ui.perspectiveExtensions">
+	<perspectiveExtension targetID="org.eclipse.wst.xml.ui.perspective">
+		<newWizardShortcut id="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard"/>
+	</perspectiveExtension>
+ </extension>
 	
 	<extension point="org.eclipse.ui.preferencePages">
 		<page category="org.eclipse.wst.xml.ui.preferences.xml"
@@ -122,58 +119,6 @@
 		</validator>
 	</extension>
 	
- <extension
-       point="org.eclipse.ui.perspectiveExtensions">
-    <perspectiveExtension
-          targetID="org.eclipse.wst.xsl.ui.perspective">
-       <newWizardShortcut
-             id="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard">
-       </newWizardShortcut>
-       <newWizardShortcut
-             id="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard">
-       </newWizardShortcut>
-       <newWizardShortcut
-             id="org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard">
-       </newWizardShortcut>
-       <newWizardShortcut
-             id="org.eclipse.wst.wsdl.ui">
-       </newWizardShortcut>
-       <newWizardShortcut
-             id="org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard">
-       </newWizardShortcut>
-    </perspectiveExtension>
-   </extension>
-	 <extension
-	       point="org.eclipse.ui.navigator.navigatorContent">
-	       <commonWizard
-	             type="new"
-	             wizardId="org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard">
-	          <enablement></enablement>
-	       </commonWizard>
-	       <commonWizard
-	             type="new"
-	             wizardId="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard">
-	          <enablement>
-	          
-	          </enablement>
-	       </commonWizard>
-	       <commonWizard
-	             type="new"
-	             wizardId="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard">
-	          <enablement></enablement>
-	       </commonWizard>
-	       <commonWizard
-	             type="new"
-	             wizardId="org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard">
-	          <enablement>
-	          </enablement>
-	       </commonWizard>
-	       <commonWizard
-	             type="new"
-	             wizardId="org.eclipse.wst.wsdl.ui">
-	          <enablement></enablement>
-	       </commonWizard>
-	 </extension>
   <extension
         point="org.eclipse.ui.handlers">
      <handler
@@ -195,85 +140,6 @@
                  checkEnabled="false">
            </visibleWhen>
         </command>
-     </menuContribution>
-     <menuContribution
-              locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
-        <toolbar
-              id="org.eclipse.wst.xsl.ui.design.NewFileToolBar">
-      <separator
-           name="org.eclipse.wst.xsl.toolbar.separator.1"
-           visible="true">
-       </separator>
-        <command
-              commandId="org.eclipse.ui.newWizard"
-              icon="$nl$/icons/full/new_xml.gif"
-              id="org.eclipse.wst.xsl.ui.newXMLFile"
-              style="push"
-              tooltip="%commandTooltipNewXMLFile">
-             <parameter
-                   name="newWizardId"
-                   value="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard">
-             </parameter>
-          <visibleWhen checkEnabled="false">
-			<with variable="activeWorkbenchWindow.activePerspective">
-			       <equals value="org.eclipse.wst.xsl.ui.perspective"/>
-			    </with>
-           </visibleWhen>         
-        </command>
-        <command
-              commandId="org.eclipse.ui.newWizard"
-              icon="$nl$/icons/full/newdtd_wiz.gif"
-              id="org.eclipse.wst.xsl.ui.newDTDFile"
-              style="push"
-              tooltip="%commandTooltipNewDTDFile">
-             <parameter
-                   name="newWizardId"
-                   value="org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard">
-             </parameter>
-          <visibleWhen checkEnabled="false">
-			<with variable="activeWorkbenchWindow.activePerspective">
-			       <equals value="org.eclipse.wst.xsl.ui.perspective"/>
-			    </with>
-           </visibleWhen>         
-        </command>
-        <command
-              commandId="org.eclipse.ui.newWizard"
-              icon="$nl$/icons/full/XSDFile.gif"
-              id="org.eclipse.wst.xsl.ui.newXSDFile"
-              style="push"
-              tooltip="%commandTooltipNewXSDFile">
-             <parameter
-                   name="newWizardId"
-                   value="org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard">
-             </parameter>
-          <visibleWhen checkEnabled="false">
-			<with variable="activeWorkbenchWindow.activePerspective">
-			       <equals value="org.eclipse.wst.xsl.ui.perspective"/>
-			    </with>
-           </visibleWhen>         
-        </command>        
-                
-        <command
-              commandId="org.eclipse.ui.newWizard"
-              icon="$nl$/icons/full/xslt_file.gif"
-              id="org.eclipse.wst.xsl.ui.newXSLFile"
-              style="push"
-              tooltip="%commandTooltipNewXSLFile">
-             <parameter
-                   name="newWizardId"
-                   value="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard">
-             </parameter>
-          <visibleWhen checkEnabled="false">
-			<with variable="activeWorkbenchWindow.activePerspective">
-			       <equals value="org.eclipse.wst.xsl.ui.perspective"/>
-			    </with>
-           </visibleWhen>         
-        </command>
-      <separator
-           name="additions"
-           visible="true">
-       </separator>
-      </toolbar> 
      </menuContribution>
   </extension>
   <extension
