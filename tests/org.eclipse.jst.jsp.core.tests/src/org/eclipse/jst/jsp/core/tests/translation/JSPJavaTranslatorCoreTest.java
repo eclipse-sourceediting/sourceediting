@@ -13,6 +13,7 @@ package org.eclipse.jst.jsp.core.tests.translation;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -20,6 +21,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -33,6 +35,7 @@ import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
+import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.validation.JSPJavaValidator;
 import org.eclipse.jst.jsp.core.internal.validation.JSPValidator;
@@ -43,7 +46,10 @@ import org.eclipse.jst.jsp.core.tests.validation.ValidationContextForTest;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.validation.ValidationFramework;
+import org.eclipse.wst.validation.ValidationResult;
+import org.eclipse.wst.validation.ValidationState;
 import org.eclipse.wst.validation.internal.operations.ValidatorManager;
+import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -51,6 +57,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 public class JSPJavaTranslatorCoreTest extends TestCase {
 
 	static final String WTP_AUTOTEST_NONINTERACTIVE = "wtp.autotest.noninteractive";
+	private static byte[] creationLock = new byte[0];
 
 	public JSPJavaTranslatorCoreTest() {
 	}
@@ -267,13 +274,14 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 
 		JSPCorePlugin.getDefault().getPluginPreferences().setValue(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, doValidateSegments);
 		IFile main = project.getFile("WebContent/main.jsp");
-		IMarker[] markers = main.findMarkers(IMarker.PROBLEM, true, IResource.DEPTH_ZERO);
+		ValidationResult result = new JSPJavaValidator().validate(main, IResourceDelta.ADDED, new ValidationState(), new NullProgressMonitor());
+		List messages = result.getReporter(null).getMessages();
 
 		StringBuffer s = new StringBuffer();
-		for (int i = 0; i < markers.length; i++) {
-			s.append("\nproblem on line " + markers[i].getAttribute(IMarker.LINE_NUMBER) + ": " + markers[i].getAttribute(IMarker.MESSAGE));
+		for (int i = 0; i < messages.size(); i++) {
+			s.append("\nproblem on line " + ((IMessage)messages.get(i)).getAttribute(IMarker.LINE_NUMBER) + ": " + ((IMessage)messages.get(i)).getText());
 		}
-		assertEquals("problem markers found" + s.toString(), 0, markers.length);
+		assertEquals("problem markers found" + s.toString(), 0, messages.size());
 	}
 
 	public void test_181057a() throws Exception {
@@ -367,9 +375,149 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 		helper.setURI(main.getFullPath().toOSString());
 		validator.validate(helper, reporter);
 
-		assertTrue("Problem markers found", reporter.getMessages().size() == 0);
+		assertTrue("Unexpected problems found", reporter.getMessages().size() == 0);
 
 		// clean up if we got to the end
 		project.delete(true, true, null);
+	}
+
+	public void test_preludes() throws Exception {
+		String testName = "testPreludeAndCodas";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
+		synchronized (creationLock) {
+			if (!project.isAccessible()) {
+				// Create new project
+				project = BundleResourceUtil.createSimpleProject(testName, null, null);
+				assertTrue(project.exists());
+				BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
+			}
+		}
+
+		IFile main = project.getFile("/web stuff/prelude-user/test.jsp");
+		assertTrue("sample test file not accessible", main.isAccessible());
+
+		IDOMModel model = null;
+		try {
+			model = (IDOMModel) StructuredModelManager.getModelManager().getModelForEdit(main);
+			
+			ModelHandlerForJSP.ensureTranslationAdapterFactory(model);
+			
+			JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
+			IJSPTranslation translation = translationAdapter.getJSPTranslation();
+			assertNotNull("no Java translation found", translation);
+			assertTrue("prelude0 contents not included", translation.getJavaText().indexOf("int prelude0") > 0);
+			assertTrue("prelude1 contents not included", translation.getJavaText().indexOf("int prelude1") > 0);
+
+			assertTrue("import statement not found", translation.getJavaText().indexOf("import java.lang.ref.Reference") > 0);
+		}
+		finally {
+			if (model != null)
+				model.releaseFromEdit();
+		}
+	}
+
+	public void test_codas() throws Exception {
+		String testName = "testPreludeAndCodas";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
+		synchronized (creationLock) {
+			if (!project.isAccessible()) {
+				// Create new project
+				project = BundleResourceUtil.createSimpleProject(testName, null, null);
+				assertTrue(project.exists());
+				BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
+			}
+		}
+
+		IFile main = project.getFile("/web stuff/coda-user/test.jsp");
+		assertTrue("sample test file not accessible", main.isAccessible());
+
+		IDOMModel model = null;
+		try {
+			model = (IDOMModel) StructuredModelManager.getModelManager().getModelForEdit(main);
+			
+			ModelHandlerForJSP.ensureTranslationAdapterFactory(model);
+			
+			JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
+			IJSPTranslation translation = translationAdapter.getJSPTranslation();
+			assertNotNull("no Java translation found", translation);
+			assertTrue("coda0 contents not included", translation.getJavaText().indexOf("int coda0") > 0);
+			assertTrue("coda1 contents not included", translation.getJavaText().indexOf("int coda1") > 0);
+
+			assertTrue("import statement not found", translation.getJavaText().indexOf("import java.lang.ref.Reference") > 0);
+		}
+		finally {
+			if (model != null)
+				model.releaseFromEdit();
+		}
+	}
+	public void test_prelude_and_coda() throws Exception {
+		String testName = "testPreludeAndCodas";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
+		synchronized (creationLock) {
+			if (!project.isAccessible()) {
+				// Create new project
+				project = BundleResourceUtil.createSimpleProject(testName, null, null);
+				assertTrue(project.exists());
+				BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
+			}
+		}
+
+		IFile main = project.getFile("/web stuff/both/test.jsp");
+		assertTrue("sample test file not accessible", main.isAccessible());
+
+		IDOMModel model = null;
+		try {
+			model = (IDOMModel) StructuredModelManager.getModelManager().getModelForEdit(main);
+			
+			ModelHandlerForJSP.ensureTranslationAdapterFactory(model);
+			
+			JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
+			IJSPTranslation translation = translationAdapter.getJSPTranslation();
+			assertNotNull("no Java translation found", translation);
+			assertTrue("prelude0 contents not included", translation.getJavaText().indexOf("int prelude0") > 0);
+			assertTrue("prelude1 contents included", translation.getJavaText().indexOf("int prelude1") < 0);
+			assertTrue("coda0 contents not included", translation.getJavaText().indexOf("int coda0") > 0);
+			assertTrue("coda1 contents included", translation.getJavaText().indexOf("int coda1") < 0);
+
+			assertTrue("import statement not found", translation.getJavaText().indexOf("import java.lang.ref.Reference") > 0);
+		}
+		finally {
+			if (model != null)
+				model.releaseFromEdit();
+		}
+	}
+
+	public void testVariablesFromIncludedFragments() throws Exception {
+		String testName = "testVariablesFromIncludedFragments";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
+		synchronized (creationLock) {
+			if (!project.isAccessible()) {
+				// Create new project
+				project = BundleResourceUtil.createSimpleProject(testName, null, null);
+				assertTrue(project.exists());
+				BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
+			}
+		}
+
+		IFile main = project.getFile("/WebContent/main.jsp");
+		assertTrue("sample test file not accessible", main.isAccessible());
+
+		IDOMModel model = null;
+		try {
+			model = (IDOMModel) StructuredModelManager.getModelManager().getModelForEdit(main);
+			
+			ModelHandlerForJSP.ensureTranslationAdapterFactory(model);
+			
+			JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
+			IJSPTranslation translation = translationAdapter.getJSPTranslation();
+			assertNotNull("no Java translation found", translation);
+			assertTrue("String variableFromHeader1 not found", translation.getJavaText().indexOf("String variableFromHeader1") > 0);
+			assertTrue("header1 contents not included", translation.getJavaText().indexOf("String variableFromHeader1 = \"initialized in header 1\";") > 0);
+			assertTrue("header2 contents not included", translation.getJavaText().indexOf("variableFromHeader1 = \"reassigned in header 2\";") > 0);
+		}
+		finally {
+			if (model != null)
+				model.releaseFromEdit();
+		}
 	}
 }
