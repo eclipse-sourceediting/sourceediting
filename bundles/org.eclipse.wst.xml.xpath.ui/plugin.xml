@@ -15,6 +15,15 @@
           name="%xpathViewName"/>
  </extension>
 
+ <!-- Addition to the XML perspective -->
+ <extension point="org.eclipse.ui.perspectiveExtensions">
+	<perspectiveExtension targetID="org.eclipse.wst.xml.ui.perspective">
+		<!-- ProjectExplorer on the left, XPath on the "bottom left" -->
+		<view id="org.eclipse.wst.xml.views.XPathView" relative="org.eclipse.ui.navigator.ProjectExplorer" relationship="bottom" ratio="0.55" />
+		<viewShortcut id="org.eclipse.wst.xml.views.XPathView"/>
+	</perspectiveExtension>
+ </extension>
+
    	<!-- XPath templates -->
 	<extension point="org.eclipse.ui.editors.templates">
 		<contextType
