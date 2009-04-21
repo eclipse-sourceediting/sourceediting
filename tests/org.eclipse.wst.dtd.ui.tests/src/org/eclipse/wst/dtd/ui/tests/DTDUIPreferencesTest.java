@@ -23,14 +23,14 @@ import org.osgi.framework.BundleException;
  * The purpose of this test is to verify the validity of the HTML Source
  * editor preferences. Tests include setting/getting preferences.
  * 
- * NOTE: This test should be preformed on a clean workspace. If performed on
+ * NOTE: This test should be performed on a clean workspace. If performed on
  * an existing workspace, this test will manipulate preferences in the
  * workspace, though attempts will be made to restore original values after
  * testing.
  */
 public class DTDUIPreferencesTest extends TestCase {
 	/**
-	 * Tests existance of preference values when getting preference values
+	 * Tests existence of preference values when getting preference values
 	 * through Platform.getPreferencesService()
 	 */
 	public void testBundleGetPreferences() {
