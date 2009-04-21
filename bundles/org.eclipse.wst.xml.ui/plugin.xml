@@ -325,7 +325,7 @@
 		</category>
 		<wizard
 			name="%_UI_WIZARD_NEW_XML"
-			icon="$nl$/icons/XMLFile.gif"
+			icon="/icons/full/etool16/new_xml.gif"
 			category="org.eclipse.wst.XMLCategory"
 			class="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard"
 			id="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard">
@@ -1644,18 +1644,28 @@
 	<commonWizard type="new" wizardId="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard">
 		<enablement></enablement>
 	</commonWizard>
-	<commonWizard type="new" wizardId="org.eclipse.wst.dtd.ui.internal.wizard.NewDTDWizard">
-		<enablement></enablement>
-	</commonWizard>
-	<commonWizard type="new" wizardId="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard">
-		<enablement></enablement>
-	</commonWizard>
-	<commonWizard type="new" wizardId="org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard">
-		<enablement></enablement>
-	</commonWizard>
-	<commonWizard type="new" wizardId="org.eclipse.wst.wsdl.ui">
-		<enablement></enablement>
-	</commonWizard>
  </extension>
+
+ <extension point="org.eclipse.ui.menus">
+	<menuContribution locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+	 <toolbar id="org.eclipse.wst.xml.ui.NewFileToolBar">
+ 	  <separator name="org.eclipse.wst.xml.toolbar.start" visible="true"/>
+		<command
+				commandId="org.eclipse.ui.newWizard"
+				icon="$nl$/icons/full/etool16/new_xml.gif"
+				id="org.eclipse.wst.xml.ui.newXMLFile"
+				style="push"
+				tooltip="%XML_New_context_type_Extension_Element.name">
+			 <parameter name="newWizardId" value="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard"/>
+          <visibleWhen checkEnabled="false">
+			<with variable="activeWorkbenchWindow.activePerspective">
+				<equals value="org.eclipse.wst.xml.ui.perspective"/>
+			</with>
+           </visibleWhen>         
+        </command>
+       <separator name="additions" visible="true"/>
+      </toolbar> 
+     </menuContribution>
+  </extension>
 
 </plugin>

@@ -38,7 +38,7 @@
 			name="%_UI_WIZARD_NEW_XSD"
 			class="org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard"
 			category="org.eclipse.wst.XMLCategory"
-			icon="icons/XSDFile.gif">
+			icon="icons/ctool16/NewXSD.gif">
 			<description>%_UI_CREATE_A_NEW_SCHEMA</description>
 			<selection class="org.eclipse.core.resources.IResource" />
 		</wizard>
@@ -494,4 +494,30 @@
 			targetId="org.eclipse.wst.xsd.core.xsdsource">
 		</hyperlinkDetector>
    </extension>
+
+ <extension point="org.eclipse.ui.menus">
+	<menuContribution locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+	 <toolbar id="org.eclipse.wst.xsd.ui.NewFileToolBar">
+        <command
+              commandId="org.eclipse.ui.newWizard"
+              icon="icons/ctool16/NewXSD.gif"
+              id="org.eclipse.wst.xsd.ui.newXSDFile"
+              style="push"
+              tooltip="%_UI_NEW_XML_SCHEMA_TITLE">
+             <parameter name="newWizardId" value="org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard"/>
+          <visibleWhen checkEnabled="false">
+			<with variable="activeWorkbenchWindow.activePerspective">
+				<equals value="org.eclipse.wst.xml.ui.perspective"/>
+			</with>
+           </visibleWhen>         
+        </command>        
+      </toolbar> 
+     </menuContribution>
+  </extension>
+
+ <extension point="org.eclipse.ui.navigator.navigatorContent">
+	<commonWizard type="new" wizardId="org.eclipse.wst.xsd.ui.internal.wizards.NewXSDWizard">
+		<enablement></enablement>
+	</commonWizard>
+ </extension>
 </plugin>
