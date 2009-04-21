@@ -228,4 +228,30 @@
       </quickFixProcessor>
    </extension -->
 	
+ <extension point="org.eclipse.ui.menus">
+	<menuContribution locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+	 <toolbar id="org.eclipse.wst.xsl.ui.NewFileToolBar">
+        <command
+              commandId="org.eclipse.ui.newWizard"
+              icon="$nl$/icons/full/xslt_file.gif"
+              id="org.eclipse.wst.xsl.ui.newXSLFile"
+              style="push"
+              tooltip="%commandTooltipNewXSLFile">
+             <parameter name="newWizardId" value="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard"/>
+          <visibleWhen checkEnabled="false">
+			<with variable="activeWorkbenchWindow.activePerspective">
+				<equals value="org.eclipse.wst.xml.ui.perspective"/>
+			</with>
+           </visibleWhen>         
+        </command>
+      </toolbar> 
+     </menuContribution>
+  </extension>
+
+ <extension point="org.eclipse.ui.navigator.navigatorContent">
+	<commonWizard type="new" wizardId="org.eclipse.wst.xsl.ui.internal.wizards.NewStylesheetWizard">
+		<enablement>
+		</enablement>
+	</commonWizard>
+ </extension>
 </plugin>
