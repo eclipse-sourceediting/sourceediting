@@ -33,6 +33,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -243,7 +245,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 			}
 		}
 	}
-	
+
 	private class PageInitializationData {
 		IConfigurationElement fElement;
 		String fPropertyName;
@@ -255,10 +257,12 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 			fPropertyName = propertyName;
 			fData = data;
 		}
+
 		void sendInitializationData(IExecutableExtension executableExtension) {
 			try {
 				executableExtension.setInitializationData(fElement, fPropertyName, fData);
-			} catch (CoreException e) {
+			}
+			catch (CoreException e) {
 				Logger.logException(e);
 			}
 		}
@@ -275,20 +279,21 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 				// the input has change, when a 'resource moved' event is
 				// found.
 				case IEditorPart.PROP_INPUT : {
-				  if (source == getTextEditor() && fDesignViewer instanceof XMLTableTreeViewer) {
-				    IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
-				    try {
-				      if (model instanceof IDOMModel) {
-				        IDOMDocument modelDocument = ((IDOMModel)model).getDocument();
-	                    Object designInput = ((XMLTableTreeViewer)fDesignViewer).getInput();
-				        if (modelDocument != designInput)
-				          setInput(getTextEditor().getEditorInput());
-				      }
-				    } finally {
-				      if (model != null)
-				        model.releaseFromRead();
-				    }
-				  }
+					if (source == getTextEditor() && fDesignViewer instanceof XMLTableTreeViewer) {
+						IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
+						try {
+							if (model instanceof IDOMModel) {
+								IDOMDocument modelDocument = ((IDOMModel) model).getDocument();
+								Object designInput = ((XMLTableTreeViewer) fDesignViewer).getInput();
+								if (modelDocument != designInput)
+									setInput(getTextEditor().getEditorInput());
+							}
+						}
+						finally {
+							if (model != null)
+								model.releaseFromRead();
+						}
+					}
 				}
 				case IEditorPart.PROP_DIRTY : {
 					if (source == getTextEditor()) {
@@ -500,8 +505,11 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 					if (getActivePage() != fSourcePageIndex) {
 						getTextEditor().getSelectionProvider().setSelection(event.getSelection());
 					}
-					/* Bug 210481 - Removed call to updateStatusLine because this is already
-					 * handled by the selection in the source page */
+					/*
+					 * Bug 210481 - Removed call to updateStatusLine because
+					 * this is already handled by the selection in the source
+					 * page
+					 */
 				}
 			});
 		}
@@ -592,8 +600,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	/**
 	 * Creates the pages of this multi-page editor.
 	 * <p>
-	 * Subclasses of <code>MultiPageEditor</code> must implement this
-	 * method.
+	 * Subclasses of <code>MultiPageEditor</code> must implement this method.
 	 * </p>
 	 */
 	protected void createPages() {
@@ -665,7 +672,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	protected void createSourcePage() throws PartInitException {
 		fTextEditor = createTextEditor();
 		fTextEditor.setEditorPart(this);
-		
+
 		/*
 		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=134301 - XML editor
 		 * does not remember font settings
@@ -829,7 +836,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.ui.IEditorPart#init(org.eclipse.ui.IEditorSite,
-	 *      org.eclipse.ui.IEditorInput)
+	 * org.eclipse.ui.IEditorInput)
 	 */
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		try {
@@ -890,7 +897,22 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		// save the last active page index to preference manager
 		getPreferenceStore().setValue(IXMLPreferenceNames.LAST_ACTIVE_PAGE, newPageIndex);
 	}
-	
+
+	public void setFocus() {
+		super.setFocus();
+		Control control = fDesignViewer.getControl();
+		control.setFocus();
+
+		if (control instanceof Tree) {
+			if (((Tree) control).getItemCount() > 0) {
+				TreeItem item = ((Tree) control).getItem(0);
+				((Tree) control).setSelection(item);
+			}
+		}
+		// 271382 - Focus not set properly after activating XML editor
+		control.forceFocus();
+	}
+
 	public void setInitializationData(IConfigurationElement cfig, String propertyName, Object data) {
 		super.setInitializationData(cfig, propertyName, data);
 		fPageInitializer = new PageInitializationData(cfig, propertyName, data);
