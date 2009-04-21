@@ -343,7 +343,7 @@ public class JarUtilities {
 			String jarFileName = urlString.substring(9, fileIndex);
 			if (fileIndex < urlString.length()) {
 				String jarPath = urlString.substring(fileIndex + 1);
-				return JarUtilities.getInputStream(jarFileName, jarPath);
+				return getInputStream(jarFileName, jarPath);
 			}
 		}
 
