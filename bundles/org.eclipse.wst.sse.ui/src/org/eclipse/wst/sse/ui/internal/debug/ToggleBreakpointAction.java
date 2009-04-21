@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,8 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
+import org.eclipse.debug.ui.DebugUITools;
+import org.eclipse.debug.ui.IDebugUIConstants;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.text.IDocument;
@@ -57,6 +59,7 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 	public ToggleBreakpointAction(ITextEditor editor, IVerticalRulerInfo rulerInfo) {
 		super(editor, rulerInfo);
 		setText(SSEUIMessages.ToggleBreakpointAction_0); //$NON-NLS-1$
+		setImageDescriptor(DebugUITools.getImageDescriptor(IDebugUIConstants.IMG_OBJS_BREAKPOINT));
 	}
 
 	public ToggleBreakpointAction(ITextEditor editor, IVerticalRulerInfo rulerInfo, IAction fallbackAction) {
