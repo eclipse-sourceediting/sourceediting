@@ -559,7 +559,13 @@ public class ModelManagerImpl implements IModelManager {
 	public IStructuredModel _getModelFor(IStructuredDocument document, ReadEditType accessType) {
 
 		String id = FileBufferModelManager.getInstance().calculateId(document);
-		Assert.isNotNull(id, "unknown IStructuredDocument " + document); //$NON-NLS-1$
+		if (id == null) {
+			if (READ == accessType)
+				return getExistingModelForRead(document);
+			if (EDIT == accessType)
+				return getExistingModelForEdit(document);
+			Assert.isNotNull(id, "unknown IStructuredDocument " + document); //$NON-NLS-1$
+		}
 		
 		SharedObject sharedObject = null;
 		SYNC.acquire();
