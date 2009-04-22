@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -130,12 +131,18 @@ public class CSSSourcePreferencePage extends AbstractPreferencePage {
 
 		fNowrapAttr = createCheckBox(formattingGroup, CSSUIMessages.PrefsLabel_WrappingWithoutAttr);
 		((GridData) fNowrapAttr.getLayoutData()).horizontalSpan = 2;
-		
-		fIndentUsingTabs = createRadioButton(formattingGroup, CSSUIMessages.Indent_using_tabs_);
-		((GridData) fIndentUsingTabs.getLayoutData()).horizontalSpan = 2;
-		fIndentUsingSpaces = createRadioButton(formattingGroup, CSSUIMessages.Indent_using_spaces);
-		((GridData) fIndentUsingSpaces.getLayoutData()).horizontalSpan = 2;
-		
+
+		// [269224] - Place the indent controls in their own composite for proper tab ordering
+		Composite indentComposite = createComposite(formattingGroup, 1);
+		((GridData) indentComposite.getLayoutData()).horizontalSpan = 2;
+		((GridLayout) indentComposite.getLayout()).marginWidth = 0;
+		((GridLayout) indentComposite.getLayout()).marginHeight = 0;
+
+		fIndentUsingTabs = createRadioButton(indentComposite, CSSUIMessages.Indent_using_tabs_);
+		((GridData) fIndentUsingTabs.getLayoutData()).horizontalSpan = 1;
+		fIndentUsingSpaces = createRadioButton(indentComposite, CSSUIMessages.Indent_using_spaces);
+		((GridData) fIndentUsingSpaces.getLayoutData()).horizontalSpan = 1;
+
 		createLabel(formattingGroup, CSSUIMessages.Indentation_size);
 		fIndentationSize = new Spinner(formattingGroup, SWT.READ_ONLY | SWT.BORDER);
 		GridData gd= new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
