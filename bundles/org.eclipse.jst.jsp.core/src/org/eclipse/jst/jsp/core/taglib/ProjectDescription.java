@@ -1879,7 +1879,7 @@ class ProjectDescription {
 							restored = true;
 						}
 						else {
-							Logger.log(Logger.INFO, "Tag Library Index: different cache format found, was \"" + lineText + "\", supports \"" + SAVE_FORMAT_VERSION + "\", reindexing build path"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							Logger.log(Logger.INFO_DEBUG, "Tag Library Index: different cache format found, was \"" + lineText + "\", supports \"" + SAVE_FORMAT_VERSION + "\", reindexing build path"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						}
 					}
 					if (_debugIndexTime)

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -81,7 +81,6 @@ import org.xml.sax.helpers.DefaultHandler;
  * TLDAttributeDeclaration interfaces for extended properties.
  */
 public class CMDocumentFactoryTLD implements CMDocumentFactory {
-
 	static final boolean _debug = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/tldcmdocument/factory")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
@@ -818,10 +817,14 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 
 	private void loadTagFile(CMElementDeclarationImpl ed, IFile tagFile, boolean allowIncludes) {
 		try {
-			IStructuredDocument document = (IStructuredDocument) new ModelHandlerForJSP().getDocumentLoader().createNewStructuredDocument(tagFile);
-			IStructuredDocumentRegion documentRegion = document.getFirstStructuredDocumentRegion();
 			ed.setPath(tagFile.getFullPath().toString());
 			ed.setTagSource(TLDElementDeclaration.SOURCE_TAG_FILE);
+			ed.setLocationString(tagFile.getFullPath().toString());
+			if (!tagFile.isAccessible())
+				return;
+
+			IStructuredDocument document = (IStructuredDocument) new ModelHandlerForJSP().getDocumentLoader().createNewStructuredDocument(tagFile);
+			IStructuredDocumentRegion documentRegion = document.getFirstStructuredDocumentRegion();
 			while (documentRegion != null) {
 				if (documentRegion.getType().equals(DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)) {
 					if (documentRegion.getNumberOfRegions() > 2) {
@@ -981,12 +984,11 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 
 		}
 		catch (IOException e) {
-			Logger.logException("problem parsing " + tagFile, e);
+			// Logger.logException("problem parsing " + tagFile, e); // can be caused by a still-in-development file
 		}
 		catch (CoreException e) {
-			Logger.logException("problem parsing " + tagFile, e);
+			// Logger.logException("problem parsing " + tagFile, e); // frequently out of sync
 		}
-		ed.setLocationString(tagFile.getFullPath().toString());
 	}
 
 	/**
