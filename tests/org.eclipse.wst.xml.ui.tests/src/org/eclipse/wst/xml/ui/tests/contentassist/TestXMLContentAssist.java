@@ -7,6 +7,8 @@
  * 
  * Contributors:
  *     David Carver - STAR - bug 259447 - intial API and implementation
+ *     IBM Corporation - make use of (copy of JSP UI Tests') ProjectUtil to skip
+ *         file-system calls
  *******************************************************************************/
 
 package org.eclipse.wst.xml.ui.tests.contentassist;
@@ -15,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -43,13 +46,13 @@ import org.eclipse.wst.xml.core.internal.encoding.XMLDocumentLoader;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
-import org.eclipse.wst.xml.ui.tests.AbstractXMLUITest;
+import org.eclipse.wst.xml.ui.tests.ProjectUtil;
 
 /**
  * Tests everything about code completion and code assistance.
  * 
  */
-public class TestXMLContentAssist extends AbstractXMLUITest {
+public class TestXMLContentAssist extends TestCase {
 
 	protected String projectName = null;
 	protected String fileName = null;
@@ -71,7 +74,7 @@ public class TestXMLContentAssist extends AbstractXMLUITest {
 	 */
 	protected void setUp() throws Exception {
 		super.setUp();
-		projectName = "xmltestfiles";
+		projectName = "TestXMLContentAssist";
 		fileName = "xmlContentAssist-test1.xml";
 
 		// Setup the Project and File to be used during the test.
@@ -140,6 +143,7 @@ public class TestXMLContentAssist extends AbstractXMLUITest {
 		} catch (CoreException e) {
 
 		}
+		ProjectUtil.copyBundleEntryIntoWorkspace("/testresources/"+fileName, xmlFilePath);
 		return xmlFilePath;
 	}
 
