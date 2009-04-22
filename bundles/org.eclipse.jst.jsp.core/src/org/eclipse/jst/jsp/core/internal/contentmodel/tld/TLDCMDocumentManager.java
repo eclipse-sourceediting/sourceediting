@@ -672,7 +672,11 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	 * @return
 	 */
 	protected Object getCacheKey(String uri) {
-		ITaglibRecord record = TaglibIndex.resolve(getCurrentParserPath().toString(), uri, false);
+		IPath currentParserPath = getCurrentParserPath();
+		if (currentParserPath == null)
+			return null;
+		
+		ITaglibRecord record = TaglibIndex.resolve(currentParserPath.toString(), uri, false);
 		if (record != null) {
 			return getUniqueIdentifier(record);
 		}
@@ -688,6 +692,9 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			return null;
 		String reference = uri;
 		Object cacheKey = getCacheKey(reference);
+		if (cacheKey == null)
+			return null;
+		
 		long lastModified = getModificationStamp(reference);
 		CMDocument doc = (CMDocument) getDocuments().get(cacheKey);
 		if (doc == null) {
@@ -849,6 +856,8 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	IPath getCurrentBaseLocation() {
 		IPath baseLocation = null;
 		IPath path = getCurrentParserPath();
+		if (path == null || path.segmentCount() < 2)
+			return path;
 		baseLocation = ResourcesPlugin.getWorkspace().getRoot().getFile(path).getLocation();
 		if (baseLocation == null) {
 			baseLocation = path;
