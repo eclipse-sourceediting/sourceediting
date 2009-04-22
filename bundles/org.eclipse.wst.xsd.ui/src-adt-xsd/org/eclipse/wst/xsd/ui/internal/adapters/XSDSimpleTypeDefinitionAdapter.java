@@ -30,9 +30,11 @@ import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
+import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDRedefine;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
+import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDVariety;
 import org.eclipse.xsd.util.XSDConstants;
 
@@ -158,9 +160,11 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter
     list.add(DeleteAction.ID);
     list.add(BaseSelectionAction.SEPARATOR_ID);
     Object schema = getEditorSchema();
-    if (getXSDTypeDefinition().getSchema() == schema)
+    XSDTypeDefinition typeDefinition = getXSDTypeDefinition();
+    if (typeDefinition.getSchema() == schema)
     {
-      if (getXSDTypeDefinition().getContainer() == schema)
+      XSDConcreteComponent container = typeDefinition.getContainer();
+      if (container == schema || container instanceof XSDRedefine)
       {
         list.add(SetInputToGraphView.ID);
       }

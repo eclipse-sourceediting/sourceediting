@@ -51,6 +51,7 @@ import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDComplexTypeContent;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
+import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDDerivationMethod;
 import org.eclipse.xsd.XSDEnumerationFacet;
 import org.eclipse.xsd.XSDModelGroup;
@@ -313,7 +314,8 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
     }
     if (complexType.getSchema() == schema)
     {
-      if (complexType.getContainer() == schema)
+      XSDConcreteComponent container = complexType.getContainer();
+      if (container == schema || container instanceof XSDRedefine)
       {
         list.add(SetInputToGraphView.ID);
       }

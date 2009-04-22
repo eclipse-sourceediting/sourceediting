@@ -20,7 +20,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -38,7 +37,6 @@ import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.common.ui.internal.search.dialogs.IComponentDescriptionProvider;
 import org.eclipse.wst.common.ui.internal.search.dialogs.IComponentList;
 import org.eclipse.wst.common.ui.internal.search.dialogs.IComponentSearchListProvider;
-import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddRedefinedComponentCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
@@ -106,8 +104,6 @@ public abstract class AddXSDRedefinableContentAction extends XSDBaseAction
     AddRedefinedComponentCommand command = getCommand(redefine, redefinableComponent);
     getCommandStack().execute(command);
     addedComponent = command.getAddedComponent();
-    Adapter adapter = XSDAdapterFactory.getInstance().adapt(addedComponent);
-    selectAddedComponent(adapter);
   }
 
   class RedefineSearchListProvider implements IComponentSearchListProvider

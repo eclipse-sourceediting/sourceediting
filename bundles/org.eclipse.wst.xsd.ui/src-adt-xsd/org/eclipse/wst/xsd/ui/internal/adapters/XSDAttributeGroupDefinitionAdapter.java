@@ -118,9 +118,11 @@ public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implement
     list.add(DeleteAction.ID);
     list.add(BaseSelectionAction.SEPARATOR_ID);
     Object schema = getEditorSchema();
-    if (getXSDAttributeGroupDefinition().getSchema() == schema)
+    XSDAttributeGroupDefinition attributeGroupDefinition = getXSDAttributeGroupDefinition();
+    if (attributeGroupDefinition.getSchema() == schema)
     {
-      if (getXSDAttributeGroupDefinition().getContainer() == schema)
+      XSDConcreteComponent container = attributeGroupDefinition.getContainer();
+      if (container == schema || container instanceof XSDRedefine)
       {
         list.add(SetInputToGraphView.ID);
       }
@@ -136,7 +138,6 @@ public class XSDAttributeGroupDefinitionAdapter extends XSDBaseAdapter implement
 
   public Command getAddNewFieldCommand(String fieldKind)
   {
-    // TODO Auto-generated method stub
     return null;
   }
 

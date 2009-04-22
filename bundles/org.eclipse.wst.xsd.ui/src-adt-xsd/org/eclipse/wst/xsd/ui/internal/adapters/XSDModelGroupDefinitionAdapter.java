@@ -122,7 +122,9 @@ public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implement
   {
     Collection list = new ArrayList();
 
-    if (!getXSDModelGroupDefinition().isModelGroupDefinitionReference())
+    XSDModelGroupDefinition modelGroupDefinition = getXSDModelGroupDefinition();
+    boolean isModelGroupReference = modelGroupDefinition.isModelGroupDefinitionReference();
+    if (!isModelGroupReference)
     {
       list.add(AddXSDElementAction.ID);
       list.add(AddXSDElementAction.REF_ID);
@@ -135,7 +137,7 @@ public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implement
     
     list.add(DeleteAction.ID);
     
-    if (getXSDModelGroupDefinition().isModelGroupDefinitionReference())
+    if (isModelGroupReference)
     {
       list.add(BaseSelectionAction.SEPARATOR_ID);
       list.add(BaseSelectionAction.SUBMENU_START_ID + Messages._UI_ACTION_SET_MULTIPLICITY);
@@ -147,9 +149,10 @@ public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implement
     }
     list.add(BaseSelectionAction.SEPARATOR_ID);
     Object schema = getEditorSchema();
-    if (getXSDModelGroupDefinition().getSchema() == schema)
+    if (modelGroupDefinition.getSchema() == schema)
     {
-      if (getXSDModelGroupDefinition().getContainer() == schema)
+      XSDConcreteComponent container = modelGroupDefinition.getContainer();
+      if (container == schema || container instanceof XSDRedefine)
       {
         list.add(SetInputToGraphView.ID);
       }
@@ -166,7 +169,6 @@ public class XSDModelGroupDefinitionAdapter extends XSDParticleAdapter implement
 
   public Command getAddNewFieldCommand(String fieldKind)
   {
-    // TODO Auto-generated method stub
     return null;
   }
 
