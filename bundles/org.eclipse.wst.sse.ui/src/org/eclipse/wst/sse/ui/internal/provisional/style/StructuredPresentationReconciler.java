@@ -464,16 +464,19 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 				newDocument.addPositionCategory(fPositionCategory);
 				newDocument.addPositionUpdater(fPositionUpdater);
 
-				newDocument.addDocumentPartitioningListener(this);
-				newDocument.addDocumentListener(this);
-				if(newDocument instanceof IStructuredDocument) {
+				if (newDocument instanceof IStructuredDocument) {
+					newDocument.addDocumentPartitioningListener(this);
+					newDocument.addDocumentListener(this);
 					((IStructuredDocument)newDocument).addDocumentChangedListener(this);
 				}
+				
 				fViewer.addTextListener(this);
-
 				setDocumentToDamagers(newDocument);
 				setDocumentToRepairers(newDocument);
-				processDamage(new Region(0, newDocument.getLength()), newDocument);
+				
+				if (newDocument instanceof IStructuredDocument) {
+					processDamage(new Region(0, newDocument.getLength()), newDocument);
+				}
 			}
 			if (_trace) {
 				System.out.println(TRACE_PREFIX + "processed damage for inputDocumentChanged in " + (System.currentTimeMillis() - time1) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
