@@ -1836,22 +1836,23 @@ class ProjectDescription {
 										urlRecord.url = new URL(urlString);
 										urlRecord.isExported = exported;
 										urlRecord.baseLocation = libraryRecord.location.toString();
-										libraryRecord.urlRecords.add(urlRecord);
 
 										InputStream tldStream = JarUtilities.getInputStream(urlRecord.url);
-
-										TaglibInfo info = extractInfo(urlRecord.url.toString(), tldStream);
-										if (info != null) {
-											urlRecord.info = info;
-										}
-										try {
-											tldStream.close();
-										}
-										catch (IOException e) {
-											Logger.log(Logger.ERROR_DEBUG, null, e);
-										}
-										if (urlRecord.getURI() != null && urlRecord.getURI().length() > 0) {
-											fClasspathReferences.put(urlRecord.getURI(), urlRecord);
+										if(tldStream != null) {
+											libraryRecord.urlRecords.add(urlRecord);
+											TaglibInfo info = extractInfo(urlRecord.url.toString(), tldStream);
+											if (info != null) {
+												urlRecord.info = info;
+											}
+											try {
+												tldStream.close();
+											}
+											catch (IOException e) {
+												Logger.log(Logger.ERROR_DEBUG, null, e);
+											}
+											if (urlRecord.getURI() != null && urlRecord.getURI().length() > 0) {
+												fClasspathReferences.put(urlRecord.getURI(), urlRecord);
+											}
 										}
 									}
 									else if (BUILDPATH_PROJECT.equalsIgnoreCase(tokenType)) {
