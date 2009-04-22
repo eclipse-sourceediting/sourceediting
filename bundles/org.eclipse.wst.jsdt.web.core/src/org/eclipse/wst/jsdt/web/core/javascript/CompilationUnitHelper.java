@@ -54,7 +54,7 @@ public class CompilationUnitHelper {
 			fWorkingCopyOwner = new WorkingCopyOwner() {
 				
 				public String toString() {
-					return "JSP Working copy owner"; //$NON-NLS-1$
+					return "Client Script Working copy owner"; //$NON-NLS-1$
 				}
 			};
 		}
