@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,9 +55,9 @@ public interface INodeNotifier {
 
 
 	/**
-	 * NOT API: these strings are for printing, such as during debuging
+	 * NOT API: these strings are for printing, such as during debugging
 	 */
-	static final String[] EVENT_TYPE_STRINGS = new String[]{"undefined", "CHANGE", "ADD", "REMOVE", "STRUCUTRED_CHANGED", "CONTENT_CHANGED"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+	static final String[] EVENT_TYPE_STRINGS = new String[]{"undefined", "CHANGE", "ADD", "REMOVE", "STRUCTURE_CHANGED", "CONTENT_CHANGED"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
 
 	/**
