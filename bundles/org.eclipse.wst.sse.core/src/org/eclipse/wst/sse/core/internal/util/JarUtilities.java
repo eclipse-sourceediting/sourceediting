@@ -60,7 +60,6 @@ public class JarUtilities {
 		}
 		catch (IOException ioe) {
 			// no cleanup can be done
-			Logger.log(Logger.ERROR_DEBUG, "JarUtilities: Could not close file " + file.getName(), ioe); //$NON-NLS-1$
 		}
 	}
 
@@ -78,7 +77,6 @@ public class JarUtilities {
 			jarfile = new ZipFile(jarFilename);
 		}
 		catch (IOException ioExc) {
-			Logger.log(Logger.ERROR_DEBUG, "JarUtilities: " + jarFilename, ioExc); //$NON-NLS-1$
 			closeJarFile(jarfile);
 		}
 
@@ -91,7 +89,7 @@ public class JarUtilities {
 						entryInputStream = jarfile.getInputStream(zentry);
 					}
 					catch (IOException ioExc) {
-						Logger.log(Logger.ERROR_DEBUG, "JarUtilities: " + jarFilename, ioExc); //$NON-NLS-1$
+						// no cleanup can be done
 					}
 
 					if (entryInputStream != null) {
@@ -114,14 +112,13 @@ public class JarUtilities {
 						}
 						catch (IOException ioe) {
 							// no cleanup can be done
-							Logger.log(Logger.ERROR_DEBUG, null, ioe);
 						}
 						finally {
 							try {
 								entryInputStream.close();
 							}
 							catch (IOException e) {
-								Logger.log(Logger.ERROR_DEBUG, null, e);
+								// no cleanup can be done
 							}
 						}
 					}
@@ -151,7 +148,6 @@ public class JarUtilities {
 			}
 			catch (IOException ioe) {
 				// no cleanup can be done
-				Logger.log(Logger.ERROR_DEBUG, null, ioe);
 			}
 		}
 		return cachedCopy;
@@ -164,14 +160,14 @@ public class JarUtilities {
 	 *         zip resource, excluding directories
 	 */
 	public static String[] getEntryNames(IResource jarResource) {
-		if (jarResource == null || jarResource.getType() != IResource.FILE)
+		if (jarResource == null || jarResource.getType() != IResource.FILE || !jarResource.isAccessible())
 			return new String[0];
 
 		try {
-			return getEntryNames(new ZipInputStream(((IFile) jarResource).getContents()), true);
+			return getEntryNames(jarResource.getFullPath().toString(), new ZipInputStream(((IFile) jarResource).getContents()), true);
 		}
 		catch (CoreException e) {
-			Logger.log(Logger.ERROR_DEBUG, "Problem reading contents of " + jarResource.getFullPath(), e); //$NON-NLS-1$
+			// no cleanup can be done
 		}
 
 		IPath location = jarResource.getLocation();
@@ -190,7 +186,7 @@ public class JarUtilities {
 		return getEntryNames(jarFilename, true);
 	}
 
-	private static String[] getEntryNames(ZipInputStream jarInputStream, boolean excludeDirectories) {
+	private static String[] getEntryNames(String filename, ZipInputStream jarInputStream, boolean excludeDirectories) {
 		List entryNames = new ArrayList();
 		try {
 			ZipEntry z = jarInputStream.getNextEntry();
@@ -201,10 +197,10 @@ public class JarUtilities {
 			}
 		}
 		catch (ZipException zExc) {
-			Logger.log(Logger.WARNING_DEBUG, "JarUtilities ZipException: (stream) " + zExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			Logger.log(Logger.WARNING_DEBUG, "JarUtilities ZipException: (stream) " + filename, zExc); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		catch (IOException ioExc) {
-			Logger.log(Logger.WARNING_DEBUG, "JarUtilities IOException: (stream) " + ioExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			// no cleanup can be done
 		}
 		finally {
 			closeStream(jarInputStream);
@@ -218,7 +214,7 @@ public class JarUtilities {
 			inputStream.close();
 		}
 		catch (IOException e) {
-			Logger.log(Logger.WARNING_DEBUG, "JarUtilities IOException: (closing stream) " + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			// no cleanup can be done
 		}
 	}
 
@@ -233,23 +229,26 @@ public class JarUtilities {
 	public static String[] getEntryNames(String jarFilename, boolean excludeDirectories) {
 		ZipFile jarfile = null;
 		List entryNames = new ArrayList();
-		try {
-			jarfile = new ZipFile(jarFilename);
-			Enumeration entries = jarfile.entries();
-			while (entries.hasMoreElements()) {
-				ZipEntry z = (ZipEntry) entries.nextElement();
-				if (!(z.isDirectory() && excludeDirectories))
-					entryNames.add(z.getName());
+		File f = new File(jarFilename);
+		if (f.exists() && f.canRead()) {
+			try {
+				jarfile = new ZipFile(f);
+				Enumeration entries = jarfile.entries();
+				while (entries.hasMoreElements()) {
+					ZipEntry z = (ZipEntry) entries.nextElement();
+					if (!(z.isDirectory() && excludeDirectories))
+						entryNames.add(z.getName());
+				}
 			}
-		}
-		catch (ZipException zExc) {
-			Logger.log(Logger.WARNING_DEBUG, "JarUtilities ZipException: " + jarFilename + " " + zExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		catch (IOException ioExc) {
-			Logger.log(Logger.WARNING_DEBUG, "JarUtilities IOException: " + jarFilename + " " + ioExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		finally {
-			closeJarFile(jarfile);
+			catch (ZipException zExc) {
+				Logger.log(Logger.WARNING_DEBUG, "JarUtilities ZipException: " + jarFilename + " " + zExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			catch (IOException ioExc) {
+				// no cleanup can be done
+			}
+			finally {
+				closeJarFile(jarfile);
+			}
 		}
 		String[] names = (String[]) entryNames.toArray(new String[0]);
 		return names;
@@ -269,10 +268,10 @@ public class JarUtilities {
 
 		try {
 			InputStream zipStream = ((IFile) jarResource).getContents();
-			return getInputStream(new ZipInputStream(zipStream), entryName);
+			return getInputStream(jarResource.getFullPath().toString(), new ZipInputStream(zipStream), entryName);
 		}
 		catch (CoreException e) {
-			Logger.log(Logger.ERROR_DEBUG, "Problem reading contents of " + jarResource.getFullPath(), e); //$NON-NLS-1$
+			// no cleanup can be done, probably out of sync
 		}
 
 		IPath location = jarResource.getLocation();
@@ -282,7 +281,7 @@ public class JarUtilities {
 		return null;
 	}
 
-	private static InputStream getInputStream(ZipInputStream zip, String entryName) {
+	private static InputStream getInputStream(String filename, ZipInputStream zip, String entryName) {
 		InputStream result = null;
 		try {
 			ZipEntry z = zip.getNextEntry();
@@ -294,10 +293,10 @@ public class JarUtilities {
 			}
 		}
 		catch (ZipException zExc) {
-			Logger.log(Logger.WARNING_DEBUG, "JarUtilities ZipException: (stream) " + zExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			Logger.log(Logger.WARNING_DEBUG, "JarUtilities ZipException: (stream) " + filename, zExc); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		catch (IOException ioExc) {
-			Logger.log(Logger.WARNING_DEBUG, "JarUtilities IOException: (stream) " + ioExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			// no cleanup can be done
 		}
 		finally {
 			closeStream(zip);

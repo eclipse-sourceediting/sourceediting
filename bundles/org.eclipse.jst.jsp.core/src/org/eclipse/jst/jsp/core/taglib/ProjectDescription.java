@@ -899,7 +899,7 @@ class ProjectDescription {
 			}
 		}
 		catch (CoreException e) {
-			Logger.logException(e);
+			// out of sync
 		}
 		finally {
 			try {
