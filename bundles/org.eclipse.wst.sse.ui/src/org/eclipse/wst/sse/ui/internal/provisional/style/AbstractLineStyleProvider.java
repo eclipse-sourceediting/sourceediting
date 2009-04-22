@@ -122,7 +122,7 @@ public abstract class AbstractLineStyleProvider {
 			start = startOffset;
 		
 		// Base the text end offset off of the, possibly adjusted, start
-		int textEnd = start + flatNode.getText(region).length();
+		int textEnd = start + region.getTextLength();
 		int maxOffset = startOffset + length;
 		
 		int end = flatNode.getEndOffset(region);
