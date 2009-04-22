@@ -1296,7 +1296,7 @@ class ProjectDescription {
 					}
 				}
 				catch (JavaModelException e) {
-					Logger.logException("Problem handling build path entry for " + element.getPath(), e); //$NON-NLS-1$
+					// Not on build path (possibly removing)
 				}
 				if ((delta.getFlags() & IJavaElementDelta.F_ADDED_TO_CLASSPATH) > 0) {
 					fBuildPathEntryCount++;
@@ -1800,8 +1800,7 @@ class ProjectDescription {
 										fClasspathJars.put(libraryLocation, libraryRecord);
 									}
 									else if ("URL".equalsIgnoreCase(tokenType) && libraryRecord != null) { //$NON-NLS-1$
-										// relies on a previously declared JAR
-										// record
+										// relies on a previously declared JAR record
 										boolean exported = Boolean.valueOf(toker.nextToken()).booleanValue();
 										// make the rest the URL
 										String urlString = toker.nextToken();
@@ -1811,53 +1810,26 @@ class ProjectDescription {
 										urlString = urlString.trim();
 										// Append a URLrecord
 										URLRecord urlRecord = new URLRecord();
-										urlRecord.url = new URL(urlString); //$NON-NLS-1$ //$NON-NLS-2$
+										urlRecord.url = new URL(urlString);
 										urlRecord.isExported = exported;
 										urlRecord.baseLocation = libraryRecord.location.toString();
 										libraryRecord.urlRecords.add(urlRecord);
 
-										ByteArrayInputStream cachedContents = null;
-										InputStream tldStream = null;
-										try {
-											URLConnection connection = urlRecord.url.openConnection();
-											connection.setDefaultUseCaches(false);
-											tldStream = connection.getInputStream();
-										}
-										catch (IOException e1) {
-											Logger.logException(e1);
-										}
+										InputStream tldStream = JarUtilities.getInputStream(urlRecord.url);
 
-										int c;
-										ByteArrayOutputStream byteArrayOutput = new ByteArrayOutputStream();
-										// array dim restriction?
-										byte bytes[] = new byte[2048];
-										try {
-											while ((c = tldStream.read(bytes)) >= 0) {
-												byteArrayOutput.write(bytes, 0, c);
-											}
-											cachedContents = new ByteArrayInputStream(byteArrayOutput.toByteArray());
-										}
-										catch (IOException ioe) {
-											// no cleanup can be done
-										}
-										finally {
-											try {
-												tldStream.close();
-											}
-											catch (IOException e) {
-											}
-										}
-
-										TaglibInfo info = extractInfo(urlRecord.url.toString(), cachedContents);
+										TaglibInfo info = extractInfo(urlRecord.url.toString(), tldStream);
 										if (info != null) {
 											urlRecord.info = info;
 										}
 										try {
-											cachedContents.close();
+											tldStream.close();
 										}
 										catch (IOException e) {
+											Logger.log(Logger.ERROR_DEBUG, null, e);
 										}
-										fClasspathReferences.put(urlRecord.getURI(), urlRecord);
+										if (urlRecord.getURI() != null && urlRecord.getURI().length() > 0) {
+											fClasspathReferences.put(urlRecord.getURI(), urlRecord);
+										}
 									}
 									else if (BUILDPATH_PROJECT.equalsIgnoreCase(tokenType)) {
 										String projectName = toker.nextToken();
@@ -1884,7 +1856,7 @@ class ProjectDescription {
 							restored = true;
 						}
 						else {
-							Logger.log(Logger.INFO, "Tag Library Index: different cache format found, was \"" + lineText + "\", supports \"" + SAVE_FORMAT_VERSION + "\", reindexing build path"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							Logger.log(Logger.INFO_DEBUG, "Tag Library Index: different cache format found, was \"" + lineText + "\", supports \"" + SAVE_FORMAT_VERSION + "\", reindexing build path"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						}
 					}
 					if (_debugIndexTime)

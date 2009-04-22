@@ -165,10 +165,13 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 	protected CMDocument buildCMDocumentFromFile(IFile file) {
 		InputStream input = null;
 		try {
-			input = file.getContents(false);
+			if(file.isAccessible()) {
+				input = file.getContents(false);
+			}
 		}
 		catch (CoreException e) {
-			Logger.logException(e);
+			// out of sync
+			input = new ByteArrayInputStream(new byte[0]);
 		}
 		if (input != null)
 			return buildCMDocument(file.getFullPath().toString(), input);
@@ -832,10 +835,14 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 
 	private void loadTagFile(CMElementDeclarationImpl ed, IFile tagFile, boolean allowIncludes) {
 		try {
-			IStructuredDocument document = (IStructuredDocument) new ModelHandlerForJSP().getDocumentLoader().createNewStructuredDocument(tagFile);
-			IStructuredDocumentRegion documentRegion = document.getFirstStructuredDocumentRegion();
 			ed.setPath(tagFile.getFullPath().toString());
 			ed.setTagSource(TLDElementDeclaration.SOURCE_TAG_FILE);
+			ed.setLocationString(tagFile.getFullPath().toString());
+			if (!tagFile.isAccessible())
+				return;
+			
+			IStructuredDocument document = (IStructuredDocument) new ModelHandlerForJSP().getDocumentLoader().createNewStructuredDocument(tagFile);
+			IStructuredDocumentRegion documentRegion = document.getFirstStructuredDocumentRegion();
 			while (documentRegion != null) {
 				if (documentRegion.getType().equals(DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)) {
 					if (documentRegion.getNumberOfRegions() > 2) {
@@ -995,12 +1002,11 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 
 		}
 		catch (IOException e) {
-			Logger.logException("problem parsing " + tagFile, e);
+			// Logger.logException("problem parsing " + tagFile, e); // can be caused by a still-in-development file
 		}
 		catch (CoreException e) {
-			Logger.logException("problem parsing " + tagFile, e);
+			// Logger.logException("problem parsing " + tagFile, e); // frequently out of sync
 		}
-		ed.setLocationString(tagFile.getFullPath().toString());
 	}
 
 	/**
