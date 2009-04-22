@@ -29,6 +29,8 @@ import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImageHelper;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImages;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -42,8 +44,14 @@ public class NewJSPWizard extends Wizard implements INewWizard {
 	private NewJSPFileWizardPage fNewFilePage;
 	private NewJSPTemplatesWizardPage fNewFileTemplatesPage;
 	private IStructuredSelection fSelection;
+	private Display fDisplay;
 
 	private boolean fShouldOpenEditorOnFinish = true;
+	
+	public void createPageControls(Composite pageContainer) {
+		fDisplay = pageContainer.getDisplay();
+		super.createPageControls(pageContainer);
+	}
 
 	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=248424
 	public void setOpenEditorOnFinish(boolean openEditor) {
@@ -78,8 +86,10 @@ public class NewJSPWizard extends Wizard implements INewWizard {
 
 	private void openEditor(final IFile file) {
 		if (file != null) {
-			getShell().getDisplay().asyncExec(new Runnable() {
+			fDisplay.asyncExec(new Runnable() {
 				public void run() {
+					if (!PlatformUI.isWorkbenchRunning())
+						return;
 					try {
 						IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 						IDE.openEditor(page, file, true);
