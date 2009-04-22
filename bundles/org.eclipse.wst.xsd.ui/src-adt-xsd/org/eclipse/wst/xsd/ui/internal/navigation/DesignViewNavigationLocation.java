@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,8 +24,11 @@ import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDVisitor;
 import org.eclipse.wst.xsd.ui.internal.adt.design.DesignViewGraphicalViewer;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
+import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDModelGroupDefinition;
+import org.eclipse.xsd.XSDRedefine;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
 import com.ibm.icu.util.StringTokenizer;
@@ -39,6 +42,8 @@ public class DesignViewNavigationLocation extends NavigationLocation
 {
   protected Path path;
 
+  private static final String PATH_TAG = "path"; //$NON-NLS-1$
+  
   public DesignViewNavigationLocation(IEditorPart part)
   {
     super(part);
@@ -94,13 +99,13 @@ public class DesignViewNavigationLocation extends NavigationLocation
 
   public void restoreState(IMemento memento)
   {
-    String string = memento.getString("path");
+    String string = memento.getString(PATH_TAG);
     path = Path.createPath(string);
   }
 
   public void saveState(IMemento memento)
   {
-    memento.putString("path", path.toString());
+    memento.putString(PATH_TAG, path.toString());
   }
 
   public void update()
@@ -111,6 +116,9 @@ public class DesignViewNavigationLocation extends NavigationLocation
   {
     final static int ELEMENT = 1;
     final static int TYPE = 2;
+    final static int MODEL_GROUP = 3;
+    final static int ATTRIBUTE_GROUP = 4;
+    final static int REDEFINE = 5;
     int kind;
     String name;
 
@@ -126,6 +134,12 @@ public class DesignViewNavigationLocation extends NavigationLocation
   }
   protected static class Path
   {
+    private static final String REDEFINE_TOKEN = "redefine"; //$NON-NLS-1$
+    private static final String MODEL_GROUP_TOKEN = "modelGroup"; //$NON-NLS-1$
+    private static final String ATTRIBUTE_GROUP_TOKEN = "attributeGroup"; //$NON-NLS-1$
+    private static final String TYPE_TOKEN = "type"; //$NON-NLS-1$
+    private static final String ELEMENT_TOKEN = "element"; //$NON-NLS-1$
+
     List segments = new ArrayList();
 
     public static XSDConcreteComponent computeComponent(XSDSchema schema, Path path)
@@ -139,21 +153,33 @@ public class DesignViewNavigationLocation extends NavigationLocation
       return null;
     }
 
-    static Path createPath(String string)
+    static Path createPath(String pathString)
     {
       Path path = new Path();
       PathSegment segment = null;
-      for (StringTokenizer st = new StringTokenizer(string, "/"); st.hasMoreTokens();)
+      for (StringTokenizer st = new StringTokenizer(pathString, "/"); st.hasMoreTokens();)
       {
         String token = st.nextToken();
         int kind = -1;
-        if (token.startsWith("element"))
+        if (token.startsWith(ELEMENT_TOKEN))
         {
           kind = PathSegment.ELEMENT;
         }
-        else if (token.startsWith("type"))
+        else if (token.startsWith(TYPE_TOKEN))
         {
           kind = PathSegment.TYPE;
+        }
+        else if (token.startsWith(ATTRIBUTE_GROUP_TOKEN))
+        {
+        	kind = PathSegment.ATTRIBUTE_GROUP;
+        }
+        else if (token.startsWith(MODEL_GROUP_TOKEN))
+        {
+        	kind = PathSegment.MODEL_GROUP;
+        }
+        else if (token.startsWith(REDEFINE_TOKEN))
+        {
+        	kind = PathSegment.REDEFINE;
         }
         if (kind != -1)
         {
@@ -193,19 +219,35 @@ public class DesignViewNavigationLocation extends NavigationLocation
       return path;
     }
 
-    static PathSegment computePathSegment(XSDConcreteComponent c)
+    static PathSegment computePathSegment(XSDConcreteComponent component)
     {
-      if (c instanceof XSDElementDeclaration)
-      {
-        XSDElementDeclaration ed = (XSDElementDeclaration) c;
-        return new PathSegment(PathSegment.ELEMENT, ed.getResolvedElementDeclaration().getName());
-      }
-      else if (c instanceof XSDTypeDefinition)
-      {
-        XSDTypeDefinition td = (XSDTypeDefinition) c;
-        return new PathSegment(PathSegment.TYPE, td.getName());
-      }
-      return null;
+    	PathSegment pathSegment = null;
+    	if (component instanceof XSDElementDeclaration)
+    	{
+    		XSDElementDeclaration elementDeclaration = (XSDElementDeclaration) component;
+    		pathSegment = new PathSegment(PathSegment.ELEMENT, elementDeclaration.getResolvedElementDeclaration().getName());
+    	}
+    	else if (component instanceof XSDTypeDefinition)
+    	{
+    		XSDTypeDefinition typeDefinition = (XSDTypeDefinition) component;
+    		pathSegment = new PathSegment(PathSegment.TYPE, typeDefinition.getName());
+    	}
+    	else if (component instanceof XSDModelGroupDefinition)
+    	{
+    		XSDModelGroupDefinition modelGroupDefinition = (XSDModelGroupDefinition) component;
+    		pathSegment = new PathSegment(PathSegment.MODEL_GROUP, modelGroupDefinition.getName());
+    	}
+    	else if (component instanceof XSDAttributeGroupDefinition)
+    	{
+    		XSDAttributeGroupDefinition attributeGroupDefinition = (XSDAttributeGroupDefinition) component;
+    		pathSegment = new PathSegment(PathSegment.ATTRIBUTE_GROUP, attributeGroupDefinition.getResolvedAttributeGroupDefinition().getName());
+    	}
+    	else if (component instanceof XSDRedefine)
+    	{
+    		XSDRedefine redefine = (XSDRedefine) component;
+    		pathSegment = new PathSegment(PathSegment.REDEFINE, redefine.toString());
+    	}
+    	return pathSegment;
     }
 
     public String toString()
@@ -217,11 +259,23 @@ public class DesignViewNavigationLocation extends NavigationLocation
         String kind = "";
         if (segment.kind == PathSegment.ELEMENT)
         {
-          kind = "element";
+          kind = ELEMENT_TOKEN;
         }
         else if (segment.kind == PathSegment.TYPE)
         {
-          kind = "type";
+          kind = TYPE_TOKEN;
+        }
+        else if (segment.kind == PathSegment.MODEL_GROUP)
+        {
+        	kind = MODEL_GROUP_TOKEN;
+        }
+        else if (segment.kind == PathSegment.ATTRIBUTE_GROUP)
+        {
+        	kind = ATTRIBUTE_GROUP_TOKEN;
+        }
+        else if (segment.kind == PathSegment.REDEFINE)
+        {
+        	kind = REDEFINE_TOKEN;
         }
         b.append(kind);
         if (segment.name != null)
@@ -275,19 +329,39 @@ public class DesignViewNavigationLocation extends NavigationLocation
       {
         if (segment.kind == PathSegment.ELEMENT)
         {
-          XSDElementDeclaration ed = schema.resolveElementDeclaration(segment.name);
-          if (ed != null)
+          XSDElementDeclaration elementDeclaration = schema.resolveElementDeclaration(segment.name);
+          if (elementDeclaration != null)
           {
-            visitElementDeclaration(ed);
+            visitElementDeclaration(elementDeclaration);
           }
         }
         else if (segment.kind == PathSegment.TYPE)
         {
-          XSDTypeDefinition td = schema.resolveTypeDefinition(segment.name);
-          if (td != null)
+          XSDTypeDefinition typeDefinition = schema.resolveTypeDefinition(segment.name);
+          if (typeDefinition != null)
           {
-            visitTypeDefinition(td);
+            visitTypeDefinition(typeDefinition);
           }
+        }
+        else if (segment.kind == PathSegment.MODEL_GROUP)
+        {
+        	XSDModelGroupDefinition modelGroupDefinition = schema.resolveModelGroupDefinition(segment.name);
+        	if (modelGroupDefinition != null)
+        	{
+        		visitModelGroupDefinition(modelGroupDefinition);
+        	}
+        }
+        else if (segment.kind == PathSegment.ATTRIBUTE_GROUP)
+        {
+        	XSDAttributeGroupDefinition attributeGroupDefinition = schema.resolveAttributeGroupDefinition(segment.name);
+        	if (attributeGroupDefinition != null)
+        	{
+        		visitAttributeGroupDefinition(attributeGroupDefinition);
+        	}
+        }
+        else if (segment.kind == PathSegment.REDEFINE)
+        {
+           // TODO
         }
       }
     }
@@ -325,7 +399,58 @@ public class DesignViewNavigationLocation extends NavigationLocation
         }
       }
     }
+    
+    public void visitModelGroupDefinition(XSDModelGroupDefinition modelGroup)
+    {
+    	if (segment != null)
+    	{
+    		String name = modelGroup.getName();
+    		if (segment.kind == PathSegment.MODEL_GROUP && isMatch(segment.name, name))
+    		{
+    			result = modelGroup;
+    			incrementSegment();
+    			if (!isDone())
+    			{
+    				super.visitModelGroupDefinition(modelGroup);
+    			}
+    		}
+    	}
+    }
 
+    public void visitAttributeGroupDefinition(XSDAttributeGroupDefinition attributeGroup)
+    {
+    	if (segment != null)
+    	{
+    		String name = attributeGroup.getName();
+    		if (segment.kind == PathSegment.ATTRIBUTE_GROUP && isMatch(segment.name, name))
+    		{
+    			result = attributeGroup;
+    			incrementSegment();
+    			if (!isDone())
+    			{
+    				super.visitAttributeGroupDefinition(attributeGroup);
+    			}
+    		}
+    	}
+    }
+    
+    public void visitRedefine(XSDRedefine redefine)
+    {
+    	if (segment != null)
+    	{
+    		String name = redefine.toString();
+    		if (segment.kind == PathSegment.ATTRIBUTE_GROUP && isMatch(segment.name, name))
+    		{
+    			result = redefine;
+    			incrementSegment();
+    			if (!isDone())
+    			{
+    				super.visitRedefine(redefine);
+    			}
+    		}
+    	}
+    	
+    }
     protected boolean isMatch(String name1, String name2)
     {
       return name1 != null ? name1.equals(name2) : name1 == name2;

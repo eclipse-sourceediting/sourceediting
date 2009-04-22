@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDNotationDeclaration;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDParticleContent;
+import org.eclipse.xsd.XSDRedefine;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
@@ -167,6 +168,11 @@ public class XSDVisitor
         visitAttributeGroupDefinition(attrGroup.getResolvedAttributeGroupDefinition());
       }
     }
+  }
+  
+  public void visitRedefine(XSDRedefine redefine)
+  {
+	  
   }
   
   public void visitNotationDeclaration(XSDNotationDeclaration notation)
