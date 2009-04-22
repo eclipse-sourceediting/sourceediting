@@ -90,7 +90,7 @@ public class FileContentCache {
 					// will try to cleanup in finally
 				}
 				catch (CoreException e) {
-					Logger.logException(e);
+					// out of sync
 				}
 				finally {
 					if (contents != null) {
