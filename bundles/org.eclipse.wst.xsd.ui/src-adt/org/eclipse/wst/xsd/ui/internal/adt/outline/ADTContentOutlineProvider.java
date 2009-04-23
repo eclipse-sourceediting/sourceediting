@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,7 +11,6 @@
 package org.eclipse.wst.xsd.ui.internal.adt.outline;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObject;
 import org.eclipse.wst.xsd.ui.internal.adt.facade.IADTObjectListener;
@@ -20,6 +19,7 @@ public class ADTContentOutlineProvider implements ITreeContentProvider, IADTObje
 {
   protected Viewer viewer = null;
   protected Object oldInput, newInput;
+  protected ADTContentOutlineRefreshJob refreshJob;
 
   public ADTContentOutlineProvider()
   {
@@ -89,6 +89,11 @@ public class ADTContentOutlineProvider implements ITreeContentProvider, IADTObje
     {
       removeListener((IADTObject) input);
     }
+    if (refreshJob != null)
+    {
+      refreshJob.cancel();
+      refreshJob = null;
+    }
   }
 
   /* (non-Javadoc)
@@ -99,6 +104,11 @@ public class ADTContentOutlineProvider implements ITreeContentProvider, IADTObje
     this.viewer = viewer;
     this.oldInput = oldInput;
     this.newInput = newInput;
+    if (refreshJob != null)
+    {
+      refreshJob.cancel();
+    }
+    refreshJob = new ADTContentOutlineRefreshJob(viewer);
   }
 
   /* (non-Javadoc)
@@ -106,15 +116,7 @@ public class ADTContentOutlineProvider implements ITreeContentProvider, IADTObje
    */
   public void propertyChanged(Object object, String property)
   {
-    if (viewer instanceof TreeViewer)
-    {
-      TreeViewer treeViewer = (TreeViewer) viewer;
-      if (treeViewer.getTree() != null && !treeViewer.getTree().isDisposed())
-      {
-        treeViewer.refresh(object);
-        treeViewer.reveal(object);
-      }
-    }
+    refreshJob.refresh((IADTObject)object);
   }
 
   /**
