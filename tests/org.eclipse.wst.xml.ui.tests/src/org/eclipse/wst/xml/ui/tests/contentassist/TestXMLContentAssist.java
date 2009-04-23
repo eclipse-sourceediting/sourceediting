@@ -13,7 +13,6 @@
 
 package org.eclipse.wst.xml.ui.tests.contentassist;
 
-import java.io.File;
 import java.io.IOException;
 
 import junit.framework.Assert;
@@ -131,19 +130,19 @@ public class TestXMLContentAssist extends TestCase {
 	}
 
 	protected String setupProject() {
-		String xmlFilePath = projectName + File.separator + fileName;
 		IProjectDescription description = ResourcesPlugin.getWorkspace()
 				.newProjectDescription(projectName);
 
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				projectName);
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 		try {
 			project.create(description, new NullProgressMonitor());
 			project.open(new NullProgressMonitor());
 		} catch (CoreException e) {
 
 		}
-		ProjectUtil.copyBundleEntryIntoWorkspace("/testresources/"+fileName, xmlFilePath);
+		String xmlFilePath = project.getFullPath().addTrailingSeparator().append(fileName).toString();
+		// needs both the test file and schemas
+		ProjectUtil.copyBundleEntriesIntoWorkspace("/testresources", project.getFullPath().toString());
 		return xmlFilePath;
 	}
 
@@ -178,7 +177,7 @@ public class TestXMLContentAssist extends TestCase {
 			ICompletionProposal[] proposals = getProposals(offset);
 			assertTrue("Length less than 1", proposals.length > 1);
 			ICompletionProposal proposal = proposals[0];
-			assertEquals("Wrong attribute proposal returned.", "handicap",
+			assertEquals("Wrong attribute proposal returned at ["+sourceViewer.getDocument().get(offset-9, 9)+"|"+sourceViewer.getDocument().get(offset, 9)+"]", "handicap",
 					proposal.getDisplayString());
 		} finally {
 			model.releaseFromEdit();

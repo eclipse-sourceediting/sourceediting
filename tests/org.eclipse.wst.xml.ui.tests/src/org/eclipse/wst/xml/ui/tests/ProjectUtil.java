@@ -86,6 +86,10 @@ public class ProjectUtil {
 		return file;
 	}
 
+	/**
+	 * @param rootEntry - avoid trailing separators
+	 * @param fullTargetPath
+	 */
 	public static void copyBundleEntriesIntoWorkspace(final String rootEntry, final String fullTargetPath) {
 		IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
