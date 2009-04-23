@@ -48,18 +48,18 @@ public class MasterListTestSuite extends TestSuite {
 	private static final String EXTENSION_POINT_ID = "org.eclipse.wst.sse.unittests.additionalTests";
 
 	public MasterListTestSuite() {
-		super("All Tests");
+		super("WTP Source Editing Master List Test Suite");
 
 		System.setProperty("wtp.autotest.noninteractive", "true");
 
 		addTest(SSEModelTestSuite.suite());
 
 		addTest(SSEModelXMLTestSuite.suite());
+		addTest(DTDCoreTestSuite.suite());
+		addTest(AllXSDCoreTests.suite());
 		addTest(CSSCoreTestSuite.suite());
 		addTest(HTMLCoreTestSuite.suite());
 		addTest(JSPCoreTestSuite.suite());
-		addTest(DTDCoreTestSuite.suite());
-		addTest(AllXSDCoreTests.suite());
 
 		addTest(EncodingTestSuite.suite());
 		addTest(CSSEncodingTestSuite.suite());
@@ -81,6 +81,7 @@ public class MasterListTestSuite extends TestSuite {
 		addTest(AllWebCoreTests.suite());
 		addTest(AllWebUITests.suite());
 		
+
 		addTest(new AllTestsSuite());
 		
 		// addTest(RegressionBucket.suite());
