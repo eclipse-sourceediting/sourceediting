@@ -16,6 +16,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -23,6 +24,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.xsl.core.model.XSLNode;
+import org.eclipse.wst.xsl.ui.internal.Messages;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
 
 /**
@@ -78,7 +80,7 @@ public class SourceFileHyperlink implements IHyperlink
 	 */
 	public String getHyperlinkText()
 	{
-		return linkedFile.getFullPath().toString();
+		return NLS.bind(Messages.Open, linkedFile.getName());
 	}
 
 	/* (non-Javadoc)

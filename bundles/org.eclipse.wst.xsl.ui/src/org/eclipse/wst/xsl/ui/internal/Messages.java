@@ -53,6 +53,7 @@ public class Messages extends NLS {
 	public static String CallTemplateContentAssistTemplateName;
 	public static String CallTemplateContentAssistTemplateNameFile;
 	public static String XSLValidationPageSeverityLevel;
+	public static String Open;
 	
 	
 	static {
