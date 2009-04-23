@@ -25,6 +25,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDSchema;
 
@@ -56,7 +57,7 @@ public class XSDHyperlink implements IHyperlink
 
   public String getHyperlinkText()
   {
-    return null;
+    return Messages._UI_ACTION_SET_AS_FOCUS;
   }
 
   public void open()

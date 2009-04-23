@@ -1,4 +1,4 @@
-package org.eclipse.jst.jsp.ui.internal.hyperlink;
+package org.eclipse.wst.xml.ui.internal.hyperlink;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -12,9 +12,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
-import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
-import org.eclipse.jst.jsp.ui.internal.Logger;
+import org.eclipse.jface.text.hyperlink.URLHyperlink;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
@@ -25,11 +23,14 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.sse.core.internal.util.JarUtilities;
+import org.eclipse.wst.xml.core.internal.Logger;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 /**
  * Hyperlink for URLs (opens in read-only mode)
  */
-class URLFileHyperlink implements IHyperlink {
+class URLStorageHyperlink implements IHyperlink {
 	// copies of this class exist in:
 	// org.eclipse.wst.xml.ui.internal.hyperlink
 	// org.eclipse.wst.html.ui.internal.hyperlink
@@ -95,10 +96,13 @@ class URLFileHyperlink implements IHyperlink {
 		public InputStream getContents() throws CoreException {
 			InputStream stream = null;
 			try {
-				stream = JarUtilities.getInputStream(fURL);
+				if (fURL.toString().startsWith("jar:file"))
+					stream = JarUtilities.getInputStream(fURL);
+				else
+					stream = fURL.openStream();
 			}
 			catch (Exception e) {
-				throw new CoreException(new Status(IStatus.ERROR, JSPUIPlugin.getDefault().getBundle().getSymbolicName(), IStatus.ERROR, fURL.toString(), e));
+				throw new CoreException(new Status(IStatus.ERROR, XMLUIPlugin.getDefault().getBundle().getSymbolicName(), IStatus.ERROR, fURL.toString(), e));
 			}
 			return stream;
 		}
@@ -124,7 +128,7 @@ class URLFileHyperlink implements IHyperlink {
 	private IRegion fRegion;
 	private URL fURL;
 
-	public URLFileHyperlink(IRegion region, URL url) {
+	public URLStorageHyperlink(IRegion region, URL url) {
 		fRegion = region;
 		fURL = url;
 	}
@@ -148,10 +152,7 @@ class URLFileHyperlink implements IHyperlink {
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getHyperlinkText()
 	 */
 	public String getHyperlinkText() {
-		String path = fURL.getPath();
-		if (path.length() > 0)
-			return NLS.bind(JSPUIMessages.Open, new Path(path).lastSegment());
-		return NLS.bind(JSPUIMessages.TLDHyperlink_hyperlinkText, fURL.toString());
+		return NLS.bind(XMLUIMessages.Open, fURL.toString());
 	}
 
 	/*
@@ -172,6 +173,7 @@ class URLFileHyperlink implements IHyperlink {
 			}
 			catch (PartInitException e) {
 				Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+				new URLHyperlink(fRegion, fURL.toString()).open();
 			}
 		}
 	}

@@ -40,7 +40,11 @@ class ExternalFileHyperlink implements IHyperlink {
 	}
 
 	public String getHyperlinkText() {
-		return NLS.bind(JSPUIMessages.Open, fHyperlinkFile.getName());
+		String path = fHyperlinkFile.getPath();
+		if (path.length() > 60) {
+			path = path.substring(0, 25) + "..." + path.substring(path.length() - 25, path.length());
+		}
+		return NLS.bind(JSPUIMessages.Open, path);
 	}
 
 	public void open() {

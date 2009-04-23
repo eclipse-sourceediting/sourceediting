@@ -51,7 +51,7 @@ class ExternalFileHyperlink implements IHyperlink {
 
 	public String getHyperlinkText() {
 		String path = fHyperlinkFile.getPath();
-		if (path.length() > 55) {
+		if (path.length() > 60) {
 			path = path.substring(0, 25) + "..." + path.substring(path.length() - 25, path.length());
 		}
 		return NLS.bind(XMLUIMessages.Open, path);

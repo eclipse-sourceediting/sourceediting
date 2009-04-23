@@ -11,13 +11,14 @@
 package org.eclipse.wst.xml.ui.internal.hyperlink;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
-import org.eclipse.jface.text.hyperlink.URLHyperlink;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
@@ -50,7 +51,21 @@ class CatalogEntryHyperlink implements IHyperlink {
 				return new WorkspaceFileHyperlink(fHyperlinkRegion, ResourcesPlugin.getWorkspace().getRoot().getFile(path));
 		}
 		else {
-			return new URLHyperlink(fHyperlinkRegion, fEntry.getURI());
+			/*
+			 * the URL detector will already work on the literal text, so
+			 * offer to open the contents in an editor
+			 */
+			try {
+				if (fEntry.getURI().startsWith("jar:file:"))
+					return new URLStorageHyperlink(fHyperlinkRegion, new URL(fEntry.getURI())) {
+						public String getHyperlinkText() {
+							return NLS.bind(XMLUIMessages.Open, fEntry.getKey());
+						}
+					};
+			}
+			catch (MalformedURLException e) {
+				// not valid?
+			}
 		}
 		return null;
 	}

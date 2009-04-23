@@ -13,21 +13,16 @@ package org.eclipse.wst.jsdt.web.ui.internal.hyperlink;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;
-/**
-*
 
-* Provisional API: This class/interface is part of an interim API that is still under development and expected to
-* change significantly before reaching stability. It is being made available at this early stage to solicit feedback
-* from pioneering adopters on the understanding that any code that uses this API will almost certainly be broken
-* (repeatedly) as the API evolves.
-*/
 class WorkspaceFileHyperlink implements IHyperlink {
 	// copies of this class exist in:
 	// org.eclipse.wst.xml.ui.internal.hyperlink
@@ -58,8 +53,11 @@ class WorkspaceFileHyperlink implements IHyperlink {
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getHyperlinkText()
 	 */
 	public String getHyperlinkText() {
-		// TODO Auto-generated method stub
-		return null;
+		String path = fFile.getFullPath().toString();
+		if (path.length() > 60) {
+			path = path.substring(0, 25) + "..." + path.substring(path.length() - 25, path.length());
+		}
+		return NLS.bind(HTMLUIMessages.Open, path);
 	}
 	
 	/*

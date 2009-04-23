@@ -14,12 +14,14 @@ import java.io.File;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.jsdt.web.ui.internal.Logger;
 
 /**
@@ -48,7 +50,11 @@ class ExternalFileHyperlink implements IHyperlink {
 	}
 	
 	public String getHyperlinkText() {
-		return null;
+		String path = fHyperlinkFile.getPath();
+		if (path.length() > 60) {
+			path = path.substring(0, 25) + "..." + path.substring(path.length() - 25, path.length());
+		}
+		return NLS.bind(HTMLUIMessages.Open, path);
 	}
 	
 	public String getTypeLabel() {

@@ -57,7 +57,11 @@ class WorkspaceFileHyperlink implements IHyperlink {
 	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getHyperlinkText()
 	 */
 	public String getHyperlinkText() {
-		return NLS.bind(JSPUIMessages.Open, fFile.getName());
+		String path = fFile.getFullPath().toString();
+		if (path.length() > 60) {
+			path = path.substring(0, 25) + "..." + path.substring(path.length() - 25, path.length());
+		}
+		return NLS.bind(JSPUIMessages.Open, path);
 	}
 
 	public void open() {

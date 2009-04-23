@@ -196,7 +196,7 @@ public class AnchorHyperlinkDetector extends AbstractHyperlinkDetector {
 		 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getHyperlinkText()
 		 */
 		public String getHyperlinkText() {
-			return null;
+			return NLS.bind(HTMLUIMessages.Open, fAnchorName);
 		}
 
 		/*
@@ -302,7 +302,7 @@ public class AnchorHyperlinkDetector extends AbstractHyperlinkDetector {
 					Logger.logException(e);
 				}
 			}
-			return fTarget.getNodeName();
+			return NLS.bind(HTMLUIMessages.Open, fTarget.getNodeName());
 		}
 
 		/*

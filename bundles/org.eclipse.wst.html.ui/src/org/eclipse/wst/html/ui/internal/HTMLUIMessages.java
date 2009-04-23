@@ -200,4 +200,5 @@ public class HTMLUIMessages extends NLS {
 	
 	// Hyperlinks
 	public static String Hyperlink_line;
+	public static String Open;
 }
