@@ -131,7 +131,10 @@
          <include>
             <rules>
 				<projectNature id="org.eclipse.wst.jsdt.core.jsNature" />
-				<contentType id="org.eclipse.wst.html.core.htmlsource"/>
+			</rules>
+         </include>
+         <include>
+            <rules>
 				<fileext caseSensitive="false" ext="html"/>
 				<fileext caseSensitive="false" ext="xhtml"/>
 				<fileext caseSensitive="false" ext="htm"/>
@@ -139,6 +142,13 @@
 				<fileext caseSensitive="false" ext="wml"/>
 				<fileext caseSensitive="false" ext="jsp"/>
 				<fileext caseSensitive="false" ext="jspf"/>
+				<fileext caseSensitive="false" ext="jsf"/>
+				<fileext caseSensitive="false" ext="tag"/>
+				<fileext caseSensitive="false" ext="tagf"/>
+				<fileext caseSensitive="false" ext="jsv"/>
+				<fileext caseSensitive="false" ext="jtpl"/>
+				<contentType id="org.eclipse.wst.html.core.htmlsource"/>
+				<contentType id="org.eclipse.jst.jsp.core.jspsource"/>
 			</rules>
          </include>
          <group id="org.eclipse.wst.sse.core.structuredModelGroup"/>
