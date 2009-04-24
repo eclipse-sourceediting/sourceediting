@@ -45,7 +45,7 @@ public class IncrementalHelper implements IValidationContext {
 		return null;
 	}
 
-	void setURI(String uri) {
+	public void setURI(String uri) {
 		fURI = uri;
 	}
 	
