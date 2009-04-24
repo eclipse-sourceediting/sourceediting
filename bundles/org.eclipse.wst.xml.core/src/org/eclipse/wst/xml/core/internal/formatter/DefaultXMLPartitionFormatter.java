@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -290,7 +290,7 @@ public class DefaultXMLPartitionFormatter {
 	 */
 	private void formatContent(TextEdit textEdit, Position formatRange, XMLFormattingConstraints parentConstraints, DOMRegion currentDOMRegion, IStructuredDocumentRegion previousRegion) {
 		IStructuredDocumentRegion currentRegion = currentDOMRegion.documentRegion;
-		String fullText = currentRegion.getFullText();
+		String fullText = currentDOMRegion.domNode.getSource();
 
 		// check if in preserve space mode, if so, don't touch anything but
 		// make sure to update available line width
@@ -333,6 +333,9 @@ public class DefaultXMLPartitionFormatter {
 			}
 		}
 		formatTextInContent(textEdit, parentConstraints, currentRegion, fullText, whitespaceMode);
+		// A text node can contain multiple structured document regions - sync the documentRegion
+		// with the last region of the node since the text from all regions was formatted
+		currentDOMRegion.documentRegion = currentDOMRegion.domNode.getLastStructuredDocumentRegion();
 	}
 
 	private void formatEmptyStartTagWithNoAttr(TextEdit textEdit, XMLFormattingConstraints constraints, IStructuredDocumentRegion currentDocumentRegion, IStructuredDocumentRegion previousDocumentRegion, int availableLineWidth, String indentStrategy, String whitespaceStrategy, ITextRegion currentTextRegion) {
@@ -438,7 +441,7 @@ public class DefaultXMLPartitionFormatter {
 				formatEndTag(edit, formatRange, parentConstraints, domRegion, previousRegion);
 			}
 		}
-		else if (regionType == DOMRegionContext.XML_CONTENT) {
+		else if (regionType == DOMRegionContext.XML_CONTENT || domRegion.domNode.getNodeType() == Node.TEXT_NODE) {
 			formatContent(edit, formatRange, parentConstraints, domRegion, previousRegion);
 		}
 		else if (regionType == DOMRegionContext.XML_COMMENT_TEXT) {
