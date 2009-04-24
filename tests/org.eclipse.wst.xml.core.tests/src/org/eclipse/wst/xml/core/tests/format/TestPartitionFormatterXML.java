@@ -324,4 +324,10 @@ public class TestPartitionFormatterXML extends TestCase {
 		// Test that malformed end tags do not cause a NPE and format the document
 		formatAndAssertEquals("testfiles/xml/xml-221279.xml", "testfiles/xml/xml-221279-fmt.xml");
 	}
+
+	public void testFormatWithFracturedXMLContent() throws UnsupportedEncodingException, IOException, CoreException {
+		// Bug 229135
+		// Test that text content that is split into multiple document regions does not stop the formatter
+		formatAndAssertEquals("testfiles/xml/xml-229135.xml", "testfiles/xml/xml-229135-fmt.xml");
+	}
 }
