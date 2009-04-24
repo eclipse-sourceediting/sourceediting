@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.internal.provisional.style;
+package org.eclipse.wst.sse.ui.internal.style;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +34,8 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.ui.ISemanticHighlighting;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.internal.provisional.style.SemanticHighlightingManager.HighlightedPosition;
-import org.eclipse.wst.sse.ui.internal.provisional.style.SemanticHighlightingManager.HighlightingStyle;
+import org.eclipse.wst.sse.ui.internal.style.SemanticHighlightingManager.HighlightedPosition;
+import org.eclipse.wst.sse.ui.internal.style.SemanticHighlightingManager.HighlightingStyle;
 
 /**
  * Semantic highlighting reconciler for Structured Source Editors. Based on 
