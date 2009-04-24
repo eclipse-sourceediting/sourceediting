@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,6 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPositionCategoryException;
 import org.eclipse.jface.text.DefaultPositionUpdater;
@@ -51,8 +50,6 @@ import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.IPresentationReconcilerExtension;
 import org.eclipse.jface.text.presentation.IPresentationRepairer;
 import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.sse.core.internal.provisional.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.internal.provisional.events.NewDocumentEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.NoChangeEvent;
@@ -64,9 +61,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
-import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 
 public class StructuredPresentationReconciler implements IPresentationReconciler, IPresentationReconcilerExtension {
 
@@ -78,203 +72,6 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 	private static final String TRACE_PREFIX = "StructuredPresentationReconciler: ";
 	private long time0;
 	private long time1;
-
-
-	/**
-	 * A utility class to do various color manipulations
-	 */
-	private class YUV_RGBConverter {
-		/**
-		 * This class "holds" the YUV values corresponding to RGB color
-		 */
-		private class YUV {
-
-			class NormalizedRGB {
-				double blue;
-				double green;
-				private final double maxRGB = 256.0;
-				double red;
-
-				public NormalizedRGB(RGB rgb) {
-					// first normalize to between 0 - 1
-					red = rgb.red / maxRGB;
-					green = rgb.green / maxRGB;
-					blue = rgb.blue / maxRGB;
-
-					red = gammaNormalized(red);
-					green = gammaNormalized(green);
-					blue = gammaNormalized(blue);
-
-				}
-			}
-
-			private NormalizedRGB normalizedRGB;
-
-			private double u = -1;
-			private double v = -1;
-			private double y = -1;
-
-			private YUV() {
-				super();
-			}
-
-			/*
-			public YUV(double y, double u, double v) {
-				this();
-				this.y = y;
-				this.u = u;
-				this.v = v;
-			}
-			*/
-
-			public YUV(RGB rgb) {
-				this();
-				normalizedRGB = new NormalizedRGB(rgb);
-				// force calculations
-				getY();
-				getV();
-				getU();
-			}
-
-			/**
-			 * normalize to "average" gamma 2.2222 or 1/0.45
-			 */
-			double gammaNormalized(double colorComponent) {
-				if (colorComponent < 0.018) {
-					return colorComponent * 0.45;
-				}
-				else {
-					return 1.099 * Math.pow(colorComponent, 0.45) - 0.099;
-				}
-			}
-
-			/**
-			 * @return RGB based on original RGB and current YUV values;
-			 */
-			/*
-			public RGB getRGB() {
-				RGB result = null;
-				double r = getY() + 1.14 * getV();
-				double g = getY() - 0.395 * getU() - 0.58 * getV();
-				double b = getY() + 2.032 * getU();
-
-				int red = (int) (inverseGammaNormalized(r) * 256);
-				int green = (int) (inverseGammaNormalized(g) * 256);
-				int blue = (int) (inverseGammaNormalized(b) * 256);
-				if (red < 0)
-					red = 0;
-				else if (red > 255)
-					red = 255;
-				if (green < 0)
-					green = 0;
-				else if (green > 255)
-					green = 255;
-				if (blue < 0)
-					blue = 0;
-				else if (blue > 255)
-					blue = 255;
-
-				result = new RGB(red, green, blue);
-				return result;
-			}
-			*/
-
-			public double getU() {
-				if (u == -1) {
-					u = 0.4949 * (normalizedRGB.blue - getY());
-				}
-				return u;
-
-			}
-
-			public double getV() {
-				if (v == -1) {
-					v = 0.877 * (normalizedRGB.red - getY());
-				}
-				return v;
-			}
-
-			public double getY() {
-				if (y == -1) {
-					y = 0.299 * normalizedRGB.red + 0.587 * normalizedRGB.green + 0.114 * normalizedRGB.blue;
-				}
-				return y;
-			}
-
-			/*
-			double inverseGammaNormalized(double colorComponent) {
-				if (colorComponent < 0.018) {
-					return colorComponent * .222;
-				}
-				else {
-					return Math.pow(((.9099 * colorComponent + 0.09)), 2.22);
-				}
-			}
-			*/
-
-		}
-
-		public YUV_RGBConverter() {
-			super();
-		}
-
-		public double calculateYComponent(Color targetColor) {
-			return new YUV(targetColor.getRGB()).getY();
-		}
-
-		/*
-		public RGB transformRGB(RGB originalRGB, double scaleFactor, double target) {
-			RGB transformedRGB = null;
-			// CCIR601 yuv = new CCIR601(originalRGB);
-			YUV yuv = new YUV(originalRGB);
-			double y = yuv.getY();
-			// zero is black, one is white
-			if (y < target) {
-				// is "dark" make lighter
-				y = y + ((target - y) * scaleFactor);
-			}
-			else {
-				// is "light" make darker
-				y = y - ((y - target) * scaleFactor);
-			}
-			// yuv.setY(y);
-			YUV newYUV = new YUV(y, yuv.getU(), yuv.getV());
-			// CCIR601 newYUV = new CCIR601(y, yuv.getCb601(),
-			// yuv.getCr601());
-			transformedRGB = newYUV.getRGB();
-			return transformedRGB;
-		}
-		*/
-
-		public RGB transformRGBToGrey(RGB originalRGB, double scaleFactor, double target) {
-			RGB transformedRGB = null;
-			// we left the "full" API method signature, but this
-			// version does not take into account originalRGB, though
-			// it might someday.
-			// for now, we'll simply make the new RGB grey, either a little
-			// lighter, or a little darker than background.
-			double y = 0;
-			double mid = 0.5;
-			// zero is black, one is white
-			if (target < mid) {
-				// is "dark" make lighter
-				y = target + scaleFactor;
-			}
-			else {
-				// is "light" make darker
-				y = target - scaleFactor;
-			}
-			int c = (int) Math.round(y * 255);
-			// just to gaurd against mis-use, or scale's values greater
-			// than mid point (and possibly rounding error)
-			if (c > 255)
-				c = 255;
-			if (c < 0)
-				c = 0;
-			transformedRGB = new RGB(c, c, c);
-			return transformedRGB;
-		}
-	}
 
 	/**
 	 * Internal listener class.
@@ -326,12 +123,8 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 			if (_trace) {
 				time1 = System.currentTimeMillis();
 			}
-			if (structuredDocumentEvent.reason != NoChangeEvent.NO_EVENT) {
-				IRegion damage = new Region(0, structuredDocumentEvent.fDocument.getLength());
-				recordDamage(damage, structuredDocumentEvent.fDocument);
-			}
 			if (structuredDocumentEvent.reason == NoChangeEvent.READ_ONLY_STATE_CHANGE) {
-				fViewer.invalidateTextPresentation();
+				// fViewer.invalidateTextPresentation();
 			}
 			if (_trace && _traceTime) {
 				System.out.println("\n" + TRACE_PREFIX + "calculated damage for NoChangeEvent in " + (System.currentTimeMillis()-time1) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -469,12 +262,11 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 					newDocument.addDocumentListener(this);
 					((IStructuredDocument)newDocument).addDocumentChangedListener(this);
 				}
-				
 				fViewer.addTextListener(this);
-				setDocumentToDamagers(newDocument);
-				setDocumentToRepairers(newDocument);
-				
+
 				if (newDocument instanceof IStructuredDocument) {
+					setDocumentToDamagers(newDocument);
+					setDocumentToRepairers(newDocument);
 					processDamage(new Region(0, newDocument.getLength()), newDocument);
 				}
 			}
@@ -715,10 +507,6 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 	 */
 	private String fPartitioning;
 
-	private YUV_RGBConverter rgbConverter;
-	private Map readOnlyColorTable;
-	double readOnlyForegroundScaleFactor = 30;
-
 	private IDocument fLastDocument;
 	
 	/**
@@ -731,10 +519,6 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 		fPartitioning= IDocumentExtension3.DEFAULT_PARTITIONING;
 		fPositionCategory= TRACKED_PARTITION + hashCode();
 		fPositionUpdater= new DefaultPositionUpdater(fPositionCategory);
-
-		// no listener for now since there's no UI to change the value
-		IPreferenceStore editorStore = SSEUIPlugin.getDefault().getPreferenceStore();
-		readOnlyForegroundScaleFactor = editorStore.getInt(EditorPreferenceNames.READ_ONLY_FOREGROUND_SCALE);
 	}
 
 	/**
@@ -1077,17 +861,8 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 			if (p != null) {
 				/**
 				 * 229749 - Read-Only highlighting support missing
+				 * 272981 - Read-only highlighting moved to semantic highlighting
 				 */
-				IStructuredDocument structuredDocument = (IStructuredDocument) document;
-				if (structuredDocument.containsReadOnly(damage.getOffset(), damage.getLength())) {
-					Iterator nonDefaultStyleRangeIterator = p.getNonDefaultStyleRangeIterator();
-					while (nonDefaultStyleRangeIterator.hasNext()) {
-						StyleRange styleRange = (StyleRange) nonDefaultStyleRangeIterator.next();
-						if (structuredDocument.containsReadOnly(styleRange.start, styleRange.length)) {
-							adjustForeground(styleRange);
-						}
-					}
-				}
 				applyTextRegionCollection(p);
 			}
 		}
@@ -1127,65 +902,6 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 	 */
 	ITypedRegion getPartition(IDocument document, int offset) throws BadLocationException {
 		return TextUtilities.getPartition(document, getDocumentPartitioning(), offset, false);
-	}
-
-	private void adjustForeground(StyleRange styleRange) {
-		RGB oldRGB = null;
-		// Color oldColor = styleRange.foreground;
-		Color oldColor = styleRange.background;
-		if (oldColor == null) {
-			// oldRGB = getTextWidget().getForeground().getRGB();
-			oldColor = fViewer.getTextWidget().getBackground();
-			oldRGB = oldColor.getRGB();
-		}
-		else {
-			oldRGB = oldColor.getRGB();
-		}
-		Color newColor = getCachedColorFor(oldRGB);
-		if (newColor == null) {
-			// make text "closer to" background lumanence
-			double target = getRGBConverter().calculateYComponent(oldColor);
-			RGB newRGB = getRGBConverter().transformRGBToGrey(oldRGB, readOnlyForegroundScaleFactor / 100.0, target);
-
-			// save conversion, so calculations only need to be done once
-			cacheColor(oldRGB, newRGB);
-			newColor = getCachedColorFor(oldRGB);
-		}
-		styleRange.foreground = newColor;
-	}
-
-	private YUV_RGBConverter getRGBConverter() {
-		if (rgbConverter == null) {
-			rgbConverter = new YUV_RGBConverter();
-		}
-		return rgbConverter;
-	}
-
-	/**
-	 * Cache read-only color.
-	 * 
-	 * @param oldRGB
-	 * @param newColor
-	 */
-	private void cacheColor(RGB oldRGB, RGB newColor) {
-		if (readOnlyColorTable == null) {
-			readOnlyColorTable = new HashMap();
-		}
-		readOnlyColorTable.put(oldRGB, newColor);
-	}
-
-	/**
-	 * This method is just to get existing read-only colors.
-	 */
-	private Color getCachedColorFor(RGB oldRGB) {
-		Color result = null;
-	
-		if (readOnlyColorTable != null) {
-			RGB readOnlyRGB = (RGB) readOnlyColorTable.get(oldRGB);
-			result = EditorUtility.getColor(readOnlyRGB);
-		}
-	
-		return result;
 	}
 
 	/**

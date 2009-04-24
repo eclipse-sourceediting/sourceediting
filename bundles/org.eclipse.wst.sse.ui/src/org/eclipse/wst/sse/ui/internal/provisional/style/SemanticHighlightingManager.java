@@ -36,6 +36,7 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
@@ -106,6 +107,8 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 		/** Highlighting of the position */
 		private HighlightingStyle fStyle;
 
+		private boolean fReadOnly;
+
 		/** Lock object */
 		private Object fLock;
 
@@ -117,14 +120,23 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 		 * @param highlighting The position's highlighting
 		 * @param lock The lock object
 		 */
-		public HighlightedPosition(int offset, int length, HighlightingStyle highlighting, Object lock) {
+		public HighlightedPosition(int offset, int length, HighlightingStyle highlighting, Object lock, boolean isReadOnly) {
 			super(offset, length);
 			fStyle = highlighting;
 			fLock = lock;
+			fReadOnly = isReadOnly;
 		}
-		
+
+		public HighlightedPosition(int offset, int length, HighlightingStyle highlighting, Object lock) {
+			this(offset, length, highlighting, lock, false);
+		}
+
 		public HighlightedPosition(Position position, HighlightingStyle highlighting, Object lock) {
-			this(position.offset, position.length, highlighting, lock);
+			this(position.offset, position.length, highlighting, lock, false);
+		}
+
+		public HighlightedPosition(Position position, HighlightingStyle highlighting, Object lock, boolean isReadOnly) {
+			this(position.offset, position.length, highlighting, lock, isReadOnly);
 		}
 
 		/**
@@ -233,6 +245,10 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 		 */
 		public HighlightingStyle getHighlighting() {
 			return fStyle;
+		}
+
+		public boolean isReadOnly() {
+			return fReadOnly;
 		}
 	}
 
@@ -562,7 +578,7 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 	 */
 	private void handlePropertyChange(PropertyChangeEvent event) {
 		String property = event.getProperty();
-		if (property == null || !property.equals("semanticHighlighting"))
+		if (property == null || !property.equals(EditorPreferenceNames.SEMANTIC_HIGHLIGHTING))
 			return;
 		
 		Object newValue = event.getNewValue();
@@ -624,7 +640,7 @@ public class SemanticHighlightingManager implements IPropertyChangeListener {
 	 * @return <code>true</code> iff semantic highlighting is enabled in the preferences
 	 */
 	private boolean isEnabled() {
-		return SSEUIPlugin.getInstance().getPreferenceStore().getBoolean("semanticHighlighting");
+		return (fPreferenceStore != null) ? fPreferenceStore.getBoolean(EditorPreferenceNames.SEMANTIC_HIGHLIGHTING) : false;
 	}
 	
 	public void uninstall() {

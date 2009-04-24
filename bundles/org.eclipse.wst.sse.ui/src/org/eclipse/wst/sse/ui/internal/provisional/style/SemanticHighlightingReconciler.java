@@ -105,15 +105,19 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 			fJobPresenter.setCanceled(false);
 		
 			startReconcilingPositions();
-	
-			IStructuredDocumentRegion[] regions = ((IStructuredDocument) fDocument).getStructuredDocumentRegions(partition.getOffset(), partition.getLength());
+			IStructuredDocument document = (IStructuredDocument) fDocument;
+			IStructuredDocumentRegion[] regions = document.getStructuredDocumentRegions(partition.getOffset(), partition.getLength());
 			for (int i = 0; i < regions.length; i++) {
-				for (int j = 0; j < fSemanticHighlightings.length; j++) {
-					if (fHighlightings[j].isEnabled()) {
-						Position[] consumes = fSemanticHighlightings[j].consumes(regions[i]);
-						if (consumes != null) {
-							for (int k = 0; k < consumes.length; k++)
-								addPosition(consumes[k], fHighlightings[j]);
+				if (document.containsReadOnly(regions[i].getStartOffset(), regions[i].getLength()))
+					addPosition(new Position(regions[i].getStartOffset(), regions[i].getLength()), null, true);
+				else {
+					for (int j = 0; j < fSemanticHighlightings.length; j++) {
+						if (fHighlightings[j].isEnabled()) {
+							Position[] consumes = fSemanticHighlightings[j].consumes(regions[i]);
+							if (consumes != null) {
+								for (int k = 0; k < consumes.length; k++)
+									addPosition(consumes[k], fHighlightings[j]);
+							}
 						}
 					}
 				}
@@ -147,6 +151,10 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 	}
 
 	private void addPosition(Position position, HighlightingStyle highlighting) {
+		addPosition(position, highlighting, false);
+	}
+
+	private void addPosition(Position position, HighlightingStyle highlighting, boolean isReadOnly) {
 		boolean isExisting = false;
 		// TODO: use binary search
 		for (int i = 0, n = fRemovedPositions.size(); i < n; i++) {
@@ -161,7 +169,7 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 			}
 		}
 		if (!isExisting) {
-			fAddedPositions.add(fPresenter.createHighlightedPosition(position, highlighting));
+			fAddedPositions.add(fPresenter.createHighlightedPosition(position, highlighting, isReadOnly));
 		}
 	}
 
@@ -230,7 +238,6 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 	}
 
 	public void setProgressMonitor(IProgressMonitor monitor) {
-		System.out.println("Setting the progress monitor");
 	}
 	
 	/**

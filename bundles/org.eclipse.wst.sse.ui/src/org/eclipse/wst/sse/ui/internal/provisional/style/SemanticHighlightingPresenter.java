@@ -12,8 +12,12 @@ package org.eclipse.wst.sse.ui.internal.provisional.style;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.BadPositionCategoryException;
 import org.eclipse.jface.text.DocumentEvent;
@@ -29,10 +33,16 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.sse.core.internal.encoding.util.Logger;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.provisional.style.SemanticHighlightingManager.HighlightedPosition;
 import org.eclipse.wst.sse.ui.internal.provisional.style.SemanticHighlightingManager.HighlightingStyle;
+import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 
 /**
  * Semantic highlighting presenter - UI thread implementation.  Based on 
@@ -241,6 +251,17 @@ public class SemanticHighlightingPresenter implements ITextPresentationListener,
 	/** <code>true</code> iff the current reconcile is canceled. */
 	private boolean fIsCanceled= false;
 
+	/** Read-only color support */
+	private YUV_RGBConverter rgbConverter;
+	private Map readOnlyColorTable;
+	double readOnlyForegroundScaleFactor = 30;
+	
+	public SemanticHighlightingPresenter() {
+		// no listener for now since there's no UI to change the value
+		IPreferenceStore editorStore = SSEUIPlugin.getDefault().getPreferenceStore();
+		readOnlyForegroundScaleFactor = editorStore.getInt(EditorPreferenceNames.READ_ONLY_FOREGROUND_SCALE);
+	}
+
 	/**
 	 * Creates and returns a new highlighted position with the given offset, length and highlighting.
 	 * <p>
@@ -270,6 +291,22 @@ public class SemanticHighlightingPresenter implements ITextPresentationListener,
 	public HighlightedPosition createHighlightedPosition(Position position, HighlightingStyle highlighting) {
 		// TODO: reuse deleted positions
 		return new HighlightedPosition(position, highlighting, fPositionUpdater);
+	}
+
+	/**
+	 * Creates and returns a new highlighted position from the given position and highlighting.
+	 * <p>
+	 * NOTE: Also called from background thread.
+	 * </p>
+	 *
+	 * @param position The position
+	 * @param highlighting The highlighting
+	 * @param isReadOnly Is this a read-only position
+	 * @return The new highlighted position
+	 */
+	public HighlightedPosition createHighlightedPosition(Position position, HighlightingStyle highlighting, boolean isReadOnly) {
+		// TODO: reuse deleted positions
+		return new HighlightedPosition(position, highlighting, fPositionUpdater, isReadOnly);
 	}
 
 	/**
@@ -558,13 +595,23 @@ public class SemanticHighlightingPresenter implements ITextPresentationListener,
 	 */
 	public void applyTextPresentation(TextPresentation textPresentation) {
 		IRegion region= textPresentation.getExtent();
+		int minStart= Integer.MAX_VALUE;
+		int maxEnd= Integer.MIN_VALUE;
 		int i= computeIndexAtOffset(fPositions, region.getOffset()), n= computeIndexAtOffset(fPositions, region.getOffset() + region.getLength());
 		if (n - i > 2) {
 			List ranges= new ArrayList(n - i);
 			for (; i < n; i++) {
 				HighlightedPosition position= (HighlightedPosition) fPositions.get(i);
-				if (!position.isDeleted())
-					ranges.add(position.createStyleRange());
+				if (!position.isDeleted()) {
+					if (!position.isReadOnly())
+						ranges.add(position.createStyleRange());
+					else {
+						int offset= position.getOffset();
+						minStart= Math.min(minStart, offset);
+						maxEnd= Math.max(maxEnd, offset + position.getLength());
+					}
+						
+				}
 			}
 			StyleRange[] array= new StyleRange[ranges.size()];
 			array= (StyleRange[]) ranges.toArray(array);
@@ -572,8 +619,27 @@ public class SemanticHighlightingPresenter implements ITextPresentationListener,
 		} else {
 			for (; i < n; i++) {
 				HighlightedPosition position= (HighlightedPosition) fPositions.get(i);
-				if (!position.isDeleted())
-					textPresentation.replaceStyleRange(position.createStyleRange());
+				if (!position.isDeleted()) {
+					if (!position.isReadOnly())
+						textPresentation.replaceStyleRange(position.createStyleRange());
+					else {
+						int offset= position.getOffset();
+						minStart= Math.min(minStart, offset);
+						maxEnd= Math.max(maxEnd, offset + position.getLength());
+					}
+				}
+			}
+		}
+		if (minStart < maxEnd) {
+			IStructuredDocument document = (IStructuredDocument) fSourceViewer.getDocument();
+			if (document.containsReadOnly(minStart, maxEnd)) {
+				Iterator nonDefaultStyleRangeIterator = textPresentation.getNonDefaultStyleRangeIterator();
+				while (nonDefaultStyleRangeIterator.hasNext()) {
+					StyleRange styleRange = (StyleRange) nonDefaultStyleRangeIterator.next();
+					if (document.containsReadOnly(styleRange.start, styleRange.length)) {
+						adjustForeground(styleRange);
+					}
+				}
 			}
 		}
 	}
@@ -785,5 +851,189 @@ public class SemanticHighlightingPresenter implements ITextPresentationListener,
 	 */
 	private String getPositionCategory() {
 		return toString();
+	}
+	
+	private void adjustForeground(StyleRange styleRange) {
+		RGB oldRGB = null;
+		// Color oldColor = styleRange.foreground;
+		Color oldColor = styleRange.background;
+		if (oldColor == null) {
+			// oldRGB = getTextWidget().getForeground().getRGB();
+			oldColor = fSourceViewer.getTextWidget().getBackground();
+			oldRGB = oldColor.getRGB();
+		}
+		else {
+			oldRGB = oldColor.getRGB();
+		}
+		Color newColor = getCachedColorFor(oldRGB);
+		if (newColor == null) {
+			// make text "closer to" background lumanence
+			double target = getRGBConverter().calculateYComponent(oldColor);
+			RGB newRGB = getRGBConverter().transformRGBToGrey(oldRGB, readOnlyForegroundScaleFactor / 100.0, target);
+
+			// save conversion, so calculations only need to be done once
+			cacheColor(oldRGB, newRGB);
+			newColor = getCachedColorFor(oldRGB);
+		}
+		styleRange.foreground = newColor;
+	}
+
+	private YUV_RGBConverter getRGBConverter() {
+		if (rgbConverter == null) {
+			rgbConverter = new YUV_RGBConverter();
+		}
+		return rgbConverter;
+	}
+
+	/**
+	 * Cache read-only color.
+	 * 
+	 * @param oldRGB
+	 * @param newColor
+	 */
+	private void cacheColor(RGB oldRGB, RGB newColor) {
+		if (readOnlyColorTable == null) {
+			readOnlyColorTable = new HashMap();
+		}
+		readOnlyColorTable.put(oldRGB, newColor);
+	}
+
+	/**
+	 * This method is just to get existing read-only colors.
+	 */
+	private Color getCachedColorFor(RGB oldRGB) {
+		Color result = null;
+	
+		if (readOnlyColorTable != null) {
+			RGB readOnlyRGB = (RGB) readOnlyColorTable.get(oldRGB);
+			result = EditorUtility.getColor(readOnlyRGB);
+		}
+	
+		return result;
+	}
+	
+	/**
+	 * A utility class to do various color manipulations
+	 */
+	private class YUV_RGBConverter {
+		/**
+		 * This class "holds" the YUV values corresponding to RGB color
+		 */
+		private class YUV {
+
+			class NormalizedRGB {
+				double blue;
+				double green;
+				private final double maxRGB = 256.0;
+				double red;
+
+				public NormalizedRGB(RGB rgb) {
+					// first normalize to between 0 - 1
+					red = rgb.red / maxRGB;
+					green = rgb.green / maxRGB;
+					blue = rgb.blue / maxRGB;
+
+					red = gammaNormalized(red);
+					green = gammaNormalized(green);
+					blue = gammaNormalized(blue);
+
+				}
+			}
+
+			private NormalizedRGB normalizedRGB;
+
+			private double u = -1;
+			private double v = -1;
+			private double y = -1;
+
+			private YUV() {
+				super();
+			}
+
+			public YUV(RGB rgb) {
+				this();
+				normalizedRGB = new NormalizedRGB(rgb);
+				// force calculations
+				getY();
+				getV();
+				getU();
+			}
+
+			/**
+			 * normalize to "average" gamma 2.2222 or 1/0.45
+			 */
+			double gammaNormalized(double colorComponent) {
+				if (colorComponent < 0.018) {
+					return colorComponent * 0.45;
+				}
+				else {
+					return 1.099 * Math.pow(colorComponent, 0.45) - 0.099;
+				}
+			}
+
+			/**
+			 * @return RGB based on original RGB and current YUV values;
+			 */
+
+			public double getU() {
+				if (u == -1) {
+					u = 0.4949 * (normalizedRGB.blue - getY());
+				}
+				return u;
+
+			}
+
+			public double getV() {
+				if (v == -1) {
+					v = 0.877 * (normalizedRGB.red - getY());
+				}
+				return v;
+			}
+
+			public double getY() {
+				if (y == -1) {
+					y = 0.299 * normalizedRGB.red + 0.587 * normalizedRGB.green + 0.114 * normalizedRGB.blue;
+				}
+				return y;
+			}
+
+		}
+
+		public YUV_RGBConverter() {
+			super();
+		}
+
+		public double calculateYComponent(Color targetColor) {
+			return new YUV(targetColor.getRGB()).getY();
+		}
+
+		public RGB transformRGBToGrey(RGB originalRGB, double scaleFactor, double target) {
+			RGB transformedRGB = null;
+			// we left the "full" API method signature, but this
+			// version does not take into account originalRGB, though
+			// it might someday.
+			// for now, we'll simply make the new RGB grey, either a little
+			// lighter, or a little darker than background.
+			double y = 0;
+			double mid = 0.5;
+			// zero is black, one is white
+			if (target < mid) {
+				// is "dark" make lighter
+				y = target + scaleFactor;
+			}
+			else {
+				// is "light" make darker
+				y = target - scaleFactor;
+			}
+			int c = (int) Math.round(y * 255);
+			// just to gaurd against mis-use, or scale's values greater
+			// than mid point (and possibly rounding error)
+			if (c > 255)
+				c = 255;
+			if (c < 0)
+				c = 0;
+			transformedRGB = new RGB(c, c, c);
+			return transformedRGB;
+		}
 	}
 }

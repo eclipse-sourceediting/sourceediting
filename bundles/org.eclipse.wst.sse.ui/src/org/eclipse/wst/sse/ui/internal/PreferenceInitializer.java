@@ -76,7 +76,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		PreferenceConverter.setDefault(store, EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND, ColorHelper.findRGB(registry, EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND, new RGB(255, 255, 255)));
 		PreferenceConverter.setDefault(store, EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND, ColorHelper.findRGB(registry, EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND, new RGB(0, 0, 0)));
 
-		store.setDefault(EditorPreferenceNames.SEMANTIC_HIGHLIGHTING, false);
+		store.setDefault(EditorPreferenceNames.SEMANTIC_HIGHLIGHTING, true);
 	}
 
 	private void setMatchingBracketsPreferences(IPreferenceStore store, ColorRegistry registry) {
