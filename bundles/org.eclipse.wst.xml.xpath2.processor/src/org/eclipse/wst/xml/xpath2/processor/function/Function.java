@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Ganhdi - bug 273719 - String Length does not work with Element arg. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.function;
@@ -132,11 +133,11 @@ public abstract class Function {
 		ResultSequence result = arg;
 
 		AnyType expected_type = expected.type();
-
+		
 		// expected is atomic
 		if (expected_type instanceof AnyAtomicType) {
 			AnyAtomicType expected_aat = (AnyAtomicType) expected_type;
-
+			
 			// atomize
 			ResultSequence rs = FnData.atomize(arg);
 
@@ -144,13 +145,20 @@ public abstract class Function {
 			result = ResultSequenceFactory.create_new();
 			for (Iterator i = rs.iterator(); i.hasNext();) {
 				AnyType item = (AnyType) i.next();
-
+				
 				if (item instanceof UntypedAtomic) {
 					// create a new item of the expected
 					// type initialized with from the string
 					// value of the item
-					ResultSequence converted = ResultSequenceFactory
-							.create_new(item);
+					ResultSequence converted = null;
+					if (expected_aat instanceof XSString) {
+					   XSString strType = new XSString(item.string_value());
+					   converted = ResultSequenceFactory.create_new(strType);
+					}
+					else {
+					   converted = ResultSequenceFactory.create_new(item);
+					}
+					
 					result.concat(converted);
 				}
 
