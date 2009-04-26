@@ -10,6 +10,7 @@ public class AllPsychoPathTests {
 				"Test for org.eclipse.wst.xml.xpath2.processor.test");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(TestXPath20.class);
+		suite.addTestSuite(Bug269833.class);
 		//$JUnit-END$
 		return suite;
 	}
