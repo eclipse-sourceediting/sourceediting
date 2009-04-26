@@ -11,44 +11,26 @@
 package org.eclipse.wst.xml.xpath2.processor.test;
 
 
-import java.io.InputStream;
 import java.net.URL;
 
-import junit.framework.TestCase;
 
-import org.apache.xerces.xs.ElementPSVI;
 import org.apache.xerces.xs.XSModel;
-import org.eclipse.wst.xml.xpath2.processor.DOMLoader;
-import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.Evaluator;
-import org.eclipse.wst.xml.xpath2.processor.JFlexCupParser;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.StaticChecker;
-import org.eclipse.wst.xml.xpath2.processor.StaticError;
-import org.eclipse.wst.xml.xpath2.processor.StaticNameResolver;
-import org.eclipse.wst.xml.xpath2.processor.XPathParser;
-import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
-import org.eclipse.wst.xml.xpath2.processor.XercesLoader;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
-import org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary;
-import org.eclipse.wst.xml.xpath2.processor.function.XDTCtrLibrary;
-import org.eclipse.wst.xml.xpath2.processor.function.XSCtrLibrary;
 
 
 import org.eclipse.wst.xml.xpath2.processor.types.ElementType;
-import org.w3c.dom.Document;
 
-public class Bug269833 extends TestCase{
-	
-	Document domDoc;
-	
+public class Bug269833 extends AbstractPsychoPathTest{
+		
 	public static void main(String[] args) {
 		Bug269833 test = new Bug269833();        
 	    try {        
             test.setUp();
-            test.testProcessSimpleXpath();
+            test.testKeywordAsNodeInXpath();
         } catch (Exception e) {            
             e.printStackTrace();
         }        
@@ -56,40 +38,10 @@ public class Bug269833 extends TestCase{
     
     protected void setUp() throws Exception {
         URL fileURL = new URL("http://www.w3schools.com/xml/note.xml");
-        InputStream is = fileURL.openStream();  
-        DOMLoader domloader = new XercesLoader();  
-        domloader.set_validating(false);  
-        domDoc = domloader.load(is);  
+        loadDOMDocument(fileURL);
      }
-
-    private XSModel getGrammar() {  
- 	   ElementPSVI rootPSVI = (ElementPSVI)domDoc.getDocumentElement();  
- 	   XSModel schema = rootPSVI.getSchemaInformation();  
- 	   return schema;  
- 	}  
-     	  
- 	private DynamicContext setupDynamicContext(XSModel schema) {  
- 	   DynamicContext dc = new DefaultDynamicContext(schema, domDoc);  
- 	   dc.add_namespace("xsd", "http://www.w3.org/2001/XMLSchema");  
- 	   dc.add_namespace("xdt", "http://www.w3.org/2004/10/xpath-datatypes");  
- 	    
- 	   dc.add_function_library(new FnFunctionLibrary());  
- 	   dc.add_function_library(new XSCtrLibrary());  
- 	   dc.add_function_library(new XDTCtrLibrary());  
- 	   return dc;  
- 	}  
-     	  
- 	private XPath compileXPath(DynamicContext dc, String xpath)  
-       throws XPathParserException, StaticError {  
- 	   XPathParser xpp = new JFlexCupParser();  
- 	   XPath path = xpp.parse(xpath);  
- 	    
- 	   StaticChecker name_check = new StaticNameResolver(dc);  
- 	   name_check.check(path);  
- 	   return path;  
- 	}
  	
- 	public void testProcessSimpleXpath() throws Exception {  
+ 	public void testKeywordAsNodeInXpath() throws Exception {  
  		   // Get XML Schema Information for the Document  
  		   XSModel schema = getGrammar();  
  		  
@@ -103,7 +55,6 @@ public class Bug269833 extends TestCase{
  		   ResultSequence rs = eval.evaluate(path);  
  		    
  		   ElementType result = (ElementType)rs.first();  
- 		   String resultValue = result.node_value().getNodeValue();  
  	    
  		   String actual = rs.first().string_value();
  		   
