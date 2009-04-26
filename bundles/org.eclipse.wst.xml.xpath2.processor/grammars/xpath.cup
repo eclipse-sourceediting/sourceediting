@@ -6,15 +6,16 @@
 // * http://www.eclipse.org/legal/epl-v10.html
 // *
 // * Contributors:
-// *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+// *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+// *     David Carver - bug 269833 - A work around for the keyword in node issue. 
 // *******************************************************************************/
 
 
-package org.ucl.xpath;
+package org.eclipse.wst.xml.xpath2.processor;
 
 import java.util.*;
-import org.ucl.xpath.ast.*;
-import org.ucl.xpath.types.*;
+import org.eclipse.wst.xml.xpath2.processor.ast.*;
+import org.eclipse.wst.xml.xpath2.processor.types.*;
 
 
 parser code 	{:
@@ -42,17 +43,17 @@ terminal LESS_LESS, GREATER_GREATER;
 terminal FORWARD_SLASH, FORWARD_SLASHSLASH;
 terminal COLONCOLON, AT_SYM, DOTDOT, COLON, COMMA, DOLLAR, DOT, QUESTIONMARK;
 
-terminal CHILD, DESCENDANT, ATTRIBUTE, SELF, DESCENDANT_OR_SELF;
-terminal FOLLOWING_SIBLING, FOLLOWING, NAMESPACE, PARENT;
-terminal ANCESTOR, PRECEDING_SIBLING, PRECEDING, ANCESTOR_OR_SELF;
+terminal String CHILD, DESCENDANT, ATTRIBUTE, SELF, DESCENDANT_OR_SELF;
+terminal String FOLLOWING_SIBLING, FOLLOWING, NAMESPACE, PARENT;
+terminal String ANCESTOR, PRECEDING_SIBLING, PRECEDING, ANCESTOR_OR_SELF;
 terminal EQ, NE, LT, LE, GT, GE;
 terminal DIV, IDIV, MOD;
-terminal UNION, INTERSECT, EXCEPT;
-terminal INSTANCE, OF, TREAT, AS, CASTABLE, CAST, IS;
-terminal FOR, IN, RETURN, SATISFIES, TO;
-terminal SOME, EVERY;
-terminal IF, THEN, ELSE;
-terminal AND, OR;
+terminal String UNION, INTERSECT, EXCEPT;
+terminal String INSTANCE, OF, TREAT, AS, CASTABLE, CAST, IS;
+terminal String FOR, IN, RETURN, SATISFIES, TO;
+terminal String SOME, EVERY;
+terminal String IF, THEN, ELSE;
+terminal String AND, OR;
 terminal EMPTY, ITEM, NODE, DOCUMENT_NODE, TEXT, COMMENT;
 terminal PROCESSING_INSTRUCTION, SCHEMA_ATTRIBUTE, ELEMENT, SCHEMA_ELEMENT;
 
@@ -116,6 +117,16 @@ precedence left PLUS, MINUS;
 precedence left STAR;
 precedence left COLON;
 precedence left NCNAME;
+precedence left CHILD, DESCENDANT, ATTRIBUTE, SELF, DESCENDANT_OR_SELF;
+precedence left FOLLOWING_SIBLING, FOLLOWING, NAMESPACE, PARENT;
+precedence left ANCESTOR, PRECEDING_SIBLING, PRECEDING, ANCESTOR_OR_SELF;
+precedence left UNION, INTERSECT, EXCEPT;
+precedence left INSTANCE, OF, TREAT, AS, CASTABLE, CAST, IS;
+precedence left FOR, IN, RETURN, SATISFIES, TO;
+precedence left SOME, EVERY;
+precedence left IF, THEN, ELSE;
+precedence left AND, OR;
+
 
 
 XPath             ::= Expr:exps {: RESULT = new XPath(exps); :} ;
@@ -642,4 +653,39 @@ Prefix                ::= NCName:n {: RESULT = n; :};
 
 LocalPart             ::= NCName:n {: RESULT = n; :};
 
-NCName                ::= NCNAME:n {: RESULT = n; :};
+NCName                ::= NCNAME:n {: RESULT = n; :} |
+						  TO:n	   {: RESULT = new String("to"); :} |
+						  CHILD:n  {: RESULT = new String("child"); :} |
+						  DESCENDANT:n {: RESULT = new String("descendant"); :} |
+						  ATTRIBUTE:n {: RESULT = new String("attribute"); :} |
+						  SELF:n {: RESULT = new String("self"); :} |
+						  DESCENDANT_OR_SELF:n {: RESULT = new String("descendant-of-self"); :} |
+						  FOLLOWING_SIBLING:n {: RESULT = new String("following-sibling"); :} |
+						  FOLLOWING:n {: RESULT = new String("following"); :} |
+						  NAMESPACE:n {: RESULT = new String("namespace"); :} |
+						  PARENT:n {: RESULT = new String("parent"); :} |
+						  ANCESTOR:n {: RESULT = new String("ancestor"); :} |
+						  PRECEDING_SIBLING:n {: RESULT  = new String("preceding-sibling"); :} |
+						  PRECEDING:n {: RESULT = new String("preceding"); :} |
+						  ANCESTOR_OR_SELF:n {: RESULT = new String("ancestor-or-self"); :} |
+						  UNION:n {: RESULT = new String("union"); :} |
+						  INTERSECT:n {: RESULT = new String("intersect"); :} |
+						  EXCEPT:n {: RESULT = new String("except"); :} |
+						  INSTANCE:n {: RESULT = new String("instance"); :} |
+						  OF:n {: RESULT = new String("of"); :} |
+						  TREAT:n {: RESULT = new String("as"); :} |
+						  CASTABLE:n {: RESULT = new String("castable"); :} |
+						  CAST:n {: RESULT = new String("cast"); :} |
+						  IS:n {: RESULT = new String("is"); :} |
+						  FOR:n {: RESULT = new String("for"); :} |
+						  IN:n {: RESULT = new String("in"); :} |
+						  RETURN:n {: RESULT = new String("return"); :} |
+						  SATISFIES:n {: RESULT = new String("satisfies"); :} |
+						  SOME:n {: RESULT = new String("some"); :} |
+						  EVERY:n {: RESULT = new String("every"); :} |
+						  IF:n {: RESULT = new String("if"); :} |
+						  THEN:n {: RESULT = new String("then"); :} |
+						  ELSE:n {: RESULT = new String("else"); :} |
+						  AND:n {: RESULT = new String("and"); :} |
+						  OR:n {: RESULT = new String("or"); :}
+			; 

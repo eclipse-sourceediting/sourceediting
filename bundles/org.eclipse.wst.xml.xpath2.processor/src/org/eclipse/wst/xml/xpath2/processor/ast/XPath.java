@@ -14,7 +14,7 @@ package org.eclipse.wst.xml.xpath2.processor.ast;
 import java.util.*;
 
 /**
- * Support for XPath (duh).
+ * Support for XPath.
  */
 public class XPath extends XPathNode {
 	private Collection _exprs;

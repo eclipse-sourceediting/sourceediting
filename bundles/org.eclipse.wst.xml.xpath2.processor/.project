@@ -6,6 +6,16 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
+			<name>pi.eclipse.cle.CupBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>pi.eclipse.cle.LexBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>
 			<arguments>
 			</arguments>
@@ -22,6 +32,7 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>pi.eclipse.cle.CupLexNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.pde.PluginNature</nature>
 	</natures>

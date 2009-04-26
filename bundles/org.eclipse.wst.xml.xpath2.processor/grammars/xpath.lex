@@ -10,7 +10,7 @@
 // *******************************************************************************/
 
 
-package org.ucl.xpath;
+package org.eclipse.wst.xml.xpath2.processor;
 
 import java_cup.runtime.*;
 
@@ -57,101 +57,101 @@ NCName		= ( {Letter} | "_") ( {NCNameChar} )*
 			  yybegin(COMMENT); 
 			}
 
-"\["	{ return symbol(sym.LBRACKET); }
-"\]"	{ return symbol(sym.RBRACKET); }
-"\("	{ return symbol(sym.LPAR); }
-"\)"	{ return symbol(sym.RPAR); }
+"\["	{ return symbol(XpathSym.LBRACKET); }
+"\]"	{ return symbol(XpathSym.RBRACKET); }
+"\("	{ return symbol(XpathSym.LPAR); }
+"\)"	{ return symbol(XpathSym.RPAR); }
 
-"\+"	{ return symbol(sym.PLUS); }
-"\-"	{ return symbol(sym.MINUS); }
-"\*"	{ return symbol(sym.STAR); }
-"\|"	{ return symbol(sym.PIPE); }
+"\+"	{ return symbol(XpathSym.PLUS); }
+"\-"	{ return symbol(XpathSym.MINUS); }
+"\*"	{ return symbol(XpathSym.STAR); }
+"\|"	{ return symbol(XpathSym.PIPE); }
 
-"="	{ return symbol(sym.EQUALS); }
-"!="	{ return symbol(sym.NOTEQUALS); }
-"<"	{ return symbol(sym.LESSTHAN); }
-"<="	{ return symbol(sym.LESSEQUAL); }
-">"	{ return symbol(sym.GREATER); }
-">="	{ return symbol(sym.GREATEREQUAL); }
+"="	{ return symbol(XpathSym.EQUALS); }
+"!="	{ return symbol(XpathSym.NOTEQUALS); }
+"<"	{ return symbol(XpathSym.LESSTHAN); }
+"<="	{ return symbol(XpathSym.LESSEQUAL); }
+">"	{ return symbol(XpathSym.GREATER); }
+">="	{ return symbol(XpathSym.GREATEREQUAL); }
 
-"<<"	{ return symbol(sym.LESS_LESS); }
-">>"	{ return symbol(sym.GREATER_GREATER); }
+"<<"	{ return symbol(XpathSym.LESS_LESS); }
+">>"	{ return symbol(XpathSym.GREATER_GREATER); }
 
-"/"	{ return symbol(sym.FORWARD_SLASH); }
-"//"	{ return symbol(sym.FORWARD_SLASHSLASH); }
+"/"	{ return symbol(XpathSym.FORWARD_SLASH); }
+"//"	{ return symbol(XpathSym.FORWARD_SLASHSLASH); }
 
-"::"	{ return symbol(sym.COLONCOLON); }
-"@"	{ return symbol(sym.AT_SYM); }
-"\.\."	{ return symbol(sym.DOTDOT); }
-":"	{ return symbol(sym.COLON); }
-","	{ return symbol(sym.COMMA); }
-"\$"	{ return symbol(sym.DOLLAR); }
-"\."	{ return symbol(sym.DOT); }
-"\?"	{ return symbol(sym.QUESTIONMARK); }
+"::"	{ return symbol(XpathSym.COLONCOLON); }
+"@"	{ return symbol(XpathSym.AT_SYM); }
+"\.\."	{ return symbol(XpathSym.DOTDOT); }
+":"	{ return symbol(XpathSym.COLON); }
+","	{ return symbol(XpathSym.COMMA); }
+"\$"	{ return symbol(XpathSym.DOLLAR); }
+"\."	{ return symbol(XpathSym.DOT); }
+"\?"	{ return symbol(XpathSym.QUESTIONMARK); }
 
 
-"child"				{ return symbol(sym.CHILD); }
-"descendant"			{ return symbol(sym.DESCENDANT); }
-"attribute"			{ return symbol(sym.ATTRIBUTE); }
-"self"				{ return symbol(sym.SELF); }
-"descendant\-or\-self"		{ return symbol(sym.DESCENDANT_OR_SELF); }
+"child"				{ return symbol(XpathSym.CHILD); }
+"descendant"			{ return symbol(XpathSym.DESCENDANT); }
+"attribute"			{ return symbol(XpathSym.ATTRIBUTE); }
+"self"				{ return symbol(XpathSym.SELF); }
+"descendant\-or\-self"		{ return symbol(XpathSym.DESCENDANT_OR_SELF); }
 
-"following\-sibling"		{ return symbol(sym.FOLLOWING_SIBLING); }
-"following"			{ return symbol(sym.FOLLOWING); }
-"namespace"			{ return symbol(sym.NAMESPACE); }
-"parent"			{ return symbol(sym.PARENT); }
+"following\-sibling"		{ return symbol(XpathSym.FOLLOWING_SIBLING); }
+"following"			{ return symbol(XpathSym.FOLLOWING); }
+"namespace"			{ return symbol(XpathSym.NAMESPACE); }
+"parent"			{ return symbol(XpathSym.PARENT); }
 
-"ancestor"			{ return symbol(sym.ANCESTOR); }
-"preceding\-sibling"		{ return symbol(sym.PRECEDING_SIBLING); }
-"preceding"			{ return symbol(sym.PRECEDING); }
-"ancestor\-or\-self"		{ return symbol(sym.ANCESTOR_OR_SELF); }
+"ancestor"			{ return symbol(XpathSym.ANCESTOR); }
+"preceding\-sibling"		{ return symbol(XpathSym.PRECEDING_SIBLING); }
+"preceding"			{ return symbol(XpathSym.PRECEDING); }
+"ancestor\-or\-self"		{ return symbol(XpathSym.ANCESTOR_OR_SELF); }
 
-"eq"				{ return symbol(sym.EQ); }
-"ne"				{ return symbol(sym.NE); }
-"lt"				{ return symbol(sym.LT); }
-"le"				{ return symbol(sym.LE); }
-"gt"				{ return symbol(sym.GT); }
-"ge"				{ return symbol(sym.GE); }
+"eq"				{ return symbol(XpathSym.EQ); }
+"ne"				{ return symbol(XpathSym.NE); }
+"lt"				{ return symbol(XpathSym.LT); }
+"le"				{ return symbol(XpathSym.LE); }
+"gt"				{ return symbol(XpathSym.GT); }
+"ge"				{ return symbol(XpathSym.GE); }
 
-"idiv"				{ return symbol(sym.IDIV); }
-"div"				{ return symbol(sym.DIV); }
-"mod"				{ return symbol(sym.MOD); }
+"idiv"				{ return symbol(XpathSym.IDIV); }
+"div"				{ return symbol(XpathSym.DIV); }
+"mod"				{ return symbol(XpathSym.MOD); }
 
-"union"				{ return symbol(sym.UNION); }
-"intersect"			{ return symbol(sym.INTERSECT); }
-"except"			{ return symbol(sym.EXCEPT); }
+"union"				{ return symbol(XpathSym.UNION); }
+"intersect"			{ return symbol(XpathSym.INTERSECT); }
+"except"			{ return symbol(XpathSym.EXCEPT); }
 
-"instance"			{ return symbol(sym.INSTANCE); }
-"treat"				{ return symbol(sym.TREAT); }
-"castable"			{ return symbol(sym.CASTABLE); }
-"cast"				{ return symbol(sym.CAST); }
-"as"				{ return symbol(sym.AS); }
-"of"				{ return symbol(sym.OF); }
-"is"				{ return symbol(sym.IS); }
+"instance"			{ return symbol(XpathSym.INSTANCE); }
+"treat"				{ return symbol(XpathSym.TREAT); }
+"castable"			{ return symbol(XpathSym.CASTABLE); }
+"cast"				{ return symbol(XpathSym.CAST); }
+"as"				{ return symbol(XpathSym.AS); }
+"of"				{ return symbol(XpathSym.OF); }
+"is"				{ return symbol(XpathSym.IS); }
 
-"for"				{ return symbol(sym.FOR); }
-"in"				{ return symbol(sym.IN); }
-"return"			{ return symbol(sym.RETURN); }
-"satisfies"			{ return symbol(sym.SATISFIES); }
-"to"				{ return symbol(sym.TO); }
-"some"				{ return symbol(sym.SOME); }
-"every"				{ return symbol(sym.EVERY); }
-"if"				{ return symbol(sym.IF); }
-"then"				{ return symbol(sym.THEN); }
-"else"				{ return symbol(sym.ELSE); }
-"and"				{ return symbol(sym.AND); }
-"or"				{ return symbol(sym.OR); }
+"for"				{ return symbol(XpathSym.FOR); }
+"in"				{ return symbol(XpathSym.IN); }
+"return"			{ return symbol(XpathSym.RETURN); }
+"satisfies"			{ return symbol(XpathSym.SATISFIES); }
+"to"				{ return symbol(XpathSym.TO); }
+"some"				{ return symbol(XpathSym.SOME); }
+"every"				{ return symbol(XpathSym.EVERY); }
+"if"				{ return symbol(XpathSym.IF); }
+"then"				{ return symbol(XpathSym.THEN); }
+"else"				{ return symbol(XpathSym.ELSE); }
+"and"				{ return symbol(XpathSym.AND); }
+"or"				{ return symbol(XpathSym.OR); }
 
-"empty"				{ return symbol(sym.EMPTY); }
-"item"				{ return symbol(sym.ITEM); }
-"node"				{ return symbol(sym.NODE); }
-"document\-node"		{ return symbol(sym.DOCUMENT_NODE); }
-"text"				{ return symbol(sym.TEXT); }
-"comment"			{ return symbol(sym.COMMENT); }
-"processing\-instruction"	{ return symbol(sym.PROCESSING_INSTRUCTION); }
-"schema\-attribute"		{ return symbol(sym.SCHEMA_ATTRIBUTE); }
-"element"			{ return symbol(sym.ELEMENT); }
-"schema\-element"		{ return symbol(sym.SCHEMA_ELEMENT); }
+"empty"				{ return symbol(XpathSym.EMPTY); }
+"item"				{ return symbol(XpathSym.ITEM); }
+"node"				{ return symbol(XpathSym.NODE); }
+"document\-node"		{ return symbol(XpathSym.DOCUMENT_NODE); }
+"text"				{ return symbol(XpathSym.TEXT); }
+"comment"			{ return symbol(XpathSym.COMMENT); }
+"processing\-instruction"	{ return symbol(XpathSym.PROCESSING_INSTRUCTION); }
+"schema\-attribute"		{ return symbol(XpathSym.SCHEMA_ATTRIBUTE); }
+"element"			{ return symbol(XpathSym.ELEMENT); }
+"schema\-element"		{ return symbol(XpathSym.SCHEMA_ELEMENT); }
 
 
 {StringLiteral}		{
@@ -159,12 +159,12 @@ NCName		= ( {Letter} | "_") ( {NCNameChar} )*
 				String str = yytext();
 				assert str.length() >= 2;
 				str = str.substring(1,str.length()-1);
-				return symbol(sym.STRING, str); 
+				return symbol(XpathSym.STRING, str); 
 			}
-{Digits}		{ return symbol(sym.INTEGER, new Integer(yytext())); }
-{DoubleLiteral}		{ return symbol(sym.DOUBLE, new Double(yytext())); }
-{DecimalLiteral}	{ return symbol(sym.DECIMAL, new Double(yytext())); }
-{NCName}		{ return symbol(sym.NCNAME, yytext()); }
+{Digits}		{ return symbol(XpathSym.INTEGER, new Integer(yytext())); }
+{DoubleLiteral}		{ return symbol(XpathSym.DOUBLE, new Double(yytext())); }
+{DecimalLiteral}	{ return symbol(XpathSym.DECIMAL, new Double(yytext())); }
+{NCName}		{ return symbol(XpathSym.NCNAME, yytext()); }
 
 
 

@@ -33,7 +33,7 @@ public class JFlexCupParser implements XPathParser {
 
 		XPathFlex lexer = new XPathFlex(new StringReader(xpath));
 
-		parser p = new parser(lexer);
+		XpathCup p = new XpathCup(lexer);
 		try {
 			Symbol res = p.parse();
 			return (XPath) res.value;
