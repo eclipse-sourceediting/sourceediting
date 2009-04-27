@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,14 +13,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.progress.UIJob;
 import org.eclipse.wst.common.core.search.SearchEngine;
 import org.eclipse.wst.common.core.search.SearchMatch;
 import org.eclipse.wst.common.core.search.SearchParticipant;
@@ -32,6 +37,7 @@ import org.eclipse.wst.common.core.search.scope.SearchScope;
 import org.eclipse.wst.common.ui.internal.search.dialogs.IComponentList;
 import org.eclipse.wst.common.ui.internal.search.dialogs.IComponentSearchListProvider;
 import org.eclipse.wst.xml.core.internal.search.XMLComponentDeclarationPattern;
+import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.search.IXSDSearchConstants;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDElementDeclaration;
@@ -88,7 +94,7 @@ public abstract class XSDSearchListProvider implements IComponentSearchListProvi
       this.searchKind = searchKind;
     }
 
-    public void visitSchema(XSDSchema schema, boolean visitImportedSchema)
+    public void visitSchema(final XSDSchema schema, boolean visitImportedSchema)
     {
       visitedSchemas.add(schema);
       for (Iterator contents = schema.getContents().iterator(); contents.hasNext();)
@@ -96,8 +102,39 @@ public abstract class XSDSearchListProvider implements IComponentSearchListProvi
         XSDSchemaContent content = (XSDSchemaContent) contents.next();
         if (content instanceof XSDSchemaDirective)
         {
-          XSDSchemaDirective schemaDirective = (XSDSchemaDirective) content;
+          final XSDSchemaDirective schemaDirective = (XSDSchemaDirective) content;
           XSDSchema extSchema = schemaDirective.getResolvedSchema();
+          if (extSchema == null && schemaDirective instanceof XSDImport && visitImportedSchema) 
+          {
+            // Force the import declaration to resolve. The work must be done in the UI thread
+            // because there are UI components listening to changes in the schema content.
+            
+            UIJob loadImportJob = new UIJob(XSDEditorPlugin.getResourceString("_UI_LABEL_LOADING_XML_SCHEMA")) //$NON-NLS-1$ 
+            {
+              public IStatus runInUIThread(IProgressMonitor monitor) 
+              {
+                // The schema model will load the import when trying to resolve any component 
+                // in the imported schema's namespace.
+
+                XSDImport xsdImport = (XSDImport)schemaDirective;
+                String importNamespace = xsdImport.getNamespace();
+                schema.resolveAttributeDeclaration(importNamespace, ""); //$NON-NLS-1$
+                return Status.OK_STATUS;
+              }
+            };
+            loadImportJob.setSystem(true);
+            loadImportJob.schedule();
+            try 
+            {
+              loadImportJob.join();
+            }
+            catch (InterruptedException e) 
+            {
+              // Nothing to do about it.
+            }
+            extSchema = schemaDirective.getResolvedSchema();
+          }
+          
           if (extSchema != null && !visitedSchemas.contains(extSchema))
           {
             if (schemaDirective instanceof XSDImport && visitImportedSchema)
