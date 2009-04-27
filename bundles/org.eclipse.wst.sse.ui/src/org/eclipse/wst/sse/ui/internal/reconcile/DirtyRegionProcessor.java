@@ -287,21 +287,23 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	private synchronized void addRequest(DirtyRegion newDirtyRegion) {
 		// NOTE: This method is called a lot so make sure it's fast
 		List dirtyRegionQueue = getDirtyRegionQueue();
-		for (Iterator it = dirtyRegionQueue.iterator(); it.hasNext();) {
-			// go through list of existing dirty regions and check if any
-			// dirty regions need to be discarded
-			DirtyRegion currentExisting = (DirtyRegion) it.next();
-			DirtyRegion outer = getOuterRegion(currentExisting, newDirtyRegion);
-			// if we already have a request which contains the new request,
-			// discard the new request
-			if (outer == currentExisting)
-				return;
-			// if new request contains any existing requests,
-			// remove those
-			if (outer == newDirtyRegion)
-				it.remove();
+		synchronized (dirtyRegionQueue) {
+			for (Iterator it = dirtyRegionQueue.iterator(); it.hasNext();) {
+				// go through list of existing dirty regions and check if any
+				// dirty regions need to be discarded
+				DirtyRegion currentExisting = (DirtyRegion) it.next();
+				DirtyRegion outer = getOuterRegion(currentExisting, newDirtyRegion);
+				// if we already have a request which contains the new request,
+				// discard the new request
+				if (outer == currentExisting)
+					return;
+				// if new request contains any existing requests,
+				// remove those
+				if (outer == newDirtyRegion)
+					it.remove();
+			}
+			dirtyRegionQueue.add(newDirtyRegion);
 		}
-		dirtyRegionQueue.add(newDirtyRegion);
 	}
 
 	/**

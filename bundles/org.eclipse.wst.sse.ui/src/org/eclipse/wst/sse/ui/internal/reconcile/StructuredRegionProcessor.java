@@ -33,6 +33,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 public class StructuredRegionProcessor extends DocumentRegionProcessor {
 
 	class ModelLifecycleListener implements IModelLifecycleListener {
+		IStructuredModel changing = null;
 		/**
 		 * @see org.eclipse.wst.sse.core.internal.provisional.IModelLifecycleListener#processPostModelEvent(org.eclipse.wst.sse.core.internal.model.ModelLifecycleEvent)
 		 */
@@ -42,27 +43,18 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 			// here...
 			// ex. file is modified outside the workbench
 			if (event.getType() == ModelLifecycleEvent.MODEL_DOCUMENT_CHANGED) {
+				if (changing != null && event.getModel() == changing) {
+					IStructuredDocument sDoc = event.getModel().getStructuredDocument();
 
-				// check that it's this model that changed
-				IStructuredModel thisModel = getStructuredModelForRead(getDocument());
-				try {
-					if (thisModel != null && event.getModel().equals(thisModel)) {
-
-						IStructuredDocument sDoc = event.getModel().getStructuredDocument();
-
-						if (DEBUG) {
-							System.out.println("======================================================"); //$NON-NLS-1$
-							System.out.println("StructuredRegionProcessor: DOCUMENT MODEL CHANGED TO: "); //$NON-NLS-1$
-							System.out.println(sDoc.get());
-							System.out.println("======================================================"); //$NON-NLS-1$
-						}
-						setDocument(sDoc);
+					if (DEBUG) {
+						System.out.println("======================================================"); //$NON-NLS-1$
+						System.out.println("StructuredRegionProcessor: DOCUMENT MODEL CHANGED TO: "); //$NON-NLS-1$
+						System.out.println(sDoc.get());
+						System.out.println("======================================================"); //$NON-NLS-1$
 					}
+					setDocument(sDoc);
 				}
-				finally {
-					if (thisModel != null)
-						thisModel.releaseFromRead();
-				}
+				changing = null;
 			}
 		}
 
@@ -70,9 +62,8 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 		 * @see org.eclipse.wst.sse.core.internal.provisional.IModelLifecycleListener#processPreModelEvent(org.eclipse.wst.sse.core.internal.model.ModelLifecycleEvent)
 		 */
 		public void processPreModelEvent(ModelLifecycleEvent event) {
-
-			if (event.getType() == ModelLifecycleEvent.MODEL_DOCUMENT_CHANGED) {
-
+			if (event.getType() == ModelLifecycleEvent.MODEL_DOCUMENT_CHANGED && event.getModel() == fCurrentModel) {
+				changing = event.getModel();
 				flushDirtyRegionQueue();
 				// note: old annotations are removed via the strategies on
 				// AbstractStructuredTextReconcilingStrategy#setDocument(...)
@@ -81,6 +72,7 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 	}
 
 	private IModelLifecycleListener fLifeCycleListener = new ModelLifecycleListener();
+	IStructuredModel fCurrentModel = null;
 
 	/*
 	 * (non-Javadoc)
@@ -93,30 +85,25 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 		DirtyRegion outer = super.getOuterRegion(root, possible);
 		if (outer == null) {
 			// now compare nodes
-			IStructuredModel sModel = getStructuredModelForRead(getDocument());
-			try {
-				if (sModel != null) {
-					IndexedRegion rootRegion = sModel.getIndexedRegion(root.getOffset());
-					IndexedRegion possRegion = sModel.getIndexedRegion(possible.getOffset());
-					if (rootRegion != null && possRegion != null) {
-						int rootStart = rootRegion.getStartOffset();
-						int possStart = possRegion.getStartOffset();
-						// first just check if rootregion starts before
-						// possregion
-						if (rootStart <= possStart) {
-							// check if possregion is inside rootregion
-							outer = _getOuterRegion(root, possible, sModel, rootStart, possStart);
-						}
-						else {
-							// otherwise if rootregion is inside possregion
-							outer = _getOuterRegion(possible, root, sModel, possStart, rootStart);
-						}
+			IStructuredModel sModel = fCurrentModel;
+
+			if (sModel != null) {
+				IndexedRegion rootRegion = sModel.getIndexedRegion(root.getOffset());
+				IndexedRegion possRegion = sModel.getIndexedRegion(possible.getOffset());
+				if (rootRegion != null && possRegion != null) {
+					int rootStart = rootRegion.getStartOffset();
+					int possStart = possRegion.getStartOffset();
+					// first just check if rootregion starts before
+					// possregion
+					if (rootStart <= possStart) {
+						// check if possregion is inside rootregion
+						outer = _getOuterRegion(root, possible, sModel, rootStart, possStart);
+					}
+					else {
+						// otherwise if rootregion is inside possregion
+						outer = _getOuterRegion(possible, root, sModel, possStart, rootStart);
 					}
 				}
-			}
-			finally {
-				if (sModel != null)
-					sModel.releaseFromRead();
 			}
 		}
 		return outer;
@@ -185,7 +172,6 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 	 * use that.
 	 */
 	protected String getContentType(IDocument doc) {
-
 		String contentTypeId = null;
 		IStructuredModel sModel = null;
 		try {
@@ -209,25 +195,9 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 	 */
 	private IStructuredModel getStructuredModelForRead(IDocument doc) {
 		IStructuredModel sModel = null;
-		if (doc != null)
-			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
+		if (doc != null && doc instanceof IStructuredDocument)
+			sModel = StructuredModelManager.getModelManager().getModelForRead((IStructuredDocument) doc);
 		return sModel;
-	}
-
-	/**
-	 * @param document
-	 */
-	private void hookUpModelLifecycleListener(IDocument document) {
-		IStructuredModel sModel = getStructuredModelForRead(document);
-		try {
-			if (sModel != null) {
-				sModel.addModelLifecycleListener(fLifeCycleListener);
-			}
-		}
-		finally {
-			if (sModel != null)
-				sModel.releaseFromRead();
-		}
 	}
 
 	protected void process(DirtyRegion dirtyRegion) {
@@ -235,29 +205,23 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 			return;
 
 		// use structured model to determine area to process
-		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
-		try {
-			if (sModel != null) {
-				int start = dirtyRegion.getOffset();
-				int end = start + dirtyRegion.getLength();
-				IndexedRegion irStart = sModel.getIndexedRegion(start);
-				IndexedRegion irEnd = sModel.getIndexedRegion(end);
+		IStructuredModel sModel = fCurrentModel;
+		if (sModel != null) {
+			int start = dirtyRegion.getOffset();
+			int end = start + dirtyRegion.getLength();
+			IndexedRegion irStart = sModel.getIndexedRegion(start);
+			IndexedRegion irEnd = sModel.getIndexedRegion(end);
 
-				if (irStart != null) {
-					start = Math.min(start, irStart.getStartOffset());
-				}
-				if (irEnd != null) {
-					end = Math.max(end, irEnd.getEndOffset());
-				}
-				super.process(createDirtyRegion(start, end - start, DirtyRegion.INSERT));
+			if (irStart != null) {
+				start = Math.min(start, irStart.getStartOffset());
 			}
-			else {
-				super.process(dirtyRegion);
+			if (irEnd != null) {
+				end = Math.max(end, irEnd.getEndOffset());
 			}
+			super.process(createDirtyRegion(start, end - start, DirtyRegion.INSERT));
 		}
-		finally {
-			if (sModel != null)
-				sModel.releaseFromRead();
+		else {
+			super.process(dirtyRegion);
 		}
 	}
 
@@ -271,34 +235,21 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 	}
 
 	public void setDocument(IDocument newDocument) {
-		// unhook old lifecycle listner
-		unhookModelLifecycleListener(getDocument());
+		// unhook old lifecycle listener
+		if (fCurrentModel != null)
+			fCurrentModel.removeModelLifecycleListener(fLifeCycleListener);
+
+		if (fCurrentModel != null) {
+			fCurrentModel.releaseFromRead();
+			fCurrentModel = null;
+		}
 		super.setDocument(newDocument);
+		if (newDocument != null) {
+			fCurrentModel = getStructuredModelForRead(newDocument);
+		}
+		
 		// add new lifecycle listener
-		if (newDocument != null)
-			hookUpModelLifecycleListener(newDocument);
-	}
-
-	/**
-	 * @param document
-	 */
-	private void unhookModelLifecycleListener(IDocument document) {
-		IStructuredModel sModel = getStructuredModelForRead(document);
-		try {
-			if (sModel != null)
-				sModel.removeModelLifecycleListener(fLifeCycleListener);
-
-		}
-		finally {
-			if (sModel != null)
-				sModel.releaseFromRead();
-		}
-	}
-
-	public void uninstall() {
-
-		// removes model listeners
-		unhookModelLifecycleListener(getDocument());
-		super.uninstall();
+		if (fCurrentModel != null)
+			fCurrentModel.addModelLifecycleListener(fLifeCycleListener);
 	}
 }
