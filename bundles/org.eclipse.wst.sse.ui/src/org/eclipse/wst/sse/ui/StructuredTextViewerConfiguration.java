@@ -387,7 +387,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		}
 		return new MultipleHyperlinkPresenter(fPreferenceStore);
 	}
-
+	
 	/**
 	 * Returns the information control creator. The creator is a factory
 	 * creating information controls for the given source viewer.<br />
@@ -517,15 +517,17 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		if(contentTypes != null) {
 			StructuredDocumentDamagerRepairer dr = null;
 			
-			for(int i = 0; i < contentTypes.length; i++) {
-				dr = new StructuredDocumentDamagerRepairer();
-				dr.setDocument(sourceViewer.getDocument());
-				
-				if(fHighlighter != null)
-					dr.setProvider(fHighlighter.getProvider(contentTypes[i]));
-				
-				reconciler.setDamager(dr, contentTypes[i]);
-				reconciler.setRepairer(dr, contentTypes[i]);
+			for (int i = 0; i < contentTypes.length; i++) {
+				if (fHighlighter != null) {
+					LineStyleProvider provider = fHighlighter.getProvider(contentTypes[i]);
+					if (provider == null)
+						continue;
+					
+					dr = new StructuredDocumentDamagerRepairer(provider);
+					dr.setDocument(sourceViewer.getDocument());
+					reconciler.setDamager(dr, contentTypes[i]);
+					reconciler.setRepairer(dr, contentTypes[i]);
+				}
 			}
 		}
 		

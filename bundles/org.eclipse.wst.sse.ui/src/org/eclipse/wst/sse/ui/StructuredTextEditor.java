@@ -1894,6 +1894,9 @@ public class StructuredTextEditor extends TextEditor {
 		else if (IShowInTargetList.class.equals(required)) {
 			result = new ShowInTargetListAdapter();
 		}
+		else if (IVerticalRuler.class.equals(required)) {
+			return getVerticalRuler();
+		}
 		else if (SelectionHistory.class.equals(required)) {
 			if (fSelectionHistory == null)
 				fSelectionHistory = new SelectionHistory(this);
@@ -1914,7 +1917,7 @@ public class StructuredTextEditor extends TextEditor {
 				result = super.getAdapter(required);
 		}
 		if (result == null) {
-			Logger.log(Logger.INFO_DEBUG, "StructuredTextEditor.getAdapter returning null for " + required); //$NON-NLS-1$
+//			Logger.log(Logger.INFO_DEBUG, "StructuredTextEditor.getAdapter returning null for " + required); //$NON-NLS-1$
 		}
 		if (org.eclipse.wst.sse.core.internal.util.Debug.perfTestAdapterClassLoading) {
 			long stop = System.currentTimeMillis();
