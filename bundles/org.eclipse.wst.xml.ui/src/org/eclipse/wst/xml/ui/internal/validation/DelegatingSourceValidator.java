@@ -426,7 +426,9 @@ public abstract class DelegatingSourceValidator implements IValidator {
 						IDOMAttr attributeNode = (IDOMAttr) (element.getAttributeNode(nameOrValue));
 						if (attributeNode != null) {
 							startEndPositions[0] = attributeNode.getValueRegionStartOffset();
-							startEndPositions[1] = startEndPositions[0] + attributeNode.getValueRegionText().length();
+							String valueRegionText = attributeNode.getValueRegionText();
+							int valueRegionLength = valueRegionText == null ? 0 : valueRegionText.length(); 
+							startEndPositions[1] = startEndPositions[0] + valueRegionLength;
 						}
 					}
 				}
