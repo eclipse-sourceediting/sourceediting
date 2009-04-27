@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Jesse Valianes - Seneca College https://bugs.eclipse.org/bugs/show_bug.cgi?id=235381
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.common.properties.sections.appinfo;
 
@@ -264,7 +265,8 @@ public class ExtensionDetailsViewer extends Viewer
       if (item instanceof DialogNodeEditorConfiguration)
       {
         DialogNodeEditorConfiguration dialogNodeEditorConfiguration = (DialogNodeEditorConfiguration)item;        
-        dialogNodeEditorConfiguration.invokeDialog();               
+        dialogNodeEditorConfiguration.invokeDialog();
+        refresh();
       }
       else if (item instanceof ExtensionItem)
       {
