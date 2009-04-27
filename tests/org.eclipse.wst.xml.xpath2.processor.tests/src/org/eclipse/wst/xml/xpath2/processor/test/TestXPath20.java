@@ -23,9 +23,9 @@ import org.eclipse.wst.xml.xpath2.processor.XPathParser;
 import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary;
-import org.eclipse.wst.xml.xpath2.processor.function.XDTCtrLibrary;
 import org.eclipse.wst.xml.xpath2.processor.function.XSCtrLibrary;
-import org.eclipse.wst.xml.xpath2.processor.types.ElementType;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.XDTCtrLibrary;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
 
 
 public class TestXPath20 extends AbstractPsychoPathTest {

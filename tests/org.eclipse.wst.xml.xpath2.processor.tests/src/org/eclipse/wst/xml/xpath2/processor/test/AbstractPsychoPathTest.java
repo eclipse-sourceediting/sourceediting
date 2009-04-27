@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.*;
 import org.eclipse.wst.xml.xpath2.processor.function.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.XDTCtrLibrary;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
 
@@ -46,7 +47,6 @@ public class AbstractPsychoPathTest extends TestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
-		// TODO Auto-generated method stub
 		super.tearDown();
 		domDoc = null;
 	}

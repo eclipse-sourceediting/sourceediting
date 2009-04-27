@@ -19,7 +19,7 @@ import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.Evaluator;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
-import org.eclipse.wst.xml.xpath2.processor.types.XSBoolean;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
 
 public class TestBugs extends AbstractPsychoPathTest {
 	

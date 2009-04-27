@@ -20,9 +20,9 @@ import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.Evaluator;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
 
 
-import org.eclipse.wst.xml.xpath2.processor.types.ElementType;
 
 public class Bug269833 extends AbstractPsychoPathTest{
 		
