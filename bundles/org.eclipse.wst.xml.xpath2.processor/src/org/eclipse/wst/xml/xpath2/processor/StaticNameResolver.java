@@ -11,8 +11,16 @@
 
 package org.eclipse.wst.xml.xpath2.processor;
 
-import org.eclipse.wst.xml.xpath2.processor.ast.*;
-import org.eclipse.wst.xml.xpath2.processor.types.*;
+import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.internal.StaticAttrNameError;
+import org.eclipse.wst.xml.xpath2.processor.internal.StaticElemNameError;
+import org.eclipse.wst.xml.xpath2.processor.internal.StaticFunctNameError;
+import org.eclipse.wst.xml.xpath2.processor.internal.StaticNameError;
+import org.eclipse.wst.xml.xpath2.processor.internal.StaticNsNameError;
+import org.eclipse.wst.xml.xpath2.processor.internal.StaticTypeNameError;
+import org.eclipse.wst.xml.xpath2.processor.internal.StaticVarNameError;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
 import java.util.*;
 

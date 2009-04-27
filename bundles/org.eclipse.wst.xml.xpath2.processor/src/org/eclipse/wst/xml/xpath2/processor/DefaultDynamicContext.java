@@ -12,8 +12,10 @@
 package org.eclipse.wst.xml.xpath2.processor;
 
 import org.apache.xerces.xs.*;
-import org.eclipse.wst.xml.xpath2.processor.function.*;
-import org.eclipse.wst.xml.xpath2.processor.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.DefaultStaticContext;
+import org.eclipse.wst.xml.xpath2.processor.internal.Focus;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
 import java.util.*;
 import org.w3c.dom.*;

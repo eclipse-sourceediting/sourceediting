@@ -14,9 +14,21 @@ package org.eclipse.wst.xml.xpath2.processor;
 import java.util.*;
 import org.w3c.dom.*;
 import org.apache.xerces.xs.*;
-import org.eclipse.wst.xml.xpath2.processor.ast.*;
-import org.eclipse.wst.xml.xpath2.processor.function.*;
-import org.eclipse.wst.xml.xpath2.processor.types.*;
+import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.internal.Axis;
+import org.eclipse.wst.xml.xpath2.processor.internal.DescendantOrSelfAxis;
+import org.eclipse.wst.xml.xpath2.processor.internal.Focus;
+import org.eclipse.wst.xml.xpath2.processor.internal.ForwardAxis;
+import org.eclipse.wst.xml.xpath2.processor.internal.ParentAxis;
+import org.eclipse.wst.xml.xpath2.processor.internal.ReverseAxis;
+import org.eclipse.wst.xml.xpath2.processor.internal.SelfAxis;
+import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
+import org.eclipse.wst.xml.xpath2.processor.internal.StaticNameError;
+import org.eclipse.wst.xml.xpath2.processor.internal.StaticTypeNameError;
+import org.eclipse.wst.xml.xpath2.processor.internal.TypeError;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
 /**
  * Default evaluator interface

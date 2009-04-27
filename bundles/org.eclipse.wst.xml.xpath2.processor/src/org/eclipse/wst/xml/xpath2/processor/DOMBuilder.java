@@ -12,6 +12,7 @@
 package org.eclipse.wst.xml.xpath2.processor;
 
 import java.io.*;
+
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import org.xml.sax.*;

@@ -11,6 +11,7 @@
 
 package org.eclipse.wst.xml.xpath2.processor;
 
+
 /**
  * This exception is thrown if there is a problem with the XPath parser.
  */

@@ -11,7 +11,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor.function;
 
-import org.eclipse.wst.xml.xpath2.processor.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.ConstructorFL;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
 /**
  * XML Schema control library support.

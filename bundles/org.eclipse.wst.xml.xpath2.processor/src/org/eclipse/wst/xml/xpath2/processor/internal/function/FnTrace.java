@@ -1,0 +1,91 @@
+/*******************************************************************************
+ * Copyright (c) 2005, 2009 Andrea Bittau, University College London, and others
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *******************************************************************************/
+
+package org.eclipse.wst.xml.xpath2.processor.internal.function;
+
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
+import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.internal.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+
+import java.util.*;
+
+/**
+ * The input $value is returned, unchanged, as the result of the function. In
+ * addition, the inputs $value, converted to an xs:string, and $label may be
+ * directed to a trace data set. The location and format of the trace data set
+ * are implementation dependent. The ordering of output from invocations of the
+ * fn:trace() function is implementation dependent.
+ */
+public class FnTrace extends Function {
+	/**
+	 * Constructor for FnTrace.
+	 */
+	public FnTrace() {
+		super(new QName("trace"), 2);
+	}
+
+	/**
+	 * Evaluate arguments.
+	 * 
+	 * @param args
+	 *            argument expressions.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of evaluation.
+	 */
+	@Override
+	public ResultSequence evaluate(Collection args) throws DynamicError {
+		return trace(args);
+	}
+
+	/**
+	 * Trace operation.
+	 * 
+	 * @param args
+	 *            Result from the expressions evaluation.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of fn:trace operation.
+	 */
+	public static ResultSequence trace(Collection args) throws DynamicError {
+
+		// sanity check args
+		if (args.size() != 2)
+			DynamicError.throw_type_error();
+
+		Iterator argsi = args.iterator();
+
+		ResultSequence arg1 = (ResultSequence) argsi.next();
+		ResultSequence arg2 = (ResultSequence) argsi.next();
+
+		if (arg2.size() != 1)
+			DynamicError.throw_type_error();
+
+		AnyType at = arg2.first();
+		if (!(at instanceof XSString))
+			DynamicError.throw_type_error();
+
+		XSString label = (XSString) at;
+
+		int index = 1;
+
+		for (Iterator i = arg1.iterator(); i.hasNext(); index++) {
+			at = (AnyType) i.next();
+
+			System.out.println(label.value() + " [" + index + "] "
+					+ at.string_type() + ":" + at.string_value());
+
+		}
+
+		return arg1;
+	}
+}

@@ -12,8 +12,8 @@
 package org.eclipse.wst.xml.xpath2.processor;
 
 import org.apache.xerces.xs.*;
-import org.eclipse.wst.xml.xpath2.processor.function.*;
-import org.eclipse.wst.xml.xpath2.processor.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
 /**
  * interface to static context

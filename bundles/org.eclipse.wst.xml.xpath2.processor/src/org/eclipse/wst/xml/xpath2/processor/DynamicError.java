@@ -11,6 +11,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor;
 
+import org.eclipse.wst.xml.xpath2.processor.internal.TypeError;
+
 /**
  * Dynamic Error like division by 0 or type errors.
  */

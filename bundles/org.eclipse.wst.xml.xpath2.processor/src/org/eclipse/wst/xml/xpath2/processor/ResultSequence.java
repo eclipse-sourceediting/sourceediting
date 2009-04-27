@@ -13,7 +13,7 @@ package org.eclipse.wst.xml.xpath2.processor;
 
 import java.util.*;
 
-import org.eclipse.wst.xml.xpath2.processor.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
 /**
  * Interface to the methods of range of result sequence

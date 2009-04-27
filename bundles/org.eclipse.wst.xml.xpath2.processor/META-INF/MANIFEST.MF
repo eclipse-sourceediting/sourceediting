@@ -8,8 +8,11 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.5.0",
  java_cup.runtime;bundle-version="0.10.0"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
-Bundle-Activator: org.eclipse.wst.xml.xpath2.processor.XPath2Plugin
+Bundle-Activator: org.eclipse.wst.xml.xpath2.processor.internal.XPath2Plugin
 Export-Package: org.eclipse.wst.xml.xpath2.processor,
  org.eclipse.wst.xml.xpath2.processor.ast,
  org.eclipse.wst.xml.xpath2.processor.function,
- org.eclipse.wst.xml.xpath2.processor.types
+ org.eclipse.wst.xml.xpath2.processor.internal;x-internal:=true,
+ org.eclipse.wst.xml.xpath2.processor.internal.ast;x-internal:=true,
+ org.eclipse.wst.xml.xpath2.processor.internal.function;x-internal:=true,
+ org.eclipse.wst.xml.xpath2.processor.internal.types;x-internal:=true

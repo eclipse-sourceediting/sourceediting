@@ -11,6 +11,7 @@
 
 package org.eclipse.wst.xml.xpath2.processor;
 
+
 /**
  * Base class for all static errors as defined by the XPath 2.0 specification
  * 
