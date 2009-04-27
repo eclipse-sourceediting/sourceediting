@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     David Carver (STAR) - bug 273763 - correct error codes. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
