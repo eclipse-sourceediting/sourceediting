@@ -20,7 +20,7 @@ public class StaticFunctNameError extends StaticNameError {
 	 * 
 	 */
 	private static final long serialVersionUID = 3804565876770376444L;
-	public static final String FUNCTION_NOT_FOUND = "XP0017";
+	public static final String FUNCTION_NOT_FOUND = "XPST0017";
 
 	/**
 	 * Constructor for static function name error

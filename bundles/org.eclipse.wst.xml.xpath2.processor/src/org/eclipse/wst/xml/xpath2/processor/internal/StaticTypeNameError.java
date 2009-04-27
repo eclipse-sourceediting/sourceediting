@@ -19,7 +19,7 @@ public class StaticTypeNameError extends StaticNameError {
 	 * 
 	 */
 	private static final long serialVersionUID = 7328671571088574947L;
-	public static final String TYPE_NOT_FOUND = "XP0051";
+	public static final String TYPE_NOT_FOUND = "XPST0051";
 
 	/**
 	 * Constructor.

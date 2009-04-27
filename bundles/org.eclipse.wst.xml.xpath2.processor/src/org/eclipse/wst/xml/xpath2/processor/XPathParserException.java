@@ -24,7 +24,7 @@ public class XPathParserException extends StaticError {
 	/**
 	 * The type of exception.
 	 */
-	public static final String INVALID_XPATH_EXPRESSION = "XP0003";
+	public static final String INVALID_XPATH_EXPRESSION = "XPST0003";
 
 	/**
 	 * Constructor for XPathParserException.

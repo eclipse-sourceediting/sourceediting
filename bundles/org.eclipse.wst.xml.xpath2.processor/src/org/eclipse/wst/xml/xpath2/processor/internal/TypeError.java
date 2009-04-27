@@ -59,7 +59,7 @@ public class TypeError extends XPathException {
 		if (err != null)
 			error += " " + err;
 
-		return new TypeError("XP0020", error);
+		return new TypeError("XPTY0020", error);
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class TypeError extends XPathException {
 		if (err != null)
 			error += " " + err;
 
-		return new TypeError("XP0018", error);
+		return new TypeError("XPTY0018", error);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class TypeError extends XPathException {
 		if (err != null)
 			error += " " + err;
 
-		return new TypeError("XP0019", error);
+		return new TypeError("XPTY0019", error);
 	}
 
 	/**
@@ -107,6 +107,6 @@ public class TypeError extends XPathException {
 		if (err != null)
 			error += " " + err;
 
-		return new TypeError("XP0006", error);
+		return new TypeError("XPTY0006", error);
 	}
 }

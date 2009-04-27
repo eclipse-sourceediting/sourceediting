@@ -78,7 +78,7 @@ public class DynamicError extends XPathException {
 		if (err != null)
 			error += " " + err;
 
-		return new DynamicError("XP0021", error);
+		return new DynamicError("XPDY0021", error);
 	}
 
 	/**
