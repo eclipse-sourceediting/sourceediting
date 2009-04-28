@@ -7,7 +7,8 @@
  * 
  * Contributors:
  *     David Carver (STAR) - initial API and implementation
- *     Mukul Gandhi - bug 273719 - String-Length with Element Arg.
+ *     Mukul Gandhi - bug 273719 - String-Length with Element Arg
+ *     Mukul Gandhi - bug 273795 - improvements to substring function
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -45,6 +46,54 @@ public class TestBugs extends AbstractPsychoPathTest {
 		String actual = result.string_value();
 
 		assertEquals("true", actual);
-	}	
+	}
+	
+	public void testBug273795Arity2() throws Exception {
+		// Bug 273795
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug273795.xml");
+		loadDOMDocument(fileURL);
+		
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		// test with arity 2
+		String xpath = "substring(x, 3) = 'happy'";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	public void testBug273795Arity3() throws Exception {
+		// Bug 273795
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug273795.xml");
+		loadDOMDocument(fileURL);
+		
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		// test with arity 3
+		String xpath = "substring(x, 3, 4) = 'happ'";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
 
 }
