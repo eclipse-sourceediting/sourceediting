@@ -72,6 +72,9 @@ public class TestXSLLineStyleProvider extends AbstractXSLUITest {
 	protected StructuredTextViewerConfigurationXSL xslConfiguration = new StructuredTextViewerConfigurationXSL();
 	protected String Partitioning = IDocumentExtension3.DEFAULT_PARTITIONING;
 	protected StructuredTextPartitionerForXSL defaultPartitioner = new StructuredTextPartitionerForXSL();
+	protected Shell shell = null;
+	protected Composite parent = null;
+
 
 	public TestXSLLineStyleProvider() {
 		// TODO Auto-generated constructor stub
@@ -105,8 +108,6 @@ public class TestXSLLineStyleProvider extends AbstractXSLUITest {
 		// some test environments might not have a "real" display
 		if (Display.getCurrent() != null) {
 
-			Shell shell = null;
-			Composite parent = null;
 
 			if (PlatformUI.isWorkbenchRunning()) {
 				shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
@@ -163,6 +164,7 @@ public class TestXSLLineStyleProvider extends AbstractXSLUITest {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		parent.dispose();
 	}
 
 	private LineStyleProvider[] getLineStyleProviders() {
@@ -236,8 +238,6 @@ public class TestXSLLineStyleProvider extends AbstractXSLUITest {
 		} finally {
 			model.releaseFromEdit();
 		}
-		sourceViewer = null;
-
 	}
 
 	public void testInitializeLineStyleProvider() throws Exception {
@@ -247,7 +247,6 @@ public class TestXSLLineStyleProvider extends AbstractXSLUITest {
 		} finally {
 			model.releaseFromEdit();
 		}
-		sourceViewer = null;
 	}
 
 	public void testPrepareRegion() throws Exception {

@@ -39,8 +39,8 @@ public abstract class AbstractXSLUITest extends TestCase
 {
 	protected static IProject fTestProject;
 	private static boolean fTestProjectInitialized;
-	private static final String PROJECT_FILES = "projectfiles";
-	private static final String TEST_PROJECT_NAME = "xsltestfiles";
+	protected static final String PROJECT_FILES = "projectfiles";
+	protected static final String TEST_PROJECT_NAME = "xsltestfiles";
 
 	@Override
 	protected void setUp() throws Exception
@@ -105,6 +105,18 @@ public abstract class AbstractXSLUITest extends TestCase
 				monitor.done();
 			}
 		}
+	}
+	
+	protected void tearDown() throws Exception {
+		String projName = TEST_PROJECT_NAME;
+
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
+				projName);
+		if (project.isAccessible()) {
+			project.delete(true, true, new NullProgressMonitor());
+		}
+		getWorkspace().getRoot().refreshLocal(2, new NullProgressMonitor());
+		fTestProjectInitialized = false;
 	}
 
 	/**

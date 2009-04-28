@@ -16,18 +16,19 @@ import java.io.File;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
 
 /**
  * Tests everything about code completion and code assistance.
  * 
  */
-public class XSLCompletionTest extends AbstractCompletionProposalTest {
+public class XSLCompletionTest extends AbstractSourceViewerTest {
 
 	public XSLCompletionTest() {
 	}
 
 	public void testGetNodeAtLine15() throws Exception {
-		projectName = "xsltestfiles";
+	
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
@@ -44,7 +45,6 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 	}
 
 	public void testGetNodeAtLine16() throws Exception {
-		projectName = "xsltestfiles";
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
@@ -61,7 +61,6 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 	}
 
 	public void testGetNodeAtLine17() throws Exception {
-		projectName = "xsltestfiles";
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
@@ -77,7 +76,6 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 	}
 
 	public void testAttributeNotValueAvailable() throws Exception {
-		projectName = "xsltestfiles";
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
@@ -96,7 +94,6 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 	}
 
 	public void testSelectAttributeProposalsAvailable() throws Exception {
-		projectName = "xsltestfiles";
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
@@ -123,7 +120,6 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 	 * @throws Exception
 	 */
 	public void testSelectAttributeProposalsNarrow() throws Exception {
-		projectName = "xsltestfiles";
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
@@ -144,7 +140,6 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 	}
 
 	public void testTestAttributeProposalsAvailable() throws Exception {
-		projectName = "xsltestfiles";
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
@@ -161,7 +156,6 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 	}
 
 	public void testXSLElementProposalsAvailable() throws Exception {
-		projectName = "xsltestfiles";
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);
@@ -182,7 +176,6 @@ public class XSLCompletionTest extends AbstractCompletionProposalTest {
 	 * Bug 259575
 	 */
 	public void testXPathProposalAvaialbleAfterComma() throws Exception {
-		projectName = "xsltestfiles";
 		fileName = "utils.xsl";
 		String xslFilePath = projectName + File.separator + fileName;
 		loadFileForTesting(xslFilePath);

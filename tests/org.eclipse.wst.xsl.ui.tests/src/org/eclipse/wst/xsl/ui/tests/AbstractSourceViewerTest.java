@@ -8,7 +8,7 @@
  *Contributors:
  *    David Carver (STAR) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.ui.tests.contentassist;
+package org.eclipse.wst.xsl.ui.tests;
 
 import java.io.IOException;
 
@@ -41,7 +41,6 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.xml.core.internal.encoding.XMLDocumentLoader;
 import org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL;
 import org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistProcessor;
-import org.eclipse.wst.xsl.ui.tests.AbstractXSLUITest;
 
 /**
  * This class is an abstract class for Content Completion Tests. It provides all
@@ -52,9 +51,9 @@ import org.eclipse.wst.xsl.ui.tests.AbstractXSLUITest;
  * @author David Carver
  * 
  */
-public class AbstractCompletionProposalTest extends AbstractXSLUITest {
+public class AbstractSourceViewerTest extends AbstractXSLUITest {
 
-	protected String projectName = null;
+	protected String projectName = TEST_PROJECT_NAME;
 	protected String fileName = null;
 	protected IFile file = null;
 	protected IEditorPart textEditorPart = null;
@@ -63,16 +62,16 @@ public class AbstractCompletionProposalTest extends AbstractXSLUITest {
 	protected IStructuredDocument document = null;
 	protected StructuredTextViewer sourceViewer = null;
 	protected IStructuredModel model;
+	protected Shell shell = null;
+	protected Composite parent = null;
 
-	public AbstractCompletionProposalTest() {
+
+	public AbstractSourceViewerTest() {
 	}
 
 	protected void initializeSourceViewer() {
 		// some test environments might not have a "real" display
 		if (Display.getCurrent() != null) {
-
-			Shell shell = null;
-			Composite parent = null;
 
 			if (PlatformUI.isWorkbenchRunning()) {
 				shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
@@ -97,21 +96,6 @@ public class AbstractCompletionProposalTest extends AbstractXSLUITest {
 		sourceViewer.configure(new StructuredTextViewerConfigurationXSL());
 
 		sourceViewer.setDocument(document);
-	}
-
-	protected void setupProject() {
-		projectName = "xsltestfiles";
-		IProjectDescription description = ResourcesPlugin.getWorkspace()
-				.newProjectDescription(projectName);
-
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(
-				projectName);
-		try {
-			project.create(description, new NullProgressMonitor());
-			project.open(new NullProgressMonitor());
-		} catch (CoreException e) {
-
-		}
 	}
 
 	protected void loadFileForTesting(String xslFilePath)
@@ -181,12 +165,12 @@ public class AbstractCompletionProposalTest extends AbstractXSLUITest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		setupProject();
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		parent.dispose();
 	}
 	
 	

@@ -15,13 +15,14 @@ import java.io.File;
 
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
 
 /**
  * Tests everything about code completion and code assistance.
  * 
  */
 public class TestElementCompletionProposal extends
-		AbstractCompletionProposalTest {
+		AbstractSourceViewerTest {
 
 	public TestElementCompletionProposal() {
 		// TODO Auto-generated constructor stub
@@ -45,8 +46,6 @@ public class TestElementCompletionProposal extends
 		} finally {
 			model.releaseFromEdit();
 		}
-		sourceViewer = null;
-
 	}
 
 	public void testXSLApplyTemplatesPropsoalAvailable() throws Exception {
@@ -78,9 +77,6 @@ public class TestElementCompletionProposal extends
 		} finally {
 			model.releaseFromEdit();
 		}
-
-		sourceViewer = null;
-
 	}
 
 	public void testXSLChoosePropsoalAvailable() throws Exception {
@@ -114,8 +110,6 @@ public class TestElementCompletionProposal extends
 		} finally {
 			model.releaseFromEdit();
 		}
-
-		sourceViewer = null;
 	}
 
 	public void testXSLWhenPropsoalNotAvailable() throws Exception {
@@ -147,7 +141,5 @@ public class TestElementCompletionProposal extends
 			model.releaseFromEdit();
 			throw ex;
 		}
-		sourceViewer = null;
 	}
-
 }

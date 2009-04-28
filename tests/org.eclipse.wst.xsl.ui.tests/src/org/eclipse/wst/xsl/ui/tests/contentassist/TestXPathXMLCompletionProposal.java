@@ -14,13 +14,14 @@ package org.eclipse.wst.xsl.ui.tests.contentassist;
 import java.io.File;
 
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
 
 /**
  * Tests everything about code completion and code assistance.
  * 
  */
 public class TestXPathXMLCompletionProposal extends
-		AbstractCompletionProposalTest {
+		AbstractSourceViewerTest {
 
 	public TestXPathXMLCompletionProposal() {
 	}
@@ -42,8 +43,6 @@ public class TestXPathXMLCompletionProposal extends
 		} finally {
 			model.releaseFromEdit();
 		}
-
-		sourceViewer = null;
 		fail("Did not find XSD proposals.");
 	}
 	
@@ -64,8 +63,6 @@ public class TestXPathXMLCompletionProposal extends
 		} finally {
 			model.releaseFromEdit();
 		}
-
-		sourceViewer = null;
 		fail("Did not find XSD proposals.");
 	}
 	
@@ -86,8 +83,6 @@ public class TestXPathXMLCompletionProposal extends
 		} finally {
 			model.releaseFromEdit();
 		}
-
-		sourceViewer = null;
 		fail("Did not find XSD proposals.");
 	}
 	

@@ -15,13 +15,14 @@ import java.io.File;
 
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
 
 /**
  * Tests everything about code completion and code assistance.
  * 
  */
 public class TestTemplateModeCompletionProposal extends
-		AbstractCompletionProposalTest {
+		AbstractSourceViewerTest {
 
 	public TestTemplateModeCompletionProposal() {
 	}
@@ -48,8 +49,6 @@ public class TestTemplateModeCompletionProposal extends
 		} finally {
 			model.releaseFromEdit();
 		}
-
-		sourceViewer = null;
 	}
 
 	private void assertProposalExists(String expected,

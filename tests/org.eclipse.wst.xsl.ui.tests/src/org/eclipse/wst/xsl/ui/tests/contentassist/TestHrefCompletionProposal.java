@@ -16,12 +16,13 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
 
 /**
  * Tests everything about code completion and code assistance.
  * 
  */
-public class TestHrefCompletionProposal extends AbstractCompletionProposalTest {
+public class TestHrefCompletionProposal extends AbstractSourceViewerTest {
 
 	public void testHrefProposalsAtStart() throws Exception {
 		fileName = projectName + File.separator + "hrefs" + File.separator + "mainFile.xsl";
@@ -41,8 +42,6 @@ public class TestHrefCompletionProposal extends AbstractCompletionProposalTest {
 		} finally {
 			model.releaseFromEdit();
 		}
-
-		sourceViewer = null;
 	}
 
 	private void doCommonTests(ICompletionProposal[] proposals) {

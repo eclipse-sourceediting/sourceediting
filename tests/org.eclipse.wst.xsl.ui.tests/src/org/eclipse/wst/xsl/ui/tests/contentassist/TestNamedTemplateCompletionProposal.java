@@ -17,9 +17,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyExists;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
+import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
 
 public class TestNamedTemplateCompletionProposal extends
-		AbstractCompletionProposalTest {
+		AbstractSourceViewerTest {
 
 	private void setupTestFile(String fileName) throws ResourceAlreadyExists,
 			ResourceInUse, IOException, CoreException {
@@ -36,8 +37,6 @@ public class TestNamedTemplateCompletionProposal extends
 		} finally {
 			model.releaseFromEdit();
 		}
-
-		sourceViewer = null;
 	}
 
 }

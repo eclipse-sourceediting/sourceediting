@@ -13,9 +13,10 @@ package org.eclipse.wst.xsl.ui.tests.contentassist;
 import java.io.File;
 
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
 
 public class TestEmptyFileCompletionProposal extends
-		AbstractCompletionProposalTest {
+		AbstractSourceViewerTest {
 
 	public void testXSLPropsoalAvailable() throws Exception {
 		fileName = "EmptyXSLFile.xsl";
@@ -29,8 +30,6 @@ public class TestEmptyFileCompletionProposal extends
 		} finally {
 			model.releaseFromEdit();
 		}
-		sourceViewer = null;
 	}
-
 
 }

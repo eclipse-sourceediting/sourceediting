@@ -15,16 +15,17 @@ import java.io.File;
 
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
 
 /**
  * Tests everything about code completion and code assistance.
  * 
  */
 public class TestExcludeResultPrefixesCompletionProposal extends
-		AbstractCompletionProposalTest {
+		AbstractSourceViewerTest {
 
 	public TestExcludeResultPrefixesCompletionProposal() {
-		
+
 	}
 
 	public void testAllDefaultValueNoProposals() throws Exception {
@@ -46,7 +47,6 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 		} finally {
 			model.releaseFromEdit();
 		}
-		sourceViewer = null;
 	}
 
 	public void testXHTMLNamespacePropsoalAvailable() throws Exception {
@@ -68,8 +68,6 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 		} finally {
 			model.releaseFromEdit();
 		}
-		sourceViewer = null;
-
 	}
 
 	public void testAllPropsoalAvailable() throws Exception {
@@ -83,7 +81,7 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 		int line = 2;
 
 		try {
-			ICompletionProposal[] proposals = getProposals(line,column);
+			ICompletionProposal[] proposals = getProposals(line, column);
 			assertNotNull("Did not find proposals.", proposals);
 			assertEquals("Proposal length not 2.", 2, proposals.length);
 			assertEquals("Proposal did not find xhtml as proposal value.",
@@ -91,8 +89,6 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 		} finally {
 			model.releaseFromEdit();
 		}
-		sourceViewer = null;
-
 	}
 
 	public void testExcludeXHTMLProposal() throws Exception {
@@ -113,14 +109,12 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 
 			for (int cnt = 0; cnt < proposals.length; cnt++) {
 				if (proposals[cnt].getDisplayString().equals("xhtml")) {
-					sourceViewer = null;
 					fail("XHTML Proposal found, when it should not have been!");
 				}
 			}
 		} finally {
 			model.releaseFromEdit();
 		}
-		sourceViewer = null;
 	}
 
 	public void testTestProposal() throws Exception {
@@ -144,7 +138,5 @@ public class TestExcludeResultPrefixesCompletionProposal extends
 		} finally {
 			model.releaseFromEdit();
 		}
-		sourceViewer = null;
 	}
-
 }

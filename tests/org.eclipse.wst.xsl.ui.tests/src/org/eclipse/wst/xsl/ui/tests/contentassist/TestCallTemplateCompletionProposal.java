@@ -13,9 +13,10 @@ package org.eclipse.wst.xsl.ui.tests.contentassist;
 import java.io.File;
 
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
 
 public class TestCallTemplateCompletionProposal extends
-		AbstractCompletionProposalTest {
+		AbstractSourceViewerTest {
 
 	public void testXSLPropsoalAvailable() throws Exception {
 		fileName = "calltemplateTest.xsl";
@@ -30,7 +31,6 @@ public class TestCallTemplateCompletionProposal extends
 		} finally {
 			model.releaseFromEdit();
 		}
-		sourceViewer = null;
 	}
 
 	public void testUtilsProposalAvailable() throws Exception {
@@ -47,8 +47,6 @@ public class TestCallTemplateCompletionProposal extends
 		} finally {
 			model.releaseFromEdit();
 		}
-
-		sourceViewer = null;
 	}
 
 }
