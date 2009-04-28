@@ -7,7 +7,9 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Ganhdi - bug 273719 - String Length does not work with Element arg. 
+ *     Mukul Gandhi - bug 273719 - String Length does not work with Element arg.
+ *     Mukul Gandhi - bug 273795 - improvements to function, substring (implemented
+ *                                 numeric type promotion). 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -28,9 +30,10 @@ import java.util.*;
 public abstract class Function {
 
 	protected QName _name;
-	protected int _arity; // if negative, need to have "at least"
-	// abs(_arity) args
-	// variable args basically...
+	/**
+	 * if negative, need to have "at least"
+	 */
+	protected int _arity; 
 	protected FunctionLibrary _fl;
 
 	/**
@@ -166,13 +169,18 @@ public abstract class Function {
 					
 					result.concat(converted);
 				}
-
 				// numeric type promotion
 				else if (item instanceof NumericType) {
-					// XXX TODO numeric type promotion
+					if (expected_aat instanceof XSDouble) {
+					  XSDouble doubleType = new XSDouble(item.string_value());
+					  result.add(doubleType);
+					}
+					else {
+					  result.add(item);
+					}
+				} else {
 					result.add(item);
-				} else
-					result.add(item);
+				}
 			}
 		}
 

@@ -46,13 +46,12 @@ import java.util.*;
  * </p>
  */
 public class FnSubstring extends Function {
-	private static Collection _expected_args = null;
 
 	/**
 	 * Constructor for FnSubstring
 	 */
 	public FnSubstring() {
-		super(new QName("substring"), 2);
+		super(new QName("substring"), -1);
 	}
 
 	/**
@@ -79,26 +78,43 @@ public class FnSubstring extends Function {
 	 * @return The result of obtaining a substring from the arguments.
 	 */
 	public static ResultSequence substring(Collection args) throws DynamicError {
-		Collection cargs = Function.convert_arguments(args, expected_args());
+		Collection cargs = Function.convert_arguments(args, expected_args(args));
 
 		Iterator argi = cargs.iterator();
 		ResultSequence arg1 = (ResultSequence) argi.next();
 		ResultSequence arg2 = (ResultSequence) argi.next();
+		
+		// for arity 3
+		ResultSequence arg3 = null;
+		if (argi.hasNext()) {
+		  arg3 = (ResultSequence) argi.next();	
+		}
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		if (arg1.empty())
-			return rs;
+		  return rs;
 
 		String str = ((XSString) arg1.first()).value();
 		double dstart = ((XSDouble) arg2.first()).double_value();
 
 		int start = (int) Math.round(dstart);
 
-		if (start > str.length())
-			return rs;
+		if (start > str.length()) {
+		  rs.add(new XSString(""));
+		  return rs;
+		}
 
-		rs.add(new XSString(str.substring(start)));
+		if (arg3 != null) {
+		  // for arity 3
+		  double dend = ((XSDouble) arg3.first()).double_value();
+		  int end = (int) Math.round(dend);
+		  rs.add(new XSString(str.substring(start - 1, start - 1 + end)));
+		}
+		else {
+		  // for arity 2
+		  rs.add(new XSString(str.substring(start - 1)));
+		}
 
 		return rs;
 	}
@@ -108,11 +124,15 @@ public class FnSubstring extends Function {
 	 * 
 	 * @return The expected arguments.
 	 */
-	public static Collection expected_args() {
-		if (_expected_args == null) {
-			_expected_args = new ArrayList();
-			_expected_args.add(new SeqType(new XSString(), SeqType.OCC_QMARK));
-			_expected_args.add(new SeqType(new XSDouble(), SeqType.OCC_NONE));
+	public static Collection expected_args(Collection actualArgs) {
+		Collection _expected_args = new ArrayList();
+		
+		_expected_args.add(new SeqType(new XSString(), SeqType.OCC_QMARK));
+		_expected_args.add(new SeqType(new XSDouble(), SeqType.OCC_NONE));
+		
+		// for arity 3
+		if (actualArgs.size() == 3) {
+		  _expected_args.add(new SeqType(new XSDouble(), SeqType.OCC_NONE));
 		}
 
 		return _expected_args;
