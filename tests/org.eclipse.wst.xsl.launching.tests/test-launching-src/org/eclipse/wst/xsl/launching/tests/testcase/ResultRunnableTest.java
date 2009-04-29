@@ -62,6 +62,50 @@ public class ResultRunnableTest extends TestCase {
 	public ResultRunnableTest() {
 	}
 
+	protected void initializeSourceViewer() {
+		// some test environments might not have a "real" display
+		if (Display.getCurrent() != null) {
+
+
+			if (PlatformUI.isWorkbenchRunning()) {
+				shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+						.getShell();
+			} else {
+				shell = new Shell(Display.getCurrent());
+			}
+			parent = new Composite(shell, SWT.NONE);
+
+			// dummy viewer
+			sourceViewer = new StructuredTextViewer(parent, null, null, false,
+					SWT.NONE);
+		} else {
+			Assert
+					.fail("Unable to run the test as a display must be available.");
+		}
+
+		configureSourceViewer();
+	}
+
+	protected void configureSourceViewer() {
+		sourceViewer.configure(new StructuredTextViewerConfigurationXSL());
+
+	}
+
+	/**
+	 * Setup the necessary projects, files, and source viewer for the tests.
+	 */
+	@Override
+	protected void setUp() throws Exception {
+		initializeSourceViewer();
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		parent.dispose();
+		super.tearDown();
+	}
+	
+
 	public void testNoProcessingInstruction() throws Exception {
 		String results = "This is some sample text.";
 		MockResultRunnable runnable = new MockResultRunnable(sourceViewer, results, null);
