@@ -24,7 +24,6 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
 
 public class TestBugs extends AbstractPsychoPathTest {
 	
-	
 	public void testStringLengthWithElementArg() throws Exception {
 		// Bug 273719
 		URL fileURL = bundle.getEntry("/bugTestFiles/bug273719.xml");

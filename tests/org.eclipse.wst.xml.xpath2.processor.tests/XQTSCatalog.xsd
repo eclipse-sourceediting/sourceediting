@@ -1,8 +1,5 @@
-<xs:schema
-   xmlns:xs="http://www.w3.org/2001/XMLSchema"
-   xmlns:test="http://www.w3.org/2005/02/query-test-XQTSCatalog"
-   targetNamespace="http://www.w3.org/2005/02/query-test-XQTSCatalog"
-   elementFormDefault="qualified">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:test="http://www.w3.org/2005/02/query-test-XQTSCatalog" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://www.w3.org/2005/02/query-test-XQTSCatalog">
    
    
    
@@ -19,19 +16,19 @@
       
       <xs:complexType>
          <xs:sequence>
-            <xs:element ref="test:test-suite-info" />
-            <xs:element ref="test:citations" />
-            <xs:element ref="test:comparisons" />
-            <xs:element ref="test:roles" />
-            <xs:element ref="test:scenarios" />
-            <xs:element ref="test:sources" />
-            <xs:element ref="test:implementation-defined-items" />
-            <xs:element ref="test:features" />
-            <xs:element ref="test:context-properties" />
-            <xs:element ref="test:test-group" maxOccurs="unbounded" />
+            <xs:element ref="test:test-suite-info"/>
+            <xs:element ref="test:citations"/>
+            <xs:element ref="test:comparisons"/>
+            <xs:element ref="test:roles"/>
+            <xs:element ref="test:scenarios"/>
+            <xs:element ref="test:sources"/>
+            <xs:element ref="test:implementation-defined-items"/>
+            <xs:element ref="test:features"/>
+            <xs:element ref="test:context-properties"/>
+            <xs:element maxOccurs="unbounded" ref="test:test-group"/>
          </xs:sequence>
          
-         <xs:attribute name="CatalogDesignDate" type="xs:date" use="required" />
+         <xs:attribute name="CatalogDesignDate" type="xs:date" use="required"/>
          
          <!-- XQTS version -->
          <xs:attribute name="version" type="xs:string" use="required">
@@ -72,7 +69,7 @@
          
          
          <!-- offset from XQTS root to XQuery expression files -->
-         <xs:attribute name="XQueryQueryOffsetPath" type="test:SimplifiedRelativeFilePath" use="required" >
+         <xs:attribute name="XQueryQueryOffsetPath" type="test:SimplifiedRelativeFilePath" use="required">
             <xs:annotation>
                <xs:documentation>
                   offset from XQTS root to XQuery expression files
@@ -82,7 +79,7 @@
          
          
          <!-- offset from XQTS root to XQueryX documents -->
-         <xs:attribute name="XQueryXQueryOffsetPath" type="test:SimplifiedRelativeFilePath" use="required" >
+         <xs:attribute name="XQueryXQueryOffsetPath" type="test:SimplifiedRelativeFilePath" use="required">
             <xs:annotation>
                <xs:documentation>
                   offset from XQTS root to XQueryX documents
@@ -92,7 +89,7 @@
          
          
          <!-- file extension for XQuery expression files -->
-         <xs:attribute name="XQueryFileExtension" type="xs:string" use="required" >
+         <xs:attribute name="XQueryFileExtension" type="xs:string" use="required">
             <xs:annotation>
                <xs:documentation>
                   file extension for XQuery expression files
@@ -102,7 +99,7 @@
          
          
          <!-- file extension for XQueryX documents -->
-         <xs:attribute name="XQueryXFileExtension" type="xs:string" use="required" >
+         <xs:attribute name="XQueryXFileExtension" type="xs:string" use="required">
             <xs:annotation>
                <xs:documentation>
                   file extension for XQueryX documents
@@ -130,8 +127,8 @@
    
    <xs:simpleType name="targetLanguage">
       <xs:restriction base="xs:string">
-         <xs:enumeration value="XQuery" />
-         <xs:enumeration value="XQueryX" />
+         <xs:enumeration value="XQuery"/>
+         <xs:enumeration value="XQueryX"/>
       </xs:restriction>
    </xs:simpleType>
    
@@ -140,7 +137,7 @@
    
    <xs:simpleType name="SimplifiedRelativeFilePath">
       <xs:restriction base="xs:anyURI">
-         <xs:pattern value="([a-zA-Z0-9\-\.]+/)+" />
+         <xs:pattern value="([a-zA-Z0-9\-\.]+/)+"/>
       </xs:restriction>
    </xs:simpleType>
    
@@ -162,7 +159,7 @@
       <xs:complexType>
          <xs:sequence>
             <xs:element name="title" type="xs:string"/>
-            <xs:element name="description" type="xs:string" minOccurs="0" />
+            <xs:element minOccurs="0" name="description" type="xs:string"/>
          </xs:sequence>
       </xs:complexType>
    </xs:element>
@@ -184,14 +181,14 @@
       
       <xs:complexType>
          <xs:choice maxOccurs="unbounded">
-            <xs:element name="citation-spec" maxOccurs="unbounded">
+            <xs:element maxOccurs="unbounded" name="citation-spec">
                <xs:complexType>
                   <xs:complexContent>
                      <xs:extension base="test:infoBase">
                         <xs:sequence>
-                           <xs:element name="spec-URI" type="xs:anyURI" />
+                           <xs:element name="spec-URI" type="xs:anyURI"/>
                         </xs:sequence>
-                        <xs:attribute name="name" type="test:citation-spec-enum" use="required" />
+                        <xs:attribute name="name" type="test:citation-spec-enum" use="required"/>
                      </xs:extension>
                   </xs:complexContent>
                </xs:complexType>
@@ -227,11 +224,11 @@
       
       <xs:complexType>
          <xs:sequence maxOccurs="unbounded">
-            <xs:element name="comparison" maxOccurs="unbounded">
+            <xs:element maxOccurs="unbounded" name="comparison">
                <xs:complexType>
                   <xs:complexContent>
                      <xs:extension base="test:infoBase">
-                        <xs:attribute name="name" type="test:comparison-enum" use="required" />
+                        <xs:attribute name="name" type="test:comparison-enum" use="required"/>
                      </xs:extension>
                   </xs:complexContent>
                </xs:complexType>
@@ -271,7 +268,7 @@
                <xs:complexType>
                   <xs:complexContent>
                      <xs:extension base="test:infoBase">
-                        <xs:attribute name="name" type="test:role-enum" use="required" />
+                        <xs:attribute name="name" type="test:role-enum" use="required"/>
                      </xs:extension>
                   </xs:complexContent>
                </xs:complexType>
@@ -311,7 +308,7 @@
                <xs:complexType>
                   <xs:complexContent>
                      <xs:extension base="test:infoBase">
-                        <xs:attribute name="name" type="test:scenarios-enum" use="required" />
+                        <xs:attribute name="name" type="test:scenarios-enum" use="required"/>
                      </xs:extension>
                   </xs:complexContent>
                </xs:complexType>
@@ -347,37 +344,37 @@
          </xs:annotation>
          
          <xs:sequence maxOccurs="unbounded">
-            <xs:element name="source" maxOccurs="unbounded">
+            <xs:element maxOccurs="unbounded" name="source">
                <xs:complexType>
                   <xs:complexContent>
                      <xs:extension base="test:infoBase">
-                        <xs:attribute name="ID" type="xs:ID" use="required" />
-                        <xs:attribute name="FileName" type="xs:anyURI" use="required" />
-                        <xs:attribute name="Creator" type="xs:string" use="required" />
-                        <xs:attribute name="schema" type="xs:IDREF" use="optional" />
+                        <xs:attribute name="ID" type="xs:ID" use="required"/>
+                        <xs:attribute name="FileName" type="xs:anyURI" use="required"/>
+                        <xs:attribute name="Creator" type="xs:string" use="required"/>
+                        <xs:attribute name="schema" type="xs:IDREF" use="optional"/>
                      </xs:extension>
                   </xs:complexContent>
                </xs:complexType>
             </xs:element>
             
-            <xs:element name="schema" minOccurs="0" maxOccurs="unbounded">
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="schema">
                <xs:complexType>
                   <xs:complexContent>
                      <xs:extension base="test:infoBase">
-                        <xs:attribute name="ID" type="xs:ID" use="required" />
-                        <xs:attribute name="uri" type="xs:anyURI" use="required" />
-                        <xs:attribute name="FileName" type="xs:anyURI" use="required" />
+                        <xs:attribute name="ID" type="xs:ID" use="required"/>
+                        <xs:attribute name="uri" type="xs:anyURI" use="required"/>
+                        <xs:attribute name="FileName" type="xs:anyURI" use="required"/>
                      </xs:extension>
                   </xs:complexContent>
                </xs:complexType>
             </xs:element>
             
-            <xs:element name="collection" minOccurs="0" maxOccurs="unbounded">
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="collection">
                <xs:complexType>
                   <xs:complexContent>
                      <xs:extension base="test:infoBase">
                         <xs:sequence>
-                           <xs:element name="input-document" maxOccurs="unbounded">
+                           <xs:element maxOccurs="unbounded" name="input-document">
                               <xs:annotation>
                                  <xs:documentation>
                                     One or more input files that will be used by this query.
@@ -392,21 +389,21 @@
                               </xs:complexType>
                            </xs:element>
                         </xs:sequence>
-                        <xs:attribute name="ID" type="xs:ID" use="required" />
-                        <xs:attribute name="Creator" type="xs:string" use="required" />
+                        <xs:attribute name="ID" type="xs:ID" use="required"/>
+                        <xs:attribute name="Creator" type="xs:string" use="required"/>
 
                      </xs:extension>
                   </xs:complexContent>
                </xs:complexType>
             </xs:element>
             
-            <xs:element name="module" minOccurs="0" maxOccurs="unbounded">
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="module">
                <xs:complexType>
                   <xs:complexContent>
                      <xs:extension base="test:infoBase">
-                        <xs:attribute name="ID" type="xs:ID" use="required" />
-                        <xs:attribute name="FileName" type="xs:anyURI" use="required" />
-                        <xs:attribute name="Creator" type="xs:string" use="required" />
+                        <xs:attribute name="ID" type="xs:ID" use="required"/>
+                        <xs:attribute name="FileName" type="xs:anyURI" use="required"/>
+                        <xs:attribute name="Creator" type="xs:string" use="required"/>
                      </xs:extension>
                   </xs:complexContent>
                </xs:complexType>
@@ -437,12 +434,12 @@
       
       <xs:complexType>
          <xs:sequence maxOccurs="unbounded">
-            <xs:element name="implementation-defined-item" maxOccurs="unbounded">
+            <xs:element maxOccurs="unbounded" name="implementation-defined-item">
                <xs:complexType>
                   <xs:complexContent>
                      <xs:extension base="test:infoBase">
-                        <xs:attribute name="name" type="xs:string" use="required" />
-                        <xs:attribute name="spec" type="test:citation-spec-enum" use="required" />
+                        <xs:attribute name="name" type="xs:string" use="required"/>
+                        <xs:attribute name="spec" type="test:citation-spec-enum" use="required"/>
                      </xs:extension>
                   </xs:complexContent>
                </xs:complexType>
@@ -479,9 +476,9 @@
       
       <xs:complexType>
          <xs:sequence maxOccurs="unbounded">
-            <xs:element name="feature" maxOccurs="unbounded">
+            <xs:element maxOccurs="unbounded" name="feature">
                <xs:complexType>
-                  <xs:attribute name="name" type="xs:string" use="required" />
+                  <xs:attribute name="name" type="xs:string" use="required"/>
                </xs:complexType>
             </xs:element>
          </xs:sequence>
@@ -516,14 +513,14 @@
       
       <xs:complexType>
          <xs:sequence maxOccurs="unbounded">
-            <xs:element name="context-property" maxOccurs="unbounded">
+            <xs:element maxOccurs="unbounded" name="context-property">
                <xs:complexType>
-                  <xs:attribute name="name" type="xs:string" use="required" />
+                  <xs:attribute name="name" type="xs:string" use="required"/>
                   <xs:attribute name="context-type" use="required">
                      <xs:simpleType>
                         <xs:restriction base="xs:string">
-                           <xs:enumeration value="static" />
-                           <xs:enumeration value="dynamic" />
+                           <xs:enumeration value="static"/>
+                           <xs:enumeration value="dynamic"/>
                         </xs:restriction>
                      </xs:simpleType>
                   </xs:attribute>
@@ -563,19 +560,19 @@
       
       <xs:complexType>
          <xs:sequence>
-            <xs:element name="GroupInfo" type="test:GroupInfo" />
-            <xs:element name="test-case" type="test:test-case" minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="GroupInfo" type="test:GroupInfo"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="test-case" type="test:test-case">
                <xs:unique name="unique-expected-error">
                   <xs:selector xpath=".//test:expected-error"/>
                   <xs:field xpath="."/>
                </xs:unique>
        </xs:element>
 
-            <xs:element ref="test:test-group" minOccurs="0" maxOccurs="unbounded" />
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="test:test-group"/>
          </xs:sequence>
-         <xs:attribute name="name" type="xs:string" use="required" />
-         <xs:attribute name="featureOwner" type="xs:string" use="optional" />
-         <xs:attribute name="is-XPath2" type="xs:boolean" use="optional" />
+         <xs:attribute name="name" type="xs:string" use="required"/>
+         <xs:attribute name="featureOwner" type="xs:string" use="optional"/>
+         <xs:attribute name="is-XPath2" type="xs:boolean" use="optional"/>
       </xs:complexType>
    </xs:element>
    
@@ -584,9 +581,9 @@
    
    <xs:complexType name="GroupInfo">
       <xs:sequence>
-         <xs:element name="title" type="xs:string" />
-         <xs:element name="description" type="test:description" />
-         <xs:element name="note" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="title" type="xs:string"/>
+         <xs:element name="description" type="test:description"/>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="note" type="xs:string"/>
       </xs:sequence>
    </xs:complexType>
    
@@ -619,13 +616,13 @@
       </xs:annotation>
       
       <xs:sequence>
-         <xs:element name="description" type="test:description" />
-         <xs:element name="note" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="description" type="test:description"/>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="note" type="xs:string"/>
          
          <!-- Identify the parts of the XQuery specifications that are       -->
          <!-- being tested                                                   -->
          
-         <xs:element name="spec-citation" minOccurs="0" maxOccurs="unbounded">
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="spec-citation">
             <xs:annotation>
                <xs:documentation>
                   Identify the parts of the XQuery specifications that are being tested.
@@ -634,10 +631,10 @@
             <xs:complexType>
                <xs:simpleContent>
                   <xs:extension base="xs:string">
-                     <xs:attribute name="section-number" type="xs:string" use="required" />
-                     <xs:attribute name="spec" type="test:citation-spec-enum" use="required" />
-                     <xs:attribute name="section-title" type="xs:string" use="required" />
-                     <xs:attribute name="section-pointer" type="xs:string" use="required" />
+                     <xs:attribute name="section-number" type="xs:string" use="required"/>
+                     <xs:attribute name="spec" type="test:citation-spec-enum" use="required"/>
+                     <xs:attribute name="section-title" type="xs:string" use="required"/>
+                     <xs:attribute name="section-pointer" type="xs:string" use="required"/>
                   </xs:extension>
                </xs:simpleContent>
             </xs:complexType>
@@ -654,25 +651,25 @@
             
             <xs:complexType>
                <xs:sequence>
-                  <xs:element name="description" type="test:description" minOccurs="0" />
-                  <xs:element name="note" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+                  <xs:element minOccurs="0" name="description" type="test:description"/>
+                  <xs:element maxOccurs="unbounded" minOccurs="0" name="note" type="xs:string"/>
                </xs:sequence>
                
                <!-- This name is always equal to the name of the test case -->
-               <xs:attribute name="name" type="xs:string" use="required" >
+               <xs:attribute name="name" type="xs:string" use="required">
                   <xs:annotation>
                      <xs:documentation>
                         This name is always equal to the name of the test case.
                      </xs:documentation>
                   </xs:annotation>
                </xs:attribute>
-               <xs:attribute name="date" type="xs:date" use="required" />
+               <xs:attribute name="date" type="xs:date" use="required"/>
             </xs:complexType>
          </xs:element>
          
          <!-- Zero or more modules that will be used by this query -->
          
-         <xs:element name="module" minOccurs="0" maxOccurs="unbounded">
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="module">
             <xs:annotation>
                <xs:documentation>
                   Zero or more modules that will be used by this query.
@@ -681,7 +678,7 @@
             <xs:complexType>
                <xs:simpleContent>
                   <xs:extension base="xs:IDREF">
-                     <xs:attribute name="namespace" type="xs:anyURI" use="required" />
+                     <xs:attribute name="namespace" type="xs:anyURI" use="required"/>
                   </xs:extension>
                </xs:simpleContent>
             </xs:complexType>
@@ -689,7 +686,7 @@
          
          <!-- Zero or more input files that will be used by this query -->
          
-         <xs:element name="input-file" minOccurs="0" maxOccurs="unbounded">
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="input-file">
             <xs:annotation>
                <xs:documentation>
                   One or more input files that will be used by this query.
@@ -699,7 +696,7 @@
                <xs:simpleContent>
                   <xs:extension base="xs:IDREF">
                      <!-- this attribute contains only principal-data -->
-                     <xs:attribute name="role" type="test:role-enum" use="required" >
+                     <xs:attribute name="role" type="test:role-enum" use="required">
                         <xs:annotation>
                            <xs:documentation>
                               this attribute contains only principal-data
@@ -714,7 +711,7 @@
          
          <!-- Zero or more input URIs that will be used by this query -->
          
-         <xs:element name="input-URI" minOccurs="0" maxOccurs="unbounded">
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="input-URI">
             <xs:annotation>
                <xs:documentation>
                   One or more input URIs that will be used by this query.
@@ -724,14 +721,14 @@
                <xs:simpleContent>
                   <xs:extension base="xs:IDREF">
                      <!-- this attribute contains only principal-data -->
-                     <xs:attribute name="role" type="test:role-enum" use="required" >
+                     <xs:attribute name="role" type="test:role-enum" use="required">
                         <xs:annotation>
                            <xs:documentation>
                               this attribute contains only principal-data
                            </xs:documentation>
                         </xs:annotation>
                      </xs:attribute>
-                     <xs:attribute name="variable" type="xs:string" use="required" />
+                     <xs:attribute name="variable" type="xs:string" use="required"/>
                   </xs:extension>
                </xs:simpleContent>
             </xs:complexType>
@@ -739,7 +736,7 @@
          
          <!-- Zero or one default collections that will be used by this query -->
          
-         <xs:element name="defaultCollection" minOccurs="0" maxOccurs="1">
+         <xs:element maxOccurs="1" minOccurs="0" name="defaultCollection">
             <xs:annotation>
                <xs:documentation>
                   Zero or one default collection that will be used by this query.
@@ -749,7 +746,7 @@
                <xs:simpleContent>
                   <xs:extension base="xs:IDREF">
                      <!-- this attribute contains only principal-data -->
-                     <xs:attribute name="role" type="test:role-enum" use="required" >
+                     <xs:attribute name="role" type="test:role-enum" use="required">
                         <xs:annotation>
                            <xs:documentation>
                               this attribute contains only principal-data
@@ -763,7 +760,7 @@
          
          <!-- Zero or one context nodes that will be used by this query -->
          
-         <xs:element name="contextItem" minOccurs="0" maxOccurs="1">
+         <xs:element maxOccurs="1" minOccurs="0" name="contextItem">
             <xs:annotation>
                <xs:documentation>
                   Zero or one context item that will be used by this query.
@@ -773,7 +770,7 @@
                <xs:simpleContent>
                   <xs:extension base="xs:IDREF">
                      <!-- this attribute contains only principal-data -->
-                     <xs:attribute name="role" type="test:role-enum" use="required" >
+                     <xs:attribute name="role" type="test:role-enum" use="required">
                         <xs:annotation>
                            <xs:documentation>
                               this attribute contains only principal-data
@@ -788,7 +785,7 @@
          <!-- Zero or more input queries that will be used to bind values to -->
          <!-- external variables                                             -->
          
-         <xs:element name="input-query" minOccurs="0" maxOccurs="unbounded">
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="input-query">
             <xs:annotation>
                <xs:documentation>
                   Zero or more input queries that will be used to bind values to 
@@ -797,18 +794,18 @@
             </xs:annotation>
             <xs:complexType>
                <xs:sequence>
-                  <xs:element name="description" type="test:description" minOccurs="0" />
-                  <xs:element name="note" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+                  <xs:element minOccurs="0" name="description" type="test:description"/>
+                  <xs:element maxOccurs="unbounded" minOccurs="0" name="note" type="xs:string"/>
                </xs:sequence>
-               <xs:attribute name="variable" type="xs:string" use="required" />
-               <xs:attribute name="name" type="xs:string" use="required" />
-               <xs:attribute name="date" type="xs:date" use="required" />
+               <xs:attribute name="variable" type="xs:string" use="required"/>
+               <xs:attribute name="name" type="xs:string" use="required"/>
+               <xs:attribute name="date" type="xs:date" use="required"/>
             </xs:complexType>
          </xs:element>
          
          <!-- Zero or more files containing expected results for this query -->
          
-         <xs:element name="output-file" minOccurs="0" maxOccurs="unbounded">
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="output-file">
             <xs:annotation>
                <xs:documentation>
                   Zero or more files containing expected results for this query.
@@ -817,13 +814,13 @@
             <xs:complexType>
                <xs:simpleContent>
                   <xs:extension base="xs:string">
-                     <xs:attribute name="role" type="test:role-enum" use="required" />
-                     <xs:attribute name="compare" type="test:comparison-enum" use="required" />
+                     <xs:attribute name="role" type="test:role-enum" use="required"/>
+                     <xs:attribute name="compare" type="test:comparison-enum" use="required"/>
                      
                      <!-- can identify a results as being specific to typed or untyped  -->
                      <!-- documents                                                     -->
                      
-                     <xs:attribute name="input-document" type="test:input-document-enum" use="optional" >
+                     <xs:attribute name="input-document" type="test:input-document-enum" use="optional">
                         <xs:annotation>
                            <xs:documentation>
                               can identify a results as being specific to typed or untyped documents
@@ -839,7 +836,7 @@
          
          <!-- Zero or more expected errors for this query -->
          
-         <xs:element name="expected-error" minOccurs="0" maxOccurs="unbounded" >
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="expected-error">
             <xs:annotation>
                <xs:documentation>
                   Zero or more expected errors for this query.
@@ -853,7 +850,7 @@
                      <!-- can identify an error as being specific to typed or untyped  -->
                      <!-- documents                                                    -->
                      
-                     <xs:attribute name="input-document" type="test:input-document-enum" use="optional" >
+                     <xs:attribute name="input-document" type="test:input-document-enum" use="optional">
                         <xs:annotation>
                            <xs:documentation>
                               can identify an error as being specific to typed or untyped documents
@@ -874,11 +871,11 @@
       <!--    the name                                                       -->
       <!--    the XQueryFileExtension or XQueryXFileExtension                -->
             
-      <xs:attribute name="name" type="xs:string" use="required" />
-      <xs:attribute name="FilePath" type="test:SimplifiedRelativeFilePath" use="required" />
-      <xs:attribute name="scenario" type="test:scenarios-enum" use="required" />
-      <xs:attribute name="Creator" type="xs:string" use="required" />
-      <xs:attribute name="version-drop" type="xs:date" >
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="FilePath" type="test:SimplifiedRelativeFilePath" use="required"/>
+      <xs:attribute name="scenario" type="test:scenarios-enum" use="required"/>
+      <xs:attribute name="Creator" type="xs:string" use="required"/>
+      <xs:attribute name="version-drop" type="xs:date">
          <xs:annotation>
             <xs:documentation>
                not being used
@@ -886,7 +883,7 @@
          </xs:annotation>
       </xs:attribute>
       <!-- identify tests that are applicable to XPath 2.0 -->
-      <xs:attribute name="is-XPath2" type="xs:boolean" use="optional" >
+      <xs:attribute name="is-XPath2" type="xs:boolean" use="optional">
          <xs:annotation>
             <xs:documentation>
                identify tests that are applicable to XPath 2.0
@@ -908,15 +905,15 @@
       </xs:annotation>
       
       <xs:restriction base="xs:string">
-         <xs:enumeration value="XQuery" />
-         <xs:enumeration value="FuncOps" />
-         <xs:enumeration value="DataModel" />
-         <xs:enumeration value="FormalSemantics" />
-         <xs:enumeration value="SchemaPart2" />
-         <xs:enumeration value="Schema-Errata" />
-         <xs:enumeration value="UseCases" />
-         <xs:enumeration value="Serialization" />
-         <xs:enumeration value="XQueryX" />
+         <xs:enumeration value="XQuery"/>
+         <xs:enumeration value="FuncOps"/>
+         <xs:enumeration value="DataModel"/>
+         <xs:enumeration value="FormalSemantics"/>
+         <xs:enumeration value="SchemaPart2"/>
+         <xs:enumeration value="Schema-Errata"/>
+         <xs:enumeration value="UseCases"/>
+         <xs:enumeration value="Serialization"/>
+         <xs:enumeration value="XQueryX"/>
       </xs:restriction>
    </xs:simpleType>
    
@@ -934,11 +931,11 @@
       </xs:annotation>
       
       <xs:restriction base="xs:string">
-         <xs:enumeration value="XML" />
-         <xs:enumeration value="Fragment" />
-         <xs:enumeration value="Text" />
-         <xs:enumeration value="Inspect" />
-         <xs:enumeration value="Ignore" />
+         <xs:enumeration value="XML"/>
+         <xs:enumeration value="Fragment"/>
+         <xs:enumeration value="Text"/>
+         <xs:enumeration value="Inspect"/>
+         <xs:enumeration value="Ignore"/>
       </xs:restriction>
    </xs:simpleType>
    
@@ -954,12 +951,12 @@
       </xs:annotation>
       
       <xs:restriction base="xs:string">
-         <xs:enumeration value="principal-data" />
-         <xs:enumeration value="supplemental-data" />
-         <xs:enumeration value="schema" />
-         <xs:enumeration value="principal" />
-         <xs:enumeration value="console-log" />
-         <xs:enumeration value="dtd" />
+         <xs:enumeration value="principal-data"/>
+         <xs:enumeration value="supplemental-data"/>
+         <xs:enumeration value="schema"/>
+         <xs:enumeration value="principal"/>
+         <xs:enumeration value="console-log"/>
+         <xs:enumeration value="dtd"/>
       </xs:restriction>
    </xs:simpleType>
    
@@ -977,10 +974,10 @@
       </xs:annotation>
       
       <xs:restriction base="xs:string">
-         <xs:enumeration value="standard" />
-         <xs:enumeration value="parse-error" />
-         <xs:enumeration value="runtime-error" />
-         <xs:enumeration value="trivial" />
+         <xs:enumeration value="standard"/>
+         <xs:enumeration value="parse-error"/>
+         <xs:enumeration value="runtime-error"/>
+         <xs:enumeration value="trivial"/>
       </xs:restriction>
    </xs:simpleType>
    
@@ -998,8 +995,8 @@
       </xs:annotation>
       
       <xs:restriction base="xs:string">
-         <xs:enumeration value="typed" />
-         <xs:enumeration value="untyped" />
+         <xs:enumeration value="typed"/>
+         <xs:enumeration value="untyped"/>
       </xs:restriction>
    </xs:simpleType>
    
@@ -1009,7 +1006,7 @@
    <xs:complexType name="description">
       <xs:simpleContent>
          <xs:extension base="xs:string">
-            <xs:attribute name="last-mod" type="xs:date" />
+            <xs:attribute name="last-mod" type="xs:date"/>
          </xs:extension>
       </xs:simpleContent>
    </xs:complexType>
@@ -1026,7 +1023,7 @@
       </xs:annotation>
       
       <xs:restriction base="xs:string">
-         <xs:pattern value="\*|([A-Z]{4}[0-9]{4})" />
+         <xs:pattern value="\*|([A-Z]{4}[0-9]{4})"/>
       </xs:restriction>
    </xs:simpleType>
    
@@ -1035,8 +1032,8 @@
    
    <xs:complexType name="infoBase">
       <xs:sequence>
-         <xs:element name="description" type="test:description" />
-         <xs:element name="note" type="xs:string" minOccurs="0" maxOccurs="unbounded" />
+         <xs:element name="description" type="test:description"/>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="note" type="xs:string"/>
       </xs:sequence>
    </xs:complexType>
 
