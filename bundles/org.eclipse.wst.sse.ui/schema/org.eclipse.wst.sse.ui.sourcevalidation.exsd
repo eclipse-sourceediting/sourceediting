@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.wst.sse.ui">
+<schema targetNamespace="org.eclipse.wst.sse.ui" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appInfo>
          <meta.schema plugin="org.eclipse.wst.sse.ui" id="sourcevalidation" name="Source Validation"/>
@@ -22,6 +22,11 @@ Required plugins are:&lt;br&gt;
    </annotation>
 
    <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
       <complexType>
          <sequence>
             <element ref="validator"/>
@@ -62,17 +67,20 @@ Required plugins are:&lt;br&gt;
                </documentation>
             </annotation>
          </attribute>
-         <attribute name="class" type="string">
+         <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
                   
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="java"/>
+               </appInfo>
             </annotation>
          </attribute>
-         <attribute name="scope" type="string">
+         <attribute name="scope" type="string" use="required">
             <annotation>
                <documentation>
-                  
+                  Either &quot;total&quot; or &quot;partial&quot;, depending on whether all or just some of the document should be revalidated on changes.
                </documentation>
             </annotation>
          </attribute>
@@ -157,14 +165,6 @@ ISourceValidator has its &quot;connect(IDocument doc)&quot; method called when i
       </documentation>
    </annotation>
 
-   <annotation>
-      <appInfo>
-         <meta.section type="apiInfo"/>
-      </appInfo>
-      <documentation>
-         
-      </documentation>
-   </annotation>
 
    <annotation>
       <appInfo>
