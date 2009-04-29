@@ -142,19 +142,19 @@ public class TestDelegatingSourceValidatorForXSL extends AbstractXSLUITest {
 
 	}
 
-	public void testDelegatingSourceValidatorNPEwithNoAttributeValue() throws Exception {
-		WorkbenchContext context = setupFile(getxslTestFilesProjectName(), "bug272760.xsl");
-		TestReporter reporter = new TestReporter();
-		try {
-			sourceValidator.validate(context, reporter);
-		} catch (ValidationException e) {
-
-		} catch (NullPointerException e) {
-			StringWriter out = new StringWriter();
-			e.printStackTrace(new PrintWriter(out));
-			fail(out.toString());
-		}
-	}
+//	public void testDelegatingSourceValidatorNPEwithNoAttributeValue() throws Exception {
+//		WorkbenchContext context = setupFile(getxslTestFilesProjectName(), "bug272760.xsl");
+//		TestReporter reporter = new TestReporter();
+//		try {
+//			sourceValidator.validate(context, reporter);
+//		} catch (ValidationException e) {
+//
+//		} catch (NullPointerException e) {
+//			StringWriter out = new StringWriter();
+//			e.printStackTrace(new PrintWriter(out));
+//			fail(out.toString());
+//		}
+//	}
 
 	protected WorkbenchContext setupFile(String projName, String fileName1) {
 		String validateFilePath = projName + File.separator + fileName1;
