@@ -682,21 +682,6 @@
 				</command>
 				
 	     </menuContribution>
-	<!--
-		Allow for sharing via ECF when present.
-	-->
-	<menuContribution locationURI="popup:org.eclipse.wst.sse.ui.StructuredTextEditor.EditorContext?after=additions">
-		<dynamic id="org.eclipse.wst.sse.ui.StructuredTextEditor.EditorContext.DocShareRosterMenu">
-			<class class="org.eclipse.ecf.docshare.menu.DocShareRosterMenuContributionItem" />
-			<visibleWhen>
-				<or>
-					<test property="org.eclipse.core.runtime.bundleState" args="org.eclipse.ecf.docshare" value="ACTIVE"/>
-					<test property="org.eclipse.core.runtime.bundleState" args="org.eclipse.ecf.docshare" value="RESOLVED"/>
-				</or>
-			</visibleWhen>
-		</dynamic>
-	</menuContribution>
-
 	</extension>
 	<extension
        point="org.eclipse.ui.commands">
