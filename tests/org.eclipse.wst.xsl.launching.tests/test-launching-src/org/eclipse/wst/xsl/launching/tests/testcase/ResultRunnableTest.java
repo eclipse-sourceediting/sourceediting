@@ -55,6 +55,9 @@ import org.eclipse.wst.xsl.jaxp.debug.ui.internal.views.*;
 public class ResultRunnableTest extends TestCase {
 
 	protected StructuredTextViewer sourceViewer = null;
+	protected Shell shell = null;
+	protected Composite parent = null;
+
 
 	public ResultRunnableTest() {
 	}
@@ -63,8 +66,6 @@ public class ResultRunnableTest extends TestCase {
 		// some test environments might not have a "real" display
 		if (Display.getCurrent() != null) {
 
-			Shell shell = null;
-			Composite parent = null;
 
 			if (PlatformUI.isWorkbenchRunning()) {
 				shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
@@ -100,6 +101,7 @@ public class ResultRunnableTest extends TestCase {
 
 	@Override
 	protected void tearDown() throws Exception {
+		parent.dispose();
 		super.tearDown();
 	}
 	
