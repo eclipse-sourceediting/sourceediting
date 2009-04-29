@@ -110,19 +110,19 @@ public class XSDRedefineAdapter extends XSDSchemaDirectiveAdapter
     XSDEditorPlugin xsdEditorPlugin = XSDEditorPlugin.getDefault();
     attributesCategory = new RedefineCategoryAdapter(
       Messages._UI_GRAPH_REDEFINE_ATTRIBUTE_GROUPS,
-      xsdEditorPlugin.getIconImage("obj16/attributesheader"), attributes, xsdRedefine, CategoryAdapter.ATTRIBUTES); //$NON-NLS-1$
+      xsdEditorPlugin.getIconImage("obj16/attributesheader"), attributes, xsdRedefine, this, CategoryAdapter.ATTRIBUTES); //$NON-NLS-1$
     attributesCategory.setAllChildren(attributes);
     registerListener(attributesCategory);
 
     typesCategory = new RedefineCategoryAdapter(
       Messages._UI_GRAPH_REDEFINE_TYPES,
-      xsdEditorPlugin.getIconImage("obj16/typesheader"), types, xsdRedefine, CategoryAdapter.TYPES); //$NON-NLS-1$
+      xsdEditorPlugin.getIconImage("obj16/typesheader"), types, xsdRedefine, this, CategoryAdapter.TYPES); //$NON-NLS-1$
     typesCategory.setAllChildren(types);
     registerListener(typesCategory);
 
     groupsCategory = new RedefineCategoryAdapter(
       Messages._UI_GRAPH_REDEFINE_GROUPS,
-      xsdEditorPlugin.getIconImage("obj16/groupsheader"), groups, xsdRedefine, CategoryAdapter.GROUPS); //$NON-NLS-1$
+      xsdEditorPlugin.getIconImage("obj16/groupsheader"), groups, xsdRedefine, this, CategoryAdapter.GROUPS); //$NON-NLS-1$
     groupsCategory.setAllChildren(groups);
     registerListener(groupsCategory);
   }

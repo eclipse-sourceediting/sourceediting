@@ -245,7 +245,7 @@ public class DesignViewNavigationLocation extends NavigationLocation
     	else if (component instanceof XSDRedefine)
     	{
     		XSDRedefine redefine = (XSDRedefine) component;
-    		pathSegment = new PathSegment(PathSegment.REDEFINE, redefine.toString());
+    		pathSegment = new PathSegment(PathSegment.REDEFINE, redefine.getSchemaLocation());
     	}
     	return pathSegment;
     }
@@ -361,7 +361,16 @@ public class DesignViewNavigationLocation extends NavigationLocation
         }
         else if (segment.kind == PathSegment.REDEFINE)
         {
-           // TODO
+        	Iterator iterator = schema.getContents().iterator();
+        	while (iterator.hasNext())
+        	{
+        		Object object = iterator.next();
+        		if (object instanceof XSDRedefine)
+        		{        			
+        			XSDRedefine redefine = (XSDRedefine)object;
+        			visitRedefine(redefine);
+        		}
+        	}
         }
       }
     }
@@ -438,14 +447,14 @@ public class DesignViewNavigationLocation extends NavigationLocation
     {
     	if (segment != null)
     	{
-    		String name = redefine.toString();
-    		if (segment.kind == PathSegment.ATTRIBUTE_GROUP && isMatch(segment.name, name))
+    		String name = redefine.getSchemaLocation();
+    		if (segment.kind == PathSegment.REDEFINE && isMatch(segment.name, name))
     		{
     			result = redefine;
     			incrementSegment();
     			if (!isDone())
     			{
-    				super.visitRedefine(redefine);
+    				visitSchema(redefine.getSchema());
     			}
     		}
     	}

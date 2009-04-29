@@ -28,12 +28,14 @@ import org.eclipse.xsd.XSDRedefine;
 public class RedefineCategoryAdapter extends CategoryAdapter
 {
   protected XSDRedefine xsdRedefine;
+  private XSDRedefineAdapter xsdRedefineAdapter;
 
-  public RedefineCategoryAdapter(String label, Image image, Collection children, XSDRedefine xsdRedefine, int groupType)
+  public RedefineCategoryAdapter(String label, Image image, Collection children, XSDRedefine xsdRedefine, XSDRedefineAdapter xsdRedefineAdapter, int groupType)
   {
     super(label, image, children, xsdRedefine.getSchema(), groupType);
     this.xsdRedefine = xsdRedefine;
     this.target = xsdRedefine;
+    this.xsdRedefineAdapter = xsdRedefineAdapter;
   }
 
   public XSDRedefine getXSDRedefine()
@@ -74,4 +76,10 @@ public class RedefineCategoryAdapter extends CategoryAdapter
   {
     return (IModel)XSDAdapterFactory.getInstance().adapt(xsdRedefine.getSchema());
   }
+
+
+  public XSDRedefineAdapter getXsdRedefineAdapter() {
+	return xsdRedefineAdapter;
+  }
+  
 }

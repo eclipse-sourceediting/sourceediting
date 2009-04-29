@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.adt.design;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.jface.viewers.ISelection;
@@ -22,7 +23,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.INavigationHistory;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.wst.xsd.ui.internal.adapters.RedefineCategoryAdapter;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDRedefineAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.IHolderEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.RootContentEditPart;
 import org.eclipse.wst.xsd.ui.internal.adt.design.editparts.StructureEditPart;
@@ -61,8 +68,12 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
   // (e.g. a selection occured from another view)
   public void selectionChanged(SelectionChangedEvent event)
   {
-    Object selectedObject = ((StructuredSelection) event.getSelection()).getFirstElement();
-    
+    Object selectedObject = null;
+    ISelection eventSelection = event.getSelection();
+    if (eventSelection instanceof StructuredSelection)
+    {
+    	selectedObject = ((StructuredSelection) eventSelection).getFirstElement(); 
+    }    
     // TODO (cs) It seems like there's way more selection going on than there
     // should
     // be!! There's at least 2 selections getting fired when something is
@@ -70,6 +81,8 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
     // outline view. Are we listening to too many things?
     //
     // if (event.getSource() instanceof ADTContentOutlinePage)
+    if (selectedObject != null)
+    {
     if (event.getSource() != internalSelectionProvider)
     {
       if (selectedObject instanceof IStructure)
@@ -79,11 +92,7 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
         {
           if ((selectedObject instanceof IGraphElement) && ((IGraphElement)selectedObject).isFocusAllowed()) 
           {
-            if (event.getSource() instanceof org.eclipse.jface.viewers.IPostSelectionProvider)
-            {
-              setInput((IStructure)selectedObject);
-            }
-            else
+            if (!(event.getSource() instanceof org.eclipse.jface.viewers.IPostSelectionProvider))            
             {
               setInputAndMarkLocation((IStructure)selectedObject);
             }
@@ -95,11 +104,6 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
         if (((IGraphElement)selectedObject).isFocusAllowed() && ((event.getSource() instanceof ADTContentOutlinePage)))
         {
           setInputAndMarkLocation((IADTObject)selectedObject);              
-        }
-        else if (((IGraphElement)selectedObject).isFocusAllowed() 
-            && (event.getSource() instanceof org.eclipse.jface.viewers.IPostSelectionProvider && !(getInput() instanceof IModel)))
-        {
-          setInput((IADTObject)selectedObject);
         }
         else if (!((IGraphElement)selectedObject).isFocusAllowed())
         {
@@ -168,8 +172,14 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
       }
       else if (selectedObject instanceof IModelProxy)
       {
-        IModelProxy adapter = (IModelProxy)selectedObject;
-        if (getInput() != adapter.getModel())
+        IModelProxy adapter = (IModelProxy)selectedObject;        
+        if (selectedObject instanceof RedefineCategoryAdapter)
+        {
+        	RedefineCategoryAdapter selectionAdapter = (RedefineCategoryAdapter)selectedObject;
+        	XSDRedefineAdapter selectionParentAdapter = selectionAdapter.getXsdRedefineAdapter(); 
+        	setInputAndMarkLocation(selectionParentAdapter);
+        }
+        else if (getInput() != adapter.getModel())
            setInput(adapter.getModel());
       }
       else if (selectedObject instanceof IModel)
@@ -184,6 +194,7 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
         setSelection(new StructuredSelection(editPart));
         setFocus(editPart);
       }
+    }
     }
   }
   
@@ -335,16 +346,27 @@ public class DesignViewGraphicalViewer extends ScrollingGraphicalViewer implemen
   
   public void setInputAndMarkLocation(IADTObject object)
   {
-    IADTObject oldInput = getInput();    
-    if (editorPart != null && oldInput != object)
-    {          
-      PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getNavigationHistory().markLocation(editorPart);
-    }  
+    IADTObject oldInput = getInput();
+    INavigationHistory navigationHistory = null;
+    IWorkbench workbench = PlatformUI.getWorkbench();
+    if(workbench != null)
+    {
+    	IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
+    	if(activeWorkbenchWindow != null)
+    	{
+    		IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+    		if(activePage != null)
+    		{
+    			navigationHistory = activePage.getNavigationHistory();
+    		}
+    	}
+    }
+
     setInput(object);
 
     if (editorPart != null && oldInput != object)
     {
-      PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getNavigationHistory().markLocation(editorPart);
+      navigationHistory.markLocation(editorPart);
     }
   }
   
