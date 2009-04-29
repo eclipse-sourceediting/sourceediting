@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -168,6 +168,27 @@ public class XSDDOMHelper
         return (Element)extensionChild;
       }
     }
+    return null;
+  }
+  
+  
+  public Element getDerivedByElementFromSimpleType(Element element)
+  {
+    Node atomic = getChildNode(element, "restriction");
+    Node list = getChildNode(element, "list");
+    Node union = getChildNode(element, "union");
+    if (atomic instanceof Element)
+	  {
+	    return (Element)atomic;
+	  }
+    if (list instanceof Element)
+	  {
+	    return (Element)list;
+	  }
+    if (union instanceof Element)
+	  {
+	    return (Element)union;
+	  }
     return null;
   }
 

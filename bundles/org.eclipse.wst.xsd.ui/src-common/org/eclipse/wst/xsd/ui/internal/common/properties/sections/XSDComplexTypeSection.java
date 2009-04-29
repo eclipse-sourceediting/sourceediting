@@ -36,6 +36,7 @@ import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNameCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDComplexTypeBaseTypeEditManager;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorCSHelpIds;
+import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDDerivationMethod;
 import org.eclipse.xsd.XSDNamedComponent;
@@ -208,13 +209,16 @@ public class XSDComplexTypeSection extends RefactoringSection implements Selecti
 
         derivedByCombo.setText(""); //$NON-NLS-1$
         int derivationMethod = complexType.getDerivationMethod().getValue();
-        if (derivationMethod == XSDDerivationMethod.EXTENSION)
-        {
-          derivedByCombo.setText(XSDConstants.EXTENSION_ELEMENT_TAG);
-        }
-        else if (derivationMethod == XSDDerivationMethod.RESTRICTION)
-        {
-          derivedByCombo.setText(XSDConstants.RESTRICTION_ELEMENT_TAG);
+        XSDDOMHelper domHelper = new XSDDOMHelper();
+        if(domHelper.getDerivedByElementFromComplexType(complexType.getElement()) != null) {
+	        if (derivationMethod == XSDDerivationMethod.EXTENSION)
+	        {
+	          derivedByCombo.setText(XSDConstants.EXTENSION_ELEMENT_TAG);
+	        }
+	        else if (derivationMethod == XSDDerivationMethod.RESTRICTION)
+	        {
+	          derivedByCombo.setText(XSDConstants.RESTRICTION_ELEMENT_TAG);
+	        }
         }
       }
 

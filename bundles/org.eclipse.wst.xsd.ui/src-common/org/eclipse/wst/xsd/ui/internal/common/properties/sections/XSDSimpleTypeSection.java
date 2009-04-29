@@ -223,56 +223,58 @@ public class XSDSimpleTypeSection extends RefactoringSection
       
       String variety = st.getVariety().getName();
       int intVariety = st.getVariety().getValue();
-
-      if (variety != null)
-      {
-        varietyCombo.setText(variety);
-        if (intVariety == XSDVariety.ATOMIC)
-        {
-          baseTypeDefinition = st.getBaseTypeDefinition();
-          String name = ""; //$NON-NLS-1$
-          if (baseTypeDefinition != null)
-          {
-            name = baseTypeDefinition.getName();
-            if (name == null) name = "";
-          }
-          typesCombo.setText(name);
-          typesLabel.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_BASE_TYPE_WITH_COLON")); //$NON-NLS-1$
-        }
-        else if (intVariety == XSDVariety.LIST)
-        {
-          itemTypeDefinition = st.getItemTypeDefinition();
-          String name = ""; //$NON-NLS-1$
-          if (itemTypeDefinition != null)
-          {
-            name = itemTypeDefinition.getName();
-            if (name == null) name = "";
-          }
-          typesCombo.setText(name);
-          typesLabel.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_ITEM_TYPE")); //$NON-NLS-1$
-        }
-        else if (intVariety == XSDVariety.UNION)
-        {
-          List memberTypesList = st.getMemberTypeDefinitions();
-          StringBuffer sb = new StringBuffer();
-          for (Iterator i = memberTypesList.iterator(); i.hasNext();)
-          {
-            XSDSimpleTypeDefinition typeObject = (XSDSimpleTypeDefinition) i.next();
-            String name = typeObject.getQName();
-            if (name != null)
-            {
-              sb.append(name);
-              if (i.hasNext())
-              {
-                sb.append(" "); //$NON-NLS-1$
-              }
-            }
-          }
-          String memberTypes = sb.toString();
-          typesCombo.setText(memberTypes);
-          typesLabel.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_MEMBERTYPES")); //$NON-NLS-1$
-        }
-      }
+      XSDDOMHelper domHelper = new XSDDOMHelper();
+      if(domHelper.getDerivedByElementFromSimpleType(st.getElement()) != null) {
+	      if (variety != null)
+	      {
+	        varietyCombo.setText(variety);
+	        if (intVariety == XSDVariety.ATOMIC)
+	        {
+	          baseTypeDefinition = st.getBaseTypeDefinition();
+	          String name = ""; //$NON-NLS-1$
+	          if (baseTypeDefinition != null)
+	          {
+	            name = baseTypeDefinition.getName();
+	            if (name == null) name = "";
+	          }
+	          typesCombo.setText(name);
+	          typesLabel.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_BASE_TYPE_WITH_COLON")); //$NON-NLS-1$
+	        }
+	        else if (intVariety == XSDVariety.LIST)
+	        {
+	          itemTypeDefinition = st.getItemTypeDefinition();
+	          String name = ""; //$NON-NLS-1$
+	          if (itemTypeDefinition != null)
+	          {
+	            name = itemTypeDefinition.getName();
+	            if (name == null) name = "";
+	          }
+	          typesCombo.setText(name);
+	          typesLabel.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_ITEM_TYPE")); //$NON-NLS-1$
+	        }
+	        else if (intVariety == XSDVariety.UNION)
+	        {
+	          List memberTypesList = st.getMemberTypeDefinitions();
+	          StringBuffer sb = new StringBuffer();
+	          for (Iterator i = memberTypesList.iterator(); i.hasNext();)
+	          {
+	            XSDSimpleTypeDefinition typeObject = (XSDSimpleTypeDefinition) i.next();
+	            String name = typeObject.getQName();
+	            if (name != null)
+	            {
+	              sb.append(name);
+	              if (i.hasNext())
+	              {
+	                sb.append(" "); //$NON-NLS-1$
+	              }
+	            }
+	          }
+	          String memberTypes = sb.toString();
+	          typesCombo.setText(memberTypes);
+	          typesLabel.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_MEMBERTYPES")); //$NON-NLS-1$
+	        }
+	      }
+	    }
     }
     setListenerEnabled(true);
 

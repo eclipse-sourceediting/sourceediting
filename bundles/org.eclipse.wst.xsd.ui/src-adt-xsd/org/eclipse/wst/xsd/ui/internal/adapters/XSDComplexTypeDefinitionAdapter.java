@@ -283,11 +283,12 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
       {
         list.add(AddXSDAttributeDeclarationAction.ID);
       }
-      else if (XSDDerivationMethod.RESTRICTION_LITERAL.equals(derivation) /*&& !(getXSDComplexTypeDefinition().getBaseType() instanceof XSDSimpleTypeDefinition)*/)
+      else if (XSDDerivationMethod.RESTRICTION_LITERAL.equals(derivation))
       {
         list.add(AddXSDEnumerationFacetAction.ID);
       }
-      
+      list.add(BaseSelectionAction.SEPARATOR_ID);
+      list.add(SetBaseTypeAction.ID);
       list.add(BaseSelectionAction.SEPARATOR_ID);
       list.add(DeleteAction.ID);
       list.add(BaseSelectionAction.SEPARATOR_ID);
@@ -373,11 +374,15 @@ public class XSDComplexTypeDefinitionAdapter extends XSDTypeDefinitionAdapter im
     		XSDDerivationMethod.RESTRICTION_LITERAL.equals(xsdComplexTypeDefinition.getDerivationMethod());
     if (canHaveEnumerations)
     {
-      for (Iterator iterator = ((XSDSimpleTypeDefinition)getContentType()).getEnumerationFacets().iterator(); iterator.hasNext();)
-      {
-        XSDEnumerationFacet enumerationFacet = (XSDEnumerationFacet)iterator.next();
-        list.add(enumerationFacet);
-      }
+    	Object contentType = getContentType();
+    	if (contentType != null)
+    	{
+    		for (Iterator iterator = ((XSDSimpleTypeDefinition)contentType).getEnumerationFacets().iterator(); iterator.hasNext();)
+    		{
+    			XSDEnumerationFacet enumerationFacet = (XSDEnumerationFacet)iterator.next();
+    			list.add(enumerationFacet);
+    		}
+    	}
     }
     XSDWildcard anyAttr = xsdComplexTypeDefinition.getAttributeWildcard();
     if (anyAttr != null)

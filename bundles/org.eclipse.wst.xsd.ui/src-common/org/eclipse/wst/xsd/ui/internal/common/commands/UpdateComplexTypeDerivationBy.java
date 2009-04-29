@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.common.commands;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDDerivationMethod;
+import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 
 public class UpdateComplexTypeDerivationBy extends BaseCommand
@@ -34,6 +35,7 @@ public class UpdateComplexTypeDerivationBy extends BaseCommand
     try
     {
       beginRecording(complexType.getElement());
+      XSDTypeDefinition originalBaseType = complexType.getBaseType();
       if (derivation.equals(XSDConstants.EXTENSION_ELEMENT_TAG))
       {
         complexType.setDerivationMethod(XSDDerivationMethod.EXTENSION_LITERAL);
@@ -42,6 +44,7 @@ public class UpdateComplexTypeDerivationBy extends BaseCommand
       {
         complexType.setDerivationMethod(XSDDerivationMethod.RESTRICTION_LITERAL);
       }
+      complexType.setBaseTypeDefinition(originalBaseType);
     }
     finally
     {

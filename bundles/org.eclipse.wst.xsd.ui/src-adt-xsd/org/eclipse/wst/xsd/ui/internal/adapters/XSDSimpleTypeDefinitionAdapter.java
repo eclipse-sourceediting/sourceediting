@@ -27,6 +27,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.facade.IModel;
 import org.eclipse.wst.xsd.ui.internal.adt.outline.ITreeElement;
 import org.eclipse.wst.xsd.ui.internal.common.actions.AddXSDEnumerationFacetAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
+import org.eclipse.wst.xsd.ui.internal.common.actions.SetBaseTypeAction;
 import org.eclipse.wst.xsd.ui.internal.common.commands.DeleteCommand;
 import org.eclipse.wst.xsd.ui.internal.editor.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
@@ -156,6 +157,8 @@ public class XSDSimpleTypeDefinitionAdapter extends XSDTypeDefinitionAdapter
   {
     List list = new ArrayList();
     list.add(AddXSDEnumerationFacetAction.ID);
+    list.add(BaseSelectionAction.SEPARATOR_ID);
+    list.add(SetBaseTypeAction.ID);
     list.add(BaseSelectionAction.SEPARATOR_ID);
     list.add(DeleteAction.ID);
     list.add(BaseSelectionAction.SEPARATOR_ID);

@@ -21,7 +21,9 @@ import org.eclipse.wst.xsd.ui.internal.adt.edit.ComponentReferenceEditManager;
 import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
 import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDComplexTypeBaseTypeEditManager;
+import org.eclipse.wst.xsd.ui.internal.editor.search.XSDSearchListDialogDelegate;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
+import org.eclipse.xsd.XSDSimpleTypeDefinition;
 
 public class SetBaseTypeAction extends XSDBaseAction
 {
@@ -42,23 +44,30 @@ public class SetBaseTypeAction extends XSDBaseAction
     {
       selection = ((XSDBaseAdapter) selection).getTarget();
       
-      if (selection instanceof XSDComplexTypeDefinition)
+      boolean complexType = selection instanceof XSDComplexTypeDefinition;
+      boolean simpleType = selection instanceof XSDSimpleTypeDefinition;
+      
+      if (complexType || simpleType)
       {
-        XSDComplexTypeDefinition ct = (XSDComplexTypeDefinition) selection;
+        
         if (getWorkbenchPart() instanceof IEditorPart)
         {
           IEditorPart editor = (IEditorPart)getWorkbenchPart();
 
           ComponentReferenceEditManager manager = (ComponentReferenceEditManager)editor.getAdapter(XSDComplexTypeBaseTypeEditManager.class);
           ComponentSpecification newValue;
-          IComponentDialog dialog= null;
+          IComponentDialog dialog = null;
           dialog = manager.getBrowseDialog();
           if (dialog != null)
           {
+        	if(simpleType)
+        	{
+        		((XSDSearchListDialogDelegate) dialog).showComplexTypes(false);
+        	}
             if (dialog.createAndOpen() == Window.OK)
             {
               newValue = dialog.getSelectedComponent();
-              manager.modifyComponentReference(ct, newValue);
+              manager.modifyComponentReference(selection, newValue);
             }
           }
         }

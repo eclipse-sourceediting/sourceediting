@@ -63,8 +63,8 @@ public class SetBaseTypeCommand extends BaseCommand
         		complexType.setContent(complexContent.getContent());
         	}
         }        
-        complexType.setBaseTypeDefinition(baseType);
         complexType.setDerivationMethod(XSDDerivationMethod.EXTENSION_LITERAL);
+        complexType.setBaseTypeDefinition(baseType);
         // vb This call should not be needed. The XSD Infoset model should reconcile itself properly.
         complexType.updateElement(true);
         formatChild(complexType.getElement());
