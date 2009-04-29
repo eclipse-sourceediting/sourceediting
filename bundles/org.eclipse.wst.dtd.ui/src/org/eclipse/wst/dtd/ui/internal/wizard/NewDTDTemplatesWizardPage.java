@@ -231,16 +231,10 @@ public class NewDTDTemplatesWizardPage extends WizardPage {
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
 		innerParent.setLayoutData(gd);
 
-		// Create linked text to just to templates preference page
-		Link link = new Link(innerParent, SWT.NONE);
-		link.setText(DTDUIMessages.NewDTDTemplatesWizardPage_6);
+		Label label = new Label(innerParent, SWT.NONE);
+		label.setText(DTDUIMessages.NewDTDTemplatesWizardPage_7);
 		data = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
-		link.setLayoutData(data);
-		link.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				linkClicked();
-			}
-		});
+		label.setLayoutData(data);
 
 		// create table that displays templates
 		Table table = new Table(innerParent, SWT.BORDER | SWT.FULL_SELECTION);
@@ -294,6 +288,17 @@ public class NewDTDTemplatesWizardPage extends WizardPage {
 
 		fTemplateStore = DTDUIPlugin.getDefault().getTemplateStore();
 		fTableViewer.setInput(fTemplateStore);
+
+		// Create linked text to just to templates preference page
+		Link link = new Link(parent, SWT.NONE);
+		link.setText(DTDUIMessages.NewDTDTemplatesWizardPage_6);
+		data = new GridData(SWT.END, SWT.FILL, true, false, 2, 1);
+		link.setLayoutData(data);
+		link.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				linkClicked();
+			}
+		});
 
 		configureTableResizing(innerParent, table, column1, column2);
 		loadLastSavedPreferences();

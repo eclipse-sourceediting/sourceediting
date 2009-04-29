@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -76,6 +76,7 @@ public class JSPUIMessages extends NLS {
 	public static String NewJSPTemplatesWizardPage_4;
 	public static String NewJSPTemplatesWizardPage_5;
 	public static String NewJSPTemplatesWizardPage_6;
+	public static String NewJSPTemplatesWizardPage_7;
 	public static String NewTagTemplatesWizardPage_0;
 	public static String NewTagTemplatesWizardPage_1;
 	public static String NewTagTemplatesWizardPage_2;
@@ -83,6 +84,7 @@ public class JSPUIMessages extends NLS {
 	public static String NewTagTemplatesWizardPage_4;
 	public static String NewTagTemplatesWizardPage_5;
 	public static String NewTagTemplatesWizardPage_6;
+	public static String NewTagTemplatesWizardPage_7;
 	public static String ToggleComment_label; // resource bundle
 	public static String ToggleComment_tooltip; // resource bundle
 	public static String ToggleComment_description; // resource bundle
