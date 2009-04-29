@@ -60,6 +60,6 @@ public class XMLCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		// 1 = IMarker.SEVERITY_WARNING
 		node.putInt(XMLCorePreferenceNames.INDICATE_NO_GRAMMAR, 1);
 		node.putBoolean(XMLCorePreferenceNames.USE_XINCLUDE, false);
-		node.putBoolean(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, false);
+		node.putBoolean(XMLCorePreferenceNames.HONOUR_ALL_SCHEMA_LOCATIONS, true);
 	}
 }
