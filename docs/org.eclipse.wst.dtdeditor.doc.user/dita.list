@@ -1,0 +1,12 @@
+#Wed Apr 29 18:04:02 EDT 2009
+user.input.file=DTDreftable.ditamap
+user.input.dir=D\:\\Docs\\WTP3\\org.eclipse.wst.dtdeditor.doc.user
+flagimagelist=
+fullditamaplist=DTDreftable.ditamap
+conreflist=
+hreftargetslist=topics/tdtemplt.dita,topics/tcretdtd.dita,topics/tvaldtd.dita,topics/cdtdover.dita
+fullditatopiclist=topics/tdtemplt.dita,topics/tcretdtd.dita,topics/tvaldtd.dita,topics/cdtdover.dita
+fullditamapandtopiclist=topics/tdtemplt.dita,topics/tcretdtd.dita,DTDreftable.ditamap,topics/tvaldtd.dita,topics/cdtdover.dita
+htmllist=
+imagelist=
+hrefditatopiclist=topics/tvaldtd.dita
