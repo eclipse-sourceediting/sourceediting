@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,15 +10,21 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.design.editparts;
 
+import java.awt.event.KeyEvent;
+
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.FocusEvent;
+import org.eclipse.draw2d.FocusListener;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.KeyListener;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.ToolbarLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
@@ -52,11 +58,10 @@ public class ADTFloatingToolbarEditPart extends BaseEditPart
     backToSchema = new ADTToolbarButton(XSDEditorPlugin.getPlugin().getIcon("elcl16/schemaview_co.gif"));
     backToSchema.setToolTipText(Messages._UI_HOVER_BACK_TO_SCHEMA);
     backToSchema.setBackgroundColor(ColorConstants.white);
-//    backToSchema.setBounds(new Rectangle(0, 0, 24, 24));
+    backToSchema.setFocusTraversable(true);    
     figure.add(backToSchema);
-    figure.setBounds(new Rectangle(0,0,24,24));
-    
-    addToToolbar(figure);   
+    figure.setBounds(new Rectangle(0,0,24,24));    
+    addToToolbar(figure);
     return figure;
   }
   
@@ -87,9 +92,7 @@ public class ADTFloatingToolbarEditPart extends BaseEditPart
   
   protected void doAction(MouseEvent me)
   {
-    IWorkbench workbench = PlatformUI.getWorkbench();
-    IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
-    IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
+    IEditorPart editorPart = getActionEditorPart();
  
     if (backToSchema.getBounds().contains(me.getLocation()))
     {
@@ -98,9 +101,27 @@ public class ADTFloatingToolbarEditPart extends BaseEditPart
     }
   }
   
+  protected void doAction(org.eclipse.draw2d.KeyEvent ke)
+  {
+	  IEditorPart editorPart = getActionEditorPart(); 
+	  SetInputToGraphView action = new SetInputToGraphView(editorPart, model);
+	  action.run();    
+  }
+  
+  private IEditorPart getActionEditorPart()
+  {
+	  IWorkbench workbench = PlatformUI.getWorkbench();
+	  IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+	  IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
+	  return editorPart;
+  }
+  
+  
   protected class ADTToolbarButton extends CenteredIconFigure
   {
     protected MouseListener mouseListener;
+    protected org.eclipse.draw2d.KeyListener keyListener;    
+    protected FocusListener focusListener;
     public boolean isEnabled;
     
     public ADTToolbarButton(Image img)
@@ -114,7 +135,7 @@ public class ADTFloatingToolbarEditPart extends BaseEditPart
         {
           if (isEnabled)
           {
-            addFeedback();
+        	  addFeedback();
           }
         }
 
@@ -135,6 +156,46 @@ public class ADTFloatingToolbarEditPart extends BaseEditPart
           removeFeedback();
         }
       });
+      
+      keyListener = new KeyListener.Stub()
+      {
+    	  public void keyPressed(org.eclipse.draw2d.KeyEvent ke)
+    	  {
+    		  boolean isValidKey = (ke.keycode == KeyEvent.VK_SPACE);
+    		  isValidKey = isValidKey || (ke.character == SWT.CR || ke.character == SWT.LF);
+    		  if (isEnabled && isValidKey)
+    		  {
+    			  addFeedback();
+    		  }
+    	  }
+
+    	  public void keyReleased(org.eclipse.draw2d.KeyEvent ke)
+    	  {
+    		  boolean isValidKey = (ke.keycode == KeyEvent.VK_SPACE);
+    		  isValidKey = isValidKey || (ke.character == SWT.CR || ke.character == SWT.LF);
+    		  if (isEnabled && isValidKey)
+    		  {
+    			  removeFeedback();
+    			  doAction(ke);
+    		  }            
+    	  }
+      };
+      addKeyListener(keyListener);    
+      
+      focusListener = new FocusListener(){
+
+		public void focusGained(FocusEvent fe) {
+			setMode(CenteredIconFigure.HOVER);
+			refresh();
+		}
+
+		public void focusLost(FocusEvent fe) {
+			setMode(CenteredIconFigure.NORMAL);
+			refresh();
+		}
+	};
+	
+	addFocusListener(focusListener);
     }
 
     public void addFeedback()
