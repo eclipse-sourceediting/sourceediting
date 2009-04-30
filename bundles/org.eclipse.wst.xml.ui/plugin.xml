@@ -1646,10 +1646,9 @@
 	</commonWizard>
  </extension>
 
- <extension point="org.eclipse.ui.menus">
+ <extension point="org.eclipse.ui.menus" name="%XML.name" id="XML">
 	<menuContribution locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
-	 <toolbar id="org.eclipse.wst.xml.ui.NewFileToolBar">
- 	  <separator name="org.eclipse.wst.xml.toolbar.start" visible="true"/>
+	 <toolbar id="org.eclipse.wst.xml.ui.perspective.NewFileToolBar">
 		<command
 				commandId="org.eclipse.ui.newWizard"
 				icon="$nl$/icons/full/etool16/new_xml.gif"
@@ -1663,7 +1662,7 @@
 			</with>
            </visibleWhen>         
         </command>
-       <separator name="additions" visible="true"/>
+       <separator name="additions" visible="false"/>
       </toolbar> 
      </menuContribution>
   </extension>
