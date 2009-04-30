@@ -76,7 +76,7 @@
          id="org.apache.commons.logging"
          download-size="0"
          install-size="0"
-         version="1.0.4"
+         version="1.0.4.qualifier"
          unpack="false"/>
 
    <plugin
