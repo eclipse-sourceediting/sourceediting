@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Jesper Steen Moller - jesper@selskabet.org - bug 112284
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.catalog;
@@ -30,6 +31,8 @@ public class CatalogElement implements ICatalogElement
 
 	String id;
 
+	String base;
+
 	Map attributes = new HashMap();
 
 	ICatalog ownerCatalog;
@@ -43,6 +46,16 @@ public class CatalogElement implements ICatalogElement
 	public int getType()
 	{
 		return type;
+	}
+
+	public String getBase()
+	{
+		return base;
+	}
+
+	public void setBase(String base)
+	{
+		this.base = base;
 	}
 
 	public String getAttributeValue(String name)
@@ -117,6 +130,11 @@ public class CatalogElement implements ICatalogElement
 		{
 		}
 
+		if (this.base != null && !this.base.equals("")) //$NON-NLS-1$
+		{
+			return makeAbsolute(base, path);		
+		}
+		
 		String result = path;
 		Catalog catalog = (Catalog) getOwnerCatalog();
 		if (catalog != null)
@@ -148,6 +166,7 @@ public class CatalogElement implements ICatalogElement
 	    }
 		element.setOwnerCatalog(ownerCatalog);
 		element.setId(id);
+		element.setBase(base);
 	    return element;
 	  }
 

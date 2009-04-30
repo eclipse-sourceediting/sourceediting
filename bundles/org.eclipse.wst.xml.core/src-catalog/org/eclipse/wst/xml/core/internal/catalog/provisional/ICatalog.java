@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Jesper Steen Moeller - Added XML Catalogs 1.1 support
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.catalog.provisional;
@@ -32,29 +33,29 @@ public interface ICatalog
      * 
      * @return catalog id string
      */
-    public String getId();
+    String getId();
     
     /**
      * Sets catalog id string
      * 
      */
-    public void setId(String id);
+    void setId(String id);
     
     
-    public void setLocation(String location);
-    public String getLocation();
+    void setLocation(String location);
+    String getLocation();
     
     /**
-     * Return the applicable PUBLIC or SYSTEM identifier.
+     * Return the applicable or SYSTEM identifier.
      * 
      * <p>
      * This method searches the Catalog and returns the system identifier
-     * specified for the given system or public identifiers. If no appropriate
-     * PUBLIC or SYSTEM entry is found in the Catalog, null is returned.
+     * specified for the given system or identifiers. If no appropriate
+     * or SYSTEM entry is found in the Catalog, null is returned.
      * </p>
      * 
      * @param publicId
-     *            The public identifier to locate in the catalog. Public
+     *            The identifier to locate in the catalog. Public
      *            identifiers are normalized before comparison.
      * @param systemId
      *            The nominal system identifier for the entity in question (as
@@ -71,7 +72,7 @@ public interface ICatalog
      *         catalog, instead null is returned to indicate that no match was
      *         found.
      */
-    public String resolvePublic(String publicId, String systemId)
+    String resolvePublic(String publicId, String systemId)
             throws MalformedURLException, IOException;
 
     /**
@@ -99,7 +100,7 @@ public interface ICatalog
      * @throws IOException
      *             Error reading subordinate catalog file.
      */
-    public String resolveSystem(String systemId) throws MalformedURLException,
+    String resolveSystem(String systemId) throws MalformedURLException,
             IOException;
 
     /**
@@ -125,7 +126,7 @@ public interface ICatalog
      * @throws IOException
      *             Error reading subordinate catalog file.
      */
-    public String resolveURI(String uri) throws MalformedURLException,
+    String resolveURI(String uri) throws MalformedURLException,
             IOException;
 
     /**
@@ -134,7 +135,7 @@ public interface ICatalog
      * @param element -
      *            catalog element
      */
-    public void addCatalogElement(ICatalogElement element);
+    void addCatalogElement(ICatalogElement element);
 
     /**
      * Removes catalog element from the collection of the catalog elements.
@@ -142,14 +143,35 @@ public interface ICatalog
      * @param element -
      *            catalog element
      */
-    public void removeCatalogElement(ICatalogElement element);
+    void removeCatalogElement(ICatalogElement element);
 
     /**
      * Returns an array of catalog elements of type ICatalogElement.TYPE_ENTRY
      * 
      * @return an array of catalog elements
      */
-    public ICatalogEntry[] getCatalogEntries();
+    ICatalogEntry[] getCatalogEntries();
+
+    /**
+     * Returns an array of catalog elements of type ICatalogElement.TYPE_REWRITE
+     * 
+     * @return an array of rewrite catalog elements
+     */
+    IRewriteEntry[] getRewriteEntries();
+
+    /**
+     * Returns an array of catalog elements of type ICatalogElement.TYPE_SUFFIX
+     * 
+     * @return an array of suffix entry elements
+     */
+    ISuffixEntry[] getSuffixEntries();
+
+    /**
+     * Returns an array of catalog elements of type ICatalogElement.TYPE_DELEGATE
+     * 
+     * @return an array of delegate catalog elements
+     */
+    IDelegateCatalog[] getDelegateCatalogs();
 
     /**
      * Returns an array of catalog elements of type
@@ -157,7 +179,7 @@ public interface ICatalog
      * 
      * @return an array of catalog elements
      */
-    public INextCatalog[] getNextCatalogs();
+    INextCatalog[] getNextCatalogs();
 
     /**
      * Returns new catalog element with the specified type. If the type is one
@@ -165,17 +187,17 @@ public interface ICatalog
      * 
      * @return
      */
-    public ICatalogElement createCatalogElement(int type);
+    ICatalogElement createCatalogElement(int type);
 
     /**
      * Removes all the elements from this catalog.
      * 
      */
-    public void clear();
+    void clear();
     
-    //public void load() throws IOException;
+    //void load() throws IOException;
     
-    public void save() throws IOException;
+    void save() throws IOException;
 
     /*
      * Loads catalog from the specified location. Expecting OASIS XML Catalog
@@ -188,7 +210,7 @@ public interface ICatalog
      *             problem loading file
      * 
      */
-    //public void load(InputStream inputStream) throws IOException;
+    //void load(InputStream inputStream) throws IOException;
 
     /*
      * Saves catalog to the specified location in OASIS XML Catalog format
@@ -200,7 +222,7 @@ public interface ICatalog
      *             problem saving file
      * 
      */
-    //public void save(OutputStream outputStream) throws IOException;
+    //void save(OutputStream outputStream) throws IOException;
 
     /**
      * This method copies all catalog entries from source catalog to this one.
@@ -211,7 +233,7 @@ public interface ICatalog
      *            a boolean flag indicating wether to include entries of the
      *            same type from the nested catalogs
      */
-    public void addEntriesFromCatalog(ICatalog catalog);
+    void addEntriesFromCatalog(ICatalog catalog);
 
     /**
      * Adds a listener of the catalog events
@@ -220,7 +242,7 @@ public interface ICatalog
      *            listener of the catalog events
      * @see ICatalogEvent
      */
-    public void addListener(ICatalogListener listener);
+    void addListener(ICatalogListener listener);
 
     /**
      * Removes a listener of the catalog events
@@ -229,5 +251,5 @@ public interface ICatalog
      *            listener of the catalog events
      * @see ICatalogEvent
      */
-    public void removeListener(ICatalogListener listener);      
+    void removeListener(ICatalogListener listener);      
 }

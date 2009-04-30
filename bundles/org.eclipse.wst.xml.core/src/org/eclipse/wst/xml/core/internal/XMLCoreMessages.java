@@ -1,11 +1,12 @@
 /**********************************************************************
- * Copyright (c) 2005 IBM Corporation and others. All rights reserved.   This
+ * Copyright (c) 2005, 2009 IBM Corporation and others. All rights reserved.   This
  * program and the accompanying materials are made available under the terms of
  * the Eclipse Public License v1.0 which accompanies this distribution, and is
  * available at http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors: 
  * IBM - Initial API and implementation
+ * Jesper Steen Moeller - Added XML Catalogs 1.1 support
  **********************************************************************/
 package org.eclipse.wst.xml.core.internal;
 
@@ -26,6 +27,12 @@ public class XMLCoreMessages {
 	public static String loading;
 	public static String Catalog_entry_key_not_set;
 	public static String Catalog_entry_uri_not_set;
+	public static String Catalog_rewrite_startString_not_set;
+	public static String Catalog_rewrite_prefix_not_set;
+	public static String Catalog_suffix_string_not_set;
+	public static String Catalog_suffix_uri_not_set;
+	public static String Catalog_delegate_prefix_not_set;
+	public static String Catalog_delegate_catalog_not_set;
 	public static String Catalog_next_catalog_location_uri_not_set;
 	public static String Catalog_resolution_null_catalog;
 	public static String Catalog_resolution_malformed_url;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2006 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Jesper Steen Moeller - Added XML Catalogs 1.1 support
  *     
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.catalog.provisional;
@@ -24,10 +25,19 @@ public interface ICatalogElement
 {
     /** Types of the catalog entries */
     /** The PUBLIC, URI or SYSTEM Catalog Entry. */
-    public static final int TYPE_ENTRY = 1;
+    int TYPE_ENTRY = 1;
 
     /** The NEXT_CATALOG Catalog Entry type. */
-    public static final int TYPE_NEXT_CATALOG = 10;
+    int TYPE_NEXT_CATALOG = 10;
+
+    /** Rewrite types (since XML Catalogs 1.1) */
+    int TYPE_REWRITE = 20;
+
+    /** Delegate types (sinceXML Catalogs 1.1) */
+    int TYPE_DELEGATE = 30;
+    
+    /** Suffix types (since XML Catalogs 1.1)  */
+    int TYPE_SUFFIX = 40;
 
     /**
      * Returns the value of the '<em><b>Type</b></em>' attribute.
@@ -80,4 +90,8 @@ public interface ICatalogElement
     public void setOwnerCatalog(ICatalog catalog);
     
     public ICatalog getOwnerCatalog();
+
+	void setBase(String base);
+
+	String getBase();
 }
