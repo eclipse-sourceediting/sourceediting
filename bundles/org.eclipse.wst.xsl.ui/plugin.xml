@@ -229,8 +229,7 @@
    </extension -->
 	
  <extension point="org.eclipse.ui.menus">
-	<menuContribution locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
-	 <toolbar id="org.eclipse.wst.xsl.ui.NewFileToolBar">
+	<menuContribution locationURI="toolbar:org.eclipse.wst.xml.ui.perspective.NewFileToolBar">
         <command
               commandId="org.eclipse.ui.newWizard"
               icon="$nl$/icons/full/xslt_file.gif"
@@ -244,7 +243,6 @@
 			</with>
            </visibleWhen>         
         </command>
-      </toolbar> 
      </menuContribution>
   </extension>
 
