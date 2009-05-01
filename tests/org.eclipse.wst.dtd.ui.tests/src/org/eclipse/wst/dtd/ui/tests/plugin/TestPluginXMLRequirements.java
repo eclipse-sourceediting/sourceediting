@@ -84,7 +84,7 @@ public class TestPluginXMLRequirements extends TestCase{
 	
 	
 	public void testDTDToolTipExists() throws Exception {
-		String xpathString = "//menuContribution[@locationURI = 'toolbar:org.eclipse.ui.main.toolbar?after=additions']/toolbar/command[@id = 'org.eclipse.wst.dtd.ui.newDTDFile']";
+		String xpathString = "//menuContribution[@locationURI = 'toolbar:org.eclipse.wst.xml.ui.perspective.NewFileToolBar']/command[@id = 'org.eclipse.wst.dtd.ui.newDTDFile']";
 		XPathExpression xpathExpr = xpath.compile(xpathString);
 		Element element = (Element) xpathExpr.evaluate(pluginDoc.getDocumentElement(), XPathConstants.NODE);
 		String toolTip = element.getAttribute("tooltip");
