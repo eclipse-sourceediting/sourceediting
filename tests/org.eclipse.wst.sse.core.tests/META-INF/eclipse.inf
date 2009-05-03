@@ -1,0 +1,6 @@
+# We do not want any nested jars 
+# signed or normalized for packing
+# see bug 274743 Some unit tests are sensitive to details of build
+# https://bugs.eclipse.org/bugs/show_bug.cgi?id=274743
+
+jarprocessor.exclude.children=true
