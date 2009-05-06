@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,11 +24,13 @@ import org.w3c.dom.Node;
 public class XSDModelReconcileAdapter extends ModelReconcileAdapter
 {
   protected XSDSchema schema;
+  protected XSDModelDelayedReconciler delayedReconciler;
   
   public XSDModelReconcileAdapter(Document document, XSDSchema schema)
   {
     super(document);
     this.schema = schema;
+    this.delayedReconciler = new XSDModelDelayedReconciler();
   }
   
   protected void handleNodeChanged(Node node)
@@ -50,9 +52,17 @@ public class XSDModelReconcileAdapter extends ModelReconcileAdapter
 
     if (node instanceof Element)
     {  
-      XSDConcreteComponent concreteComponent = schema.getCorrespondingComponent(node);    
-      concreteComponent.elementChanged((Element)node);
-    }
+		Element element = (Element) node;
+		if (delayedReconciler.shouldDelay(schema))
+		{
+			delayedReconciler.elementChanged(element, schema);
+		}
+		else
+		{
+	        XSDConcreteComponent concreteComponent = schema.getCorrespondingComponent(node);
+			concreteComponent.elementChanged(element);
+		}
+	}
     else if (node instanceof Document)
     {
       // The document changed so we may need to fix up the 
