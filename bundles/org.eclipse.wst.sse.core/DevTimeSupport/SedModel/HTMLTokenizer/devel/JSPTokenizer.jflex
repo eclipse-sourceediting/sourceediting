@@ -242,7 +242,16 @@ import org.eclipse.wst.xml.core.internal.parser.IntStack;
 				if (longscan)
 					fCurrentTagName = internalTagName;
 				// read the next region and context
-				internalContext = primGetNextToken();
+				try {
+					internalContext = primGetNextToken();
+				}
+				catch(IllegalStateException e) {
+					start = yychar;
+					while(yy_advance() != YYEOF);
+					textLength = length = yylength();
+					yybegin(ST_ABORT_EMBEDDED);
+					longscan = false;
+				}
 				if (longscan) {
 					// Returning from a block tag scan requires restoring some state variables
 					// as well as handling the block region and setting up for normal scanning
@@ -258,7 +267,15 @@ import org.eclipse.wst.xml.core.internal.parser.IntStack;
 					fEmbeddedHint = previousEmbeddedHint;
 					fCurrentTagName = previousCurrentTagName;
 					yybegin(previousState);
-					internalContext = primGetNextToken();
+					try {
+						internalContext = primGetNextToken();
+					}
+					catch(IllegalStateException e) {
+						start = yychar;
+						while(yy_advance() != YYEOF);
+						textLength = length = yylength();
+						yybegin(ST_ABORT_EMBEDDED);
+					}
 				}
 			} catch (IOException e) {
 				// primGetNextToken() calls may throw an IOException
@@ -454,9 +471,18 @@ private final String doScan(String searchString, boolean requireTailSeparator, b
 				int resumeState = yystate();
 				yybegin(ST_BLOCK_TAG_INTERNAL_SCAN);
 				if(yy_markedPos == yy_startRead) {
-					String jspContext = primGetNextToken();
+					try {
+						String jspContext = primGetNextToken();
+						yybegin(resumeState);
+						return jspContext;
+					}
+					catch(IllegalStateException e) {
+						start = yychar;
+						while(yy_advance() != YYEOF);
+						textLength = length = yylength();
+					}
 					yybegin(resumeState);
-					return jspContext;
+					return UNDEFINED;
 				}
 				return searchContext;
 			}
@@ -472,9 +498,18 @@ private final String doScan(String searchString, boolean requireTailSeparator, b
 				int resumeState = yystate();
 				yybegin(ST_BLOCK_TAG_INTERNAL_SCAN);
 				if(yy_markedPos == yy_startRead) {
-					String jspContext = primGetNextToken();
+					try {
+						String jspContext = primGetNextToken();
+						yybegin(resumeState);
+						return jspContext;
+					}
+					catch(IllegalStateException e) {
+						start = yychar;
+						while(yy_advance() != YYEOF);
+						textLength = length = yylength();
+					}
 					yybegin(resumeState);
-					return jspContext;
+					return UNDEFINED;
 				}
 				return searchContext;
 			}
@@ -490,9 +525,18 @@ private final String doScan(String searchString, boolean requireTailSeparator, b
 				int resumeState = yystate();
 				yybegin(ST_BLOCK_TAG_INTERNAL_SCAN);
 				if(yy_markedPos == yy_startRead) {
-					String jspContext = primGetNextToken();
+					try {
+						String jspContext = primGetNextToken();
+						yybegin(resumeState);
+						return jspContext;
+					}
+					catch(IllegalStateException e) {
+						start = yychar;
+						while(yy_advance() != YYEOF);
+						textLength = length = yylength();
+					}
 					yybegin(resumeState);
-					return jspContext;
+					return UNDEFINED;
 				}
 				return searchContext;
 			}
@@ -522,7 +566,16 @@ private final String doScan(String searchString, boolean requireTailSeparator, b
 				fEmbeddedContainer.setLength(fEmbeddedContainer.getLength() + yylength());
 				fEmbeddedContainer.setTextLength(fEmbeddedContainer.getTextLength() + yylength());
 				yybegin(YYINITIAL);
-				String context = primGetNextToken();
+				String context = null;
+				try {
+					context = primGetNextToken();
+				}
+				catch(IllegalStateException e) {
+					start = yychar;
+					while(yy_advance() != YYEOF);
+					textLength = length = yylength();
+					return UNDEFINED;
+				}
 				if(context.equals(XMLRegionContexts.XML_CDATA_OPEN)) {
 					assembleEmbeddedContainer(XMLRegionContexts.XML_CDATA_OPEN, XMLRegionContexts.XML_CDATA_CLOSE);
 				}
@@ -609,7 +662,15 @@ private final String doScan(String searchString, boolean requireTailSeparator, b
 		// been a Block, resume scanning normally immediately
 		if (yy_markedPos == yy_startRead) {
 			yybegin(immediateFallbackState);
-			return primGetNextToken();
+			try {
+				return primGetNextToken();
+			}
+			catch(IllegalStateException e) {
+				start = yychar;
+				while(yy_advance() != YYEOF);
+				textLength = length = yylength();
+			}
+			return UNDEFINED;
 		}
 	}
 	else {
@@ -620,8 +681,17 @@ private final String doScan(String searchString, boolean requireTailSeparator, b
 	yybegin(exitState);
 	// If the ending occurs at the very beginning of what would have
 	// been a Block, resume scanning normally immediately
-	if(yy_markedPos == yy_startRead)
-		return primGetNextToken();
+	if(yy_markedPos == yy_startRead) {
+		try {
+			return primGetNextToken();
+		}
+		catch(IllegalStateException e) {
+			start = yychar;
+			while(yy_advance() != YYEOF);
+			textLength = length = yylength();
+		}
+		return UNDEFINED;
+	}
 	return searchContext;
 }
 /**
@@ -660,7 +730,15 @@ private final String doBlockTagScan() throws IOException {
 			textLength = length = fBufferedLength;
 			fShouldLoadBuffered = false;
 		} else {
-			context = primGetNextToken();
+			try {
+				context = primGetNextToken();
+			}
+			catch(IllegalStateException e) {
+				start = yychar;
+				while(yy_advance() != YYEOF);
+				textLength = length = yylength();
+				return fRegionFactory.createToken(UNDEFINED, start, textLength, length, null, null);
+			}
 			if (context == PROXY_CONTEXT) {
 				return fEmbeddedContainer;
 			} else if (context == XML_TAG_NAME || f_context == JSP_ROOT_TAG_NAME || f_context == JSP_DIRECTIVE_NAME) {
@@ -681,7 +759,15 @@ private final String doBlockTagScan() throws IOException {
 			}
 		}
 		// store the next token
-		f_context = primGetNextToken();
+		try {
+			f_context = primGetNextToken();
+		}
+		catch(IllegalStateException e) {
+			start = yychar;
+			while(yy_advance() != YYEOF);
+			textLength = length = yylength();
+			return fRegionFactory.createToken(UNDEFINED, start, textLength, length, null, null);
+		}
 		if (f_context == PROXY_CONTEXT) {
 			fBufferedEmbeddedContainer = fEmbeddedContainer;
 			fShouldLoadBuffered = true;
@@ -755,6 +841,7 @@ private final String doBlockTagScan() throws IOException {
 		if (Debug.debugTokenizer) {
 			System.out.println("resetting tokenizer");//$NON-NLS-1$
 		}
+		fInputStamp++;
 		fOffset = newOffset;
 	
 		/* the input device */
@@ -789,7 +876,7 @@ private final String doBlockTagScan() throws IOException {
 		yy_endRead = 0;
 	
 		/* number of newlines encountered up to the start of the matched text */
-		yyline = 0;
+		//yyline = 0;
 	
 		/* the number of characters up to the start of the matched text */
 		yychar = 0;
@@ -875,7 +962,6 @@ private final String doBlockTagScan() throws IOException {
 %function primGetNextToken
 %type String
 %char
-%line
 %unicode
 %pack
 
@@ -2720,12 +2806,11 @@ jspDirectiveStart        = {jspScriptletStart}@
 	return XML_CONTENT;
 }
 
-
 <ST_BLOCK_TAG_SCAN> .|\r|\n {
 		return doBlockTagScan();
 	}
 
-. {
+.|\r|\n {
 	if (Debug.debugTokenizer)
 		System.out.println("!!!unexpected!!!: \"" + yytext() + "\":" + //$NON-NLS-2$//$NON-NLS-1$
 			yychar + "-" + (yychar + yylength()));//$NON-NLS-1$

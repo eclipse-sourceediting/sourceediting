@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -257,8 +257,9 @@ private final String doScan(String searchString, boolean requireTailSeparator, S
 	yybegin(exitState);
 	// If the ending occurs at the very beginning of what would have
 	// been a Block, resume scanning normally immediately
-	if(yy_markedPos == yy_startRead)
+	if(yy_markedPos == yy_startRead) {
 		return primGetNextToken();
+	}
 	return searchContext;
 }
 /**
@@ -322,10 +323,10 @@ public final ITextRegion getNextToken() throws IOException {
 	// store the next token
 	f_context = primGetNextToken();
 	if (f_context == XML_TAG_NAME) {
-		if(containsTagName(yy_buffer, yy_startRead, yy_markedPos-yy_startRead))
-			fCurrentTagName = yytext();
-		else
-			fCurrentTagName = null;
+	if(containsTagName(yy_buffer, yy_startRead, yy_markedPos-yy_startRead))
+		fCurrentTagName = yytext();
+	else
+		fCurrentTagName = null;
 	}
 	else if (f_context == XML_TAG_OPEN) {
 		fIsBlockingEnabled = true;
@@ -393,6 +394,8 @@ public void reset(java.io.Reader in, int newOffset) {
 	if (Debug.debugTokenizer) {
 		System.out.println("resetting tokenizer");//$NON-NLS-1$
 	}
+
+	fInputStamp++;
 	fOffset = newOffset;
 
 	/* the input device */
@@ -427,7 +430,7 @@ public void reset(java.io.Reader in, int newOffset) {
 	yy_endRead = 0;
 
 	/* number of newlines encountered up to the start of the matched text */
-	yyline = 0;
+	//yyline = 0;
 
 	/* the number of characters up to the start of the matched text */
 	yychar = 0;
@@ -489,7 +492,6 @@ private final String scanXMLCommentText() throws IOException {
 %function primGetNextToken
 %type String
 %char
-%line
 %unicode
 %pack
 
@@ -1298,7 +1300,7 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 		return doBlockTagScan();
 	}
 
-. {
+.|\r|\n {
 	if (Debug.debugTokenizer)
 		System.out.println("!!!unexpected!!!: \"" + yytext() + "\":" + //$NON-NLS-2$//$NON-NLS-1$
 			yychar + "-" + (yychar + yylength()));//$NON-NLS-1$
