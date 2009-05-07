@@ -145,20 +145,12 @@
       </p><pre class="programlisting">
 
 &lt;?xml version="1.0"?&gt;
-&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="1.0"&gt;
-  &lt;xsl:template match="/"&gt;
-    &lt;html&gt;
-      &lt;head&gt;
-        &lt;title&gt;Welcome&lt;/title&gt;
-      &lt;/head&gt;
-      &lt;body&gt;
-        Welcome &lt;xsl:value-of select="member/name"/&gt;!
-      &lt;/body&gt;
-    &lt;/html&gt;
-  &lt;/xsl:template&gt;
-&lt;/xsl:stylesheet&gt;
-      
+&lt;member level="platinum"&gt;
+  &lt;name&gt;Jeff&lt;/name&gt;
+  &lt;phone type="home"&gt;555-1234&lt;/phone&gt;
+  &lt;phone type="work"&gt;555-4321&lt;/phone&gt;
+  &lt;favoriteColor&gt;blue&lt;/favoriteColor&gt;
+&lt;/member&gt;      
       </pre><p>
          There are a couple of things that need to be pointed out right away. First this is a well-formed XML
          document. This mean all HTML used must conform to the XHTML specification (i.e. all tags must be closed and

@@ -189,20 +189,12 @@
       <programlisting>
 <![CDATA[
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="1.0">
-  <xsl:template match="/">
-    <html>
-      <head>
-        <title>Welcome</title>
-      </head>
-      <body>
-        Welcome <xsl:value-of select="member/name"/>!
-      </body>
-    </html>
-  </xsl:template>
-</xsl:stylesheet>
-]]>      
+<member level="platinum">
+  <name>Jeff</name>
+  <phone type="home">555-1234</phone>
+  <phone type="work">555-4321</phone>
+  <favoriteColor>blue</favoriteColor>
+</member>]]>      
       </programlisting>
       <para>
          There are a couple of things that need to be pointed out right away. First this is a well-formed XML
