@@ -13,6 +13,7 @@ package org.eclipse.wst.xsl.core.tests;
 
 import org.eclipse.wst.xsl.core.internal.utils.tests.TestXMLContentType;
 import org.eclipse.wst.xsl.internal.core.tests.TestIncludedTemplates;
+import org.eclipse.wst.xsl.internal.core.tests.TestStructuredTextPartitionerForXSL;
 import org.eclipse.wst.xsl.internal.core.tests.TestXSLCore;
 import org.eclipse.wst.xsl.internal.model.tests.TestStylesheet;
 import org.eclipse.wst.xsl.internal.model.tests.TestStylesheetModel;
@@ -33,5 +34,6 @@ public class XSLCoreTestSuite extends TestSuite {
 		addTestSuite(TestStylesheet.class);
 		addTestSuite(TestStylesheetModel.class);
 		addTestSuite(TestXMLContentType.class);
+		addTestSuite(TestStructuredTextPartitionerForXSL.class);
 	}
 }
