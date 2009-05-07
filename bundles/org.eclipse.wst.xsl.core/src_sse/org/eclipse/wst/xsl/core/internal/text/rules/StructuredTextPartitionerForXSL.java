@@ -55,7 +55,7 @@ public class StructuredTextPartitionerForXSL extends StructuredTextPartitionerFo
 	
 	@Override
 	public IDocumentPartitioner newInstance() {
-		StructuredTextPartitionerForXML instance = new StructuredTextPartitionerForXML();
+		StructuredTextPartitionerForXSL instance = new StructuredTextPartitionerForXSL();
 		return instance;
 	}
 	
