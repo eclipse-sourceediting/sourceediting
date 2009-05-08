@@ -33,6 +33,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextPartiti
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.sse.core.internal.text.rules.IStructuredTypedRegion;
 import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
@@ -403,7 +404,8 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 		// but hopefully this will be less garbage than before (especially for
 		// HTML, XML,
 		// naturally!)
-		internalReusedTempInstance = getEmbeddedPartitioner().createPartition(offset, length, type);
+		IStructuredTypedRegion region = getEmbeddedPartitioner().createPartition(offset, length, type);
+		super.setInternalPartition(region.getOffset(), region.getLength(), region.getType());
 
 	}
 

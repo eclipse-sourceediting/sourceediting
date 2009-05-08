@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,6 +38,9 @@ import org.eclipse.wst.sse.core.text.IStructuredPartitions;
  * Base Document partitioner for StructuredDocuments. BLOCK_TEXT ITextRegions
  * have a partition type of BLOCK or BLOCK:TAGNAME if a surrounding tagname
  * was recorded.
+ * 
+ * Subclasses should synchronize access to <code>internalReusedTempInstance</code> using the lock
+ * <code>PARTITION_LOCK</code>.
  */
 public class StructuredTextPartitioner implements IDocumentPartitioner, IStructuredTextPartitioner {
 
@@ -60,6 +63,8 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 	protected IStructuredTypedRegion internalReusedTempInstance = new SimpleStructuredTypedRegion(0, 0, IStructuredPartitions.DEFAULT_PARTITION);
 	protected IStructuredDocument fStructuredDocument;
 
+	protected final Object PARTITION_LOCK = new Object();
+
 	/**
 	 * StructuredTextPartitioner constructor comment.
 	 */
@@ -71,7 +76,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 	 * Returns the partitioning of the given range of the connected document.
 	 * There must be a document connected to this partitioner.
 	 * 
-	 * Note: this shouldn't be called dirctly by clients, unless they control
+	 * Note: this shouldn't be called directly by clients, unless they control
 	 * the threading that includes modifications to the document. Otherwise
 	 * the document could be modified while partitions are being computed. We
 	 * advise that clients use the computePartitions API directly from the
@@ -89,12 +94,12 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 		}
 		ITypedRegion[] results = null;
 
+		synchronized (cachedPartitions) {
+			if ((!cachedPartitions.isInValid) && (offset == cachedPartitions.fOffset) && (length == cachedPartitions.fLength))
+				results = cachedPartitions.fPartitions;
+		}
 
-
-		if ((!cachedPartitions.isInValid) && (offset == cachedPartitions.fOffset) && (length == cachedPartitions.fLength)) {
-			results = cachedPartitions.fPartitions;
-		} else {
-
+		if (results == null) {
 			if (length == 0) {
 				results = new ITypedRegion[]{getPartition(offset)};
 			} else {
@@ -109,19 +114,26 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 				int currentPos = offset;
 				IStructuredTypedRegion previousPartition = null;
 				while (currentPos < endPos) {
-					internalGetPartition(currentPos, false);
-					currentPos += internalReusedTempInstance.getLength();
-					// check if this partition just continues last one
-					// (type is the same),
-					// if so, just extend length of last one, not need to
-					// create new
-					// instance.
-					if (previousPartition != null && internalReusedTempInstance.getType().equals(previousPartition.getType())) {
-						// same partition type
-						previousPartition.setLength(previousPartition.getLength() + internalReusedTempInstance.getLength());
-					} else {
-						// not the same, so add to list
-						IStructuredTypedRegion partition = createNewPartitionInstance();
+					IStructuredTypedRegion partition = null;
+					synchronized (PARTITION_LOCK) {
+						internalGetPartition(currentPos, false);
+						currentPos += internalReusedTempInstance.getLength();
+						
+						// check if this partition just continues last one
+						// (type is the same),
+						// if so, just extend length of last one, not need to
+						// create new
+						// instance.
+						if (previousPartition != null && internalReusedTempInstance.getType().equals(previousPartition.getType())) {
+							// same partition type
+							previousPartition.setLength(previousPartition.getLength() + internalReusedTempInstance.getLength());
+						}
+						else {
+							// not the same, so add to list
+							partition = createNewPartitionInstance();
+						}
+					}
+					if (partition != null) {
 						list.add(partition);
 						// and make current, previous
 						previousPartition = partition;
@@ -140,15 +152,21 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 					((IStructuredRegion) results[results.length - 1]).setLength(offset + length - results[results.length - 1].getOffset());
 				}
 			}
-			cachedPartitions.fLength = length;
-			cachedPartitions.fOffset = offset;
-			cachedPartitions.fPartitions = results;
-			cachedPartitions.isInValid = false;
+			synchronized (cachedPartitions) {
+				cachedPartitions.fLength = length;
+				cachedPartitions.fOffset = offset;
+				cachedPartitions.fPartitions = results;
+				cachedPartitions.isInValid = false;
+			}
 		}
 		return results;
 	}
 
-
+	private void invalidatePartitionCache() {
+		synchronized (cachedPartitions) {
+			cachedPartitions.isInValid = true;
+		}
+	}
 
 	/**
 	 * Connects the document to the partitioner, i.e. indicates the begin of
@@ -156,7 +174,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 	 */
 	public synchronized void connect(IDocument document) {
 		if (document instanceof IStructuredDocument) {
-			cachedPartitions.isInValid = true;
+			invalidatePartitionCache();
 			this.fStructuredDocument = (IStructuredDocument) document;
 		} else {
 			throw new IllegalArgumentException("This class and API are for Structured Documents only"); //$NON-NLS-1$
@@ -185,7 +203,9 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 	}
 
 	private IStructuredTypedRegion createNewPartitionInstance() {
-		return new SimpleStructuredTypedRegion(internalReusedTempInstance.getOffset(), internalReusedTempInstance.getLength(), internalReusedTempInstance.getType());
+		synchronized (PARTITION_LOCK) {
+			return new SimpleStructuredTypedRegion(internalReusedTempInstance.getOffset(), internalReusedTempInstance.getLength(), internalReusedTempInstance.getType());
+		}
 	}
 
 	/**
@@ -212,7 +232,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 	 * @see org.eclipse.jface.text.IDocumentPartitioner#disconnect()
 	 */
 	public synchronized void disconnect() {
-		cachedPartitions.isInValid = true;
+		invalidatePartitionCache();
 		this.fStructuredDocument = null;
 	}
 
@@ -222,7 +242,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 	 * @see org.eclipse.jface.text.IDocumentPartitioner#documentAboutToBeChanged(DocumentEvent)
 	 */
 	public void documentAboutToBeChanged(DocumentEvent event) {
-		cachedPartitions.isInValid = true;
+		invalidatePartitionCache();
 	}
 
 	/**
@@ -270,7 +290,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 	}
 
 	/**
-	 * Returns the set of all possible content types the partitoner supports.
+	 * Returns the set of all possible content types the partitioner supports.
 	 * I.e. Any result delivered by this partitioner may not contain a content
 	 * type which would not be included in this method's result.
 	 * 
@@ -288,7 +308,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 	 * given document. The document has previously been connected to the
 	 * partitioner.
 	 * 
-	 * Note: this shouldn't be called dirctly by clients, unless they control
+	 * Note: this shouldn't be called directly by clients, unless they control
 	 * the threading that includes modifications to the document. Otherwise
 	 * the document could be modified while partitions are being computed. We
 	 * advise that clients use the getPartition API directly from the
@@ -598,9 +618,11 @@ public class StructuredTextPartitioner implements IDocumentPartitioner, IStructu
 	}
 
 	protected void setInternalPartition(int offset, int length, String type) {
-		internalReusedTempInstance.setOffset(offset);
-		internalReusedTempInstance.setLength(length);
-		internalReusedTempInstance.setType(type);
+		synchronized (PARTITION_LOCK) {
+			internalReusedTempInstance.setOffset(offset);
+			internalReusedTempInstance.setLength(length);
+			internalReusedTempInstance.setType(type);
+		}
 	}
 
 }
