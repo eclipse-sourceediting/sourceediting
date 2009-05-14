@@ -2836,9 +2836,9 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				extension.stopRewriteSession(session, get());
 			}
 
+			fActiveRewriteSession = null;
 			DocumentRewriteSessionEvent event = new DocumentRewriteSessionEvent(this, session, DocumentRewriteSessionEvent.SESSION_STOP);
 			fireDocumentRewriteSessionEvent(event);
-			fActiveRewriteSession = null;
 		}
 	}
 
