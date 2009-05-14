@@ -35,8 +35,8 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.wst.sse.core.internal.encoding.util.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
@@ -177,7 +177,7 @@ public class SemanticHighlightingPresenter implements ITextPresentationListener,
 						position.update(newRightOffset, newRightLength);
 					} else {
 						position.setLength(newLeftLength);
-						addPositionFromUI(newRightOffset, newRightLength, position.getHighlighting());
+						addPositionFromUI(position);
 					}
 				}
 			}
@@ -782,12 +782,10 @@ public class SemanticHighlightingPresenter implements ITextPresentationListener,
 	 * Add a position with the given range and highlighting unconditionally, only from UI thread.
 	 * The position will also be registered on the document. The text presentation is not invalidated.
 	 *
-	 * @param offset The range offset
-	 * @param length The range length
-	 * @param highlighting
+	 * @param uiPosition the highlighted position to add from the UI
 	 */
-	private void addPositionFromUI(int offset, int length, HighlightingStyle highlighting) {
-		Position position= createHighlightedPosition(offset, length, highlighting);
+	private void addPositionFromUI(HighlightedPosition uiPosition) {
+		Position position= createHighlightedPosition(uiPosition, uiPosition.getHighlighting(), uiPosition.isReadOnly());
 		synchronized (fPositionLock) {
 			insertPosition(position);
 		}
