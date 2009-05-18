@@ -1,64 +1,76 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2006, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2008, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
+<?Pub Sty _display FontColor="red"?>
 <?Pub Inc?>
 <task id="taddcmxt" xml:lang="en-us">
 <title>Adding complex types</title>
 <titlealts>
 <searchtitle>Adding complex types</searchtitle>
 </titlealts>
-<shortdesc>A complex type allows elements in its content and can carry attributes.
-Complex types can be used to help determine the appropriate content for any
-instance documents generated from or associated with your XML schema.</shortdesc>
+<shortdesc>A complex type allows elements in its content and can carry
+attributes. Complex types can be used to help determine the appropriate
+content for any instance documents generated from or associated with
+your XML schema.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML schema editor<indexterm>complex types</indexterm></indexterm>
 <indexterm>XML schema files<indexterm>complex types</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
-<context><p>You can add as many complex types as you want to an XML schema.</p><p>The
-following instructions were written for the Resource perspective, but they
-will also work in many other perspectives.</p><p>To add a complex type to
-an XML schema, complete the following steps:</p></context>
+<context><p>You can add as many complex types as you want to an XML
+schema.</p><p>The following instructions were written for the Resource
+perspective, but they will also work in many other perspectives.</p><p>To
+add a complex type to an XML schema, complete the following steps:</p></context>
 <steps>
 <step><cmd>Open your XML schema in the XML schema editor.</cmd></step>
-<step><cmd>Right-click the Types category in the Design view, and click <uicontrol>Add
-Complex Type</uicontrol>.</cmd></step>
-<step><cmd>In the Properties view, type a new name for the complex type in
-the <uicontrol>Name</uicontrol> field.</cmd></step>
-<step><cmd>Select <uicontrol>Browse</uicontrol> in the <uicontrol>Inherited
-From</uicontrol> drop down to select a base type for your complex type.</cmd>
-<info>You can either set a base type for your complex type, or you can add
-a content model to it (which represents any data that can be contained inside
-an element), but you cannot do both. For more information about content models,
-see <xref href="taddcmod.dita" scope="peer">Adding content models</xref>.</info>
+<step><cmd>Right-click the Types category in the Design view, click <uicontrol>Add
+Complex Type</uicontrol> and type the name for the complex type. If
+you need to change the name later, you can edit it in the <uicontrol>General</uicontrol> tab
+of the Properties view.</cmd></step>
+<step><cmd>To set a base type for the complex type, right-click the
+type in the Design view and click <uicontrol>Set Base Type</uicontrol>. </cmd>
+<info>You can either set a base type for your complex type, or you
+can add a content model to it (which represents any data that can
+be contained inside an element), but you cannot do both. For more
+information about content models, see <xref href="taddcmod.dita"
+scope="peer">Adding content models</xref>.</info></step>
+<step><cmd>Your new type can be derived from its base type either
+by extension or restriction. By default, the derivation is set to
+extension. To change how the type is derived, click the <uicontrol>General</uicontrol> tab
+in the Properties view and select <uicontrol>restriction</uicontrol> or <uicontrol>extension</uicontrol> from
+the <uicontrol>Inherited By</uicontrol> list. </cmd></step>
+<step><cmd>To add attributes to your complex type, in the Design view,
+right-click your complex type and select <uicontrol>Add Attribute</uicontrol>. </cmd>
+<info>An attribute associates an attribute name with a specific type
+and value. </info><?Pub Caret1?>
+<substeps>
+<substep><cmd>To set the name of the attribute, in the Design view,
+double-click the name of the attribute and type the name.</cmd>
+</substep>
+<substep><cmd>To set the type of the attribute, in the Design view,
+double-click the attribute type and then select the new type from
+the list.</cmd></substep>
+</substeps>
+<info>For information about adding attributes, attribute references,
+and <userinput>any</userinput> attributes, see <xref href="taddagrp.dita"
+scope="peer">Adding attribute groups</xref>.</info></step>
+<step><cmd>You can further define your complex type in the Properties
+view:</cmd>
+<substeps>
+<substep><cmd>Click the <uicontrol>Documentation</uicontrol> tab if
+you want to provide any information about this complex type. </cmd>
+<info>The <uicontrol>Documentation</uicontrol> page is used for human
+readable material, such as a description.</info></substep>
+<substep><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you
+want to add application information elements to your annotations of
+schema components. </cmd><info>The <uicontrol>Extensions</uicontrol> page
+allows you to specify the schema and add XML content to your annotations.</info>
+</substep>
+</substeps>
 </step>
-<step><cmd>Select <uicontrol>restriction</uicontrol> or <uicontrol>extension</uicontrol> from
-the <uicontrol>Inherited By</uicontrol> list.</cmd><info>This specifies whether
-your type is derived from its base type by restriction or extension.</info>
-</step>
-<step><cmd>The Design view will display the attributes within the complex
-type.</cmd><info>You can also use this view to add attributes to your complex
-type. An attribute associates an attribute name with a specific type and value.
-To add an attribute, in the Design view, right click your complex type and
-select <uicontrol>Add Attribute</uicontrol>.<ul>
-<li><uicontrol>name</uicontrol>. In the Design view, click the name of the
-attribute to make a change.</li>
-<li><uicontrol>type</uicontrol>. In the Design view, click the type of the
-attribute to make a change. The drop-down menu provides commonly used types.
-For more options, simply select <uicontrol>Browse</uicontrol> from the menu.</li>
-</ul>For information about adding attributes, attribute references, and <userinput>any</userinput> attributes<?Pub Caret?>,
-see <xref href="taddagrp.dita" scope="peer">Adding attribute groups</xref>.</info>
-</step>
-<step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
-to provide any information about this complex type.</cmd><info>The <uicontrol>Documentation</uicontrol> page
-is used for human readable material, such as a description.</info></step>
-<step><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you want to
-add application information elements to your annotations of schema components.</cmd>
-<info>The <uicontrol>Extensions</uicontrol> page allows you to specify the
-schema and add XML content to your annotations.</info></step>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000003647?>
+<?Pub *0000003841?>

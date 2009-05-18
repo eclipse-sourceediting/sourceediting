@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2006, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2008, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <?Pub Inc?>
@@ -8,20 +8,21 @@
 <titlealts>
 <searchtitle>Adding simple types</searchtitle>
 </titlealts>
-<shortdesc>Simple types are used to create derived datatypes. They provide
-a set of constraints on the value space (a set of values) and the lexical
-space (a set of valid literals) of a datatype.</shortdesc>
+<shortdesc>Simple types are used to create derived data types. They
+provide a set of constraints on the value space (a set of values)
+and the lexical space (a set of valid literals) of a datatype.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML schema editor<indexterm>simple types</indexterm></indexterm>
 <indexterm>XML schema files<indexterm>simple types</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
-<context><p>A simple type cannot have element content and cannot carry attributes.
-Elements that contain numbers (and strings, and dates, and so on) but do not
-contain any sub-elements have a simple type.</p><p>The following instructions
-were written for the Resource perspective, but they will also work in many
-other perspectives.</p><p>To add a simple type, complete the following steps:</p></context>
+<context><p>A simple type cannot have element content and cannot carry
+attributes. Elements that contain numbers (and strings, and dates,
+and so on) but do not contain any sub-elements have a simple type.</p><p>The
+following instructions were written for the Resource perspective,
+but they will also work in many other perspectives.</p><p>To add a
+simple type, complete the following steps:</p></context>
 <steps>
 <step><cmd>Open your XML schema in the XML schema editor.</cmd></step>
 <step><cmd>In the Outline view, right-click <b>Types</b>, and click <uicontrol>Add
@@ -33,83 +34,92 @@ Simple Type</uicontrol>.</cmd></step>
 </step>
 <step><cmd>You can select the following options from the <uicontrol>Variety</uicontrol> list:</cmd>
 <choices>
-<choice><uicontrol>atomic</uicontrol>: atomic types are<?Pub Caret?> all the
-simple types built into the XML schema language.</choice>
+<choice><uicontrol>atomic</uicontrol>: atomic types are all the simple
+types built into the XML schema language.</choice>
 <choice><uicontrol>list</uicontrol>: list types are comprised of sequences
-of atomic types. They have values that are comprised of finite-length sequences
-of atomic values. </choice>
-<choice><uicontrol>union</uicontrol>: union types enable an element or attribute
-value to be one or more instances of one type drawn from the union of multiple
-atomic and list types.</choice>
+of atomic types. They have values that are comprised of finite-length
+sequences of atomic values. </choice>
+<choice><uicontrol>union</uicontrol>: union types enable an element
+or attribute value to be one or more instances of one type drawn from
+the union of multiple atomic and list types.</choice>
 </choices>
 </step>
 <step><cmd>If you selected <uicontrol>atomic</uicontrol> or <uicontrol>list</uicontrol> from
-the <uicontrol>Variety</uicontrol> drop-down, click <uicontrol>Browse</uicontrol> <image
-href="../images/Browse.gif"><alt>This graphic is the Browse button</alt></image> next
-to the <uicontrol>Base type</uicontrol> or <uicontrol>Item type</uicontrol> field
-to specify a base type for the simple type.</cmd><info>The Set Type dialog
-box lists all built-in and user-defined types currently available. You can
-change the <uicontrol>Scope</uicontrol> of the list by selecting one of the
-following options:<ul>
-<li><uicontrol>Workspace</uicontrol>: lists all of the types available in
-your workspace. </li>
-<li><uicontrol>Enclosing Project</uicontrol>: lists all of the types available
-in the project that contains your file. </li>
-<li>(Default) <uicontrol>Current Resource</uicontrol>: lists all of the types
-available in your current file.</li>
-<li><uicontrol>Working Sets</uicontrol>: lists all the types available within
-the selected working set.</li>
+the <uicontrol>Variety</uicontrol> list, click <uicontrol>Browse</uicontrol> <image
+href="../images/Browse.gif"><alt>This graphic is the Browse button</alt>
+</image> next to the <uicontrol>Base type</uicontrol> or <uicontrol>Item
+type</uicontrol> field to specify a base type for the simple type. </cmd>
+<info>The Set Type dialog box lists all built-in and user-defined
+types currently available. You can change the <uicontrol>Scope</uicontrol> of
+the list by selecting one of the following options:<ul>
+<li><uicontrol>Workspace</uicontrol>: lists all of the types available
+in your workspace. </li>
+<li><uicontrol>Enclosing Project</uicontrol>: lists all of the types
+available in the project that contains your file. </li>
+<li>(Default) <uicontrol>Current Resource</uicontrol>: lists all of
+the types available in your current file.</li>
+<li><uicontrol>Working Sets</uicontrol>: lists all the types available
+within the selected working set.</li>
 </ul></info></step>
-<step><cmd>If you selected <uicontrol>union</uicontrol> from the <uicontrol>Variety</uicontrol> drop-down,
-click <uicontrol>Browse</uicontrol> <image href="../images/Browse.gif"><alt>This
-graphic is the Browse button</alt></image> next to the <uicontrol>Member types</uicontrol> field
-to specify the member types for the simple type.</cmd><info>You can select
-to add both <uicontrol>Built-in simple types</uicontrol> and <uicontrol>User-defined
-simple types</uicontrol> to the member types value list. </info></step>
-<step><cmd>Click the <uicontrol>Constraints</uicontrol> tab.</cmd><info>From
-here you will be able to set specific constraint values including length constraints,
-enumerations, and patterns. </info>
+<step><cmd>If you selected <uicontrol>union</uicontrol> from the <uicontrol>Variety</uicontrol> list,
+click <uicontrol>Browse</uicontrol> <image href="../images/Browse.gif">
+<alt>This graphic is the Browse button</alt></image> next to the <uicontrol>Member
+types</uicontrol> field to specify the member types for the simple
+type. </cmd><info>You can select to add both <uicontrol>Built-in simple
+types</uicontrol> and <uicontrol>User-defined simple types</uicontrol> to
+the member types value list. </info></step>
+<step><cmd>To set specific constraint values on your simple type,
+such as length constraints, enumerations, and patterns, click the <uicontrol>Constraints</uicontrol> tab.</cmd>
 <substeps>
-<substep><cmd>Enumerations help you to define a set of valid values for simple
-types. They are the actual values the simple type can take as valid values
-in the instance document. You can either add one enumeration or several enumerations
-at a time:</cmd><info><ul>
+<substep><cmd>You can use <i>enumerations</i> to define a set of valid
+values for simple types. They are the actual values the simple type
+can take as valid values in the instance document. You can add one
+enumeration or several enumerations at a time:</cmd><info><ul>
 <li>To add one enumeration at a time, under <uicontrol>Specific constraint
-values</uicontrol>, select <uicontrol>Enumerations</uicontrol> and click <uicontrol>Add</uicontrol> and
-specify a value for the enumeration.</li>
+values</uicontrol>, select <uicontrol>Enumerations</uicontrol> and
+click <uicontrol>Add</uicontrol> and specify a value for the enumeration.</li>
 <li>To add several enumerations at one time:<ol>
 <li>Select <uicontrol>Enumerations</uicontrol> and click <uicontrol>Add</uicontrol>.</li>
-<li>Enter the value of each enumeration. Each value must be separated by the <uicontrol>Delimiter
-character</uicontrol>. For example: <codeph>First, Second</codeph> will create
-two enumerations, one with the value "First" and one with the value "Second".</li>
+<li>Enter the value of each enumeration. Each value must be separated
+by the <uicontrol>Delimiter character</uicontrol>. For example: <codeph>First,
+Second</codeph> will create two enumerations, one with the value "First"
+and one with the value "Second".</li>
 <li>Select the <uicontrol>Preserve leading and trailing whitespace</uicontrol> check
-box if you want any white space around your enumeration values to be preserved.
-If you select this check box, the values of <codeph>First, Second</codeph> will
-show up as "First" and " Second" (there is a space before Second) because
-you put a space before "Second" when entering the value.</li>
-<li>Click <uicontrol>OK</uicontrol>. Your enumerations will be created and
-appear in the Properties view.</li>
+box if you want any white space around your enumeration values to
+be preserved. If you select this check box, the values of <codeph>First,
+Second</codeph> will show up as "First" and " Second" (there is a
+space before Second) because you put a space before "Second" when
+entering the value.</li>
+<li>Click <uicontrol>OK</uicontrol>. Your enumerations will be created
+and appear in the Properties view.</li>
 </ol></li>
 </ul></info></substep>
-<substep><cmd>Patterns help you to place certain constraints regarding allowable
-values.</cmd><info>For example, you could restrict the field to only accept
-input which follows the pattern "five digits followed by two upper-case ASCII
-letters". To set a pattern constraint:<ol>
+<substep><cmd>You can use <i>patterns</i> to place certain constraints
+regarding allowable values. </cmd><info>For example, you could restrict
+the field to only accept input which follows the pattern "five digits
+followed by two upper-case ASCII letters". To set a pattern constraint:<ol>
 <li>Select <uicontrol>Patterns</uicontrol> and click <uicontrol>Add</uicontrol>.</li>
-<li>Create the regular expression pattern you wish to use as your constraint
-using the <uicontrol>Regular Expression</uicontrol> wizard.</li>
+<li>Create the regular expression pattern you wish to use as your
+constraint using the <uicontrol>Regular Expression</uicontrol> wizard.</li>
 <li>Click <uicontrol>Finish</uicontrol>.</li>
 </ol></info></substep>
 </substeps>
 </step>
-<step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
-to provide any information about this simple type.</cmd><info>The <uicontrol>Documentation</uicontrol> page
-is used for human readable material, such as a description.</info></step>
-<step><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you want to
-add application information elements to your annotations of schema components.</cmd>
-<info>The <uicontrol>Extensions</uicontrol> page allows you to specify the
-schema and add XML content to your annotations.</info></step>
+<step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you
+want to provide any information about this simple type. </cmd><info>The <uicontrol>Documentation</uicontrol> page
+is used for human readable material, such as a description.</info>
+</step>
+<step><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you
+want to add application information elements to your annotations of
+schema components. </cmd><info>The <uicontrol>Extensions</uicontrol> page
+allows you to specify the schema and add XML content to your annotations.</info>
+</step>
+<step><cmd>If you do not want the simple type to be used to derive
+other types, click the <uicontrol>Advanced</uicontrol> tab and, in
+the <uicontrol>Final</uicontrol> list, select if derivations should
+be prevented by <uicontrol>list</uicontrol>, <uicontrol>restriction</uicontrol>, <uicontrol>union</uicontrol> or <uicontrol>#all</uicontrol>.</cmd><?Pub
+Caret1?></step>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000006649?>
+<?Pub *0000006999?>

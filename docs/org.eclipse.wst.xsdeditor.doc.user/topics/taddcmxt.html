@@ -2,8 +2,8 @@
 <html lang="en-us" xml:lang="en-us">
 <head>
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<meta name="copyright" content="Copyright (c) 2000, 2008 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
-<meta name="DC.rights.owner" content="(C) Copyright 2000, 2008" />
+<meta name="copyright" content="Copyright (c) 2000, 2009 IBM Corporation and others. All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at http://www.eclipse.org/legal/epl-v10.html. Contributors: IBM Corporation - initial API and implementation" />
+<meta name="DC.rights.owner" content="(C) Copyright 2000, 2009" />
 <meta content="public" name="security" />
 <meta content="index,follow" name="Robots" />
 <meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
@@ -28,65 +28,75 @@
 
 
 
-<div><p>A complex type allows elements in its content and can carry attributes.
-Complex types can be used to help determine the appropriate content for any
-instance documents generated from or associated with your XML schema.</p>
+<div><p>A complex type allows elements in its content and can carry
+attributes. Complex types can be used to help determine the appropriate
+content for any instance documents generated from or associated with
+your XML schema.</p>
 
-<div class="section"><p>You can add as many complex types as you want to an XML schema.</p>
-<p>The
-following instructions were written for the Resource perspective, but they
-will also work in many other perspectives.</p>
-<p>To add a complex type to
-an XML schema, complete the following steps:</p>
+<div class="section"><p>You can add as many complex types as you want to an XML
+schema.</p>
+<p>The following instructions were written for the Resource
+perspective, but they will also work in many other perspectives.</p>
+<p>To
+add a complex type to an XML schema, complete the following steps:</p>
 </div>
 
 <ol>
 <li class="stepexpand"><span>Open your XML schema in the XML schema editor.</span></li>
 
-<li class="stepexpand"><span>Right-click the Types category in the Design view, and click <span class="uicontrol">Add
-Complex Type</span>.</span></li>
+<li class="stepexpand"><span>Right-click the Types category in the Design view, click <span class="uicontrol">Add
+Complex Type</span> and type the name for the complex type. If
+you need to change the name later, you can edit it in the <span class="uicontrol">General</span> tab
+of the Properties view.</span></li>
 
-<li class="stepexpand"><span>In the Properties view, type a new name for the complex type in
-the <span class="uicontrol">Name</span> field.</span></li>
+<li class="stepexpand"><span>To set a base type for the complex type, right-click the
+type in the Design view and click <span class="uicontrol">Set Base Type</span>. </span>
+ You can either set a base type for your complex type, or you
+can add a content model to it (which represents any data that can
+be contained inside an element), but you cannot do both. For more
+information about content models, see <a href="taddcmod.html">Adding content models</a>.</li>
 
-<li class="stepexpand"><span>Select <span class="uicontrol">Browse</span> in the <span class="uicontrol">Inherited
-From</span> drop down to select a base type for your complex type.</span>
- You can either set a base type for your complex type, or you can add
-a content model to it (which represents any data that can be contained inside
-an element), but you cannot do both. For more information about content models,
-see <a href="taddcmod.html">Adding content models</a>.
+<li class="stepexpand"><span>Your new type can be derived from its base type either
+by extension or restriction. By default, the derivation is set to
+extension. To change how the type is derived, click the <span class="uicontrol">General</span> tab
+in the Properties view and select <span class="uicontrol">restriction</span> or <span class="uicontrol">extension</span> from
+the <span class="uicontrol">Inherited By</span> list. </span></li>
+
+<li class="stepexpand"><span>To add attributes to your complex type, in the Design view,
+right-click your complex type and select <span class="uicontrol">Add Attribute</span>. </span>
+ An attribute associates an attribute name with a specific type
+and value. 
+<ol type="a">
+<li><span>To set the name of the attribute, in the Design view,
+double-click the name of the attribute and type the name.</span>
 </li>
 
-<li class="stepexpand"><span>Select <span class="uicontrol">restriction</span> or <span class="uicontrol">extension</span> from
-the <span class="uicontrol">Inherited By</span> list.</span> This specifies whether
-your type is derived from its base type by restriction or extension.
+<li><span>To set the type of the attribute, in the Design view,
+double-click the attribute type and then select the new type from
+the list.</span></li>
+
+</ol>
+
+ For information about adding attributes, attribute references,
+and <kbd class="userinput">any</kbd> attributes, see <a href="taddagrp.html">Adding attribute groups</a>.</li>
+
+<li class="stepexpand"><span>You can further define your complex type in the Properties
+view:</span>
+<ol type="a">
+<li class="substepexpand"><span>Click the <span class="uicontrol">Documentation</span> tab if
+you want to provide any information about this complex type. </span>
+ The <span class="uicontrol">Documentation</span> page is used for human
+readable material, such as a description.</li>
+
+<li class="substepexpand"><span>Click the <span class="uicontrol">Extensions</span> tab if you
+want to add application information elements to your annotations of
+schema components. </span> The <span class="uicontrol">Extensions</span> page
+allows you to specify the schema and add XML content to your annotations.
 </li>
 
-<li class="stepexpand"><span>The Design view will display the attributes within the complex
-type.</span> You can also use this view to add attributes to your complex
-type. An attribute associates an attribute name with a specific type and value.
-To add an attribute, in the Design view, right click your complex type and
-select <span class="uicontrol">Add Attribute</span>.<ul>
-<li><span class="uicontrol">name</span>. In the Design view, click the name of the
-attribute to make a change.</li>
+</ol>
 
-<li><span class="uicontrol">type</span>. In the Design view, click the type of the
-attribute to make a change. The drop-down menu provides commonly used types.
-For more options, simply select <span class="uicontrol">Browse</span> from the menu.</li>
-
-</ul>
-For information about adding attributes, attribute references, and <kbd class="userinput">any</kbd> attributes,
-see <a href="taddagrp.html">Adding attribute groups</a>.
 </li>
-
-<li class="stepexpand"><span>Click the <span class="uicontrol">Documentation</span> tab if you want
-to provide any information about this complex type.</span> The <span class="uicontrol">Documentation</span> page
-is used for human readable material, such as a description.</li>
-
-<li class="stepexpand"><span>Click the <span class="uicontrol">Extensions</span> tab if you want to
-add application information elements to your annotations of schema components.</span>
- The <span class="uicontrol">Extensions</span> page allows you to specify the
-schema and add XML content to your annotations.</li>
 
 </ol>
 

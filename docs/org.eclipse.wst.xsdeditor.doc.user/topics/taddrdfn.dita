@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2006, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2008, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <?Pub Inc?>
@@ -8,9 +8,10 @@
 <titlealts>
 <searchtitle>Adding redefine elements</searchtitle>
 </titlealts>
-<shortdesc>You can use the <codeph>redefine</codeph> mechanism to redefine
-simple and complex types, groups, and attribute groups obtained from external
-schema files. When you redefine a component, you are modifying its contents.</shortdesc>
+<shortdesc>You can use the <codeph>redefine</codeph> mechanism to
+redefine simple and complex types, groups, and attribute groups obtained
+from external schema files. When you redefine a component, you are
+modifying its contents.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML schema editor<indexterm>adding redefine elements</indexterm></indexterm>
 <indexterm>XML schema files<indexterm>adding redefine elements</indexterm></indexterm>
@@ -18,55 +19,57 @@ schema files. When you redefine a component, you are modifying its contents.</sh
 </metadata></prolog>
 <taskbody>
 <context><p>Like the <codeph>include</codeph> mechanism, <codeph>redefine</codeph> requires
-the external components to be in the same target namespace as the redefining
-schema, although external components from schemas that have no namespace can
-also be redefined.</p><p>The following instructions were written for the Resource
-perspective, but they will also work in many other perspectives.</p><p>To
-add a redefine element, complete the following steps:</p></context>
+the external components to be in the same target namespace as the
+redefining schema, although external components from schemas that
+have no namespace can also be redefined.</p><p>The following instructions
+were written for the Resource perspective, but they will also work
+in many other perspectives.</p><p>To add a redefine element, complete
+the following steps:</p></context>
 <steps>
-<step><cmd>Open your XML schema in the XML schema editor. In the Outline view,
-select your schema.</cmd><info>The entire schema and its contents are displayed
-in the Design view.</info></step>
+<step><cmd>Open your XML schema in the XML schema editor.</cmd></step>
 <step><cmd>In the Design view, right-click in the <b>Directives</b> section
 and click <uicontrol>Add Redefine</uicontrol>.</cmd></step>
-<step><cmd>In the Properties view, click the <b>General</b> tab and click
-the <uicontrol>Browse</uicontrol> <image href="../images/Browse.gif"><alt>This
-graphic is the Browse button</alt></image> button to the right of the <uicontrol>Schema
-location</uicontrol> field.</cmd><info>The XML schema file you select must
-have the same namespace as the current schema.</info></step>
-<step><cmd>If you want to import an XML schema located in the workbench:</cmd>
+<step><cmd>In the Select XML schema file wizard, you can import an
+XML schema that is located in your workspace or you can import a schema
+from an HTTP Web address. The XML schema file that you select must
+have the same namespace as the current schema.</cmd>
+<choices>
+<choice>If you want to import an XML schema located in your workspace:<ol>
+<li>Select <uicontrol>Workbench projects</uicontrol> and click <uicontrol>Next</uicontrol>. </li>
+<li>Select the schema that you want to import and click <uicontrol>Finish</uicontrol>.</li>
+</ol></choice>
+<choice>If you want to import an XML schema located at an HTTP Web
+address:<ol>
+<li>Select <uicontrol>HTTP</uicontrol> and click <uicontrol>Next</uicontrol>.</li>
+<li>Type the URL of the XML schema and click <uicontrol>Finish</uicontrol>.<note>A
+local copy of the schema is not stored in your workspace. If you validate
+your schema, the schema's contents are checked from the URL that you
+specify.</note></li>
+</ol></choice>
+</choices>
+</step>
+<step importance="optional"><cmd>Use the Properties view to define
+additional properties for your import element.</cmd>
 <substeps>
-<substep><cmd>Select <uicontrol>Workbench projects</uicontrol> and click <uicontrol>Next</uicontrol>. </cmd>
+<substep><cmd>If you want to edit the location of the included XML
+schema file, click the <uicontrol>General</uicontrol> tab and type
+the new location display in the <uicontrol>Schema location</uicontrol> field.</cmd>
 </substep>
-<substep><cmd>Select the schema you want to import and click <uicontrol>Finish</uicontrol>.</cmd>
+<substep><cmd>Click the <uicontrol>Documentation</uicontrol> tab if
+you want to provide any information about this redefine element. </cmd>
+<info>The <uicontrol>Documentation</uicontrol> page is used for human
+readable material, such as a description.</info></substep>
+<substep><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you
+want to add application information elements to your annotations of
+schema components. </cmd><info>The <uicontrol>Extensions</uicontrol> page
+allows you to specify the schema and add XML content to your annotations.</info>
 </substep>
 </substeps>
 </step>
-<step><cmd>If you want to import an XML schema located on the Web:</cmd>
-<substeps>
-<substep><cmd>Select <uicontrol>HTTP</uicontrol> and click <uicontrol>Next</uicontrol>.</cmd>
-</substep>
-<substep><cmd>Type the URL of the XML schema and click <uicontrol>Finish</uicontrol>.</cmd>
-<info><note>A local copy of the schema will not be stored in the workbench.
-Every time you validate your schema, the schema's contents will be checked
-from the URL you specify.</note></info></substep>
-</substeps>
-</step><?Pub Caret?>
-<step><cmd>The XML schema editor will retrieve the location of the included
-XML schema file, and display it in the <uicontrol>Schema location</uicontrol> field.
-This field can be edited at any time to reflect the location of the XML schema
-file.</cmd></step>
-<step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
-to provide any information about this redefine element.</cmd><info>The <uicontrol>Documentation</uicontrol> page
-is used for human readable material, such as a description.</info></step>
-<step><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you want to
-add application information elements to your annotations of schema components.</cmd>
-<info>The <uicontrol>Extensions</uicontrol> page allows you to specify the
-schema and add XML content to your annotations.</info></step>
-</steps>
-<result><p>Once you have added the redefine element to your XML schema, you
-can redefine any of the simple and complex types, groups, and attribute groups
-in the XML schema you selected in the redefine element. </p></result>
+</steps><?Pub Caret1?>
+<result><p>Once you have added the redefine element to your XML schema,
+you can redefine any of the simple and complex types, groups, and
+attribute groups in the XML schema you selected in the redefine element. </p></result>
 </taskbody>
 </task>
-<?Pub *0000003931?>
+<?Pub *0000003721?>

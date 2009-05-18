@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2006, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2008, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <?Pub Inc?>
@@ -8,40 +8,51 @@
 <titlealts>
 <searchtitle>Editing XML schema properties</searchtitle>
 </titlealts>
-<shortdesc>After you create an XML schema, you can edit its various properties,
-such as its namespace and prefix.</shortdesc>
+<shortdesc>After you create an XML schema, you can edit its various
+properties, such as its namespace and prefix.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML schema editor<indexterm>XML schema properties</indexterm></indexterm>
 <indexterm>XML schema files<indexterm>editing properties</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
-<context><p>The following instructions were written for the Resource perspective,
-but they will also work in many other perspectives.</p><p>To edit an XML schema's
-properties, complete the following steps:</p></context>
+<context><p><?Pub Caret1?>The following instructions were written
+for the Resource perspective, but they will also work in many other
+perspectives.</p><p>To edit an XML schema's properties, complete the
+following steps:</p></context>
 <steps>
-<step><cmd>Create a new XML schema or double-click an existing schema in the
-Navigator view.</cmd><info> It will automatically open in the XML schema editor.</info>
-</step>
+<step><cmd>Create a new XML schema or double-click an existing schema
+in the Navigator view.</cmd><info> It will automatically open in the
+XML schema editor.</info></step>
 <step><cmd>In the Outline view, click <uicontrol>Directives</uicontrol>.</cmd>
 </step>
 <step><cmd>In the Properties view, click the <uicontrol>General</uicontrol> tab.</cmd>
 </step>
-<step><cmd>You can change the <uicontrol>Prefix</uicontrol> associated with
-the current namespace.</cmd><info>Element and attribute names that are associated
-with this namespace will be prefixed with this value.</info></step>
+<step><cmd>You can change the <uicontrol>Prefix</uicontrol> associated
+with the current namespace. </cmd><info>Element and attribute names
+that are associated with this namespace will be prefixed with this
+value.</info></step>
 <step><cmd>You can also edit the <uicontrol>Target namespace</uicontrol> for
-this schema.</cmd><info> A namespace is a URI that provides a unique name
-to associate with all the elements and type definitions in a schema.</info>
+this schema.</cmd><info> A namespace is a URI that provides a unique
+name to associate with all the elements and type definitions in a
+schema.</info></step>
+<step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you
+want to provide any information about this XML schema. </cmd><info>The <uicontrol>Documentation</uicontrol> page
+is used for human readable material, such as a description.</info>
 </step>
-<step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
-to provide any information about this XML schema.</cmd><info>The <uicontrol>Documentation</uicontrol> page
-is used for human readable material, such as a description.</info></step><?Pub Caret?>
-<step><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you want to
-add application information elements to your annotations of schema components.</cmd>
-<info>The <uicontrol>Extensions</uicontrol> page allows you to specify the
-schema and add XML content to your annotations.</info></step>
+<step><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you
+want to add application information elements to your annotations of
+schema components. </cmd><info>The <uicontrol>Extensions</uicontrol> page
+allows you to specify the schema and add XML content to your annotations.</info>
+</step>
+<step><cmd>Click the <uicontrol>Advanced</uicontrol> tab if you want
+to define the following additional schema attributes: </cmd><info><ul>
+<li><uicontrol>Prefix for elements</uicontrol> (elementFormDefault)</li>
+<li><uicontrol>Prefix for attributes</uicontrol> (attributeFormDefault)</li>
+<li><uicontrol>Block default</uicontrol> (blockDefault)</li>
+<li><uicontrol>Final default</uicontrol> (finalDefault)</li>
+</ul></info></step>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000002345?>
+<?Pub *0000002780?>

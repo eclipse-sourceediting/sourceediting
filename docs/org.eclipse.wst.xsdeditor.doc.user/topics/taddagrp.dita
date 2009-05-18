@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2006, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2008, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <task id="taddagrp" xml:lang="en-us">
@@ -7,93 +7,100 @@
 <titlealts>
 <searchtitle>Adding attribute groups</searchtitle>
 </titlealts>
-<shortdesc>An attribute group definition is an association between a name
-and a set of attribute declarations. Named groups of attribute declarations
-can greatly facilitate the maintenance and reuse of common attribute declarations
-in an XML schema.</shortdesc>
+<shortdesc>An attribute group definition is an association between
+a name and a set of attribute declarations. Named groups of attribute
+declarations can greatly facilitate the maintenance and reuse of common
+attribute declarations in an XML schema.</shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML schema editor<indexterm>attribute groups</indexterm></indexterm>
 <indexterm>XML schema files<indexterm>attribute groups</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
-<context><p>The following instructions were written for the Resource perspective,
-but they will also work in many other perspectives.</p><p>To add an attribute
-group to an XML schema, complete the following steps:</p></context>
+<context><p>The following instructions were written for the Resource
+perspective, but they will also work in many other perspectives.</p><p>To
+add an attribute group to an XML schema, complete the following steps:</p></context>
 <steps>
 <step><cmd>Open your XML schema in the XML schema editor.</cmd></step>
 <step><cmd>In the Outline view, right-click the <uicontrol>Attributes</uicontrol> folder
-and click  <uicontrol>Add Attribute Group</uicontrol>.</cmd><info>It appears
-in the <uicontrol>Attributes</uicontrol> folder.</info></step>
-<step><cmd>Select your new group, and in the Design view, right-click the
-attribute group and select <menucascade><uicontrol>Refactor</uicontrol><uicontrol>Rename</uicontrol>
-</menucascade>. In the <uicontrol>New Name</uicontrol> field, type a name
-for the attribute group and click <uicontrol>OK</uicontrol>.</cmd></step>
-<step><cmd>To add an attribute, right-click your attribute group in the Outline
-view, click <uicontrol>Add Attribute</uicontrol>.</cmd><info>The attribute
-appears below the attribute group in the Outline view.</info>
+and click  <uicontrol>Add Attribute Group</uicontrol>. </cmd><info>It
+appears in the <uicontrol>Attributes</uicontrol> folder.</info></step>
+<step><cmd>Select your new group, and in the Design view, right-click
+the attribute group and select <menucascade><uicontrol>Refactor</uicontrol>
+<uicontrol>Rename</uicontrol></menucascade>. In the <uicontrol>New
+Name</uicontrol> field, type a name for the attribute group and click <uicontrol>OK</uicontrol>.</cmd>
+</step>
+<step><cmd>To add an attribute, right-click your attribute group in
+the Outline view, click <uicontrol>Add Attribute</uicontrol>. </cmd>
+<info>The attribute appears below the attribute group in the Outline
+view.</info>
 <substeps>
-<substep><cmd>Select the attribute, and in the Design view, click the current
-(default) name of the attribute, then type the new <uicontrol>Name</uicontrol>.</cmd>
+<substep><cmd>Select the attribute, and in the Design view, click
+the current (default) name of the attribute, then type the new <uicontrol>Name</uicontrol>.</cmd>
 </substep>
-<substep><cmd>In the Design view, click the current (default) attribute type
-and select a type from the menu. Alternately, you can select browse to invoke
-the Set Type menu for more options.</cmd><info>The Set Type dialog lists all
-built-in and user-defined types currently available. You can change the <uicontrol>Scope</uicontrol> of
-the list by selecting one of the following options:<ul>
-<li><uicontrol>Workspace</uicontrol>. Lists all of the types available in
-your workspace. </li>
-<li><uicontrol>Enclosing Project</uicontrol>. Lists all of the types available
-in the project that contains your file. </li>
-<li><uicontrol>Current Resource</uicontrol> (default). List all of the types
-available in your current file.</li>
-<li><uicontrol>Working Sets</uicontrol>. List all the types available within
-the selected working set.</li>
+<substep><cmd>In the Design view, click the current (default) attribute
+type and select a type from the menu. Alternately, you can select
+browse to invoke the Set Type menu for more options. </cmd><info>The
+Set Type dialog lists all built-in and user-defined types currently
+available. You can change the <uicontrol>Scope</uicontrol> of the
+list by selecting one of the following options:<ul>
+<li><uicontrol>Workspace</uicontrol>. Lists all of the types available
+in your workspace. </li>
+<li><uicontrol>Enclosing Project</uicontrol>. Lists all of the types
+available in the project that contains your file. </li>
+<li><uicontrol>Current Resource</uicontrol> (default). List all of
+the types available in your current file.</li>
+<li><uicontrol>Working Sets</uicontrol>. List all the types available
+within the selected working set.</li>
 </ul></info></substep>
 </substeps>
 </step>
-<step><cmd>An attribute reference provides a reference to a global attribute.
-To add an attribute reference, in the Design view, right-click the complex
-type containing the element, and click <uicontrol>Add Attribute Ref</uicontrol>.</cmd>
-<info>A declaration that references a global attribute enables the referenced
-attribute to appear in the instance document in the context of the referencing
-declaration. Select the reference, then in the Properties view, select the
-attribute you want it to reference from the<uicontrol>Reference</uicontrol> drop-down</info>
+<step><cmd>An attribute reference provides a reference to a global
+attribute. To add an attribute reference, in the Design view, right-click
+the complex type containing the element, and click <uicontrol>Add
+Attribute Ref</uicontrol>. </cmd><info>A declaration that references
+a global attribute enables the referenced attribute to appear in the
+instance document in the context of the referencing declaration. Select
+the reference, then in the Properties view, select the attribute you
+want it to reference from the <uicontrol>Reference</uicontrol> list.<?Pub
+Caret?></info></step>
+<step><cmd>An attribute group reference provides a reference to an
+attribute group. To add an attribute group reference, in the Design
+view, right-click the complex type containing the element, and click <uicontrol>Add
+Attribute Group Ref</uicontrol>. </cmd><info>A declaration that references
+a global attribute enables the referenced attribute to appear in the
+instance document in the context of the referencing declaration. Select
+the reference, then in the Properties view, select the attribute group
+you want it to reference from the <uicontrol>Reference</uicontrol> list.</info>
 </step>
-<step><cmd>An attribute group reference provides a reference to an attribute
-group. To add an attribute group reference, in the Design view, right-click
-the complex type containing the element, and click <uicontrol>Add Attribute
-Group Ref</uicontrol>.</cmd><info>A declaration that references a global attribute
-enables the referenced attribute to appear in the instance document in the
-context of the referencing declaration. Select the reference, then in the
-Properties view, select the attribute group you want it to reference from
-the<uicontrol>Reference</uicontrol> drop-down.</info></step>
-<step><cmd>An <codeph>any</codeph> element enables element content according
-to namespaces, and the corresponding <codeph>any</codeph> attribute element
-enables attributes to appear in elements. To add an <codeph>any</codeph> attribute,
-right-click your attribute group and click <uicontrol>Add Any Attribute</uicontrol>.</cmd>
-<info>The <codeph>any</codeph> appears below the attribute group in the Outline
-view. You can specify the following values for an <codeph>any</codeph> attribute:</info>
+<step><cmd>An <codeph>any</codeph> element enables element content
+according to namespaces, and the corresponding <codeph>any</codeph> attribute
+element enables attributes to appear in elements. To add an <codeph>any</codeph> attribute,
+right-click your attribute group and click <uicontrol>Add Any Attribute</uicontrol>. </cmd>
+<info>The <codeph>any</codeph> appears below the attribute group in
+the Outline view. You can specify the following values for an <codeph>any</codeph> attribute:</info>
 <choices>
-<choice>For a <uicontrol>namespace</uicontrol> value, you can select:<ul>
+<choice>For a <uicontrol>Namespace</uicontrol> value, you can select:<ul>
 <li><b>##any</b>: this allows any well-formed XML from any namespace.</li>
 <li><b>##local </b>: this allows any well-formed XML that is not declared
 to be in a namespace.</li>
-<li><b>##other</b>: this allows any well-formed XML that is not from the target
-namespace of the type being defined.</li>
+<li><b>##other</b>: this allows any well-formed XML that is not from
+the target namespace of the type being defined.</li>
 <li><b>##targetNamespace </b>: this is shorthand for the target namespace
 of the type being defined.</li>
 </ul></choice>
-<choice>For a <uicontrol>processContents</uicontrol> value, you can select:<ul>
-<li><b>skip</b>: t<?Pub Caret?>he XML processor will not validate the attribute
+<choice>For a <uicontrol>Process Contents</uicontrol> value, you can
+select:<ul>
+<li><b>skip</b>: the XML processor will not validate the attribute
 content at all.</li>
-<li><b>lax</b>: the XML processor will validate the attribute content as much
-as it can.</li>
-<li><b>strict</b>: the XML processor will validate all the attribute content.</li>
+<li><b>lax</b>: the XML processor will validate the attribute content
+as much as it can.</li>
+<li><b>strict</b>: the XML processor will validate all the attribute
+content.</li>
 </ul></choice>
 </choices>
 </step>
 </steps>
 </taskbody>
 </task>
-<?Pub *0000005543?>
+<?Pub *0000005544?>

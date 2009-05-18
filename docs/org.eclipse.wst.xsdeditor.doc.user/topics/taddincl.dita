@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2006, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2008, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <?Pub Inc?>
@@ -8,78 +8,78 @@
 <titlealts>
 <searchtitle>Adding include elements</searchtitle>
 </titlealts>
-<shortdesc>As schemas become larger, it is often desirable to divide their
-content among several schema documents for purposes such as ease of maintenance,
-reuse, and readability. You can use the <codeph>include</codeph> element to
-bring in definitions and declarations from the included schema into the current
-schema. The included schema must be in the same target namespace as the including
-schema. </shortdesc>
+<shortdesc>If your schemas are large, you might choose to divide their
+content among several schema documents to make them easier to maintain,
+reuse, and read.  You can use the <codeph>include</codeph> element
+to bring in definitions and declarations from the included schema
+into the current schema. The included schema must be in the same target
+namespace as the including schema. </shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML schema editor<indexterm>include elements</indexterm></indexterm>
 <indexterm>XML schema files<indexterm>include elements</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
-<context><p>The following instructions were written for the XML perspective,
-but they will also work in many other perspectives.</p><p>To add an include
-element, complete the following steps:</p></context>
+<context><p>The following instructions were written for the Resource
+perspective, but they will also work in many other perspectives.</p><p>To
+add an include element, complete the following steps:</p></context>
 <steps>
-<step><cmd>Open your XML schema in the XML schema editor. In the Outline view,
-select your schema.</cmd><info>The entire schema and its contents are displayed
-in the Design view.</info></step>
+<step><cmd>Open your XML schema in the XML schema editor.</cmd></step>
 <step><cmd>In the Design view, right-click in the <b>Directives</b> section
 and click <uicontrol>Add Include</uicontrol>.</cmd></step>
-<step><cmd>In the Properties view, click the <b>General</b> tab and click
-the <uicontrol>Browse</uicontrol> <image href="../images/Browse.gif"><alt>This
-graphic is the Browse button</alt></image> button to the right of the <uicontrol>Schema
-location</uicontrol> field.</cmd><info>The XML schema file you select must
-have the same namespace as the current schema.</info></step>
-<step><cmd>If you want to import an XML schema located in the workbench:</cmd>
+<step><cmd>In the Select XML schema file wizard, you can include an
+XML schema that is located in your workspace or you can include a
+schema from an HTTP Web address. The XML schema file that you select
+must have the same namespace as the current schema.</cmd>
+<choices>
+<choice>If you want to include an XML schema located in your workspace:<ol>
+<li>Select <uicontrol>Workbench projects</uicontrol> and click <uicontrol>Next</uicontrol>. </li>
+<li>Select the schema that you want to import and click <uicontrol>Finish</uicontrol>.</li>
+</ol></choice>
+<choice>If you want to include an XML schema located at an HTTP Web
+address:<ol>
+<li>Select <uicontrol>HTTP</uicontrol> and click <uicontrol>Next</uicontrol>.</li>
+<li>Type the URL of the XML schema and click <uicontrol>Finish</uicontrol>.<note>A
+local copy of the schema is not stored in your workspace. If you validate
+your schema, the schema's contents are checked from the URL that you
+specify.</note></li>
+</ol></choice>
+</choices>
+</step>
+<step importance="optional"><cmd>Use the Properties view to define
+additional properties for your import element.</cmd>
 <substeps>
-<substep><cmd>Select <uicontrol>Workbench projects</uicontrol> and click <uicontrol>Next</uicontrol>. </cmd>
+<substep><cmd>If you want to edit the location of the included XML
+schema file, click the <uicontrol>General</uicontrol> tab and type
+the new location display in the <uicontrol>Schema location</uicontrol> field.</cmd>
 </substep>
-<substep><cmd>Select the schema you want to import and click <uicontrol>Finish</uicontrol>.</cmd>
+<substep><cmd>Click the <uicontrol>Documentation</uicontrol> tab if
+you want to provide any information about this include<?Pub Caret?>
+element. </cmd><info>The <uicontrol>Documentation</uicontrol> page
+is used for human readable material, such as a description.</info>
+</substep>
+<substep><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you
+want to add application information elements to your annotations of
+schema components. </cmd><info>The <uicontrol>Extensions</uicontrol> page
+allows you to specify the schema and add XML content to your annotations.</info>
 </substep>
 </substeps>
 </step>
-<step><cmd>If you want to import an XML schema located on the Web:</cmd>
-<substeps>
-<substep><cmd>Select <uicontrol>HTTP</uicontrol> and click <uicontrol>Next</uicontrol>.</cmd>
-</substep>
-<substep><cmd>Type the URL of the XML schema and click <uicontrol>Finish</uicontrol>.</cmd>
-<info><note>A local copy of the schema will not be stored in the workbench.
-Every time you validate your schema, the schema's contents will be checked
-from the URL you specify.</note></info></substep>
-</substeps>
-</step>
-<step><cmd>The XML schema editor will retrieve the location of the included
-XML schema file, and display it in the <uicontrol>Schema location</uicontrol> field.
-This field can be edited at any time to reflect the location of the XML schema
-file.</cmd></step>
-<step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
-to provide any information about this include element.</cmd><info>The <uicontrol>Documentation</uicontrol> page
-is used for human readable material, such as a description.</info></step>
-<step><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you want to
-add application information elements to your annotations of schema components.</cmd>
-<info>The <uicontrol>Extensions</uicontrol> page allows you to specify the
-schema and add XML content to your annotations.</info></step>
 </steps>
-<result><p>Once you have added the include element to your XML schema, when
-you define new elements, attributes, complex types, or simple types where
-you can specify type information, any declarations from the included schema
-will be available in the <uicontrol>Type</uicontrol> list for the element,
-attribute, complex or simple type.</p><p>For example, if Address.xsd has the
-following content:</p><codeblock>&lt;complexType name="Address">
+<result><p>Once you have added the include element to your XML schema,
+when you define new elements, attributes, complex types, or simple
+types where you can specify type information, any declarations from
+the included schema will be available in the <uicontrol>Type</uicontrol> list
+for the element, attribute, complex or simple type.</p><p>For example,
+if Address.xsd has the following content:</p><codeblock>&lt;complexType name="Address">
     &lt;sequence>
         &lt;element name="name" type="string">
         &lt;element name="street" type="string">
     &lt;/sequence>
 &lt;/complexType>
-</codeblock>and you have an XML schema called PurchaseOrder.xsd that has added
-an include for Address.xsd, then when defining a new element in  PurchaseOrder,
-you can select Address as its type.  <draft-comment>(c) Copyright 2001, World
-Wide Web Consortium (Massachusetts Institute of Technology, Institut National
-de Recherche en Informatique et en Automatique, Keio University).</draft-comment></result>
+</codeblock>and you have an XML schema called PurchaseOrder.xsd that
+has added an include for Address.xsd, then when defining a new element
+in  PurchaseOrder, you can select Address as its type.  </result>
 </taskbody>
-</task><?Pub Caret?>
-<?Pub *0000004595?>
+</task>
+<?Pub *0000004174?>

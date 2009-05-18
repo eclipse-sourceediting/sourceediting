@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--Arbortext, Inc., 1988-2006, v.4002-->
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Arbortext, Inc., 1988-2008, v.4002-->
 <!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN"
  "task.dtd">
 <?Pub Inc?>
@@ -8,70 +8,70 @@
 <titlealts>
 <searchtitle>Adding import elements</searchtitle>
 </titlealts>
-<shortdesc>As schemas become larger, it is often desirable to divide their
-content among several schema documents for purposes such as ease of maintenance,
-reuse, and readability. You can use an <codeph>import</codeph> element to
-bring in definitions and declarations from an imported schema into the current
-schema. </shortdesc>
+<shortdesc>If your schemas are large, you might choose to divide their
+content among several schema documents to make them easier to maintain,
+reuse, and read. You can use an <codeph>import</codeph> element to
+bring in definitions and declarations from an imported schema into
+the current schema. </shortdesc>
 <prolog><metadata>
 <keywords><indexterm>XML schema editor<indexterm>import elements</indexterm></indexterm>
 <indexterm>XML schema files<indexterm>import elements</indexterm></indexterm>
 </keywords>
 </metadata></prolog>
 <taskbody>
-<context><p>The imported schema can come from a different namespace than the
-current schema does. You can add multiple import elements to an XML schema,
-however, prefixes and namespaces have to unique amongst the imported schemas.</p><p>The
-following instructions were written for the Resource perspective, but they
-will also work in many other perspectives.</p><p>To add an import element,
-complete the following steps:</p></context>
+<context><p>You can import a schema from a different namespace than
+the current schema. You can add multiple import elements to an XML
+schema; however, an imported schema cannot have the same namespace
+or prefix as another imported schema.</p><p>The following instructions
+were written for the Resource perspective, but they will also work
+in many other perspectives.</p><p>To add an import element, complete
+the following steps:</p></context>
 <steps>
-<step><cmd>Open your XML schema in the XML schema editor. In the Outline view,
-select your schema.</cmd><info>The entire schema and its contents should be
-displayed in the Design view.</info></step>
-<step><cmd>In the Design view, right click in the <b>Directives</b> section
+<step><cmd>Open your XML schema in the XML schema editor.</cmd></step>
+<step><cmd>In the Design view, right-click in the <b>Directives</b> section
 and click <uicontrol>Add Import</uicontrol>.</cmd></step>
-<step><cmd>In the Properties view, click the <b>General</b> tab and click
-the <uicontrol>Browse</uicontrol> <image href="../images/Browse.gif"><alt>This
-graphic is the Browse button</alt></image> button to the right of the <uicontrol>Schema
-location</uicontrol> field.</cmd></step>
-<step><cmd>If you want to import an XML schema located in the workbench:</cmd>
+<step><cmd>In the Select XML schema file wizard, you can import an
+XML schema that is located in your workspace or you can import a schema
+from an HTTP Web address.</cmd>
+<choices>
+<choice>If you want to import an XML schema located in your workspace:<ol>
+<li>Select <uicontrol>Workbench projects</uicontrol> and click <uicontrol>Next</uicontrol>. </li>
+<li>Select the schema that you want to import and click <uicontrol>Finish</uicontrol>.</li>
+</ol></choice>
+<choice>If you want to import an XML schema located at an HTTP Web
+address:<ol>
+<li>Select <uicontrol>HTTP</uicontrol> and click <uicontrol>Next</uicontrol>.</li>
+<li>Type the URL of the XML schema and click <uicontrol>Finish</uicontrol>.<note>A
+local copy of the schema is not stored in your workspace. If you validate
+your schema, the schema's contents are checked from the URL that you
+specify.</note></li>
+</ol></choice>
+</choices>
+</step>
+<step importance="optional"><cmd>Use the Properties view to define
+additional properties for your import element.</cmd>
 <substeps>
-<substep><cmd>Select <uicontrol>Workbench projects</uicontrol> and click <uicontrol>Next</uicontrol>. </cmd>
-</substep>
-<substep><cmd>Select the schema you want to import and click <uicontrol>Finish</uicontrol>.</cmd>
+<substep><cmd>If you want to add a unique prefix for this namespace,
+click the <uicontrol>General</uicontrol> tab and type the prefix in
+the <uicontrol>Prefix</uicontrol> field.</cmd></substep>
+<substep><cmd>Click the <uicontrol>Documentation</uicontrol> tab if
+you want to provide any information about this import element. </cmd>
+<info>The <uicontrol>Documentation</uicontrol> page is used for human
+readable material, such as a description.</info></substep>
+<substep><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you
+want to add application information elements to your annotations of
+schema components. </cmd><info>The <uicontrol>Extensions</uicontrol> page
+allows you to specify the schema and add XML content to your annotations.</info>
 </substep>
 </substeps>
 </step>
-<step><cmd>If you want to import an XML schema located on the Web:</cmd>
-<substeps>
-<substep><cmd>Select <uicontrol>HTTP</uicontrol> and click <uicontrol>Next</uicontrol>.</cmd>
-</substep>
-<substep><cmd>Type the URL of the XML schema and click <uicontrol>Finish</uicontrol>.</cmd>
-<info><note>A local copy of the schema will not be stored in the workbench.
-Every time you validate your schema, the schema's contents will be checked
-from the URL you specify.</note></info></substep>
-</substeps>
-</step>
-<step><cmd>The XML schema editor will retrieve the namespace for the imported
-XML schema file and display it as read-only in the <uicontrol>Namespace</uicontrol> field.</cmd>
-</step>
-<step><cmd>If necessary, type a unique prefix for this namespace in the <uicontrol>Prefix</uicontrol> field.</cmd>
-</step>
-<step><cmd>Click the <uicontrol>Documentation</uicontrol> tab if you want
-to provide any information about this import element.</cmd><info>The <uicontrol>Documentation</uicontrol> page
-is used for human readable material, such as a description.</info></step>
-<step><cmd>Click the <uicontrol>Extensions</uicontrol> tab if you want to
-add application information elements to your annotations of schema components.</cmd>
-<info>The <uicontrol>Extensions</uicontrol> page allows you to specify the
-schema and add XML content to your annotations.</info></step>
-</steps>
-<result><p>Once you have added an import element to your XML schema, when
-you define new elements, attributes, complex types, or simple types where
-you can specify type information, any declarations from the included s<?Pub Caret?>chema
-will be available in the <uicontrol>Type</uicontrol> list for the element,
-attribute, complex or simple type.</p></result>
+</steps><?Pub Caret1?>
+<result><p>Once you have added an import element to your XML schema,
+when you define new elements, attributes, complex types, or simple
+types where you can specify type information, any declarations from
+the included schema will be available in the <uicontrol>Type</uicontrol> list
+for the element, attribute, complex or simple type.</p></result>
 <postreq></postreq>
 </taskbody>
 </task>
-<?Pub *0000004058?>
+<?Pub *0000003756?>
