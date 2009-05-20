@@ -1,76 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-  <!-- XML Capability Definition
-       The following components are associated with
-       the XML activity as they are required by XML
-       and other components and XML is currently 
-       serving as the base WTP component.
-       common
-       sse
-       validation
-  -->
-  <extension point="org.eclipse.ui.activities">
-  	
-  		<activity
+    <!--
+        XML Capability Definition The following components are
+        associated with the XML activity as they are required by XML and
+        other components and XML is currently serving as the base WTP
+        component. common sse validation
+    -->
+    <extension
+        point="org.eclipse.ui.activities">
+        <activity
             name="%activity.xml"
             description="%activity.xml.desc"
             id="org.eclipse.wtp.xml.capabilities">
-     	</activity>
-     	
-     	<categoryActivityBinding
-            activityId="org.eclipse.wtp.xml.capabilities"
-            categoryId="org.eclipse.categories.developmentCategory">
-      	</categoryActivityBinding>
-      	
-      	<activityPatternBinding
+        </activity>
+        <activityPatternBinding
             activityId="org.eclipse.wtp.xml.capabilities"
             pattern="org\.eclipse\.wst\.xml\.[\.\w/]*">
-      	</activityPatternBinding>
-      	
-      	<activityPatternBinding
+        </activityPatternBinding>
+        <activityPatternBinding
             activityId="org.eclipse.wtp.xml.capabilities"
             pattern="org\.eclipse\.wst\.xsd\.[\.\w/]*">
-      	</activityPatternBinding>
-      	
-      	<activityPatternBinding
+        </activityPatternBinding>
+        <activityPatternBinding
             activityId="org.eclipse.wtp.xml.capabilities"
             pattern="org\.eclipse\.wst\.dtd\.[\.\w/]*">
-      	</activityPatternBinding>
-      	
-      	<activityPatternBinding
+        </activityPatternBinding>
+        <activityPatternBinding
             activityId="org.eclipse.wtp.xml.capabilities"
             pattern="org\.apache\.xerces\.[\.\w/]*">
-      	</activityPatternBinding>
-      	
-      	<activityPatternBinding
+        </activityPatternBinding>
+        <activityPatternBinding
             activityId="org.eclipse.wtp.xml.capabilities"
             pattern="org\.eclipse\.wst\.common\.[\.\w/]*">
-      	</activityPatternBinding>
-      	
-      	<activityPatternBinding
+        </activityPatternBinding>
+        <activityPatternBinding
             activityId="org.eclipse.wtp.xml.capabilities"
             pattern="org\.eclipse\.wst\.sse\.[\.\w/]*">
-      	</activityPatternBinding>
-      	
-      	<activityPatternBinding
+        </activityPatternBinding>
+        <activityPatternBinding
             activityId="org.eclipse.wtp.xml.capabilities"
             pattern="org\.eclipse\.wst\.validation\.[\.\w/]*">
-      	</activityPatternBinding>
-      	
-      	<activityPatternBinding
+        </activityPatternBinding>
+        <activityPatternBinding
             activityId="org.eclipse.wtp.xml.capabilities"
             pattern="org\.eclipse\.wst\.internet\.cache\.[\.\w/]*">
-      	</activityPatternBinding>
-      	
-      	<activityPatternBinding
+        </activityPatternBinding>
+        <activityPatternBinding
             activityId="org.eclipse.wtp.xml.capabilities"
             pattern="org\.eclipse\.wst\.internet\.proxy\.[\.\w/]*">
-      	</activityPatternBinding>
-      	
-      	<defaultEnablement
+        </activityPatternBinding>
+        <!--
+        <categoryActivityBinding
+            activityId="org.eclipse.wtp.xml.capabilities"
+            categoryId="org.eclipse.categories.developmentCategory">
+        </categoryActivityBinding>
+        <defaultEnablement
             id="org.eclipse.wtp.xml.capabilities">
-      	</defaultEnablement>
-   </extension>
-   
+        </defaultEnablement>
+        -->
+    </extension>
 </plugin>

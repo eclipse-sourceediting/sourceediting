@@ -11,17 +11,12 @@
     -->
    <extension point="org.eclipse.ui.activities">
       	
-  		<activity
+  	<activity
             name="%activity.web"
             description="%activity.web.desc"
             id="org.eclipse.wtp.web.capabilities">
      	</activity>
      	
-     	<categoryActivityBinding
-            activityId="org.eclipse.wst.web"
-            categoryId="org.eclipse.categories.developmentCategory">
-      	</categoryActivityBinding>
-      	
       	<activityPatternBinding
             activityId="org.eclipse.wst.web"
             pattern="org\.eclipse\.wst\.css\.[\.\w/]*">
@@ -54,14 +49,20 @@
       	
       	<!--
       	<activityRequirementBinding 
-      		requiredActivityId="org.eclipse.wtp.xml" 
+      		requiredActivityId="org.eclipse.wtp.xml.capabilities" 
       		activityId="org.eclipse.wtp.web.capabilities">
       	</activityRequirementBinding>
       	-->
+      	<!--
+       <categoryActivityBinding
+            activityId="org.eclipse.wst.web.capabilities"
+            categoryId="org.eclipse.categories.developmentCategory">
+       </categoryActivityBinding>
+             	
       	<defaultEnablement
             id="org.eclipse.wtp.web.capabilities">
       	</defaultEnablement>
-      
+      -->
    </extension>
    
 </plugin>
