@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+    <extension
+        point="org.eclipse.ui.activities">
+        <activity
+            name="%activity.javascript"
+            description="%activity.javascript.desc"
+            id="org.eclipse.wtp.javascript.capabilities">
+        </activity>
+        <categoryActivityBinding
+            activityId="org.eclipse.wtp.javascript.capabilities"
+            categoryId="org.eclipse.categories.developmentCategory">
+        </categoryActivityBinding>
+        <activityPatternBinding
+            activityId="org.eclipse.wtp.javascript.capabilities"
+            pattern="org\.eclipse\.wst\.jsdt\.[\.\w/]*">
+        </activityPatternBinding>
+        <defaultEnablement
+            id="org.eclipse.wtp.javascript.capabilities">
+        </defaultEnablement>
+    </extension>
+</plugin>
