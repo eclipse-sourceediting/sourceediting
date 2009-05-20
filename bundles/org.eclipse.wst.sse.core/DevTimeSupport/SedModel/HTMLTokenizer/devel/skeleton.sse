@@ -13,7 +13,7 @@
 
   /* error messages for the codes above */
   final private static String YY_ERROR_MSG[] = {
-    "Unkown internal scanner error",		//$NON-NLS-1$
+    "Unknown internal scanner error",		//$NON-NLS-1$
     "Internal error: unknown state",		//$NON-NLS-1$
     "Error: could not match input",		//$NON-NLS-1$
     "Error: pushback value was too large"	//$NON-NLS-1$
@@ -50,7 +50,7 @@
   private int yy_endRead;
 
   /** number of newlines encountered up to the start of the matched text */
-  private int yyline;
+  //private int yyline;
 
   /** the number of characters up to the start of the matched text */
   private int yychar;
@@ -68,6 +68,11 @@
 
   /** yy_atEOF == true <=> the scanner has returned a value for EOF */
   private boolean yy_atEOF;
+
+  // records the number of times we've set up new input to be parsed
+  private long fInputStamp = -1;
+  // records the last input iteration for which we reported an error
+  private long fErroredInputstamp = -1;
 
 --- user class code
 
@@ -174,17 +179,23 @@
 
 
   /**
-   * Reports an error that occured while scanning - from the SED JFlex skeleton
+   * Reports an error that occurred while scanning - method from the SSE custom JFlex skeleton
    *
-   * @param   errorCode  the code of the errormessage to display
+   * @param   errorCode  the code of the error message to display
    */
   private void yy_ScanError(int errorCode) {
-    try {
-      Logger.log(Logger.ERROR, YY_ERROR_MSG[errorCode]);
-    }
-    catch (ArrayIndexOutOfBoundsException e) {
-      Logger.log(Logger.ERROR, YY_ERROR_MSG[YY_UNKNOWN_ERROR]);
-    }
+	if (fErroredInputstamp != fInputStamp) {
+		IllegalStateException e = new IllegalStateException("Instance:" + System.identityHashCode(this) + " Input:" + fInputStamp + " offset:" + (fOffset + yychar) + " state:" + yystate());
+		try {
+			Logger.logException(YY_ERROR_MSG[errorCode], e);
+			throw(e);
+		}
+		catch (ArrayIndexOutOfBoundsException e2) {
+			Logger.logException(YY_ERROR_MSG[YY_UNKNOWN_ERROR], e2);
+		}
+		fErroredInputstamp = fInputStamp;
+	}
+	
     // DO NOT EXIT the VM on an error
     // System.exit(1);
   } 

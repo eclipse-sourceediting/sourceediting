@@ -192,14 +192,6 @@
                      caseSensitive="false"
                      ext="xml">
                </fileext>
-               <fileext
-                     caseSensitive="false"
-                     ext="gph">
-               </fileext>
-               <fileext
-                     caseSensitive="false"
-                     ext="wdo-connections">
-               </fileext>
             </rules>
          </include>
          <exclude>

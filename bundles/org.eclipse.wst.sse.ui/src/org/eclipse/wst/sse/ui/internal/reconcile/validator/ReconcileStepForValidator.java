@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.quickassist.IQuickAssistProcessor;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilableModel;
@@ -32,6 +33,7 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
+import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
@@ -57,6 +59,11 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	private final IReconcileResult[] EMPTY_RECONCILE_RESULT_SET = new IReconcileResult[0];
 	private IncrementalHelper fHelper = null;
 	private IncrementalReporter fReporter = null;
+
+	/**
+	 * Declared scope of this validator, either ReconcileAnnotationKey.TOTAL
+	 * or ReconcileAnnotationKey.PARTIAL
+	 */
 	private int fScope = -1;
 	private IValidator fValidator = null;
 	private final String QUICKASSISTPROCESSOR = IQuickAssistProcessor.class.getName();
@@ -243,7 +250,8 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 		IReconcileResult[] results = EMPTY_RECONCILE_RESULT_SET;
 		if (dirtyRegion != null) {
 			try {
-				if (fValidator instanceof ISourceValidator) {
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=247714
+				if (fValidator instanceof ISourceValidator && getScope() == ReconcileAnnotationKey.PARTIAL) {
 					results = validate(dirtyRegion, subRegion);
 				}
 				else {
@@ -337,7 +345,10 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 
 			if (fValidator instanceof ISourceValidator) {
 				IncrementalReporter reporter = getReporter();
-				((ISourceValidator) fValidator).validate(dirtyRegion, helper, reporter);
+				if (getScope() == IReconcileAnnotationKey.PARTIAL)
+					((ISourceValidator) fValidator).validate(dirtyRegion, helper, reporter);
+				else
+					((ISourceValidator) fValidator).validate(new Region(0, getDocument().getLength()), helper, reporter);
 				// call IValidator.cleanup() during release()
 				// results = createAnnotations(reporter.getMessages());
 				results = createAnnotations(reporter.getAnnotationInfo());

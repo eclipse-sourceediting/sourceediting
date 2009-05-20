@@ -272,7 +272,7 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		IAnnotationModel annotationModel = getAnnotationModel();
 
 		IDocument document = getDocument();
-		if (document != null) {
+		if (document != null && annotationModel != null) {
 			long time0 = 0;
 			if (_DEBUG_SPELLING) {
 				time0 = System.currentTimeMillis();

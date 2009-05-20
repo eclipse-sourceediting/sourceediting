@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -126,7 +126,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 
 			strategies = (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
 		}
-		else if (contentType == IHTMLPartitions.HTML_DEFAULT || contentType == IHTMLPartitions.HTML_DECLARATION) {
+		else if (contentType == IHTMLPartitions.HTML_DEFAULT || contentType == IHTMLPartitions.HTML_DECLARATION || contentType == IJSPPartitions.JSP_DIRECTIVE) {
 			// html and jsp autoedit strategies
 			List allStrategies = new ArrayList(0);
 
@@ -339,9 +339,12 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		if (fStatusLineLabelProvider == null) {
 			fStatusLineLabelProvider = new JFaceNodeLabelProvider() {
 				public String getText(Object element) {
-
 					if (element == null)
 						return null;
+
+					if (!(element instanceof Node)) {
+						return super.getText(element);
+					}
 
 					StringBuffer s = new StringBuffer();
 					Node node = (Node) element;

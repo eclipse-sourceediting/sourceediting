@@ -162,6 +162,22 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		return loadDocument(fileName, rootElement);
 	}
 
+	protected CMDocument buildCMDocumentFromFile(IFile file) {
+		InputStream input = null;
+		try {
+			if(file.isAccessible()) {
+				input = file.getContents(false);
+			}
+		}
+		catch (CoreException e) {
+			// out of sync
+			input = new ByteArrayInputStream(new byte[0]);
+		}
+		if (input != null)
+			return buildCMDocument(file.getFullPath().toString(), input);
+		return null;
+	}
+
 	/**
 	 * Builds a CMDocument assuming the JSP v1.1 default path
 	 * 
@@ -819,10 +835,14 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 
 	private void loadTagFile(CMElementDeclarationImpl ed, IFile tagFile, boolean allowIncludes) {
 		try {
-			IStructuredDocument document = (IStructuredDocument) new ModelHandlerForJSP().getDocumentLoader().createNewStructuredDocument(tagFile);
-			IStructuredDocumentRegion documentRegion = document.getFirstStructuredDocumentRegion();
 			ed.setPath(tagFile.getFullPath().toString());
 			ed.setTagSource(TLDElementDeclaration.SOURCE_TAG_FILE);
+			ed.setLocationString(tagFile.getFullPath().toString());
+			if (!tagFile.isAccessible())
+				return;
+			
+			IStructuredDocument document = (IStructuredDocument) new ModelHandlerForJSP().getDocumentLoader().createNewStructuredDocument(tagFile);
+			IStructuredDocumentRegion documentRegion = document.getFirstStructuredDocumentRegion();
 			while (documentRegion != null) {
 				if (documentRegion.getType().equals(DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)) {
 					if (documentRegion.getNumberOfRegions() > 2) {
@@ -982,12 +1002,11 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 
 		}
 		catch (IOException e) {
-			Logger.logException("problem parsing " + tagFile, e);
+			// Logger.logException("problem parsing " + tagFile, e); // can be caused by a still-in-development file
 		}
 		catch (CoreException e) {
-			Logger.logException("problem parsing " + tagFile, e);
+			// Logger.logException("problem parsing " + tagFile, e); // frequently out of sync
 		}
-		ed.setLocationString(tagFile.getFullPath().toString());
 	}
 
 	/**
@@ -999,9 +1018,9 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		switch (reference.getRecordType()) {
 			case (ITaglibRecord.TLD) : {
 				ITLDRecord record = (ITLDRecord) reference;
-				IResource file = ResourcesPlugin.getWorkspace().getRoot().getFile(record.getPath());
-				if (file.getLocation() != null) {
-					document = (CMDocumentImpl) buildCMDocumentFromFile(file.getLocation().toString());
+				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(record.getPath());
+				if (file.isAccessible()) {
+					document = (CMDocumentImpl) buildCMDocumentFromFile(file);
 					document.setLocationString(record.getPath().toString());
 					if (_debug && document != null && document.getElements().getLength() == 0) {
 						System.out.println("failure parsing " + record.getPath()); //$NON-NLS-1$

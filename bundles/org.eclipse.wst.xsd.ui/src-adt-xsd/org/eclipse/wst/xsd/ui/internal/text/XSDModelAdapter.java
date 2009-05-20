@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.xml.type.util.XMLTypeUtil;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
@@ -141,6 +142,12 @@ public class XSDModelAdapter implements INodeAdapter
       {
         e.printStackTrace();
       }       
+
+      // This call is needed to work around a bug in EMF. XMLTypeUtil will
+      // hold a reference to the thread used to run setElementOperation 
+      // resulting in a circular dependency that leaks model adapters.
+      
+      XMLTypeUtil.normalize("name", false); //$NON-NLS-1$
         
       // attach an adapter to keep the XSD model and DOM in sync
       //

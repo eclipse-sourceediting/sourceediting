@@ -56,8 +56,9 @@ public class JSDTCompletionProposal extends JavaCompletionProposal implements IJ
 		if (this.fJavaCompletionProposal instanceof LazyJavaCompletionProposal)
 		{
 			((LazyJavaCompletionProposal)this.fJavaCompletionProposal).apply(viewer.getDocument(), trigger, offset);
+		} else {
+			super.apply(viewer, trigger, stateMask, offset);
 		}
-		super.apply(viewer, trigger, stateMask, offset);
 	}
 	
 	

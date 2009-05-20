@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,6 +29,8 @@ import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImageHelper;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImages;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -43,6 +45,14 @@ public class NewJSPWizard extends Wizard implements INewWizard {
 	private NewJSPTemplatesWizardPage fNewFileTemplatesPage;
 	private IStructuredSelection fSelection;
 
+	private boolean fShouldOpenEditorOnFinish = true;
+	private Display fDisplay;
+
+	// https://bugs.eclipse.org/bugs/show_bug.cgi?id=248424
+	public void setOpenEditorOnFinish(boolean openEditor) {
+		this.fShouldOpenEditorOnFinish = openEditor;
+	}
+	
 	public void addPages() {
 		fNewFilePage = new NewJSPFileWizardPage("JSPWizardNewFileCreationPage", new StructuredSelection(IDE.computeSelectedResources(fSelection))); //$NON-NLS-1$ 
 		fNewFilePage.setTitle(JSPUIMessages._UI_WIZARD_NEW_HEADING);
@@ -61,6 +71,11 @@ public class NewJSPWizard extends Wizard implements INewWizard {
 		return convertedText;
 	}
 
+	public void createPageControls(Composite pageContainer) {
+		fDisplay = pageContainer.getDisplay();
+		super.createPageControls(pageContainer);
+	}
+
 	public void init(IWorkbench aWorkbench, IStructuredSelection aSelection) {
 		fSelection = aSelection;
 		setWindowTitle(JSPUIMessages._UI_WIZARD_NEW_TITLE);
@@ -71,8 +86,10 @@ public class NewJSPWizard extends Wizard implements INewWizard {
 
 	private void openEditor(final IFile file) {
 		if (file != null) {
-			getShell().getDisplay().asyncExec(new Runnable() {
+			fDisplay.asyncExec(new Runnable() {
 				public void run() {
+					if (!PlatformUI.isWorkbenchRunning())
+						return;
 					try {
 						IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 						IDE.openEditor(page, file, true);
@@ -135,7 +152,8 @@ public class NewJSPWizard extends Wizard implements INewWizard {
 			}
 
 			// open the file in editor
-			openEditor(file);
+			if (fShouldOpenEditorOnFinish)
+				openEditor(file);
 
 			// everything's fine
 			performedOK = true;

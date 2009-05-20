@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
@@ -103,6 +104,7 @@ import org.eclipse.wst.xsd.ui.internal.common.actions.OpenInNewEditor;
 import org.eclipse.wst.xsd.ui.internal.common.actions.SetMultiplicityAction;
 import org.eclipse.wst.xsd.ui.internal.common.actions.SetTypeAction;
 import org.eclipse.wst.xsd.ui.internal.common.properties.sections.IDocumentChangedNotifier;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDDirectivesManager;
 import org.eclipse.wst.xsd.ui.internal.navigation.DesignViewNavigationLocation;
 import org.eclipse.wst.xsd.ui.internal.navigation.MultiPageEditorTextSelectionNavigationLocation;
 import org.eclipse.wst.xsd.ui.internal.text.XSDModelAdapter;
@@ -356,7 +358,6 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     getSelectionManager().removeSelectionChangedListener(fXSDSelectionListener);
     XSDEditorPlugin.getDefault().getPreferenceStore().removePropertyChangeListener(xsdPreferenceStoreListener);
     xsdPreferenceStoreListener = null;
-    structuredTextEditor.dispose();
     super.dispose();
   }
 
@@ -368,6 +369,9 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
       root.setModel(model);
     }
     graphicalViewer.setContents(root);
+    
+    // Select the schema to show the properties
+    getSelectionManager().setSelection(new StructuredSelection(getModel()));
   }
   
   protected void configureGraphicalViewer()
@@ -579,9 +583,6 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     }
     fXSDSelectionListener = new XSDSelectionManagerSelectionListener();
     getSelectionManager().addSelectionChangedListener(fXSDSelectionListener);
-    
-    // Select the schema to show the properties
-    getSelectionManager().setSelection(new StructuredSelection(getModel()));
     
     xsdPreferenceStoreListener = new XSDPreferenceStoreListener();
     XSDEditorPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(xsdPreferenceStoreListener);
@@ -1306,6 +1307,15 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
   protected void storeCurrentModePreference(String id)
   {
     XSDEditorPlugin.getPlugin().getPreferenceStore().setValue(DEFAULT_EDITOR_MODE_ID, id);
+  }
+  
+  /* (non-Javadoc)
+   * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  public void doSave(IProgressMonitor monitor)
+  {
+    XSDDirectivesManager.removeUnusedXSDImports(((XSDSchema)getAdapter(XSDSchema.class)));
+    super.doSave(monitor);
   }
 
   /* (non-Javadoc)

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,11 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.adt.editor;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
@@ -36,7 +41,33 @@ public class ADTReadOnlyFileEditorInput implements IStorageEditorInput, IADTEdit
   public ADTReadOnlyFileEditorInput(String urlString)
   {
     this.urlString = urlString;
-    variant = new ADTExternalResourceVariant(urlString);
+    InputStream is = null;
+    try
+    {
+      URL url = new URL(urlString);
+      URLConnection urlConnection = url.openConnection();
+      is = urlConnection.getInputStream();
+      
+      // use the resolved URL
+      this.urlString = urlConnection.getURL().toExternalForm();
+    } 
+    catch (Exception e) 
+    {  // do nothing and let the editor handle the exception later on
+    } 
+    finally 
+    {
+      if (is != null)
+        try
+        {
+          is.close();
+        } 
+        catch (IOException e)
+        {
+          // do nothing
+        }
+    }
+    
+    variant = new ADTExternalResourceVariant(this.urlString);
   }
 
   /*

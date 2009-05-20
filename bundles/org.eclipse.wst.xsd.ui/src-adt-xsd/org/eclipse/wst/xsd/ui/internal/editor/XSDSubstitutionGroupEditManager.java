@@ -16,6 +16,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.wst.common.ui.internal.search.dialogs.ComponentSpecification;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDElementCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateAttributeValueCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDDirectivesManager;
 import org.eclipse.wst.xsd.ui.internal.search.IXSDSearchConstants;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
@@ -67,7 +68,8 @@ public class XSDSubstitutionGroupEditManager extends XSDElementReferenceEditMana
         {
           Command command = new UpdateAttributeValueCommand(concreteComponent.getElement(), XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE, ((XSDElementDeclaration)component.getObject()).getQName(concreteComponent.getSchema()), org.eclipse.wst.xsd.ui.internal.common.util.Messages._UI_LABEL_SUBSTITUTION_GROUP);
           command.execute();
-        }  
+        }
+        XSDDirectivesManager.removeUnusedXSDImports(concreteComponent.getSchema());
       }
   }
 }

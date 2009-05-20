@@ -51,6 +51,7 @@ import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.validation.ValidationResult;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.validation.core.LazyURLInputStream;
+import org.eclipse.wst.xml.core.internal.validation.core.NestedValidatorContext;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -275,6 +276,27 @@ public class XMLValidator
    */
   public XMLValidationReport validate(String uri, InputStream inputStream, XMLValidationConfiguration configuration, ValidationResult result)
   {
+	  return validate(uri, inputStream, configuration, null, null);
+  }
+  
+  /**
+   * Validate the inputStream
+   * 
+   * @param uri 
+   *    The URI of the file to validate.
+   * @param inputstream
+   *    The inputStream of the file to validate
+   * @param configuration
+   *    A configuration for this validation session.
+   * @param result
+   *    The validation result
+   * @param context
+   *    The validation context   
+   * @return 
+   *    Returns an XML validation report.
+   */
+  public XMLValidationReport validate(String uri, InputStream inputStream, XMLValidationConfiguration configuration, ValidationResult result, NestedValidatorContext context)
+  {
     String grammarFile = "";
     Reader reader1 = null; // Used for the preparse.
     Reader reader2 = null; // Used for validation parse.
@@ -287,7 +309,7 @@ public class XMLValidator
     } 
         
     XMLValidationInfo valinfo = new XMLValidationInfo(uri);
-    MyEntityResolver entityResolver = new MyEntityResolver(uriResolver); 
+    MyEntityResolver entityResolver = new MyEntityResolver(uriResolver, context); 
     ValidatorHelper helper = new ValidatorHelper(); 
     try
     {  
@@ -419,15 +441,18 @@ public class XMLValidator
   {
     private URIResolver uriResolver;
     private String resolvedDTDLocation;
+    private NestedValidatorContext context;
    
     /**
      * Constructor.
      * 
      * @param uriResolver The URI resolver to use with this entity resolver.
+     * @param context The XML validator context.
      */
-    public MyEntityResolver(URIResolver uriResolver)
+    public MyEntityResolver(URIResolver uriResolver, NestedValidatorContext context)
     {
       this.uriResolver = uriResolver;
+      this.context = context;
     }
     
     /* (non-Javadoc)
@@ -435,20 +460,12 @@ public class XMLValidator
      */
     public XMLInputSource resolveEntity(XMLResourceIdentifier rid) throws XNIException, IOException
     {
-      try
-      {
-        XMLInputSource inputSource = _internalResolveEntity(uriResolver, rid);
+        XMLInputSource inputSource = _internalResolveEntity(uriResolver, rid, context);
         if (inputSource != null)
         {
           resolvedDTDLocation = inputSource.getSystemId();
         }
         return inputSource;
-      }
-      catch(IOException e)
-      {
-        //e.printStackTrace();   
-      }      
-      return null;
     }
    
     public String getLocation()
@@ -461,6 +478,11 @@ public class XMLValidator
   // (i.e. XML Schema, WSDL etc).   The other approach is maintain a copy for each validator that has
   // identical code.  In any case we should strive to ensure that the validators perform resolution consistently. 
   public static XMLInputSource _internalResolveEntity(URIResolver uriResolver, XMLResourceIdentifier rid) throws  IOException
+  {
+    return _internalResolveEntity(uriResolver, rid, null);
+  }
+  
+  public static XMLInputSource _internalResolveEntity(URIResolver uriResolver, XMLResourceIdentifier rid, NestedValidatorContext context) throws  IOException
   {
     XMLInputSource is = null;
     
@@ -481,6 +503,18 @@ public class XMLValidator
       if (location != null)
       {                     
         String physical = uriResolver.resolvePhysicalLocation(rid.getBaseSystemId(), id, location);
+
+        // if physical is already a known bad uri, just go ahead and throw an exception
+        if (context instanceof XMLNestedValidatorContext)
+        {
+          XMLNestedValidatorContext xmlContext = ((XMLNestedValidatorContext)context);
+
+          if (xmlContext.isURIMarkedInaccessible(physical))
+          {
+        	 throw new FileNotFoundException(physical);
+          }
+        }
+        
         is = new XMLInputSource(rid.getPublicId(), location, location);
         
         // This block checks that the file exists. If it doesn't we need to throw
@@ -491,6 +525,16 @@ public class XMLValidator
         try
         {
           isTemp = new URL(physical).openStream();
+        }
+        catch (IOException e)
+        {
+          // physical was a bad url, so cache it so we know next time
+          if (context instanceof XMLNestedValidatorContext)
+          {
+            XMLNestedValidatorContext xmlContext = ((XMLNestedValidatorContext)context);
+            xmlContext.markURIInaccessible(physical);
+          }
+          throw e;
         }
         finally
         {

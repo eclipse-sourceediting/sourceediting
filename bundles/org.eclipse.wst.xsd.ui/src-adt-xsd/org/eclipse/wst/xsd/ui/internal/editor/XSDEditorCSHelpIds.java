@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -67,6 +67,7 @@ public class XSDEditorCSHelpIds
   public static final String XMLSCHEMAFILES_PREFERENCES__XML_SCHEMA_LANGUAGE_CONSTRUCTS_PREFIX = PLUGIN_NAME + ".xsduf0020";
   public static final String XMLSCHEMAFILES_PREFERENCES__DEFAULT_TARGETNAMESPACE = PLUGIN_NAME + ".xsduf0030";
   public static final String XMLSCHEMAFILES_PREFERENCES__HONOUR_ALL_SCHEMA_LOCATIONS = PLUGIN_NAME + ".xsduf0040";
+  public static final String XMLSCHEMAFILES_PREFERENCES__IMPORT_CLEANUP = PLUGIN_NAME + ".xsduf0050";
   
   public static final String DOCUMENTATION_TAB__NO_LABEL = PLUGIN_NAME + ".xsdup0010";
   

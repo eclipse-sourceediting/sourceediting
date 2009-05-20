@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,23 +13,25 @@ package org.eclipse.jst.jsp.core.internal.java;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
-import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TaglibTracker;
+import org.eclipse.jst.jsp.core.internal.encoding.JSPDocumentLoader;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.util.FileContentCache;
-import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
+import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler;
-import org.eclipse.wst.sse.core.internal.ltk.parser.TagMarker;
+import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
@@ -86,13 +88,30 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 
 	public void reset(String textToParse, int start) {
 		fStartOfTextToParse = start;
-		getLocalParser().reset(textToParse);
 		fTextToParse = textToParse;
 	}
 
 	public void forceParse() {
-		getLocalParser().getDocumentRegions();
-		fLocalParser = null;
+		String contents = fTextToParse;
+
+		IStructuredDocument document = (IStructuredDocument) new JSPDocumentLoader().createNewStructuredDocument();
+		if(contents != null && document != null) {		
+			// from outer class
+			List blockMarkers = this.fTranslator.getBlockMarkers();
+			// this adds the current markers from the outer class list
+			// to this parser so parsing works correctly
+			for (int i = 0; i < blockMarkers.size(); i++) {
+				addBlockMarker((BlockMarker) blockMarkers.get(i));
+			}
+			reset(contents);
+	
+			document.set(contents);
+			IStructuredDocumentRegion cursor = document.getFirstStructuredDocumentRegion();
+			while(cursor != null) {
+				nodeParsed(cursor);
+				cursor = cursor.getNext();
+			}
+		}
 	}
 
 	/*
@@ -100,41 +119,49 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	 * 
 	 * @param filename @return
 	 */
-	public boolean parse(String filePath) {
-		getLocalParser().removeStructuredDocumentRegionHandler(this);
-		// from outer class
-		List blockMarkers = this.fTranslator.getBlockMarkers();
-		IStructuredDocument document = StructuredDocumentFactory.getNewStructuredDocumentInstance(getLocalParser());
-		String contents = getContents(filePath);
-		if (contents == null)
-			return false;
-		// this adds the current markers from the outer class list
-		// to this parser so parsing works correctly
-		for (int i = 0; i < blockMarkers.size(); i++) {
-			addBlockMarker((BlockMarker) blockMarkers.get(i));
+	public boolean parse(String filePathString) {
+		boolean parsed = false;
+		IStructuredDocument document = null;
+		String contents = null;
+
+		IPath filePath = new Path(filePathString);
+		IFile f = ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
+		if (f == null || !f.isAccessible()) {
+			f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(filePath);
 		}
-		// RATLC01139770
-//		getLocalParser().getNestablePrefixes().addAll(((JSPSourceParser)fTranslator.getStructuredDocument().getParser()).getNestablePrefixes());
-		TLDCMDocumentManager documentManager = this.fTranslator.getTLDCMDocumentManager();
-		if (documentManager != null) {
-			List trackers = documentManager.getTaglibTrackers();
-			for (Iterator it = trackers.iterator(); it.hasNext();) {
-				TaglibTracker tracker = (TaglibTracker) it.next();
-				String prefix = tracker.getPrefix();
-				getLocalParser().getNestablePrefixes().add(new TagMarker(prefix));
+		if (f != null && f.isAccessible()) {
+			/*
+			 * using a real document allows us to pull out text in the
+			 * translator for dealing with TEI variables
+			 */
+			try {
+				IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerFor(f);
+				document = (IStructuredDocument) handler.getDocumentLoader().createNewStructuredDocument();
+				contents = FileContentCache.getInstance().getContents(f.getFullPath());
+			}
+			catch (CoreException e) {
+				Logger.logException(e);
 			}
 		}
-
-		reset(contents);
-		// forceParse();
-		document.set(contents);
-		IStructuredDocumentRegion cursor = document.getFirstStructuredDocumentRegion();
-		while (cursor != null) {
-			nodeParsed(cursor);
-			cursor = cursor.getNext();
+		if (contents != null && document != null) {
+			// from outer class
+			List blockMarkers = this.fTranslator.getBlockMarkers();
+			// this adds the current markers from the outer class list
+			// to this parser so parsing works correctly
+			for (int i = 0; i < blockMarkers.size(); i++) {
+				addBlockMarker((BlockMarker) blockMarkers.get(i));
+			}
+			reset(contents);
+			// forces parse
+			document.set(contents);
+			IStructuredDocumentRegion cursor = document.getFirstStructuredDocumentRegion();
+			while (cursor != null) {
+				nodeParsed(cursor);
+				cursor = cursor.getNext();
+			}
+			parsed = true;
 		}
-		getLocalParser().addStructuredDocumentRegionHandler(this);
-		return true;
+		return parsed;
 	}
 
 
@@ -146,8 +173,6 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	public void nodeParsed(IStructuredDocumentRegion sdRegion) {
 
 		try {
-
-			handleScopingIfNecessary(sdRegion);
 			if (isJSPEndRegion(sdRegion)) {
 				String nameStr = getRegionName(sdRegion);
 				if (isPossibleCustomTag(nameStr)) {
@@ -202,6 +227,24 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 			}
 			else {
 				fTagname = null;
+				/*
+				 * We may have been asked to decode a script block with an XML
+				 * comment in it (a common provision for browsers not
+				 * supporting client scripting). While
+				 * scriptlets/expressions/declarations will be identified as
+				 * part of the normal parsing process, the temporary document
+				 * used here will be parsed differently, respecting the
+				 * comment since it's not in a tag block region any more, and
+				 * the custom tags in the comment will not be found. Run those
+				 * comment text pieces through the translator on their own.
+				 */
+				Iterator regions = sdRegion.getRegions().iterator();
+				while (regions.hasNext()) {
+					ITextRegion region = (ITextRegion) regions.next();
+					if (DOMRegionContext.XML_COMMENT_TEXT.equals(region.getType()) && region.getStart() != 0) {
+						fTranslator.decodeScriptBlock(sdRegion.getFullText(region), sdRegion.getStartOffset(region));
+					}
+				}
 			}
 			// this updates cursor position
 			checkCursorInRegion(sdRegion);
@@ -217,58 +260,6 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 				// do nothing, since we're just ending
 			}
 		}
-	}
-
-
-	private void handleScopingIfNecessary(IStructuredDocumentRegion sdRegion) {
-		/* 199047 - Braces missing from translation of custom tags not defining variables */
-		// fix to make sure custom tag block have their own scope
-		// we add '{' for custom tag open and '}' for custom tag close
-		// in the translation
-		if (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN) {
-			if (!isSelfClosingTag(sdRegion)) {
-				String nameStr = getRegionName(sdRegion);
-				if (isPossibleCustomTag(nameStr)) {
-					startScope(nameStr);
-				}
-			}
-		}
-		else if (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_END_TAG_OPEN) {
-			String nameStr = getRegionName(sdRegion);
-			if (isPossibleCustomTag(nameStr)) {
-				endScope(nameStr);
-			}
-		}
-	}
-
-	private boolean isSelfClosingTag(ITextRegionCollection containerRegion) {
-
-		if (containerRegion == null)
-			return false;
-
-		ITextRegionList regions = containerRegion.getRegions();
-		ITextRegion r = regions.get(regions.size() - 1);
-		return r.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE;
-	}
-
-	private void startScope(String tagName) {
-		IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
-		StringBuffer text = new StringBuffer();
-		text.append("{ // <"); //$NON-NLS-1$
-		text.append(tagName);
-		text.append(">\n"); //$NON-NLS-1$
-		this.fTranslator.translateScriptletString(text.toString(), currentNode, currentNode.getStartOffset(), currentNode.getLength(), fAppendAsIndirectSource); //$NON-NLS-1$
-
-	}
-
-	private void endScope(String tagName) {
-		IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
-		StringBuffer text = new StringBuffer();
-		text.append("} // </"); //$NON-NLS-1$
-		text.append(tagName);
-		text.append(">\n"); //$NON-NLS-1$
-		this.fTranslator.translateScriptletString(text.toString(), currentNode, currentNode.getStartOffset(), currentNode.getLength(), fAppendAsIndirectSource); //$NON-NLS-1$
-
 	}
 
 	public void resetNodes() {
@@ -376,7 +367,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		}
 		else if (isPossibleCustomTag(fTagname)) {
 			// this custom tag may define variables
-			this.fTranslator.addTaglibVariables(fTagname);
+			this.fTranslator.addTaglibVariables(fTagname, sdRegion);
 		}
 		else if (isTaglibDirective(fTagname)) {
 			// also add the ones created here to the parent document
@@ -481,21 +472,12 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 
 	protected boolean isPossibleCustomTag(String tagName) {
 		int colonIndex = tagName.indexOf(":");
+		boolean isPossible = false;
 		if (colonIndex > 0) {
 			String prefix = tagName.substring(0, colonIndex);
-			if (prefix.equals("jsp")) { //$NON-NLS-1$
-				return false;
-			}
-			if (prefix.length() > 0) {
-				TagMarker[] prefixes = (TagMarker[]) fLocalParser.getNestablePrefixes().toArray(new TagMarker[0]);
-				for (int i = 0; i < prefixes.length; i++) {
-					if (prefix.equals(prefixes[i].getTagName())) {
-						return true;
-					}
-				}
-			}
+			isPossible = !prefix.equals("jsp"); //$NON-NLS-1$
 		}
-		return false;
+		return isPossible;
 	}
 
 	protected boolean isTaglibDirective(String tagName) {

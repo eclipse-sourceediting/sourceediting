@@ -42,13 +42,13 @@ you searched in the Structure document for the text, you would find that it
 is for the section "Schema Component Constraint: Complex Type Definition Properties
 Correct". </p><p>You can set up a project's properties so that different types
 of project resources are automatically validated when you save them (this
-is set for all resources <?Pub Caret?>by default). From a project's pop-up
-menu select <uicontrol>Properties</uicontrol>, then select <uicontrol>Validation</uicontrol>.
-Any validators you can run against your project will be listed in the Validation
-page.</p></result>
+is set for all resources by default). From a project's pop-up menu select <uicontrol>Properties</uicontrol>,
+then select <uicontrol>Validation</uicontrol>. Any validators you can run
+against your project will be listed in the Validation page.</p></result>
 </taskbody>
 <related-links>
 <link href="../../org.eclipse.jst.j2ee.doc.user/topics/tjval.dita" scope="peer">
+<linktext>Validating code in enterprise applications</linktext>
 <desc>General validation information</desc>
 </link>
 <link href="http://www.w3.org/TR/xmlschema-1" scope="external"><linktext>XML
@@ -61,4 +61,3 @@ Schema Part 2: Datatypes</linktext>
 </link>
 </related-links>
 </task>
-<?Pub *0000003403?>

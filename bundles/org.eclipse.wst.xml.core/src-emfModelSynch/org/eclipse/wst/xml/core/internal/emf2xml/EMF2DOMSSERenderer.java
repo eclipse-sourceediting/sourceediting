@@ -17,16 +17,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -64,6 +64,8 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 	private boolean isSaving = false;
 
 	private IModelManager modelManager;
+	
+	private Class resourceClass;
 
 	/** The XML DOM model */
 	protected IDOMModel xmlModel;
@@ -151,24 +153,31 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 		TranslatorResource res = getResource();
 		res.setDefaults();
 		IFile file = WorkbenchResourceHelper.getFile(resource);
-		InputStream is = DOMUtilities.createHeaderInputStream(res.getDoctype(), res.getPublicId(), res.getSystemId());
-		if (is == null)
-			return;
+		InputStream is = null;
 		try {
 			try {
-				List folders = new ArrayList();
-				IContainer container = file.getParent();
-				while (null != container && !container.exists() && container instanceof IFolder) {
-					folders.add(container);
-					container = container.getParent();
+				// make sure the project is 'open'
+				if (!file.getProject().isOpen())
+					file.getProject().open(null);
+
+				// create folder from highest parent, first, as needed
+				Stack containers = new Stack();
+				IContainer parent = file.getParent();
+				while (parent != null && parent.getType() == IResource.FOLDER) {
+					containers.push(parent);
+					parent = parent.getParent();
 				}
-				IFolder folder = null;
-				for (int i = 0; i < folders.size(); i++) {
-					folder = (IFolder) folders.get(i);
-					folder.create(true, true, null);
+				while (!containers.isEmpty()) {
+					IFolder folder = (IFolder) containers.pop();
+					if (!folder.isAccessible()) {
+						folder.create(true, true, null);
+					}
 				}
-				file.create(is, true, null);
-				file.setLocal(true, 1, null);
+
+				if (!file.exists()) {
+					is = DOMUtilities.createHeaderInputStream(res.getDoctype(), res.getPublicId(), res.getSystemId());
+					file.create(is, true, null);
+				}
 			}
 			catch (CoreException e1) {
 				Logger.logException(e1);
@@ -178,7 +187,7 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 					is.close();
 				}
 			}
-			initializeXMLModel(file, true);
+			initializeXMLModel(file, resource.getWriteCount() != 0);
 		}
 		catch (IOException ex) {
 			Logger.log(Logger.ERROR, "IWAE0017E Unexpected IO exception occurred creating xml document");//$NON-NLS-1$
@@ -272,10 +281,15 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 			INodeAdapter adapter = (INodeAdapter) iterator.next();
 			// First Check if it's an EMF2DOMAdapter
 			if (adapter != null && adapter.isAdapterForType(EMF2DOMAdapter.ADAPTER_CLASS)) {
-				// Cast to EMF2DOMAdapter
-				EMF2DOMAdapter e2DAdapter = (EMF2DOMAdapter) adapter;
+				// Cast to EMF2DOMSSEAdapter
+				EMF2DOMSSEAdapter e2DAdapter = (EMF2DOMSSEAdapter) adapter;
+				//Handle the cases where either adapter's target is null 
+				//Use the resourceClass to make sure the resource type is identical
 				if (getResource() == null || e2DAdapter.getTarget() == null)
-					return e2DAdapter;
+					if(resourceClass.equals(e2DAdapter.getResourceClass()))
+						return e2DAdapter;
+					else
+						continue;
 				
 				// First check if targets are resources
 				if (e2DAdapter.getTarget() instanceof Resource) {
@@ -343,26 +357,17 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 	
 	private IDOMModel initializeXMLModel(IFile file, boolean forWrite) throws UnsupportedEncodingException, IOException {
 		if (file == null || !file.exists())
-			throw new FileNotFoundException((file == null) ? "null" : file.getFullPath().toOSString()); //$NON-NLS-1$
+			throw new FileNotFoundException((file == null) ? "null" : file.getFullPath().toString()); //$NON-NLS-1$
 		try {
 			IModelManager manager = getModelManager();
-			String id = manager.calculateId(file);			
+			IDOMModel mod = null;
 			if (forWrite) {
-				IDOMModel mod = (IDOMModel)manager.getExistingModelForEdit(id);
-				if (mod == null)
-					setXMLModel((IDOMModel) manager.getModelForEdit(file));
-				else {
-					setXMLModel(mod);
-				}
+				mod = (IDOMModel) manager.getModelForEdit(file);
 			}
 			else {
-				IDOMModel mod = (IDOMModel)manager.getExistingModelForRead(id);
-				if (mod == null)
-					setXMLModel((IDOMModel) manager.getModelForRead(file));
-				else {
-					setXMLModel(mod);
-				}
+				mod = (IDOMModel) manager.getModelForRead(file);
 			}
+			setXMLModel(mod);
 			setXMLModelId(getXMLModel().getId());
 			needsToCreateDOM = false;
 		}
@@ -386,7 +391,12 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 	}
 
 	public boolean isShared() {
-		if (getResourceSet() == null || xmlModel == null)
+		
+		if( xmlModel == null) { //resource could be in process of being unloaded - check with model manager
+			String id = getModelManagerId();
+			return getModelManager().isShared(id);
+		}
+		if (getResourceSet() == null)
 			return false;
 		return xmlModel.isShared();
 	}
@@ -428,17 +438,18 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 		if (isBatchChanges)
 			return;
 		try {
-			if (aboutToChangeNode != null
-					&& model.getStructuredDocument() != null
-					&& model.getStructuredDocument()
-							.getFirstStructuredDocumentRegion() != aboutToChangeNode) {
-				modelAccessForWrite();
+			if (aboutToChangeNode != null && model.getStructuredDocument() != null
+					&& model.getStructuredDocument().getFirstStructuredDocumentRegion() != aboutToChangeNode) {
+				String id = getModelManagerId();
+				IStructuredModel tempModel = null;
 				try {
+					tempModel = getModelManager().getExistingModelForEdit(id);
 					xmlModelReverted = true;
 					resource.unload();
 				} finally {
-					if (getXMLModel() != null)
-						getXMLModel().releaseFromEdit();
+					if (tempModel != null && (tempModel.getReferenceCountForEdit() > 0)) {
+						tempModel.releaseFromEdit();
+					}
 				}
 			}
 		} finally {
@@ -620,6 +631,12 @@ public class EMF2DOMSSERenderer extends EMF2DOMRenderer implements IModelStateLi
 
 	public boolean wasReverted() {
 		return xmlModelReverted;
+	}
+
+	public void setResource(TranslatorResource resource) {
+		super.setResource(resource);
+		if (resource != null)
+			resourceClass = resource.getClass();
 	}
 
 }

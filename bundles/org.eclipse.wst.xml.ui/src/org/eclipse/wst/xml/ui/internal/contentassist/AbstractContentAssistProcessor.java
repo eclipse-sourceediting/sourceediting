@@ -1037,26 +1037,20 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						cursorAdjustment = proposedText.length();
 						if (elementDecl instanceof CMElementDeclaration) {
 							CMElementDeclaration ed = (CMElementDeclaration) elementDecl;
-							if (ed.getContentType() == CMElementDeclaration.EMPTY) {
-								proposedText += getContentGenerator().getStartTagClose(parent, ed);
-								cursorAdjustment = proposedText.length();
-							}
-							else {
-								// https://bugs.eclipse.org/bugs/show_bug.cgi?id=89811
-								StringBuffer sb = new StringBuffer();
-								getContentGenerator().generateTag(parent, ed, sb);
-								// since it's a name proposal, assume '<' is
-								// already there
-								// only return the rest of the tag
-								proposedText = sb.toString().substring(1);
-								cursorAdjustment = getCursorPositionForProposedText(proposedText);
+							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=89811
+							StringBuffer sb = new StringBuffer();
+							getContentGenerator().generateTag(parent, ed, sb);
+							// since it's a name proposal, assume '<' is
+							// already there
+							// only return the rest of the tag
+							proposedText = sb.toString().substring(1);
+							cursorAdjustment = getCursorPositionForProposedText(proposedText);
 
-								// cursorAdjustment = proposedText.length() +
-								// 1;
-								// proposedText += "></" +
-								// getRequiredName(parent, elementDecl) + ">";
-								// //$NON-NLS-2$//$NON-NLS-1$
-							}
+							// cursorAdjustment = proposedText.length() +
+							// 1;
+							// proposedText += "></" +
+							// getRequiredName(parent, elementDecl) + ">";
+							// //$NON-NLS-2$//$NON-NLS-1$
 						}
 					}
 					if (beginsWith(proposedText, matchString)) {
@@ -1104,14 +1098,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					}
 
 					cursorAdjustment = getCursorPositionForProposedText(proposedText);
-
-					if (ed instanceof CMElementDeclaration) {
-						CMElementDeclaration elementDecl = (CMElementDeclaration) ed;
-						if (elementDecl.getContentType() == CMElementDeclaration.EMPTY) {
-							proposedText += getContentGenerator().getStartTagClose(parent, elementDecl);
-							cursorAdjustment = proposedText.length();
-						}
-					}
 
 					String proposedInfo = getAdditionalInfo(null, ed);
 					Image image = CMImageUtil.getImage(ed);
@@ -1949,10 +1935,10 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			if (node.getStructuredDocument().getLength() == 0) {
 				return null;
 			}
-			ITextRegion result = node.getStructuredDocument().getRegionAtCharacterOffset(offset).getRegionAtCharacterOffset(offset);
+			ITextRegion result = getContentRegion(offset, node);
 			while (result == null) {
 				offset--;
-				result = node.getStructuredDocument().getRegionAtCharacterOffset(offset).getRegionAtCharacterOffset(offset);
+				result = getContentRegion(offset, node);
 			}
 			return result;
 		}
@@ -1976,36 +1962,50 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			region = getCompletionRegion(offset, flatNode);
 		}
 		else {
-			// the docPosition is neither within the start nor the end, so it
-			// must be content
-			flatNode = node.getStructuredDocument().getRegionAtCharacterOffset(offset);
-			// (pa) ITextRegion refactor
-			// if (flatNode.contains(documentPosition)) {
-			if ((flatNode.getStartOffset() <= documentPosition) && (flatNode.getEndOffset() >= documentPosition)) {
-				// we're interesting in completing/extending the previous
-				// IStructuredDocumentRegion if the current
-				// IStructuredDocumentRegion isn't plain content or if it's
-				// preceded by an orphan '<'
-				if ((offset == flatNode.getStartOffset()) && (flatNode.getPrevious() != null) && (((flatNode.getRegionAtCharacterOffset(documentPosition) != null) && (flatNode.getRegionAtCharacterOffset(documentPosition).getType() != DOMRegionContext.XML_CONTENT)) || (flatNode.getPrevious().getLastRegion().getType() == DOMRegionContext.XML_TAG_OPEN) || (flatNode.getPrevious().getLastRegion().getType() == DOMRegionContext.XML_END_TAG_OPEN))) {
-					// Is the region also the start of the node? If so, the
-					// previous IStructuredDocumentRegion is
-					// where to look for a useful region.
-					region = flatNode.getPrevious().getLastRegion();
-				}
-				else if (flatNode.getEndOffset() == documentPosition) {
-					region = flatNode.getLastRegion();
-				}
-				else {
-					region = flatNode.getFirstRegion();
-				}
-			}
-			else {
-				// catch end of document positions where the docPosition isn't
-				// in a IStructuredDocumentRegion
-				region = flatNode.getLastRegion();
-			}
+			region = getContentRegion(offset, node);
 		}
 
+		return region;
+	}
+	
+	/**
+	 * Find the region within the content
+	 * @param offset offset within the document
+	 * @param node 
+	 * @param flatNode
+	 * @return
+	 */
+	private ITextRegion getContentRegion(int offset, IDOMNode node) {
+		ITextRegion region = null;
+		
+		// the docPosition is neither within the start nor the end, so it
+		// must be content
+		IStructuredDocumentRegion flatNode = node.getStructuredDocument().getRegionAtCharacterOffset(offset);
+		// (pa) ITextRegion refactor
+		// if (flatNode.contains(documentPosition)) {
+		if ((flatNode.getStartOffset() <= offset) && (flatNode.getEndOffset() >= offset)) {
+			// we're interesting in completing/extending the previous
+			// IStructuredDocumentRegion if the current
+			// IStructuredDocumentRegion isn't plain content or if it's
+			// preceded by an orphan '<'
+			if ((offset == flatNode.getStartOffset()) && (flatNode.getPrevious() != null) && (((flatNode.getRegionAtCharacterOffset(offset) != null) && (flatNode.getRegionAtCharacterOffset(offset).getType() != DOMRegionContext.XML_CONTENT)) || (flatNode.getPrevious().getLastRegion().getType() == DOMRegionContext.XML_TAG_OPEN) || (flatNode.getPrevious().getLastRegion().getType() == DOMRegionContext.XML_END_TAG_OPEN))) {
+				// Is the region also the start of the node? If so, the
+				// previous IStructuredDocumentRegion is
+				// where to look for a useful region.
+				region = flatNode.getPrevious().getLastRegion();
+			}
+			else if (flatNode.getEndOffset() == offset) {
+				region = flatNode.getLastRegion();
+			}
+			else {
+				region = flatNode.getFirstRegion();
+			}
+		}
+		else {
+			// catch end of document positions where the docPosition isn't
+			// in a IStructuredDocumentRegion
+			region = flatNode.getLastRegion();
+		}
 		return region;
 	}
 

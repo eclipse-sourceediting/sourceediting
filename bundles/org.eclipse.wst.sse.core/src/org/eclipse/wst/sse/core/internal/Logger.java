@@ -116,6 +116,19 @@ public class Logger {
 	public static final int WARNING = IStatus.WARNING;
 	public static final int ERROR = IStatus.ERROR;
 
+	public static final int OK_DEBUG = 200 + OK;
+	public static final int INFO_DEBUG = 200 + INFO;
+	public static final int WARNING_DEBUG = 200 + WARNING;
+	public static final int ERROR_DEBUG = 200 + ERROR;
+
+
+	/**
+	 * @return true if the platform is debugging
+	 */
+	private static boolean isDebugging() {
+		return Platform.inDebugMode();
+	}
+	
 	/**
 	 * Adds message to log.
 	 * 
@@ -127,8 +140,26 @@ public class Logger {
 	 *            exception thrown
 	 */
 	private static void _log(int level, String message, Throwable exception) {
+		if (level == OK_DEBUG || level == INFO_DEBUG || level == WARNING_DEBUG || level == ERROR_DEBUG) {
+			if (!isDebugging())
+				return;
+		}
+		int severity = IStatus.OK;
+		switch (level) {
+			case INFO_DEBUG :
+			case INFO :
+				severity = IStatus.INFO;
+				break;
+			case WARNING_DEBUG :
+			case WARNING :
+				severity = IStatus.WARNING;
+				break;
+			case ERROR_DEBUG :
+			case ERROR :
+				severity = IStatus.ERROR;
+		}
 		message = (message != null) ? message : ""; //$NON-NLS-1$
-		Status statusObj = new Status(level, PLUGIN_ID, level, message, exception);
+		Status statusObj = new Status(severity, PLUGIN_ID, severity, message, exception);
 		Bundle bundle = Platform.getBundle(PLUGIN_ID);
 		if (bundle != null)
 			Platform.getLog(bundle).log(statusObj);

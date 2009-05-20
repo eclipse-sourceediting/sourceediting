@@ -12,10 +12,8 @@ package org.eclipse.wst.html.core.internal.validate;
 
 
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -26,7 +24,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
-import org.eclipse.wst.xml.core.internal.contentmodel.basic.CMNamedNodeMapImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
@@ -99,38 +96,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 			return;
 		CMNamedNodeMap declarations = edec.getAttributes();
 
-		CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(declarations) {
-			private Map caseInsensitive;
-			
-			private Map getCaseInsensitiveMap() {
-				if(caseInsensitive == null)
-					caseInsensitive = new HashMap();
-				return caseInsensitive;
-			}
-
-			public CMNode getNamedItem(String name) {
-				CMNode node = super.getNamedItem(name);
-				if (node == null) {
-					node = (CMNode) getCaseInsensitiveMap().get(name.toLowerCase(Locale.US));
-				}
-				return node;
-			}
-
-			public void put(CMNode cmNode) {
-				super.put(cmNode);
-				getCaseInsensitiveMap().put(cmNode.getNodeName().toLowerCase(Locale.US), cmNode);
-			}
-		};
-
-		List nodes = ModelQueryUtil.getModelQuery(target.getOwnerDocument()).getAvailableContent((Element) node, edec, ModelQuery.INCLUDE_ATTRIBUTES);
-		for (int k = 0; k < nodes.size(); k++) {
-			CMNode cmnode = (CMNode) nodes.get(k);
-			if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
-				allAttributes.put(cmnode);
-			}
-		}
-		declarations = allAttributes;
-
+		List modelQueryNodes = null;
 		NamedNodeMap attrs = target.getAttributes();
 		for (int i = 0; i < attrs.getLength(); i++) {
 			int rgnType = REGION_NAME;
@@ -150,6 +116,22 @@ public class HTMLAttributeValidator extends PrimeValidator {
 			}
 
 			CMAttributeDeclaration adec = (CMAttributeDeclaration) declarations.getNamedItem(a.getName());
+			
+			/* Check the modelquery if nothing is declared by the element declaration */
+			if (adec == null) {
+				if (modelQueryNodes == null)
+					modelQueryNodes = ModelQueryUtil.getModelQuery(target.getOwnerDocument()).getAvailableContent((Element) node, edec, ModelQuery.INCLUDE_ATTRIBUTES);
+				
+				String attrName = a.getName().toLowerCase(Locale.US);
+				for (int k = 0; k < modelQueryNodes.size(); k++) {
+					CMNode cmnode = (CMNode) modelQueryNodes.get(k);
+					if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION && cmnode.getNodeName().toLowerCase(Locale.US).equals(attrName)) {
+						adec = (CMAttributeDeclaration) cmnode;
+						break;
+					}
+				}
+			}
+			
 			if (adec == null) {
 				// No attr declaration was found. That is, the attr name is
 				// undefined.

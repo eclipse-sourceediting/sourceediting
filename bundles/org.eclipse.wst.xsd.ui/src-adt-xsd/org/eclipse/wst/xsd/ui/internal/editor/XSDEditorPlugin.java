@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -55,6 +55,7 @@ public class XSDEditorPlugin extends AbstractUIPlugin
   public static final String CONST_XSD_LANGUAGE_QUALIFY = "org.eclipse.wst.xmlschema.xsdQualify"; //$NON-NLS-1$
   public static final String CONST_DEFAULT_TARGET_NAMESPACE = "org.eclipse.wst.xmlschema.defaultTargetnamespaceText"; //$NON-NLS-1$
   public static final String CONST_SHOW_EXTERNALS = PLUGIN_ID + ".showExternals"; //$NON-NLS-1$
+  public static final String CONST_XSD_IMPORT_CLEANUP = PLUGIN_ID + ".autoImportCleanup"; //$NON-NLS-1$
   
   public static String DEFAULT_PAGE = "org.eclipse.wst.xsd.ui.internal.defaultPage";
   public static String DESIGN_PAGE = "org.eclipse.wst.xsd.ui.internal.designPage";
@@ -236,6 +237,7 @@ public class XSDEditorPlugin extends AbstractUIPlugin
     store.setDefault(DEFAULT_PAGE, DESIGN_PAGE);
     store.setDefault(CONST_DEFAULT_TARGET_NAMESPACE, DEFAULT_TARGET_NAMESPACE);
     store.setDefault(CONST_SHOW_EXTERNALS, false);
+    store.setDefault(CONST_XSD_IMPORT_CLEANUP, false);
     
     //Even the last item in the list must contain a trailing List separator
     store.setDefault(CONST_PREFERED_BUILT_IN_TYPES,     		
@@ -287,6 +289,11 @@ public class XSDEditorPlugin extends AbstractUIPlugin
   public void setShowExternals(boolean doShow)
   {
     getPreferenceStore().setValue(CONST_SHOW_EXTERNALS, doShow);
+  }
+  
+  public boolean getRemoveImportSetting()
+  {
+    return getPreferenceStore().getBoolean(CONST_XSD_IMPORT_CLEANUP);
   }
 
   /**

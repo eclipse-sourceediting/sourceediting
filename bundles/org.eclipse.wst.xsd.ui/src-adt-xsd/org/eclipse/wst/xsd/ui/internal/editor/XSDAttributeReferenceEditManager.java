@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.wst.xsd.ui.internal.adt.edit.IComponentDialog;
 import org.eclipse.wst.xsd.ui.internal.common.commands.AddXSDAttributeDeclarationCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateAttributeReferenceAndManagerDirectivesCommand;
 import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateAttributeReferenceCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.XSDDirectivesManager;
 import org.eclipse.wst.xsd.ui.internal.dialogs.NewAttributeDialog;
 import org.eclipse.wst.xsd.ui.internal.editor.search.XSDSearchListDialogDelegate;
 import org.eclipse.wst.xsd.ui.internal.search.IXSDSearchConstants;
@@ -81,7 +82,8 @@ public class XSDAttributeReferenceEditManager extends XSDElementReferenceEditMan
           {
             Command command = new UpdateAttributeReferenceCommand(Messages._UI_ACTION_UPDATE_ATTRIBUTE_REFERENCE, concreteComponent, attributeDec);
             command.execute();
-          }  
+          }
+          XSDDirectivesManager.removeUnusedXSDImports(concreteComponent.getSchema());
         }  
         else
         {

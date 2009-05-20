@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,9 +26,11 @@ import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.w3c.dom.Node;
 
@@ -54,12 +56,33 @@ public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
 					smartInsertForComment(command, document, model);
 					smartInsertForEndTag(command, document, model);
 					smartRemoveEndTag(command, document, model);
+					smartInsertPairedQuotes(command, document, model);
 				}
 			}
 		}
 		finally {
 			if (model != null)
 				model.releaseFromRead();
+		}
+	}
+
+	private void smartInsertPairedQuotes(DocumentCommand command, IDocument document, IStructuredModel model) {
+		String text = command.text;
+		if (text.length() == 1) {
+			char c = text.charAt(0);
+			if (c == '\'' || c == '\"') {
+				IStructuredDocument doc = (IStructuredDocument) document;
+				IStructuredDocumentRegion[] regions = doc.getStructuredDocumentRegions(command.offset - 1, 1);
+				if (regions.length > 0) {
+					IStructuredDocumentRegion region = regions[regions.length - 1];
+					if (region.getRegionAtCharacterOffset(command.offset - 1).getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+						command.text += c; //$NON-NLS-1$
+						command.caretOffset = command.offset + 1;
+						command.shiftsCaret = false;
+						command.doit = false;
+					}
+				}
+			}
 		}
 	}
 

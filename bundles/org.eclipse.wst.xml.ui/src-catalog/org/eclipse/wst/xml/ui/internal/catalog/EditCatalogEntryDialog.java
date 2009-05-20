@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -404,12 +404,12 @@ public class EditCatalogEntryDialog extends Dialog {
 					for (Iterator j = theFileType.extensions.iterator(); j.hasNext();) {
 						String extension = (String) j.next();
 						if (resourceLocationField.getText().endsWith(extension)) {
-							if (theFileType.description.equals("XSD Files")) { //$NON-NLS-1$
+							if ("org.eclipse.wst.xml.core.ui.catalogFileType.xsd".equals(theFileType.id)) { //$NON-NLS-1$
 								keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_XSD_PUBLIC);
 								keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_XSD_SYSTEM);
 								keyTypeCombo.setData("keyType", "schema"); //$NON-NLS-1$ //$NON-NLS-2$
 							}
-							else if (theFileType.description.equals("DTD Files")) { //$NON-NLS-1$
+							else if ("org.eclipse.wst.xml.core.ui.catalogFileType.dtd".equals(theFileType.id)) { //$NON-NLS-1$
 								keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_DTD_PUBLIC);
 								keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_DTD_SYSTEM);
 								keyTypeCombo.add(XMLCatalogMessages.UI_KEY_TYPE_DESCRIPTION_URI);

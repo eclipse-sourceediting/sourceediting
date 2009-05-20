@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -22,8 +22,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceInfoManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
-import org.eclipse.wst.xml.ui.internal.actions.ReplacePrefixAction;
 import org.eclipse.wst.xml.ui.internal.util.XMLCommonResources;
+import org.eclipse.wst.xsd.ui.internal.common.commands.UpdateNamespaceInformationCommand;
+import org.eclipse.wst.xsd.ui.internal.common.util.Messages;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.nsedit.SchemaPrefixChangeHandler;
 import org.eclipse.wst.xsd.ui.internal.nsedit.TargetNamespaceChangeHandler;
@@ -33,6 +34,7 @@ import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 
 public class XSDEditNamespacesAction extends Action {
@@ -95,8 +97,11 @@ public class XSDEditNamespacesAction extends Action {
           dialog.setIsAttributeQualified(currentAttributeFormQualified);
 		      dialog.setBlockOnOpen(true);                                 
 		      dialog.open();
-          String xsdPrefix = "";     //$NON-NLS-1$
 
+		      String xsdPrefix = null; //$NON-NLS-1$
+          String origXSDPrefix = xsdSchema.getSchemaForSchemaQNamePrefix();
+          String newTNSPrefix = "";
+          
 		      if (dialog.getReturnCode() == Window.OK)
 		      {
             Element xsdSchemaElement = xsdSchema.getElement();
@@ -107,6 +112,18 @@ public class XSDEditNamespacesAction extends Action {
 		        // see if we need to rename any prefixes
 		        Map prefixMapping = createPrefixMapping(oldNamespaceInfoList, namespaceInfoList);
             
+		        String origTNSPrefix = null;
+		        Map origPrefixMap = xsdSchema.getQNamePrefixToNamespaceMap();
+		        for (Iterator iter = origPrefixMap.keySet().iterator(); iter.hasNext();)
+		        {
+		          String key = (String) iter.next();
+		          String ns = (String) origPrefixMap.get(key);
+		          if ((targetNamespace == null && ns == null) || targetNamespace != null && targetNamespace.equals(ns))
+		          {
+		            origTNSPrefix = key;
+		            break;
+		          }
+		        }
             Map map2 = new Hashtable();
             for (Iterator iter = newInfoList.iterator(); iter.hasNext(); )
             {
@@ -119,6 +136,10 @@ public class XSDEditNamespacesAction extends Action {
               {
                 xsdPrefix = pref;
               }
+              if (uri.equals(dialog.getTargetNamespace()))
+              {
+                newTNSPrefix = pref;
+              }
               map2.put(pref, uri);
             }
            
@@ -127,38 +148,76 @@ public class XSDEditNamespacesAction extends Action {
 		        	try {
                 
                 doc.getModel().beginRecording(this, XSDEditorPlugin.getXSDString("_UI_NAMESPACE_CHANGE"));
+                boolean targetNamespaceChanged = (targetNamespace != null && !targetNamespace.equals(dialog.getTargetNamespace()) || targetNamespace == null && dialog.getTargetNamespace() != null);
+                boolean tnsPrefixChanged = !newTNSPrefix.equals(origTNSPrefix);
+                boolean xsdPrefixChanged = (!(origXSDPrefix == null && xsdPrefix.equals("")) || (origXSDPrefix != null && !origXSDPrefix.equals(xsdPrefix))); 
 
-                if (xsdPrefix != null && xsdPrefix.length() == 0)
-                {
-                  xsdSchema.setSchemaForSchemaQNamePrefix(null);
-                }
-                else
-                {
-                  xsdSchema.setSchemaForSchemaQNamePrefix(xsdPrefix);
-                }
-
-                xsdSchema.setTargetNamespace(dialog.getTargetNamespace());
-                xsdSchema.update();
-                
-                SchemaPrefixChangeHandler spch = new SchemaPrefixChangeHandler(xsdSchema, xsdPrefix);
-                spch.resolve();
-                xsdSchema.update();
-                
                 xsdSchema.setIncrementalUpdate(false);
+
+                // First handle the prefix change for the target namespace
+                if (tnsPrefixChanged)
+                {
+                  prefixMapping.remove(origTNSPrefix);
+                  UpdateNamespaceInformationCommand command = new UpdateNamespaceInformationCommand(Messages._UI_ACTION_NAMESPACE_INFORMATION_CHANGE, xsdSchema, newTNSPrefix, targetNamespace);
+                  command.execute();
+                  xsdSchema.update();
+                }
+                // Second, handle the target namespace change
+                if (targetNamespaceChanged)
+                {
+                  // set the targetNamespace attribute
+                  xsdSchema.setTargetNamespace(dialog.getTargetNamespace());
+
+                  TargetNamespaceChangeHandler targetNamespaceChangeHandler = new TargetNamespaceChangeHandler(xsdSchema, targetNamespace, dialog.getTargetNamespace());
+                  targetNamespaceChangeHandler.resolve();
+                }
+                // Third, handle the schema for schema prefix change
+                if (xsdPrefixChanged)
+                {
+                  if (xsdPrefix != null && xsdPrefix.length() == 0)
+                  {
+                    xsdSchema.setSchemaForSchemaQNamePrefix(null);
+                  }
+                  else
+                  {
+                    xsdSchema.setSchemaForSchemaQNamePrefix(xsdPrefix);
+                  }
+                  
+                  namespaceInfoManager.removeNamespaceInfo(element);
+                  namespaceInfoManager.addNamespaceInfo(element, newInfoList, false);
+                  xsdSchema.setIncrementalUpdate(true);
+
+                  // Now change the references to any schema types/components ie. string --> xs:string
+                  SchemaPrefixChangeHandler spch = new SchemaPrefixChangeHandler(xsdSchema, xsdPrefix);
+                  spch.resolve();
+
+                  // Change the prefix for all schema components
+                  updateAllNodes(element, xsdPrefix);
+
+                  prefixMapping.remove(origXSDPrefix);
+                }
+                // Now handle the other changes.  PrefixMapping size should be greater than 0 for any remaining prefix changes
+                
+                if (prefixMapping.size() > 0)
+                {
+                  for (Iterator iter = prefixMapping.keySet().iterator(); iter.hasNext(); )
+                  {
+                     String oldPrefix = (String)iter.next();
+                     String newPrefix = (String)prefixMapping.get(oldPrefix);
+                  
+                     // Now update any references to this old prefix in the schema with the value of the new prefix
+                     String ns = (String)origPrefixMap.get(oldPrefix); 
+                     SchemaPrefixChangeHandler spch = new SchemaPrefixChangeHandler(xsdSchema, newPrefix, ns);
+                     spch.resolve();
+                  }            
+                }
                 namespaceInfoManager.removeNamespaceInfo(element);
                 namespaceInfoManager.addNamespaceInfo(element, newInfoList, false);
-                xsdSchema.setIncrementalUpdate(true);
-
-                // don't need these any more?
-			          ReplacePrefixAction replacePrefixAction = new ReplacePrefixAction(null, element, prefixMapping);
-			          replacePrefixAction.run();
                 
-                TargetNamespaceChangeHandler targetNamespaceChangeHandler = new TargetNamespaceChangeHandler(xsdSchema, targetNamespace, dialog.getTargetNamespace());
-                targetNamespaceChangeHandler.resolve();
+                xsdSchema.setIncrementalUpdate(true);
 				    	}
               catch (Exception e)
               { 
-//                e.printStackTrace();
               }
               finally
               {
@@ -262,25 +321,25 @@ public class XSDEditNamespacesAction extends Action {
 	    return map;
 	  }
    
-//    private void updateAllNodes(Element element, String prefix)
-//    {
-//      element.setPrefix(prefix);
-//      NodeList list = element.getChildNodes();
-//      if (list != null)
-//      {
-//        for (int i=0; i < list.getLength(); i++)
-//        {
-//          Node child = list.item(i);
-//          if (child != null && child instanceof Element)
-//          {
-//            child.setPrefix(prefix);
-//            if (child.hasChildNodes())
-//            {
-//              updateAllNodes((Element)child, prefix);
-//            }
-//          }
-//        }
-//      }   
-//    }
+    private void updateAllNodes(Element element, String prefix)
+    {
+      element.setPrefix(prefix);
+      NodeList list = element.getChildNodes();
+      if (list != null)
+      {
+        for (int i=0; i < list.getLength(); i++)
+        {
+          Node child = list.item(i);
+          if (child != null && child instanceof Element)
+          {
+            child.setPrefix(prefix);
+            if (child.hasChildNodes())
+            {
+              updateAllNodes((Element)child, prefix);
+            }
+          }
+        }
+      }   
+    }
 
 }

@@ -162,6 +162,10 @@ public abstract class AbstractLineStyleProvider {
 	protected IStructuredDocument getDocument() {
 		return fDocument;
 	}
+	
+	public void setDocument(IStructuredDocument document) {
+		fDocument = document;
+	}
 
 	/**
 	 */

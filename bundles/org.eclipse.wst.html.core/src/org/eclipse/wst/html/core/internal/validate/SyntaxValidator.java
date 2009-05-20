@@ -95,8 +95,8 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		// gather information to validate from target at once.
 		getInfo(info);
 
+		validateTags(info);
 		if (info.target.isGlobalTag()) {
-			validateTags(info);
 			validateNames(info);
 			if (info.decl != null && info.isXHTML) {
 				validateTagCase(info);
@@ -185,10 +185,10 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		else {
 			if (info.hasEndTag) {
 				if (info.decl != null) {
-					if (CMUtil.isHTML(info.decl) && !info.target.hasChildNodes()) {
+					if (/*CMUtil.isHTML(info.decl) &&*/ !info.target.hasChildNodes()) {
 						if (info.target.isContainer()) {
 							// Set the error mark to the start of the element.
-							Segment errorSeg = new Segment(info.target.getStartOffset(), 0);
+							Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_END_TAG);
 							report(MISSING_START_TAG_ERROR, errorSeg, info.target);
 						}
 						else {
@@ -198,7 +198,7 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 						}
 					}
 					else if (info.isXHTML) {
-						Segment errorSeg = new Segment(info.target.getStartOffset(), 0);
+						Segment errorSeg = new Segment(info.endTag.getStartOffset(), info.endTag.getLength());
 						report(MISSING_START_TAG_ERROR, errorSeg, info.target);
 					}
 				}
@@ -214,7 +214,12 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		}
 		else {
 			if (info.isXHTML) { // XHTML
-				if (!info.target.isEmptyTag()) {
+				if (!info.target.isEmptyTag() && DOMRegionContext.XML_TAG_OPEN.equals(info.target.getStartStructuredDocumentRegion().getFirstRegion().getType())) {
+					/*
+					 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=248963 :
+					 * report empty tags not written as such, but only when
+					 * they follow actual XML/HTML syntax
+					 */
 					if (isEmptyContent(info.decl)) {
 						// EMPTY element should be written in <.../> form.
 						Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG);
@@ -222,16 +227,16 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 					}
 					else {
 						// end tag is required.
-						Segment errorSeg = new Segment(info.target.getEndOffset(), 0);
+						Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG);
 						report(MISSING_END_TAG_ERROR, errorSeg, info.target);
 					}
 				}
 			}
 			else { // HTML
 				if (info.hasStartTag) {
-					if (info.decl != null && CMUtil.isHTML(info.decl) && !info.target.isEmptyTag() && !CMUtil.isEndTagOmissible(info.decl)) {
+					if (info.decl != null && CMUtil.isHTML(info.decl) && !info.target.isEmptyTag() && !CMUtil.isEndTagOmissible(info.decl) && info.target.getStartStructuredDocumentRegion().getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN) {
 						// Set the error mark to the end of the element.
-						Segment errorSeg = new Segment(info.target.getEndOffset(), 0);
+						Segment errorSeg = FMUtil.getSegment(info.target, FMUtil.SEG_START_TAG);
 						report(MISSING_END_TAG_ERROR, errorSeg, info.target);
 					}
 				}

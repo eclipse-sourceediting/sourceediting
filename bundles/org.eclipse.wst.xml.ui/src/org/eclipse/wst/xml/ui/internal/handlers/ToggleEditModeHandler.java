@@ -37,7 +37,6 @@ import org.eclipse.wst.xml.ui.internal.util.SharedXMLEditorPluginImageHelper;
 public class ToggleEditModeHandler extends AbstractHandler implements IElementUpdater {
 	protected ImageDescriptor onImage = SharedXMLEditorPluginImageHelper.getImageDescriptor(SharedXMLEditorPluginImageHelper.IMG_ETOOL_CONSTRAINON);
 	protected ImageDescriptor offImage = SharedXMLEditorPluginImageHelper.getImageDescriptor(SharedXMLEditorPluginImageHelper.IMG_ETOOL_CONSTRAINOFF);
-	protected ModelQuery modelQuery;
 
 	public ToggleEditModeHandler() {
 		super();
@@ -57,7 +56,8 @@ public class ToggleEditModeHandler extends AbstractHandler implements IElementUp
 			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 			if (model != null) {
-				try {
+			    ModelQuery modelQuery;
+			    try {
 					modelQuery = ModelQueryUtil.getModelQuery(model);
 				}
 				finally {
@@ -109,6 +109,7 @@ public class ToggleEditModeHandler extends AbstractHandler implements IElementUp
 			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 			if (model != null) {
+			    ModelQuery modelQuery;
 				try {
 					modelQuery = ModelQueryUtil.getModelQuery(model);
 				}

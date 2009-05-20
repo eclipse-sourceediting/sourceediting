@@ -132,6 +132,7 @@ public class IndexWorkspaceJob extends Job {
 		if(DEBUG)
 			System.out.println(" ^ IndexWorkspaceJob started: "); //$NON-NLS-1$
 		
+		Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 		long start = System.currentTimeMillis();
 		
 		try {

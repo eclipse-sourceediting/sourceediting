@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
@@ -50,7 +51,7 @@ import org.w3c.dom.Node;
  * @author pavery
  */
 public class MarkupValidator implements IValidator, ISourceValidator {
-	private String DQUOTE = "\""; //$NON-NLS-1$
+	protected final static String DQUOTE = "\""; //$NON-NLS-1$
 
 	protected String SEVERITY_ATTR_MISSING_VALUE = TemporaryAnnotation.ANNOT_ERROR;
 	protected String SEVERITY_ATTR_NO_VALUE = TemporaryAnnotation.ANNOT_ERROR;
@@ -60,12 +61,12 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 	protected String SEVERITY_STRUCTURE = TemporaryAnnotation.ANNOT_ERROR;
 	protected String SEVERITY_SYNTAX_ERROR = TemporaryAnnotation.ANNOT_ERROR;
 	// used for attribute quote checking
-	private String SQUOTE = "'"; //$NON-NLS-1$
+	protected final static String SQUOTE = "'"; //$NON-NLS-1$
 	private final String QUICKASSISTPROCESSOR = IQuickAssistProcessor.class.getName();
 
 	private IDocument fDocument;
 
-	private void addAttributeError(String messageText, String attributeValueText, int start, int length, int problemId, IStructuredDocumentRegion sdRegion, IReporter reporter) {
+	protected final void addAttributeError(String messageText, String attributeValueText, int start, int length, int problemId, IStructuredDocumentRegion sdRegion, IReporter reporter) {
 
 		if (sdRegion.isDeleted()) {
 			return;
@@ -80,6 +81,27 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 		MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
 		processor.setProblemId(problemId);
 		processor.setAdditionalFixInfo(attributeValueText);
+		message.setAttribute(QUICKASSISTPROCESSOR, processor);
+
+		AnnotationInfo info = new AnnotationInfo(message);
+		((IncrementalReporter) reporter).addAnnotationInfo(this, info);
+	}
+
+	protected final void addAttributeError(String messageText, Object[] additionalInfo, int start, int length, int problemId, IStructuredDocumentRegion sdRegion, IReporter reporter) {
+
+		if (sdRegion.isDeleted()) {
+			return;
+		}
+
+		int lineNo = getLineNumber(start);
+		LocalizedMessage message = new LocalizedMessage(IMessage.HIGH_SEVERITY, messageText);
+		message.setOffset(start);
+		message.setLength(length);
+		message.setLineNo(lineNo);
+
+		MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
+		processor.setProblemId(problemId);
+		processor.setAdditionalFixInfo(additionalInfo);
 		message.setAttribute(QUICKASSISTPROCESSOR, processor);
 
 		AnnotationInfo info = new AnnotationInfo(message);
@@ -204,7 +226,7 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 		return lineNo;
 	}
 
-	private void checkForAttributeValue(IStructuredDocumentRegion structuredDocumentRegion, IReporter reporter) {
+	protected void checkForAttributeValue(IStructuredDocumentRegion structuredDocumentRegion, IReporter reporter) {
 
 		if (structuredDocumentRegion.isDeleted()) {
 			return;
@@ -232,28 +254,14 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 
 						int start = structuredDocumentRegion.getStartOffset(nameRegion);
 						int end = structuredDocumentRegion.getEndOffset();
-						int lineNo = getLineNumber(start);
 						int textLength = structuredDocumentRegion.getText(nameRegion).trim().length();
-
-						LocalizedMessage message = new LocalizedMessage(IMessage.HIGH_SEVERITY, messageText);
-						message.setOffset(start);
-						message.setLength(textLength);
-						message.setLineNo(lineNo);
 
 						// quick fix info
 						ITextRegion equalsRegion = textRegions.get(i - 2 + 1);
 						int insertOffset = structuredDocumentRegion.getTextEndOffset(equalsRegion) - end;
 						Object[] additionalFixInfo = {structuredDocumentRegion.getText(nameRegion), new Integer(insertOffset)};
 
-						MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
-						processor.setProblemId(ProblemIDsXML.MissingAttrValue);
-						processor.setAdditionalFixInfo(additionalFixInfo);
-						message.setAttribute(QUICKASSISTPROCESSOR, processor);
-
-						AnnotationInfo info = new AnnotationInfo(message);
-
-						((IncrementalReporter) reporter).addAnnotationInfo(this, info);
-
+						addAttributeError(messageText, additionalFixInfo, start, textLength, ProblemIDsXML.MissingAttrValue, structuredDocumentRegion, reporter);
 						// annotation.setAdditionalFixInfo(additionalFixInfo);
 						// results.add(annotation);
 						errorCount++;
@@ -268,22 +276,8 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 						String messageText = NLS.bind(XMLUIMessages.Attribute__has_no_value, args);
 						int start = structuredDocumentRegion.getStartOffset(previousRegion);
 						int textLength = structuredDocumentRegion.getText(previousRegion).trim().length();
-						int lineNo = getLineNumber(start);
 
-						LocalizedMessage message = new LocalizedMessage(IMessage.HIGH_SEVERITY, messageText);
-						message.setOffset(start);
-						message.setLength(textLength);
-						message.setLineNo(lineNo);
-
-						MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
-						processor.setProblemId(ProblemIDsXML.NoAttrValue);
-						processor.setAdditionalFixInfo(structuredDocumentRegion.getText(previousRegion));
-						message.setAttribute(QUICKASSISTPROCESSOR, processor);
-
-						AnnotationInfo info = new AnnotationInfo(message);
-
-						((IncrementalReporter) reporter).addAnnotationInfo(this, info);
-
+						addAttributeError(messageText, structuredDocumentRegion.getText(previousRegion), start, textLength, ProblemIDsXML.NoAttrValue, structuredDocumentRegion, reporter);
 						errorCount++;
 					}
 				}
@@ -371,7 +365,7 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 		}
 	}
 
-	private void checkQuotesForAttributeValues(IStructuredDocumentRegion structuredDocumentRegion, IReporter reporter) {
+	protected void checkQuotesForAttributeValues(IStructuredDocumentRegion structuredDocumentRegion, IReporter reporter) {
 		ITextRegionList regions = structuredDocumentRegion.getRegions();
 		ITextRegion r = null;
 		String attrValueText = ""; //$NON-NLS-1$
@@ -451,16 +445,19 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 
 		boolean selfClosed = false;
 		String tagName = null;
-		int length = 0;
 
+		/**
+		 * For tags that aren't meant to be EMPTY, make sure it's empty or has an end tag
+		 */
 		if (xmlNode.isContainer()) {
 			IStructuredDocumentRegion endRegion = xmlNode.getEndStructuredDocumentRegion();
 			if (endRegion == null) {
 				IStructuredDocumentRegion startRegion = xmlNode.getStartStructuredDocumentRegion();
-				if (!startRegion.isDeleted()) {
+				if (startRegion != null && !startRegion.isDeleted() && DOMRegionContext.XML_TAG_OPEN.equals(startRegion.getFirstRegion().getType())) {
 					// analyze the tag (check self closing)
 					ITextRegionList regions = startRegion.getRegions();
 					ITextRegion r = null;
+					int length = 0;
 					for (int i = 0; i < regions.size(); i++) {
 						r = regions.get(i);
 						if ((r.getType() == DOMRegionContext.XML_TAG_OPEN) || (r.getType() == DOMRegionContext.XML_TAG_CLOSE)) {
@@ -508,6 +505,41 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 				}
 			}
 
+		}
+		/*
+		 * Check for an end tag that has no start tag
+		 */
+		else {
+			IStructuredDocumentRegion startRegion = xmlNode.getStartStructuredDocumentRegion();
+			if (startRegion == null) {
+				IStructuredDocumentRegion endRegion = xmlNode.getEndStructuredDocumentRegion();
+				if (!endRegion.isDeleted()) {
+					// get name
+					ITextRegionList regions = endRegion.getRegions();
+					ITextRegion r = null;
+					for (int i = 0; i < regions.size(); i++) {
+						r = regions.get(i);
+						if (r.getType() == DOMRegionContext.XML_TAG_NAME) {
+							tagName = sdRegion.getText(r);
+						}
+					}
+
+					if (!selfClosed && (tagName != null)) {
+						String messageText = StringUtils.unpack(XMLUIMessages.Indicate_no_grammar_specified_severities)[0];
+
+						int start = sdRegion.getStart();
+						int lineNumber = getLineNumber(start);
+
+						// SEVERITY_STRUCTURE == IMessage.HIGH_SEVERITY
+						IMessage message = new LocalizedMessage(IMessage.HIGH_SEVERITY, messageText);
+						message.setOffset(start);
+						message.setLength(sdRegion.getTextLength());
+						message.setLineNo(lineNumber);
+
+						reporter.addMessage(this, message);
+					}
+				}
+			}
 		}
 	}
 
@@ -715,6 +747,8 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 			checkAttributesInEndTag(structuredDocumentRegion, reporter);
 			// check that the closing '>' is there
 			checkClosingBracket(structuredDocumentRegion, reporter);
+			// check if end tag is started
+			checkStartEndTagPairs(structuredDocumentRegion, reporter);
 		}
 		else if (isPI(structuredDocumentRegion)) {
 			// check validity of processing instruction
@@ -732,7 +766,22 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 	}
 
 	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException {
-		// TODO Auto-generated method stub
+		if (getDocument() == null) {
+			return;
+		}
+		if (!(reporter instanceof IncrementalReporter)) {
+			return;
+		}
+		if (!(getDocument() instanceof IStructuredDocument)) {
+			return;
+		}
 
+		// remove old messages
+		reporter.removeAllMessages(this);
+
+		IStructuredDocumentRegion[] regions = ((IStructuredDocument) fDocument).getStructuredDocumentRegions();
+		for (int i = 0; i < regions.length; i++) {
+			validate(regions[i], reporter);
+		}
 	}
 }

@@ -24,9 +24,11 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorExtension3;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
@@ -55,6 +57,7 @@ public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
 					smartInsertForComment(command, document, model);
 					smartInsertForEndTag(command, document, model);
 					smartRemoveEndTag(command, document, model);
+					smartInsertPairedQuotes(command, document, model);
 				}
 			}
 		}
@@ -77,6 +80,26 @@ public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
 		return ((node != null) && (node.getNodeType() == Node.DOCUMENT_NODE));
 	}
 
+	private void smartInsertPairedQuotes(DocumentCommand command, IDocument document, IStructuredModel model) {
+		String text = command.text;
+		if (text.length() == 1) {
+			char c = text.charAt(0);
+			if (c == '\'' || c == '\"') {
+				IStructuredDocument doc = (IStructuredDocument) document;
+				IStructuredDocumentRegion[] regions = doc.getStructuredDocumentRegions(command.offset - 1, 1);
+				if (regions.length > 0) {
+					IStructuredDocumentRegion region = regions[regions.length - 1];
+					if (region.getRegionAtCharacterOffset(command.offset - 1).getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+						command.text += c; //$NON-NLS-1$
+						command.caretOffset = command.offset + 1;
+						command.shiftsCaret = false;
+						command.doit = false;
+					}
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Attempts to clean up an end-tag if a start-tag is converted into an empty-element
 	 * tag (e.g., <node />) and the original element was empty.

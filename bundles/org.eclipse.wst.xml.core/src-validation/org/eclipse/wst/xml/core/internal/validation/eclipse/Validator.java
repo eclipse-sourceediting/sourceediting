@@ -13,10 +13,14 @@ package org.eclipse.wst.xml.core.internal.validation.eclipse;
 
 import java.io.InputStream;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.validation.ValidationResult;
+import org.eclipse.wst.validation.ValidationState;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
+import org.eclipse.wst.xml.core.internal.validation.XMLNestedValidatorContext;
 import org.eclipse.wst.xml.core.internal.validation.XMLValidationConfiguration;
 import org.eclipse.wst.xml.core.internal.validation.XMLValidationReport;
 import org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator;
@@ -26,6 +30,7 @@ import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 
 public class Validator extends AbstractNestedValidator
 {
+  private static final String XML_VALIDATOR_CONTEXT = "org.eclipse.wst.xml.core.validatorContext"; //$NON-NLS-1$
   protected int indicateNoGrammar = 0;
   
   /**
@@ -64,11 +69,11 @@ public class Validator extends AbstractNestedValidator
     XMLValidationReport valreport = null;
     if (inputstream != null)
     {
-      valreport = validator.validate(uri, inputstream, configuration, result);
+      valreport = validator.validate(uri, inputstream, configuration, result, context);
     }
     else
     {
-      valreport = validator.validate(uri, null, configuration, result);
+      valreport = validator.validate(uri, null, configuration, result, context);
     }
               
     return valreport;
@@ -95,5 +100,56 @@ public class Validator extends AbstractNestedValidator
       message.setAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE, messageInfo[0]);
       message.setAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE, messageInfo[1]);
 	}
+  }
+  
+  /**
+   * Get the nested validation context.
+   * 
+   * @param state
+   *          the validation state.
+   * @param create
+   *          when true, a new context will be created if one is not found
+   * @return the nested validation context.
+   */
+  protected NestedValidatorContext getNestedContext(ValidationState state, boolean create)
+  {
+    NestedValidatorContext context = null;
+    Object o = state.get(XML_VALIDATOR_CONTEXT);
+    if (o instanceof XMLNestedValidatorContext)
+      context = (XMLNestedValidatorContext)o;
+    else if (create)
+    {
+      context = new XMLNestedValidatorContext();
+    }
+    return context;
+  }
+  
+  public void validationStarting(IProject project, ValidationState state, IProgressMonitor monitor)
+  {
+    if (project != null)
+    {
+      NestedValidatorContext context = getNestedContext(state, false);
+      if (context == null)
+      {
+        context = getNestedContext(state, true);
+        setupValidation(context);
+        state.put(XML_VALIDATOR_CONTEXT, context);
+      }
+      super.validationStarting(project, state, monitor);
+    }
+  }
+  
+  public void validationFinishing(IProject project, ValidationState state, IProgressMonitor monitor)
+  {
+    if (project != null)
+    {
+      super.validationFinishing(project, state, monitor);
+      NestedValidatorContext context = getNestedContext(state, false);
+      if (context != null)
+      {
+        teardownValidation(context);
+        state.put(XML_VALIDATOR_CONTEXT, null);
+      }
+    }
   }
 }

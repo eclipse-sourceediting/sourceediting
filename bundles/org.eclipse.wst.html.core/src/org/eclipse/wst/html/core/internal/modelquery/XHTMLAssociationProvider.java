@@ -11,6 +11,16 @@
 package org.eclipse.wst.html.core.internal.modelquery;
 
 
+import java.lang.ref.Reference;
+import java.lang.ref.SoftReference;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager;
@@ -26,6 +36,15 @@ import org.w3c.dom.Document;
  * This class closely resemble XMLModelQueryAssociationProvider.
  */
 class XHTMLAssociationProvider extends XMLAssociationProvider {
+	
+	/**
+	 * set CACHE_FIXED_DOCUMENTS to false to test effects of not caching certain catalog-contributed schemas.
+	 */
+	private static final boolean CACHE_FIXED_DOCUMENTS = true;
+	private static final String[] STANDARD_SCHEMA_BUNDLES = new String[] {"org.eclipse.wst.standard.schemas","org.eclipse.jst.standard.schemas"};
+	private static final String XML_CATALOG_EXT_POINT = "org.eclipse.wst.xml.core.catalogContributions"; 
+	private static Collection fFixedPublicIDs = null;
+	private static Map fFixedCMDocuments = new HashMap();
 
 	/**
 	 * set USE_QUICK_CACHE to false to test effects of not caching at all.
@@ -59,6 +78,7 @@ class XHTMLAssociationProvider extends XMLAssociationProvider {
 	public CMDocument getXHTMLCMDocument(String publicId, String systemId) {
 		if (idResolver == null)
 			return null;
+		
 		String grammerURI = null;
 		if (USE_QUICK_CACHE) {
 			/*
@@ -84,7 +104,18 @@ class XHTMLAssociationProvider extends XMLAssociationProvider {
 
 		if (grammerURI == null)
 			return null;
-
+		
+		CMDocument cmDocument = null;
+		if (CACHE_FIXED_DOCUMENTS) {
+			Reference ref = (Reference) fFixedCMDocuments.get(publicId);
+			if (ref != null) {
+				cmDocument = (CMDocument) ref.get();
+				if (cmDocument != null) {
+					return cmDocument;
+				}
+			}
+		}
+		
 		/*
 		 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=88896
 		 * 
@@ -105,7 +136,14 @@ class XHTMLAssociationProvider extends XMLAssociationProvider {
 		 * grammerURI); CMDocument cmDocument =
 		 * documentManager.getCMDocument(publicId, grammerURI, "dtd");
 		 */
-		CMDocument cmDocument = documentManager.getCMDocument(publicId, grammerURI, null);
+		synchronized (grammerURI) {
+			cmDocument = documentManager.getCMDocument(publicId, grammerURI, null);
+		}
+		
+		if (CACHE_FIXED_DOCUMENTS && getFixedPublicIDs().contains(publicId)) {
+			fFixedCMDocuments.put(publicId, new SoftReference(cmDocument));
+		}
+		
 		return cmDocument;
 	}
 
@@ -133,5 +171,39 @@ class XHTMLAssociationProvider extends XMLAssociationProvider {
 	 */
 	public String getCachedGrammerURI() {
 		return fCachedGrammerURI;
+	}
+
+	/**
+	 * @return the fFixedPublicIDs, a collection of contributed Public
+	 *         Identifiers from the known schema plug-ins.
+	 */
+	private static Collection getFixedPublicIDs() {
+		/**
+		 * public:publicId
+		 * TODO: system:systemId and uri:name in their own methods and maps?
+		 */
+		synchronized (STANDARD_SCHEMA_BUNDLES) {
+			if (fFixedPublicIDs == null) {
+				fFixedPublicIDs = new HashSet();
+				for (int i = 0; i < STANDARD_SCHEMA_BUNDLES.length; i++) {
+					IExtension[] extensions = Platform.getExtensionRegistry().getExtensions(STANDARD_SCHEMA_BUNDLES[i]);
+					for (int j = 0; j < extensions.length; j++) {
+						if (XML_CATALOG_EXT_POINT.equals(extensions[j].getExtensionPointUniqueIdentifier())) {
+							IConfigurationElement[] configurationElements = extensions[j].getConfigurationElements();
+							for (int k = 0; k < configurationElements.length; k++) {
+								IConfigurationElement[] publics = configurationElements[k].getChildren("public");
+								for (int l = 0; l < publics.length; l++) {
+									String publicId = publics[l].getAttribute("publicId");
+									if (publicId != null && publicId.length() > 0) {
+										fFixedPublicIDs.add(publicId);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return fFixedPublicIDs;
 	}
 }

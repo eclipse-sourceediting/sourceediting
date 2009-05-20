@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     Frits Jalvingh - contributions for bug 150794
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.style.java;
 
@@ -42,6 +43,7 @@ public class LineStyleProviderForJava extends AbstractLineStyleProvider implemen
 	public LineStyleProviderForJava() {
 		super();
 		fScanner = new JavaCodeScanner();
+		loadColors();		// Make sure we have rules before we start parsing
 	}
 
 	/**

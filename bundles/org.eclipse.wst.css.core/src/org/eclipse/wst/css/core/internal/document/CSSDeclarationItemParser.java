@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -52,7 +52,8 @@ class CSSDeclarationItemParser {
 			for (int i = 0; i < len; i++) {
 				char c = text.charAt(i);
 				if (bNum) {
-					if ('0' <= c && c <= '9' || c == '.' || c == '+' || c == '-') {
+					// Only add +/- if it's the first character in the value buffer
+					if ('0' <= c && c <= '9' || c == '.' || ((c == '+' || c == '-') && i == 0)) {
 						bufValue.append(c);
 					}
 					else {
@@ -65,7 +66,12 @@ class CSSDeclarationItemParser {
 				}
 			}
 			String valueStr = bufValue.toString();
-			fValue = Float.valueOf(valueStr).floatValue();
+			try {
+				fValue = Float.valueOf(valueStr).floatValue();
+			}
+			catch (NumberFormatException e) {
+				bufIdent.insert(0, valueStr);
+			}
 			fIdentifier = bufIdent.toString();
 			fType = getFloatValueType(valueStr, fIdentifier);
 		}
