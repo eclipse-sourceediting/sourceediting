@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,7 +51,7 @@ import org.w3c.dom.Node;
  * @author pavery
  */
 public class MarkupValidator implements IValidator, ISourceValidator {
-	private String DQUOTE = "\""; //$NON-NLS-1$
+	protected final static String DQUOTE = "\""; //$NON-NLS-1$
 
 	protected String SEVERITY_ATTR_MISSING_VALUE = TemporaryAnnotation.ANNOT_ERROR;
 	protected String SEVERITY_ATTR_NO_VALUE = TemporaryAnnotation.ANNOT_ERROR;
@@ -61,12 +61,12 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 	protected String SEVERITY_STRUCTURE = TemporaryAnnotation.ANNOT_ERROR;
 	protected String SEVERITY_SYNTAX_ERROR = TemporaryAnnotation.ANNOT_ERROR;
 	// used for attribute quote checking
-	private String SQUOTE = "'"; //$NON-NLS-1$
+	protected final static String SQUOTE = "'"; //$NON-NLS-1$
 	private final String QUICKASSISTPROCESSOR = IQuickAssistProcessor.class.getName();
 
 	private IDocument fDocument;
 
-	private void addAttributeError(String messageText, String attributeValueText, int start, int length, int problemId, IStructuredDocumentRegion sdRegion, IReporter reporter) {
+	protected final void addAttributeError(String messageText, String attributeValueText, int start, int length, int problemId, IStructuredDocumentRegion sdRegion, IReporter reporter) {
 
 		if (sdRegion.isDeleted()) {
 			return;
@@ -81,6 +81,27 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 		MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
 		processor.setProblemId(problemId);
 		processor.setAdditionalFixInfo(attributeValueText);
+		message.setAttribute(QUICKASSISTPROCESSOR, processor);
+
+		AnnotationInfo info = new AnnotationInfo(message);
+		((IncrementalReporter) reporter).addAnnotationInfo(this, info);
+	}
+
+	protected final void addAttributeError(String messageText, Object[] additionalInfo, int start, int length, int problemId, IStructuredDocumentRegion sdRegion, IReporter reporter) {
+
+		if (sdRegion.isDeleted()) {
+			return;
+		}
+
+		int lineNo = getLineNumber(start);
+		LocalizedMessage message = new LocalizedMessage(IMessage.HIGH_SEVERITY, messageText);
+		message.setOffset(start);
+		message.setLength(length);
+		message.setLineNo(lineNo);
+
+		MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
+		processor.setProblemId(problemId);
+		processor.setAdditionalFixInfo(additionalInfo);
 		message.setAttribute(QUICKASSISTPROCESSOR, processor);
 
 		AnnotationInfo info = new AnnotationInfo(message);
@@ -205,7 +226,7 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 		return lineNo;
 	}
 
-	private void checkForAttributeValue(IStructuredDocumentRegion structuredDocumentRegion, IReporter reporter) {
+	protected void checkForAttributeValue(IStructuredDocumentRegion structuredDocumentRegion, IReporter reporter) {
 
 		if (structuredDocumentRegion.isDeleted()) {
 			return;
@@ -233,28 +254,14 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 
 						int start = structuredDocumentRegion.getStartOffset(nameRegion);
 						int end = structuredDocumentRegion.getEndOffset();
-						int lineNo = getLineNumber(start);
 						int textLength = structuredDocumentRegion.getText(nameRegion).trim().length();
-
-						LocalizedMessage message = new LocalizedMessage(IMessage.HIGH_SEVERITY, messageText);
-						message.setOffset(start);
-						message.setLength(textLength);
-						message.setLineNo(lineNo);
 
 						// quick fix info
 						ITextRegion equalsRegion = textRegions.get(i - 2 + 1);
 						int insertOffset = structuredDocumentRegion.getTextEndOffset(equalsRegion) - end;
 						Object[] additionalFixInfo = {structuredDocumentRegion.getText(nameRegion), new Integer(insertOffset)};
 
-						MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
-						processor.setProblemId(ProblemIDsXML.MissingAttrValue);
-						processor.setAdditionalFixInfo(additionalFixInfo);
-						message.setAttribute(QUICKASSISTPROCESSOR, processor);
-
-						AnnotationInfo info = new AnnotationInfo(message);
-
-						((IncrementalReporter) reporter).addAnnotationInfo(this, info);
-
+						addAttributeError(messageText, additionalFixInfo, start, textLength, ProblemIDsXML.MissingAttrValue, structuredDocumentRegion, reporter);
 						// annotation.setAdditionalFixInfo(additionalFixInfo);
 						// results.add(annotation);
 						errorCount++;
@@ -269,22 +276,8 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 						String messageText = NLS.bind(XMLUIMessages.Attribute__has_no_value, args);
 						int start = structuredDocumentRegion.getStartOffset(previousRegion);
 						int textLength = structuredDocumentRegion.getText(previousRegion).trim().length();
-						int lineNo = getLineNumber(start);
 
-						LocalizedMessage message = new LocalizedMessage(IMessage.HIGH_SEVERITY, messageText);
-						message.setOffset(start);
-						message.setLength(textLength);
-						message.setLineNo(lineNo);
-
-						MarkupQuickAssistProcessor processor = new MarkupQuickAssistProcessor();
-						processor.setProblemId(ProblemIDsXML.NoAttrValue);
-						processor.setAdditionalFixInfo(structuredDocumentRegion.getText(previousRegion));
-						message.setAttribute(QUICKASSISTPROCESSOR, processor);
-
-						AnnotationInfo info = new AnnotationInfo(message);
-
-						((IncrementalReporter) reporter).addAnnotationInfo(this, info);
-
+						addAttributeError(messageText, structuredDocumentRegion.getText(previousRegion), start, textLength, ProblemIDsXML.NoAttrValue, structuredDocumentRegion, reporter);
 						errorCount++;
 					}
 				}
@@ -372,7 +365,7 @@ public class MarkupValidator implements IValidator, ISourceValidator {
 		}
 	}
 
-	private void checkQuotesForAttributeValues(IStructuredDocumentRegion structuredDocumentRegion, IReporter reporter) {
+	protected void checkQuotesForAttributeValues(IStructuredDocumentRegion structuredDocumentRegion, IReporter reporter) {
 		ITextRegionList regions = structuredDocumentRegion.getRegions();
 		ITextRegion r = null;
 		String attrValueText = ""; //$NON-NLS-1$

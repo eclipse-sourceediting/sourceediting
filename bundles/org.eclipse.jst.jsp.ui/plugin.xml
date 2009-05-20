@@ -150,7 +150,7 @@
 	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
 		<validator
 			scope="total"
-			class="org.eclipse.wst.xml.ui.internal.validation.MarkupValidator"
+			class="org.eclipse.jst.jsp.ui.internal.validation.JSPMarkupValidator"
 			id="org.eclipse.jst.jsp.ui.internal.validation.markupvalidator">
 			<contentTypeIdentifier
 				id="org.eclipse.jst.jsp.core.jspsource">
