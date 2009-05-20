@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -369,6 +369,9 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
       root.setModel(model);
     }
     graphicalViewer.setContents(root);
+    
+    // Select the schema to show the properties
+    getSelectionManager().setSelection(new StructuredSelection(getModel()));
   }
   
   protected void configureGraphicalViewer()
@@ -580,9 +583,6 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
     }
     fXSDSelectionListener = new XSDSelectionManagerSelectionListener();
     getSelectionManager().addSelectionChangedListener(fXSDSelectionListener);
-    
-    // Select the schema to show the properties
-    getSelectionManager().setSelection(new StructuredSelection(getModel()));
     
     xsdPreferenceStoreListener = new XSDPreferenceStoreListener();
     XSDEditorPlugin.getDefault().getPreferenceStore().addPropertyChangeListener(xsdPreferenceStoreListener);
