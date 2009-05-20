@@ -125,7 +125,7 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 			 * Show for conditions more severe than INFO or when no
 			 * breakpoints were created
 			 */
-			if (status.getSeverity() > IStatus.INFO || getBreakpoints(getMarkers()).length < 1) {
+			if (status.getSeverity() > IStatus.INFO && getBreakpoints(getMarkers()).length < 1) {
 				ErrorDialog.openError(shell, SSEUIMessages.ManageBreakpoints_error_adding_title1, status.getMessage(), status); //$NON-NLS-1$ //$NON-NLS-2$
 				return false;
 			}
