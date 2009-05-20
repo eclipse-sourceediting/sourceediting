@@ -40,7 +40,8 @@ public interface IBreakpointProvider {
 	 * @return IStatus the status after being asked to add a breakpoint. The
 	 *         Severity of ERROR should only be used if the location
 	 *         information is both valid for a breakpoint and one could not be
-	 *         added.
+	 *         added.  Any severity greater than INFO will be logged, and if
+	 *         no breakpoints were created, shown to the user.
 	 */
 	IStatus addBreakpoint(IDocument document, IEditorInput input, int lineNumber, int offset) throws CoreException;
 
