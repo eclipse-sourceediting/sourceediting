@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others. All rights reserved. This
+ * Copyright (c) 2004, 2009 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms
  * of the Eclipse Public License v1.0 which accompanies this distribution, and
  * is available at http://www.eclipse.org/legal/epl-v10.html
@@ -17,12 +17,16 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableLayout;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -34,13 +38,19 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -137,22 +147,50 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 		}
 	}
 
-	protected CellEditor cellEditor;
+	private PaintListener fContentPaintListener = new PaintListener() {
 
-	protected XMLTreeExtension treeExtension;
-	
+		public void paintControl(PaintEvent e) {
+			GC gc = e.gc;
+			if (getTree().getItemCount() == 0) {
+				gc.setForeground(getTree().getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND));
+				gc.setBackground(getTree().getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+				gc.drawString(XMLEditorMessages.XMLTreeExtension_3, 10, 10);
+				gc.drawString(XMLEditorMessages.XMLTreeExtension_4, 10, 10 + gc.getFontMetrics().getHeight());
+			}
+		}
+		
+	};
+
 	private ISelectionProvider fSelectionProvider = new SelectionProvider();
 
 	public XMLTableTreeViewer(Composite parent) {
 		super(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		
+		TableLayout layout = new TableLayout();
+		
+		layout.addColumnData(new ColumnWeightData(40));
+		TreeColumn column = new TreeColumn(this.getTree(), SWT.LEFT);
+		column.setText(XMLEditorMessages.XMLTableTreeViewer_1);
+
+		layout.addColumnData(new ColumnWeightData(60));
+		column = new TreeColumn(this.getTree(), SWT.LEFT);
+		column.setText(XMLEditorMessages.XMLTableTreeViewer_2);
+
+		this.getTree().setHeaderVisible(true);
+		this.getTree().setLinesVisible(true);
+		this.getTree().setLayout(layout);
 
 		// set up providers
-		this.treeExtension = new XMLTreeExtension(getTree());
+		propertyDescriptorFactory = new XMLTableTreePropertyDescriptorFactory();
 
 		XMLTableTreeContentProvider provider = new XMLTableTreeContentProvider();
 		setContentProvider(provider);
 		setLabelProvider(provider);
 
+		setColumnProperties(new String[] {STRUCTURE_PROPERTY, VALUE_PROPERTY});
+		setCellEditors(new CellEditor[] {null, new TextCellEditor(this.getTree())});
+
+		setCellModifier(new XMLCMCellModifier());
 		createContextMenu();
 
 		DragSource dragSource = new DragSource(getControl(), DND.DROP_COPY | DND.DROP_MOVE);
@@ -161,6 +199,8 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 		DropTarget dropTarget = new DropTarget(getControl(), DND.DROP_COPY | DND.DROP_MOVE);
 		dropTarget.addDropListener(createDropTargetListener());
 		dropTarget.setTransfer(new Transfer[] {LocalSelectionTransfer.getTransfer()});
+
+		this.getTree().addPaintListener(fContentPaintListener);
 	}
 
 	/**
@@ -265,7 +305,6 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 	}
 	
 	protected void doRefresh(Object o, boolean fromDelayed) {
-		treeExtension.resetCachedData();
 		super.refresh(o);
 	}
 
@@ -279,30 +318,8 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 
 	protected void handleDispose(DisposeEvent event) {
 		super.handleDispose(event);
-		treeExtension.dispose();
+		this.getTree().removePaintListener(fContentPaintListener);
 		setDocument(null);
-	}
-
-	public void refresh() {
-		treeExtension.resetCachedData();
-		super.refresh();
-	}
-
-	public void refresh(Object o) {
-		treeExtension.resetCachedData();
-		super.refresh(o);
-	}
-
-	public void refresh(boolean updateLabels) {
-		treeExtension.resetCachedData();
-		super.refresh(updateLabels);
-		getControl().redraw();
-	}
-
-	public void refresh(Object element, boolean updateLabels) {
-		treeExtension.resetCachedData();
-		super.refresh(element, updateLabels);
-		getControl().redraw();
 	}
 
 	public void setDocument(IDocument document) {
@@ -317,10 +334,6 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 				Document domDoc = null;
 				domDoc = ((IDOMModel) model).getDocument();
 				setInput(domDoc);
-				treeExtension.setIsUnsupportedInput(false);
-			}
-			else {
-				treeExtension.setIsUnsupportedInput(true);
 			}
 		}
 		finally {
@@ -329,6 +342,57 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 			}
 		}
 
+	}
+	
+	protected TreeContentHelper treeContentHelper = new TreeContentHelper();
+	protected XMLTableTreePropertyDescriptorFactory propertyDescriptorFactory;
+	
+	private final static String STRUCTURE_PROPERTY = XMLEditorMessages.XMLTreeExtension_0;
+	private final static String VALUE_PROPERTY = XMLEditorMessages.XMLTreeExtension_1;
+	
+	public class XMLCMCellModifier implements ICellModifier, TreeExtension.ICellEditorProvider {
+		public boolean canModify(Object element, String property) {
+			boolean result = false;
+			if (element instanceof Node) {
+				Node node = (Node) element;
+				if (property == VALUE_PROPERTY) {
+					result = treeContentHelper.isEditable(node);
+					if (result) {
+						/* Set up the cell editor based on the element */
+						CellEditor[] editors = getCellEditors();
+						if (editors.length > 0) {
+							if (editors[1] != null)
+								editors[1].dispose();
+							editors[1] = getCellEditor(element, 1);
+						}
+					}
+					
+				}
+			}
+			return result;
+		}
+
+		public Object getValue(Object object, String property) {
+			String result = null;
+			if (object instanceof Node) {
+				result = treeContentHelper.getNodeValue((Node) object);
+			}
+			return (result != null) ? result : ""; //$NON-NLS-1$
+		}
+
+		public void modify(Object element, String property, Object value) {
+			Item item = (Item) element;
+			String oldValue = treeContentHelper.getNodeValue((Node) item.getData());
+			String newValue = value.toString();
+			if ((newValue != null) && !newValue.equals(oldValue)) {
+				treeContentHelper.setNodeValue((Node) item.getData(), value.toString());
+			}
+		}
+
+		public CellEditor getCellEditor(Object o, int col) {
+			IPropertyDescriptor pd = propertyDescriptorFactory.createPropertyDescriptor(o);
+			return pd != null ? pd.createPropertyEditor(XMLTableTreeViewer.this.getTree()) : null;
+		}
 	}
 
 }

@@ -992,34 +992,6 @@
 	              </reference>
 	           </visibleWhen>
            </command>
-           <separator
-                 name="sed.tabletree.separator.2"
-                 visible="true">
-           </separator>
-           <command
-                 commandId="sed.tabletree.expandAll"
-                 icon="icons/full/etool16/expand_all.gif"
-                 id="ExpandAll"
-                 style="push">
-	           <visibleWhen
-	                 checkEnabled="false">
-	              <reference
-	                    definitionId="org.eclipse.wst.xml.ui.expand">
-	              </reference>
-	           </visibleWhen>
-           </command>
-           <command
-                 commandId="sed.tabletree.collapseAll"
-                 icon="icons/full/etool16/collapse_all.gif"
-                 id="CollapseAll"
-                 style="push">
-	             <visibleWhen
-	                 checkEnabled="false">
-	              <reference
-	                    definitionId="org.eclipse.wst.xml.ui.expand">
-	              </reference>
-	           </visibleWhen>
-           </command>
         </toolbar>
      </menuContribution>
      

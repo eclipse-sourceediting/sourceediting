@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,18 +14,24 @@ package org.eclipse.wst.xml.ui.internal.tabletree;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapterFactory;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManagerListener;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDescriptionBuilder;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -39,13 +45,17 @@ import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
 
 
-public class XMLTableTreeContentProvider implements ITreeContentProvider, ITableLabelProvider, ILabelProvider, CMDocumentManagerListener {
+public class XMLTableTreeContentProvider implements ITreeContentProvider, ITableLabelProvider, ITableColorProvider, ILabelProvider, CMDocumentManagerListener {
 
 	protected CMDocumentManager documentManager;
 
 	StructuredViewer fViewer = null;
 
 	private TreeContentHelper treeContentHelper = new TreeContentHelper();
+
+	private CMDescriptionBuilder descriptionBuilder = new CMDescriptionBuilder();
+
+	private Color fCMColor = null;
 
 	public XMLTableTreeContentProvider() {
 		super();
@@ -83,6 +93,9 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 				}
 			}
 		}
+		if (fCMColor != null) {
+			fCMColor.dispose();
+		}
 	}
 
 	private void doDelayedRefreshForViewers() {
@@ -118,6 +131,22 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 		}
 		else if ((column == 1) && (object instanceof Node)) {
 			result = treeContentHelper.getNodeValue((Node) object);
+			if (result == null)
+				result = getElementValueHelper((Element) object);
+				
+		}
+		return result != null ? result : ""; //$NON-NLS-1$
+	}
+	
+	private String getElementValueHelper(Element element) {
+		String result = null;
+
+		ModelQuery mq = ModelQueryUtil.getModelQuery(element.getOwnerDocument());
+		if ((result == null) && (mq != null)) {
+			CMElementDeclaration ed = mq.getCMElementDeclaration(element);
+			if ((ed != null) && !Boolean.TRUE.equals(ed.getProperty("isInferred"))) { //$NON-NLS-1$
+				result = descriptionBuilder.buildDescription(ed);
+			}
 		}
 		return result != null ? result : ""; //$NON-NLS-1$
 	}
@@ -327,5 +356,26 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 	public void removeListener(ILabelProviderListener listener) {
 		// since we always return 'false' for "isLabelProperty",
 		// not need to listen. Maybe that should change some day?
+	}
+
+	public Color getBackground(Object element, int columnIndex) {
+		return null;
+	}
+
+	public Color getForeground(Object element, int columnIndex) {
+		if (columnIndex == 1 && treeContentHelper.getNodeValue((Node) element) == null)
+			return getCMColor();
+		return null;
+	}
+	
+	private Color getCMColor() {
+		if (fCMColor == null) {
+			Color background = Display.getCurrent().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
+			int r = Math.abs(background.getRed() - 125);
+			int g = Math.abs(background.getGreen() - 85);
+			int b = Math.abs(background.getBlue() - 105);
+			fCMColor = new Color(Display.getCurrent(), r, g, b);
+		}
+		return fCMColor;
 	}
 }

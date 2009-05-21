@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,8 @@ public class XMLEditorMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.xml.ui.internal.tabletree.XMLEditorResources";//$NON-NLS-1$
 
 	public static String XMLTableTreeViewer_0;
+	public static String XMLTableTreeViewer_1;
+	public static String XMLTableTreeViewer_2;
 	public static String XMLMultiPageEditorPart_0;
 	public static String XMLTreeExtension_0;
 	public static String XMLTreeExtension_1;

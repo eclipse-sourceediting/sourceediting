@@ -17,10 +17,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IStatusLineManager;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextInputListener;
 import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -30,9 +32,13 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorActionBarContributor;
@@ -586,15 +592,42 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		// note: By adding the design page as a Control instead of an
 		// IEditorPart, page switches will indicate
 		// a "null" active editor when the design page is made active
-		fDesignPageIndex = addPage(designViewer.getControl());
+		fDesignPageIndex = addPage(designViewer.getControl().getParent());
 		setPageText(fDesignPageIndex, designViewer.getTitle());
 	}
 
 	protected IDesignViewer createDesignPage() {
-		XMLTableTreeViewer tableTreeViewer = new XMLTableTreeViewer(getContainer());
+		Composite container = new Composite(getContainer(), SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.marginHeight = 0;
+		layout.verticalSpacing = 0;
+		layout.marginWidth = 0;
+		container.setLayout(layout);
+
+		ToolBar tb = new ToolBar(container, SWT.FLAT);
+
+		ToolBarManager manager = new ToolBarManager(tb);
+		tb.setLayoutData(new GridData(GridData.END, GridData.VERTICAL_ALIGN_BEGINNING, true, false));
+
+		IDesignViewer designViewer = new XMLTableTreeViewer(container);
+		designViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 		// Set the default infopop for XML design viewer.
-		XMLUIPlugin.getInstance().getWorkbench().getHelpSystem().setHelp(tableTreeViewer.getControl(), XMLTableTreeHelpContextIds.XML_DESIGN_VIEW_HELPID);
-		return tableTreeViewer;
+		XMLUIPlugin.getInstance().getWorkbench().getHelpSystem().setHelp(designViewer.getControl(), XMLTableTreeHelpContextIds.XML_DESIGN_VIEW_HELPID);
+
+		addToolBarActions(manager, designViewer);
+
+		return designViewer;
+	}
+
+	private void addToolBarActions(ToolBarManager manager, IDesignViewer viewer) {
+		ViewerExpandCollapseAction expand = new ViewerExpandCollapseAction(true);
+		ViewerExpandCollapseAction collapse = new ViewerExpandCollapseAction(false);
+		manager.add(expand);
+		manager.add(collapse);
+		manager.update(true);
+
+		expand.setViewer((AbstractTreeViewer) viewer);
+		collapse.setViewer((AbstractTreeViewer) viewer);
 	}
 
 	/**
