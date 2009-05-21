@@ -13,12 +13,14 @@ package org.eclipse.jst.jsp.core.internal.modelquery;
 
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerUtility;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -33,6 +35,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQueryAssoc
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.ModelQueryImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
+import org.eclipse.wst.xml.core.internal.ssemodelquery.MovableModelQuery;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -41,7 +44,7 @@ import org.w3c.dom.Node;
  * loaded tag libraries in the model before falling back to the embedded model
  * query, if one is found.
  */
-public class TagModelQuery extends ModelQueryImpl implements ModelQuery {
+public class TagModelQuery extends ModelQueryImpl implements ModelQuery, MovableModelQuery {
 	/**
 	 * The default mime-type for the embedded ModelQuery
 	 */
@@ -70,7 +73,7 @@ public class TagModelQuery extends ModelQueryImpl implements ModelQuery {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @seeorg.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.
+	 * @see org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.
 	 * ModelQueryImpl#getCMElementDeclaration(org.w3c.dom.Element)
 	 */
 	public CMElementDeclaration getCMElementDeclaration(Element element) {
@@ -109,9 +112,12 @@ public class TagModelQuery extends ModelQueryImpl implements ModelQuery {
 			if (!baseLocation.equals(IModelManager.UNMANAGED_MODEL)) {
 				IPath path = new Path(baseLocation);
 				if (path.segmentCount() > 1) {
-					String key = createPreferenceKey(path);
-					IEclipsePreferences preferences = new ProjectScope(ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0))).getNode(JSPCorePlugin.getDefault().getBundle().getSymbolicName());
-					type = preferences.get(key, DEFAULT_MIMETYPE);
+					IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0));
+					if (project.isAccessible()) {
+						String key = createPreferenceKey(path);
+						IEclipsePreferences preferences = new ProjectScope(project).getNode(JSPCorePlugin.getDefault().getBundle().getSymbolicName());
+						type = preferences.get(key, DEFAULT_MIMETYPE);
+					}
 				}
 			}
 		}
@@ -138,5 +144,12 @@ public class TagModelQuery extends ModelQueryImpl implements ModelQuery {
 			}
 		}
 		return fEmbeddedModelQuery;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.xml.core.internal.ssemodelquery.MovableModelQuery#setIdResolver(org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver)
+	 */
+	public void setIdResolver(URIResolver newURIResolver) {
+		fEmbeddedModelQuery = null;
 	}
 }
