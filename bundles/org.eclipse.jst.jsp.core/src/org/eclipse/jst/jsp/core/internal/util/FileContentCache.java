@@ -126,9 +126,12 @@ public class FileContentCache {
 				IFile f = getFile(filePath);
 				if (f != null && f.isAccessible()) {
 					String charset = detectCharset(f);
+					if (charset == null) {
+						charset = ResourcesPlugin.getEncoding();
+					}
 					is = f.getContents();
 					Reader reader = new InputStreamReader(is, charset);
-					char[] readBuffer = new char[2048];
+					char[] readBuffer = new char[8092];
 					int n = reader.read(readBuffer);
 					while (n > 0) {
 						s.append(readBuffer, 0, n);
