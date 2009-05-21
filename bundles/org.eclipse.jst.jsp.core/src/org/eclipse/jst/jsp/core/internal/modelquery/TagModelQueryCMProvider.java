@@ -62,7 +62,7 @@ public class TagModelQueryCMProvider implements ModelQueryCMProvider {
 				if (tldmgr != null) {
 					List documents = tldmgr.getCMDocumentTrackers(node.getPrefix(), xmlNode.getStartOffset());
 					// there shouldn't be more than one cmdocument returned
-					if (documents != null && documents.size() > 0)
+					if (documents != null && !documents.isEmpty())
 						result = (CMDocument) documents.get(0);
 				}
 			}
@@ -70,9 +70,10 @@ public class TagModelQueryCMProvider implements ModelQueryCMProvider {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (result == null) {
-			result = tagdoc;
-		}
+// 204990 - JSP/Web Page Editors: tag files do not support content assist on html element attributes
+//		if (result == null) {
+//			result = tagdoc;
+//		}
 		return result;
 	}
 }
