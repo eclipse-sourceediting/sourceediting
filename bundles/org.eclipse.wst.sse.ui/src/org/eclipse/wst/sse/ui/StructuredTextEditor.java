@@ -128,6 +128,9 @@ import org.eclipse.ui.texteditor.IStatusField;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
+import org.eclipse.ui.texteditor.ITextEditorExtension;
+import org.eclipse.ui.texteditor.ITextEditorExtension2;
+import org.eclipse.ui.texteditor.ITextEditorExtension3;
 import org.eclipse.ui.texteditor.ITextEditorExtension4;
 import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
@@ -1837,7 +1840,7 @@ public class StructuredTextEditor extends TextEditor {
 		Object result = null;
 		// text editor
 		IStructuredModel internalModel = getInternalModel();
-		if (ITextEditor.class.equals(required)) {
+		if (ITextEditor.class.equals(required) || ITextEditorExtension4.class.equals(required) || ITextEditorExtension3.class.equals(required) || ITextEditorExtension2.class.equals(required) || ITextEditorExtension.class.equals(required)) {
 			result = this;
 		}
 		else if (IWorkbenchSiteProgressService.class.equals(required)) {
