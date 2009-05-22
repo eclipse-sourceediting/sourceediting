@@ -22,6 +22,7 @@ public class AllPsychoPathTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(TestXPath20.class);
 		suite.addTestSuite(Bug269833.class);
+		suite.addTest(AllW3CXPath20Tests.suite());
 		suite.addTestSuite(TestBugs.class);
 		//$JUnit-END$
 		return suite;
