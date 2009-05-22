@@ -18,10 +18,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextInputListener;
 import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.IPostSelectionProvider;
@@ -38,7 +41,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorActionBarContributor;
@@ -422,7 +424,11 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	private ILabelProvider fStatusLineLabelProvider;
 
 	private PageInitializationData fPageInitializer;
+	
+	private ToolBarManager fToolbarManager;
 
+	private boolean fAllocateToolbar = true;
+	
 	/**
 	 * StructuredTextMultiPageEditorPart constructor comment.
 	 */
@@ -592,42 +598,89 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		// note: By adding the design page as a Control instead of an
 		// IEditorPart, page switches will indicate
 		// a "null" active editor when the design page is made active
-		fDesignPageIndex = addPage(designViewer.getControl().getParent());
+		fDesignPageIndex = addPage(designViewer.getControl());
 		setPageText(fDesignPageIndex, designViewer.getTitle());
 	}
 
 	protected IDesignViewer createDesignPage() {
-		Composite container = new Composite(getContainer(), SWT.NONE);
-		GridLayout layout = new GridLayout();
-		layout.marginHeight = 0;
-		layout.verticalSpacing = 0;
-		layout.marginWidth = 0;
-		container.setLayout(layout);
+		XMLTableTreeViewer tableTreeViewer = new XMLTableTreeViewer(getContainer());
+		// Set the default info-pop for XML design viewer.
+		XMLUIPlugin.getInstance().getWorkbench().getHelpSystem().setHelp(tableTreeViewer.getControl(), XMLTableTreeHelpContextIds.XML_DESIGN_VIEW_HELPID);
 
-		ToolBar tb = new ToolBar(container, SWT.FLAT);
-
-		ToolBarManager manager = new ToolBarManager(tb);
-		tb.setLayoutData(new GridData(GridData.END, GridData.VERTICAL_ALIGN_BEGINNING, true, false));
-
-		IDesignViewer designViewer = new XMLTableTreeViewer(container);
-		designViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
-		// Set the default infopop for XML design viewer.
-		XMLUIPlugin.getInstance().getWorkbench().getHelpSystem().setHelp(designViewer.getControl(), XMLTableTreeHelpContextIds.XML_DESIGN_VIEW_HELPID);
-
-		addToolBarActions(manager, designViewer);
-
-		return designViewer;
+		if (fToolbarManager != null) {
+			addToolBarActions(fToolbarManager, tableTreeViewer);
+		}
+		return tableTreeViewer;
 	}
 
-	private void addToolBarActions(ToolBarManager manager, IDesignViewer viewer) {
-		ViewerExpandCollapseAction expand = new ViewerExpandCollapseAction(true);
-		ViewerExpandCollapseAction collapse = new ViewerExpandCollapseAction(false);
-		manager.add(expand);
-		manager.add(collapse);
-		manager.update(true);
+	private void addToolBarActions(final ToolBarManager manager, IDesignViewer viewer) {
+		if (viewer instanceof AbstractTreeViewer) {
+			// "dual-mode" actions for both pages
+			final ViewerExpandCollapseAction expand = new ViewerExpandCollapseAction(true) {
+				public void run() {
+					if (getActivePage() == fDesignPageIndex) {
+						super.run();
+					}
+					else if (getActivePage() == fSourcePageIndex) {
+						ITextViewer viewer = fTextEditor.getTextViewer();
+						if (viewer instanceof ProjectionViewer) {
+							ProjectionViewer projectionViewer = (ProjectionViewer) viewer;
+							if (projectionViewer.isProjectionMode())
+								projectionViewer.doOperation(ProjectionViewer.EXPAND_ALL);
+						}
+					}
+				}
+			};
+			final ViewerExpandCollapseAction collapse = new ViewerExpandCollapseAction(false) {
+				public void run() {
+					if (getActivePage() == fDesignPageIndex) {
+						super.run();
+					}
+					else if (getActivePage() == fSourcePageIndex) {
+						ITextViewer viewer = fTextEditor.getTextViewer();
+						if (viewer instanceof ProjectionViewer) {
+							ProjectionViewer projectionViewer = (ProjectionViewer) viewer;
+							if (projectionViewer.isProjectionMode())
+								projectionViewer.doOperation(ProjectionViewer.COLLAPSE_ALL);
+						}
+					}
+				}
+			};
+			expand.setViewer((AbstractTreeViewer) viewer);
+			collapse.setViewer((AbstractTreeViewer) viewer);
 
-		expand.setViewer((AbstractTreeViewer) viewer);
-		collapse.setViewer((AbstractTreeViewer) viewer);
+			manager.add(expand);
+			manager.add(collapse);
+			manager.getControl().pack(true);
+			manager.update(true);
+		}
+	}
+
+	protected Composite createPageContainer(Composite parent) {
+		if (fAllocateToolbar) {
+			Composite container = new Composite(super.createPageContainer(parent), SWT.NONE);
+			GridLayout layout = new GridLayout(1, true);
+			layout.horizontalSpacing = 0;
+			layout.verticalSpacing = 0;
+			layout.marginBottom = 0;
+			layout.marginTop = 0;
+			layout.marginHeight = 0;
+			layout.marginWidth = 0;
+			layout.marginLeft = 0;
+			layout.marginRight = 0;
+			layout.horizontalSpacing = 0;
+			container.setLayout(layout);
+
+			fToolbarManager = new ToolBarManager();
+			GridData data = GridDataFactory.fillDefaults().align(SWT.END, SWT.BEGINNING).grab(true, false).create();
+			fToolbarManager.createControl(container).setLayoutData(data);
+
+			Composite composite = new Composite(container, SWT.NONE);
+			composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
+
+			return composite;
+		}
+		return super.createPageContainer(parent);
 	}
 
 	/**
@@ -749,7 +802,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		if ((fTextEditor != null) && (fPropertyListener != null)) {
 			fTextEditor.removePropertyListener(fPropertyListener);
 		}
-
+		
 		// moved to last when added window ... seems like
 		// we'd be in danger of losing some data, like site,
 		// or something.
@@ -903,6 +956,14 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 			return fTextEditor.isSaveOnCloseNeeded();
 		}
 		return isDirty();
+	}
+	
+	/**
+	 * Prevents the creation of the in-editor toolbar, if called before
+	 * createPageContainer() during editor initialization.
+	 */
+	protected final void noToolbar() {
+		fAllocateToolbar = false;
 	}
 
 	/*
