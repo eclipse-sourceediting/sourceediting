@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorActionBarContributor;
@@ -671,9 +672,10 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 			layout.horizontalSpacing = 0;
 			container.setLayout(layout);
 
-			fToolbarManager = new ToolBarManager();
+			ToolBar toolbar = new ToolBar(container, SWT.FLAT);
+			fToolbarManager = new ToolBarManager(toolbar);
 			GridData data = GridDataFactory.fillDefaults().align(SWT.END, SWT.BEGINNING).grab(true, false).create();
-			fToolbarManager.createControl(container).setLayoutData(data);
+			toolbar.setLayoutData(data);
 
 			Composite composite = new Composite(container, SWT.NONE);
 			composite.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
