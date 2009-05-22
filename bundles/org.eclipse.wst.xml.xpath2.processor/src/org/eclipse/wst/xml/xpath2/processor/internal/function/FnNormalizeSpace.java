@@ -6,11 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 274471 - improvements to normalize-space function (support for arity 0)
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -47,7 +49,7 @@ public class FnNormalizeSpace extends Function {
 	 * Constructor for FnNormalizeSpace.
 	 */
 	public FnNormalizeSpace() {
-		super(new QName("normalize-space"), 1);
+		super(new QName("normalize-space"), -1);
 	}
 
 	/**
@@ -61,7 +63,7 @@ public class FnNormalizeSpace extends Function {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return normalize_space(args);
+		return normalize_space(args, dynamic_context());
 	}
 
 	/**
@@ -73,21 +75,28 @@ public class FnNormalizeSpace extends Function {
 	 *             Dynamic error.
 	 * @return The result of normalizing the space in the arguments.
 	 */
-	public static ResultSequence normalize_space(Collection args)
+	public static ResultSequence normalize_space(Collection args, DynamicContext d_context)
 			throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
-		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
-
-		ResultSequence rs = ResultSequenceFactory.create_new();
+		ResultSequence arg1 = null;
+		
+		if (cargs.isEmpty()) {
+		  // support for arity = 0
+		  return getResultSetForArityZero(d_context);
+		}
+		else {
+		  arg1 = (ResultSequence) cargs.iterator().next();
+		}
 
 		if (arg1.empty()) {
-			rs.add(new XSString(""));
-			return rs;
+		  // support for arity = 0
+		  return getResultSetForArityZero(d_context);
 		}
 
 		String str = ((XSString) arg1.first()).value();
 
+		ResultSequence rs = ResultSequenceFactory.create_new();
 		rs.add(new XSString(normalize(str)));
 
 		return rs;
@@ -189,5 +198,23 @@ public class FnNormalizeSpace extends Function {
 		}
 
 		return _expected_args;
+	}
+	
+	/*
+	 * Helper function for arity 0
+	 */
+	private static ResultSequence getResultSetForArityZero(DynamicContext d_context) {
+		ResultSequence rs = ResultSequenceFactory.create_new();
+		
+		AnyType contextItem = d_context.context_item();
+		if (contextItem != null) {
+		  // if context item is defined, then that is the default argument
+		  // to fn:string function
+		  rs.add(new XSString(contextItem.string_value()));
+		}
+		else {
+		  rs.add(new XSString(""));
+		}
+		return rs;
 	}
 }

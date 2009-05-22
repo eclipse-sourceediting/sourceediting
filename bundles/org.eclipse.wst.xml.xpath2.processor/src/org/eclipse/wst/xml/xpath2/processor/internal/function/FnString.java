@@ -6,11 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 274471 - improvements to fn:string function (support for arity 0) 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -23,13 +25,12 @@ import java.util.*;
  * Returns the value of $arg represented as a xs:string. If no argument is
  * supplied, this function returns the string value of the context item (.).
  */
-// XXX if no args, use context item!!! need to implement
 public class FnString extends Function {
 	/**
 	 * Constructor for FnString.
 	 */
 	public FnString() {
-		super(new QName("string"), 1);
+	  super(new QName("string"), -1);
 	}
 
 	/**
@@ -43,7 +44,7 @@ public class FnString extends Function {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return string(args);
+		return string(args, dynamic_context());
 	}
 
 	/**
@@ -55,26 +56,52 @@ public class FnString extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:string operation.
 	 */
-	public static ResultSequence string(Collection args) throws DynamicError {
+	public static ResultSequence string(Collection args, DynamicContext d_context) throws DynamicError {
 
-		assert args.size() == 1;
+		assert (args.size() == 0 || args.size() == 1);
 
-		ResultSequence arg1 = (ResultSequence) args.iterator().next();
+		ResultSequence arg1 = null;
+				
+		if (args.isEmpty()) {
+			// support for arity = 0
+			return getResultSetForArityZero(d_context);
+		}
+		else {
+			arg1 = (ResultSequence) args.iterator().next();	
+		}
 
 		// sanity check args
 		if (arg1.size() > 1)
 			throw new DynamicError(TypeError.invalid_type(null));
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
 		if (arg1.empty()) {
-			rs.add(new XSString(""));
-			return rs;
+			// support for arity = 0
+			return getResultSetForArityZero(d_context);
 		}
 
 		AnyType at = arg1.first();
 
+		ResultSequence rs = ResultSequenceFactory.create_new();
 		rs.add(new XSString(at.string_value()));
 
+		return rs;
+	}
+	
+	/*
+	 * Helper function for arity 0
+	 */
+	private static ResultSequence getResultSetForArityZero(DynamicContext d_context) {
+		ResultSequence rs = ResultSequenceFactory.create_new();
+		
+		AnyType contextItem = d_context.context_item();
+		if (contextItem != null) {
+		  // if context item is defined, then that is the default argument
+		  // to fn:string function
+		  rs.add(new XSString(contextItem.string_value()));
+		}
+		else {
+		  rs.add(new XSString(""));
+		}
 		return rs;
 	}
 

@@ -6,11 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 274471 - improvements to string-length function (support for arity 0)  
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -44,7 +46,7 @@ public class FnStringLength extends Function {
 	 * Constructor for FnStringLength
 	 */
 	public FnStringLength() {
-		super(new QName("string-length"), 1);
+		super(new QName("string-length"), -1);
 	}
 
 	/**
@@ -58,7 +60,7 @@ public class FnStringLength extends Function {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return string_length(args);
+		return string_length(args, dynamic_context());
 	}
 
 	/**
@@ -70,21 +72,28 @@ public class FnStringLength extends Function {
 	 *             Dynamic error.
 	 * @return The result of obtaining the string length from the arguments.
 	 */
-	public static ResultSequence string_length(Collection args)
+	public static ResultSequence string_length(Collection args, DynamicContext d_context)
 			throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
-		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
+		ResultSequence arg1 = null;
 
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
+		if (cargs.isEmpty()) {
+		  // support for arity = 0
+		  return getResultSetForArityZero(d_context);
+		}
+		else {
+		  arg1 = (ResultSequence) cargs.iterator().next();
+		}
+		
 		if (arg1.empty()) {
-			rs.add(new XSInteger(0));
-			return rs;
+		  // support for arity = 0
+		  return getResultSetForArityZero(d_context);
 		}
 
 		String str = ((XSString) arg1.first()).value();
 
+		ResultSequence rs = ResultSequenceFactory.create_new();
 		rs.add(new XSInteger(str.length()));
 
 		return rs;
@@ -102,5 +111,23 @@ public class FnStringLength extends Function {
 		}
 
 		return _expected_args;
+	}
+	
+	/*
+	 * Helper function for arity 0
+	 */
+	private static ResultSequence getResultSetForArityZero(DynamicContext d_context) {
+		ResultSequence rs = ResultSequenceFactory.create_new();
+		
+		AnyType contextItem = d_context.context_item();
+		if (contextItem != null) {
+		  // if context item is defined, then that is the default argument
+		  // to fn:string function
+		  rs.add(new XSInteger(contextItem.string_value().length()));
+		}
+		else {
+		  rs.add(new XSInteger(0));
+		}
+		return rs;
 	}
 }

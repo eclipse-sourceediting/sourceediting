@@ -7,16 +7,17 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Mukul Gandhi - bug 274471 - improvements to fn:string function (support for arity 0)
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
-import java.util.*;
+import java.util.Hashtable;
+import java.util.Map;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.StaticContext;
-import org.eclipse.wst.xml.xpath2.processor.internal.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 
 /**
  * Class for Function Library support.
@@ -83,6 +84,10 @@ public class FunctionLibrary {
 		// make sure we got at least arity arguments
 		if (arity >= (f.arity() * -1))
 			return true;
+		
+		// support for arity == 0
+		if ((arity == 0) && (f.arity() < 0))
+		  return true;	
 
 		// bye bye
 		return false;
@@ -112,6 +117,10 @@ public class FunctionLibrary {
 
 		if (arity >= (f.arity() * -1))
 			return f;
+		
+		// support for arity == 0
+		if ((arity == 0) && (f.arity() < 0))
+		   return f;
 
 		return null;
 	}
