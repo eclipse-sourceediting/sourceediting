@@ -20,13 +20,13 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
-public class BooleanGTTest extends AbstractPsychoPathTest {
+public class RangeExprTest extends AbstractPsychoPathTest {
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(lower bound) $arg2 = xs:boolean(lower bound).
-   public void test_op_boolean_greater_than2args_1() throws Exception {
+   //Simple range expression using positive integers.
+   public void test_rangeExpr_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-1.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-1.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-1.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -59,11 +59,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(mid range) $arg2 = xs:boolean(lower bound).
-   public void test_op_boolean_greater_than2args_2() throws Exception {
+   //Evaluation of a range expression of length one containing the single integer 10.
+   public void test_rangeExpr_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-2.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-2.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-2.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -96,11 +96,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(upper bound) $arg2 = xs:boolean(lower bound).
-   public void test_op_boolean_greater_than2args_3() throws Exception {
+   //Evaluation of a range expression that results in the sequence of length zero.
+   public void test_rangeExpr_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-3.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-3.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-3.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -133,11 +133,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(lower bound) $arg2 = xs:boolean(mid range).
-   public void test_op_boolean_greater_than2args_4() throws Exception {
+   //Evaluation of a range expression that in conjunction with the "reverse" function.
+   public void test_rangeExpr_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-4.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-4.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-4.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -170,11 +170,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(lower bound) $arg2 = xs:boolean(upper bound).
-   public void test_op_boolean_greater_than2args_5() throws Exception {
+   //Evaluation of a range expression that uses the empty sequence.
+   public void test_rangeExpr_5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-5.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-5.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-5.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -207,11 +207,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(lower bound) $arg2 = xs:boolean(lower bound).
-   public void test_op_boolean_greater_than2args_6() throws Exception {
+   //Evaluation of a range expression, where both operands are addition operations.
+   public void test_rangeExpr_6() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-6.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-6.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-6.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-6.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -244,11 +244,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(mid range) $arg2 = xs:boolean(lower bound).
-   public void test_op_boolean_greater_than2args_7() throws Exception {
+   //Evaluation of a range expression, where the first operand are negative numbers.
+   public void test_rangeExpr_7() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-7.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-7.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-7.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-7.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -281,11 +281,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(upper bound) $arg2 = xs:boolean(lower bound).
-   public void test_op_boolean_greater_than2args_8() throws Exception {
+   //Evaluation of a range expression, where both operands are negative integers.
+   public void test_rangeExpr_8() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-8.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-8.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-8.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-8.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -318,11 +318,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(lower bound) $arg2 = xs:boolean(mid range).
-   public void test_op_boolean_greater_than2args_9() throws Exception {
+   //Evaluation of a range expression, where the first operand is "xs:integer" function.
+   public void test_rangeExpr_9() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-9.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-9.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-9.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-9.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -355,11 +355,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(lower bound) $arg2 = xs:boolean(upper bound).
-   public void test_op_boolean_greater_than2args_10() throws Exception {
+   //Evaluation of a range expression, where the second operand is "xs:integer" function.
+   public void test_rangeExpr_10() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-10.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-10.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-10.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-10.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -392,11 +392,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(true)" and "true" respectively. Use of "gt" operator.
-   public void test_op_boolean_greater_than_1() throws Exception {
+   //Evaluation of a range expression, where both operands are "xs:integer" functions.
+   public void test_rangeExpr_11() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-1.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-1.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-11.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-11.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -429,11 +429,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(true)" and "true" respectively. Use of "le" operator.
-   public void test_op_boolean_greater_than_2() throws Exception {
+   //Evaluation of a range expression, using the "fn:min" function.
+   public void test_rangeExpr_12() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-2.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-2.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-12.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-12.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -466,11 +466,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(true)" and "false" respectively. Use of "gt" operator.
-   public void test_op_boolean_greater_than_3() throws Exception {
+   //Evaluation of a range expression, using the "fn:max" function.
+   public void test_rangeExpr_13() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-3.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-3.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-13.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-13.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -503,11 +503,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(true)" and "false" respectively. Use of "le" operator.
-   public void test_op_boolean_greater_than_4() throws Exception {
+   //Evaluation of a range expression, using the "fn:min" and "fn:max" functions.
+   public void test_rangeExpr_14() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-4.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-4.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-14.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-14.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -540,11 +540,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(false)" and "true" respectively. Use of "gt" operator.
-   public void test_op_boolean_greater_than_5() throws Exception {
+   //Evaluation of a range expression as an argument to the "fn:min" function.
+   public void test_rangeExpr_15() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-5.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-5.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-15.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-15.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -577,11 +577,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(false)" and "true" respectively. Use of "le" operator.
-   public void test_op_boolean_greater_than_6() throws Exception {
+   //Evaluation of a range expression as an argument to the "fn:max" function.
+   public void test_rangeExpr_16() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-6.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-6.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-16.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-16.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -614,11 +614,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(false)" and "false" respectively. Use of "gt" operator.
-   public void test_op_boolean_greater_than_7() throws Exception {
+   //Evaluation of a range expression as an argument to the "fn:avg" function.
+   public void test_rangeExpr_17() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-7.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-7.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-17.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-17.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -651,11 +651,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(false)" and "false" respectively. Use of "le" operator.
-   public void test_op_boolean_greater_than_8() throws Exception {
+   //Evaluation of a range expression as an argument to the "fn:count" function.
+   public void test_rangeExpr_18() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-8.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-8.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-18.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-18.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -688,11 +688,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "(7 eq 7)" and "true" respectively. Use of "gt" operator.
-   public void test_op_boolean_greater_than_9() throws Exception {
+   //Evaluation of a range expression, where the first operand is a multiplication operation.
+   public void test_rangeExpr_19() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-9.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-9.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-19.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-19.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -725,11 +725,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "(7 eq 7)" and "true" respectively. Use of "le" operator.
-   public void test_op_boolean_greater_than_10() throws Exception {
+   //Evaluation of a range expression, where the second operand is a multiplication operation.
+   public void test_rangeExpr_20() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-10.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-10.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-20.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-20.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -762,11 +762,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "(7 eq 7)" and "false" respectively. Use of "gt" operator.
-   public void test_op_boolean_greater_than_11() throws Exception {
+   //Evaluation of a range expression, where both operands are multiplication operations.
+   public void test_rangeExpr_21() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-11.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-11.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-21.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-21.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -799,11 +799,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "(7 eq 7)" and "false" respectively. Use of "le" operator.
-   public void test_op_boolean_greater_than_12() throws Exception {
+   //Evaluation of a range expression, where the first operand is a subtraction operation.
+   public void test_rangeExpr_22() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-12.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-12.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-22.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-22.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -836,11 +836,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_001() throws Exception {
+   //Evaluation of a range expression, where the second operand is a subtraction operation.
+   public void test_rangeExpr_23() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-001.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-001.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-23.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-23.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -873,11 +873,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_002() throws Exception {
+   //Evaluation of a range expression, where both operands are subtraction operations.
+   public void test_rangeExpr_24() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-002.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-002.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-24.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-24.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -910,11 +910,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_003() throws Exception {
+   //Evaluation of a range expression, where the first operand is a division operation.
+   public void test_rangeExpr_25() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-003.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-003.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-25.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-25.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -947,11 +947,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_004() throws Exception {
+   //Evaluation of a range expression, where the second operand is a division operation.
+   public void test_rangeExpr_26() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-004.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-004.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-26.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-26.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -984,344 +984,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_005() throws Exception {
+   //Evaluation of a range expression, where both operands are division operations.
+   public void test_rangeExpr_27() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-005.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-005.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //.
-   public void test_op_boolean_greater_than_more_args_006() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-006.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-006.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //.
-   public void test_op_boolean_greater_than_more_args_007() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-007.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-007.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //.
-   public void test_op_boolean_greater_than_more_args_008() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-008.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-008.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //.
-   public void test_op_boolean_greater_than_more_args_009() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-009.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-009.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //.
-   public void test_op_boolean_greater_than_more_args_010() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-010.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-010.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //.
-   public void test_op_boolean_greater_than_more_args_011() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-011.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-011.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //.
-   public void test_op_boolean_greater_than_more_args_012() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-012.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-012.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //.
-   public void test_op_boolean_greater_than_more_args_013() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-013.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-013.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //.
-   public void test_op_boolean_greater_than_more_args_014() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-014.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-014.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/RangeExpr/rangeExpr-27.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/RangeExpr/rangeExpr-27.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

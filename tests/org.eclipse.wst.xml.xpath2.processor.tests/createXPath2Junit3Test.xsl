@@ -18,21 +18,29 @@
    <xsl:output indent="yes" method="text" encoding="UTF-8"/>
    
    <xsl:variable name="location">/Queries/XQuery</xsl:variable>
-   <xsl:param name="group">SequenceTypeSyntax</xsl:param>
+   <xsl:param name="group">BooleanGT</xsl:param>
    
    <xsl:template match="/">
       <xsl:text>
+/*******************************************************************************
+ * Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     David Carver - STAR - initial api and implementation bug 262765 
+ *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.testsuite;
 
 import java.net.URL;
 
 import org.apache.xerces.xs.XSModel;
-import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
-import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
-import org.eclipse.wst.xml.xpath2.processor.Evaluator;
-import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       </xsl:text>
       <xsl:apply-templates/>
@@ -42,7 +50,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
       <xsl:text>
 public class </xsl:text>
       <xsl:value-of select="$group"/>
-      <xsl:text> extends AbstractPsychoPathTest {
+      <xsl:text>Test extends AbstractPsychoPathTest {
 </xsl:text>
       <xsl:apply-templates select="descendant::xqts:test-group[@name = $group]"/>
       <xsl:text>
@@ -65,7 +73,7 @@ public class </xsl:text>
    //</xsl:text>
         <xsl:value-of select="./xqts:description"/>
         <xsl:text>
-   public void </xsl:text>
+   public void test_</xsl:text>
         <xsl:variable name="methodName">
             <xsl:call-template name="replace-string">
                <xsl:with-param name="text" select="$testName"/>
@@ -74,8 +82,12 @@ public class </xsl:text>
             </xsl:call-template>
         </xsl:variable>
         <xsl:value-of select="$methodName"/>
-        <xsl:text> throws Exception {
-      URL fileURL = bundle.getEntry("/bugTestFiles/bug273719.xml");
+        <xsl:text>() throws Exception {
+</xsl:text>
+        <xsl:call-template name="SetVariables"/>
+<xsl:text>
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
       // Get XML Schema Information for the Document
@@ -83,23 +95,47 @@ public class </xsl:text>
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = "string-length(x) > 2";
-      XPath path = compileXPath(dc, xpath);
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
 
-      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-      ResultSequence rs = eval.evaluate(path);
-
-      XSBoolean result = (XSBoolean) rs.first();
-
-      String actual = result.string_value();
-
-      assertEquals("true", actual);
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 </xsl:text>
         <xsl:text>
    }
 </xsl:text>
       </xsl:if>
+   </xsl:template>
+   
+   <xsl:template name="SetVariables">
+      <xsl:text>      String inputFile = "/TestSources/</xsl:text>
+      <xsl:value-of select="xqts:input-file"/>
+      <xsl:text>.xml";</xsl:text>
+      <xsl:text>
+      String xqFile = "/Queries/XQuery/</xsl:text>
+      <xsl:value-of select="@FilePath"/>
+      <xsl:value-of select="xqts:query/@name"/>
+      <xsl:text>.xq";</xsl:text>
+      <xsl:text>
+      String resultFile = "/ExpectedTestResults/</xsl:text>
+      <xsl:value-of select="@FilePath"/>
+      <xsl:value-of select="xqts:output-file"/>
+      <xsl:text>";</xsl:text>
    </xsl:template>
    
    <xsl:template name="replace-string">

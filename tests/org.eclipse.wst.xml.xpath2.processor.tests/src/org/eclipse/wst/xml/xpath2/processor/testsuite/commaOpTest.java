@@ -20,13 +20,13 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
-public class BooleanGTTest extends AbstractPsychoPathTest {
+public class commaOpTest extends AbstractPsychoPathTest {
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(lower bound) $arg2 = xs:boolean(lower bound).
-   public void test_op_boolean_greater_than2args_1() throws Exception {
+   //Simple Sequence construction involving integers.
+   public void test_sequenceexpressionhc1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-1.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-1.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc1.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -59,11 +59,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(mid range) $arg2 = xs:boolean(lower bound).
-   public void test_op_boolean_greater_than2args_2() throws Exception {
+   //Simple Sequence construction involving nested sequences using integers.
+   public void test_sequenceexpressionhc2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-2.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-2.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc2.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -96,11 +96,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(upper bound) $arg2 = xs:boolean(lower bound).
-   public void test_op_boolean_greater_than2args_3() throws Exception {
+   //Simple Sequence construction using the empty sequence.
+   public void test_sequenceexpressionhc3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-3.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-3.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc3.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -133,11 +133,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(lower bound) $arg2 = xs:boolean(mid range).
-   public void test_op_boolean_greater_than2args_4() throws Exception {
+   //Simple Sequence construction using the "to" operand.
+   public void test_sequenceexpressionhc4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-4.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-4.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc4.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -170,11 +170,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(lower bound) $arg2 = xs:boolean(upper bound).
-   public void test_op_boolean_greater_than2args_5() throws Exception {
+   //Simple Sequence construction using a repeated element.
+   public void test_sequenceexpressionhc5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-5.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-5.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc5.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -207,11 +207,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(lower bound) $arg2 = xs:boolean(lower bound).
-   public void test_op_boolean_greater_than2args_6() throws Exception {
+   //Simple Sequence expression resulting in an empty sequence.
+   public void test_sequenceexpressionhc6() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-6.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-6.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc6.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc6.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -244,11 +244,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(mid range) $arg2 = xs:boolean(lower bound).
-   public void test_op_boolean_greater_than2args_7() throws Exception {
+   //Simple Sequence expression resulting on a sequence in reverse order.
+   public void test_sequenceexpressionhc7() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-7.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-7.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc7.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc7.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -281,11 +281,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(upper bound) $arg2 = xs:boolean(lower bound).
-   public void test_op_boolean_greater_than2args_8() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-8.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-8.txt";
+   //Simple Sequence expression resulting by quering string data from xml source.
+   public void test_sequenceexpressionhc8() throws Exception {
+      String inputFile = "/TestSources/works.xml";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc8.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc8.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -318,11 +318,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(lower bound) $arg2 = xs:boolean(mid range).
-   public void test_op_boolean_greater_than2args_9() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-9.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-9.txt";
+   //Simple sequence expression resulting by quering string data from multiple xml source.
+   public void test_sequenceexpressionhc9() throws Exception {
+      String inputFile = "/TestSources/works.xml";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc9.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc9.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -355,11 +355,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(lower bound) $arg2 = xs:boolean(upper bound).
-   public void test_op_boolean_greater_than2args_10() throws Exception {
+   //Simple Sequence construction, where one of the members is an addition operation.
+   public void test_constSeq_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-10.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-10.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-1.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -392,11 +392,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(true)" and "true" respectively. Use of "gt" operator.
-   public void test_op_boolean_greater_than_1() throws Exception {
+   //Simple Sequence construction, where one of the members is a subtraction operation.
+   public void test_constSeq_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-1.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-1.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-2.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -429,11 +429,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(true)" and "true" respectively. Use of "le" operator.
-   public void test_op_boolean_greater_than_2() throws Exception {
+   //Simple Sequence construction, where one of the members is a multiplication operation.
+   public void test_constSeq_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-2.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-2.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-3.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -466,11 +466,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(true)" and "false" respectively. Use of "gt" operator.
-   public void test_op_boolean_greater_than_3() throws Exception {
+   //Simple Sequence construction, where one of the members is a division (div) operation.
+   public void test_constSeq_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-3.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-3.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-4.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -503,11 +503,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(true)" and "false" respectively. Use of "le" operator.
-   public void test_op_boolean_greater_than_4() throws Exception {
+   //Simple Sequence construction, where one of the members is a division (idiv) operation.
+   public void test_constSeq_5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-4.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-4.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-5.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -540,11 +540,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(false)" and "true" respectively. Use of "gt" operator.
-   public void test_op_boolean_greater_than_5() throws Exception {
+   //Simple Sequence construction, where one of the members contains invocation to "fn:count" function.
+   public void test_constSeq_6() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-5.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-5.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-6.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-6.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -577,11 +577,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(false)" and "true" respectively. Use of "le" operator.
-   public void test_op_boolean_greater_than_6() throws Exception {
+   //Simple Sequence construction, where one of the members contains invacotion to "fn:string-length" function.
+   public void test_constSeq_7() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-6.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-6.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-7.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-7.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -614,11 +614,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(false)" and "false" respectively. Use of "gt" operator.
-   public void test_op_boolean_greater_than_7() throws Exception {
+   //Simple Sequence construction, where both of its members contains invocation to "fn:true" function.
+   public void test_constSeq_8() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-7.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-7.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-8.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-8.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -651,11 +651,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(false)" and "false" respectively. Use of "le" operator.
-   public void test_op_boolean_greater_than_8() throws Exception {
+   //Simple Sequence construction, where both of its members contains invocation to "fn:false" function.
+   public void test_constSeq_9() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-8.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-8.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-9.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-9.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -688,11 +688,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "(7 eq 7)" and "true" respectively. Use of "gt" operator.
-   public void test_op_boolean_greater_than_9() throws Exception {
+   //Simple Sequence construction, where both of its members contains invocation to "fn:not()" function.
+   public void test_constSeq_10() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-9.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-9.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-10.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-10.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -725,11 +725,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "(7 eq 7)" and "true" respectively. Use of "le" operator.
-   public void test_op_boolean_greater_than_10() throws Exception {
+   //Simple Sequence construction, where one of its members contains a boolean (and) operation.
+   public void test_constSeq_11() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-10.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-10.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-11.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-11.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -762,11 +762,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "(7 eq 7)" and "false" respectively. Use of "gt" operator.
-   public void test_op_boolean_greater_than_11() throws Exception {
+   //Simple Sequence construction, where one of its members contains a boolean (or) operation.
+   public void test_constSeq_12() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-11.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-11.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-12.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-12.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -799,11 +799,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "(7 eq 7)" and "false" respectively. Use of "le" operator.
-   public void test_op_boolean_greater_than_12() throws Exception {
+   //Simple Sequence construction, where one of its members contains invocation to "xs:string()".
+   public void test_constSeq_13() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-12.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-12.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-13.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-13.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -836,11 +836,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_001() throws Exception {
+   //Simple Sequence construction, where one of its members contains invocation to "xs:integer()".
+   public void test_constSeq_14() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-001.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-001.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-14.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-14.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -873,11 +873,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_002() throws Exception {
+   //Simple Sequence construction, where one of its members contains invocation to "xs:decimal()".
+   public void test_constSeq_15() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-002.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-002.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-15.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-15.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -910,11 +910,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_003() throws Exception {
+   //Simple Sequence construction, where both of its members contains invocation to "xs:anyURI".
+   public void test_constSeq_16() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-003.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-003.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-16.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-16.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -947,11 +947,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_004() throws Exception {
+   //Simple Sequence construction, where one of its members contains invocation to "xs:float()".
+   public void test_constSeq_17() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-004.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-004.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-17.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-17.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -984,11 +984,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_005() throws Exception {
+   //Simple Sequence construction, where one of its members contains invocation to "xs:double()".
+   public void test_constSeq_18() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-005.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-005.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-18.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-18.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1021,11 +1021,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_006() throws Exception {
+   //Simple Sequence construction, where one of its members contains invocation to "xs:boolean()".
+   public void test_constSeq_19() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-006.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-006.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-19.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-19.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1058,11 +1058,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_007() throws Exception {
+   //Simple Sequence construction, where both of its members contains invocation to "xs:date()".
+   public void test_constSeq_20() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-007.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-007.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-20.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-20.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1095,11 +1095,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_008() throws Exception {
+   //Simple Sequence construction, where both of its members contains invocation to "xs:dateTime()".
+   public void test_constSeq_21() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-008.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-008.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-21.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-21.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1132,11 +1132,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_009() throws Exception {
+   //Simple Sequence construction, where both of its members contains invocation to "xs:time()".
+   public void test_constSeq_22() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-009.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-009.txt";
+      String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-22.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/constSeq-22.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1169,11 +1169,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_010() throws Exception {
+   //Arg1 and arg2 : sequence of number.
+   public void test_op_concatenate_mix_args_001() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-010.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-010.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-001.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-001.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1206,11 +1206,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_011() throws Exception {
+   //Arg1 and arg2 : string.
+   public void test_op_concatenate_mix_args_002() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-011.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-011.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-002.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-002.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1243,11 +1243,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_012() throws Exception {
+   //Args : string.
+   public void test_op_concatenate_mix_args_003() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-012.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-012.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-003.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-003.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1280,11 +1280,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_013() throws Exception {
+   //Args : string.
+   public void test_op_concatenate_mix_args_004() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-013.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-013.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-004.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-004.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1317,11 +1317,566 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_014() throws Exception {
+   //Arg1 : string, arg2:anyURI.
+   public void test_op_concatenate_mix_args_005() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-014.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-014.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-005.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-005.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Arg1 : string, arg2:integer, arg3:anyURI.
+   public void test_op_concatenate_mix_args_006() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-006.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-006.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Arg1 : anyURI, arg2: decimal.
+   public void test_op_concatenate_mix_args_007() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-007.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-007.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Arg1 and arg2 : float.
+   public void test_op_concatenate_mix_args_008() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-008.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-008.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Arg1:float, arg2: double.
+   public void test_op_concatenate_mix_args_009() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-009.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-009.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Arg1: double, arg2: double, arg3:float.
+   public void test_op_concatenate_mix_args_010() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-010.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-010.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Arg1:boolean, arg2: boolean, arg3: integer.
+   public void test_op_concatenate_mix_args_011() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-011.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-011.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Arg1:boolean, arg2: boolean.
+   public void test_op_concatenate_mix_args_012() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-012.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-012.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Iarg1:date, arg2: boolean, arg3: string.
+   public void test_op_concatenate_mix_args_013() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-013.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-013.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Arg1:dateTime, arg2: empty sequence.
+   public void test_op_concatenate_mix_args_014() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-014.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-014.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Arg1:time, arg2: string , arg3: decimal.
+   public void test_op_concatenate_mix_args_015() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-015.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-015.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Arg1:empty seq, arg2: string , arg3: decimal.
+   public void test_op_concatenate_mix_args_016() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-016.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-016.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Use simple arithmetic expression with concat.
+   public void test_op_concatenate_mix_args_017() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-017.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-017.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Concat more than two sequences.
+   public void test_op_concatenate_mix_args_018() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-018.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-018.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Use an external variable with op:concatenate.
+   public void test_op_concatenate_mix_args_019() throws Exception {
+      String inputFile = "/TestSources/bib.xml";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-019.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-019.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Use two external variables with op:contenate.
+   public void test_op_concatenate_mix_args_020() throws Exception {
+      String inputFile = "/TestSources/bib.xml";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-020.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqConcat/op-concatenate-mix-args-020.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

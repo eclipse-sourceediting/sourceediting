@@ -20,13 +20,13 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
-public class BooleanGTTest extends AbstractPsychoPathTest {
+public class NumericMultiplyTest extends AbstractPsychoPathTest {
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(lower bound) $arg2 = xs:boolean(lower bound).
-   public void test_op_boolean_greater_than2args_1() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:decimal(lower bound) $arg2 = xs:decimal(lower bound).
+   public void test_op_numeric_multiplydec2args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-1.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-1.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydec2args-1.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydec2args-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -59,11 +59,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(mid range) $arg2 = xs:boolean(lower bound).
-   public void test_op_boolean_greater_than2args_2() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:decimal(mid range) $arg2 = xs:decimal(lower bound).
+   public void test_op_numeric_multiplydec2args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-2.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-2.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydec2args-2.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydec2args-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -96,11 +96,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(upper bound) $arg2 = xs:boolean(lower bound).
-   public void test_op_boolean_greater_than2args_3() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:decimal(upper bound) $arg2 = xs:decimal(lower bound).
+   public void test_op_numeric_multiplydec2args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-3.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-3.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydec2args-3.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydec2args-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -133,11 +133,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(lower bound) $arg2 = xs:boolean(mid range).
-   public void test_op_boolean_greater_than2args_4() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:decimal(lower bound) $arg2 = xs:decimal(mid range).
+   public void test_op_numeric_multiplydec2args_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-4.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-4.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydec2args-4.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydec2args-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -170,11 +170,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(lower bound) $arg2 = xs:boolean(upper bound).
-   public void test_op_boolean_greater_than2args_5() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:decimal(lower bound) $arg2 = xs:decimal(upper bound).
+   public void test_op_numeric_multiplydec2args_5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-5.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-5.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydec2args-5.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydec2args-5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -207,11 +207,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(lower bound) $arg2 = xs:boolean(lower bound).
-   public void test_op_boolean_greater_than2args_6() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:double(lower bound) $arg2 = xs:double(lower bound).
+   public void test_op_numeric_multiplydbl2args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-6.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-6.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydbl2args-1.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydbl2args-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -244,11 +244,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(mid range) $arg2 = xs:boolean(lower bound).
-   public void test_op_boolean_greater_than2args_7() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:double(mid range) $arg2 = xs:double(lower bound).
+   public void test_op_numeric_multiplydbl2args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-7.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-7.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydbl2args-2.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydbl2args-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -281,11 +281,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(upper bound) $arg2 = xs:boolean(lower bound).
-   public void test_op_boolean_greater_than2args_8() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:double(upper bound) $arg2 = xs:double(lower bound).
+   public void test_op_numeric_multiplydbl2args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-8.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-8.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydbl2args-3.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydbl2args-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -318,11 +318,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(lower bound) $arg2 = xs:boolean(mid range).
-   public void test_op_boolean_greater_than2args_9() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:double(lower bound) $arg2 = xs:double(mid range).
+   public void test_op_numeric_multiplydbl2args_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-9.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-9.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydbl2args-4.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydbl2args-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -355,11 +355,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the arguments set as follows: $arg1 = xs:boolean(lower bound) $arg2 = xs:boolean(upper bound).
-   public void test_op_boolean_greater_than2args_10() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:double(lower bound) $arg2 = xs:double(upper bound).
+   public void test_op_numeric_multiplydbl2args_5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-10.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than2args-10.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydbl2args-5.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplydbl2args-5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -392,11 +392,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(true)" and "true" respectively. Use of "gt" operator.
-   public void test_op_boolean_greater_than_1() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:float(lower bound) $arg2 = xs:float(lower bound).
+   public void test_op_numeric_multiplyflt2args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-1.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-1.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyflt2args-1.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyflt2args-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -429,11 +429,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(true)" and "true" respectively. Use of "le" operator.
-   public void test_op_boolean_greater_than_2() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:float(mid range) $arg2 = xs:float(lower bound).
+   public void test_op_numeric_multiplyflt2args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-2.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-2.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyflt2args-2.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyflt2args-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -466,11 +466,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(true)" and "false" respectively. Use of "gt" operator.
-   public void test_op_boolean_greater_than_3() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:float(upper bound) $arg2 = xs:float(lower bound).
+   public void test_op_numeric_multiplyflt2args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-3.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-3.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyflt2args-3.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyflt2args-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -503,11 +503,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(true)" and "false" respectively. Use of "le" operator.
-   public void test_op_boolean_greater_than_4() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:float(lower bound) $arg2 = xs:float(mid range).
+   public void test_op_numeric_multiplyflt2args_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-4.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-4.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyflt2args-4.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyflt2args-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -540,11 +540,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(false)" and "true" respectively. Use of "gt" operator.
-   public void test_op_boolean_greater_than_5() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:float(lower bound) $arg2 = xs:float(upper bound).
+   public void test_op_numeric_multiplyflt2args_5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-5.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-5.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyflt2args-5.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyflt2args-5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -577,11 +577,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(false)" and "true" respectively. Use of "le" operator.
-   public void test_op_boolean_greater_than_6() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:unsignedShort(lower bound) $arg2 = xs:unsignedShort(lower bound).
+   public void test_op_numeric_multiplyusht2args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-6.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-6.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyusht2args-1.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyusht2args-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -614,11 +614,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(false)" and "false" respectively. Use of "gt" operator.
-   public void test_op_boolean_greater_than_7() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:unsignedShort(mid range) $arg2 = xs:unsignedShort(lower bound).
+   public void test_op_numeric_multiplyusht2args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-7.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-7.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyusht2args-2.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyusht2args-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -651,11 +651,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "fn:not(false)" and "false" respectively. Use of "le" operator.
-   public void test_op_boolean_greater_than_8() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:unsignedShort(upper bound) $arg2 = xs:unsignedShort(lower bound).
+   public void test_op_numeric_multiplyusht2args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-8.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-8.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyusht2args-3.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyusht2args-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -688,11 +688,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "(7 eq 7)" and "true" respectively. Use of "gt" operator.
-   public void test_op_boolean_greater_than_9() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:unsignedShort(lower bound) $arg2 = xs:unsignedShort(mid range).
+   public void test_op_numeric_multiplyusht2args_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-9.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-9.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyusht2args-4.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyusht2args-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -725,11 +725,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "(7 eq 7)" and "true" respectively. Use of "le" operator.
-   public void test_op_boolean_greater_than_10() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:unsignedShort(lower bound) $arg2 = xs:unsignedShort(upper bound).
+   public void test_op_numeric_multiplyusht2args_5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-10.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-10.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyusht2args-5.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyusht2args-5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -762,11 +762,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "(7 eq 7)" and "false" respectively. Use of "gt" operator.
-   public void test_op_boolean_greater_than_11() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:positiveInteger(lower bound) $arg2 = xs:positiveInteger(lower bound).
+   public void test_op_numeric_multiplypint2args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-11.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-11.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplypint2args-1.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplypint2args-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -799,11 +799,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:boolean-greater-than" operator with the operators set as to "(7 eq 7)" and "false" respectively. Use of "le" operator.
-   public void test_op_boolean_greater_than_12() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:positiveInteger(mid range) $arg2 = xs:positiveInteger(lower bound).
+   public void test_op_numeric_multiplypint2args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-12.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-12.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplypint2args-2.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplypint2args-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -836,11 +836,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_001() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:positiveInteger(upper bound) $arg2 = xs:positiveInteger(lower bound).
+   public void test_op_numeric_multiplypint2args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-001.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-001.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplypint2args-3.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplypint2args-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -873,11 +873,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_002() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:positiveInteger(lower bound) $arg2 = xs:positiveInteger(mid range).
+   public void test_op_numeric_multiplypint2args_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-002.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-002.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplypint2args-4.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplypint2args-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -910,11 +910,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_003() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:positiveInteger(lower bound) $arg2 = xs:positiveInteger(upper bound).
+   public void test_op_numeric_multiplypint2args_5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-003.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-003.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplypint2args-5.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplypint2args-5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -947,11 +947,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_004() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:unsignedLong(lower bound) $arg2 = xs:unsignedLong(lower bound).
+   public void test_op_numeric_multiplyulng2args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-004.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-004.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyulng2args-1.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyulng2args-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -984,11 +984,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_005() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:unsignedLong(mid range) $arg2 = xs:unsignedLong(lower bound).
+   public void test_op_numeric_multiplyulng2args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-005.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-005.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyulng2args-2.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyulng2args-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1021,11 +1021,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_006() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:unsignedLong(upper bound) $arg2 = xs:unsignedLong(lower bound).
+   public void test_op_numeric_multiplyulng2args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-006.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-006.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyulng2args-3.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyulng2args-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1058,11 +1058,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_007() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:unsignedLong(lower bound) $arg2 = xs:unsignedLong(mid range).
+   public void test_op_numeric_multiplyulng2args_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-007.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-007.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyulng2args-4.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyulng2args-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1095,11 +1095,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_008() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:unsignedLong(lower bound) $arg2 = xs:unsignedLong(upper bound).
+   public void test_op_numeric_multiplyulng2args_5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-008.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-008.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyulng2args-5.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplyulng2args-5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1132,11 +1132,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_009() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:nonPositiveInteger(upper bound) $arg2 = xs:nonPositiveInteger(lower bound).
+   public void test_op_numeric_multiplynpi2args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-009.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-009.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplynpi2args-1.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplynpi2args-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1169,11 +1169,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_010() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:nonPositiveInteger(lower bound) $arg2 = xs:nonPositiveInteger(upper bound).
+   public void test_op_numeric_multiplynpi2args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-010.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-010.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplynpi2args-2.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplynpi2args-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1206,11 +1206,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_011() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:nonNegativeInteger(lower bound) $arg2 = xs:nonNegativeInteger(lower bound).
+   public void test_op_numeric_multiplynni2args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-011.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-011.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplynni2args-1.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplynni2args-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1243,11 +1243,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_012() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:nonNegativeInteger(mid range) $arg2 = xs:nonNegativeInteger(lower bound).
+   public void test_op_numeric_multiplynni2args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-012.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-012.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplynni2args-2.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplynni2args-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1280,11 +1280,11 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_013() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:nonNegativeInteger(upper bound) $arg2 = xs:nonNegativeInteger(lower bound).
+   public void test_op_numeric_multiplynni2args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-013.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-013.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplynni2args-3.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplynni2args-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1317,11 +1317,159 @@ public class BooleanGTTest extends AbstractPsychoPathTest {
 
    }
 
-   //.
-   public void test_op_boolean_greater_than_more_args_014() throws Exception {
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:nonNegativeInteger(lower bound) $arg2 = xs:nonNegativeInteger(mid range).
+   public void test_op_numeric_multiplynni2args_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-014.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/BooleanOp/BooleanGT/op-boolean-greater-than-more-args-014.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplynni2args-4.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplynni2args-4.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Evaluates the "op:numeric-multiply" operator with the arguments set as follows: $arg1 = xs:nonNegativeInteger(lower bound) $arg2 = xs:nonNegativeInteger(upper bound).
+   public void test_op_numeric_multiplynni2args_5() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplynni2args-5.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplynni2args-5.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Simple multiplication test with () as one operand should return null.
+   public void test_op_numeric_multiplymix2args_1() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplymix2args-1.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplymix2args-1.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Simple multiplication test pass string for second operator.
+   public void test_op_numeric_multiplymix2args_2() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplymix2args-2.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Simple multiplication test, second operator cast string to integer.
+   public void test_op_numeric_multiplymix2args_3() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplymix2args-3.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericMultiply/op-numeric-multiplymix2args-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
