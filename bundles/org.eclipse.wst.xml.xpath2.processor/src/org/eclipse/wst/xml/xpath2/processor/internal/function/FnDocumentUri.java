@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Mukul Gandhi - bug274731 - implementation of fn:document-uri function
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -68,16 +69,17 @@ public class FnDocumentUri extends Function {
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
 		if (arg1.empty())
-			return rs;
+		  return rs;
 
 		NodeType nt = (NodeType) arg1.first();
 
 		if (!(nt instanceof DocType))
-			return rs;
+		  return rs;
 
 		DocType dt = (DocType) nt;
-		// XXX need to implement
-		assert false;
+		XSAnyURI docUri = new XSAnyURI(dt.value().getDocumentURI());
+		
+		rs.add(docUri);
 
 		return rs;
 	}
