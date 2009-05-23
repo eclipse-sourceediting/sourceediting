@@ -13,6 +13,7 @@
  *     Mukul Gandhi - bug 274725 - improvements to fn:base-uri function.
  *     Mukul Gandhi - bug 274731 - improvements to fn:document-uri function.
  *     Mukul Gandhi - bug 274784 - improvements to xs:boolean data type
+ *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -299,5 +300,28 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
+	
+	public void testIntegerDataTypeBug() throws Exception {
+		// Bug 274805
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug274805.xml");
+		loadDOMDocument(fileURL);
+		
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+		
+		String xpath = "xs:integer(x) gt 100";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}	
 	
 }
