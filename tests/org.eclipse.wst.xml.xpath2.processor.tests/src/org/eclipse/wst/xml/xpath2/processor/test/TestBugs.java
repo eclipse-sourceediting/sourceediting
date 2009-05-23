@@ -350,4 +350,29 @@ public class TestBugs extends AbstractPsychoPathTest {
 		assertEquals("true", actual);
 	}
 	
+	public void testIntDataType() throws Exception {
+		// Bug 275105
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+		
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+		
+		// int min value is -2147483648
+		// and max value can be 2147483647
+		String xpath = "xs:int('2147483647') gt 0";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
 }
