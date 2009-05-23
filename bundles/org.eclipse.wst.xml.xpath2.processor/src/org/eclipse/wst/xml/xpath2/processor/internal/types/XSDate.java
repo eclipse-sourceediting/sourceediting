@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
+ *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
+ *     Mukul Gandhi - bug 274792 - improvements to xs:date constructor function. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -149,8 +150,11 @@ Cloneable {
 		if (arg.empty())
 			return rs;
 
-		AnyAtomicType aat = (AnyAtomicType) arg.first();
-
+		// function conversion rules apply here also.
+		// for whatever be argument atype, get it's string value,
+		// and ensure that the string value is a valid date string.
+		AnyType aat = arg.first();
+		
 		XSDate dt = parse_date(aat.string_value());
 
 		if (dt == null)
