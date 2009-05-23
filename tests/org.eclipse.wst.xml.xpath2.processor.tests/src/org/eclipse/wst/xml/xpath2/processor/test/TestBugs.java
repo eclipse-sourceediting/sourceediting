@@ -11,6 +11,7 @@
  *     Mukul Gandhi - bug 273795 - improvements to fn:substring function
  *     Mukul Gandhi - bug 274471 - improvements to fn:string function
  *     Mukul Gandhi - bug 274725 - improvements to fn:base-uri function.
+ *     Mukul Gandhi - bug 274731 - improvements to fn:document-uri function.
  *     Mukul Gandhi - bug 274784 - improvements to xs:boolean data type
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
@@ -221,6 +222,33 @@ public class TestBugs extends AbstractPsychoPathTest {
 		XSBoolean result = (XSBoolean) rs.first();
 
 		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+
+	public void testDocumentUriBug() throws Exception {
+		// Bug 274731
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = dbf.newDocumentBuilder();
+		
+		domDoc = docBuilder.parse("http://www.w3schools.com/xml/note.xml");
+
+		DynamicContext dc = setupDynamicContext(null);
+		
+		String xpath = "document-uri(/) eq xs:anyURI('http://www.w3schools.com/xml/note.xml')";
+		
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = "false";
+		
+		if (result != null) {
+		  actual = result.string_value();
+		}
 
 		assertEquals("true", actual);
 	}
