@@ -7,12 +7,17 @@
  * 
  * Contributors:
  *     David Carver (STAR) - initial API and implementation
- *     Mukul Gandhi - bug 273719 - String-Length with Element Arg
- *     Mukul Gandhi - bug 273795 - improvements to substring function
+ *     Mukul Gandhi - bug 273719 - improvements to fn:string-length function
+ *     Mukul Gandhi - bug 273795 - improvements to fn:substring function
+ *     Mukul Gandhi - bug 274471 - improvements to fn:string function
+ *     Mukul Gandhi - bug 274784 - improvements to xs:boolean data type
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
 import java.net.URL;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
@@ -83,6 +88,101 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		// test with arity 3
 		String xpath = "substring(x, 3, 4) = 'happ'";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	public void testStringFunctionBug274471() throws Exception {
+		// Bug 274471
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug274471.xml");
+		loadDOMDocument(fileURL);
+		
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "x/string() = 'unhappy'";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	public void testStringLengthFunctionBug274471() throws Exception {
+		// Bug 274471. string-length() with arity 0
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug274471.xml");
+		loadDOMDocument(fileURL);
+		
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "x/string-length() = 7";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	public void testNormalizeSpaceFunctionBug274471() throws Exception {
+		// Bug 274471. normalize-space() with arity 0
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug274471.xml");
+		loadDOMDocument(fileURL);
+		
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "x/normalize-space() = 'unhappy'";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	
+	
+	public void testBooleanTypeBug() throws Exception {
+		// Bug 274784
+		// reusing the XML document from another bug
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug273719.xml");
+		loadDOMDocument(fileURL);
+		
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+		
+		String xpath = "xs:boolean('1') eq xs:boolean('true')";
 		XPath path = compileXPath(dc, xpath);
 
 		Evaluator eval = new DefaultEvaluator(dc, domDoc);

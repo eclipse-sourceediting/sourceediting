@@ -1,5 +1,19 @@
+/*******************************************************************************
+ * Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     David Carver (STAR) - initial API and implementation based on W3C XPath 2.0
+ *                           Test Suite.
+ *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
+import org.eclipse.wst.xml.xpath2.processor.testsuite.BooleanEqualTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.BooleanGTTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.BooleanLTTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.CombNodeSeqTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.DateAddYMDTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.DateTimeSubtractYMDTest;
@@ -20,13 +34,13 @@ public class AllW3CXPath20Tests {
 //		suite.addTestSuite(TimeSubtractTest.class);
 		suite.addTestSuite(CombNodeSeqTest.class);
 //		suite.addTestSuite(DayTimeDurationDivideDTDTest.class);
-//		suite.addTestSuite(BooleanLTTest.class);
+		suite.addTestSuite(BooleanLTTest.class);
 //		suite.addTestSuite(NumericMultiplyTest.class);
 //		suite.addTestSuite(AxesTest.class);
 //		suite.addTestSuite(DateSubtractDTDTest.class);
 //		suite.addTestSuite(NodeTestTest.class);
 //		suite.addTestSuite(TimeAddDTDTest.class);
-//		suite.addTestSuite(BooleanEqualTest.class);
+		suite.addTestSuite(BooleanEqualTest.class);
 //		suite.addTestSuite(YearMonthDurationAddTest.class);
 //		suite.addTestSuite(DayTimeDurationAddTest.class);
 //		suite.addTestSuite(dateTimesSubtractTest.class);
@@ -41,7 +55,7 @@ public class AllW3CXPath20Tests {
 //		suite.addTestSuite(NumericDivideTest.class);
 //		suite.addTestSuite(YearMonthDurationSubtractTest.class);
 //		suite.addTestSuite(RangeExprTest.class);
-//		suite.addTestSuite(BooleanGTTest.class);
+		suite.addTestSuite(BooleanGTTest.class);
 //		suite.addTestSuite(DateSubtractYMDTest.class);
 //		suite.addTestSuite(LiteralsTest.class);
 //		suite.addTestSuite(TimeSubtractDTDTest.class);
