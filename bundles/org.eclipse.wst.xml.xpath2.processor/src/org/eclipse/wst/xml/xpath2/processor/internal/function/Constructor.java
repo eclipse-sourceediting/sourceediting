@@ -6,17 +6,20 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug274784 - improvements to xs:boolean data type implementation
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
-import org.eclipse.wst.xml.xpath2.processor.internal.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
-
-import java.util.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.CtrType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 
 /**
  * Constructor class for functions.
@@ -61,8 +64,12 @@ public class Constructor extends Function {
 		for (Iterator i = arg.iterator(); i.hasNext();) {
 			AnyType at = (AnyType) i.next();
 
+			// we should not throw error here. the function conversion rules
+			// apply here also. ref: http://www.w3.org/TR/xpath20/#id-function-calls
+			/*
 			if (!(at instanceof CtrType))
-				DynamicError.throw_type_error();
+			  DynamicError.throw_type_error();
+			*/
 		}
 
 		// do it

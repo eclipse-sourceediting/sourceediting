@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Mukul Gandhi - bug274784 - improvements to xs:boolean data type implementation
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -14,8 +15,9 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpGt;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpLt;
 
 /**
  * A representation of a true or a false value.
@@ -27,7 +29,7 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 * Initiates the new representation to the boolean supplied
 	 * 
 	 * @param x
-	 *            Initialises this datatype to represent this boolean
+	 *       Initializes this datatype to represent this boolean
 	 */
 	public XSBoolean(boolean x) {
 		_value = x;
@@ -37,7 +39,7 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 * Initiates to a default representation of false.
 	 */
 	public XSBoolean() {
-		this(false);
+	  this(false);
 	}
 
 	/**
@@ -93,11 +95,25 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		if (arg.empty())
-			return rs;
+		  return rs;
+		
+		AnyType anyType = (AnyType)arg.first();
+		String str_value = anyType.string_value();
+		
+		if (!(str_value.equals("0") || str_value.equals("1") || 
+			 str_value.equals("true") || str_value.equals("false"))) {
+		   // anything other than these strings is an error
+		   DynamicError.throw_type_error();
+		}
 
-		AnyAtomicType aat = (AnyAtomicType) arg.first();
-
-		Boolean b = new Boolean(aat.string_value());
+		Boolean b = null;
+		if (str_value.equals("0") || str_value.equals("false")) {
+		  b = new Boolean(false);	
+		}
+		else {
+		  b = new Boolean(true);		
+		}
+		
 		rs.add(new XSBoolean(b.booleanValue()));
 
 		return rs;
