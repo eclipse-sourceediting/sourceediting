@@ -13,6 +13,7 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -25,6 +26,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.*;
 public class XSDecimal extends NumericType {
 
 	private double _value;
+	private DecimalFormat format = new DecimalFormat("0.##################");
 
 	/**
 	 * Initiates a representation of 0.0
@@ -70,7 +72,8 @@ public class XSDecimal extends NumericType {
 	 */
 	@Override
 	public String string_value() {
-		return "" + _value;
+
+		return format.format(_value);
 	}
 
 	/**

@@ -13,6 +13,7 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -25,6 +26,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.*;
 public class XSFloat extends NumericType {
 
 	private float _value;
+	private DecimalFormat format = new DecimalFormat("0.#######E0");
 
 	/**
 	 * Initiates a representation of the supplied number
@@ -70,7 +72,11 @@ public class XSFloat extends NumericType {
 	 */
 	@Override
 	public String string_value() {
-		return "" + _value;
+		String value = format.format(_value);
+		if (zero()) {
+			value = "0";
+		}
+		return value;
 	}
 
 	/**
@@ -79,7 +85,7 @@ public class XSFloat extends NumericType {
 	 * @return True is this datatype represents NaN. False otherwise
 	 */
 	public boolean nan() {
-		return _value == Float.NaN;
+		return Float.isNaN(_value);
 	}
 
 	/**
@@ -89,7 +95,10 @@ public class XSFloat extends NumericType {
 	 */
 	@Override
 	public boolean zero() {
-		return _value == 0.0;
+		if (Float.compare(_value, 0) == 0) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
