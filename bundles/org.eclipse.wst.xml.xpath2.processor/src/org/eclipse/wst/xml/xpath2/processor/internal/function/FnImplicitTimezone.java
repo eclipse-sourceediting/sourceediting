@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -63,7 +64,7 @@ public class FnImplicitTimezone extends Function {
 		assert args.size() == 0;
 
 		try {
-			AnyType res = (XDTDayTimeDuration) dc.tz().clone();
+			AnyType res = (XSDayTimeDuration) dc.tz().clone();
 
 			return ResultSequenceFactory.create_new(res);
 		} catch (CloneNotSupportedException err) {

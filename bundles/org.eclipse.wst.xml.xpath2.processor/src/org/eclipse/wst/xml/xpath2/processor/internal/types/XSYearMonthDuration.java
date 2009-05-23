@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -20,7 +21,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
 /**
  * A representation of the YearMonthDuration datatype
  */
-public class XDTYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
+public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 		CmpGt,
 
 		MathPlus, MathMinus, MathTimes, MathDiv {
@@ -41,7 +42,7 @@ public class XDTYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 *            True if this duration of time represents a backwards passage
 	 *            through time. False otherwise
 	 */
-	public XDTYearMonthDuration(int year, int month, boolean negative) {
+	public XSYearMonthDuration(int year, int month, boolean negative) {
 		_year = year;
 		_month = month;
 		_negative = negative;
@@ -59,14 +60,14 @@ public class XDTYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @param months
 	 *            Number of months in the duration of time
 	 */
-	public XDTYearMonthDuration(int months) {
+	public XSYearMonthDuration(int months) {
 		this(0, Math.abs(months), months < 0);
 	}
 
 	/**
 	 * Initialises to a duration of no time (0years and 0months)
 	 */
-	public XDTYearMonthDuration() {
+	public XSYearMonthDuration() {
 		this(0, 0, false);
 	}
 
@@ -79,7 +80,7 @@ public class XDTYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @return New XDTYearMonthDuration representing the duration of time
 	 *         supplied
 	 */
-	public static XDTYearMonthDuration parseYMDuration(String str) {
+	public static XSYearMonthDuration parseYMDuration(String str) {
 		boolean negative = false;
 		int year = 0;
 		int month = 0;
@@ -157,7 +158,7 @@ public class XDTYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 			}
 		}
 
-		return new XDTYearMonthDuration(year, month, negative);
+		return new XSYearMonthDuration(year, month, negative);
 	}
 
 	/**
@@ -188,7 +189,7 @@ public class XDTYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 
-		XDTYearMonthDuration ymd = parseYMDuration(aat.string_value());
+		XSYearMonthDuration ymd = parseYMDuration(aat.string_value());
 
 		if (ymd == null)
 			throw DynamicError.cant_cast(null);
@@ -288,8 +289,8 @@ public class XDTYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @throws DynamicError
 	 */
 	public boolean eq(AnyType arg) throws DynamicError {
-		XDTYearMonthDuration val = (XDTYearMonthDuration) NumericType
-				.get_single_type(arg, XDTYearMonthDuration.class);
+		XSYearMonthDuration val = (XSYearMonthDuration) NumericType
+				.get_single_type(arg, XSYearMonthDuration.class);
 
 		return value() == val.value();
 	}
@@ -304,8 +305,8 @@ public class XDTYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @throws DynamicError
 	 */
 	public boolean lt(AnyType arg) throws DynamicError {
-		XDTYearMonthDuration val = (XDTYearMonthDuration) NumericType
-				.get_single_type(arg, XDTYearMonthDuration.class);
+		XSYearMonthDuration val = (XSYearMonthDuration) NumericType
+				.get_single_type(arg, XSYearMonthDuration.class);
 
 		return value() < val.value();
 	}
@@ -320,8 +321,8 @@ public class XDTYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @throws DynamicError
 	 */
 	public boolean gt(AnyType arg) throws DynamicError {
-		XDTYearMonthDuration val = (XDTYearMonthDuration) NumericType
-				.get_single_type(arg, XDTYearMonthDuration.class);
+		XSYearMonthDuration val = (XSYearMonthDuration) NumericType
+				.get_single_type(arg, XSYearMonthDuration.class);
 
 		return value() > val.value();
 	}
@@ -337,12 +338,12 @@ public class XDTYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @throws DynamicError
 	 */
 	public ResultSequence plus(ResultSequence arg) throws DynamicError {
-		XDTYearMonthDuration val = (XDTYearMonthDuration) NumericType
-				.get_single_type(arg, XDTYearMonthDuration.class);
+		XSYearMonthDuration val = (XSYearMonthDuration) NumericType
+				.get_single_type(arg, XSYearMonthDuration.class);
 
 		int res = value() + val.value();
 
-		return ResultSequenceFactory.create_new(new XDTYearMonthDuration(res));
+		return ResultSequenceFactory.create_new(new XSYearMonthDuration(res));
 	}
 
 	/**
@@ -356,12 +357,12 @@ public class XDTYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @throws DynamicError
 	 */
 	public ResultSequence minus(ResultSequence arg) throws DynamicError {
-		XDTYearMonthDuration val = (XDTYearMonthDuration) NumericType
-				.get_single_type(arg, XDTYearMonthDuration.class);
+		XSYearMonthDuration val = (XSYearMonthDuration) NumericType
+				.get_single_type(arg, XSYearMonthDuration.class);
 
 		int res = value() - val.value();
 
-		return ResultSequenceFactory.create_new(new XDTYearMonthDuration(res));
+		return ResultSequenceFactory.create_new(new XSYearMonthDuration(res));
 	}
 
 	/**
@@ -380,7 +381,7 @@ public class XDTYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 
 		int res = (int) Math.round(value() * val.double_value());
 
-		return ResultSequenceFactory.create_new(new XDTYearMonthDuration(res));
+		return ResultSequenceFactory.create_new(new XSYearMonthDuration(res));
 	}
 
 	/**
@@ -407,10 +408,10 @@ public class XDTYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 			if (!dt.zero())
 				ret = (int) Math.round(value() / dt.double_value());
 
-			return ResultSequenceFactory.create_new(new XDTYearMonthDuration(
+			return ResultSequenceFactory.create_new(new XSYearMonthDuration(
 					ret));
-		} else if (at instanceof XDTYearMonthDuration) {
-			XDTYearMonthDuration md = (XDTYearMonthDuration) at;
+		} else if (at instanceof XSYearMonthDuration) {
+			XSYearMonthDuration md = (XSYearMonthDuration) at;
 
 			double res = (double) value() / md.value();
 

@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -112,10 +113,10 @@ public class FnAvg extends Function {
 		AnyType first = arg.first();
 
 		Class durtype = null;
-		if (first instanceof XDTDayTimeDuration)
-			durtype = XDTDayTimeDuration.class;
-		else if (first instanceof XDTYearMonthDuration)
-			durtype = XDTYearMonthDuration.class;
+		if (first instanceof XSDayTimeDuration)
+			durtype = XSDayTimeDuration.class;
+		else if (first instanceof XSYearMonthDuration)
+			durtype = XSYearMonthDuration.class;
 		else
 			durtype = null;
 

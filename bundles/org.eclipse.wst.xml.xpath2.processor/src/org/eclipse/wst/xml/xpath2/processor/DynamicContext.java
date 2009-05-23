@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -81,7 +82,7 @@ public interface DynamicContext extends StaticContext {
 	 * 
 	 * @return current date time and implicit timezone.
 	 */
-	public XDTDayTimeDuration tz();
+	public XSDayTimeDuration tz();
 
 	/**
 	 * Get document.

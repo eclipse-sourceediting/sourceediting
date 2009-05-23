@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -69,7 +70,7 @@ public class FnMonthsFromDuration extends Function {
 			return rs;
 		}
 
-		XDTYearMonthDuration ymd = (XDTYearMonthDuration) arg1.first();
+		XSYearMonthDuration ymd = (XSYearMonthDuration) arg1.first();
 
 		int res = ymd.month();
 
@@ -89,7 +90,7 @@ public class FnMonthsFromDuration extends Function {
 	public static Collection expected_args() {
 		if (_expected_args == null) {
 			_expected_args = new ArrayList();
-			_expected_args.add(new SeqType(new XDTYearMonthDuration(),
+			_expected_args.add(new SeqType(new XSYearMonthDuration(),
 					SeqType.OCC_QMARK));
 		}
 

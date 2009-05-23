@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -31,7 +32,7 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 		DynamicContext {
 
 	private Focus _focus;
-	private XDTDayTimeDuration _tz;
+	private XSDayTimeDuration _tz;
 	private Hashtable _node_order;
 
 	/**
@@ -46,7 +47,7 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 		super(schema);
 
 		_focus = null;
-		_tz = new XDTDayTimeDuration();
+		_tz = new XSDayTimeDuration();
 
 		init_node_order(doc);
 	}
@@ -88,7 +89,7 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	 * 
 	 * @return an xs:integer _tz
 	 */
-	public XDTDayTimeDuration tz() {
+	public XSDayTimeDuration tz() {
 		return _tz;
 	}
 

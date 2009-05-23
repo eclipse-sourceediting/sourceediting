@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -20,7 +21,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
 /**
  * A representation of the DayTimeDuration datatype
  */
-public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
+public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 		CmpGt,
 
 		MathPlus, MathMinus, MathTimes, MathDiv,
@@ -50,7 +51,7 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 *            True if this duration of time represents a backwards passage
 	 *            through time. False otherwise
 	 */
-	public XDTDayTimeDuration(int days, int hours, int minutes, double seconds,
+	public XSDayTimeDuration(int days, int hours, int minutes, double seconds,
 			boolean negative) {
 		_days = days;
 		_hours = hours;
@@ -83,14 +84,14 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @param secs
 	 *            Number of seconds in the duration of time
 	 */
-	public XDTDayTimeDuration(double secs) {
+	public XSDayTimeDuration(double secs) {
 		this(0, 0, 0, Math.abs(secs), secs < 0);
 	}
 
 	/**
 	 * Initialises to a duration of no time (0days, 0hours, 0minutes, 0seconds)
 	 */
-	public XDTDayTimeDuration() {
+	public XSDayTimeDuration() {
 		this(0, 0, 0, 0.0, false);
 	}
 
@@ -102,7 +103,7 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 */
 	@Override
 	public Object clone() throws CloneNotSupportedException {
-		return new XDTDayTimeDuration(days(), hours(), minutes(), seconds(),
+		return new XSDayTimeDuration(days(), hours(), minutes(), seconds(),
 				negative());
 	}
 
@@ -114,7 +115,7 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 *            String represented duration of time
 	 * @return New XDTDayTimeDuration representing the duration of time supplied
 	 */
-	public static XDTDayTimeDuration parseDTDuration(String str) {
+	public static XSDayTimeDuration parseDTDuration(String str) {
 		boolean negative = false;
 		int days = 0;
 		int hours = 0;
@@ -199,7 +200,7 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 			return null;
 		}
 
-		return new XDTDayTimeDuration(days, hours, minutes, seconds, negative);
+		return new XSDayTimeDuration(days, hours, minutes, seconds, negative);
 	}
 
 	/**
@@ -230,7 +231,7 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 
-		XDTDayTimeDuration dtd = parseDTDuration(aat.string_value());
+		XSDayTimeDuration dtd = parseDTDuration(aat.string_value());
 
 		if (dtd == null)
 			throw DynamicError.cant_cast(null);
@@ -369,8 +370,8 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @throws DynamicError
 	 */
 	public boolean eq(AnyType arg) throws DynamicError {
-		XDTDayTimeDuration val = (XDTDayTimeDuration) NumericType
-				.get_single_type(arg, XDTDayTimeDuration.class);
+		XSDayTimeDuration val = (XSDayTimeDuration) NumericType
+				.get_single_type(arg, XSDayTimeDuration.class);
 
 		return value() == val.value();
 	}
@@ -385,8 +386,8 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @throws DynamicError
 	 */
 	public boolean lt(AnyType arg) throws DynamicError {
-		XDTDayTimeDuration val = (XDTDayTimeDuration) NumericType
-				.get_single_type(arg, XDTDayTimeDuration.class);
+		XSDayTimeDuration val = (XSDayTimeDuration) NumericType
+				.get_single_type(arg, XSDayTimeDuration.class);
 
 		return value() < val.value();
 	}
@@ -401,8 +402,8 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @throws DynamicError
 	 */
 	public boolean gt(AnyType arg) throws DynamicError {
-		XDTDayTimeDuration val = (XDTDayTimeDuration) NumericType
-				.get_single_type(arg, XDTDayTimeDuration.class);
+		XSDayTimeDuration val = (XSDayTimeDuration) NumericType
+				.get_single_type(arg, XSDayTimeDuration.class);
 
 		return value() > val.value();
 	}
@@ -418,12 +419,12 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @throws DynamicError
 	 */
 	public ResultSequence plus(ResultSequence arg) throws DynamicError {
-		XDTDayTimeDuration val = (XDTDayTimeDuration) NumericType
-				.get_single_type(arg, XDTDayTimeDuration.class);
+		XSDayTimeDuration val = (XSDayTimeDuration) NumericType
+				.get_single_type(arg, XSDayTimeDuration.class);
 
 		double res = value() + val.value();
 
-		return ResultSequenceFactory.create_new(new XDTDayTimeDuration(res));
+		return ResultSequenceFactory.create_new(new XSDayTimeDuration(res));
 	}
 
 	/**
@@ -437,12 +438,12 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @throws DynamicError
 	 */
 	public ResultSequence minus(ResultSequence arg) throws DynamicError {
-		XDTDayTimeDuration val = (XDTDayTimeDuration) NumericType
-				.get_single_type(arg, XDTDayTimeDuration.class);
+		XSDayTimeDuration val = (XSDayTimeDuration) NumericType
+				.get_single_type(arg, XSDayTimeDuration.class);
 
 		double res = value() - val.value();
 
-		return ResultSequenceFactory.create_new(new XDTDayTimeDuration(res));
+		return ResultSequenceFactory.create_new(new XSDayTimeDuration(res));
 	}
 
 	/**
@@ -461,7 +462,7 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 
 		double res = value() * val.double_value();
 
-		return ResultSequenceFactory.create_new(new XDTDayTimeDuration(res));
+		return ResultSequenceFactory.create_new(new XSDayTimeDuration(res));
 	}
 
 	/**
@@ -488,9 +489,9 @@ public class XDTDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 				ret = value() / dt.double_value();
 
 			return ResultSequenceFactory
-					.create_new(new XDTDayTimeDuration(ret));
-		} else if (at instanceof XDTDayTimeDuration) {
-			XDTDayTimeDuration md = (XDTDayTimeDuration) at;
+					.create_new(new XSDayTimeDuration(ret));
+		} else if (at instanceof XSDayTimeDuration) {
+			XSDayTimeDuration md = (XSDayTimeDuration) at;
 
 			double res = value() / md.value();
 

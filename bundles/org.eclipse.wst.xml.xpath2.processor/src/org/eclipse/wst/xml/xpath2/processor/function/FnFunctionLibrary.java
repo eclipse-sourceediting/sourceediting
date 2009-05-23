@@ -115,7 +115,7 @@ public class FnFunctionLibrary extends FunctionLibrary {
 	/**
 	 * Path to xpath functions specification.
 	 */
-	public static final String XPATH_FUNCTIONS_NS = "http://www.w3.org/2004/10/xpath-functions";
+	public static final String XPATH_FUNCTIONS_NS = "http://www.w3.org/2005/xpath-functions";
 
 	/**
 	 * Constructor for FnFunctionLibrary.

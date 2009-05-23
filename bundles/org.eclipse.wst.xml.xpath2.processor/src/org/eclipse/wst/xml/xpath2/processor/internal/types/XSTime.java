@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -30,7 +31,7 @@ Cloneable {
 
 	private Calendar _calendar;
 	private boolean _timezoned;
-	private XDTDayTimeDuration _tz;
+	private XSDayTimeDuration _tz;
 
 	/**
 	 * Initialises to the supplied time and timezone
@@ -40,7 +41,7 @@ Cloneable {
 	 * @param tz
 	 *            The timezone (possibly null) associated with this time
 	 */
-	public XSTime(Calendar cal, XDTDayTimeDuration tz) {
+	public XSTime(Calendar cal, XSDayTimeDuration tz) {
 		_calendar = cal;
 
 		_tz = tz;
@@ -66,10 +67,10 @@ Cloneable {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Calendar c = (Calendar) calendar().clone();
-		XDTDayTimeDuration t = tz();
+		XSDayTimeDuration t = tz();
 
 		if (t != null)
-			t = (XDTDayTimeDuration) t.clone();
+			t = (XSDayTimeDuration) t.clone();
 
 		return new XSTime(c, t);
 	}
@@ -244,7 +245,7 @@ Cloneable {
 	 * @return The duration of time between the time stored and the actual time
 	 *         after the timezone is taken into account
 	 */
-	public XDTDayTimeDuration tz() {
+	public XSDayTimeDuration tz() {
 		return _tz;
 	}
 
@@ -324,9 +325,9 @@ Cloneable {
 			double res = value() - val.value();
 
 			return ResultSequenceFactory
-					.create_new(new XDTDayTimeDuration(res));
-		} else if (at instanceof XDTDayTimeDuration) {
-			XDTDayTimeDuration val = (XDTDayTimeDuration) at;
+					.create_new(new XSDayTimeDuration(res));
+		} else if (at instanceof XSDayTimeDuration) {
+			XSDayTimeDuration val = (XSDayTimeDuration) at;
 
 			try {
 				double ms = val.value() * -1000.0;
@@ -357,8 +358,8 @@ Cloneable {
 	 * @throws DynamicError
 	 */
 	public ResultSequence plus(ResultSequence arg) throws DynamicError {
-		XDTDayTimeDuration val = (XDTDayTimeDuration) NumericType
-				.get_single_type(arg, XDTDayTimeDuration.class);
+		XSDayTimeDuration val = (XSDayTimeDuration) NumericType
+				.get_single_type(arg, XSDayTimeDuration.class);
 
 		try {
 			double ms = val.value() * 1000.0;

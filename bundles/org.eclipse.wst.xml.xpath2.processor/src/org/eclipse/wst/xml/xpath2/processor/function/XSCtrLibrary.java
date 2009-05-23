@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.function;
@@ -52,5 +53,7 @@ public class XSCtrLibrary extends ConstructorFL {
 		add_type(new QName());
 		add_type(new XSNCName());
 		add_type(new XSAnyURI());
+		add_type(new XSYearMonthDuration());
+		add_type(new XSDayTimeDuration());
 	}
 }

@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -29,7 +30,7 @@ MathMinus, MathPlus,
 Cloneable {
 	private Calendar _calendar;
 	private boolean _timezoned;
-	private XDTDayTimeDuration _tz;
+	private XSDayTimeDuration _tz;
 
 	/**
 	 * Initiates a new represenation of a supplied date ant time
@@ -39,7 +40,7 @@ Cloneable {
 	 * @param tz
 	 *            The timezone of the date to be stored.
 	 */
-	public XSDateTime(Calendar cal, XDTDayTimeDuration tz) {
+	public XSDateTime(Calendar cal, XSDayTimeDuration tz) {
 		_calendar = cal;
 
 		_tz = tz;
@@ -58,10 +59,10 @@ Cloneable {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Calendar c = (Calendar) calendar().clone();
-		XDTDayTimeDuration t = tz();
+		XSDayTimeDuration t = tz();
 
 		if (t != null)
-			t = (XDTDayTimeDuration) t.clone();
+			t = (XSDayTimeDuration) t.clone();
 
 		return new XSDateTime(c, t);
 	}
@@ -459,7 +460,7 @@ Cloneable {
 
 		// get timezone
 		int tz[] = null;
-		XDTDayTimeDuration tzd = null;
+		XSDayTimeDuration tzd = null;
 		if (timezone != null) {
 			tz = parse_timezone(timezone);
 
@@ -470,7 +471,7 @@ Cloneable {
 			if (tz[0] > 0)
 				mul = -1;
 
-			tzd = new XDTDayTimeDuration(0, tz[1], tz[2], 0.0, tz[0] < 0);
+			tzd = new XSDayTimeDuration(0, tz[1], tz[2], 0.0, tz[0] < 0);
 
 			cal.add(Calendar.HOUR_OF_DAY, mul * tz[1]);
 			cal.add(Calendar.MINUTE, mul * tz[2]);
@@ -728,7 +729,7 @@ Cloneable {
 	 * 
 	 * @return the timezone associated with the date stored
 	 */
-	public XDTDayTimeDuration tz() {
+	public XSDayTimeDuration tz() {
 		return _tz;
 	}
 
@@ -772,18 +773,18 @@ Cloneable {
 
 				double res = value() - val.value();
 
-				return ResultSequenceFactory.create_new(new XDTDayTimeDuration(
+				return ResultSequenceFactory.create_new(new XSDayTimeDuration(
 						res));
-			} else if (at instanceof XDTYearMonthDuration) {
-				XDTYearMonthDuration val = (XDTYearMonthDuration) at;
+			} else if (at instanceof XSYearMonthDuration) {
+				XSYearMonthDuration val = (XSYearMonthDuration) at;
 
 				XSDateTime res = (XSDateTime) clone();
 
 				res.calendar().add(Calendar.MONTH, val.value() * -1);
 				return ResultSequenceFactory.create_new(res);
 
-			} else if (at instanceof XDTDayTimeDuration) {
-				XDTDayTimeDuration val = (XDTDayTimeDuration) at;
+			} else if (at instanceof XSDayTimeDuration) {
+				XSDayTimeDuration val = (XSDayTimeDuration) at;
 
 				XSDateTime res = (XSDateTime) clone();
 
@@ -822,15 +823,15 @@ Cloneable {
 		AnyType at = arg.first();
 
 		try {
-			if (at instanceof XDTYearMonthDuration) {
-				XDTYearMonthDuration val = (XDTYearMonthDuration) at;
+			if (at instanceof XSYearMonthDuration) {
+				XSYearMonthDuration val = (XSYearMonthDuration) at;
 
 				XSDateTime res = (XSDateTime) clone();
 
 				res.calendar().add(Calendar.MONTH, val.value());
 				return ResultSequenceFactory.create_new(res);
-			} else if (at instanceof XDTDayTimeDuration) {
-				XDTDayTimeDuration val = (XDTDayTimeDuration) at;
+			} else if (at instanceof XSDayTimeDuration) {
+				XSDayTimeDuration val = (XSDayTimeDuration) at;
 
 				XSDateTime res = (XSDateTime) clone();
 
