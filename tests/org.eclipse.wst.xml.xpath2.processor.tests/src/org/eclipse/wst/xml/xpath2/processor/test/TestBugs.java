@@ -169,7 +169,30 @@ public class TestBugs extends AbstractPsychoPathTest {
 		assertEquals("true", actual);
 	}
 	
-	
+	public void testAnyUriEqualityBug() throws Exception {
+		// Bug 274719
+		// reusing the XML document from another bug
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug274471.xml");
+		loadDOMDocument(fileURL);
+		
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+		
+		String xpath = "xs:anyURI('abc') eq xs:anyURI('abc')";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+
 	
 	public void testBooleanTypeBug() throws Exception {
 		// Bug 274784
