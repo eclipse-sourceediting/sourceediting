@@ -277,4 +277,27 @@ public class TestBugs extends AbstractPsychoPathTest {
 		assertEquals("true", actual);
 	}
 
+	public void testDateConstructorBug() throws Exception {
+		// Bug 274792
+		URL fileURL = bundle.getEntry("/bugTestFiles/bug274792.xml");
+		loadDOMDocument(fileURL);
+		
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+		
+		String xpath = "xs:date(x) eq xs:date('2009-01-01')";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
 }
