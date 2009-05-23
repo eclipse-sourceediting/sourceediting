@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug274719 - implementation of equality of xs:anyURI values
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -14,12 +15,12 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
 
 /**
  * Represents a Universal Resource Identifier (URI) reference
  */
-public class XSAnyURI extends CtrType {
+public class XSAnyURI extends CtrType implements CmpEq {
 
 	private String _value;
 
@@ -93,5 +94,28 @@ public class XSAnyURI extends CtrType {
 		rs.add(new XSAnyURI(aat.string_value()));
 
 		return rs;
+	}
+	
+	/**
+	 * Equality comparison between this and the supplied representation which
+	 * must be of type xs:anyURI
+	 * 
+	 * @param arg
+	 *            The representation to compare with
+	 * @return True if the two representation are of the same String. False
+	 *         otherwise
+	 * @throws DynamicError
+	 */
+	public boolean eq(AnyType arg) throws DynamicError {
+	  if (arg instanceof XSAnyURI) {
+		if (this.string_value().equals(arg.string_value())) {
+		  return true;	
+		}
+	  }
+	  else {
+		throw DynamicError.throw_type_error();  
+	  }
+	  
+	  return false;
 	}
 }
