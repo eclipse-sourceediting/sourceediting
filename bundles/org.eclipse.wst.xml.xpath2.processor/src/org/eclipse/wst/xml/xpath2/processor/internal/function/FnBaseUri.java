@@ -7,10 +7,12 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Mukul Gandhi - bug274725 - implementation of base-uri function
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -39,7 +41,7 @@ public class FnBaseUri extends Function {
 	 * Constructor for FnBaseUri.
 	 */
 	public FnBaseUri() {
-		super(new QName("base-uri"), 1);
+		super(new QName("base-uri"), -1);
 	}
 
 	/**
@@ -53,7 +55,7 @@ public class FnBaseUri extends Function {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return base_uri(args);
+		return base_uri(args, dynamic_context());
 	}
 
 	/**
@@ -61,25 +63,71 @@ public class FnBaseUri extends Function {
 	 * 
 	 * @param args
 	 *            Result from the expressions evaluation.
+	 * @param d_context
+	 * 			  Dynamic context
 	 * @throws DynamicError
 	 *             Dynamic error.
 	 * @return Result of fn:base-uri operation.
 	 */
-	public static ResultSequence base_uri(Collection args) throws DynamicError {
+	public static ResultSequence base_uri(Collection args, DynamicContext d_context) 
+	                       throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args());
+		
+		ResultSequence rs = null;
+		
+		if (cargs.size() == 0) {
+		  // support for arity 0
+		  // get base-uri from the context item.
+		  AnyType contextItem = d_context.context_item();
+		  if (contextItem != null) {
+			rs = getBaseUri(contextItem);
+		  }
+		  else {
+		    throw DynamicError.throw_type_error();
+		  }
+		}
+		else if (cargs.size() == 1) {
+	      // support for arity 1
+		  ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
+		  AnyType att = (AnyType) arg1.first();
 
-		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
-
-		ResultSequence rs = ResultSequenceFactory.create_new();
-		if (arg1.empty())
-			return rs;
-
-		NodeType nt = (NodeType) arg1.first();
-
-		// XXX need to implement
-		assert false;
+		  rs = getBaseUri(att);
+		}
+		else {
+		  // arity other than 0 or 1 is not allowed
+		  throw DynamicError.throw_type_error();	
+		}
 
 		return rs;
+	}
+
+	/*
+	 * Helper function for base-uri support
+	 */
+	private static ResultSequence getBaseUri(AnyType att) {
+		ResultSequence rs = ResultSequenceFactory.create_new();
+		XSAnyURI baseUri = null;
+		  // depending on the node type, we get the base-uri for the node.
+		  // if base-uri property in DOM is null, we set the base-uri as string "null". This
+		  // avoids null pointer exception while comparing xs:anyURI values.
+	      if (att instanceof DocType) {
+	         DocType dType = (DocType)att;
+	         baseUri = new XSAnyURI(dType.node_value().getBaseURI() != null ? dType.node_value().getBaseURI() : "null");
+	      }
+	      else if (att instanceof ElementType) {
+	         ElementType elemType = (ElementType)att;
+	         baseUri = new XSAnyURI(elemType.node_value().getBaseURI() != null ? elemType.node_value().getBaseURI() : "null");
+	      }
+	      else if (att instanceof PIType) {
+	         PIType piType = (PIType)att;
+	         baseUri = new XSAnyURI(piType.node_value().getBaseURI() != null ? piType.node_value().getBaseURI() : "null");	
+	      }
+	        
+	      if (baseUri != null) {
+	        rs.add(baseUri);	
+	      }
+	      
+	      return rs;
 	}
 
 	/**
