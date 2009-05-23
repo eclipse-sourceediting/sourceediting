@@ -17,6 +17,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -62,6 +63,6 @@ public class FnCount extends Function {
 		Iterator citer = args.iterator();
 		ResultSequence arg = (ResultSequence) citer.next();
 
-		return ResultSequenceFactory.create_new(new XSInteger(arg.size()));
+		return ResultSequenceFactory.create_new(new XSInteger(BigInteger.valueOf(arg.size())));
 	}
 }

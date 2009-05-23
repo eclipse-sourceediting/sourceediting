@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -82,7 +83,7 @@ public class FnInsertBefore extends Function {
 		if (inserts.empty())
 			return target;
 
-		int position = ((XSInteger) at).int_value();
+		int position = ((XSInteger) at).int_value().intValue();
 
 		if (position < 1)
 			position = 1;

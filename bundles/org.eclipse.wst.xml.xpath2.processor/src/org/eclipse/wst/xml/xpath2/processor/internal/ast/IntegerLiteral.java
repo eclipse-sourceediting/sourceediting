@@ -6,10 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
+
+import java.math.BigInteger;
 
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger;
 
@@ -28,7 +31,7 @@ public class IntegerLiteral extends NumericLiteral {
 	 *            integer value
 	 */
 	public IntegerLiteral(int value) {
-		_value = new XSInteger(value);
+		_value = new XSInteger(BigInteger.valueOf(value));
 	}
 
 	/**

@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -124,7 +125,7 @@ public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 
 		XSInteger i = (XSInteger) rs.first();
 
-		return i.int_value();
+		return i.int_value().intValue();
 	}
 
 	/**

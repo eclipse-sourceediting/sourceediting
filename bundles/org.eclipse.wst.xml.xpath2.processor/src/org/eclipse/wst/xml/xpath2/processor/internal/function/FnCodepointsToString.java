@@ -74,7 +74,7 @@ public class FnCodepointsToString extends Function {
 		for (Iterator i = arg1.iterator(); i.hasNext();) {
 			XSInteger code = (XSInteger) i.next();
 
-			sb.append((char) code.int_value());
+			sb.append((char) code.int_value().intValue());
 		}
 
 		rs.add(new XSString(sb.toString()));

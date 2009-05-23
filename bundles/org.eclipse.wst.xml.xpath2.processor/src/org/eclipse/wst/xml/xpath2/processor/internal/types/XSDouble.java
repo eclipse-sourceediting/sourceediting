@@ -6,10 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
+
+import java.math.BigInteger;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -86,7 +89,7 @@ public class XSDouble extends NumericType {
 		if (arg.empty())
 			return rs;
 
-		AnyAtomicType aat = (AnyAtomicType) arg.first();
+		AnyType aat = arg.first();
 
 		XSDouble d = parse_double(aat.string_value());
 		if (d == null)
@@ -290,8 +293,9 @@ public class XSDouble extends NumericType {
 
 		if (val.zero())
 			throw DynamicError.div_zero(null);
+		
 		return ResultSequenceFactory.create_new(new XSInteger(
-				(int) (double_value() / val.double_value())));
+				BigInteger.valueOf((int) (double_value() / val.double_value()))));
 	}
 
 	/**

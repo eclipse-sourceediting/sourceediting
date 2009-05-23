@@ -6,11 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
+import java.math.BigInteger;
 import java.util.*;
 
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -81,7 +83,7 @@ public class RangeResultSequence extends ResultSequence {
 			ResultSequence newtail = ResultSequenceFactory.create_new();
 
 			for (; _start <= _end; _start++)
-				newtail.add(new XSInteger(_start));
+				newtail.add(new XSInteger(BigInteger.valueOf(_start)));
 
 			newtail.concat(_tail);
 			_tail.release();
@@ -102,7 +104,7 @@ public class RangeResultSequence extends ResultSequence {
 	@Override
 	public AnyType get(int i) {
 		if (i < _size)
-			return new XSInteger(_start + i);
+			return new XSInteger(BigInteger.valueOf(_start + i));
 		else
 			return _tail.get(i - _size);
 	}

@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
+ *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
+ *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -18,6 +19,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -76,7 +78,7 @@ public class FnYearsFromDuration extends Function {
 		if (ymd.negative())
 			res *= -1;
 
-		rs.add(new XSInteger(res));
+		rs.add(new XSInteger(BigInteger.valueOf(res)));
 
 		return rs;
 	}

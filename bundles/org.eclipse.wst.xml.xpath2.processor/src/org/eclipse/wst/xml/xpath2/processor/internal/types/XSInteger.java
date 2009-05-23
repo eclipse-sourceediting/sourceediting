@@ -6,38 +6,41 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type. Using Java
+ *                      BigInteger class to enhance numerical range to -INF -> +INF.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import java.math.BigInteger;
+
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.*;
 
 /**
  * A representation of the Integer datatype
  */
 public class XSInteger extends XSDecimal {
 
-	private int _value;
+	private BigInteger _value;
 
 	/**
-	 * Initialises a representation of 0
+	 * Initializes a representation of 0
 	 */
 	public XSInteger() {
-		this(0);
+		this(BigInteger.valueOf(0));
 	}
 
 	/**
-	 * Initialises a representation of the supplied integer
+	 * Initializes a representation of the supplied integer
 	 * 
 	 * @param x
 	 *            Integer to be stored
 	 */
-	public XSInteger(int x) {
-		super(x);
+	public XSInteger(BigInteger x) {
+		super(x.intValue());
 		_value = x;
 	}
 
@@ -68,7 +71,7 @@ public class XSInteger extends XSDecimal {
 	 */
 	@Override
 	public String string_value() {
-		return "" + _value;
+		return _value.toString();
 	}
 
 	/**
@@ -78,7 +81,7 @@ public class XSInteger extends XSDecimal {
 	 */
 	@Override
 	public boolean zero() {
-		return _value == 0;
+		return _value == BigInteger.valueOf(0);
 	}
 
 	/**
@@ -97,11 +100,13 @@ public class XSInteger extends XSDecimal {
 		if (arg.empty())
 			return rs;
 
-		AnyAtomicType aat = (AnyAtomicType) arg.first();
+		// the function conversion rules apply here too. Get the argument
+		// and convert it's string value to an integer.
+		AnyType aat = arg.first();
 
 		try {
-			Integer i = new Integer(aat.string_value());
-			rs.add(new XSInteger(i.intValue()));
+			BigInteger bigInt = new BigInteger(aat.string_value());
+			rs.add(new XSInteger(bigInt));
 			return rs;
 		} catch (NumberFormatException e) {
 			throw DynamicError.cant_cast(null);
@@ -114,7 +119,7 @@ public class XSInteger extends XSDecimal {
 	 * 
 	 * @return The actual integer value stored
 	 */
-	public int int_value() {
+	public BigInteger int_value() {
 		return _value;
 	}
 
@@ -124,9 +129,9 @@ public class XSInteger extends XSDecimal {
 	 * @param x
 	 *            Integer to be stored
 	 */
-	public void set_int(int x) {
+	public void set_int(BigInteger x) {
 		_value = x;
-		set_double(x);
+		set_double(x.intValue());
 	}
 
 	/**
@@ -146,8 +151,9 @@ public class XSInteger extends XSDecimal {
 			DynamicError.throw_type_error();
 		XSInteger val = (XSInteger) at;
 
-		return ResultSequenceFactory.create_new(new XSInteger(int_value()
-				+ val.int_value()));
+		return ResultSequenceFactory.create_new(new 
+				                   XSInteger(int_value().add(val.int_value())));
+		
 	}
 
 	/**
@@ -163,8 +169,9 @@ public class XSInteger extends XSDecimal {
 	@Override
 	public ResultSequence minus(ResultSequence arg) throws DynamicError {
 		XSInteger val = (XSInteger) get_single_type(arg, XSInteger.class);
-		return ResultSequenceFactory.create_new(new XSInteger(int_value()
-				- val.int_value()));
+		
+		return ResultSequenceFactory.create_new(new 
+				                 XSInteger(int_value().subtract(val.int_value())));
 	}
 
 	/**
@@ -180,8 +187,9 @@ public class XSInteger extends XSDecimal {
 	@Override
 	public ResultSequence times(ResultSequence arg) throws DynamicError {
 		XSInteger val = (XSInteger) get_single_type(arg, XSInteger.class);
-		return ResultSequenceFactory.create_new(new XSInteger(int_value()
-				* val.int_value()));
+		
+		return ResultSequenceFactory.create_new(new 
+				                 XSInteger(int_value().multiply(val.int_value())));
 	}
 
 	/**
@@ -196,8 +204,9 @@ public class XSInteger extends XSDecimal {
 	@Override
 	public ResultSequence mod(ResultSequence arg) throws DynamicError {
 		XSInteger val = (XSInteger) get_single_type(arg, XSInteger.class);
-		return ResultSequenceFactory.create_new(new XSInteger(int_value()
-				% val.int_value()));
+		
+		return ResultSequenceFactory.create_new(new 
+				                  XSInteger(int_value().mod(val.int_value())));
 	}
 
 	/**
@@ -208,17 +217,41 @@ public class XSInteger extends XSDecimal {
 	@Override
 	public ResultSequence unary_minus() {
 		return ResultSequenceFactory
-				.create_new(new XSInteger(-1 * int_value()));
+				.create_new(new XSInteger(int_value().multiply(BigInteger.valueOf(-1))));
 	}
 
 	/**
 	 * Absolutes the integer stored
 	 * 
-	 * @return New XSInteger representing the abolsute of the integer stored
+	 * @return New XSInteger representing the absolute of the integer stored
 	 */
 	@Override
 	public NumericType abs() {
-		return new XSInteger(Math.abs(int_value()));
+		return new XSInteger(int_value().abs());
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal#gt(org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType)
+	 */
+	public boolean gt(AnyType arg) throws DynamicError {
+        XSInteger val = (XSInteger) get_single_type(arg, XSInteger.class);
+        
+        int compareResult = int_value().compareTo(val.int_value());
+		
+		return compareResult > 0;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal#lt(org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType)
+	 */
+	public boolean lt(AnyType arg) throws DynamicError {
+        XSInteger val = (XSInteger) get_single_type(arg, XSInteger.class);
+        
+        int compareResult = int_value().compareTo(val.int_value());
+		
+		return compareResult < 0;
 	}
 
 }

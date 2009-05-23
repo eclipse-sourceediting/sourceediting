@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -17,6 +18,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -62,7 +64,7 @@ public class FnSum extends Function {
 		ResultSequence arg = FnAvg.get_arg(args);
 
 		if (arg.empty())
-			return ResultSequenceFactory.create_new(new XSInteger(0));
+			return ResultSequenceFactory.create_new(new XSInteger(BigInteger.valueOf(0)));
 
 		MathPlus total = null;
 		for (Iterator i = arg.iterator(); i.hasNext();) {

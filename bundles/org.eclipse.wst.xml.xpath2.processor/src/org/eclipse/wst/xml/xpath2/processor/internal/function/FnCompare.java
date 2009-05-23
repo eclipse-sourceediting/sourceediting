@@ -17,6 +17,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -102,11 +103,11 @@ public class FnCompare extends Function {
 		int ret = xstr1.value().compareTo(xstr2.value());
 
 		if (ret == 0)
-			rs.add(new XSInteger(0));
+			rs.add(new XSInteger(BigInteger.valueOf(0)));
 		else if (ret < 0)
-			rs.add(new XSInteger(-1));
+			rs.add(new XSInteger(BigInteger.valueOf(-1)));
 		else
-			rs.add(new XSInteger(1));
+			rs.add(new XSInteger(BigInteger.valueOf(1)));
 
 		return rs;
 	}

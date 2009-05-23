@@ -17,6 +17,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -73,7 +74,7 @@ public class FnHoursFromDateTime extends Function {
 
 		int res = dt.hour();
 
-		rs.add(new XSInteger(res));
+		rs.add(new XSInteger(BigInteger.valueOf(res)));
 
 		return rs;
 	}

@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Gandhi - bug 274471 - improvements to string-length function (support for arity 0)  
+ *     Mukul Gandhi - bug 274471 - improvements to string-length function (support for arity 0)
+ *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type  
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -19,6 +20,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -94,7 +96,7 @@ public class FnStringLength extends Function {
 		String str = ((XSString) arg1.first()).value();
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
-		rs.add(new XSInteger(str.length()));
+		rs.add(new XSInteger(BigInteger.valueOf(str.length())));
 
 		return rs;
 	}
@@ -123,10 +125,10 @@ public class FnStringLength extends Function {
 		if (contextItem != null) {
 		  // if context item is defined, then that is the default argument
 		  // to fn:string function
-		  rs.add(new XSInteger(contextItem.string_value().length()));
+		  rs.add(new XSInteger(BigInteger.valueOf(contextItem.string_value().length())));
 		}
 		else {
-		  rs.add(new XSInteger(0));
+		  rs.add(new XSInteger(BigInteger.valueOf(0)));
 		}
 		return rs;
 	}

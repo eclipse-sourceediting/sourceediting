@@ -18,6 +18,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -66,6 +67,6 @@ public class FnLast extends Function {
 
 		assert last != 0;
 
-		return ResultSequenceFactory.create_new(new XSInteger(last));
+		return ResultSequenceFactory.create_new(new XSInteger(BigInteger.valueOf(last)));
 	}
 }

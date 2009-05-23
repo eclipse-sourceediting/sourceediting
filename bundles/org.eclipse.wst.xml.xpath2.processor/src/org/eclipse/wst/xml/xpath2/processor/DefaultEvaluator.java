@@ -6,11 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
 
+import java.math.BigInteger;
 import java.util.*;
 import org.w3c.dom.*;
 import org.apache.xerces.xs.*;
@@ -1763,7 +1765,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 
 			if (at instanceof NumericType) {
 				try {
-					_g_xsint.set_int(_dc.context_position());
+					_g_xsint.set_int(BigInteger.valueOf(_dc.context_position()));
 					return FsEq.fs_eq_fast(at, _g_xsint);
 				} catch (DynamicError err) {
 					report_error(err);
@@ -1803,8 +1805,8 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 						&& xpe.expr() instanceof FilterExpr) {
 					FilterExpr fex = (FilterExpr) xpe.expr();
 					if (fex.primary() instanceof IntegerLiteral) {
-						int pos = ((IntegerLiteral) fex.primary()).value()
-								.int_value();
+						int pos = (((IntegerLiteral) fex.primary()).value()
+								.int_value()).intValue();
 
 						if (pos <= focus.last() && pos > 0) {
 							focus.set_position(pos);
