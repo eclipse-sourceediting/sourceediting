@@ -1,6 +1,9 @@
 package org.eclipse.wst.xml.xpath2.processor.test;
 
 import org.eclipse.wst.xml.xpath2.processor.testsuite.CombNodeSeqTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.DateAddYMDTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.DateTimeSubtractYMDTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.YearMonthDurationAddDTTest;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -52,14 +55,14 @@ public class AllW3CXPath20Tests {
 //		suite.addTestSuite(PredicatesTest.class);
 //		suite.addTestSuite(ExternalContextExprTest.class);
 //		suite.addTestSuite(NumericModTest.class);
-//		suite.addTestSuite(DateTimeSubtractYMDTest.class);
+		suite.addTestSuite(DateTimeSubtractYMDTest.class);
 //		suite.addTestSuite(NumericEqualTest.class);
 //		suite.addTestSuite(DatesSubtractTest.class);
 //		suite.addTestSuite(DateAddDTDTest.class);
 //		suite.addTestSuite(DayTimeDurationSubtractTest.class);
 //		suite.addTestSuite(NumericUnaryMinusTest.class);
-//		suite.addTestSuite(YearMonthDurationAddDTTest.class);
-//		suite.addTestSuite(DateAddYMDTest.class);
+		suite.addTestSuite(YearMonthDurationAddDTTest.class);
+		suite.addTestSuite(DateAddYMDTest.class);
 //		suite.addTestSuite(ParenExprTest.class);
 //		suite.addTestSuite(UnabbrAxesTest.class);
 		//$JUnit-END$

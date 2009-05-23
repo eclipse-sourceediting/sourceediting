@@ -7,6 +7,7 @@
  *
  *Contributors:
  *    David Carver (STAR) - initial API and implementation
+ *    Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -24,7 +25,6 @@ import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary;
 import org.eclipse.wst.xml.xpath2.processor.function.XSCtrLibrary;
-import org.eclipse.wst.xml.xpath2.processor.internal.function.XDTCtrLibrary;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
 
 
@@ -44,17 +44,14 @@ public class TestXPath20 extends AbstractPsychoPathTest {
 	public void testSetupNullContenxt() throws Exception {
 		DynamicContext dc = new DefaultDynamicContext(null, domDoc);
 		dc.add_namespace("xsd", "http://www.w3.org/2001/XMLSchema");
-		dc.add_namespace("xdt", "http://www.w3.org/2004/10/xpath-datatypes");
 	}
 
 	public void testAddLibraries() throws Exception {
 		DynamicContext dc = new DefaultDynamicContext(null, domDoc);
 		dc.add_namespace("xsd", "http://www.w3.org/2001/XMLSchema");
-		dc.add_namespace("xdt", "http://www.w3.org/2004/10/xpath-datatypes");
 
 		dc.add_function_library(new FnFunctionLibrary());
 		dc.add_function_library(new XSCtrLibrary());
-		dc.add_function_library(new XDTCtrLibrary());
 	}
 
 	public void testParseInvalidXPathExpression() throws Exception {

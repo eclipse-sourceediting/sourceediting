@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.*;
 import org.eclipse.wst.xml.xpath2.processor.function.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.function.XDTCtrLibrary;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
@@ -81,14 +80,12 @@ public class AbstractPsychoPathTest extends TestCase {
 	protected DynamicContext setupDynamicContext(XSModel schema) {
 		DynamicContext dc = new DefaultDynamicContext(schema, domDoc);
 		dc.add_namespace("xs", "http://www.w3.org/2001/XMLSchema");
-		dc.add_namespace("xdt", "http://www.w3.org/2004/10/xpath-datatypes");
-		dc.add_namespace("fn", "http://www.w3.org/2004/10/xpath-functions");//XXX:PP FunctionLibrary ns bug 
-		dc.add_namespace("local", "http://www.w3.org/2005/xquery-local-functions");
+		dc.add_namespace("xsd", "http://www.w3.org/2001/XMLSchema");
+		dc.add_namespace("fn", "http://www.w3.org/2005/xpath-functions");
 
 
 		dc.add_function_library(new FnFunctionLibrary());
 		dc.add_function_library(new XSCtrLibrary());
-		dc.add_function_library(new XDTCtrLibrary());
 		setupVariables(dc);
 		return dc;
 	}
