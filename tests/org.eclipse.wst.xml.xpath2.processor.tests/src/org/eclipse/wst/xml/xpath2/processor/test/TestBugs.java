@@ -14,6 +14,7 @@
  *     Mukul Gandhi - bug 274731 - improvements to fn:document-uri function.
  *     Mukul Gandhi - bug 274784 - improvements to xs:boolean data type
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type
+ *     Mukul Gandhi - bug 274952 - implements xs:long data type
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -323,5 +324,30 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}	
+
+	public void testLongDataType() throws Exception {
+		// Bug 274952
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+		
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+		
+		// long min value is -9223372036854775808
+		// and max value can be 9223372036854775807
+		String xpath = "xs:long('9223372036854775807') gt 0";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
 	
 }
