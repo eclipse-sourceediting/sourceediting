@@ -10,6 +10,7 @@
  *     Mukul Gandhi - bug 273719 - improvements to fn:string-length function
  *     Mukul Gandhi - bug 273795 - improvements to fn:substring function
  *     Mukul Gandhi - bug 274471 - improvements to fn:string function
+ *     Mukul Gandhi - bug 274725 - improvements to fn:base-uri function.
  *     Mukul Gandhi - bug 274784 - improvements to xs:boolean data type
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
@@ -193,6 +194,36 @@ public class TestBugs extends AbstractPsychoPathTest {
 		assertEquals("true", actual);
 	}
 
+	public void testBaseUriBug() throws Exception {
+		// Bug 274725 - Mukul Ghandi
+		
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = dbf.newDocumentBuilder();
+		
+		// for testing this bug, we read the XML document from the web. 
+		// this ensures, that base-uri property of DOM is not null.
+		domDoc = docBuilder.parse("http://www.w3schools.com/xml/note.xml");
+
+		// we pass XSModel as null for this test case. Otherwise, we would
+		// get an exception.
+		DynamicContext dc = setupDynamicContext(null);
+		
+		String xpath = "base-uri(note) eq xs:anyURI('http://www.w3schools.com/xml/note.xml')";
+		
+		// please note: The below XPath would also work, with base-uri using arity 0.
+		//String xpath = "note/base-uri() eq xs:anyURI('http://www.w3schools.com/xml/note.xml')";
+		
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
 	
 	public void testBooleanTypeBug() throws Exception {
 		// Bug 274784
