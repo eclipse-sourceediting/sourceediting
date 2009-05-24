@@ -90,5 +90,25 @@ public class TestXPath20 extends AbstractPsychoPathTest {
 	  
 	   assertEquals("Unexpected value returned", "Boston", resultValue);
 	}
+	
+	public void testProcessSimpleXpathVariable() throws Exception {
+		   // Get XML Schema Information for the Document
+		   XSModel schema = getGrammar();
+
+		   DynamicContext dc = setupDynamicContext(schema);
+		  
+		   String xpath = "$input-context/employee[1]/location";
+
+		   XPath path = compileXPath(dc, xpath);
+		  
+		   Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		   ResultSequence rs = eval.evaluate(path);
+		  
+		   ElementType result = (ElementType)rs.first();
+		   String resultValue = result.node_value().getTextContent();
+		  
+		   assertEquals("Unexpected value returned", "Boston", resultValue);
+		}
+
 
 }

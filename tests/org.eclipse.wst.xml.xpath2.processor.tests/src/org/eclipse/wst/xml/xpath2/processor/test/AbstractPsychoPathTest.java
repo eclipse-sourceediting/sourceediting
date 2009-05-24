@@ -35,6 +35,7 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.*;
 import org.eclipse.wst.xml.xpath2.processor.function.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.DocType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.osgi.framework.Bundle;
@@ -244,10 +245,11 @@ public class AbstractPsychoPathTest extends TestCase {
 	protected DynamicContext setupVariables(DynamicContext dc) {
 		dc.add_variable(new QName("x"));
 		dc.add_variable(new QName("var"));
+		AnyType docType = new DocType(domDoc, 0);
 		ElementType elementType = new ElementType(domDoc.getDocumentElement(),
 				0);
 		dc.set_variable(new QName("input-context1"), elementType);
-		dc.set_variable(new QName("input-context"), elementType);
+		dc.set_variable(new QName("input-context"), docType);
 
 		return dc;
 	}
@@ -257,6 +259,7 @@ public class AbstractPsychoPathTest extends TestCase {
 		Iterator<AnyType> iterator = rs.iterator();
 		while (iterator.hasNext()) {
 			AnyType anyType = iterator.next();
+			
 			actual = actual + anyType.string_value() + " ";
 		}
 
