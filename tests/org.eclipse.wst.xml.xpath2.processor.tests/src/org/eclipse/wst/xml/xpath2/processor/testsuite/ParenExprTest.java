@@ -403,44 +403,6 @@ public class ParenExprTest extends AbstractPsychoPathTest {
 
    }
 
-   //If expression.
-   public void test_Parenexpr_12() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/PrimaryExpr/ParenExpr/Parenexpr-12.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/PrimaryExpr/ParenExpr/Parenexpr-12.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-	
-	      AnyType result = rs.first();
-	
-	      actual = result.string_value();
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
    //Literal.
    public void test_Parenexpr_13() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
