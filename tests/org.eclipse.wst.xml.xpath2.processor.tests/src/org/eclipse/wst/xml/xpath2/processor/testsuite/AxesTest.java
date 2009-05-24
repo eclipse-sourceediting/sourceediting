@@ -6720,115 +6720,116 @@ public class AxesTest extends AbstractPsychoPathTest {
    }
 
    //Use of // to get all elements of a given name.
-   public void test_Axes085() throws Exception {
-      String inputFile = "/TestSources/nw_Customers.xml";
-      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/Axes/Axes085.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/Axes/Axes085.xml";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
+   // Not a valid XPath 2 script
+//   public void test_Axes085() throws Exception {
+//      String inputFile = "/TestSources/nw_Customers.xml";
+//      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/Axes/Axes085.xq";
+//      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/Axes/Axes085.xml";
+//      String expectedResult = getExpectedResult(resultFile);
+//      URL fileURL = bundle.getEntry(inputFile);
+//      loadDOMDocument(fileURL);
+//      
+//      // Get XML Schema Information for the Document
+//      XSModel schema = getGrammar();
+//
+//      DynamicContext dc = setupDynamicContext(schema);
+//
+//      String xpath = extractXPathExpression(xqFile, inputFile);
+//      String actual = null;
+//      try {
+//	   	  XPath path = compileXPath(dc, xpath);
+//	
+//	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+//	      ResultSequence rs = eval.evaluate(path);
+//         
+//          actual = buildResultString(rs);
+//	
+//      } catch (XPathParserException ex) {
+//    	 actual = ex.code();
+//      } catch (StaticError ex) {
+//         actual = ex.code();
+//      } catch (DynamicError ex) {
+//         actual = ex.code();
+//      }
+//
+//      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+//        
+//
+//   }
 
    //Parent of attribute node.
-   public void test_Axes086() throws Exception {
-      String inputFile = "/TestSources/Tree1Text.xml";
-      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/Axes/Axes086.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/Axes/Axes086.xml";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
+//   public void test_Axes086() throws Exception {
+//      String inputFile = "/TestSources/Tree1Text.xml";
+//      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/Axes/Axes086.xq";
+//      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/Axes/Axes086.xml";
+//      String expectedResult = getExpectedResult(resultFile);
+//      URL fileURL = bundle.getEntry(inputFile);
+//      loadDOMDocument(fileURL);
+//      
+//      // Get XML Schema Information for the Document
+//      XSModel schema = getGrammar();
+//
+//      DynamicContext dc = setupDynamicContext(schema);
+//
+//      String xpath = extractXPathExpression(xqFile, inputFile);
+//      String actual = null;
+//      try {
+//	   	  XPath path = compileXPath(dc, xpath);
+//	
+//	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+//	      ResultSequence rs = eval.evaluate(path);
+//         
+//          actual = buildResultString(rs);
+//	
+//      } catch (XPathParserException ex) {
+//    	 actual = ex.code();
+//      } catch (StaticError ex) {
+//         actual = ex.code();
+//      } catch (DynamicError ex) {
+//         actual = ex.code();
+//      }
+//
+//      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+//        
+//
+//   }
 
    //Parent of text nodes.
-   public void test_Axes087() throws Exception {
-      String inputFile = "/TestSources/xq311B.xml";
-      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/Axes/Axes087.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/Axes/Axes087.xml";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
+//   public void test_Axes087() throws Exception {
+//      String inputFile = "/TestSources/xq311B.xml";
+//      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/Axes/Axes087.xq";
+//      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/Axes/Axes087.xml";
+//      String expectedResult = getExpectedResult(resultFile);
+//      URL fileURL = bundle.getEntry(inputFile);
+//      loadDOMDocument(fileURL);
+//      
+//      // Get XML Schema Information for the Document
+//      XSModel schema = getGrammar();
+//
+//      DynamicContext dc = setupDynamicContext(schema);
+//
+//      String xpath = extractXPathExpression(xqFile, inputFile);
+//      String actual = null;
+//      try {
+//	   	  XPath path = compileXPath(dc, xpath);
+//	
+//	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+//	      ResultSequence rs = eval.evaluate(path);
+//         
+//          actual = buildResultString(rs);
+//	
+//      } catch (XPathParserException ex) {
+//    	 actual = ex.code();
+//      } catch (StaticError ex) {
+//         actual = ex.code();
+//      } catch (DynamicError ex) {
+//         actual = ex.code();
+//      }
+//
+//      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+//        
+//
+//   }
 
    //Empty step should result in parse error.
    public void test_Axes088() throws Exception {

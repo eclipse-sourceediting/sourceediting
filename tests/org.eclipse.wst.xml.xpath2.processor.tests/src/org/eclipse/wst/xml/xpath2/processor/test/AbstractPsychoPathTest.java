@@ -37,9 +37,14 @@ import org.eclipse.wst.xml.xpath2.processor.function.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.DocType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSOutput;
+import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.SAXException;
 
 import junit.framework.TestCase;
@@ -263,6 +268,27 @@ public class AbstractPsychoPathTest extends TestCase {
 			actual = actual + anyType.string_value() + " ";
 		}
 
+		return actual.trim();
+	}
+	
+	protected String buildXMLResultString(ResultSequence rs) throws Exception {
+        DOMImplementationLS domLS = (DOMImplementationLS) domDoc.getImplementation().getFeature("LS", "3.0");
+        LSOutput outputText = domLS.createLSOutput();
+        LSSerializer serializer = domLS.createLSSerializer();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        outputText.setByteStream((OutputStream)outputStream);
+        
+		String actual = new String();
+		Iterator<NodeType> iterator = rs.iterator();
+		while (iterator.hasNext()) {
+			NodeType nodeType = iterator.next();
+			Node node = nodeType.node_value();
+			serializer.write(node, outputText);
+		}
+
+		actual = outputStream.toString();
+		actual = actual.replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
+		outputStream.close();
 		return actual.trim();
 	}
 
