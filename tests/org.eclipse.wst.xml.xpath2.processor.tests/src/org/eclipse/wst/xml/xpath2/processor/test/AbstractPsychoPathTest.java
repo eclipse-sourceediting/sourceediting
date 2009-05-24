@@ -246,8 +246,8 @@ public class AbstractPsychoPathTest extends TestCase {
 		dc.add_variable(new QName("var"));
 		ElementType elementType = new ElementType(domDoc.getDocumentElement(),
 				0);
-		;
 		dc.set_variable(new QName("input-context1"), elementType);
+		dc.set_variable(new QName("input-context"), elementType);
 
 		return dc;
 	}
