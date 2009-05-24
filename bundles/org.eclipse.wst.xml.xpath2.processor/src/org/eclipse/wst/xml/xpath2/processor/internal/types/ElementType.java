@@ -6,15 +6,22 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 276134 - improvements to schema aware primitive type support
+ *                                  for attribute/element nodes  
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
-import org.w3c.dom.*;
+import org.apache.xerces.dom.PSVIElementNSImpl;
+import org.apache.xerces.xs.XSTypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.*;
+import org.eclipse.wst.xml.xpath2.processor.function.XSCtrLibrary;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 /**
  * A representation of the ElementType datatype
@@ -90,10 +97,22 @@ public class ElementType extends NodeType {
 	 */
 	@Override
 	public ResultSequence typed_value() {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
-		// XXX only if PSVI is not present!! [not our case]
-		rs.add(new UntypedAtomic(string_value()));
+		ResultSequence rs = ResultSequenceFactory.create_new();	
+		
+		PSVIElementNSImpl psviElem = (PSVIElementNSImpl)_value;
+		XSTypeDefinition typeDef = psviElem.getTypeDefinition();
+		
+		if (typeDef != null && typeDef.getNamespace().equals(XSCtrLibrary.XML_SCHEMA_NS)) {
+		  Object schemaTypeValue = getTypedValueForPrimitiveType(typeDef);
+		  if (schemaTypeValue != null) {
+			rs.add((AnyType)schemaTypeValue);  
+		  }
+		  else {
+			rs.add(new UntypedAtomic(string_value()));  
+		  }
+	    } else {
+		   rs.add(new UntypedAtomic(string_value()));	
+		}	
 
 		return rs;
 	}

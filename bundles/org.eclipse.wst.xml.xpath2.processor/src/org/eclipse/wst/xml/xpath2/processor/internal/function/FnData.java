@@ -6,17 +6,23 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 276134 - improvements to schema aware primitive type support
+ *                                 for attribute/element nodes 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.ListIterator;
+
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
-
-import java.util.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 
 /**
  * fn:data takes a sequence of items and returns a sequence of atomic values.
@@ -65,14 +71,15 @@ public class FnData extends Function {
 		for (Iterator i = arg.iterator(); i.hasNext();) {
 			AnyType at = (AnyType) i.next();
 
-			if (at instanceof AnyAtomicType)
+			if (at instanceof AnyAtomicType) {
 				rs.add(at);
+			}
 			else if (at instanceof NodeType) {
 				NodeType nt = (NodeType) at;
-
 				rs.concat(nt.typed_value());
-			} else
+			} else {
 				assert false;
+			}
 		}
 
 		return rs;

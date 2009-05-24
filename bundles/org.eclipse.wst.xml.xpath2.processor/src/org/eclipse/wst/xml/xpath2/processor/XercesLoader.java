@@ -6,7 +6,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 276134 - improvements to schema aware primitive type support
+ *                                 for attribute/element nodes  
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -15,6 +17,8 @@ import java.io.*;
 
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
+import javax.xml.validation.Schema;
+
 import org.xml.sax.*;
 
 /**
@@ -41,12 +45,19 @@ public class XercesLoader implements DOMLoader {
 	public static final String DOCUMENT_PSVI_IMPLEMENTATION = "org.apache.xerces.dom.PSVIDocumentImpl";
 
 	boolean _validating;
+	
+	Schema _schema = null;;
 
 	/**
 	 * Constructor for Xerxes loader.
 	 */
 	public XercesLoader() {
 		_validating = false;
+	}
+	
+	public XercesLoader(Schema schema) {
+		_validating = false;
+		_schema = schema;
 	}
 
 	/**
@@ -64,12 +75,17 @@ public class XercesLoader implements DOMLoader {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
 		factory.setNamespaceAware(true);
-		factory.setValidating(_validating);
 		factory.setAttribute(SCHEMA_VALIDATION_FEATURE,
 				new Boolean(_validating));
 		factory.setAttribute(DOCUMENT_IMPLEMENTATION_PROPERTY,
 				DOCUMENT_PSVI_IMPLEMENTATION);
-		// factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
+		
+		if (_schema != null) {
+		  factory.setSchema(_schema);
+		}
+		else {
+		  factory.setValidating(_validating);	
+		}
 
 		try {
 			DocumentBuilder builder = factory.newDocumentBuilder();
@@ -94,13 +110,16 @@ public class XercesLoader implements DOMLoader {
 			}
 			return builder.parse(in);
 		} catch (SAXException e) {
-			throw new DOMLoaderException("SAX exception: " + e.getMessage());
+			//throw new DOMLoaderException("SAX exception: " + e.getMessage());
+			e.printStackTrace();
 		} catch (ParserConfigurationException e) {
 			throw new DOMLoaderException("Parser configuration exception: "
 					+ e.getMessage());
 		} catch (IOException e) {
 			throw new DOMLoaderException("IO exception: " + e.getMessage());
 		}
+		
+		return null;
 
 	}
 

@@ -6,7 +6,9 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - bug 276134 - improvements to schema aware primitive type support
+ *                                 for attribute/element nodes 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -64,7 +66,8 @@ public class FsEq extends Function {
 		for (Iterator i = args.iterator(); i.hasNext();) {
 			ResultSequence rs = (ResultSequence) i.next();
 
-			FnData.fast_atomize(rs);
+			//FnData.fast_atomize(rs);
+			rs = FnData.atomize(rs);
 
 			if (rs.empty())
 				return new ArrayList();
