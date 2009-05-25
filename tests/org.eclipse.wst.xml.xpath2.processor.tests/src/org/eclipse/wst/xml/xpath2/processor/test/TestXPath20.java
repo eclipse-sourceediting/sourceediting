@@ -97,7 +97,7 @@ public class TestXPath20 extends AbstractPsychoPathTest {
 
 		   DynamicContext dc = setupDynamicContext(schema);
 		  
-		   String xpath = "$input-context/employee[1]/location";
+		   String xpath = "$input-context/employees/employee[1]/location";
 
 		   XPath path = compileXPath(dc, xpath);
 		  
