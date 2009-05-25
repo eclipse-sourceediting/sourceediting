@@ -8,7 +8,6 @@
          <topic href="doc/html/org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper.html" label="org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper"/>
       </topic>
       <topic label="org.eclipse.wst.xsl.core">
-         <topic href="doc/html/org.eclipse.wst.xsl.core.Messages.html" label="org.eclipse.wst.xsl.core.Messages"/>
          <topic href="doc/html/org.eclipse.wst.xsl.core.ValidationPreferences.html" label="org.eclipse.wst.xsl.core.ValidationPreferences"/>
          <topic href="doc/html/org.eclipse.wst.xsl.core.XSLCore.html" label="org.eclipse.wst.xsl.core.XSLCore"/>
       </topic>
