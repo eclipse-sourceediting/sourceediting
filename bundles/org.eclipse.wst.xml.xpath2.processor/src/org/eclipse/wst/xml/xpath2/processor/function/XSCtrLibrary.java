@@ -9,7 +9,8 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
  *     Mukul Gandhi - bug 274952 - implementation of xs:long data type
- *     Mukul Gandhi - bug 275105 - implementation of xs:int data type  
+ *     Mukul Gandhi - bug 275105 - implementation of xs:int data type
+ *     Mukul Gandhi - bug 277599 - implementation of xs:nonPositiveInteger data type 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.function;
@@ -43,6 +44,7 @@ public class XSCtrLibrary extends ConstructorFL {
 		add_type(new XSInteger());
 		add_type(new XSLong());
 		add_type(new XSInt());
+		add_type(new XSNonPositiveInteger());
 
 		// date
 		add_type(new XSDateTime());
