@@ -21,7 +21,8 @@
  *     Mukul Gandhi - bug 277608   implements xs:short data type
  *                    bug 277609   implements xs:nonNegativeInteger data type
  *                    bug 277629   implements xs:unsignedLong data type
- *                    bug 277632   implements xs:positiveInteger data type 
+ *                    bug 277632   implements xs:positiveInteger data type
+ *                    bug 277639   implements xs:byte data type 
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -574,6 +575,31 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// min value of xs:positiveInteger is 1
 		// max value of xs:positiveInteger is INF
 		String xpath = "xs:positiveInteger('1') eq 1";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+		
+	public void testXSByte() throws Exception {
+		// Bug 277639
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		// min value of xs:byte is -128
+		// max value of xs:byte is 127
+		String xpath = "xs:byte('-128') eq -128";
 		XPath path = compileXPath(dc, xpath);
 
 		Evaluator eval = new DefaultEvaluator(dc, domDoc);
