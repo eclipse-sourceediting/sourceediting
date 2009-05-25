@@ -65,7 +65,7 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 	 * List of ValidatorMetaDatas of total scope validators that have been run
 	 * since beginProcessing() was called.
 	 */
-	private List fTotalScopeValidatorsAlreadyRun;
+	private List fTotalScopeValidatorsAlreadyRun = new ArrayList();
 
 	public ValidatorStrategy(ISourceViewer sourceViewer, String contentType) {
 		super(sourceViewer);
@@ -79,10 +79,7 @@ public class ValidatorStrategy extends StructuredTextReconcilingStrategy {
 	}
 
 	public void beginProcessing() {
-		if (fTotalScopeValidatorsAlreadyRun == null)
-			fTotalScopeValidatorsAlreadyRun = new ArrayList();
-		else
-			fTotalScopeValidatorsAlreadyRun.clear();
+		fTotalScopeValidatorsAlreadyRun.clear();
 	}
 
 	/**
