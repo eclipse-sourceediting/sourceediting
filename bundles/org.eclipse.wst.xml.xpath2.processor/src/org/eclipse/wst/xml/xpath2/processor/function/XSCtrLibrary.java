@@ -13,7 +13,8 @@
  *     Mukul Gandhi - bug 277599 - implementation of xs:nonPositiveInteger data type
  *     Mukul Gandhi - bug 277602 - implementation of xs:negativeInteger data type
  *     Mukul Gandhi - bug 277608 - implementation of xs:short data type
- *     Mukul Gandhi - bug 277609 - implementation of xs:nonNegativeInteger data type 
+ *     Mukul Gandhi - bug 277609 - implementation of xs:nonNegativeInteger data type
+ *     Mukul Gandhi - bug 277629 - implementation of xs:unsignedLong data type 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.function;
@@ -51,6 +52,7 @@ public class XSCtrLibrary extends ConstructorFL {
 		add_type(new XSNegativeInteger());
 		add_type(new XSShort());
 		add_type(new XSNonNegativeInteger());
+		add_type(new XSUnsignedLong());
 
 		// date
 		add_type(new XSDateTime());
