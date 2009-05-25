@@ -15,6 +15,7 @@
  *     Mukul Gandhi - bug 274784 - improvements to xs:boolean data type
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type
  *     Mukul Gandhi - bug 274952 - implements xs:long data type
+ *     Mukul Gandhi - bug 277599 - implements xs:nonPositiveInteger data type
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -416,6 +417,31 @@ public class TestBugs extends AbstractPsychoPathTest {
 		DynamicContext dc = setupDynamicContext(schema);
 
 		String xpath = "person/dob eq xs:date('2006-12-10')";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	public void testXSNonPositiveInteger() throws Exception {
+		// Bug 277599
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		// min value of xs:nonPositiveInteger is -INF
+		// max value is 0
+		String xpath = "xs:nonPositiveInteger('0') eq 0";
 		XPath path = compileXPath(dc, xpath);
 
 		Evaluator eval = new DefaultEvaluator(dc, domDoc);
