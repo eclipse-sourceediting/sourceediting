@@ -24,7 +24,8 @@
  *                    bug 277632   implements xs:positiveInteger data type
  *                    bug 277639   implements xs:byte data type
  *                    bug 277642   implements xs:unsignedInt data type
- *                    bug 277645   implements xs:unsignedShort data type 
+ *                    bug 277645   implements xs:unsignedShort data type
+ *                    bug 277650   implements xs:unsignedByte data type 
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -653,6 +654,33 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// min value of xs:unsignedShort is 0
 		// max value of xs:unsignedShort is 65535
 		String xpath = "xs:unsignedShort('65535') eq 65535";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	
+	
+	public void testXSUnsignedByte() throws Exception {
+		// Bug 277650
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		// min value of xs:unsignedByte is 0
+		// max value of xs:unsignedByte is 255
+		String xpath = "xs:unsignedByte('255') eq 255";
 		XPath path = compileXPath(dc, xpath);
 
 		Evaluator eval = new DefaultEvaluator(dc, domDoc);
