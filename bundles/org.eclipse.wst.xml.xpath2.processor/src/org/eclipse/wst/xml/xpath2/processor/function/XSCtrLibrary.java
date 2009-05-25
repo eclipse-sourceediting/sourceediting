@@ -59,6 +59,7 @@ public class XSCtrLibrary extends ConstructorFL {
 		add_type(new XSPositiveInteger());
 		add_type(new XSByte());
 		add_type(new XSUnsignedInt());
+		add_type(new XSUnsignedShort());
 
 		// date
 		add_type(new XSDateTime());
