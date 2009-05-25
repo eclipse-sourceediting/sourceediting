@@ -10,8 +10,8 @@
  *     Mukul Gandhi - bug 273719 - improvements to fn:string-length function
  *     Mukul Gandhi - bug 273795 - improvements to fn:substring function
  *     Mukul Gandhi - bug 274471 - improvements to fn:string function
- *     Mukul Gandhi - bug 274725 - improvements to fn:base-uri function.
- *     Mukul Gandhi - bug 274731 - improvements to fn:document-uri function.
+ *     Mukul Gandhi - bug 274725 - improvements to fn:base-uri function
+ *     Mukul Gandhi - bug 274731 - improvements to fn:document-uri function
  *     Mukul Gandhi - bug 274784 - improvements to xs:boolean data type
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type
  *     Mukul Gandhi - bug 274952 - implements xs:long data type
@@ -20,7 +20,8 @@
  *     Mukul Gandhi - bug 277599 - implements xs:nonPositiveInteger data type
  *     Mukul Gandhi - bug 277608   implements xs:short data type
  *                    bug 277609   implements xs:nonNegativeInteger data type
- *                    bug 277629   implements xs:unsignedLong data type. 
+ *                    bug 277629   implements xs:unsignedLong data type
+ *                    bug 277632   implements xs:positiveInteger data type 
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -548,6 +549,31 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// min value of xs:unsignedLong is 0
 		// max value of xs:unsignedLong is 18446744073709551615
 		String xpath = "xs:unsignedLong('0') eq 0";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	public void testXSPositiveInteger() throws Exception {
+		// Bug 277632
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		// min value of xs:positiveInteger is 1
+		// max value of xs:positiveInteger is INF
+		String xpath = "xs:positiveInteger('1') eq 1";
 		XPath path = compileXPath(dc, xpath);
 
 		Evaluator eval = new DefaultEvaluator(dc, domDoc);
