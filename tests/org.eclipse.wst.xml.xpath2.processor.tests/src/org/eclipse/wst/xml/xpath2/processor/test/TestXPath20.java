@@ -108,11 +108,4 @@ public class TestXPath20 extends AbstractPsychoPathTest {
 
 		assertEquals("Unexpected value returned", "Boston", resultValue);
 	}
-
-	public void testBigDecimal() {
-		BigDecimal dec = new BigDecimal(-999999999999999999L);
-		assertEquals("-999999999999999999", dec.toString());
-		assertEquals("-999999999999999999", Double.toString(dec.doubleValue()));
-	}
-	
 }
