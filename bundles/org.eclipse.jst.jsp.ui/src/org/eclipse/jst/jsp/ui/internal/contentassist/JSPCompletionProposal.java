@@ -12,8 +12,11 @@ package org.eclipse.jst.jsp.ui.internal.contentassist;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposal;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.jface.text.contentassist.ICompletionProposalExtension3;
 import org.eclipse.jface.text.contentassist.ICompletionProposalExtension5;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
@@ -24,7 +27,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
  *
  * @plannedfor 1.0
  */
-public class JSPCompletionProposal extends CustomCompletionProposal implements IJavaCompletionProposal, ICompletionProposalExtension5 {
+public class JSPCompletionProposal extends CustomCompletionProposal implements IJavaCompletionProposal, ICompletionProposalExtension3, ICompletionProposalExtension5 {
 
 	/*
 	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=124483
@@ -79,5 +82,41 @@ public class JSPCompletionProposal extends CustomCompletionProposal implements I
 		}
 
 		return additionalInfo;
+	}
+
+	/*
+	 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension3#getInformationControlCreator()
+	 */
+	public IInformationControlCreator getInformationControlCreator() {
+		// [277530] Use the java proposal's information control creator
+		ICompletionProposal javaProposal = getJavaCompletionProposal();
+		IInformationControlCreator informationControlCreator = null;
+
+		if (javaProposal instanceof ICompletionProposalExtension3)
+			informationControlCreator = ((ICompletionProposalExtension3) javaProposal).getInformationControlCreator();
+
+		return informationControlCreator;
+	}
+
+	/*
+	 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension3#getPrefixCompletionStart(org.eclipse.jface.text.IDocument, int)
+	 */
+	public int getPrefixCompletionStart(IDocument document, int completionOffset) {
+		ICompletionProposal javaProposal = getJavaCompletionProposal();
+		if (javaProposal instanceof ICompletionProposalExtension3)
+			return ((ICompletionProposalExtension3) javaProposal).getPrefixCompletionStart(document, completionOffset);
+
+		return getReplacementOffset();
+	}
+
+	/*
+	 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension3#getPrefixCompletionText(org.eclipse.jface.text.IDocument, int)
+	 */
+	public CharSequence getPrefixCompletionText(IDocument document, int completionOffset) {
+		ICompletionProposal javaProposal = getJavaCompletionProposal();
+		if (javaProposal instanceof ICompletionProposalExtension3)
+			return ((ICompletionProposalExtension3) javaProposal).getPrefixCompletionText(document, completionOffset);
+
+		return getReplacementString();
 	}
 }
