@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
+import org.eclipse.wst.xml.xpath2.processor.testsuite.AbbrAxesTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.AxesTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.BooleanEqualTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.BooleanGTTest;
@@ -55,7 +56,7 @@ public class AllW3CXPath20Tests {
 //		suite.addTestSuite(dateTimesSubtractTest.class);
 //		suite.addTestSuite(InternalContextExprTest.class);
 //		suite.addTestSuite(DayTimeDurationMultiplyTest.class);
-//		suite.addTestSuite(AbbrAxesTest.class);
+		suite.addTestSuite(AbbrAxesTest.class);
 //		suite.addTestSuite(DateTimeSubtractDTDTest.class);
 //		suite.addTestSuite(NumericSubtractTest.class);
 //		suite.addTestSuite(DayTimeDurationDivideTest.class);

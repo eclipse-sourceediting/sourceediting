@@ -44,7 +44,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -101,7 +101,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-3.xq";
       String resultFile = "/ExpectedTestResults/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-3.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = formatResultString(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -118,7 +118,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -127,6 +127,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
       } catch (DynamicError ex) {
          actual = ex.code();
       }
+      
 
       assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
@@ -138,7 +139,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-5.xq";
       String resultFile = "/ExpectedTestResults/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-5.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = formatResultString(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -155,7 +156,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -175,7 +176,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-6.xq";
       String resultFile = "/ExpectedTestResults/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-6.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = formatResultString(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -192,7 +193,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -229,7 +230,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -266,7 +267,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -303,7 +304,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -340,7 +341,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -377,7 +378,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -414,7 +415,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -434,7 +435,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-14.xq";
       String resultFile = "/ExpectedTestResults/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-14.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = formatResultString(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -451,7 +452,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -471,7 +472,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-16.xq";
       String resultFile = "/ExpectedTestResults/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-16.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = formatResultString(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -488,7 +489,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -508,7 +509,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-17.xq";
       String resultFile = "/ExpectedTestResults/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-17.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = formatResultString(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -525,7 +526,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -545,7 +546,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-18.xq";
       String resultFile = "/ExpectedTestResults/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-18.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = formatResultString(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -562,7 +563,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -582,7 +583,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-19.xq";
       String resultFile = "/ExpectedTestResults/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-19.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = formatResultString(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -599,7 +600,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -619,7 +620,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-20.xq";
       String resultFile = "/ExpectedTestResults/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-20.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = formatResultString(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -636,7 +637,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -656,7 +657,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-21.xq";
       String resultFile = "/ExpectedTestResults/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-21.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = formatResultString(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -673,7 +674,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -710,7 +711,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -747,7 +748,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -767,7 +768,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-25.xq";
       String resultFile = "/ExpectedTestResults/Expressions/PathExpr/AbbrAxes/abbreviatedSyntax-25.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = formatResultString(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -784,7 +785,7 @@ public class AbbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();

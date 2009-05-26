@@ -253,7 +253,7 @@ public class AbstractPsychoPathTest extends TestCase {
 		AnyType docType = new DocType(domDoc, 0);
 		ElementType elementType = new ElementType(domDoc.getDocumentElement(),
 				0);
-		dc.set_variable(new QName("input-context1"), elementType);
+		dc.set_variable(new QName("input-context1"), docType);
 		dc.set_variable(new QName("input-context"), docType);
 
 		return dc;
@@ -291,5 +291,21 @@ public class AbstractPsychoPathTest extends TestCase {
 		outputStream.close();
 		return actual.trim();
 	}
+	
+	protected String formatResultString(String resultFile) throws Exception {
+		DOMLoader domloader = new XercesLoader(null);
+		domloader.set_validating(false);
+		InputStream is = bundle.getEntry(resultFile).openStream();		
+		Document resultDoc = domloader.load(is);
+
+        DOMImplementationLS domLS = (DOMImplementationLS) resultDoc.getImplementation().getFeature("LS", "3.0");
+        LSSerializer serializer = domLS.createLSSerializer();
+        
+        String actual = serializer.writeToString(resultDoc.getDocumentElement());
+
+		actual = actual.replace("<?xml version=\"1.0\" encoding=\"UTF-16\"?>", "");
+		return actual.trim();
+	}
+
 
 }
