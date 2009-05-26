@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
+import java.math.BigDecimal;
 import java.net.URL;
 
 import org.apache.xerces.xs.XSModel;
@@ -27,7 +28,6 @@ import org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary;
 import org.eclipse.wst.xml.xpath2.processor.function.XSCtrLibrary;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
 
-
 public class TestXPath20 extends AbstractPsychoPathTest {
 
 	@Override
@@ -36,7 +36,7 @@ public class TestXPath20 extends AbstractPsychoPathTest {
 		URL fileURL = bundle.getEntry("/TestSources/acme_corp.xml");
 		loadDOMDocument(fileURL);
 	}
-	
+
 	public void testLoadXML() throws Exception {
 		assertNotNull(domDoc);
 	}
@@ -70,45 +70,49 @@ public class TestXPath20 extends AbstractPsychoPathTest {
 		String xpath = "some $x in /students/student/name satisfies $x = \"Fred\"";
 		xpp.parse(xpath);
 	}
-	
 
 	public void testProcessSimpleXpath() throws Exception {
-	   // Get XML Schema Information for the Document
-	   XSModel schema = getGrammar();
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
 
-	   DynamicContext dc = setupDynamicContext(schema);
-	  
-	   String xpath = "/employees/employee[1]/location";
+		DynamicContext dc = setupDynamicContext(schema);
 
-	   XPath path = compileXPath(dc, xpath);
-	  
-	   Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	   ResultSequence rs = eval.evaluate(path);
-	  
-	   ElementType result = (ElementType)rs.first();
-	   String resultValue = result.node_value().getTextContent();
-	  
-	   assertEquals("Unexpected value returned", "Boston", resultValue);
+		String xpath = "/employees/employee[1]/location";
+
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		ElementType result = (ElementType) rs.first();
+		String resultValue = result.node_value().getTextContent();
+
+		assertEquals("Unexpected value returned", "Boston", resultValue);
+	}
+
+	public void testProcessSimpleXpathVariable() throws Exception {
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "$input-context/employees/employee[1]/location";
+
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		ElementType result = (ElementType) rs.first();
+		String resultValue = result.node_value().getTextContent();
+
+		assertEquals("Unexpected value returned", "Boston", resultValue);
+	}
+
+	public void testBigDecimal() {
+		BigDecimal dec = new BigDecimal(-999999999999999999L);
+		assertEquals("-999999999999999999", dec.toString());
+		assertEquals("-999999999999999999", Double.toString(dec.doubleValue()));
 	}
 	
-	public void testProcessSimpleXpathVariable() throws Exception {
-		   // Get XML Schema Information for the Document
-		   XSModel schema = getGrammar();
-
-		   DynamicContext dc = setupDynamicContext(schema);
-		  
-		   String xpath = "$input-context/employees/employee[1]/location";
-
-		   XPath path = compileXPath(dc, xpath);
-		  
-		   Evaluator eval = new DefaultEvaluator(dc, domDoc);
-		   ResultSequence rs = eval.evaluate(path);
-		  
-		   ElementType result = (ElementType)rs.first();
-		   String resultValue = result.node_value().getTextContent();
-		  
-		   assertEquals("Unexpected value returned", "Boston", resultValue);
-		}
-
-
 }

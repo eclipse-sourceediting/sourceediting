@@ -19,6 +19,10 @@ import org.eclipse.wst.xml.xpath2.processor.testsuite.CombNodeSeqTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.DateAddYMDTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.DateTimeSubtractYMDTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.NodeTestTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.NumericEqualTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.NumericGTTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.NumericLTTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.NumericUnaryPlusTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.ParenExprTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.YearMonthDurationAddDTTest;
 
@@ -30,9 +34,9 @@ public class AllW3CXPath20Tests {
 	public static Test suite() {
 		TestSuite suite = new TestSuite("Test for W3C XPath 2.0 test suite.");
 		//$JUnit-BEGIN$
-//		suite.addTestSuite(NumericUnaryPlusTest.class);
+		suite.addTestSuite(NumericUnaryPlusTest.class);
 //		suite.addTestSuite(SequenceTypeSyntaxTest.class);
-//		suite.addTestSuite(NumericGTTest.class);
+		suite.addTestSuite(NumericGTTest.class);
 //		suite.addTestSuite(DateTimeAddDTDTest.class);
 //		suite.addTestSuite(TimeSubtractTest.class);
 		suite.addTestSuite(CombNodeSeqTest.class);
@@ -54,7 +58,7 @@ public class AllW3CXPath20Tests {
 //		suite.addTestSuite(NumericSubtractTest.class);
 //		suite.addTestSuite(DayTimeDurationDivideTest.class);
 //		suite.addTestSuite(NameTestTest.class);
-//		suite.addTestSuite(NumericLTTest.class);
+		suite.addTestSuite(NumericLTTest.class);
 //		suite.addTestSuite(NumericDivideTest.class);
 //		suite.addTestSuite(YearMonthDurationSubtractTest.class);
 //		suite.addTestSuite(RangeExprTest.class);
@@ -73,7 +77,7 @@ public class AllW3CXPath20Tests {
 //		suite.addTestSuite(ExternalContextExprTest.class);
 //		suite.addTestSuite(NumericModTest.class);
 		suite.addTestSuite(DateTimeSubtractYMDTest.class);
-//		suite.addTestSuite(NumericEqualTest.class);
+		suite.addTestSuite(NumericEqualTest.class);
 //		suite.addTestSuite(DatesSubtractTest.class);
 //		suite.addTestSuite(DateAddDTDTest.class);
 //		suite.addTestSuite(DayTimeDurationSubtractTest.class);
