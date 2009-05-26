@@ -13,6 +13,7 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -126,7 +127,10 @@ public class XSDouble extends NumericType {
 	 */
 	@Override
 	public String string_value() {
-		return "" + _value;
+		if (zero()) {
+			return "0";
+		}
+		return  Double.toString(_value);
 	}
 
 	/**
@@ -135,7 +139,7 @@ public class XSDouble extends NumericType {
 	 * @return True if this XSDouble represents NaN. False otherwise.
 	 */
 	public boolean nan() {
-		return _value == Double.NaN;
+		return Double.isNaN(_value);
 	}
 
 	/**
@@ -145,7 +149,7 @@ public class XSDouble extends NumericType {
 	 */
 	@Override
 	public boolean zero() {
-		return _value == 0.0;
+		return (Double.compare(_value, 0.0E0) == 0);
 	}
 
 	/**
