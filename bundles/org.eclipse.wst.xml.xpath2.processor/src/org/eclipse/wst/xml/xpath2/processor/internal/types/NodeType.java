@@ -8,11 +8,13 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 276134 - improvements to schema aware primitive type support
- *                                 for attribute/element nodes 
+ *                                 for attribute/element nodes
+ *     David Carver - bug 277774 - XSDecimal returning wrong values. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -209,7 +211,7 @@ public abstract class NodeType extends AnyType {
 		  schemaTypeValue = new XSFloat(Float.parseFloat(string_value()));
 	    }
 		else if (typeDef.getName().equals("decimal")) {		
-		  schemaTypeValue = new XSDecimal(Double.parseDouble(string_value()));
+		  schemaTypeValue = new XSDecimal(new BigDecimal(string_value()));
 		}
 		
 		return schemaTypeValue;

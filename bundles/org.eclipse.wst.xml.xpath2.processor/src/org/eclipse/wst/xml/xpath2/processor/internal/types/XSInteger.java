@@ -13,6 +13,7 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
@@ -40,7 +41,7 @@ public class XSInteger extends XSDecimal {
 	 *            Integer to be stored
 	 */
 	public XSInteger(BigInteger x) {
-		super(x.intValue());
+		super(new BigDecimal(x));
 		_value = x;
 	}
 

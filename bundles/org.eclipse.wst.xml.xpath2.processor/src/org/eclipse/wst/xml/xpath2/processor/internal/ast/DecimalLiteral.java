@@ -11,6 +11,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.ast;
 
+import java.math.BigDecimal;
+
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
 /**
@@ -27,7 +29,7 @@ public class DecimalLiteral extends NumericLiteral {
 	 * @param value
 	 *            double value
 	 */
-	public DecimalLiteral(double value) {
+	public DecimalLiteral(BigDecimal value) {
 		_value = new XSDecimal(value);
 	}
 

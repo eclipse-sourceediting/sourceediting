@@ -12,6 +12,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import java.math.BigDecimal;
+
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -495,7 +497,7 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 
 			double res = value() / md.value();
 
-			return ResultSequenceFactory.create_new(new XSDecimal(res));
+			return ResultSequenceFactory.create_new(new XSDecimal(BigDecimal.valueOf(res)));
 		} else {
 			DynamicError.throw_type_error();
 			return null; // unreach

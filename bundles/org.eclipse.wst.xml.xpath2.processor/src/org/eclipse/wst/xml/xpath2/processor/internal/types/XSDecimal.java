@@ -7,12 +7,15 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
+ *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type
+ *     David Carver - bug 277774 - XSDecimal returning wrong values. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
@@ -25,14 +28,14 @@ import org.eclipse.wst.xml.xpath2.processor.internal.*;
  */
 public class XSDecimal extends NumericType {
 
-	private double _value;
+	private BigDecimal _value;
 	private DecimalFormat format = new DecimalFormat("0.##################");
 
 	/**
 	 * Initiates a representation of 0.0
 	 */
 	public XSDecimal() {
-		this(0.0);
+		this(BigDecimal.valueOf(0.0));
 	}
 
 	/**
@@ -41,8 +44,12 @@ public class XSDecimal extends NumericType {
 	 * @param x
 	 *            Number to be stored
 	 */
-	public XSDecimal(double x) {
+	public XSDecimal(BigDecimal x) {
 		_value = x;
+	}
+	
+	public XSDecimal(String x) {
+		_value = new BigDecimal(x);
 	}
 
 	/**
@@ -72,6 +79,10 @@ public class XSDecimal extends NumericType {
 	 */
 	@Override
 	public String string_value() {
+		
+		if (zero()) {
+			return "0";
+		}
 
 		return format.format(_value);
 	}
@@ -83,7 +94,7 @@ public class XSDecimal extends NumericType {
 	 */
 	@Override
 	public boolean zero() {
-		return _value == 0.0;
+		return (_value.compareTo(BigDecimal.valueOf(0.0)) == 0);
 	}
 
 	/**
@@ -105,8 +116,8 @@ public class XSDecimal extends NumericType {
 		AnyType aat = arg.first();
 
 		try {
-			Double d = new Double(aat.string_value());
-			rs.add(new XSDecimal(d.doubleValue()));
+			//Double d = new Double(aat.string_value());
+			rs.add(new XSDecimal(aat.string_value()));
 			return rs;
 		} catch (NumberFormatException e) {
 			throw DynamicError.cant_cast(null);
@@ -118,8 +129,13 @@ public class XSDecimal extends NumericType {
 	 * Retrieves the actual value of the number stored
 	 * 
 	 * @return The actual value of the number stored
+	 * @deprecated Use getValue() instead.
 	 */
 	public double double_value() {
+		return _value.doubleValue();
+	}
+	
+	public BigDecimal getValue() {
 		return _value;
 	}
 
@@ -130,7 +146,7 @@ public class XSDecimal extends NumericType {
 	 *            Number to be stored
 	 */
 	public void set_double(double x) {
-		_value = x;
+		_value = BigDecimal.valueOf(x);
 	}
 
 	// comparisons
@@ -151,8 +167,7 @@ public class XSDecimal extends NumericType {
 			DynamicError.throw_type_error();
 
 		XSDecimal dt = (XSDecimal) at;
-
-		return double_value() == dt.double_value();
+		return (_value.compareTo(dt.getValue()) == 0);
 	}
 
 	/**
@@ -168,7 +183,7 @@ public class XSDecimal extends NumericType {
 	 */
 	public boolean gt(AnyType arg) throws DynamicError {
 		XSDecimal val = (XSDecimal) get_single_type(arg, XSDecimal.class);
-		return double_value() > val.double_value();
+		return (_value.compareTo(val.getValue()) == 1);
 	}
 
 	/**
@@ -184,7 +199,7 @@ public class XSDecimal extends NumericType {
 	 */
 	public boolean lt(AnyType arg) throws DynamicError {
 		XSDecimal val = (XSDecimal) get_single_type(arg, XSDecimal.class);
-		return double_value() < val.double_value();
+		return (_value.compareTo(val.getValue()) == -1);
 	}
 
 	// math
@@ -206,8 +221,7 @@ public class XSDecimal extends NumericType {
 		XSDecimal dt = (XSDecimal) at;
 
 		// own it
-		return ResultSequenceFactory.create_new(new XSDecimal(double_value()
-				+ dt.double_value()));
+		return ResultSequenceFactory.create_new(new XSDecimal(_value.add(dt.getValue())));
 	}
 
 	/**
@@ -226,8 +240,7 @@ public class XSDecimal extends NumericType {
 			DynamicError.throw_type_error();
 		XSDecimal dt = (XSDecimal) at;
 
-		return ResultSequenceFactory.create_new(new XSDecimal(double_value()
-				- dt.double_value()));
+		return ResultSequenceFactory.create_new(new XSDecimal(_value.subtract(dt.getValue())));
 	}
 
 	/**
@@ -242,8 +255,8 @@ public class XSDecimal extends NumericType {
 	 */
 	public ResultSequence times(ResultSequence arg) throws DynamicError {
 		XSDecimal val = (XSDecimal) get_single_type(arg, XSDecimal.class);
-		return ResultSequenceFactory.create_new(new XSDecimal(double_value()
-				* val.double_value()));
+		BigDecimal result = _value.multiply(val.getValue());
+		return ResultSequenceFactory.create_new(new XSDecimal(result));
 	}
 
 	/**
@@ -260,8 +273,8 @@ public class XSDecimal extends NumericType {
 		XSDecimal val = (XSDecimal) get_single_type(arg, XSDecimal.class);
 		if (val.zero())
 			throw DynamicError.div_zero(null);
-		return ResultSequenceFactory.create_new(new XSDecimal(double_value()
-				/ val.double_value()));
+		BigDecimal result = BigDecimal.valueOf(double_value() / val.double_value());
+		return ResultSequenceFactory.create_new(new XSDecimal(result));
 	}
 
 	/**
@@ -279,8 +292,11 @@ public class XSDecimal extends NumericType {
 
 		if (val.zero())
 			throw DynamicError.div_zero(null);
+		BigInteger _ivalue = _value.toBigInteger();
+		BigInteger ival =  val.getValue().toBigInteger();
+		BigInteger result = _ivalue.divide(ival);
 		return ResultSequenceFactory.create_new(new 
-				           XSInteger(BigInteger.valueOf((int) (double_value() / val.double_value()))));
+				           XSInteger(result));
 	}
 
 	/**
@@ -294,8 +310,8 @@ public class XSDecimal extends NumericType {
 	 */
 	public ResultSequence mod(ResultSequence arg) throws DynamicError {
 		XSDecimal val = (XSDecimal) get_single_type(arg, XSDecimal.class);
-		return ResultSequenceFactory.create_new(new XSDecimal(double_value()
-				% val.double_value()));
+		BigDecimal result = _value.remainder(val.getValue());
+		return ResultSequenceFactory.create_new(new XSDecimal(result));
 	}
 
 	/**
@@ -305,8 +321,8 @@ public class XSDecimal extends NumericType {
 	 */
 	@Override
 	public ResultSequence unary_minus() {
-		return ResultSequenceFactory.create_new(new XSDecimal(-1
-				* double_value()));
+		BigDecimal result = _value.negate();
+		return ResultSequenceFactory.create_new(new XSDecimal(result));
 	}
 
 	// functions
@@ -317,7 +333,7 @@ public class XSDecimal extends NumericType {
 	 */
 	@Override
 	public NumericType abs() {
-		return new XSDecimal(Math.abs(double_value()));
+		return new XSDecimal(_value.abs());
 	}
 
 	/**
@@ -328,7 +344,8 @@ public class XSDecimal extends NumericType {
 	 */
 	@Override
 	public NumericType ceiling() {
-		return new XSDecimal(Math.ceil(double_value()));
+		BigDecimal ceiling = _value.setScale(0, RoundingMode.CEILING);
+		return new XSDecimal(ceiling);
 	}
 
 	/**
@@ -339,7 +356,8 @@ public class XSDecimal extends NumericType {
 	 */
 	@Override
 	public NumericType floor() {
-		return new XSDecimal(Math.floor(double_value()));
+		BigDecimal floor = _value.setScale(0, RoundingMode.FLOOR);
+		return new XSDecimal(floor);
 	}
 
 	/**
@@ -349,7 +367,8 @@ public class XSDecimal extends NumericType {
 	 */
 	@Override
 	public NumericType round() {
-		return new XSDecimal(Math.round(double_value()));
+		BigDecimal round = _value.setScale(0, RoundingMode.UP);
+		return new XSDecimal(round);
 	}
 
 	/**
@@ -359,6 +378,7 @@ public class XSDecimal extends NumericType {
 	 */
 	@Override
 	public NumericType round_half_to_even() {
-		return new XSDecimal(Math.rint(double_value()));
+		BigDecimal round = _value.setScale(0, RoundingMode.HALF_UP);
+		return new XSDecimal(round);
 	}
 }

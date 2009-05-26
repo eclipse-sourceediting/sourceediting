@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     David Carver - bug 277774 - XSDecimal returing wrong values. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -17,6 +18,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -76,7 +78,7 @@ public class FnSecondsFromTime extends Function {
 
 		double res = dt.second();
 
-		rs.add(new XSDecimal(res));
+		rs.add(new XSDecimal(BigDecimal.valueOf(res)));
 
 		return rs;
 	}

@@ -7,18 +7,17 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
+ *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type
+ *     David Carver - bug 277770 - format of XSDouble for zero values incorrect. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigInteger;
-import java.text.DecimalFormat;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.*;
 
 /**
  * A representation of the Double datatype

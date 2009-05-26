@@ -16,6 +16,7 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
@@ -3112,7 +3113,7 @@ class CUP$XpathCup$actions {
 		int dleft = ((java_cup.runtime.Symbol)CUP$XpathCup$stack.peek()).left;
 		int dright = ((java_cup.runtime.Symbol)CUP$XpathCup$stack.peek()).right;
 		Double d = (Double)((java_cup.runtime.Symbol) CUP$XpathCup$stack.peek()).value;
-		 RESULT = new DecimalLiteral(d.doubleValue()); 
+		 RESULT = new DecimalLiteral(BigDecimal.valueOf(d.doubleValue())); 
               CUP$XpathCup$result = new java_cup.runtime.Symbol(59/*DecimalLiteral*/, ((java_cup.runtime.Symbol)CUP$XpathCup$stack.peek()).left, ((java_cup.runtime.Symbol)CUP$XpathCup$stack.peek()).right, RESULT);
             }
           return CUP$XpathCup$result;
