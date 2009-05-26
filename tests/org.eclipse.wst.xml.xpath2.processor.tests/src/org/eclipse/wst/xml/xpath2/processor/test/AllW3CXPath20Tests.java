@@ -24,7 +24,9 @@ import org.eclipse.wst.xml.xpath2.processor.testsuite.NumericGTTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.NumericLTTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.NumericUnaryPlusTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.ParenExprTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.SequenceTypeSyntaxTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.YearMonthDurationAddDTTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.YearMonthDurationSubtractTest;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -35,7 +37,7 @@ public class AllW3CXPath20Tests {
 		TestSuite suite = new TestSuite("Test for W3C XPath 2.0 test suite.");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(NumericUnaryPlusTest.class);
-//		suite.addTestSuite(SequenceTypeSyntaxTest.class);
+		suite.addTestSuite(SequenceTypeSyntaxTest.class);
 		suite.addTestSuite(NumericGTTest.class);
 //		suite.addTestSuite(DateTimeAddDTDTest.class);
 //		suite.addTestSuite(TimeSubtractTest.class);
@@ -60,7 +62,7 @@ public class AllW3CXPath20Tests {
 //		suite.addTestSuite(NameTestTest.class);
 		suite.addTestSuite(NumericLTTest.class);
 //		suite.addTestSuite(NumericDivideTest.class);
-//		suite.addTestSuite(YearMonthDurationSubtractTest.class);
+		suite.addTestSuite(YearMonthDurationSubtractTest.class);
 //		suite.addTestSuite(RangeExprTest.class);
 		suite.addTestSuite(BooleanGTTest.class);
 //		suite.addTestSuite(DateSubtractYMDTest.class);
