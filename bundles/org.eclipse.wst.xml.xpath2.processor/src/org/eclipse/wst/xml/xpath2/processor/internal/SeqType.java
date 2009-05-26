@@ -102,7 +102,7 @@ public class SeqType {
 			assert false;
 		}
 
-		// figure out wtf the item is
+		// figure out the item is
 		ItemType item = st.item_type();
 		KindTest ktest = null;
 		switch (item.type()) {

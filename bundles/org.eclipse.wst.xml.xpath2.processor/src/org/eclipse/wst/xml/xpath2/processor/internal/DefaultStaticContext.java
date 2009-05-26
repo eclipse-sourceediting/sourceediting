@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     David Carver (STAR) - bug 277792 - add built in types to static context. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
@@ -14,6 +15,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal;
 import org.apache.xerces.xs.*;
 import org.eclipse.wst.xml.xpath2.processor.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary;
+import org.eclipse.wst.xml.xpath2.processor.function.XSCtrLibrary;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
@@ -29,6 +31,7 @@ public class DefaultStaticContext implements StaticContext {
 	private String _default_namespace;
 	private String _default_function_namespace;
 	private XSModel _schema;
+	private XSCtrLibrary builtinTypes;
 
 	// key: String prefix, contents: String namespace
 	private Map _namespaces;
@@ -62,6 +65,7 @@ public class DefaultStaticContext implements StaticContext {
 		_default_namespace = null;
 		_default_function_namespace = FnFunctionLibrary.XPATH_FUNCTIONS_NS;
 		_schema = schema;
+		builtinTypes = new XSCtrLibrary();
 
 		_functions = new HashMap(20); // allow null keys: null namespace
 		_namespaces = new HashMap(20); // ditto
@@ -269,11 +273,10 @@ public class DefaultStaticContext implements StaticContext {
 	 * @return true if type is defined.
 	 */
 	public boolean type_defined(QName qname) {
-
-		// we got no schema definitions...
-		// XXX: should have built in ones
-		if (_schema == null)
-			return false;
+		
+		if (_schema == null) {
+			return builtinTypes.function_exists(qname, 1);
+		}
 
 		XSTypeDefinition td = _schema.getTypeDefinition(qname.local(), qname
 				.namespace());
