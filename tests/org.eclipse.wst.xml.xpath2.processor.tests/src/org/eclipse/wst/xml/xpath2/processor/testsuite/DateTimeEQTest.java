@@ -20,13 +20,13 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
-public class DateTimeLTTest extends AbstractPsychoPathTest {
+public class DateTimeEQTest extends AbstractPsychoPathTest {
 
-   //Evaluates the "op:dateTime-less-than" operator with the arguments set as follows: $arg1 = xs:dateTime(lower bound) $arg2 = xs:dateTime(lower bound).
-   public void test_op_dateTime_less_than2args_1() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator with the arguments set as follows: $arg1 = xs:dateTime(lower bound) $arg2 = xs:dateTime(lower bound).
+   public void test_op_dateTime_equal2args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-1.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-1.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-1.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -59,11 +59,11 @@ public class DateTimeLTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:dateTime-less-than" operator with the arguments set as follows: $arg1 = xs:dateTime(mid range) $arg2 = xs:dateTime(lower bound).
-   public void test_op_dateTime_less_than2args_2() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator with the arguments set as follows: $arg1 = xs:dateTime(mid range) $arg2 = xs:dateTime(lower bound).
+   public void test_op_dateTime_equal2args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-2.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-2.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-2.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -96,11 +96,11 @@ public class DateTimeLTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:dateTime-less-than" operator with the arguments set as follows: $arg1 = xs:dateTime(upper bound) $arg2 = xs:dateTime(lower bound).
-   public void test_op_dateTime_less_than2args_3() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator with the arguments set as follows: $arg1 = xs:dateTime(upper bound) $arg2 = xs:dateTime(lower bound).
+   public void test_op_dateTime_equal2args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-3.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-3.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-3.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -133,11 +133,11 @@ public class DateTimeLTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:dateTime-less-than" operator with the arguments set as follows: $arg1 = xs:dateTime(lower bound) $arg2 = xs:dateTime(mid range).
-   public void test_op_dateTime_less_than2args_4() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator with the arguments set as follows: $arg1 = xs:dateTime(lower bound) $arg2 = xs:dateTime(mid range).
+   public void test_op_dateTime_equal2args_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-4.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-4.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-4.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -170,11 +170,11 @@ public class DateTimeLTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:dateTime-less-than" operator with the arguments set as follows: $arg1 = xs:dateTime(lower bound) $arg2 = xs:dateTime(upper bound).
-   public void test_op_dateTime_less_than2args_5() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator with the arguments set as follows: $arg1 = xs:dateTime(lower bound) $arg2 = xs:dateTime(upper bound).
+   public void test_op_dateTime_equal2args_5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-5.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-5.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-5.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -207,11 +207,11 @@ public class DateTimeLTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:dateTime-less-than" operator with the arguments set as follows: $arg1 = xs:dateTime(lower bound) $arg2 = xs:dateTime(lower bound).
-   public void test_op_dateTime_less_than2args_6() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator with the arguments set as follows: $arg1 = xs:dateTime(lower bound) $arg2 = xs:dateTime(lower bound).
+   public void test_op_dateTime_equal2args_6() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-6.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-6.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-6.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-6.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -244,11 +244,11 @@ public class DateTimeLTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:dateTime-less-than" operator with the arguments set as follows: $arg1 = xs:dateTime(mid range) $arg2 = xs:dateTime(lower bound).
-   public void test_op_dateTime_less_than2args_7() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator with the arguments set as follows: $arg1 = xs:dateTime(mid range) $arg2 = xs:dateTime(lower bound).
+   public void test_op_dateTime_equal2args_7() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-7.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-7.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-7.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-7.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -281,11 +281,11 @@ public class DateTimeLTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:dateTime-less-than" operator with the arguments set as follows: $arg1 = xs:dateTime(upper bound) $arg2 = xs:dateTime(lower bound).
-   public void test_op_dateTime_less_than2args_8() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator with the arguments set as follows: $arg1 = xs:dateTime(upper bound) $arg2 = xs:dateTime(lower bound).
+   public void test_op_dateTime_equal2args_8() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-8.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-8.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-8.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-8.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -318,11 +318,11 @@ public class DateTimeLTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:dateTime-less-than" operator with the arguments set as follows: $arg1 = xs:dateTime(lower bound) $arg2 = xs:dateTime(mid range).
-   public void test_op_dateTime_less_than2args_9() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator with the arguments set as follows: $arg1 = xs:dateTime(lower bound) $arg2 = xs:dateTime(mid range).
+   public void test_op_dateTime_equal2args_9() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-9.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-9.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-9.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-9.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -355,11 +355,11 @@ public class DateTimeLTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:dateTime-less-than" operator with the arguments set as follows: $arg1 = xs:dateTime(lower bound) $arg2 = xs:dateTime(upper bound).
-   public void test_op_dateTime_less_than2args_10() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator with the arguments set as follows: $arg1 = xs:dateTime(lower bound) $arg2 = xs:dateTime(upper bound).
+   public void test_op_dateTime_equal2args_10() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-10.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than2args-10.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-10.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-10.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -392,11 +392,11 @@ public class DateTimeLTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:dateTime-less-than" operator that returns true and used together with the fn:not function (lt operator).
-   public void test_op_dateTime_less_than_3() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator (le) with the arguments set as follows: $arg1 = xs:dateTime(lower bound) $arg2 = xs:dateTime(lower bound).
+   public void test_op_dateTime_equal2args_11() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-3.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-3.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-11.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-11.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -429,11 +429,11 @@ public class DateTimeLTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:dateTime-less-than" operator that returns true and used together with the fn:not function (le operator).
-   public void test_op_dateTime_less_than_4() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator (le) with the arguments set as follows: $arg1 = xs:dateTime(mid range) $arg2 = xs:dateTime(lower bound).
+   public void test_op_dateTime_equal2args_12() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-4.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-4.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-12.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-12.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -466,11 +466,11 @@ public class DateTimeLTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:dateTime-less-than" operator that returns false and used together with the fn:not function (lt operator).
-   public void test_op_dateTime_less_than_5() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator (le) with the arguments set as follows: $arg1 = xs:dateTime(upper bound) $arg2 = xs:dateTime(lower bound).
+   public void test_op_dateTime_equal2args_13() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-5.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-5.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-13.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-13.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -503,11 +503,11 @@ public class DateTimeLTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:dateTime-less-than" operator that returns false and used together with the fn:not function (le operator).
-   public void test_op_dateTime_less_than_6() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator (le) with the arguments set as follows: $arg1 = xs:dateTime(lower bound) $arg2 = xs:dateTime(mid range).
+   public void test_op_dateTime_equal2args_14() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-6.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-6.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-14.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-14.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -540,11 +540,11 @@ public class DateTimeLTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:dateTime-less-than" operator used together with "and" expression (lt operator).
-   public void test_op_dateTime_less_than_7() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator (le) with the arguments set as follows: $arg1 = xs:dateTime(lower bound) $arg2 = xs:dateTime(upper bound).
+   public void test_op_dateTime_equal2args_15() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-7.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-7.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-15.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-15.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -577,11 +577,11 @@ public class DateTimeLTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:dateTime-less-than" operator used together with "and" expression (le operator).
-   public void test_op_dateTime_less_than_8() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator (ge) with the arguments set as follows: $arg1 = xs:dateTime(lower bound) $arg2 = xs:dateTime(lower bound).
+   public void test_op_dateTime_equal2args_16() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-8.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-8.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-16.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-16.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -614,11 +614,11 @@ public class DateTimeLTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:dateTime-less-than" operator used together with "or" expression (lt operator).
-   public void test_op_dateTime_less_than_9() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator (ge) with the arguments set as follows: $arg1 = xs:dateTime(mid range) $arg2 = xs:dateTime(lower bound).
+   public void test_op_dateTime_equal2args_17() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-9.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-9.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-17.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-17.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -651,11 +651,11 @@ public class DateTimeLTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:dateTime-less-than" operator used together with "or" expression (le operator).
-   public void test_op_dateTime_less_than_10() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator (ge) with the arguments set as follows: $arg1 = xs:dateTime(upper bound) $arg2 = xs:dateTime(lower bound).
+   public void test_op_dateTime_equal2args_18() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-10.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-10.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-18.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-18.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -688,11 +688,11 @@ public class DateTimeLTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:dateTime-less-than" operator used together with "or" expression and fn:true function (lt operator).
-   public void test_op_dateTime_less_than_11() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator (ge) with the arguments set as follows: $arg1 = xs:dateTime(lower bound) $arg2 = xs:dateTime(mid range).
+   public void test_op_dateTime_equal2args_19() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-11.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-11.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-19.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-19.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -725,85 +725,11 @@ public class DateTimeLTTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "op:dateTime-less-than" operator used together with "or" expression and fn:true function (le operator).
-   public void test_op_dateTime_less_than_12() throws Exception {
+   //Evaluates the "op:dateTime-equal" operator (ge) with the arguments set as follows: $arg1 = xs:dateTime(lower bound) $arg2 = xs:dateTime(upper bound).
+   public void test_op_dateTime_equal2args_20() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-12.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-12.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "op:dateTime-less-than" operator used together with "or" expression and fn:false function (lt operator).
-   public void test_op_dateTime_less_than_13() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-13.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-13.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "op:dateTime-less-than" operator used together with "or" expression and fn:false function (le operator).
-   public void test_op_dateTime_less_than_14() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-14.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeLT/op-dateTime-less-than-14.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-20.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateTimeEQ/op-dateTime-equal2args-20.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

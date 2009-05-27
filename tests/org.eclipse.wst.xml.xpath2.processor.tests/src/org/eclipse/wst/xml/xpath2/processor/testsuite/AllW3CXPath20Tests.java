@@ -17,11 +17,12 @@ public class AllW3CXPath20Tests {
 		suite.addTestSuite(DayTimeDurationDivideDTDTest.class);
 		suite.addTestSuite(BooleanLTTest.class);
 		suite.addTestSuite(NumericMultiplyTest.class);
+		suite.addTestSuite(DayTimeDurationGTTest.class);
 		suite.addTestSuite(AxesTest.class);
 		suite.addTestSuite(DateSubtractDTDTest.class);
 		suite.addTestSuite(NodeTestTest.class);
-		suite.addTestSuite(TimeAddDTDTest.class);
 		suite.addTestSuite(BooleanEqualTest.class);
+		suite.addTestSuite(TimeAddDTDTest.class);
 		suite.addTestSuite(YearMonthDurationAddTest.class);
 		suite.addTestSuite(DayTimeDurationAddTest.class);
 		suite.addTestSuite(dateTimesSubtractTest.class);
@@ -33,6 +34,7 @@ public class AllW3CXPath20Tests {
 		suite.addTestSuite(DayTimeDurationDivideTest.class);
 		suite.addTestSuite(NameTestTest.class);
 		suite.addTestSuite(NumericLTTest.class);
+		suite.addTestSuite(YearMonthDurationLTTest.class);
 		suite.addTestSuite(NumericDivideTest.class);
 		suite.addTestSuite(YearMonthDurationSubtractTest.class);
 		suite.addTestSuite(RangeExprTest.class);
@@ -40,6 +42,7 @@ public class AllW3CXPath20Tests {
 		suite.addTestSuite(DateSubtractYMDTest.class);
 		suite.addTestSuite(LiteralsTest.class);
 		suite.addTestSuite(TimeSubtractDTDTest.class);
+		suite.addTestSuite(DateTimeLTTest.class);
 		suite.addTestSuite(YearMonthDurationMultiplyTest.class);
 		suite.addTestSuite(YearMonthDurationDivideTest.class);
 		suite.addTestSuite(NumericAddTest.class);
@@ -49,8 +52,11 @@ public class AllW3CXPath20Tests {
 		suite.addTestSuite(YearMonthDurationDivideYMDTest.class);
 		suite.addTestSuite(PredicatesTest.class);
 		suite.addTestSuite(ExternalContextExprTest.class);
+		suite.addTestSuite(YearMonthDurationGTTest.class);
+		suite.addTestSuite(DayTimeDurationLTTest.class);
 		suite.addTestSuite(NumericModTest.class);
 		suite.addTestSuite(DateTimeSubtractYMDTest.class);
+		suite.addTestSuite(DurationEQTest.class);
 		suite.addTestSuite(NumericEqualTest.class);
 		suite.addTestSuite(DatesSubtractTest.class);
 		suite.addTestSuite(DateAddDTDTest.class);
@@ -59,6 +65,7 @@ public class AllW3CXPath20Tests {
 		suite.addTestSuite(YearMonthDurationAddDTTest.class);
 		suite.addTestSuite(DateAddYMDTest.class);
 		suite.addTestSuite(ParenExprTest.class);
+		suite.addTestSuite(DateTimeEQTest.class);
 		suite.addTestSuite(UnabbrAxesTest.class);
 		//$JUnit-END$
 		return suite;
