@@ -36,6 +36,7 @@ public class StructuredAutoEditStrategyCSS implements IAutoEditStrategy {
 
 	class CompoundRegion {
 
+		/* textRegion can be null if the offset is at the end of the document */
 		CompoundRegion(IStructuredDocumentRegion documentRegion, ITextRegion textRegion) {
 			super();
 			this.documentRegion = documentRegion;
@@ -51,27 +52,27 @@ public class StructuredAutoEditStrategyCSS implements IAutoEditStrategy {
 		}
 
 		int getStart() {
-			return textRegion.getStart();
+			return (textRegion != null) ? textRegion.getStart() : documentRegion.getStart();
 		}
 
 		int getEnd() {
-			return textRegion.getEnd();
+			return (textRegion != null) ? textRegion.getEnd() : documentRegion.getEnd();
 		}
 
 		String getType() {
-			return textRegion.getType();
+			return (textRegion != null) ? textRegion.getType() : CSSRegionContexts.CSS_UNKNOWN;
 		}
 
 		String getText() {
-			return documentRegion.getText(textRegion);
+			return (textRegion != null) ? documentRegion.getText(textRegion) : ""; //$NON-NLS-1$
 		}
 
 		int getStartOffset() {
-			return documentRegion.getStartOffset(textRegion);
+			return (textRegion != null) ? documentRegion.getStartOffset(textRegion) : documentRegion.getStartOffset();
 		}
 
 		int getEndOffset() {
-			return documentRegion.getEndOffset(textRegion);
+			return (textRegion != null) ? documentRegion.getEndOffset(textRegion) : documentRegion.getEndOffset();
 		}
 
 		private IStructuredDocumentRegion documentRegion;
