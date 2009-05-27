@@ -27,6 +27,7 @@ import org.eclipse.wst.xml.xpath2.processor.testsuite.NumericLTTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.NumericUnaryPlusTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.ParenExprTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.SequenceTypeSyntaxTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.UnabbrAxesTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.YearMonthDurationAddDTTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.YearMonthDurationSubtractTest;
 
@@ -89,7 +90,7 @@ public class AllW3CXPath20Tests {
 		suite.addTestSuite(YearMonthDurationAddDTTest.class);
 		suite.addTestSuite(DateAddYMDTest.class);
 		suite.addTestSuite(ParenExprTest.class);
-//		suite.addTestSuite(UnabbrAxesTest.class);
+		suite.addTestSuite(UnabbrAxesTest.class);
 		//$JUnit-END$
 		return suite;
 	}
