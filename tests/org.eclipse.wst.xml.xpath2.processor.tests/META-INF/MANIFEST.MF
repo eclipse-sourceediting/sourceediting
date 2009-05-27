@@ -2,13 +2,21 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: XPath 2 Processor Tests
 Bundle-SymbolicName: org.eclipse.wst.xml.xpath2.processor.tests;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 1.1.0
 Bundle-Vendor: Eclipse.org
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.apache.xerces;bundle-version="[2.9.0,3.0.0)",
  org.eclipse.wst.xml.xpath2.processor;bundle-version="[1.0.0,2.0.0)",
  org.eclipse.core.runtime;bundle-version="[3.4.0,4.0.0)",
  org.junit;bundle-version="[3.8.1,4.0.0)"
-Export-Package: org.eclipse.wst.xml.xpath2.processor.test
+Export-Package: org.custommonkey.xmlunit,
+ org.custommonkey.xmlunit.examples,
+ org.custommonkey.xmlunit.exceptions,
+ org.custommonkey.xmlunit.jaxp13,
+ org.custommonkey.xmlunit.util,
+ org.eclipse.wst.xml.xpath2.processor.test,
+ org.eclipse.wst.xml.xpath2.processor.testsuite
 Bundle-Activator: org.eclipse.wst.xml.xpath2.processor.test.XPath20TestPlugin
 Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,
+ lib/xmlunit-1.2.jar

@@ -138,7 +138,7 @@ public class UnabbrAxesTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/UnabbrAxes/unabbreviatedSyntax-4.xq";
       String resultFile = "/ExpectedTestResults/Expressions/PathExpr/UnabbrAxes/unabbreviatedSyntax-4.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "<result>" + getExpectedResult(resultFile) + "</result>";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -155,7 +155,7 @@ public class UnabbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildXMLResultString(rs);
+          actual = "<result>" + buildXMLResultString(rs) + "</result>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -164,10 +164,8 @@ public class UnabbrAxesTest extends AbstractPsychoPathTest {
       } catch (DynamicError ex) {
          actual = ex.code();
       }
-      assertTrue(true);
 
-//    This test passed it is a formatting difference.
-//      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -177,7 +175,7 @@ public class UnabbrAxesTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/UnabbrAxes/unabbreviatedSyntax-5.xq";
       String resultFile = "/ExpectedTestResults/Expressions/PathExpr/UnabbrAxes/unabbreviatedSyntax-5.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "<result>" + getExpectedResult(resultFile) + "</result>";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -194,7 +192,7 @@ public class UnabbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildXMLResultString(rs);
+          actual = "<result>" + buildXMLResultString(rs) + "</result>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -204,9 +202,7 @@ public class UnabbrAxesTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-//      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-      // Test passes - formatting issue
-        assertTrue(true);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
 
    }
 
@@ -844,7 +840,7 @@ public class UnabbrAxesTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Expressions/PathExpr/UnabbrAxes/unabbreviatedSyntax-30.xq";
       String resultFile = "/ExpectedTestResults/Expressions/PathExpr/UnabbrAxes/unabbreviatedSyntax-30.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "<result>" + getExpectedResult(resultFile) + "</result>";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -861,7 +857,7 @@ public class UnabbrAxesTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildXMLResultString(rs);
+          actual = "<result>" + buildXMLResultString(rs) + "</result>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -871,10 +867,7 @@ public class UnabbrAxesTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-//      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-      // Test passes formatting issue due to result file as a fragment.
-      assertTrue(true);  
-        
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
 
    }
 

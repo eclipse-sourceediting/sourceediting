@@ -30,6 +30,7 @@ import org.apache.xerces.xni.grammars.XMLGrammarPool;
 import org.apache.xerces.xni.grammars.XSGrammar;
 import org.apache.xerces.xs.ElementPSVI;
 import org.apache.xerces.xs.XSModel;
+import org.custommonkey.xmlunit.XMLTestCase;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.*;
@@ -49,7 +50,7 @@ import org.xml.sax.SAXException;
 
 import junit.framework.TestCase;
 
-public class AbstractPsychoPathTest extends TestCase {
+public class AbstractPsychoPathTest extends XMLTestCase {
 
 	protected Document domDoc = null;
 	protected Bundle bundle = null;
