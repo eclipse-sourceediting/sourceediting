@@ -26,5 +26,14 @@
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
+
+   <extension point="org.eclipse.wst.common.project.facet.core.facets">
+		<event-handler facet="jst.web" type="POST_INSTALL"  version="[2.0">
+	   		<delegate class="org.eclipse.wst.jsdt.web.core.internal.project.JsNatureInstaller"/>
+		</event-handler>
 	
+		<event-handler facet="jst.web" type="POST_UNINSTALL" version="[2.0">
+			<delegate class="org.eclipse.wst.jsdt.web.core.internal.project.JsNatureUninstaller"/>
+		</event-handler>
+	</extension>
 </plugin>
