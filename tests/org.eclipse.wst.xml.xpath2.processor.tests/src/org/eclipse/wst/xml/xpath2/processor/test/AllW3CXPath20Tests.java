@@ -19,6 +19,7 @@ import org.eclipse.wst.xml.xpath2.processor.testsuite.BooleanLTTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.CombNodeSeqTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.DateAddYMDTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.DateTimeSubtractYMDTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.NameTestTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.NodeTestTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.NumericEqualTest;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.NumericGTTest;
@@ -60,7 +61,7 @@ public class AllW3CXPath20Tests {
 //		suite.addTestSuite(DateTimeSubtractDTDTest.class);
 //		suite.addTestSuite(NumericSubtractTest.class);
 //		suite.addTestSuite(DayTimeDurationDivideTest.class);
-//		suite.addTestSuite(NameTestTest.class);
+		suite.addTestSuite(NameTestTest.class);
 		suite.addTestSuite(NumericLTTest.class);
 //		suite.addTestSuite(NumericDivideTest.class);
 		suite.addTestSuite(YearMonthDurationSubtractTest.class);
