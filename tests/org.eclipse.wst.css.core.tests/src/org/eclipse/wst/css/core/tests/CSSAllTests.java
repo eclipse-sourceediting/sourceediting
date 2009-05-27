@@ -25,6 +25,7 @@ import org.eclipse.wst.css.core.tests.source.CSSSelectorTest;
 import org.eclipse.wst.css.core.tests.source.CSSSourceParserTest;
 import org.eclipse.wst.css.core.tests.source.CSSTextParserTest;
 import org.eclipse.wst.css.core.tests.source.CSSUrlTest;
+import org.eclipse.wst.css.core.tests.testfiles.CSSModelLoadTest;
 
 
 public class CSSAllTests extends TestSuite {
@@ -56,5 +57,6 @@ public class CSSAllTests extends TestSuite {
 		suite.addTestSuite(TestFormatProcessorCSS.class);
 		suite.addTestSuite(TestCleanupProcessorCSS.class);
 		suite.addTestSuite(TestCSSDecl.class);
+		suite.addTestSuite(CSSModelLoadTest.class);
 	}
 }
