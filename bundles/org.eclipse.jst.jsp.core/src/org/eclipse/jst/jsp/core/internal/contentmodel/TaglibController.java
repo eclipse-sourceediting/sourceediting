@@ -28,13 +28,13 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
-import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.taglib.ITaglibIndexDelta;
 import org.eclipse.jst.jsp.core.taglib.ITaglibIndexListener;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.core.internal.util.Assert;
+import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
 
 /**
  * Provides a direct mapping from IStructuredDocument to supporting
@@ -135,7 +135,7 @@ public class TaglibController implements IDocumentSetupParticipant, IDocumentSet
 					info.location = buffer.getLocation();
 					info.locationKind = LocationKind.NORMALIZE;
 					info.tldDocumentManager = new TLDCMDocumentManager();
-					info.tldDocumentManager.setSourceParser((JSPSourceParser) info.document.getParser());
+					info.tldDocumentManager.setSourceParser((XMLSourceParser) info.document.getParser());
 					synchronized (_instance.fDocumentMap) {
 						_instance.fDocumentMap.put(document, info);
 					}
@@ -364,7 +364,7 @@ public class TaglibController implements IDocumentSetupParticipant, IDocumentSet
 		synchronized (_instance.fDocumentMap) {
 			_instance.fDocumentMap.put(document, info);
 		}
-		info.tldDocumentManager.setSourceParser((JSPSourceParser) info.document.getParser());
+		info.tldDocumentManager.setSourceParser((XMLSourceParser) info.document.getParser());
 		if (document instanceof BasicStructuredDocument && document.getLength() > 0) {
 			((BasicStructuredDocument) document).reparse(this);
 		}

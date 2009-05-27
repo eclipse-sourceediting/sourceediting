@@ -37,7 +37,6 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDDocumen
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache;
 import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropertyCache.PropertyGroup;
-import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.util.FacetModuleCoreSupport;
@@ -53,6 +52,7 @@ import org.eclipse.jst.jsp.core.taglib.IURLRecord;
 import org.eclipse.jst.jsp.core.taglib.TaglibIndex;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
+import org.eclipse.wst.sse.core.internal.ltk.parser.JSPCapableParser;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandlerExtension;
 import org.eclipse.wst.sse.core.internal.ltk.parser.TagMarker;
@@ -66,6 +66,7 @@ import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 public class TLDCMDocumentManager implements ITaglibIndexListener {
@@ -75,7 +76,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		 * Adds a block tagname (fully namespace qualified) into the list of
 		 * block tag names for the parser. The marker
 		 * IStructuredDocumentRegion along with position cues during reparses
-		 * allow the JSPSourceParser to enable/ignore the tags as blocks.
+		 * allow the XMLSourceParser to enable/ignore the tags as blocks.
 		 */
 		protected void addBlockTag(String tagnameNS, ITextRegionCollection marker) {
 			if (getParser() == null)
@@ -148,7 +149,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			}
 		}
 		
-		protected void processRegionCollection(ITextRegionCollection regionCollection, IStructuredDocumentRegion anchorStructuredDocumentRegion, JSPSourceParser textSource) {
+		protected void processRegionCollection(ITextRegionCollection regionCollection, IStructuredDocumentRegion anchorStructuredDocumentRegion, XMLSourceParser textSource) {
 			/*
 			 * Would test > 1, but since we only care if there are 8 (<%@,
 			 * taglib, uri, =, where, prefix, =, what) [or 4 for include
@@ -196,7 +197,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		 * anchorStructuredDocumentRegion. Includes use the including file as
 		 * the point of reference, not necessarily the "top" file.
 		 */
-		protected void processInclude(ITextRegionCollection includeDirectiveCollection, IStructuredDocumentRegion anchorStructuredDocumentRegion, JSPSourceParser textSource) {
+		protected void processInclude(ITextRegionCollection includeDirectiveCollection, IStructuredDocumentRegion anchorStructuredDocumentRegion, XMLSourceParser textSource) {
 			ITextRegionList regions = includeDirectiveCollection.getRegions();
 			String includedFile = null;
 			boolean isFilename = false;
@@ -266,9 +267,11 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 						includeHelper.parse(filePath);
 						List references = includeHelper.taglibReferences;
 						fTLDCMReferencesMap.put(filePath, references);
-						for (int i = 0; references != null && i < references.size(); i++) {
-							TLDCMDocumentReference reference = (TLDCMDocumentReference) references.get(i);
-							getParser().addNestablePrefix(new TagMarker(reference.prefix + ":")); //$NON-NLS-1$
+						if (getParser() instanceof JSPCapableParser) {
+							for (int i = 0; references != null && i < references.size(); i++) {
+								TLDCMDocumentReference reference = (TLDCMDocumentReference) references.get(i);
+								((JSPCapableParser) getParser()).addNestablePrefix(new TagMarker(reference.prefix + ":")); //$NON-NLS-1$
+							}
 						}
 						/*
 						 * TODO: walk up the include hierarchy and add
@@ -287,7 +290,9 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 							 * relative to the JSP fragment.
 							 */
 							enableTaglibFromURI(reference.prefix, reference.uri, anchorStructuredDocumentRegion);
-							getParser().addNestablePrefix(new TagMarker(reference.prefix + ":")); //$NON-NLS-1$
+							if (getParser() instanceof JSPCapableParser) {
+								((JSPCapableParser) getParser()).addNestablePrefix(new TagMarker(reference.prefix + ":")); //$NON-NLS-1$
+							}
 						}
 					}
 				}
@@ -298,7 +303,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			}
 		}
 
-		protected void processXMLStartTag(ITextRegionCollection startTagRegionCollection, IStructuredDocumentRegion anchorStructuredDocumentRegion, JSPSourceParser textSource) {
+		protected void processXMLStartTag(ITextRegionCollection startTagRegionCollection, IStructuredDocumentRegion anchorStructuredDocumentRegion, XMLSourceParser textSource) {
 			ITextRegionList regions = startTagRegionCollection.getRegions();
 			String uri = null;
 			String prefix = null;
@@ -351,7 +356,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		 * Pulls the URI and prefix from the given taglib directive
 		 * IStructuredDocumentRegion and makes sure the tags are known.
 		 */
-		protected void processTaglib(ITextRegionCollection taglibDirectiveCollection, IStructuredDocumentRegion anchorStructuredDocumentRegion, JSPSourceParser textSource) {
+		protected void processTaglib(ITextRegionCollection taglibDirectiveCollection, IStructuredDocumentRegion anchorStructuredDocumentRegion, XMLSourceParser textSource) {
 			ITextRegionList regions = taglibDirectiveCollection.getRegions();
 			String uri = null;
 			String prefix = null;
@@ -463,20 +468,20 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		public void setStructuredDocument(IStructuredDocument newDocument) {
 			Assert.isTrue(newDocument != null, "null document"); //$NON-NLS-1$
 			Assert.isTrue(newDocument.getParser() != null, "null document parser"); //$NON-NLS-1$
-			Assert.isTrue(newDocument.getParser() instanceof JSPSourceParser, "can only listen to document with a JSPSourceParser"); //$NON-NLS-1$
+			Assert.isTrue(newDocument.getParser() instanceof XMLSourceParser, "can only listen to document with a XMLSourceParser"); //$NON-NLS-1$
 			getSourceParser().removeStructuredDocumentRegionHandler(this);
-			setSourceParser((JSPSourceParser) newDocument.getParser());
+			setSourceParser((XMLSourceParser) newDocument.getParser());
 			getSourceParser().addStructuredDocumentRegionHandler(this);
 		}
 	}
 
 	protected class IncludeHelper extends DirectiveStructuredDocumentRegionHandler {
 		protected IStructuredDocumentRegion fAnchor = null;
-		protected JSPSourceParser fLocalParser = null;
-		protected JSPSourceParser fParentParser = null;
+		protected XMLSourceParser fLocalParser = null;
+		protected XMLSourceParser fParentParser = null;
 		List taglibReferences = null;
 
-		public IncludeHelper(IStructuredDocumentRegion anchor, JSPSourceParser rootParser) {
+		public IncludeHelper(IStructuredDocumentRegion anchor, XMLSourceParser rootParser) {
 			super();
 			fAnchor = anchor;
 			fParentParser = rootParser;
@@ -504,7 +509,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		 *            the fullpath for the resource to be parsed
 		 */
 		void parse(IPath path) {
-			JSPSourceParser p = new JSPSourceParser();
+			XMLSourceParser p = (XMLSourceParser) getParser().newInstance();
 			fLocalParser = p;
 			String s = getContents(path);
 			// Should we consider preludes on this segment?
@@ -515,9 +520,11 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				BlockMarker marker = (BlockMarker) blockTags.get(i);
 				fLocalParser.addBlockMarker(new BlockMarker(marker.getTagName(), null, marker.getContext(), marker.isCaseSensitive()));
 			}
-			TagMarker[] knownPrefixes = (TagMarker[]) fParentParser.getNestablePrefixes().toArray(new TagMarker[0]);
-			for (int i = 0; i < knownPrefixes.length; i++) {
-				fLocalParser.addNestablePrefix(new TagMarker(knownPrefixes[i].getTagName(), null));
+			if (fParentParser instanceof JSPCapableParser && fLocalParser instanceof JSPCapableParser) {
+				TagMarker[] knownPrefixes = (TagMarker[]) ((JSPCapableParser) fParentParser).getNestablePrefixes().toArray(new TagMarker[0]);
+				for (int i = 0; i < knownPrefixes.length; i++) {
+					((JSPCapableParser) fLocalParser).addNestablePrefix(new TagMarker(knownPrefixes[i].getTagName(), null));
+				}
 			}
 			// force parse
 			fLocalParser.getDocumentRegions();
@@ -630,7 +637,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 
 	private Stack fIncludes = null;
 
-	private JSPSourceParser fParser = null;
+	private XMLSourceParser fParser = null;
 
 	private List fTaglibTrackers = null;
 
@@ -912,11 +919,11 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		return fIncludes;
 	}
 
-	JSPSourceParser getParser() {
+	XMLSourceParser getParser() {
 		return fParser;
 	}
 
-	public JSPSourceParser getSourceParser() {
+	public XMLSourceParser getSourceParser() {
 		return fParser;
 	}
 
@@ -951,9 +958,11 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 							includeHelper.parse(preludes[i]);
 							List references = includeHelper.taglibReferences;
 							fTLDCMReferencesMap.put(preludes[i], references);
-							for (int j = 0; j < references.size(); j++) {
-								TLDCMDocumentReference reference = (TLDCMDocumentReference) references.get(j);
-								getParser().addNestablePrefix(new TagMarker(reference.prefix + ":")); //$NON-NLS-1$
+							if (getParser() instanceof JSPCapableParser) {
+								for (int j = 0; j < references.size(); j++) {
+									TLDCMDocumentReference reference = (TLDCMDocumentReference) references.get(j);
+									((JSPCapableParser) getParser()).addNestablePrefix(new TagMarker(reference.prefix + ":")); //$NON-NLS-1$
+								}
 							}
 						}
 						else
@@ -1072,7 +1081,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		getTaglibTrackers().clear();
 	}
 
-	public void setSourceParser(JSPSourceParser parser) {
+	public void setSourceParser(XMLSourceParser parser) {
 		if (fParser != null)
 			fParser.removeStructuredDocumentRegionHandler(getStructuredDocumentRegionHandler());
 		fParser = parser;
