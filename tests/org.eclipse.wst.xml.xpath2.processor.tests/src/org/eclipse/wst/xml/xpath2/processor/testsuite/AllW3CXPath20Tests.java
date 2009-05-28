@@ -10,20 +10,24 @@ public class AllW3CXPath20Tests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(NumericUnaryPlusTest.class);
 		suite.addTestSuite(SequenceTypeSyntaxTest.class);
+		suite.addTestSuite(SeqUnionTest.class);
 		suite.addTestSuite(NumericGTTest.class);
 		suite.addTestSuite(DateTimeAddDTDTest.class);
 		suite.addTestSuite(gDayEQTest.class);
 		suite.addTestSuite(TimeSubtractTest.class);
 		suite.addTestSuite(DateEQTest.class);
+		suite.addTestSuite(SeqIntersectTest.class);
 		suite.addTestSuite(CombNodeSeqTest.class);
 		suite.addTestSuite(DayTimeDurationDivideDTDTest.class);
+		suite.addTestSuite(SeqExceptTest.class);
 		suite.addTestSuite(BooleanLTTest.class);
+		suite.addTestSuite(NodeSameTest.class);
 		suite.addTestSuite(QNameEQTest.class);
 		suite.addTestSuite(NumericMultiplyTest.class);
 		suite.addTestSuite(DayTimeDurationGTTest.class);
 		suite.addTestSuite(gMonthDayEQTest.class);
-		suite.addTestSuite(AxesTest.class);
 		suite.addTestSuite(DateSubtractDTDTest.class);
+		suite.addTestSuite(AxesTest.class);
 		suite.addTestSuite(GenCompEqTest.class);
 		suite.addTestSuite(NodeTestTest.class);
 		suite.addTestSuite(BooleanEqualTest.class);
@@ -43,6 +47,7 @@ public class AllW3CXPath20Tests {
 		suite.addTestSuite(NumericLTTest.class);
 		suite.addTestSuite(NameTestTest.class);
 		suite.addTestSuite(NumericDivideTest.class);
+		suite.addTestSuite(NodeAfterTest.class);
 		suite.addTestSuite(YearMonthDurationSubtractTest.class);
 		suite.addTestSuite(RangeExprTest.class);
 		suite.addTestSuite(BooleanGTTest.class);
@@ -52,7 +57,9 @@ public class AllW3CXPath20Tests {
 		suite.addTestSuite(TimeSubtractDTDTest.class);
 		suite.addTestSuite(DateTimeLTTest.class);
 		suite.addTestSuite(YearMonthDurationMultiplyTest.class);
+		suite.addTestSuite(GenCompLTEQTest.class);
 		suite.addTestSuite(GenCompLTTest.class);
+		suite.addTestSuite(NodeBeforeTest.class);
 		suite.addTestSuite(gYearMonthEQTest.class);
 		suite.addTestSuite(DateTimeGTTest.class);
 		suite.addTestSuite(YearMonthDurationDivideTest.class);
@@ -70,9 +77,11 @@ public class AllW3CXPath20Tests {
 		suite.addTestSuite(ExternalContextExprTest.class);
 		suite.addTestSuite(DayTimeDurationLTTest.class);
 		suite.addTestSuite(NumericModTest.class);
+		suite.addTestSuite(LogicExprTest.class);
 		suite.addTestSuite(DateGTTest.class);
 		suite.addTestSuite(DateTimeSubtractYMDTest.class);
 		suite.addTestSuite(DurationEQTest.class);
+		suite.addTestSuite(GenCompGTTest.class);
 		suite.addTestSuite(NumericEqualTest.class);
 		suite.addTestSuite(TimeLTTest.class);
 		suite.addTestSuite(DatesSubtractTest.class);
@@ -84,8 +93,9 @@ public class AllW3CXPath20Tests {
 		suite.addTestSuite(gMonthEQTest.class);
 		suite.addTestSuite(DateAddYMDTest.class);
 		suite.addTestSuite(ParenExprTest.class);
-		suite.addTestSuite(DateTimeEQTest.class);
 		suite.addTestSuite(UnabbrAxesTest.class);
+		suite.addTestSuite(DateTimeEQTest.class);
+		suite.addTestSuite(GenCompGTEQTest.class);
 		//$JUnit-END$
 		return suite;
 	}
