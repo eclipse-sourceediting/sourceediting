@@ -209,7 +209,7 @@ class MainTab implements IPreferenceTab {
 
 		Text description = new Text(composite, SWT.READ_ONLY | SWT.SINGLE);
 		description.setText(SSEUIMessages.TaskTagPreferenceTab_33); //$NON-NLS-1$
-		description.setBackground(composite.getBackground());
+//		description.setBackground(composite.getBackground());
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=104403
 		Point sizeHint = description.computeSize(SWT.DEFAULT, SWT.DEFAULT);

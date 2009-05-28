@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.preferences.ui;
 
-import com.ibm.icu.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -47,6 +46,8 @@ import org.eclipse.wst.sse.core.internal.tasks.TaskTagPreferenceKeys;
 import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.util.Sorter;
+
+import com.ibm.icu.text.Collator;
 
 class ExclusionsTab implements IPreferenceTab {
 	private class ArrayTreeContentProvider implements ITreeContentProvider {
@@ -233,11 +234,11 @@ class ExclusionsTab implements IPreferenceTab {
 	public Control createContents(Composite tabFolder) {
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		composite.setLayout(new GridLayout(2, true));
-		Text description = new Text(composite, SWT.READ_ONLY);
+		Text description = new Text(composite, SWT.READ_ONLY | SWT.SINGLE);
 		description.setText(SSEUIMessages.TaskTagExclusionTab_02);
-		description.setBackground(composite.getBackground());
+//		description.setBackground(composite.getBackground());
 
-		fContentTypeList = new CheckboxTreeViewer(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
+		fContentTypeList = new CheckboxTreeViewer(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		fContentTypeList.setLabelProvider(new ContentTypeLabelProvider());
 		fContentTypeList.setContentProvider(new ArrayTreeContentProvider());
 
@@ -268,12 +269,12 @@ class ExclusionsTab implements IPreferenceTab {
 
 		new Label(composite, SWT.NONE).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 
-		Text affectedTypesLabel = new Text(composite, SWT.READ_ONLY);
+		Text affectedTypesLabel = new Text(composite, SWT.READ_ONLY | SWT.SINGLE);
 		affectedTypesLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
-		affectedTypesLabel.setBackground(composite.getBackground());
+//		affectedTypesLabel.setBackground(composite.getBackground());
 		affectedTypesLabel.setText(SSEUIMessages.TaskTagExclusionTab_03);
 
-		final TreeViewer contentTypeTreeViewer = new TreeViewer(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL);
+		final TreeViewer contentTypeTreeViewer = new TreeViewer(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		contentTypeTreeViewer.setLabelProvider(new ContentTypeLabelProvider());
 		contentTypeTreeViewer.setContentProvider(new ContentTypeTreeProvider());
 		contentTypeTreeViewer.setInput(new Object[0]);
