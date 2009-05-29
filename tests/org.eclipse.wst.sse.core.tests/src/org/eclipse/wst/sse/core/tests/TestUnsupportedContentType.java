@@ -12,6 +12,8 @@ package org.eclipse.wst.sse.core.tests;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import junit.framework.TestCase;
 
@@ -55,7 +57,7 @@ public class TestUnsupportedContentType extends TestCase {
 	 * @throws CoreException
 	 * @throws IOException
 	 */
-	public void testGetForReadWithUnsupported() throws CoreException, IOException {
+	public void testGetForReadWithUnsupported() throws CoreException {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(getName());
 		if (!project.isAccessible()) {
 			project = createSimpleProject(getName());
@@ -64,12 +66,20 @@ public class TestUnsupportedContentType extends TestCase {
 		IFile file = project.getFile("testReadFile.js");
 		file.create(new ByteArrayInputStream("var n = 0;".getBytes()), true, null);
 		assertTrue("test file not created", file.isAccessible());
-		IStructuredModel model = StructuredModelManager.getModelManager().getModelForRead(file);
-		assertNull("model returned even though expected to silently get null", model);
-		if (model != null)
-			model.releaseFromRead();
+		try {
+			IStructuredModel model = StructuredModelManager.getModelManager().getModelForRead(file);
+			assertNull("model returned even though expected to silently get null", model);
+			if (model != null)
+				model.releaseFromRead();
+		}
+		catch (Exception e) {
+			StringWriter out = new StringWriter();
+			e.printStackTrace(new PrintWriter(out));
+			fail(out.toString());
+		}
 		project.delete(true, null);
 	}
+
 	/**
 	 * Verify that attempting to load a model for an unsupported content type
 	 * simply returns null without Exceptions or assertion failures.
@@ -77,7 +87,7 @@ public class TestUnsupportedContentType extends TestCase {
 	 * @throws CoreException
 	 * @throws IOException
 	 */
-	public void testGetForEditWithUnsupported() throws CoreException, IOException {
+	public void testGetForEditWithUnsupported() throws CoreException {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(getName());
 		if (!project.isAccessible()) {
 			project = createSimpleProject(getName());
@@ -86,10 +96,17 @@ public class TestUnsupportedContentType extends TestCase {
 		IFile file = project.getFile("testEditFile.js");
 		file.create(new ByteArrayInputStream("var n = 0;".getBytes()), true, null);
 		assertTrue("test file not created", file.isAccessible());
-		IStructuredModel model = StructuredModelManager.getModelManager().getModelForEdit(file);
-		assertNull("model returned even though expected to silently get null", model);
-		if (model != null)
-			model.releaseFromRead();
+		try {
+			IStructuredModel model = StructuredModelManager.getModelManager().getModelForEdit(file);
+			assertNull("model returned even though expected to silently get null", model);
+			if (model != null)
+				model.releaseFromRead();
+		}
+		catch (Exception e) {
+			StringWriter out = new StringWriter();
+			e.printStackTrace(new PrintWriter(out));
+			fail(out.toString());
+		}
 		project.delete(true, null);
 	}
 }
