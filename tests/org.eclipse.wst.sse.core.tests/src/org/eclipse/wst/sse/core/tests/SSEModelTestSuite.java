@@ -46,7 +46,7 @@ public class SSEModelTestSuite extends TestSuite {
 	// TestDocumentReader.class, TestCharSequenceReader.class,
 	// TestRegionMatches.class};
 
-	private static Class[] classes = new Class[]{ExistenceTest.class, TestObjects.class, TestNewDocumentContentEvent.class, TestAboutToBeChangedEvent.class, TestNewDocumentEvent.class, TestNoChangeEvent.class, TestRegionChangedEvent.class,TestRegionsReplacedEvent.class,TestStructuredDocumentRegionsReplacedEvent.class, TestJarUtilities.class};
+	private static Class[] classes = new Class[]{ExistenceTest.class, TestObjects.class, TestNewDocumentContentEvent.class, TestAboutToBeChangedEvent.class, TestNewDocumentEvent.class, TestNoChangeEvent.class, TestRegionChangedEvent.class,TestRegionsReplacedEvent.class,TestStructuredDocumentRegionsReplacedEvent.class, TestJarUtilities.class, TestUnsupportedContentType.class};
 
 	public SSEModelTestSuite() {
 		super("SSE Model Basic Test Suite");
