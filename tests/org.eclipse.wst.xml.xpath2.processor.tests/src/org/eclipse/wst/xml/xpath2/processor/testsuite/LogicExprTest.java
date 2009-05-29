@@ -4476,7 +4476,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedInt(0) and xs:unsignedInt(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -4513,7 +4513,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedInt(0) and xs:unsignedInt(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -4550,7 +4550,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedInt(1) and xs:unsignedInt(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -4587,7 +4587,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedInt(1) and xs:unsignedInt(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -4624,7 +4624,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedInt(4294967295) and xs:unsignedInt(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -4661,7 +4661,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedInt(4294967295) and xs:unsignedInt(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -4698,7 +4698,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedInt(4294967295) and xs:unsignedInt(4294967295)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -4735,7 +4735,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:short(0) and xs:short(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -4772,7 +4772,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:short(0) and xs:short(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -4809,7 +4809,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:short(-1) and xs:short(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -4846,7 +4846,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:short(1) and xs:short(-1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -4883,7 +4883,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:short(32767) and xs:short(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -4920,7 +4920,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:short(32767) and xs:short(-1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -4957,7 +4957,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:short(-32768) and xs:short(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -4994,7 +4994,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:short(-32768) and xs:short(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5031,7 +5031,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:short(32767) and xs:short(-32768)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5068,7 +5068,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedShort(0) and xs:unsignedShort(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5105,7 +5105,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedShort(0) and xs:unsignedShort(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5142,7 +5142,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedShort(1) and xs:unsignedShort(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5179,7 +5179,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedShort(1) and xs:unsignedShort(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5216,7 +5216,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedShort(65535) and xs:unsignedShort(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5253,7 +5253,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedShort(65535) and xs:unsignedShort(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5290,7 +5290,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedShort(65535) and xs:unsignedShort(65535)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5327,7 +5327,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:byte(0) and xs:byte(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5364,7 +5364,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:byte(0) and xs:byte(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5401,7 +5401,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:byte(-1) and xs:byte(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5438,7 +5438,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:byte(1) and xs:byte(-1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5475,7 +5475,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:byte(127) and xs:byte(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5512,7 +5512,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:byte(127) and xs:byte(-1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5549,7 +5549,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:byte(-128) and xs:byte(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5586,7 +5586,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:byte(-128) and xs:byte(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5623,7 +5623,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:byte(127) and xs:byte(-128)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5660,7 +5660,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedByte(0) and xs:unsignedByte(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5697,7 +5697,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedByte(0) and xs:unsignedByte(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5734,7 +5734,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedByte(1) and xs:unsignedByte(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5771,7 +5771,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedByte(1) and xs:unsignedByte(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5808,7 +5808,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedByte(255) and xs:unsignedByte(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5845,7 +5845,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedByte(255) and xs:unsignedByte(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5882,7 +5882,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:unsignedByte(255) and xs:unsignedByte(255)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5919,7 +5919,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "false() or false()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5936,7 +5936,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
       } catch (DynamicError ex) {
          actual = ex.code();
       }
-
+      
       assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
@@ -5956,7 +5956,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "false() or true()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -5964,7 +5964,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -5993,7 +5993,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "false() or true()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6001,7 +6001,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6030,7 +6030,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "true() or true()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6038,7 +6038,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6067,7 +6067,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "() or ()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6075,7 +6075,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6104,7 +6104,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "(1) or ()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6112,7 +6112,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6141,7 +6141,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "() or (1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6149,7 +6149,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6178,7 +6178,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "(1) or (1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6186,7 +6186,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6215,7 +6215,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "(0) or ()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6223,7 +6223,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6252,7 +6252,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "() or (0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6260,7 +6260,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6289,7 +6289,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "(0) or (0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6297,7 +6297,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6326,7 +6326,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "(1) or (0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6334,7 +6334,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6363,7 +6363,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "(0) or (1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6371,7 +6371,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6400,7 +6400,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "(0) or ($input-context/bib/book/price/text())";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6408,7 +6408,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6437,7 +6437,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "($input-context/bib/book/price/text()) or (1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6445,7 +6445,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6474,7 +6474,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "($input-context/bib/book/price/text()) or ($input-context/bib/book/price/text())";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6482,7 +6482,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6511,7 +6511,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "\"\" or ''";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6519,7 +6519,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6548,7 +6548,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "\"\" or 'a'";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6556,7 +6556,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6585,7 +6585,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "\"0\" or ''";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6593,7 +6593,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6622,7 +6622,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "\"a\" or '0'";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6630,7 +6630,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6659,7 +6659,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:string(\"\") or xs:string('')";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6667,7 +6667,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6696,7 +6696,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:string(\"\") or xs:string('abc')";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6704,7 +6704,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6733,7 +6733,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:string(\"abc\") or xs:string('')";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6741,7 +6741,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6770,7 +6770,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:string(\"0\") or xs:string('abc')";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6778,7 +6778,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6807,7 +6807,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:untypedAtomic('') or xs:untypedAtomic(\"\")";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6815,7 +6815,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6844,7 +6844,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:untypedAtomic('abc') or xs:untypedAtomic(\"\")";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6852,7 +6852,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6881,7 +6881,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:untypedAtomic('') or xs:untypedAtomic(\"0\")";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6889,7 +6889,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6918,7 +6918,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:untypedAtomic('abc') or xs:untypedAtomic(\"0\")";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6926,7 +6926,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6955,7 +6955,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "0 or 0";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -6963,7 +6963,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -6992,7 +6992,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "0 or 1";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7000,7 +7000,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7029,7 +7029,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "1 or 0";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7037,7 +7037,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7066,7 +7066,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "-1 or 1";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7074,7 +7074,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7103,7 +7103,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:float(0) or xs:float(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7111,7 +7111,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7140,7 +7140,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:float(0) or xs:float(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7148,7 +7148,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7177,7 +7177,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:float(0) or xs:float(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7185,7 +7185,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7214,7 +7214,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:float(-1) or xs:float(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7222,7 +7222,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7251,7 +7251,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:float(1) or xs:float(-1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7259,7 +7259,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7288,7 +7288,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:float('NaN') or xs:float(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7296,7 +7296,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7325,7 +7325,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:float('NaN') or xs:float(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7333,7 +7333,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7362,7 +7362,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:float('NaN') or xs:float('NaN')";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7370,7 +7370,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7399,7 +7399,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:float('INF') or xs:float(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7407,7 +7407,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7436,7 +7436,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:float('INF') or xs:float(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7444,7 +7444,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7473,7 +7473,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:float('INF') or xs:float('NaN')";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7481,7 +7481,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7510,7 +7510,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:float('-INF') or xs:float(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7518,7 +7518,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7547,7 +7547,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:float('-INF') or xs:float(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7555,7 +7555,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7584,7 +7584,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:float('-INF') or xs:float('NaN')";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7592,7 +7592,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7621,7 +7621,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:float('-INF') or xs:float('INF')";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7629,7 +7629,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7658,7 +7658,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:double(0) or xs:double(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7666,7 +7666,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7695,7 +7695,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:double(0) or xs:double(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7703,7 +7703,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7732,7 +7732,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:double(-1) or xs:double(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7740,7 +7740,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7769,7 +7769,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:double(1) or xs:double(-1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7777,7 +7777,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7806,7 +7806,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:double('NaN') or xs:double(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7814,7 +7814,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7843,7 +7843,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:double('NaN') or xs:double(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7851,7 +7851,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7880,7 +7880,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:double('NaN') or xs:double('NaN')";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7888,7 +7888,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7917,7 +7917,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:double('INF') or xs:double(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7925,7 +7925,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7954,7 +7954,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:double('INF') or xs:double(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7962,7 +7962,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -7991,7 +7991,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:double('INF') or xs:double('NaN')";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7999,7 +7999,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -8028,7 +8028,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:double('-INF') or xs:double(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -8036,7 +8036,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -8065,7 +8065,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "xs:double('-INF') or xs:double(1)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -8073,7 +8073,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual =  "<return>" + buildResultString(rs) + "</return>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
