@@ -81,7 +81,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -91,7 +91,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -118,7 +118,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -155,7 +155,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -212,7 +212,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ForExpr/ForExpr013.xq";
       String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ForExpr/ForExpr013.xml";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "<result>" + getExpectedResult(resultFile) + "</result>";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -229,7 +229,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<result>" + buildXMLResultString(rs) + "</result>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -239,7 +239,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -323,7 +323,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ForExpr/ForExpr016.xq";
       String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ForExpr/ForExpr016.xml";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "<result>" + getExpectedResult(resultFile) + "</result>";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -340,7 +340,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<result>" + buildXMLResultString(rs) + "</result>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -350,7 +350,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -545,7 +545,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ForExpr/ForExpr025.xq";
       String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ForExpr/ForExpr025.xml";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "<result>" + getExpectedResult(resultFile) + "</result>";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -562,7 +562,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<result>" + buildXMLResultString(rs) + "</result>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -572,7 +572,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }

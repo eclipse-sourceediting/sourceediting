@@ -48,6 +48,7 @@ public class AllW3CXPath20Tests {
 		suite.addTestSuite(NameTestTest.class);
 		suite.addTestSuite(NumericDivideTest.class);
 		suite.addTestSuite(NodeAfterTest.class);
+		suite.addTestSuite(ForExprWithoutTest.class);
 		suite.addTestSuite(YearMonthDurationSubtractTest.class);
 		suite.addTestSuite(RangeExprTest.class);
 		suite.addTestSuite(BooleanGTTest.class);
