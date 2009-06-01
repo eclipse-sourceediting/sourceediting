@@ -57,6 +57,7 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TypedRegion;
 import org.eclipse.wst.sse.core.internal.Logger;
+import org.eclipse.wst.sse.core.internal.document.IDocumentStateValidationListener;
 import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
@@ -288,6 +289,9 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	private Object[] fStructuredDocumentChangingListeners;
 
 	private List fDocumentRewriteSessionListeners;
+
+	private IDocumentStateValidationListener fDocumentStateValidationListener;
+	private byte[] stateListenerLock = new byte[0];
 
 	private ILineTracker fTracker;
 	private IStructuredTextUndoManager fUndoManager;
@@ -1905,31 +1909,38 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		try {
 			// Note: event must be computed before 'fire' method called
 			fDocumentEvent = new DocumentEvent(this, start, replacementLength, changes);
-			fireDocumentAboutToChanged();
-
-			try {
-				acquireLock();
-
-				if (!ignoreReadOnlySettings && (containsReadOnly(start, replacementLength))) {
-					NoChangeEvent noChangeEvent = new NoChangeEvent(this, requester, changes, start, replacementLength);
-					noChangeEvent.reason = NoChangeEvent.READ_ONLY_STATE_CHANGE;
-					result = noChangeEvent;
+			if (!fireDocumentStateValidation()) {
+				NoChangeEvent noChangeEvent = new NoChangeEvent(this, requester, changes, start, replacementLength);
+				noChangeEvent.reason = NoChangeEvent.INVALID_STATE;
+				result = noChangeEvent;
+			}
+			else {
+				fireDocumentAboutToChanged();
+	
+				try {
+					acquireLock();
+	
+					if (!ignoreReadOnlySettings && (containsReadOnly(start, replacementLength))) {
+						NoChangeEvent noChangeEvent = new NoChangeEvent(this, requester, changes, start, replacementLength);
+						noChangeEvent.reason = NoChangeEvent.READ_ONLY_STATE_CHANGE;
+						result = noChangeEvent;
+					}
+					else {
+						result = updateModel(requester, start, replacementLength, changes);
+					}
 				}
-				else {
-					result = updateModel(requester, start, replacementLength, changes);
+				finally {
+					releaseLock();
 				}
-			}
-			finally {
-				releaseLock();
-			}
-
-
-			if (Debug.perfTestRawStructuredDocumentOnly || Debug.perfTest) {
-				long stopStreamTime = System.currentTimeMillis();
-				System.out.println("\n\t\t\t\t Time for IStructuredDocument raw replaceText: " + (stopStreamTime - startStreamTime)); //$NON-NLS-1$
-			}
-			if (Debug.debugStructuredDocument) {
-				System.out.println("event type returned by replaceTextWithNoDebuggingThread: " + result); //$NON-NLS-1$
+	
+	
+				if (Debug.perfTestRawStructuredDocumentOnly || Debug.perfTest) {
+					long stopStreamTime = System.currentTimeMillis();
+					System.out.println("\n\t\t\t\t Time for IStructuredDocument raw replaceText: " + (stopStreamTime - startStreamTime)); //$NON-NLS-1$
+				}
+				if (Debug.debugStructuredDocument) {
+					System.out.println("event type returned by replaceTextWithNoDebuggingThread: " + result); //$NON-NLS-1$
+				}
 			}
 		}
 		finally {
@@ -1976,7 +1987,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 						}
 						else {
 							if (result instanceof NoChangeEvent) {
-								fireStructuredDocumentEvent((NoChangeEvent) result);
+								if (((NoChangeEvent) result).reason != NoChangeEvent.INVALID_STATE)
+									fireStructuredDocumentEvent((NoChangeEvent) result);
 							}
 							else {
 								// if here, this means a new event was created
@@ -2959,6 +2971,30 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		while (e.hasNext()) {
 			IDocumentRewriteSessionListener l = (IDocumentRewriteSessionListener) e.next();
 			l.documentRewriteSessionChanged(event);
+		}
+	}
+
+	/**
+	 * Fires document state check events. If the state is validated as editable,
+	 * returns true.
+	 * @return true if the document has been validated as editable
+	 */
+	private boolean fireDocumentStateValidation() {
+		boolean stateValidated = true;
+		synchronized (stateListenerLock) {
+			if (fDocumentStateValidationListener != null)
+				stateValidated = fDocumentStateValidationListener.validateDocumentState(fDocumentEvent);
+		}
+		return stateValidated;
+	}
+
+	/**
+	 * Sets the document state validation listener for the document
+	 * @param listener the state validation listener that should be notified before document edits 
+	 */
+	public void setDocumentStateValidationListener(IDocumentStateValidationListener listener) {
+		synchronized (stateListenerLock) {
+			fDocumentStateValidationListener = listener;
 		}
 	}
 }
