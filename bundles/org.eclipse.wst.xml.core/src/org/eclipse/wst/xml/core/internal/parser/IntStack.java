@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -92,6 +92,21 @@ public class IntStack {
 	}
 
 	public int size() {
-		return list.length;
+		return size;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		StringBuffer s = new StringBuffer(getClass().getName() + ":" +size + " [");
+		for (int i = 0; i < size; i++) {
+			s.append(list[i]);
+			if(i < size - 1) {
+				s.append(", ");
+			}
+		}
+		s.append("]");
+		return s.toString();
 	}
 }
