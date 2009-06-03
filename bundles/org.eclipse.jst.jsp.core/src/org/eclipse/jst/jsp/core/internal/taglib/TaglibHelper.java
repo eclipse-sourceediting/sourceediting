@@ -12,12 +12,9 @@ package org.eclipse.jst.jsp.core.internal.taglib;
 
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagData;
@@ -76,13 +73,11 @@ public class TaglibHelper {
 	private IProject fProject = null;
 	private ClassLoader fLoader = null;
 
-	private Map fTranslationProblems = null;
 	private IJavaProject fJavaProject;
 
 	public TaglibHelper(IProject project) {
 		super();
 		setProject(project);
-		fTranslationProblems = new HashMap();
 	}
 
 	/**
@@ -93,11 +88,13 @@ public class TaglibHelper {
 	 * @param customTag
 	 *            is the IStructuredDocumentRegion opening tag for the custom
 	 *            tag
+	 * @param problems problems that are generated while creating variables are added to this collection
 	 */
-	public TaglibVariable[] getTaglibVariables(String tagToAdd, IStructuredDocument structuredDoc, ITextRegionCollection customTag) {
+	public TaglibVariable[] getTaglibVariables(String tagToAdd, IStructuredDocument structuredDoc, ITextRegionCollection customTag, List problems) {
 
 		List results = new ArrayList();
-		List problems = new ArrayList();
+		if (problems == null)
+			problems = new ArrayList();
 		ModelQuery mq = getModelQuery(structuredDoc);
 		if (mq != null) {
 			TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(structuredDoc);
@@ -148,11 +145,6 @@ public class TaglibHelper {
 					}
 				}
 			}
-		}
-
-		IPath location = TaglibController.getLocation(structuredDoc);
-		if (location != null) {
-			fTranslationProblems.put(location, problems);
 		}
 
 		return (TaglibVariable[]) results.toArray(new TaglibVariable[results.size()]);
@@ -643,14 +635,6 @@ public class TaglibHelper {
 		}
 	}
 
-	/**
-	 * @param path
-	 * @return
-	 */
-	public Collection getProblems(IPath path) {
-		return (Collection) fTranslationProblems.remove(path);
-	}
-
 	private void validateTagClass(IStructuredDocument document, ITextRegionCollection customTag, TLDElementDeclaration decl, List problems) {
 		// skip if from a tag file
 		if (TLDElementDeclaration.SOURCE_TAG_FILE.equals(decl.getProperty(TLDElementDeclaration.TAG_SOURCE))) {
@@ -682,6 +666,5 @@ public class TaglibHelper {
 		fLoader = null;
 		fJavaProject = null;
 		fProject = null;
-		fTranslationProblems = null;
 	}
 }

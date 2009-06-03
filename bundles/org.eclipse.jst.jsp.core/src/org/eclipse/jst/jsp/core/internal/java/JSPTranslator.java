@@ -812,8 +812,9 @@ public class JSPTranslator {
 			/*
 			 * Start tag
 			 */
-			TaglibVariable[] taglibVars = helper.getTaglibVariables(tagToAdd, getStructuredDocument(), customTag);
-			fTranslationProblems.addAll(helper.getProblems(f.getFullPath()));
+			List problems = new ArrayList();
+			TaglibVariable[] taglibVars = helper.getTaglibVariables(tagToAdd, getStructuredDocument(), customTag, problems);
+			fTranslationProblems.addAll(problems);
 			/*
 			 * Add AT_BEGIN variables
 			 */
