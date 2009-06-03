@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,22 +10,29 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.tests.contenttypeidentifier.contentspecific;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import junit.framework.TestCase;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.tests.taglibindex.BundleResourceUtil;
 import org.eclipse.wst.css.core.internal.provisional.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.w3c.dom.Document;
 
 public class TestModelHandlers extends TestCase {
 	private static ModelHandlerRegistry getModelHandlerRegistry() {
@@ -151,6 +158,105 @@ public class TestModelHandlers extends TestCase {
 		IStructuredModel model = StructuredModelManager.getModelManager().getModelForRead(testFile);
 		assertFalse("newly opened model was dirty " + testFile.getName(), model.isDirty());
 		model.releaseFromRead();
+		project.delete(true, null);
+	}
+
+	public void testDirtyStateForMisspelledEmbeddedCharset() throws Exception {
+		String projectName = "TestModelHandlers." + getName();
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+		if (!project.isAccessible()) {
+			project = BundleResourceUtil.createSimpleProject(projectName, null, null);
+		}
+		IFile testFile = project.getFile("charaset.jsp");
+		String contents = "<%@ page language=\"java\" contentType=\"text/xml; charaset=UTF-8\" pageEncoding=\"UTF-8\"%>\n" + 
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+				"<Contents>\n" + 
+				"<Error state=\"fatal\" code=\"\">\n" + 
+				"</Error>\n" + 
+				"</Contents>";
+		if (!testFile.exists()) {
+			testFile.create(new ByteArrayInputStream(contents.getBytes("utf8")), IResource.FORCE, null);
+		}
+		else {
+			testFile.setContents(new ByteArrayInputStream(contents.getBytes("utf8")), IResource.FORCE, null);
+		}
+		IStructuredModel model = null;
+		try {
+			model = StructuredModelManager.getModelManager().getModelForRead(testFile);
+
+			Document doc = ((IDOMModel) model).getDocument();
+			PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) ((INodeNotifier) doc).getAdapterFor(PageDirectiveAdapter.class);
+			EmbeddedTypeHandler embeddedHandler = pageDirectiveAdapter.getEmbeddedType();
+
+			assertFalse("newly opened model was dirty, embedded handler changed? current family:" + embeddedHandler.getFamilyId(), model.isDirty());
+		}
+		finally {
+			if (model != null)
+				model.releaseFromRead();
+		}
+		project.delete(true, null);
+	}
+	
+	public void testDirtyStateForEmbeddedCharsetWithoutContentType() throws Exception {
+		String projectName = "TestModelHandlers." + getName();
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+		if (!project.isAccessible()) {
+			project = BundleResourceUtil.createSimpleProject(projectName, null, null);
+		}
+		IFile testFile = project.getFile("charaset.jsp");
+		String contents = "<%@ page language=\"java\" contentType=\"charset=UTF-8\" pageEncoding=\"UTF-8\"%>\n" + 
+				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+				"<Contents>\n" + 
+				"<Error state=\"fatal\" code=\"\">\n" + 
+				"</Error>\n" + 
+				"</Contents>";
+		if (!testFile.exists()) {
+			testFile.create(new ByteArrayInputStream(contents.getBytes("utf8")), IResource.FORCE, null);
+		}
+		else {
+			testFile.setContents(new ByteArrayInputStream(contents.getBytes("utf8")), IResource.FORCE, null);
+		}
+		IStructuredModel model = null;
+		try {
+			model = StructuredModelManager.getModelManager().getModelForRead(testFile);
+
+			Document doc = ((IDOMModel) model).getDocument();
+			PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) ((INodeNotifier) doc).getAdapterFor(PageDirectiveAdapter.class);
+			EmbeddedTypeHandler embeddedHandler = pageDirectiveAdapter.getEmbeddedType();
+
+			assertFalse("newly opened model was dirty, embedded handler changed? current family:" + embeddedHandler.getFamilyId(), model.isDirty());
+		}
+		finally {
+			if (model != null)
+				model.releaseFromRead();
+		}
+		project.delete(true, null);
+	}
+
+	public void testDirtyStateForUnsupportedEmbeddedContentType() throws Exception {
+		String projectName = "TestModelHandlers." + getName();
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+		if (!project.isAccessible()) {
+			project = BundleResourceUtil.createSimpleProject(projectName, null, null);
+		}
+		IFile testFile = project.getFile("unsupported.jsp");
+		String contents = "<%@ page language=\"java\" contentType=\"image/gif\"%>\n" + 
+		"out.write(\"GIF89a\"";
+		if (!testFile.exists()) {
+			testFile.create(new ByteArrayInputStream(contents.getBytes("utf8")), IResource.FORCE, null);
+		}
+		else {
+			testFile.setContents(new ByteArrayInputStream(contents.getBytes("utf8")), IResource.FORCE, null);
+		}
+		IStructuredModel model = null;
+		try {
+			model = StructuredModelManager.getModelManager().getModelForRead(testFile);
+			assertFalse("newly opened model was dirty " + testFile.getName(), model.isDirty());
+		}
+		finally {
+			if (model != null)
+				model.releaseFromRead();
+		}
 		project.delete(true, null);
 	}
 

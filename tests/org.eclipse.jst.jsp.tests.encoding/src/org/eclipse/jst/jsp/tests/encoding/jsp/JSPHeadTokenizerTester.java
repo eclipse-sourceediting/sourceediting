@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.jst.jsp.tests.encoding.jsp;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.StringTokenizer;
 import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
@@ -20,6 +21,7 @@ import org.eclipse.jst.jsp.core.internal.contenttype.HeadParserToken;
 import org.eclipse.jst.jsp.core.internal.contenttype.JSPHeadTokenizer;
 import org.eclipse.jst.jsp.core.internal.contenttype.JSPHeadTokenizerConstants;
 import org.eclipse.jst.jsp.tests.encoding.JSPEncodingTestsPlugin;
+import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.xml.core.internal.contenttype.EncodingParserConstants;
 import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
 
@@ -138,34 +140,51 @@ public class JSPHeadTokenizerTester extends TestCase {
 	 * @param contentType
 	 */
 	private void parseContentTypeValue(String contentType) {
-		Pattern pattern = Pattern.compile(";\\s*charset\\s*=\\s*"); //$NON-NLS-1$
-		String[] parts = pattern.split(contentType);
-		if (parts.length > 0) {
-			// if only one item, it can still be charset instead of
-			// contentType
-			if (parts.length == 1) {
-				if (parts[0].length() > 6) {
-					String checkForCharset = parts[0].substring(0, 7);
-					if (checkForCharset.equalsIgnoreCase("charset")) {
-						int eqpos = parts[0].indexOf('=');
-						eqpos = eqpos + 1;
-						if (eqpos < parts[0].length()) {
-							fCharset = parts[0].substring(eqpos);
-							fCharset = fCharset.trim();
-						}
-					}
-					else {
-						fContentType = parts[0];
-					}
-				}
-			}
-			else {
-				fContentType = parts[0];
+		/*
+		 * Based partially on
+		 * org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapterImpl
+		 * .getMimeTypeFromContentTypeValue(String) , divides the full value
+		 * into segments according to ';', assumes the first specifies the
+		 * content type itself if it has no '=', and that the remainder are
+		 * parameters which may specify a charset
+		 */
+		
+		String cleanContentTypeValue = StringUtils.stripNonLetterDigits(contentType);
+		/* Break the mime header into the main value and its parameters, separated by ';' */
+		StringTokenizer tokenizer = new StringTokenizer(cleanContentTypeValue, ";"); //$NON-NLS-1$
+		int tLen = tokenizer.countTokens();
+		if (tLen == 0)
+			return;
+		String[] tokens = new String[tLen];
+		int j = 0;
+		while (tokenizer.hasMoreTokens()) {
+			tokens[j] = tokenizer.nextToken();
+			j++;
+		}
+		
+		int firstParameter = 0;
+		if (tokens[0].indexOf('=') == -1) {
+			/*
+			 * no equal sign in the first segment, so assume it indicates a
+			 * content type properly
+			 */
+			fContentType = tokens[0].trim();
+			firstParameter = 1;
+		}
+		/*
+		 * now handle parameters as name=value pairs, looking for "charset"
+		 * specifically
+		 */
+		Pattern equalPattern = Pattern.compile("\\s*=\\s*"); //$NON-NLS-1$
+		for (int i = firstParameter; i < tokens.length; i++) {
+			String[] pair = equalPattern.split(tokens[i]);
+			if (pair.length < 2)
+				continue;
+			if (pair[0].trim().equals("charset")) { //$NON-NLS-1$
+				fCharset = pair[1].trim();
 			}
 		}
-		if (parts.length > 1) {
-			fCharset = parts[1];
-		}
+
 	}
 
 	/**
