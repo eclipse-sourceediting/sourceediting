@@ -247,7 +247,7 @@ import org.eclipse.wst.xml.core.internal.parser.IntStack;
 				}
 				catch(IllegalStateException e) {
 					start = yychar;
-					while(yy_advance() != YYEOF);
+					while(yy_advance() != YYEOF){}
 					textLength = length = yylength();
 					yybegin(ST_ABORT_EMBEDDED);
 					longscan = false;
@@ -272,7 +272,7 @@ import org.eclipse.wst.xml.core.internal.parser.IntStack;
 					}
 					catch(IllegalStateException e) {
 						start = yychar;
-						while(yy_advance() != YYEOF);
+						while(yy_advance() != YYEOF){}
 						textLength = length = yylength();
 						yybegin(ST_ABORT_EMBEDDED);
 					}
@@ -478,7 +478,7 @@ private final String doScan(String searchString, boolean requireTailSeparator, b
 					}
 					catch(IllegalStateException e) {
 						start = yychar;
-						while(yy_advance() != YYEOF);
+						while(yy_advance() != YYEOF){}
 						textLength = length = yylength();
 					}
 					yybegin(resumeState);
@@ -505,7 +505,7 @@ private final String doScan(String searchString, boolean requireTailSeparator, b
 					}
 					catch(IllegalStateException e) {
 						start = yychar;
-						while(yy_advance() != YYEOF);
+						while(yy_advance() != YYEOF){}
 						textLength = length = yylength();
 					}
 					yybegin(resumeState);
@@ -532,7 +532,7 @@ private final String doScan(String searchString, boolean requireTailSeparator, b
 					}
 					catch(IllegalStateException e) {
 						start = yychar;
-						while(yy_advance() != YYEOF);
+						while(yy_advance() != YYEOF){}
 						textLength = length = yylength();
 					}
 					yybegin(resumeState);
@@ -572,8 +572,10 @@ private final String doScan(String searchString, boolean requireTailSeparator, b
 				}
 				catch(IllegalStateException e) {
 					start = yychar;
-					while(yy_advance() != YYEOF);
+					while(yy_advance() != YYEOF){}
 					textLength = length = yylength();
+					recoverInternals();
+					yybegin(YYINITIAL);
 					return UNDEFINED;
 				}
 				if(context.equals(XMLRegionContexts.XML_CDATA_OPEN)) {
@@ -667,8 +669,10 @@ private final String doScan(String searchString, boolean requireTailSeparator, b
 			}
 			catch(IllegalStateException e) {
 				start = yychar;
-				while(yy_advance() != YYEOF);
+				while(yy_advance() != YYEOF){}
 				textLength = length = yylength();
+				recoverInternals();
+				yybegin(YYINITIAL);
 			}
 			return UNDEFINED;
 		}
@@ -687,8 +691,10 @@ private final String doScan(String searchString, boolean requireTailSeparator, b
 		}
 		catch(IllegalStateException e) {
 			start = yychar;
-			while(yy_advance() != YYEOF);
+			while(yy_advance() != YYEOF){}
 			textLength = length = yylength();
+				recoverInternals();
+				yybegin(YYINITIAL);
 		}
 		return UNDEFINED;
 	}
@@ -735,8 +741,10 @@ private final String doBlockTagScan() throws IOException {
 			}
 			catch(IllegalStateException e) {
 				start = yychar;
-				while(yy_advance() != YYEOF);
+				while(yy_advance() != YYEOF){}
 				textLength = length = yylength();
+				recoverInternals();
+				yybegin(YYINITIAL);
 				return fRegionFactory.createToken(UNDEFINED, start, textLength, length, null, null);
 			}
 			if (context == PROXY_CONTEXT) {
@@ -764,8 +772,10 @@ private final String doBlockTagScan() throws IOException {
 		}
 		catch(IllegalStateException e) {
 			start = yychar;
-			while(yy_advance() != YYEOF);
+			while(yy_advance() != YYEOF){}
 			textLength = length = yylength();
+			recoverInternals();
+			yybegin(YYINITIAL);
 			return fRegionFactory.createToken(UNDEFINED, start, textLength, length, null, null);
 		}
 		if (f_context == PROXY_CONTEXT) {
@@ -950,6 +960,23 @@ private final String doBlockTagScan() throws IOException {
 	private boolean isJspTag() {
 	  return fJspTagStack.empty() ? false : fJspTagStack.peek();
 	}
+	/* user method */
+	private void recoverInternals() {
+		fShouldLoadBuffered = false;
+		fBufferedContext = null;
+		fBufferedStart = 1;
+		fBufferedLength = 0;
+		fStateStack = new IntStack();
+		fJspTagStack.clear();
+	
+		fLastInternalBlockStart = -1;
+	
+		context = null;	
+		fEmbeddedContainer = null;
+		
+		fELlevel = 0;
+	}
+
 %}
 
 %eof{

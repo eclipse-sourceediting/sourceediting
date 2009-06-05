@@ -185,19 +185,34 @@
    */
   private void yy_ScanError(int errorCode) {
 	if (fErroredInputstamp != fInputStamp) {
-		IllegalStateException e = new IllegalStateException("Instance:" + System.identityHashCode(this) + " Input:" + fInputStamp + " offset:" + (fOffset + yychar) + " state:" + yystate());
-		try {
-			Logger.logException(YY_ERROR_MSG[errorCode], e);
-			throw(e);
+			// must update count before throwing the exception
+			fErroredInputstamp = fInputStamp;
+			// attempt to capture and report the next 20 characters
+			StringBuffer next = new StringBuffer();
+			if(errorCode == YY_NO_MATCH) {
+				for (int i = 0; i < 20; i++) {
+					try {
+						int c = yy_advance();
+						if (c != YYEOF)
+							next.append((char) c);
+					}
+					catch (IOException e1) {
+					}
+				}
+				yypushback(next.length());
+			}
+			IllegalStateException e = new IllegalStateException("Instance:" + System.identityHashCode(this) + " Input:" + fInputStamp + " offset:" + (fOffset + yychar) + " state:" + yystate() + " stack:" + fStateStack + " next:" + next);
+			try {
+				Logger.logException(YY_ERROR_MSG[errorCode], e);
+				throw (e);
+			}
+			catch (ArrayIndexOutOfBoundsException e2) {
+				Logger.logException(YY_ERROR_MSG[YY_UNKNOWN_ERROR], e2);
+			}
 		}
-		catch (ArrayIndexOutOfBoundsException e2) {
-			Logger.logException(YY_ERROR_MSG[YY_UNKNOWN_ERROR], e2);
-		}
-		fErroredInputstamp = fInputStamp;
-	}
-	
-    // DO NOT EXIT the VM on an error
-    // System.exit(1);
+
+		// DO NOT EXIT the VM on an error
+		// System.exit(1);
   } 
 
 
