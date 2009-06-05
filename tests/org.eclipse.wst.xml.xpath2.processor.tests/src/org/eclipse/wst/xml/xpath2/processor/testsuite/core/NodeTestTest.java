@@ -9,7 +9,7 @@
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
  *******************************************************************************/
-package org.eclipse.wst.xml.xpath2.processor.testsuite;
+package org.eclipse.wst.xml.xpath2.processor.testsuite.core;
 
 import java.net.URL;
 
@@ -18,15 +18,17 @@ import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
-      
-      
-public class compareFuncTest extends AbstractPsychoPathTest {
+import org.w3c.dom.Element;
+import org.w3c.dom.ls.*;
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(lower bound) $comparand2 = xs:string(lower bound).
-   public void test_fn_compare2args_1() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-1.txt";
+// NodeTests need to compare based on Fragments.  We which means need to compare DOM outputs.
+public class NodeTestTest extends AbstractPsychoPathTest {
+
+   //Simple test for comment() node type.
+   public void test_NodeTest001() throws Exception {
+      String inputFile = "/TestSources/bib2.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTest001.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTest001.xml";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -43,8 +45,8 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
+          
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -59,11 +61,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(mid range) $comparand2 = xs:string(lower bound).
-   public void test_fn_compare2args_2() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-2.txt";
+   //Simple test for processing-instruction() node test.
+   public void test_NodeTest002() throws Exception {
+      String inputFile = "/TestSources/bib2.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTest002.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTest002.xml";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -81,7 +83,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -96,11 +98,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(upper bound) $comparand2 = xs:string(lower bound).
-   public void test_fn_compare2args_3() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-3.txt";
+   //Simple test for node type text().
+   public void test_NodeTest006() throws Exception {
+      String inputFile = "/TestSources/bib.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTest006.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTest006.xml";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -110,7 +112,8 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      //String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "$input-context/bib/book/editor/affiliation/text()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -118,7 +121,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<result>" + buildXMLResultString(rs) + "</result>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -133,11 +136,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(lower bound) $comparand2 = xs:string(mid range).
-   public void test_fn_compare2args_4() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-4.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-4.txt";
+   //processing-instruction() finds no descendant PIs of the given name anywhere.
+   public void test_NodeTest007_1() throws Exception {
+      String inputFile = "/TestSources/TreeEmpty.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTest007.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTest007-1.xml";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -147,7 +150,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:count($input-context//processing-instruction('a-pi'))";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -155,7 +158,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<out>" + buildResultString(rs) + "</out>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -170,11 +173,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(lower bound) $comparand2 = xs:string(upper bound).
-   public void test_fn_compare2args_5() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-5.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-5.txt";
+   //processing-instruction() gets all PIs of the given name, including those off root.
+   public void test_NodeTest007_2() throws Exception {
+      String inputFile = "/TestSources/TopMany.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTest007.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTest007-2.xml";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -184,7 +187,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:count($input-context//processing-instruction('a-pi'))";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -192,7 +195,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<out>" + buildResultString(rs) + "</out>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -207,11 +210,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "" $arg2 = "".
-   public void test_fn_compare_1() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-1.txt";
+   //text() gets no descendant text nodes.
+   public void test_NodeTest008_1() throws Exception {
+      String inputFile = "/TestSources/Tree1Child.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTest008.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTest008-1.xml";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -221,7 +224,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:count($input-context//center/text())";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -229,7 +232,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<out>" + buildResultString(rs) + "</out>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -244,11 +247,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "" $arg2 = "A Character String".
-   public void test_fn_compare_2() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-2.txt";
+   //text() gets text nodes.
+   public void test_NodeTest008_2() throws Exception {
+      String inputFile = "/TestSources/TreeCompass.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTest008.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTest008-2.xml";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -258,7 +261,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:count($input-context//center/text())";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -266,7 +269,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<out>" + buildResultString(rs) + "</out>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -281,11 +284,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A Character String" $arg2 = "".
-   public void test_fn_compare_3() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-3.txt";
+   //comment() gets no descendant comment nodes.
+   public void test_NodeTest009_1() throws Exception {
+      String inputFile = "/TestSources/Tree1Child.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTest009.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTest009-1.xml";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -295,7 +298,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:count($input-context//center/comment())";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -303,7 +306,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<out>" + buildResultString(rs) + "</out>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -318,11 +321,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = () $arg2 = "".
-   public void test_fn_compare_4() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-4.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-4.txt";
+   //comment() gets comment nodes.
+   public void test_NodeTest009_2() throws Exception {
+      String inputFile = "/TestSources/TreeCompass.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTest009.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTest009-2.xml";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -332,7 +335,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:count($input-context//center/comment())";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -340,7 +343,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<out>" + buildResultString(rs) + "</out>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -355,11 +358,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "" $arg2 = ().
-   public void test_fn_compare_5() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-5.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-5.txt";
+   ////comment() gets no comment nodes anywhere.
+   public void test_NodeTest010_1() throws Exception {
+      String inputFile = "/TestSources/TreeEmpty.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTest010.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTest010-1.xml";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -369,7 +372,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:count($input-context//comment())";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -377,7 +380,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<out>" + buildResultString(rs) + "</out>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -392,11 +395,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A Character String" $arg2 = ().
-   public void test_fn_compare_6() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-6.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-6.txt";
+   ////comment() gets all comments, including those off root.
+   public void test_NodeTest010_2() throws Exception {
+      String inputFile = "/TestSources/TopMany.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTest010.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTest010-2.xml";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -406,7 +409,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:count($input-context//comment())";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -414,7 +417,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<out>" + buildResultString(rs) + "</out>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -429,11 +432,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = () $arg2 = "A Character String".
-   public void test_fn_compare_7() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-7.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-7.txt";
+   //processing-instruction() finds no descendant PIs.
+   public void test_NodeTest011_1() throws Exception {
+      String inputFile = "/TestSources/Tree1Child.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTest011.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTest011-1.xml";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -443,7 +446,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:count($input-context//center/processing-instruction())";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -451,7 +454,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<out>" + buildResultString(rs) + "</out>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -466,11 +469,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "AAAAABBBBBCCCCC" $arg2 = "BBBBB".
-   public void test_fn_compare_8() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-8.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-8.txt";
+   //processing-instruction() gets all descendant PIs.
+   public void test_NodeTest011_2() throws Exception {
+      String inputFile = "/TestSources/TreeCompass.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTest011.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTest011-2.xml";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -480,7 +483,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:count($input-context//center/processing-instruction())";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -488,7 +491,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<out>" + buildResultString(rs) + "</out>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -503,11 +506,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "AAAAABBBBB" $arg2 = " ".
-   public void test_fn_compare_9() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-9.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-9.txt";
+   //processing-instruction() finds no descendant PIs anywhere.
+   public void test_NodeTest012_1() throws Exception {
+      String inputFile = "/TestSources/TreeEmpty.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTest012.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTest012-1.xml";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -517,7 +520,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:count($input-context//processing-instruction())";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -525,7 +528,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<out>" + buildResultString(rs) + "</out>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -540,11 +543,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = " " $arg2 = "AAAAABBBBB".
-   public void test_fn_compare_10() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-10.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-10.txt";
+   //processing-instruction() gets all PIs, including those off root.
+   public void test_NodeTest012_2() throws Exception {
+      String inputFile = "/TestSources/TopMany.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTest012.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTest012-2.xml";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -554,7 +557,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:count($input-context//processing-instruction())";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -562,7 +565,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<out>" + buildResultString(rs) + "</out>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -577,11 +580,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function as an argument of another function (fn:not)- return true.
-   public void test_fn_compare_11() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-11.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-11.txt";
+   //processing-instruction() gets descendant PIs of the given name.
+   public void test_NodeTest013_1() throws Exception {
+      String inputFile = "/TestSources/TreeCompass.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTest013.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTest013-1.xml";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -591,7 +594,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:count($input-context//center/processing-instruction('a-pi'))";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -599,7 +602,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<out>" + buildResultString(rs) + "</out>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -614,11 +617,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function as an argument of another function (fn:not) - return false.
-   public void test_fn_compare_12() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-12.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-12.txt";
+   //Simple test involving a text node and a boolean expression (and fn:true()).
+   public void test_NodeTesthc_1() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTesthc-1.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTesthc-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -628,7 +631,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "$input-context1//text() and fn:true()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -636,7 +639,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<result>" + buildResultString(rs) + "</result>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -651,11 +654,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = xs:string("A") $arg2 = "A".
-   public void test_fn_compare_13() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-13.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-13.txt";
+   //Simple test involving a text node and a boolean expression (or fn:true()).
+   public void test_NodeTesthc_2() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTesthc-2.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTesthc-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -665,7 +668,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "$input-context1//text() or fn:true()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -673,7 +676,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<result>" + buildResultString(rs) + "</result>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -688,11 +691,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A" $arg2 = xs:string("A").
-   public void test_fn_compare_14() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-14.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-14.txt";
+   //Simple test involving a text node and a boolean expression (and fn:false()).
+   public void test_NodeTesthc_3() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTesthc-3.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTesthc-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -702,7 +705,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "$input-context1//text() and fn:false()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -710,7 +713,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<result>" + buildResultString(rs) + "</result>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -725,11 +728,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A" $arg2 = "a".
-   public void test_fn_compare_15() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-15.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-15.txt";
+   //Simple test involving a text node and a boolean expression (or fn:false()).
+   public void test_NodeTesthc_4() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTesthc-4.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTesthc-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -739,7 +742,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "$input-context1//text() or fn:false()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -747,7 +750,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<result>" + buildResultString(rs) + "</result>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -762,11 +765,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "a" $arg2 = "A".
-   public void test_fn_compare_16() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-16.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-16.txt";
+   //Simple test involving Element node types and a boolean expression (or fn:false()).
+   public void test_NodeTesthc_5() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTesthc-5.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTesthc-5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -776,7 +779,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "$input-context1//overtime/node() or fn:false()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -784,7 +787,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<result>" + buildResultString(rs) + "</result>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -799,11 +802,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "compare" $arg2 = "compare".
-   public void test_fn_compare_17() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-17.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-17.txt";
+   //Simple test involving Element node types and a boolean expression (or fn:true()).
+   public void test_NodeTesthc_6() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTesthc-6.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTesthc-6.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -813,7 +816,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "$input-context1//overtime/node() or fn:true()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -821,7 +824,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<result>" + buildResultString(rs) + "</result>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -836,11 +839,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "comparecompare" $arg2 = "compare".
-   public void test_fn_compare_18() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-18.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-18.txt";
+   //Simple test involving Element node types and a boolean expression (and fn:false()).
+   public void test_NodeTesthc_7() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTesthc-7.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTesthc-7.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -850,7 +853,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "$input-context1//overtime/node() and fn:false()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -858,7 +861,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<result>" + buildResultString(rs) + "</result>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -873,11 +876,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "****" $arg2 = "***".
-   public void test_fn_compare_19() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-19.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-19.txt";
+   //Simple test involving Element node types and a boolean expression (and fn:true()).
+   public void test_NodeTesthc_8() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/PathExpr/Steps/NodeTest/NodeTesthc-8.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/PathExpr/Steps/NodeTest/NodeTesthc-8.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -887,7 +890,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "$input-context1//overtime/node() and fn:true()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -895,118 +898,7 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "compare" function using numbers as part of the string. Arguments set as follows: $arg1 = "12345" $arg2 = "1234".
-   public void test_fn_compare_20() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-20.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-20.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "compare" function using "compare" backwards. Arguments set as follows: $arg1 = "compare" $arg2 = "reapmco".
-   public void test_fn_compare_21() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-21.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-21.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "compare" function using "compare" that specifies a non-existent collation.
-   public void test_fn_compare_22() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-22.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
+          actual = "<result>" + buildResultString(rs) + "</result>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();

@@ -15,7 +15,11 @@ Export-Package: org.custommonkey.xmlunit,
  org.custommonkey.xmlunit.jaxp13,
  org.custommonkey.xmlunit.util,
  org.eclipse.wst.xml.xpath2.processor.test,
- org.eclipse.wst.xml.xpath2.processor.testsuite
+ org.eclipse.wst.xml.xpath2.processor.testsuite,
+ org.eclipse.wst.xml.xpath2.processor.testsuite.core,
+ org.eclipse.wst.xml.xpath2.processor.testsuite.dates,
+ org.eclipse.wst.xml.xpath2.processor.testsuite.functions,
+ org.eclipse.wst.xml.xpath2.processor.testsuite.numeric
 Bundle-Activator: org.eclipse.wst.xml.xpath2.processor.test.XPath20TestPlugin
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,

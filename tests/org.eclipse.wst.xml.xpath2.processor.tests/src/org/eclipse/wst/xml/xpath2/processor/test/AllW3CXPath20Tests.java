@@ -11,25 +11,25 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
-import org.eclipse.wst.xml.xpath2.processor.testsuite.AbbrAxesTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.AxesTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.BooleanEqualTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.BooleanGTTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.BooleanLTTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.CombNodeSeqTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.DateAddYMDTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.DateTimeSubtractYMDTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.NameTestTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.NodeTestTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.NumericEqualTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.NumericGTTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.NumericLTTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.NumericUnaryPlusTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.ParenExprTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.SequenceTypeSyntaxTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.UnabbrAxesTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.YearMonthDurationAddDTTest;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.YearMonthDurationSubtractTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.core.AbbrAxesTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.core.AxesTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.core.BooleanEqualTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.core.BooleanGTTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.core.BooleanLTTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.core.CombNodeSeqTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.core.NameTestTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.core.NodeTestTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.core.ParenExprTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.core.SequenceTypeSyntaxTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.core.UnabbrAxesTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.dates.DateAddYMDTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.dates.DateTimeSubtractYMDTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.dates.YearMonthDurationAddDTTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.dates.YearMonthDurationSubtractTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.numeric.NumericEqualTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.numeric.NumericGTTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.numeric.NumericLTTest;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.numeric.NumericUnaryPlusTest;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;

@@ -9,7 +9,7 @@
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
  *******************************************************************************/
-package org.eclipse.wst.xml.xpath2.processor.testsuite;
+package org.eclipse.wst.xml.xpath2.processor.testsuite.dates;
 
 import java.net.URL;
 
@@ -20,13 +20,13 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
-public class compareFuncTest extends AbstractPsychoPathTest {
+public class DatesSubtractTest extends AbstractPsychoPathTest {
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(lower bound) $comparand2 = xs:string(lower bound).
-   public void test_fn_compare2args_1() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator as per example 1 (for this function) of the Functions and Operators spec.
+   public void test_op_subtract_dates_yielding_DTD_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-1.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-1.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -59,11 +59,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(mid range) $comparand2 = xs:string(lower bound).
-   public void test_fn_compare2args_2() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator as per example 2 (for this function) of the Functions and Operators spec.
+   public void test_op_subtract_dates_yielding_DTD_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-2.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-2.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -96,11 +96,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(upper bound) $comparand2 = xs:string(lower bound).
-   public void test_fn_compare2args_3() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator as per example 3 (for this function) of the Functions and Operators spec.
+   public void test_op_subtract_dates_yielding_DTD_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-3.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-3.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -133,11 +133,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(lower bound) $comparand2 = xs:string(mid range).
-   public void test_fn_compare2args_4() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator used in conjunction with the "fn:not" function.
+   public void test_op_subtract_dates_yielding_DTD_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-4.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-4.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-4.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -170,11 +170,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(lower bound) $comparand2 = xs:string(upper bound).
-   public void test_fn_compare2args_5() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator as an argument to the "fn:boolean" function.
+   public void test_op_subtract_dates_yielding_DTD_5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-5.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-5.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-5.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -207,11 +207,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "" $arg2 = "".
-   public void test_fn_compare_1() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator as an argument to the "fn:number" function.
+   public void test_op_subtract_dates_yielding_DTD_6() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-1.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-6.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-6.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -244,11 +244,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "" $arg2 = "A Character String".
-   public void test_fn_compare_2() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator as an argument to the "fn:string" function.
+   public void test_op_subtract_dates_yielding_DTD_7() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-2.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-7.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-7.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -281,11 +281,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A Character String" $arg2 = "".
-   public void test_fn_compare_3() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator that returns a negative value.
+   public void test_op_subtract_dates_yielding_DTD_8() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-3.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-8.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-8.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -318,11 +318,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = () $arg2 = "".
-   public void test_fn_compare_4() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator, which is part of an "and" expression.
+   public void test_op_subtract_dates_yielding_DTD_9() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-4.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-4.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-9.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-9.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -355,11 +355,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "" $arg2 = ().
-   public void test_fn_compare_5() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator as part of an "or" expression.
+   public void test_op_subtract_dates_yielding_DTD_10() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-5.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-5.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-10.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-10.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -392,11 +392,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A Character String" $arg2 = ().
-   public void test_fn_compare_6() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator as part of a "div" expression.
+   public void test_op_subtract_dates_yielding_DTD_11() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-6.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-6.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-11.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-11.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -429,11 +429,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = () $arg2 = "A Character String".
-   public void test_fn_compare_7() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator used in conjunction with a boolean expression and the "fn:true" function.
+   public void test_op_subtract_dates_yielding_DTD_12() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-7.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-7.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-12.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-12.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -466,11 +466,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "AAAAABBBBBCCCCC" $arg2 = "BBBBB".
-   public void test_fn_compare_8() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator, which is part of a numeric-equal expression (eq operator).
+   public void test_op_subtract_dates_yielding_DTD_13() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-8.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-8.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-13.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-13.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -503,11 +503,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "AAAAABBBBB" $arg2 = " ".
-   public void test_fn_compare_9() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator, which is part of a numeric-equal expression (ne operator).
+   public void test_op_subtract_dates_yielding_DTD_14() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-9.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-9.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-14.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-14.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -540,11 +540,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = " " $arg2 = "AAAAABBBBB".
-   public void test_fn_compare_10() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator, which is part of a numeric-equal expression (le operator).
+   public void test_op_subtract_dates_yielding_DTD_15() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-10.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-10.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-15.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-15.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -577,11 +577,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function as an argument of another function (fn:not)- return true.
-   public void test_fn_compare_11() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator, which is part of a numeric-equal expression (ge operator).
+   public void test_op_subtract_dates_yielding_DTD_16() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-11.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-11.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-16.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-16.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -614,11 +614,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function as an argument of another function (fn:not) - return false.
-   public void test_fn_compare_12() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator as part of a boolean expression (and operator) and the "fn:false" function.
+   public void test_op_subtract_dates_yielding_DTD_17() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-12.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-12.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-17.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-17.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -651,11 +651,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = xs:string("A") $arg2 = "A".
-   public void test_fn_compare_13() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator as part of a boolean expression (or operator) and the "fn:false" function.
+   public void test_op_subtract_dates_yielding_DTD_18() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-13.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-13.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-18.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-18.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -688,11 +688,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A" $arg2 = xs:string("A").
-   public void test_fn_compare_14() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator as part of a multiplication expression ("*" operator).
+   public void test_op_subtract_dates_yielding_DTD_19() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-14.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-14.txt";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-19.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-19.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -725,270 +725,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A" $arg2 = "a".
-   public void test_fn_compare_15() throws Exception {
+   //Evaluates the "op:subtract-dates-yielding-dayTimeDuration" operator as part of an addition expression ("+" operator).
+   public void test_op_subtract_dates_yielding_DTD_20() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-15.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-15.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "a" $arg2 = "A".
-   public void test_fn_compare_16() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-16.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-16.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "compare" $arg2 = "compare".
-   public void test_fn_compare_17() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-17.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-17.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "comparecompare" $arg2 = "compare".
-   public void test_fn_compare_18() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-18.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-18.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "****" $arg2 = "***".
-   public void test_fn_compare_19() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-19.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-19.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "compare" function using numbers as part of the string. Arguments set as follows: $arg1 = "12345" $arg2 = "1234".
-   public void test_fn_compare_20() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-20.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-20.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "compare" function using "compare" backwards. Arguments set as follows: $arg1 = "compare" $arg2 = "reapmco".
-   public void test_fn_compare_21() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-21.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-21.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "compare" function using "compare" that specifies a non-existent collation.
-   public void test_fn_compare_22() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-22.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/";
+      String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-20.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/DurationArith/DatesSubtract/op-subtract-dates-yielding-DTD-20.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

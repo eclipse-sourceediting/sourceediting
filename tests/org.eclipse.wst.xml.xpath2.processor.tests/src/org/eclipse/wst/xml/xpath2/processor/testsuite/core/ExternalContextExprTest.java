@@ -1,15 +1,15 @@
-
 /*******************************************************************************
- * Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
+ * Copyright (c) 2009 Standards for Technology for Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- *     David Carver - STAR - initial api and implementation bug 262765 
+ *     David Carver (STAR) - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xml.xpath2.processor.testsuite;
+
+package org.eclipse.wst.xml.xpath2.processor.testsuite.core;
 
 import java.net.URL;
 
@@ -20,13 +20,13 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
-public class compareFuncTest extends AbstractPsychoPathTest {
+public class ExternalContextExprTest extends AbstractPsychoPathTest {
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(lower bound) $comparand2 = xs:string(lower bound).
-   public void test_fn_compare2args_1() throws Exception {
+   //Context Item expression that just uses the "name" element and no context item defined.
+   public void test_externalcontextitem_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-1.txt";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-1.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -43,9 +43,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -59,11 +60,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(mid range) $comparand2 = xs:string(lower bound).
-   public void test_fn_compare2args_2() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-2.txt";
+   //Evaluation of external context item expression where context item is used as a string.
+   public void test_externalcontextitem_2() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-2.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -80,9 +81,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -96,11 +98,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(upper bound) $comparand2 = xs:string(lower bound).
-   public void test_fn_compare2args_3() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-3.txt";
+   //Evaluation of external context item expression where context item is used as an integer.
+   public void test_externalcontextitem_3() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-3.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -117,9 +119,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -133,11 +136,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(lower bound) $comparand2 = xs:string(mid range).
-   public void test_fn_compare2args_4() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-4.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-4.txt";
+   //Evaluation of external context item expression where context item is used as a decimal.
+   public void test_externalcontextitem_4() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-4.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -154,9 +157,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -170,11 +174,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(lower bound) $comparand2 = xs:string(upper bound).
-   public void test_fn_compare2args_5() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-5.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-5.txt";
+   //Evaluation of external context item expression where context item is used a float.
+   public void test_externalcontextitem_5() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-5.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -191,9 +195,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -207,11 +212,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "" $arg2 = "".
-   public void test_fn_compare_1() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-1.txt";
+   //Evaluation of external context item expression where context item is used as a double.
+   public void test_externalcontextitem_6() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-6.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-6.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -228,9 +233,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -244,11 +250,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "" $arg2 = "A Character String".
-   public void test_fn_compare_2() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-2.txt";
+   //Evaluation of external context item expression where context item is used as a boolean value.
+   public void test_externalcontextitem_7() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-7.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-7.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -265,9 +271,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -281,11 +288,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A Character String" $arg2 = "".
-   public void test_fn_compare_3() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-3.txt";
+   //Evaluation of external context item expression where context item is used as a boolean with fn:not.
+   public void test_externalcontextitem_8() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-8.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-8.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -302,9 +309,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -318,11 +326,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = () $arg2 = "".
-   public void test_fn_compare_4() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-4.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-4.txt";
+   //Evaluation of external context item expression where context item is used as argument to sum function.
+   public void test_externalcontextitem_9() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-9.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-9.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -339,9 +347,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -355,11 +364,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "" $arg2 = ().
-   public void test_fn_compare_5() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-5.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-5.txt";
+   //Evaluation of external context item expression where context item used as part of addition operation.
+   public void test_externalcontextitem_10() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-10.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-10.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -376,9 +385,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -392,11 +402,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A Character String" $arg2 = ().
-   public void test_fn_compare_6() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-6.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-6.txt";
+   //Evaluation of external context item expression where context item used as part of a subtraction operation.
+   public void test_externalcontextitem_11() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-11.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-11.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -413,9 +423,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -429,11 +440,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = () $arg2 = "A Character String".
-   public void test_fn_compare_7() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-7.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-7.txt";
+   //Evaluation of external context item expression where context item used as part of a multiplication operation.
+   public void test_externalcontextitem_12() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-12.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-12.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -450,9 +461,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -466,11 +478,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "AAAAABBBBBCCCCC" $arg2 = "BBBBB".
-   public void test_fn_compare_8() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-8.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-8.txt";
+   //Evaluation of external context item expression where context item used as part of a modulus operation.
+   public void test_externalcontextitem_13() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-13.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-13.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -487,9 +499,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -503,11 +516,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "AAAAABBBBB" $arg2 = " ".
-   public void test_fn_compare_9() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-9.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-9.txt";
+   //Evaluation of external context item expression where context item used as part of a divison (div operator) operation.
+   public void test_externalcontextitem_14() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-14.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-14.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -524,9 +537,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -540,11 +554,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = " " $arg2 = "AAAAABBBBB".
-   public void test_fn_compare_10() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-10.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-10.txt";
+   //Evaluation of external context item expression where context item used as part of a divison (idiv operator) operation.
+   public void test_externalcontextitem_15() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-15.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-15.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -561,9 +575,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -577,11 +592,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function as an argument of another function (fn:not)- return true.
-   public void test_fn_compare_11() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-11.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-11.txt";
+   //Evaluation of external context item expression where context item used as part of a boolean expression (and operator).
+   public void test_externalcontextitem_16() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-16.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-16.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -598,9 +613,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -614,11 +630,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function as an argument of another function (fn:not) - return false.
-   public void test_fn_compare_12() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-12.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-12.txt";
+   //Evaluation of external context item expression where context item used as part of a boolean expression (or operator).
+   public void test_externalcontextitem_17() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-17.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-17.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -635,9 +651,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -651,11 +668,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = xs:string("A") $arg2 = "A".
-   public void test_fn_compare_13() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-13.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-13.txt";
+   //Evaluation of external context item expression where context item used as argument to string-length function.
+   public void test_externalcontextitem_18() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-18.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-18.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -672,9 +689,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -688,11 +706,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A" $arg2 = xs:string("A").
-   public void test_fn_compare_14() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-14.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-14.txt";
+   //Evaluation of external context item expression where context item used as argument to "avg" function.
+   public void test_externalcontextitem_19() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-19.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-19.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -709,9 +727,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -725,11 +744,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A" $arg2 = "a".
-   public void test_fn_compare_15() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-15.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-15.txt";
+   //Evaluation of external context item expression where context item used as argument to "min" function.
+   public void test_externalcontextitem_20() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-20.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-20.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -746,9 +765,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -762,11 +782,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "a" $arg2 = "A".
-   public void test_fn_compare_16() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-16.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-16.txt";
+   //Evaluation of external context item expression where context item used as argument to "max" function.
+   public void test_externalcontextitem_21() throws Exception {
+      String inputFile = "/TestSources/works-mod.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-21.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-21.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -783,9 +803,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -799,11 +820,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "compare" $arg2 = "compare".
-   public void test_fn_compare_17() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-17.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-17.txt";
+   //Evaluation of external context item expression where context item used as argument to "max" function.
+   public void test_externalcontextitem_22() throws Exception {
+      String inputFile = "/TestSources/.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-22.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-22.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -820,9 +841,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -836,11 +858,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "comparecompare" $arg2 = "compare".
-   public void test_fn_compare_18() throws Exception {
+   //Reference to a context item that has not been bound.
+   public void test_externalcontextitem_23() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-18.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-18.txt";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-23.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -857,9 +879,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
+	      AnyType result = rs.first();
+	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -873,11 +896,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "****" $arg2 = "***".
-   public void test_fn_compare_19() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-19.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-19.txt";
+   //Evaluation of external context item expression where context item used as argument to "max" function.
+   public void test_externalcontextitem_24() throws Exception {
+      String inputFile = "/TestSources/.xml";
+      String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-24.xq";
+      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-22.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -894,120 +917,10 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
 	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "compare" function using numbers as part of the string. Arguments set as follows: $arg1 = "12345" $arg2 = "1234".
-   public void test_fn_compare_20() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-20.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-20.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
+	      AnyType result = rs.first();
 	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "compare" function using "compare" backwards. Arguments set as follows: $arg1 = "compare" $arg2 = "reapmco".
-   public void test_fn_compare_21() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-21.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-21.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "compare" function using "compare" that specifies a non-existent collation.
-   public void test_fn_compare_22() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-22.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {

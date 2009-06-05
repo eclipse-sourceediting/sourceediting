@@ -9,7 +9,7 @@
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
  *******************************************************************************/
-package org.eclipse.wst.xml.xpath2.processor.testsuite;
+package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
 
 import java.net.URL;
 
@@ -20,13 +20,13 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
-public class compareFuncTest extends AbstractPsychoPathTest {
+public class CeilingFuncTest extends AbstractPsychoPathTest {
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(lower bound) $comparand2 = xs:string(lower bound).
-   public void test_fn_compare2args_1() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:int(lower bound).
+   public void test_fn_ceilingint1args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingint1args-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingint1args-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -59,11 +59,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(mid range) $comparand2 = xs:string(lower bound).
-   public void test_fn_compare2args_2() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:int(mid range).
+   public void test_fn_ceilingint1args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingint1args-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingint1args-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -96,11 +96,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(upper bound) $comparand2 = xs:string(lower bound).
-   public void test_fn_compare2args_3() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:int(upper bound).
+   public void test_fn_ceilingint1args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingint1args-3.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingint1args-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -133,11 +133,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(lower bound) $comparand2 = xs:string(mid range).
-   public void test_fn_compare2args_4() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:integer(lower bound).
+   public void test_fn_ceilingintg1args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-4.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-4.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingintg1args-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingintg1args-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -170,11 +170,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(lower bound) $comparand2 = xs:string(upper bound).
-   public void test_fn_compare2args_5() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:integer(mid range).
+   public void test_fn_ceilingintg1args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-5.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-5.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingintg1args-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingintg1args-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -207,11 +207,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "" $arg2 = "".
-   public void test_fn_compare_1() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:integer(upper bound).
+   public void test_fn_ceilingintg1args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingintg1args-3.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingintg1args-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -244,11 +244,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "" $arg2 = "A Character String".
-   public void test_fn_compare_2() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:decimal(lower bound).
+   public void test_fn_ceilingdec1args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingdec1args-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingdec1args-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -281,11 +281,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A Character String" $arg2 = "".
-   public void test_fn_compare_3() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:decimal(mid range).
+   public void test_fn_ceilingdec1args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingdec1args-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingdec1args-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -318,11 +318,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = () $arg2 = "".
-   public void test_fn_compare_4() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:decimal(upper bound).
+   public void test_fn_ceilingdec1args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-4.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-4.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingdec1args-3.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingdec1args-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -355,11 +355,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "" $arg2 = ().
-   public void test_fn_compare_5() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:double(lower bound).
+   public void test_fn_ceilingdbl1args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-5.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-5.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingdbl1args-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingdbl1args-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -392,11 +392,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A Character String" $arg2 = ().
-   public void test_fn_compare_6() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:double(mid range).
+   public void test_fn_ceilingdbl1args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-6.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-6.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingdbl1args-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingdbl1args-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -429,11 +429,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = () $arg2 = "A Character String".
-   public void test_fn_compare_7() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:double(upper bound).
+   public void test_fn_ceilingdbl1args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-7.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-7.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingdbl1args-3.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingdbl1args-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -466,11 +466,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "AAAAABBBBBCCCCC" $arg2 = "BBBBB".
-   public void test_fn_compare_8() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:float(lower bound).
+   public void test_fn_ceilingflt1args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-8.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-8.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingflt1args-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingflt1args-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -503,11 +503,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "AAAAABBBBB" $arg2 = " ".
-   public void test_fn_compare_9() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:float(mid range).
+   public void test_fn_ceilingflt1args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-9.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-9.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingflt1args-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingflt1args-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -540,11 +540,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = " " $arg2 = "AAAAABBBBB".
-   public void test_fn_compare_10() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:float(upper bound).
+   public void test_fn_ceilingflt1args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-10.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-10.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingflt1args-3.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingflt1args-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -577,11 +577,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function as an argument of another function (fn:not)- return true.
-   public void test_fn_compare_11() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:long(lower bound).
+   public void test_fn_ceilinglng1args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-11.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-11.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilinglng1args-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilinglng1args-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -614,11 +614,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function as an argument of another function (fn:not) - return false.
-   public void test_fn_compare_12() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:long(mid range).
+   public void test_fn_ceilinglng1args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-12.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-12.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilinglng1args-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilinglng1args-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -651,11 +651,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = xs:string("A") $arg2 = "A".
-   public void test_fn_compare_13() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:long(upper bound).
+   public void test_fn_ceilinglng1args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-13.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-13.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilinglng1args-3.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilinglng1args-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -688,11 +688,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A" $arg2 = xs:string("A").
-   public void test_fn_compare_14() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:unsignedShort(lower bound).
+   public void test_fn_ceilingusht1args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-14.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-14.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingusht1args-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingusht1args-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -725,11 +725,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A" $arg2 = "a".
-   public void test_fn_compare_15() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:unsignedShort(mid range).
+   public void test_fn_ceilingusht1args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-15.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-15.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingusht1args-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingusht1args-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -762,11 +762,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "a" $arg2 = "A".
-   public void test_fn_compare_16() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:unsignedShort(upper bound).
+   public void test_fn_ceilingusht1args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-16.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-16.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingusht1args-3.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingusht1args-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -799,11 +799,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "compare" $arg2 = "compare".
-   public void test_fn_compare_17() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:negativeInteger(lower bound).
+   public void test_fn_ceilingnint1args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-17.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-17.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingnint1args-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingnint1args-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -836,11 +836,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "comparecompare" $arg2 = "compare".
-   public void test_fn_compare_18() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:negativeInteger(mid range).
+   public void test_fn_ceilingnint1args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-18.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-18.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingnint1args-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingnint1args-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -873,11 +873,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "****" $arg2 = "***".
-   public void test_fn_compare_19() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:negativeInteger(upper bound).
+   public void test_fn_ceilingnint1args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-19.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-19.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingnint1args-3.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingnint1args-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -910,11 +910,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function using numbers as part of the string. Arguments set as follows: $arg1 = "12345" $arg2 = "1234".
-   public void test_fn_compare_20() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:positiveInteger(lower bound).
+   public void test_fn_ceilingpint1args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-20.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-20.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingpint1args-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingpint1args-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -947,11 +947,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function using "compare" backwards. Arguments set as follows: $arg1 = "compare" $arg2 = "reapmco".
-   public void test_fn_compare_21() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:positiveInteger(mid range).
+   public void test_fn_ceilingpint1args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-21.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-21.txt";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingpint1args-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingpint1args-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -984,11 +984,455 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function using "compare" that specifies a non-existent collation.
-   public void test_fn_compare_22() throws Exception {
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:positiveInteger(upper bound).
+   public void test_fn_ceilingpint1args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-22.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingpint1args-3.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingpint1args-3.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:unsignedLong(lower bound).
+   public void test_fn_ceilingulng1args_1() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingulng1args-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingulng1args-1.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:unsignedLong(mid range).
+   public void test_fn_ceilingulng1args_2() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingulng1args-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingulng1args-2.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:unsignedLong(upper bound).
+   public void test_fn_ceilingulng1args_3() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingulng1args-3.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingulng1args-3.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:nonPositiveInteger(lower bound).
+   public void test_fn_ceilingnpi1args_1() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingnpi1args-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingnpi1args-1.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:nonPositiveInteger(mid range).
+   public void test_fn_ceilingnpi1args_2() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingnpi1args-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingnpi1args-2.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:nonPositiveInteger(upper bound).
+   public void test_fn_ceilingnpi1args_3() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingnpi1args-3.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingnpi1args-3.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:nonNegativeInteger(lower bound).
+   public void test_fn_ceilingnni1args_1() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingnni1args-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingnni1args-1.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:nonNegativeInteger(mid range).
+   public void test_fn_ceilingnni1args_2() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingnni1args-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingnni1args-2.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:nonNegativeInteger(upper bound).
+   public void test_fn_ceilingnni1args_3() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingnni1args-3.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingnni1args-3.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:short(lower bound).
+   public void test_fn_ceilingsht1args_1() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingsht1args-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingsht1args-1.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:short(mid range).
+   public void test_fn_ceilingsht1args_2() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingsht1args-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingsht1args-2.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Evaluates the "ceiling" function with the arguments set as follows: $arg = xs:short(upper bound).
+   public void test_fn_ceilingsht1args_3() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Functions/NumericFunc/CeilingFunc/fn-ceilingsht1args-3.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/CeilingFunc/fn-ceilingsht1args-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

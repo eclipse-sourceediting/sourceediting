@@ -9,7 +9,7 @@
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
  *******************************************************************************/
-package org.eclipse.wst.xml.xpath2.processor.testsuite;
+package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
 
 import java.net.URL;
 
@@ -20,13 +20,13 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
-public class compareFuncTest extends AbstractPsychoPathTest {
+public class DateTimeFuncTest extends AbstractPsychoPathTest {
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(lower bound) $comparand2 = xs:string(lower bound).
-   public void test_fn_compare2args_1() throws Exception {
+   //Evaluation of "fn:dateTime" function as per example 1 for this function from the F and O Specs.
+   public void test_fn_dateTime_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -59,11 +59,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(mid range) $comparand2 = xs:string(lower bound).
-   public void test_fn_compare2args_2() throws Exception {
+   //Evaluation of "fn:dateTime" function as per example 2 for this function from the F and O Specs.
+   public void test_fn_dateTime_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -96,11 +96,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(upper bound) $comparand2 = xs:string(lower bound).
-   public void test_fn_compare2args_3() throws Exception {
+   //Evaluation of "fn:dateTime", where only the first argument have a timezone.
+   public void test_fn_dateTime_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-3.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -133,11 +133,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(lower bound) $comparand2 = xs:string(mid range).
-   public void test_fn_compare2args_4() throws Exception {
+   //Evaluation of "fn:dateTime", where only the second argument have a timezone.
+   public void test_fn_dateTime_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-4.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-4.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-4.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -170,11 +170,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $comparand1 = xs:string(lower bound) $comparand2 = xs:string(upper bound).
-   public void test_fn_compare2args_5() throws Exception {
+   //Evaluation of "fn:dateTime", where both arguments have the same timezone (Z).
+   public void test_fn_dateTime_5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-5.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare2args-5.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-5.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -207,11 +207,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "" $arg2 = "".
-   public void test_fn_compare_1() throws Exception {
+   //Evaluation of "fn:dateTime", where both arguments have the same timezone (+10:00).
+   public void test_fn_dateTime_6() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-6.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-6.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -244,11 +244,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "" $arg2 = "A Character String".
-   public void test_fn_compare_2() throws Exception {
+   //Evaluation of "fn:dateTime" function together together with the op:dateTime-equal operator(eq).
+   public void test_fn_dateTime_7() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-7.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-7.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -281,11 +281,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A Character String" $arg2 = "".
-   public void test_fn_compare_3() throws Exception {
+   //Evaluation of "fn:dateTime" function together together with the op:dateTime-equal operator(ne).
+   public void test_fn_dateTime_8() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-8.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-8.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -318,11 +318,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = () $arg2 = "".
-   public void test_fn_compare_4() throws Exception {
+   //Evaluation of "fn:dateTime" function together together with the op:dateTime-equal operator(le).
+   public void test_fn_dateTime_9() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-4.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-4.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-9.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-9.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -355,11 +355,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "" $arg2 = ().
-   public void test_fn_compare_5() throws Exception {
+   //Evaluation of "fn:dateTime" function together together with the op:dateTime-equal operator(ge).
+   public void test_fn_dateTime_10() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-5.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-5.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-10.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-10.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -392,11 +392,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A Character String" $arg2 = ().
-   public void test_fn_compare_6() throws Exception {
+   //Evaluation of "fn:dateTime" function together together with the op:dateTime-equal operator(lt).
+   public void test_fn_dateTime_11() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-6.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-6.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-11.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-11.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -429,11 +429,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = () $arg2 = "A Character String".
-   public void test_fn_compare_7() throws Exception {
+   //Evaluation of "fn:dateTime" function together together with the op:dateTime-equal operator(le).
+   public void test_fn_dateTime_12() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-7.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-7.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-12.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-12.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -466,11 +466,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "AAAAABBBBBCCCCC" $arg2 = "BBBBB".
-   public void test_fn_compare_8() throws Exception {
+   //Evaluation of "fn:dateTime" function together together with the op:dateTime-equal operator(gt).
+   public void test_fn_dateTime_13() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-8.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-8.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-13.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-13.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -503,11 +503,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "AAAAABBBBB" $arg2 = " ".
-   public void test_fn_compare_9() throws Exception {
+   //Evaluation of "fn:dateTime" function together together with the op:dateTime-equal operator(ge).
+   public void test_fn_dateTime_14() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-9.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-9.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-14.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-14.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -540,11 +540,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = " " $arg2 = "AAAAABBBBB".
-   public void test_fn_compare_10() throws Exception {
+   //Evaluation of "fn:dateTime" as an argument to the function "year-from-dateTime".
+   public void test_fn_dateTime_15() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-10.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-10.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-15.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-15.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -577,11 +577,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function as an argument of another function (fn:not)- return true.
-   public void test_fn_compare_11() throws Exception {
+   //Evaluation of "fn:dateTime" as an argument to the function "month-from-dateTime".
+   public void test_fn_dateTime_16() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-11.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-11.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-16.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-16.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -614,11 +614,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function as an argument of another function (fn:not) - return false.
-   public void test_fn_compare_12() throws Exception {
+   //Evaluation of "fn:dateTime" as an argument to the function "day-from-dateTime".
+   public void test_fn_dateTime_17() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-12.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-12.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-17.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-17.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -651,11 +651,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = xs:string("A") $arg2 = "A".
-   public void test_fn_compare_13() throws Exception {
+   //Evaluation of "fn:dateTime" as an argument to the function "hours-from-dateTime".
+   public void test_fn_dateTime_18() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-13.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-13.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-18.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-18.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -688,11 +688,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A" $arg2 = xs:string("A").
-   public void test_fn_compare_14() throws Exception {
+   //Evaluation of "fn:dateTime" as an argument to the function "minutes-from-dateTime".
+   public void test_fn_dateTime_19() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-14.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-14.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-19.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-19.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -725,11 +725,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "A" $arg2 = "a".
-   public void test_fn_compare_15() throws Exception {
+   //Evaluation of "fn:dateTime" as an argument to the function "seconds-from-dateTime".
+   public void test_fn_dateTime_20() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-15.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-15.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-20.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-20.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -762,11 +762,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "a" $arg2 = "A".
-   public void test_fn_compare_16() throws Exception {
+   //Evaluation of "fn:dateTime" as an argument to the function "timezone-from-dateTime".
+   public void test_fn_dateTime_21() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-16.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-16.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-21.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-21.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -799,11 +799,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "compare" $arg2 = "compare".
-   public void test_fn_compare_17() throws Exception {
+   //Evaluation of "fn:dateTime" as an argument to the function "adjust-dateTime-to-timezone".
+   public void test_fn_dateTime_22() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-17.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-17.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-22.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-22.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -836,11 +836,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "comparecompare" $arg2 = "compare".
-   public void test_fn_compare_18() throws Exception {
+   //Evaluation of "fn:dateTime" part of a subtraction operation.
+   public void test_fn_dateTime_23() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-18.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-18.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-23.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-23.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -873,11 +873,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function with the arguments set as follows: $arg1 = "****" $arg2 = "***".
-   public void test_fn_compare_19() throws Exception {
+   //Evaluation of "fn:dateTime" used together with the "op:add-yearMonthDuration-to-dateTime" operator.
+   public void test_fn_dateTime_24() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-19.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-19.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-24.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-24.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -910,11 +910,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function using numbers as part of the string. Arguments set as follows: $arg1 = "12345" $arg2 = "1234".
-   public void test_fn_compare_20() throws Exception {
+   //Evaluation of "fn:dateTime" used together with the "op:add-dayTimeDuration-to-dateTime" operator.
+   public void test_fn_dateTime_25() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-20.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-20.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-25.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-25.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -947,11 +947,11 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function using "compare" backwards. Arguments set as follows: $arg1 = "compare" $arg2 = "reapmco".
-   public void test_fn_compare_21() throws Exception {
+   //Evaluation of "fn:dateTime" used together with the "subtract-yearMonthDuration-from-dateTime" operator.
+   public void test_fn_dateTime_26() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-21.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-21.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-26.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-26.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -984,11 +984,159 @@ public class compareFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "compare" function using "compare" that specifies a non-existent collation.
-   public void test_fn_compare_22() throws Exception {
+   //Evaluation of "fn:dateTime" used together with the "subtract-dayTimeDuration-from-dateTime" operator.
+   public void test_fn_dateTime_27() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CompareFunc/fn-compare-22.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CompareFunc/";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-27.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-27.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Evaluation of "fn:dateTime" where the first argument is the empty sequence.
+   public void test_fn_dateTime_28() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-28.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/zero.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Evaluation of "fn:dateTime" where the second argument is the empty sequence.
+   public void test_fn_dateTime_29() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-29.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/zero.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Evaluation of "fn:dateTime" where both arguments are equal to the empty sequence.
+   public void test_fn_dateTime_30() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-30.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/zero.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Evaluation of error FORG008, different timezones for DateTimeFunc.
+   public void test_forg0008_1() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/forg0008-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
