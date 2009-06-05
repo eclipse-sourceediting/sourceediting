@@ -20,13 +20,13 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
-public class RoundEvenFuncTest extends AbstractPsychoPathTest {
+public class DateTimeFuncTest extends AbstractPsychoPathTest {
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:int(lower bound).
-   public void test_fn_round_half_to_evenint1args_1() throws Exception {
+   //Evaluation of "fn:dateTime" function as per example 1 for this function from the F and O Specs.
+   public void test_fn_dateTime_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenint1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenint1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -59,11 +59,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:int(mid range).
-   public void test_fn_round_half_to_evenint1args_2() throws Exception {
+   //Evaluation of "fn:dateTime" function as per example 2 for this function from the F and O Specs.
+   public void test_fn_dateTime_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenint1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenint1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -96,11 +96,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:int(upper bound).
-   public void test_fn_round_half_to_evenint1args_3() throws Exception {
+   //Evaluation of "fn:dateTime", where only the first argument have a timezone.
+   public void test_fn_dateTime_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenint1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenint1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-3.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -133,11 +133,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:integer(lower bound).
-   public void test_fn_round_half_to_evenintg1args_1() throws Exception {
+   //Evaluation of "fn:dateTime", where only the second argument have a timezone.
+   public void test_fn_dateTime_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenintg1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenintg1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-4.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -170,11 +170,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:integer(mid range).
-   public void test_fn_round_half_to_evenintg1args_2() throws Exception {
+   //Evaluation of "fn:dateTime", where both arguments have the same timezone (Z).
+   public void test_fn_dateTime_5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenintg1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenintg1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-5.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -207,11 +207,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:integer(upper bound).
-   public void test_fn_round_half_to_evenintg1args_3() throws Exception {
+   //Evaluation of "fn:dateTime", where both arguments have the same timezone (+10:00).
+   public void test_fn_dateTime_6() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenintg1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenintg1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-6.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-6.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -244,11 +244,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:decimal(lower bound).
-   public void test_fn_round_half_to_evendec1args_1() throws Exception {
+   //Evaluation of "fn:dateTime" function together together with the op:dateTime-equal operator(eq).
+   public void test_fn_dateTime_7() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evendec1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evendec1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-7.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-7.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -281,11 +281,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:decimal(mid range).
-   public void test_fn_round_half_to_evendec1args_2() throws Exception {
+   //Evaluation of "fn:dateTime" function together together with the op:dateTime-equal operator(ne).
+   public void test_fn_dateTime_8() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evendec1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evendec1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-8.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-8.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -318,11 +318,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:decimal(upper bound).
-   public void test_fn_round_half_to_evendec1args_3() throws Exception {
+   //Evaluation of "fn:dateTime" function together together with the op:dateTime-equal operator(le).
+   public void test_fn_dateTime_9() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evendec1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evendec1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-9.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-9.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -355,11 +355,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:double(lower bound).
-   public void test_fn_round_half_to_evendbl1args_1() throws Exception {
+   //Evaluation of "fn:dateTime" function together together with the op:dateTime-equal operator(ge).
+   public void test_fn_dateTime_10() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evendbl1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evendbl1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-10.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-10.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -392,11 +392,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:double(mid range).
-   public void test_fn_round_half_to_evendbl1args_2() throws Exception {
+   //Evaluation of "fn:dateTime" function together together with the op:dateTime-equal operator(lt).
+   public void test_fn_dateTime_11() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evendbl1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evendbl1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-11.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-11.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -429,11 +429,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:double(upper bound).
-   public void test_fn_round_half_to_evendbl1args_3() throws Exception {
+   //Evaluation of "fn:dateTime" function together together with the op:dateTime-equal operator(le).
+   public void test_fn_dateTime_12() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evendbl1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evendbl1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-12.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-12.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -466,11 +466,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:float(lower bound).
-   public void test_fn_round_half_to_evenflt1args_1() throws Exception {
+   //Evaluation of "fn:dateTime" function together together with the op:dateTime-equal operator(gt).
+   public void test_fn_dateTime_13() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenflt1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenflt1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-13.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-13.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -503,11 +503,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:float(mid range).
-   public void test_fn_round_half_to_evenflt1args_2() throws Exception {
+   //Evaluation of "fn:dateTime" function together together with the op:dateTime-equal operator(ge).
+   public void test_fn_dateTime_14() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenflt1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenflt1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-14.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-14.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -540,11 +540,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:float(upper bound).
-   public void test_fn_round_half_to_evenflt1args_3() throws Exception {
+   //Evaluation of "fn:dateTime" as an argument to the function "year-from-dateTime".
+   public void test_fn_dateTime_15() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenflt1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenflt1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-15.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-15.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -577,11 +577,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:long(lower bound).
-   public void test_fn_round_half_to_evenlng1args_1() throws Exception {
+   //Evaluation of "fn:dateTime" as an argument to the function "month-from-dateTime".
+   public void test_fn_dateTime_16() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenlng1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenlng1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-16.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-16.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -614,11 +614,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:long(mid range).
-   public void test_fn_round_half_to_evenlng1args_2() throws Exception {
+   //Evaluation of "fn:dateTime" as an argument to the function "day-from-dateTime".
+   public void test_fn_dateTime_17() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenlng1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenlng1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-17.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-17.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -651,11 +651,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:long(upper bound).
-   public void test_fn_round_half_to_evenlng1args_3() throws Exception {
+   //Evaluation of "fn:dateTime" as an argument to the function "hours-from-dateTime".
+   public void test_fn_dateTime_18() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenlng1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenlng1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-18.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-18.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -688,11 +688,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:unsignedShort(lower bound).
-   public void test_fn_round_half_to_evenusht1args_1() throws Exception {
+   //Evaluation of "fn:dateTime" as an argument to the function "minutes-from-dateTime".
+   public void test_fn_dateTime_19() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenusht1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenusht1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-19.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-19.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -725,11 +725,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:unsignedShort(mid range).
-   public void test_fn_round_half_to_evenusht1args_2() throws Exception {
+   //Evaluation of "fn:dateTime" as an argument to the function "seconds-from-dateTime".
+   public void test_fn_dateTime_20() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenusht1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenusht1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-20.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-20.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -762,11 +762,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:unsignedShort(upper bound).
-   public void test_fn_round_half_to_evenusht1args_3() throws Exception {
+   //Evaluation of "fn:dateTime" as an argument to the function "timezone-from-dateTime".
+   public void test_fn_dateTime_21() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenusht1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenusht1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-21.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-21.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -799,11 +799,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:negativeInteger(lower bound).
-   public void test_fn_round_half_to_evennint1args_1() throws Exception {
+   //Evaluation of "fn:dateTime" as an argument to the function "adjust-dateTime-to-timezone".
+   public void test_fn_dateTime_22() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evennint1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evennint1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-22.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-22.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -836,11 +836,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:negativeInteger(mid range).
-   public void test_fn_round_half_to_evennint1args_2() throws Exception {
+   //Evaluation of "fn:dateTime" part of a subtraction operation.
+   public void test_fn_dateTime_23() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evennint1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evennint1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-23.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-23.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -873,11 +873,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:negativeInteger(upper bound).
-   public void test_fn_round_half_to_evennint1args_3() throws Exception {
+   //Evaluation of "fn:dateTime" used together with the "op:add-yearMonthDuration-to-dateTime" operator.
+   public void test_fn_dateTime_24() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evennint1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evennint1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-24.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-24.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -910,11 +910,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:positiveInteger(lower bound).
-   public void test_fn_round_half_to_evenpint1args_1() throws Exception {
+   //Evaluation of "fn:dateTime" used together with the "op:add-dayTimeDuration-to-dateTime" operator.
+   public void test_fn_dateTime_25() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenpint1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenpint1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-25.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-25.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -947,11 +947,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:positiveInteger(mid range).
-   public void test_fn_round_half_to_evenpint1args_2() throws Exception {
+   //Evaluation of "fn:dateTime" used together with the "subtract-yearMonthDuration-from-dateTime" operator.
+   public void test_fn_dateTime_26() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenpint1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenpint1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-26.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-26.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -984,11 +984,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:positiveInteger(upper bound).
-   public void test_fn_round_half_to_evenpint1args_3() throws Exception {
+   //Evaluation of "fn:dateTime" used together with the "subtract-dayTimeDuration-from-dateTime" operator.
+   public void test_fn_dateTime_27() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenpint1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenpint1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-27.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-27.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1021,11 +1021,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:unsignedLong(lower bound).
-   public void test_fn_round_half_to_evenulng1args_1() throws Exception {
+   //Evaluation of "fn:dateTime" where the first argument is the empty sequence.
+   public void test_fn_dateTime_28() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenulng1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenulng1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-28.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/zero.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1058,11 +1058,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:unsignedLong(mid range).
-   public void test_fn_round_half_to_evenulng1args_2() throws Exception {
+   //Evaluation of "fn:dateTime" where the second argument is the empty sequence.
+   public void test_fn_dateTime_29() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenulng1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenulng1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-29.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/zero.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1095,11 +1095,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:unsignedLong(upper bound).
-   public void test_fn_round_half_to_evenulng1args_3() throws Exception {
+   //Evaluation of "fn:dateTime" where both arguments are equal to the empty sequence.
+   public void test_fn_dateTime_30() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenulng1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evenulng1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/fn-dateTime-30.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/zero.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1132,307 +1132,11 @@ public class RoundEvenFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:nonPositiveInteger(lower bound).
-   public void test_fn_round_half_to_evennpi1args_1() throws Exception {
+   //Evaluation of error FORG008, different timezones for DateTimeFunc.
+   public void test_forg0008_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evennpi1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evennpi1args-1.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:nonPositiveInteger(mid range).
-   public void test_fn_round_half_to_evennpi1args_2() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evennpi1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evennpi1args-2.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:nonPositiveInteger(upper bound).
-   public void test_fn_round_half_to_evennpi1args_3() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evennpi1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evennpi1args-3.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:nonNegativeInteger(lower bound).
-   public void test_fn_round_half_to_evennni1args_1() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evennni1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evennni1args-1.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:nonNegativeInteger(mid range).
-   public void test_fn_round_half_to_evennni1args_2() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evennni1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evennni1args-2.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:nonNegativeInteger(upper bound).
-   public void test_fn_round_half_to_evennni1args_3() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evennni1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evennni1args-3.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:short(lower bound).
-   public void test_fn_round_half_to_evensht1args_1() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evensht1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evensht1args-1.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:short(mid range).
-   public void test_fn_round_half_to_evensht1args_2() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evensht1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evensht1args-2.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "round-half-to-even" function with the arguments set as follows: $arg = xs:short(upper bound).
-   public void test_fn_round_half_to_evensht1args_3() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evensht1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NumericFunc/RoundEvenFunc/fn-round-half-to-evensht1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/ConstructFunc/DateTimeFunc/forg0008-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ConstructFunc/DateTimeFunc/";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
