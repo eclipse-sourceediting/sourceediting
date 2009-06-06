@@ -18,7 +18,7 @@
    <xsl:output indent="yes" method="text" encoding="UTF-8"/>
    
    <xsl:variable name="location">/Queries/XQuery</xsl:variable>
-   <xsl:param name="group">NotFunc</xsl:param>
+   <xsl:param name="group">NodeLocalNameFunc</xsl:param>
    
    <xsl:template match="/">
       <xsl:text>
