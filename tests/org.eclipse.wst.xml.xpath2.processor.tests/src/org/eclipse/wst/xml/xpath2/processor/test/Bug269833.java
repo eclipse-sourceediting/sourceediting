@@ -36,7 +36,8 @@ public class Bug269833 extends AbstractPsychoPathTest{
         }        
     }    
     
-    protected void setUp() throws Exception {
+    @Override
+	protected void setUp() throws Exception {
         URL fileURL = new URL("http://www.w3schools.com/xml/note.xml");
         loadDOMDocument(fileURL);
      }

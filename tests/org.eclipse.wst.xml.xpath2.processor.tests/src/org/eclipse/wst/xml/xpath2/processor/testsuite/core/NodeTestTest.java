@@ -16,10 +16,7 @@ import java.net.URL;
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
-import org.w3c.dom.Element;
-import org.w3c.dom.ls.*;
 
 // NodeTests need to compare based on Fragments.  We which means need to compare DOM outputs.
 public class NodeTestTest extends AbstractPsychoPathTest {

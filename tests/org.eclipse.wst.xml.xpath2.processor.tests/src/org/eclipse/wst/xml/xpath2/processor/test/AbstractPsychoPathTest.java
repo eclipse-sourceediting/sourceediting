@@ -48,8 +48,6 @@ import org.w3c.dom.ls.LSOutput;
 import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.SAXException;
 
-import junit.framework.TestCase;
-
 public class AbstractPsychoPathTest extends XMLTestCase {
 
 	protected Document domDoc = null;
@@ -277,7 +275,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
         LSOutput outputText = domLS.createLSOutput();
         LSSerializer serializer = domLS.createLSSerializer();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        outputText.setByteStream((OutputStream)outputStream);
+        outputText.setByteStream(outputStream);
         
 		String actual = new String();
 		Iterator<NodeType> iterator = rs.iterator();

@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
-import java.math.BigDecimal;
 import java.net.URL;
 
 import org.apache.xerces.xs.XSModel;
