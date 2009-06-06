@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
@@ -9,7 +8,8 @@
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
  *******************************************************************************/
-package org.eclipse.wst.xml.xpath2.processor.testsuite;
+
+package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
 
 import java.net.URL;
 

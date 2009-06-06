@@ -1,4 +1,3 @@
-
 /*******************************************************************************
  * Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
  * All rights reserved. This program and the accompanying materials
@@ -9,24 +8,24 @@
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
  *******************************************************************************/
-package org.eclipse.wst.xml.xpath2.processor.testsuite;
+
+package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
 
 import java.net.URL;
 
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
-public class NotFuncTest extends AbstractPsychoPathTest {
+public class ReplaceFuncTest extends AbstractPsychoPathTest {
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:int(lower bound).
-   public void test_fn_notint1args_1() throws Exception {
+   //Evaluates the "replace" function with the arguments set as follows: $input = xs:string(lower bound) $pattern = xs:string(lower bound) $replacement = xs:string(lower bound).
+   public void test_fn_replace3args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notint1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notint1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace3args-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace3args-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -59,11 +58,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:int(mid range).
-   public void test_fn_notint1args_2() throws Exception {
+   //Evaluates the "replace" function with the arguments set as follows: $input = xs:string(mid range) $pattern = xs:string(lower bound) $replacement = xs:string(lower bound).
+   public void test_fn_replace3args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notint1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notint1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace3args-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace3args-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -96,11 +95,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:int(upper bound).
-   public void test_fn_notint1args_3() throws Exception {
+   //Evaluates the "replace" function with the arguments set as follows: $input = xs:string(upper bound) $pattern = xs:string(lower bound) $replacement = xs:string(lower bound).
+   public void test_fn_replace3args_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notint1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notint1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace3args-3.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace3args-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -133,11 +132,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:integer(lower bound).
-   public void test_fn_notintg1args_1() throws Exception {
+   //Evaluates the "replace" function with the arguments set as follows: $input = xs:string(lower bound) $pattern = xs:string(mid range) $replacement = xs:string(lower bound).
+   public void test_fn_replace3args_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notintg1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notintg1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace3args-4.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace3args-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -170,11 +169,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:integer(mid range).
-   public void test_fn_notintg1args_2() throws Exception {
+   //Evaluates the "replace" function with the arguments set as follows: $input = xs:string(lower bound) $pattern = xs:string(upper bound) $replacement = xs:string(lower bound).
+   public void test_fn_replace3args_5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notintg1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notintg1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace3args-5.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace3args-5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -207,11 +206,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:integer(upper bound).
-   public void test_fn_notintg1args_3() throws Exception {
+   //Evaluates the "replace" function with the arguments set as follows: $input = xs:string(lower bound) $pattern = xs:string(lower bound) $replacement = xs:string(mid range).
+   public void test_fn_replace3args_6() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notintg1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notintg1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace3args-6.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace3args-6.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -244,11 +243,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:decimal(lower bound).
-   public void test_fn_notdec1args_1() throws Exception {
+   //Evaluates the "replace" function with the arguments set as follows: $input = xs:string(lower bound) $pattern = xs:string(lower bound) $replacement = xs:string(upper bound).
+   public void test_fn_replace3args_7() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notdec1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notdec1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace3args-7.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace3args-7.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -281,11 +280,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:decimal(mid range).
-   public void test_fn_notdec1args_2() throws Exception {
+   //Invalid flag for the "replace" function.
+   public void test_fn_replaceErr_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notdec1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notdec1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replaceErr-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -318,11 +317,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:decimal(upper bound).
-   public void test_fn_notdec1args_3() throws Exception {
+   //The value of $replacement contains a "\" character that is not part of a "\\" pair, unless it is immediately followed by a "$" character.
+   public void test_fn_replaceErr_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notdec1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notdec1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replaceErr-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -355,11 +354,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:double(lower bound).
-   public void test_fn_notdbl1args_1() throws Exception {
+   //The value of $replacement contains a "$" character that is not immediately followed by a digit 0-9 and not immediately preceded by a "\".
+   public void test_fn_replaceErr_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notdbl1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notdbl1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replaceErr-3.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -392,11 +391,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:double(mid range).
-   public void test_fn_notdbl1args_2() throws Exception {
+   //Evaluation of replace function with replacement = "*" as per example 1 for this function.
+   public void test_fn_replace_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notdbl1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notdbl1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -429,11 +428,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:double(upper bound).
-   public void test_fn_notdbl1args_3() throws Exception {
+   //Evaluation of replace function with pattern = "a.*a" and replacement = "*" as an example 2 for this function.
+   public void test_fn_replace_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notdbl1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notdbl1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -466,11 +465,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:float(lower bound).
-   public void test_fn_notflt1args_1() throws Exception {
+   //Evaluation of replace function with pattern = "a.*?a" and replacement = "*" as an example 3 for this function.
+   public void test_fn_replace_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notflt1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notflt1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-3.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -503,11 +502,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:float(mid range).
-   public void test_fn_notflt1args_2() throws Exception {
+   //Evaluation of replace function with pattern = "a" and replacement = "" as an example 4 for this function.
+   public void test_fn_replace_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notflt1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notflt1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-4.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -540,11 +539,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:float(upper bound).
-   public void test_fn_notflt1args_3() throws Exception {
+   //Evaluation of replace function with pattern = "a(.)" and replacement = "a$1$1" as an example 5 for this function.
+   public void test_fn_replace_5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notflt1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notflt1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-5.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -577,11 +576,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:long(lower bound).
-   public void test_fn_notlng1args_1() throws Exception {
+   //Evaluation of replace function with pattern = ".*?" and replacement = "$1" as an example 6 for this function. This should raise error.
+   public void test_fn_replace_6() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notlng1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notlng1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-6.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -614,11 +613,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:long(mid range).
-   public void test_fn_notlng1args_2() throws Exception {
+   //Evaluation of replace function with pattern = "A+" and replacement = "b" as an example 7 for this function.
+   public void test_fn_replace_7() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notlng1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notlng1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-7.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-7.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -651,11 +650,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:long(upper bound).
-   public void test_fn_notlng1args_3() throws Exception {
+   //Evaluation of replace function with pattern = "A+?" and replacement = "b" as an example 8 for this function.
+   public void test_fn_replace_8() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notlng1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notlng1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-8.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-8.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -688,11 +687,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:unsignedShort(lower bound).
-   public void test_fn_notusht1args_1() throws Exception {
+   //Evaluation of replace function with pattern = "^(.*?)d(.*)" and replacement = "$1c$2" as an example 9 for this function.
+   public void test_fn_replace_9() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notusht1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notusht1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-9.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-9.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -725,11 +724,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:unsignedShort(mid range).
-   public void test_fn_notusht1args_2() throws Exception {
+   //Two alternatives within the pattern both match at the same position in the $input. The first one is chosen.
+   public void test_fn_replace_10() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notusht1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notusht1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-10.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-10.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -762,11 +761,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:unsignedShort(upper bound).
-   public void test_fn_notusht1args_3() throws Exception {
+   //Evaluation of fn:replace function with input set to empty sequence.
+   public void test_fn_replace_11() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notusht1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notusht1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-11.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-11.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -799,11 +798,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:negativeInteger(lower bound).
-   public void test_fn_notnint1args_1() throws Exception {
+   //Evaluate that calling function with flags ommited is same as flags being the zero length string.
+   public void test_fn_replace_12() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notnint1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notnint1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-12.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-12.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -836,11 +835,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:negativeInteger(mid range).
-   public void test_fn_notnint1args_2() throws Exception {
+   //Test of "replace" with the pattern set to "\?" for an input string that contains "?".
+   public void test_fn_replace_13() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notnint1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notnint1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-13.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-13.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -873,11 +872,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:negativeInteger(upper bound).
-   public void test_fn_notnint1args_3() throws Exception {
+   //Test of "replace" with the pattern set to "\*" for an input string that contains "*".
+   public void test_fn_replace_14() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notnint1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notnint1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-14.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-14.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -910,11 +909,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:positiveInteger(lower bound).
-   public void test_fn_notpint1args_1() throws Exception {
+   //Test of "replace" with the pattern set to "\+" for an input string that contains "+".
+   public void test_fn_replace_15() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notpint1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notpint1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-15.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-15.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -947,11 +946,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:positiveInteger(mid range).
-   public void test_fn_notpint1args_2() throws Exception {
+   //Test of "replace" with the pattern set to "\{" for an input string that contains "{".
+   public void test_fn_replace_16() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notpint1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notpint1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-16.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-16.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -984,11 +983,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:positiveInteger(upper bound).
-   public void test_fn_notpint1args_3() throws Exception {
+   //Test of "replace" with the pattern set to "\}" for an input string that contains "}".
+   public void test_fn_replace_17() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notpint1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notpint1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-17.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-17.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1021,11 +1020,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:unsignedLong(lower bound).
-   public void test_fn_notulng1args_1() throws Exception {
+   //Test of "replace" with the pattern set to "\(" for an input string that contains "(".
+   public void test_fn_replace_18() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notulng1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notulng1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-18.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-18.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1058,11 +1057,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:unsignedLong(mid range).
-   public void test_fn_notulng1args_2() throws Exception {
+   //Test of "replace" with the pattern set to "\)" for an input string that contains ")".
+   public void test_fn_replace_19() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notulng1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notulng1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-19.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-19.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1095,11 +1094,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:unsignedLong(upper bound).
-   public void test_fn_notulng1args_3() throws Exception {
+   //Test of "replace" with the pattern set to "\[" for an input string that contains "[".
+   public void test_fn_replace_20() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notulng1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notulng1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-20.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-20.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1132,11 +1131,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:nonPositiveInteger(lower bound).
-   public void test_fn_notnpi1args_1() throws Exception {
+   //Test of "replace" with the pattern set to "\]" for an input string that contains "]".
+   public void test_fn_replace_21() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notnpi1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notnpi1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-21.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-21.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1169,11 +1168,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:nonPositiveInteger(mid range).
-   public void test_fn_notnpi1args_2() throws Exception {
+   //Test of "replace" with the pattern set to "\-" for an input string that contains "-".
+   public void test_fn_replace_22() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notnpi1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notnpi1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-22.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-22.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1206,11 +1205,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:nonPositiveInteger(upper bound).
-   public void test_fn_notnpi1args_3() throws Exception {
+   //Test of "replace" with the pattern set to "\." for an input string that contains ".".
+   public void test_fn_replace_23() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notnpi1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notnpi1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-23.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-23.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1243,11 +1242,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:nonNegativeInteger(lower bound).
-   public void test_fn_notnni1args_1() throws Exception {
+   //Test of "replace" with the pattern set to "\|" for an input string that contains "|".
+   public void test_fn_replace_24() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notnni1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notnni1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-24.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-24.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1280,11 +1279,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:nonNegativeInteger(mid range).
-   public void test_fn_notnni1args_2() throws Exception {
+   //Test of "replace" with the pattern set to "\\" for an input string that contains "\".
+   public void test_fn_replace_25() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notnni1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notnni1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-25.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-25.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1317,11 +1316,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:nonNegativeInteger(upper bound).
-   public void test_fn_notnni1args_3() throws Exception {
+   //Test of "replace" with the pattern set to "\t" for an input string that contains the tab character.
+   public void test_fn_replace_26() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notnni1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notnni1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-26.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-26.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1354,11 +1353,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:short(lower bound).
-   public void test_fn_notsht1args_1() throws Exception {
+   //Test of "replace" with the pattern set to "\n" for an input string that contains the newline character.
+   public void test_fn_replace_27() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notsht1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notsht1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-27.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-27.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1391,11 +1390,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:short(mid range).
-   public void test_fn_notsht1args_2() throws Exception {
+   //Evaluation of replace function with pattern set to "aa{1}" (exact quantity) for an input string that contains the "aa" string.
+   public void test_fn_replace_28() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notsht1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notsht1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-28.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-28.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1428,11 +1427,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "not" function with the arguments set as follows: $arg = xs:short(upper bound).
-   public void test_fn_notsht1args_3() throws Exception {
+   //Evaluation of replace function with pattern set to "aa{1,}" (min quantity) for an input string that contains the "aa" string twice.
+   public void test_fn_replace_29() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-notsht1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-notsht1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-29.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-29.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1465,11 +1464,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Simple call to an "fn:not" function.
-   public void test_fn_not_1() throws Exception {
+   //Evaluation of replace function with pattern set to "aa{1,2}" (range quantity) for an input string that contains the "aa" string twice.
+   public void test_fn_replace_30() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-30.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-30.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1502,11 +1501,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluation to an "fn:not" function as an argument to an "fn:not()" function.
-   public void test_fn_not_2() throws Exception {
+   //Evaluation of replace function with pattern set to "\^" for an input string that contains the "^" character.
+   public void test_fn_replace_31() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-31.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-31.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1539,11 +1538,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluation of an "fn:not()" function with a logical expression involving the "and" operator.
-   public void test_fn_not_3() throws Exception {
+   //Evaluation of replace function with pattern set to "^a".
+   public void test_fn_replace_32() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-32.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-32.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1576,640 +1575,11 @@ public class NotFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluation of an "fn:function" function with a logical expression involving the "or" operator.
-   public void test_fn_not_4() throws Exception {
+   //Evaluation of replace function with pattern that does not match the input string.
+   public void test_fn_replace_33() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-4.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-4.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluation of an "fn:not()" function with a comparison expression involving the "eq" operator.
-   public void test_fn_not_5() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-5.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-5.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluation of an "fn:not()" function with a comparison expression involving the "ne" operator.
-   public void test_fn_not_6() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-6.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-6.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluation of an "fn:not()" function with a comparison expression involving the "lt" operator.
-   public void test_fn_not_7() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-7.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-7.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluation of an "fn:not()" function with a comparison expression involving the "le" operator.
-   public void test_fn_not_8() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-8.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-8.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluation of an "fn:not()" function with a comparison expression involving the "gt" operator.
-   public void test_fn_not_9() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-9.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-9.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluation of an "fn:not()" function with a comparison expression involving the "ge" operator.
-   public void test_fn_not_10() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-10.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-10.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluation of an "fn:not()" function with a comparison expression involving the "=" operator.
-   public void test_fn_not_11() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-11.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-11.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluation of an "fn:not()" function with a comparison expression involving the "!=" operator.
-   public void test_fn_not_12() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-12.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-12.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluation of an "fn:not()" function with a comparison expression involving the "<" operator.
-   public void test_fn_not_13() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-13.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-13.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluation of an "fn:not()" function with a comparison expression involving the "<=" operator.
-   public void test_fn_not_14() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-14.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-14.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluation of an "fn:not()" function with a comparison expression involving the ">" operator.
-   public void test_fn_not_15() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-15.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-15.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluation of an "fn:not()" function with a comparison expression involving the ">=" operator.
-   public void test_fn_not_16() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-16.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-16.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluation of an "fn:not()" function as an argument to an "xs:boolean" function.
-   public void test_fn_not_17() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-17.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-17.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluation of an "fn:not()" function as an argument to an "fn:string" function.
-   public void test_fn_not_18() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-18.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-18.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluation of an "fn:not()" function (string representation) as arguments to an "fn:concat" function.
-   public void test_fn_not_19() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-19.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-19.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluation of an "fn:not()" function (string representation) as arguments to an "fn:contains" function.
-   public void test_fn_not_20() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-20.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-20.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluation of an "fn:not()" function (string representation) as an argument to an "fn:string-length" function.
-   public void test_fn_not_21() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/BooleanFunc/NotFunc/fn-not-21.xq";
-      String resultFile = "/ExpectedTestResults/Functions/BooleanFunc/NotFunc/fn-not-21.txt";
+      String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-33.xq";
+      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/ReplaceFunc/fn-replace-33.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
