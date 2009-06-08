@@ -20,13 +20,13 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
-public class NodeLocalNameFuncTest extends AbstractPsychoPathTest {
+public class CatalogTest extends AbstractPsychoPathTest {
 
-   //Evaluation of the fn:local-name function with no argument and no context node. Should raise an error.
-   public void test_fn_local_name_1() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NodeFunc/NodeLocalNameFunc/fn-local-name-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeFunc/NodeLocalNameFunc/";
+   //Check variable name is used, if source is not "emptydoc".
+   public void test_Catalog001() throws Exception {
+      String inputFile = "/TestSources/XQTSCatalog.xml";
+      String xqFile = "/Queries/XQuery/Catalog/Catalog001.xq";
+      String resultFile = "/ExpectedTestResults/Catalog/Catalog001.xml";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -59,11 +59,11 @@ public class NodeLocalNameFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluation of the fn:local-name function with argument set to empty sequence.
-   public void test_fn_local_name_4() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NodeFunc/NodeLocalNameFunc/fn-local-name-4.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeFunc/NodeLocalNameFunc/fn-local-name-4.txt";
+   //Test all standard test cases have at least one output file.
+   public void test_Catalog002() throws Exception {
+      String inputFile = "/TestSources/XQTSCatalog.xml";
+      String xqFile = "/Queries/XQuery/Catalog/Catalog002.xq";
+      String resultFile = "/ExpectedTestResults/Catalog/Catalog002.xml";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -96,11 +96,11 @@ public class NodeLocalNameFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluation of the fn:local-name function with second argument set to "." and no context node. Should raise an error.
-   public void test_fn_local_name_23() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/NodeFunc/NodeLocalNameFunc/fn-local-name-23.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeFunc/NodeLocalNameFunc/";
+   //Test all error test cases have at least one expected error.
+   public void test_Catalog003() throws Exception {
+      String inputFile = "/TestSources/XQTSCatalog.xml";
+      String xqFile = "/Queries/XQuery/Catalog/Catalog003.xq";
+      String resultFile = "/ExpectedTestResults/Catalog/Catalog003.xml";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

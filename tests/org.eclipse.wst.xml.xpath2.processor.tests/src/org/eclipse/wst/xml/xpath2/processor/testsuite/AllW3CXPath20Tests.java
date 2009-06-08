@@ -4,6 +4,7 @@ import org.eclipse.wst.xml.xpath2.processor.testsuite.core.AllW3CCoreTests;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.dates.AllW3CDateTests;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.functions.AllW3CFunctionTests;
 import org.eclipse.wst.xml.xpath2.processor.testsuite.numeric.AllW3CNumericTests;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.schema.AllW3CSchemaTests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -18,6 +19,7 @@ public class AllW3CXPath20Tests {
 		suite.addTest(AllW3CDateTests.suite());
 		suite.addTest(AllW3CFunctionTests.suite());
 		suite.addTest(AllW3CNumericTests.suite());
+		suite.addTest(AllW3CSchemaTests.suite());
 		//$JUnit-END$
 		return suite;
 	}

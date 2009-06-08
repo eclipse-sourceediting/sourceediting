@@ -287,6 +287,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 
 		actual = outputStream.toString();
 		actual = actual.replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
+		actual = actual.replace("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>", "");
 		outputStream.close();
 		return actual.trim();
 	}
