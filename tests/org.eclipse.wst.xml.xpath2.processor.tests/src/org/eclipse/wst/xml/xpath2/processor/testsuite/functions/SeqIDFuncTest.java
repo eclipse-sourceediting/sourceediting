@@ -19,13 +19,13 @@ import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
-public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
+public class SeqIDFuncTest extends AbstractPsychoPathTest {
 
-   //Evaluates the "day-from-dateTime" function with the arguments set as follows: $arg = xs:dateTime(lower bound).
-   public void test_fn_day_from_dateTime1args_1() throws Exception {
+   //Evaluation of fn:id with second argument ommited an no context node.
+   public void test_fn_id_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -58,11 +58,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function with the arguments set as follows: $arg = xs:dateTime(mid range).
-   public void test_fn_day_from_dateTime1args_2() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime1args-2.txt";
+   //Evaluation of fn:id with given IDREF matching a single element.  This test uses a DTD.
+   public void test_fn_id_dtd_5() throws Exception {
+      String inputFile = "/TestSources/id-idref-dtd.xml";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-5.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -95,11 +95,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function with the arguments set as follows: $arg = xs:dateTime(upper bound).
-   public void test_fn_day_from_dateTime1args_3() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime1args-3.txt";
+   //Evaluation of fn:id with given IDREF does not match any element.  This test uses a DTD.
+   public void test_fn_id_dtd_6() throws Exception {
+      String inputFile = "/TestSources/id-idref-dtd.xml";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-6.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-6.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -132,11 +132,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function as per example 1 (of this function) of the Functions Operators spec.
-   public void test_fn_day_from_dateTime_1() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-1.txt";
+   //Evaluation of fn:id with given IDREF matches same element (Eliminates duplicates).  This test uses a DTD.
+   public void test_fn_id_dtd_7() throws Exception {
+      String inputFile = "/TestSources/id-idref-dtd.xml";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-7.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-7.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -169,11 +169,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function as per example 2(of this function) of the Functions Operators spec.
-   public void test_fn_day_from_dateTime_2() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-2.txt";
+   //Evaluation of fn:id with multiple IDREF matching more than one element (Eliminates duplicates).  This test uses a DTD.
+   public void test_fn_id_dtd_8() throws Exception {
+      String inputFile = "/TestSources/id-idref-dtd.xml";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-8.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-8.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -206,11 +206,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function as per example 3 (of this function) of the Functions Operators spec.
-   public void test_fn_day_from_dateTime_3() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-3.txt";
+   //Evaluation of fn:id with multiple IDREF, but only one matching element.  This test uses a DTD.
+   public void test_fn_id_dtd_9() throws Exception {
+      String inputFile = "/TestSources/id-idref-dtd.xml";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-9.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-9.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -243,11 +243,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function used as an argument of an avg function.
-   public void test_fn_day_from_dateTime_4() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-4.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-4.txt";
+   //Evaluation of fn:id with multiple IDREF, and none matching an element.  This test uses a DTD.
+   public void test_fn_id_dtd_10() throws Exception {
+      String inputFile = "/TestSources/id-idref-dtd.xml";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-10.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-10.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -280,11 +280,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function using empty sequence as argument. Use of fn:count to avoid empty file.
-   public void test_fn_day_from_dateTime_5() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-5.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-5.txt";
+   //Evaluation of fn:id with multiple IDREF set to empty string.  This test uses a DTD.
+   public void test_fn_id_dtd_11() throws Exception {
+      String inputFile = "/TestSources/id-idref-dtd.xml";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-11.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-11.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -317,11 +317,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function with argument set so that function returns 1.
-   public void test_fn_day_from_dateTime_6() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-6.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-6.txt";
+   //Evaluation of fn:id function, where first argument is given as part of fn:substring function.  This test uses a DTD.
+   public void test_fn_id_dtd_12() throws Exception {
+      String inputFile = "/TestSources/id-idref-dtd.xml";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-12.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-12.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -354,11 +354,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function with argument set so the function returns 31. Use Zulu.
-   public void test_fn_day_from_dateTime_7() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-7.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-7.txt";
+   //Evaluation of fn:id, where the same IDREF makes reference to the same element.  This test uses a DTD.
+   public void test_fn_id_dtd_13() throws Exception {
+      String inputFile = "/TestSources/id-idref-dtd.xml";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-13.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-13.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -391,11 +391,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of an addition expression.
-   public void test_fn_day_from_dateTime_8() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-8.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-8.txt";
+   //Evaluation of fn:id for for which the given the given IDREF contains a prefix.  This test uses a DTD.
+   public void test_fn_id_dtd_14() throws Exception {
+      String inputFile = "/TestSources/id-idref-dtd.xml";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-14.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-14.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -428,11 +428,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of a subtraction expression.
-   public void test_fn_day_from_dateTime_9() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-9.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-9.txt";
+   //Evaluation of fn:id for which all members of the IDREF list having the same value.  This test uses a DTD.
+   public void test_fn_id_dtd_15() throws Exception {
+      String inputFile = "/TestSources/id-idref-dtd.xml";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-15.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-15.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -465,11 +465,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of a multiplication expression.
-   public void test_fn_day_from_dateTimeNew_10() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTimeNew-10.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTimeNew-10.txt";
+   //Evaluation of fn:id for which all members of the IDREF list having the same value (but different cases).  This test uses a DTD.
+   public void test_fn_id_dtd_16() throws Exception {
+      String inputFile = "/TestSources/id-idref-dtd.xml";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-16.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-16.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -502,11 +502,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of a div expression.
-   public void test_fn_day_from_dateTime_11() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-11.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-11.txt";
+   //Evaluation of fn:id for which the give IDREF uses the lower-case function.  This test uses a DTD.
+   public void test_fn_id_dtd_17() throws Exception {
+      String inputFile = "/TestSources/id-idref-dtd.xml";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-17.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-17.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -539,11 +539,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of an idiv expression.
-   public void test_fn_day_from_dateTime_12() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-12.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-12.txt";
+   //Evaluation of fn:id for which the give IDREF uses the upper-case function.  This test uses a DTD.
+   public void test_fn_id_dtd_18() throws Exception {
+      String inputFile = "/TestSources/id-idref-dtd.xml";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-18.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-18.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -576,11 +576,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of a mod expression.
-   public void test_fn_day_from_dateTime_13() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-13.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-13.txt";
+   //Evaluation of fn:id for which the give IDREF uses the fn:concat function.  This test uses a DTD.
+   public void test_fn_id_dtd_19() throws Exception {
+      String inputFile = "/TestSources/id-idref-dtd.xml";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-19.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-19.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -613,11 +613,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of a numeric-unary-plus expression.
-   public void test_fn_day_from_dateTime_14() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-14.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-14.txt";
+   //Evaluation of fn:id for which the give IDREF uses the xs:string function.  This test uses a DTD.
+   public void test_fn_id_dtd_20() throws Exception {
+      String inputFile = "/TestSources/id-idref-dtd.xml";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-20.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-20.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -650,11 +650,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of a numeric-unary-minus expression.
-   public void test_fn_day_from_dateTime_15() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-15.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-15.txt";
+   //Evaluation of fn:id for which the give IDREF uses the fn:string-join function.  This test uses a DTD.
+   public void test_fn_id_dtd_21() throws Exception {
+      String inputFile = "/TestSources/id-idref-dtd.xml";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-21.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-21.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -687,11 +687,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of a numeric-equal expression (eq operator).
-   public void test_fn_day_from_dateTime_16() throws Exception {
+   //Evaluation of fn:id with second argument set to "." an no context node.
+   public void test_fn_id_22() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-16.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-16.txt";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-22.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -724,85 +724,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of a numeric-equal expression (ne operator).
-   public void test_fn_day_from_dateTime_17() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-17.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-17.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "day-from-dateTime" function, which is part of a numeric-equal expression (le operator).
-   public void test_fn_day_from_dateTime_18() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-18.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-18.txt";
-      String expectedResult = getExpectedResult(resultFile);
-      URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
-      
-      // Get XML Schema Information for the Document
-      XSModel schema = getGrammar();
-
-      DynamicContext dc = setupDynamicContext(schema);
-
-      String xpath = extractXPathExpression(xqFile, inputFile);
-      String actual = null;
-      try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = buildResultString(rs);
-	
-      } catch (XPathParserException ex) {
-    	 actual = ex.code();
-      } catch (StaticError ex) {
-         actual = ex.code();
-      } catch (DynamicError ex) {
-         actual = ex.code();
-      }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
-   }
-
-   //Evaluates the "day-from-dateTime" function, which is part of a numeric-equal expression (ge operator).
-   public void test_fn_day_from_dateTime_19() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-19.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-19.txt";
+   //Evaluation of fn:id together with declare ordering.  This test uses a DTD.
+   public void test_fn_id_dtd_23() throws Exception {
+      String inputFile = "/TestSources/id-idref-dtd.xml";
+      String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-23.xq";
+      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/fn-id-dtd-23.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);

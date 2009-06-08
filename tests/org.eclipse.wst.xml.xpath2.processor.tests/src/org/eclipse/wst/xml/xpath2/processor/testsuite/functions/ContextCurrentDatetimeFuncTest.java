@@ -19,13 +19,13 @@ import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
-public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
+public class ContextCurrentDatetimeFuncTest extends AbstractPsychoPathTest {
 
-   //Evaluates the "day-from-dateTime" function with the arguments set as follows: $arg = xs:dateTime(lower bound).
-   public void test_fn_day_from_dateTime1args_1() throws Exception {
+   //Evaluation simple call to "fn:current-dateTime" function.
+   public void test_fn_current_dateTime_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime1args-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime1args-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-1.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -58,11 +58,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function with the arguments set as follows: $arg = xs:dateTime(mid range).
-   public void test_fn_day_from_dateTime1args_2() throws Exception {
+   //Evaluation of "fn:current-dateTime" function as argument to year-from-date function.
+   public void test_fn_current_dateTime_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime1args-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime1args-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-2.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-2.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -95,11 +95,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function with the arguments set as follows: $arg = xs:dateTime(upper bound).
-   public void test_fn_day_from_dateTime1args_3() throws Exception {
+   //Evaluation of "fn:current-dateTime" function as argument to month-from-date function.
+   public void test_fn_current_dateTime_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime1args-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime1args-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-3.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-3.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -132,11 +132,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function as per example 1 (of this function) of the Functions Operators spec.
-   public void test_fn_day_from_dateTime_1() throws Exception {
+   //Evaluation of "fn:current-dateTime" function as argument to day-from-date function.
+   public void test_fn_current_dateTime_4() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-1.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-4.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-4.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -169,11 +169,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function as per example 2(of this function) of the Functions Operators spec.
-   public void test_fn_day_from_dateTime_2() throws Exception {
+   //Evaluation of "fn:current-time" function as part of a subtraction operation.
+   public void test_fn_current_dateTime_5() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-2.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-5.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-5.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -206,11 +206,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function as per example 3 (of this function) of the Functions Operators spec.
-   public void test_fn_day_from_dateTime_3() throws Exception {
+   //Evaluation of "fn:current-dateTime" function as part of an addition operation and a dayTimeDuration.
+   public void test_fn_current_dateTime_6() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-3.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-6.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-6.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -243,11 +243,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function used as an argument of an avg function.
-   public void test_fn_day_from_dateTime_4() throws Exception {
+   //Evaluation of "fn:current-dateTime" function as part of a subtraction operation and a dayTimeDuration.
+   public void test_fn_current_datetime_7() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-4.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-4.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-datetime-7.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-7.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -280,11 +280,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function using empty sequence as argument. Use of fn:count to avoid empty file.
-   public void test_fn_day_from_dateTime_5() throws Exception {
+   //Evaluation of "fn:current-dateTime" function with incorrect arity.
+   public void test_fn_current_dateTime_8() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-5.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-5.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-8.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -317,11 +317,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function with argument set so that function returns 1.
-   public void test_fn_day_from_dateTime_6() throws Exception {
+   //Evaluation of "fn:current-dateTime" function as part of a subtration operation both operands are equal to current-time function.
+   public void test_fn_current_dateTime_9() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-6.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-6.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-9.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-9.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -354,11 +354,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function with argument set so the function returns 31. Use Zulu.
-   public void test_fn_day_from_dateTime_7() throws Exception {
+   //Evaluation of "fn:current-dateTime" function as an argument to the xs:string function.
+   public void test_fn_current_dateTime_10() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-7.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-7.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-10.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-10.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -391,11 +391,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of an addition expression.
-   public void test_fn_day_from_dateTime_8() throws Exception {
+   //Evaluation of "fn:current-dateTime" function as an argument to the timezone-from-time function.
+   public void test_fn_current_dateTime_11() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-8.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-8.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-11.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-11.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -428,11 +428,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of a subtraction expression.
-   public void test_fn_day_from_dateTime_9() throws Exception {
+   //Evaluation of "fn:current-dateTime" function (string value) as part of an equal comparison (eq operator).
+   public void test_fn_current_dateTime_12() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-9.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-9.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-12.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-12.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -465,11 +465,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of a multiplication expression.
-   public void test_fn_day_from_dateTimeNew_10() throws Exception {
+   //Evaluation of "fn:current-dateTime" function (string value) as part of an equal comparison (ne operator).
+   public void test_fn_current_dateTime_13() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTimeNew-10.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTimeNew-10.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-13.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-13.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -502,11 +502,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of a div expression.
-   public void test_fn_day_from_dateTime_11() throws Exception {
+   //Evaluation of "fn:current-dateTime" function (string value) as part of an equal comparison (le operator).
+   public void test_fn_current_dateTime_14() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-11.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-11.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-14.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-14.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -539,11 +539,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of an idiv expression.
-   public void test_fn_day_from_dateTime_12() throws Exception {
+   //Evaluation of "fn:current-dateTime" function (string value) as part of an equal comparison (ge operator).
+   public void test_fn_current_dateTime_15() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-12.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-12.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-15.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-15.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -576,11 +576,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of a mod expression.
-   public void test_fn_day_from_dateTime_13() throws Exception {
+   //Evaluation of "fn:current-dateTime" function (string value) as part of a boolean expression ("and" operator and fn:true function).
+   public void test_fn_current_dateTime_16() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-13.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-13.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-16.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-16.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -613,11 +613,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of a numeric-unary-plus expression.
-   public void test_fn_day_from_dateTime_14() throws Exception {
+   //Evaluation of "fn:current-dateTime" function (string value) as part of a boolean expression ("and" operator and fn:false function).
+   public void test_fn_current_dateTime_17() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-14.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-14.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-17.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-17.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -650,11 +650,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of a numeric-unary-minus expression.
-   public void test_fn_day_from_dateTime_15() throws Exception {
+   //Evaluation of "fn:current-dateTime" function (string value) as part of a boolean expression ("or" operator and fn:true function).
+   public void test_fn_current_dateTime_18() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-15.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-15.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-18.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-18.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -687,11 +687,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of a numeric-equal expression (eq operator).
-   public void test_fn_day_from_dateTime_16() throws Exception {
+   //Evaluation of "fn:current-dateTime" function (string value) as part of a boolean expression ("or" operator and fn:false function).
+   public void test_fn_current_dateTime_19() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-16.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-16.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-19.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-19.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -724,11 +724,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of a numeric-equal expression (ne operator).
-   public void test_fn_day_from_dateTime_17() throws Exception {
+   //Evaluation of "fn:current-dateTime" function (string value) as an argument to the fn:not function.
+   public void test_fn_current_dateTime_20() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-17.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-17.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-20.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-20.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -761,11 +761,11 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of a numeric-equal expression (le operator).
-   public void test_fn_day_from_dateTime_18() throws Exception {
+   //Evaluation of "fn:current-dateTime" function as part of a subtraction operation and a yearMonthDuration type.
+   public void test_fn_current_dateTime_21() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-18.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-18.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-21.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-21.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -798,11 +798,85 @@ public class DayFromDateTimeFuncTest extends AbstractPsychoPathTest {
 
    }
 
-   //Evaluates the "day-from-dateTime" function, which is part of a numeric-equal expression (ge operator).
-   public void test_fn_day_from_dateTime_19() throws Exception {
+   //Evaluation of "fn:current-dateTime" function as argument to hours-from-date function.
+   public void test_fn_current_dateTime_22() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
-      String xqFile = "/Queries/XQuery/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-19.xq";
-      String resultFile = "/ExpectedTestResults/Functions/DurationDateTimeFunc/DayFromDateTimeFunc/fn-day-from-dateTime-19.txt";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-22.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-22.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Evaluation of "fn:current-dateTime" function as argument to minutes-from-date function.
+   public void test_fn_current_dateTime_23() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-23.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-23.txt";
+      String expectedResult = getExpectedResult(resultFile);
+      URL fileURL = bundle.getEntry(inputFile);
+      loadDOMDocument(fileURL);
+      
+      // Get XML Schema Information for the Document
+      XSModel schema = getGrammar();
+
+      DynamicContext dc = setupDynamicContext(schema);
+
+      String xpath = extractXPathExpression(xqFile, inputFile);
+      String actual = null;
+      try {
+	   	  XPath path = compileXPath(dc, xpath);
+	
+	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      ResultSequence rs = eval.evaluate(path);
+         
+          actual = buildResultString(rs);
+	
+      } catch (XPathParserException ex) {
+    	 actual = ex.code();
+      } catch (StaticError ex) {
+         actual = ex.code();
+      } catch (DynamicError ex) {
+         actual = ex.code();
+      }
+
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+        
+
+   }
+
+   //Evaluation of "fn:current-dateTime" function as argument to seconds-from-date function.
+   public void test_fn_current_dateTime_24() throws Exception {
+      String inputFile = "/TestSources/emptydoc.xml";
+      String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-24.xq";
+      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-24.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
