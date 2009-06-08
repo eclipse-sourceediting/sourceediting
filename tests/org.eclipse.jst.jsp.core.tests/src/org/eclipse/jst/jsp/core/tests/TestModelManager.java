@@ -18,6 +18,7 @@ import junit.framework.TestCase;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 
 /**
  * This class tests basic creation of IModelManager plugin and the
@@ -42,14 +43,36 @@ public class TestModelManager extends TestCase {
 		assertTrue("modelManager must not be null", modelManager != null);
 
 		try {
-			model = modelManager.getModelForEdit("test.xml", new NullInputStream(), null);
-			assertTrue("basic XML empty model could not be created", model != null);
+			model = modelManager.getModelForEdit("test.jsp", new NullInputStream(), null);
+			assertTrue("basic JSP empty model could not be created", model != null);
 		} finally {
 			if (model != null) {
 				model.releaseFromEdit();
 			}
 		}
 
+	}
+
+	public void testCopyModel() throws IOException {
+		IStructuredModel model = null;
+		try {
+			IModelManager modelManager = StructuredModelManager.getModelManager();
+			model = modelManager.getModelForEdit("test.jsp", new NullInputStream(), null);
+			try {
+				IStructuredModel modelCopy = modelManager.copyModelForEdit(model.getId(), "newId");
+				assertNotNull("copied JSP model was null", modelCopy);
+				assertEquals("Model Handlers differ", model.getModelHandler(), modelCopy.getModelHandler());
+				assertEquals("Structured Document Parsers differ", model.getStructuredDocument().getParser().getClass(), modelCopy.getStructuredDocument().getParser().getClass());
+			}
+			catch (ResourceInUse e) {
+				fail(e.getMessage());
+			}
+			
+		}
+		finally {
+			if (model != null)
+				model.releaseFromEdit();
+		}
 	}
 
 	public void testNullArgument() throws UnsupportedEncodingException, IOException {
