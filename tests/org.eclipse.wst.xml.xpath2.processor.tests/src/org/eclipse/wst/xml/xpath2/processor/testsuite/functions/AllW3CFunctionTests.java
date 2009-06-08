@@ -12,6 +12,7 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(NameFuncTest.class);
 		suite.addTestSuite(SecondsFromTimeFuncTest.class);
 		suite.addTestSuite(StringJoinFuncTest.class);
+		suite.addTestSuite(SeqBooleanFuncTest.class);
 		suite.addTestSuite(ReplaceFuncTest.class);
 		suite.addTestSuite(LowerCaseFuncTest.class);
 		suite.addTestSuite(NodeLocalNameFuncTest.class);
@@ -36,6 +37,7 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(EncodeURIfuncTest.class);
 		suite.addTestSuite(FloorFuncTest.class);
 		suite.addTestSuite(TimezoneFromDateFuncTest.class);
+		suite.addTestSuite(NodeNamespaceURIFuncTest.class);
 		suite.addTestSuite(ABSFuncTest.class);
 		suite.addTestSuite(AdjDateTimeToTimezoneFuncTest.class);
 		suite.addTestSuite(DateTimeFuncTest.class);
@@ -48,6 +50,7 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(compareFuncTest.class);
 		suite.addTestSuite(AdjDateToTimezoneFuncTest.class);
 		suite.addTestSuite(MinutesFromDateTimeFuncTest.class);
+		suite.addTestSuite(NodeLangFuncTest.class);
 		suite.addTestSuite(HoursFromTimeFuncTest.class);
 		suite.addTestSuite(NamespaceURIFromQNameFuncTest.class);
 		suite.addTestSuite(StringToCodepointFuncTest.class);
@@ -55,6 +58,7 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(TrueFuncTest.class);
 		suite.addTestSuite(CeilingFuncTest.class);
 		suite.addTestSuite(AdjTimeToTimezoneFuncTest.class);
+		suite.addTestSuite(NodeNumberFuncTest.class);
 		suite.addTestSuite(MinutesFromTimeFuncTest.class);
 		suite.addTestSuite(SubstringAfterFuncTest.class);
 		suite.addTestSuite(CodepointEqualTest.class);
@@ -73,14 +77,16 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(MonthFromDateFuncTest.class);
 		suite.addTestSuite(BaseURIFuncTest.class);
 		suite.addTestSuite(ConcatFuncTest.class);
+		suite.addTestSuite(NodeRootFuncTest.class);
 		suite.addTestSuite(DayFromDateTimeFuncTest.class);
 		suite.addTestSuite(MatchesFuncTest.class);
+		suite.addTestSuite(SeqIndexOfFuncTest.class);
 		suite.addTestSuite(SecondsFromDurationFuncTest.class);
 		suite.addTestSuite(HoursFromDateTimeFuncTest.class);
 		suite.addTestSuite(DaysFromDurationFuncTest.class);
 		suite.addTestSuite(SurrogatesTest.class);
-		suite.addTestSuite(SubstringBeforeFuncTest.class);
 		suite.addTestSuite(DocumentURIFuncTest.class);
+		suite.addTestSuite(SubstringBeforeFuncTest.class);
 		//$JUnit-END$
 		return suite;
 	}
