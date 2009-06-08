@@ -11,6 +11,7 @@ public class AllW3CFunctionTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(NameFuncTest.class);
 		suite.addTestSuite(SecondsFromTimeFuncTest.class);
+		suite.addTestSuite(SeqExactlyOneFuncTest.class);
 		suite.addTestSuite(StringJoinFuncTest.class);
 		suite.addTestSuite(SeqBooleanFuncTest.class);
 		suite.addTestSuite(ReplaceFuncTest.class);
@@ -30,9 +31,10 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(TimezoneFromTimeFuncTest.class);
 		suite.addTestSuite(ErrorFuncTest.class);
 		suite.addTestSuite(LocalNameFromQNameFuncTest.class);
+		suite.addTestSuite(SeqSubsequenceFuncTest.class);
 		suite.addTestSuite(TraceFuncTest.class);
-		suite.addTestSuite(TranslateFuncTest.class);
 		suite.addTestSuite(MonthFromDateTimeFuncTest.class);
+		suite.addTestSuite(TranslateFuncTest.class);
 		suite.addTestSuite(DayFromDateFuncTest.class);
 		suite.addTestSuite(EncodeURIfuncTest.class);
 		suite.addTestSuite(FloorFuncTest.class);
@@ -41,11 +43,13 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(ABSFuncTest.class);
 		suite.addTestSuite(AdjDateTimeToTimezoneFuncTest.class);
 		suite.addTestSuite(DateTimeFuncTest.class);
+		suite.addTestSuite(SeqOneOrMoreFuncTest.class);
 		suite.addTestSuite(FalseFuncTest.class);
 		suite.addTestSuite(MonthsFromDurationFuncTest.class);
 		suite.addTestSuite(RoundFuncTest.class);
 		suite.addTestSuite(SubstringFuncTest.class);
 		suite.addTestSuite(StaticBaseURIFuncTest.class);
+		suite.addTestSuite(SeqZeroOrOneFuncTest.class);
 		suite.addTestSuite(StartsWithFuncTest.class);
 		suite.addTestSuite(compareFuncTest.class);
 		suite.addTestSuite(AdjDateToTimezoneFuncTest.class);
@@ -68,6 +72,7 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(YearsFromDurationFuncTest.class);
 		suite.addTestSuite(IRIToURIfuncTest.class);
 		suite.addTestSuite(NilledFuncTest.class);
+		suite.addTestSuite(SeqExistsFuncTest.class);
 		suite.addTestSuite(InScopePrefixesFuncTest.class);
 		suite.addTestSuite(DataFuncTest.class);
 		suite.addTestSuite(UpperCaseFuncTest.class);
@@ -76,14 +81,20 @@ public class AllW3CFunctionTests {
 		suite.addTestSuite(TimezoneFromDateTimeFuncTest.class);
 		suite.addTestSuite(MonthFromDateFuncTest.class);
 		suite.addTestSuite(BaseURIFuncTest.class);
+		suite.addTestSuite(SeqDeepEqualFuncTest.class);
 		suite.addTestSuite(ConcatFuncTest.class);
 		suite.addTestSuite(NodeRootFuncTest.class);
 		suite.addTestSuite(DayFromDateTimeFuncTest.class);
+		suite.addTestSuite(SeqReverseFuncTest.class);
 		suite.addTestSuite(MatchesFuncTest.class);
-		suite.addTestSuite(SeqIndexOfFuncTest.class);
+		suite.addTestSuite(SeqDistinctValuesFuncTest.class);
+		suite.addTestSuite(SeqRemoveFuncTest.class);
 		suite.addTestSuite(SecondsFromDurationFuncTest.class);
+		suite.addTestSuite(SeqIndexOfFuncTest.class);
 		suite.addTestSuite(HoursFromDateTimeFuncTest.class);
 		suite.addTestSuite(DaysFromDurationFuncTest.class);
+		suite.addTestSuite(SeqInsertBeforeFuncTest.class);
+		suite.addTestSuite(SeqUnorderedFuncTest.class);
 		suite.addTestSuite(SurrogatesTest.class);
 		suite.addTestSuite(DocumentURIFuncTest.class);
 		suite.addTestSuite(SubstringBeforeFuncTest.class);
