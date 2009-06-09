@@ -34,7 +34,7 @@ public class WebPropertiesUtil {
 		String errorMessage = null;
 
 		String name = contextRoot;
-		if (name.equals("") || name == null) { //$NON-NLS-1$
+		if (name.equals("")) { //$NON-NLS-1$
 			//  this was added because the error message shouldnt be shown initially. It should be
 			// shown only if context root field is edited to
 			errorMessage = ResourceHandler.StaticWebProjectWizardBasePage_Page_Title; 

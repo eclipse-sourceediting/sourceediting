@@ -50,7 +50,6 @@ public class Logger {
 	 *            exception thrown
 	 */
 	private static void _log(int level, String message, Throwable exception) {
-		message = (message != null) ? message : ""; //$NON-NLS-1$
 		Status statusObj = new Status(level, PLUGIN_ID, level, message, exception);
 		Bundle bundle = Platform.getBundle(PLUGIN_ID);
 		if (bundle != null)

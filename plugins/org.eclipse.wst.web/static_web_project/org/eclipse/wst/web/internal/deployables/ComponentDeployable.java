@@ -376,9 +376,6 @@ public abstract class ComponentDeployable extends ProjectModule {
 			String name = null != archiveName ? archiveName : extFile.getName();
 			mf = new ModuleFile(extFile, name, runtimePath.makeRelative());
 		}
-		if (mf == null) {
-			return;
-		}
 		IModuleResource moduleParent = getExistingModuleResource(members, mf.getModuleRelativePath());
 		if (moduleParent != null && moduleParent instanceof ModuleFolder) {
 			addMembersToModuleFolder((ModuleFolder)moduleParent, new IModuleResource[]{mf});

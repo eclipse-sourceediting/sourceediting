@@ -18,21 +18,21 @@ import org.eclipse.wst.web.internal.WSTWebPlugin;
 
 public class RuntimePresetMappingRegistry {
 
-	static final String EXTENSION_POINT = "runtimePresetMappings";
+	static final String EXTENSION_POINT = "runtimePresetMappings"; //$NON-NLS-1$
 
-	static final String ELEMENT_MAPPING = "mapping";
+	static final String ELEMENT_MAPPING = "mapping"; //$NON-NLS-1$
 
-	static final String ATTRIBUTE_ID = "id";
+	static final String ATTRIBUTE_ID = "id"; //$NON-NLS-1$
 
-	static final String ATTRIBUTE_FACET_RUNTIME_TYPE_ID = "facetRuntimeTypeID";
+	static final String ATTRIBUTE_FACET_RUNTIME_TYPE_ID = "facetRuntimeTypeID"; //$NON-NLS-1$
 
-	static final String ATTRIBUTE_FACET_RUNTIME_VERSION = "facetRuntimeVersion";
+	static final String ATTRIBUTE_FACET_RUNTIME_VERSION = "facetRuntimeVersion"; //$NON-NLS-1$
 
-	static final String ATTRIBUTE_FACET_ID = "facetID";
+	static final String ATTRIBUTE_FACET_ID = "facetID"; //$NON-NLS-1$
 
-	static final String ATTRIBUTE_FACET_VERSION = "facetVersion";
+	static final String ATTRIBUTE_FACET_VERSION = "facetVersion"; //$NON-NLS-1$
 
-	static final String ATTRIBUTE_PRESET_ID = "presetID";
+	static final String ATTRIBUTE_PRESET_ID = "presetID"; //$NON-NLS-1$
 
 	public static RuntimePresetMappingRegistry INSTANCE = new RuntimePresetMappingRegistry();
 
@@ -85,7 +85,7 @@ public class RuntimePresetMappingRegistry {
 						return true;
 					}
 				}
-			} else if(simplePattern.endsWith("*")){
+			} else if(simplePattern.endsWith("*")){ //$NON-NLS-1$
 				if(value.startsWith(simplePattern.substring(0, simplePattern.length()-2))){
 					return true;
 				}
@@ -101,7 +101,7 @@ public class RuntimePresetMappingRegistry {
 		StringTokenizer strTok = new StringTokenizer(pattern, ","); //$NON-NLS-1$
 		while(strTok.hasMoreTokens()){
 			String simplePattern = strTok.nextToken().trim();
-			if(!simplePattern.startsWith("*") && !simplePattern.endsWith("*")){ //$NON-NLS-1$
+			if(!simplePattern.startsWith("*") && !simplePattern.endsWith("*")){ //$NON-NLS-1$ //$NON-NLS-2$
 				staticTokens.add(simplePattern);
 			}
 		}
