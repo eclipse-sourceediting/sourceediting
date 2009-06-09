@@ -7,7 +7,9 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
+ *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
+ *     Mukul Gandhi - bug 279373 - improvements to multiply operation on xs:yearMonthDuration
+ *                                 data type.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -24,9 +26,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
  * A representation of the YearMonthDuration datatype
  */
 public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
-		CmpGt,
-
-		MathPlus, MathMinus, MathTimes, MathDiv {
+		CmpGt, MathPlus, MathMinus, MathTimes, MathDiv {
 
 	private int _year;
 	private int _month;
@@ -74,12 +74,12 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	}
 
 	/**
-	 * Creates a new XDTYearMonthDuration by parsing the supplied String
+	 * Creates a new XSYearMonthDuration by parsing the supplied String
 	 * represented duration of time
 	 * 
 	 * @param str
 	 *            String represented duration of time
-	 * @return New XDTYearMonthDuration representing the duration of time
+	 * @return New XSYearMonthDuration representing the duration of time
 	 *         supplied
 	 */
 	public static XSYearMonthDuration parseYMDuration(String str) {
@@ -261,11 +261,11 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	/**
 	 * Retrieves the datatype's full pathname
 	 * 
-	 * @return "xdt:yearMonthDuration" which is the datatype's full pathname
+	 * @return "xs:yearMonthDuration" which is the datatype's full pathname
 	 */
 	@Override
 	public String string_type() {
-		return "xdt:yearMonthDuration";
+		return "xs:yearMonthDuration";
 	}
 
 	/**
@@ -331,11 +331,11 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 
 	/**
 	 * Mathematical addition between this duration stored and the supplied
-	 * duration of time (of type XDTYearMonthDuration)
+	 * duration of time (of type XSYearMonthDuration)
 	 * 
 	 * @param arg
 	 *            The duration of time to add
-	 * @return New XDTYearMonthDuration representing the resulting duration
+	 * @return New XSYearMonthDuration representing the resulting duration
 	 *         after the addition
 	 * @throws DynamicError
 	 */
@@ -350,11 +350,11 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 
 	/**
 	 * Mathematical subtraction between this duration stored and the supplied
-	 * duration of time (of type XDTYearMonthDuration)
+	 * duration of time (of type XSYearMonthDuration)
 	 * 
 	 * @param arg
 	 *            The duration of time to subtract
-	 * @return New XDTYearMonthDuration representing the resulting duration
+	 * @return New XSYearMonthDuration representing the resulting duration
 	 *         after the subtraction
 	 * @throws DynamicError
 	 */
@@ -369,16 +369,28 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 
 	/**
 	 * Mathematical multiplication between this duration stored and the supplied
-	 * duration of time (of type XDTYearMonthDuration)
+	 * duration of time (of type XSYearMonthDuration)
 	 * 
 	 * @param arg
 	 *            The duration of time to multiply by
-	 * @return New XDTYearMonthDuration representing the resulting duration
+	 * @return New XSYearMonthDuration representing the resulting duration
 	 *         after the multiplication
 	 * @throws DynamicError
 	 */
 	public ResultSequence times(ResultSequence arg) throws DynamicError {
-		XSDouble val = (XSDouble) NumericType.get_single_type(arg,
+
+		ResultSequence convertedRS = null;		
+		if (arg.size() == 1) {
+			AnyType argValue = arg.first();
+            if (argValue instanceof XSDecimal) {
+            	convertedRS = ResultSequenceFactory.create_new(new XSDouble(argValue.string_value()));	
+            }
+            else {
+            	convertedRS = arg;	
+            }
+		}
+		
+		XSDouble val = (XSDouble) NumericType.get_single_type(convertedRS,
 				XSDouble.class);
 
 		int res = (int) Math.round(value() * val.double_value());
@@ -388,11 +400,11 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 
 	/**
 	 * Mathematical division between this duration stored and the supplied
-	 * duration of time (of type XDTYearMonthDuration)
+	 * duration of time (of type XSYearMonthDuration)
 	 * 
 	 * @param arg
 	 *            The duration of time to divide by
-	 * @return New XDTYearMonthDuration representing the resulting duration
+	 * @return New XSYearMonthDuration representing the resulting duration
 	 *         after the division
 	 * @throws DynamicError
 	 */
