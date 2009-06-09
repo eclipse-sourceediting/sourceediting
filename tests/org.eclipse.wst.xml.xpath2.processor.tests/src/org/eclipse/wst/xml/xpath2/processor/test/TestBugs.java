@@ -41,6 +41,9 @@ import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.Evaluator;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDayTimeDuration;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSYearMonthDuration;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
@@ -214,7 +217,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 	}
 
 	public void testBaseUriBug() throws Exception {
-		// Bug 274725 - Mukul Ghandi
+		// Bug 274725
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = dbf.newDocumentBuilder();
@@ -693,6 +696,56 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
+	
+	
+	
+	
+	public void testXSDayTimeDurationMultiply() throws Exception {
+		// Bug 279377
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "xs:dayTimeDuration('PT2H10M') * 2.1";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSDayTimeDuration result = (XSDayTimeDuration) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("PT4H33M", actual);
+	}
+	
+	public void testXSDayTimeDurationDivide() throws Exception {
+		// Bug 279377
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "xs:dayTimeDuration('P1DT2H30M10.5S') div 1.5";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSDayTimeDuration result = (XSDayTimeDuration) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("PT17H40M7S", actual);
+	}
+	
 
 	public void testXSYearMonthDurationMultiply() throws Exception {
 		// Bug 279373
