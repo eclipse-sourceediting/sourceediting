@@ -424,6 +424,16 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 
 			return ResultSequenceFactory.create_new(new XSYearMonthDuration(
 					ret));
+		} else if (at instanceof XSDecimal) {
+			XSDecimal dt = (XSDecimal) at;
+			
+			int ret = 0;
+			
+			if (!dt.zero())
+				ret = (int) Math.round(value() / dt.double_value());
+			
+			return ResultSequenceFactory.create_new(new XSYearMonthDuration(
+					ret));	
 		} else if (at instanceof XSYearMonthDuration) {
 			XSYearMonthDuration md = (XSYearMonthDuration) at;
 
