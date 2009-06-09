@@ -29,6 +29,7 @@ public class StaticWebDeployableObjectAdapter extends ModuleArtifactAdapterDeleg
 		return new Class[]{IStaticWebModuleArtifact.class};
 	}
 
+	@Override
 	public IModuleArtifact getModuleArtifact(Object obj) {
 		return StaticWebDeployableObjectAdapterUtil.getModuleObject(obj);
 	}

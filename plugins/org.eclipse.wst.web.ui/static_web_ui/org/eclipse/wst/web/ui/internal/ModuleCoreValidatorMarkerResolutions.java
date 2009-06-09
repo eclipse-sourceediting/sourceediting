@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IMarkerResolution;
-import org.eclipse.ui.IMarkerResolution2;
 import org.eclipse.ui.IMarkerResolutionGenerator;
 import org.eclipse.ui.views.markers.WorkbenchMarkerResolution;
 import org.eclipse.wst.common.componentcore.internal.ModuleMigratorManager;
@@ -44,13 +43,10 @@ public final class ModuleCoreValidatorMarkerResolutions
     }
     
     private class ModuleCoreMigrationResolution extends WorkbenchMarkerResolution
-    
-        implements IMarkerResolution,IMarkerResolution2
         
     {
         private final IMarker theMarker;
-        private final String MARKERTYPE = "org.eclipse.wst.common.modulecore.ModuleCoreValidatorMarker";
-//        private final IMarker[] NO_MARKERS= new IMarker[0];
+        private final String MARKERTYPE = "org.eclipse.wst.common.modulecore.ModuleCoreValidatorMarker"; //$NON-NLS-1$
         
         public ModuleCoreMigrationResolution( IMarker marker )
         {
@@ -90,6 +86,7 @@ public final class ModuleCoreValidatorMarkerResolutions
 			return null;
 		}
 
+		@Override
 		public IMarker[] findOtherMarkers(IMarker[] markers) {
 			List marks = new ArrayList();
 			for (int i = 0; i < markers.length; i++) {

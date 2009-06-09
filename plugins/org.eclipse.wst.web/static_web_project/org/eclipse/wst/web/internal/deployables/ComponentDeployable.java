@@ -99,7 +99,8 @@ public abstract class ComponentDeployable extends ProjectModule {
      * 
      * @return org.eclipse.wst.server.core.model.IModule[]
      */
-    public IModule[] getChildModules() {
+    @Override
+	public IModule[] getChildModules() {
         return getModules();
     }
     
@@ -320,6 +321,7 @@ public abstract class ComponentDeployable extends ProjectModule {
 		return new IModuleResource[]{};
 	}
 	
+	@Override
 	public IModuleResource[] members() throws CoreException {
 		members.clear();
 		IVirtualComponent vc = ComponentCore.createComponent(getProject());

@@ -24,6 +24,7 @@ public class SimpleWebFacetProjectCreationDataModelProvider extends FacetProject
 		super();
 	}
 	
+	@Override
 	public void init() {
 		super.init();
 

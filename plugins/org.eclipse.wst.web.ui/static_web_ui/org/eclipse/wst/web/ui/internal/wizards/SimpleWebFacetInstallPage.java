@@ -33,10 +33,12 @@ public class SimpleWebFacetInstallPage extends DataModelFacetInstallPage impleme
 		setDescription(ResourceHandler.ConfigureSettings);
 	}
 
+	@Override
 	protected String[] getValidationPropertyNames() {
 		return new String[]{CONTENT_DIR};
 	}
 
+	@Override
 	protected Composite createTopLevelComposite(Composite parent) {
 		setInfopopID(IWstWebUIContextIds.NEW_STATIC_WEB_PROJECT_PAGE3);
 		final Composite composite = new Composite(parent, SWT.NONE);

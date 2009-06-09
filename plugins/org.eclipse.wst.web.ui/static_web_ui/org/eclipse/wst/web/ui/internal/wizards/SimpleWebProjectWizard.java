@@ -34,22 +34,27 @@ public class SimpleWebProjectWizard extends NewProjectDataModelFacetWizard {
 		setWindowTitle(ResourceHandler.StaticWebProjectCreationWizard_Wizard_Title);
 	}
 
+	@Override
 	protected IDataModel createDataModel() {
 		return DataModelFactory.createDataModel(new SimpleWebFacetProjectCreationDataModelProvider());
 	}
 
+	@Override
 	protected ImageDescriptor getDefaultPageImageDescriptor() {
 		return WSTWebUIPlugin.getDefault().getImageDescriptor("newwprj_wiz"); //$NON-NLS-1$
 	}
 
+	@Override
 	protected IFacetedProjectTemplate getTemplate() {
 		return ProjectFacetsManager.getTemplate("template.wst.web"); //$NON-NLS-1$
 	}
 
+	@Override
 	protected IWizardPage createFirstPage() {
 		return new SimpleWebProjectFirstPage(model, "first.page"); //$NON-NLS-1$
 	}
 	
+	@Override
 	protected String getFinalPerspectiveID() {
         return ProductManager.getProperty(IProductConstants.FINAL_PERSPECTIVE_STATICWEB);
 	}

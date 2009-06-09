@@ -29,6 +29,7 @@ public class WebProjectPropertiesUpdateDataModelProvider
 		super();
 	}
 
+	@Override
 	public Set getPropertyNames() {
 		Set names = super.getPropertyNames();
 		names.add(PROJECT);
@@ -36,6 +37,7 @@ public class WebProjectPropertiesUpdateDataModelProvider
 		return names;
 	}
 	
+	@Override
 	public IDataModelOperation getDefaultOperation() {
 		return new WebProjectPropertiesUpdateOperation(model);
 	}

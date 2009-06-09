@@ -21,17 +21,17 @@ import org.eclipse.wst.project.facet.ProductManager;
 
 public class WebDevelopmentPerspective implements IPerspectiveFactory {
 
-	public static final String ID = "org.eclipse.wst.web.ui.webDevPerspective"; //$NON-NLS-N$
+	public static final String ID = "org.eclipse.wst.web.ui.webDevPerspective"; //$NON-NLS-1$
 
-	protected static final String TOP_LEFT_LOCATION = "topLeft"; //$NON-NLS-N$
-	protected static final String BOTTOM_LEFT_LOCATION = "bottomLeft"; //$NON-NLS-N$
-	protected static final String BOTTOM_RIGHT_LOCATION = "bottomRight"; //$NON-NLS-N$
-	protected static final String TOP_RIGHT_LOCATION = "topRight"; //$NON-NLS-N$
-	protected static final String BOTTOM_LOCATION = "bottom"; //$NON-NLS-N$
+	protected static final String TOP_LEFT_LOCATION = "topLeft"; //$NON-NLS-1$
+	protected static final String BOTTOM_LEFT_LOCATION = "bottomLeft"; //$NON-NLS-1$ 
+	protected static final String BOTTOM_RIGHT_LOCATION = "bottomRight"; //$NON-NLS-1$
+	protected static final String TOP_RIGHT_LOCATION = "topRight"; //$NON-NLS-1$
+	protected static final String BOTTOM_LOCATION = "bottom"; //$NON-NLS-1$
 
 	// view id's
-	protected static String ID_PROJECT_EXPLORER = "org.eclipse.ui.navigator.ProjectExplorer"; //$NON-NLS-N$
-	protected static final String ID_SERVER = "org.eclipse.wst.server.ui.ServersView";
+	protected static String ID_PROJECT_EXPLORER = "org.eclipse.ui.navigator.ProjectExplorer"; //$NON-NLS-1$
+	protected static final String ID_SERVER = "org.eclipse.wst.server.ui.ServersView"; //$NON-NLS-1$
 	protected static String ID_WST_SNIPPETS_VIEW = "org.eclipse.wst.common.snippets.internal.ui.SnippetsView"; //$NON-NLS-1$
 
 	public WebDevelopmentPerspective() {

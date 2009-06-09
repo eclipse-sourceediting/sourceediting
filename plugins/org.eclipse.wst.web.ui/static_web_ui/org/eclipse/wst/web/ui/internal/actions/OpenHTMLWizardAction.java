@@ -11,13 +11,12 @@
 package org.eclipse.wst.web.ui.internal.actions;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard;
 
-public class OpenHTMLWizardAction extends AbstractOpenWizardAction implements
-		IWorkbenchWindowActionDelegate
+public class OpenHTMLWizardAction extends AbstractOpenWizardAction
 {
 
+	@Override
 	public void run( IAction action )
 	{
 		openWizardDialog( new NewHTMLWizard() );

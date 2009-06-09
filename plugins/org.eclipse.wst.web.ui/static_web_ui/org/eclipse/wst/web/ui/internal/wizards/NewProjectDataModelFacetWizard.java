@@ -34,7 +34,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkingSet;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.eclipse.wst.common.componentcore.datamodel.properties.IFacetDataModelProperties;
@@ -114,6 +113,7 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
 		return new IWizardPage[]{createFirstPage()};
 	}
 
+	@Override
 	public void addPages() {
 		beginingPages = createBeginingPages();
 		for (int i = 0; i < beginingPages.length; i++) {
@@ -135,6 +135,7 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
         );
     }
 
+	@Override
 	public void createPageControls(Composite container) {
 		super.createPageControls(container);
 
@@ -186,6 +187,7 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
         synchRuntimes();
 	}
 
+	@Override
 	public IWizardPage[] getPages() {
 		final IWizardPage[] base = super.getPages();
 		final IWizardPage[] pages = new IWizardPage[base.length + beginingPages.length];
@@ -268,6 +270,7 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
 		return model.getStringProperty(IFacetProjectCreationDataModelProperties.FACET_PROJECT_NAME);
 	}
 
+	@Override
 	protected void performFinish(final IProgressMonitor monitor)
 
 	throws CoreException
@@ -291,6 +294,7 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
 		}
 	}
 
+	@Override
 	public boolean performFinish() {
 		if (super.performFinish() == false) {
 			return false;
@@ -405,6 +409,7 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
 		// open the "final" perspective
 		if (getFinalPerspectiveID() != null && getFinalPerspectiveID().length() > 0) {
 			final IConfigurationElement element = new DelegateConfigurationElement(configurationElement) {
+				@Override
 				public String getAttribute(String aName) {
 					if (aName.equals("finalPerspective")) { //$NON-NLS-1$
 						return getFinalPerspectiveID();
@@ -422,10 +427,12 @@ public abstract class NewProjectDataModelFacetWizard extends ModifyFacetedProjec
 
 	protected IDataModelOperation getFacetProjectNotificationOperation() {
 		return new DataModelPausibleOperationImpl(new AbstractDataModelOperation(this.model) {
+			@Override
 			public String getID() {
 				return NewProjectDataModelFacetWizard.class.getName();
 			}
 
+			@Override
 			public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
 				return AbstractDataModelProvider.OK_STATUS;
 			}

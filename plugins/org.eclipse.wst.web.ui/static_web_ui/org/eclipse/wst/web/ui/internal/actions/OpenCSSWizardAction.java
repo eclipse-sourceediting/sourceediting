@@ -11,13 +11,12 @@
 package org.eclipse.wst.web.ui.internal.actions;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.wst.css.ui.internal.wizard.NewCSSWizard;
 
-public class OpenCSSWizardAction extends AbstractOpenWizardAction implements
-		IWorkbenchWindowActionDelegate
+public class OpenCSSWizardAction extends AbstractOpenWizardAction
 {
 
+	@Override
 	public void run( IAction action )
 	{
 		openWizardDialog( new NewCSSWizard() );

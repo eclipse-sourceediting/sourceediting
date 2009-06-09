@@ -22,6 +22,7 @@ public class SimpleWebFacetInstallDataModelProvider extends FacetInstallDataMode
 		super();
 	}
 
+	@Override
 	public Set getPropertyNames() {
 		Set names = super.getPropertyNames();
 		names.add(CONTENT_DIR);
@@ -29,6 +30,7 @@ public class SimpleWebFacetInstallDataModelProvider extends FacetInstallDataMode
 		return names;
 	}
 
+	@Override
 	public Object getDefaultProperty(String propertyName) {
 		if (propertyName.equals(CONTENT_DIR)) {
 			return "WebContent"; //$NON-NLS-1$
@@ -40,6 +42,7 @@ public class SimpleWebFacetInstallDataModelProvider extends FacetInstallDataMode
 		return super.getDefaultProperty(propertyName);
 	}
 	
+	@Override
 	public boolean propertySet(String propertyName, Object propertyValue) {
 		if (FACET_PROJECT_NAME.equals(propertyName)) {
 			model.notifyPropertyChange(CONTEXT_ROOT, IDataModel.VALID_VALUES_CHG);

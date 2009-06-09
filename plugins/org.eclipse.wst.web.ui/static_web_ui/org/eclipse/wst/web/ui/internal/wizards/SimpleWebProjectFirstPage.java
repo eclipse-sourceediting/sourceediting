@@ -26,6 +26,7 @@ public class SimpleWebProjectFirstPage extends DataModelFacetCreationWizardPage 
 		setInfopopID(IWstWebUIContextIds.NEW_STATIC_WEB_PROJECT_PAGE1);
 	}
 	
+	@Override
 	protected String getModuleTypeID() {
 		return IModuleConstants.WST_WEB_MODULE;
 	}

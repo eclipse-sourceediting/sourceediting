@@ -77,6 +77,7 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 	 * 
 	 * @see org.eclipse.wst.server.core.model.ModuleFactoryDelegate#getModuleDelegate(org.eclipse.wst.server.core.IModule)
 	 */
+	@Override
 	public ModuleDelegate getModuleDelegate(IModule module) {
 		for (Iterator iter = moduleDelegates.iterator(); iter.hasNext();) {
 			ModuleDelegate element = (ModuleDelegate) iter.next();
@@ -87,6 +88,7 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 
 	}
 
+	@Override
 	protected IModule[] createModules(IProject project) {
 		IVirtualComponent component = ComponentCore.createComponent(project);
 		if(component != null){
@@ -131,6 +133,7 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 	 *
 	 * @return a possibly empty array of paths
 	 */
+	@Override
 	protected IPath[] getListenerPaths() {
 		return new IPath[] {
 			new Path(".project"), // nature //$NON-NLS-1$

@@ -52,6 +52,7 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (delegateElement == null)
 			return false;
@@ -176,6 +177,7 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
+	@Override
 	public int hashCode() {
 		if (delegateElement == null)
 			return -1;
@@ -197,6 +199,7 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		if (delegateElement == null)
 			return DELEGATE_NULL_STRING;

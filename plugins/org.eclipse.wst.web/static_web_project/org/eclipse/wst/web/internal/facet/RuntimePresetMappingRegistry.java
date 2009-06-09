@@ -66,14 +66,14 @@ public class RuntimePresetMappingRegistry {
 	 * @return
 	 */
 	private static boolean matches(String value, String pattern){
-		StringTokenizer strTok = new StringTokenizer(pattern, ",");
+		StringTokenizer strTok = new StringTokenizer(pattern, ","); //$NON-NLS-1$
 		while(strTok.hasMoreTokens()){
 			String simplePattern = strTok.nextToken().trim();
-			if(simplePattern.startsWith("*")){
+			if(simplePattern.startsWith("*")){ //$NON-NLS-1$
 				if(simplePattern.length() < 2){
 					return true; // i.e. *
 				}
-				if(simplePattern.endsWith("*")){
+				if(simplePattern.endsWith("*")){ //$NON-NLS-1$
 					if(simplePattern.length() < 3){ 
 						return true; // i.e. **
 					}
@@ -98,10 +98,10 @@ public class RuntimePresetMappingRegistry {
 	
 	private static List <String> getStaticTokens(String pattern){
 		List <String> staticTokens = new ArrayList <String> ();
-		StringTokenizer strTok = new StringTokenizer(pattern, ",");
+		StringTokenizer strTok = new StringTokenizer(pattern, ","); //$NON-NLS-1$
 		while(strTok.hasMoreTokens()){
 			String simplePattern = strTok.nextToken().trim();
-			if(!simplePattern.startsWith("*") && !simplePattern.endsWith("*")){
+			if(!simplePattern.startsWith("*") && !simplePattern.endsWith("*")){ //$NON-NLS-1$
 				staticTokens.add(simplePattern);
 			}
 		}

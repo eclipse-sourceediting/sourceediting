@@ -62,6 +62,7 @@ public class WSTWebPlugin extends Plugin
 		return ResourcesPlugin.getWorkspace();
 	}
 	
+	@Override
 	protected void initializeDefaultPluginPreferences() {
 		getWSTWebPreferences().initializeDefaultPreferences();
 	}

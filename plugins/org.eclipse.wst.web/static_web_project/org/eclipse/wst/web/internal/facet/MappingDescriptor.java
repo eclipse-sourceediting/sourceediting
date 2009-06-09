@@ -38,19 +38,20 @@ public class MappingDescriptor {
 		return element.getAttribute(RuntimePresetMappingRegistry.ATTRIBUTE_PRESET_ID);
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer buff = new StringBuffer();
-		buff.append("id:");
+		buff.append("id:"); //$NON-NLS-1$
 		buff.append(getID());
-		buff.append(" facetRuntimeTypeID:");
+		buff.append(" facetRuntimeTypeID:"); //$NON-NLS-1$
 		buff.append(getFacetRuntimeTypeID());
-		buff.append(" facetRuntimeVersion:");
+		buff.append(" facetRuntimeVersion:"); //$NON-NLS-1$
 		buff.append(getFacetRuntimeVersion());
-		buff.append(" facetID:");
+		buff.append(" facetID:"); //$NON-NLS-1$
 		buff.append(getFacetID());
-		buff.append(" facetVersion:");
+		buff.append(" facetVersion:"); //$NON-NLS-1$
 		buff.append(getFacetVersion());
-		buff.append(" presetID:");
+		buff.append(" presetID:"); //$NON-NLS-1$
 		buff.append(getPresetID());
 		return buff.toString();
 	}

@@ -117,6 +117,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
         return gd;
     }
 
+	@Override
 	protected Composite createTopLevelComposite(Composite parent) {
 		Composite top = new Composite(parent, SWT.NONE);
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(top, getInfopopID());
@@ -134,7 +135,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 	    final StringBuilder buf = new StringBuilder();
 	    boolean firstWord = true;
 	    
-	    for( String word : primaryProjectFacet.getLabel().split( " " ) )
+	    for( String word : primaryProjectFacet.getLabel().split( " " ) ) //$NON-NLS-1$
 	    {
 	        if( firstWord )
 	        {
@@ -416,7 +417,8 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		    
 		    final Thread newRuntimeSelectionThread = new Thread()
 		    {
-		        public void run()
+		        @Override
+				public void run()
 		        {
         		    // Causes the list of runtimes held by the RuntimeManager to be refreshed and 
         		    // triggers events to listeners on that list.
@@ -459,11 +461,8 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		    
 		    return true;
 		}
-		else
-		{
-		    model.removeListener( listener );
-		    return false;
-		}
+	    model.removeListener( listener );
+	    return false;
 	}
 	
 	public boolean internalLaunchNewRuntimeWizard(Shell shell, IDataModel model) {
@@ -514,6 +513,7 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		Button newServerTargetButton = new Button(group, SWT.NONE);
 		newServerTargetButton.setText(ResourceHandler.NewDotDotDot);
 		newServerTargetButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (!internalLaunchNewRuntimeWizard(getShell(), model)) {
 					//Bugzilla 135288
@@ -533,11 +533,13 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		projectNameGroup = new NewProjectGroup(parent, nestedProjectDM);
 	}
 
+	@Override
 	protected String[] getValidationPropertyNames() 
 	{
 	    return VALIDATION_PROPERTIES;
 	}
 
+	@Override
 	public void dispose() {
 		super.dispose();
 		if (projectNameGroup != null)
@@ -546,11 +548,13 @@ public class DataModelFacetCreationWizardPage extends DataModelWizardPage implem
 		this.fpjwc.removeListener( this.fpjwcListener );
 	}
 
+	@Override
 	public void storeDefaultSettings() {
 		IDialogSettings settings = getDialogSettings();
 		DataModelFacetCreationWizardPage.saveRuntimeSettings(settings, model);
 	}
 
+	@Override
 	public void restoreDefaultSettings() {
 		IDialogSettings settings = getDialogSettings();
 		DataModelFacetCreationWizardPage.restoreRuntimeSettings(settings, model);
