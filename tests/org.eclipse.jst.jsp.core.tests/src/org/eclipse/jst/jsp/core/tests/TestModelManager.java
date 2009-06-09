@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -43,7 +43,7 @@ public class TestModelManager extends TestCase {
 		assertTrue("modelManager must not be null", modelManager != null);
 
 		try {
-			model = modelManager.getModelForEdit("test.jsp", new NullInputStream(), null);
+			model = modelManager.getModelForEdit(getClass().getName() + "." + getName() + ".test.jsp", new NullInputStream(), null);
 			assertTrue("basic JSP empty model could not be created", model != null);
 		} finally {
 			if (model != null) {
@@ -53,21 +53,16 @@ public class TestModelManager extends TestCase {
 
 	}
 
-	public void testCopyModel() throws IOException {
+	public void testCopyJSPModelForEdit() throws IOException, ResourceInUse {
 		IStructuredModel model = null;
 		try {
 			IModelManager modelManager = StructuredModelManager.getModelManager();
 			model = modelManager.getModelForEdit("test.jsp", new NullInputStream(), null);
-			try {
-				IStructuredModel modelCopy = modelManager.copyModelForEdit(model.getId(), "newId");
-				assertNotNull("copied JSP model was null", modelCopy);
-				assertEquals("Model Handlers differ", model.getModelHandler(), modelCopy.getModelHandler());
-				assertEquals("Structured Document Parsers differ", model.getStructuredDocument().getParser().getClass(), modelCopy.getStructuredDocument().getParser().getClass());
-			}
-			catch (ResourceInUse e) {
-				fail(e.getMessage());
-			}
-			
+			IStructuredModel modelCopy = modelManager.copyModelForEdit(model.getId(), "newId");
+			assertNotNull("copied JSP model was null", modelCopy);
+			assertEquals("ModelHandlers differ", model.getModelHandler(), modelCopy.getModelHandler());
+			assertEquals("StructuredDocument RegionParsers differ", model.getStructuredDocument().getParser().getClass(), modelCopy.getStructuredDocument().getParser().getClass());
+			assertEquals("Text document contents differ", model.getStructuredDocument().get(), modelCopy.getStructuredDocument().get());
 		}
 		finally {
 			if (model != null)
