@@ -43,6 +43,11 @@ import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.Evaluator;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDayTimeDuration;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSYearMonthDuration;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDayTimeDuration;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSYearMonthDuration;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
@@ -671,9 +676,9 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
-
-	public void testXSUnsignedByte() throws Exception {
-		// Bug 277650
+	
+	public void testXSYearMonthDurationMultiply() throws Exception {
+		// Bug 279373
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -682,23 +687,64 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		DynamicContext dc = setupDynamicContext(schema);
 
-		// min value of xs:unsignedByte is 0
-		// max value of xs:unsignedByte is 255
-		String xpath = "xs:unsignedByte('255') eq 255";
+		String xpath = "xs:yearMonthDuration('P2Y11M') * 2.3";
 		XPath path = compileXPath(dc, xpath);
 
 		Evaluator eval = new DefaultEvaluator(dc, domDoc);
 		ResultSequence rs = eval.evaluate(path);
 
-		XSBoolean result = (XSBoolean) rs.first();
+		XSYearMonthDuration result = (XSYearMonthDuration) rs.first();
 
 		String actual = result.string_value();
 
-		assertEquals("true", actual);
+		assertEquals("P6Y9M", actual);
 	}
 	
+	public void testXSYearMonthDurationDivide1() throws Exception {
+		// Bug 279376
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "xs:yearMonthDuration('P2Y11M') div 1.5";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSYearMonthDuration result = (XSYearMonthDuration) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("P1Y11M", actual);
+	}
 	
-	
+	public void testXSYearMonthDurationDivide2() throws Exception {
+		// Bug 279376
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "xs:yearMonthDuration('P3Y4M') div xs:yearMonthDuration('-P1Y4M')";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSDecimal result = (XSDecimal) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("-2.5", actual);
+	}
 	
 	public void testXSDayTimeDurationMultiply() throws Exception {
 		// Bug 279377
@@ -746,9 +792,8 @@ public class TestBugs extends AbstractPsychoPathTest {
 		assertEquals("PT17H40M7S", actual);
 	}
 	
-
-	public void testXSYearMonthDurationMultiply() throws Exception {
-		// Bug 279373
+	public void testNegativeZeroDouble() throws Exception {
+		// Bug 279406
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -757,22 +802,21 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		DynamicContext dc = setupDynamicContext(schema);
 
-		String xpath = "xs:yearMonthDuration('P2Y11M') * 2.3";
+		String xpath = "-(xs:double('0'))";
 		XPath path = compileXPath(dc, xpath);
 
 		Evaluator eval = new DefaultEvaluator(dc, domDoc);
 		ResultSequence rs = eval.evaluate(path);
 
-		XSYearMonthDuration result = (XSYearMonthDuration) rs.first();
+		XSDouble result = (XSDouble) rs.first();
 
 		String actual = result.string_value();
 
-		assertEquals("P6Y9M", actual);
+		assertEquals("-0", actual);
 	}
-
-	public void testXSYearMonthDurationDivide1() throws Exception {
-
-		// Bug 279376
+	
+	public void testNegativeZeroFloat() throws Exception {
+		// Bug 279406
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
@@ -781,40 +825,42 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		DynamicContext dc = setupDynamicContext(schema);
 
-		String xpath = "xs:yearMonthDuration('P2Y11M') div 1.5";
+		String xpath = "-(xs:float('0'))";
 		XPath path = compileXPath(dc, xpath);
 
 		Evaluator eval = new DefaultEvaluator(dc, domDoc);
 		ResultSequence rs = eval.evaluate(path);
-		XSYearMonthDuration result = (XSYearMonthDuration) rs.first();
+
+		XSFloat result = (XSFloat) rs.first();
+
 		String actual = result.string_value();
 
-		assertEquals("P1Y11M", actual);
-
+		assertEquals("-0", actual);
 	}
+	
 
-	public void testXSYearMonthDurationDivide2() throws Exception {
-
-		// Bug 279376
-
+	public void testXSUnsignedByte() throws Exception {
+		// Bug 277650
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
 		loadDOMDocument(fileURL);
 
 		// Get XML Schema Information for the Document
-
 		XSModel schema = getGrammar();
-		DynamicContext dc = setupDynamicContext(schema);
-		String xpath = "xs:yearMonthDuration('P3Y4M') div xs:yearMonthDuration('-P1Y4M')";
 
+		DynamicContext dc = setupDynamicContext(schema);
+
+		// min value of xs:unsignedByte is 0
+		// max value of xs:unsignedByte is 255
+		String xpath = "xs:unsignedByte('255') eq 255";
 		XPath path = compileXPath(dc, xpath);
+
 		Evaluator eval = new DefaultEvaluator(dc, domDoc);
 		ResultSequence rs = eval.evaluate(path);
 
-		XSDecimal result = (XSDecimal) rs.first();
+		XSBoolean result = (XSBoolean) rs.first();
 
 		String actual = result.string_value();
 
-		assertEquals("-2.5", actual);
-
+		assertEquals("true", actual);
 	}
 }
