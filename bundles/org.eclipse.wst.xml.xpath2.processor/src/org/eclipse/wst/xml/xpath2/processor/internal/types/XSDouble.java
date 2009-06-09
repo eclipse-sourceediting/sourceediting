@@ -8,7 +8,8 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type
- *     David Carver - bug 277770 - format of XSDouble for zero values incorrect. 
+ *     David Carver - bug 277770 - format of XSDouble for zero values incorrect.
+ *     Mukul Gandhi - bug 279406 - improvements to negative zero values for xs:double 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -37,7 +38,7 @@ public class XSDouble extends NumericType {
 	}
 
 	/**
-	 * Initialises a representation of 0
+	 * Initializes a representation of 0
 	 */
 	public XSDouble() {
 		this(0);
@@ -127,7 +128,10 @@ public class XSDouble extends NumericType {
 	@Override
 	public String string_value() {
 		if (zero()) {
-			return "0";
+		  return "0";
+		}
+		else if (negativeZero()) {
+		   return "-0";	
 		}
 		return  Double.toString(_value);
 	}
@@ -148,7 +152,17 @@ public class XSDouble extends NumericType {
 	 */
 	@Override
 	public boolean zero() {
-		return (Double.compare(_value, 0.0E0) == 0);
+	   return (Double.compare(_value, 0.0E0) == 0);
+	}
+	
+	/*
+	 * Check for whether this XSDouble represents -0
+	 * 
+	 * @return True if this XSDouble represents -0. False otherwise.
+	 * @since 1.1
+	 */
+	public boolean negativeZero() {
+	   return (Double.compare(_value, -0.0E0) == 0);
 	}
 
 	/**

@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
+ *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type
+ *     Mukul Gandhi - bug 279406 - improvements to negative zero values for xs:float
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -74,7 +75,10 @@ public class XSFloat extends NumericType {
 	public String string_value() {
 		String value = format.format(_value);
 		if (zero()) {
-			value = "0";
+		   value = "0";
+		}
+		else if (negativeZero()) {
+		   value = "-0";	
 		}
 		return value;
 	}
@@ -95,12 +99,19 @@ public class XSFloat extends NumericType {
 	 */
 	@Override
 	public boolean zero() {
-		if (Float.compare(_value, 0) == 0) {
-			return true;
-		}
-		return false;
+	   return (Float.compare(_value, 0) == 0);
 	}
-
+	
+	/*
+	 * Check for whether this XSFloat represents -0
+	 * 
+	 * @return True if this XSFloat represents -0. False otherwise.
+	 * @since 1.1
+	 */
+	public boolean negativeZero() {
+	   return (Float.compare(_value, -0.0f) == 0);
+	}
+	
 	/**
 	 * Creates a new ResultSequence consisting of the retrievable float in the
 	 * supplied ResultSequence
