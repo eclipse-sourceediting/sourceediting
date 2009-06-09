@@ -28,6 +28,7 @@
  *                    bug 277650   implements xs:unsignedByte data type
  *                    bug 279373   improvements to multiply operation on xs:yearMonthDuration
  *                                 data type.
+ *                    bug 279376   improvements to xs:yearMonthDuration division operation                                 
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -43,6 +44,7 @@ import org.eclipse.wst.xml.xpath2.processor.Evaluator;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSYearMonthDuration;
 
 public class TestBugs extends AbstractPsychoPathTest {
@@ -441,7 +443,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
-		
+
 	public void testXSNonPositiveInteger() throws Exception {
 		// Bug 277599
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
@@ -466,7 +468,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
-	
+
 	public void testXSNegativeInteger() throws Exception {
 		// Bug 277602
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
@@ -491,7 +493,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
-		
+
 	public void testXSShort() throws Exception {
 		// Bug 277608
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
@@ -516,7 +518,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
-			
+
 	public void testXSNonNegativeInteger() throws Exception {
 		// Bug 277609
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
@@ -541,8 +543,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
-	
-	
+
 	public void testXSUnsignedLong() throws Exception {
 		// Bug 277629
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
@@ -567,7 +568,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
-	
+
 	public void testXSPositiveInteger() throws Exception {
 		// Bug 277632
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
@@ -592,7 +593,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
-		
+
 	public void testXSByte() throws Exception {
 		// Bug 277639
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
@@ -616,8 +617,8 @@ public class TestBugs extends AbstractPsychoPathTest {
 		String actual = result.string_value();
 
 		assertEquals("true", actual);
-	}	
-	
+	}
+
 	public void testXSUnsignedInt() throws Exception {
 		// Bug 277642
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
@@ -642,8 +643,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
-	
-		
+
 	public void testXSUnsignedShort() throws Exception {
 		// Bug 277645
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
@@ -668,9 +668,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
-	
-	
-	
+
 	public void testXSUnsignedByte() throws Exception {
 		// Bug 277650
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
@@ -695,7 +693,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
-	
+
 	public void testXSYearMonthDurationMultiply() throws Exception {
 		// Bug 279373
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
@@ -717,5 +715,53 @@ public class TestBugs extends AbstractPsychoPathTest {
 		String actual = result.string_value();
 
 		assertEquals("P6Y9M", actual);
+	}
+
+	public void testXSYearMonthDurationDivide1() throws Exception {
+
+		// Bug 279376
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "xs:yearMonthDuration('P2Y11M') div 1.5";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+		XSYearMonthDuration result = (XSYearMonthDuration) rs.first();
+		String actual = result.string_value();
+
+		assertEquals("P1Y11M", actual);
+
+	}
+
+	public void testXSYearMonthDurationDivide2() throws Exception {
+
+		// Bug 279376
+
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+
+		XSModel schema = getGrammar();
+		DynamicContext dc = setupDynamicContext(schema);
+		String xpath = "xs:yearMonthDuration('P3Y4M') div xs:yearMonthDuration('-P1Y4M')";
+
+		XPath path = compileXPath(dc, xpath);
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSDecimal result = (XSDecimal) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("-2.5", actual);
+
 	}
 }
