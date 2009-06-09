@@ -8,6 +8,8 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
+ *     Mukul Gandhi - bug 279377 - improvements to multiplication and division operations
+ *                                 on xs:dayTimeDuration.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -100,7 +102,7 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	/**
 	 * Creates a copy of this representation of a time duration
 	 * 
-	 * @return New XDTDayTimeDuration representing the duration of time stored
+	 * @return New XSDayTimeDuration representing the duration of time stored
 	 * @throws CloneNotSupportedException
 	 */
 	@Override
@@ -110,12 +112,12 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	}
 
 	/**
-	 * Creates a new XDTDayTimeDuration by parsing the supplied String
+	 * Creates a new XSDayTimeDuration by parsing the supplied String
 	 * represented duration of time
 	 * 
 	 * @param str
 	 *            String represented duration of time
-	 * @return New XDTDayTimeDuration representing the duration of time supplied
+	 * @return New XSDayTimeDuration representing the duration of time supplied
 	 */
 	public static XSDayTimeDuration parseDTDuration(String str) {
 		boolean negative = false;
@@ -323,7 +325,15 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 			did_something = true;
 		}
 		if (seconds() != 0) {
-			tret += seconds() + "S";
+			String doubStr = (Double.valueOf(seconds())).toString();
+			if (doubStr.endsWith(".0")) {
+			   // string value of x.0 seconds is xS. e.g, 7.0S is converted to
+			   // 7S.
+			   tret += doubStr.substring(0, doubStr.indexOf(".0")) + "S";
+			}
+			else {
+			   tret += seconds() + "S";	
+			}
 			did_something = true;
 		} else if (!did_something) {
 			tret += "0" + "S";
@@ -338,11 +348,11 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	/**
 	 * Retrieves the datatype's full pathname
 	 * 
-	 * @return "xdt:dayTimeDuration" which is the datatype's full pathname
+	 * @return "xs:dayTimeDuration" which is the datatype's full pathname
 	 */
 	@Override
 	public String string_type() {
-		return "xdt:dayTimeDuration";
+		return "xs:dayTimeDuration";
 	}
 
 	/**
@@ -412,11 +422,11 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 
 	/**
 	 * Mathematical addition between this duration stored and the supplied
-	 * duration of time (of type XDTDayTimeDuration)
+	 * duration of time (of type XSDayTimeDuration)
 	 * 
 	 * @param arg
 	 *            The duration of time to add
-	 * @return New XDTDayTimeDuration representing the resulting duration after
+	 * @return New XSDayTimeDuration representing the resulting duration after
 	 *         the addition
 	 * @throws DynamicError
 	 */
@@ -431,11 +441,11 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 
 	/**
 	 * Mathematical subtraction between this duration stored and the supplied
-	 * duration of time (of type XDTDayTimeDuration)
+	 * duration of time (of type XSDayTimeDuration)
 	 * 
 	 * @param arg
 	 *            The duration of time to subtract
-	 * @return New XDTDayTimeDuration representing the resulting duration after
+	 * @return New XSDayTimeDuration representing the resulting duration after
 	 *         the subtraction
 	 * @throws DynamicError
 	 */
@@ -450,17 +460,29 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 
 	/**
 	 * Mathematical multiplication between this duration stored and the supplied
-	 * duration of time (of type XDTDayTimeDuration)
+	 * duration of time (of type XSDayTimeDuration)
 	 * 
 	 * @param arg
 	 *            The duration of time to multiply by
-	 * @return New XDTDayTimeDuration representing the resulting duration after
+	 * @return New XSDayTimeDuration representing the resulting duration after
 	 *         the multiplication
 	 * @throws DynamicError
 	 */
 	public ResultSequence times(ResultSequence arg) throws DynamicError {
-		XSDouble val = (XSDouble) NumericType.get_single_type(arg,
-				XSDouble.class);
+		ResultSequence convertedRS = null;
+		
+		if (arg.size() == 1) {
+			AnyType argValue = arg.first();
+            if (argValue instanceof XSDecimal) {
+            	convertedRS = ResultSequenceFactory.create_new(new XSDouble(argValue.string_value()));	
+            }
+            else {
+            	convertedRS = arg;	
+            }
+		}
+		
+		XSDouble val = (XSDouble) NumericType.get_single_type(convertedRS,
+				                                  XSDouble.class);
 
 		double res = value() * val.double_value();
 
@@ -469,11 +491,11 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 
 	/**
 	 * Mathematical division between this duration stored and the supplied
-	 * duration of time (of type XDTDayTimeDuration)
+	 * duration of time (of type XSDayTimeDuration)
 	 * 
 	 * @param arg
 	 *            The duration of time to divide by
-	 * @return New XDTDayTimeDuration representing the resulting duration after
+	 * @return New XSDayTimeDuration representing the resulting duration after
 	 *         the division
 	 * @throws DynamicError
 	 */
@@ -492,6 +514,16 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 
 			return ResultSequenceFactory
 					.create_new(new XSDayTimeDuration(ret));
+		} else if (at instanceof XSDecimal) {
+			XSDecimal dt = (XSDecimal) at;
+			
+			int ret = 0;
+			
+			if (!dt.zero())
+				ret = (int) Math.round(value() / dt.double_value());
+			
+			return ResultSequenceFactory.create_new(new XSDayTimeDuration(
+					ret));	
 		} else if (at instanceof XSDayTimeDuration) {
 			XSDayTimeDuration md = (XSDayTimeDuration) at;
 
