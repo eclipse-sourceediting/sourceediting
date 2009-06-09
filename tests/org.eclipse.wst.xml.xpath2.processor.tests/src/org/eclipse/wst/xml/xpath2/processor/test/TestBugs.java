@@ -25,7 +25,9 @@
  *                    bug 277639   implements xs:byte data type
  *                    bug 277642   implements xs:unsignedInt data type
  *                    bug 277645   implements xs:unsignedShort data type
- *                    bug 277650   implements xs:unsignedByte data type 
+ *                    bug 277650   implements xs:unsignedByte data type
+ *                    bug 279373   improvements to multiply operation on xs:yearMonthDuration
+ *                                 data type.
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -41,6 +43,7 @@ import org.eclipse.wst.xml.xpath2.processor.Evaluator;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSYearMonthDuration;
 
 public class TestBugs extends AbstractPsychoPathTest {
 
@@ -691,5 +694,28 @@ public class TestBugs extends AbstractPsychoPathTest {
 		String actual = result.string_value();
 
 		assertEquals("true", actual);
+	}
+	
+	public void testXSYearMonthDurationMultiply() throws Exception {
+		// Bug 279373
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "xs:yearMonthDuration('P2Y11M') * 2.3";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSYearMonthDuration result = (XSYearMonthDuration) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("P6Y9M", actual);
 	}
 }
