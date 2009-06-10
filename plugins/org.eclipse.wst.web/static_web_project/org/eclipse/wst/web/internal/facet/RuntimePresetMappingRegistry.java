@@ -120,13 +120,13 @@ public class RuntimePresetMappingRegistry {
 			if (ELEMENT_MAPPING.equals(element.getName())) {
 				String id = element.getAttribute(ATTRIBUTE_ID);
 				if (null == id || id.trim().length() == 0) {
-					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_ID);
+					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_ID); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					continue;
 				}
 
 				String runtimeID = element.getAttribute(ATTRIBUTE_FACET_RUNTIME_TYPE_ID);
 				if (null == runtimeID || runtimeID.trim().length() == 0) {
-					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_FACET_RUNTIME_TYPE_ID);
+					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_FACET_RUNTIME_TYPE_ID); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					continue;
 				}
 
@@ -139,13 +139,13 @@ public class RuntimePresetMappingRegistry {
 							staticRuntimeTypes.add(runtimeType);
 						}
 					} catch (IllegalArgumentException e) {
-						WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_FACET_RUNTIME_TYPE_ID + ": " + runtimeID +" unable to resolve runtime: "+staticRuntimeID, e);
+						WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_FACET_RUNTIME_TYPE_ID + ": " + runtimeID +" unable to resolve runtime: "+staticRuntimeID, e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 					}
 				}
 					
 				String runtimeVersionStr = element.getAttribute(ATTRIBUTE_FACET_RUNTIME_VERSION);
 				if (null == runtimeVersionStr || runtimeVersionStr.trim().length() == 0) {
-					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_FACET_RUNTIME_VERSION);
+					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_FACET_RUNTIME_VERSION); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					continue;
 				}
 				if(!staticRuntimeTypes.isEmpty()){
@@ -155,26 +155,26 @@ public class RuntimePresetMappingRegistry {
 						for(int k=0;k<staticRuntimeTypes.size() && !foundVersion;k++){
 							IRuntimeComponentType runtimeType = staticRuntimeTypes.get(k);
 							try {
-								IRuntimeComponentVersion version = runtimeType.getVersion(staticVersion);
+								runtimeType.getVersion(staticVersion);
 								foundVersion = true;
 							} catch (IllegalArgumentException e) {
 								//eat it
 							}
 						}
 						if(!foundVersion){
-							StringBuffer validVersions = new StringBuffer(" valid versions include: ");
+							StringBuffer validVersions = new StringBuffer(" valid versions include: "); //$NON-NLS-1$
 							for(IRuntimeComponentType runtimeType : staticRuntimeTypes) {
-								validVersions.append("\n");
+								validVersions.append("\n"); //$NON-NLS-1$
 								validVersions.append(runtimeType.getId());
-								validVersions.append(": ");
+								validVersions.append(": "); //$NON-NLS-1$
 								for (Iterator<IRuntimeComponentVersion> iterator = runtimeType.getVersions().iterator(); iterator.hasNext();) {
 									validVersions.append(iterator.next().getVersionString());
 									if (iterator.hasNext()) {
-										validVersions.append(" ");
+										validVersions.append(" "); //$NON-NLS-1$
 									}
 								}
 							}
-							WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_FACET_RUNTIME_VERSION + ": " + staticVersion
+							WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_FACET_RUNTIME_VERSION + ": " + staticVersion //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 									+ validVersions);
 						}
 					}
@@ -182,7 +182,7 @@ public class RuntimePresetMappingRegistry {
 				
 				String facetID = element.getAttribute(ATTRIBUTE_FACET_ID);
 				if (null == facetID || facetID.trim().length() == 0) {
-					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_FACET_ID);
+					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_FACET_ID); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					continue;
 				}
 				
@@ -195,13 +195,13 @@ public class RuntimePresetMappingRegistry {
 							staticFacets.add(facet);
 						}
 					} catch (IllegalArgumentException e) {
-						WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_FACET_ID + ": " + staticFacetID, e);
+						WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_FACET_ID + ": " + staticFacetID, e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 					}
 				}
 				
 				String facetVersionStr = element.getAttribute(ATTRIBUTE_FACET_VERSION);
 				if (null == facetVersionStr || facetVersionStr.trim().length() == 0) {
-					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_FACET_VERSION);
+					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_FACET_VERSION); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					continue;
 				}
 				List <String>staticFacetVersionStrs = getStaticTokens(facetVersionStr);
@@ -220,19 +220,19 @@ public class RuntimePresetMappingRegistry {
 							}
 						}
 						if(!foundFacetVersion){
-							StringBuffer validVersions = new StringBuffer(" valid versions include: ");
+							StringBuffer validVersions = new StringBuffer(" valid versions include: "); //$NON-NLS-1$
 							for(IProjectFacet staticFacet:staticFacets){
-								validVersions.append("\n");
+								validVersions.append("\n"); //$NON-NLS-1$
 								validVersions.append(staticFacet.getId());
-								validVersions.append(": ");
+								validVersions.append(": "); //$NON-NLS-1$
 								for (Iterator<IProjectFacetVersion> iterator = staticFacet.getVersions().iterator(); iterator.hasNext();) {
 									validVersions.append(iterator.next().getVersionString());
 									if (iterator.hasNext()) {
-										validVersions.append(" ");
+										validVersions.append(" "); //$NON-NLS-1$
 									}
 								}
 							}
-							WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_FACET_VERSION + ": " + staticFacetVersion
+							WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_FACET_VERSION + ": " + staticFacetVersion //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 									+ validVersions);
 							continue;
 						}
@@ -240,20 +240,20 @@ public class RuntimePresetMappingRegistry {
 				}
 				String presetID = element.getAttribute(ATTRIBUTE_PRESET_ID);
 				if (null == presetID || presetID.trim().length() == 0) {
-					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_PRESET_ID);
+					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " is missing attribute " + ATTRIBUTE_PRESET_ID); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					continue;
 				}
 				try {
 					ProjectFacetsManager.getPreset(presetID);
 				} catch (IllegalArgumentException e) {
-					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_PRESET_ID + ": " + presetID, e);
+					WSTWebPlugin.logError("Extension: " + EXTENSION_POINT + " Element: " + ELEMENT_MAPPING + " defined invalid attribute " + ATTRIBUTE_PRESET_ID + ": " + presetID, e); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 					continue;
 				}
 				MappingDescriptor descriptor = new MappingDescriptor(element);
 				descriptors.add(descriptor);
 			} else {
-				WSTWebPlugin.logError("Elements must be named: " + ELEMENT_MAPPING + " within the extension: " + EXTENSION_POINT);
-				WSTWebPlugin.logError("Element: " + element.getName() + " is invalid within the extension: " + EXTENSION_POINT);
+				WSTWebPlugin.logError("Elements must be named: " + ELEMENT_MAPPING + " within the extension: " + EXTENSION_POINT); //$NON-NLS-1$ //$NON-NLS-2$
+				WSTWebPlugin.logError("Element: " + element.getName() + " is invalid within the extension: " + EXTENSION_POINT); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}
