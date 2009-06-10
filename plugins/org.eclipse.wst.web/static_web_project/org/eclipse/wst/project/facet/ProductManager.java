@@ -146,7 +146,7 @@ public class ProductManager {
 		int seperatorIndex = defaultProductRuntimeKey.indexOf(RUNTIME_SEPARATOR);
 		if (seperatorIndex < 0 && seperatorIndex < defaultProductRuntimeKey.length()) {
 			//Consider throwing an exception here.
-			Logger.getLogger().logError("Invalid default product runtime id.  It should follow the format <facet runtime id>:<facet version>.  Id processed: " + defaultProductRuntimeKey);
+			Logger.getLogger().logError("Invalid default product runtime id.  It should follow the format <facet runtime id>:<facet version>.  Id processed: " + defaultProductRuntimeKey); //$NON-NLS-1$
 			return null;
 		}
 		String defaultRuntimeID = defaultProductRuntimeKey.substring(0, seperatorIndex);
