@@ -10,6 +10,7 @@
  *
  * Contributors:
  *     David Carver - 20080330 - STAR - bug 224819 - changed procesContents from lax to skip
+ *     David Carver - STAR - bug 279737 - use namespace to import xml schema definitions.
  *******************************************************************************
 *******************************************************************************
  * W3C® SOFTWARE NOTICE AND LICENSE
@@ -112,8 +113,7 @@ of problems processing the schema using various tools
     so the Schema for schemas needs to be imported
 -->
   
-<xs:import namespace="http://www.w3.org/2001/XMLSchema"
-                  schemaLocation="http://www.w3.org/2001/XMLSchema.xsd"/>
+<xs:import namespace="http://www.w3.org/2001/XMLSchema"/>
 
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 <xs:annotation>
