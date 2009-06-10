@@ -96,8 +96,6 @@ public class ShowTranslationHandler extends AbstractHandler {
 										IProblem[] problems = (IProblem[]) problemsList.toArray(new IProblem[problemsList.size()]);
 										AnnotationTypeLookup lookup = new AnnotationTypeLookup();
 										for (int i = 0; i < problems.length; i++) {
-//											if (problems[i] instanceof IJSPProblem)
-//												continue;
 											int length = problems[i].getSourceEnd() - problems[i].getSourceStart() + 1;
 											Position position = new Position(problems[i].getSourceStart(), length);
 											Annotation annotation = null;

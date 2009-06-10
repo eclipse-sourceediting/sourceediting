@@ -5,7 +5,11 @@
        point="org.eclipse.ui.commands">
 	    <command
 	          id="org.eclipse.wst.jsdt.web.showTranslation"
-	          name="%_UI_SHOW_TRANSLATION">
+	          name="Show JavaScript Translation">
+	    </command>
+	    <command
+	          id="org.eclipse.wst.jsdt.web.runCode"
+	          name="Run Example Handler">
 	    </command>
 	</extension>
 	<extension point="org.eclipse.ui.bindings">
@@ -18,11 +22,18 @@
 			contextId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			commandId="org.eclipse.wst.jsdt.web.showTranslation"
 			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+		<key
+			sequence="M1+M2+7"
+			contextId="org.eclipse.wst.jsdt.ui.javaEditorScope"
+			commandId="org.eclipse.wst.jsdt.web.runCode"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 	</extension>
     <extension point="org.eclipse.ui.handlers">
        <handler
              class="org.eclipse.wst.jsdt.web.ui.tests.translation.ShowTranslationHandler"
-             commandId="org.eclipse.wst.jsdt.web.showTranslation">
-       </handler>
+             commandId="org.eclipse.wst.jsdt.web.showTranslation"/>
+       <handler
+             class="org.eclipse.wst.jsdt.web.ui.tests.translation.RunCodeHandler"
+             commandId="org.eclipse.wst.jsdt.web.runCode"/>
 	</extension>
 </plugin>
