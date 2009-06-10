@@ -77,6 +77,22 @@ public class TestDelegatingSourceValidatorForXSL extends AbstractXSLUITest {
 		assertFalse("Messages were reported on file with valid XPath 2.0",
 				reporter.isMessageReported());
 	}
+	
+	public void testXSLT2_2Passes() throws Exception {
+		String fileName1 = "ChangeRequestsByStatus.xsl";
+		WorkbenchContext context = setupFile(getxslTestFilesProjectName(), fileName1);
+		
+		TestReporter reporter = new TestReporter();
+		try {
+			sourceValidator.validate(context, reporter);
+		} catch (ValidationException e) {
+			e.printStackTrace();
+		}
+
+		assertFalse("Messages were reported on file with valid XSLT 2.0",
+				reporter.isMessageReported());
+	}
+	
 
 	public void testValidXSLT() throws Exception {
 		String fileName1 = "ListAllChangeRequests.xsl"; 
