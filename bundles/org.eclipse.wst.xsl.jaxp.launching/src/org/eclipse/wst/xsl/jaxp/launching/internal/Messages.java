@@ -40,6 +40,18 @@ public class Messages extends NLS {
 	public static String AbstractRegistryReader_7;
 	public static String AbstractRegistryReader_8;
 	public static String AbstractRegistryReader_9;
+
+	public static String JAXPJavaLaunchConfigurationDelegate_0;
+
+	public static String JAXPJavaLaunchConfigurationDelegate_1;
+
+	public static String JAXPJavaLaunchConfigurationDelegate_2;
+
+	public static String JAXPJavaLaunchConfigurationDelegate_3;
+
+	public static String JAXPJavaLaunchConfigurationDelegate_4;
+
+	public static String JAXPJavaLaunchConfigurationDelegate_5;
     public static String LaunchHelper_0;
     public static String LaunchHelper_1;
 	

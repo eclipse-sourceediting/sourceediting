@@ -167,7 +167,7 @@ public class JAXPDebugTarget extends XSLDebugElement implements IXSLDebugTarget 
 
 	public String getName() throws DebugException {
 		if (name == null) {
-			name = launch.getAttribute("launchName");
+			name = launch.getAttribute("launchName"); //$NON-NLS-1$
 		}
 		return name;
 	}

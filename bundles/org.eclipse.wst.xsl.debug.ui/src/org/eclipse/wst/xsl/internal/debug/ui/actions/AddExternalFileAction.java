@@ -61,7 +61,7 @@ public class AddExternalFileAction extends OpenDialogAction
 		for (int i = 0; i < xslContentTypes.length; i++)
 		{
 			String string = xslContentTypes[i];
-			xslContentTypes[i] = "*."+string;
+			xslContentTypes[i] = "*."+string; //$NON-NLS-1$
 		}
 
 		dialog.setFilterExtensions(xslContentTypes);

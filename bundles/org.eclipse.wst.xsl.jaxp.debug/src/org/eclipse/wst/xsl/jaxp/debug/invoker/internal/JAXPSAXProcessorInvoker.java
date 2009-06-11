@@ -170,11 +170,11 @@ public class JAXPSAXProcessorInvoker implements IProcessorInvoker
 		else {
 			reader.setContentHandler(newTh);
 			try {
-				reader.setProperty("http://xml.org/sax/properties/lexical-handler", newTh);
+				reader.setProperty("http://xml.org/sax/properties/lexical-handler", newTh); //$NON-NLS-1$
 			} catch (SAXNotRecognizedException ex) {
-				log.warn("Unable to set lexical content handler.  Comments and Processing instructions may be skipped");
+				log.warn(Messages.getString("JAXPSAXProcessorInvoker_4")); //$NON-NLS-1$
 			} catch (SAXNotSupportedException e) {
-				log.warn("Lexical property not supported.  Comments and Processing instructions may be skipped");
+				log.warn(Messages.getString("JAXPSAXProcessorInvoker_5")); //$NON-NLS-1$
 			}
 		}
 		th = newTh;

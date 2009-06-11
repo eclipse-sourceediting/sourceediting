@@ -34,6 +34,8 @@ import org.xml.sax.SAXException;
 
 public class XSLValue extends XSLDebugElement implements IValue
 {
+	private static final String NODESET = "nodeset"; //$NON-NLS-1$
+	private static final String EMPTY_NODESET = "<EMPTY NODESET>"; //$NON-NLS-1$
 	private String fValue;
 	private String type;
 	private boolean hasVariables;
@@ -45,7 +47,7 @@ public class XSLValue extends XSLDebugElement implements IValue
 	public XSLValue(IDebugTarget target, String type, Node node) {
 		super(target);
 		actualNode = node;
-		String value = "";
+		String value = ""; //$NON-NLS-1$
 		if (node.getNodeValue() != null) {
 			value = node.getNodeValue();
 		}
@@ -90,7 +92,7 @@ public class XSLValue extends XSLDebugElement implements IValue
 			}
 			variableList.addAll(getNodeListVariables(actualNode.getChildNodes()));
 		}
-		if (type.equals("nodeset") && !(fValue.equals("<EMPTY NODESET>"))) {
+		if (type.equals(NODESET) && !(fValue.equals(EMPTY_NODESET))) { 
 			createNodeSetVariables(variableList);
 		}
 		IVariable[] variables = new IVariable[variableList.size()];
@@ -102,7 +104,7 @@ public class XSLValue extends XSLDebugElement implements IValue
 		NodeList nodeList = null;
 		try {
 			DocumentBuilder builder = builderFactory.newDocumentBuilder();
-			String nodeSet = "<nodeset>" + fValue + "</nodeset>";
+			String nodeSet = "<nodeset>" + fValue + "</nodeset>"; //$NON-NLS-1$ //$NON-NLS-2$
 			InputStream is = new ByteArrayInputStream(nodeSet.getBytes());
 			Document doc = builder.parse(is);
 			Node firstChild = doc.getFirstChild();
@@ -122,9 +124,6 @@ public class XSLValue extends XSLDebugElement implements IValue
 		if (nodeList != null) {
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				Node node = nodeList.item(i);
-//				if (node.hasAttributes()) {
-//					getAttributes(variableList, node);
-//				}
 				IVariable variable = new NodeListVariable(getDebugTarget(), node);
 				variableList.add(variable);
 			}
@@ -145,12 +144,12 @@ public class XSLValue extends XSLDebugElement implements IValue
 		hasVariables = false;
 		if (actualNode != null) {
 			hasVariables = actualNode.hasChildNodes();
-		} else 	if (type.equals("nodeset")) {
+		} else 	if (type.equals(NODESET)) { 
 			hasVariables = true;
 		} else {
 			hasVariables = false;
 		}
-		if (fValue.equals("<EMPTY NODESET>")) {
+		if (fValue.equals(EMPTY_NODESET)) {
 			hasVariables = false;
 		}
 		

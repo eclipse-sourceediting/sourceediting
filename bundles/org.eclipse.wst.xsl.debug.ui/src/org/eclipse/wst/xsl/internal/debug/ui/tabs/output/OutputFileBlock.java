@@ -104,7 +104,7 @@ public class OutputFileBlock extends ResourceSelectionBlock
 		specificFileComp.setLayoutData(gd);
 
 		Label label = new Label(specificFileComp, SWT.NONE);
-		label.setText("Filename");
+		label.setText(Messages.OutputFileBlock_1);
 
 		fileNameText = new Text(specificFileComp, SWT.SINGLE | SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -162,7 +162,7 @@ public class OutputFileBlock extends ResourceSelectionBlock
 			}
 		});
 
-		formatFileCheckButton = createCheckButton(checkComposite, "Format file on completion");
+		formatFileCheckButton = createCheckButton(checkComposite, Messages.OutputFileBlock_2);
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gd.horizontalSpan = 1;
 		formatFileCheckButton.setLayoutData(gd);
@@ -280,7 +280,7 @@ public class OutputFileBlock extends ResourceSelectionBlock
 			{// inside workspace
 				IPath p = new Path(files[0].getProject().getName());
 				p.append(files[0].getParent().getProjectRelativePath());
-				defaultResource = "${workspace_loc:/"+p.toString()+"}";
+				defaultResource = "${workspace_loc:/"+p.toString()+"}";  //$NON-NLS-1$//$NON-NLS-2$
 			}
 			else
 			{// outside workspace

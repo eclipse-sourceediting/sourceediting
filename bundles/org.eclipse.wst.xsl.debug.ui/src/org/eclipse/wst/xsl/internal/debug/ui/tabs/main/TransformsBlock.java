@@ -40,7 +40,7 @@ import org.eclipse.wst.xsl.launching.config.LaunchPipeline;
 
 public class TransformsBlock extends AbstractTableBlock implements IStylesheetEntriesChangedListener
 {
-	protected static final String DIALOG_SETTINGS_PREFIX = "TransformsBlock"; 
+	protected static final String DIALOG_SETTINGS_PREFIX = "TransformsBlock";  //$NON-NLS-1$
 	private StylesheetViewer stylesheetViewer;
 	private LaunchPipeline pipeline;
 

@@ -41,7 +41,7 @@ import org.eclipse.wst.xsl.launching.config.BaseLaunchHelper;
  */
 public class XSLDebugUILaunchListener implements ILaunchesListener2
 {
-	public static final String XSL_LAUNCH_CONFIGURATION_TYPE = "org.eclipse.wst.xsl.launching.launchConfigurationType";
+	public static final String XSL_LAUNCH_CONFIGURATION_TYPE = "org.eclipse.wst.xsl.launching.launchConfigurationType"; //$NON-NLS-1$
 
 	/**
 	 * Starts the launch listening
@@ -136,7 +136,7 @@ public class XSLDebugUILaunchListener implements ILaunchesListener2
 						{
 							// format the editor contents
 							IHandlerService p = (IHandlerService)PlatformUI.getWorkbench().getService(IHandlerService.class);
-							p.executeCommand("org.eclipse.wst.sse.ui.format.document", null);
+							p.executeCommand("org.eclipse.wst.sse.ui.format.document", null); //$NON-NLS-1$
 						}
 					}
 					catch (PartInitException e)

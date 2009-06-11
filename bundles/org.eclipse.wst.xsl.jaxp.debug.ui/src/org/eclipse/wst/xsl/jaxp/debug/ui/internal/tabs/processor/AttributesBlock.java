@@ -90,7 +90,7 @@ public class AttributesBlock extends AbstractTableBlock
 	@Override
 	protected String getQualifier()
 	{
-		return JAXPDebugUIPlugin.PLUGIN_ID+"."+getClass().getCanonicalName();
+		return JAXPDebugUIPlugin.PLUGIN_ID+"."+getClass().getCanonicalName(); //$NON-NLS-1$
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class AttributesBlock extends AbstractTableBlock
 	public void createControl(Composite parent)
 	{
 		TabItem item = new TabItem((TabFolder)parent,SWT.NONE);
-		item.setText("Attributes");
+		item.setText(Messages.getString("AttributesBlock.0")); //$NON-NLS-1$
 		
 		Composite composite = new Composite(parent,SWT.NONE);
 		GridLayout layout = new GridLayout(2,false);
@@ -124,12 +124,12 @@ public class AttributesBlock extends AbstractTableBlock
 		});
 		
 		TableColumn tc1 = new TableColumn(table,SWT.NONE);
-		tc1.setText("Name");
+		tc1.setText(Messages.getString("AttributesBlock.2")); //$NON-NLS-1$
 		tc1.setWidth(350);
 		tc1.setResizable(true);
 		
 		TableColumn tc2 = new TableColumn(table,SWT.NONE);
-		tc2.setText("Value");
+		tc2.setText(Messages.getString("AttributesBlock.7")); //$NON-NLS-1$
 		tc2.setWidth(50);
 		tc2.setResizable(true);
 		
@@ -140,7 +140,7 @@ public class AttributesBlock extends AbstractTableBlock
 		buttonComp.setLayout(gl);
 		
 		Button addButton = new Button(buttonComp,SWT.PUSH);
-		addButton.setText("Add");
+		addButton.setText(Messages.getString("AttributesBlock.8")); //$NON-NLS-1$
 		addButton.setLayoutData(new GridData(SWT.FILL,SWT.TOP,false,false));
 		addButton.addSelectionListener(new SelectionListener(){
 			public void widgetDefaultSelected(SelectionEvent e)
@@ -155,7 +155,7 @@ public class AttributesBlock extends AbstractTableBlock
 					LaunchAttribute first = null;
 					for (IAttribute attribute : newAttributes)
 					{
-						LaunchAttribute att = new LaunchAttribute(attribute.getURI(),"string",null);
+						LaunchAttribute att = new LaunchAttribute(attribute.getURI(),"string",null); //$NON-NLS-1$
 						if (first == null)
 							first = att;
 						attributes.addAttribute(att);
@@ -172,7 +172,7 @@ public class AttributesBlock extends AbstractTableBlock
 		});
 		
 		removeButton = new Button(buttonComp,SWT.PUSH);
-		removeButton.setText("Remove");
+		removeButton.setText(Messages.getString("AttributesBlock.14")); //$NON-NLS-1$
 		removeButton.setLayoutData(new GridData(SWT.FILL,SWT.TOP,false,false));
 		removeButton.addSelectionListener(new SelectionListener(){
 			public void widgetDefaultSelected(SelectionEvent e)
@@ -274,7 +274,7 @@ public class AttributesBlock extends AbstractTableBlock
 			protected Object getValue(Object element)
 			{
 				LaunchAttribute tv = (LaunchAttribute)element;
-				return tv.value == null ? "" : tv.value;
+				return tv.value == null ? "" : tv.value; //$NON-NLS-1$
 			}
 
 			@Override

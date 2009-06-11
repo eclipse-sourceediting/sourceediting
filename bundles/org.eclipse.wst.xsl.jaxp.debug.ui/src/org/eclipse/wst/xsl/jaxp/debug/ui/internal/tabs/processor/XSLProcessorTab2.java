@@ -74,7 +74,7 @@ public class XSLProcessorTab2 extends XSLLaunchConfigurationTab
 	@Override
 	public String getId()
 	{
-		return "org.eclipse.wst.xsl.debug.ui.jaxp.tabs.processor";
+		return "org.eclipse.wst.xsl.debug.ui.jaxp.tabs.processor"; //$NON-NLS-1$
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class XSLProcessorTab2 extends XSLLaunchConfigurationTab
 	{
 		if (image == null)
 		{
-			ImageDescriptor id = AbstractUIPlugin.imageDescriptorFromPlugin(JAXPDebugUIPlugin.PLUGIN_ID, "icons/xslt_processor.gif");
+			ImageDescriptor id = AbstractUIPlugin.imageDescriptorFromPlugin(JAXPDebugUIPlugin.PLUGIN_ID, "icons/xslt_processor.gif"); //$NON-NLS-1$
 			image = id.createImage();
 		}
 		return image;

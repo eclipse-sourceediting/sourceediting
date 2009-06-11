@@ -182,7 +182,7 @@ public class LaunchHelper extends BaseLaunchHelper
 			{
 				String uri = entry.getKey();
 				IAttribute attribute = getAttribute(pt.getAttributes(), uri);
-				attributes.addAttribute(new LaunchAttribute(uri, "string", entry.getValue()));
+				attributes.addAttribute(new LaunchAttribute(uri, "string", entry.getValue())); //$NON-NLS-1$
 			}
 		}
 		else

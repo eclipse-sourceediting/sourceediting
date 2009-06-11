@@ -22,9 +22,9 @@ public class ProcessorTypeRegistryReader extends AbstractRegistryReader
 	public static final String ATT_LABEL = "label"; //$NON-NLS-1$
 	public static final String ATT_OUTPUT_PROPERTIES = "outputProperties"; //$NON-NLS-1$
 	public static final String ATT_ATTRIBUTE_PROPERTIES = "attributeProperties"; //$NON-NLS-1$
-	public static final String EL_TRANSFORMER_FACTORY = "transformerFactory";
-	public static final String ATT_TRANSFORMER_FACTORY_NAME = "name";
-	public static final String ATT_TRANSFORMER_FACTORY_CLASS = "factoryClass";
+	public static final String EL_TRANSFORMER_FACTORY = "transformerFactory"; //$NON-NLS-1$
+	public static final String ATT_TRANSFORMER_FACTORY_NAME = "name"; //$NON-NLS-1$
+	public static final String ATT_TRANSFORMER_FACTORY_CLASS = "factoryClass"; //$NON-NLS-1$
 
 	private ProcessorTypeRegistry registry;
 

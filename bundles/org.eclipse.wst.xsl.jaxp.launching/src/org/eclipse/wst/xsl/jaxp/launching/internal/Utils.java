@@ -39,7 +39,7 @@ public class Utils
 		String location = null;
 		try
 		{
-			URL url = new URL("platform:/plugin/"+bundleId);
+			URL url = new URL("platform:/plugin/"+bundleId); //$NON-NLS-1$
 			if (url != null)
 			{
 				URL fileUrl = FileLocator.toFileURL(url);

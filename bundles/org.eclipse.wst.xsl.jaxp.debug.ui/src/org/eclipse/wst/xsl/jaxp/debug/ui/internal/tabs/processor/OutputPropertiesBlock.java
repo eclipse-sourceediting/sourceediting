@@ -89,7 +89,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 	@Override
 	protected String getQualifier()
 	{
-		return JAXPDebugUIPlugin.PLUGIN_ID+"."+getClass().getCanonicalName();
+		return JAXPDebugUIPlugin.PLUGIN_ID+"."+getClass().getCanonicalName(); //$NON-NLS-1$
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 	public void createControl(Composite parent)
 	{
 		TabItem item = new TabItem((TabFolder)parent,SWT.NONE);
-		item.setText("Output Properties");
+		item.setText(Messages.getString("OutputPropertiesBlock_0")); //$NON-NLS-1$
 		
 		Composite composite = new Composite(parent,SWT.NONE);
 		GridLayout layout = new GridLayout(2,false);
@@ -124,12 +124,12 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 
 		
 		TableColumn tc1 = new TableColumn(table,SWT.NONE);
-		tc1.setText("Name");
+		tc1.setText(Messages.getString("OutputPropertiesBlock_1")); //$NON-NLS-1$
 		tc1.setWidth(350);
 		tc1.setResizable(true);
 		
 		TableColumn tc2 = new TableColumn(table,SWT.NONE);
-		tc2.setText("Value");
+		tc2.setText(Messages.getString("OutputPropertiesBlock_2")); //$NON-NLS-1$
 		tc2.setWidth(50);
 		tc2.setResizable(true);
 		
@@ -140,7 +140,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 		buttonComp.setLayout(gl);
 		
 		Button addButton = new Button(buttonComp,SWT.PUSH);
-		addButton.setText("Add");
+		addButton.setText(Messages.getString("OutputPropertiesBlock_3")); //$NON-NLS-1$
 		addButton.setLayoutData(new GridData(SWT.FILL,SWT.TOP,false,false));
 		addButton.addSelectionListener(new SelectionListener(){
 			public void widgetDefaultSelected(SelectionEvent e)
@@ -172,7 +172,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 		});
 		
 		removeButton = new Button(buttonComp,SWT.PUSH);
-		removeButton.setText("Remove");
+		removeButton.setText(Messages.getString("OutputPropertiesBlock_4")); //$NON-NLS-1$
 		removeButton.setLayoutData(new GridData(SWT.FILL,SWT.TOP,false,false));
 		removeButton.addSelectionListener(new SelectionListener(){
 			public void widgetDefaultSelected(SelectionEvent e)
@@ -243,7 +243,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 			{
 				String tv = (String) cell.getElement();
 				String val = properties.getProperty(tv);
-				cell.setText(val == null ? "" : val);
+				cell.setText(val == null ? "" : val); //$NON-NLS-1$
 			}
 		});
 		
@@ -266,7 +266,7 @@ public class OutputPropertiesBlock extends AbstractTableBlock
 			{
 				String tv = (String)element;
 				String val = properties.getProperty(tv);
-				return val == null ? "" : val;
+				return val == null ? "" : val; //$NON-NLS-1$
 			}
 
 			@Override

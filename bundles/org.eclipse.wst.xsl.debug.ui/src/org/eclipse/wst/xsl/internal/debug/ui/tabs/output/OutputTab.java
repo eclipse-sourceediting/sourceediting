@@ -72,7 +72,7 @@ public class OutputTab extends XSLLaunchConfigurationTab
 	@Override
 	public String getId()
 	{
-		return "org.eclipse.wst.xsl.internal.debug.ui.tabs.output";
+		return "org.eclipse.wst.xsl.internal.debug.ui.tabs.output"; //$NON-NLS-1$
 	}
 
 	public String getName()

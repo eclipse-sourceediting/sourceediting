@@ -9,7 +9,7 @@ import org.osgi.framework.BundleContext;
 public class JAXPDebugUIPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.wst.xsl.jaxp.debug.ui";
+	public static final String PLUGIN_ID = "org.eclipse.wst.xsl.jaxp.debug.ui"; //$NON-NLS-1$
 
 	// The shared instance
 	private static JAXPDebugUIPlugin plugin;

@@ -67,8 +67,8 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate impl
 		String tfactory = getTransformerFactory(install);
 		String name = install.getName();
 		if (tfactory != null)
-			name += "[" + tfactory + "]";
-		launch.setAttribute("launchName", name);
+			name += "[" + tfactory + "]";  //$NON-NLS-1$//$NON-NLS-2$
+		launch.setAttribute("launchName", name); //$NON-NLS-1$
 
 		// the super.launch will add a Java source director if we set it to null here
 		final ISourceLocator configuredLocator = launch.getSourceLocator();
@@ -173,9 +173,9 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate impl
 						{
 							IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 							
-							String title = "Change Transformer Factory";
-							String message = install.getName() + " must use the " + launchHelper.getTransformerFactory().getName() + " transformer factory when debugging.\n"
-									+ "Be aware that this may give different results to the " + launchHelper.getTransformerFactory().getName() + " transformer factory configured for this launch configuration.";
+							String title = Messages.JAXPJavaLaunchConfigurationDelegate_0;
+							String message = install.getName() + Messages.JAXPJavaLaunchConfigurationDelegate_1 + launchHelper.getTransformerFactory().getName() + Messages.JAXPJavaLaunchConfigurationDelegate_2
+									+ Messages.JAXPJavaLaunchConfigurationDelegate_3 + launchHelper.getTransformerFactory().getName() + Messages.JAXPJavaLaunchConfigurationDelegate_4;
 							
 							MessageDialog dialog = new MessageDialog(dw.getShell(), title, null, message, MessageDialog.WARNING,
 									new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0); // yes is the default
@@ -215,7 +215,7 @@ public class JAXPJavaLaunchConfigurationDelegate extends JavaLaunchDelegate impl
 
 	private IProcessorInvoker getProcessorInvokerDescriptor(ILaunchConfiguration configuration) throws CoreException
 	{
-		String invokerId = configuration.getAttribute(JAXPLaunchConfigurationConstants.INVOKER_DESCRIPTOR, "org.eclipse.wst.xsl.launching.jaxp.invoke");
+		String invokerId = configuration.getAttribute(JAXPLaunchConfigurationConstants.INVOKER_DESCRIPTOR, Messages.JAXPJavaLaunchConfigurationDelegate_5);
 		return JAXPRuntime.getProcessorInvoker(invokerId);
 	}
 

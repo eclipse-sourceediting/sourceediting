@@ -12,7 +12,7 @@ import org.osgi.framework.BundleContext;
 public class JAXPLaunchingPlugin extends Plugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "org.eclipse.wst.xsl.jaxp.launching";
+	public static final String PLUGIN_ID = "org.eclipse.wst.xsl.jaxp.launching"; //$NON-NLS-1$
 
 	// The shared instance
 	private static JAXPLaunchingPlugin plugin;

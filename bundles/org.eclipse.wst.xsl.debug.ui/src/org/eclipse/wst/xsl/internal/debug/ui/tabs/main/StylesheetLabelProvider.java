@@ -23,7 +23,7 @@ import org.eclipse.wst.xsl.launching.config.LaunchTransform;
 
 public class StylesheetLabelProvider extends LabelProvider
 {
-	private Image image = XSLDebugUIPlugin.getImageDescriptor("icons/xslt_launch.gif").createImage();
+	private Image image = XSLDebugUIPlugin.getImageDescriptor("icons/xslt_launch.gif").createImage(); //$NON-NLS-1$
 	
 	@Override
 	public Image getImage(Object element)

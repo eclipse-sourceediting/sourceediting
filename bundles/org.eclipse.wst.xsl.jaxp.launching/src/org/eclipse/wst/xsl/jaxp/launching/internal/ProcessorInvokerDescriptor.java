@@ -59,7 +59,7 @@ public class ProcessorInvokerDescriptor implements IProcessorInvoker
 					{
 						File bundleFile = FileLocator.getBundleFile(Platform.getBundle(jar));
 						if (bundleFile.isDirectory())
-							entry = Utils.getPluginLocation(jar) + "/bin";
+							entry = Utils.getPluginLocation(jar) + "/bin"; //$NON-NLS-1$
 						else
 							entry = Utils.getPluginLocation(jar);
 					}

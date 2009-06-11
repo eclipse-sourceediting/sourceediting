@@ -21,10 +21,10 @@ import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
 import org.eclipse.wst.xsl.internal.debug.ui.XSLDebugUIPlugin;
 
 public class ResultRunnable implements Runnable {
-	private static final String XML_PROCESSING_INSTRUCTION = "<?xml";
-	private static final String DOCTYPE_HTML = "<!DOCTYPE html";
-	private static final String HTML_CONTENT_TYPE_ID = "org.eclipse.wst.html.core.htmlsource";
-	private static final String XML_CONTENT_TYPE_ID = "org.eclipse.core.runtime.xml";
+	private static final String XML_PROCESSING_INSTRUCTION = "<?xml"; //$NON-NLS-1$
+	private static final String DOCTYPE_HTML = "<!DOCTYPE html"; //$NON-NLS-1$
+	private static final String HTML_CONTENT_TYPE_ID = "org.eclipse.wst.html.core.htmlsource"; //$NON-NLS-1$
+	private static final String XML_CONTENT_TYPE_ID = "org.eclipse.core.runtime.xml"; //$NON-NLS-1$
 	private SourceViewer sourceViewer = null;
 	private final String results;
 	private IWorkbenchPartSite viewSite = null;

@@ -44,7 +44,7 @@ public class AttributeDialog extends StatusDialog
 	public AttributeDialog(Shell parent, LaunchAttributes launchAttributes)
 	{
 		super(parent);
-		setTitle("Select Processor Attributes");
+		setTitle(Messages.getString("AttributeDialog_0")); //$NON-NLS-1$
 		
 		Set<String> attributeSet = new HashSet<String>();
 		for (LaunchAttribute att : launchAttributes.getAttributes())
@@ -74,7 +74,7 @@ public class AttributeDialog extends StatusDialog
 		comp.setLayout(new GridLayout());
 		
 		Label label = new Label(comp,SWT.NONE);
-		label.setText("Select one or more attributes to set on the XSLT processor.");
+		label.setText(Messages.getString("AttributeDialog_1")); //$NON-NLS-1$
 		
 		
 		table = new Table(comp,SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI);
@@ -124,7 +124,7 @@ public class AttributeDialog extends StatusDialog
 				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
 				selectedAttributes = sel.toList();
 				if (sel.isEmpty())
-					text.setText("");
+					text.setText(Messages.getString("AttributeDialog_2")); //$NON-NLS-1$
 				else
 				{
 					IAttribute attribute = (IAttribute)sel.getFirstElement(); 

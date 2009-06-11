@@ -36,9 +36,9 @@ public class NodeListVariable extends XSLDebugElement implements IVariable {
 
 	public String getName() throws DebugException {
 		// TODO Auto-generated method stub
-		String nodeName = "";
+		String nodeName = ""; //$NON-NLS-1$
 		if (node.getPrefix() != null) {
-			nodeName = nodeName + node.getPrefix() + ":";
+			nodeName = nodeName + node.getPrefix() + ":"; //$NON-NLS-1$
 		}
 		if (node.getNodeName() != null) {
 			nodeName = nodeName + node.getNodeName();
@@ -52,12 +52,12 @@ public class NodeListVariable extends XSLDebugElement implements IVariable {
 	}
 
 	public IValue getValue() throws DebugException {
-		String nodeValue = "";
+		String nodeValue = ""; //$NON-NLS-1$
 		if (node.getNodeValue() != null) {
 		   nodeValue = node.getNodeValue();
 		}
 		//IValue value = new XSLValue(debugTarget, "string", nodeValue);
-		IValue value = new XSLValue(debugTarget, "string", node);
+		IValue value = new XSLValue(debugTarget, "string", node); //$NON-NLS-1$
 		return value;
 	}
 

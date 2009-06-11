@@ -118,7 +118,7 @@ public class ResultView extends ViewPart implements IDebugEventSetListener
 		// first, clear the viewer
 		sv.setDocument(null);
 		IWorkbenchSiteProgressService service = (IWorkbenchSiteProgressService)getSite().getService(IWorkbenchSiteProgressService.class);
-		service.schedule(new ResultViewJob("Result view job", getSite(), xdt, sv));
+		service.schedule(new ResultViewJob(Messages.ResultView_0, getSite(), xdt, sv));
 	}
 
 }

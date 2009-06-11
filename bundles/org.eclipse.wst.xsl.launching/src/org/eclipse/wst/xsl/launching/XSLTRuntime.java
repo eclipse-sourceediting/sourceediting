@@ -44,7 +44,7 @@ public class XSLTRuntime
 		String file = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(inputFileExpression);
 		IPath inputFilePath = new Path(file);
 		inputFilePath = inputFilePath.removeFileExtension();
-		inputFilePath = inputFilePath.addFileExtension("out.xml");
+		inputFilePath = inputFilePath.addFileExtension("out.xml"); //$NON-NLS-1$
 		return inputFilePath;
 	}
 

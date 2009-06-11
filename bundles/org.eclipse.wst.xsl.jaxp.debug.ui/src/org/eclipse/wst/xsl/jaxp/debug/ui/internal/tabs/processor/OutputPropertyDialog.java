@@ -43,7 +43,7 @@ public class OutputPropertyDialog extends StatusDialog
 	public OutputPropertyDialog(Shell parent, LaunchProperties launchProperties)
 	{
 		super(parent);
-		setTitle("Select Output Properties");
+		setTitle(Messages.getString("OutputPropertyDialog_0")); //$NON-NLS-1$
 		
 		Set<String> propertySet = new HashSet<String>();
 		for (String att : launchProperties.getProperties().keySet())
@@ -73,7 +73,7 @@ public class OutputPropertyDialog extends StatusDialog
 		comp.setLayout(new GridLayout());
 		
 		Label label = new Label(comp,SWT.NONE);
-		label.setText("Select one or more output properties for the transformation.");
+		label.setText(Messages.getString("OutputPropertyDialog_1")); //$NON-NLS-1$
 		
 		
 		table = new Table(comp,SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL | SWT.MULTI);
@@ -123,7 +123,7 @@ public class OutputPropertyDialog extends StatusDialog
 				IStructuredSelection sel = (IStructuredSelection)event.getSelection();
 				selectedProperties = sel.toList();
 				if (sel.isEmpty())
-					text.setText("");
+					text.setText(""); //$NON-NLS-1$
 				else
 				{
 					IOutputProperty property = (IOutputProperty)sel.getFirstElement(); 

@@ -172,6 +172,10 @@ public class Messages extends NLS {
 
 	public static String OutputFileBlock_0;
 
+	public static String OutputFileBlock_1;
+
+	public static String OutputFileBlock_2;
+
 	public static String OutputFileBlock_7;
 
 	public static String OutputFileBlock_8;

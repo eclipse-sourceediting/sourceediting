@@ -20,7 +20,7 @@ public class JAXPLaunchConfigurationConstants
 	public static final String ATTR_ATTRIBUTES = JAXPLaunchingPlugin.PLUGIN_ID + ".ATTR_ATTRIBUTES"; //$NON-NLS-1$
 	public static final String ATTR_DEFAULT_DEBUGGING_INSTALL_ID = JAXPLaunchingPlugin.PLUGIN_ID + ".ATTR_DEFAULT_DEBUGGING_INSTALL_ID"; //$NON-NLS-1$
 	public static final String ATTR_USE_DEFAULT_PROCESSOR = JAXPLaunchingPlugin.PLUGIN_ID + ".ATTR_USE_DEFAULT_PROCESSOR"; //$NON-NLS-1$
-	public static final String ATTR_TRANSFORMER_FACTORY = JAXPLaunchingPlugin.PLUGIN_ID + ".ATTR_TRANSFORMER_FACTORY";
+	public static final String ATTR_TRANSFORMER_FACTORY = JAXPLaunchingPlugin.PLUGIN_ID + ".ATTR_TRANSFORMER_FACTORY"; //$NON-NLS-1$
 
 	public static final String XALAN_TYPE_ID = "org.eclipse.wst.xsl.xalan.processorType"; //$NON-NLS-1$
 	public static final String SAXON_TYPE_ID = "org.eclipse.wst.xsl.saxon.processorType"; //$NON-NLS-1$
