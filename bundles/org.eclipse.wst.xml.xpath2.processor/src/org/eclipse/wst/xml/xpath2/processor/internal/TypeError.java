@@ -108,6 +108,6 @@ public class TypeError extends XPathException {
 		if (err != null)
 			error += " " + err;
 
-		return new TypeError("XPTY0006", error);
+		return new TypeError("XPTY0004", error);
 	}
 }
