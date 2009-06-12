@@ -179,8 +179,9 @@ public class FsPlus extends Function {
 		} catch (InvocationTargetException err) {
 			Throwable ex = err.getTargetException();
 
-			if (ex instanceof DynamicError)
+			if (ex instanceof DynamicError) {
 				throw (DynamicError) ex;
+			}
 			else {
 				ex.printStackTrace();
 				System.exit(1);

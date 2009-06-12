@@ -90,7 +90,8 @@ public class DynamicError extends XPathException {
 	 * @return the DynamicError.
 	 */
 	public static DynamicError throw_type_error() throws DynamicError {
-		throw new DynamicError(TypeError.invalid_type(null));
+		
+		throw new DynamicError(new TypeError(XPathParserException.INVALID_XPATH_EXPRESSION, "Invalid static type."));
 	}
 
 	/**
