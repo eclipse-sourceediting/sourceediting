@@ -14,7 +14,9 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -25,7 +27,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
  */
 public class XSDouble extends NumericType {
 
-	private double _value;
+	private Double _value;
 
 	/**
 	 * Initialises a representation of the supplied number
@@ -34,7 +36,7 @@ public class XSDouble extends NumericType {
 	 *            Number to be stored
 	 */
 	public XSDouble(double x) {
-		_value = x;
+		_value = new Double(x);
 	}
 
 	/**
@@ -171,7 +173,7 @@ public class XSDouble extends NumericType {
 	 * @return The actual value of the number stored
 	 */
 	public double double_value() {
-		return _value;
+		return _value.doubleValue();
 	}
 
 	/**
@@ -391,6 +393,20 @@ public class XSDouble extends NumericType {
 	 */
 	@Override
 	public NumericType round_half_to_even() {
-		return new XSDouble(Math.rint(double_value()));
+    
+		return round_half_to_even(0);
+	}
+
+	/**
+	 * Returns the closest integer of the number stored with the specified precision.
+	 * 
+	 * @param precision An integer precision 
+	 * @return A XSDouble representing the closest long of the number stored.
+	 */
+	@Override
+	public NumericType round_half_to_even(int precision) {
+		BigDecimal value = new BigDecimal(_value);
+		BigDecimal round = value.setScale(precision, RoundingMode.HALF_EVEN);
+		return new XSDouble(round.doubleValue());
 	}
 }

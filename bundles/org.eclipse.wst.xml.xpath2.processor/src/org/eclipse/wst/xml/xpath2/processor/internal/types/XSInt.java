@@ -96,5 +96,4 @@ public class XSInt extends XSLong {
 		}
 
 	}
-
 }

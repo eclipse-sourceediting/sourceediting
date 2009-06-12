@@ -34,7 +34,7 @@ public class FnRoundHalfToEven extends Function {
 	 * Constructor for FnRoundHalfToEven.
 	 */
 	public FnRoundHalfToEven() {
-		super(new QName("round-half-to-even"), 1);
+		super(new QName("round-half-to-even"), -1);
 	}
 
 	/**
@@ -48,11 +48,11 @@ public class FnRoundHalfToEven extends Function {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		// 1 argument only!
-		assert args.size() == arity();
-
 		ResultSequence argument = (ResultSequence) args.iterator().next();
-
+		if (args.size() == 2) {
+			return fn_round_half_to_even(args);
+		}
+		
 		return fn_round_half_to_even(argument);
 	}
 
@@ -69,14 +69,33 @@ public class FnRoundHalfToEven extends Function {
 			throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
-		// sanity chex
 		NumericType nt = FnAbs.get_single_numeric_arg(arg);
 
 		// empty arg
 		if (nt == null)
 			return rs;
-
+		
 		rs.add(nt.round_half_to_even());
 		return rs;
+	}
+	
+	public static ResultSequence fn_round_half_to_even(Collection args) throws DynamicError {
+		
+		if (args.size() > 2 || args.size() <= 1) {
+			throw new DynamicError(TypeError.invalid_type(null));
+		}
+		
+		Iterator argIt = args.iterator();
+		ResultSequence rsArg1 =  (ResultSequence) argIt.next();
+		ResultSequence rsPrecision = (ResultSequence) argIt.next();
+		
+		NumericType nt = (NumericType) rsArg1.first();
+		NumericType ntPrecision = (NumericType) rsPrecision.first();
+		
+		ResultSequence rs = ResultSequenceFactory.create_new();
+		
+		rs.add(nt.round_half_to_even(Integer.parseInt(ntPrecision.string_value())));
+		return rs;
+
 	}
 }

@@ -11,6 +11,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import java.math.BigInteger;
+
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
@@ -78,6 +80,8 @@ MathPlus, MathMinus, MathTimes, MathDiv, MathIDiv, MathMod {
 	 * @return A NumericType representing the closest long of the number stored.
 	 */
 	public abstract NumericType round_half_to_even();
+	
+	public abstract NumericType round_half_to_even(int precision);
 
 	protected AnyType get_single_arg(ResultSequence rs) throws DynamicError {
 		if (rs.size() != 1)

@@ -378,7 +378,18 @@ public class XSDecimal extends NumericType {
 	 */
 	@Override
 	public NumericType round_half_to_even() {
-		BigDecimal round = _value.setScale(0, RoundingMode.HALF_UP);
+		return round_half_to_even(0);
+	}
+
+	/**
+	 * Returns the closest integer of the number stored with the specified precision.
+	 * 
+	 * @param precision An integer precision 
+	 * @return A XSDecimal representing the closest long of the number stored.
+	 */
+	@Override
+	public NumericType round_half_to_even(int precision) {
+		BigDecimal round = _value.setScale(precision, RoundingMode.HALF_EVEN);
 		return new XSDecimal(round);
 	}
 }
