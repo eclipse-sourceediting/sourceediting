@@ -11,6 +11,7 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
 
@@ -36,10 +37,20 @@ public class XPathDecimalFormat extends DecimalFormat {
 	 * @return
 	 */
 	public String formatDropZeroExp(Object obj) {
-		String formatted = super.format(obj, new StringBuffer(), new FieldPosition(0)).toString();
-		if (formatted.contains("E0")) {
-			formatted = formatted.replace("E0", "");
+		String curPattern = toPattern();
+		if (obj instanceof Float) {
+            Float floatValue = (Float) obj;
+			if (floatValue > 1E-6f && floatValue < 1E6f) {
+				applyPattern(curPattern.replace("E0", ""));
+			}
 		}
+		if (obj instanceof Double) {
+			Double doubleValue = (Double) obj;
+			if (doubleValue > 1E-6d && doubleValue < 1E6d) {
+				applyPattern(curPattern.replace("E0", ""));
+			}
+		}
+		String formatted = super.format(obj, new StringBuffer(), new FieldPosition(0)).toString();
 		return formatted;
 	}
 	

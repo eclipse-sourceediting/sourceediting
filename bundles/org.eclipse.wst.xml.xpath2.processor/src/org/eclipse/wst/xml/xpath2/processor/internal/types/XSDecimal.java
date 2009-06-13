@@ -30,7 +30,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.*;
 public class XSDecimal extends NumericType {
 
 	private BigDecimal _value;
-	private DecimalFormat format = new DecimalFormat("0.####################");
+	private XPathDecimalFormat format = new XPathDecimalFormat("0.####################");
 
 	/**
 	 * Initiates a representation of 0.0
@@ -86,7 +86,7 @@ public class XSDecimal extends NumericType {
 		}
 		
 		_value = _value.stripTrailingZeros();
-		return format.format(_value);
+		return format.formatDropZeroExp(_value);
 	}
 
 	/**
