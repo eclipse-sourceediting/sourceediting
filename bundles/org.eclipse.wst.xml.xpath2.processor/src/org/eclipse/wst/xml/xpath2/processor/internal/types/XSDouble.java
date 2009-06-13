@@ -18,7 +18,6 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -30,7 +29,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 public class XSDouble extends NumericType {
 
 	private Double _value;
-	private DecimalFormat format = new DecimalFormat("0.################E0");
+	private XPathDecimalFormat format = new XPathDecimalFormat("0.################E0");
 
 	/**
 	 * Initialises a representation of the supplied number
@@ -140,16 +139,7 @@ public class XSDouble extends NumericType {
 		   return "-0";	
 		}
 		
-		if (_value.compareTo(Double.valueOf(1.0d)) == 0) {
-			return "1";
-		}
-		
-		if (_value.compareTo(Double.valueOf(-1.0d)) == 0) {
-			return "-1";
-		}
-
-		
-		return  format.format(_value);
+		return  format.formatDropZeroExp(_value);
 	}
 
 	/**

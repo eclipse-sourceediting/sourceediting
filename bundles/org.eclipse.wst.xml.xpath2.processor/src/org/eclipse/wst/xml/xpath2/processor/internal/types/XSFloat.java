@@ -29,8 +29,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.*;
 public class XSFloat extends NumericType {
 
 	private Float _value;
-	private DecimalFormat formatExp = new DecimalFormat("0.#######E0");
-	private DecimalFormat fromatNoExp = new DecimalFormat("0.#######");
+	private XPathDecimalFormat format = new XPathDecimalFormat("0.#######E0");
 	/**
 	 * Initiates a representation of the supplied number
 	 * 
@@ -81,19 +80,8 @@ public class XSFloat extends NumericType {
 		if (negativeZero()) {
 		   return "-0";	
 		}
-		
-		// Java's Formatter seems to have problems correctly determining these values.
-		// So we have a hack here.  A custom formatter probably needs to be written
-		if (_value.compareTo(Float.valueOf(1.0f)) == 0) {
-			return "1";
-		}
-		
-		if (_value.compareTo(Float.valueOf(-1.0f)) == 0) {
-			return "-1";
-		}
-		
-				
-		return formatExp.format(_value);
+						
+		return format.formatDropZeroExp(_value);
 	}
 
 	/**
