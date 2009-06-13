@@ -139,6 +139,10 @@ public class XSDouble extends NumericType {
 		   return "-0";	
 		}
 		
+		if (nan()) {
+			return "NaN";
+		}
+		
 		return  format.formatDropZeroExp(_value);
 	}
 

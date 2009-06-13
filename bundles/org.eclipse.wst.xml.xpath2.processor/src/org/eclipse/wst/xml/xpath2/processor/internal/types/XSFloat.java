@@ -80,6 +80,10 @@ public class XSFloat extends NumericType {
 		if (negativeZero()) {
 		   return "-0";	
 		}
+		
+		if (nan()) {
+		   return "NaN";	
+		}
 						
 		return format.formatDropZeroExp(_value);
 	}
