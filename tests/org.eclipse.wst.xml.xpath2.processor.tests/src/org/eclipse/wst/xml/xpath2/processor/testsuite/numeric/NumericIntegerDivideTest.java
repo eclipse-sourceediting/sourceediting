@@ -1801,8 +1801,7 @@ public class NumericIntegerDivideTest extends AbstractPsychoPathTest {
    public void test_op_numeric_integer_dividemix2args_10() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericIntegerDivide/op-numeric-integer-dividemix2args-10.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericIntegerDivide/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FOAR0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
