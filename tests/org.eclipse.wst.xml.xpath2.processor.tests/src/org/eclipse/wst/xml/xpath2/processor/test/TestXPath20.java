@@ -31,6 +31,7 @@ import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary;
 import org.eclipse.wst.xml.xpath2.processor.function.XSCtrLibrary;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XPathDecimalFormat;
 
 public class TestXPath20 extends AbstractPsychoPathTest {
 
@@ -115,13 +116,8 @@ public class TestXPath20 extends AbstractPsychoPathTest {
 	
 	public void testFloatFormat() throws Exception {
 		Float value = 1.0f;
-		String result = value.toString();
-		BigDecimal b = new BigDecimal(value);
-		b = b.stripTrailingZeros();
-		
-		b.toString();
-		
-		assertEquals("1", b.toString());
-
+		XPathDecimalFormat format = new XPathDecimalFormat("0.#######E0");
+		String result = format.formatDropZeroExp(value); 
+		assertEquals("1", result);
 	}
 }
