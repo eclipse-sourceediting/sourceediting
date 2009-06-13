@@ -143,6 +143,10 @@ public class XSDouble extends NumericType {
 			return "NaN";
 		}
 		
+		if (_value.isInfinite()) {
+			return "INF";
+		}
+		
 		return  format.formatDropZeroExp(_value);
 	}
 

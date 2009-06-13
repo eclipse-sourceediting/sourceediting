@@ -84,6 +84,10 @@ public class XSFloat extends NumericType {
 		if (nan()) {
 		   return "NaN";	
 		}
+		
+		if (_value.isInfinite()) {
+			return "INF";
+		}
 						
 		return format.formatDropZeroExp(_value);
 	}

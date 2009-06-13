@@ -38,16 +38,24 @@ public class XPathDecimalFormat extends DecimalFormat {
 	 */
 	public String formatDropZeroExp(Object obj) {
 		String curPattern = toPattern();
+		String newPattern = curPattern.replace("E0", "");
 		if (obj instanceof Float) {
             Float floatValue = (Float) obj;
-			if (floatValue > 1E-6f && floatValue < 1E6f) {
-				applyPattern(curPattern.replace("E0", ""));
+			if (floatValue > -1E6f && floatValue < 1E6f) {
+				
+				applyPattern(newPattern);
+			} else if (floatValue <= -1E6f) {
+				applyPattern(curPattern.replace("0.#", "0.0" ));
 			}
 		}
 		if (obj instanceof Double) {
-			Double doubleValue = (Double) obj;
-			if (doubleValue > 1E-6d && doubleValue < 1E6d) {
-				applyPattern(curPattern.replace("E0", ""));
+			BigDecimal doubValue = BigDecimal.valueOf(((Double) obj));
+			BigDecimal minValue = new BigDecimal("-1E6");
+			BigDecimal maxValue = new BigDecimal("1E6");
+			if (doubValue.compareTo(minValue) > 0 && doubValue.compareTo(maxValue) < 0) {
+				applyPattern(newPattern);
+			} else if (doubValue.compareTo(minValue) < 0) {
+				applyPattern(curPattern.replace("0.#", "0.0"));
 			}
 		}
 		String formatted = super.format(obj, new StringBuffer(), new FieldPosition(0)).toString();
