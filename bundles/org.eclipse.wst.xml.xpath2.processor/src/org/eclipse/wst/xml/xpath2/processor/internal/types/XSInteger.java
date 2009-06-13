@@ -205,9 +205,9 @@ public class XSInteger extends XSDecimal {
 	@Override
 	public ResultSequence mod(ResultSequence arg) throws DynamicError {
 		XSInteger val = (XSInteger) get_single_type(arg, XSInteger.class);
+		BigInteger result = int_value().remainder(val.int_value()); 
 		
-		return ResultSequenceFactory.create_new(new 
-				                  XSInteger(int_value().mod(val.int_value())));
+		return ResultSequenceFactory.create_new(new XSInteger(result));
 	}
 
 	/**

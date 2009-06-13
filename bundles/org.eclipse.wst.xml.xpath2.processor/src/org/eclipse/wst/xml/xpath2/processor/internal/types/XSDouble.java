@@ -9,7 +9,8 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type
  *     David Carver - bug 277770 - format of XSDouble for zero values incorrect.
- *     Mukul Gandhi - bug 279406 - improvements to negative zero values for xs:double 
+ *     Mukul Gandhi - bug 279406 - improvements to negative zero values for xs:double
+ *     David Carver - bug 262765 - various numeric formatting fixes and calculations      
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -17,6 +18,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -28,6 +30,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 public class XSDouble extends NumericType {
 
 	private Double _value;
+	private DecimalFormat format = new DecimalFormat("0.################E0");
 
 	/**
 	 * Initialises a representation of the supplied number
@@ -54,7 +57,7 @@ public class XSDouble extends NumericType {
 	 */
 	public XSDouble(String init) throws DynamicError {
 		try {
-			_value = new Double(init).doubleValue();
+			_value = new Double(init);
 		} catch (NumberFormatException e) {
 			throw DynamicError.cant_cast(null);
 		}
@@ -132,10 +135,21 @@ public class XSDouble extends NumericType {
 		if (zero()) {
 		  return "0";
 		}
-		else if (negativeZero()) {
+		
+		if (negativeZero()) {
 		   return "-0";	
 		}
-		return  Double.toString(_value);
+		
+		if (_value.compareTo(Double.valueOf(1.0d)) == 0) {
+			return "1";
+		}
+		
+		if (_value.compareTo(Double.valueOf(-1.0d)) == 0) {
+			return "-1";
+		}
+
+		
+		return  format.format(_value);
 	}
 
 	/**

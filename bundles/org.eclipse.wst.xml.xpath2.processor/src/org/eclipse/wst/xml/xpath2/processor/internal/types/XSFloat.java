@@ -28,9 +28,9 @@ import org.eclipse.wst.xml.xpath2.processor.internal.*;
  */
 public class XSFloat extends NumericType {
 
-	private float _value;
-	private DecimalFormat format = new DecimalFormat("0.#######E0");
-
+	private Float _value;
+	private DecimalFormat formatExp = new DecimalFormat("0.#######E0");
+	private DecimalFormat fromatNoExp = new DecimalFormat("0.#######");
 	/**
 	 * Initiates a representation of the supplied number
 	 * 
@@ -75,14 +75,25 @@ public class XSFloat extends NumericType {
 	 */
 	@Override
 	public String string_value() {
-		String value = format.format(_value);
 		if (zero()) {
-		   value = "0";
+		   return "0";
 		}
-		else if (negativeZero()) {
-		   value = "-0";	
+		if (negativeZero()) {
+		   return "-0";	
 		}
-		return value;
+		
+		// Java's Formatter seems to have problems correctly determining these values.
+		// So we have a hack here.  A custom formatter probably needs to be written
+		if (_value.compareTo(Float.valueOf(1.0f)) == 0) {
+			return "1";
+		}
+		
+		if (_value.compareTo(Float.valueOf(-1.0f)) == 0) {
+			return "-1";
+		}
+		
+				
+		return formatExp.format(_value);
 	}
 
 	/**

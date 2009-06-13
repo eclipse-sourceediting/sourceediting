@@ -8,7 +8,8 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type
- *     David Carver - bug 277774 - XSDecimal returning wrong values. 
+ *     David Carver - bug 277774 - XSDecimal returning wrong values.
+ *     David Carver - bug 262765 - various numeric formatting fixes and calculations 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -29,7 +30,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.*;
 public class XSDecimal extends NumericType {
 
 	private BigDecimal _value;
-	private DecimalFormat format = new DecimalFormat("0.##################");
+	private DecimalFormat format = new DecimalFormat("0.####################");
 
 	/**
 	 * Initiates a representation of 0.0
@@ -83,7 +84,8 @@ public class XSDecimal extends NumericType {
 		if (zero()) {
 			return "0";
 		}
-
+		
+		_value = _value.stripTrailingZeros();
 		return format.format(_value);
 	}
 
@@ -273,7 +275,8 @@ public class XSDecimal extends NumericType {
 		XSDecimal val = (XSDecimal) get_single_type(arg, XSDecimal.class);
 		if (val.zero())
 			throw DynamicError.div_zero(null);
-		BigDecimal result = BigDecimal.valueOf(double_value() / val.double_value());
+		BigDecimal result = getValue().divide(val.getValue(), 18, RoundingMode.HALF_UP);
+//		BigDecimal result = BigDecimal.valueOf(double_value() / val.double_value());
 		return ResultSequenceFactory.create_new(new XSDecimal(result));
 	}
 
