@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     David Carver (STAR) - bug 262765 - Correct parsing of Date to get day correctly. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -66,33 +67,53 @@ public class XSGDay extends CalendarType implements CmpEq {
 	 * @return The XSGDay representation of the supplied date
 	 */
 	public static XSGDay parse_gDay(String str) {
-		// XXX
-
-		String lame = "1983-11-";
-		String lame2 = "T00:00:00.0";
+		
+		String startdate = "1972-12-";
+		String starttime = "T00:00:00";
 		boolean tz = false;
 
-		int index = str.indexOf('+', 0);
+		int index = str.lastIndexOf('+', str.length());
+		
 		if (index == -1)
-			index = str.indexOf('-', 0);
+			index = str.lastIndexOf('-');
 		if (index == -1)
-			index = str.indexOf('Z', 0);
+			index = str.lastIndexOf('Z', str.length());
 		if (index != -1) {
-			lame += str.substring(0, index);
-			lame += lame2;
-			lame += str.substring(index, str.length());
-			tz = true;
+			int zIndex = str.lastIndexOf('Z', str.length());
+			
+			String[] split = str.split("-");
+			startdate += split[3].replace("Z", "");
+			
+			if (split.length > 4) {
+				String[] timesplit = split[4].split(":");
+				if (timesplit.length < 3) {
+					starttime = "T";
+					for (int cnt = 0; cnt < timesplit.length; cnt++) {
+						starttime += timesplit[cnt] + ":";
+					}
+					starttime += "00";
+				} else {
+					starttime += timesplit[0] + ":" + timesplit[1] + ":" + timesplit[2];
+				}
+			}
+			startdate = startdate.trim();
+			startdate += starttime;
+
+			if (zIndex != -1) {
+				startdate += str.substring(zIndex);
+				tz = true;
+			}
 		} else {
-			lame += str + lame2;
+			startdate += str + starttime;
 		}
 
-		XSDateTime dt = XSDateTime.parseDateTime(lame);
+		XSDateTime dt = XSDateTime.parseDateTime(startdate);
 		if (dt == null)
 			return null;
 
 		return new XSGDay(dt.calendar(), tz);
 	}
-
+	
 	/**
 	 * Creates a new ResultSequence consisting of the extractable gDay in the
 	 * supplied ResultSequence
