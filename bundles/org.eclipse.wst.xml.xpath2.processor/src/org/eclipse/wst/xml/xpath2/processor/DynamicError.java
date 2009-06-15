@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     David Carver (STAR) - bug 273763 - correct error codes. 
+ *     David Carver (STAR) - bug 273763 - correct error codes.
+ *                           bug 280106 - Correct XPDY0021 - XPST0003 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -79,7 +80,7 @@ public class DynamicError extends XPathException {
 		if (err != null)
 			error += " " + err;
 
-		return new DynamicError("XPDY0021", error);
+		return new DynamicError("XPST0003", error);
 	}
 
 	/**

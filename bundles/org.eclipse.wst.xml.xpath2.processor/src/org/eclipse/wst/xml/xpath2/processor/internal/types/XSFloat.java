@@ -84,11 +84,7 @@ public class XSFloat extends NumericType {
 		if (nan()) {
 		   return "NaN";	
 		}
-		
-		if (_value.isInfinite()) {
-			return "INF";
-		}
-						
+								
 		return format.formatDropZeroExp(_value);
 	}
 
@@ -140,7 +136,14 @@ public class XSFloat extends NumericType {
 		AnyType aat = arg.first();
 
 		try {
-			Float f = new Float(aat.string_value());
+			Float f = null;
+			if (aat.string_value().equals("INF")) {
+				f = Float.POSITIVE_INFINITY;
+			} else if (aat.string_value().equals("-INF")) {
+				f = Float.NEGATIVE_INFINITY;
+			} else {
+			    f = new Float(aat.string_value());
+			}
 			rs.add(new XSFloat(f.floatValue()));
 			return rs;
 		} catch (NumberFormatException e) {

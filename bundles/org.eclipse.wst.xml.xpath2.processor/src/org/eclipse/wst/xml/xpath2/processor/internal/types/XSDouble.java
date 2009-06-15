@@ -56,7 +56,13 @@ public class XSDouble extends NumericType {
 	 */
 	public XSDouble(String init) throws DynamicError {
 		try {
-			_value = new Double(init);
+			if (init.equals("-INF")) {
+				_value = Double.NEGATIVE_INFINITY;
+			} else if (init.equals("INF")) {
+				_value = Double.POSITIVE_INFINITY;
+			} else {
+				_value = new Double(init);
+			}
 		} catch (NumberFormatException e) {
 			throw DynamicError.cant_cast(null);
 		}
@@ -71,7 +77,14 @@ public class XSDouble extends NumericType {
 	 */
 	public static XSDouble parse_double(String i) {
 		try {
-			Double d = new Double(i);
+			Double d = null;
+			if (i.equals("INF")) {
+				d = Double.POSITIVE_INFINITY;
+			} else if (i.equals("-INF")) {
+				d = Double.NEGATIVE_INFINITY;
+			} else {
+			    d = new Double(i);
+			}
 			return new XSDouble(d.doubleValue());
 		} catch (NumberFormatException e) {
 			return null;

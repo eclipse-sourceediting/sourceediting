@@ -41,6 +41,13 @@ public class XPathDecimalFormat extends DecimalFormat {
 		String newPattern = curPattern.replace("E0", "");
 		if (obj instanceof Float) {
             Float floatValue = (Float) obj;
+			if (floatValue == Float.NEGATIVE_INFINITY) {
+				return "-INF";
+			}
+			if (floatValue == Float.POSITIVE_INFINITY) {
+				return "INF";
+			}
+            
 			if (floatValue > -1E6f && floatValue < 1E6f) {
 				
 				applyPattern(newPattern);
@@ -49,6 +56,13 @@ public class XPathDecimalFormat extends DecimalFormat {
 			}
 		}
 		if (obj instanceof Double) {
+			Double doubleValue = (Double) obj;
+			if (Double.doubleToLongBits(doubleValue) == Double.NEGATIVE_INFINITY) {
+				return "-INF";
+			}
+			if (Double.doubleToLongBits(doubleValue) == Double.POSITIVE_INFINITY) {
+				return "INF";
+			}
 			BigDecimal doubValue = BigDecimal.valueOf(((Double) obj));
 			BigDecimal minValue = new BigDecimal("-1E6");
 			BigDecimal maxValue = new BigDecimal("1E6");
