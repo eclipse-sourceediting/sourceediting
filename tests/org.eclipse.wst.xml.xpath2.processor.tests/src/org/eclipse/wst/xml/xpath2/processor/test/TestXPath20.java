@@ -117,7 +117,7 @@ public class TestXPath20 extends AbstractPsychoPathTest {
 	public void testFloatFormat() throws Exception {
 		Float value = 1.0f;
 		XPathDecimalFormat format = new XPathDecimalFormat("0.#######E0");
-		String result = format.formatDropZeroExp(value); 
+		String result = format.xpathFormat(value); 
 		assertEquals("1", result);
 	}
 }
