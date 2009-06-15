@@ -160,7 +160,7 @@ public class XSDouble extends NumericType {
 			return "INF";
 		}
 		
-		return  format.formatDropZeroExp(_value);
+		return  format.xpathFormat(_value);
 	}
 
 	/**

@@ -27,6 +27,9 @@ import java.text.FieldPosition;
  */
 public class XPathDecimalFormat extends DecimalFormat {
 	
+	private static final String NEG_INFINITY = "-INF";
+	private static final String POS_INFINITY = "INF";
+
 	public XPathDecimalFormat(String pattern) {
 		super(pattern);
 	}
@@ -36,44 +39,85 @@ public class XPathDecimalFormat extends DecimalFormat {
 	 * @param obj
 	 * @return
 	 */
-	public String formatDropZeroExp(Object obj) {
+	public String xpathFormat(Object obj) {
+		return formatXPath(obj);
+	}
+
+	private String formatXPath(Object obj) {
 		String curPattern = toPattern();
 		String newPattern = curPattern.replace("E0", "");
 		if (obj instanceof Float) {
-            Float floatValue = (Float) obj;
-			if (floatValue == Float.NEGATIVE_INFINITY) {
-				return "-INF";
-			}
-			if (floatValue == Float.POSITIVE_INFINITY) {
-				return "INF";
-			}
-            
-			if (floatValue > -1E6f && floatValue < 1E6f) {
-				
-				applyPattern(newPattern);
-			} else if (floatValue <= -1E6f) {
-				applyPattern(curPattern.replace("0.#", "0.0" ));
-			}
+            return formatFloatValue(obj, curPattern, newPattern);
 		}
 		if (obj instanceof Double) {
-			Double doubleValue = (Double) obj;
-			if (Double.doubleToLongBits(doubleValue) == Double.NEGATIVE_INFINITY) {
-				return "-INF";
-			}
-			if (Double.doubleToLongBits(doubleValue) == Double.POSITIVE_INFINITY) {
-				return "INF";
-			}
-			BigDecimal doubValue = BigDecimal.valueOf(((Double) obj));
-			BigDecimal minValue = new BigDecimal("-1E6");
-			BigDecimal maxValue = new BigDecimal("1E6");
-			if (doubValue.compareTo(minValue) > 0 && doubValue.compareTo(maxValue) < 0) {
-				applyPattern(newPattern);
-			} else if (doubValue.compareTo(minValue) < 0) {
-				applyPattern(curPattern.replace("0.#", "0.0"));
-			}
+			return formatDoubleValue(obj, curPattern, newPattern);
 		}
-		String formatted = super.format(obj, new StringBuffer(), new FieldPosition(0)).toString();
-		return formatted;
+		return super.format(obj, new StringBuffer(), new FieldPosition(0)).toString();
+	}
+
+	private String formatDoubleValue(Object obj, String curPattern,
+			String newPattern) {
+		Double doubleValue = (Double) obj;
+		if (isDoubleNegativeInfinity(doubleValue)) {
+			return NEG_INFINITY;
+		}
+		if (isDoublePositiveInfinity(doubleValue)) {
+			return POS_INFINITY;
+		}
+		doubleXPathPattern(obj, curPattern, newPattern);
+		return format(obj, new StringBuffer(), new FieldPosition(0)).toString();
+	}
+
+	private void doubleXPathPattern(Object obj, String curPattern,
+			String newPattern) {
+		BigDecimal doubValue = BigDecimal.valueOf(((Double) obj));
+		BigDecimal minValue = new BigDecimal("-1E6");
+		BigDecimal maxValue = new BigDecimal("1E6");
+		if (doubValue.compareTo(minValue) > 0 && doubValue.compareTo(maxValue) < 0) {
+			applyPattern(newPattern);
+		} else if (doubValue.compareTo(minValue) < 0) {
+			applyPattern(curPattern.replace("0.#", "0.0"));
+		}
+	}
+
+	private boolean isDoublePositiveInfinity(Double doubleValue) {
+		return doubleValue == Double.POSITIVE_INFINITY;
+	}
+
+	private boolean isDoubleNegativeInfinity(Double doubleValue) {
+		return doubleValue == Double.NEGATIVE_INFINITY;
+	}
+
+	private String formatFloatValue(Object obj, String curPattern,
+			String newPattern) {
+		Float floatValue = (Float) obj;
+		if (isFloatNegInfinity(floatValue)) {
+			return NEG_INFINITY;
+		}
+		if (isFloatPosInfinity(floatValue)) {
+			return POS_INFINITY;
+		}
+		
+		floatXPathPattern(curPattern, newPattern, floatValue);
+		return format(obj, new StringBuffer(), new FieldPosition(0)).toString();
+	}
+
+	private boolean isFloatPosInfinity(Float floatValue) {
+		return floatValue == Float.POSITIVE_INFINITY;
+	}
+
+	private boolean isFloatNegInfinity(Float floatValue) {
+		return floatValue == Float.NEGATIVE_INFINITY;
+	}
+
+	private void floatXPathPattern(String curPattern, String newPattern,
+			Float floatValue) {
+		if (floatValue > -1E6f && floatValue < 1E6f) {
+			
+			applyPattern(newPattern);
+		} else if (floatValue <= -1E6f) {
+			applyPattern(curPattern.replace("0.#", "0.0" ));
+		}
 	}
 	
 	

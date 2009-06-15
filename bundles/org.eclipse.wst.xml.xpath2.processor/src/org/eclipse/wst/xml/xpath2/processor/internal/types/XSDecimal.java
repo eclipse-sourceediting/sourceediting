@@ -86,7 +86,7 @@ public class XSDecimal extends NumericType {
 		}
 		
 		_value = _value.stripTrailingZeros();
-		return format.formatDropZeroExp(_value);
+		return format.xpathFormat(_value);
 	}
 
 	/**

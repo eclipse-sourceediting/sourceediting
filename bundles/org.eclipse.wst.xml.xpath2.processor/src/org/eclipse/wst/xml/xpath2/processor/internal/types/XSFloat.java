@@ -85,7 +85,7 @@ public class XSFloat extends NumericType {
 		   return "NaN";	
 		}
 								
-		return format.formatDropZeroExp(_value);
+		return format.xpathFormat(_value);
 	}
 
 	/**
