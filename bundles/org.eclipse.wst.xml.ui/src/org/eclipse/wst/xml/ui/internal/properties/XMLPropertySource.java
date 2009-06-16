@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -53,13 +53,16 @@ import org.w3c.dom.Node;
 public class XMLPropertySource implements IPropertySource, IPropertySourceExtension, IPropertySource2 {
 	protected final static String CATEGORY_ATTRIBUTES = XMLUIMessages.XMLPropertySourceAdapter_0;
 
+	/**
+	 * Controls whether optional attributes are marked as for "experts"
+	 */
 	private static final boolean fSetExpertFilter = false;
 
 	/**
-	 * derive categories from CMDataTypes; disabled until display strings can
-	 * be planned
+	 * Controls whether to derive categories from CMDataTypes; disabled by
+	 * default until display strings can be planned
 	 */
-	private final static boolean fShouldDeriveCategories = false;
+	private boolean fShouldDeriveCategories = false;
 
 	private final static boolean fSortEnumeratedValues = true;
 
@@ -78,30 +81,40 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		super();
 		fNode = initNode(target);
 		fCaseSensitive = initCaseSensitive(fNode);
-
 	}
 
-	/** seperate method just to isolate error processing */
-	private Node initNode(INodeNotifier target) {
-		Node node = null;
+	public XMLPropertySource(Node target, boolean useCategories) {
+		super();
+		initNode(target);
+		fNode = target;
+		fCaseSensitive = initCaseSensitive(fNode);
+		fShouldDeriveCategories = useCategories;
+	}
+
+	/** Separate method just to isolate error processing */
+	private static INodeNotifier initNode(Node target) {
+		if (target instanceof INodeNotifier) {
+			return (INodeNotifier) target;
+		}
+		throw new IllegalArgumentException("XMLPropertySource is only for INodeNotifiers"); //$NON-NLS-1$
+	}
+
+	/** Separate method just to isolate error processing */
+	private static Node initNode(INodeNotifier target) {
 		if (target instanceof Node) {
-			node = (Node) target;
+			return (Node) target;
 		}
-		else {
-			throw new IllegalArgumentException("XMLPropertySource is only for Nodes"); //$NON-NLS-1$
-		}
-		return node;
+		throw new IllegalArgumentException("XMLPropertySource is only for W3C DOM Nodes"); //$NON-NLS-1$
 	}
 
 	private boolean initCaseSensitive(Node node) {
-		// almost all tags are case senstive, except that old HTML
+		// almost all tags are case sensitive, except that old HTML
 		boolean caseSensitive = true;
-		DocumentTypeAdapter adapter = null;
 		if (node instanceof IDOMNode) {
-			adapter = getDocTypeFromDOMNode(node);
-		}
-		if (adapter != null) {
-			caseSensitive = (adapter.getTagNameCase() == DocumentTypeAdapter.STRICT_CASE);
+			DocumentTypeAdapter adapter = getDocTypeFromDOMNode(node);
+			if (adapter != null) {
+				caseSensitive = (adapter.getTagNameCase() == DocumentTypeAdapter.STRICT_CASE);
+			}
 		}
 		return caseSensitive;
 	}
@@ -418,7 +431,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 			if (attrDecl.supports("category")) { //$NON-NLS-1$
 				return (String) attrDecl.getProperty("category"); //$NON-NLS-1$
 			}
-			if (fShouldDeriveCategories && (attrDecl.getAttrType() != null) && (attrDecl.getAttrType().getNodeName() != null) && (attrDecl.getAttrType().getNodeName().length() > 0)) {
+			if (fShouldDeriveCategories && (attrDecl.getAttrType() != null) && (attrDecl.getAttrType().getDataTypeName() != null) && (attrDecl.getAttrType().getDataTypeName().length() > 0)) {
 				return attrDecl.getAttrType().getDataTypeName();
 			}
 		}
@@ -617,7 +630,7 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		}
 		fValuesBeingSet.push(nameObject);
 		String name = nameObject.toString();
-		String valueString = null;
+		String valueString = ""; //$NON-NLS-1$
 		if (value != null) {
 			valueString = value.toString();
 		}
@@ -642,16 +655,14 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 				}
 				else {
 					// NEW(?) value
-					if (value != null) { // never create an empty attribute
-						Attr newAttr = fNode.getOwnerDocument().createAttribute(name);
-						if (newAttr instanceof IDOMNode) {
-							((IDOMNode) newAttr).setValueSource(valueString);
-						}
-						else {
-							newAttr.setValue(valueString);
-						}
-						attrMap.setNamedItem(newAttr);
+					Attr newAttr = fNode.getOwnerDocument().createAttribute(name);
+					if (newAttr instanceof IDOMNode) {
+						((IDOMNode) newAttr).setValueSource(valueString);
 					}
+					else {
+						newAttr.setValue(valueString);
+					}
+					attrMap.setNamedItem(newAttr);
 				}
 			}
 			else {
@@ -689,11 +700,14 @@ public class XMLPropertySource implements IPropertySource, IPropertySourceExtens
 		if (ed != null) {
 			attrMap = ed.getAttributes();
 			CMNamedNodeMapImpl allAttributes = new CMNamedNodeMapImpl(attrMap);
-			List nodes = ModelQueryUtil.getModelQuery(fNode.getOwnerDocument()).getAvailableContent((Element) fNode, ed, ModelQuery.INCLUDE_ATTRIBUTES);
-			for (int k = 0; k < nodes.size(); k++) {
-				CMNode cmnode = (CMNode) nodes.get(k);
-				if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
-					allAttributes.put(cmnode);
+			ModelQuery modelQuery = ModelQueryUtil.getModelQuery(fNode.getOwnerDocument());
+			if(modelQuery != null) {
+			List nodes = modelQuery.getAvailableContent((Element) fNode, ed, ModelQuery.INCLUDE_ATTRIBUTES);
+				for (int k = 0; k < nodes.size(); k++) {
+					CMNode cmnode = (CMNode) nodes.get(k);
+					if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
+						allAttributes.put(cmnode);
+					}
 				}
 			}
 			attrMap = allAttributes;
