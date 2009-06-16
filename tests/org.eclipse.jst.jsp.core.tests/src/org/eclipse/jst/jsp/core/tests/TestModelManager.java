@@ -53,7 +53,7 @@ public class TestModelManager extends TestCase {
 
 	}
 
-	public void testCopyJSPModelForEdit() throws IOException, ResourceInUse {
+	public void testCopyJSPModelForEdit() throws IOException {
 		IStructuredModel model = null;
 		try {
 			IModelManager modelManager = StructuredModelManager.getModelManager();
@@ -63,6 +63,9 @@ public class TestModelManager extends TestCase {
 			assertEquals("ModelHandlers differ", model.getModelHandler(), modelCopy.getModelHandler());
 			assertEquals("StructuredDocument RegionParsers differ", model.getStructuredDocument().getParser().getClass(), modelCopy.getStructuredDocument().getParser().getClass());
 			assertEquals("Text document contents differ", model.getStructuredDocument().get(), modelCopy.getStructuredDocument().get());
+		}
+		catch (ResourceInUse e) {
+			fail(e.getMessage());
 		}
 		finally {
 			if (model != null)
