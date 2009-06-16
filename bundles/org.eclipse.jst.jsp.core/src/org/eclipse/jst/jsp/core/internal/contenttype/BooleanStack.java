@@ -102,7 +102,22 @@ public class BooleanStack {
 	}
 
 	public int size() {
-		return list.length;
+		return size;
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	public String toString() {
+		StringBuffer s = new StringBuffer(getClass().getName() + ":" +size + " [");
+		for (int i = 0; i < size; i++) {
+			s.append(list[i]);
+			if(i < size - 1) {
+				s.append(", ");
+			}
+		}
+		s.append("]");
+		return s.toString();
 	}
 	
 	public static void setMaxDepth(int depth) {
