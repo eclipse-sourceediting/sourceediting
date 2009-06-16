@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2008 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -97,7 +97,7 @@ public final class TaglibIndex {
 			else if (element.getElementType() == IJavaElement.JAVA_PROJECT) {
 				if ((delta.getFlags() & IJavaElementDelta.F_CLASSPATH_CHANGED) != 0) {
 					IJavaElement proj = element;
-					handleClasspathChange((IJavaProject) proj, forceUpdate);
+					handleClasspathChange((IJavaProject) proj, delta, forceUpdate);
 				}
 				else {
 					IJavaElementDelta[] deltas = delta.getAffectedChildren();
@@ -158,7 +158,7 @@ public final class TaglibIndex {
 			}
 		}
 
-		private void handleClasspathChange(IJavaProject project, boolean forceUpdate) {
+		private void handleClasspathChange(IJavaProject project, IJavaElementDelta delta, boolean forceUpdate) {
 			if (frameworkIsShuttingDown())
 				return;
 
@@ -179,7 +179,7 @@ public final class TaglibIndex {
 					}
 					if (description != null && !frameworkIsShuttingDown()) {
 						projectsIndexed.add(resource);
-						description.setBuildPathIsDirty();
+						description.queueElementChanged(delta);
 					}
 				}
 			}
@@ -349,7 +349,7 @@ public final class TaglibIndex {
 	private static final String DIRTY = "DIRTY";
 	static boolean ENABLED = false;
 
-	static ILock LOCK = Job.getJobManager().newLock();
+	static final ILock LOCK = Job.getJobManager().newLock();
 
 	/**
 	 * NOT API.
@@ -654,6 +654,9 @@ public final class TaglibIndex {
 	 * @return
 	 */
 	ProjectDescription createDescription(IProject project) {
+		if (fProjectDescriptions == null)
+			return null;
+
 		ProjectDescription description = null;
 		try {
 			LOCK.acquire();
@@ -914,6 +917,8 @@ public final class TaglibIndex {
 
 	private void stop() {
 		if (isInitialized()) {
+			setIntialized(false);
+
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(fResourceChangeListener);
 			JavaCore.removeElementChangedListener(fClasspathChangeListener);
 
@@ -935,7 +940,6 @@ public final class TaglibIndex {
 			fProjectDescriptions = null;
 			fResourceChangeListener = null;
 			fClasspathChangeListener = null;
-			setIntialized(false);
 		}
 	}
 
