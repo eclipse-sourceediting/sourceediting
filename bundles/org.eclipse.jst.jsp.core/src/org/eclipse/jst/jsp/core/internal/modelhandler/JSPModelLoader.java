@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,7 +50,6 @@ import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
-import org.eclipse.wst.sse.core.internal.ltk.parser.JSPCapableParser;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.model.AbstractModelLoader;
 import org.eclipse.wst.sse.core.internal.modelhandler.EmbeddedTypeRegistry;
@@ -157,7 +156,7 @@ public class JSPModelLoader extends AbstractModelLoader {
 		// least the
 		// default embeddeded content type handler
 		EmbeddedTypeHandler embeddedType = getJSPDefaultEmbeddedType(null);
-		embeddedType.initializeParser((JSPCapableParser) structuredDocument.getParser());
+		embeddedType.initializeParser(structuredDocument.getParser());
 		return structuredDocument;
 	}
 
@@ -350,7 +349,7 @@ public class JSPModelLoader extends AbstractModelLoader {
 		// ((INodeNotifier)
 		// document).getExistingAdapter(ModelQueryAdapter.class);
 		oldEmbeddedContentType.uninitializeFactoryRegistry(model.getFactoryRegistry());
-		oldEmbeddedContentType.uninitializeParser((JSPCapableParser) structuredDocument.getParser());
+		oldEmbeddedContentType.uninitializeParser(structuredDocument.getParser());
 		// since 'document' is not recreated in this
 		// reinit path, we need to remove all adapters,
 		// except for the propagated adapters (including page
@@ -390,7 +389,7 @@ public class JSPModelLoader extends AbstractModelLoader {
 			((DOMModelImpl) model).setModelParser(null);
 
 			newEmbeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
-			newEmbeddedContentType.initializeParser((JSPCapableParser) structuredDocument.getParser());
+			newEmbeddedContentType.initializeParser(structuredDocument.getParser());
 
 			// partitioner setup is the responsibility of this loader
 			IDocumentPartitioner documentPartitioner = structuredDocument.getDocumentPartitioner();
@@ -442,13 +441,13 @@ public class JSPModelLoader extends AbstractModelLoader {
 		// the old embedded type (during createModel), we need to unitialize
 		// parts of it, based on the old (or default) ones
 		oldEmbeddedContentType.uninitializeFactoryRegistry(model.getFactoryRegistry());
-		oldEmbeddedContentType.uninitializeParser((JSPCapableParser) structuredDocument.getParser());
+		oldEmbeddedContentType.uninitializeParser(structuredDocument.getParser());
 		// remember, embedded type factories are automatically cleared when
 		// embededType changed
 		pageDirectiveAdapter.setEmbeddedType(newEmbeddedContentType);
 		if (newEmbeddedContentType != null) {
 			newEmbeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
-			newEmbeddedContentType.initializeParser((JSPCapableParser) structuredDocument.getParser());
+			newEmbeddedContentType.initializeParser(structuredDocument.getParser());
 		}
 		// adding language here, in this convienent central
 		// location, but some obvious renaming or refactoring

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,7 +23,7 @@ import org.eclipse.wst.html.core.internal.modelquery.ModelQueryAdapterFactoryFor
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockTagParser;
-import org.eclipse.wst.sse.core.internal.ltk.parser.JSPCapableParser;
+import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.util.Assert;
@@ -71,9 +71,11 @@ public class EmbeddedHTML implements EmbeddedTypeHandler {
 	/*
 	 * @see EmbeddedContentType#initializeParser(RegionParser)
 	 */
-	public void initializeParser(JSPCapableParser parser) {
-		addHTMLishTag(parser, "script"); //$NON-NLS-1$
-		addHTMLishTag(parser, "style"); //$NON-NLS-1$
+	public void initializeParser(RegionParser parser) {
+		if (parser instanceof BlockTagParser) {
+			addHTMLishTag((BlockTagParser) parser, "script"); //$NON-NLS-1$
+			addHTMLishTag((BlockTagParser) parser, "style"); //$NON-NLS-1$
+		}
 	}
 
 	public List getSupportedMimeTypes() {
@@ -142,11 +144,13 @@ public class EmbeddedHTML implements EmbeddedTypeHandler {
 
 	}
 
-	public void uninitializeParser(JSPCapableParser parser) {
+	public void uninitializeParser(RegionParser parser) {
 		// I'm assuming block markers are unique based on name only
 		// we add these as full BlockMarkers, but remove based on name alone.
-		parser.removeBlockMarker("script"); //$NON-NLS-1$
-		parser.removeBlockMarker("script"); //$NON-NLS-1$
+		if (parser instanceof BlockTagParser) {
+			((BlockTagParser) parser).removeBlockMarker("style"); //$NON-NLS-1$
+			((BlockTagParser) parser).removeBlockMarker("script"); //$NON-NLS-1$
+		}
 	}
 
 	public EmbeddedTypeHandler newInstance() {

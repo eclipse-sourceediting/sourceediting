@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
-import org.eclipse.wst.sse.core.internal.ltk.parser.JSPCapableParser;
+import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryAdapterFactoryForEmbeddedXML;
 
@@ -63,10 +63,7 @@ public class EmbeddedXML implements EmbeddedTypeHandler {
 		//TODO: initialize
 	}
 
-	/*
-	 * @see EmbeddedContentType#initializeParser(RegionParser)
-	 */
-	public void initializeParser(JSPCapableParser parser) {
+	public void initializeParser(RegionParser parser) {
 		// nothing to initialize for "pure" XML
 		// compare with XHTML
 	}
@@ -84,7 +81,7 @@ public class EmbeddedXML implements EmbeddedTypeHandler {
 
 	}
 
-	public void uninitializeParser(JSPCapableParser parser) {
+	public void uninitializeParser(RegionParser parser) {
 		// need to undo anything we did in initialize
 	}
 

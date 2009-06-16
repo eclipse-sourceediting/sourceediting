@@ -39,7 +39,6 @@ import org.eclipse.wst.sse.core.internal.encoding.CodedReaderCreator;
 import org.eclipse.wst.sse.core.internal.encoding.ContentTypeEncodingPreferences;
 import org.eclipse.wst.sse.core.internal.encoding.util.BufferedLimitedReader;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
-import org.eclipse.wst.sse.core.internal.ltk.parser.JSPCapableParser;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.ltk.parser.TagMarker;
 import org.eclipse.wst.sse.core.internal.modelhandler.EmbeddedTypeRegistry;
@@ -91,7 +90,7 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 
 			EmbeddedTypeHandler embeddedType = getEmbeddedType(iFile);
 			if (embeddedType != null)
-				embeddedType.initializeParser((JSPCapableParser) structuredDocument.getParser());
+				embeddedType.initializeParser(structuredDocument.getParser());
 
 			fFullPreparedReader.reset();
 			setDocumentContentsFromReader(structuredDocument, fFullPreparedReader);
@@ -134,7 +133,7 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 			EmbeddedTypeHandler embeddedType = getEmbeddedType((IFile) null);
 			fFullPreparedReader.reset();
 			if (embeddedType != null)
-				embeddedType.initializeParser((JSPCapableParser) ((IStructuredDocument) structuredDocument).getParser());
+				embeddedType.initializeParser(((IStructuredDocument) structuredDocument).getParser());
 			setDocumentContentsFromReader(structuredDocument, fFullPreparedReader);
 		}
 		catch (CoreException e) {
@@ -277,7 +276,7 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 		// the
 		// default embeddeded content type handler
 		EmbeddedTypeHandler embeddedType = getJSPDefaultEmbeddedType();
-		embeddedType.initializeParser((JSPCapableParser) structuredDocument.getParser());
+		embeddedType.initializeParser(structuredDocument.getParser());
 		return structuredDocument;
 	}
 

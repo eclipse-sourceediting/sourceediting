@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,7 +14,7 @@ package org.eclipse.wst.sse.core.internal.ltk.modelhandler;
 
 import java.util.List;
 
-import org.eclipse.wst.sse.core.internal.ltk.parser.JSPCapableParser;
+import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 
 
@@ -24,9 +24,10 @@ public interface EmbeddedTypeHandler {
 
 	/**
 	 * These AdapterFactories are NOT added to IStructuredModel's
-	 * IAdapterFactory Registry ... they are for use by "JSP Aware
-	 * AdapterFactories" The are added to the "registry" in the
-	 * PageDirectiveAdapter.
+	 * IAdapterFactory Registry, but instead expected to be consulted as
+	 * needed by functionality aware of embedded content types.  Additions
+	 * to the model's own factory registry should be done in
+	 * {@link #initializeFactoryRegistry(FactoryRegistry)}
 	 */
 	List getAdapterFactories();
 
@@ -56,16 +57,18 @@ public interface EmbeddedTypeHandler {
 	 * @return true if this handler thinks can handle the given mimeType
 	 */
 	boolean canHandleMimeType(String mimeType);
+
 	/**
 	 * This method is to give the EmbeddedContentType an opportunity to add
-	 * factories directly to the IStructuredModel's IAdapterFactory registry.
+	 * factories directly to the IStructuredModel's IAdapterFactory registry. 
 	 */
 	void initializeFactoryRegistry(FactoryRegistry registry);
 
 	/**
-	 * initializeParser Its purpose is to setBlockTags
+	 * initializeParser, for example, setting up a "block" tags list using an
+	 * extended interface
 	 */
-	void initializeParser(JSPCapableParser parser);
+	void initializeParser(RegionParser parser);
 
 	boolean isDefault();
 
@@ -73,5 +76,5 @@ public interface EmbeddedTypeHandler {
 
 	void uninitializeFactoryRegistry(FactoryRegistry registry);
 
-	void uninitializeParser(JSPCapableParser parser);
+	void uninitializeParser(RegionParser parser);
 }
