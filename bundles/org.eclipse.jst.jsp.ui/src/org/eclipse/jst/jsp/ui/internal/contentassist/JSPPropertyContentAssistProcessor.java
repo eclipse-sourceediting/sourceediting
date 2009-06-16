@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -122,7 +122,7 @@ public class JSPPropertyContentAssistProcessor extends JSPDummyContentAssistProc
 						continue;
 					Element useBean = (Element) useBeans.item(j);
 					if (useBean instanceof IndexedRegion && ((IndexedRegion) useBean).getStartOffset() < node.getStartOffset()) {
-						if (useBean.getAttribute(JSP11Namespace.ATTR_NAME_ID).equals(useBeanName)) {
+						if (useBeanName.equals(useBean.getAttribute(JSP11Namespace.ATTR_NAME_ID))) {
 							typeName = useBean.getAttribute(JSP11Namespace.ATTR_NAME_CLASS);
 							if (typeName == null || typeName.length() < 1) {
 								typeName = useBean.getAttribute(JSP11Namespace.ATTR_NAME_TYPE);
@@ -173,7 +173,7 @@ public class JSPPropertyContentAssistProcessor extends JSPDummyContentAssistProc
 				if (useBeans.item(j).getNodeType() != Node.ELEMENT_NODE)
 					continue;
 				Element useBean = (Element) useBeans.item(j);
-				if (useBean instanceof IndexedRegion && ((IndexedRegion) useBean).getStartOffset() < node.getStartOffset()) {
+				if (useBean instanceof IndexedRegion && ((IndexedRegion) useBean).getStartOffset() < node.getStartOffset() && useBean.hasAttribute(JSP11Namespace.ATTR_NAME_ID)) {
 					id = StringUtils.strip(useBean.getAttribute(JSP11Namespace.ATTR_NAME_ID));
 					displayString = null;
 					classOrType = null;
