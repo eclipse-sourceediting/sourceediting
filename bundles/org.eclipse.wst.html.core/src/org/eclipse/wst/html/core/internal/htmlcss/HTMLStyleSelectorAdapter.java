@@ -12,12 +12,12 @@ package org.eclipse.wst.html.core.internal.htmlcss;
 
 
 
-import com.ibm.icu.util.StringTokenizer;
-
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSelectorAdapter;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSSimpleSelector;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.w3c.dom.Element;
+
+import com.ibm.icu.util.StringTokenizer;
 
 /**
  * Insert the type's description here.
@@ -68,7 +68,7 @@ public class HTMLStyleSelectorAdapter implements IStyleSelectorAdapter {
 			if (i > 1)
 				return false;
 			key = element.getAttribute("id");//$NON-NLS-1$
-			if (key == null)
+			if (key == null || key.length() == 0)
 				return false;
 			if (!selector.getID(0).equals(key))
 				return false;
@@ -78,7 +78,7 @@ public class HTMLStyleSelectorAdapter implements IStyleSelectorAdapter {
 		i = selector.getNumOfClasses();
 		if (i > 0) {
 			key = element.getAttribute("class");//$NON-NLS-1$
-			if (key == null)
+			if (key == null|| key.length() == 0)
 				return false;
 			StringTokenizer tokenizer = new StringTokenizer(key);
 			for (i = i - 1; i >= 0; i--) {
@@ -100,7 +100,7 @@ public class HTMLStyleSelectorAdapter implements IStyleSelectorAdapter {
 			int countTokens = tokenizer.countTokens();
 			if (countTokens > 0) {
 				String attrValue = element.getAttribute(tokenizer.nextToken());
-				if (attrValue == null)
+				if (attrValue == null || attrValue.length() == 0)
 					return false;
 				if (countTokens > 1) {
 					String token = tokenizer.nextToken("= \t\r\n\f");//$NON-NLS-1$

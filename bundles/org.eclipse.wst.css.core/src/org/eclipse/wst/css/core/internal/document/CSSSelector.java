@@ -15,7 +15,6 @@ package org.eclipse.wst.css.core.internal.document;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import com.ibm.icu.util.StringTokenizer;
 
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSelectorAdapter;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSSelector;
@@ -26,6 +25,8 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.provisional.NameValidator;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
+import com.ibm.icu.util.StringTokenizer;
 
 
 /**
@@ -303,7 +304,7 @@ class CSSSelector implements ICSSSelector {
 			if (i > 1)
 				return false;
 			key = element.getAttribute("id");//$NON-NLS-1$
-			if (key == null)
+			if (key == null || key.length() == 0)
 				return false;
 			if (!selector.getID(0).equals(key))
 				return false;
@@ -313,7 +314,7 @@ class CSSSelector implements ICSSSelector {
 		i = selector.getNumOfClasses();
 		if (i > 0) {
 			key = element.getAttribute("class");//$NON-NLS-1$
-			if (key == null)
+			if (key == null || key.length() == 0)
 				return false;
 			StringTokenizer tokenizer = new StringTokenizer(key);
 			for (i = i - 1; i >= 0; i--) {
@@ -335,7 +336,7 @@ class CSSSelector implements ICSSSelector {
 			int countTokens = tokenizer.countTokens();
 			if (countTokens > 0) {
 				String attrValue = element.getAttribute(tokenizer.nextToken());
-				if (attrValue == null)
+				if (attrValue == null || attrValue.length() == 0)
 					return false;
 				if (countTokens > 1) {
 					String token = tokenizer.nextToken("= \t\r\n\f");//$NON-NLS-1$

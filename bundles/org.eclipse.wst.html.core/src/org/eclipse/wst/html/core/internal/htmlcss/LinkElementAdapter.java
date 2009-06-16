@@ -18,6 +18,7 @@ import org.eclipse.wst.css.core.internal.provisional.adapters.IModelProvideAdapt
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSheetListAdapter;
 import org.eclipse.wst.css.core.internal.provisional.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
+import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
@@ -73,8 +74,8 @@ public class LinkElementAdapter extends AbstractStyleSheetAdapter {
 		URIResolver resolver = baseModel.getResolver();
 
 		// resolve to absolute url : this need not exact location of css file. It is important that absurl is not null. 
-		String ref = getElement().getAttribute(org.eclipse.wst.html.core.internal.provisional.HTML40Namespace.ATTR_NAME_HREF);
-		String absurl = (resolver != null && ref != null) ? resolver.getLocationByURI(ref, true) : null;
+		String ref = getElement().getAttribute(HTML40Namespace.ATTR_NAME_HREF);
+		String absurl = (resolver != null && ref != null && ref.length() > 0) ? resolver.getLocationByURI(ref, true) : null;
 		if ((absurl == null) || (absurl.length() == 0)) {
 			IPath basePath = new Path(baseModel.getBaseLocation());
 			URLHelper helper = new URLHelper(basePath.removeLastSegments(1).toString());
