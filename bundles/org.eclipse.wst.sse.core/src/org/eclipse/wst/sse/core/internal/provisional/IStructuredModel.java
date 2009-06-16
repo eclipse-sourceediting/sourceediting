@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,15 +36,11 @@ import org.eclipse.wst.sse.core.internal.util.URIResolver;
  * implementers. The main purposed of this abstraction is to provide a common
  * means to manage models that have an associated structured document.
  * 
- * @plannedfor 2.0
- * 
  * <p>
- * ISSUE: this interface needs ton of cleanup!
+ * TODO: this interface needs ton of cleanup!
  * </p>
  * 
- * <p>
- * This interface is not intended to be implemented by clients.
- * </p>
+ * @noimplement This interface is not intended to be implemented by clients.
  */
 public interface IStructuredModel extends IAdaptable {
 
@@ -338,10 +334,16 @@ public interface IStructuredModel extends IAdaptable {
 
 	void save() throws UnsupportedEncodingException, IOException, CoreException;
 
+	/**
+	 * @deprecated - will save according to the encoding priorities specified for the IFile 
+	 */
 	void save(EncodingRule encodingRule) throws UnsupportedEncodingException, IOException, CoreException;
 
 	void save(IFile iFile) throws UnsupportedEncodingException, IOException, CoreException;
 
+	/**
+	 * @deprecated - will save according to the encoding priorities specified for the IFile 
+	 */
 	void save(IFile iFile, EncodingRule encodingRule) throws UnsupportedEncodingException, IOException, CoreException;
 
 	void save(OutputStream outputStream) throws UnsupportedEncodingException, IOException, CoreException;

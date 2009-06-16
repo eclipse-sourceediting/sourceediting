@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,7 +32,7 @@ import org.eclipse.wst.sse.core.internal.util.URIResolver;
  * for managing (add or remove) model loaders and model dumpers, and for
  * managing (get, release, save, and save as) models.
  * 
- * Clients can reference, but should not implement.
+ * @noimplement This interface is not intended to be implemented by clients.
  * 
  * @see StructuredModelManger
  */
