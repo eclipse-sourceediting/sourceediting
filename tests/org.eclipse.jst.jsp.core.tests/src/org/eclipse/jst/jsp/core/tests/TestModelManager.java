@@ -58,14 +58,14 @@ public class TestModelManager extends TestCase {
 		try {
 			IModelManager modelManager = StructuredModelManager.getModelManager();
 			model = modelManager.getModelForEdit("test.jsp", new NullInputStream(), null);
-			IStructuredModel modelCopy = modelManager.copyModelForEdit(model.getId(), "newId");
+			IStructuredModel modelCopy = modelManager.copyModelForEdit(model.getId(), getName()+".newId");
 			assertNotNull("copied JSP model was null", modelCopy);
 			assertEquals("ModelHandlers differ", model.getModelHandler(), modelCopy.getModelHandler());
 			assertEquals("StructuredDocument RegionParsers differ", model.getStructuredDocument().getParser().getClass(), modelCopy.getStructuredDocument().getParser().getClass());
 			assertEquals("Text document contents differ", model.getStructuredDocument().get(), modelCopy.getStructuredDocument().get());
 		}
 		catch (ResourceInUse e) {
-			fail(e.getMessage());
+			fail("Resource in use reported for " + model.getId());
 		}
 		finally {
 			if (model != null)
