@@ -297,7 +297,7 @@ public abstract class XMLAssociationProvider extends BaseAssociationProvider imp
     if (xsiPrefix != null)
     {
       String xsiTypeValue = element.getAttribute(xsiPrefix + ":type"); //$NON-NLS-1$
-      if (xsiTypeValue != null)
+      if (xsiTypeValue != null && xsiTypeValue.length() > 0)
       {  
         String typePrefix = DOMNamespaceHelper.getPrefix(xsiTypeValue);
         String typeName = DOMNamespaceHelper.getUnprefixedName(xsiTypeValue);

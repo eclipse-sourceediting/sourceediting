@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -721,8 +721,6 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 		return id;
 	}
 
-	/**
-	 */
 	public Element getElementById(String id) {
 		if (id == null)
 			return null;
@@ -735,20 +733,13 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument, Documen
 				continue;
 			ElementImpl element = (ElementImpl) node;
 			String value = element.getAttribute("id");//$NON-NLS-1$
-			if (value != null && value.equals(id))
+			if (id.equals(value))
 				return element;
 		}
 
 		return null;
 	}
 
-	/**
-	 * getElementsByTagName method
-	 * 
-	 * @return org.w3c.dom.NodeList
-	 * @param tagName
-	 *            java.lang.String
-	 */
 	public NodeList getElementsByTagName(String tagName) {
 		if (tagName == null)
 			return new NodeListImpl();

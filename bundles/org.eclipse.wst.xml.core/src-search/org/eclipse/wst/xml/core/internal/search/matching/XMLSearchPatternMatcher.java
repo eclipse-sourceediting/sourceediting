@@ -50,7 +50,7 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
 		  Element e = (Element)node;
 		  String attributeName = (prefix != null && prefix.length() > 0) ? ("xmlns:" + prefix) : "xmlns";  //$NON-NLS-1$ //$NON-NLS-2$
 		  result = e.getAttribute(attributeName);
-		  if (result != null)
+		  if (result != null && result.length() > 0)
 		  {
 			 break;  
 		  }	  
@@ -67,7 +67,7 @@ public class XMLSearchPatternMatcher extends PatternMatcher{
             // TODO (cs) set the depth attribute on the pattern
             //
 			String actualValue = domElement.getAttribute(pattern.getAttributeName());
-			 if(actualValue != null){
+			 if(actualValue != null && actualValue.length() > 0){
 					int n = actualValue.indexOf(":"); //$NON-NLS-1$
 					if(n > 0){
 						String prefix = actualValue.substring(0, n);

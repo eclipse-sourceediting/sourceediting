@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,8 +19,9 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 import java.io.Serializable;
-import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.AbstractNotifier;
@@ -56,7 +57,7 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	private NodeImpl parentNode = null;
 	private NodeImpl previousSibling = null;
 	
-	private Hashtable userDataTable=null;
+	private Map userDataTable=null;
 
 	/**
 	 * NodeImpl constructor
@@ -1007,10 +1008,11 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 			return; 
 			
 		if (userDataTable!=null) {
-			Enumeration keys=userDataTable.keys();
-			while (keys.hasMoreElements()) {
-				String key=(String) keys.nextElement(); //should always be a string
-				UserDataAndHandler dataAndHandler = (UserDataAndHandler) userDataTable.get(key);
+			Iterator entries =userDataTable.entrySet().iterator();
+			while (entries.hasNext()) {
+				Map.Entry entry = (Map.Entry) entries.next();
+				String key = entry.getKey().toString(); //should always be a string
+				UserDataAndHandler dataAndHandler = (UserDataAndHandler) entry.getValue();
 				if (dataAndHandler!=null) {
 					UserDataHandler dataHandler=dataAndHandler.getHandler();
 					if (dataHandler!=null) {
@@ -1025,12 +1027,12 @@ public abstract class NodeImpl extends AbstractNotifier implements Node, IDOMNod
 	 * 
 	 * Class for user data and UserDataHandler
 	 */
-	protected class UserDataAndHandler implements Serializable {
+	protected static class UserDataAndHandler implements Serializable {
 
 		/**
 		 * Generated Serial ID
 		 */
-		private static final long serialVersionUID = 4860521237315444840L;
+		private static final long serialVersionUID = 4860521237315444841L;
 		/**
 		 * Generated serialization version
 		 */
