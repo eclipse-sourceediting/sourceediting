@@ -54,8 +54,11 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ILock;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IClasspathContainer;
@@ -100,6 +103,64 @@ import com.ibm.icu.util.StringTokenizer;
  *
  */
 class ProjectDescription {
+	class BuildPathJob extends Job {
+		public BuildPathJob() {
+			super("Updating Tag Library Index");
+			setSystem(true);
+			setUser(false);
+		}
+
+		protected IStatus run(IProgressMonitor monitor) {
+			try {
+				LOCK.acquire();
+
+				PackageFragmentRootDelta[] removes = (PackageFragmentRootDelta[]) fPackageFragmentRootsRemoved.values().toArray(new PackageFragmentRootDelta[fPackageFragmentRootsRemoved.size()]);
+				for (int i = 0; i < removes.length; i++) {
+					handleElementChanged(removes[i].elementPath, removes[i].deltaKind, removes[i].isExported);
+				}
+				fPackageFragmentRootsRemoved.clear();
+				if (monitor.isCanceled())
+					return Status.OK_STATUS;
+				
+				PackageFragmentRootDelta[] changes = (PackageFragmentRootDelta[]) fPackageFragmentRootsChanged.values().toArray(new PackageFragmentRootDelta[fPackageFragmentRootsChanged.size()]);
+				for (int i = 0; i < changes.length; i++) {
+					handleElementChanged(changes[i].elementPath, changes[i].deltaKind, changes[i].isExported);
+				}
+				fPackageFragmentRootsChanged.clear();
+				if (monitor.isCanceled())
+					return Status.OK_STATUS;
+				
+				PackageFragmentRootDelta[] adds = (PackageFragmentRootDelta[]) fPackageFragmentRootsAdded.values().toArray(new PackageFragmentRootDelta[fPackageFragmentRootsAdded.size()]);
+				for (int i = 0; i < adds.length; i++) {
+					handleElementChanged(adds[i].elementPath, adds[i].deltaKind, adds[i].isExported);
+				}
+				fPackageFragmentRootsAdded.clear();
+			}
+			finally {
+				LOCK.release();
+			}
+			TaglibIndex.getInstance().fireCurrentDelta(BuildPathJob.this);
+			return Status.OK_STATUS;
+		}
+	}
+	
+	class PackageFragmentRootDelta {
+		PackageFragmentRootDelta(IPath path, int kind, boolean exported) {
+			super();
+			elementPath = path;
+			deltaKind = kind;
+			isExported = exported;
+		}
+
+		/*
+			IJavaElementDelta.F_ADDED_TO_CLASSPATH
+			IJavaElementDelta.F_ARCHIVE_CONTENT_CHANGED
+			IJavaElementDelta.F_REMOVED_FROM_CLASSPATH
+		*/ 
+		int deltaKind;
+		IPath elementPath;
+		boolean isExported;
+	}
 
 	class DeltaVisitor implements IResourceDeltaVisitor {
 		public boolean visit(IResourceDelta delta) throws CoreException {
@@ -579,12 +640,17 @@ class ProjectDescription {
 
 	IResourceDeltaVisitor fVisitor;
 	Hashtable fWebXMLReferences;
+	
+	private Map fPackageFragmentRootsAdded = new HashMap();
+	private Map fPackageFragmentRootsChanged = new HashMap();
+	private Map fPackageFragmentRootsRemoved = new HashMap();
 
 	ILock LOCK = Job.getJobManager().newLock();
 
 	private long time0;
 	
 	private TaglibSorter fTaglibSorter = new TaglibSorter();
+	private BuildPathJob fBuildPathJob = new BuildPathJob();
 
 	ProjectDescription(IProject project, String saveStateFile) {
 		super();
@@ -944,6 +1010,23 @@ class ProjectDescription {
 					indexClasspath(entries);
 					fBuildPathIsDirty = false;
 				}
+				else {
+					PackageFragmentRootDelta[] removes = (PackageFragmentRootDelta[]) fPackageFragmentRootsRemoved.values().toArray(new PackageFragmentRootDelta[fPackageFragmentRootsRemoved.size()]);
+					for (int i = 0; i < removes.length; i++) {
+						handleElementChanged(removes[i].elementPath, removes[i].deltaKind, removes[i].isExported);
+					}
+					PackageFragmentRootDelta[] changes = (PackageFragmentRootDelta[]) fPackageFragmentRootsChanged.values().toArray(new PackageFragmentRootDelta[fPackageFragmentRootsChanged.size()]);
+					for (int i = 0; i < changes.length; i++) {
+						handleElementChanged(changes[i].elementPath, changes[i].deltaKind, changes[i].isExported);
+					}
+					PackageFragmentRootDelta[] adds = (PackageFragmentRootDelta[]) fPackageFragmentRootsAdded.values().toArray(new PackageFragmentRootDelta[fPackageFragmentRootsAdded.size()]);
+					for (int i = 0; i < adds.length; i++) {
+						handleElementChanged(adds[i].elementPath, adds[i].deltaKind, adds[i].isExported);
+					}
+					fPackageFragmentRootsRemoved.clear();
+					fPackageFragmentRootsChanged.clear();
+					fPackageFragmentRootsAdded.clear();
+				}
 			}
 			finally {
 				LOCK.release();
@@ -1245,6 +1328,16 @@ class ProjectDescription {
 		return fVisitor;
 	}
 
+	void handleElementChanged(IPath libraryPath, int deltaKind, boolean exported) {
+		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(libraryPath);
+		String libraryLocation = null;
+		if (file.isAccessible() && file.getLocation() != null)
+			libraryLocation = file.getLocation().toString();
+		else
+			libraryLocation = libraryPath.toString();
+		updateClasspathLibrary(libraryLocation, deltaKind, exported);
+	}
+	
 	void handleElementChanged(IJavaElementDelta delta) {
 		if (fBuildPathIsDirty) {
 			return;
@@ -1252,6 +1345,12 @@ class ProjectDescription {
 
 		// Logger.log(Logger.INFO_DEBUG, "IJavaElementDelta: " + delta);
 		IJavaElement element = delta.getElement();
+		if (element.getElementType() == IJavaElement.JAVA_PROJECT) {
+			IJavaElementDelta[] affectedChildren = delta.getAffectedChildren();
+			for (int i = 0; i < affectedChildren.length; i++) {
+				handleElementChanged(affectedChildren[i]);
+			}
+		}
 		if (element.getElementType() == IJavaElement.PACKAGE_FRAGMENT_ROOT && ((IPackageFragmentRoot) element).isArchive()) {
 			time0 = System.currentTimeMillis();
 			if (element.getElementType() == IJavaElement.PACKAGE_FRAGMENT_ROOT && ((IPackageFragmentRoot) element).isExternal()) {
@@ -1259,7 +1358,16 @@ class ProjectDescription {
 			String libLocation = null;
 			int taglibRecordEventKind = -1;
 			if ((delta.getFlags() & IJavaElementDelta.F_ADDED_TO_CLASSPATH) > 0 || (delta.getFlags() & IJavaElementDelta.F_ARCHIVE_CONTENT_CHANGED) > 0 || (delta.getFlags() & IJavaElementDelta.F_REMOVED_FROM_CLASSPATH) > 0) {
-				taglibRecordEventKind = ITaglibIndexDelta.ADDED;
+				taglibRecordEventKind = ITaglibIndexDelta.CHANGED;
+				if ((delta.getFlags() & IJavaElementDelta.F_ADDED_TO_CLASSPATH) > 0) {
+					taglibRecordEventKind = ITaglibIndexDelta.ADDED;
+				}
+				else if ((delta.getFlags() & IJavaElementDelta.F_ARCHIVE_CONTENT_CHANGED) > 0) {
+					taglibRecordEventKind = ITaglibIndexDelta.CHANGED;
+				}
+				else if ((delta.getFlags() & IJavaElementDelta.F_REMOVED_FROM_CLASSPATH) > 0) {
+					taglibRecordEventKind = ITaglibIndexDelta.REMOVED;
+				}
 				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(element.getPath());
 				if (file.isAccessible() && file.getLocation() != null)
 					libLocation = file.getLocation().toString();
@@ -1488,6 +1596,61 @@ class ProjectDescription {
 			}
 		}
 	}
+	
+	void queueElementChanged(IJavaElementDelta delta) {
+		try {
+			LOCK.acquire();
+			IJavaElement element = delta.getElement();
+			if (element.getElementType() == IJavaElement.JAVA_PROJECT) {
+				IJavaElementDelta[] affectedChildren = delta.getAffectedChildren();
+				for (int i = 0; i < affectedChildren.length; i++) {
+					queueElementChanged(affectedChildren[i]);
+				}
+			}
+			if (element.getElementType() == IJavaElement.PACKAGE_FRAGMENT_ROOT && ((IPackageFragmentRoot) element).isArchive()) {
+				IPath path = element.getPath();
+				boolean fragmentisExported = true;
+				try {
+					IClasspathEntry rawClasspathEntry = ((IPackageFragmentRoot) element).getRawClasspathEntry();
+					/*
+					 * null may also be returned for deletions depending on
+					 * resource/build path notification order. If it's null,
+					 * it's been deleted and whether it's exported won't
+					 * really matter
+					 */
+					if (rawClasspathEntry != null) {
+						fragmentisExported = rawClasspathEntry.isExported();
+					}
+				}
+				catch (JavaModelException e) {
+					// IPackageFragmentRoot not part of the build path
+				}
+				String key = path.toString();
+				if ((delta.getFlags() & IJavaElementDelta.F_ADDED_TO_CLASSPATH) > 0) {
+					fPackageFragmentRootsAdded.put(key, new PackageFragmentRootDelta(path, ITaglibIndexDelta.ADDED, fragmentisExported));
+					fPackageFragmentRootsChanged.remove(key);
+					fPackageFragmentRootsRemoved.remove(key);
+					fBuildPathEntryCount++;
+				}
+				else if ((delta.getFlags() & IJavaElementDelta.F_ARCHIVE_CONTENT_CHANGED) > 0) {
+					fPackageFragmentRootsChanged.put(key, new PackageFragmentRootDelta(path, ITaglibIndexDelta.CHANGED, fragmentisExported));
+				}
+				else if ((delta.getFlags() & IJavaElementDelta.F_REMOVED_FROM_CLASSPATH) > 0) {
+					fPackageFragmentRootsAdded.remove(key);
+					fPackageFragmentRootsChanged.remove(key);
+					fPackageFragmentRootsRemoved.put(key, new PackageFragmentRootDelta(path, ITaglibIndexDelta.REMOVED, fragmentisExported));
+					fBuildPathEntryCount--;
+				}
+			}
+		}
+		finally {
+			LOCK.release();
+		}
+
+		fBuildPathJob.cancel();
+		fBuildPathJob.schedule(2000);
+	}
+
 
 	private String readTextofChild(Node node, String childName) {
 		NodeList children = node.getChildNodes();
@@ -1559,6 +1722,15 @@ class ProjectDescription {
 				TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, records[i], ITaglibIndexDelta.REMOVED));
 			}
 		}
+	}
+	
+	private boolean requestedRefresh() {
+		boolean requested = false;
+		String[] commandLineArgs = Platform.getCommandLineArgs();
+		for (int i = 0; i < commandLineArgs.length; i++) {
+			requested = requested || "-refresh".equals(commandLineArgs[i]); //$NON-NLS-1$ 
+		}
+		return requested;
 	}
 
 	/**
@@ -1736,7 +1908,7 @@ class ProjectDescription {
 			// ================ test reload time ========================
 			boolean restored = false;
 			File savedState = new File(fSaveStateFilename);
-			if (savedState.exists()) {
+			if (savedState.exists() && !requestedRefresh()) {
 				Reader reader = null;
 				try {
 					time0 = System.currentTimeMillis();
@@ -2035,7 +2207,13 @@ class ProjectDescription {
 										urlRecord.isExported = isExported;
 										urlRecord.url = new URL("jar:file:" + libraryLocation + "!/" + z.getName()); //$NON-NLS-1$ //$NON-NLS-2$
 										libraryRecord.urlRecords.add(urlRecord);
-										TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, urlRecord, deltaKind));
+										int urlDeltaKind = ITaglibIndexDelta.ADDED;
+										if (fClasspathReferences.containsKey(urlRecord.getURI())) {
+											// TODO: not minimized enough
+											urlDeltaKind = ITaglibIndexDelta.CHANGED;
+										}
+										fClasspathReferences.put(urlRecord.getURI(), urlRecord);
+										TaglibIndex.getInstance().addDelta(new TaglibIndexDelta(fProject, urlRecord, urlDeltaKind));
 										fClasspathReferences.put(info.uri, urlRecord);
 										if (_debugIndexCreation)
 											Logger.log(Logger.INFO, "created record for " + urlRecord.getURI() + "@" + urlRecord.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -2197,7 +2375,7 @@ class ProjectDescription {
 		InputStream webxmlContents = null;
 		Document document = null;
 		try {
-			webxmlContents = ((IFile) webxml).getContents(true);
+			webxmlContents = ((IFile) webxml).getContents(false);
 			DocumentProvider provider = new DocumentProvider();
 			provider.setInputStream(webxmlContents);
 			provider.setValidating(false);
