@@ -590,7 +590,7 @@ public class ModelManagerImpl implements IModelManager {
 				break;
 			} else if (sharedObject == testObject) {
 				synchronized(sharedObject) {
-					Assert.isTrue(sharedObject.referenceCountForEdit + sharedObject.referenceCountForRead > 0);
+					Assert.isTrue(sharedObject.referenceCountForEdit + sharedObject.referenceCountForRead > 0, "reference count was less than zero");
 					if (sharedObject.theSharedModel!=null) {
 						_incrCount(sharedObject, accessType);
 					}
@@ -639,7 +639,7 @@ public class ModelManagerImpl implements IModelManager {
 	private void addFactories(IStructuredModel model, IModelHandler handler) {
 		Assert.isNotNull(model, "model can not be null"); //$NON-NLS-1$
 		FactoryRegistry registry = model.getFactoryRegistry();
-		Assert.isNotNull(registry, "Factory Registry can not be null"); //$NON-NLS-1$
+		Assert.isNotNull(registry, "model's Factory Registry can not be null"); //$NON-NLS-1$
 		List factoryList = handler.getAdapterFactories();
 		addFactories(model, factoryList);
 	}
@@ -647,7 +647,7 @@ public class ModelManagerImpl implements IModelManager {
 	private void addFactories(IStructuredModel model, List factoryList) {
 		Assert.isNotNull(model, "model can not be null"); //$NON-NLS-1$
 		FactoryRegistry registry = model.getFactoryRegistry();
-		Assert.isNotNull(registry, "Factory Registry can not be null"); //$NON-NLS-1$
+		Assert.isNotNull(registry, "model's Factory Registry can not be null"); //$NON-NLS-1$
 		// Note: we add all of them from handler, even if
 		// already exists. May need to reconsider this.
 		if (factoryList != null) {
@@ -1325,7 +1325,7 @@ public class ModelManagerImpl implements IModelManager {
 	 */
 	public  IStructuredModel getModelForEdit(Object id, InputStream inputStream, URIResolver resolver) throws java.io.UnsupportedEncodingException, IOException {
 
-		Assert.isNotNull(id, "IFile parameter can not be null"); //$NON-NLS-1$
+		Assert.isNotNull(id, "requested model id can not be null"); //$NON-NLS-1$
 		String stringId = id.toString();
 		return getModelForEdit(stringId, Utilities.getMarkSupportedStream(inputStream), resolver);
 	}
@@ -1626,7 +1626,8 @@ public class ModelManagerImpl implements IModelManager {
 	 * not to use this function
 	 */
 	public void moveModel(Object oldId, Object newId) {
-		org.eclipse.wst.sse.core.internal.util.Assert.isNotNull(oldId, "id parameter can not be null"); //$NON-NLS-1$
+		Assert.isNotNull(oldId, "old id parameter can not be null"); //$NON-NLS-1$
+		Assert.isNotNull(newId, "new id parameter can not be null"); //$NON-NLS-1$
 		SYNC.acquire();
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(oldId);
 		// if not found in cache, ignore request.
@@ -1883,6 +1884,7 @@ public class ModelManagerImpl implements IModelManager {
 	 * @deprecated - will become protected, use reload directly on model
 	 */
 	public  IStructuredModel reloadModel(Object id, java.io.InputStream inputStream) throws java.io.UnsupportedEncodingException {
+		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 
 		// get the existing model associated with this id
 		IStructuredModel structuredModel = getExistingModel(id);
@@ -1904,6 +1906,8 @@ public class ModelManagerImpl implements IModelManager {
 	}
 
 	public void saveModel(IFile iFile, String id, EncodingRule encodingRule) throws UnsupportedEncodingException, IOException, CoreException {
+		Assert.isNotNull(iFile, "file parameter can not be null"); //$NON-NLS-1$
+		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 
 		// let's see if we already have it in our cache
 	
@@ -1959,6 +1963,7 @@ public class ModelManagerImpl implements IModelManager {
 	 * @throws CoreException
 	 */
 	public void saveModel(String id, EncodingRule encodingRule) throws UnsupportedEncodingException, IOException, CoreException {
+		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 
 		// let's see if we already have it in our cache
 
@@ -2006,6 +2011,8 @@ public class ModelManagerImpl implements IModelManager {
 	 *             in favor of the IFile form.
 	 */
 	public void saveModel(String id, OutputStream outputStream, EncodingRule encodingRule) throws UnsupportedEncodingException, CoreException, IOException {
+		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
+
 		SYNC.acquire();
 		// let's see if we already have it in our cache
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
@@ -2035,6 +2042,7 @@ public class ModelManagerImpl implements IModelManager {
 	}
 
 	public void saveStructuredDocument(IStructuredDocument structuredDocument, IFile iFile, EncodingRule encodingRule) throws UnsupportedEncodingException, CoreException, IOException {
+		Assert.isNotNull(iFile, "file parameter can not be null"); //$NON-NLS-1$
 		if (FileBufferModelManager.getInstance().isExistingBuffer(structuredDocument)) {
 			ITextFileBuffer buffer = FileBufferModelManager.getInstance().getBuffer(structuredDocument);
 			if (buffer.getLocation().equals(iFile.getFullPath()) || buffer.getLocation().equals(iFile.getLocation())) {
