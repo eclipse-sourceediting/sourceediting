@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     David Carver - STAR - bug 262765 - check for empty string in second arg before first. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -78,12 +79,13 @@ public class FnContains extends Function {
 		int str1len = str1.length();
 		int str2len = str2.length();
 
-		if (str1len == 0) {
-			rs.add(new XSBoolean(false));
-			return rs;
-		}
 		if (str2len == 0) {
 			rs.add(new XSBoolean(true));
+			return rs;
+		}
+		
+		if (str1len == 0) {
+			rs.add(new XSBoolean(false));
 			return rs;
 		}
 
