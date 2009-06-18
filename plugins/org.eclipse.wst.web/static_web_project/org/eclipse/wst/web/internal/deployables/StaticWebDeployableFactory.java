@@ -17,7 +17,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jem.util.logger.proxy.Logger;
 import org.eclipse.wst.common.componentcore.ComponentCore;
 import org.eclipse.wst.common.componentcore.ModuleCoreNature;
 import org.eclipse.wst.common.componentcore.internal.StructureEdit;
@@ -29,6 +28,7 @@ import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.model.ModuleDelegate;
 import org.eclipse.wst.server.core.util.ProjectModuleFactoryDelegate;
+import org.eclipse.wst.web.internal.WSTWebPlugin;
 
 public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 	private static final String ID = "org.eclipse.wst.web.internal.deployables.static"; //$NON-NLS-1$
@@ -95,7 +95,7 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 			try {
 				return createModuleDelegates(component);
 			} catch (CoreException e) {
-				Logger.getLogger().write(e);
+				WSTWebPlugin.logError(e);
 			}
 		}
 		return null;
@@ -114,7 +114,7 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 				moduleDelegate.initialize(module);
 			}
 		} catch (Exception e) {
-			Logger.getLogger().write(e);
+			WSTWebPlugin.logError(e);
 		} finally {
 			if (module != null) {
 				if (getModuleDelegate(module) == null)

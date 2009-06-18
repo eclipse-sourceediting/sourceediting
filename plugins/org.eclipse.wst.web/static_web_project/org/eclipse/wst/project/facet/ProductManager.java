@@ -17,10 +17,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jem.util.logger.proxy.Logger;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntimeComponent;
 import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
+import org.eclipse.wst.web.internal.WSTWebPlugin;
 
 public class ProductManager {
 
@@ -146,7 +146,7 @@ public class ProductManager {
 		int seperatorIndex = defaultProductRuntimeKey.indexOf(RUNTIME_SEPARATOR);
 		if (seperatorIndex < 0 && seperatorIndex < defaultProductRuntimeKey.length()) {
 			//Consider throwing an exception here.
-			Logger.getLogger().logError("Invalid default product runtime id.  It should follow the format <facet runtime id>:<facet version>.  Id processed: " + defaultProductRuntimeKey); //$NON-NLS-1$
+			WSTWebPlugin.logError("Invalid default product runtime id.  It should follow the format <facet runtime id>:<facet version>.  Id processed: " + defaultProductRuntimeKey); //$NON-NLS-1$
 			return null;
 		}
 		String defaultRuntimeID = defaultProductRuntimeKey.substring(0, seperatorIndex);
