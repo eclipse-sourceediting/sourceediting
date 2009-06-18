@@ -8,6 +8,9 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
+ *     David Carver - bug 262765 - fix issue with casting items to XSDouble cast
+ *                                 needed to cast to Numeric so that evaluations
+ *                                 and formatting occur correctly.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -18,6 +21,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -87,8 +91,20 @@ public class FnAvg extends Function {
 			DynamicError.throw_type_error();
 
 		MathDiv avg = (MathDiv) total;
-		ResultSequence res = avg.div(ResultSequenceFactory
-				.create_new(new XSDouble(elems)));
+		ResultSequence res = null;
+		if (avg instanceof XSDecimal) {
+			res = avg.div(ResultSequenceFactory
+					.create_new(new XSDecimal(BigDecimal.valueOf(elems))));
+		} else if (avg instanceof XSDouble) {
+			 res = avg.div(ResultSequenceFactory
+					.create_new(new XSDouble(elems)));
+		} else if (avg instanceof XSFloat) {
+			res = avg.div(ResultSequenceFactory
+					.create_new(new XSFloat(elems)));
+		} else if (avg instanceof XSDuration) {
+			res = avg.div(ResultSequenceFactory
+					.create_new(new XSDecimal(BigDecimal.valueOf(elems))));
+		}
 
 		return res;
 	}
@@ -132,15 +148,16 @@ public class FnAvg extends Function {
 		}
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
-		// XXX promote everything to double
 		for (Iterator i = arg.iterator(); i.hasNext();) {
 			AnyType at = (AnyType) i.next();
 
-			XSDouble d = null;
+			NumericType d = null;
 			if (at instanceof UntypedAtomic) {
-				d = XSDouble.parse_double(((UntypedAtomic) at).string_value());
+				d = new XSDecimal(((UntypedAtomic) at).string_value());
+			} else if (at instanceof XSDouble) {
+				d = (XSDouble) at; 
 			} else if (at instanceof NumericType) {
-				d = XSDouble.parse_double(((NumericType) at).string_value());
+				d = (NumericType) at;
 			} else
 				DynamicError.throw_type_error();
 
