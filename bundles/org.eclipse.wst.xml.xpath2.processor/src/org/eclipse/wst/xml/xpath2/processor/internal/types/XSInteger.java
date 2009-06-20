@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type. Using Java
  *                      BigInteger class to enhance numerical range to -INF -> +INF.
+ *     David Carver (STAR) - bug 262765 - fix comparision to zero.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -82,7 +83,7 @@ public class XSInteger extends XSDecimal {
 	 */
 	@Override
 	public boolean zero() {
-		return _value == BigInteger.valueOf(0);
+		return (_value.compareTo(BigInteger.ZERO) == 0);
 	}
 
 	/**
