@@ -1468,8 +1468,7 @@ public class SeqExactlyOneFuncTest extends AbstractPsychoPathTest {
    public void test_fn_exactly_one_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/CardinalitySeqFunc/SeqExactlyOneFunc/fn-exactly-one-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/CardinalitySeqFunc/SeqExactlyOneFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
