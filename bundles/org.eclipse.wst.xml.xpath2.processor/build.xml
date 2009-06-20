@@ -1,0 +1,14 @@
+<project name="proj1" default="generate_parser" basedir=".">
+    <property name="src" location="${basedir}"/>   
+    <property name="cupJar" location="/home/dcarver/eclipse3.5/xsltworkspace/org.eclipse.wst.xml.xpath2.processor/lib/javacup10.jar"/>
+    <description>
+    Build File for Compiler Project
+</description>
+
+
+	<target name="generate_parser">
+	    <java jar="${cupJar}" input="grammars/xpath.cup" fork="true" failonerror="true">
+	    </java>
+	</target>
+
+</project>

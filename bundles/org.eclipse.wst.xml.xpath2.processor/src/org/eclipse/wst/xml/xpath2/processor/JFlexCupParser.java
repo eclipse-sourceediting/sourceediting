@@ -18,7 +18,7 @@ import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.internal.CupError;
 import org.eclipse.wst.xml.xpath2.processor.internal.JFlexError;
 import org.eclipse.wst.xml.xpath2.processor.internal.XPathFlex;
-import org.eclipse.wst.xml.xpath2.processor.internal.XpathCup;
+import org.eclipse.wst.xml.xpath2.processor.internal.XPathCup;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.*;
 
 /**
@@ -38,7 +38,7 @@ public class JFlexCupParser implements XPathParser {
 
 		XPathFlex lexer = new XPathFlex(new StringReader(xpath));
 
-		XpathCup p = new XpathCup(lexer);
+		XPathCup p = new XPathCup(lexer);
 		try {
 			Symbol res = p.parse();
 			return (XPath) res.value;

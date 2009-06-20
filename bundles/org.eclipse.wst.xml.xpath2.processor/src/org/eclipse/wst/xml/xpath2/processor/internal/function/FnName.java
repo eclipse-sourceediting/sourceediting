@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     David Carver - STAR - bug 262765 - Fixed arguments for Name function. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -30,7 +31,7 @@ public class FnName extends Function {
 	 * Constructor for FnName.
 	 */
 	public FnName() {
-		super(new QName("name"), 1);
+		super(new QName("name"), -1);
 	}
 
 	/**
@@ -58,6 +59,9 @@ public class FnName extends Function {
 	 */
 	public static ResultSequence name(Collection args) throws DynamicError {
 
+		if (args.isEmpty()) {
+			throw DynamicError.contextUndefined(null);
+		}
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
 		ResultSequence rs = ResultSequenceFactory.create_new();

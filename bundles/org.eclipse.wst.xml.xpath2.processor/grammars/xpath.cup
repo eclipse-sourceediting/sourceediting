@@ -11,13 +11,13 @@
 // *******************************************************************************/
 
 
-package org.eclipse.wst.xml.xpath2.processor;
+package org.eclipse.wst.xml.xpath2.processor.internal;
 
 import java.util.*;
-import org.eclipse.wst.xml.xpath2.processor.ast.*;
-import org.eclipse.wst.xml.xpath2.processor.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.ast.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
-
+ 
 parser code 	{:
 
 public void report_error(String message, Object info) {
@@ -47,7 +47,7 @@ terminal String CHILD, DESCENDANT, ATTRIBUTE, SELF, DESCENDANT_OR_SELF;
 terminal String FOLLOWING_SIBLING, FOLLOWING, NAMESPACE, PARENT;
 terminal String ANCESTOR, PRECEDING_SIBLING, PRECEDING, ANCESTOR_OR_SELF;
 terminal EQ, NE, LT, LE, GT, GE;
-terminal DIV, IDIV, MOD;
+terminal String DIV, IDIV, MOD;
 terminal String UNION, INTERSECT, EXCEPT;
 terminal String INSTANCE, OF, TREAT, AS, CASTABLE, CAST, IS;
 terminal String FOR, IN, RETURN, SATISFIES, TO;
@@ -126,6 +126,8 @@ precedence left FOR, IN, RETURN, SATISFIES, TO;
 precedence left SOME, EVERY;
 precedence left IF, THEN, ELSE;
 precedence left AND, OR;
+precedence left DIV, IDIV, MOD;
+
 
 
 
@@ -687,5 +689,8 @@ NCName                ::= NCNAME:n {: RESULT = n; :} |
 						  THEN:n {: RESULT = new String("then"); :} |
 						  ELSE:n {: RESULT = new String("else"); :} |
 						  AND:n {: RESULT = new String("and"); :} |
-						  OR:n {: RESULT = new String("or"); :}
+						  OR:n {: RESULT = new String("or"); :} |
+						  DIV:n {: RESULT = new String("div"); :} |
+						  IDIV:n {: RESULT = new String("idiv"); :} |
+						  MOD:n {: RESULT = new String("mod"); :}
 			; 

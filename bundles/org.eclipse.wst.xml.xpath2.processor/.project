@@ -6,13 +6,23 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
-			<name>pi.eclipse.cle.CupBuilder</name>
+			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
+			<triggers>full,incremental,</triggers>
 			<arguments>
+				<dictionary>
+					<key>LaunchConfigHandle</key>
+					<value>&lt;project&gt;/.externalToolBuilders/pi.eclipse.cle.CupBuilder.launch</value>
+				</dictionary>
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>pi.eclipse.cle.LexBuilder</name>
+			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
+			<triggers>full,incremental,</triggers>
 			<arguments>
+				<dictionary>
+					<key>LaunchConfigHandle</key>
+					<value>&lt;project&gt;/.externalToolBuilders/pi.eclipse.cle.LexBuilder.launch</value>
+				</dictionary>
 			</arguments>
 		</buildCommand>
 		<buildCommand>

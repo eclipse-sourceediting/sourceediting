@@ -13,6 +13,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
@@ -29,7 +30,7 @@ public class FnNilled extends Function {
 	 * Constructor for FnNilled.
 	 */
 	public FnNilled() {
-		super(new QName("nilled"), 1);
+		super(new QName("nilled"), -1);
 	}
 
 	/**
@@ -56,11 +57,16 @@ public class FnNilled extends Function {
 	 * @return Result of fn:nilled operation.
 	 */
 	public static ResultSequence nilled(Collection args) throws DynamicError {
+		
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
+		
 		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
+		if (arg1.empty()) {
+			return arg1;
+		}
 		NodeType nt = (NodeType) arg1.first();
-
+		
 		return nt.nilled();
 	}
 

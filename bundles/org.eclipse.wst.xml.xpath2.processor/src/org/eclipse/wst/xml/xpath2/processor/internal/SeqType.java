@@ -168,8 +168,10 @@ public class SeqType {
 	 * @return a result sequence
 	 */
 	public ResultSequence match(ResultSequence args) throws DynamicError {
-		// XXX i don't want to implement this
-		// i'll implement it my way... not conformant to the spec...
+		if (args.empty()) {  // empty sequence so return an empty sequence
+			return args;
+		}
+		
 		int arg_count = 0;
 
 		for (Iterator i = args.iterator(); i.hasNext();) {

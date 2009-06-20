@@ -220,4 +220,8 @@ public class DynamicError extends XPathException {
 	public static DynamicError div_zero(String msg) {
 		return make_error("FOAR0001", "Division by zero", msg);
 	}
+	
+	public static DynamicError contextUndefined(String msg) {
+		return make_error("XPDY0002", "Context is undefined.", msg);
+	}
 }
