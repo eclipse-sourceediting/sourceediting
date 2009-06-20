@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 274471 - improvements to normalize-space function (support for arity 0)
+ *     David Carver (STAR) - bug 262765 - correct implementation to correctly get context node 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -83,7 +84,7 @@ public class FnNormalizeSpace extends Function {
 		
 		if (cargs.isEmpty()) {
 		  // support for arity = 0
-		  return getResultSetForArityZero(d_context);
+		  arg1 = getResultSetForArityZero(d_context);
 		}
 		else {
 		  arg1 = (ResultSequence) cargs.iterator().next();
@@ -91,7 +92,7 @@ public class FnNormalizeSpace extends Function {
 
 		if (arg1.empty()) {
 		  // support for arity = 0
-		  return getResultSetForArityZero(d_context);
+		  arg1 = getResultSetForArityZero(d_context);
 		}
 
 		String str = ((XSString) arg1.first()).value();
