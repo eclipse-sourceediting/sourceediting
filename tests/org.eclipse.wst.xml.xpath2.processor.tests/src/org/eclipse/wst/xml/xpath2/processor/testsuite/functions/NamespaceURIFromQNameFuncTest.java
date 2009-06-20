@@ -35,7 +35,7 @@ public class NamespaceURIFromQNameFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:namespace-uri-from-QName(())";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -43,7 +43,7 @@ public class NamespaceURIFromQNameFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<empty>" + buildResultString(rs) + "</empty>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -53,7 +53,7 @@ public class NamespaceURIFromQNameFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -72,7 +72,7 @@ public class NamespaceURIFromQNameFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:namespace-uri-from-QName(((),()))";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -80,7 +80,7 @@ public class NamespaceURIFromQNameFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<empty>" + buildResultString(rs) + "</empty>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -90,7 +90,7 @@ public class NamespaceURIFromQNameFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -100,7 +100,7 @@ public class NamespaceURIFromQNameFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/QNameFunc/NamespaceURIFromQNameFunc/NamespaceURIFromQNameFunc009.xq";
       String resultFile = "/ExpectedTestResults/Functions/QNameFunc/NamespaceURIFromQNameFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -137,7 +137,7 @@ public class NamespaceURIFromQNameFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/QNameFunc/NamespaceURIFromQNameFunc/NamespaceURIFromQNameFunc011.xq";
       String resultFile = "/ExpectedTestResults/Functions/QNameFunc/NamespaceURIFromQNameFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -174,7 +174,7 @@ public class NamespaceURIFromQNameFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Functions/QNameFunc/NamespaceURIFromQNameFunc/NamespaceURIFromQNameFunc015.xq";
       String resultFile = "/ExpectedTestResults/Functions/QNameFunc/NamespaceURIFromQNameFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -211,7 +211,7 @@ public class NamespaceURIFromQNameFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/QNameFunc/NamespaceURIFromQNameFunc/NamespaceURIFromQNameFunc016.xq";
       String resultFile = "/ExpectedTestResults/Functions/QNameFunc/NamespaceURIFromQNameFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -248,7 +248,7 @@ public class NamespaceURIFromQNameFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/QNameFunc/NamespaceURIFromQNameFunc/NamespaceURIFromQNameFunc017.xq";
       String resultFile = "/ExpectedTestResults/Functions/QNameFunc/NamespaceURIFromQNameFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
