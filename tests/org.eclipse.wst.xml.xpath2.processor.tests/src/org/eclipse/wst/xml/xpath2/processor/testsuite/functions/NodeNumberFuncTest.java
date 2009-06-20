@@ -170,6 +170,7 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
    }
 
    //Evaluates the "number" function with the arguments set as follows: $arg = xs:integer(mid range).
+   // This currently fails due to the Parser not handling BigInteger literal values.
    public void test_fn_numberintg1args_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeFunc/NodeNumberFunc/fn-numberintg1args-2.xq";
