@@ -6,11 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     David Carver - STAR - bug 262765 - fixed implementation of fn:local-name according to spec.  
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -30,7 +32,7 @@ public class FnLocalName extends Function {
 	 * Constructor for FnLocalName.
 	 */
 	public FnLocalName() {
-		super(new QName("local-name"), 1);
+		super(new QName("local-name"), -1);
 	}
 
 	/**
@@ -44,7 +46,7 @@ public class FnLocalName extends Function {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return local_name(args);
+		return local_name(args, dynamic_context());
 	}
 
 	/**
@@ -56,7 +58,7 @@ public class FnLocalName extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:local-name operation.
 	 */
-	public static ResultSequence local_name(Collection args)
+	public static ResultSequence local_name(Collection args, DynamicContext context)
 			throws DynamicError {
 
 		Collection cargs = Function.convert_arguments(args, expected_args());
@@ -64,14 +66,27 @@ public class FnLocalName extends Function {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		// get arg
-		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
+		ResultSequence arg1 = null;
+		
+		if (cargs.isEmpty()) {
+			if (context.context_item() == null)
+				throw DynamicError.contextUndefined();
+			else {
+				arg1 = ResultSequenceFactory.create_new();
+				arg1.add(context.context_item());
+			}
+		} else {
+			arg1 = (ResultSequence) cargs.iterator().next();
 
+		}
+		
 		if (arg1.empty()) {
 			rs.add(new XSString(""));
 			return rs;
 		}
 
 		NodeType an = (NodeType) arg1.first();
+		
 
 		QName name = an.node_name();
 

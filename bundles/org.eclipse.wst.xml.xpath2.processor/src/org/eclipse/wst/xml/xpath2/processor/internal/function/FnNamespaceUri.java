@@ -6,11 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     David Carver - bug 262765 - corrected implementation according to spec. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -29,7 +31,7 @@ public class FnNamespaceUri extends Function {
 	 * Constructor for FnNamespaceUri.
 	 */
 	public FnNamespaceUri() {
-		super(new QName("namespace-uri"), 1);
+		super(new QName("namespace-uri"), -1);
 	}
 
 	/**
@@ -43,7 +45,7 @@ public class FnNamespaceUri extends Function {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return namespace_uri(args);
+		return namespace_uri(args, dynamic_context());
 	}
 
 	/**
@@ -55,15 +57,23 @@ public class FnNamespaceUri extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:namespace-uri operation.
 	 */
-	public static ResultSequence namespace_uri(Collection args)
-			throws DynamicError {
+	public static ResultSequence namespace_uri(Collection args,
+			DynamicContext context) throws DynamicError {
 
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
-
-		// get arg
-		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
+		ResultSequence arg1 = null;
+		if (cargs.isEmpty()) {
+			if (context.context_item() == null) {
+				throw DynamicError.contextUndefined();
+			}
+			arg1 = ResultSequenceFactory.create_new();
+			arg1.add(context.context_item());
+		} else {
+			// get arg
+			arg1 = (ResultSequence) cargs.iterator().next();
+		}
 
 		if (arg1.empty()) {
 			rs.add(new XSAnyURI(""));

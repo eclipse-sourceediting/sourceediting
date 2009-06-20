@@ -75,7 +75,7 @@ public class XPathDecimalFormat extends DecimalFormat {
 		BigDecimal maxValue = new BigDecimal("1E6");
 		if (doubValue.compareTo(minValue) > 0 && doubValue.compareTo(maxValue) < 0) {
 			applyPattern(newPattern);
-		} else if (doubValue.compareTo(minValue) < 0) {
+		} else { //if (doubValue.compareTo(minValue) < 0) {
 			applyPattern(curPattern.replace("0.#", "0.0"));
 		}
 	}

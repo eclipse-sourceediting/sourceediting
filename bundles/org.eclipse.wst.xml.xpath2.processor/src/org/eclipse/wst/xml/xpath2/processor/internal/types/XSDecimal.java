@@ -275,7 +275,7 @@ public class XSDecimal extends NumericType {
 		XSDecimal val = (XSDecimal) get_single_type(arg, XSDecimal.class);
 		if (val.zero())
 			throw DynamicError.div_zero(null);
-		BigDecimal result = getValue().divide(val.getValue(), 18, RoundingMode.HALF_UP);
+		BigDecimal result = getValue().divide(val.getValue(), 18, RoundingMode.HALF_EVEN);
 //		BigDecimal result = BigDecimal.valueOf(double_value() / val.double_value());
 		return ResultSequenceFactory.create_new(new XSDecimal(result));
 	}
