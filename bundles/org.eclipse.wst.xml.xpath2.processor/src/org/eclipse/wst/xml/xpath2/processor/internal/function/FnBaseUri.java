@@ -83,7 +83,7 @@ public class FnBaseUri extends Function {
 			rs = getBaseUri(contextItem);
 		  }
 		  else {
-		    throw DynamicError.throw_type_error();
+		    throw DynamicError.contextUndefined();
 		  }
 		}
 		else if (cargs.size() == 1) {

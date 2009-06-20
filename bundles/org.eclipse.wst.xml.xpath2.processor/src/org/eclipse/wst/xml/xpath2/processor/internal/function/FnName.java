@@ -60,7 +60,7 @@ public class FnName extends Function {
 	public static ResultSequence name(Collection args) throws DynamicError {
 
 		if (args.isEmpty()) {
-			throw DynamicError.contextUndefined(null);
+			throw DynamicError.contextUndefined();
 		}
 		Collection cargs = Function.convert_arguments(args, expected_args());
 

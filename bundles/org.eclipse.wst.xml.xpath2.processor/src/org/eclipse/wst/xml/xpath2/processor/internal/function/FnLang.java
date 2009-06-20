@@ -6,11 +6,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     David Carver - bug 280972 - fix fn:lang implementation so it matches spec. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -37,7 +39,7 @@ public class FnLang extends Function {
 	 * Constructor for FnLang.
 	 */
 	public FnLang() {
-		super(new QName("lang"), 2);
+		super(new QName("lang"), -1);
 	}
 
 	/**
@@ -51,7 +53,7 @@ public class FnLang extends Function {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return lang(args);
+		return lang(args, dynamic_context());
 	}
 
 	/**
@@ -63,7 +65,7 @@ public class FnLang extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:lang operation.
 	 */
-	public static ResultSequence lang(Collection args) throws DynamicError {
+	public static ResultSequence lang(Collection args, DynamicContext context) throws DynamicError {
 
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
@@ -72,7 +74,16 @@ public class FnLang extends Function {
 		// get arg
 		Iterator citer = cargs.iterator();
 		ResultSequence arg1 = (ResultSequence) citer.next();
-		ResultSequence arg2 = (ResultSequence) citer.next();
+		ResultSequence arg2 = null;
+		if (cargs.size() == 1) {
+			if (context.context_item() == null) {
+				throw DynamicError.contextUndefined();
+			}
+			arg2 = ResultSequenceFactory.create_new();
+			arg2.add(context.context_item());
+		} else {
+			arg2 = (ResultSequence) citer.next();
+		}
 
 		String lang = "";
 
@@ -80,6 +91,10 @@ public class FnLang extends Function {
 			lang = ((XSString) arg1.first()).value();
 		}
 
+		
+		if (!((AnyType)arg2.first() instanceof NodeType) ) {
+			throw DynamicError.throw_type_error();
+		}
 		NodeType an = (NodeType) arg2.first();
 
 		rs.add(new XSBoolean(test_lang(an.node_value(), lang)));
@@ -105,9 +120,21 @@ public class FnLang extends Function {
 
 				if (!"xml:lang".equals(attr.getName()))
 					continue;
+				
+				String xmllangValue = attr.getValue();
+				int hyphenIndex = xmllangValue.indexOf('-');
+				
+				if (hyphenIndex > -1) {
+					xmllangValue = xmllangValue.substring(0, hyphenIndex);
+				}
 
-				if (lang.equals(attr.getValue()))
-					return true;
+				
+				String langLanguage = lang;
+				if (lang.length() > 2) {
+					langLanguage = lang.substring(0, 2);
+				}
+				
+				return xmllangValue.equalsIgnoreCase(langLanguage);
 			}
 		}
 
@@ -133,4 +160,5 @@ public class FnLang extends Function {
 
 		return _expected_args;
 	}
+		
 }
