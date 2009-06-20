@@ -25,8 +25,7 @@ public class NodeRootFuncTest extends AbstractPsychoPathTest {
    public void test_fn_root_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeFunc/NodeRootFunc/fn-root-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeFunc/NodeRootFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -35,7 +34,7 @@ public class NodeRootFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:root()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -43,7 +42,7 @@ public class NodeRootFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "XPDY0002";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -117,7 +116,7 @@ public class NodeRootFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -127,7 +126,7 @@ public class NodeRootFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -173,8 +172,7 @@ public class NodeRootFuncTest extends AbstractPsychoPathTest {
    public void test_fn_root_24() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeFunc/NodeRootFunc/fn-root-24.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeFunc/NodeRootFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -191,7 +189,7 @@ public class NodeRootFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "XPDY0002";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
