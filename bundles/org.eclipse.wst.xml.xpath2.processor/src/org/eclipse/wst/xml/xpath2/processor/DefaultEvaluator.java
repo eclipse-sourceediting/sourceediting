@@ -976,7 +976,9 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		rs = kind_test(rs, NodeType.class);
 
 		try {
-			rs = FnRoot.fn_root(rs, _dc);
+			List records = new ArrayList();
+			records.add(rs);
+			rs = FnRoot.fn_root(records, _dc);
 		} catch (DynamicError err) {
 			report_error(err);
 		}

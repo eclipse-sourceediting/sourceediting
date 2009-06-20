@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     David Carver - STAR - bug 262765 - clean up fn:root according to spec. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -19,6 +20,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
 import java.util.*;
+
 import org.w3c.dom.*;
 
 /**
@@ -26,11 +28,13 @@ import org.w3c.dom.*;
  * not necessarily, be a document node.
  */
 public class FnRoot extends Function {
+	private static Collection _expected_args = null;
+
 	/**
 	 * Constructor for FnRoot.
 	 */
 	public FnRoot() {
-		super(new QName("root"), 1);
+		super(new QName("root"), -1);
 	}
 
 	/**
@@ -47,9 +51,9 @@ public class FnRoot extends Function {
 
 		assert args.size() == arity();
 
-		ResultSequence argument = (ResultSequence) args.iterator().next();
+		//ResultSequence argument = (ResultSequence) args.iterator().next();
 
-		return fn_root(argument, dynamic_context());
+		return fn_root(args, dynamic_context());
 	}
 
 	/**
@@ -63,18 +67,35 @@ public class FnRoot extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:root operation.
 	 */
-	public static ResultSequence fn_root(ResultSequence arg, DynamicContext dc)
+	public static ResultSequence fn_root(Collection args, DynamicContext dc)
 			throws DynamicError {
 
+		Collection cargs = Function.convert_arguments(args, expected_args());
+		
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		// sanity check arg
-		if (arg.size() == 0)
-			return rs;
+//		if (cargs.isEmpty())
+//			return rs;
 
-		if (arg.size() > 1)
+		if (cargs.size() > 1)
 			throw new DynamicError(TypeError.invalid_type(null));
-
+		
+		ResultSequence arg = null;
+		if (cargs.isEmpty()) {
+			arg = ResultSequenceFactory.create_new();
+			if (dc.context_item() == null) {
+				throw DynamicError.contextUndefined();
+			}
+			arg.add(dc.context_item());
+		} else {
+			arg = (ResultSequence) cargs.iterator().next();			
+		}
+		
+		if (arg.empty()) {
+			return rs;
+		}
+		
 		AnyType aa = arg.first();
 
 		if (!(aa instanceof NodeType))
@@ -100,5 +121,21 @@ public class FnRoot extends Function {
 
 		return rs;
 	}
+	
+	/**
+	 * Obtain a list of expected arguments.
+	 * 
+	 * @return Result of operation.
+	 */
+	public static Collection expected_args() {
+		if (_expected_args == null) {
+			_expected_args = new ArrayList();
+			SeqType arg = new SeqType(SeqType.OCC_QMARK);
+			_expected_args.add(arg);
+		}
+
+		return _expected_args;
+	}
+	
 
 }
