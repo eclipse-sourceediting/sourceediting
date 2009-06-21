@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     David Carver (STAR) - bug 262765 - added exception handling to toss correct error numbers. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -32,7 +33,7 @@ public class FnReplace extends Function {
 	 * Constructor for RnReplace.
 	 */
 	public FnReplace() {
-		super(new QName("replace"), 3);
+		super(new QName("replace"), -3);
 	}
 
 	/**
@@ -72,17 +73,51 @@ public class FnReplace extends Function {
 
 		ResultSequence arg2 = (ResultSequence) argiter.next();
 		ResultSequence arg3 = (ResultSequence) argiter.next();
+		ResultSequence arg4 = null;
+		if (argiter.hasNext()) {
+			arg4 = (ResultSequence) argiter.next();
+			String flags = arg4.first().string_value();
+			
+			if (flags.length() == 0) {
+				arg4 = null;
+			} else if (isFlagValid(flags) == false) {
+				throw new DynamicError("FORX0001", "Invalid regular expression. flags");
+			}
+		}
 		String pattern = ((XSString) arg2.first()).value();
 		String replacement = ((XSString) arg3.first()).value();
-
-		// XXX THIS IS NOT CORRECT
+		
 		try {
 			rs.add(new XSString(str1.replaceAll(pattern, replacement)));
-			return rs;
+			return rs; 
 		} catch (PatternSyntaxException err) {
 			throw DynamicError.regex_error(null);
+		} catch (IllegalArgumentException ex) {
+			throw new DynamicError("FORX0004", "invalid regex.");
+		} catch (IndexOutOfBoundsException ex) {
+			String className = ex.getClass().getName();
+			if (className.endsWith("StringIndexOutOfBoundsException")) {
+				throw new DynamicError("FORX0004", "result out of bounds");
+			}
+			throw new DynamicError("FORX0003", "invalid regex.");
+		} catch (Exception ex) {
+			throw new DynamicError("FORX0004", "invalid regex.");
 		}
 	}
+	
+	private static boolean isFlagValid(String flag) {
+		char flags[] = {'s', 'm', 'i', 'x'};
+		
+		for (int i = 0; i < flags.length; i++) {
+			if (flag.indexOf(flags[i]) != -1) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	
 
 	/**
 	 * Obtain a list of expected arguments.
@@ -94,6 +129,7 @@ public class FnReplace extends Function {
 			_expected_args = new ArrayList();
 			SeqType arg = new SeqType(new XSString(), SeqType.OCC_QMARK);
 			_expected_args.add(arg);
+			_expected_args.add(new SeqType(new XSString(), SeqType.OCC_NONE));
 			_expected_args.add(new SeqType(new XSString(), SeqType.OCC_NONE));
 			_expected_args.add(new SeqType(new XSString(), SeqType.OCC_NONE));
 		}
