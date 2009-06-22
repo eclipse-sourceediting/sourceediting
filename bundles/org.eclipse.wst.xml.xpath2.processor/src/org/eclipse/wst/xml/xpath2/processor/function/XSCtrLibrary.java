@@ -33,7 +33,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
  */
 public class XSCtrLibrary extends ConstructorFL {
 	/**
-	 * Path to W3.org XML Schema specification.
+	 * Path to w3.org XML Schema specification.
 	 */
 	public static final String XML_SCHEMA_NS = "http://www.w3.org/2001/XMLSchema";
 
@@ -82,5 +82,6 @@ public class XSCtrLibrary extends ConstructorFL {
 		add_type(new XSDayTimeDuration());
 		
 		add_type(new XSBase64Binary());
+		add_type(new XSHexBinary());
 	}
 }
