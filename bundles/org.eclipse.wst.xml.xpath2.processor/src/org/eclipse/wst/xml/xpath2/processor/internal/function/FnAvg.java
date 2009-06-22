@@ -74,6 +74,12 @@ public class FnAvg extends Function {
 
 			if (!(at instanceof MathPlus))
 				DynamicError.throw_type_error();
+			
+			if (at.string_value().equals("NaN")) {
+				ResultSequence res = ResultSequenceFactory.create_new();
+				res.add(at);
+				return res;
+			}		
 
 			if (total == null)
 				total = (MathPlus) at;

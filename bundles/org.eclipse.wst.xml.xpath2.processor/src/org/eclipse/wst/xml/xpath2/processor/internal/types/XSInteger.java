@@ -151,7 +151,8 @@ public class XSInteger extends XSDecimal {
 		AnyType at = get_single_arg(arg);
 		if (!(at instanceof XSInteger))
 			DynamicError.throw_type_error();
-		XSInteger val = (XSInteger) at;
+		
+		XSInteger val = (XSInteger)at;
 
 		return ResultSequenceFactory.create_new(new 
 				                   XSInteger(int_value().add(val.int_value())));
