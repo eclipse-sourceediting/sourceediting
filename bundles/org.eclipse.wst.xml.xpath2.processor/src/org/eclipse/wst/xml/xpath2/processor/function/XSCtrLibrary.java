@@ -19,7 +19,8 @@
  *     Mukul Gandhi - bug 277639 - implementation of xs:byte data type
  *     Mukul Gandhi - bug 277642 - implementation of xs:unsignedInt data type
  *     Mukul Gandhi - bug 277645 - implementation of xs:unsighedShort data type
- *     Mukul Gandhi - bug 277650 - implementation of xs:unsignedByte data type  
+ *     Mukul Gandhi - bug 277650 - implementation of xs:unsignedByte data type
+ *     Mukul Gandhi - bug 281046 - implementation of xs:base64Binary data type 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.function;
@@ -79,5 +80,7 @@ public class XSCtrLibrary extends ConstructorFL {
 		add_type(new XSAnyURI());
 		add_type(new XSYearMonthDuration());
 		add_type(new XSDayTimeDuration());
+		
+		add_type(new XSBase64Binary());
 	}
 }
