@@ -28,7 +28,8 @@
  *                    bug 277650   implements xs:unsignedByte data type
  *                    bug 279373   improvements to multiply operation on xs:yearMonthDuration
  *                                 data type.
- *                    bug 279376   improvements to xs:yearMonthDuration division operation                                 
+ *                    bug 279376   improvements to xs:yearMonthDuration division operation
+ *                    bug 281046   implementation of xs:base64Binary data type                                
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -852,6 +853,29 @@ public class TestBugs extends AbstractPsychoPathTest {
 		// min value of xs:unsignedByte is 0
 		// max value of xs:unsignedByte is 255
 		String xpath = "xs:unsignedByte('255') eq 255";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
+	
+	public void testXSBase64Binary() throws Exception {
+		// Bug 281046
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "xs:base64Binary('cmxjZ3R4c3JidnllcmVuZG91aWpsbXV5Z2NhamxpcmJkaWFhbmFob2VsYXVwZmJ1Z2dmanl2eHlzYmhheXFtZXR0anV2dG1q') eq xs:base64Binary('cmxjZ3R4c3JidnllcmVuZG91aWpsbXV5Z2NhamxpcmJkaWFhbmFob2VsYXVwZmJ1Z2dmanl2eHlzYmhheXFtZXR0anV2dG1q')";
 		XPath path = compileXPath(dc, xpath);
 
 		Evaluator eval = new DefaultEvaluator(dc, domDoc);
