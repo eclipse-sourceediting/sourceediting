@@ -10,7 +10,8 @@
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type
  *     David Carver - bug 277770 - format of XSDouble for zero values incorrect.
  *     Mukul Gandhi - bug 279406 - improvements to negative zero values for xs:double
- *     David Carver - bug 262765 - various numeric formatting fixes and calculations      
+ *     David Carver (STAR) - bug 262765 - various numeric formatting fixes and calculations
+ *     David Carver (STAR) - bug 262765 - fixed rounding errors.      
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -155,11 +156,7 @@ public class XSDouble extends NumericType {
 		if (nan()) {
 			return "NaN";
 		}
-		
-		if (_value.isInfinite()) {
-			return "INF";
-		}
-		
+				
 		return  format.xpathFormat(_value);
 	}
 
@@ -408,7 +405,9 @@ public class XSDouble extends NumericType {
 	 */
 	@Override
 	public NumericType round() {
-		return new XSDouble(Math.round(double_value()));
+		BigDecimal value = new BigDecimal(_value);
+		BigDecimal round = value.setScale(0, RoundingMode.HALF_UP);
+		return new XSDouble(round.doubleValue());
 	}
 
 	/**

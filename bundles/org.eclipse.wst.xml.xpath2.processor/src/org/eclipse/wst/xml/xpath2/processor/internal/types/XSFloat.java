@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type
  *     Mukul Gandhi - bug 279406 - improvements to negative zero values for xs:float
+ *     David Carver - bug 262765 - fixed rounding errors.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -370,7 +371,9 @@ public class XSFloat extends NumericType {
 	 */
 	@Override
 	public NumericType round() {
-		return new XSFloat(Math.round(float_value()));
+		BigDecimal value = new BigDecimal(float_value());
+		BigDecimal round = value.setScale(0, RoundingMode.HALF_UP);
+		return new XSFloat(round.floatValue());
 	}
 
 	/**
