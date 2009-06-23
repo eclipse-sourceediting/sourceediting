@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,6 +30,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -37,6 +38,7 @@ import org.eclipse.ui.texteditor.TextEditorAction;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 
@@ -248,6 +250,7 @@ class GoToMatchingTagAction extends TextEditorAction {
 
 				Position pStart = null;
 				Position pEnd = null;
+				String tag = ""; //$NON-NLS-1$
 				if (o instanceof IDOMNode) {
 					IDOMNode node = (IDOMNode) o;
 					IStructuredDocumentRegion startStructuredDocumentRegion = node.getStartStructuredDocumentRegion();
@@ -255,6 +258,7 @@ class GoToMatchingTagAction extends TextEditorAction {
 						if (startStructuredDocumentRegion.getNumberOfRegions() > 1) {
 							ITextRegion nameRegion = startStructuredDocumentRegion.getRegions().get(1);
 							pStart = new Position(startStructuredDocumentRegion.getStartOffset(nameRegion), nameRegion.getTextLength());
+							tag = startStructuredDocumentRegion.getText(nameRegion);
 						}
 						matchRegion = ((IDOMNode) o).getEndStructuredDocumentRegion();
 						if (matchRegion != null && matchRegion.getNumberOfRegions() > 1) {
@@ -268,6 +272,7 @@ class GoToMatchingTagAction extends TextEditorAction {
 							if (endStructuredDocumentRegion.getNumberOfRegions() > 1) {
 								ITextRegion nameRegion = endStructuredDocumentRegion.getRegions().get(1);
 								pEnd = new Position(endStructuredDocumentRegion.getStartOffset(nameRegion), nameRegion.getTextLength());
+								tag = endStructuredDocumentRegion.getText(nameRegion);
 							}
 							matchRegion = ((IDOMNode) o).getStartStructuredDocumentRegion();
 							if (matchRegion != null && matchRegion.getNumberOfRegions() > 1) {
@@ -278,15 +283,12 @@ class GoToMatchingTagAction extends TextEditorAction {
 					}
 				}
 				if (pStart != null && pEnd != null) {
-					Annotation annotation = new Annotation(false);
-					annotation.setType(ANNOTATION_TYPE);
+					Annotation annotation = new Annotation(ANNOTATION_TYPE, false, NLS.bind(XMLUIMessages.gotoMatchingTag_start, tag));
 					newAnnotations.put(annotation, pStart);
 					if (DEBUG) {
 						System.out.println("adding " + annotation); //$NON-NLS-1$
 					}
-
-					annotation = new Annotation(false);
-					annotation.setType(ANNOTATION_TYPE);
+					annotation = new Annotation(ANNOTATION_TYPE, false, NLS.bind(XMLUIMessages.gotoMatchingTag_end, tag));
 					newAnnotations.put(annotation, pEnd);
 					if (DEBUG) {
 						System.out.println("adding " + annotation); //$NON-NLS-1$

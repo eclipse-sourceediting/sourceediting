@@ -300,6 +300,8 @@ public class XMLUIMessages extends NLS {
 	public static String _UI_STRUCTURED_TEXT_EDITOR_PREFS_LINK;
 	public static String gotoMatchingTag_label;
 	public static String gotoMatchingTag_description;
+	public static String gotoMatchingTag_start;
+	public static String gotoMatchingTag_end;
 	public static String nextSibling_label;
 	public static String nextSibling_description;
 	public static String previousSibling_label;
