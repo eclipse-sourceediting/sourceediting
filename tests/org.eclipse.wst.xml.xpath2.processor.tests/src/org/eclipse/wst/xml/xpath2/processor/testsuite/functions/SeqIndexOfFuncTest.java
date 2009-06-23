@@ -270,6 +270,7 @@ public class SeqIndexOfFuncTest extends AbstractPsychoPathTest {
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
+    	 ex.printStackTrace();
          actual = ex.code();
       } catch (DynamicError ex) {
          actual = ex.code();
