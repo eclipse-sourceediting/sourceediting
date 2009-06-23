@@ -93,7 +93,7 @@ public class FnBoolean extends Function {
 				return make_false();
 		}
 
-		if ((at instanceof XSString) || (at instanceof UntypedAtomic)) {
+		if ((at instanceof XSString) || (at instanceof XSUntypedAtomic)) {
 			if (at.string_value().equals(""))
 				return make_false();
 		}

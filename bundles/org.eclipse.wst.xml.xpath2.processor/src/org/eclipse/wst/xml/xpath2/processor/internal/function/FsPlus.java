@@ -71,7 +71,7 @@ public class FsPlus extends Function {
 
 			AnyType arg = rs.first();
 
-			if (arg instanceof UntypedAtomic) {
+			if (arg instanceof XSUntypedAtomic) {
 				arg = new XSDouble(arg.string_value());
 			}
 

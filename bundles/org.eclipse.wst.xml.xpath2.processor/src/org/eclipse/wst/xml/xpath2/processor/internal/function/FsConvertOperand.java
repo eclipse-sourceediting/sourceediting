@@ -82,9 +82,9 @@ public class FsConvertOperand extends Function {
 			AnyType item = (AnyType) i.next();
 
 			// 2
-			if (item instanceof UntypedAtomic) {
+			if (item instanceof XSUntypedAtomic) {
 				// a
-				if (exp_aat instanceof UntypedAtomic)
+				if (exp_aat instanceof XSUntypedAtomic)
 					result.add(new XSString(item.string_value()));
 				// b
 				else if (exp_aat instanceof NumericType)

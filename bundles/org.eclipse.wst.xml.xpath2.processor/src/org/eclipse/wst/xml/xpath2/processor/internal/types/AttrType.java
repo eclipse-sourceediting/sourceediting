@@ -86,10 +86,10 @@ public class AttrType extends NodeType {
 			rs.add((AnyType)schemaTypeValue);  
 		  }
 		  else {
-			rs.add(new UntypedAtomic(string_value()));  
+			rs.add(new XSUntypedAtomic(string_value()));  
 		  }
 	    } else {
-		   rs.add(new UntypedAtomic(string_value()));	
+		   rs.add(new XSUntypedAtomic(string_value()));	
 		}
 		
 		return rs;

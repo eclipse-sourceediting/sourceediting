@@ -80,7 +80,7 @@ public class DocType extends NodeType {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		// XXX no psvi
-		rs.add(new UntypedAtomic(string_value()));
+		rs.add(new XSUntypedAtomic(string_value()));
 
 		return rs;
 	}

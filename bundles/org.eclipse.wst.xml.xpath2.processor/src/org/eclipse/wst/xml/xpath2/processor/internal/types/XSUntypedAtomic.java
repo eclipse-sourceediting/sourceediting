@@ -6,18 +6,28 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     David Carver - bug 262765 - corrected implementation of XSUntypedAtomic 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
+
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
+import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 
 /**
  * A representation of the UntypedAtomic datatype which is used to represent
  * untyped atomic nodes.
  */
-public class UntypedAtomic extends AnyAtomicType {
+public class XSUntypedAtomic extends CtrType {
 	private String _value;
 
+	
+	public XSUntypedAtomic() {
+		this(null);
+	}
+	
 	/**
 	 * Initialises using the supplied String
 	 * 
@@ -25,18 +35,18 @@ public class UntypedAtomic extends AnyAtomicType {
 	 *            The String representation of the value of the untyped atomic
 	 *            node
 	 */
-	public UntypedAtomic(String x) {
+	public XSUntypedAtomic(String x) {
 		_value = x;
 	}
 
 	/**
 	 * Retrieves the datatype's full pathname
 	 * 
-	 * @return "xdt:untypedAtomic" which is the datatype's full pathname
+	 * @return "xs:untypedAtomic" which is the datatype's full pathname
 	 */
 	@Override
 	public String string_type() {
-		return "xdt:untypedAtomic";
+		return "xs:untypedAtomic";
 	}
 
 	/**
@@ -48,5 +58,22 @@ public class UntypedAtomic extends AnyAtomicType {
 	@Override
 	public String string_value() {
 		return _value;
+	}
+
+	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
+		ResultSequence rs = ResultSequenceFactory.create_new();
+
+		if (arg.empty())
+			return rs;
+
+		AnyAtomicType aat = (AnyAtomicType) arg.first();
+
+		rs.add(new XSUntypedAtomic(aat.string_value()));
+
+		return rs;
+	}
+
+	public String type_name() {
+		return "untypedAtomic";
 	}
 }

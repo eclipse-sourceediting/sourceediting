@@ -154,7 +154,7 @@ public abstract class Function {
 			for (Iterator i = rs.iterator(); i.hasNext();) {
 				AnyType item = (AnyType) i.next();
 				
-				if (item instanceof UntypedAtomic) {
+				if (item instanceof XSUntypedAtomic) {
 					// create a new item of the expected
 					// type initialized with from the string
 					// value of the item

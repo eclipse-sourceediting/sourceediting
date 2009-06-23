@@ -77,7 +77,7 @@ public class FsEq extends Function {
 
 			AnyType arg = rs.first();
 
-			if (arg instanceof UntypedAtomic)
+			if (arg instanceof XSUntypedAtomic)
 				arg = new XSString(arg.string_value());
 
 			rs = ResultSequenceFactory.create_new();
@@ -119,10 +119,10 @@ public class FsEq extends Function {
 		one = FnData.atomize(one);
 		two = FnData.atomize(two);
 
-		if (one instanceof UntypedAtomic)
+		if (one instanceof XSUntypedAtomic)
 			one = new XSString(one.string_value());
 
-		if (two instanceof UntypedAtomic)
+		if (two instanceof XSUntypedAtomic)
 			two = new XSString(two.string_value());
 
 		if (!(one instanceof CmpEq))
@@ -152,9 +152,9 @@ public class FsEq extends Function {
 		// rule a
 		// if one is untyped and other is numeric, cast untyped to
 		// double
-		if ((a instanceof UntypedAtomic && b instanceof NumericType)
-				|| (b instanceof UntypedAtomic && a instanceof NumericType)) {
-			if (a instanceof UntypedAtomic)
+		if ((a instanceof XSUntypedAtomic && b instanceof NumericType)
+				|| (b instanceof XSUntypedAtomic && a instanceof NumericType)) {
+			if (a instanceof XSUntypedAtomic)
 				a = new XSDouble(a.string_value());
 			else
 				b = new XSDouble(b.string_value());
@@ -164,12 +164,12 @@ public class FsEq extends Function {
 		// rule b
 		// if one is untyped and other is string or untyped, then cast
 		// untyped to string
-		else if ((a instanceof UntypedAtomic
-				&& (b instanceof XSString || b instanceof UntypedAtomic) || (b instanceof UntypedAtomic && (a instanceof XSString || a instanceof UntypedAtomic)))) {
+		else if ((a instanceof XSUntypedAtomic
+				&& (b instanceof XSString || b instanceof XSUntypedAtomic) || (b instanceof XSUntypedAtomic && (a instanceof XSString || a instanceof XSUntypedAtomic)))) {
 
-			if (a instanceof UntypedAtomic)
+			if (a instanceof XSUntypedAtomic)
 				a = new XSString(a.string_value());
-			if (b instanceof UntypedAtomic)
+			if (b instanceof XSUntypedAtomic)
 				b = new XSString(a.string_value());
 		}
 
@@ -178,11 +178,11 @@ public class FsEq extends Function {
 		// cast untyped to dynamic type of other
 
 		// XXX?
-		else if (a instanceof UntypedAtomic) {
+		else if (a instanceof XSUntypedAtomic) {
 			ResultSequence converted = ResultSequenceFactory.create_new(a);
 			assert converted.size() == 1;
 			a = converted.first();
-		} else if (b instanceof UntypedAtomic) {
+		} else if (b instanceof XSUntypedAtomic) {
 			ResultSequence converted = ResultSequenceFactory.create_new(b);
 			assert converted.size() == 1;
 			b = converted.first();

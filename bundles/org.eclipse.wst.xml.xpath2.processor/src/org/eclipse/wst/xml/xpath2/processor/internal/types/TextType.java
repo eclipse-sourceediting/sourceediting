@@ -64,7 +64,7 @@ public class TextType extends NodeType {
 	public ResultSequence typed_value() {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
-		rs.add(new UntypedAtomic(_value.getData()));
+		rs.add(new XSUntypedAtomic(_value.getData()));
 
 		return rs;
 	}

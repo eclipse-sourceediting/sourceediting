@@ -46,6 +46,7 @@ public class XSCtrLibrary extends ConstructorFL {
 		// add types here
 		add_type(new XSString());
 		add_type(new XSBoolean());
+		add_type(new XSUntypedAtomic());
 
 		// numeric
 		add_type(new XSDecimal());
