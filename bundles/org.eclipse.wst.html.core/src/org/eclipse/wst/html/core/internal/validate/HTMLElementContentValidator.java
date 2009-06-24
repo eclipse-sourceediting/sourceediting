@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +13,7 @@ package org.eclipse.wst.html.core.internal.validate;
 import java.util.List;
 import java.util.Locale;
 
+import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
@@ -206,6 +207,13 @@ public class HTMLElementContentValidator extends PrimeValidator {
 					return;
 				error = ErrorState.INVALID_CONTENT_ERROR;
 				// Mark the whole node as an error segment.
+				segType = FMUtil.SEG_WHOLE_TAG;
+				break;
+			case Node.CDATA_SECTION_NODE :
+				if (edec.supports(HTMLCMProperties.IS_XHTML) && Boolean.TRUE.equals(edec.getProperty(HTMLCMProperties.IS_XHTML)))
+					return;
+				// Mark the whole CDATA section as an error segment
+				error = ErrorState.INVALID_CONTENT_ERROR;
 				segType = FMUtil.SEG_WHOLE_TAG;
 				break;
 			default :
