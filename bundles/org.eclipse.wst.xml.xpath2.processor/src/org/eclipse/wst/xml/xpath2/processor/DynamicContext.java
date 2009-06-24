@@ -81,6 +81,7 @@ public interface DynamicContext extends StaticContext {
 	 * Reads the day from a TimeDuration type
 	 * 
 	 * @return current date time and implicit timezone.
+	 * @since 1.1
 	 */
 	public XSDayTimeDuration tz();
 
