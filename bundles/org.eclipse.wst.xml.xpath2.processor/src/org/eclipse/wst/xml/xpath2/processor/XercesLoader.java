@@ -55,6 +55,9 @@ public class XercesLoader implements DOMLoader {
 		_validating = false;
 	}
 	
+	/**
+	 * @since 1.1
+	 */
 	public XercesLoader(Schema schema) {
 		_validating = false;
 		_schema = schema;

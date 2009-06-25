@@ -221,6 +221,9 @@ public class DynamicError extends XPathException {
 		return make_error("FOAR0001", "Division by zero", msg);
 	}
 	
+	/**
+	 * @since 1.1
+	 */
 	public static DynamicError contextUndefined() {
 		return make_error("XPDY0002", "Context is undefined.", "");
 	}

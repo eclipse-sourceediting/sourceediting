@@ -88,6 +88,7 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	 * Reads the day from a TimeDuration type
 	 * 
 	 * @return an xs:integer _tz
+	 * @since 1.1
 	 */
 	public XSDayTimeDuration tz() {
 		return _tz;
