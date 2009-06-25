@@ -56,7 +56,7 @@ public class TestAttributeContentAssist extends SelectAttributeContentAssist {
 	@Override
 	public ArrayList<ICompletionProposal> getCompletionProposals() {
 		
-		adjustXPathStart();
+		adjustXPathStart(ATTR_TEST);
 		
 		int offset = getReplacementBeginPosition();
 		IDOMAttr attrNode = (IDOMAttr)((IDOMElement)getNode()).getAttributeNode(ATTR_TEST);
@@ -68,25 +68,4 @@ public class TestAttributeContentAssist extends SelectAttributeContentAssist {
 		return getAllCompletionProposals();
     }
 	
-	/**
-	 *  This needs to setup the content assistance correctly. Here is what needs to happen:
-	 *  1. Adjust the matchString (This should have been calculated earlier) 
-	 *  2. Get the current tokens offset position..this will be the starting offset.
-	 *  3. Get the replacement length...this is the difference between the token offset and the next token or end of the string
-	 */
-	@Override
-	protected void adjustXPathStart() {
-	    IDOMElement elem = (IDOMElement)getNode();
-	    IDOMAttr xpathNode = (IDOMAttr)elem.getAttributeNode(ATTR_TEST);
-		
-		if (xpathNode != null) {
-			String xpathString = xpathNode.getValue();
-			int startOffset = xpathNode.getValueRegionStartOffset();
-			int tokenOffset = getReplacementBeginPosition() - xpathNode.getValueRegionStartOffset();
-			int tokenPosition = getXPathSeperatorPos(tokenOffset, xpathString);
-			int newStartOffset = startOffset + tokenPosition - 1;
-			
-			replacementLength = getReplacementBeginPosition() - startOffset;
-		}
-	}
 }

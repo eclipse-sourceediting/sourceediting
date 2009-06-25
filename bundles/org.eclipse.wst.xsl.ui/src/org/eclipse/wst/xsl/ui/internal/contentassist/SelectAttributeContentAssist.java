@@ -97,7 +97,7 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 	public ArrayList<ICompletionProposal> getCompletionProposals() {
 		proposals.clear();
 		
-		adjustXPathStart();
+		adjustXPathStart(SELECT_ATTRIBUTE);
 		
 		int offset = getReplacementBeginPosition();
 		IDOMAttr attrNode = getAttribute(SELECT_ATTRIBUTE); 
@@ -121,10 +121,11 @@ public class SelectAttributeContentAssist extends AbstractXSLContentAssistReques
 	 *  1. Adjust the matchString (This should have been calculated earlier) 
 	 *  2. Get the current tokens offset position..this will be the starting offset.
 	 *  3. Get the replacement length...this is the difference between the token offset and the next token or end of the string
+	 * @param attrName TODO
 	 */
-	protected void adjustXPathStart() {
+	protected void adjustXPathStart(String attrName) {
 	    IDOMElement elem = (IDOMElement)getNode();
-	    IDOMAttr xpathNode = (IDOMAttr)elem.getAttributeNode(SELECT_ATTRIBUTE);
+	    IDOMAttr xpathNode = (IDOMAttr)elem.getAttributeNode(attrName);
 	    if (xpathNode == null) {
 	    	return;
 	    }
