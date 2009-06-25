@@ -86,5 +86,24 @@ public class TestXPathXMLCompletionProposal extends
 		fail("Did not find XSD proposals.");
 	}
 	
+	public void testTestAttributeProposal() throws Exception {
+		fileName = "TestTestAttributeProposals.xsl";
+		String xslFilePath = projectName + File.separator + fileName;
+		try {
+			loadFileForTesting(xslFilePath);
+
+			ICompletionProposal[] proposals = getProposals(4,28);
+			assertNotNull("Did not find proposals.", proposals);
+
+			for (int i = 0; i < proposals.length; i++) {
+				if (proposals[i].getDisplayString().contains("document")) {
+					return;
+				}
+			}
+		} finally {
+			model.releaseFromEdit();
+		}
+		fail("Did not find XPath proposals for the test attribute.");
+	}
 	
 }
