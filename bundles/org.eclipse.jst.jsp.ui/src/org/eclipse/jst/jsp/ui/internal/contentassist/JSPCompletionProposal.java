@@ -29,6 +29,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
  */
 public class JSPCompletionProposal extends CustomCompletionProposal implements IJavaCompletionProposal, ICompletionProposalExtension3, ICompletionProposalExtension5 {
 
+	private static final char[] TRIGGERS = new char[] { '.', '[' };
 	/*
 	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=124483
 	 * 
@@ -47,7 +48,12 @@ public class JSPCompletionProposal extends CustomCompletionProposal implements I
 	 * Sets cursor position after applying.
 	 */
 	public void apply(ITextViewer viewer, char trigger, int stateMask, int offset) {
+		if (trigger != (char) 0 ) {
+			setReplacementString(getReplacementString() + trigger);
+			setCursorPosition(getCursorPosition() + 1);
+		}
 		super.apply(viewer, trigger, stateMask, offset);
+		
 	}
 
 	final public ICompletionProposal getJavaCompletionProposal() {
@@ -107,6 +113,10 @@ public class JSPCompletionProposal extends CustomCompletionProposal implements I
 			return ((ICompletionProposalExtension3) javaProposal).getPrefixCompletionStart(document, completionOffset);
 
 		return getReplacementOffset();
+	}
+
+	public char[] getTriggerCharacters() {
+		return TRIGGERS;
 	}
 
 	/*
