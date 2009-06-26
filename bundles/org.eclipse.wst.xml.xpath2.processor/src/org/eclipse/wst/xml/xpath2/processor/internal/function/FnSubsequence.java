@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     David Carver - bug 262765 - eased restriction on data type...convert numerics to XSDouble. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -75,16 +76,25 @@ public class FnSubsequence extends Function {
 			DynamicError.throw_type_error();
 
 		AnyType at = startLoc.first();
-		if (!(at instanceof XSDouble))
+		if (!(at instanceof NumericType)) {
 			DynamicError.throw_type_error();
+		}
+
+		at = new XSDouble(at.string_value());
 
 		int start = (int) ((XSDouble) at).double_value();
 
 		if (length.size() != 1)
 			DynamicError.throw_type_error();
+		
 		at = length.first();
-		if (!(at instanceof XSDouble))
+		
+		if (!(at instanceof NumericType)) {
 			DynamicError.throw_type_error();
+		}
+		
+		at = new XSDouble(at.string_value());
+			
 
 		int len = (int) ((XSDouble) at).double_value();
 
