@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - improvements to the function implementation 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -69,16 +70,18 @@ public class FnCodepointsToString extends Function {
 			return rs;
 		}
 
-		// XXX this is wrong
-		StringBuffer sb = new StringBuffer();
+		int[] codePointArray = new int[arg1.size()];
+		int codePointIndex = 0;
 		for (Iterator i = arg1.iterator(); i.hasNext();) {
 			XSInteger code = (XSInteger) i.next();
-
-			sb.append((char) code.int_value().intValue());
+			codePointArray[codePointIndex] = code.int_value().intValue();
+			codePointIndex++;
 		}
 
-		rs.add(new XSString(sb.toString()));
-
+		// "new String(int[] codePoints, int offset, int count)" is a facility
+		// introduced in Java 1.5
+		rs.add(new XSString(new String(codePointArray, 0, codePointArray.length)));
+		
 		return rs;
 	}
 
