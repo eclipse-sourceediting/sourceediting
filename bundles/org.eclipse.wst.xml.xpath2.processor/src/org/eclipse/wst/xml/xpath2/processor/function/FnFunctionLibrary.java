@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - implementation of XPath 2.0 function, fn:prefix-from-QName
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.function;
@@ -71,6 +72,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.FnNot;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.FnNumber;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.FnOneOrMore;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.FnPosition;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FnPrefixFromQName;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.FnQName;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.FnRemove;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.FnReplace;
@@ -208,7 +210,7 @@ public class FnFunctionLibrary extends FunctionLibrary {
 		add_function(new FnQName());
 		add_function(new FnLocalNameFromQName());
 		add_function(new FnNamespaceUriFromQName());
-		// XXX implement namespace/prefix stuff
+		add_function(new FnPrefixFromQName());
 
 		// XXX implement hex & binary & notations
 
