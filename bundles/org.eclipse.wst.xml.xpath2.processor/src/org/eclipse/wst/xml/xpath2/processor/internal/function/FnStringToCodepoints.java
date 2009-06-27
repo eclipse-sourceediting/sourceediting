@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
+ *     Mukul Gandhi - bug 280554 - improvements to the function implementation 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -66,16 +66,15 @@ public class FnStringToCodepoints extends Function {
 
 		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
 		if (arg1.empty())
-			return rs;
+		   return rs;
 
 		XSString xstr = (XSString) arg1.first();
 		String str = xstr.value();
 
-		// XXX this is wrong
 		for (int i = 0; i < str.length(); i++) {
-			char x = str.charAt(i);
-
-			rs.add(new XSInteger(BigInteger.valueOf(x)));
+			// Character.codePointAt API, is introduced in Java 1.5 
+            int codePointValue = Character.codePointAt(str, i);
+			rs.add(new XSInteger(BigInteger.valueOf(codePointValue)));
 		}
 
 		return rs;
