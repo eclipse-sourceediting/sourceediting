@@ -52,11 +52,27 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
       } catch (DynamicError ex) {
          actual = ex.code();
       }
-
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
-
+      
+      assertUnorderedEqual(expectedResult, actual);
    }
+
+private void assertUnorderedEqual(String expectedResult, String actual) {
+	String actArray[] = actual.split(" ");
+      String expArray[] = expectedResult.split(" ");
+      
+	  boolean foundsw = false;
+      for (int a = 0; a < actArray.length; a++) {
+    	  for (int e = 0; e < expArray.length; e++) {
+    		   if (expArray[e].equals(actArray[a])) {
+    			   foundsw = true;
+    		   }
+    	  }
+      }
+      
+      if (!foundsw) {
+    	  fail("Did not find contents of undorered function. Expected " + expectedResult + " but found " + actual);
+      }
+}
 
    //Arg: sequence of string.
    public void test_fn_unordered_mix_args_002() throws Exception {
@@ -90,7 +106,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -127,7 +143,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -164,7 +180,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -201,7 +217,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -238,7 +254,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -275,7 +291,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -312,7 +328,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -349,7 +365,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -386,7 +402,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -423,7 +439,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -460,7 +476,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -497,7 +513,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -534,7 +550,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -571,7 +587,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -608,7 +624,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -645,7 +661,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -682,7 +698,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -719,7 +735,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -756,7 +772,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -793,7 +809,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -830,7 +846,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
@@ -867,7 +883,7 @@ public class SeqUnorderedFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertUnorderedEqual(expectedResult, actual);
         
 
    }
