@@ -1538,14 +1538,16 @@
 			<or>
             	<iterate ifEmpty="false">
 					<adapt type="org.eclipse.core.resources.IFile">
+						<!-- Force property tester to load, should not cause entire plug-in to start -->
 						<test property="org.eclipse.wst.sse.core.resources.contentTypeId" 
-							value="org.eclipse.wst.xml.core.xmlsource"/>
+							value="org.eclipse.wst.xml.core.xmlsource" forcePluginActivation="true"/>
 					</adapt>
 				</iterate>
 				<iterate ifEmpty="false">
 					<adapt type="org.eclipse.core.resources.IFile">
+						<!-- Force property tester to load, should not cause entire plug-in to start -->
 						<test property="org.eclipse.wst.sse.core.resources.contentTypeId"
-							value="org.eclipse.core.runtime.xml"/>
+							value="org.eclipse.core.runtime.xml" forcePluginActivation="true"/>
 					</adapt>
 				</iterate>
 			</or>
