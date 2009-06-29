@@ -486,7 +486,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	public String getLocalName() {
 		if (this.fTagName == null)
 			return null;
-		int index = indexOf(this.fTagName, ':');
+		int index = CharOperation.indexOf(this.fTagName, ':');
 		if (index < 0)
 			return new String(this.fTagName);
 		return new String(this.fTagName, index + 1, this.fTagName.length - index - 1);
@@ -539,7 +539,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	public String getPrefix() {
 		if (this.fTagName == null)
 			return null;
-		int index = indexOf(this.fTagName, ':');
+		int index = CharOperation.indexOf(this.fTagName, ':');
 		if (index <= 0)
 			return null;
 		// exclude JSP tag in name
@@ -623,7 +623,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	protected final boolean hasPrefix() {
 		if (this.fTagName == null || this.fTagName.length == 0)
 			return false;
-		return indexOf(this.fTagName, ':') > 0 && this.fTagName[0] != '<';
+		return CharOperation.indexOf(this.fTagName, ':') > 0 && this.fTagName[0] != '<';
 	}
 
 	/**
@@ -645,14 +645,6 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			return !hasPrefix();
 		}
 		return false;
-	}
-
-	private int indexOf(char[] array, char c) {
-		for (int i = 0; i < array.length; i++) {
-			if (array[i] == c)
-				return i;
-		}
-		return -1;
 	}
 
 	/**

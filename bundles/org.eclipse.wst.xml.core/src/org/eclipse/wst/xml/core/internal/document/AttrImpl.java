@@ -138,7 +138,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	public String getLocalName() {
 		if (this.fName == null)
 			return null;
-		int index = indexOf(this.fName, ':');
+		int index = CharOperation.indexOf(this.fName, ':');
 		if (index < 0)
 			return new String(this.fName);
 		return new String(this.fName, index + 1, this.fName.length - index - 1);
@@ -283,7 +283,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	public String getPrefix() {
 		if (this.fName == null)
 			return null;
-		int index = indexOf(this.fName, ':');
+		int index = CharOperation.indexOf(this.fName, ':');
 		if (index <= 0)
 			return null;
 		// exclude JSP tag in name
@@ -513,17 +513,9 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 	protected final boolean hasPrefix() {
 		if (this.fName == null || this.fName.length == 0)
 			return false;
-		return indexOf(this.fName, ':') > 0 && this.fName[0] != '<';
+		return CharOperation.indexOf(this.fName, ':') > 0 && this.fName[0] != '<';
 	}
 	
-	private int indexOf(char[] array, char c) {
-		for (int i = 0; i < array.length; i++) {
-			if (array[i] == c)
-				return i;
-		}
-		return -1;
-	}
-
 	/**
 	 */
 	protected final boolean ignoreCase() {
