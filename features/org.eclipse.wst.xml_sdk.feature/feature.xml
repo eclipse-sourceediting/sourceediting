@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.xml_sdk.feature"
       label="%featureName"
-      version="3.1.0.qualifier"
+      version="3.2.0.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -21,9 +21,9 @@
       <update label="%updateSiteName" url="http://download.eclipse.org/webtools/updates/"/>
    </url>
 
-   <includes 
+   <includes
          id="org.eclipse.wst.common_sdk.feature"
-         version="0.0.0" />
+         version="0.0.0"/>
 
    <includes
          id="org.eclipse.wst.xml_ui.feature"
@@ -32,5 +32,5 @@
    <includes
          id="org.eclipse.wst.xml_ui.feature.source"
          version="0.0.0"/>
- 
+
 </feature>

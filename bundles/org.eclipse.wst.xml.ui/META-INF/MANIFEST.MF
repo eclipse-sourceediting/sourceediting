@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.xml.ui; singleton:=true
-Bundle-Version: 1.1.0.qualifier
+Bundle-Version: 1.1.100.qualifier
 Bundle-Activator: org.eclipse.wst.xml.ui.internal.XMLUIPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
@@ -11,9 +11,6 @@ Export-Package: org.eclipse.wst.xml.ui,
  org.eclipse.wst.xml.ui.internal.actions;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
  org.eclipse.wst.xml.ui.internal.autoedit;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
  org.eclipse.wst.xml.ui.internal.catalog;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
- org.eclipse.wst.xml.ui.internal.catalog.icons.etool50;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
- org.eclipse.wst.xml.ui.internal.catalog.icons.obj16;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
- org.eclipse.wst.xml.ui.internal.catalog.icons.ovr16;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
  org.eclipse.wst.xml.ui.internal.contentassist;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
  org.eclipse.wst.xml.ui.internal.contentoutline;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
  org.eclipse.wst.xml.ui.internal.correction;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
@@ -24,6 +21,7 @@ Export-Package: org.eclipse.wst.xml.ui,
  org.eclipse.wst.xml.ui.internal.handlers;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
  org.eclipse.wst.xml.ui.internal.hyperlink;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
  org.eclipse.wst.xml.ui.internal.nsedit;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
+ org.eclipse.wst.xml.ui.internal.perspective;x-friends:="org.eclipse.wst.xsl.ui",
  org.eclipse.wst.xml.ui.internal.preferences;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
  org.eclipse.wst.xml.ui.internal.projection;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
  org.eclipse.wst.xml.ui.internal.properties;x-friends:="org.eclipse.wst.xsd.ui,org.eclipse.wst.dtd.ui",
