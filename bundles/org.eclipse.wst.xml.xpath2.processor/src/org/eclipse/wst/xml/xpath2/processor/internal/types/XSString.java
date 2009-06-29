@@ -7,7 +7,6 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -101,7 +100,8 @@ public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 		if (arg.empty())
 			return rs;
 
-		AnyAtomicType aat = (AnyAtomicType) arg.first();
+		//AnyAtomicType aat = (AnyAtomicType) arg.first();
+		AnyType aat = arg.first();
 
 		rs.add(new XSString(aat.string_value()));
 
