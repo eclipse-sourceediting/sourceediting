@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.wst.web_ui.feature.patch"
       label="%featureName"
-      version="3.0.4.qualifier"
+      version="3.0.5.qualifier"
       provider-name="%providerName">
 
    <description>
@@ -18,11 +18,18 @@
    </license>
 
    <requires>
-      <import feature="org.eclipse.wst.web_ui.feature" version="3.0.4.v200811240900-7R0EP7E8Ks9v7urtuDJtBcaRV6Ri" patch="true"/>
+      <import feature="org.eclipse.wst.web_ui.feature" version="3.0.5.v200904070030-7R0EPLE8Ks_vFN8ntF_nOY1stwIC" patch="true"/>
    </requires>
    
    <plugin
-         id="org.eclipse.wst.jsdt.web.ui"
+         id="org.eclipse.wst.css.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.wst.html.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
