@@ -619,8 +619,9 @@
 		<definition id="org.eclipse.wst.html.ui.htmlContentType.definition">
 			<iterate ifEmpty="false">
 				<adapt type="org.eclipse.core.resources.IFile">
+					<!-- Force property tester to load, should not cause entire plug-in to start -->
 					<test property="org.eclipse.wst.sse.core.resources.contentTypeId"
-						value="org.eclipse.wst.html.core.htmlsource"/>
+						value="org.eclipse.wst.html.core.htmlsource" forcePluginActivation="true"/>
 				</adapt>
 			</iterate>
 		</definition>
