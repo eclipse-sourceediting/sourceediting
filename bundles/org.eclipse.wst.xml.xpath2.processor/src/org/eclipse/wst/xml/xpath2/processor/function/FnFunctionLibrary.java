@@ -7,7 +7,6 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Gandhi - implementation of XPath 2.0 function, fn:prefix-from-QName
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.function;
@@ -26,6 +25,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.FnCurrentDate;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.FnCurrentDateTime;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.FnCurrentTime;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.FnData;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FnDateTime;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.FnDayFromDate;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.FnDayFromDateTime;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.FnDaysFromDuration;
@@ -202,6 +202,8 @@ public class FnFunctionLibrary extends FunctionLibrary {
 		add_function(new FnMinutesFromTime());
 		add_function(new FnSecondsFromTime());
 		add_function(new FnTimezoneFromTime());
+		
+		add_function(new FnDateTime());
 
 		// XXX implement timezone functs
 

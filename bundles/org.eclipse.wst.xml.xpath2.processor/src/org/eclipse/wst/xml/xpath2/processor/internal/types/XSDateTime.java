@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
+ *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
+ *     Mukul Gandhi - improved string_value() implementation (motivated by bug, 281822)
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -33,7 +34,7 @@ Cloneable {
 	private XSDayTimeDuration _tz;
 
 	/**
-	 * Initiates a new represenation of a supplied date ant time
+	 * Initiates a new representation of a supplied date and time
 	 * 
 	 * @param cal
 	 *            The Calendar representation of the date and time to be stored
@@ -647,8 +648,28 @@ Cloneable {
 				ret += sec;
 		}
 
-		if (timezoned())
-			ret += "Z";
+		if (timezoned()) {
+			int hrs = _tz.hours();
+			int min = _tz.minutes();
+			double secs = _tz.seconds();
+			if (hrs == 0 && min == 0 && secs == 0) {
+			  ret += "Z";
+			}
+			else {
+			  String tZoneStr = "";
+			  if (_tz.negative()) {
+				tZoneStr += "-";  
+			  }
+			  else {
+				tZoneStr += "+"; 
+			  }
+			  tZoneStr += pad_int(hrs, 2);  
+			  tZoneStr += ":";
+			  tZoneStr += pad_int(min, 2);
+			  
+			  ret += tZoneStr;
+			}
+		}
 
 		return ret;
 	}
