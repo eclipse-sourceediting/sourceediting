@@ -79,6 +79,7 @@ import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 
@@ -87,6 +88,12 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	 */
 	class ActivationListener implements IPartListener, IWindowListener {
 
+		/**
+		 * The maximum number of children the root nodes can have for the
+		 * design page to auto expand the root nodes
+		 */
+		private static final int MAX_NUM_CHILD_NODES_FOR_AUTO_EXPAND = 500;
+		
 		/** Cache of the active workbench part. */
 		private IWorkbenchPart fActivePart;
 		/** Indicates whether activation handling is currently be done. */
@@ -155,7 +162,40 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		 * @see IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
 		 */
 		public void partOpened(IWorkbenchPart part) {
-			// do nothing
+			if (fDesignViewer instanceof AbstractTreeViewer) {
+				IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
+				try {
+					if (model instanceof IDOMModel) {
+						IDOMDocument modelDocument = ((IDOMModel) model).getDocument();
+						NodeList rootChildren = modelDocument.getChildNodes();
+
+						boolean tooManyChildren = (rootChildren.getLength() > MAX_NUM_CHILD_NODES_FOR_AUTO_EXPAND);
+						/*
+						 * For each root (there should really only be one
+						 * real root but there are also could be empty
+						 * text regions and doc type at the root level)
+						 * determine if it has to many children or not to
+						 * auto expand
+						 */
+						for (int i = 0; i < rootChildren.getLength() && !tooManyChildren; ++i) {
+							tooManyChildren = (rootChildren.item(i).getChildNodes().getLength() > MAX_NUM_CHILD_NODES_FOR_AUTO_EXPAND);
+						}
+
+						/*
+						 * if root node does not have to many children then
+						 * auto expand the root node
+						 */
+						if (!tooManyChildren) {
+							((AbstractTreeViewer) fDesignViewer).expandToLevel(2);
+						}
+					}
+				}
+				finally {
+					if (model != null) {
+						model.releaseFromRead();
+					}
+				}
+			}
 		}
 
 		/**
