@@ -1468,8 +1468,7 @@ public class SeqZeroOrOneFuncTest extends AbstractPsychoPathTest {
    public void test_fn_zero_or_one_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/CardinalitySeqFunc/SeqZeroOrOneFunc/fn-zero-or-one-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/CardinalitySeqFunc/SeqZeroOrOneFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORG0003";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
