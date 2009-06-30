@@ -1469,7 +1469,7 @@ public class StringFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AccessorFunc/StringFunc/fn-string-1.xq";
       String resultFile = "/ExpectedTestResults/Functions/AccessorFunc/StringFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -1543,7 +1543,7 @@ public class StringFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AccessorFunc/StringFunc/fn-string-3.xq";
       String resultFile = "/ExpectedTestResults/Functions/AccessorFunc/StringFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
