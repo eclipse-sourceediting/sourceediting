@@ -45,7 +45,7 @@ public class XSGDay extends CalendarType implements CmpEq {
 	 * Initialises a representation of the current day
 	 */
 	public XSGDay() {
-		this(new GregorianCalendar(), false);
+		this(new GregorianCalendar(TimeZone.getTimeZone("GMT")), false);
 	}
 
 	/**

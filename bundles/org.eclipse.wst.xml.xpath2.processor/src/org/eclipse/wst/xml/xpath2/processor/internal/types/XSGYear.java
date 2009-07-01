@@ -44,7 +44,7 @@ public class XSGYear extends CalendarType implements CmpEq {
 	 * Initialises a representation of the current year
 	 */
 	public XSGYear() {
-		this(new GregorianCalendar(), false);
+		this(new GregorianCalendar(TimeZone.getTimeZone("GMT")), false);
 	}
 
 	/**

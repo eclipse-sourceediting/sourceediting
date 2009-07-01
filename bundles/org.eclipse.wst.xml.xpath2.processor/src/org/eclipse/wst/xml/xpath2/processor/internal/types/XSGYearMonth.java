@@ -44,7 +44,7 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 	 * Initialises a representation of the current year and month
 	 */
 	public XSGYearMonth() {
-		this(new GregorianCalendar(), false);
+		this(new GregorianCalendar(TimeZone.getTimeZone("GMT")), false);
 	}
 
 	/**

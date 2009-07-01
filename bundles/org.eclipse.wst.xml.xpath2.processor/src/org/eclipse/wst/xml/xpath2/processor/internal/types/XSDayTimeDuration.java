@@ -305,7 +305,7 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 		boolean did_something = false; // this should be constant ;D
 		String tret = "";
 
-		if (negative())
+		if (negative() && !(days() == 0 && hours() == 0 && seconds() == 0))
 			ret += "-";
 
 		ret += "P";

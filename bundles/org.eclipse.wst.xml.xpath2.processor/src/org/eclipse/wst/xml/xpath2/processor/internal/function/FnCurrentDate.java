@@ -64,7 +64,7 @@ public class FnCurrentDate extends Function {
 			throws DynamicError {
 		assert args.size() == 0;
 
-		AnyType res = new XSDate(new GregorianCalendar(), dc.tz());
+		AnyType res = new XSDate(new GregorianCalendar(TimeZone.getTimeZone("GMT")), dc.tz());
 
 		return ResultSequenceFactory.create_new(res);
 	}

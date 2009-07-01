@@ -65,7 +65,7 @@ public class FnCurrentDateTime extends Function {
 			DynamicContext dc) throws DynamicError {
 		assert args.size() == 0;
 
-		AnyType res = new XSDateTime(new GregorianCalendar(), dc.tz());
+		AnyType res = new XSDateTime(new GregorianCalendar(TimeZone.getTimeZone("GMT")), dc.tz());
 
 		return ResultSequenceFactory.create_new(res);
 	}

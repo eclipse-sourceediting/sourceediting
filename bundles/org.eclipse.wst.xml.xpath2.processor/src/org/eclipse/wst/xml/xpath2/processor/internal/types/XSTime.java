@@ -55,7 +55,7 @@ Cloneable {
 	 * Initialises to the current time
 	 */
 	public XSTime() {
-		this(new GregorianCalendar(), null);
+		this(new GregorianCalendar(TimeZone.getTimeZone("GMT")), null);
 	}
 
 	/**

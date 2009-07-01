@@ -55,7 +55,7 @@ Cloneable {
 	 * Initialises a new representation of the current date
 	 */
 	public XSDate() {
-		this(new GregorianCalendar(), null);
+		this(new GregorianCalendar(TimeZone.getTimeZone("GMT")), null);
 	}
 
 	/**
