@@ -164,7 +164,7 @@ public class TranslateFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/GeneralStringFunc/TranslateFunc/fn-translate3args-5.xq";
       String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/GeneralStringFunc/TranslateFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -201,7 +201,7 @@ public class TranslateFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/GeneralStringFunc/TranslateFunc/fn-translate3args-6.xq";
       String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/GeneralStringFunc/TranslateFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -238,7 +238,7 @@ public class TranslateFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/GeneralStringFunc/TranslateFunc/fn-translate3args-7.xq";
       String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/GeneralStringFunc/TranslateFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -275,7 +275,7 @@ public class TranslateFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/GeneralStringFunc/TranslateFunc/fn-translate3args-8.xq";
       String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/GeneralStringFunc/TranslateFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
