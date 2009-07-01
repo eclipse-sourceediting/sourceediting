@@ -63,7 +63,7 @@ public class ContextLastFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextLastFunc/last-2.xq";
       String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextLastFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -72,7 +72,7 @@ public class ContextLastFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "last()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);

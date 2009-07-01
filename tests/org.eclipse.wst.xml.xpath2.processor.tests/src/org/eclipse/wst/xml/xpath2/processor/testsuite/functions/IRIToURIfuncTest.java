@@ -174,7 +174,7 @@ public class IRIToURIfuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/EscapingFuncs/IRIToURIfunc/fn-iri-to-uri1args-5.xq";
       String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/EscapingFuncs/IRIToURIfunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

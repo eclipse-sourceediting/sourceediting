@@ -296,7 +296,7 @@ public class ContextCurrentDateFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDateFunc/fn-current-date-8.xq";
       String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDateFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

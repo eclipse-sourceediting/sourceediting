@@ -26,7 +26,7 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AccessorFunc/StaticBaseURIFunc/fn-static-base-uri-1.xq";
       String resultFile = "/ExpectedTestResults/Functions/AccessorFunc/StaticBaseURIFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

@@ -1544,7 +1544,7 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeFunc/NodeNumberFunc/fn-number-3.xq";
       String resultFile = "/ExpectedTestResults/Functions/NodeFunc/NodeNumberFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -1553,7 +1553,7 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:number()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -1581,7 +1581,7 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeFunc/NodeNumberFunc/fn-number-4.xq";
       String resultFile = "/ExpectedTestResults/Functions/NodeFunc/NodeNumberFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -1590,7 +1590,7 @@ public class NodeNumberFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:number(.)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
