@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Mukul Gandhi - bug274784 - improvements to xs:boolean data type implementation
+ *     David Carver - bug 282223 - corrected casting to boolean.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -100,14 +101,13 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 		AnyType anyType = (AnyType)arg.first();
 		String str_value = anyType.string_value();
 		
-		if (!(str_value.equals("0") || str_value.equals("1") || 
-			 str_value.equals("true") || str_value.equals("false"))) {
-		   // anything other than these strings is an error
+		
+		if (!(isCastable(anyType, str_value))) {
 		   DynamicError.throw_type_error();
 		}
 
 		Boolean b = null;
-		if (str_value.equals("0") || str_value.equals("false")) {
+		if (isFalse(str_value)) {
 		  b = new Boolean(false);	
 		}
 		else {
@@ -117,6 +117,18 @@ public class XSBoolean extends CtrType implements CmpEq, CmpGt, CmpLt {
 		rs.add(new XSBoolean(b.booleanValue()));
 
 		return rs;
+	}
+
+	private boolean isFalse(String str_value) {
+		return str_value.equals("0") || str_value.equals("false") ||
+		    str_value.equals("+0") || str_value.equals("-0") ||
+		    str_value.equals("0.0E0") || str_value.equals("NaN");
+	}
+
+	private boolean isCastable(AnyType anyType, String str_value) {
+		return str_value.equals("0") || str_value.equals("1") || 
+			 str_value.equals("true") || str_value.equals("false") ||
+			 anyType instanceof NumericType;
 	}
 
 	// comparisons

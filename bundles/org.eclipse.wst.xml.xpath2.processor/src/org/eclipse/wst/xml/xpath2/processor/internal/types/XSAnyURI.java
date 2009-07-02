@@ -8,6 +8,8 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug274719 - implementation of equality of xs:anyURI values
+ *     David Carver (STAR) - bug 282223 - fixed casting to xs:anyURI only string,
+ *         untypedAtomic, and anyURI are allowed.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -89,7 +91,13 @@ public class XSAnyURI extends CtrType implements CmpEq {
 		if (arg.empty())
 			return rs;
 
-		AnyAtomicType aat = (AnyAtomicType) arg.first();
+		AnyType aat = (AnyType) arg.first();
+		
+		if (!(aat.string_type().equals("xs:string") ||
+			  aat.string_type().equals("xs:anyURI") ||
+			  aat.string_type().equals("xs:untypedAtomic"))) {
+			throw DynamicError.throw_type_error();
+		}
 
 		rs.add(new XSAnyURI(aat.string_value()));
 
