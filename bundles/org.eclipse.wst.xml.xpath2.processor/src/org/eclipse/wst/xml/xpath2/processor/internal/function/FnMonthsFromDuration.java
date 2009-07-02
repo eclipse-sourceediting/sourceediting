@@ -8,7 +8,8 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
- *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
+ *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type
+ *     David Carver - bug 282223 - implementation of xs:duration. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -72,7 +73,7 @@ public class FnMonthsFromDuration extends Function {
 			return rs;
 		}
 
-		XSYearMonthDuration ymd = (XSYearMonthDuration) arg1.first();
+		XSDuration ymd = (XSDuration) arg1.first();
 
 		int res = ymd.month();
 

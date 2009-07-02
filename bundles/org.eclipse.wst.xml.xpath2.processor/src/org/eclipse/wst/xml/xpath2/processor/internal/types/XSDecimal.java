@@ -9,7 +9,8 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type
  *     David Carver - bug 277774 - XSDecimal returning wrong values.
- *     David Carver - bug 262765 - various numeric formatting fixes and calculations 
+ *     David Carver - bug 262765 - various numeric formatting fixes and calculations
+ *     David Carver (STAR) - bug 282223 - Can't Cast Exponential values to Decimal values. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -17,7 +18,6 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -118,7 +118,11 @@ public class XSDecimal extends NumericType {
 		AnyType aat = arg.first();
 
 		try {
-			//Double d = new Double(aat.string_value());
+			// XPath doesn't allow for converting Exponents to Decimal values.
+			if (aat.string_value().contains("E") || aat.string_value().contains("e")) {
+				throw DynamicError.cant_cast(null);
+			}
+			
 			rs.add(new XSDecimal(aat.string_value()));
 			return rs;
 		} catch (NumberFormatException e) {

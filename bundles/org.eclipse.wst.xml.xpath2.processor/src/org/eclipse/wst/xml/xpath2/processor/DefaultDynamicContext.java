@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
+ *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
+ *     David Carver - bug 282223 - implementation of xs:duration data type. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -32,7 +33,7 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 		DynamicContext {
 
 	private Focus _focus;
-	private XSDayTimeDuration _tz;
+	private XSDuration _tz;
 	private Hashtable _node_order;
 
 	/**
@@ -90,7 +91,7 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	 * @return an xs:integer _tz
 	 * @since 1.1
 	 */
-	public XSDayTimeDuration tz() {
+	public XSDuration tz() {
 		return _tz;
 	}
 

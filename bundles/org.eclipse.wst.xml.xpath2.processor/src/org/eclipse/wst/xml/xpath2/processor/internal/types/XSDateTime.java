@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
  *     Mukul Gandhi - improved string_value() implementation (motivated by bug, 281822)
+ *     David Carver - bug 282223 - implementation of xs:duration.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -31,7 +32,7 @@ MathMinus, MathPlus,
 Cloneable {
 	private Calendar _calendar;
 	private boolean _timezoned;
-	private XSDayTimeDuration _tz;
+	private XSDuration _tz;
 
 	/**
 	 * Initiates a new representation of a supplied date and time
@@ -41,7 +42,7 @@ Cloneable {
 	 * @param tz
 	 *            The timezone of the date to be stored.
 	 */
-	public XSDateTime(Calendar cal, XSDayTimeDuration tz) {
+	public XSDateTime(Calendar cal, XSDuration tz) {
 		_calendar = cal;
 
 		_tz = tz;
@@ -60,10 +61,10 @@ Cloneable {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Calendar c = (Calendar) calendar().clone();
-		XSDayTimeDuration t = tz();
+		XSDuration t = tz();
 
 		if (t != null)
-			t = (XSDayTimeDuration) t.clone();
+			t = (XSDuration) t.clone();
 
 		return new XSDateTime(c, t);
 	}
@@ -461,7 +462,7 @@ Cloneable {
 
 		// get timezone
 		int tz[] = null;
-		XSDayTimeDuration tzd = null;
+		XSDuration tzd = null;
 		if (timezone != null) {
 			tz = parse_timezone(timezone);
 
@@ -750,7 +751,7 @@ Cloneable {
 	 * 
 	 * @return the timezone associated with the date stored
 	 */
-	public XSDayTimeDuration tz() {
+	public XSDuration tz() {
 		return _tz;
 	}
 
@@ -801,11 +802,11 @@ Cloneable {
 
 				XSDateTime res = (XSDateTime) clone();
 
-				res.calendar().add(Calendar.MONTH, val.value() * -1);
+				res.calendar().add(Calendar.MONTH, val.monthValue() * -1);
 				return ResultSequenceFactory.create_new(res);
 
 			} else if (at instanceof XSDayTimeDuration) {
-				XSDayTimeDuration val = (XSDayTimeDuration) at;
+				XSDuration val = (XSDuration) at;
 
 				XSDateTime res = (XSDateTime) clone();
 
@@ -849,10 +850,10 @@ Cloneable {
 
 				XSDateTime res = (XSDateTime) clone();
 
-				res.calendar().add(Calendar.MONTH, val.value());
+				res.calendar().add(Calendar.MONTH, val.monthValue());
 				return ResultSequenceFactory.create_new(res);
 			} else if (at instanceof XSDayTimeDuration) {
-				XSDayTimeDuration val = (XSDayTimeDuration) at;
+				XSDuration val = (XSDuration) at;
 
 				XSDateTime res = (XSDateTime) clone();
 

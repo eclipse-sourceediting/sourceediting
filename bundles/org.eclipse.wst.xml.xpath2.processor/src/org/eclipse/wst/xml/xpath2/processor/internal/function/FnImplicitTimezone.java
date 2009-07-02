@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
+ *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
+ *     David Carver - bug 282223 - implementation of xs:duration 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -64,7 +65,7 @@ public class FnImplicitTimezone extends Function {
 		assert args.size() == 0;
 
 		try {
-			AnyType res = (XSDayTimeDuration) dc.tz().clone();
+			AnyType res = (XSDuration) dc.tz().clone();
 
 			return ResultSequenceFactory.create_new(res);
 		} catch (CloneNotSupportedException err) {

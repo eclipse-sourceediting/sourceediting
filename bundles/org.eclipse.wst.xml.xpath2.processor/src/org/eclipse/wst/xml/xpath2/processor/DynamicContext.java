@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
+ *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
+ *     David Carver - bug 282223 - implementation of xs:duration data types. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -83,7 +84,7 @@ public interface DynamicContext extends StaticContext {
 	 * @return current date time and implicit timezone.
 	 * @since 1.1
 	 */
-	public XSDayTimeDuration tz();
+	public XSDuration tz();
 
 	/**
 	 * Get document.

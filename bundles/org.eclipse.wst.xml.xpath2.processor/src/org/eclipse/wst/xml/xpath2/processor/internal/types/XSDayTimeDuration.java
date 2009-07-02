@@ -10,6 +10,7 @@
  *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
  *     Mukul Gandhi - bug 279377 - improvements to multiplication and division operations
  *                                 on xs:dayTimeDuration.
+ *     David Carver - bug 282223 - implementation of xs:duration
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -32,11 +33,6 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 
 		Cloneable {
 
-	private int _days;
-	private int _hours;
-	private int _minutes;
-	private double _seconds;
-	private boolean _negative;
 
 	/**
 	 * Initialises to the supplied parameters. If more than 24 hours is
@@ -57,29 +53,7 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 */
 	public XSDayTimeDuration(int days, int hours, int minutes, double seconds,
 			boolean negative) {
-		_days = days;
-		_hours = hours;
-		_minutes = minutes;
-		_seconds = seconds;
-		_negative = negative;
-
-		if (_seconds >= 60) {
-			int isec = (int) _seconds;
-			double rem = _seconds - (isec);
-
-			_minutes += isec / 60;
-			_seconds = isec % 60;
-			_seconds += rem;
-		}
-		if (_minutes >= 60) {
-			_hours += _minutes / 60;
-			_minutes = _minutes % 60;
-		}
-		if (_hours >= 24) {
-			_days += _hours / 24;
-			_hours = _hours % 24;
-		}
-
+		super(0, 0, days, hours, minutes, seconds, negative);
 	}
 
 	/**
@@ -89,14 +63,14 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 *            Number of seconds in the duration of time
 	 */
 	public XSDayTimeDuration(double secs) {
-		this(0, 0, 0, Math.abs(secs), secs < 0);
+		super(0, 0, 0, 0, 0, Math.abs(secs), secs < 0);
 	}
 
 	/**
 	 * Initialises to a duration of no time (0days, 0hours, 0minutes, 0seconds)
 	 */
 	public XSDayTimeDuration() {
-		this(0, 0, 0, 0.0, false);
+		super(0, 0, 0, 0, 0, 0.0, false);
 	}
 
 	/**
@@ -111,6 +85,24 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 				negative());
 	}
 
+	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
+		ResultSequence rs = ResultSequenceFactory.create_new();
+	
+		if (arg.empty())
+			return rs;
+	
+		AnyAtomicType aat = (AnyAtomicType) arg.first();
+	
+		XSDuration dtd = parseDTDuration(aat.string_value());
+	
+		if (dtd == null)
+			throw DynamicError.cant_cast(null);
+	
+		rs.add(dtd);
+	
+		return rs;
+	}
+	
 	/**
 	 * Creates a new XSDayTimeDuration by parsing the supplied String
 	 * represented duration of time
@@ -119,7 +111,7 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 *            String represented duration of time
 	 * @return New XSDayTimeDuration representing the duration of time supplied
 	 */
-	public static XSDayTimeDuration parseDTDuration(String str) {
+	public static XSDuration parseDTDuration(String str) {
 		boolean negative = false;
 		int days = 0;
 		int hours = 0;
@@ -218,134 +210,6 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	}
 
 	/**
-	 * Creates a new ResultSequence consisting of the extractable time duration
-	 * from the supplied ResultSequence
-	 * 
-	 * @param arg
-	 *            The ResultSequence from which to extract
-	 * @return New ResultSequence consisting of the time duration extracted
-	 * @throws DynamicError
-	 */
-	@Override
-	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-
-		if (arg.empty())
-			return rs;
-
-		AnyAtomicType aat = (AnyAtomicType) arg.first();
-
-		XSDayTimeDuration dtd = parseDTDuration(aat.string_value());
-
-		if (dtd == null)
-			throw DynamicError.cant_cast(null);
-
-		rs.add(dtd);
-
-		return rs;
-	}
-
-	/**
-	 * Retrieves whether this duration represents a backward passage through
-	 * time
-	 * 
-	 * @return True if this duration represents a backward passage through time.
-	 *         False otherwise
-	 */
-	public boolean negative() {
-		return _negative;
-	}
-
-	/**
-	 * Retrieves the number of days within the duration of time stored
-	 * 
-	 * @return Number of days within the duration of time stored
-	 */
-	public int days() {
-		return _days;
-	}
-
-	/**
-	 * Retrieves the number of minutes (max 60) within the duration of time
-	 * stored
-	 * 
-	 * @return Number of minutes within the duration of time stored
-	 */
-	public int minutes() {
-		return _minutes;
-	}
-
-	/**
-	 * Retrieves the number of hours (max 24) within the duration of time stored
-	 * 
-	 * @return Number of hours within the duration of time stored
-	 */
-	public int hours() {
-		return _hours;
-	}
-
-	/**
-	 * Retrieves the number of seconds (max 60) within the duration of time
-	 * stored
-	 * 
-	 * @return Number of seconds within the duration of time stored
-	 */
-	public double seconds() {
-		return _seconds;
-	}
-
-	/**
-	 * Retrieves a String representation of the duration of time stored
-	 * 
-	 * @return String representation of the duration of time stored
-	 */
-	@Override
-	public String string_value() {
-		String ret = "";
-		boolean did_something = false; // this should be constant ;D
-		String tret = "";
-
-		if (negative() && !(days() == 0 && hours() == 0 && seconds() == 0))
-			ret += "-";
-
-		ret += "P";
-
-		if (days() != 0) {
-			ret += days() + "D";
-			did_something = true;
-		}
-
-		// do the "time" bit
-		if (hours() != 0) {
-			tret += hours() + "H";
-			did_something = true;
-		}
-		if (minutes() != 0) {
-			tret += minutes() + "M";
-			did_something = true;
-		}
-		if (seconds() != 0) {
-			String doubStr = (Double.valueOf(seconds())).toString();
-			if (doubStr.endsWith(".0")) {
-			   // string value of x.0 seconds is xS. e.g, 7.0S is converted to
-			   // 7S.
-			   tret += doubStr.substring(0, doubStr.indexOf(".0")) + "S";
-			}
-			else {
-			   tret += seconds() + "S";	
-			}
-			did_something = true;
-		} else if (!did_something) {
-			tret += "0" + "S";
-		}
-
-		if (tret.length() > 0)
-			ret += "T" + tret;
-
-		return ret;
-	}
-
-	/**
 	 * Retrieves the datatype's full pathname
 	 * 
 	 * @return "xs:dayTimeDuration" which is the datatype's full pathname
@@ -353,71 +217,6 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	@Override
 	public String string_type() {
 		return "xs:dayTimeDuration";
-	}
-
-	/**
-	 * Retrieves the duration of time stored as the number of seconds within it
-	 * 
-	 * @return Number of seconds making up this duration of time
-	 */
-	public double value() {
-		double ret = days() * 24 * 60 * 60;
-
-		ret += hours() * 60 * 60;
-		ret += minutes() * 60;
-		ret += seconds();
-
-		if (negative())
-			ret *= -1;
-
-		return ret;
-	}
-
-	/**
-	 * Equality comparison between this and the supplied duration of time.
-	 * 
-	 * @param arg
-	 *            The duration of time to compare with
-	 * @return True if they both represent the duration of time. False otherwise
-	 * @throws DynamicError
-	 */
-	public boolean eq(AnyType arg) throws DynamicError {
-		XSDayTimeDuration val = (XSDayTimeDuration) NumericType
-				.get_single_type(arg, XSDayTimeDuration.class);
-
-		return value() == val.value();
-	}
-
-	/**
-	 * Comparison between this and the supplied duration of time.
-	 * 
-	 * @param arg
-	 *            The duration of time to compare with
-	 * @return True if the supplied time represents a larger duration than that
-	 *         stored. False otherwise
-	 * @throws DynamicError
-	 */
-	public boolean lt(AnyType arg) throws DynamicError {
-		XSDayTimeDuration val = (XSDayTimeDuration) NumericType
-				.get_single_type(arg, XSDayTimeDuration.class);
-
-		return value() < val.value();
-	}
-
-	/**
-	 * Comparison between this and the supplied duration of time.
-	 * 
-	 * @param arg
-	 *            The duration of time to compare with
-	 * @return True if the supplied time represents a smaller duration than that
-	 *         stored. False otherwise
-	 * @throws DynamicError
-	 */
-	public boolean gt(AnyType arg) throws DynamicError {
-		XSDayTimeDuration val = (XSDayTimeDuration) NumericType
-				.get_single_type(arg, XSDayTimeDuration.class);
-
-		return value() > val.value();
 	}
 
 	/**
@@ -431,7 +230,7 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @throws DynamicError
 	 */
 	public ResultSequence plus(ResultSequence arg) throws DynamicError {
-		XSDayTimeDuration val = (XSDayTimeDuration) NumericType
+		XSDuration val = (XSDuration) NumericType
 				.get_single_type(arg, XSDayTimeDuration.class);
 
 		double res = value() + val.value();
@@ -450,7 +249,7 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @throws DynamicError
 	 */
 	public ResultSequence minus(ResultSequence arg) throws DynamicError {
-		XSDayTimeDuration val = (XSDayTimeDuration) NumericType
+		XSDuration val = (XSDuration) NumericType
 				.get_single_type(arg, XSDayTimeDuration.class);
 
 		double res = value() - val.value();
@@ -525,7 +324,7 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 			return ResultSequenceFactory.create_new(new XSDayTimeDuration(
 					ret));	
 		} else if (at instanceof XSDayTimeDuration) {
-			XSDayTimeDuration md = (XSDayTimeDuration) at;
+			XSDuration md = (XSDuration) at;
 
 			double res = value() / md.value();
 

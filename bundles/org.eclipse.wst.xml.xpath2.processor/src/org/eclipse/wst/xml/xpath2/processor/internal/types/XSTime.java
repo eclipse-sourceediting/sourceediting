@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types 
+ *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
+ *     David Carver - bug 282223 - implementation of xs:duration data type. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -31,7 +32,7 @@ Cloneable {
 
 	private Calendar _calendar;
 	private boolean _timezoned;
-	private XSDayTimeDuration _tz;
+	private XSDuration _tz;
 
 	/**
 	 * Initialises to the supplied time and timezone
@@ -41,7 +42,7 @@ Cloneable {
 	 * @param tz
 	 *            The timezone (possibly null) associated with this time
 	 */
-	public XSTime(Calendar cal, XSDayTimeDuration tz) {
+	public XSTime(Calendar cal, XSDuration tz) {
 		_calendar = cal;
 
 		_tz = tz;
@@ -67,10 +68,10 @@ Cloneable {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Calendar c = (Calendar) calendar().clone();
-		XSDayTimeDuration t = tz();
+		XSDuration t = tz();
 
 		if (t != null)
-			t = (XSDayTimeDuration) t.clone();
+			t = (XSDuration) t.clone();
 
 		return new XSTime(c, t);
 	}
@@ -245,7 +246,7 @@ Cloneable {
 	 * @return The duration of time between the time stored and the actual time
 	 *         after the timezone is taken into account
 	 */
-	public XSDayTimeDuration tz() {
+	public XSDuration tz() {
 		return _tz;
 	}
 
@@ -327,7 +328,7 @@ Cloneable {
 			return ResultSequenceFactory
 					.create_new(new XSDayTimeDuration(res));
 		} else if (at instanceof XSDayTimeDuration) {
-			XSDayTimeDuration val = (XSDayTimeDuration) at;
+			XSDuration val = (XSDuration) at;
 
 			try {
 				double ms = val.value() * -1000.0;
@@ -358,7 +359,7 @@ Cloneable {
 	 * @throws DynamicError
 	 */
 	public ResultSequence plus(ResultSequence arg) throws DynamicError {
-		XSDayTimeDuration val = (XSDayTimeDuration) NumericType
+		XSDuration val = (XSDuration) NumericType
 				.get_single_type(arg, XSDayTimeDuration.class);
 
 		try {

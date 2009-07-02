@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Mukul Gandhi - bug 281822 - initial API and implementation 
+ *     Mukul Gandhi - bug 281822 - initial API and implementation
+ *     David Carver - bug 282223 - implementation of xs:duration 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -87,8 +88,8 @@ public class FnDateTime extends Function {
 		cal.set(Calendar.SECOND, (Double.valueOf(Math.floor(param2.second())).intValue()));
 		cal.set(Calendar.MILLISECOND, 0);
 		
-		XSDayTimeDuration dateTimeZone = param1.tz();
-		XSDayTimeDuration timeTimeZone = param2.tz();
+		XSDuration dateTimeZone = param1.tz();
+		XSDuration timeTimeZone = param2.tz();
 		if ((dateTimeZone != null && timeTimeZone != null) &&
 		     !dateTimeZone.string_value().equals(timeTimeZone.string_value())) {
 		  // it's an error, if the arguments have different timezones

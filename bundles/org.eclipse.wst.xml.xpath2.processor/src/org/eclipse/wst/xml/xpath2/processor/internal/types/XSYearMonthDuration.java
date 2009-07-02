@@ -10,6 +10,7 @@
  *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
  *     Mukul Gandhi - bug 279373 - improvements to multiply operation on xs:yearMonthDuration
  *                                 data type.
+ *     David Carver - bug 282223 - implementation of xs:duration data type.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -28,9 +29,6 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
 public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 		CmpGt, MathPlus, MathMinus, MathTimes, MathDiv {
 
-	private int _year;
-	private int _month;
-	private boolean _negative;
 
 	/**
 	 * Initialises using the supplied parameters. If the number of months
@@ -45,15 +43,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 *            through time. False otherwise
 	 */
 	public XSYearMonthDuration(int year, int month, boolean negative) {
-		_year = year;
-		_month = month;
-		_negative = negative;
-
-		if (_month >= 12) {
-			_year += (_month / 12);
-			_month = _month % 12;
-		}
-
+		super(year, month, 0, 0, 0, 0, negative);
 	}
 
 	/**
@@ -82,7 +72,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @return New XSYearMonthDuration representing the duration of time
 	 *         supplied
 	 */
-	public static XSYearMonthDuration parseYMDuration(String str) {
+	public static XSDuration parseYMDuration(String str) {
 		boolean negative = false;
 		int year = 0;
 		int month = 0;
@@ -191,7 +181,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 
-		XSYearMonthDuration ymd = parseYMDuration(aat.string_value());
+		XSDuration ymd = parseYMDuration(aat.string_value());
 
 		if (ymd == null)
 			throw DynamicError.cant_cast(null);
@@ -210,24 +200,6 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 */
 	public boolean negative() {
 		return _negative;
-	}
-
-	/**
-	 * Retrieves the number of years within the duration of time stored
-	 * 
-	 * @return Number of years within the duration of time stored
-	 */
-	public int year() {
-		return _year;
-	}
-
-	/**
-	 * Retrieves the number of months within the duration of time stored
-	 * 
-	 * @return Number of months within the duration of time stored
-	 */
-	public int month() {
-		return _month;
 	}
 
 	/**
@@ -273,7 +245,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 * 
 	 * @return Number of months making up this duration of time
 	 */
-	public int value() {
+	public int monthValue() {
 		int ret = year() * 12 + month();
 
 		if (negative())
@@ -294,7 +266,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 		XSYearMonthDuration val = (XSYearMonthDuration) NumericType
 				.get_single_type(arg, XSYearMonthDuration.class);
 
-		return value() == val.value();
+		return monthValue() == val.monthValue();
 	}
 
 	/**
@@ -310,7 +282,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 		XSYearMonthDuration val = (XSYearMonthDuration) NumericType
 				.get_single_type(arg, XSYearMonthDuration.class);
 
-		return value() < val.value();
+		return monthValue() < val.monthValue();
 	}
 
 	/**
@@ -326,7 +298,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 		XSYearMonthDuration val = (XSYearMonthDuration) NumericType
 				.get_single_type(arg, XSYearMonthDuration.class);
 
-		return value() > val.value();
+		return monthValue() > val.monthValue();
 	}
 
 	/**
@@ -343,7 +315,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 		XSYearMonthDuration val = (XSYearMonthDuration) NumericType
 				.get_single_type(arg, XSYearMonthDuration.class);
 
-		int res = value() + val.value();
+		int res = monthValue() + val.monthValue();
 
 		return ResultSequenceFactory.create_new(new XSYearMonthDuration(res));
 	}
@@ -362,7 +334,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 		XSYearMonthDuration val = (XSYearMonthDuration) NumericType
 				.get_single_type(arg, XSYearMonthDuration.class);
 
-		int res = value() - val.value();
+		int res = monthValue() - val.monthValue();
 
 		return ResultSequenceFactory.create_new(new XSYearMonthDuration(res));
 	}
@@ -393,7 +365,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 		XSDouble val = (XSDouble) NumericType.get_single_type(convertedRS,
 				XSDouble.class);
 
-		int res = (int) Math.round(value() * val.double_value());
+		int res = (int) Math.round(monthValue() * val.double_value());
 
 		return ResultSequenceFactory.create_new(new XSYearMonthDuration(res));
 	}
@@ -420,7 +392,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 			int ret = 0;
 
 			if (!dt.zero())
-				ret = (int) Math.round(value() / dt.double_value());
+				ret = (int) Math.round(monthValue() / dt.double_value());
 
 			return ResultSequenceFactory.create_new(new XSYearMonthDuration(
 					ret));
@@ -430,20 +402,19 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 			int ret = 0;
 			
 			if (!dt.zero())
-				ret = (int) Math.round(value() / dt.double_value());
+				ret = (int) Math.round(monthValue() / dt.double_value());
 			
 			return ResultSequenceFactory.create_new(new XSYearMonthDuration(
 					ret));	
 		} else if (at instanceof XSYearMonthDuration) {
 			XSYearMonthDuration md = (XSYearMonthDuration) at;
 
-			double res = (double) value() / md.value();
+			double res = (double) monthValue() / md.monthValue();
 
 			return ResultSequenceFactory.create_new(new XSDecimal(BigDecimal.valueOf(res)));
 		} else {
 			DynamicError.throw_type_error();
 			return null; // unreach
 		}
-	}
-
+	}	
 }
