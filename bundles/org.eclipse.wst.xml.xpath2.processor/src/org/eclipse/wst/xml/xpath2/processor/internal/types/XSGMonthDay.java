@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     David Carver (STAR) - bug 262765 - Fix parsing of gMonthDay to valid date 
+ *     David Carver (STAR) - bug 262765 - Fix parsing of gMonthDay to valid date
+ *     David Carver (STAR) - bug 282223 - fix timezone adjustment creation. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -74,7 +75,7 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 		boolean tz = false;
 
 		int index = str.lastIndexOf('+', str.length());
-		
+				
 		if (index == -1)
 			index = str.lastIndexOf('-');
 		if (index == -1)
@@ -98,7 +99,12 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 				}
 			}
 			startdate = startdate.trim();
-			startdate += starttime;
+			int offset = startdate.indexOf('+');
+			if (offset != -1) {
+				startdate = startdate.substring(0, offset) + starttime + startdate.substring(offset);
+			} else {
+				startdate += starttime;
+			}
 
 			if (zIndex != -1) {
 				startdate += str.substring(zIndex);
