@@ -45,11 +45,10 @@ import org.eclipse.wst.xml.xpath2.processor.Evaluator;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDayTimeDuration;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSYearMonthDuration;
 
 public class TestBugs extends AbstractPsychoPathTest {
 
@@ -689,7 +688,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		Evaluator eval = new DefaultEvaluator(dc, domDoc);
 		ResultSequence rs = eval.evaluate(path);
 
-		XSYearMonthDuration result = (XSYearMonthDuration) rs.first();
+		XSDuration result = (XSDuration) rs.first();
 
 		String actual = result.string_value();
 
@@ -712,7 +711,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		Evaluator eval = new DefaultEvaluator(dc, domDoc);
 		ResultSequence rs = eval.evaluate(path);
 
-		XSYearMonthDuration result = (XSYearMonthDuration) rs.first();
+		XSDuration result = (XSDuration) rs.first();
 
 		String actual = result.string_value();
 
@@ -758,7 +757,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		Evaluator eval = new DefaultEvaluator(dc, domDoc);
 		ResultSequence rs = eval.evaluate(path);
 
-		XSDayTimeDuration result = (XSDayTimeDuration) rs.first();
+		XSDuration result = (XSDuration) rs.first();
 
 		String actual = result.string_value();
 
@@ -781,7 +780,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 		Evaluator eval = new DefaultEvaluator(dc, domDoc);
 		ResultSequence rs = eval.evaluate(path);
 
-		XSDayTimeDuration result = (XSDayTimeDuration) rs.first();
+		XSDuration result = (XSDuration) rs.first();
 
 		String actual = result.string_value();
 
