@@ -307,16 +307,28 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 
-		XSDuration dtd = parseDTDuration(aat.string_value());
+		if (!(isCastable(aat))) {
+			throw DynamicError.cant_cast(null);
+		}
+		
+		XSDuration duration = castDuration(aat);
 
-		if (dtd == null)
+		if (duration == null)
 			throw DynamicError.cant_cast(null);
 
-		rs.add(dtd);
+		rs.add(duration);
 
 		return rs;
 	}
 
+	private XSDuration castDuration(AnyAtomicType aat) {
+		if (aat instanceof XSDuration) {
+			XSDuration duration = (XSDuration) aat;
+			return new XSDuration(duration.year(), duration.month(), duration.days(), duration.hours(), duration.minutes(), duration.seconds(), duration.negative());
+		}
+		
+		return parseDTDuration(aat.string_value());
+	}
 	/**
 	 * Creates a new XSDayTimeDuration by parsing the supplied String
 	 * represented duration of time
@@ -446,6 +458,27 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 	 */
 	public int month() {
 		return _month;
+	}
+
+	protected boolean isCastable(AnyAtomicType aat) {
+		String value = aat.string_value(); // get this once so we don't recreate everytime.
+		String type = aat.string_type();
+		if (type.equals("xs:string") || type.equals("xs:untypedAtomic")) {
+			if (isDurationValue(value)) {
+				return true;  // We might be able to cast this.
+			}
+		}
+		
+		// We can cast from ourself or derivations of ourselves.
+		if (aat instanceof XSDuration) {
+			return true;
+		}
+				
+		return false;
+	}
+
+	private boolean isDurationValue(String value) {
+		return value.startsWith("P") || value.startsWith("-P");
 	}
 
 }

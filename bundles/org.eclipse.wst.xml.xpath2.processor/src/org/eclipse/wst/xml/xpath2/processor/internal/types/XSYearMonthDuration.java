@@ -180,8 +180,14 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 			return rs;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
+		String value = aat.string_value();
+		
+		if (!isCastable(aat)) {
+			throw DynamicError.cant_cast(null);
+		}
 
-		XSDuration ymd = parseYMDuration(aat.string_value());
+		
+		XSDuration ymd = castYearMonthDuration(aat);
 
 		if (ymd == null)
 			throw DynamicError.cant_cast(null);
@@ -189,6 +195,15 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 		rs.add(ymd);
 
 		return rs;
+	}
+	
+	private XSDuration castYearMonthDuration(AnyAtomicType aat) {
+		if (aat instanceof XSDuration) {
+			XSDuration duration = (XSDuration) aat;
+			return new XSYearMonthDuration(duration.year(), duration.month(), duration.negative());
+		}
+		
+		return parseYMDuration(aat.string_value());
 	}
 
 	/**

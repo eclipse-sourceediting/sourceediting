@@ -92,8 +92,12 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 			return rs;
 	
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
+		
+		if (!isCastable(aat)) {
+			throw DynamicError.cant_cast(null);
+		}
 	
-		XSDuration dtd = parseDTDuration(aat.string_value());
+		XSDuration dtd = castDayTimeDuration(aat);
 	
 		if (dtd == null)
 			throw DynamicError.cant_cast(null);
@@ -102,6 +106,16 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	
 		return rs;
 	}
+	
+	private XSDuration castDayTimeDuration(AnyAtomicType aat) {
+		if (aat instanceof XSDuration) {
+			XSDuration duration = (XSDuration) aat;
+			return new XSDayTimeDuration(duration.days(), duration.hours(), duration.minutes(), duration.seconds(), duration.negative());
+		}
+		
+		return parseDTDuration(aat.string_value());
+	}
+
 	
 	/**
 	 * Creates a new XSDayTimeDuration by parsing the supplied String
