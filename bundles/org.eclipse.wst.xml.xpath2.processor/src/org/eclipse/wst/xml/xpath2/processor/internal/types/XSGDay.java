@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     David Carver (STAR) - bug 262765 - Correct parsing of Date to get day correctly. 
+ *     David Carver (STAR) - bug 262765 - Correct parsing of Date to get day correctly.
+ *     David Carver (STAR) - bug 282223 - fixed issue with casting. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -131,8 +132,12 @@ public class XSGDay extends CalendarType implements CmpEq {
 			return rs;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
-
-		XSGDay val = parse_gDay(aat.string_value());
+		
+		if (!isCastable(aat)) {
+			throw DynamicError.cant_cast(null);
+		}
+		
+		XSGDay val = castGDay(aat);
 
 		if (val == null)
 			throw DynamicError.cant_cast(null);
@@ -140,6 +145,41 @@ public class XSGDay extends CalendarType implements CmpEq {
 		rs.add(val);
 
 		return rs;
+	}
+	
+	private boolean isCastable(AnyAtomicType aat) {
+		if (aat instanceof XSString || aat instanceof XSUntypedAtomic) {
+			return true;
+		}
+		
+		if (aat instanceof XSTime) {
+			return false;
+		}
+		
+		if (aat instanceof XSDateTime || aat instanceof XSDateTime ||
+			aat instanceof XSGDay) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private XSGDay castGDay(AnyAtomicType aat) {
+		if (aat instanceof XSGDay) {
+			XSGDay gday = (XSGDay) aat;
+			return new XSGDay(gday.calendar(), gday.timezoned());
+		}
+		
+		if (aat instanceof XSDate) {
+			XSDate date = (XSDate) aat;
+			return new XSGDay(date.calendar(), date.timezoned());
+		}
+		
+		if (aat instanceof XSDateTime) {
+			XSDateTime dateTime = (XSDateTime) aat;
+			return new XSGDay(dateTime.calendar(), dateTime.timezoned());
+		}
+		return parse_gDay(aat.string_value()); 
 	}
 
 	/**
