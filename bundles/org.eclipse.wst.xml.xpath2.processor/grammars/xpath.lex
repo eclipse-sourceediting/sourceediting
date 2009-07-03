@@ -161,9 +161,9 @@ NCName		= ( {Letter} | "_") ( {NCNameChar} )*
 				str = str.substring(1,str.length()-1);
 				return symbol(XpathSym.STRING, str); 
 			}
-{Digits}		{ return symbol(XpathSym.INTEGER, new Integer(yytext())); }
+{Digits}		{ return symbol(XpathSym.INTEGER, new BigInteger(yytext())); }
 {DoubleLiteral}		{ return symbol(XpathSym.DOUBLE, new Double(yytext())); }
-{DecimalLiteral}	{ return symbol(XpathSym.DECIMAL, new Double(yytext())); }
+{DecimalLiteral}	{ return symbol(XpathSym.DECIMAL, new BigDecimal(yytext())); }
 {NCName}		{ return symbol(XpathSym.NCNAME, yytext()); }
 
 

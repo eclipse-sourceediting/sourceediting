@@ -27,11 +27,11 @@ public class IntegerLiteral extends NumericLiteral {
 	/**
 	 * Constructor for IntegerLiteral
 	 * 
-	 * @param value
+	 * @param i
 	 *            integer value
 	 */
-	public IntegerLiteral(int value) {
-		_value = new XSInteger(BigInteger.valueOf(value));
+	public IntegerLiteral(BigInteger i) {
+		_value = new XSInteger(i);
 	}
 
 	/**

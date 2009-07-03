@@ -5,8 +5,10 @@
     Build File for Compiler Project
 </description>
 
+	<taskdef classname="JFlex.anttask.JFlexTask" name="jflex" />
 
 	<target name="generate_parser">
+		<jflex file="grammars/xpath.lex" destdir="grammars/generated"/>
 	    <java jar="${cupJar}" input="grammars/xpath.cup" fork="true" failonerror="true">
 	    </java>
 	</target>

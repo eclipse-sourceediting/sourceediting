@@ -18,6 +18,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.ast.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -348,7 +349,7 @@ public class Normalizer implements XPathVisitor {
 	}
 
 	private XPathExpr make_int_lit(int i) {
-		IntegerLiteral il = new IntegerLiteral(i);
+		IntegerLiteral il = new IntegerLiteral(BigInteger.valueOf(i));
 		return make_xpathexpr(il);
 	}
 

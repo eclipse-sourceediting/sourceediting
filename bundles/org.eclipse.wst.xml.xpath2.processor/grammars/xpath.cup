@@ -57,8 +57,9 @@ terminal String AND, OR;
 terminal EMPTY, ITEM, NODE, DOCUMENT_NODE, TEXT, COMMENT;
 terminal PROCESSING_INSTRUCTION, SCHEMA_ATTRIBUTE, ELEMENT, SCHEMA_ELEMENT;
 
-terminal Integer INTEGER;
-terminal Double DOUBLE, DECIMAL;
+terminal BigInteger INTEGER;
+terminal Double DOUBLE;
+terminal BigDecimal DECIMAL;
 terminal String STRING, NCNAME;
 
 
