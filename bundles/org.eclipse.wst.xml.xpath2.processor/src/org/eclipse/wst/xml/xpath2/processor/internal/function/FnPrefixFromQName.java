@@ -66,15 +66,15 @@ public class FnPrefixFromQName extends Function {
 		ResultSequence arg1 = (ResultSequence) cargs.iterator().next();
 
 		if (arg1.empty())
-			return rs;
+		  return rs;
 
 		QName qname = (QName) arg1.first();
 
 		String prefix = qname.prefix();
 
-		if (prefix == null)
-			prefix = "";
-		rs.add(new XSNCName(prefix));
+		if (prefix != null) {
+		  rs.add(new XSNCName(prefix));
+		}
 
 		return rs;
 	}
