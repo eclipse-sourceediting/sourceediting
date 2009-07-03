@@ -111,18 +111,40 @@ public class XSDouble extends NumericType {
 
 		AnyType aat = arg.first();
 
-		if (!(aat.string_type().equals("xs:string") || aat instanceof NodeType
-				|| aat.string_type().equals("xs:untypedAtomic")
-				|| aat.string_type().equals("xs:boolean") || aat instanceof NumericType)) {
+		if (!isCastable(aat)) {
 			throw DynamicError.cant_cast(null);
 		}
 
-		XSDouble d = parse_double(aat.string_value());
+		XSDouble d = castDouble(aat);
+		
 		if (d == null)
 			throw DynamicError.cant_cast(null);
 
 		rs.add(d);
 		return rs;
+	}
+	
+	private boolean isCastable(AnyType aat) {
+		if (aat instanceof XSString || aat instanceof XSUntypedAtomic ||
+			aat instanceof NodeType) {
+			return true;
+		}
+		if (aat instanceof XSBoolean || aat instanceof NumericType) {
+			return true;
+		}
+		return false;
+	}
+	
+	private XSDouble castDouble(AnyType aat) {
+		if (aat instanceof XSBoolean) {
+			if (aat.string_value().equals("true")) {
+				return new XSDouble(new Double("1.0E0"));
+			} else {
+				return new XSDouble(new Double("0.0E0"));
+			}
+		}
+		return parse_double(aat.string_value());
+		
 	}
 
 	/**

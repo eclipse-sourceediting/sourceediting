@@ -132,8 +132,12 @@ public class XSGMonth extends CalendarType implements CmpEq {
 			return rs;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
+		
+		if (!isCastable(aat)) {
+			throw DynamicError.cant_cast(null);
+		}
 
-		XSGMonth val = parse_gMonth(aat.string_value());
+		XSGMonth val = castGMonth(aat);
 
 		if (val == null)
 			throw DynamicError.cant_cast(null);
@@ -143,6 +147,43 @@ public class XSGMonth extends CalendarType implements CmpEq {
 		return rs;
 	}
 
+	
+	private boolean isCastable(AnyAtomicType aat) {
+		if (aat instanceof XSString || aat instanceof XSUntypedAtomic) {
+			return true;
+		}
+		
+		if (aat instanceof XSTime) {
+			return false;
+		}
+		
+		if (aat instanceof XSDate || aat instanceof XSDateTime || 
+			aat instanceof XSGMonth) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private XSGMonth castGMonth(AnyAtomicType aat) {
+		if (aat instanceof XSGMonth) {
+			XSGMonth gm = (XSGMonth) aat;
+			return new XSGMonth(gm.calendar(), gm.timezoned());
+		}
+		
+		if (aat instanceof XSDate) {
+			XSDate date = (XSDate) aat;
+			return new XSGMonth(date.calendar(), date.timezoned());
+		}
+		
+		if (aat instanceof XSDateTime) {
+			XSDateTime dateTime = (XSDateTime) aat;
+			return new XSGMonth(dateTime.calendar(), dateTime.timezoned());
+		}
+		
+		return parse_gMonth(aat.string_value());
+	}
+	
 	/**
 	 * Retrieves the actual month as an integer
 	 * 

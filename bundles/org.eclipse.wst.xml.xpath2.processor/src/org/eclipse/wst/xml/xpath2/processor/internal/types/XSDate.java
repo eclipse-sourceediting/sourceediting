@@ -96,15 +96,9 @@ Cloneable {
 	 * @return The XSDate representation of the supplied date
 	 */
 	public static XSDate parse_date(String str) {
-		// XXX
-		// sorry kids... but i don't wanna go through all the mess
-		// again...
-		// i guess the ends justify the means...
-		// not really =P
-
-		String lame = "";
-		String lame2 = "T00:00:00.0";
-		boolean tz = false;
+	
+		String date = "";
+		String time = "T00:00:00.0";
 
 		int index = str.indexOf('+', 1);
 		if (index == -1) {
@@ -119,17 +113,16 @@ Cloneable {
 		if (index == -1)
 			index = str.indexOf('Z', 1);
 		if (index != -1) {
-			lame = str.substring(0, index);
+			date = str.substring(0, index);
 			// here we go
-			lame += lame2;
-			lame += str.substring(index, str.length());
-			tz = true;
+			date += time;
+			date += str.substring(index, str.length());
 		} else {
-			lame = str + lame2;
+			date = str + time;
 		}
 
 		// sorry again =D
-		XSDateTime dt = XSDateTime.parseDateTime(lame);
+		XSDateTime dt = XSDateTime.parseDateTime(date);
 		if (dt == null)
 			return null;
 

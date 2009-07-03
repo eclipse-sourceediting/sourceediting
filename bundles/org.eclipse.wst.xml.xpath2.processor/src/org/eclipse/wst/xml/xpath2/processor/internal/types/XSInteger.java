@@ -107,28 +107,48 @@ public class XSInteger extends XSDecimal {
 		// and convert it's string value to an integer.
 		AnyType aat = arg.first();
 
-		if (!(aat.string_type().equals("xs:string") || aat instanceof NodeType
-				|| aat.string_type().equals("xs:untypedAtomic")
-				|| aat.string_type().equals("xs:boolean") || aat instanceof NumericType)) {
+		if (!isCastable(aat)) {
 			throw DynamicError.cant_cast(null);
 		}
 
 		
 		try {
-			BigInteger bigInt = null;
-			if (aat.string_type().equals("xs:decimal") || aat.string_type().equals("xs:float") ||
-				aat.string_type().equals("xs:double")) {
-				BigDecimal bigDec =  new BigDecimal(aat.string_value());
-				bigInt = bigDec.toBigInteger();
-			} else {
-				bigInt = new BigInteger(aat.string_value());
-			}
+			BigInteger bigInt = castInteger(aat);
 			rs.add(new XSInteger(bigInt));
 			return rs;
 		} catch (NumberFormatException e) {
 			throw DynamicError.cant_cast(null);
 		}
 
+	}
+	
+	private BigInteger castInteger(AnyType aat) {
+		if (aat instanceof XSBoolean) {
+			if (aat.string_value().equals("true")) {
+				return BigInteger.ONE;
+			} else {
+				return BigInteger.ZERO;
+			}
+		}
+		
+		if (aat instanceof XSDecimal || aat instanceof XSFloat ||
+				aat instanceof XSDouble) {
+				BigDecimal bigDec =  new BigDecimal(aat.string_value());
+				return bigDec.toBigInteger();
+		}
+		
+		return new BigInteger(aat.string_value());
+	}
+	
+	private boolean isCastable(AnyType aat) {
+		if (aat instanceof XSString || aat instanceof XSUntypedAtomic ||
+			aat instanceof NodeType) {
+			return true;
+		}
+		if (aat instanceof XSBoolean || aat instanceof NumericType) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

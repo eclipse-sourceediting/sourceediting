@@ -156,7 +156,7 @@ public class XSGDay extends CalendarType implements CmpEq {
 			return false;
 		}
 		
-		if (aat instanceof XSDateTime || aat instanceof XSDateTime ||
+		if (aat instanceof XSDate || aat instanceof XSDateTime ||
 			aat instanceof XSGDay) {
 			return true;
 		}

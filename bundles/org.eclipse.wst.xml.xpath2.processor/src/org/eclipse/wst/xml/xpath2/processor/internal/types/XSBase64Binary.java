@@ -99,6 +99,10 @@ public class XSBase64Binary extends CtrType implements CmpEq {
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 		
+		if (!isCastable(aat)) {
+			throw DynamicError.cant_cast(null);
+		}
+		
 		String str_value = aat.string_value();
 		byte[] decodedValue = Base64.decode(str_value);
 		if (decodedValue != null) {
@@ -112,6 +116,17 @@ public class XSBase64Binary extends CtrType implements CmpEq {
 		return rs;
 	}
 
+	private boolean isCastable(AnyAtomicType aat) {
+		if (aat instanceof XSString || aat instanceof XSUntypedAtomic) {
+			return true;
+		}
+		
+		if (aat instanceof XSBase64Binary || aat instanceof XSHexBinary) {
+			return true;
+		}
+		
+		return false;
+	}
 
 	/**
 	 * Equality comparison between this and the supplied representation which

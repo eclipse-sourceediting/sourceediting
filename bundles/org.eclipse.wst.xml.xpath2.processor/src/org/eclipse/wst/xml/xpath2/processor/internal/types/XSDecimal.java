@@ -117,20 +117,16 @@ public class XSDecimal extends NumericType {
 
 		AnyType aat = arg.first();
 		
-		if (!(aat.string_type().equals("xs:string") || aat instanceof NodeType
-				|| aat.string_type().equals("xs:untypedAtomic")
-				|| aat.string_type().equals("xs:boolean") || aat instanceof NumericType)) {
+		if (!isCastable(aat)) {
 			throw DynamicError.cant_cast(null);
 		}
 
-
 		try {
 			// XPath doesn't allow for converting Exponents to Decimal values.
-			if (aat.string_value().contains("E") || aat.string_value().contains("e") && !(aat instanceof XSBoolean)) {
-				throw DynamicError.cant_cast(null);
-			}
 			
-			rs.add(new XSDecimal(aat.string_value()));
+			XSDecimal decimal = castDecimal(aat);
+			
+			rs.add(decimal);
 			return rs;
 		} catch (NumberFormatException e) {
 			throw DynamicError.cant_cast(null);
@@ -138,6 +134,32 @@ public class XSDecimal extends NumericType {
 
 	}
 
+	private boolean isCastable(AnyType aat) {
+		if (aat.string_value().contains("E") || aat.string_value().contains("e") && !(aat instanceof XSBoolean)) {
+			return false;
+		}
+
+		if (aat instanceof XSString || aat instanceof XSUntypedAtomic ||
+			aat instanceof NodeType) {
+			return true;
+		}
+		if (aat instanceof XSBoolean || aat instanceof NumericType) {
+			return true;
+		}
+		return false;
+	}
+
+	private XSDecimal castDecimal(AnyType aat) {
+		if (aat instanceof XSBoolean) {
+			if (aat.string_value().equals("true")) {
+				return new XSDecimal(BigDecimal.ONE);
+			} else {
+				return new XSDecimal(BigDecimal.ZERO);
+			}
+		}
+		return new XSDecimal(aat.string_value());
+	}
+	
 	/**
 	 * Retrieves the actual value of the number stored
 	 * 

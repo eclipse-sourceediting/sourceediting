@@ -501,8 +501,12 @@ Cloneable {
 			return rs;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
+		
+		if (!isCastable(aat)) {
+			throw DynamicError.cant_cast(null);
+		}
 
-		XSDateTime dt = parseDateTime(aat.string_value());
+		XSDateTime dt = castDateTime(aat);
 
 		if (dt == null)
 			throw DynamicError.cant_cast(null);
@@ -511,6 +515,37 @@ Cloneable {
 
 		return rs;
 	}
+	
+	private boolean isCastable(AnyAtomicType aat) {
+		if (aat instanceof XSString || aat instanceof XSUntypedAtomic) {
+			return true;
+		}
+		
+		if (aat instanceof XSTime) {
+			return false;
+		}
+		
+		if (aat instanceof XSDate || aat instanceof XSDateTime) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private XSDateTime castDateTime(AnyAtomicType aat) {
+		if (aat instanceof XSDate) {
+			XSDate date = (XSDate) aat;
+			return new XSDateTime(date.calendar(), date.tz());
+		}
+		
+		if (aat instanceof XSDateTime) {
+			XSDateTime dateTime = (XSDateTime) aat;
+			return new XSDateTime(dateTime.calendar(), dateTime.tz());
+		}
+		
+		return parseDateTime(aat.string_value());
+	}
+	
 
 	/**
 	 * Retrieve the year from the date stored
