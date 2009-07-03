@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Mukul Gandhi - bug 281054 - initial API and implementation 
+ *     Mukul Gandhi - bug 281054 - initial API and implementation
+ *     David Carver - bug 282223 - fix casting issues 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -98,6 +99,13 @@ public class XSHexBinary extends CtrType implements CmpEq {
 			return rs;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
+		
+		if (!(aat instanceof XSHexBinary ||
+			  aat instanceof XSString ||
+			  aat instanceof XSUntypedAtomic ||
+			  aat instanceof XSBase64Binary)) {
+			throw DynamicError.cant_cast(null);
+		}
 		
 		String str_value = aat.string_value();
 		byte[] decodedValue = HexBin.decode(str_value);

@@ -10,6 +10,7 @@
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type. Using Java
  *                      BigInteger class to enhance numerical range to -INF -> +INF.
  *     David Carver (STAR) - bug 262765 - fix comparision to zero.
+ *     David Carver (STAR) - bug 282223 - fix casting issues.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -107,7 +108,14 @@ public class XSInteger extends XSDecimal {
 		AnyType aat = arg.first();
 
 		try {
-			BigInteger bigInt = new BigInteger(aat.string_value());
+			BigInteger bigInt = null;
+			if (aat.string_type().equals("xs:decimal") || aat.string_type().equals("xs:float") ||
+				aat.string_type().equals("xs:double")) {
+				BigDecimal bigDec =  new BigDecimal(aat.string_value());
+				bigInt = bigDec.toBigInteger();
+			} else {
+				bigInt = new BigInteger(aat.string_value());
+			}
 			rs.add(new XSInteger(bigInt));
 			return rs;
 		} catch (NumberFormatException e) {

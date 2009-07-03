@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     David Carver (STAR) - bug 282223 - fix casting issues. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -110,6 +111,10 @@ public class XSGYear extends CalendarType implements CmpEq {
 			return rs;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
+		
+		if (aat instanceof NumericType) {
+			throw DynamicError.throw_type_error();
+		}
 
 		XSGYear val = parse_gYear(aat.string_value());
 
