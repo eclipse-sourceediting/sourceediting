@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Mukul Gandhi - improved comparison of xs:string with other XDM types
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -116,8 +117,8 @@ public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 
 		ResultSequence rs = ResultSequenceFactory.create_new(this);
 		args.add(rs);
-		args.add(ResultSequenceFactory.create_new(arg));
-
+		args.add(ResultSequenceFactory.create_new(new 
+				                       XSString(arg.string_value())));
 		rs = FnCompare.compare(args);
 
 		if (rs.empty())
