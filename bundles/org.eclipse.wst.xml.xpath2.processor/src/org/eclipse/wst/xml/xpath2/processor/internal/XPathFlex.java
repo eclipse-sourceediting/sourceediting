@@ -8,7 +8,8 @@
 // * http://www.eclipse.org/legal/epl-v10.html
 // *
 // * Contributors:
-// *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+// *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+// *     David Carver - bug 280987 - fixed literal issues for integer and decimal
 // *******************************************************************************/
 
 
