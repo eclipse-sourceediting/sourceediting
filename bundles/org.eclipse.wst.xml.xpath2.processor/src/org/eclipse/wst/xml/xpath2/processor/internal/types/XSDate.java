@@ -9,7 +9,8 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
  *     Mukul Gandhi - bug 274792 - improvements to xs:date constructor function.
- *     David Carver - bug 282223 - implementation of xs:duration. 
+ *     David Carver - bug 282223 - implementation of xs:duration.
+ *                                 fixed casting issue. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -35,12 +36,12 @@ Cloneable {
 	private XSDuration _tz;
 
 	/**
-	 * Initialises a new represenation of a supplied date
+	 * Initializes a new representation of a supplied date
 	 * 
 	 * @param cal
 	 *            The Calendar representation of the date to be stored
 	 * @param tz
-	 *            The timezone of the date to be stored.
+	 *            The time zone of the date to be stored.
 	 */
 	public XSDate(Calendar cal, XSDuration tz) {
 		_calendar = cal;
@@ -53,7 +54,7 @@ Cloneable {
 	}
 
 	/**
-	 * Initialises a new representation of the current date
+	 * Initializes a new representation of the current date
 	 */
 	public XSDate() {
 		this(new GregorianCalendar(TimeZone.getTimeZone("GMT")), null);
@@ -151,12 +152,13 @@ Cloneable {
 		if (arg.empty())
 			return rs;
 
-		// function conversion rules apply here also.
-		// for whatever be argument atype, get it's string value,
-		// and ensure that the string value is a valid date string.
 		AnyType aat = arg.first();
 		
-		XSDate dt = parse_date(aat.string_value());
+		if (!isCastable(aat)) {
+			throw DynamicError.cant_cast(null);
+		}
+		
+		XSDate dt = castDate(aat);
 
 		if (dt == null)
 			throw DynamicError.cant_cast(null);
@@ -164,6 +166,44 @@ Cloneable {
 		rs.add(dt);
 
 		return rs;
+	}
+	
+	private boolean isCastable(AnyType aat) {
+		
+		// We might be able to cast these.
+		if (aat instanceof XSString || aat instanceof XSUntypedAtomic ||
+			aat instanceof NodeType) {
+			return true;
+		}
+		
+		if (aat instanceof XSTime) {
+			return false;
+		}
+		
+		if (aat instanceof XSDateTime) {
+			return true;
+		
+		}
+		
+		if (aat instanceof XSDate) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private XSDate castDate(AnyType aat) {
+		if (aat instanceof XSDate) {
+			XSDate date = (XSDate) aat;
+			return new XSDate(date.calendar(), date.tz());
+		}
+		
+		if (aat instanceof XSDateTime) {
+			XSDateTime dateTime = (XSDateTime) aat;
+			return new XSDate(dateTime.calendar(), dateTime.tz());
+		}
+		
+		return parse_date(aat.string_value());
 	}
 
 	/**
@@ -230,7 +270,7 @@ Cloneable {
 		return ret;
 	}
 
-	/**
+ 	/**
 	 * Retrive the datatype full pathname
 	 * 
 	 * @return "xs:date" which is the datatype full pathname

@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     David Carver (STAR) - bug 282223 - fixed casting issues. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -117,7 +118,11 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 
-		XSGYearMonth val = parse_gYearMonth(aat.string_value());
+		if (!isCastable(aat)) {
+			throw DynamicError.cant_cast(null);
+		}
+		
+		XSGYearMonth val = castGYearMonth(aat); 
 
 		if (val == null)
 			throw DynamicError.cant_cast(null);
@@ -125,6 +130,51 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 		rs.add(val);
 
 		return rs;
+	}
+	
+	private boolean isCastable(AnyAtomicType aat) {
+		
+		if (aat instanceof XSString || aat instanceof XSUntypedAtomic) {
+			return true;
+		}
+		
+		if (aat instanceof XSGYearMonth) {
+			return true;
+		}
+		
+		if (aat instanceof XSDate) {
+			return true;
+		}
+		
+		if (aat instanceof XSTime) {
+			return false;
+		}
+		
+		if (aat instanceof XSDateTime) {
+			return true;
+		}
+		
+		return false;
+		
+	}
+	
+	private XSGYearMonth castGYearMonth(AnyAtomicType aat) {
+		if (aat instanceof XSGYearMonth) {
+			XSGYearMonth gym = (XSGYearMonth) aat;
+			return new XSGYearMonth(gym.calendar(), gym.timezoned());
+		}
+		
+		if (aat instanceof XSDate) {
+			XSDate date = (XSDate) aat;
+			return new XSGYearMonth(date.calendar(), date.timezoned());
+		}
+		
+		if (aat instanceof XSDateTime) {
+			XSDateTime dateTime = (XSDateTime) aat;
+			return new XSGYearMonth(dateTime.calendar(), dateTime.timezoned());
+		}
+		
+		return parse_gYearMonth(aat.string_value());
 	}
 
 	/**

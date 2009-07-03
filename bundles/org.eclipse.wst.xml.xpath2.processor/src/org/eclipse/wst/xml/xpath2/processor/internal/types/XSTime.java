@@ -8,7 +8,8 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
- *     David Carver - bug 282223 - implementation of xs:duration data type. 
+ *     David Carver - bug 282223 - implementation of xs:duration data type.
+ *                                 correction of casting to time. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -96,7 +97,7 @@ Cloneable {
 	public static XSTime parse_time(String str) {
 		// XXX fix this
 
-		String lame = "1983-11-29T";
+		String startdate = "1983-11-29T";
 		boolean tz = false;
 
 		int index = str.indexOf('+', 1);
@@ -109,7 +110,7 @@ Cloneable {
 		}
 
 		// thus life
-		XSDateTime dt = XSDateTime.parseDateTime(lame + str);
+		XSDateTime dt = XSDateTime.parseDateTime(startdate + str);
 		if (dt == null)
 			return null;
 
@@ -134,7 +135,11 @@ Cloneable {
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 
-		XSTime t = parse_time(aat.string_value());
+		if (!isCastable(aat)) {
+			throw DynamicError.cant_cast(null); 
+		}
+		
+		XSTime t = castTime(aat);
 
 		if (t == null)
 			throw DynamicError.cant_cast(null);
@@ -142,8 +147,35 @@ Cloneable {
 		rs.add(t);
 
 		return rs;
-	}
+	} 
 
+	private boolean isCastable(AnyAtomicType aat) {
+		if (aat instanceof XSString || aat instanceof XSUntypedAtomic) {
+			return true;
+		}
+		
+		if (aat instanceof XSDateTime) {
+			return true;
+		}
+		
+		if (aat instanceof XSTime) {
+			return true;
+		}
+		return false;
+	}
+	
+	private XSTime castTime(AnyAtomicType aat) {
+		if (aat instanceof XSTime) {
+			XSTime time = (XSTime) aat;
+			return new XSTime(time.calendar(), time.tz());
+		}
+		if (aat instanceof XSDateTime) {
+			XSDateTime dateTime = (XSDateTime) aat;
+			return new XSTime(dateTime.calendar(), dateTime.tz());
+		}
+		
+		return parse_time(aat.string_value());
+	}
 	/**
 	 * Retrieves the hour stored as an integer
 	 * 
