@@ -107,6 +107,13 @@ public class XSInteger extends XSDecimal {
 		// and convert it's string value to an integer.
 		AnyType aat = arg.first();
 
+		if (!(aat.string_type().equals("xs:string") || aat instanceof NodeType
+				|| aat.string_type().equals("xs:untypedAtomic")
+				|| aat.string_type().equals("xs:boolean") || aat instanceof NumericType)) {
+			throw DynamicError.cant_cast(null);
+		}
+
+		
 		try {
 			BigInteger bigInt = null;
 			if (aat.string_type().equals("xs:decimal") || aat.string_type().equals("xs:float") ||

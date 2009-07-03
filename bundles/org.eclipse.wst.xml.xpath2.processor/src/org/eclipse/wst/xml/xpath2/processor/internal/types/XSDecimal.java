@@ -116,10 +116,17 @@ public class XSDecimal extends NumericType {
 			return rs;
 
 		AnyType aat = arg.first();
+		
+		if (!(aat.string_type().equals("xs:string") || aat instanceof NodeType
+				|| aat.string_type().equals("xs:untypedAtomic")
+				|| aat.string_type().equals("xs:boolean") || aat instanceof NumericType)) {
+			throw DynamicError.cant_cast(null);
+		}
+
 
 		try {
 			// XPath doesn't allow for converting Exponents to Decimal values.
-			if (aat.string_value().contains("E") || aat.string_value().contains("e")) {
+			if (aat.string_value().contains("E") || aat.string_value().contains("e") && !(aat instanceof XSBoolean)) {
 				throw DynamicError.cant_cast(null);
 			}
 			

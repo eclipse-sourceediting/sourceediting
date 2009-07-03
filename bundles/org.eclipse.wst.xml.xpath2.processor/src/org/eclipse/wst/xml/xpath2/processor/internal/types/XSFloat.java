@@ -10,6 +10,7 @@
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type
  *     Mukul Gandhi - bug 279406 - improvements to negative zero values for xs:float
  *     David Carver - bug 262765 - fixed rounding errors.
+ *     David Carver - bug 282223 - fixed casting errors.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -135,6 +136,14 @@ public class XSFloat extends NumericType {
 			return rs;
 
 		AnyType aat = arg.first();
+		
+		if (!(aat.string_type().equals("xs:string") || aat instanceof NodeType ||
+			aat.string_type().equals("xs:untypedAtomic") ||
+			aat.string_type().equals("xs:boolean") ||
+			aat instanceof NumericType)) {
+			throw DynamicError.cant_cast(null);
+		}
+		
 
 		try {
 			Float f = null;
@@ -142,6 +151,12 @@ public class XSFloat extends NumericType {
 				f = Float.POSITIVE_INFINITY;
 			} else if (aat.string_value().equals("-INF")) {
 				f = Float.NEGATIVE_INFINITY;
+			} else if (aat instanceof XSBoolean) {
+				if (aat.string_value().equals("true")) {
+					f = new Float("1.0E0");
+				} else {
+					f = new Float("0.0E0");
+				}
 			} else {
 			    f = new Float(aat.string_value());
 			}

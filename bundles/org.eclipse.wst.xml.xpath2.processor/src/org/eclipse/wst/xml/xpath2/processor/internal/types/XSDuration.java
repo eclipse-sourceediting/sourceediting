@@ -12,6 +12,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import java.math.BigInteger;
+
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -20,9 +22,11 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpGt;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpLt;
 
 /**
- * A representation of the xs:duration data type.  Other duration implementations
+ * A representation of the xs:duration data type. Other duration implementations
  * should inherit from this implementation.
- * @since 1.1 This used to be an abstract class but was incorrectly implemented as such.
+ * 
+ * @since 1.1 This used to be an abstract class but was incorrectly implemented
+ *        as such.
  */
 public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 
@@ -38,7 +42,7 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 	 * Initializes to the supplied parameters. If more than 24 hours is
 	 * supplied, the number of days is adjusted accordingly. The same occurs for
 	 * minutes and seconds
-	 *
+	 * 
 	 * @param years
 	 *            Number of years in this duration of time.
 	 * @param months
@@ -55,8 +59,8 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 	 *            True if this duration of time represents a backwards passage
 	 *            through time. False otherwise
 	 */
-	public XSDuration(int years, int months, int days, int hours, int minutes, double seconds,
-			boolean negative) {
+	public XSDuration(int years, int months, int days, int hours, int minutes,
+			double seconds, boolean negative) {
 		_year = years;
 		_month = months;
 		_days = days;
@@ -64,9 +68,9 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 		_minutes = minutes;
 		_seconds = seconds;
 		_negative = negative;
-		
+
 		if (_month >= 12) {
-			_year += (_month / 12);
+			_year += _month / 12;
 			_month = _month % 12;
 		}
 
@@ -105,17 +109,14 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 	public XSDuration() {
 		this(0, 0, 0, 0, 0, 0.0, false);
 	}
-	
 
 	public String type_name() {
 		return "duration";
 	}
 
-
 	public String string_type() {
 		return "xs:duration";
 	}
-
 
 	/**
 	 * Retrieves a String representation of the duration stored
@@ -126,10 +127,10 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 		String ret = "";
 		boolean did_something = false; // this should be constant ;D
 		String tret = "";
-	
+
 		if (negative() && !(days() == 0 && hours() == 0 && seconds() == 0))
 			ret += "-";
-	
+
 		ret += "P";
 
 		int years = year();
@@ -138,14 +139,14 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 
 		int months = month();
 		if (months != 0) {
-				ret += months + "M";
+			ret += months + "M";
 		}
-		
+
 		if (days() != 0) {
 			ret += days() + "D";
 			did_something = true;
 		}
-	
+
 		// do the "time" bit
 		if (hours() != 0) {
 			tret += hours() + "H";
@@ -158,21 +159,20 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 		if (seconds() != 0) {
 			String doubStr = (Double.valueOf(seconds())).toString();
 			if (doubStr.endsWith(".0")) {
-			   // string value of x.0 seconds is xS. e.g, 7.0S is converted to
-			   // 7S.
-			   tret += doubStr.substring(0, doubStr.indexOf(".0")) + "S";
-			}
-			else {
-			   tret += seconds() + "S";	
+				// string value of x.0 seconds is xS. e.g, 7.0S is converted to
+				// 7S.
+				tret += doubStr.substring(0, doubStr.indexOf(".0")) + "S";
+			} else {
+				tret += seconds() + "S";
 			}
 			did_something = true;
 		} else if (!did_something) {
 			tret += "0" + "S";
 		}
-	
+
 		if (tret.length() > 0)
 			ret += "T" + tret;
-	
+
 		return ret;
 	}
 
@@ -223,9 +223,9 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 	 * @throws DynamicError
 	 */
 	public boolean eq(AnyType arg) throws DynamicError {
-		XSDuration val = (XSDuration) NumericType
-				.get_single_type(arg, XSDayTimeDuration.class);
-	
+		XSDuration val = (XSDuration) NumericType.get_single_type(arg,
+				XSDayTimeDuration.class);
+
 		return value() == val.value();
 	}
 
@@ -239,9 +239,9 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 	 * @throws DynamicError
 	 */
 	public boolean lt(AnyType arg) throws DynamicError {
-		XSDuration val = (XSDuration) NumericType
-				.get_single_type(arg, XSDayTimeDuration.class);
-	
+		XSDuration val = (XSDuration) NumericType.get_single_type(arg,
+				XSDayTimeDuration.class);
+
 		return value() < val.value();
 	}
 
@@ -255,9 +255,9 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 	 * @throws DynamicError
 	 */
 	public boolean gt(AnyType arg) throws DynamicError {
-		XSDuration val = (XSDuration) NumericType
-				.get_single_type(arg, XSDayTimeDuration.class);
-	
+		XSDuration val = (XSDuration) NumericType.get_single_type(arg,
+				XSDayTimeDuration.class);
+
 		return value() > val.value();
 	}
 
@@ -279,17 +279,16 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 	 */
 	public double value() {
 		double ret = days() * 24 * 60 * 60;
-	
+
 		ret += hours() * 60 * 60;
 		ret += minutes() * 60;
 		ret += seconds();
-	
+
 		if (negative())
 			ret *= -1;
-	
+
 		return ret;
 	}
-	
 
 	/**
 	 * Creates a new ResultSequence consisting of the extractable time duration
@@ -302,22 +301,22 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 	 */
 	public ResultSequence constructor(ResultSequence arg) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new();
-	
+
 		if (arg.empty())
 			return rs;
-	
+
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
-	
+
 		XSDuration dtd = parseDTDuration(aat.string_value());
-	
+
 		if (dtd == null)
 			throw DynamicError.cant_cast(null);
-	
+
 		rs.add(dtd);
-	
+
 		return rs;
 	}
-	
+
 	/**
 	 * Creates a new XSDayTimeDuration by parsing the supplied String
 	 * represented duration of time
@@ -336,8 +335,8 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 		double seconds = 0;
 
 		// string following the P
-		String pstr = null;
-		String tstr = null;
+		String pstr = "";
+		String tstr = "";
 
 		// get the negative and pstr
 		if (str.startsWith("-P")) {
@@ -353,31 +352,28 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 			int index = pstr.indexOf('Y');
 			boolean did_something = false;
 
-			
 			if (index != -1) {
 				String digit = pstr.substring(0, index);
 				years = Integer.parseInt(digit);
 				pstr = pstr.substring(index + 1, pstr.length());
 				did_something = true;
-			} 
-			
+			}
+
 			index = pstr.indexOf('M');
 			if (index != -1) {
 				String digit = pstr.substring(0, index);
 				months = Integer.parseInt(digit);
-				pstr =  pstr.substring(index + 1, pstr.length());
+				pstr = pstr.substring(index + 1, pstr.length());
 				did_something = true;
 			}
-			
+
 			// get the days
 			index = pstr.indexOf('D');
 
-			// no D... must have T
 			if (index == -1) {
 				if (pstr.startsWith("T")) {
 					tstr = pstr.substring(1, pstr.length());
-				} else
-					return null;
+				}
 			} else {
 				String digit = pstr.substring(0, index);
 				days = Integer.parseInt(digit);
@@ -386,8 +382,6 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 				if (tstr.startsWith("T")) {
 					tstr = tstr.substring(1, tstr.length());
 				} else {
-					if (tstr.length() > 0)
-						return null;
 					tstr = "";
 					did_something = true;
 				}
@@ -419,11 +413,7 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 				tstr = tstr.substring(index + 1, tstr.length());
 				did_something = true;
 			}
-			if (did_something) {
-				// make sure we parsed it all
-				if (tstr.length() != 0)
-					return null;
-			} else {
+			if (!did_something) {
 				return null;
 			}
 
@@ -431,12 +421,13 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 			return null;
 		}
 
-		return new XSDuration(years, months, days, hours, minutes, seconds, negative);
+		return new XSDuration(years, months, days, hours, minutes, seconds,
+				negative);
 	}
 
 	public Object clone() throws CloneNotSupportedException {
-		return new XSDuration(year(), month(), days(), hours(), minutes(), seconds(),
-				negative());
+		return new XSDuration(year(), month(), days(), hours(), minutes(),
+				seconds(), negative());
 	}
 
 	/**

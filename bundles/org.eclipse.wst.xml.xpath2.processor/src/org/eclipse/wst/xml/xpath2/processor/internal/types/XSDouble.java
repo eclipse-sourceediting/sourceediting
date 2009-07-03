@@ -30,7 +30,8 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 public class XSDouble extends NumericType {
 
 	private Double _value;
-	private XPathDecimalFormat format = new XPathDecimalFormat("0.################E0");
+	private XPathDecimalFormat format = new XPathDecimalFormat(
+			"0.################E0");
 
 	/**
 	 * Initialises a representation of the supplied number
@@ -84,7 +85,7 @@ public class XSDouble extends NumericType {
 			} else if (i.equals("-INF")) {
 				d = Double.NEGATIVE_INFINITY;
 			} else {
-			    d = new Double(i);
+				d = new Double(i);
 			}
 			return new XSDouble(d.doubleValue());
 		} catch (NumberFormatException e) {
@@ -109,6 +110,12 @@ public class XSDouble extends NumericType {
 			return rs;
 
 		AnyType aat = arg.first();
+
+		if (!(aat.string_type().equals("xs:string") || aat instanceof NodeType
+				|| aat.string_type().equals("xs:untypedAtomic")
+				|| aat.string_type().equals("xs:boolean") || aat instanceof NumericType)) {
+			throw DynamicError.cant_cast(null);
+		}
 
 		XSDouble d = parse_double(aat.string_value());
 		if (d == null)
@@ -146,18 +153,18 @@ public class XSDouble extends NumericType {
 	@Override
 	public String string_value() {
 		if (zero()) {
-		  return "0";
+			return "0";
 		}
-		
+
 		if (negativeZero()) {
-		   return "-0";	
+			return "-0";
 		}
-		
+
 		if (nan()) {
 			return "NaN";
 		}
-				
-		return  format.xpathFormat(_value);
+
+		return format.xpathFormat(_value);
 	}
 
 	/**
@@ -176,17 +183,18 @@ public class XSDouble extends NumericType {
 	 */
 	@Override
 	public boolean zero() {
-	   return (Double.compare(_value, 0.0E0) == 0);
+		return (Double.compare(_value, 0.0E0) == 0);
 	}
-	
+
 	/*
 	 * Check for whether this XSDouble represents -0
 	 * 
 	 * @return True if this XSDouble represents -0. False otherwise.
+	 * 
 	 * @since 1.1
 	 */
 	public boolean negativeZero() {
-	   return (Double.compare(_value, -0.0E0) == 0);
+		return (Double.compare(_value, -0.0E0) == 0);
 	}
 
 	/**
@@ -334,9 +342,9 @@ public class XSDouble extends NumericType {
 
 		if (val.zero())
 			throw DynamicError.div_zero(null);
-		
-		return ResultSequenceFactory.create_new(new XSInteger(
-				BigInteger.valueOf((int) (double_value() / val.double_value()))));
+
+		return ResultSequenceFactory.create_new(new XSInteger(BigInteger
+				.valueOf((int) (double_value() / val.double_value()))));
 	}
 
 	/**
@@ -417,14 +425,16 @@ public class XSDouble extends NumericType {
 	 */
 	@Override
 	public NumericType round_half_to_even() {
-    
+
 		return round_half_to_even(0);
 	}
 
 	/**
-	 * Returns the closest integer of the number stored with the specified precision.
+	 * Returns the closest integer of the number stored with the specified
+	 * precision.
 	 * 
-	 * @param precision An integer precision 
+	 * @param precision
+	 *            An integer precision
 	 * @return A XSDouble representing the closest long of the number stored.
 	 */
 	@Override
