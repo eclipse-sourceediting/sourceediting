@@ -116,7 +116,11 @@ public class XSGYear extends CalendarType implements CmpEq {
 			throw DynamicError.throw_type_error();
 		}
 
-		XSGYear val = parse_gYear(aat.string_value());
+		if (!isCastable(aat)) {
+			throw DynamicError.cant_cast(null);
+		}
+		
+		XSGYear val = castGYear(aat);
 
 		if (val == null)
 			throw DynamicError.cant_cast(null);
@@ -124,6 +128,42 @@ public class XSGYear extends CalendarType implements CmpEq {
 		rs.add(val);
 
 		return rs;
+	}
+	
+	private boolean isCastable(AnyAtomicType aat) {
+		if (aat instanceof XSString || aat instanceof XSUntypedAtomic) {
+			return true;
+		}
+		
+		if (aat instanceof XSTime) {
+			return false;
+		}
+		
+		if (aat instanceof XSDate || aat instanceof XSDateTime || 
+			aat instanceof XSGYear) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private XSGYear castGYear(AnyAtomicType aat) {
+		if (aat instanceof XSGYear) {
+			XSGYear gy = (XSGYear) aat;
+			return new XSGYear(gy.calendar(), gy.timezoned());
+		}
+		
+		if (aat instanceof XSDate) {
+			XSDate date = (XSDate) aat;
+			return new XSGYear(date.calendar(), date.timezoned());
+		}
+		
+		if (aat instanceof XSDateTime) {
+			XSDateTime dateTime = (XSDateTime) aat;
+			return new XSGYear(dateTime.calendar(), dateTime.timezoned());
+		}
+		
+		return parse_gYear(aat.string_value());
 	}
 
 	/**

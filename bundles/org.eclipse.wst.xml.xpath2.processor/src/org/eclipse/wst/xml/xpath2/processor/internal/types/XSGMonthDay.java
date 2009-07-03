@@ -8,7 +8,8 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver (STAR) - bug 262765 - Fix parsing of gMonthDay to valid date
- *     David Carver (STAR) - bug 282223 - fix timezone adjustment creation. 
+ *     David Carver (STAR) - bug 282223 - fix timezone adjustment creation.
+ *                                        fixed casting issue. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -139,7 +140,11 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 
-		XSGMonthDay val = parse_gMonthDay(aat.string_value());
+		if (!isCastable(aat)) {
+			throw DynamicError.cant_cast(null);
+		}
+		
+		XSGMonthDay val = castGMonthDay(aat);
 
 		if (val == null)
 			throw DynamicError.cant_cast(null);
@@ -149,6 +154,42 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 		return rs;
 	}
 
+	private boolean isCastable(AnyAtomicType aat) {
+		if (aat instanceof XSString || aat instanceof XSUntypedAtomic) {
+			return true;
+		}
+		
+		if (aat instanceof XSTime) {
+			return false;
+		}
+		
+		if (aat instanceof XSDate || aat instanceof XSDateTime || 
+			aat instanceof XSGMonthDay) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private XSGMonthDay castGMonthDay(AnyAtomicType aat) {
+		if (aat instanceof XSGMonthDay) {
+			XSGMonthDay gmd = (XSGMonthDay) aat;
+			return new XSGMonthDay(gmd.calendar(), gmd.timezoned());
+		}
+		
+		if (aat instanceof XSDate) {
+			XSDate date = (XSDate) aat;
+			return new XSGMonthDay(date.calendar(), date.timezoned());
+		}
+		
+		if (aat instanceof XSDateTime) {
+			XSDateTime dateTime = (XSDateTime) aat;
+			return new XSGMonthDay(dateTime.calendar(), dateTime.timezoned());
+		}
+		
+		return parse_gMonthDay(aat.string_value());
+	}
+	
 	/**
 	 * Retrieves the actual month as an integer
 	 * 
