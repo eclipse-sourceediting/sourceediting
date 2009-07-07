@@ -1580,7 +1580,7 @@ public class SeqExprCastTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/exprSeqTypes/SeqExprCast/casthc43.xq";
       String resultFile = "/ExpectedTestResults/Expressions/exprSeqTypes/SeqExprCast/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0080";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
