@@ -655,17 +655,6 @@ Cloneable {
 	public String string_value() {
 		String ret = "";
 		
-		ret += pad_int(year(), 4);
-
-		ret += "-";
-		ret += pad_int(month(), 2);
-
-		ret += "-";
-		ret += pad_int(day(), 2);
-
-		// time
-		ret += "T";
-
 		Calendar adjustFortimezone = calendar();
 		int tzHours = 0;
 		int tzMinutes = 0;
@@ -679,11 +668,28 @@ Cloneable {
 		   }
 		}
 		
+		if (adjustFortimezone.get(Calendar.ERA) == GregorianCalendar.BC) {
+			ret +="-";
+		}
+		
 		adjustFortimezone.add(Calendar.HOUR_OF_DAY, tzHours);
+		adjustFortimezone.add(Calendar.MINUTE, tzMinutes);
+
+		
+		ret += pad_int(adjustFortimezone.get(Calendar.YEAR), 4);
+
+		ret += "-";
+		ret += pad_int(month(), 2);
+
+		ret += "-";
+		ret += pad_int(adjustFortimezone.get(Calendar.DAY_OF_MONTH), 2);
+
+		// time
+		ret += "T";
+		
 		ret += pad_int(adjustFortimezone.get(Calendar.HOUR_OF_DAY), 2);
 
 		ret += ":";
-		adjustFortimezone.add(Calendar.MINUTE, tzMinutes);
 		ret += pad_int(adjustFortimezone.get(Calendar.MINUTE), 2);
 
 		ret += ":";
