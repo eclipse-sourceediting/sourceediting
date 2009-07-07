@@ -257,8 +257,28 @@ Cloneable {
 		ret += "-";
 		ret += XSDateTime.pad_int(day(), 2);
 
-		if (timezoned())
-			ret += "Z";
+		if (timezoned()) {
+			int hrs = _tz.hours();
+			int min = _tz.minutes();
+			double secs = _tz.seconds();
+			if (hrs == 0 && min == 0 && secs == 0) {
+			  ret += "Z";
+			}
+			else {
+			  String tZoneStr = "";
+			  if (_tz.negative()) {
+				tZoneStr += "-";  
+			  }
+			  else {
+				tZoneStr += "+"; 
+			  }
+			  tZoneStr += XSDateTime.pad_int(hrs, 2);  
+			  tZoneStr += ":";
+			  tZoneStr += XSDateTime.pad_int(min, 2);
+			  
+			  ret += tZoneStr;
+			}
+		}
 
 		return ret;
 	}

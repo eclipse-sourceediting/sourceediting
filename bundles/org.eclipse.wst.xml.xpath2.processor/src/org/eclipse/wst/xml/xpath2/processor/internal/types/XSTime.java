@@ -227,11 +227,27 @@ Cloneable {
 	@Override
 	public String string_value() {
 		String ret = "";
-
-		ret += XSDateTime.pad_int(hour(), 2);
-
+		
+		Calendar adjustFortimezone = calendar();
+		int tzHours = 0;
+		int tzMinutes = 0;
+		if (timezoned()) {
+		   adjustFortimezone = calendar();
+		   tzHours = tz().hours();
+		   tzMinutes = tz().minutes();
+		   if (tz().negative()) {
+			   tzHours = tzHours * -1;
+			   tzMinutes = tzMinutes * -1;
+		   }
+		}
+		
+		adjustFortimezone.add(Calendar.HOUR_OF_DAY, tzHours);
+		ret += XSDateTime.pad_int(adjustFortimezone.get(Calendar.HOUR_OF_DAY), 2);
+		
 		ret += ":";
-		ret += XSDateTime.pad_int(minute(), 2);
+		adjustFortimezone.add(Calendar.MINUTE, tzMinutes);
+		ret += XSDateTime.pad_int(adjustFortimezone.get(Calendar.MINUTE), 2);
+		
 
 		ret += ":";
 		int isecond = (int) second();
@@ -246,8 +262,28 @@ Cloneable {
 				ret += sec;
 		}
 
-		if (timezoned())
-			ret += "Z";
+		if (timezoned()) {
+			int hrs = _tz.hours();
+			int min = _tz.minutes();
+			double secs = _tz.seconds();
+			if (hrs == 0 && min == 0 && secs == 0) {
+			  ret += "Z";
+			}
+			else {
+			  String tZoneStr = "";
+			  if (_tz.negative()) {
+				tZoneStr += "-";  
+			  }
+			  else {
+				tZoneStr += "+"; 
+			  }
+			  tZoneStr += XSDateTime.pad_int(hrs, 2);  
+			  tZoneStr += ":";
+			  tZoneStr += XSDateTime.pad_int(min, 2);
+			  
+			  ret += tZoneStr;
+			}
+		}
 
 		return ret;
 	}
