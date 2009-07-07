@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,6 +59,7 @@ public class CSSCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		node.putBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR, true);
 		node.putBoolean(CSSCorePreferenceNames.WRAPPING_NEWLINE_ON_OPEN_BRACE, false);
 		node.putInt(CSSCorePreferenceNames.CASE_IDENTIFIER, CSSCorePreferenceNames.UPPER);
+		node.putInt(CSSCorePreferenceNames.CASE_SELECTOR, CSSCorePreferenceNames.UPPER);
 		node.putInt(CSSCorePreferenceNames.CASE_PROPERTY_NAME, CSSCorePreferenceNames.LOWER);
 		node.putInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE, CSSCorePreferenceNames.LOWER);
 

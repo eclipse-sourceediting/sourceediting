@@ -65,6 +65,11 @@ public class CSSSourcePreferencePage extends AbstractPreferencePage {
 	protected Button fPropValueLower;
 	// case of property value
 	protected Button fPropValueUpper;
+
+	// Selector case
+	protected Button fSelectorUpper;
+	protected Button fSelectorLower;
+
 	protected Button fSplitMultiAttrs;
 	private final int MAX_INDENTATION_SIZE = 16;
 	private final int MIN_INDENTATION_SIZE = 0;
@@ -93,7 +98,7 @@ public class CSSSourcePreferencePage extends AbstractPreferencePage {
 
 	private void createContentsForContentAssistGroup(Composite parent) {
 		// not content assist, but preferred case
-		Group caseGroup = createGroup(parent, 3);
+		Group caseGroup = createGroup(parent, 4);
 		caseGroup.setText(CSSUIMessages.PrefsLabel_CaseGroup);
 
 		// use group for radio buttons so that associated label is read
@@ -101,6 +106,12 @@ public class CSSSourcePreferencePage extends AbstractPreferencePage {
 		identGroup.setText(CSSUIMessages.PrefsLabel_CaseIdent);
 		fIdentUpper = createRadioButton(identGroup, CSSUIMessages.PrefsLabel_CaseIdentUpper);
 		fIdentLower = createRadioButton(identGroup, CSSUIMessages.PrefsLabel_CaseIdentLower);
+
+		// use group for radio buttons so that associated label is read
+		Group selectorGroup = createGroup(caseGroup, 1);
+		selectorGroup.setText(CSSUIMessages.PrefsLabel_SelectorTagName);
+		fSelectorUpper = createRadioButton(selectorGroup, CSSUIMessages.PrefsLabel_CaseIdentUpper);
+		fSelectorLower = createRadioButton(selectorGroup, CSSUIMessages.PrefsLabel_CaseIdentLower);
 
 		// use group for radio buttons so that associated label is read
 		Group propNameGroup = createGroup(caseGroup, 1);
@@ -181,6 +192,8 @@ public class CSSSourcePreferencePage extends AbstractPreferencePage {
 		Preferences prefs = getModelPreferences();
 		fIdentUpper.setSelection(prefs.getInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.UPPER);
 		fIdentLower.setSelection(prefs.getInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.LOWER);
+		fSelectorUpper.setSelection(prefs.getInt(CSSCorePreferenceNames.CASE_SELECTOR) == CSSCorePreferenceNames.UPPER);
+		fSelectorLower.setSelection(prefs.getInt(CSSCorePreferenceNames.CASE_SELECTOR) == CSSCorePreferenceNames.LOWER);
 		fPropNameUpper.setSelection(prefs.getInt(CSSCorePreferenceNames.CASE_PROPERTY_NAME) == CSSCorePreferenceNames.UPPER);
 		fPropNameLower.setSelection(prefs.getInt(CSSCorePreferenceNames.CASE_PROPERTY_NAME) == CSSCorePreferenceNames.LOWER);
 		fPropValueUpper.setSelection(prefs.getInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE) == CSSCorePreferenceNames.UPPER);
@@ -220,6 +233,8 @@ public class CSSSourcePreferencePage extends AbstractPreferencePage {
 		Preferences prefs = getModelPreferences();
 		fIdentUpper.setSelection(prefs.getDefaultInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.UPPER);
 		fIdentLower.setSelection(prefs.getDefaultInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.LOWER);
+		fSelectorUpper.setSelection(prefs.getDefaultInt(CSSCorePreferenceNames.CASE_SELECTOR) == CSSCorePreferenceNames.UPPER);
+		fSelectorLower.setSelection(prefs.getDefaultInt(CSSCorePreferenceNames.CASE_SELECTOR) == CSSCorePreferenceNames.LOWER);
 		fPropNameUpper.setSelection(prefs.getDefaultInt(CSSCorePreferenceNames.CASE_PROPERTY_NAME) == CSSCorePreferenceNames.UPPER);
 		fPropNameLower.setSelection(prefs.getDefaultInt(CSSCorePreferenceNames.CASE_PROPERTY_NAME) == CSSCorePreferenceNames.LOWER);
 		fPropValueUpper.setSelection(prefs.getDefaultInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE) == CSSCorePreferenceNames.UPPER);
@@ -260,6 +275,7 @@ public class CSSSourcePreferencePage extends AbstractPreferencePage {
 		// not content assist, but preferred case
 		Preferences prefs = getModelPreferences();
 		prefs.setValue(CSSCorePreferenceNames.CASE_IDENTIFIER, (fIdentUpper.getSelection()) ? CSSCorePreferenceNames.UPPER : CSSCorePreferenceNames.LOWER);
+		prefs.setValue(CSSCorePreferenceNames.CASE_SELECTOR, (fSelectorUpper.getSelection()) ? CSSCorePreferenceNames.UPPER : CSSCorePreferenceNames.LOWER);
 		prefs.setValue(CSSCorePreferenceNames.CASE_PROPERTY_NAME, (fPropNameUpper.getSelection()) ? CSSCorePreferenceNames.UPPER : CSSCorePreferenceNames.LOWER);
 		prefs.setValue(CSSCorePreferenceNames.CASE_PROPERTY_VALUE, (fPropValueUpper.getSelection()) ? CSSCorePreferenceNames.UPPER : CSSCorePreferenceNames.LOWER);
 	}

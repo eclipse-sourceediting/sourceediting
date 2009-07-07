@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleRule;
 import org.eclipse.wst.css.ui.internal.image.CSSImageType;
@@ -56,8 +58,8 @@ class CSSProposalGeneratorForHTMLTag extends CSSProposalGenerator {
 			return candidates.iterator();
 		}
 
+		boolean bLowerCase = CSSCorePlugin.getDefault().getPluginPreferences().getInt(CSSCorePreferenceNames.CASE_SELECTOR) == CSSCorePreferenceNames.LOWER;
 		// XHTML requires lower case
-		boolean bLowerCase = false;
 		if (fContext.getModel().getStyleSheetType() == ICSSModel.EMBEDDED) {
 			Node domNode = fContext.getModel().getOwnerDOMNode();
 			if (domNode != null && !(domNode instanceof Document)) {
