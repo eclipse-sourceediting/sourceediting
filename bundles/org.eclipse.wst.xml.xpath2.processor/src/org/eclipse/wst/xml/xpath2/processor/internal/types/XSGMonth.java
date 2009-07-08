@@ -27,25 +27,29 @@ public class XSGMonth extends CalendarType implements CmpEq {
 
 	private Calendar _calendar;
 	private boolean _timezoned;
+	private XSDuration _tz;
 
 	/**
-	 * Initialises a representation of the supplied month
+	 * Initializes a representation of the supplied month
 	 * 
 	 * @param cal
 	 *            Calendar representation of the month to be stored
 	 * @param tz
 	 *            Timezone associated with this month
 	 */
-	public XSGMonth(Calendar cal, boolean tz) {
+	public XSGMonth(Calendar cal, XSDuration tz) {
 		_calendar = cal;
-		_timezoned = tz;
+		if (tz != null) {
+			_timezoned = true;
+			_tz = tz;
+		}
 	}
 
 	/**
 	 * Initialises a representation of the current month
 	 */
 	public XSGMonth() {
-		this(new GregorianCalendar(TimeZone.getTimeZone("GMT")), false);
+		this(new GregorianCalendar(TimeZone.getTimeZone("GMT")), null);
 	}
 
 	/**
@@ -67,7 +71,6 @@ public class XSGMonth extends CalendarType implements CmpEq {
 	 * @return The XSGMonth representation of the supplied date
 	 */
 	public static XSGMonth parse_gMonth(String str) {
-		// XXX
 
 		String startdate = "1972-";
 		String starttime = "T00:00:00";
@@ -81,20 +84,27 @@ public class XSGMonth extends CalendarType implements CmpEq {
 			index = str.lastIndexOf('Z', str.length());
 		if (index != -1) {
 			int zIndex = str.lastIndexOf('Z', str.length());
+			if (zIndex == -1) {
+				if (index > 3) {
+					zIndex = index;
+				}
+			}
 			
 			String[] split = str.split("-");
 			startdate += split[2].replace("Z", "") + "-01";
 			
-			if (split.length > 3) {
-				String[] timesplit = split[3].split(":");
-				if (timesplit.length < 3) {
-					starttime = "T";
-					for (int cnt = 0; cnt < timesplit.length; cnt++) {
-						starttime += timesplit[cnt] + ":";
+			if (str.indexOf('T') != -1) { 
+				if (split.length > 3) {
+					String[] timesplit = split[3].split(":");
+					if (timesplit.length < 3) {
+						starttime = "T";
+						for (int cnt = 0; cnt < timesplit.length; cnt++) {
+							starttime += timesplit[cnt] + ":";
+						}
+						starttime += "00";
+					} else {
+						starttime += timesplit[0] + ":" + timesplit[1] + ":" + timesplit[2];
 					}
-					starttime += "00";
-				} else {
-					starttime += timesplit[0] + ":" + timesplit[1] + ":" + timesplit[2];
 				}
 			}
 			startdate = startdate.trim();
@@ -112,7 +122,7 @@ public class XSGMonth extends CalendarType implements CmpEq {
 		if (dt == null)
 			return null;
 
-		return new XSGMonth(dt.calendar(), tz);
+		return new XSGMonth(dt.calendar(), dt.tz());
 	}
 
 	/**
@@ -168,17 +178,17 @@ public class XSGMonth extends CalendarType implements CmpEq {
 	private XSGMonth castGMonth(AnyAtomicType aat) {
 		if (aat instanceof XSGMonth) {
 			XSGMonth gm = (XSGMonth) aat;
-			return new XSGMonth(gm.calendar(), gm.timezoned());
+			return new XSGMonth(gm.calendar(), gm.tz());
 		}
 		
 		if (aat instanceof XSDate) {
 			XSDate date = (XSDate) aat;
-			return new XSGMonth(date.calendar(), date.timezoned());
+			return new XSGMonth(date.calendar(), date.tz());
 		}
 		
 		if (aat instanceof XSDateTime) {
 			XSDateTime dateTime = (XSDateTime) aat;
-			return new XSGMonth(dateTime.calendar(), dateTime.timezoned());
+			return new XSGMonth(dateTime.calendar(), dateTime.tz());
 		}
 		
 		return parse_gMonth(aat.string_value());
@@ -209,12 +219,33 @@ public class XSGMonth extends CalendarType implements CmpEq {
 	 */
 	@Override
 	public String string_value() {
-		String ret = "";
+		String ret = "--";
 
 		ret += XSDateTime.pad_int(month(), 2);
 
-		if (timezoned())
-			ret += "Z";
+		if (timezoned()) {
+			
+			int hrs = tz().hours();
+			int min = tz().minutes();
+			double secs = tz().seconds();
+			if (hrs == 0 && min == 0 && secs == 0) {
+			  ret += "Z";
+			}
+			else {
+			  String tZoneStr = "";
+			  if (tz().negative()) {
+				tZoneStr += "-";  
+			  }
+			  else {
+				tZoneStr += "+"; 
+			  }
+			  tZoneStr += XSDateTime.pad_int(hrs, 2);  
+			  tZoneStr += ":";
+			  tZoneStr += XSDateTime.pad_int(min, 2);
+			  
+			  ret += tZoneStr;
+			}
+		}
 
 		return ret;
 	}
@@ -254,4 +285,15 @@ public class XSGMonth extends CalendarType implements CmpEq {
 
 		return calendar().equals(val.calendar());
 	}
+	
+	/**
+	 * Retrieves the timezone associated with the date stored
+	 * 
+	 * @return the timezone associated with the date stored
+	 * @since 1.1
+	 */
+	public XSDuration tz() {
+		return _tz;
+	}	
+	
 }

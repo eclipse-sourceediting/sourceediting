@@ -71,7 +71,7 @@ public class XSHexBinary extends CtrType implements CmpEq {
 	 */
 	@Override
 	public String string_value() {
-		return _value;
+		return _value.toUpperCase();
 	}
 
 	/**

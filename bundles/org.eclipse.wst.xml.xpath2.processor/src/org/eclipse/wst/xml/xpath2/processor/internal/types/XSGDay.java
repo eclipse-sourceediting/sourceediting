@@ -28,25 +28,29 @@ public class XSGDay extends CalendarType implements CmpEq {
 
 	private Calendar _calendar;
 	private boolean _timezoned;
+	private XSDuration _tz;
 
 	/**
-	 * Initialises a representation of the supplied day
+	 * Initializes a representation of the supplied day
 	 * 
 	 * @param cal
 	 *            Calendar representation of the day to be stored
 	 * @param tz
 	 *            Timezone associated with this day
 	 */
-	public XSGDay(Calendar cal, boolean tz) {
+	public XSGDay(Calendar cal, XSDuration tz) {
 		_calendar = cal;
-		_timezoned = tz;
+		if (tz != null) {
+			_timezoned = true;
+			_tz = tz;
+		}
 	}
 
 	/**
 	 * Initialises a representation of the current day
 	 */
 	public XSGDay() {
-		this(new GregorianCalendar(TimeZone.getTimeZone("GMT")), false);
+		this(new GregorianCalendar(TimeZone.getTimeZone("GMT")), null);
 	}
 
 	/**
@@ -81,26 +85,36 @@ public class XSGDay extends CalendarType implements CmpEq {
 			index = str.lastIndexOf('Z', str.length());
 		if (index != -1) {
 			int zIndex = str.lastIndexOf('Z', str.length());
+			if (zIndex == -1) {
+				if (index > 4)
+					zIndex = index;
+			}
+			if (zIndex == -1) {
+				zIndex = str.lastIndexOf('+');
+			}
 			
 			String[] split = str.split("-");
 			startdate += split[3].replace("Z", "");
 			
-			if (split.length > 4) {
-				String[] timesplit = split[4].split(":");
-				if (timesplit.length < 3) {
-					starttime = "T";
-					for (int cnt = 0; cnt < timesplit.length; cnt++) {
-						starttime += timesplit[cnt] + ":";
+			if (str.indexOf('T') != -1) {
+				if (split.length > 4) {
+					String[] timesplit = split[4].split(":");
+					if (timesplit.length < 3) {
+						starttime = "T";
+						for (int cnt = 0; cnt < timesplit.length; cnt++) {
+							starttime += timesplit[cnt] + ":";
+						}
+						starttime += "00";
+					} else {
+						starttime += timesplit[0] + ":" + timesplit[1] + ":" + timesplit[2];
 					}
-					starttime += "00";
-				} else {
-					starttime += timesplit[0] + ":" + timesplit[1] + ":" + timesplit[2];
 				}
 			}
 			startdate = startdate.trim();
 			startdate += starttime;
 
 			if (zIndex != -1) {
+				
 				startdate += str.substring(zIndex);
 				tz = true;
 			}
@@ -112,7 +126,7 @@ public class XSGDay extends CalendarType implements CmpEq {
 		if (dt == null)
 			return null;
 
-		return new XSGDay(dt.calendar(), tz);
+		return new XSGDay(dt.calendar(), dt.tz());
 	}
 	
 	/**
@@ -167,17 +181,17 @@ public class XSGDay extends CalendarType implements CmpEq {
 	private XSGDay castGDay(AnyAtomicType aat) {
 		if (aat instanceof XSGDay) {
 			XSGDay gday = (XSGDay) aat;
-			return new XSGDay(gday.calendar(), gday.timezoned());
+			return new XSGDay(gday.calendar(), gday.tz());
 		}
 		
 		if (aat instanceof XSDate) {
 			XSDate date = (XSDate) aat;
-			return new XSGDay(date.calendar(), date.timezoned());
+			return new XSGDay(date.calendar(), date.tz());
 		}
 		
 		if (aat instanceof XSDateTime) {
 			XSDateTime dateTime = (XSDateTime) aat;
-			return new XSGDay(dateTime.calendar(), dateTime.timezoned());
+			return new XSGDay(dateTime.calendar(), dateTime.tz());
 		}
 		return parse_gDay(aat.string_value()); 
 	}
@@ -207,12 +221,33 @@ public class XSGDay extends CalendarType implements CmpEq {
 	 */
 	@Override
 	public String string_value() {
-		String ret = "";
+		String ret = "---";
 
 		ret += XSDateTime.pad_int(day(), 2);
 
-		if (timezoned())
-			ret += "Z";
+		if (timezoned()) {
+			
+			int hrs = tz().hours();
+			int min = tz().minutes();
+			double secs = tz().seconds();
+			if (hrs == 0 && min == 0 && secs == 0) {
+			  ret += "Z";
+			}
+			else {
+			  String tZoneStr = "";
+			  if (tz().negative()) {
+				tZoneStr += "-";  
+			  }
+			  else {
+				tZoneStr += "+"; 
+			  }
+			  tZoneStr += XSDateTime.pad_int(hrs, 2);  
+			  tZoneStr += ":";
+			  tZoneStr += XSDateTime.pad_int(min, 2);
+			  
+			  ret += tZoneStr;
+			}
+		}
 
 		return ret;
 	}
@@ -251,4 +286,15 @@ public class XSGDay extends CalendarType implements CmpEq {
 
 		return calendar().equals(val.calendar());
 	}
+	
+	/**
+	 * Retrieves the timezone associated with the date stored
+	 * 
+	 * @return the timezone associated with the date stored
+	 * @since 1.1
+	 */
+	public XSDuration tz() {
+		return _tz;
+	}	
+	
 }

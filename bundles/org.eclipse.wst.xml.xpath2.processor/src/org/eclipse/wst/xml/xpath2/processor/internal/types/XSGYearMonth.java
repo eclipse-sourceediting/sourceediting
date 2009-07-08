@@ -27,6 +27,8 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 
 	private Calendar _calendar;
 	private boolean _timezoned;
+	private XSDuration _tz;
+
 
 	/**
 	 * Initialises a representation of the supplied year and month
@@ -36,16 +38,19 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 	 * @param tz
 	 *            Timezone associated with this year and month
 	 */
-	public XSGYearMonth(Calendar cal, boolean tz) {
+	public XSGYearMonth(Calendar cal, XSDuration tz) {
 		_calendar = cal;
-		_timezoned = tz;
+		if (tz != null) {
+			_timezoned = true;
+			_tz = tz;
+		}
 	}
 
 	/**
 	 * Initialises a representation of the current year and month
 	 */
 	public XSGYearMonth() {
-		this(new GregorianCalendar(TimeZone.getTimeZone("GMT")), false);
+		this(new GregorianCalendar(TimeZone.getTimeZone("GMT")), null);
 	}
 
 	/**
@@ -68,7 +73,6 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 	 * @return The XSGYearMonth representation of the supplied date
 	 */
 	public static XSGYearMonth parse_gYearMonth(String str) {
-		// XXX
 
 		String lame = "";
 		String lame2 = "-01T00:00:00.0";
@@ -96,7 +100,7 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 		if (dt == null)
 			return null;
 
-		return new XSGYearMonth(dt.calendar(), tz);
+		return new XSGYearMonth(dt.calendar(), dt.tz());
 	}
 
 	/**
@@ -161,17 +165,17 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 	private XSGYearMonth castGYearMonth(AnyAtomicType aat) {
 		if (aat instanceof XSGYearMonth) {
 			XSGYearMonth gym = (XSGYearMonth) aat;
-			return new XSGYearMonth(gym.calendar(), gym.timezoned());
+			return new XSGYearMonth(gym.calendar(), gym.tz());
 		}
 		
 		if (aat instanceof XSDate) {
 			XSDate date = (XSDate) aat;
-			return new XSGYearMonth(date.calendar(), date.timezoned());
+			return new XSGYearMonth(date.calendar(), date.tz());
 		}
 		
 		if (aat instanceof XSDateTime) {
 			XSDateTime dateTime = (XSDateTime) aat;
-			return new XSGYearMonth(dateTime.calendar(), dateTime.timezoned());
+			return new XSGYearMonth(dateTime.calendar(), dateTime.tz());
 		}
 		
 		return parse_gYearMonth(aat.string_value());
@@ -222,8 +226,29 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 		ret += "-";
 		ret += XSDateTime.pad_int(month(), 2);
 
-		if (timezoned())
-			ret += "Z";
+		if (timezoned()) {
+			
+			int hrs = tz().hours();
+			int min = tz().minutes();
+			double secs = tz().seconds();
+			if (hrs == 0 && min == 0 && secs == 0) {
+			  ret += "Z";
+			}
+			else {
+			  String tZoneStr = "";
+			  if (tz().negative()) {
+				tZoneStr += "-";  
+			  }
+			  else {
+				tZoneStr += "+"; 
+			  }
+			  tZoneStr += XSDateTime.pad_int(hrs, 2);  
+			  tZoneStr += ":";
+			  tZoneStr += XSDateTime.pad_int(min, 2);
+			  
+			  ret += tZoneStr;
+			}
+		}
 
 		return ret;
 	}
@@ -263,4 +288,14 @@ public class XSGYearMonth extends CalendarType implements CmpEq {
 
 		return calendar().equals(val.calendar());
 	}
+	
+	/**
+	 * Retrieves the timezone associated with the date stored
+	 * 
+	 * @return the timezone associated with the date stored
+	 */
+	public XSDuration tz() {
+		return _tz;
+	}	
+	
 }

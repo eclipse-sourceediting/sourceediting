@@ -99,11 +99,6 @@ Cloneable {
 		return false;
 	}
 
-	// XXX fix all this parsing
-	// return:
-	// year [possibly negative]
-	// month
-	// day
 	/**
 	 * Parses a String representation of a date and time and retrieves the year,
 	 * month and day from it
@@ -174,7 +169,6 @@ Cloneable {
 					if (token.length() != 2)
 						return null;
 
-					// XXX check if month <= 12 ?
 					ret[1] = Integer.parseInt(token);
 					token = "";
 					state = 3;
@@ -204,7 +198,6 @@ Cloneable {
 		if (token.length() != 2)
 			return null;
 
-		// XXX check day ?
 		ret[2] = Integer.parseInt(token);
 
 		return ret;

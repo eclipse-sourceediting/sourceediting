@@ -29,6 +29,8 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 
 	private Calendar _calendar;
 	private boolean _timezoned;
+	private XSDuration _tz;
+	
 
 	/**
 	 * Initialises a representation of the supplied month and day
@@ -38,16 +40,19 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 	 * @param tz
 	 *            Timezone associated with this month and day
 	 */
-	public XSGMonthDay(Calendar cal, boolean tz) {
+	public XSGMonthDay(Calendar cal, XSDuration tz) {
 		_calendar = cal;
-		_timezoned = tz;
+		if (tz != null) {
+			_timezoned = true;
+			_tz = tz;
+		}
 	}
 
 	/**
 	 * Initialises a representation of the current month and day
 	 */
 	public XSGMonthDay() {
-		this(new GregorianCalendar(TimeZone.getTimeZone("GMT")), false);
+		this(new GregorianCalendar(TimeZone.getTimeZone("GMT")), null);
 	}
 
 	/**
@@ -119,7 +124,7 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 		if (dt == null)
 			return null;
 
-		return new XSGMonthDay(dt.calendar(), tz);
+		return new XSGMonthDay(dt.calendar(), dt.tz());
 	}
 
 	/**
@@ -174,17 +179,17 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 	private XSGMonthDay castGMonthDay(AnyAtomicType aat) {
 		if (aat instanceof XSGMonthDay) {
 			XSGMonthDay gmd = (XSGMonthDay) aat;
-			return new XSGMonthDay(gmd.calendar(), gmd.timezoned());
+			return new XSGMonthDay(gmd.calendar(), gmd.tz());
 		}
 		
 		if (aat instanceof XSDate) {
 			XSDate date = (XSDate) aat;
-			return new XSGMonthDay(date.calendar(), date.timezoned());
+			return new XSGMonthDay(date.calendar(), date.tz());
 		}
 		
 		if (aat instanceof XSDateTime) {
 			XSDateTime dateTime = (XSDateTime) aat;
-			return new XSGMonthDay(dateTime.calendar(), dateTime.timezoned());
+			return new XSGMonthDay(dateTime.calendar(), dateTime.tz());
 		}
 		
 		return parse_gMonthDay(aat.string_value());
@@ -224,15 +229,52 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 	 */
 	@Override
 	public String string_value() {
-		String ret = "";
+		String ret = "--";
 
+		Calendar adjustFortimezone = calendar();
+		int tzHours = 0;
+		int tzMinutes = 0;
+		if (timezoned()) {
+		   adjustFortimezone = calendar();
+		   tzHours = tz().hours();
+		   tzMinutes = tz().minutes();
+		   if (tz().negative()) {
+			   tzHours = tzHours * -1;
+			   tzMinutes = tzMinutes * -1;
+		   }
+		}
+
+		adjustFortimezone.add(Calendar.HOUR_OF_DAY, tzHours);
+		adjustFortimezone.add(Calendar.MINUTE, tzMinutes);
+		
 		ret += XSDateTime.pad_int(month(), 2);
 
 		ret += "-";
-		ret += XSDateTime.pad_int(day(), 2);
+		ret += XSDateTime.pad_int(adjustFortimezone.get(Calendar.DAY_OF_MONTH), 2);
 
-		if (timezoned())
-			ret += "Z";
+		if (timezoned()) {
+			
+			int hrs = tz().hours();
+			int min = tz().minutes();
+			double secs = tz().seconds();
+			if (hrs == 0 && min == 0 && secs == 0) {
+			  ret += "Z";
+			}
+			else {
+			  String tZoneStr = "";
+			  if (tz().negative()) {
+				tZoneStr += "-";  
+			  }
+			  else {
+				tZoneStr += "+"; 
+			  }
+			  tZoneStr += XSDateTime.pad_int(hrs, 2);  
+			  tZoneStr += ":";
+			  tZoneStr += XSDateTime.pad_int(min, 2);
+			  
+			  ret += tZoneStr;
+			}
+		}
 
 		return ret;
 	}
@@ -272,4 +314,14 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 
 		return calendar().equals(val.calendar());
 	}
+	
+	/**
+	 * Retrieves the timezone associated with the date stored
+	 * 
+	 * @return the timezone associated with the date stored
+	 */
+	public XSDuration tz() {
+		return _tz;
+	}	
+
 }
