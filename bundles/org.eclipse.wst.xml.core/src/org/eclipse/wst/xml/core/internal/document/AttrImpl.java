@@ -750,7 +750,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		if (this.ownerElement != null && !this.ownerElement.isDataEditable()) {
 			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
 		}
-		this.fValueSource = source.toCharArray();
+		this.fValueSource = (source != null) ? source.toCharArray() : null;
 
 		notifyValueChanged();
 	}
