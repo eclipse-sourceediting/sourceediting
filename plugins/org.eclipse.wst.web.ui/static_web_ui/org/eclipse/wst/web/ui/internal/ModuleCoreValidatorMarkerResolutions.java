@@ -24,6 +24,7 @@ import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.IMarkerResolutionGenerator;
 import org.eclipse.ui.views.markers.WorkbenchMarkerResolution;
 import org.eclipse.wst.common.componentcore.internal.ModuleMigratorManager;
+import org.eclipse.wst.web.ui.internal.WSTWebUIPlugin;
 
 /**
  * @author <a href="mailto:kosta@bea.com">Konstantin Komissarchik</a>
@@ -73,7 +74,7 @@ public final class ModuleCoreValidatorMarkerResolutions
             }
             catch( Exception e )
             {
-                e.printStackTrace();
+            	WSTWebUIPlugin.logError(e);
             }
         }
 
@@ -82,7 +83,6 @@ public final class ModuleCoreValidatorMarkerResolutions
 		}
 
 		public Image getImage() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
@@ -95,8 +95,7 @@ public final class ModuleCoreValidatorMarkerResolutions
 					if (marker.getType().equals(MARKERTYPE) && !(marker.equals(theMarker)))
 						marks.add(marker);
 				} catch (CoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					WSTWebUIPlugin.logError(e);
 				}
 			}
 			return (IMarker[])marks.toArray(new IMarker[marks.size()]);

@@ -9,10 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*
- * Created on Dec 14, 2004
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * Created on December 14, 2004
  */
 package org.eclipse.wst.web.internal;
 
@@ -207,7 +204,6 @@ public class DelegateConfigurationElement implements IConfigurationElement {
 	}
 
 	public IConfigurationElement toEquinox() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

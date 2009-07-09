@@ -32,7 +32,6 @@ public abstract class AbstractOpenWizardAction implements IWorkbenchWindowAction
 
 	public void dispose()
 	{
-		// TODO Auto-generated method stub
 	}
 
 	public void init( IWorkbenchWindow window )
@@ -44,7 +43,6 @@ public abstract class AbstractOpenWizardAction implements IWorkbenchWindowAction
 
 	public void selectionChanged( IAction action, ISelection selection )
 	{
-		// TODO Auto-generated method stub
 	}
 
 	protected void openWizardDialog( IWorkbenchWizard wizard )
