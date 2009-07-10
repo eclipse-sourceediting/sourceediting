@@ -67,4 +67,14 @@ public class AttrImplTests extends TestCase {
 		Attr attr3 = model.getDocument().createAttributeNS(null, "complex");
 		assertEquals("attribute namespace URI was not as expected", null, attr3.getNamespaceURI());
 	}
+
+	public void testNullAttributeValue() {
+		IDOMModel model = (IDOMModel) StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForXML.ContentTypeID_XML);
+		Attr attribute = model.getDocument().createAttribute("attr");
+		try {
+			attribute.setNodeValue(null);
+		} catch (NullPointerException npe) {
+			fail("Setting a null node value caused a NullPointerException.");
+		}
+	}
 }
