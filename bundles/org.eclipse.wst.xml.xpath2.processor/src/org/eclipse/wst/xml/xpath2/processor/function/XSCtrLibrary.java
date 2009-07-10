@@ -85,6 +85,9 @@ public class XSCtrLibrary extends ConstructorFL {
 		add_type(new XSYearMonthDuration());
 		add_type(new XSDayTimeDuration());
 		add_type(new XSDuration());
+		add_type(new XSEntity());
+		add_type(new XSID());
+		add_type(new XSIDREF());
 		
 		add_type(new XSBase64Binary());
 		add_type(new XSHexBinary());
