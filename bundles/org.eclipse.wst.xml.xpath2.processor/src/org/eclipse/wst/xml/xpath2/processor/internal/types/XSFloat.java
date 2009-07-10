@@ -137,6 +137,10 @@ public class XSFloat extends NumericType {
 
 		AnyType aat = arg.first();
 		
+		if (aat instanceof XSGDay) {
+			throw new DynamicError(TypeError.invalid_type(null));
+		}
+		
 		if (!(aat.string_type().equals("xs:string") || aat instanceof NodeType ||
 			aat.string_type().equals("xs:untypedAtomic") ||
 			aat.string_type().equals("xs:boolean") ||

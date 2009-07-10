@@ -227,4 +227,18 @@ public class DynamicError extends XPathException {
 	public static DynamicError contextUndefined() {
 		return make_error("XPDY0002", "Context is undefined.", "");
 	}
+
+	/**
+	 * Data is invalid for casting or the data type constructor.
+	 * @param msg
+	 * @return FORG0001
+	 * @since 1.1
+	 */
+	public static DynamicError invalidForCastConstructor() {
+		return make_error(
+				"FORG0001",
+				"data type invalid for cast or constructor",
+				null);
+	}
+
 }

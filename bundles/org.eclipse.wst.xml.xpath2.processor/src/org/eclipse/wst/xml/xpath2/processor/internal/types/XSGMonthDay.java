@@ -88,9 +88,17 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 			index = str.lastIndexOf('Z', str.length());
 		if (index != -1) {
 			int zIndex = str.lastIndexOf('Z', str.length());
+			if (zIndex == -1) {
+				if (index > 5)
+					zIndex = index;
+			}
+			if (zIndex == -1) {
+				zIndex = str.lastIndexOf('+');
+			}
+
 			
 			String[] split = str.split("-");
-			startdate += split[2].replace("Z", "") + "-" + split[3].replace("Z", "");
+			startdate += split[2].replace("Z", "") + "-" + split[3].replace("Z", "").substring(0, 2);
 			
 			if (split.length > 4) {
 				String[] timesplit = split[4].split(":");
@@ -104,20 +112,17 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 					starttime += timesplit[0] + ":" + timesplit[1] + ":" + timesplit[2];
 				}
 			}
-			startdate = startdate.trim();
-			int offset = startdate.indexOf('+');
-			if (offset != -1) {
-				startdate = startdate.substring(0, offset) + starttime + startdate.substring(offset);
-			} else {
-				startdate += starttime;
-			}
 
+			startdate = startdate.trim();
+			startdate += starttime;
+
+			
 			if (zIndex != -1) {
 				startdate += str.substring(zIndex);
 				tz = true;
 			}
 		} else {
-			startdate += str + starttime;
+			startdate += starttime;
 		}
 
 		XSDateTime dt = XSDateTime.parseDateTime(startdate);

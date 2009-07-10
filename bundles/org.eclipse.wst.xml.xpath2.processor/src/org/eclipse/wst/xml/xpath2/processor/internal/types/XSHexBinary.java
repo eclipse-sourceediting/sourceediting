@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     Mukul Gandhi - bug 281054 - initial API and implementation
- *     David Carver - bug 282223 - fix casting issues 
+ *     David Carver (STAR) - bug 228223 - fixed casting issue.  Needed to encode the value. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -101,24 +101,47 @@ public class XSHexBinary extends CtrType implements CmpEq {
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
 		
-		if (!(aat instanceof XSHexBinary ||
-			  aat instanceof XSString ||
-			  aat instanceof XSUntypedAtomic ||
-			  aat instanceof XSBase64Binary)) {
-			throw DynamicError.cant_cast(null);
-		}
-		
 		String str_value = aat.string_value();
+		
+		if (!(aat instanceof XSHexBinary ||
+				  aat instanceof XSString ||
+				  aat instanceof XSUntypedAtomic ||
+				  aat instanceof XSBase64Binary)) {
+				throw DynamicError.cant_cast(null);
+			}
+		
+		if (aat instanceof XSUntypedAtomic || aat instanceof XSString) {
+			String[] nonHexValues = null;
+			try {
+				nonHexValues = str_value.split("[0-9a-fA-F]");
+			} catch (Exception ex) {
+				throw DynamicError.throw_type_error();
+			}
+			
+			String[] binValues = null;
+			try {
+				binValues = str_value.split("[0-1]");
+			} catch (Exception ex) {
+				throw DynamicError.throw_type_error();
+			}
+			
+			if (nonHexValues.length > 0 || binValues.length == 0) {
+				throw DynamicError.invalidForCastConstructor();
+			}			
+		}
+
+		
 		byte[] decodedValue = null;
 		
 		if (aat instanceof XSBase64Binary) {
 			decodedValue = Base64.decode(str_value);
+			decodedValue = HexBin.encode(decodedValue).getBytes();
 		} else {
-			decodedValue = HexBin.decode(str_value);
+			decodedValue = str_value.getBytes();
  		}
 		
 		if (decodedValue != null) {
-		  rs.add(new XSHexBinary(str_value));
+		  rs.add(new XSHexBinary(new String(decodedValue)));
 		}
 		else {
 		  // invalid hexBinary string

@@ -249,13 +249,34 @@ Cloneable {
 	public String string_value() {
 		String ret = "";
 
-		ret += XSDateTime.pad_int(year(), 4);
+		Calendar adjustFortimezone = calendar();
+		int tzHours = 0;
+		int tzMinutes = 0;
+		if (timezoned()) {
+		   adjustFortimezone = calendar();
+		   tzHours = tz().hours();
+		   tzMinutes = tz().minutes();
+		   if (tz().negative()) {
+			   tzHours = tzHours * -1;
+			   tzMinutes = tzMinutes * -1;
+		   }
+		}
+		
+		if (adjustFortimezone.get(Calendar.ERA) == GregorianCalendar.BC) {
+			ret +="-";
+		}
+		
+		adjustFortimezone.add(Calendar.HOUR_OF_DAY, tzHours);
+		adjustFortimezone.add(Calendar.MINUTE, tzMinutes);
+
+		
+		ret += XSDateTime.pad_int(adjustFortimezone.get(Calendar.YEAR), 4);
 
 		ret += "-";
 		ret += XSDateTime.pad_int(month(), 2);
 
 		ret += "-";
-		ret += XSDateTime.pad_int(day(), 2);
+		ret += XSDateTime.pad_int(adjustFortimezone.get(Calendar.DAY_OF_MONTH), 2);
 
 		if (timezoned()) {
 			int hrs = _tz.hours();

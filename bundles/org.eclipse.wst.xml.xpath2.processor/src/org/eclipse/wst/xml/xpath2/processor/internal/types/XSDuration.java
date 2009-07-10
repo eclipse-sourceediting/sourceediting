@@ -125,7 +125,7 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 	 */
 	public String string_value() {
 		String ret = "";
-		boolean did_something = false; // this should be constant ;D
+		boolean did_something = false;
 		String tret = "";
 
 		if (negative() && !(days() == 0 && hours() == 0 && seconds() == 0))
@@ -148,30 +148,37 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 		}
 
 		// do the "time" bit
-		if (hours() != 0) {
-			tret += hours() + "H";
+		int hours = hours();
+		int minutes = minutes();
+		double seconds = seconds();
+		
+		if (hours != 0) {
+			tret += hours + "H";
 			did_something = true;
 		}
-		if (minutes() != 0) {
-			tret += minutes() + "M";
+		if (minutes != 0) {
+			tret += minutes + "M";
 			did_something = true;
 		}
-		if (seconds() != 0) {
-			String doubStr = (Double.valueOf(seconds())).toString();
+		if (seconds != 0) {
+			String doubStr = (Double.valueOf(seconds).toString());
 			if (doubStr.endsWith(".0")) {
 				// string value of x.0 seconds is xS. e.g, 7.0S is converted to
 				// 7S.
 				tret += doubStr.substring(0, doubStr.indexOf(".0")) + "S";
 			} else {
-				tret += seconds() + "S";
+				tret += seconds + "S";
 			}
 			did_something = true;
 		} else if (!did_something) {
-			tret += "0" + "S";
+				tret += "0S";
 		}
-
-		if (tret.length() > 0)
-			ret += "T" + tret;
+		
+		if ((year() == 0 && month() == 0) || (hours > 0 || minutes > 0 || seconds > 0)) {
+			if (tret.length() > 0) {
+				ret += "T" + tret;
+			}
+		}
 
 		return ret;
 	}

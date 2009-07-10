@@ -12,6 +12,7 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import org.apache.xerces.impl.dv.util.Base64;
+import org.apache.xerces.impl.dv.util.HexBin;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -104,9 +105,17 @@ public class XSBase64Binary extends CtrType implements CmpEq {
 		}
 		
 		String str_value = aat.string_value();
+		
 		byte[] decodedValue = Base64.decode(str_value);
+		
+		if (aat instanceof XSHexBinary) {
+			decodedValue = HexBin.decode(str_value);
+			decodedValue = Base64.encode(decodedValue).getBytes();
+		} else {
+			decodedValue = str_value.getBytes();
+		}
 		if (decodedValue != null) {
-		  rs.add(new XSBase64Binary(str_value));
+		  rs.add(new XSBase64Binary(new String(decodedValue)));
 		}
 		else {
 		  // invalid base64 string
