@@ -22,16 +22,26 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorExtension3;
+import org.eclipse.wst.html.core.internal.contentmodel.HTMLElementDeclaration;
+import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeEntry;
+import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeRegistry;
+import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
@@ -138,9 +148,13 @@ public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
 					IStructuredDocumentRegion region = node.getEndStructuredDocumentRegion();
 					if (region != null && region.getRegions().size() > 0 && region.getRegions().get(0).getType() == DOMRegionContext.XML_END_TAG_OPEN && !isClosedByParent)
 						return;
-					command.text += "</" + getElementName(node, command.offset) + ">"; //$NON-NLS-1$ //$NON-NLS-2$
-					command.shiftsCaret = false;
-					command.caretOffset = command.offset + 1;
+					CMElementDeclaration decl = getCMElementDeclaration(node);
+					// If it's XHTML, always generate the end tag
+					if (isXHTML(node) || shouldGenerateEndTag(decl)) {
+						command.text += "</" + getElementName(node, command.offset) + ">"; //$NON-NLS-1$ //$NON-NLS-2$
+						command.shiftsCaret = false;
+						command.caretOffset = command.offset + 1;
+					}
 				}
 				
 			}
@@ -220,6 +234,60 @@ public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
 			if (!parent.isClosed())
 				return true;
 			parent = (IDOMNode) parent.getParentNode();
+		}
+		return false;
+	}
+
+	/**
+	 * Based on the content model, determine if an end tag should be generated
+	 * @param elementDecl the content model element declaration
+	 * @return true if the end tag should be generated; false otherwise.
+	 */
+	private boolean shouldGenerateEndTag(CMElementDeclaration elementDecl) {
+		if (elementDecl == null)
+			return false;
+		if (elementDecl instanceof HTMLElementDeclaration) {
+			if (((Boolean) elementDecl.getProperty(HTMLCMProperties.IS_JSP)).booleanValue()) {
+				if (elementDecl.getContentType() == CMElementDeclaration.EMPTY)
+					return false;
+			}
+			else {
+				String ommission = (String) elementDecl.getProperty(HTMLCMProperties.OMIT_TYPE);
+				if (ommission.equals(HTMLCMProperties.Values.OMIT_END) || ommission.equals(HTMLCMProperties.Values.OMIT_END_DEFAULT) || ommission.equals(HTMLCMProperties.Values.OMIT_END_MUST)) {
+					return false;
+				}
+			}
+		}
+
+		if (elementDecl.getContentType() == CMElementDeclaration.EMPTY)
+			return false;
+		return true;
+	}
+
+	private CMElementDeclaration getCMElementDeclaration(Node node) {
+		CMElementDeclaration result = null;
+		if (node.getNodeType() == Node.ELEMENT_NODE) {
+			ModelQuery modelQuery = ModelQueryUtil.getModelQuery(node.getOwnerDocument());
+			if (modelQuery != null) {
+				result = modelQuery.getCMElementDeclaration((Element) node);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Is the node part of an XHTML document
+	 * @param node
+	 * @return
+	 */
+	private boolean isXHTML(Node node) {
+		Document doc = node.getOwnerDocument();
+		if (!(doc instanceof IDOMDocument))
+			return false;
+		String typeid = ((IDOMDocument) doc).getDocumentTypeId();
+		if (typeid != null) {
+			HTMLDocumentTypeEntry entry = HTMLDocumentTypeRegistry.getInstance().getEntry(typeid);
+			return (entry != null && entry.isXMLType());
 		}
 		return false;
 	}
