@@ -11,6 +11,7 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -44,7 +45,7 @@ public class FnPrefixFromQName extends Function {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return prefix(args);
+		return prefix(args, _fl.dynamic_context());
 	}
 
 	/**
@@ -56,7 +57,7 @@ public class FnPrefixFromQName extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:prefix-from-QName operation.
 	 */
-	public static ResultSequence prefix(Collection args) throws DynamicError {
+	public static ResultSequence prefix(Collection args, DynamicContext dc) throws DynamicError {
 
 		Collection cargs = Function.convert_arguments(args, expected_args());
 
@@ -71,14 +72,19 @@ public class FnPrefixFromQName extends Function {
 		QName qname = (QName) arg1.first();
 
 		String prefix = qname.prefix();
+		
 
 		if (prefix != null) {
-		  rs.add(new XSNCName(prefix));
-		}
+			if (dc.prefix_exists(prefix)) {
+				  rs.add(new XSNCName(prefix));
+			} else {
+				throw DynamicError.invalidPrefix();
+			}
+		} 
 
 		return rs;
 	}
-
+	
 	/**
 	 * Obtain a list of expected arguments.
 	 * 

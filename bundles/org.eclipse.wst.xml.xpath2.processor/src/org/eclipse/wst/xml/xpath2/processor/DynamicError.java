@@ -240,5 +240,15 @@ public class DynamicError extends XPathException {
 				"data type invalid for cast or constructor",
 				null);
 	}
+	
+	/**
+	 * No namespace found for prefix.
+	 * 
+	 * @return
+	 * @since 1.1
+	 */
+	public static DynamicError invalidPrefix() {
+		return make_error("FONS0004", "No namespace found for prefix.", null);
+	}
 
 }
