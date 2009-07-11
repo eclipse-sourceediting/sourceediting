@@ -259,6 +259,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 				0);
 		dc.set_variable(new QName("input-context1"), docType);
 		dc.set_variable(new QName("input-context"), docType);
+		dc.set_variable(new QName("input-context2"), docType);
 
 		return dc;
 	}

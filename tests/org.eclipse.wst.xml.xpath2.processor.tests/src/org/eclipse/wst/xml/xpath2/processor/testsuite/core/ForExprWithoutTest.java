@@ -137,7 +137,7 @@ public class ForExprWithoutTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ForExpr/ForExpr009.xq";
       String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ForExpr/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0008";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       

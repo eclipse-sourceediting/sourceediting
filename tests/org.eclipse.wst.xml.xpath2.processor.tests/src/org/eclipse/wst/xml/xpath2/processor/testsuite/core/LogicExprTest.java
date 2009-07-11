@@ -7102,7 +7102,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = "xs:float(0) or xs:float(0)";
+      String xpath = "-1 or 1";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -7139,7 +7139,7 @@ public class LogicExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = "xs:float(0) or xs:float(1)";
+      String xpath = "xs:float(0) or xs:float(0)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);

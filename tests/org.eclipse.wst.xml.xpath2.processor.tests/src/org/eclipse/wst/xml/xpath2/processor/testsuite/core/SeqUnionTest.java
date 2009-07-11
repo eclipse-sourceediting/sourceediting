@@ -552,6 +552,7 @@ public class SeqUnionTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -589,7 +590,8 @@ public class SeqUnionTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
@@ -626,7 +628,8 @@ public class SeqUnionTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
@@ -663,7 +666,8 @@ public class SeqUnionTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
@@ -700,7 +704,8 @@ public class SeqUnionTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
@@ -737,7 +742,8 @@ public class SeqUnionTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
@@ -774,7 +780,8 @@ public class SeqUnionTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
@@ -811,7 +818,8 @@ public class SeqUnionTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {

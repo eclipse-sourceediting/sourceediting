@@ -26,7 +26,7 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/QNameOp/PrefixFromQName/fn-prefix-from-qname-1.xq";
       String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/QNameOp/PrefixFromQName/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -63,7 +63,7 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/QNameOp/PrefixFromQName/fn-prefix-from-qname-2.xq";
       String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/QNameOp/PrefixFromQName/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -182,6 +182,7 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("foo", "http://example.org");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -219,7 +220,8 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      dc.add_namespace("foo", "http://example.org");
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
@@ -256,7 +258,7 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
@@ -285,7 +287,8 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/QNameOp/PrefixFromQName/fn-prefix-from-qname-8.xq";
       String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/QNameOp/PrefixFromQName/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FONS0004";
+      
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -330,7 +333,8 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      dc.add_namespace("foo", "http://example.org");
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
@@ -367,7 +371,8 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      dc.add_namespace("FOO", "http://example.org");
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
@@ -404,6 +409,7 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("foo", "http://example.org");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -441,7 +447,8 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      dc.add_namespace("foo", "http://example.org");
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
@@ -478,7 +485,8 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      dc.add_namespace("foo", "http://example.org");
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
@@ -515,7 +523,8 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      dc.add_namespace("foo", "http://example.org");
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
@@ -552,7 +561,8 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      dc.add_namespace("foo", "http://example.org");
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
@@ -589,7 +599,8 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      dc.add_namespace("foo", "http://example.org");
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
@@ -626,7 +637,8 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      dc.add_namespace("foo", "http://example.org");
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
@@ -663,7 +675,8 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      dc.add_namespace("foo", "http://example.org");
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
@@ -700,7 +713,8 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      dc.add_namespace("foo", "http://example.org");
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
@@ -737,7 +751,8 @@ public class PrefixFromQNameTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+      dc.add_namespace("foo", "http://example.org");
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
