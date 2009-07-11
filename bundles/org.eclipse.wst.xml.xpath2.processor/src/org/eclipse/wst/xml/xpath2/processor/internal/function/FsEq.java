@@ -282,14 +282,21 @@ public class FsEq extends Function {
 		two = FnData.atomize(two);
 
 		// we gotta find a pair that satisfied the condition
+		AnyType a = null;
+		AnyType b = null;		
 		for (Iterator i = one.iterator(); i.hasNext();) {
-			for (Iterator j = two.iterator(); j.hasNext();) {
-				AnyType a = (AnyType) i.next();
-				AnyType b = (AnyType) j.next();
-
-				if (do_general_pair(a, b, comparator))
+			for (Iterator j = two.iterator(); j.hasNext();) {				
+				if (i.hasNext()) {
+				  a = (AnyType) i.next();
+				}
+				if (j.hasNext()) {
+				  b = (AnyType) j.next();
+				}
+				if (a != null && b != null) {
+				  if (do_general_pair(a, b, comparator))
 					return ResultSequenceFactory
 							.create_new(new XSBoolean(true));
+				}
 			}
 		}
 
