@@ -72,7 +72,26 @@ public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 */
 	@Override
 	public String string_value() {
-		return _value;
+		String value = normalize();
+		return value;
+	}
+	
+	private String normalize() {
+		String value = _value;
+		if (_value.contains("\"\"")) {
+			value = _value.replaceAll("\"\"", "\"");
+		}
+		if (_value.contains("&quote;")) {
+			value = _value.replaceAll("&quote;", "\"");
+		}
+		if (_value.contains("''")) {
+			value = _value.replaceAll("''", "'");
+		}
+		if (_value.contains("&apos;")) {
+			value = _value.replaceAll("&apos;", "'");
+		}
+		
+		return value; 
 	}
 
 	/**
@@ -82,7 +101,7 @@ public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 * @return The String stored
 	 */
 	public String value() {
-		return _value;
+		return string_value();
 	}
 
 	/**

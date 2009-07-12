@@ -1169,6 +1169,9 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	// XXX this routine sux
 	private boolean name_test(NodeType node, QName name, String type) {
 		// make sure principal node kind is the same
+		if (node == null) {
+			return false;
+		}
 		if (!type.equals(node.string_type())) {
 			return false;
 		}

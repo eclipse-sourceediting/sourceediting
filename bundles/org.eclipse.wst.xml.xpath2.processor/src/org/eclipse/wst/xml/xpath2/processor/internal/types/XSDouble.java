@@ -230,21 +230,24 @@ public class XSDouble extends NumericType {
 
 	/**
 	 * Equality comparison between this number and the supplied representation.
-	 * Currently no numeric type promotion exists so the supplied representation
-	 * must be of type XSDouble.
 	 * 
 	 * @param aa
 	 *            Representation to be compared with (must currently be of type
 	 *            XSDouble)
 	 * @return True if the 2 representations represent the same number. False
 	 *         otherwise
+	 * @since 1.1
 	 */
 	public boolean eq(AnyType aa) throws DynamicError {
-
-		if (!(aa instanceof XSDouble))
+		ResultSequence rs = ResultSequenceFactory.create_new(aa);
+		ResultSequence crs = constructor(rs);
+		
+		if (crs.empty()) {
 			throw DynamicError.throw_type_error();
+		}
+		AnyType cat = crs.first();
 
-		XSDouble d = (XSDouble) aa;
+		XSDouble d = (XSDouble) cat;
 
 		return double_value() == d.double_value();
 	}
