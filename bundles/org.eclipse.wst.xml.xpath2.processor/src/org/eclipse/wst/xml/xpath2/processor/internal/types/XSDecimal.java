@@ -23,6 +23,7 @@ import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.Function;
 
 /**
  * A representation of the Decimal datatype
@@ -197,11 +198,17 @@ public class XSDecimal extends NumericType {
 	 *         otherwise
 	 */
 	public boolean eq(AnyType at) throws DynamicError {
+		
+		ResultSequence rs = ResultSequenceFactory.create_new(at);
+		
+		ResultSequence crs = constructor(rs);
+		if (crs.empty()) {
+			throw DynamicError.throw_type_error();
+		}
+		
+		AnyType cat = crs.first();
 
-		if (!(at instanceof XSDecimal))
-			DynamicError.throw_type_error();
-
-		XSDecimal dt = (XSDecimal) at;
+		XSDecimal dt = (XSDecimal) cat;
 		return (_value.compareTo(dt.getValue()) == 0);
 	}
 
