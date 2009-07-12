@@ -220,7 +220,7 @@ public class ReturnExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "for $file in ($input-context//Folder)[1]/File return ()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -228,7 +228,7 @@ public class ReturnExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildXMLResultString(rs);
+          actual = "<empty>" + buildXMLResultString(rs) + "</empty>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -238,7 +238,7 @@ public class ReturnExprTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -359,7 +359,7 @@ public class ReturnExprTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/FLWORExpr/ReturnExpr/ReturnExpr014.xq";
       String resultFile = "/ExpectedTestResults/Expressions/FLWORExpr/ReturnExpr/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0008";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -442,7 +442,7 @@ public class ReturnExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "for $file in ($input-context//Folder)[1]/File return ($file/Stream/StreamSize)[1] + 1";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -453,10 +453,13 @@ public class ReturnExprTest extends AbstractPsychoPathTest {
           actual = buildResultString(rs);
 	
       } catch (XPathParserException ex) {
+    	 ex.printStackTrace();
     	 actual = ex.code();
       } catch (StaticError ex) {
+    	  ex.printStackTrace();
          actual = ex.code();
       } catch (DynamicError ex) {
+    	  ex.printStackTrace();
          actual = ex.code();
       }
 
@@ -490,10 +493,13 @@ public class ReturnExprTest extends AbstractPsychoPathTest {
           actual = buildResultString(rs);
 	
       } catch (XPathParserException ex) {
+    	 ex.printStackTrace();
     	 actual = ex.code();
       } catch (StaticError ex) {
+    	 ex.printStackTrace();
          actual = ex.code();
       } catch (DynamicError ex) {
+    	 ex.printStackTrace();
          actual = ex.code();
       }
 

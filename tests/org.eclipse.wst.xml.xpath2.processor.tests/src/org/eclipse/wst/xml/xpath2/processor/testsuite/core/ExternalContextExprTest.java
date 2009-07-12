@@ -27,7 +27,7 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-1.xq";
       String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -36,7 +36,7 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "name";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -45,8 +45,13 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
 	      ResultSequence rs = eval.evaluate(path);
 	
 	      AnyType result = rs.first();
-	
-	      actual = result.string_value();
+	      
+	      if (result == null) {
+	    	actual = "XPDY0002";  
+	      } else {
+	    	  actual = result.string_value();
+	      }
+	      
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
