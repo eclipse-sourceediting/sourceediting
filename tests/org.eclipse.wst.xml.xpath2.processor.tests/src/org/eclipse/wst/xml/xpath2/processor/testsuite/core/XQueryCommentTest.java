@@ -26,16 +26,18 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/fsx_NS.xml";
       String xqFile = "/Queries/XQuery/Expressions/XQueryComment/XQueryComment002.xq";
       String resultFile = "/ExpectedTestResults/Expressions/XQueryComment/XQueryComment002.xml";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "<result>" + getExpectedResult(resultFile) + "</result>";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
+      
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("fsm", "http://www.example.com/filesystem");
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "//fsm:Folder/fsm:File/fsm:FileName";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -43,13 +45,14 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
          actual = ex.code();
       } catch (DynamicError ex) {
+    	 ex.printStackTrace();
          actual = ex.code();
       }
 
@@ -71,8 +74,11 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("fsm", "http://www.example.com/filesystem");
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "if (:test (: yada (: neato :) :) :) ($input-context/fsm:MyComputer)\n" + 
+	       "then (: yada :) \"true\"\n" +
+	       " else \"false\"";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -80,7 +86,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -146,7 +152,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "$input-context/south(: comment :)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -154,7 +160,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -164,7 +170,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -183,7 +189,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "(1, 2, (: comment :) 3, 4)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -220,7 +226,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "\"10\" cast as (: type comment :) xs:integer ?";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);

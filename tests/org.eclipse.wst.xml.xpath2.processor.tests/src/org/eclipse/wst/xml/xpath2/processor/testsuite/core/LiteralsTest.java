@@ -2048,7 +2048,7 @@ public class LiteralsTest extends AbstractPsychoPathTest {
    public void test_Literals058() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/PrimaryExpr/Literals/Literals058.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/PrimaryExpr/Literals/Literals058.txt";
+      String resultFile = "/ExpectedTestResults/Expressions/PrimaryExpr/Literals/Literals058-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -2156,7 +2156,7 @@ public class LiteralsTest extends AbstractPsychoPathTest {
    public void test_Literals062() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/PrimaryExpr/Literals/Literals062.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/PrimaryExpr/Literals/Literals062.txt";
+      String resultFile = "/ExpectedTestResults/Expressions/PrimaryExpr/Literals/Literals062-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -2192,7 +2192,7 @@ public class LiteralsTest extends AbstractPsychoPathTest {
    public void test_Literals063() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/PrimaryExpr/Literals/Literals063.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/PrimaryExpr/Literals/Literals063.txt";
+      String resultFile = "/ExpectedTestResults/Expressions/PrimaryExpr/Literals/Literals063-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -2228,7 +2228,7 @@ public class LiteralsTest extends AbstractPsychoPathTest {
    public void test_Literals064() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/PrimaryExpr/Literals/Literals064.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/PrimaryExpr/Literals/Literals064.txt";
+      String resultFile = "/ExpectedTestResults/Expressions/PrimaryExpr/Literals/Literals064-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -2264,7 +2264,7 @@ public class LiteralsTest extends AbstractPsychoPathTest {
    public void test_Literals065() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/PrimaryExpr/Literals/Literals065.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/PrimaryExpr/Literals/Literals065.txt";
+      String resultFile = "/ExpectedTestResults/Expressions/PrimaryExpr/Literals/Literals065-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -2300,7 +2300,7 @@ public class LiteralsTest extends AbstractPsychoPathTest {
    public void test_Literals068() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/PrimaryExpr/Literals/Literals068.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/PrimaryExpr/Literals/Literals068.txt";
+      String resultFile = "/ExpectedTestResults/Expressions/PrimaryExpr/Literals/Literals068-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -2310,7 +2310,7 @@ public class LiteralsTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "'He said, \"I don''t like it.\"'";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -2336,7 +2336,7 @@ public class LiteralsTest extends AbstractPsychoPathTest {
    public void test_Literals069() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/PrimaryExpr/Literals/Literals069.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/PrimaryExpr/Literals/Literals069.txt";
+      String resultFile = "/ExpectedTestResults/Expressions/PrimaryExpr/Literals/Literals069-1.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -2346,7 +2346,7 @@ public class LiteralsTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "\"He said, \"\"I don't like it.\"\"\"";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);

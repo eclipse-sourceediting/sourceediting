@@ -515,6 +515,7 @@ public class SeqExceptTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -552,6 +553,8 @@ public class SeqExceptTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
+
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -589,6 +592,7 @@ public class SeqExceptTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -598,7 +602,7 @@ public class SeqExceptTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -626,6 +630,7 @@ public class SeqExceptTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -663,6 +668,8 @@ public class SeqExceptTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
+      
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -700,6 +707,7 @@ public class SeqExceptTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -737,6 +745,7 @@ public class SeqExceptTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("atomic", "http://www.w3.org/XQueryTest");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
