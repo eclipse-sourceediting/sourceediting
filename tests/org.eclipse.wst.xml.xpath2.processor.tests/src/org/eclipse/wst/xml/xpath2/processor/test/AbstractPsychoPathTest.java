@@ -286,9 +286,12 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		String actual = new String();
 		Iterator<NodeType> iterator = rs.iterator();
 		while (iterator.hasNext()) {
-			NodeType nodeType = iterator.next();
-			Node node = nodeType.node_value();
-			serializer.write(node, outputText);
+			AnyType aat = iterator.next();
+			if (aat instanceof NodeType) {
+				NodeType nodeType = (NodeType) aat;
+				Node node = nodeType.node_value();
+				serializer.write(node, outputText);
+			}
 		}
 
 		actual = outputStream.toString();

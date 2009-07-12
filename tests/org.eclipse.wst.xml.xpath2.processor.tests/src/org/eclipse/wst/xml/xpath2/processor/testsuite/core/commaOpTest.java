@@ -12,11 +12,15 @@
 package org.eclipse.wst.xml.xpath2.processor.testsuite.core;
 
 import java.net.URL;
+import java.util.Iterator;
 
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
+import org.w3c.dom.Node;
       
       
 public class commaOpTest extends AbstractPsychoPathTest {
@@ -302,7 +306,7 @@ public class commaOpTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -322,7 +326,7 @@ public class commaOpTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/works.xml";
       String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc9.xq";
       String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc9.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "<result>" + getExpectedResult(resultFile) + "</result>";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -339,7 +343,7 @@ public class commaOpTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<result>" + buildXMLResultString(rs) + "</result>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -349,7 +353,7 @@ public class commaOpTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -1856,7 +1860,15 @@ public class commaOpTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
+          Iterator<NodeType> iterator = rs.iterator();
+          while (iterator.hasNext()) {
+			AnyType aat = iterator.next();
+			if (!(aat instanceof NodeType)) {
+				actual += aat.string_value();
+			}
+		}
+
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -1893,7 +1905,7 @@ public class commaOpTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();

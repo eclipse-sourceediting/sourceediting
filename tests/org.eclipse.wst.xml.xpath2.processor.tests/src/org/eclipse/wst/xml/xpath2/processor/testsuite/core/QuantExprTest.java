@@ -2242,6 +2242,7 @@ public class QuantExprTest extends AbstractPsychoPathTest {
    }
 
    //Simple quantified expression using "some" keyword that binds the declared variables to and xs:integer type.
+   //
    public void test_quantexpr_61() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/QuantExpr/QuantExprWith/quantexpr-61.xq";
@@ -2255,7 +2256,8 @@ public class QuantExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "some $x in (1, 2, 3) , $y in (2, 3, 4)\n" + 
+     "satisfies $x + $y = 4";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -2292,7 +2294,8 @@ public class QuantExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "some $x in (\"cat\",\"dog\",\"rat\")\n" +  
+     "satisfies fn:string-length($x) = 3";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -2329,7 +2332,8 @@ public class QuantExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "every $x in (\"cat\",\"dog\",\"rat\")\n" +  
+      		"satisfies fn:string-length($x) = 3";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -2366,7 +2370,8 @@ public class QuantExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "every $x in (\"cat\",\"dog\",\"rat\"), $y in (3, 3, 3)" +
+    " satisfies fn:string-length($x) = $y";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -2403,7 +2408,8 @@ public class QuantExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "some $x in (1, 2, 3), $y in (xs:float(2), xs:float(3))\n" +
+      		"satisfies $x + $y = 5";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
