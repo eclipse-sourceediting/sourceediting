@@ -19,6 +19,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -317,6 +318,15 @@ public class XSDouble extends NumericType {
 	private ResultSequence convertResultSequence(ResultSequence arg)
 			throws DynamicError {
 		ResultSequence carg = arg;
+		Iterator it = carg.iterator();
+		while (it.hasNext()) {
+			AnyType type = (AnyType) it.next();
+			if (type.string_type().equals("xs:untypedAtomic") ||
+				type.string_type().equals("xs:string")) {
+				throw DynamicError.throw_type_error();
+			}
+		}
+
 		carg = constructor(carg);
 		return carg;
 	}

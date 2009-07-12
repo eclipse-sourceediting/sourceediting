@@ -18,6 +18,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -275,6 +276,14 @@ public class XSDecimal extends NumericType {
 	private ResultSequence convertResultSequence(ResultSequence arg)
 			throws DynamicError {
 		ResultSequence carg = arg;
+		Iterator it = carg.iterator();
+		while (it.hasNext()) {
+			AnyType type = (AnyType) it.next();
+			if (type.string_type().equals("xs:untypedAtomic") ||
+				type.string_type().equals("xs:string")) {
+				throw DynamicError.throw_type_error();
+			}
+		}
 		carg = constructor(carg);
 		return carg;
 	}	
@@ -289,6 +298,7 @@ public class XSDecimal extends NumericType {
 	 *         subtraction.
 	 */
 	public ResultSequence minus(ResultSequence arg) throws DynamicError {
+		
 		ResultSequence carg = convertResultSequence(arg);
 
 		AnyType at = get_single_arg(carg);
@@ -328,7 +338,9 @@ public class XSDecimal extends NumericType {
 	 */
 	public ResultSequence div(ResultSequence arg) throws DynamicError {
 		ResultSequence carg = convertResultSequence(arg);
-
+		
+		AnyType nanCheck = (AnyType) arg.first();
+		
 		XSDecimal val = (XSDecimal) get_single_type(carg, XSDecimal.class);
 		if (val.zero())
 			throw DynamicError.div_zero(null);
