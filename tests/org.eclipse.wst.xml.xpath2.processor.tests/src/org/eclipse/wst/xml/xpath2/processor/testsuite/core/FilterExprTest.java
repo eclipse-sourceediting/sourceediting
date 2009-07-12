@@ -26,7 +26,7 @@ public class FilterExprTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/works.xml";
       String xqFile = "/Queries/XQuery/Expressions/SeqExpr/FilterExpr/filterexpressionhc1.xq";
       String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/FilterExpr/filterexpressionhc1.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "<result>" + getExpectedResult(resultFile) + "</result>";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -43,7 +43,7 @@ public class FilterExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<result>" + buildXMLResultString(rs) + "</result>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -53,7 +53,7 @@ public class FilterExprTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -137,7 +137,7 @@ public class FilterExprTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/works.xml";
       String xqFile = "/Queries/XQuery/Expressions/SeqExpr/FilterExpr/filterexpressionhc4.xq";
       String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/FilterExpr/filterexpressionhc4.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "<result>" + getExpectedResult(resultFile) + "</result>";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -154,7 +154,7 @@ public class FilterExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<result>" + buildXMLResultString(rs) + "</result>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -164,7 +164,7 @@ public class FilterExprTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -174,7 +174,7 @@ public class FilterExprTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/works.xml";
       String xqFile = "/Queries/XQuery/Expressions/SeqExpr/FilterExpr/filterexpressionhc5.xq";
       String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/FilterExpr/filterexpressionhc5.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "<result>" + getExpectedResult(resultFile) + "</result>";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -191,7 +191,7 @@ public class FilterExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<result>" + buildXMLResultString(rs) + "</result>"; 
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -201,7 +201,7 @@ public class FilterExprTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }

@@ -420,6 +420,7 @@ public class GenCompNETest extends AbstractPsychoPathTest {
       } catch (StaticError ex) {
          actual = ex.code();
       } catch (DynamicError ex) {
+    	 ex.printStackTrace();
          actual = ex.code();
       }
 
