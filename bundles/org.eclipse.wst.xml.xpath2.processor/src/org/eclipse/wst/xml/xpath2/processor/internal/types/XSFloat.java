@@ -183,8 +183,6 @@ public class XSFloat extends NumericType {
 
 	/**
 	 * Equality comparison between this number and the supplied representation.
-	 * Currently no numeric type promotion exists so this representation must be
-	 * of type XSFloat
 	 * 
 	 * @param aa
 	 *            The datatype to compare with
@@ -193,19 +191,17 @@ public class XSFloat extends NumericType {
 	 * @throws DynamicError
 	 */
 	public boolean eq(AnyType aa) throws DynamicError {
-		// XXX numeric promotion
-		if (!(aa instanceof XSFloat))
+		AnyType carg = convertArg(aa);
+		if (!(carg instanceof XSFloat))
 			DynamicError.throw_type_error();
 
-		XSFloat f = (XSFloat) aa;
+		XSFloat f = (XSFloat) carg;
 
 		return float_value() == f.float_value();
 	}
 
 	/**
-	 * Comparison between this number and the supplied representation. Currently
-	 * no numeric type promotion is implemented so this representation must be
-	 * of type XSFloat
+	 * Comparison between this number and the supplied representation. 
 	 * 
 	 * @param arg
 	 *            The datatype to compare with
@@ -214,14 +210,13 @@ public class XSFloat extends NumericType {
 	 * @throws DynamicError
 	 */
 	public boolean gt(AnyType arg) throws DynamicError {
-		XSFloat val = (XSFloat) get_single_type(arg, XSFloat.class);
+		AnyType carg = convertArg(arg);
+		XSFloat val = (XSFloat) get_single_type(carg, XSFloat.class);
 		return float_value() > val.float_value();
 	}
 
 	/**
-	 * Comparison between this number and the supplied representation. Currently
-	 * no numeric type promotion is implemented so this representation must be
-	 * of type XSFloat
+	 * Comparison between this number and the supplied representation. 
 	 * 
 	 * @param arg
 	 *            The datatype to compare with
@@ -230,22 +225,22 @@ public class XSFloat extends NumericType {
 	 * @throws DynamicError
 	 */
 	public boolean lt(AnyType arg) throws DynamicError {
-		XSFloat val = (XSFloat) get_single_type(arg, XSFloat.class);
+		AnyType carg = convertArg(arg);
+		XSFloat val = (XSFloat) get_single_type(carg, XSFloat.class);
 		return float_value() < val.float_value();
 	}
 
 	/**
 	 * Mathematical addition operator between this XSFloat and the supplied
-	 * ResultSequence. Due to no numeric type promotion or conversion, the
-	 * ResultSequence must be of type XSFloat.
+	 * ResultSequence. 
 	 * 
 	 * @param arg
 	 *            The ResultSequence to perform an addition with
 	 * @return A XSFloat consisting of the result of the mathematical addition.
 	 */
 	public ResultSequence plus(ResultSequence arg) throws DynamicError {
-
-		AnyType at = get_single_arg(arg);
+		ResultSequence carg = convertResultSequence(arg);
+		AnyType at = get_single_arg(carg);
 		if (!(at instanceof XSFloat))
 			DynamicError.throw_type_error();
 		XSFloat val = (XSFloat) at;
@@ -256,8 +251,7 @@ public class XSFloat extends NumericType {
 
 	/**
 	 * Mathematical subtraction operator between this XSFloat and the supplied
-	 * ResultSequence. Due to no numeric type promotion or conversion, the
-	 * ResultSequence must be of type XSFloat.
+	 * ResultSequence. 
 	 * 
 	 * @param arg
 	 *            The ResultSequence to perform a subtraction with
@@ -265,7 +259,8 @@ public class XSFloat extends NumericType {
 	 *         subtraction.
 	 */
 	public ResultSequence minus(ResultSequence arg) throws DynamicError {
-		AnyType at = get_single_arg(arg);
+		ResultSequence carg = constructor(arg);
+		AnyType at = get_single_arg(carg);
 		if (!(at instanceof XSFloat))
 			DynamicError.throw_type_error();
 		XSFloat val = (XSFloat) at;
@@ -276,8 +271,7 @@ public class XSFloat extends NumericType {
 
 	/**
 	 * Mathematical multiplication operator between this XSFloat and the
-	 * supplied ResultSequence. Due to no numeric type promotion or conversion,
-	 * the ResultSequence must be of type XSFloat.
+	 * supplied ResultSequence. 
 	 * 
 	 * @param arg
 	 *            The ResultSequence to perform a multiplication with
@@ -285,30 +279,30 @@ public class XSFloat extends NumericType {
 	 *         multiplication.
 	 */
 	public ResultSequence times(ResultSequence arg) throws DynamicError {
-		XSFloat val = (XSFloat) get_single_type(arg, XSFloat.class);
+		ResultSequence carg = constructor(arg);
+		XSFloat val = (XSFloat) get_single_type(carg, XSFloat.class);
 		return ResultSequenceFactory.create_new(new XSFloat(float_value()
 				* val.float_value()));
 	}
 
 	/**
 	 * Mathematical division operator between this XSFloat and the supplied
-	 * ResultSequence. Due to no numeric type promotion or conversion, the
-	 * ResultSequence must be of type XSFloat.
+	 * ResultSequence. 
 	 * 
 	 * @param arg
 	 *            The ResultSequence to perform a division with
 	 * @return A XSFloat consisting of the result of the mathematical division.
 	 */
 	public ResultSequence div(ResultSequence arg) throws DynamicError {
-		XSFloat val = (XSFloat) get_single_type(arg, XSFloat.class);
+		ResultSequence carg = convertResultSequence(arg);
+		XSFloat val = (XSFloat) get_single_type(carg, XSFloat.class);
 		return ResultSequenceFactory.create_new(new XSFloat(float_value()
 				/ val.float_value()));
 	}
 
 	/**
 	 * Mathematical integer division operator between this XSFloat and the
-	 * supplied ResultSequence. Due to no numeric type promotion or conversion,
-	 * the ResultSequence must be of type XSFloat.
+	 * supplied ResultSequence. 
 	 * 
 	 * @param arg
 	 *            The ResultSequence to perform an integer division with
@@ -316,7 +310,8 @@ public class XSFloat extends NumericType {
 	 *         division.
 	 */
 	public ResultSequence idiv(ResultSequence arg) throws DynamicError {
-		XSFloat val = (XSFloat) get_single_type(arg, XSFloat.class);
+		ResultSequence carg = convertResultSequence(arg);
+		XSFloat val = (XSFloat) get_single_type(carg, XSFloat.class);
 
 		if (val.zero())
 			throw DynamicError.div_zero(null);
@@ -335,7 +330,8 @@ public class XSFloat extends NumericType {
 	 * @return A XSFloat consisting of the result of the mathematical modulus.
 	 */
 	public ResultSequence mod(ResultSequence arg) throws DynamicError {
-		XSFloat val = (XSFloat) get_single_type(arg, XSFloat.class);
+		ResultSequence carg = convertResultSequence(arg);
+		XSFloat val = (XSFloat) get_single_type(carg, XSFloat.class);
 		return ResultSequenceFactory.create_new(new XSFloat(float_value()
 				% val.float_value()));
 	}
@@ -418,4 +414,19 @@ public class XSFloat extends NumericType {
 		BigDecimal round = value.setScale(precision, RoundingMode.HALF_EVEN);
 		return new XSFloat(round.floatValue());
 	}
+	
+	protected AnyType convertArg(AnyType arg) throws DynamicError {
+		ResultSequence rs = ResultSequenceFactory.create_new(arg);
+		rs = constructor(rs);
+		AnyType carg = rs.first();
+		return carg;
+	}
+	
+	private ResultSequence convertResultSequence(ResultSequence arg)
+			throws DynamicError {
+		ResultSequence carg = arg;
+		carg = constructor(carg);
+		return carg;
+	}	
+	
 }

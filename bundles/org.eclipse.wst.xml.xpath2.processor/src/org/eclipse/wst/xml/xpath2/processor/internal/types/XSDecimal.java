@@ -188,8 +188,7 @@ public class XSDecimal extends NumericType {
 	// comparisons
 	/**
 	 * Equality comparison between this number and the supplied representation.
-	 * Currently no numeric type promotion exists so the supplied representation
-	 * must be of type XSDecimal.
+	 * 
 	 * 
 	 * @param at
 	 *            Representation to be compared with (must currently be of type
@@ -213,9 +212,7 @@ public class XSDecimal extends NumericType {
 	}
 
 	/**
-	 * Comparison between this number and the supplied representation. Currently
-	 * no numeric type promotion exists so the supplied representation must be
-	 * of type XSDecimal.
+	 * Comparison between this number and the supplied representation. 
 	 * 
 	 * @param arg
 	 *            Representation to be compared with (must currently be of type
@@ -224,14 +221,21 @@ public class XSDecimal extends NumericType {
 	 *         one stored. False otherwise
 	 */
 	public boolean gt(AnyType arg) throws DynamicError {
-		XSDecimal val = (XSDecimal) get_single_type(arg, XSDecimal.class);
+		AnyType carg = convertArg(arg);
+		
+		XSDecimal val = (XSDecimal) get_single_type(carg, XSDecimal.class);
 		return (_value.compareTo(val.getValue()) == 1);
 	}
 
+	protected AnyType convertArg(AnyType arg) throws DynamicError {
+		ResultSequence rs = ResultSequenceFactory.create_new(arg);
+		rs = constructor(rs);
+		AnyType carg = rs.first();
+		return carg;
+	}
+	
 	/**
-	 * Comparison between this number and the supplied representation. Currently
-	 * no numeric type promotion exists so the supplied representation must be
-	 * of type XSDecimal.
+	 * Comparison between this number and the supplied representation. 
 	 * 
 	 * @param arg
 	 *            Representation to be compared with (must currently be of type
@@ -240,7 +244,8 @@ public class XSDecimal extends NumericType {
 	 *         one stored. False otherwise
 	 */
 	public boolean lt(AnyType arg) throws DynamicError {
-		XSDecimal val = (XSDecimal) get_single_type(arg, XSDecimal.class);
+		AnyType carg = convertArg(arg);
+		XSDecimal val = (XSDecimal) get_single_type(carg, XSDecimal.class);
 		return (_value.compareTo(val.getValue()) == -1);
 	}
 
@@ -257,7 +262,8 @@ public class XSDecimal extends NumericType {
 	 */
 	public ResultSequence plus(ResultSequence arg) throws DynamicError {
 		// get arg
-		AnyType at = get_single_arg(arg);
+		ResultSequence carg = convertResultSequence(arg);
+		AnyType at = get_single_arg(carg);
 		if (!(at instanceof XSDecimal))
 			DynamicError.throw_type_error();
 		XSDecimal dt = (XSDecimal) at;
@@ -265,11 +271,17 @@ public class XSDecimal extends NumericType {
 		// own it
 		return ResultSequenceFactory.create_new(new XSDecimal(_value.add(dt.getValue())));
 	}
+	
+	private ResultSequence convertResultSequence(ResultSequence arg)
+			throws DynamicError {
+		ResultSequence carg = arg;
+		carg = constructor(carg);
+		return carg;
+	}	
 
 	/**
 	 * Mathematical subtraction operator between this XSDecimal and the supplied
-	 * ResultSequence. Due to no numeric type promotion or conversion, the
-	 * ResultSequence must be of type XSDecimal.
+	 * ResultSequence. 
 	 * 
 	 * @param arg
 	 *            The ResultSequence to perform a subtraction with
@@ -277,7 +289,9 @@ public class XSDecimal extends NumericType {
 	 *         subtraction.
 	 */
 	public ResultSequence minus(ResultSequence arg) throws DynamicError {
-		AnyType at = get_single_arg(arg);
+		ResultSequence carg = convertResultSequence(arg);
+
+		AnyType at = get_single_arg(carg);
 		if (!(at instanceof XSDecimal))
 			DynamicError.throw_type_error();
 		XSDecimal dt = (XSDecimal) at;
@@ -287,8 +301,7 @@ public class XSDecimal extends NumericType {
 
 	/**
 	 * Mathematical multiplication operator between this XSDecimal and the
-	 * supplied ResultSequence. Due to no numeric type promotion or conversion,
-	 * the ResultSequence must be of type XSDecimal.
+	 * supplied ResultSequence. 
 	 * 
 	 * @param arg
 	 *            The ResultSequence to perform a multiplication with
@@ -296,7 +309,9 @@ public class XSDecimal extends NumericType {
 	 *         multiplication.
 	 */
 	public ResultSequence times(ResultSequence arg) throws DynamicError {
-		XSDecimal val = (XSDecimal) get_single_type(arg, XSDecimal.class);
+		ResultSequence carg = convertResultSequence(arg);
+
+		XSDecimal val = (XSDecimal) get_single_type(carg, XSDecimal.class);
 		BigDecimal result = _value.multiply(val.getValue());
 		return ResultSequenceFactory.create_new(new XSDecimal(result));
 	}
@@ -312,7 +327,9 @@ public class XSDecimal extends NumericType {
 	 *         division.
 	 */
 	public ResultSequence div(ResultSequence arg) throws DynamicError {
-		XSDecimal val = (XSDecimal) get_single_type(arg, XSDecimal.class);
+		ResultSequence carg = convertResultSequence(arg);
+
+		XSDecimal val = (XSDecimal) get_single_type(carg, XSDecimal.class);
 		if (val.zero())
 			throw DynamicError.div_zero(null);
 		BigDecimal result = getValue().divide(val.getValue(), 18, RoundingMode.HALF_EVEN);
@@ -331,7 +348,9 @@ public class XSDecimal extends NumericType {
 	 *         division.
 	 */
 	public ResultSequence idiv(ResultSequence arg) throws DynamicError {
-		XSDecimal val = (XSDecimal) get_single_type(arg, XSDecimal.class);
+		ResultSequence carg = convertResultSequence(arg);
+
+		XSDecimal val = (XSDecimal) get_single_type(carg, XSDecimal.class);
 
 		if (val.zero())
 			throw DynamicError.div_zero(null);
@@ -352,7 +371,9 @@ public class XSDecimal extends NumericType {
 	 * @return A XSDecimal consisting of the result of the mathematical modulus.
 	 */
 	public ResultSequence mod(ResultSequence arg) throws DynamicError {
-		XSDecimal val = (XSDecimal) get_single_type(arg, XSDecimal.class);
+		ResultSequence carg = convertResultSequence(arg);
+
+		XSDecimal val = (XSDecimal) get_single_type(carg, XSDecimal.class);
 		BigDecimal result = _value.remainder(val.getValue());
 		return ResultSequenceFactory.create_new(new XSDecimal(result));
 	}

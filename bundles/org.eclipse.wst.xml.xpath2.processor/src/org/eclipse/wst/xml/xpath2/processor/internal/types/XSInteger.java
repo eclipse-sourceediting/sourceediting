@@ -173,8 +173,7 @@ public class XSInteger extends XSDecimal {
 
 	/**
 	 * Mathematical addition operator between this XSInteger and the supplied
-	 * ResultSequence. Due to no numeric type promotion or conversion, the
-	 * ResultSequence must be of type XSInteger.
+	 * ResultSequence. 
 	 * 
 	 * @param arg
 	 *            The ResultSequence to perform an addition with
@@ -183,7 +182,8 @@ public class XSInteger extends XSDecimal {
 	 */
 	@Override
 	public ResultSequence plus(ResultSequence arg) throws DynamicError {
-		AnyType at = get_single_arg(arg);
+		ResultSequence carg = convertResultSequence(arg);
+		AnyType at = get_single_arg(carg);
 		if (!(at instanceof XSInteger))
 			DynamicError.throw_type_error();
 		
@@ -194,10 +194,17 @@ public class XSInteger extends XSDecimal {
 		
 	}
 
+	
+	private ResultSequence convertResultSequence(ResultSequence arg)
+			throws DynamicError {
+		ResultSequence carg = arg;
+		carg = constructor(carg);
+		return carg;
+	}	
+	
 	/**
 	 * Mathematical subtraction operator between this XSInteger and the supplied
-	 * ResultSequence. Due to no numeric type promotion or conversion, the
-	 * ResultSequence must be of type XSInteger.
+	 * ResultSequence. 
 	 * 
 	 * @param arg
 	 *            The ResultSequence to perform a subtraction with
@@ -206,7 +213,8 @@ public class XSInteger extends XSDecimal {
 	 */
 	@Override
 	public ResultSequence minus(ResultSequence arg) throws DynamicError {
-		XSInteger val = (XSInteger) get_single_type(arg, XSInteger.class);
+		ResultSequence carg = convertResultSequence(arg);
+		XSInteger val = (XSInteger) get_single_type(carg, XSInteger.class);
 		
 		return ResultSequenceFactory.create_new(new 
 				                 XSInteger(int_value().subtract(val.int_value())));
@@ -214,8 +222,7 @@ public class XSInteger extends XSDecimal {
 
 	/**
 	 * Mathematical multiplication operator between this XSInteger and the
-	 * supplied ResultSequence. Due to no numeric type promotion or conversion,
-	 * the ResultSequence must be of type XSInteger.
+	 * supplied ResultSequence. 
 	 * 
 	 * @param arg
 	 *            The ResultSequence to perform a multiplication with
@@ -224,7 +231,9 @@ public class XSInteger extends XSDecimal {
 	 */
 	@Override
 	public ResultSequence times(ResultSequence arg) throws DynamicError {
-		XSInteger val = (XSInteger) get_single_type(arg, XSInteger.class);
+		ResultSequence carg = convertResultSequence(arg);
+
+		XSInteger val = (XSInteger) get_single_type(carg, XSInteger.class);
 		
 		return ResultSequenceFactory.create_new(new 
 				                 XSInteger(int_value().multiply(val.int_value())));
@@ -232,8 +241,7 @@ public class XSInteger extends XSDecimal {
 
 	/**
 	 * Mathematical modulus operator between this XSInteger and the supplied
-	 * ResultSequence. Due to no numeric type promotion or conversion, the
-	 * ResultSequence must be of type XSInteger.
+	 * ResultSequence. 
 	 * 
 	 * @param arg
 	 *            The ResultSequence to perform a modulus with
@@ -241,7 +249,9 @@ public class XSInteger extends XSDecimal {
 	 */
 	@Override
 	public ResultSequence mod(ResultSequence arg) throws DynamicError {
-		XSInteger val = (XSInteger) get_single_type(arg, XSInteger.class);
+		ResultSequence carg = convertResultSequence(arg);
+
+		XSInteger val = (XSInteger) get_single_type(carg, XSInteger.class);
 		BigInteger result = int_value().remainder(val.int_value()); 
 		
 		return ResultSequenceFactory.create_new(new XSInteger(result));
@@ -273,11 +283,19 @@ public class XSInteger extends XSDecimal {
 	 * @see org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal#gt(org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType)
 	 */
 	public boolean gt(AnyType arg) throws DynamicError {
-        XSInteger val = (XSInteger) get_single_type(arg, XSInteger.class);
+		AnyType carg = convertArg(arg);
+        XSInteger val = (XSInteger) get_single_type(carg, XSInteger.class);
         
         int compareResult = int_value().compareTo(val.int_value());
 		
 		return compareResult > 0;
+	}
+	
+	protected AnyType convertArg(AnyType arg) throws DynamicError {
+		ResultSequence rs = ResultSequenceFactory.create_new(arg);
+		rs = constructor(rs);
+		AnyType carg = rs.first();
+		return carg;
 	}
 	
 	/*
@@ -285,7 +303,8 @@ public class XSInteger extends XSDecimal {
 	 * @see org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal#lt(org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType)
 	 */
 	public boolean lt(AnyType arg) throws DynamicError {
-        XSInteger val = (XSInteger) get_single_type(arg, XSInteger.class);
+		AnyType carg = convertArg(arg);
+        XSInteger val = (XSInteger) get_single_type(carg, XSInteger.class);
         
         int compareResult = int_value().compareTo(val.int_value());
 		

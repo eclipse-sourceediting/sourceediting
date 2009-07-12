@@ -253,9 +253,7 @@ public class XSDouble extends NumericType {
 	}
 
 	/**
-	 * Comparison between this number and the supplied representation. Currently
-	 * no numeric type promotion exists so the supplied representation must be
-	 * of type XSDouble.
+	 * Comparison between this number and the supplied representation. 
 	 * 
 	 * @param arg
 	 *            Representation to be compared with (must currently be of type
@@ -264,8 +262,17 @@ public class XSDouble extends NumericType {
 	 *         one stored. False otherwise
 	 */
 	public boolean gt(AnyType arg) throws DynamicError {
-		XSDouble val = (XSDouble) get_single_type(arg, XSDouble.class);
+		AnyType carg = convertArg(arg);
+		
+		XSDouble val = (XSDouble) get_single_type(carg, XSDouble.class);
 		return double_value() > val.double_value();
+	}
+
+	protected AnyType convertArg(AnyType arg) throws DynamicError {
+		ResultSequence rs = ResultSequenceFactory.create_new(arg);
+		rs = constructor(rs);
+		AnyType carg = rs.first();
+		return carg;
 	}
 
 	/**
@@ -280,22 +287,25 @@ public class XSDouble extends NumericType {
 	 *         one stored. False otherwise
 	 */
 	public boolean lt(AnyType arg) throws DynamicError {
-		XSDouble val = (XSDouble) get_single_type(arg, XSDouble.class);
+		AnyType carg = convertArg(arg);
+
+		XSDouble val = (XSDouble) get_single_type(carg, XSDouble.class);
 		return double_value() < val.double_value();
 	}
 
 	// math
 	/**
 	 * Mathematical addition operator between this XSDouble and the supplied
-	 * ResultSequence. Due to no numeric type promotion or conversion, the
-	 * ResultSequence must be of type XSDouble.
+	 * ResultSequence. 
 	 * 
 	 * @param arg
 	 *            The ResultSequence to perform an addition with
 	 * @return A XSDouble consisting of the result of the mathematical addition.
 	 */
 	public ResultSequence plus(ResultSequence arg) throws DynamicError {
-		AnyType at = get_single_arg(arg);
+		ResultSequence carg = convertResultSequence(arg);
+		AnyType at = get_single_arg(carg);
+		
 		if (!(at instanceof XSDouble))
 			DynamicError.throw_type_error();
 		XSDouble val = (XSDouble) at;
@@ -304,10 +314,16 @@ public class XSDouble extends NumericType {
 				+ val.double_value()));
 	}
 
+	private ResultSequence convertResultSequence(ResultSequence arg)
+			throws DynamicError {
+		ResultSequence carg = arg;
+		carg = constructor(carg);
+		return carg;
+	}
+
 	/**
 	 * Mathematical subtraction operator between this XSDouble and the supplied
-	 * ResultSequence. Due to no numeric type promotion or conversion, the
-	 * ResultSequence must be of type XSDouble.
+	 * ResultSequence. 
 	 * 
 	 * @param arg
 	 *            The ResultSequence to perform an subtraction with
@@ -315,7 +331,9 @@ public class XSDouble extends NumericType {
 	 *         subtraction.
 	 */
 	public ResultSequence minus(ResultSequence arg) throws DynamicError {
-		XSDouble val = (XSDouble) get_single_type(arg, XSDouble.class);
+		ResultSequence carg = convertResultSequence(arg);
+		
+		XSDouble val = (XSDouble) get_single_type(carg, XSDouble.class);
 
 		return ResultSequenceFactory.create_new(new XSDouble(double_value()
 				- val.double_value()));
@@ -332,30 +350,32 @@ public class XSDouble extends NumericType {
 	 *         multiplication.
 	 */
 	public ResultSequence times(ResultSequence arg) throws DynamicError {
-		XSDouble val = (XSDouble) get_single_type(arg, XSDouble.class);
+		ResultSequence carg = convertResultSequence(arg);
+
+		XSDouble val = (XSDouble) get_single_type(carg, XSDouble.class);
 		return ResultSequenceFactory.create_new(new XSDouble(double_value()
 				* val.double_value()));
 	}
 
 	/**
 	 * Mathematical division operator between this XSDouble and the supplied
-	 * ResultSequence. Due to no numeric type promotion or conversion, the
-	 * ResultSequence must be of type XSDouble.
+	 * ResultSequence. 
 	 * 
 	 * @param arg
 	 *            The ResultSequence to perform an division with
 	 * @return A XSDouble consisting of the result of the mathematical division.
 	 */
 	public ResultSequence div(ResultSequence arg) throws DynamicError {
-		XSDouble val = (XSDouble) get_single_type(arg, XSDouble.class);
+		ResultSequence carg = convertResultSequence(arg);
+
+		XSDouble val = (XSDouble) get_single_type(carg, XSDouble.class);
 		return ResultSequenceFactory.create_new(new XSDouble(double_value()
 				/ val.double_value()));
 	}
 
 	/**
 	 * Mathematical integer division operator between this XSDouble and the
-	 * supplied ResultSequence. Due to no numeric type promotion or conversion,
-	 * the ResultSequence must be of type XSDouble.
+	 * supplied ResultSequence. 
 	 * 
 	 * @param arg
 	 *            The ResultSequence to perform an integer division with
@@ -363,7 +383,9 @@ public class XSDouble extends NumericType {
 	 *         division.
 	 */
 	public ResultSequence idiv(ResultSequence arg) throws DynamicError {
-		XSDouble val = (XSDouble) get_single_type(arg, XSDouble.class);
+		ResultSequence carg = convertResultSequence(arg);
+
+		XSDouble val = (XSDouble) get_single_type(carg, XSDouble.class);
 
 		if (val.zero())
 			throw DynamicError.div_zero(null);
@@ -374,15 +396,16 @@ public class XSDouble extends NumericType {
 
 	/**
 	 * Mathematical modulus operator between this XSDouble and the supplied
-	 * ResultSequence. Due to no numeric type promotion or conversion, the
-	 * ResultSequence must be of type XSDouble.
+	 * ResultSequence. 
 	 * 
 	 * @param arg
 	 *            The ResultSequence to perform a modulus with
 	 * @return A XSDouble consisting of the result of the mathematical modulus.
 	 */
 	public ResultSequence mod(ResultSequence arg) throws DynamicError {
-		XSDouble val = (XSDouble) get_single_type(arg, XSDouble.class);
+		ResultSequence carg = convertResultSequence(arg);
+
+		XSDouble val = (XSDouble) get_single_type(carg, XSDouble.class);
 		return ResultSequenceFactory.create_new(new XSDouble(double_value()
 				% val.double_value()));
 	}
