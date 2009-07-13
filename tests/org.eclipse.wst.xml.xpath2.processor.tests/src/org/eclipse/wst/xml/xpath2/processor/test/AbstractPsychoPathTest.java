@@ -51,6 +51,7 @@ import org.xml.sax.SAXException;
 public class AbstractPsychoPathTest extends XMLTestCase {
 
 	protected Document domDoc = null;
+	protected Document domDoc2 = null;
 	protected Bundle bundle = null;
 
 	private static final String INPUT_CONTEXT = "input-context";
@@ -85,11 +86,25 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		domloader.set_validating(false);
 		domDoc = domloader.load(is);
 	}
+	
+	protected void load2DOMDocument(URL fileURL, URL fileURL2) throws IOException,
+			DOMLoaderException {
+		InputStream is = fileURL.openStream();
+		InputStream is2 = fileURL.openStream();
+		
+		DOMLoader domloader = new XercesLoader();
+		domloader.set_validating(false);
+		domDoc = domloader.load(is);
+		domDoc2 = domloader.load(is2);
+		is.close();
+		is2.close();
+	}	
 
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		domDoc = null;
+		domDoc2 = null;
 	}
 
 	protected XSModel getGrammar() {
@@ -107,6 +122,8 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		domloader.set_validating(false);
 		domDoc = domloader.load(is);
 	}
+	
+	
 
 	private Schema getSchema(InputStream schemaIs) throws SAXException {
 		SchemaFactory sf = SchemaFactory
@@ -259,7 +276,11 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 				0);
 		dc.set_variable(new QName("input-context1"), docType);
 		dc.set_variable(new QName("input-context"), docType);
-		dc.set_variable(new QName("input-context2"), docType);
+		if (domDoc2 == null) {
+			dc.set_variable(new QName("input-context2"), docType);
+		} else {
+			dc.set_variable(new QName("input-context2"), (AnyType) new DocType(domDoc2, 0));
+		}
 
 		return dc;
 	}

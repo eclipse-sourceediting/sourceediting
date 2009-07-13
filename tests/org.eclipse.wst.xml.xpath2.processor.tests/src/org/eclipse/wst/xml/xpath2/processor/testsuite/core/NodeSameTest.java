@@ -209,11 +209,13 @@ public class NodeSameTest extends AbstractPsychoPathTest {
    //Evaluation of a Node expression With the operands/operator set with the following format: Single Node Element is Sequence of single Element Node.
    public void test_nodeexpression12() throws Exception {
       String inputFile = "/TestSources/works.xml";
+      String inputFile2 = "/TestSourcres/staff.xml";
       String xqFile = "/Queries/XQuery/Expressions/Operators/NodeOp/NodeSame/nodeexpression12.xq";
       String resultFile = "/ExpectedTestResults/Expressions/Operators/NodeOp/NodeSame/nodeexpression12.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      URL fileURL2 = bundle.getEntry(inputFile2);
+      load2DOMDocument(fileURL, fileURL2);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
@@ -283,11 +285,13 @@ public class NodeSameTest extends AbstractPsychoPathTest {
    //Evaluation of a Node expression With the operands/operator set with the following format: Sequence of single Element Node is Single Node Element.
    public void test_nodeexpression15() throws Exception {
       String inputFile = "/TestSources/works.xml";
+      String inputFile2 = "/TestSources/staff.xml";
       String xqFile = "/Queries/XQuery/Expressions/Operators/NodeOp/NodeSame/nodeexpression15.xq";
       String resultFile = "/ExpectedTestResults/Expressions/Operators/NodeOp/NodeSame/nodeexpression15.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      URL fileURL2 = bundle.getEntry(inputFile);
+      load2DOMDocument(fileURL, fileURL2);
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
