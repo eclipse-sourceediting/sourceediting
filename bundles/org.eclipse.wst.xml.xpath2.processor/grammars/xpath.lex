@@ -6,7 +6,8 @@
 // * http://www.eclipse.org/legal/epl-v10.html
 // *
 // * Contributors:
-// *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+// *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+// *     Jesper S Moller - bug 283214 - fix IF THEN ELSE parsing and update grammars 
 // *******************************************************************************/
 
 
@@ -152,7 +153,7 @@ NCName		= ( {Letter} | "_") ( {NCNameChar} )*
 "schema\-attribute"		{ return symbol(XpathSym.SCHEMA_ATTRIBUTE); }
 "element"			{ return symbol(XpathSym.ELEMENT); }
 "schema\-element"		{ return symbol(XpathSym.SCHEMA_ELEMENT); }
-
+"typeswitch"        { return symbol(XpathSym.TYPESWITCH); }
 
 {StringLiteral}		{
 				// get rid of quotes

@@ -7,13 +7,17 @@
 // *
 // * Contributors:
 // *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
-// *     David Carver - bug 269833 - A work around for the keyword in node issue. 
+// *     David Carver - bug 269833 - A work around for the keyword in node issue.
+// *     Jesper S Moller - bug 283214 - fix IF THEN ELSE parsing and update grammars 
 // *******************************************************************************/
 
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
+import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
 import org.eclipse.wst.xml.xpath2.processor.internal.ast.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
@@ -56,6 +60,8 @@ terminal String IF, THEN, ELSE;
 terminal String AND, OR;
 terminal EMPTY, ITEM, NODE, DOCUMENT_NODE, TEXT, COMMENT;
 terminal PROCESSING_INSTRUCTION, SCHEMA_ATTRIBUTE, ELEMENT, SCHEMA_ELEMENT;
+// Unused in XPath 2, but reserved for compatibility with XQuery
+terminal TYPESWITCH;
 
 terminal BigInteger INTEGER;
 terminal Double DOUBLE;
@@ -63,7 +69,7 @@ terminal BigDecimal DECIMAL;
 terminal String STRING, NCNAME;
 
 
-non terminal String Prefix, LocalPart, NCName;
+non terminal String Prefix, LocalPart, NCName, UnqualifiedNCName, UnqualifiedLocalPart;
 non terminal StringLiteral StringLiteral;
 non terminal QName ElementDeclaration, ElementNameOrWildcard, TypeName, ElementName;
 non terminal QName AttributeDeclaration, AttribNameOrWildcard, AttributeName;
@@ -630,10 +636,10 @@ ElementName           ::= QName:n {: RESULT = n; :};
 
 TypeName              ::= QName:n {: RESULT = n; :};
 
-IntegerLiteral        ::= INTEGER:i {: RESULT = new IntegerLiteral(i.intValue()); :};
+IntegerLiteral        ::= INTEGER:i {: RESULT = new IntegerLiteral(i); :};
    
 DecimalLiteral        ::= DECIMAL:d 
-			    {: RESULT = new DecimalLiteral(d.doubleValue()); :}
+			    {: RESULT = new DecimalLiteral(d); :}
 			;    
 
 DoubleLiteral         ::= DOUBLE:d
@@ -644,17 +650,15 @@ StringLiteral         ::= STRING:s {: RESULT = new StringLiteral(s); :};
 
 VarName               ::= QName:n {: RESULT = n; :};
 
-QName                 ::= LocalPart:l {: RESULT = new QName(l); :}
+QName                 ::= UnqualifiedLocalPart:l {: RESULT = new QName(l); :}
                         | Prefix:p COLON LocalPart:l {: RESULT = new QName(p,l); :}
-
-			// XXX hack to get empty working for now...
-			// for fn:empty at least
-			| Prefix:p COLON EMPTY {: RESULT = new QName(p, "empty"); :}
-			;
+						;
 
 Prefix                ::= NCName:n {: RESULT = n; :};
 
 LocalPart             ::= NCName:n {: RESULT = n; :};
+
+UnqualifiedLocalPart  ::= UnqualifiedNCName:n {: RESULT = n; :};
 
 NCName                ::= NCNAME:n {: RESULT = n; :} |
 						  TO:n	   {: RESULT = new String("to"); :} |
@@ -693,5 +697,55 @@ NCName                ::= NCNAME:n {: RESULT = n; :} |
 						  OR:n {: RESULT = new String("or"); :} |
 						  DIV:n {: RESULT = new String("div"); :} |
 						  IDIV:n {: RESULT = new String("idiv"); :} |
+						  COMMENT:n {: RESULT = new String("comment"); :} |
+						  DOCUMENT_NODE:n {: RESULT = new String("document-node"); :} |
+						  ELEMENT:n {: RESULT = new String("element"); :} |
+						  EMPTY:n {: RESULT = new String("empty"); :} |
+						  ITEM:n {: RESULT = new String("item"); :} |
+						  NODE:n {: RESULT = new String("node"); :} |
+						  PROCESSING_INSTRUCTION:n {: RESULT = new String("processing-instruction"); :} |
+						  SCHEMA_ATTRIBUTE:n {: RESULT = new String("schema-attribute"); :} |
+						  SCHEMA_ELEMENT:n {: RESULT = new String("schema-element"); :} |
+						  TEXT:n {: RESULT = new String("text"); :} |
+						  TYPESWITCH:n {: RESULT = new String("typeswitch"); :} |
 						  MOD:n {: RESULT = new String("mod"); :}
 			; 
+
+UnqualifiedNCName     ::= NCNAME:n {: RESULT = n; :} |
+						  TO:n	   {: RESULT = new String("to"); :} |
+						  CHILD:n  {: RESULT = new String("child"); :} |
+						  DESCENDANT:n {: RESULT = new String("descendant"); :} |
+						  SELF:n {: RESULT = new String("self"); :} |
+						  DESCENDANT_OR_SELF:n {: RESULT = new String("descendant-of-self"); :} |
+						  FOLLOWING_SIBLING:n {: RESULT = new String("following-sibling"); :} |
+						  FOLLOWING:n {: RESULT = new String("following"); :} |
+						  NAMESPACE:n {: RESULT = new String("namespace"); :} |
+						  PARENT:n {: RESULT = new String("parent"); :} |
+						  ANCESTOR:n {: RESULT = new String("ancestor"); :} |
+						  PRECEDING_SIBLING:n {: RESULT  = new String("preceding-sibling"); :} |
+						  PRECEDING:n {: RESULT = new String("preceding"); :} |
+						  ANCESTOR_OR_SELF:n {: RESULT = new String("ancestor-or-self"); :} |
+						  UNION:n {: RESULT = new String("union"); :} |
+						  INTERSECT:n {: RESULT = new String("intersect"); :} |
+						  EXCEPT:n {: RESULT = new String("except"); :} |
+						  INSTANCE:n {: RESULT = new String("instance"); :} |
+						  OF:n {: RESULT = new String("of"); :} |
+						  TREAT:n {: RESULT = new String("as"); :} |
+						  CASTABLE:n {: RESULT = new String("castable"); :} |
+						  CAST:n {: RESULT = new String("cast"); :} |
+						  IS:n {: RESULT = new String("is"); :} |
+						  FOR:n {: RESULT = new String("for"); :} |
+						  IN:n {: RESULT = new String("in"); :} |
+						  RETURN:n {: RESULT = new String("return"); :} |
+						  SATISFIES:n {: RESULT = new String("satisfies"); :} |
+						  SOME:n {: RESULT = new String("some"); :} |
+						  EVERY:n {: RESULT = new String("every"); :} |
+						  THEN:n {: RESULT = new String("then"); :} |
+						  ELSE:n {: RESULT = new String("else"); :} |
+						  AND:n {: RESULT = new String("and"); :} |
+						  OR:n {: RESULT = new String("or"); :} |
+						  DIV:n {: RESULT = new String("div"); :} |
+						  IDIV:n {: RESULT = new String("idiv"); :} |
+						  MOD:n {: RESULT = new String("mod"); :}
+			; 
+			
