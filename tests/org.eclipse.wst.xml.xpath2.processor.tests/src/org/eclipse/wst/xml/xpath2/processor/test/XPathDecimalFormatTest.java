@@ -7,9 +7,12 @@
  * 
  * Contributors:
  *     David Carver - initial API and implementation
+ *     Jesper Steen Moller - bug 283404 - added locale sensitivity test
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.test;
+
+import java.util.Locale;
 
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XPathDecimalFormat;
 
@@ -47,5 +50,13 @@ public class XPathDecimalFormatTest extends TestCase {
 		String result = format.xpathFormat(value);
 		assertEquals("Unexpected XPath format string:", "-INF", result);
 	}
-	
+
+	public void testLocaleInsensitivity() {
+		Locale.setDefault(Locale.GERMAN);
+		XPathDecimalFormat format = new XPathDecimalFormat(FLOAT_FORMAT);
+		Float value = Float.valueOf(1.2f);
+		String result = format.xpathFormat(value);
+		assertEquals("Unexpected XPath format string:", "1.2", result);
+	}
+
 }

@@ -8,12 +8,14 @@
  * Contributors:
  *     David Carver (STAR) - initial API and implementation
  *     Jin Mingjan - bug 262765 -  extractXPathExpression and getExpectedResults
- *     Jesper S Moller - bug 283214 - fix IF THEN ELSE parsing and update grammars 
+ *     Jesper S Moller - bug 283214 - fix IF THEN ELSE parsing and update grammars
+ *     Jesper S Moller - bug 283404 - fixed locale  
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.regex.Matcher;
@@ -235,7 +237,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		try {
 			InputStream isxq = bundle.getEntry(xqFile).openStream();
 			BufferedReader xqreader = new BufferedReader(new InputStreamReader(
-					isxq));
+					isxq, Charset.forName("UTF-8")));
 			int nByte = xqreader.read(cbuf);
 			assertTrue(xqFile, nByte < 2048);
 			content = new String(cbuf).trim();
@@ -348,7 +350,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 			}
 		}
 
-		actual = outputStream.toString();
+		actual = outputStream.toString("UTF-8");
 		actual = actual.replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
 		actual = actual.replace("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>", "");
 		outputStream.close();
