@@ -189,7 +189,7 @@ public class JFaceNodeAdapterForJs extends JFaceNodeAdapterForHTML {
 
 		Vector validChildren = new Vector();
 		for (int i = 0; i < allChildren.length; i++) {
-			if (allChildren[i] instanceof IJavaScriptElement && allChildren[i].getElementType() != IJavaScriptElement.PACKAGE_DECLARATION) {
+			if (allChildren[i] instanceof IJavaScriptElement) {
 				ISourceRange range = null;
 				if (allChildren[i] instanceof Member) {
 					try {

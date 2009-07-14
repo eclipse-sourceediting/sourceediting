@@ -192,7 +192,7 @@ public class JsTranslation implements IJsTranslation {
 	 */
 	private IJavaScriptUnit createCompilationUnit() throws JavaScriptModelException {
 		IPackageFragmentRoot root = getDocScope(true);
-		IJavaScriptUnit cu = root.getPackageFragment("").getJavaScriptUnit(getMangledName() + JsDataTypes.BASE_FILE_EXTENSION).getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor()); //$NON-NLS-1$
+		IJavaScriptUnit cu = root.getPackageFragment("").getJavaScriptUnit(getMangledName() + JsDataTypes.BASE_FILE_EXTENSION).getWorkingCopy(getWorkingCopyOwner(), getProgressMonitor()); //$NON-NLS-1$
 		IBuffer buffer;
 		try {
 			buffer = cu.getBuffer();
@@ -228,14 +228,12 @@ public class JsTranslation implements IJsTranslation {
 		}
 		Vector validChildren = new Vector();
 		for (int i = 0; i < allChildren.length; i++) {
-			if (allChildren[i].getElementType() != IJavaScriptElement.PACKAGE_DECLARATION) {
-				ISourceRange range = getJSSourceRangeOf(allChildren[i]);
-				if (javaPositionStart <= range.getOffset() && range.getLength() + range.getOffset() <= (javaPositionEnd)) {
-					validChildren.add(allChildren[i]);
-				}
-				else if (allChildren[i].getElementType() == IJavaScriptElement.TYPE) {
-					validChildren.add(allChildren[i]);
-				}
+			ISourceRange range = getJSSourceRangeOf(allChildren[i]);
+			if (javaPositionStart <= range.getOffset() && range.getLength() + range.getOffset() <= (javaPositionEnd)) {
+				validChildren.add(allChildren[i]);
+			}
+			else if (allChildren[i].getElementType() == IJavaScriptElement.TYPE) {
+				validChildren.add(allChildren[i]);
 			}
 		}
 		if (validChildren.size() > 0) {
@@ -273,7 +271,7 @@ public class JsTranslation implements IJsTranslation {
 		}
 		getDocScope(true);
 		try {
-			fCompilationUnit = fCompilationUnit.getWorkingCopy(getWorkingCopyOwner(), getProblemRequestor(), getProgressMonitor());
+			fCompilationUnit = fCompilationUnit.getWorkingCopy(getWorkingCopyOwner(), getProgressMonitor());
 			// fCompilationUnit.makeConsistent(getProgressMonitor());
 		}
 		catch (JavaScriptModelException ex) {
