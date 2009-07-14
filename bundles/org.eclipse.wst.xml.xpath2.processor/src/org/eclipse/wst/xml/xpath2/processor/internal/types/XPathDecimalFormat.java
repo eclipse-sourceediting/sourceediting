@@ -7,13 +7,17 @@
  *
  * Contributors:
  *    David Carver - initial API and implementation
+ *    Jesper Steen Moller - bug 283404 - fixed locale
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.FieldPosition;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * This is an XPath specific implementation of DecimalFormat to handle
@@ -31,7 +35,8 @@ public class XPathDecimalFormat extends DecimalFormat {
 	private static final String POS_INFINITY = "INF";
 
 	public XPathDecimalFormat(String pattern) {
-		super(pattern);
+		// Xpath hardcodes this to US locale
+		super(pattern, new DecimalFormatSymbols(Locale.US));
 	}
 
 	/**
@@ -97,7 +102,6 @@ public class XPathDecimalFormat extends DecimalFormat {
 		if (isFloatPosInfinity(floatValue)) {
 			return POS_INFINITY;
 		}
-		
 		floatXPathPattern(curPattern, newPattern, floatValue);
 		return format(obj, new StringBuffer(), new FieldPosition(0)).toString();
 	}
