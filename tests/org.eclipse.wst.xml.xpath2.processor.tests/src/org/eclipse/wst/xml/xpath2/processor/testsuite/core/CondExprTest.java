@@ -7,7 +7,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  * 
  * Contributors:
- *     David Carver - STAR - initial api and implementation bug 262765 
+ *     David Carver - STAR - initial api and implementation bug 262765
+ *     Jesper S Moller - bug 283214 - fix IF THEN ELSE parsing and update grammars 
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.testsuite.core;
 
@@ -26,7 +27,7 @@ public class CondExprTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/CondExpr/CondExpr006.xq";
       String resultFile = "/ExpectedTestResults/Expressions/CondExpr/CondExpr006.xml";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = getExpectedResult(resultFile, "out");
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -35,7 +36,7 @@ public class CondExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = "if (1 != 0) then if (4 != 5) then 1 else 2 else 3";
+      String xpath = extractXPathExpression(xqFile, inputFile, "out");
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -43,8 +44,8 @@ public class CondExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = "<out>" + buildResultString(rs) + "</out>";
-	
+	      actual = buildResultString(rs);
+	      
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -63,7 +64,7 @@ public class CondExprTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/CondExpr/CondExpr010.xq";
       String resultFile = "/ExpectedTestResults/Expressions/CondExpr/CondExpr010.xml";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = getExpectedResult(resultFile, "out");
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -72,7 +73,7 @@ public class CondExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = "if (2 != 4) then 1 else 0";
+      String xpath = extractXPathExpression(xqFile, inputFile, "out");
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -80,8 +81,8 @@ public class CondExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = "<out>" + buildResultString(rs) + "</out>";
-	
+	      actual = buildResultString(rs);
+	      
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -100,7 +101,7 @@ public class CondExprTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/CondExpr/CondExpr011.xq";
       String resultFile = "/ExpectedTestResults/Expressions/CondExpr/CondExpr011.xml";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = getExpectedResult(resultFile, "out");
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -109,7 +110,7 @@ public class CondExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = "fn:string-length(if (2 != 3) then 'foo' else 'expanded-foo')";
+      String xpath = extractXPathExpression(xqFile, inputFile, "out");
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -117,8 +118,8 @@ public class CondExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = "<out>" + buildResultString(rs) + "</out>";
-	
+	      actual = buildResultString(rs);
+	      
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -146,7 +147,7 @@ public class CondExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = extractXPathExpression(xqFile, inputFile, "out");
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -154,7 +155,7 @@ public class CondExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -174,7 +175,7 @@ public class CondExprTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/xq311A.xml";
       String xqFile = "/Queries/XQuery/Expressions/CondExpr/CondExpr013.xq";
       String resultFile = "/ExpectedTestResults/Expressions/CondExpr/CondExpr013.xml";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = getExpectedResult(resultFile, "out");
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -183,7 +184,7 @@ public class CondExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = extractXPathExpression(xqFile, inputFile, "out");
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -211,7 +212,7 @@ public class CondExprTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/xq311A.xml";
       String xqFile = "/Queries/XQuery/Expressions/CondExpr/CondExpr014.xq";
       String resultFile = "/ExpectedTestResults/Expressions/CondExpr/CondExpr014.xml";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = getExpectedResult(resultFile, "out");
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -220,7 +221,7 @@ public class CondExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = extractXPathExpression(xqFile, inputFile, "out");
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -248,7 +249,7 @@ public class CondExprTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/CondExpr/CondExpr015.xq";
       String resultFile = "/ExpectedTestResults/Expressions/CondExpr/CondExpr015.xml";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = getExpectedResult(resultFile, "out");
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -257,7 +258,7 @@ public class CondExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = extractXPathExpression(xqFile, inputFile, "out");
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -322,7 +323,7 @@ public class CondExprTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/CondExpr/CondExpr017.xq";
       String resultFile = "/ExpectedTestResults/Expressions/CondExpr/CondExpr017.xml";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = getExpectedResult(resultFile, "out");
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -331,7 +332,8 @@ public class CondExprTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = extractXPathExpression(xqFile, inputFile, "out");
+
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -354,7 +356,7 @@ public class CondExprTest extends AbstractPsychoPathTest {
 
    }
 
-   //If where branches return different valid types.
+//If where branches return different valid types.
    public void test_CondExpr018() throws Exception {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Expressions/CondExpr/CondExpr018.xq";

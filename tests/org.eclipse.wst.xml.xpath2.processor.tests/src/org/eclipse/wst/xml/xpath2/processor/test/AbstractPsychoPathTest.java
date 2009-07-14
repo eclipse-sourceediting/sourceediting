@@ -8,6 +8,7 @@
  * Contributors:
  *     David Carver (STAR) - initial API and implementation
  *     Jin Mingjan - bug 262765 -  extractXPathExpression and getExpectedResults
+ *     Jesper S Moller - bug 283214 - fix IF THEN ELSE parsing and update grammars 
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -217,6 +218,14 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		return content;
 	}
 
+	public String unwrapResult(String expectedResult, String elemName) {
+		return trimSurrounding(expectedResult, "<"+ elemName + ">", "</" + elemName + ">");
+	}
+	
+	protected String getExpectedResult(String resultFile, String elemName) {
+		return unwrapResult(getExpectedResult(resultFile), elemName);
+	}
+
 	public String extractXPathExpression(String xqFile, String inputFile) {
 		// get the xpath2 expr from xq file, first
 		char[] cbuf = new char[2048];//
@@ -247,13 +256,37 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 			//
 			assertTrue(content.lastIndexOf(S_COMMENT2) != -1);// assert to get
 			xpath2Expr = content.substring(content.lastIndexOf(S_COMMENT2) + 2)
-					.trim();
-
+					.trim();			
 			xqreader.close();
 			isxq.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		return xpath2Expr;
+	}
+
+	protected String extractXPathExpression(String xqFile, String inputFile,
+			String tagName) {
+		return unwrapQuery(extractXPathExpression(xqFile, inputFile), tagName);
+	}
+
+	protected String unwrapQuery(String xpath2Expr, String tag) {
+		String str = "<" + tag + ">";
+		String endStr = "</" + tag + ">";
+		String withoutTag = trimSurrounding(xpath2Expr, str, endStr);
+		if (withoutTag != xpath2Expr) {
+			// also trim off the braces { }
+			xpath2Expr = trimSurrounding(withoutTag, "{", "}");
+		}
+		return xpath2Expr;
+	}
+
+	protected String trimSurrounding(String xpath2Expr, String str, String endStr) {
+		int indexOfStart = xpath2Expr.indexOf(str);
+		int indexOfEnd = xpath2Expr.indexOf(endStr);
+		if (indexOfStart >= 0 && indexOfEnd >= 0) {
+			xpath2Expr = xpath2Expr.substring(indexOfStart + str.length(), indexOfEnd).trim(); 
 		}
 		return xpath2Expr;
 	}
