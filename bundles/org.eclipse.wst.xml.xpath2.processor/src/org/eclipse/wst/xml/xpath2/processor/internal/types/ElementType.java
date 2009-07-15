@@ -152,10 +152,8 @@ public class ElementType extends NodeType {
 	 */
 	@Override
 	public QName node_name() {
-		QName name = new QName(_value.getTagName());
-
-		name.set_namespace(_value.getNamespaceURI());
-
+		QName name = new QName(_value.getPrefix(), _value.getLocalName(), _value.getNamespaceURI());
+		
 		return name;
 	}
 

@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 276134 - improvements to schema aware primitive type support
  *                                 for attribute/element nodes  
+ *     Jesper Steen Moller - Fixed namespace awareness
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -22,7 +23,7 @@ import javax.xml.validation.Schema;
 import org.xml.sax.*;
 
 /**
- * Xerces loader class.
+ * Xerces loader class. The loading is always namespace aware.
  */
 public class XercesLoader implements DOMLoader {
 
@@ -64,7 +65,7 @@ public class XercesLoader implements DOMLoader {
 	}
 
 	/**
-	 * The Xerces loader loads the XML docuemnt
+	 * The Xerces loader loads the XML document
 	 * 
 	 * @param in
 	 *            is the input stream.
@@ -88,6 +89,7 @@ public class XercesLoader implements DOMLoader {
 		}
 		else {
 		  factory.setValidating(_validating);	
+		  factory.setNamespaceAware(true);
 		}
 
 		try {

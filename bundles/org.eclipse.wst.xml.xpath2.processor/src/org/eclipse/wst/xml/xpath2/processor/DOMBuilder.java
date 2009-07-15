@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Steen Moller - Doc fixes
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -18,10 +19,11 @@ import javax.xml.parsers.*;
 import org.xml.sax.*;
 
 /**
- * The DOM builder creates the string representation of an XML document.
+ * The DOM builder loads an DOM from an InputStream. The loading is always namespace aware.
  */
 public class DOMBuilder implements DOMLoader {
 	boolean _validating;
+	boolean _namespace_aware;
 
 	/**
 	 * Constructor for DOM builder.

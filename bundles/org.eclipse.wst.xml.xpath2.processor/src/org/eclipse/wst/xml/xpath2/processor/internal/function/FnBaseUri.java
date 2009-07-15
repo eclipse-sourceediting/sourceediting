@@ -18,6 +18,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.w3c.dom.Node;
 
 import java.util.*;
 
@@ -110,19 +111,18 @@ public class FnBaseUri extends Function {
 		  // depending on the node type, we get the base-uri for the node.
 		  // if base-uri property in DOM is null, we set the base-uri as string "null". This
 		  // avoids null pointer exception while comparing xs:anyURI values.
-	      if (att instanceof DocType) {
-	         DocType dType = (DocType)att;
-	         baseUri = new XSAnyURI(dType.node_value().getBaseURI() != null ? dType.node_value().getBaseURI() : "null");
-	      }
-	      else if (att instanceof ElementType) {
-	         ElementType elemType = (ElementType)att;
-	         baseUri = new XSAnyURI(elemType.node_value().getBaseURI() != null ? elemType.node_value().getBaseURI() : "null");
-	      }
-	      else if (att instanceof PIType) {
-	         PIType piType = (PIType)att;
-	         baseUri = new XSAnyURI(piType.node_value().getBaseURI() != null ? piType.node_value().getBaseURI() : "null");	
-	      }
-	        
+		
+		  if (att instanceof NodeType) {
+			  NodeType node = (NodeType) att;
+			  Node domNode = node.node_value();
+			  String buri = domNode.getBaseURI();
+			  if (buri != null) {
+				  baseUri = new XSAnyURI(buri);
+			  } else {
+				  baseUri = new XSAnyURI("null");
+			  }
+		  }
+		  	        
 	      if (baseUri != null) {
 	        rs.add(baseUri);	
 	      }

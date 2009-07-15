@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Steen Moller - Documented namespace awareness
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -26,7 +27,7 @@ public interface DOMLoader {
 	 *            is the input stream.
 	 * @throws DOMLoaderException
 	 *             DOM loader exception.
-	 * @return The loaded document.
+	 * @return The loaded document. The document is always loaded as namespace-aware
 	 */
 	public Document load(InputStream in) throws DOMLoaderException;
 
@@ -39,5 +40,4 @@ public interface DOMLoader {
 	// XXX: default is false ?! [document it ?]
 	public void set_validating(boolean val);
 
-	// XXX: set namespace aware!?
 }
