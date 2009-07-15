@@ -10,6 +10,7 @@
  *     Mukul Gandhi - bug 276134 - improvements to schema aware primitive type support
  *                                 for attribute/element nodes 
  *     David Carver - bug 262765 - fixed comparison on sequence range values.
+ *     Jesper S Moller - bug 283214 - fix eq for untyped atomic values
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -171,7 +172,7 @@ public class FsEq extends Function {
 			if (a instanceof XSUntypedAtomic)
 				a = new XSString(a.string_value());
 			if (b instanceof XSUntypedAtomic)
-				b = new XSString(a.string_value());
+				b = new XSString(b.string_value());
 		}
 
 		// rule c
