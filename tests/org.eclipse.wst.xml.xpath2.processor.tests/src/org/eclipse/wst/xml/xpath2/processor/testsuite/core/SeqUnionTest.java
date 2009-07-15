@@ -8,6 +8,7 @@
  * 
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
+ *     Jesper Steen Moller - Tweaked expected results to allow for XQuery/XPath differences.
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.testsuite.core;
 
@@ -571,6 +572,8 @@ public class SeqUnionTest extends AbstractPsychoPathTest {
       } catch (DynamicError ex) {
          actual = ex.code();
       }
+      
+      expectedResult = removeIrrelevantNamespaces(expectedResult);
 
       assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
@@ -609,7 +612,9 @@ public class SeqUnionTest extends AbstractPsychoPathTest {
       } catch (DynamicError ex) {
          actual = ex.code();
       }
-
+      
+      expectedResult = removeIrrelevantNamespaces(expectedResult);
+      
       assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
@@ -638,7 +643,7 @@ public class SeqUnionTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -648,10 +653,18 @@ public class SeqUnionTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
+      expectedResult = removeIrrelevantNamespaces(expectedResult);
+      
       assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
+
+private String removeIrrelevantNamespaces(String expectedResult) {
+	expectedResult = expectedResult.replaceAll(" xmlns:foo=\"http://www.example.com/foo\"", "");
+      expectedResult = expectedResult.replaceAll(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
+	return expectedResult;
+}
 
    //Arg: text node and text node.
    public void test_fn_union_node_args_018() throws Exception {

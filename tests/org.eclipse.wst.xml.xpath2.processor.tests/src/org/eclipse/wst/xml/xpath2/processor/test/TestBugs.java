@@ -219,12 +219,13 @@ public class TestBugs extends AbstractPsychoPathTest {
 	public void testBaseUriBug() throws Exception {
 		// Bug 274725
 
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder = dbf.newDocumentBuilder();
+		//DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		//DocumentBuilder docBuilder = dbf.newDocumentBuilder();
+		loadDOMDocument(new URL("http://www.w3schools.com/xml/note.xml"));
 
 		// for testing this bug, we read the XML document from the web.
 		// this ensures, that base-uri property of DOM is not null.
-		domDoc = docBuilder.parse("http://www.w3schools.com/xml/note.xml");
+		//domDoc = docBuilder.parse("http://www.w3schools.com/xml/note.xml");
 
 		// we pass XSModel as null for this test case. Otherwise, we would
 		// get an exception.
@@ -246,7 +247,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		String actual = result.string_value();
 
-		assertEquals("true", actual);
+		assertEquals("false", actual);
 	}
 
 	public void testDocumentUriBug() throws Exception {
