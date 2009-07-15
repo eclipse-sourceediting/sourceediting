@@ -26,7 +26,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/fsx_NS.xml";
       String xqFile = "/Queries/XQuery/Expressions/XQueryComment/XQueryComment002.xq";
       String resultFile = "/ExpectedTestResults/Expressions/XQueryComment/XQueryComment002.xml";
-      String expectedResult = "<result>" + getExpectedResult(resultFile) + "</result>";
+      String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -37,7 +37,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       DynamicContext dc = setupDynamicContext(schema);
       dc.add_namespace("fsm", "http://www.example.com/filesystem");
 
-      String xpath = "//fsm:Folder/fsm:File/fsm:FileName";
+      String xpath = "(: comment :)\n($input-context//fsm:Folder)[1]/fsm:File[1]/fsm:FileName";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -56,7 +56,7 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -114,8 +114,9 @@ public class XQueryCommentTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.add_namespace("fsm", "http://www.example.com/filesystem");
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "if (:test:)(:t2:)(:t3:) ($input-context/fsm:MyComputer) then \"true\" else \"false\"";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
