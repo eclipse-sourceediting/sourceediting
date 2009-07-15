@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -663,6 +663,14 @@ public final class CSSSyntaxColoringPage extends PreferencePage implements IWork
 			styles.add(IStyleConstantsCSS.NORMAL);
 			styles.add(IStyleConstantsCSS.ATMARK_RULE);
 			styles.add(IStyleConstantsCSS.SELECTOR);
+			styles.add(IStyleConstantsCSS.UNIVERSAL);
+			styles.add(IStyleConstantsCSS.SELECTOR_CLASS);
+			styles.add(IStyleConstantsCSS.ID);
+			styles.add(IStyleConstantsCSS.PSEUDO);
+			styles.add(IStyleConstantsCSS.ATTRIBUTE_DELIM);
+			styles.add(IStyleConstantsCSS.ATTRIBUTE_NAME);
+			styles.add(IStyleConstantsCSS.ATTRIBUTE_OPERATOR);
+			styles.add(IStyleConstantsCSS.ATTRIBUTE_VALUE);
 			styles.add(IStyleConstantsCSS.MEDIA);
 			styles.add(IStyleConstantsCSS.COMMENT);
 			styles.add(IStyleConstantsCSS.PROPERTY_NAME);
@@ -786,18 +794,21 @@ public final class CSSSyntaxColoringPage extends PreferencePage implements IWork
 		fContextToStyleMap.put(CSSRegionContexts.CSS_PAGE_SELECTOR, IStyleConstantsCSS.MEDIA);
 
 		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_ELEMENT_NAME, IStyleConstantsCSS.SELECTOR);
-		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_UNIVERSAL, IStyleConstantsCSS.SELECTOR);
-		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_PSEUDO, IStyleConstantsCSS.SELECTOR);
-		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_CLASS, IStyleConstantsCSS.SELECTOR);
-		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_ID, IStyleConstantsCSS.SELECTOR);
+		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_UNIVERSAL, IStyleConstantsCSS.UNIVERSAL);
+
+		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_PSEUDO, IStyleConstantsCSS.PSEUDO);
+		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_CLASS, IStyleConstantsCSS.SELECTOR_CLASS);
+		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_ID, IStyleConstantsCSS.ID);
 
 		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_COMBINATOR, IStyleConstantsCSS.SELECTOR);
 		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_SEPARATOR, IStyleConstantsCSS.SELECTOR);
-		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_START, IStyleConstantsCSS.SELECTOR);
-		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_END, IStyleConstantsCSS.SELECTOR);
-		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_NAME, IStyleConstantsCSS.SELECTOR);
-		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_VALUE, IStyleConstantsCSS.SELECTOR);
-		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_OPERATOR, IStyleConstantsCSS.SELECTOR);
+
+		/* Attribute selector */
+		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_START, IStyleConstantsCSS.ATTRIBUTE_DELIM);
+		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_END, IStyleConstantsCSS.ATTRIBUTE_DELIM);
+		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_NAME, IStyleConstantsCSS.ATTRIBUTE_NAME);
+		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_VALUE, IStyleConstantsCSS.ATTRIBUTE_VALUE);
+		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_OPERATOR, IStyleConstantsCSS.ATTRIBUTE_OPERATOR);
 
 		fContextToStyleMap.put(CSSRegionContexts.CSS_DECLARATION_PROPERTY, IStyleConstantsCSS.PROPERTY_NAME);
 		fContextToStyleMap.put(CSSRegionContexts.CSS_DECLARATION_VALUE_IDENT, IStyleConstantsCSS.PROPERTY_VALUE);
@@ -823,6 +834,14 @@ public final class CSSSyntaxColoringPage extends PreferencePage implements IWork
 		fStyleToDescriptionMap.put(IStyleConstantsCSS.NORMAL, CSSUIMessages.PrefsLabel_ColorNormal);//$NON-NLS-1$
 		fStyleToDescriptionMap.put(IStyleConstantsCSS.ATMARK_RULE, CSSUIMessages.PrefsLabel_ColorAtmarkRule);//$NON-NLS-1$
 		fStyleToDescriptionMap.put(IStyleConstantsCSS.SELECTOR, CSSUIMessages.PrefsLabel_ColorSelector);//$NON-NLS-1$
+		fStyleToDescriptionMap.put(IStyleConstantsCSS.UNIVERSAL, CSSUIMessages.PrefsLabel_ColorUniversal);//$NON-NLS-1$
+		fStyleToDescriptionMap.put(IStyleConstantsCSS.ID, CSSUIMessages.PrefsLabel_ColorId);//$NON-NLS-1$
+		fStyleToDescriptionMap.put(IStyleConstantsCSS.PSEUDO, CSSUIMessages.PrefsLabel_ColorPseudoClass);//$NON-NLS-1$
+		fStyleToDescriptionMap.put(IStyleConstantsCSS.SELECTOR_CLASS, CSSUIMessages.PrefsLabel_ColorClass);//$NON-NLS-1$
+		fStyleToDescriptionMap.put(IStyleConstantsCSS.ATTRIBUTE_DELIM, CSSUIMessages.PrefsLabel_ColorAttrDelimiter);//$NON-NLS-1$
+		fStyleToDescriptionMap.put(IStyleConstantsCSS.ATTRIBUTE_NAME, CSSUIMessages.PrefsLabel_ColorAttrName);//$NON-NLS-1$
+		fStyleToDescriptionMap.put(IStyleConstantsCSS.ATTRIBUTE_OPERATOR, CSSUIMessages.PrefsLabel_ColorAttrOperator);//$NON-NLS-1$
+		fStyleToDescriptionMap.put(IStyleConstantsCSS.ATTRIBUTE_VALUE, CSSUIMessages.PrefsLabel_ColorAttrValue);//$NON-NLS-1$
 		fStyleToDescriptionMap.put(IStyleConstantsCSS.MEDIA, CSSUIMessages.PrefsLabel_ColorMedia);//$NON-NLS-1$
 		fStyleToDescriptionMap.put(IStyleConstantsCSS.COMMENT, CSSUIMessages.PrefsLabel_ColorComment);//$NON-NLS-1$
 		fStyleToDescriptionMap.put(IStyleConstantsCSS.PROPERTY_NAME, CSSUIMessages.PrefsLabel_ColorPropertyName);//$NON-NLS-1$

@@ -24,13 +24,33 @@ public class CSSUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		// CSS Style Preferences
 		String NOBACKGROUNDBOLD = " | null | false"; //$NON-NLS-1$
 		String JUSTITALIC = " | null | false | true"; //$NON-NLS-1$
+		String JUSTBOLD = " | null | true";
 		String styleValue = "null" + NOBACKGROUNDBOLD; //$NON-NLS-1$
 		store.setDefault(IStyleConstantsCSS.NORMAL, styleValue);
 
 		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsCSS.ATMARK_RULE, 63, 127, 127) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsCSS.ATMARK_RULE, styleValue);
-		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsCSS.SELECTOR, 63, 127, 127) + NOBACKGROUNDBOLD;
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsCSS.SELECTOR, 63, 127, 127) + JUSTBOLD;
 		store.setDefault(IStyleConstantsCSS.SELECTOR, styleValue);
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsCSS.UNIVERSAL, 63, 127, 127) + NOBACKGROUNDBOLD;
+		store.setDefault(IStyleConstantsCSS.UNIVERSAL, styleValue);
+
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsCSS.SELECTOR_CLASS, 63, 127, 127) + JUSTITALIC;
+		store.setDefault(IStyleConstantsCSS.SELECTOR_CLASS, styleValue);
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsCSS.ID, 63, 127, 127) + JUSTITALIC;
+		store.setDefault(IStyleConstantsCSS.ID, styleValue);
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsCSS.PSEUDO, 63, 127, 127) + JUSTITALIC;
+		store.setDefault(IStyleConstantsCSS.PSEUDO, styleValue);
+
+		/* Attribute selector */
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsCSS.ATTRIBUTE_DELIM, 63, 127, 127) + NOBACKGROUNDBOLD;
+		store.setDefault(IStyleConstantsCSS.ATTRIBUTE_DELIM, styleValue);
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsCSS.ATTRIBUTE_NAME, 63, 127, 127) + NOBACKGROUNDBOLD;
+		store.setDefault(IStyleConstantsCSS.ATTRIBUTE_NAME, styleValue);
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsCSS.ATTRIBUTE_OPERATOR, 63, 127, 127) + NOBACKGROUNDBOLD;
+		store.setDefault(IStyleConstantsCSS.ATTRIBUTE_OPERATOR, styleValue);
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsCSS.ATTRIBUTE_VALUE, 63, 127, 127) + NOBACKGROUNDBOLD;
+		store.setDefault(IStyleConstantsCSS.ATTRIBUTE_VALUE, styleValue);
 
 		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsCSS.MEDIA, 42, 0, 225) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsCSS.MEDIA, styleValue);

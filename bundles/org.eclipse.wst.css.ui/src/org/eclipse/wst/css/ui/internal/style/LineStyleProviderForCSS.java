@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -86,18 +86,21 @@ public class LineStyleProviderForCSS extends AbstractLineStyleProvider implement
 		fColorTypes.put(CSSRegionContexts.CSS_PAGE_SELECTOR, IStyleConstantsCSS.MEDIA);
 
 		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_ELEMENT_NAME, IStyleConstantsCSS.SELECTOR);
-		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_UNIVERSAL, IStyleConstantsCSS.SELECTOR);
-		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_PSEUDO, IStyleConstantsCSS.SELECTOR);
-		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_CLASS, IStyleConstantsCSS.SELECTOR);
-		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_ID, IStyleConstantsCSS.SELECTOR);
+		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_UNIVERSAL, IStyleConstantsCSS.UNIVERSAL);
+
+		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_PSEUDO, IStyleConstantsCSS.PSEUDO);
+		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_CLASS, IStyleConstantsCSS.SELECTOR_CLASS);
+		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_ID, IStyleConstantsCSS.ID);
 
 		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_COMBINATOR, IStyleConstantsCSS.SELECTOR);
 		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_SEPARATOR, IStyleConstantsCSS.SELECTOR);
-		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_START, IStyleConstantsCSS.SELECTOR);
-		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_END, IStyleConstantsCSS.SELECTOR);
-		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_NAME, IStyleConstantsCSS.SELECTOR);
-		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_VALUE, IStyleConstantsCSS.SELECTOR);
-		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_OPERATOR, IStyleConstantsCSS.SELECTOR);
+
+		/* Attribute selector */
+		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_START, IStyleConstantsCSS.ATTRIBUTE_DELIM);
+		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_END, IStyleConstantsCSS.ATTRIBUTE_DELIM);
+		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_NAME, IStyleConstantsCSS.ATTRIBUTE_NAME);
+		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_VALUE, IStyleConstantsCSS.ATTRIBUTE_VALUE);
+		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_OPERATOR, IStyleConstantsCSS.ATTRIBUTE_OPERATOR);
 
 		fColorTypes.put(CSSRegionContexts.CSS_DECLARATION_PROPERTY, IStyleConstantsCSS.PROPERTY_NAME);
 		fColorTypes.put(CSSRegionContexts.CSS_DECLARATION_VALUE_IDENT, IStyleConstantsCSS.PROPERTY_VALUE);
@@ -139,12 +142,28 @@ public class LineStyleProviderForCSS extends AbstractLineStyleProvider implement
 				styleKey = IStyleConstantsCSS.MEDIA;
 			} else if (IStyleConstantsCSS.NORMAL.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.NORMAL;
+			} else if (IStyleConstantsCSS.ATTRIBUTE_DELIM.equals(prefKey)) {
+				styleKey = IStyleConstantsCSS.ATTRIBUTE_DELIM;
+			} else if (IStyleConstantsCSS.ATTRIBUTE_NAME.equals(prefKey)) {
+				styleKey = IStyleConstantsCSS.ATTRIBUTE_NAME;
+			} else if (IStyleConstantsCSS.ATTRIBUTE_OPERATOR.equals(prefKey)) {
+				styleKey = IStyleConstantsCSS.ATTRIBUTE_OPERATOR;
+			} else if (IStyleConstantsCSS.ATTRIBUTE_VALUE.equals(prefKey)) {
+				styleKey = IStyleConstantsCSS.ATTRIBUTE_VALUE;
 			} else if (IStyleConstantsCSS.PROPERTY_NAME.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.PROPERTY_NAME;
 			} else if (IStyleConstantsCSS.PROPERTY_VALUE.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.PROPERTY_VALUE;
 			} else if (IStyleConstantsCSS.SELECTOR.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.SELECTOR;
+			} else if (IStyleConstantsCSS.UNIVERSAL.equals(prefKey)) {
+				styleKey = IStyleConstantsCSS.UNIVERSAL;
+			} else if (IStyleConstantsCSS.ID.equals(prefKey)) {
+				styleKey = IStyleConstantsCSS.ID;
+			} else if (IStyleConstantsCSS.PSEUDO.equals(prefKey)) {
+				styleKey = IStyleConstantsCSS.PSEUDO;
+			} else if (IStyleConstantsCSS.SELECTOR_CLASS.equals(prefKey)) {
+				styleKey = IStyleConstantsCSS.SELECTOR_CLASS;
 			} else if (IStyleConstantsCSS.SEMI_COLON.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.SEMI_COLON;
 			} else if (IStyleConstantsCSS.STRING.equals(prefKey)) {
@@ -187,6 +206,14 @@ public class LineStyleProviderForCSS extends AbstractLineStyleProvider implement
 		addTextAttribute(IStyleConstantsCSS.PROPERTY_NAME);
 		addTextAttribute(IStyleConstantsCSS.PROPERTY_VALUE);
 		addTextAttribute(IStyleConstantsCSS.SELECTOR);
+		addTextAttribute(IStyleConstantsCSS.UNIVERSAL);
+		addTextAttribute(IStyleConstantsCSS.ATTRIBUTE_DELIM);
+		addTextAttribute(IStyleConstantsCSS.ATTRIBUTE_NAME);
+		addTextAttribute(IStyleConstantsCSS.ATTRIBUTE_OPERATOR);
+		addTextAttribute(IStyleConstantsCSS.ATTRIBUTE_VALUE);
+		addTextAttribute(IStyleConstantsCSS.ID);
+		addTextAttribute(IStyleConstantsCSS.SELECTOR_CLASS);
+		addTextAttribute(IStyleConstantsCSS.PSEUDO);
 		addTextAttribute(IStyleConstantsCSS.SEMI_COLON);
 		addTextAttribute(IStyleConstantsCSS.STRING);
 		addTextAttribute(IStyleConstantsCSS.URI);

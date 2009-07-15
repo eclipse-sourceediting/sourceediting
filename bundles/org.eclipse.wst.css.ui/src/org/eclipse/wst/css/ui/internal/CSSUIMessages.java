@@ -55,6 +55,10 @@ public class CSSUIMessages extends NLS {
 	public static String PrefsLabel_ColorNormal;
 	public static String PrefsLabel_ColorAtmarkRule;
 	public static String PrefsLabel_ColorSelector;
+	public static String PrefsLabel_ColorUniversal;
+	public static String PrefsLabel_ColorId;
+	public static String PrefsLabel_ColorPseudoClass;
+	public static String PrefsLabel_ColorClass;
 	public static String PrefsLabel_ColorMedia;
 	public static String PrefsLabel_ColorComment;
 	public static String PrefsLabel_ColorPropertyName;
@@ -65,6 +69,10 @@ public class CSSUIMessages extends NLS {
 	public static String PrefsLabel_ColorSemiColon;
 	public static String PrefsLabel_ColorCurlyBrace;
 	public static String PrefsLabel_ColorError;
+	public static String PrefsLabel_ColorAttrDelimiter;
+	public static String PrefsLabel_ColorAttrName;
+	public static String PrefsLabel_ColorAttrValue;
+	public static String PrefsLabel_ColorAttrOperator;
 	public static String SortAction_0;
 	public static String _UI_WIZARD_NEW_TITLE;
 	public static String _UI_WIZARD_NEW_HEADING;
