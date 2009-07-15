@@ -9,6 +9,7 @@
  *     David Carver (STAR) - initial API and implementation
  *     Jin Mingjan - bug 262765 -  extractXPathExpression and getExpectedResults
  *     Jesper S Moller - bug 283214 - fix IF THEN ELSE parsing and update grammars
+ *     Jesper S Moller - bug 283214 - fix XML result serialization
  *     Jesper S Moller - bug 283404 - fixed locale  
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
@@ -341,12 +342,18 @@ public class AbstractPsychoPathTest extends XMLTestCase {
         
 		String actual = new String();
 		Iterator<NodeType> iterator = rs.iterator();
+		boolean queueSpace = false;
 		while (iterator.hasNext()) {
 			AnyType aat = iterator.next();
 			if (aat instanceof NodeType) {
 				NodeType nodeType = (NodeType) aat;
 				Node node = nodeType.node_value();
 				serializer.write(node, outputText);
+				queueSpace = false;
+			} else {
+				if (queueSpace) outputText.getByteStream().write(32);
+				outputText.getByteStream().write(aat.string_value().getBytes("UTF-8"));
+				queueSpace = true;
 			}
 		}
 

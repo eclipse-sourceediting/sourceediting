@@ -165,9 +165,11 @@ public class CondExprTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
-        
+      // trim the expected result to only contain the attribute name:
+      // <out name="axolotl"/>  -> axolotl
+      expectedResult = trimSurrounding(expectedResult, "<out name=\"", "\"/>");
 
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
    }
 
    //Test expression has another if expression.
@@ -303,7 +305,7 @@ public class CondExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -341,7 +343,7 @@ public class CondExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
