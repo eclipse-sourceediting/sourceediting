@@ -231,7 +231,7 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 	 */
 	public boolean eq(AnyType arg) throws DynamicError {
 		XSDuration val = (XSDuration) NumericType.get_single_type(arg,
-				XSDayTimeDuration.class);
+				XSDuration.class);
 
 		return value() == val.value();
 	}

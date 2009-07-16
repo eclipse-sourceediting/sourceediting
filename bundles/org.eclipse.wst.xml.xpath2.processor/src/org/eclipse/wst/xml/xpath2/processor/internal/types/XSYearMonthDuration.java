@@ -278,10 +278,16 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @throws DynamicError
 	 */
 	public boolean eq(AnyType arg) throws DynamicError {
-		XSYearMonthDuration val = (XSYearMonthDuration) NumericType
-				.get_single_type(arg, XSYearMonthDuration.class);
-
-		return monthValue() == val.monthValue();
+		if (arg instanceof XSDayTimeDuration) {
+			XSDayTimeDuration dayTimeDuration = (XSDayTimeDuration)arg;
+			return (monthValue() == 0 && dayTimeDuration.value() == 0.0);
+		} else if (arg instanceof XSYearMonthDuration) {
+			XSYearMonthDuration yearMonthDuration = (XSYearMonthDuration)arg;
+			return monthValue() == yearMonthDuration.monthValue();
+		}
+		XSDuration val = (XSDuration) NumericType
+				.get_single_type(arg, XSDuration.class);
+		return super.eq(val);
 	}
 
 	/**
