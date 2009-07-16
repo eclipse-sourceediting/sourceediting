@@ -612,6 +612,8 @@ public class SeqExceptTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
+      expectedResult = removeIrrelevantNamespaces(expectedResult);
+
       assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 

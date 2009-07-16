@@ -660,13 +660,7 @@ public class SeqUnionTest extends AbstractPsychoPathTest {
 
    }
 
-private String removeIrrelevantNamespaces(String expectedResult) {
-	expectedResult = expectedResult.replaceAll(" xmlns:foo=\"http://www.example.com/foo\"", "");
-      expectedResult = expectedResult.replaceAll(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
-	return expectedResult;
-}
-
-   //Arg: text node and text node.
+//Arg: text node and text node.
    public void test_fn_union_node_args_018() throws Exception {
       String inputFile = "/TestSources/atomic.xml";
       String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqUnion/fn-union-node-args-018.xq";

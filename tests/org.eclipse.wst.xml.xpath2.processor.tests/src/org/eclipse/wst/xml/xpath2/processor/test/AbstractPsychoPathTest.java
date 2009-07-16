@@ -188,7 +188,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		try {
 			isrf = bundle.getEntry(resultFile).openStream();
 			BufferedReader rfreader = new BufferedReader(new InputStreamReader(
-					isrf));
+					isrf, "UTF-8"));
 			// XXX:assume char buffer 2048 is long enough;1024 maybe enough
 			// Exception: Axes085, NodeTest003/04/05,...
 			int bufferLength = 2048;
@@ -377,6 +377,12 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 
 		actual = actual.replace("<?xml version=\"1.0\" encoding=\"UTF-16\"?>", "");
 		return actual.trim();
+	}
+
+	protected String removeIrrelevantNamespaces(String expectedResult) {
+		expectedResult = expectedResult.replaceAll(" xmlns:foo=\"http://www.example.com/foo\"", "");
+	      expectedResult = expectedResult.replaceAll(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
+		return expectedResult;
 	}
 
 
