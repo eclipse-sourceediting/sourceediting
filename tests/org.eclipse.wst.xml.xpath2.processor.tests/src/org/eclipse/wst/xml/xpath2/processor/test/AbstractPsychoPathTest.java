@@ -94,7 +94,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	protected void load2DOMDocument(URL fileURL, URL fileURL2) throws IOException,
 			DOMLoaderException {
 		InputStream is = fileURL.openStream();
-		InputStream is2 = fileURL.openStream();
+		InputStream is2 = fileURL2.openStream();
 		
 		DOMLoader domloader = new XercesLoader();
 		domloader.set_validating(false);

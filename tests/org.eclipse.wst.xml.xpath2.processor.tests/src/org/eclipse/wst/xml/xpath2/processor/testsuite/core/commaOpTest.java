@@ -324,11 +324,14 @@ public class commaOpTest extends AbstractPsychoPathTest {
    //Simple sequence expression resulting by quering string data from multiple xml source.
    public void test_sequenceexpressionhc9() throws Exception {
       String inputFile = "/TestSources/works.xml";
+      String inputFile2 = "/TestSources/staff.xml";
       String xqFile = "/Queries/XQuery/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc9.xq";
       String resultFile = "/ExpectedTestResults/Expressions/SeqExpr/ConstructSeq/commaOp/sequenceexpressionhc9.txt";
-      String expectedResult = "<result>" + getExpectedResult(resultFile) + "</result>";
+      String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
-      loadDOMDocument(fileURL);
+      URL fileURL2 = bundle.getEntry(inputFile2);
+      load2DOMDocument(fileURL, fileURL2);
+      
       
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
@@ -343,7 +346,7 @@ public class commaOpTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = "<result>" + buildXMLResultString(rs) + "</result>";
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -353,7 +356,7 @@ public class commaOpTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -1861,13 +1864,13 @@ public class commaOpTest extends AbstractPsychoPathTest {
 	      ResultSequence rs = eval.evaluate(path);
          
           actual = buildXMLResultString(rs);
-          Iterator<NodeType> iterator = rs.iterator();
-          while (iterator.hasNext()) {
-			AnyType aat = iterator.next();
-			if (!(aat instanceof NodeType)) {
-				actual += aat.string_value();
-			}
-		}
+//          Iterator<NodeType> iterator = rs.iterator();
+//          while (iterator.hasNext()) {
+//			AnyType aat = iterator.next();
+//			if (!(aat instanceof NodeType)) {
+//				actual += aat.string_value();
+//			}
+//		}
 
 	
       } catch (XPathParserException ex) {
