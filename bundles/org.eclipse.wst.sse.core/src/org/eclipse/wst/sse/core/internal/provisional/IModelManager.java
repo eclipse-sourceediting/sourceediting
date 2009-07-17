@@ -26,19 +26,54 @@ import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 
-
 /**
- * Responsible for providing a set of APIs for creating a new model manager,
- * for managing (add or remove) model loaders and model dumpers, and for
- * managing (get, release, save, and save as) models.
+ * <p>
+ * Provides APIs for managing (get, release, save, and save as) SSE Structured
+ * Models.
+ * </p>
+ * <p>
+ * Structured Models created from an implementor of this interface can be
+ * either managed or unmanaged. Managed models are shared using reference
+ * counts, so until that count has been decremented to zero, the model will
+ * continue to exist in memory. When managed, models can be looked up using
+ * their IDs or their IStructuredDocuments, which can be advantageous when
+ * building on APIs that aren't specifically designed for SSE (such as those
+ * revolving around IDocuments). Unmanaged models offer no such features, and
+ * are largely used for tasks where their contents are ephemeral, such as for
+ * populating a source viewer with the right syntax colors.
+ * </p>
+ * <p>
+ * There are two types of access used when retrieving a model from the model
+ * manager: read or edit. The contents of the model can be modified regardless
+ * of which access type is used, but any client who gets a model for edit is
+ * explicitly declaring that they are interested in saving those changed
+ * contents. The edit and read reference counts are visible to everyone, as
+ * are convenience methods for determining whether a managed model is shared
+ * among multiple clients accessing it for read or edit.
+ * </p>
+ * <p>
+ * Managed models whose contents are "dirty" with read and edit counts above
+ * zero will be reverted to the on-disk content if the edit count drops to
+ * zero while the read count remains above zero.
+ * </p>
+ * <p>
  * 
  * @noimplement This interface is not intended to be implemented by clients.
- * 
- * @see StructuredModelManger
+ *              </p>
+ *              <p>
+ * @see StructuredModelManger</p>
  */
 public interface IModelManager {
 
+	/**
+	 * A fixed ID used for models which were created as duplicates of existing
+	 * models
+	 */
 	public final static String DUPLICATED_MODEL = "org.eclipse.wst.sse.core.IModelManager.DUPLICATED_MODEL"; //$NON-NLS-1$
+
+	/**
+	 * A fixed ID used for unmanaged models
+	 */
 	public final static String UNMANAGED_MODEL = "org.eclipse.wst.sse.core.IModelManager.UNMANAGED_MODEL"; //$NON-NLS-1$
 
 	/**
@@ -48,22 +83,36 @@ public interface IModelManager {
 	 */
 	public String calculateId(IFile file);
 
+	/**
+	 * Copies a model with the old id 
+	 * @param oldId - the old model's ID
+	 * @param newId - the new model's ID
+	 * @return the new model
+	 * @throws ResourceInUse if the given new ID is already in use by a managed model
+	 */
 	IStructuredModel copyModelForEdit(String oldId, String newId) throws ResourceInUse;
 
 	/**
-	 * createNewInstance is similar to clone, except the new instance has no
-	 * content. Note: this produces an unmanaged model, for temporary use. If
-	 * a true shared model is desired, use "copy".
+	 * Creates a new, but empty, unmanaged model of the same kind as the one
+	 * given. For a managed model with the same contents, use "copy".
+	 * 
+	 * @param model
+	 * @return
+	 * @throws IOException
 	 */
 	public IStructuredModel createNewInstance(IStructuredModel model) throws IOException;
 
 	/**
 	 * Factory method, since a proper IStructuredDocument must have a proper
-	 * parser assigned. Note: its assume that IFile does not actually exist as
-	 * a resource yet. If it does, ResourceAlreadyExists exception is thrown.
-	 * If the resource does already exist, then createStructuredDocumentFor is
-	 * the right API to use.
+	 * parser assigned. If the resource does already exist, then
+	 * createStructuredDocumentFor is the right API to use.
 	 * 
+	 * @param iFile
+	 * @return
+	 * @throws ResourceAlreadyExists
+	 *             if the IFile already exists
+	 * @throws IOException
+	 * @throws CoreException
 	 */
 	IStructuredDocument createNewStructuredDocumentFor(IFile iFile) throws ResourceAlreadyExists, IOException, CoreException;
 
@@ -76,9 +125,13 @@ public interface IModelManager {
 	IStructuredDocument createStructuredDocumentFor(IFile iFile) throws IOException, CoreException;
 
 	/**
-	 * Conveience method, since a proper IStructuredDocument must have a
+	 * Convenience method, since a proper IStructuredDocument must have a
 	 * proper parser assigned. It should only be used when an empty
 	 * structuredDocument is needed. Otherwise, use IFile form.
+	 * 
+	 * @param contentTypeId
+	 * @return a structured document with the correct parsing setup for the
+	 *         given content type, or null if one could not be created
 	 */
 	IStructuredDocument createStructuredDocumentFor(String contentTypeId);
 
@@ -93,67 +146,137 @@ public interface IModelManager {
 	 */
 	IStructuredDocument createStructuredDocumentFor(String filename, InputStream inputStream, URIResolver resolver) throws IOException;
 
+	/**
+	 * @deprecated - clients should convert the InputStream into text themselves
+	 *             and then use the version of this method taking a String for its
+	 *             content
+	 */
 	IStructuredDocument createStructuredDocumentFor(String filename, InputStream inputStream, URIResolver resolver, String ianaEncodingName) throws IOException;
 
+	/**
+	 * @param filename
+	 * @param content
+	 * @param resolver
+	 * @return a structured document with the correct parsing setup for the
+	 *         given filename, or null if one could not be created
+	 * @throws IOException
+	 */
 	IStructuredDocument createStructuredDocumentFor(String filename, String content, URIResolver resolver) throws IOException;
 
 	/**
-	 * Conveience method. It depends on the loaders newModel method to return
-	 * an appropriate StrucuturedModel appropriately initialized.
+	 * Creates and returns an unmanaged model populated with the given IFile's
+	 * contents
+	 * 
+	 * @param iFile
+	 * @return a structured model, or null if one could not be created
+	 * @throws IOException
+	 * @throws CoreException
 	 */
 	IStructuredModel createUnManagedStructuredModelFor(IFile iFile) throws IOException, CoreException;
 
 	/**
-	 * Conveience method. It depends on the loaders newModel method to return
+	 * Convenience method. It depends on the loader's newModel method to return
 	 * an appropriate StrucuturedModel appropriately initialized.
+	 * 
+	 * @param contentTypeId
+	 * @return a structured model for the given content type, or null if one could not be created
 	 */
 	IStructuredModel createUnManagedStructuredModelFor(String contentTypeId);
 
+	/**
+	 * @deprecated
+	 */
 	IStructuredModel createUnManagedStructuredModelFor(String contentTypeId, URIResolver resolver);
 
 	/**
-	 * Note: users of this 'model' must still release it when finished.
-	 * Returns null if there's not a model corresponding to document.
+	 * Note: callers of this method must still release the model when finished.
+	 * 
+	 * @param document
+	 * @return the structured model containing the give document, incrementing
+	 *         its edit count, or null if there is not a model corresponding
+	 *         to this document.
 	 */
 	IStructuredModel getExistingModelForEdit(IDocument document);
 
-	public IStructuredModel getExistingModelForEdit(IFile iFile);
+	/**
+	 * @param file
+	 * @return the structured model for the given file, incrementing its edit
+	 *         count, or null if one does not already exist for this file.
+	 */
+	IStructuredModel getExistingModelForEdit(IFile file);
 
 	/**
-	 * This is similar to the getModel method, except this method does not
-	 * create a model. This method does increment the reference count (if it
-	 * exists). If the model does not already exist in the cache of models,
-	 * null is returned.
+	 * @param id
+	 * @return the structured model with the given ID, incrementing its edit
+	 *         count, or null if one does not already exist for this ID
 	 */
 	public IStructuredModel getExistingModelForEdit(Object id);
 
 	/**
-	 * Note: users of this 'model' must still release it when finished.
-	 * Returns null if there's not a model corresponding to document.
+	 * Note: callers of this method must still release the model when finished.
+	 * 
+	 * @param document
+	 * @return the structured model containing the give document, incrementing
+	 *         its read count, or null if there is not a model corresponding
+	 *         to this document.
 	 */
 	IStructuredModel getExistingModelForRead(IDocument document);
 
+	/**
+	 * @param file
+	 * @return the structured model for the given file, incrementing its read
+	 *         count, or null if one does not already exist for this file.
+	 */
 	public IStructuredModel getExistingModelForRead(IFile iFile);
 
 	/**
-	 * This is similar to the getModel method, except this method does not
-	 * create a model. This method does increment the reference count (if it
-	 * exists). If the model does not already exist in the cache of models,
-	 * null is returned.
+	 * @param id
+	 * @return the structured model with the given ID, incrementing its edit
+	 *         count, or null if one does not already exist for this ID
 	 */
 	public IStructuredModel getExistingModelForRead(Object id);
 
+	/**
+	 * @deprecated - internal information
+	 */
 	public Enumeration getExistingModelIds();
 
+	/**
+	 * Returns a structured model for the given file. If one does not already
+	 * exists, one will be created with an edit count of 1. If one already
+	 * exists, its edit count will be incremented before it is returned.
+	 * 
+	 * @param iFile
+	 * @return a structured model for the given file, or null if one could not
+	 *         be found or created
+	 */
 	public IStructuredModel getModelForEdit(IFile iFile) throws IOException, CoreException;
 
-	/*
-	 * @deprecated - encoding is handled automatically
+	/**
+	 * @deprecated - encoding is handled automatically based on the file's
+	 *             contents or user preferences
 	 */
 	public IStructuredModel getModelForEdit(IFile iFile, EncodingRule encodingRule) throws UnsupportedEncodingException, IOException, CoreException;
 
+	/**
+	 * @deprecated - Encoding and the line delimiter used are handled
+	 *             automatically based on the file's contents or user
+	 *             preferences.
+	 */
 	public IStructuredModel getModelForEdit(IFile iFile, String encoding, String lineDelimiter) throws UnsupportedEncodingException, IOException, CoreException;
 
+	/**
+	 * Returns a structured model for the given document. If one does not
+	 * already exists, one will be created with an edit count of 1. If one
+	 * already exists, its edit count will be incremented before it is
+	 * returned. This method is intended only to interact with documents
+	 * contained within File Buffers.
+	 * 
+	 * @param textFileBufferDocument
+	 * @return a structured model for the given document, or null if there is
+	 *         insufficient information known about the document instance to
+	 *         do so
+	 */
 	public IStructuredModel getModelForEdit(IStructuredDocument textFileBufferDocument);
 
 	/*
@@ -162,21 +285,45 @@ public interface IModelManager {
 	 */
 	public IStructuredModel getModelForEdit(String id, InputStream inStream, URIResolver resolver) throws UnsupportedEncodingException, IOException;
 
+	/**
+	 * Returns a structured model for the given file. If one does not already
+	 * exists, one will be created with a read count of 1. If one already
+	 * exists, its read count will be incremented before it is returned.
+	 * 
+	 * @param iFile
+	 * @return a structured model for the given file, or null if one could not
+	 *         be found or created
+	 */
 	public IStructuredModel getModelForRead(IFile iFile) throws IOException, CoreException;
 
-	/*
-	 * @deprecated - encoding is handled automatically
+	/**
+	 * @deprecated - encoding is handled automatically based on the file's
+	 *             contents or user preferences
 	 */
 	public IStructuredModel getModelForRead(IFile iFile, EncodingRule encodingRule) throws UnsupportedEncodingException, IOException, CoreException;
 
-	/*
-	 * @deprecated - encoding and line delimiters are handled automatically
+	/**
+	 * @deprecated - Encoding and the line delimiter used are handled
+	 *             automatically based on the file's contents or user
+	 *             preferences.
 	 */
 	public IStructuredModel getModelForRead(IFile iFile, String encoding, String lineDelimiter) throws UnsupportedEncodingException, IOException, CoreException;
 
+	/**
+	 * Returns a structured model for the given document. If one does not
+	 * already exists, one will be created with a read count of 1. If one
+	 * already exists, its read count will be incremented before it is
+	 * returned. This method is intended only to interact with documents
+	 * contained within File Buffers.
+	 * 
+	 * @param textFileBufferDocument
+	 * @return a structured model for the given document, or null if there is
+	 *         insufficient information known about the document instance to
+	 *         do so
+	 */
 	public IStructuredModel getModelForRead(IStructuredDocument textFileBufferDocument);
 
-	/*
+	/**
 	 * @deprecated - a URI resolver should be automatically created when
 	 *             needed
 	 */
@@ -204,7 +351,7 @@ public interface IModelManager {
 	 * @param id
 	 *            Object The id of the model TODO: try to refine the design
 	 *            not to use this function
-	 * @deprecated
+	 * @deprecated - internal information that can be obtained from the model itself
 	 */
 	int getReferenceCount(Object id);
 
@@ -214,7 +361,7 @@ public interface IModelManager {
 	 * @param id
 	 *            Object The id of the model TODO: try to refine the design
 	 *            not to use this function
-	 * @deprecated
+	 * @deprecated - internal information that can be obtained from the model itself
 	 */
 	int getReferenceCountForEdit(Object id);
 
@@ -224,7 +371,7 @@ public interface IModelManager {
 	 * @param id
 	 *            Object The id of the model TODO: try to refine the design
 	 *            not to use this function
-	 * @deprecated
+	 * @deprecated - internal information that can be obtained from the model itself
 	 */
 	int getReferenceCountForRead(Object id);
 
@@ -256,6 +403,8 @@ public interface IModelManager {
 	boolean isSharedForRead(Object id);
 
 	/**
+	 * @deprecated - not granular enough
+	 * 
 	 * This method can be called to determine if the model manager is within a
 	 * "aboutToChange" and "changed" sequence.
 	 */
@@ -270,7 +419,7 @@ public interface IModelManager {
 	void moveModel(Object oldId, Object newId);
 
 	/**
-	 * This method can be called when the content type of a model changes. Its
+	 * This method can be called when the content type of a model changes. It's
 	 * assumed the contentType has already been changed, and this method uses
 	 * the text of the old one, to repopulate the text of the new one. In
 	 * theory, the actual instance could change, (e.g. using 'saveAs' to go
