@@ -59,7 +59,7 @@ public class CSSCorePreferenceInitializer extends AbstractPreferenceInitializer 
 		node.putBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR, true);
 		node.putBoolean(CSSCorePreferenceNames.WRAPPING_NEWLINE_ON_OPEN_BRACE, false);
 		node.putInt(CSSCorePreferenceNames.CASE_IDENTIFIER, CSSCorePreferenceNames.UPPER);
-		node.putInt(CSSCorePreferenceNames.CASE_SELECTOR, CSSCorePreferenceNames.UPPER);
+		node.putInt(CSSCorePreferenceNames.CASE_SELECTOR, CSSCorePreferenceNames.LOWER);
 		node.putInt(CSSCorePreferenceNames.CASE_PROPERTY_NAME, CSSCorePreferenceNames.LOWER);
 		node.putInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE, CSSCorePreferenceNames.LOWER);
 
