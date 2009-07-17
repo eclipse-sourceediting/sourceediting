@@ -92,7 +92,7 @@ public class LineStyleProviderForCSS extends AbstractLineStyleProvider implement
 		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_CLASS, IStyleConstantsCSS.SELECTOR_CLASS);
 		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_ID, IStyleConstantsCSS.ID);
 
-		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_COMBINATOR, IStyleConstantsCSS.SELECTOR);
+		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_COMBINATOR, IStyleConstantsCSS.COMBINATOR);
 		fColorTypes.put(CSSRegionContexts.CSS_SELECTOR_SEPARATOR, IStyleConstantsCSS.SELECTOR);
 
 		/* Attribute selector */
@@ -150,6 +150,8 @@ public class LineStyleProviderForCSS extends AbstractLineStyleProvider implement
 				styleKey = IStyleConstantsCSS.ATTRIBUTE_OPERATOR;
 			} else if (IStyleConstantsCSS.ATTRIBUTE_VALUE.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.ATTRIBUTE_VALUE;
+			} else if (IStyleConstantsCSS.COMBINATOR.equals(prefKey)) {
+				styleKey = IStyleConstantsCSS.COMBINATOR;
 			} else if (IStyleConstantsCSS.PROPERTY_NAME.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.PROPERTY_NAME;
 			} else if (IStyleConstantsCSS.PROPERTY_VALUE.equals(prefKey)) {
@@ -211,6 +213,7 @@ public class LineStyleProviderForCSS extends AbstractLineStyleProvider implement
 		addTextAttribute(IStyleConstantsCSS.ATTRIBUTE_NAME);
 		addTextAttribute(IStyleConstantsCSS.ATTRIBUTE_OPERATOR);
 		addTextAttribute(IStyleConstantsCSS.ATTRIBUTE_VALUE);
+		addTextAttribute(IStyleConstantsCSS.COMBINATOR);
 		addTextAttribute(IStyleConstantsCSS.ID);
 		addTextAttribute(IStyleConstantsCSS.SELECTOR_CLASS);
 		addTextAttribute(IStyleConstantsCSS.PSEUDO);

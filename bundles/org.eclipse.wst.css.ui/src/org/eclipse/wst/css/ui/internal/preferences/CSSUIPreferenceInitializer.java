@@ -34,6 +34,8 @@ public class CSSUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(IStyleConstantsCSS.SELECTOR, styleValue);
 		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsCSS.UNIVERSAL, 63, 127, 127) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsCSS.UNIVERSAL, styleValue);
+		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsCSS.COMBINATOR, 63, 127, 127) + NOBACKGROUNDBOLD;
+		store.setDefault(IStyleConstantsCSS.COMBINATOR, styleValue);
 
 		styleValue = ColorHelper.findRGBString(registry, IStyleConstantsCSS.SELECTOR_CLASS, 63, 127, 127) + JUSTITALIC;
 		store.setDefault(IStyleConstantsCSS.SELECTOR_CLASS, styleValue);

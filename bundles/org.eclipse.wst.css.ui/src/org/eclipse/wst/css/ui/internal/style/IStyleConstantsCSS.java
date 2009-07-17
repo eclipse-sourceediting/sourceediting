@@ -35,5 +35,6 @@ public interface IStyleConstantsCSS {
 	public static final String ATTRIBUTE_NAME = "ATTRIBUTE_NAME"; //$NON-NLS-1$
 	public static final String ATTRIBUTE_OPERATOR = "ATTRIBUTE_OPERATOR"; //$NON-NLS-1$
 	public static final String ATTRIBUTE_VALUE = "ATTRIBUTE_VALUE"; //$NON-NLS-1$
+	public static final String COMBINATOR = "COMBINATOR"; //$NON-NLS-1$
 	public static final String ERROR = "ERROR"; //$NON-NLS-1$
 }

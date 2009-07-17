@@ -55,6 +55,7 @@ public class CSSUIMessages extends NLS {
 	public static String PrefsLabel_ColorNormal;
 	public static String PrefsLabel_ColorAtmarkRule;
 	public static String PrefsLabel_ColorSelector;
+	public static String PrefsLabel_ColorCombinator;
 	public static String PrefsLabel_ColorUniversal;
 	public static String PrefsLabel_ColorId;
 	public static String PrefsLabel_ColorPseudoClass;

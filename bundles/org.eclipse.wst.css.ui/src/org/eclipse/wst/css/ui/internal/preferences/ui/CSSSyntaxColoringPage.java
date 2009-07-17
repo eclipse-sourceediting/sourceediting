@@ -664,6 +664,7 @@ public final class CSSSyntaxColoringPage extends PreferencePage implements IWork
 			styles.add(IStyleConstantsCSS.ATMARK_RULE);
 			styles.add(IStyleConstantsCSS.SELECTOR);
 			styles.add(IStyleConstantsCSS.UNIVERSAL);
+			styles.add(IStyleConstantsCSS.COMBINATOR);
 			styles.add(IStyleConstantsCSS.SELECTOR_CLASS);
 			styles.add(IStyleConstantsCSS.ID);
 			styles.add(IStyleConstantsCSS.PSEUDO);
@@ -800,7 +801,7 @@ public final class CSSSyntaxColoringPage extends PreferencePage implements IWork
 		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_CLASS, IStyleConstantsCSS.SELECTOR_CLASS);
 		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_ID, IStyleConstantsCSS.ID);
 
-		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_COMBINATOR, IStyleConstantsCSS.SELECTOR);
+		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_COMBINATOR, IStyleConstantsCSS.COMBINATOR);
 		fContextToStyleMap.put(CSSRegionContexts.CSS_SELECTOR_SEPARATOR, IStyleConstantsCSS.SELECTOR);
 
 		/* Attribute selector */
@@ -834,6 +835,7 @@ public final class CSSSyntaxColoringPage extends PreferencePage implements IWork
 		fStyleToDescriptionMap.put(IStyleConstantsCSS.NORMAL, CSSUIMessages.PrefsLabel_ColorNormal);//$NON-NLS-1$
 		fStyleToDescriptionMap.put(IStyleConstantsCSS.ATMARK_RULE, CSSUIMessages.PrefsLabel_ColorAtmarkRule);//$NON-NLS-1$
 		fStyleToDescriptionMap.put(IStyleConstantsCSS.SELECTOR, CSSUIMessages.PrefsLabel_ColorSelector);//$NON-NLS-1$
+		fStyleToDescriptionMap.put(IStyleConstantsCSS.COMBINATOR, CSSUIMessages.PrefsLabel_ColorCombinator);//$NON-NLS-1$
 		fStyleToDescriptionMap.put(IStyleConstantsCSS.UNIVERSAL, CSSUIMessages.PrefsLabel_ColorUniversal);//$NON-NLS-1$
 		fStyleToDescriptionMap.put(IStyleConstantsCSS.ID, CSSUIMessages.PrefsLabel_ColorId);//$NON-NLS-1$
 		fStyleToDescriptionMap.put(IStyleConstantsCSS.PSEUDO, CSSUIMessages.PrefsLabel_ColorPseudoClass);//$NON-NLS-1$
