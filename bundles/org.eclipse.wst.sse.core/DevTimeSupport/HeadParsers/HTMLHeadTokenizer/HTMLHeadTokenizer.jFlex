@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -70,7 +70,7 @@ import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
   		yy_endRead = 0;
 
   		/* number of newlines encountered up to the start of the matched text */
-  		yyline = 0;
+  		// yyline = 0;
 
   		/* the number of characters up to the start of the matched text */
   		yychar = 0;
@@ -79,7 +79,7 @@ import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
   		 * the number of characters from the last newline up to the start
   		 * of the matched text
   		 */
-  		yycolumn = 0; 
+  		// yycolumn = 0; 
 
   		/** 
   		 * yy_atBOL == true <=> the scanner is currently at the beginning 
@@ -111,8 +111,16 @@ import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
 
 	public final HeadParserToken getNextToken() throws IOException {
 		String context = null;
-		context = primGetNextToken();
 		HeadParserToken result = null;
+		try {
+			context = primGetNextToken();
+		}
+		catch (IllegalStateException e) {
+			hasMore = false;
+			result = createToken(HTMLHeadTokenizerConstants.UNDEFINED, yychar, yytext());
+			while(yy_advance() != YYEOF) {}
+			return result;
+		}
 		if (valueText != null) {
 			result = createToken(context, yychar, valueText);
 			valueText = null;
