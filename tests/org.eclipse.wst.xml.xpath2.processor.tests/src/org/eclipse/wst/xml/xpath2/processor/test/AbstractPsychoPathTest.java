@@ -19,6 +19,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -159,6 +160,10 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		dc.add_namespace("xsd", "http://www.w3.org/2001/XMLSchema");
 		dc.add_namespace("fn", "http://www.w3.org/2005/xpath-functions");
 		dc.add_namespace("xml", "http://www.w3.org/XML/1998/namespace");
+
+		for (Map.Entry<String, String> entry : namespaceMap.entrySet()) {
+			dc.add_namespace(entry.getKey(), entry.getValue());
+		}
 
 		dc.add_function_library(new FnFunctionLibrary());
 		dc.add_function_library(new XSCtrLibrary());
