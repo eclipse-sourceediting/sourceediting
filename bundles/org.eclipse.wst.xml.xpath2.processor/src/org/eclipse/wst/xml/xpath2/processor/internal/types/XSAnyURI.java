@@ -10,19 +10,26 @@
  *     Mukul Gandhi - bug274719 - implementation of equality of xs:anyURI values
  *     David Carver (STAR) - bug 282223 - fixed casting to xs:anyURI only string,
  *         untypedAtomic, and anyURI are allowed.
+ *     David Carver (STAR) - bug 283777 - implemented gt, lt comparison code.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpGt;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpLt;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FnCompare;
 
 /**
  * Represents a Universal Resource Identifier (URI) reference
  */
-public class XSAnyURI extends CtrType implements CmpEq {
+public class XSAnyURI extends CtrType implements CmpEq, CmpGt, CmpLt {
 
 	private String _value;
 
@@ -92,10 +99,10 @@ public class XSAnyURI extends CtrType implements CmpEq {
 			return rs;
 
 		AnyType aat = (AnyType) arg.first();
-		
-		if (!(aat.string_type().equals("xs:string") ||
-			  aat.string_type().equals("xs:anyURI") ||
-			  aat.string_type().equals("xs:untypedAtomic"))) {
+
+		if (!(aat.string_type().equals("xs:string")
+				|| aat.string_type().equals("xs:anyURI") || aat.string_type()
+				.equals("xs:untypedAtomic"))) {
 			throw DynamicError.throw_type_error();
 		}
 
@@ -103,7 +110,7 @@ public class XSAnyURI extends CtrType implements CmpEq {
 
 		return rs;
 	}
-	
+
 	/**
 	 * Equality comparison between this and the supplied representation which
 	 * must be of type xs:anyURI
@@ -115,15 +122,54 @@ public class XSAnyURI extends CtrType implements CmpEq {
 	 * @throws DynamicError
 	 */
 	public boolean eq(AnyType arg) throws DynamicError {
-	  if (arg instanceof XSAnyURI) {
-		if (this.string_value().equals(arg.string_value())) {
-		  return true;	
+		if (arg instanceof XSAnyURI) {
+			if (this.string_value().equals(arg.string_value())) {
+				return true;
+			}
+		} else {
+			throw DynamicError.throw_type_error();
 		}
-	  }
-	  else {
-		throw DynamicError.throw_type_error();  
-	  }
-	  
-	  return false;
+
+		return false;
 	}
+
+	/**
+	 * Greater than comparison between this and the supplied representation which
+	 * must be of type xs:anyURI
+	 * @since 1.1
+	 */
+	public boolean gt(AnyType arg) throws DynamicError {
+		if (!(arg instanceof XSAnyURI)) {
+			throw DynamicError.throw_type_error();	
+		}
+		
+		String anyURI = this.string_value();
+		String compareToURI = arg.string_value();
+		if (anyURI.compareTo(compareToURI) > 0) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Less than comparison between this and the supplied representation which
+	 * must be of type xs:anyURI
+	 * 
+	 * @since 1.1
+	 */
+	public boolean lt(AnyType arg) throws DynamicError {
+		if (!(arg instanceof XSAnyURI)) {
+			throw DynamicError.throw_type_error();
+		}
+		
+		String anyURI = this.string_value();
+		String compareToURI = arg.string_value();
+		if (anyURI.compareTo(compareToURI) < 0) {
+			return true;
+		}
+
+		return false;
+	}
+
 }
