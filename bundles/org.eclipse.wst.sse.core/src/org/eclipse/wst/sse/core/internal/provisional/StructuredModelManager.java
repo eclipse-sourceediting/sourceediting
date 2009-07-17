@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,7 +39,7 @@ final public class StructuredModelManager {
 	 * @return IModelManager - returns the one model manager for structured
 	 *         model
 	 * @deprecated - use the one that is in
-	 *             org.eclipse.wst.sse.core.SttructuredModelManager
+	 *             org.eclipse.wst.sse.core.StructuredModelManager
 	 */
 	public static IModelManager getModelManager() {
 		boolean isReady = false;
