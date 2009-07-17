@@ -59,16 +59,18 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	protected Document domDoc2 = null;
 	protected Bundle bundle = null;
 
+	private DynamicContext dynamicContext = null;
+	
 	private static final String INPUT_CONTEXT = "input-context";
 	private static final String INPUT_CONTEXT1 = "input-context1";
 	private static final String INPUT_CONTEXT2 = "input-context2";
 	// private static final String S_COMMENT1 = "(:";
 	private static final String S_COMMENT2 = ":)";
 	private static final String DECLARE_NAMESPACE = "declare namespace";
+	private static final String IMPORT_SCHEMA_NAMESPACE = "import schema namespace";
 	private static final String DECLARE_VARIABLE = "declare variable";
-	private static final String REGEX_DN = "declare namespace\\s+(\\w[-_\\w]*)\\s*=\\s*['\"]([^;]*)['\"];";
-	private static HashMap<String, String> namespaceMap = new HashMap<String, String>(
-			3);
+	private static final String REGEX_DN = " namespace\\s+(\\w[-_\\w]*)\\s*=\\s*['\"]([^;]*)['\"];";
+
 	private static HashMap<String, String> inputMap = new HashMap<String, String>(
 			3);
 
@@ -110,6 +112,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		super.tearDown();
 		domDoc = null;
 		domDoc2 = null;
+		dynamicContext = null;
 	}
 
 	protected XSModel getGrammar() {
@@ -155,15 +158,11 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	}
 
 	protected DynamicContext setupDynamicContext(XSModel schema) {
-		DynamicContext dc = new DefaultDynamicContext(schema, domDoc);
+		DynamicContext dc = dynamicContext = new DefaultDynamicContext(schema, domDoc);
 		dc.add_namespace("xs", "http://www.w3.org/2001/XMLSchema");
 		dc.add_namespace("xsd", "http://www.w3.org/2001/XMLSchema");
 		dc.add_namespace("fn", "http://www.w3.org/2005/xpath-functions");
 		dc.add_namespace("xml", "http://www.w3.org/XML/1998/namespace");
-
-		for (Map.Entry<String, String> entry : namespaceMap.entrySet()) {
-			dc.add_namespace(entry.getKey(), entry.getValue());
-		}
 
 		dc.add_function_library(new FnFunctionLibrary());
 		dc.add_function_library(new XSCtrLibrary());
@@ -258,7 +257,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 				inputMap.put(INPUT_CONTEXT2, inputFile);
 			}
 			//	        
-			if (content.indexOf(DECLARE_NAMESPACE) != -1) {
+			if (content.indexOf(DECLARE_NAMESPACE) != -1 || content.indexOf(IMPORT_SCHEMA_NAMESPACE) != -1) {
 				setupNamespace(content);
 			}
 			//
@@ -300,11 +299,12 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	}
 
 	protected void setupNamespace(String content) {
+		if (dynamicContext == null) return; // Can't set it up if nonexistent
 		Pattern p = Pattern.compile(REGEX_DN);
 		Matcher m = p.matcher(content);
 		while (m.find()) {
 			assertTrue(m.groupCount() == 2);//
-			namespaceMap.put(m.group(1), m.group(2));
+			dynamicContext.add_namespace(m.group(1), m.group(2));
 		}
 
 	}
