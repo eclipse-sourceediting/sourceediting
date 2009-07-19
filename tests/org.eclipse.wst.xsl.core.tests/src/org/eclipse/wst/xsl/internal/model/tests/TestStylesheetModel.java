@@ -45,4 +45,5 @@ public class TestStylesheetModel extends AbstractModelTest {
 		}
 		assertEquals("Wrong number of mode templates returned.", 3, modes.size());
 	}
+		
 }
