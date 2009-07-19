@@ -13,6 +13,7 @@ package org.eclipse.wst.xsl.core.internal;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
 
@@ -288,5 +289,23 @@ public class StylesheetBuilder {
 				XSLCorePlugin.log(e);
 			}
 		}
+	}
+	
+	/**
+	 * Releases all the cached stylesheets.
+	 */
+	public void release() {
+		if (builtFiles.isEmpty()) {
+			return;
+		}
+		Iterator it = builtFiles.keySet().iterator();
+		while (it.hasNext()) {
+			IFile key = (IFile) it.next();
+			it.remove();
+		}
+	}
+	
+	public void release(IFile file) {
+		builtFiles.remove(file);
 	}
 }

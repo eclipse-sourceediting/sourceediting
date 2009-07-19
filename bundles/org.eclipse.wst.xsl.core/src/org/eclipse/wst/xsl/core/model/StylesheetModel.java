@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2007, 2009 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,11 +8,13 @@
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *     David Carver (STAR) -  bug 243577 - Added retrieving all called-templates.
+ *     David Carver (STAR) -  bug 246503 - Handled nested circular includes.
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.model;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -212,10 +214,13 @@ public class StylesheetModel extends XSLModelObject
 		{
 			return;
 		}
-		else if (stylesheet.getFile().equals(file) || files.contains(file))
+		
+		if (stylesheet.getFile().equals(file) || files.contains(file))
 		{
 			circularReference = true;
 			return;
+		} else if (isNestedInclude(include, stylesheet.getFile())) {
+			circularReference = true;
 		}
 		files.add(file);
 
@@ -225,7 +230,6 @@ public class StylesheetModel extends XSLModelObject
 		stylesheets.add(includedModel.getStylesheet());
 		globalVariables.addAll(includedModel.globalVariables);
 		callTemplates.addAll(includedModel.getCallTemplates());
-
 		if (include.getIncludeType() == Include.INCLUDE)
 		{
 			includeModel.add(include);
@@ -244,6 +248,23 @@ public class StylesheetModel extends XSLModelObject
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Is the current stylesheet nested in one of the included stylesheets
+	 * @return
+	 */
+	private boolean isNestedInclude(Include include, IFile compareTo) {
+		StylesheetModel includedModel = XSLCore.getInstance().getStylesheet(include.getHrefAsFile());
+
+		for (Include inc : includedModel.getIncludes()) {
+			if (inc.getHrefAsFile().equals(compareTo) || isNestedInclude(inc, compareTo)) {
+				return true;
+			}
+		}
+		
+		return false;
+		
 	}
 	
 	@Override
