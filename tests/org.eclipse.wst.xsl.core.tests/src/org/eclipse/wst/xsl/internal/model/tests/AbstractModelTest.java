@@ -45,6 +45,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xsl.core.XSLCore;
+import org.eclipse.wst.xsl.core.internal.StylesheetBuilder;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidationMessage;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidationReport;
 import org.eclipse.wst.xsl.core.internal.validation.XSLValidator;
@@ -93,6 +94,13 @@ public abstract class AbstractModelTest extends TestCase
 			fTestProject.refreshLocal(IResource.DEPTH_INFINITE, null);
 			fTestProjectInitialized = true;
 		}
+	}
+	
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		StylesheetBuilder builder = StylesheetBuilder.getInstance();
+		builder.release();
 	}
 	
 	
