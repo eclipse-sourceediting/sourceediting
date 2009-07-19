@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 246500 - Add Paramters to global variables type.
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.model;
 
@@ -52,5 +53,10 @@ public class Parameter extends Variable
 		if (getAttributeValue("select") != null) //$NON-NLS-1$
 			return true;
 		return false; 
+	}
+	
+	@Override
+	public Type getModelType() {
+		return Type.PARAM;
 	}
 }

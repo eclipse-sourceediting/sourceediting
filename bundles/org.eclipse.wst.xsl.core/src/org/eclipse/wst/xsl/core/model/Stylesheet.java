@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 246500 - added ability to get parameters in global variables.
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.model;
 

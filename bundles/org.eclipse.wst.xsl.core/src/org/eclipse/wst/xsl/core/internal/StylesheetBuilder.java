@@ -219,7 +219,7 @@ public class StylesheetBuilder {
 					CallTemplate currentCallTemplate = callTemplates.peek();
 					currentCallTemplate.addParameter(param);
 					xslEl = param;
-				} else if ("variable".equals(elName)) //$NON-NLS-1$
+				} else if ("variable".equals(elName) || "param".equals(elName)) //$NON-NLS-1$ //$NON-NLS-2$
 				{
 					if (elementStack.size() == 1)
 					{// global variable
@@ -233,7 +233,7 @@ public class StylesheetBuilder {
 						currentTemplate.addVariable(var);
 						xslEl = var;
 					}
-				} 
+				}
 				else {
 					xslEl = new XSLElement(sf);
 				}
