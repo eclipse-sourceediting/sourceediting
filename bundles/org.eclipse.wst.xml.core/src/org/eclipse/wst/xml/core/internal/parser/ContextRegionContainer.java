@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -149,16 +149,29 @@ public class ContextRegionContainer implements ITextRegionContainer {
 	public ITextRegion getRegionAtCharacterOffset(int offset) {
 		ITextRegion result = null;
 		if (regions != null) {
+			int thisStartOffset = getStartOffset();
+			if (offset < thisStartOffset)
+				return null;
+			int thisEndOffset = getStartOffset() + getLength();
+			if (offset > thisEndOffset)
+				return null;
 			// transform the requested offset to the "scale" that
 			// regions are stored in, which are all relative to the
 			// start point.
 			//int transformedOffset = offset - getStartOffset();
 			//
-			int length = getRegions().size();
-			for (int i = 0; i < length; i++) {
-				ITextRegion region = getRegions().get(i);
+			ITextRegionList regions = getRegions();
+			int length = regions.size();
+			int low = 0;
+			int high = length;
+			int mid = 0;
+			// Binary search for the region
+			while (low < high) {
+				mid = low + ((high - low) >> 1);
+				ITextRegion region = regions.get(mid);
 				if (org.eclipse.wst.sse.core.internal.util.Debug.debugStructuredDocument) {
 					System.out.println("region(s) in IStructuredDocumentRegion::getRegionAtCharacterOffset: " + region); //$NON-NLS-1$
+					System.out.println("       midpoint of search:" + mid); //$NON-NLS-1$
 					System.out.println("       requested offset: " + offset); //$NON-NLS-1$
 					//System.out.println(" transformedOffset: " +
 					// transformedOffset); //$NON-NLS-1$
@@ -168,11 +181,15 @@ public class ContextRegionContainer implements ITextRegionContainer {
 					System.out.println("       region class: " + region.getClass()); //$NON-NLS-1$
 
 				}
-				if ((getStartOffset(region) <= offset) && (offset < getEndOffset(region))) {
-					result = region;
-					break;
-				}
+				// Region is before this one
+				if (offset < region.getStart() + thisStartOffset)
+					high = mid;
+				else if (offset > (region.getEnd() + thisStartOffset - 1))
+					low = mid + 1;
+				else
+					return region;
 			}
+			return null;
 		}
 		return result;
 	}
