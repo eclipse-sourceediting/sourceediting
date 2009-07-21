@@ -8,6 +8,7 @@
  * Contributors:
  * Jesper Steen Moeller - XSL core plugin
  * Doug Satchwell - bug 225304
+ * David Carver - bug 284200 - make sure we get a non XML Include parser configuration
  *******************************************************************************/
 
 package org.eclipse.wst.xsl.core.resolver;

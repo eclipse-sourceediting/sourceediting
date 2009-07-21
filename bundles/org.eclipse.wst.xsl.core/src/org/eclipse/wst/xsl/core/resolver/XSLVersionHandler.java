@@ -7,6 +7,7 @@
  * Contributors: 
  * IBM - Initial API and implementation
  * Jesper Steen M�ller - adapted from org.eclipse.core.internal.content
+ * David Carver - bug 284200 - make sure we get a non XML Include parser configuration
  **********************************************************************/
 
 package org.eclipse.wst.xsl.core.resolver;
@@ -76,6 +77,7 @@ public final class XSLVersionHandler extends DefaultHandler implements LexicalHa
 		final SAXParser parser = parserFactory.newSAXParser();
 		final XMLReader reader = parser.getXMLReader();
 		reader.setProperty("http://xml.org/sax/properties/lexical-handler", this); //$NON-NLS-1$
+		
 		reader.setErrorHandler(this); // This helps to ignore errors
 		// disable DTD validation
 		try {
@@ -139,6 +141,9 @@ public final class XSLVersionHandler extends DefaultHandler implements LexicalHa
 			SAXParserFactory factory = XSLCorePlugin.getDefault().getFactory();
 			if (factory == null)
 				return false;
+			if (factory.isXIncludeAware()) {
+				factory.setXIncludeAware(false);
+			}
 			final SAXParser parser = createParser(factory);
 			// to support external entities specified as relative URIs (see bug 63298)
 			parser.parse(contents, this);
