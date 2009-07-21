@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -152,7 +152,7 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 
 	public String getPartitionType(ITextRegion region, int offset) {
 		String result = null;
-		if (region.getType() == DOMRegionContext.XML_COMMENT_TEXT || region.getType() == DOMRegionContext.XML_COMMENT_OPEN)
+		if (region.getType() == DOMRegionContext.XML_COMMENT_TEXT || region.getType() == DOMRegionContext.XML_COMMENT_OPEN || region.getType() == DOMRegionContext.XML_COMMENT_CLOSE)
 			result = IHTMLPartitions.HTML_COMMENT;
 		else if (region.getType() == DOMRegionContext.XML_DOCTYPE_DECLARATION || region.getType() == DOMRegionContext.XML_DECLARATION_OPEN)
 			result = IHTMLPartitions.HTML_DECLARATION;
