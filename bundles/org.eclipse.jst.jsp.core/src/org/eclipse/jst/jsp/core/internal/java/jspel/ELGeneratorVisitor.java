@@ -502,8 +502,30 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	 * Literal
 	 */
 	public Object visit(ASTLiteral node, Object data) {
-		// TODO any further translation needed?
+		if (isSingleQuotedStringLiteral(node)) {
+			//replace the single quotes with double quotes quotes
+			//so java compiler will be happy
+			//(see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=104943)
+			String image = node.firstToken.image;
+			image = "\"" + image.substring(1, image.length()-1) + "\""; //$NON-NLS-1$ //$NON-NLS-2$
+			node.firstToken.image = image;
+		}
+		
 		append(node.firstToken);
 		return null;
+	}
+	
+	/**
+	 * Indicates whether the given ASTLiteral is a single quoted string literal,
+	 * As opposed to a double quoted ASTLiteral
+	 * 
+	 * @param node the ASTLiteral to check to see if it is single quoted
+	 * 
+	 * @return true, if the given token is a single quoted string literal,
+	 * false otherwise
+	 */
+	private static boolean isSingleQuotedStringLiteral(ASTLiteral node) {
+		String content = node.firstToken.image;
+		return content.length() > 1 && content.startsWith("'") && content.endsWith("'"); //$NON-NLS-1$ // $NON-NLS-2$
 	}
 }
