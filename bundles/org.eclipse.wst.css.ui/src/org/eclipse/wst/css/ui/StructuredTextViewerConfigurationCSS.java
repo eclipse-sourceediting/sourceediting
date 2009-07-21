@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -73,7 +73,7 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		if (fConfiguredContentTypes == null) {
-			fConfiguredContentTypes = new String[]{ICSSPartitions.STYLE, IStructuredPartitions.DEFAULT_PARTITION, IStructuredPartitions.UNKNOWN_PARTITION};
+			fConfiguredContentTypes = new String[]{ICSSPartitions.STYLE, ICSSPartitions.COMMENT, IStructuredPartitions.DEFAULT_PARTITION, IStructuredPartitions.UNKNOWN_PARTITION};
 		}
 		return fConfiguredContentTypes;
 	}
@@ -147,7 +147,7 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
 		LineStyleProvider[] providers = null;
 
-		if (partitionType == ICSSPartitions.STYLE) {
+		if (partitionType == ICSSPartitions.STYLE || partitionType == ICSSPartitions.COMMENT) {
 			providers = new LineStyleProvider[]{getLineStyleProviderForCSS()};
 		}
 

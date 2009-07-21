@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -300,7 +300,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		else if (partitionType == IHTMLPartitions.SCRIPT || partitionType == IJSPPartitions.JSP_CONTENT_JAVASCRIPT) {
 			providers = getHTMLSourceViewerConfiguration().getLineStyleProviders(sourceViewer, IHTMLPartitions.SCRIPT);
 		}
-		else if (partitionType == ICSSPartitions.STYLE) {
+		else if (partitionType == ICSSPartitions.STYLE || partitionType == ICSSPartitions.COMMENT) {
 			providers = getHTMLSourceViewerConfiguration().getLineStyleProviders(sourceViewer, ICSSPartitions.STYLE);
 		}
 		else if (partitionType == IXMLPartitions.XML_DEFAULT || partitionType == IXMLPartitions.XML_CDATA || partitionType == IXMLPartitions.XML_COMMENT || partitionType == IXMLPartitions.XML_DECLARATION || partitionType == IXMLPartitions.XML_PI) {

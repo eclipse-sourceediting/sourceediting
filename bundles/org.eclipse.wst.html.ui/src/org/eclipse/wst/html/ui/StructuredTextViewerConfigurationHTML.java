@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -208,7 +208,7 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		if (partitionType == IHTMLPartitions.HTML_DEFAULT || partitionType == IHTMLPartitions.HTML_COMMENT || partitionType == IHTMLPartitions.HTML_DECLARATION || partitionType == IXMLPartitions.XML_PI) {
 			providers = new LineStyleProvider[]{getLineStyleProviderForHTML()};
 		}
-		else if (partitionType == ICSSPartitions.STYLE) {
+		else if (partitionType == ICSSPartitions.STYLE || partitionType == ICSSPartitions.COMMENT) {
 			providers = new LineStyleProvider[]{getLineStyleProviderForEmbeddedCSS()};
 		}
 
