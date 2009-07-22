@@ -48,6 +48,8 @@ import org.eclipse.ui.wizards.datatransfer.ImportOperation;
  * @author pavery
  */
 public class ProjectUnzipUtility {
+	public static final String ZIP_EXTENSION = ".zip";
+	
 	class WorkspaceProgressMonitor implements IProgressMonitor {
 		private boolean finished = false;
 

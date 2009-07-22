@@ -14,6 +14,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.jst.jsp.ui.tests.contentassist.BeanInfoProviderTest;
+import org.eclipse.jst.jsp.ui.tests.contentassist.JSPELContentAssistTest;
 import org.eclipse.jst.jsp.ui.tests.contentassist.JSPJavaTranslatorTest;
 import org.eclipse.jst.jsp.ui.tests.contentassist.JSPTranslationTest;
 import org.eclipse.jst.jsp.ui.tests.contentdescription.TestContentDescription;
@@ -47,6 +48,7 @@ public class JSPUITestSuite extends TestSuite {
 		addTest(new TestSuite(TestEmailNotice.class, "TestEmailNotice"));
 		addTest(new TestSuite(BeanInfoProviderTest.class, "BeanInfo Provider Test"));
 		addTest(new TestSuite(JSPTranslationTest.class, "Translator Tests"));
+		addTest(new TestSuite(JSPELContentAssistTest.class, "JSP EL Content Assist Tests"));
 		addTest(new TestSuite(AdapterFactoryRegistryTest.class, "AdapterFactoryRegistry Tests"));
 		addTest(new TestSuite(JSPUIPreferencesTest.class, "Preference Tests"));
 		addTest(new TestSuite(TestViewerConfigurationJSP.class, "Source Viewer Configuration Tests"));
