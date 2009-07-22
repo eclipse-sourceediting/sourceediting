@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,10 +40,11 @@ public class JSPELProposalCollector extends JSPProposalCollector {
 			}
 			
 			// java offset
-			int offset = proposal.getReplaceStart() + 1;
+			int offset = proposal.getReplaceStart();
 			
 			// replacement length
-			int length = proposal.getReplaceEnd() - offset + 1;
+			//-3 for "get" pre text on the java proposal
+			int length = proposal.getReplaceEnd() - offset - 3;
 			
 			// translate offset from Java > JSP
 			offset = getTranslation().getJspOffset(offset);

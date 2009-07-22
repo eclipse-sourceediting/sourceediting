@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,6 +65,24 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	 *         proposals are possible
 	 */
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int pos) {
+		return computeCompletionProposals(viewer, pos, 0);
+	}
+	
+	/**
+	 * The same as the normal <code>computeCompeltaionProposals</code> except the calculated
+	 * java position is offset by the given extra offset.
+	 * 
+	 * @param viewer
+	 *            the viewer whose document is used to compute the proposals
+	 * @param documentPosition
+	 *            an offset within the document for which completions should
+	 *            be computed
+	 * @param javaPositionExtraOffset
+	 * 				the extra offset for the java position
+	 * @return an array of completion proposals or <code>null</code> if no
+	 *         proposals are possible
+	 */
+	protected ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int pos, int javaPositionExtraOffset) {
 		initialize(pos);
 
 		JSPProposalCollector collector = null;
@@ -82,7 +100,7 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 			if (fTranslationAdapter != null) {
 
 				JSPTranslation translation = fTranslationAdapter.getJSPTranslation();
-				fJavaPosition = translation.getJavaOffset(getDocumentPosition());
+				fJavaPosition = translation.getJavaOffset(getDocumentPosition())+javaPositionExtraOffset;
 
 				if (DEBUG)
 					System.out.println(debug(translation));

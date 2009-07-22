@@ -53,7 +53,9 @@ public class JSPCompletionProposal extends CustomCompletionProposal implements I
 			setCursorPosition(getCursorPosition() + 1);
 		}
 		super.apply(viewer, trigger, stateMask, offset);
-		
+		//move the caret to the end of the change
+		int endOffsetOfChanges = getReplacementString().length() + getReplacementOffset();
+		viewer.getTextWidget().setCaretOffset(endOffsetOfChanges);
 	}
 
 	final public ICompletionProposal getJavaCompletionProposal() {
@@ -72,6 +74,17 @@ public class JSPCompletionProposal extends CustomCompletionProposal implements I
 		
 		return additionalInfo;
 	}
+
+	/**
+	 * use the java proposals image if there is one for this proposals image
+	 */                                                                     
+	public Image getImage() {                                               
+		if(this.fJavaCompletionProposal != null) {                          
+			return this.fJavaCompletionProposal.getImage();                 
+		} else {                                                            
+			return super.getImage();                                        
+		}                                                                   
+	}                                                                       
 
 	/* 
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension5#getAdditionalProposalInfo(org.eclipse.core.runtime.IProgressMonitor)

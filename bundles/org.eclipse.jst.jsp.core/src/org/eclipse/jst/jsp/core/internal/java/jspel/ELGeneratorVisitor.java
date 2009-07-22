@@ -409,7 +409,8 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 			if(node.jjtGetChild(0) instanceof ASTValuePrefix && node.jjtGetChild(1) instanceof ASTValueSuffix) {
 				ASTValuePrefix prefix = (ASTValuePrefix) node.jjtGetChild(0);
 				ASTValueSuffix suffix = (ASTValueSuffix) node.jjtGetChild(1);
-				if(prefix.firstToken.image.equals("pageContext") && suffix.getPropertyNameToken().image.equals("request")) {
+				//content assist can cause a null pointer here without the extra null check
+				if(prefix.firstToken.image.equals("pageContext") && suffix.getPropertyNameToken() != null && suffix.getPropertyNameToken().image.equals("request")) {
 					append("((HTTPServletRequest)");
 				}
 			}
@@ -471,7 +472,10 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 				append(")");
 			} 
 
-
+		} else if(node.getLastToken().image.equals(".") && node.getLastToken().next.image.equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
+			//this allows for content assist in the case of something along the lines of "pageContext." and then ctl-space
+			append(node.firstToken);
+			append("get()", node.getLastToken().beginColumn, node.getLastToken().beginColumn); //$NON-NLS-1$
 		} else {
 			append(node.firstToken);
 		}
