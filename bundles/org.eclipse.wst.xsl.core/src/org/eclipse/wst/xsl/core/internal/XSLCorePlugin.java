@@ -13,6 +13,7 @@ package org.eclipse.wst.xsl.core.internal;
 
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.xerces.jaxp.SAXParserFactoryImpl;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
@@ -39,7 +40,7 @@ public class XSLCorePlugin extends Plugin {
 	// The shared instance
 	private static XSLCorePlugin plugin;
 	
-	private ServiceTracker parserTracker = null;
+	private SAXParserFactoryImpl saxParserFactory = null;
 
 	private BundleContext bundleContext;
 
@@ -85,13 +86,15 @@ public class XSLCorePlugin extends Plugin {
 	 * @return returns a SAXParserFactory
 	 */
 	public SAXParserFactory getFactory() {
-		if (parserTracker == null) {
-			parserTracker = new ServiceTracker(bundleContext, SAXParserFactory.class.getName(), null);
-			parserTracker.open();
+		if (saxParserFactory == null) {
+			saxParserFactory = new SAXParserFactoryImpl();
 		}
-		SAXParserFactory theFactory = (SAXParserFactory) parserTracker.getService();
-		if (theFactory != null)
+		SAXParserFactory theFactory = saxParserFactory; 
+		if (theFactory != null) {
 			theFactory.setNamespaceAware(true);
+			theFactory.setXIncludeAware(false);
+			theFactory.setValidating(false);
+		}
 		return theFactory;
 	}
 	

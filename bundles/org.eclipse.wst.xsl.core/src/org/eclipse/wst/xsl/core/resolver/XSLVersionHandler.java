@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import javax.xml.parsers.*;
 
+import org.apache.xerces.jaxp.SAXParserImpl;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.xml.sax.*;
@@ -72,9 +73,9 @@ public final class XSLVersionHandler extends DefaultHandler implements LexicalHa
 	 *             If the <code>XMLReader</code> does not support the lexical
 	 *             handler configuration option.
 	 */
-	private final SAXParser createParser(SAXParserFactory parserFactory) throws ParserConfigurationException, SAXException, SAXNotRecognizedException, SAXNotSupportedException {
+	private final synchronized SAXParser createParser(SAXParserFactory parserFactory) throws ParserConfigurationException, SAXException, SAXNotRecognizedException, SAXNotSupportedException {
 		// Initialize the parser.
-		final SAXParser parser = parserFactory.newSAXParser();
+		final SAXParserImpl parser = (SAXParserImpl)parserFactory.newSAXParser();
 		final XMLReader reader = parser.getXMLReader();
 		reader.setProperty("http://xml.org/sax/properties/lexical-handler", this); //$NON-NLS-1$
 		
