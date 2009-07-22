@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,8 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.validate;
-
-
 
 import java.util.List;
 import java.util.Locale;
@@ -197,50 +195,45 @@ public class HTMLAttributeValidator extends PrimeValidator {
 								}
 							}
 						}
-					} else {
+					}
+					else {
 						// Check current value is valid among a known list
-						String[] candidates = attrType.getEnumeratedValues();
-						if (candidates != null && candidates.length > 0) {
-							// several candidates are found.
-							boolean found = false;
-							for (int index = 0; index < candidates.length; index++) {
-								String candidate = candidates[index];
+						String[] enumeratedValues = attrType.getEnumeratedValues();
+						// several candidates are found.
+						boolean found = false;
+						for (int j = 0; j < enumeratedValues.length; j++) {
+							// At 1st, compare ignoring case.
+							if (actualValue.equalsIgnoreCase(enumeratedValues[j])) {
+								found = true;
+								if (CMUtil.isCaseSensitive(edec) && (!actualValue.equals(enumeratedValues[j]))) {
+									rgnType = REGION_VALUE;
+									state = ErrorState.MISMATCHED_VALUE_ERROR;
+								}
+								break; // exit the loop.
+							}
+						}
+						if (!found) {
+							// retrieve and check extended values (retrieval can call extensions, which may take longer)
+							String[] modelQueryExtensionValues = ModelQueryUtil.getModelQuery(target.getOwnerDocument()).getPossibleDataTypeValues((Element) node, adec);
+							// copied loop from above
+							for (int j = 0; j < modelQueryExtensionValues.length; j++) {
 								// At 1st, compare ignoring case.
-								if (actualValue.equalsIgnoreCase(candidate)) {
+								if (actualValue.equalsIgnoreCase(modelQueryExtensionValues[j])) {
 									found = true;
-									if (CMUtil.isCaseSensitive(edec) && (!actualValue.equals(candidate))) {
+									if (CMUtil.isCaseSensitive(edec) && (!actualValue.equals(modelQueryExtensionValues[j]))) {
 										rgnType = REGION_VALUE;
 										state = ErrorState.MISMATCHED_VALUE_ERROR;
 									}
 									break; // exit the loop.
 								}
 							}
-							if (!found) {
-								// No candidate was found. That is,
-								// actualValue is invalid.
-								// but not regard it as undefined value if it
-								// includes nested region.
-								if (!hasNestedRegion(((IDOMNode) a).getValueRegion())) {
-									rgnType = REGION_VALUE;
-									state = ErrorState.UNDEFINED_VALUE_ERROR;
-								}
-							}
-						}
-						else if (attrType.getDataTypeName() == CMDataType.URI) {
-							// TODO: URI validation?
-							if (false && actualValue.indexOf('#') < 0 && actualValue.indexOf(":/") == -1 && CMUtil.isHTML(edec)) { //$NON-NLS-1$ //$NON-NLS-2$
-								IStructuredDocumentRegion start = ((IDOMNode) node).getStartStructuredDocumentRegion();
-								if (start != null && start.getFirstRegion().getTextLength() == 1) {
-									IPath basePath = new Path(((IDOMNode) node).getModel().getBaseLocation());
-									if (basePath.segmentCount() > 1) {
-										IPath path = ModuleCoreSupport.resolve(basePath, actualValue);
-										IResource found = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
-										if (found == null || !found.isAccessible()) {
-											rgnType = REGION_VALUE;
-											state = ErrorState.RESOURCE_NOT_FOUND;
-										}
-									}
-								}
+							// No candidate was found. That is,
+							// actualValue is invalid.
+							// but not regard it as undefined value if it
+							// includes nested region.
+							if (!hasNestedRegion(((IDOMNode) a).getValueRegion())) {
+								rgnType = REGION_VALUE;
+								state = ErrorState.UNDEFINED_VALUE_ERROR;
 							}
 						}
 					}
