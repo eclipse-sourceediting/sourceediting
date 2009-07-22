@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002, 2008 IBM Corporation and others.
+ * Copyright (c) 2002, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,12 +12,14 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
+import java.util.Set;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAnyElement;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
@@ -138,7 +140,7 @@ public class ModelQueryImpl implements ModelQuery
 
   public List getCMDocumentList(Element element, CMElementDeclaration ed, String uri)
   {                
-    List result = new Vector();
+    List result = new ArrayList();
     if (modelQueryAssociationProvider instanceof XMLAssociationProvider)
     {              
       XMLAssociationProvider xmlAssociationProvider = (XMLAssociationProvider)modelQueryAssociationProvider;
@@ -582,7 +584,7 @@ public class ModelQueryImpl implements ModelQuery
   protected List nodeListToList(NodeList nodeList)
   {
     int size = nodeList.getLength();
-    Vector v = new Vector(size);
+    List v = new ArrayList(size);
     for (int i = 0; i < size; i++)
     {
       v.add(nodeList.item(i));
@@ -644,7 +646,7 @@ public class ModelQueryImpl implements ModelQuery
 
     public List computeAvailableContent(int includeOptions)
     {                   
-      Vector v = new Vector();  
+      List v = new ArrayList();  
 
       int contentType = rootElementDeclaration.getContentType();
       includeSequenceGroups = ((includeOptions & INCLUDE_SEQUENCE_GROUPS) != 0);
@@ -793,7 +795,7 @@ public class ModelQueryImpl implements ModelQuery
    */
   public String[] getPossibleDataTypeValues(Element element, CMNode cmNode)
   {
-    List list = new Vector();                            
+    List list = new ArrayList();                            
                                
     if (cmNode != null)
     {       
@@ -819,18 +821,15 @@ public class ModelQueryImpl implements ModelQuery
                          
     addValuesForXSIType(element, cmNode, list);
     
+    // Remove duplicates
+    Set set = new HashSet(list);
+
     if (extensionManager != null)
     {                    
-      list.addAll(extensionManager.getDataTypeValues(element, cmNode));
+      set.addAll(extensionManager.getDataTypeValues(element, cmNode));
     }          
-                        
-    int listSize = list.size();
-    String[] result = new String[listSize];
-    for (int i = 0; i < listSize; i++)
-    {
-      result[i] = (String)list.get(i);
-    }     
-    return result;
+        
+    return (String[]) set.toArray(new String[set.size()]);
   }    
 
            
