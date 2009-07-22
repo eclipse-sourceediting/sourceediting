@@ -39,7 +39,9 @@ import org.eclipse.ui.texteditor.spelling.SpellingAnnotation;
 import org.eclipse.ui.texteditor.spelling.SpellingContext;
 import org.eclipse.ui.texteditor.spelling.SpellingProblem;
 import org.eclipse.ui.texteditor.spelling.SpellingService;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -230,7 +232,9 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 			IStructuredDocumentRegion documentRegion = ((IStructuredDocument) document).getRegionAtCharacterOffset(problem.getOffset());
 			if (documentRegion != null) {
 				ITextRegion textRegion = documentRegion.getRegionAtCharacterOffset(problem.getOffset());
-				if (textRegion != null && isSupportedContext(textRegion.getType()) && !(textRegion instanceof ITextRegionCollection)) {
+				//if the region is not null, and is a supported context and is not a collection of regions,
+				//	and it should be spell-checked, then spell check it.
+				if (textRegion != null && isSupportedContext(textRegion.getType()) && !(textRegion instanceof ITextRegionCollection) && shouldSpellcheck(problem.getOffset())) {
 					return true;
 				}
 				if (documentRegion.getFirstRegion() instanceof ForeignRegion)
@@ -367,5 +371,37 @@ public class SpellcheckStrategy extends StructuredTextReconcilingStrategy {
 		if (getDocument() != null) {
 			EditorsUI.getPreferenceStore().addPropertyChangeListener(fSpellCheckPreferenceListener);
 		}
+	}
+	
+	/**
+	 * Decides if the given offset should be spell-checked using an <code>IAdapterFactory</code>
+	 * 
+	 * @param offset Decide if this offset should be spell-checked
+	 * @return <code>true</code> if the given <code>offset</code> should be spell-checked,
+	 * <code>false</code> otherwise.
+	 */
+	private boolean shouldSpellcheck(int offset) {
+		boolean decision = true;
+		
+		IStructuredModel model = null;
+		try {
+			model = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
+			
+			/* use an an adapter factory to get a spell-check decision maker,
+			 * and ask it if the  offset should be spell-checked.  It is done
+			 * this way so content type specific decisions can be made without this
+			 * plugin being aware of any content type specifics.
+			 */
+			ISpellcheckDelegate delegate = (ISpellcheckDelegate)Platform.getAdapterManager().getAdapter(model, ISpellcheckDelegate.class);
+			if(delegate != null) {
+				decision = delegate.shouldSpellcheck(offset, model);
+			}
+		}  finally {
+			if(model != null) {
+				model.releaseFromRead();
+			}
+		}
+		
+		return decision;
 	}
 }
