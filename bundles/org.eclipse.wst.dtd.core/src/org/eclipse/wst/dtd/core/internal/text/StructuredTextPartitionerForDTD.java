@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.core.internal.text;
 
+import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.wst.dtd.core.text.IDTDPartitions;
 import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
@@ -38,5 +39,12 @@ public class StructuredTextPartitionerForDTD extends StructuredTextPartitioner {
 	 */
 	protected void initLegalContentTypes() {
 		fSupportedTypes = new String[]{IDTDPartitions.DTD_DEFAULT, IStructuredPartitions.UNKNOWN_PARTITION};
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner#newInstance()
+	 */
+	public IDocumentPartitioner newInstance() {
+		return new StructuredTextPartitionerForDTD();
 	}
 }
