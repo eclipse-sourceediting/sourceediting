@@ -64,4 +64,11 @@
 			base-type="org.eclipse.core.runtime.xml">
 		</content-type>
 	</extension>
+	<extension point="org.eclipse.wst.sse.core.commentElementHandler">
+		<handler-custom
+			commenttype="xml"
+			class="org.eclipse.wst.xml.ui.tests.commentelement.CommentElementHandlerForFoo">
+			<startwith prefix="$"></startwith>
+		</handler-custom>
+	</extension>
 </plugin>

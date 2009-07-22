@@ -40,5 +40,6 @@ public class XMLUITestSuite extends TestSuite {
 		addTestSuite(TestReconcilerXML.class);
 		addTestSuite(TestSourceValidationFramework.class);
 		addTestSuite(TestXMLContentAssist.class);
+		addTest(new TestSuite(TestSpellcheckDelegateAdapaterFactory.class, "Test Spellcheck Delegate Adapter Factory"));
 	}
 }
