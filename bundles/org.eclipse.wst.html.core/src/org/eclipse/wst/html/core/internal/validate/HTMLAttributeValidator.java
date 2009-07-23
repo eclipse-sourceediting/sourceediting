@@ -196,8 +196,13 @@ public class HTMLAttributeValidator extends PrimeValidator {
 							}
 						}
 					}
-					else {
-						// Check current value is valid among a known list
+					else if (CMDataType.ENUM.equals(attrType.getDataTypeName())) {
+						/*
+						 * Check current value is valid among a known list.
+						 * There may be enumerated values provided even when
+						 * the datatype is not ENUM, but we'll only validate
+						 * against that list if the type matches.
+						 */
 						String[] enumeratedValues = attrType.getEnumeratedValues();
 						// several candidates are found.
 						boolean found = false;
