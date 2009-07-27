@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -504,11 +504,27 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 //					fScriptText.append(regionText.substring(0, trailingTrim));
 //				}
 				else {
+					// fix for https://bugs.eclipse.org/bugs/show_bug.cgi?id=284774
+					int index = -1;
+					int fromIndex = 0;
+					// find any instance of <portlet:nsamespace in the region text
+					while((index = regionText.indexOf("<portlet:namespace", fromIndex)) > -1) { //$NON-NLS-1$
+						// change the portlet tag to a valid variable name
+						String tempText = regionText.substring(0, index) + "_portlet_namespace"; //$NON-NLS-1$
+						// determine the length of the ending - add it to the tempText along with the rest of the region text
+						if(regionText.substring(index + 18).startsWith(" />")) { //$NON-NLS-1$
+							tempText = tempText + "___" + regionText.substring(index + 21); //$NON-NLS-1$
+							fromIndex = index + 21;
+						} else {
+							tempText = tempText + "__" + regionText.substring(index + 20); //$NON-NLS-1$
+							fromIndex = index + 20;
+						}
+						regionText = tempText;
+					}
 					fScriptText.append(regionText);
 					Position inHtml = new Position(scriptStart, scriptTextLength);
 					scriptLocationInHtml.add(inHtml);
 				}
-				
 				
 				scriptOffset = fScriptText.length();
 			}
