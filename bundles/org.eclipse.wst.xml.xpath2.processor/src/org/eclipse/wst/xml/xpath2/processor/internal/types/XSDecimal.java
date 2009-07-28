@@ -328,8 +328,7 @@ public class XSDecimal extends NumericType {
 
 	/**
 	 * Mathematical division operator between this XSDecimal and the supplied
-	 * ResultSequence. Due to no numeric type promotion or conversion, the
-	 * ResultSequence must be of type XSDecimal.
+	 * ResultSequence. 
 	 * 
 	 * @param arg
 	 *            The ResultSequence to perform a division with

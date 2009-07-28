@@ -99,12 +99,16 @@ public class FnAvg extends Function {
 		MathDiv avg = (MathDiv) total;
 		ResultSequence res = null;
 		if (avg instanceof XSDecimal) {
-			res = avg.div(ResultSequenceFactory
+			// Need to promote then divide
+			XSDecimal dec = new XSDecimal(((XSDecimal) avg).string_value());
+			res = dec.div(ResultSequenceFactory
 					.create_new(new XSDecimal(BigDecimal.valueOf(elems))));
 		} else if (avg instanceof XSDouble) {
-			 res = avg.div(ResultSequenceFactory
+			 XSDouble d = new XSDouble(((XSDouble) avg).string_value());
+			 res = d.div(ResultSequenceFactory
 					.create_new(new XSDouble(elems)));
 		} else if (avg instanceof XSFloat) {
+			XSFloat flt = new XSFloat(((XSFloat) avg).float_value());
 			res = avg.div(ResultSequenceFactory
 					.create_new(new XSFloat(elems)));
 		} else if (avg instanceof XSDuration) {
@@ -164,6 +168,8 @@ public class FnAvg extends Function {
 				d = (XSDouble) at; 
 			} else if (at instanceof NumericType) {
 				d = (NumericType) at;
+			} else if (at instanceof NodeType) {
+				d = new XSDecimal(at.string_value()); 
 			} else
 				DynamicError.throw_type_error();
 

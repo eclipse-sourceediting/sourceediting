@@ -73,6 +73,9 @@ public class OpTo extends Function {
 		ResultSequence r = (ResultSequence) iter.next();
 		int one = ((XSInteger) r.first()).int_value().intValue();
 		r = (ResultSequence) iter.next();
+		if (r.first() == null) {
+			return rs;
+		}
 		int two = ((XSInteger) r.first()).int_value().intValue();
 
 		if (one > two)

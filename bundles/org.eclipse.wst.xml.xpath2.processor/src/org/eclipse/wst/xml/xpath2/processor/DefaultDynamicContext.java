@@ -8,7 +8,8 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
- *     David Carver - bug 282223 - implementation of xs:duration data type. 
+ *     David Carver - bug 282223 - implementation of xs:duration data type.
+ *                  - bug 262765 - fix handling of range expression op:to and empty sequence 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
