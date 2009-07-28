@@ -129,8 +129,8 @@ public class ValidatorMetaData {
 	 */
 	public boolean canHandlePartitionType(String contentTypeIds[], String paritionType) {
         for(int i=0; i<contentTypeIds.length; i++) {
-    		if (fMatrix.containsKey(contentTypeIds[i])) {
-    			List partitions = (List) fMatrix.get(contentTypeIds[i]);
+        	List partitions = (List) fMatrix.get(contentTypeIds[i]);
+    		if (partitions != null) {
     			for (int j = 0; j < partitions.size(); j++) {
     				if (paritionType.equals(partitions.get(j)))
     					return true;
