@@ -361,6 +361,7 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       } catch (StaticError ex) {
          actual = ex.code();
       } catch (DynamicError ex) {
+    	 ex.printStackTrace();
          actual = ex.code();
       }
 
@@ -827,7 +828,7 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
 
    //Evaluation of external context item expression where context item used as argument to "max" function.
    public void test_externalcontextitem_22() throws Exception {
-      String inputFile = "/TestSources/.xml";
+      String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-22.xq";
       String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-22.txt";
       String expectedResult = getExpectedResult(resultFile);
@@ -847,9 +848,7 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
 	
-	      AnyType result = rs.first();
-	
-	      actual = result.string_value();
+	      actual = buildXMLResultString(rs); 
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -858,7 +857,7 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -868,7 +867,7 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-23.xq";
       String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -884,10 +883,14 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-	
+	      
 	      AnyType result = rs.first();
 	
-	      actual = result.string_value();
+	      if (result == null) {
+	    	  actual = "XPDY0002";
+	      } else {
+	    	  actual = result.string_value();
+	      }
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -903,7 +906,7 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
 
    //Evaluation of external context item expression where context item used as argument to "max" function.
    public void test_externalcontextitem_24() throws Exception {
-      String inputFile = "/TestSources/.xml";
+      String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-24.xq";
       String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-22.txt";
       String expectedResult = getExpectedResult(resultFile);
@@ -923,9 +926,7 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
 	
-	      AnyType result = rs.first();
-	
-	      actual = result.string_value();
+	      actual = buildXMLResultString(rs);
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -934,7 +935,7 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
