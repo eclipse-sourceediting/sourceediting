@@ -147,6 +147,24 @@ public class DynamicError extends XPathException {
 		return new DynamicError("FORX0002", error);
 	}
 
+	/**
+	 * Returns the dynamic error for an unsupported normalization form
+	 * 
+	 * @param err
+	 *            is the error
+	 * @return the DynamicError.
+	 * @since 1.1
+	 * 
+	 */
+	public static DynamicError unsupported_normalization_form(String err) {
+		String error = "Unsupported normalization form. ";
+
+		if (err != null)
+			error += " " + err;
+
+		return new DynamicError("FOCH0003", error);
+	}
+
 	private static DynamicError make_error(String code, String err, String msg) {
 		String error = err;
 

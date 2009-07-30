@@ -66,6 +66,7 @@ public class FnFunctionLibrary extends FunctionLibrary {
 		add_function(new FnSubstring());
 		add_function(new FnStringLength());
 		add_function(new FnNormalizeSpace());
+		add_function(new FnNormalizeUnicode());
 		add_function(new FnUpperCase());
 		add_function(new FnLowerCase());
 		add_function(new FnTranslate());
