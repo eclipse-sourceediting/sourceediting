@@ -1,6 +1,8 @@
 
 package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 
 import org.apache.xerces.xs.XSModel;
@@ -11,6 +13,19 @@ import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
 public class NormalizeUnicodeFuncTest extends AbstractPsychoPathTest {
 
+	@Override
+	public String extractXPathExpression(String xqFile, String inputFile) {
+		String body = super.extractXPathExpression(xqFile, inputFile);
+		try {
+			body = resolveCharacterReferences(body);
+		} catch (DOMLoaderException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return body;
+	}
+	
    //Test normalize-unicode with simple text input.
    public void test_fn_normalize_unicode1args_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";

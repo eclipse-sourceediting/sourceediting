@@ -390,5 +390,15 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		return expectedResult;
 	}
 
+	protected String resolveCharacterReferences(String xpath)
+			throws IOException, DOMLoaderException {
+				   String docText = "<doc>" + xpath + "</doc>";
+				   InputStream is = new ByteArrayInputStream(docText.getBytes("UTF-8"));
+				   DOMLoader domloader = new XercesLoader();
+				   domloader.set_validating(false);
+				   Document temp = domloader.load(is);
+				   return temp.getDocumentElement().getFirstChild().getTextContent();
+			   }
+
 
 }
