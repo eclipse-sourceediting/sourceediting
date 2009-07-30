@@ -8,6 +8,7 @@
  * 
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
+ *     Jesper Steen Moeller - bug 28149 - fix test expectation for fn:error test
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
 
@@ -786,7 +787,7 @@ public class ErrorFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", "SESU0007", actual);
+      assertEquals("XPath Result Error " + xqFile + ":", "SESU0011", actual);
         
 
    }
