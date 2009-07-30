@@ -7,6 +7,8 @@
  * 
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
+ *     Jesper Steen Moeller - bug 285145 - fix expected outcome
+                                           for iri-to-uri-1args-6
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
@@ -210,8 +212,7 @@ public class IRIToURIfuncTest extends AbstractPsychoPathTest {
    public void test_fn_iri_to_uri1args_6() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/EscapingFuncs/IRIToURIfunc/fn-iri-to-uri1args-6.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/EscapingFuncs/IRIToURIfunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
