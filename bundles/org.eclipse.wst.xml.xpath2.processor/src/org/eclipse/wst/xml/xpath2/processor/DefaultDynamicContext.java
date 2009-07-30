@@ -236,11 +236,13 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	 * @return integer from _node_order.get(node)
 	 */
 	public int node_position(Node node) {
-		Integer pos = (Integer) _node_order.get(node);
+		synchronized (this) {
+			Integer pos = (Integer) _node_order.get(node);
+	
+			assert pos != null;
 
-		assert pos != null;
-
-		return pos.intValue();
+			return pos.intValue();
+		}
 	}
 
 }
