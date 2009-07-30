@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver (STAR) - bug 273763 - correct error codes.
  *                           bug 280106 - Correct XPDY0021 - XPST0003 
+ *     Jesper Steen Moeller - bug 28149 - add more fn:error info
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -98,16 +99,35 @@ public class DynamicError extends XPathException {
 	/**
 	 * Returns the dynamic error.
 	 * 
+	 * @param desc
+	 *            is the description of the error
+	 * @return the DynamicError.
+	 * @since 1.1
+	 */
+	public static DynamicError user_error(String ns, String code, String desc) {
+		String error = "Error reported by fn:error.";
+
+		if (desc != null)
+			error = desc + " (reported by fn:error)";
+
+		// XXX: Need to pass the namespace also...
+		return new DynamicError(code, error);
+	}
+
+	/**
+	 * Returns the dynamic error.
+	 * 
 	 * @param err
-	 *            is the error
+	 *            is the description of the error
 	 * @return the DynamicError.
 	 */
 	public static DynamicError user_error(String err) {
-		String error = "Error reported by user.";
+		String error = "Error reported by fn:error.";
 
 		if (err != null)
-			error += " " + err;
+			error = err + " (reported by fn:error)";
 
+		// XXX: Need to pass the namespace also...
 		return new DynamicError("FOER0000", error);
 	}
 
