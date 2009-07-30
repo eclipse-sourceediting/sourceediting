@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Carver - STAR - bug 262765 - renamed to correct function name. 
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -20,7 +21,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 public class FnIriToURI extends AbstractURIFunction {
 
 	public FnIriToURI() {
-		super(new QName("iri-to-uri"), -1);
+		super(new QName("iri-to-uri"), 1);
 	}
 	
 	/**

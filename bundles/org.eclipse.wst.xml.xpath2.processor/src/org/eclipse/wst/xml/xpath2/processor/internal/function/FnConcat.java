@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -47,7 +48,7 @@ public class FnConcat extends Function {
 	 * Constructor for FnConcat.
 	 */
 	public FnConcat() {
-		super(new QName("concat"), -2);
+		super(new QName("concat"), 2, Integer.MAX_VALUE);
 	}
 
 	/**

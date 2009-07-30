@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 274471 - improvements to string-length function (support for arity 0)
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type  
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -48,7 +49,7 @@ public class FnStringLength extends Function {
 	 * Constructor for FnStringLength
 	 */
 	public FnStringLength() {
-		super(new QName("string-length"), -1);
+		super(new QName("string-length"), 0, 1);
 	}
 
 	/**

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Carver - STAR - bug 262765 - renamed to correct function name. 
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -127,6 +128,10 @@ public abstract class AbstractURIFunction extends Function {
 
 	public AbstractURIFunction(QName name, int arity) {
 		super(name, arity);
+	}
+
+	public AbstractURIFunction(QName name, int min_arity, int max_arity) {
+		super(name, min_arity, max_arity);
 	}
 
 	@Override

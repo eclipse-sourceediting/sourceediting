@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
+ *     Jesper Steen Moeller - bug 285145 - check arguments to op:to
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -519,7 +520,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	public Object visit(RangeExpr rex) {
 		ResultSequence one = (ResultSequence) rex.left().accept(this);
 		ResultSequence two = (ResultSequence) rex.right().accept(this);
-
+		if (one.empty() || two.empty()) return ResultSequenceFactory.create_new(); 
 		Collection args = new ArrayList();
 		args.add(one);
 		args.add(two);

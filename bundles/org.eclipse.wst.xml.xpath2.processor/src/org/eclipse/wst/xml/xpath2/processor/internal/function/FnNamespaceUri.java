@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver - bug 262765 - corrected implementation according to spec. 
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -31,7 +32,7 @@ public class FnNamespaceUri extends Function {
 	 * Constructor for FnNamespaceUri.
 	 */
 	public FnNamespaceUri() {
-		super(new QName("namespace-uri"), -1);
+		super(new QName("namespace-uri"), 0, 1);
 	}
 
 	/**

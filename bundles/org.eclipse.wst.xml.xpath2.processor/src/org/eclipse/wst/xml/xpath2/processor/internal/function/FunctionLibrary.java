@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Mukul Gandhi - bug 274471 - improvements to fn:string function (support for arity 0)
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -63,34 +64,7 @@ public class FunctionLibrary {
 	 * @return Result of the test.
 	 */
 	public boolean function_exists(QName name, int arity) {
-		boolean result = false;
-
-		result = _functions.containsKey(Function.signature(name, arity));
-
-		// found it
-		if (result)
-			return true;
-
-		// check if its a varg function
-		result = _functions.containsKey(Function.signature(name, -1));
-
-		// nope
-		if (!result)
-			return false;
-
-		// maybe... lets make sure the requirements are good...
-		Function f = function(name, -1);
-
-		// make sure we got at least arity arguments
-		if (arity >= (f.arity() * -1))
-			return true;
-		
-		// support for arity == 0
-		if ((arity == 0) && (f.arity() < 0))
-		  return true;	
-
-		// bye bye
-		return false;
+		return function(name, arity) != null;
 	}
 
 	/**
@@ -114,13 +88,9 @@ public class FunctionLibrary {
 		// nope
 		if (f == null)
 			return null;
-
-		if (arity >= (f.arity() * -1))
-			return f;
 		
-		// support for arity == 0
-		if ((arity == 0) && (f.arity() < 0))
-		   return f;
+		if (f.matches_arity(arity))
+			return f;
 
 		return null;
 	}

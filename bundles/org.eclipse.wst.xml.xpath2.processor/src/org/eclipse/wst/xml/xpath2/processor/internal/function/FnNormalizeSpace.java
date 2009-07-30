@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 274471 - improvements to normalize-space function (support for arity 0)
  *     David Carver (STAR) - bug 262765 - correct implementation to correctly get context node 
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -50,7 +51,7 @@ public class FnNormalizeSpace extends Function {
 	 * Constructor for FnNormalizeSpace.
 	 */
 	public FnNormalizeSpace() {
-		super(new QName("normalize-space"), -1);
+		super(new QName("normalize-space"), 0, 1);
 	}
 
 	/**

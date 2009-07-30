@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 274471 - improvements to fn:string function (support for arity 0) 
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -30,7 +31,7 @@ public class FnString extends Function {
 	 * Constructor for FnString.
 	 */
 	public FnString() {
-	  super(new QName("string"), -1);
+	  super(new QName("string"), 0, 1);
 	}
 
 	/**

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -57,6 +58,7 @@ public class FnCompare extends Function {
 	 * Constructor of FnCompare.
 	 */
 	public FnCompare() {
+		// XXX: This should be 2-3 when compare learns how to deal with collations
 		super(new QName("compare"), 2);
 	}
 

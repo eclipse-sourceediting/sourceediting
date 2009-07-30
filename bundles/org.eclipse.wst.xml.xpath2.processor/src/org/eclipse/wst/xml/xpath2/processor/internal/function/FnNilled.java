@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -30,7 +31,7 @@ public class FnNilled extends Function {
 	 * Constructor for FnNilled.
 	 */
 	public FnNilled() {
-		super(new QName("nilled"), -1);
+		super(new QName("nilled"), 0, 1);
 	}
 
 	/**
@@ -78,7 +79,7 @@ public class FnNilled extends Function {
 	public static Collection expected_args() {
 		if (_expected_args == null) {
 			_expected_args = new ArrayList();
-			_expected_args.add(new SeqType(SeqType.OCC_NONE));
+			_expected_args.add(new SeqType(SeqType.OCC_QMARK));
 		}
 
 		return _expected_args;

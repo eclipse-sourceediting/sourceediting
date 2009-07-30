@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver - STAR - bug 262765 - clean up fn:root according to spec. 
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -34,7 +35,7 @@ public class FnRoot extends Function {
 	 * Constructor for FnRoot.
 	 */
 	public FnRoot() {
-		super(new QName("root"), -1);
+		super(new QName("root"), 0, 1);
 	}
 
 	/**
@@ -49,7 +50,7 @@ public class FnRoot extends Function {
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 
-		assert args.size() == arity();
+		assert args.size() >= min_arity() && args.size() <= max_arity();
 
 		//ResultSequence argument = (ResultSequence) args.iterator().next();
 

@@ -11,6 +11,7 @@
  *                                 for attribute/element nodes 
  *     David Carver - bug 262765 - fixed comparison on sequence range values.
  *     Jesper S Moller - bug 283214 - fix eq for untyped atomic values
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -46,7 +47,7 @@ public class FsEq extends Function {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		assert args.size() == arity();
+		assert args.size() >= min_arity() && args.size() <= max_arity();
 
 		return fs_eq_value(args);
 	}

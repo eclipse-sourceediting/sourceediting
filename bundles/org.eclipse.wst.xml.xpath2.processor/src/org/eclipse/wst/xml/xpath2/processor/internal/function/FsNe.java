@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -40,7 +41,7 @@ public class FsNe extends Function {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		assert args.size() == arity();
+		assert args.size() >= min_arity() && args.size() <= max_arity();
 
 		return fs_ne_value(args);
 	}

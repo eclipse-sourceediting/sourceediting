@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Carver (STAR) - initial API and implementation
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
@@ -50,7 +51,7 @@ public class FnDefaultCollation extends Function {
 
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		assert args.size() == arity();
+		assert args.size() >= min_arity() && args.size() <= max_arity();
 		ResultSequence rs = ResultSequenceFactory.create_new();
 		rs.add(new XSString(DEFAULT_COLLATION));
 		return rs;

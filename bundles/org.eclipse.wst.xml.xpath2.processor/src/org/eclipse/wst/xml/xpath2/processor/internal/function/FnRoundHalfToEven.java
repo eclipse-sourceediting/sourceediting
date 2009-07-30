@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -34,7 +35,7 @@ public class FnRoundHalfToEven extends Function {
 	 * Constructor for FnRoundHalfToEven.
 	 */
 	public FnRoundHalfToEven() {
-		super(new QName("round-half-to-even"), -1);
+		super(new QName("round-half-to-even"), 1, 2);
 	}
 
 	/**

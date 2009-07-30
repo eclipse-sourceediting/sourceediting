@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver - STAR - bug 262765 - fixed implementation of fn:local-name according to spec.  
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -32,7 +33,7 @@ public class FnLocalName extends Function {
 	 * Constructor for FnLocalName.
 	 */
 	public FnLocalName() {
-		super(new QName("local-name"), -1);
+		super(new QName("local-name"), 0, 1);
 	}
 
 	/**

@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver (STAR) - bug 262765 - added exception handling to toss correct error numbers. 
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -33,7 +34,7 @@ public class FnReplace extends Function {
 	 * Constructor for RnReplace.
 	 */
 	public FnReplace() {
-		super(new QName("replace"), -3);
+		super(new QName("replace"), 3, 4);
 	}
 
 	/**

@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver - bug 280972 - fix fn:lang implementation so it matches spec. 
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -39,7 +40,7 @@ public class FnLang extends Function {
 	 * Constructor for FnLang.
 	 */
 	public FnLang() {
-		super(new QName("lang"), -1);
+		super(new QName("lang"), 1, 2);
 	}
 
 	/**

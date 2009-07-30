@@ -10,6 +10,7 @@
  *     Mukul Gandhi - bug 273719 - String Length does not work with Element arg.
  *     Mukul Gandhi - bug 273795 - improvements to function, substring (implemented
  *                                 numeric type promotion). 
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -33,7 +34,13 @@ public abstract class Function {
 	/**
 	 * if negative, need to have "at least"
 	 */
-	protected int _arity; 
+	protected int _min_arity; 
+	
+	/**
+	 * If "at least", this speci, unlimited if -1
+	 */
+	protected int _max_arity;
+	
 	protected FunctionLibrary _fl;
 
 	/**
@@ -46,7 +53,29 @@ public abstract class Function {
 	 */
 	public Function(QName name, int arity) {
 		_name = name;
-		_arity = arity;
+		if (arity < 0) {
+			throw new RuntimeException("We want to avoid this!");
+		}
+		_min_arity = arity;
+		_max_arity = arity;
+		_fl = null;
+	}
+
+	/**
+	 * Constructor for Function.
+	 * 
+	 * @param name
+	 *            QName.
+	 * @param arity
+	 *            the arity of a specific function.
+	 */
+	public Function(QName name, int min_arity, int max_arity) {
+		_name = name;
+		if (min_arity < 0 || max_arity < 0 || max_arity < min_arity) {
+			throw new RuntimeException("We want to avoid this!");
+		}
+		_min_arity = min_arity;
+		_max_arity = max_arity;
 		_fl = null;
 	}
 
@@ -60,14 +89,35 @@ public abstract class Function {
 	}
 
 	/**
-	 * Support for int interface.
+	 * Minimal number of allowed arguments.
 	 * 
-	 * @return Result of int operation.
+	 * @return The smallest number of erguments possible
 	 */
-	public int arity() {
-		return _arity;
+	public int min_arity() {
+		return _min_arity;
 	}
 
+	/**
+	 * Maximum number of allowed arguments.
+	 * 
+	 * @return The highest number of erguments possible
+	 */
+	public int max_arity() {
+		return _max_arity;
+	}
+
+	/**
+	 * Checks if this function has an to the
+	 * 
+	 * @param actual_arity
+	 * @return
+	 */
+	public boolean matches_arity(int actual_arity) {
+		if (actual_arity < min_arity()) return false;
+		if (actual_arity > max_arity()) return false;
+		return true;
+	}
+	
 	/**
 	 * Default constructor for signature.
 	 * 
@@ -85,7 +135,7 @@ public abstract class Function {
 	 * @return Signature.
 	 */
 	public static String signature(Function f) {
-		return signature(f.name(), f.arity());
+		return signature(f.name(), f.is_vararg() ? -1 : f.min_arity());
 	}
 
 	/**
@@ -140,8 +190,9 @@ public abstract class Function {
 			SeqType expected) throws DynamicError {
 		ResultSequence result = arg;
 
+		// XXX: Should use type_class instead and use item.getClass().isAssignableTo(expected.type_class())
 		AnyType expected_type = expected.type();
-		
+
 		// expected is atomic
 		if (expected_type instanceof AnyAtomicType) {
 			AnyAtomicType expected_aat = (AnyAtomicType) expected_type;
@@ -205,7 +256,7 @@ public abstract class Function {
 			Collection expected) throws DynamicError {
 		Collection result = new ArrayList();
 
-		assert args.size() == expected.size();
+		assert args.size() <= expected.size();
 
 		Iterator argi = args.iterator();
 		Iterator expi = expected.iterator();
@@ -241,6 +292,10 @@ public abstract class Function {
 			return null;
 
 		return _fl.dynamic_context();
+	}
+
+	public boolean is_vararg() {
+		return _min_arity != _max_arity;
 	}
 
 }

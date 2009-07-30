@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug274784 - improvements to xs:boolean data type implementation
+ *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -53,7 +54,7 @@ public class Constructor extends Function {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		assert args.size() == arity();
+		assert args.size() >= min_arity() && args.size() <= max_arity();
 
 		// sanity checks
 		ResultSequence arg = (ResultSequence) args.iterator().next();

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Steen Moeller - bug 285145 - don't silently allow empty sequences always
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
@@ -59,9 +60,21 @@ public class SeqType {
 	 */
 	// XXX hack to represent AnyNode...
 	public SeqType(int occ) {
-		this(null, occ);
+		this((AnyType)null, occ);
 
 		_type_class = NodeType.class;
+	}
+
+	/**
+	 * @param type_class
+	 *            is a class which represents the expected type
+	 * @param occ
+	 *            is an integer in the sequence.
+	 */
+	public SeqType(Class type_class, int occ) {
+		this((AnyType)null, occ);
+
+		_type_class = type_class;
 	}
 
 	/**
@@ -168,9 +181,6 @@ public class SeqType {
 	 * @return a result sequence
 	 */
 	public ResultSequence match(ResultSequence args) throws DynamicError {
-		if (args.empty()) {  // empty sequence so return an empty sequence
-			return args;
-		}
 		
 		int arg_count = 0;
 
