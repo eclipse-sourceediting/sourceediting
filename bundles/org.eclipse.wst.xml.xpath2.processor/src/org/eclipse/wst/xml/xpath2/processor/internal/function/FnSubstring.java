@@ -81,55 +81,46 @@ public class FnSubstring extends Function {
 	 */
 	public static ResultSequence substring(Collection args) throws DynamicError {
 		Collection cargs = Function.convert_arguments(args, expected_args(args));
-
-		Iterator argi = cargs.iterator();
-		ResultSequence arg1 = (ResultSequence) argi.next();
-		ResultSequence arg2 = (ResultSequence) argi.next();
-		
-		// for arity 3
-		ResultSequence arg3 = null;
-		if (argi.hasNext()) {
-		  arg3 = (ResultSequence) argi.next();	
-		}
-
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
-		if (arg1.empty()) {
-			rs.add(new XSString(""));
-			return rs;
+		Iterator argi = cargs.iterator();
+		ResultSequence stringArg = (ResultSequence) argi.next();
+		ResultSequence startPosArg = (ResultSequence) argi.next();
+		ResultSequence lengthArg = null;
+		
+		if (argi.hasNext()) {
+		  lengthArg = (ResultSequence) argi.next();	
 		}
 
-		String str = ((XSString) arg1.first()).value();
-		double dstart = ((XSDouble) arg2.first()).double_value();
+		if (stringArg.empty()) {
+			return emptyString(rs);
+		}
+
+		String str = ((XSString) stringArg.first()).value();
+		double dstart = ((XSDouble) startPosArg.first()).double_value();
 
 		int start = (int) Math.round(dstart);
 
-		if (start > str.length()) {
-		  rs.add(new XSString(""));
-		  return rs;
+		if (isStartOutOfBounds(str, start)) {
+		  return emptyString(rs);
 		}
 		
-		if (start <= 0) {
-			start = 0;
-		} else {
-			start = start - 1;
-		}
+		start = adjustStartPosition(start);
 
-		if (arg3 != null) {
-		  // for arity 3
-		  double dend = ((XSDouble) arg3.first()).double_value();
-		  int end = (int) Math.round(dend);
-		  if (dstart < 0) {
-			  end = (int)( dend - (Math.abs(dstart) + 1));
-		  } else if (dstart == 0) {
-			  end = end - 1;
-		  } else if (end < 0) {
-			  end = start - Math.abs(end);
-		  }
-		  int endpos = start + end;
-		  if (endpos < 0 || endpos > str.length()) {
-			  rs.add(new XSString(""));
-			  return rs;
+		if (lengthArg != null) {
+		  return substringLength(rs, lengthArg, dstart, start, str);
+		}
+		
+		rs.add(new XSString(str.substring(start)));
+
+		return rs;
+	}
+	
+	private static ResultSequence substringLength(ResultSequence rs, ResultSequence lengthArg, double dstart, int start, String str) {
+		  int length = adjustLength(lengthArg, dstart, start);
+		  int endpos = start + length;
+		  if (isEndPosOutOfBounds(endpos) || isStartOutOfBounds(str, endpos)) {
+			  return emptyString(rs);
 		  }
 		 
 		  if (start == 0 && endpos == 0) {
@@ -137,12 +128,42 @@ public class FnSubstring extends Function {
 		  } else {
 			  rs.add(new XSString(str.substring(start, endpos)));
 		  }
-		}
-		else {
-		  // for arity 2
-		  rs.add(new XSString(str.substring(start)));
-		}
+		  return rs;
+	}
 
+	private static boolean isEndPosOutOfBounds(int endpos) {
+		return endpos < 0;
+	}
+
+	private static int adjustLength(ResultSequence arg3, double dstart,
+			int start) {
+		double dlength = ((XSDouble) arg3.first()).double_value();
+		  int length = (int) Math.round(dlength);
+		  if (dstart < 0) {
+			  length = (int)( dlength - (Math.abs(dstart) + 1));
+		  } else if (dstart == 0) {
+			  length = length - 1;
+		  } else if (isEndPosOutOfBounds(length)) {
+			  length = start - Math.abs(length);
+		  }
+		return length;
+	}
+
+	private static int adjustStartPosition(int start) {
+		if (start <= 0) {
+			start = 0;
+		} else {
+			start = start - 1;
+		}
+		return start;
+	}
+
+	private static boolean isStartOutOfBounds(String str, int start) {
+		return start > str.length();
+	}
+
+	private static ResultSequence emptyString(ResultSequence rs) {
+		rs.add(new XSString(""));
 		return rs;
 	}
 
