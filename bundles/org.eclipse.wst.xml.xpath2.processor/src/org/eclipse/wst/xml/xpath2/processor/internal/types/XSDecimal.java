@@ -341,7 +341,10 @@ public class XSDecimal extends NumericType {
 		AnyType nanCheck = (AnyType) arg.first();
 		
 		XSDecimal val = (XSDecimal) get_single_type(carg, XSDecimal.class);
-		if (val.zero())
+		if (val.zero()) {
+			return ResultSequenceFactory.create_new(new XSDouble(Double.NaN));
+		}
+		if (zero())
 			throw DynamicError.div_zero(null);
 		BigDecimal result = getValue().divide(val.getValue(), 18, RoundingMode.HALF_EVEN);
 //		BigDecimal result = BigDecimal.valueOf(double_value() / val.double_value());

@@ -94,8 +94,10 @@ public class FnSubstring extends Function {
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
-		if (arg1.empty())
-		  return rs;
+		if (arg1.empty()) {
+			rs.add(new XSString(""));
+			return rs;
+		}
 
 		String str = ((XSString) arg1.first()).value();
 		double dstart = ((XSDouble) arg2.first()).double_value();
@@ -106,16 +108,39 @@ public class FnSubstring extends Function {
 		  rs.add(new XSString(""));
 		  return rs;
 		}
+		
+		if (start <= 0) {
+			start = 0;
+		} else {
+			start = start - 1;
+		}
 
 		if (arg3 != null) {
 		  // for arity 3
 		  double dend = ((XSDouble) arg3.first()).double_value();
 		  int end = (int) Math.round(dend);
-		  rs.add(new XSString(str.substring(start - 1, start - 1 + end)));
+		  if (dstart < 0) {
+			  end = (int)( dend - (Math.abs(dstart) + 1));
+		  } else if (dstart == 0) {
+			  end = end - 1;
+		  } else if (end < 0) {
+			  end = start - Math.abs(end);
+		  }
+		  int endpos = start + end;
+		  if (endpos < 0 || endpos > str.length()) {
+			  rs.add(new XSString(""));
+			  return rs;
+		  }
+		 
+		  if (start == 0 && endpos == 0) {
+			  rs.add(new XSString(str.substring(start)));
+		  } else {
+			  rs.add(new XSString(str.substring(start, endpos)));
+		  }
 		}
 		else {
 		  // for arity 2
-		  rs.add(new XSString(str.substring(start - 1)));
+		  rs.add(new XSString(str.substring(start)));
 		}
 
 		return rs;
