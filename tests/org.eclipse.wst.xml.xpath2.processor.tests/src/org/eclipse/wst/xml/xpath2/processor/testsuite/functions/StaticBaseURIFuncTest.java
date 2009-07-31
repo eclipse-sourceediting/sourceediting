@@ -71,6 +71,9 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      String uri = "ftp://ftp.is.co.za/rfc/somefile.txt";
+      dc.set_base_uri(uri);
+
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -108,6 +111,8 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      String baseuri = "mailto:John.Doe@example.com"; 
+      dc.set_base_uri(baseuri);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -145,6 +150,8 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      String baseuri = "news:comp.infosystems.www.servers.unix";
+      dc.set_base_uri(baseuri);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -182,6 +189,8 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      String baseuri = "telnet://192.0.2.16:80/";
+      dc.set_base_uri(baseuri);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -219,6 +228,8 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      String baseuri = "tel:+1-816-555-1212";
+      dc.set_base_uri(baseuri);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -256,6 +267,8 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      String baseuri = "urn:oasis:names:specification:docbook:dtd:xml:4.1.2";
+      dc.set_base_uri(baseuri);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -293,6 +306,8 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      String baseuri = "http://www.example.com";
+      dc.set_base_uri(baseuri);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -330,6 +345,7 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.set_base_uri("http://www.example.com");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -367,6 +383,8 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      String baseuri = "http://www.example.com";
+      dc.set_base_uri(baseuri);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -404,6 +422,8 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      String baseuri = "http://www.example.com";
+      dc.set_base_uri(baseuri);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -441,6 +461,8 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      String baseuri = "http://www.example.com";
+      dc.set_base_uri(baseuri);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -478,6 +500,8 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      String baseuri = "http://www.example.com";
+      dc.set_base_uri(baseuri);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -515,6 +539,8 @@ public class StaticBaseURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      String baseuri = "http://www.example.com";
+      dc.set_base_uri(baseuri);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
