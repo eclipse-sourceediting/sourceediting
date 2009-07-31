@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     David Carver (STAR) - bug 262765 - add ability to set the base uri 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -237,4 +238,11 @@ public interface StaticContext {
 	 * @return any atomic type
 	 */
 	public AnyAtomicType make_atomic(QName name);
+	
+	/**
+	 * Sets the base uri for the context.
+	 * @param baseuri
+	 * @since 1.1
+	 */
+	public void set_base_uri(String baseuri);
 }

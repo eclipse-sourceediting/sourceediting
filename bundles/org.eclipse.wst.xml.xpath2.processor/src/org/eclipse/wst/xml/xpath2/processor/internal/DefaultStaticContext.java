@@ -577,4 +577,11 @@ public class DefaultStaticContext implements StaticContext {
 			level++;
 		}
 	}
+
+	/**
+	 * Set the Base URI for the static context.
+	 */
+	public void set_base_uri(String baseuri) {
+		_base_uri = new XSAnyURI(baseuri);
+	}
 }

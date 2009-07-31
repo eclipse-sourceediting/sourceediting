@@ -110,6 +110,12 @@
         <filter id="403804204">
             <message_arguments>
                 <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
+                <message_argument value="set_base_uri(String)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
                 <message_argument value="variable_exists(QName)"/>
             </message_arguments>
         </filter>
@@ -206,13 +212,13 @@
         <filter id="405901410">
             <message_arguments>
                 <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
-                <message_argument value="make_atomic(QName)"/>
+                <message_argument value="expand_function_qname(QName)"/>
             </message_arguments>
         </filter>
         <filter id="405901410">
             <message_arguments>
                 <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
-                <message_argument value="expand_function_qname(QName)"/>
+                <message_argument value="make_atomic(QName)"/>
             </message_arguments>
         </filter>
         <filter id="405901410">
