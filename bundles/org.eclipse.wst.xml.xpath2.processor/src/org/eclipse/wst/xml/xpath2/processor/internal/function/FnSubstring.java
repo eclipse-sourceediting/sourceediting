@@ -98,6 +98,10 @@ public class FnSubstring extends Function {
 
 		String str = ((XSString) stringArg.first()).value();
 		double dstart = ((XSDouble) startPosArg.first()).double_value();
+		
+		if (Double.NaN == dstart) {
+			return emptyString(rs);
+		}
 
 		int start = (int) Math.round(dstart);
 

@@ -40,16 +40,16 @@ public abstract class AbstractURIFunction extends Function {
 		case '-':
 		case '_':
 		case '.':
-		case '!':
 		case '~':
-		case '*':
-		case '\'':
-		case '(':
-		case ')':
-		case '#':
-		case '%':
 			return false;
 	
+		case '(':
+		case ')':
+		case '\'':
+		case '*':
+		case '!':
+		case '#':
+		case '%':
 		case ';':
 		case '/':
 		case '?':

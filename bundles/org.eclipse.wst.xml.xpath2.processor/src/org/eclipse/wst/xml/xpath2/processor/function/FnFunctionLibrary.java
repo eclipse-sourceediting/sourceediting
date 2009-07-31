@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver (STAR) - bug 262765 - Added FnDefaultCollation.
+ *     David Carver (STAR) - bug 285321 - implemented fn:encode-for-uri()
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.function;
@@ -80,6 +81,7 @@ public class FnFunctionLibrary extends FunctionLibrary {
 		add_function(new FnMatches());
 		add_function(new FnReplace());
 		add_function(new FnTokenize());
+		add_function(new FnEncodeForURI());
 
 		// boolean functions
 		add_function(new FnTrue());

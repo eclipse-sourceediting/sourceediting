@@ -17,6 +17,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Iterator;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
@@ -318,6 +319,20 @@ public class XSInteger extends XSDecimal {
         int compareResult = int_value().compareTo(val.int_value());
 		
 		return compareResult < 0;
+	}
+	
+	@Override
+	public ResultSequence div(ResultSequence arg) throws DynamicError {
+		ResultSequence carg = convertResultSequence(arg);
+		
+		XSDecimal val = (XSDecimal) get_single_type(carg, XSDecimal.class);
+
+		if (val.zero()) {
+			throw DynamicError.div_zero(null);
+		}
+		
+		BigDecimal result = getValue().divide(val.getValue(), 18, RoundingMode.HALF_EVEN);
+		return ResultSequenceFactory.create_new(new XSDecimal(result));
 	}
 
 }
