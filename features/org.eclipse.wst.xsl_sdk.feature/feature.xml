@@ -30,6 +30,10 @@
          id="org.eclipse.wst.xsl.feature.source"
          version="0.0.0"/>
 
+   <includes
+         id="org.eclipse.wst.xml.xpath2.processor.feature"
+         version="0.0.0"/>
+
    <plugin
          id="org.eclipse.wst.xsl.sdk.documentation"
          download-size="0"
