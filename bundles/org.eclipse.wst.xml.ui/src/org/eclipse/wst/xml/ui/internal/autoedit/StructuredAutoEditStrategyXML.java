@@ -94,10 +94,13 @@ public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
 			if ("/".equals(command.text) && ">".equals(document.get(command.offset, 1)) && isPreferenceEnabled(XMLUIPreferenceNames.TYPING_REMOVE_END_TAGS)) { //$NON-NLS-1$ //$NON-NLS-2$
 				IDOMNode node = (IDOMNode) model.getIndexedRegion(command.offset);
 				if (node != null && !node.hasChildNodes()) {
-					IStructuredDocumentRegion region = node.getEndStructuredDocumentRegion();
+					IStructuredDocumentRegion region = node.getFirstStructuredDocumentRegion();
+					if(region.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN && command.offset <= region.getEnd()) {
+						region = node.getEndStructuredDocumentRegion();
 
-					if (region != null && region.isEnded())
-						document.replace(region.getStartOffset(), region.getLength(), ""); //$NON-NLS-1$
+						if (region != null && region.isEnded())
+							document.replace(region.getStartOffset(), region.getLength(), ""); //$NON-NLS-1$
+					}
 				}
 			}
 		}
