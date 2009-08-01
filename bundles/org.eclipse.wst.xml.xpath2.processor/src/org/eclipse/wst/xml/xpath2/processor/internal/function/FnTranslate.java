@@ -11,11 +11,13 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.utils.SurrogateUtils;
 
 import java.util.*;
 
@@ -108,8 +110,11 @@ public class FnTranslate extends Function {
 		}
 
 		String str = ((XSString) arg1.first()).value();
+		str = SurrogateUtils.decodeXML(str);
 		String mapstr = ((XSString) arg2.first()).value();
+		mapstr = SurrogateUtils.decodeXML(mapstr);
 		String transstr = ((XSString) arg3.first()).value();
+		transstr = SurrogateUtils.decodeXML(transstr);
 
 		String result = new String(str);
 
@@ -131,7 +136,8 @@ public class FnTranslate extends Function {
 
 			result = result.replaceAll(chartofind, replace);
 		}
-
+		
+		result = StringEscapeUtils.escapeXml(result);
 		rs.add(new XSString(result));
 
 		return rs;

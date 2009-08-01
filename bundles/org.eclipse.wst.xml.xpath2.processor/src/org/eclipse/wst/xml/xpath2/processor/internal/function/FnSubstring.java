@@ -9,15 +9,18 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 273795 - improvements to function, substring
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
+ *     David Carver - bug 282096 - improvements for surrogate handling 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.utils.SurrogateUtils;
 
 import java.util.*;
 
@@ -97,6 +100,7 @@ public class FnSubstring extends Function {
 		}
 
 		String str = ((XSString) stringArg.first()).value();
+		str = SurrogateUtils.decodeXML(str);
 		double dstart = ((XSDouble) startPosArg.first()).double_value();
 		
 		if (Double.NaN == dstart) {
@@ -115,7 +119,7 @@ public class FnSubstring extends Function {
 		  return substringLength(rs, lengthArg, dstart, start, str);
 		}
 		
-		rs.add(new XSString(str.substring(start)));
+		rs.add(new XSString(StringEscapeUtils.escapeXml(str.substring(start))));
 
 		return rs;
 	}
@@ -128,9 +132,9 @@ public class FnSubstring extends Function {
 		  }
 		 
 		  if (start == 0 && endpos == 0) {
-			  rs.add(new XSString(str.substring(start)));
+			  rs.add(new XSString(StringEscapeUtils.escapeXml(str.substring(start))));
 		  } else {
-			  rs.add(new XSString(str.substring(start, endpos)));
+			  rs.add(new XSString(StringEscapeUtils.escapeXml(str.substring(start, endpos))));
 		  }
 		  return rs;
 	}

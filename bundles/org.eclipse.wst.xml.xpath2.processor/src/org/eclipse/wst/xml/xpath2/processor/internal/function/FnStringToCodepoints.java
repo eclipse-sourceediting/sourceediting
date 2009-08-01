@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Gandhi - bug 280554 - improvements to the function implementation 
+ *     Mukul Gandhi - bug 280554 - improvements to the function implementation
+ *     David Carver - bug 282096 - improvements for surrogate handling  
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -17,6 +18,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.utils.SurrogateUtils;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -70,6 +72,7 @@ public class FnStringToCodepoints extends Function {
 
 		XSString xstr = (XSString) arg1.first();
 		String str = xstr.value();
+		str = SurrogateUtils.decodeXML(str);
 
 		for (int i = 0; i < str.length(); i++) {
 			// Character.codePointAt API, is introduced in Java 1.5 

@@ -7,11 +7,13 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     Mukul Gandhi - improvements to the function implementation 
+ *     Mukul Gandhi - improvements to the function implementation
+ *     David Carver - bug 282096 - improvements for surrogate handling 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -80,7 +82,9 @@ public class FnCodepointsToString extends Function {
 
 		// "new String(int[] codePoints, int offset, int count)" is a facility
 		// introduced in Java 1.5
-		rs.add(new XSString(new String(codePointArray, 0, codePointArray.length)));
+		String str = new String(codePointArray, 0, codePointArray.length);
+		str = StringEscapeUtils.escapeXml(str);
+		rs.add(new XSString(str));
 		
 		return rs;
 	}

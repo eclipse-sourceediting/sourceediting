@@ -6,16 +6,19 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     David Carver - bug 282096 - improvements for surrogate handling  
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.utils.SurrogateUtils;
 
 import java.util.*;
 
@@ -69,12 +72,16 @@ public class FnSubstringAfter extends Function {
 		ResultSequence arg1 = (ResultSequence) argiter.next();
 		String str1 = "";
 		String str2 = "";
-		if (!arg1.empty())
+		if (!arg1.empty()) {
 			str1 = ((XSString) arg1.first()).value();
+			str1 = SurrogateUtils.decodeXML(str1);
+		}
 
 		ResultSequence arg2 = (ResultSequence) argiter.next();
-		if (!arg2.empty())
+		if (!arg2.empty()) {
 			str2 = ((XSString) arg2.first()).value();
+			str2 = SurrogateUtils.decodeXML(str2);
+		}
 
 		int str1len = str1.length();
 		int str2len = str2.length();
@@ -97,7 +104,7 @@ public class FnSubstringAfter extends Function {
 			result = str1.substring(index, str1len);
 		}
 
-		rs.add(new XSString(result));
+		rs.add(new XSString(StringEscapeUtils.escapeXml(result)));
 
 		return rs;
 	}

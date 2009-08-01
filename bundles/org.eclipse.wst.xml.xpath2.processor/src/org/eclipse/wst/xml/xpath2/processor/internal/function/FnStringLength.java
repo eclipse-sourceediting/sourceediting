@@ -10,16 +10,19 @@
  *     Mukul Gandhi - bug 274471 - improvements to string-length function (support for arity 0)
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type  
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
+ *     David Carver - bug 282096 - improvements for surrogate handling 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.utils.SurrogateUtils;
 
 import java.math.BigInteger;
 import java.util.*;
@@ -95,6 +98,7 @@ public class FnStringLength extends Function {
 		}
 
 		String str = ((XSString) arg1.first()).value();
+		str = SurrogateUtils.decodeXML(str);
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
 		rs.add(new XSInteger(BigInteger.valueOf(str.length())));

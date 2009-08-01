@@ -6,16 +6,19 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     David Carver - bug 282096 - improvements for surrogate handling  
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.utils.SurrogateUtils;
 
 import java.util.*;
 
@@ -86,8 +89,9 @@ public class FnLowerCase extends Function {
 		}
 
 		String str = ((XSString) arg1.first()).value();
+		str = SurrogateUtils.decodeXML(str);
 
-		rs.add(new XSString(str.toLowerCase()));
+		rs.add(new XSString(StringEscapeUtils.escapeXml(str.toLowerCase())));
 
 		return rs;
 	}
