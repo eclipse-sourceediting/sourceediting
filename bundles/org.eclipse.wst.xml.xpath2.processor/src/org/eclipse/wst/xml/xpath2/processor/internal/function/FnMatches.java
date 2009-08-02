@@ -12,6 +12,10 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.xerces.impl.xpath.regex.Match;
+import org.apache.xerces.impl.xpath.regex.ParseException;
+import org.apache.xerces.impl.xpath.regex.RegularExpression;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -29,12 +33,13 @@ import java.util.regex.*;
  */
 public class FnMatches extends Function {
 	private static Collection _expected_args = null;
+	private static final String validflags = "smix";
 
 	/**
 	 * Constructor for FnMatches.
 	 */
 	public FnMatches() {
-		super(new QName("matches"), 2);
+		super(new QName("matches"), 2, 3);
 	}
 
 	/**
@@ -72,27 +77,71 @@ public class FnMatches extends Function {
 		if (!arg1.empty()) {
 			str1 = ((XSString) arg1.first()).value();
 			str1 = SurrogateUtils.decodeXML(str1);
+			str1 = StringEscapeUtils.unescapeXml(str1);
 		}
 
 		ResultSequence arg2 = (ResultSequence) argiter.next();
 		String pattern = ((XSString) arg2.first()).value();
 		pattern = SurrogateUtils.decodeXML(pattern);
+		String flags = null;
+
+		if (argiter.hasNext()) {
+			ResultSequence flagRS = null;
+			flagRS = (ResultSequence) argiter.next();
+			flags = flagRS.first().string_value();
+			if (validflags.indexOf(flags) == -1 && flags.length() > 0 ) {
+				throw DynamicError.regex_flags_error(null);
+			}
+		}
 
 		// XXX THIS IS NOT CORRECT
+//		try {
+//			boolean result = false;
+//
+//			} else {
+//				result = str1.matches(pattern);
+//			}
+//
+//			rs.add(new XSBoolean(result));
+//			return rs;
+//		} catch (PatternSyntaxException err) {
+//			throw DynamicError.regex_error(null);
+//		}
 		try {
 			boolean result = false;
-
-			if (pattern.indexOf('^') == -1 && pattern.indexOf('$') == -1) {
-				result = str1.indexOf(pattern) != -1;
-			} else {
-				result = str1.matches(pattern);
-			}
-
+			result = javaRegex(pattern, flags, str1);
 			rs.add(new XSBoolean(result));
 			return rs;
-		} catch (PatternSyntaxException err) {
-			throw DynamicError.regex_error(null);
+		} catch (PatternSyntaxException pex) {
+			throw DynamicError.regex_error(pex.getMessage());
 		}
+	}
+	
+	private static boolean javaRegex(String pattern, String flags, String src) {
+		int flag = 0;
+		if (flags != null) {
+			if (flags.indexOf("m") >= 0) {
+				flag = flag | Pattern.MULTILINE;
+			}
+			if (flags.indexOf("s") >= 0) {
+				flag = flag | Pattern.DOTALL;
+			}
+			if (flags.indexOf("i") >= 0) {
+				flag = flag | Pattern.CASE_INSENSITIVE;
+			}
+			
+			if (flags.indexOf("x") >= 0) {
+				flag = flag | Pattern.COMMENTS;
+			}
+		}
+		
+		Pattern p = Pattern.compile(pattern, flag);
+		Matcher m = p.matcher(src);
+		boolean fnd = false;
+		while (m.find()) {
+			fnd = true;
+		}
+		return fnd;
 	}
 
 	/**
@@ -105,6 +154,7 @@ public class FnMatches extends Function {
 			_expected_args = new ArrayList();
 			SeqType arg = new SeqType(new XSString(), SeqType.OCC_QMARK);
 			_expected_args.add(arg);
+			_expected_args.add(new SeqType(new XSString(), SeqType.OCC_NONE));
 			_expected_args.add(new SeqType(new XSString(), SeqType.OCC_NONE));
 		}
 

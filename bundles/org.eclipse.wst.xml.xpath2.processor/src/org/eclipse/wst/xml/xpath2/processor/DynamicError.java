@@ -130,6 +130,22 @@ public class DynamicError extends XPathException {
 		// XXX: Need to pass the namespace also...
 		return new DynamicError("FOER0000", error);
 	}
+	
+	/**
+	 * Returns the Dynamic Error for invalid flags in regular expressions
+	 * @param err
+	 * @return
+	 * @since 1.1
+	 */
+	public static DynamicError regex_flags_error(String err) {
+		String error = "Invalid regular expression flag parameter.";
+
+		if (err != null)
+			error += " " + err;
+
+		return new DynamicError("FORX0001", error);
+		
+	}
 
 	/**
 	 * Returns the dynamic error.
