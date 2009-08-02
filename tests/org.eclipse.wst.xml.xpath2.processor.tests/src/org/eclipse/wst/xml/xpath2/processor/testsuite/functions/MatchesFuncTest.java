@@ -211,7 +211,7 @@ public class MatchesFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/MatchesFunc/fn-matchesErr-1.xq";
       String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/MatchesFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORX0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -1136,7 +1136,7 @@ public class MatchesFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/MatchesFunc/fn-matches-25.xq";
       String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/MatchesFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FORX0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
