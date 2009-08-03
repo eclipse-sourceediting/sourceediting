@@ -164,6 +164,23 @@ public class DynamicError extends XPathException {
 	}
 
 	/**
+	 * Returns the dynamic error.
+	 * 
+	 * @param err
+	 *            is the error
+	 * @return the DynamicError.
+	 * @since 1.1
+	 */
+	public static DynamicError regex_match_zero_length(String err) {
+		String error = "Invalid regular expression.";
+
+		if (err != null)
+			error += " " + err;
+
+		return new DynamicError("FORX0003", error);
+	}
+	
+	/**
 	 * Returns the dynamic error for an unsupported normalization form
 	 * 
 	 * @param err

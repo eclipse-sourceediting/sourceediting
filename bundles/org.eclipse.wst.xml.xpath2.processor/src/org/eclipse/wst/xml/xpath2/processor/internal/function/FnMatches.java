@@ -7,15 +7,13 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     David Carver - bug 282096 - improvements for surrogate handling  
+ *     David Carver - bug 282096 - improvements for surrogate handling
+ *     David Carver - bug 262765 - improvements to Regular Expression   
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.xerces.impl.xpath.regex.Match;
-import org.apache.xerces.impl.xpath.regex.ParseException;
-import org.apache.xerces.impl.xpath.regex.RegularExpression;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -31,9 +29,8 @@ import java.util.regex.*;
  * as $pattern as influenced by the value of $flags, if present; otherwise, it
  * returns false.
  */
-public class FnMatches extends Function {
+public class FnMatches extends AbstractRegExFunction {
 	private static Collection _expected_args = null;
-	private static final String validflags = "smix";
 
 	/**
 	 * Constructor for FnMatches.
@@ -94,22 +91,9 @@ public class FnMatches extends Function {
 			}
 		}
 
-		// XXX THIS IS NOT CORRECT
-//		try {
-//			boolean result = false;
-//
-//			} else {
-//				result = str1.matches(pattern);
-//			}
-//
-//			rs.add(new XSBoolean(result));
-//			return rs;
-//		} catch (PatternSyntaxException err) {
-//			throw DynamicError.regex_error(null);
-//		}
 		try {
 			boolean result = false;
-			result = javaRegex(pattern, flags, str1);
+			result = matches(pattern, flags, str1);
 			rs.add(new XSBoolean(result));
 			return rs;
 		} catch (PatternSyntaxException pex) {
@@ -117,32 +101,6 @@ public class FnMatches extends Function {
 		}
 	}
 	
-	private static boolean javaRegex(String pattern, String flags, String src) {
-		int flag = 0;
-		if (flags != null) {
-			if (flags.indexOf("m") >= 0) {
-				flag = flag | Pattern.MULTILINE;
-			}
-			if (flags.indexOf("s") >= 0) {
-				flag = flag | Pattern.DOTALL;
-			}
-			if (flags.indexOf("i") >= 0) {
-				flag = flag | Pattern.CASE_INSENSITIVE;
-			}
-			
-			if (flags.indexOf("x") >= 0) {
-				flag = flag | Pattern.COMMENTS;
-			}
-		}
-		
-		Pattern p = Pattern.compile(pattern, flag);
-		Matcher m = p.matcher(src);
-		boolean fnd = false;
-		while (m.find()) {
-			fnd = true;
-		}
-		return fnd;
-	}
 
 	/**
 	 * Obtain a list of expected arguments.
