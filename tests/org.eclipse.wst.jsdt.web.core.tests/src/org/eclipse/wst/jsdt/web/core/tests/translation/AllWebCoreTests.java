@@ -10,7 +10,7 @@ public class AllWebCoreTests {
 		//$JUnit-BEGIN$
 
 		//$JUnit-END$
-		suite.addTest(new TestSuite(TestHtmlTranslation.class, "TestHtmlTranslation"));
+		suite.addTestSuite(TestHtmlTranslation.class);
 		return suite;
 	}
 
