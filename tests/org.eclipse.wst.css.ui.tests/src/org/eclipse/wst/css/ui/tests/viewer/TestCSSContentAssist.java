@@ -10,13 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.css.ui.tests.viewer;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -36,6 +30,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.css.ui.StructuredTextViewerConfigurationCSS;
 import org.eclipse.wst.css.ui.internal.contentassist.CSSContentAssistProcessor;
+import org.eclipse.wst.css.ui.tests.ProjectUtil;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -62,7 +57,7 @@ public class TestCSSContentAssist extends TestCase {
 		super.setUp();
 		projectName = "CSSContentAssistForMedia";
 		fileName = "mediaexample.css";
-		resourcesFolder = "testresources";
+		resourcesFolder = "/testresources";
 
 		String filePath = setupProject();
 		file = ResourcesPlugin.getWorkspace().getRoot().getFile(
@@ -111,29 +106,6 @@ public class TestCSSContentAssist extends TestCase {
 		document = model.getStructuredDocument();
 	}
 
-	protected static void copyBundleEntryIntoWorkspace(String resourcesPath, String fullNewProjectPath) throws CoreException, FileNotFoundException,
-	IOException, CoreException {
-		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fullNewProjectPath));
-		InputStream input = new BufferedInputStream(new FileInputStream(resourcesPath));
-		if (input != null) {
-			byte[] b = new byte[2048];
-			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			int i = -1;
-			while ((i = input.read(b)) > -1) {
-				output.write(b, 0, i);
-			}
-
-			if (file != null) {
-				if (!file.exists()) {
-					file.create(new ByteArrayInputStream(output.toByteArray()), true, new NullProgressMonitor());
-				}
-				else {
-					file.setContents(new ByteArrayInputStream(output.toByteArray()), true, false, new NullProgressMonitor());
-				}
-			}
-		}
-	}
-
 	protected String setupProject() throws Exception{
 		IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(projectName);
 
@@ -146,8 +118,7 @@ public class TestCSSContentAssist extends TestCase {
 		}
 		String filePath = project.getFullPath().addTrailingSeparator().append(fileName).toString();
 
-		String f = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
-		copyBundleEntryIntoWorkspace(f + resourcesFolder + "/" + fileName, filePath);
+		ProjectUtil.copyBundleEntriesIntoWorkspace(resourcesFolder, project.getFullPath().toString());
 
 		return filePath;
 	}
@@ -156,13 +127,12 @@ public class TestCSSContentAssist extends TestCase {
 		super.tearDown();
 	}
 
-
 	public void testContentAssistInsideMedia() throws Exception {
 
 		try {
 			CSSContentAssistProcessor processor = new CSSContentAssistProcessor();
 			ICompletionProposal[] proposals = processor.computeCompletionProposals(sourceViewer, 24);
-			assertTrue("No proposals offset.", proposals.length > 0);
+			assertTrue("No proposals at offset.", proposals.length > 0);
 			ICompletionProposal proposal = proposals[0];
 			assertEquals("Wrong proposal returned for ACRONYM.", "azimuth", proposal.getDisplayString()); 
 		} finally {
