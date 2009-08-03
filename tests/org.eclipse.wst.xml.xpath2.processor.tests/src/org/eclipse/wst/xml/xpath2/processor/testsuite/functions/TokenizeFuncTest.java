@@ -63,7 +63,7 @@ public class TokenizeFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/MatchStringFunc/TokenizeFunc/fn-tokenize-2.xq";
       String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/MatchStringFunc/TokenizeFunc/";
-      String expectedResult = "FORX0002";
+      String expectedResult = "FORX0001";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
