@@ -36,4 +36,21 @@
              class="org.eclipse.wst.jsdt.web.ui.tests.translation.RunCodeHandler"
              commandId="org.eclipse.wst.jsdt.web.runCode"/>
 	</extension>
+	<extension point="org.eclipse.ui.bindings">
+      <!--  win32:  M1=CTRL,    M2=SHIFT, M3=ALT, M4=-
+            carbon: M1=COMMAND, M2=SHIFT, M3=ALT, M4=CTRL
+            gtk: ? 
+      -->
+		<key
+			sequence="M1+M2+8"
+			contextId="org.eclipse.wst.jsdt.ui.javascriptViewScope"
+			commandId="org.eclipse.wst.jsdt.web.executeArbitrarySnippet"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+	</extension>
+    <extension
+       point="org.eclipse.ui.commands">
+	    <command
+	          id="org.eclipse.wst.jsdt.web.executeArbitrarySnippet"
+	          name="%_UI_RUN"/>
+	</extension>
 </plugin>
