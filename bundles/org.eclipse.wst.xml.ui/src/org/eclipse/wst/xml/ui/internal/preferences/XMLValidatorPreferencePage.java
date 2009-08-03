@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
@@ -39,6 +38,8 @@ public class XMLValidatorPreferencePage extends AbstractPreferencePage {
   private Button fHonourAllSchemaLocations;
 
   private Button fUseXinclude;
+ 
+  private static final String[] SEVERITIES = {XMLUIMessages.Indicate_no_grammar_specified_severities_error, XMLUIMessages.Indicate_no_grammar_specified_severities_warning, XMLUIMessages.Indicate_no_grammar_specified_severities_ignore};
 
   protected Control createContents(Composite parent) {
     Composite composite = (Composite)super.createContents(parent);
@@ -58,7 +59,7 @@ public class XMLValidatorPreferencePage extends AbstractPreferencePage {
 
     if (fIndicateNoGrammar == null) {
       createLabel(validatingGroup, XMLUIMessages.Indicate_no_grammar_specified);
-      fIndicateNoGrammar = createCombo(validatingGroup, StringUtils.unpack(XMLUIMessages.Indicate_no_grammar_specified_severities));
+      fIndicateNoGrammar = createCombo(validatingGroup, SEVERITIES);
     }
     if (fUseXinclude == null) {
       fUseXinclude = createCheckBox(validatingGroup, XMLUIMessages.Use_XInclude);
@@ -96,7 +97,7 @@ public class XMLValidatorPreferencePage extends AbstractPreferencePage {
 
     if (fIndicateNoGrammar != null) {
       fIndicateNoGrammar.select(2 - indicateNoGrammarButtonSelected);
-      fIndicateNoGrammar.setText(StringUtils.unpack(XMLUIMessages.Indicate_no_grammar_specified_severities)[2 - indicateNoGrammarButtonSelected]);
+      fIndicateNoGrammar.setText(SEVERITIES[2 - indicateNoGrammarButtonSelected]);
     }
     if (fUseXinclude != null) {
       fUseXinclude.setSelection(useXIncludeButtonSelected);
@@ -115,7 +116,7 @@ public class XMLValidatorPreferencePage extends AbstractPreferencePage {
 
     if (fIndicateNoGrammar != null) {
       fIndicateNoGrammar.setSelection(new Point(indicateNoGrammarButtonSelected, 2 - indicateNoGrammarButtonSelected));
-      fIndicateNoGrammar.setText(StringUtils.unpack(XMLUIMessages.Indicate_no_grammar_specified_severities)[indicateNoGrammarButtonSelected]);
+      fIndicateNoGrammar.setText(SEVERITIES[indicateNoGrammarButtonSelected]);
     }
     if (fUseXinclude != null) {
       fUseXinclude.setSelection(useXIncludeButtonSelected);

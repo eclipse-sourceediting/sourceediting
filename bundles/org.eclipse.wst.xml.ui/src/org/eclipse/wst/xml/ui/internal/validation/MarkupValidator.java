@@ -40,7 +40,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
-import org.eclipse.wst.sse.core.utils.StringUtils;
 import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.AnnotationInfo;
@@ -631,7 +630,7 @@ public class MarkupValidator extends AbstractValidator implements IValidator, IS
 					}
 
 					if (!selfClosed && (tagName != null)) {
-						String messageText = StringUtils.unpack(XMLUIMessages.Indicate_no_grammar_specified_severities)[0];
+						String messageText = XMLUIMessages.Indicate_no_grammar_specified_severities_error;
 
 						int start = sdRegion.getStart();
 						int lineNumber = getLineNumber(start);
