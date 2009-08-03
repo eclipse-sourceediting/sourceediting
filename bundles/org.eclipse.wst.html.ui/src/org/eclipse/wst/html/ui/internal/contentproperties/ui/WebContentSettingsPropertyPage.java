@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2008 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -107,7 +107,7 @@ public class WebContentSettingsPropertyPage extends PropertyPage {
 
 	private void createCSSProfileContents(Composite parent) {
 		// CSS Profile
-		Text languageLabel = new Text(parent, SWT.READ_ONLY);
+		Label languageLabel = new Label(parent, SWT.NONE);
 		languageLabel.setText(HTMLUIMessages.UI_CSS_profile___2);
 		fProfileCombo = new Combo(parent, SWT.READ_ONLY);
 		GridData data = new GridData(GridData.FILL, GridData.FILL, true, false);
@@ -125,7 +125,7 @@ public class WebContentSettingsPropertyPage extends PropertyPage {
 		doctypeLabel.setLayoutData(data);
 
 		// document type
-		Text languageLabel = new Text(parent, SWT.READ_ONLY);
+		Label languageLabel = new Label(parent, SWT.NONE);
 		languageLabel.setText(HTMLUIMessages.UI_Default_HTML_DOCTYPE_ID___1);
 		fDocumentTypeCombo = new Combo(parent, SWT.READ_ONLY);
 		data = new GridData(GridData.FILL, GridData.FILL, true, false);
@@ -133,7 +133,7 @@ public class WebContentSettingsPropertyPage extends PropertyPage {
 		fDocumentTypeCombo.setLayoutData(data);
 
 		// public ID
-		Text publicIdLabel = new Text(parent, SWT.READ_ONLY);
+		Label publicIdLabel = new Label(parent, SWT.NONE);
 		publicIdLabel.setText(HTMLUIMessages.UI_Public_ID);
 		fPublicIdText = new Text(parent, SWT.READ_ONLY | SWT.BORDER);
 		data = new GridData(GridData.FILL, GridData.FILL, true, false);
@@ -141,7 +141,7 @@ public class WebContentSettingsPropertyPage extends PropertyPage {
 		fPublicIdText.setLayoutData(data);
 
 		// system ID
-		Text systemIdLabel = new Text(parent, SWT.READ_ONLY);
+		Label systemIdLabel = new Label(parent, SWT.NONE);
 		systemIdLabel.setText(HTMLUIMessages.UI_System_ID);
 		fSystemIdText = new Text(parent, SWT.READ_ONLY | SWT.BORDER);
 		data = new GridData(GridData.FILL, GridData.FILL, true, false);
@@ -155,6 +155,7 @@ public class WebContentSettingsPropertyPage extends PropertyPage {
 		data.horizontalSpan = 2;
 		data.verticalSpan = 8;
 		label.setLayoutData(data);
+
 	}
 
 	/**
