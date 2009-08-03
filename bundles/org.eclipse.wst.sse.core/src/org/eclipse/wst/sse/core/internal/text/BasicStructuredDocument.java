@@ -2341,8 +2341,9 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		stopPostNotificationProcessing();
 		clearReadOnly();
 
-		acquireLock();
 		try {
+			acquireLock();
+
 			CharSequenceReader subSetTextStoreReader = new CharSequenceReader((CharSequence) getStore(), 0, getStore().getLength());
 			resetParser(subSetTextStoreReader, 0);
 			//
