@@ -16,7 +16,7 @@
         value="org.eclipse.wst.jsdt.web.core.tests" />
     <property
         name="classname"
-        value="org.eclipse.wst.jsdt.web.core.tests.translation.AllWebCoreTests" />
+        value="org.eclipse.wst.jsdt.web.core.tests.AllWebCoreTests" />
     <property
         name="testType"
         value="core-test" />
