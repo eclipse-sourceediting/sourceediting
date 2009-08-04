@@ -29,9 +29,9 @@ import org.eclipse.wst.dtd.ui.tests.DTDUITestSuite;
 import org.eclipse.wst.html.core.tests.HTMLCoreTestSuite;
 import org.eclipse.wst.html.tests.encoding.HTMLEncodingTestSuite;
 import org.eclipse.wst.html.ui.tests.HTMLUITestSuite;
+import org.eclipse.wst.jsdt.core.tests.RunJSDTCoreTests;
 import org.eclipse.wst.jsdt.core.tests.compiler.JSDTCompilerTests;
-import org.eclipse.wst.jsdt.core.tests.model.JSDTModelTests;
-import org.eclipse.wst.jsdt.web.core.tests.translation.AllWebCoreTests;
+import org.eclipse.wst.jsdt.web.core.tests.AllWebCoreTests;
 import org.eclipse.wst.jsdt.web.ui.tests.AllWebUITests;
 import org.eclipse.wst.sse.core.tests.SSEModelTestSuite;
 import org.eclipse.wst.sse.ui.tests.SSEUITestSuite;
@@ -69,14 +69,14 @@ public class MasterListTestSuite extends TestSuite {
 		addTest(AllXMLTests.suite());
 		addTest(AllXSDTests.suite());
 
-		addTest(CSSUITestSuite.suite());
-		addTest(HTMLUITestSuite.suite());
 		addTest(SSEUITestSuite.suite());
 		addTest(XMLUITestSuite.suite());
 		addTest(DTDUITestSuite.suite());
+		addTest(CSSUITestSuite.suite());
+		addTest(HTMLUITestSuite.suite());
 		addTest(JSPUITestSuite.suite());
 		
-		addTest(JSDTModelTests.suite());
+		addTest(RunJSDTCoreTests.suite());
 		addTest(JSDTCompilerTests.suite());
 		addTest(AllWebCoreTests.suite());
 		addTest(AllWebUITests.suite());
@@ -105,7 +105,7 @@ public class MasterListTestSuite extends TestSuite {
 				Test test;
 				try {
 					test = (Test) elements[i].createExecutableExtension(CLASS);
-					addTest(new TestSuite(test.getClass()));
+					addTestSuite(test.getClass());
 					System.err.println("Adding TestCase " + test.getClass().getName());
 				}
 				catch (CoreException e) {
