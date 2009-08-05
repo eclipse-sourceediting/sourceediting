@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
  *     Jesper Steen Moeller - bug 285145 - check arguments to op:to
+ *     Jesper Steen Moeller - bug 262765 - fixed node state iteration
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -201,8 +202,10 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 			ResultSequence rs = (ResultSequence) ve.expr().accept(this);
 
 			// XXX
-			if (rs.empty())
+			if (rs.empty()) {
+				iter.previous();
 				return result;
+			}
 
 			QName varname = ve.varname();
 
