@@ -11,6 +11,7 @@
  *     Jesper S Moller - bug 283214 - fix IF THEN ELSE parsing and update grammars
  *     Jesper S Moller - bug 283214 - fix XML result serialization
  *     Jesper S Moller - bug 283404 - fixed locale  
+ *     Jesper S Moller - bug 281159 - fix document URIs and also filter XML namespace
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -92,6 +93,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		DOMLoader domloader = new XercesLoader();
 		domloader.set_validating(false);
 		domDoc = domloader.load(is);
+		domDoc.setDocumentURI(fileURL.toString());
 	}
 	
 	protected void load2DOMDocument(URL fileURL, URL fileURL2) throws IOException,
@@ -102,7 +104,9 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		DOMLoader domloader = new XercesLoader();
 		domloader.set_validating(false);
 		domDoc = domloader.load(is);
+		domDoc.setDocumentURI(fileURL.toString());
 		domDoc2 = domloader.load(is2);
+		domDoc2.setDocumentURI(fileURL2.toString());
 		is.close();
 		is2.close();
 	}	
@@ -240,7 +244,10 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		String xpath2Expr = null;
 
 		try {
-			InputStream isxq = bundle.getEntry(xqFile).openStream();
+			URL entryUrl = bundle.getEntry(xqFile);
+			InputStream isxq = entryUrl.openStream();
+			if (dynamicContext.base_uri().string_value() == null)
+				dynamicContext.set_base_uri(entryUrl.toString());
 			BufferedReader xqreader = new BufferedReader(new InputStreamReader(
 					isxq, Charset.forName("UTF-8")));
 			int nByte = xqreader.read(cbuf);
@@ -385,8 +392,9 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	}
 
 	protected String removeIrrelevantNamespaces(String expectedResult) {
+		expectedResult = expectedResult.replaceAll(" xmlns:xml=\"http://www.w3.org/XML/1998/namespace\"", "");
 		expectedResult = expectedResult.replaceAll(" xmlns:foo=\"http://www.example.com/foo\"", "");
-	      expectedResult = expectedResult.replaceAll(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
+	    expectedResult = expectedResult.replaceAll(" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
 		return expectedResult;
 	}
 

@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
+ *     Jesper Moller - bug 281159 - fix expectations and parameters
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
@@ -16,6 +17,8 @@ import java.net.URL;
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSAnyURI;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
@@ -26,7 +29,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-1.xq";
       String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqDocFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FODC0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -63,7 +66,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-2.xq";
       String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqDocFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -100,7 +103,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-3.xq";
       String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqDocFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FODC0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -171,7 +174,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
 
    //Evaluation of fn:doc as per example 1 from the Functions and Operators specs for the function (usage of "is" operator).
    public void test_fn_doc_5() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
+      String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-5.xq";
       String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-5.txt";
       String expectedResult = getExpectedResult(resultFile);
@@ -182,6 +185,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+	  dc.set_variable(new QName("input-context"), new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -208,7 +212,8 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
 
    //Evaluation of fn:doc (two different resources) with "is" operator.
    public void test_fn_doc_6() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
+      String inputFile = "/TestSources/works.xml";
+      String inputFile2 = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-6.xq";
       String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-6.txt";
       String expectedResult = getExpectedResult(resultFile);
@@ -219,6 +224,8 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+	  dc.set_variable(new QName("input-context1"), new XSAnyURI(inputFile));
+	  dc.set_variable(new QName("input-context2"), new XSAnyURI(inputFile2));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -245,7 +252,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
 
    //Evaluation of fn:doc (normal usage) and retrieve part of the resources.
    public void test_fn_doc_7() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
+	  String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-7.xq";
       String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-7.txt";
       String expectedResult = getExpectedResult(resultFile);
@@ -256,6 +263,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+	  dc.set_variable(new QName("input-context"), new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -265,7 +273,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -282,7 +290,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
 
    //Evaluation of fn:doc as an argument to the fn:nilled function.
    public void test_fn_doc_15() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
+		  String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-15.xq";
       String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-15.txt";
       String expectedResult = getExpectedResult(resultFile);
@@ -293,6 +301,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+	  dc.set_variable(new QName("input-context"), new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -319,7 +328,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
 
    //Evaluation of fn:doc as an argument to the fn:node-name function.
    public void test_fn_doc_16() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
+		  String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-16.xq";
       String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-16.txt";
       String expectedResult = getExpectedResult(resultFile);
@@ -330,6 +339,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+	  dc.set_variable(new QName("input-context"), new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -359,7 +369,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-17.xq";
       String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqDocFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FODC0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -393,7 +403,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
 
    //Evaluation of fn:doc used together with "is" operator and a the fn:not function.
    public void test_fn_doc_18() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
+	  String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-18.xq";
       String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-18.txt";
       String expectedResult = getExpectedResult(resultFile);
@@ -404,6 +414,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+	  dc.set_variable(new QName("input-context"), new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -430,7 +441,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
 
    //Evaluation of fn:doc used together with "is" operator and a the fn:true() function and the "and" operator.
    public void test_fn_doc_19() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
+	  String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-19.xq";
       String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-19.txt";
       String expectedResult = getExpectedResult(resultFile);
@@ -441,6 +452,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+	  dc.set_variable(new QName("input-context"), new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -467,7 +479,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
 
    //Evaluation of fn:doc used together with "is" operator and a the fn:false() function and the "and" operator.
    public void test_fn_doc_20() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
+	  String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-20.xq";
       String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-20.txt";
       String expectedResult = getExpectedResult(resultFile);
@@ -478,6 +490,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+	  dc.set_variable(new QName("input-context"), new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -504,7 +517,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
 
    //Evaluation of fn:doc used together with "is" operator and a the fn:true() function and the "or" operator.
    public void test_fn_doc_21() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
+	  String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-21.xq";
       String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-21.txt";
       String expectedResult = getExpectedResult(resultFile);
@@ -515,6 +528,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+	  dc.set_variable(new QName("input-context"), new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -541,7 +555,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
 
    //Evaluation of fn:doc used together with "is" operator and a the fn:false() function and the "or" operator.
    public void test_fn_doc_22() throws Exception {
-      String inputFile = "/TestSources/emptydoc.xml";
+	  String inputFile = "/TestSources/works-mod.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-22.xq";
       String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqDocFunc/fn-doc-22.txt";
       String expectedResult = getExpectedResult(resultFile);
@@ -552,6 +566,7 @@ public class SeqDocFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+	  dc.set_variable(new QName("input-context"), new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;

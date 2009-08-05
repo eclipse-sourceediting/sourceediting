@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
+ *     Jesper Moller - bug 281159 - fix expectations and parameters
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
@@ -153,7 +154,7 @@ public class NodeRootFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildXMLResultString(rs);
+          actual = removeIrrelevantNamespaces(buildXMLResultString(rs));
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -163,7 +164,7 @@ public class NodeRootFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }

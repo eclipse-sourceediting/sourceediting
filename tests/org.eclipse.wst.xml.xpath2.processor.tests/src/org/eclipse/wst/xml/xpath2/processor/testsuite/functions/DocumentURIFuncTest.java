@@ -8,6 +8,7 @@
  * 
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
+ *     Jesper Moller - bug 281159 - fix expectations and parameters
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
 
@@ -16,6 +17,8 @@ import java.net.URL;
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSAnyURI;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
@@ -71,7 +74,8 @@ public class DocumentURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
-
+	  dc.set_variable(new QName("input-context1"), new XSAnyURI(inputFile));
+      
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
       try {
@@ -182,6 +186,7 @@ public class DocumentURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+	  dc.set_variable(new QName("input-context1"), new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -219,6 +224,7 @@ public class DocumentURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+	  dc.set_variable(new QName("input-context1"), new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -256,6 +262,7 @@ public class DocumentURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+	  dc.set_variable(new QName("input-context1"), new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -293,6 +300,7 @@ public class DocumentURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+	  dc.set_variable(new QName("input-context1"), new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
@@ -330,6 +338,7 @@ public class DocumentURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+	  dc.set_variable(new QName("input-context1"), new XSAnyURI(inputFile));
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
