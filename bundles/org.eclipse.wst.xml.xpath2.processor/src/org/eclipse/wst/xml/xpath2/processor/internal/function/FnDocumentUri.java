@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Mukul Gandhi - bug274731 - implementation of fn:document-uri function
+ *     Jesper Moller- bug 281159 - fix document loading and resolving URIs 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -77,10 +78,12 @@ public class FnDocumentUri extends Function {
 		  return rs;
 
 		DocType dt = (DocType) nt;
-		XSAnyURI docUri = new XSAnyURI(dt.value().getDocumentURI());
+		String documentURI = dt.value().getDocumentURI();
 		
-		rs.add(docUri);
-
+		if (documentURI != null) {
+			XSAnyURI docUri = new XSAnyURI(documentURI);
+			rs.add(docUri);
+		}
 		return rs;
 	}
 

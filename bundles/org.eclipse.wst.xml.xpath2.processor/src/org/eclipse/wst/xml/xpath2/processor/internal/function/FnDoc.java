@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Steen Moller - bug 281159 - fix document loading and resolving URIs 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -18,6 +19,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
+import java.net.URI;
 import java.util.*;
 
 /**
@@ -80,9 +82,13 @@ public class FnDoc extends Function {
 
 		String uri = ((XSString) arg1.first()).value();
 
-		ResultSequence rs = dc.get_doc(uri);
-		if (rs == null)
+		URI resolved = dc.resolve_uri(uri);
+		if (resolved == null)
 			throw DynamicError.invalid_doc(null);
+
+		ResultSequence rs = dc.get_doc(resolved);
+		if (rs == null)
+			throw DynamicError.doc_not_found(null);
 
 		return rs;
 	}

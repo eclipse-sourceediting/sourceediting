@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Moller- bug 281159 - debugging convenience toString method 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -323,5 +324,10 @@ public class QName extends CtrType implements CmpEq {
 	public boolean eq(AnyType arg) throws DynamicError {
 		QName val = (QName) NumericType.get_single_type(arg, QName.class);
 		return equals(val);
+	}
+	
+	@Override
+	public String toString() {
+		return string();
 	}
 }

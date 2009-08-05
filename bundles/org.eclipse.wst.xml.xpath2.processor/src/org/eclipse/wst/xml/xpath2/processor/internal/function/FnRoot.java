@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver - STAR - bug 262765 - clean up fn:root according to spec. 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
+ *     Jesper Steen Moeller - bug 281159 - tak extra care to find the root 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -108,9 +109,12 @@ public class FnRoot extends Function {
 
 		Node root = nt.node_value();
 
-		while (root != null) {
+		while (root != null && ! (root instanceof Document)) {
 			Node newroot = root.getParentNode();
-
+			if (newroot == null && root instanceof Attr) {
+				newroot = ((Attr)root).getOwnerElement();
+			}
+				
 			// found it
 			if (newroot == null)
 				break;

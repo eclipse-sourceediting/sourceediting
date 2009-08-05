@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 276134 - improvements to schema aware primitive type support
  *                                 for attribute/element nodes 
+ *     Jesper Moller- bug 281159 - we were missing out on qualified attributes 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -102,11 +103,7 @@ public class AttrType extends NodeType {
 	 */
 	@Override
 	public QName node_name() {
-		QName name = new QName(_value.getName());
-
-		String ns = _value.getNamespaceURI();
-
-		name.set_namespace(ns);
+		QName name = new QName(_value.getPrefix(), _value.getLocalName(), _value.getNamespaceURI());
 
 		return name;
 	}

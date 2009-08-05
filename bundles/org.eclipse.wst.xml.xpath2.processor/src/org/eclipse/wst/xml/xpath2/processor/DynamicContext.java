@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
  *     David Carver - bug 282223 - implementation of xs:duration data types. 
+ *     Jesper Moller- bug 281159 - fix document loading and resolving URIs 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -16,6 +17,7 @@ package org.eclipse.wst.xml.xpath2.processor;
 import org.eclipse.wst.xml.xpath2.processor.internal.Focus;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
+import java.net.URI;
 import java.util.*;
 import org.w3c.dom.*;
 
@@ -53,7 +55,7 @@ public interface DynamicContext extends StaticContext {
 	 * @return variable.
 	 */
 	public AnyType get_variable(QName name);
-
+	
 	/**
 	 * Set variable.
 	 * 
@@ -92,9 +94,20 @@ public interface DynamicContext extends StaticContext {
 	 * @param uri
 	 *            is the URI of the document.
 	 * @return document.
+	 * @since 1.1
 	 */
 	// available doc
-	public ResultSequence get_doc(String uri);
+	public ResultSequence get_doc(URI uri);
+
+	/**
+	 * Resolve an URI
+	 * 
+	 * @param uri
+	 *            is the possibly relative URI to resolve
+	 * @return the absolutized, resolved URI.
+	 * @since 1.1
+	 */
+	public URI resolve_uri(String uri);
 
 	// available collections
 

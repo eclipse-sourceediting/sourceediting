@@ -11,6 +11,7 @@
  *     David Carver (STAR) - bug 282223 - fixed casting to xs:anyURI only string,
  *         untypedAtomic, and anyURI are allowed.
  *     David Carver (STAR) - bug 283777 - implemented gt, lt comparison code.
+ *     Jesper Steen Moller - bug 281159 - added promotion of xs:anyURI to string (reverse case) 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -113,7 +114,7 @@ public class XSAnyURI extends CtrType implements CmpEq, CmpGt, CmpLt {
 
 	/**
 	 * Equality comparison between this and the supplied representation which
-	 * must be of type xs:anyURI
+	 * must be of type xs:anyURI (or, by promotion of this, xs:string)
 	 * 
 	 * @param arg
 	 *            The representation to compare with
@@ -122,7 +123,7 @@ public class XSAnyURI extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 * @throws DynamicError
 	 */
 	public boolean eq(AnyType arg) throws DynamicError {
-		if (arg instanceof XSAnyURI) {
+		if (arg instanceof XSAnyURI || arg instanceof XSString) {
 			if (this.string_value().equals(arg.string_value())) {
 				return true;
 			}
@@ -135,11 +136,11 @@ public class XSAnyURI extends CtrType implements CmpEq, CmpGt, CmpLt {
 
 	/**
 	 * Greater than comparison between this and the supplied representation which
-	 * must be of type xs:anyURI
+	 * must be of type xs:anyURI (or, by promotion of this, xs:string)
 	 * @since 1.1
 	 */
 	public boolean gt(AnyType arg) throws DynamicError {
-		if (!(arg instanceof XSAnyURI)) {
+		if (!(arg instanceof XSAnyURI || arg instanceof XSString)) {
 			throw DynamicError.throw_type_error();	
 		}
 		
@@ -154,12 +155,12 @@ public class XSAnyURI extends CtrType implements CmpEq, CmpGt, CmpLt {
 
 	/**
 	 * Less than comparison between this and the supplied representation which
-	 * must be of type xs:anyURI
+	 * must be of type xs:anyURI (or, by promotion of this, xs:string)
 	 * 
 	 * @since 1.1
 	 */
 	public boolean lt(AnyType arg) throws DynamicError {
-		if (!(arg instanceof XSAnyURI)) {
+		if (!(arg instanceof XSAnyURI || arg instanceof XSString)) {
 			throw DynamicError.throw_type_error();
 		}
 		

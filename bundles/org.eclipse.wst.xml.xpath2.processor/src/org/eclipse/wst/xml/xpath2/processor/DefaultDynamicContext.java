@@ -10,6 +10,7 @@
  *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
  *     David Carver - bug 282223 - implementation of xs:duration data type.
  *                  - bug 262765 - fix handling of range expression op:to and empty sequence 
+ *     Jesper Moller- bug 281159 - fix document loading and resolving URIs 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -21,8 +22,12 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
 import java.util.*;
+
 import org.w3c.dom.*;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 
 /**
  * The default implementation of a Dynamic Context.
@@ -35,6 +40,8 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 
 	private Focus _focus;
 	private XSDuration _tz;
+	private Map _loaded_documents;
+	private XSTime _current_time;
 	private Hashtable _node_order;
 
 	/**
@@ -50,7 +57,8 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 
 		_focus = null;
 		_tz = new XSDayTimeDuration();
-
+		_loaded_documents = new HashMap();
+		
 		init_node_order(doc);
 	}
 
@@ -188,9 +196,17 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	 * get document
 	 * 
 	 * @return a ResultSequence from ResultSequenceFactory.create_new()
+	 * @since 1.1
 	 */
-	public ResultSequence get_doc(String uri) {
-		Document doc = retrieve_doc(uri);
+	public ResultSequence get_doc(URI resolved) {
+		Document doc = null;
+		if (_loaded_documents.containsKey(resolved)) {
+			 //tried before
+			doc = (Document)_loaded_documents.get(resolved);
+		} else {
+			doc = retrieve_doc(resolved);
+			_loaded_documents.put(resolved, doc);
+		}
 
 		if (doc == null)
 			return null;
@@ -200,19 +216,39 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 		return ResultSequenceFactory.create_new(new DocType(doc, 0));
 	}
 
+	/**
+	 * @since 1.1
+	 */
+	public URI resolve_uri(String uri) {
+		try {
+			URI realURI = URI.create(uri);
+			if (realURI.isAbsolute()) {
+				return realURI;
+			} else {
+				URI baseURI = URI.create(base_uri().string_value());
+				return baseURI.resolve(uri);
+			}
+		} catch (IllegalArgumentException iae) {
+			return null;
+		}
+	}
+
 	// XXX make it nice, and move it out as a utility function
-	private Document retrieve_doc(String uri) {
+	private Document retrieve_doc(URI uri) {
 		try {
 			DOMLoader loader = new XercesLoader();
-			loader.set_validating(true);
+			loader.set_validating(false);
 
-			// assuming file...
-			Document doc = loader.load(new FileInputStream(uri));
-
+			Document doc = loader.load(new URL(uri.toString()).openStream());
+			doc.setDocumentURI(uri.toString());
 			return doc;
 		} catch (DOMLoaderException e) {
 			return null;
 		} catch (FileNotFoundException e) {
+			return null;
+		} catch (MalformedURLException e) {
+			return null;
+		} catch (IOException e) {
 			return null;
 		}
 	}

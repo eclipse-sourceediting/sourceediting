@@ -10,6 +10,7 @@
  *     David Carver (STAR) - bug 273763 - correct error codes.
  *                           bug 280106 - Correct XPDY0021 - XPST0003 
  *     Jesper Steen Moeller - bug 28149 - add more fn:error info
+ *     Jesper Steen Moller  - bug 281159 - fix document loading and resolving URIs 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -279,6 +280,18 @@ public class DynamicError extends XPathException {
 	 */
 	public static DynamicError invalid_doc(String msg) {
 		return make_error("FODC0005", "Invalid argument to fn:doc", msg);
+	}
+
+	/**
+	 * Returns the error message when fn:doc cannot load its document
+	 * 
+	 * @param msg
+	 *            is the message
+	 * @return the make_error
+	 * @since 1.1
+	 */
+	public static DynamicError doc_not_found(String msg) {
+		return make_error("FODC0002", "Document argument fn:doc not found", msg);
 	}
 
 	/**

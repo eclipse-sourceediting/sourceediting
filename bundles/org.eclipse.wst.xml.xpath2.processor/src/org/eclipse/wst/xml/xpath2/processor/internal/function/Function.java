@@ -11,6 +11,7 @@
  *     Mukul Gandhi - bug 273795 - improvements to function, substring (implemented
  *                                 numeric type promotion). 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
+ *     Jesper Steen Moeller - bug 281159 - implement xs:anyUri -> xs:string promotion
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -219,6 +220,10 @@ public abstract class Function {
 					}
 					
 					result.concat(converted);
+				}
+				// xs:anyURI promotion to xs:string
+				else if (item instanceof XSAnyURI && expected_aat instanceof XSString) {
+					result.add(new XSString(item.string_value()));
 				}
 				// numeric type promotion
 				else if (item instanceof NumericType) {
