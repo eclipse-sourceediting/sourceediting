@@ -61,6 +61,7 @@ import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropert
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.taglib.CustomTag;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelper;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibVariable;
@@ -244,6 +245,21 @@ public class JSPTranslator {
 	 * EL Translator ID
 	 */
 	private String fELTranslatorID;
+
+	/**
+	 * A structure for holding a region collection marker and list of variable
+	 * information. The region can be used later for positioning validation
+	 * messages.
+	 */
+	static class RegionTag {
+		ITextRegionCollection region;
+		CustomTag tag;
+
+		RegionTag(ITextRegionCollection region, CustomTag tag) {
+			this.region = region;
+			this.tag = tag;
+		}
+	}
 
 	public JSPTranslator() {
 		super();
@@ -801,8 +817,13 @@ public class JSPTranslator {
 		 */
 		String decl = ""; //$NON-NLS-1$
 		if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_TAG_OPEN)) {
-			TaglibVariable[] taglibVars = helper.getTaglibVariables(tagToAdd, getStructuredDocument(), customTag);
-
+			/*
+			 * Start tag
+			 */
+			List problems = new ArrayList();
+			CustomTag tag = helper.getCustomTag(tagToAdd, getStructuredDocument(), customTag, problems);
+			TaglibVariable[] taglibVars = tag.getTagVariables();
+			fTranslationProblems.addAll(problems);
 			// Bug 199047
 			/*
 			 * Add AT_BEGIN variables
@@ -814,14 +835,21 @@ public class JSPTranslator {
 				}
 			}
 
+			boolean isEmptyTag = customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE);
+
 			/**
 			 * Add opening curly brace
 			 */
-
 			StringBuffer text = new StringBuffer();
+			if (!isEmptyTag && tag.isIterationTag() && tag.getTagClassName() != null)
+				text.append("\nwhile (true) "); //$NON-NLS-1$
 			text.append("{ // <"); //$NON-NLS-1$
 			text.append(tagToAdd);
-			text.append(">\n"); //$NON-NLS-1$
+			if (isEmptyTag)
+				text.append("/>\n"); //$NON-NLS-1$
+			else
+				text.append(">\n"); //$NON-NLS-1$
+
 			appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
 
 			/**
@@ -838,9 +866,9 @@ public class JSPTranslator {
 			 * If empty, pop from stack, add ending curly brace and AT_END
 			 * variables
 			 */
-			if (customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
+			if (isEmptyTag) {
 				text = new StringBuffer();
-				text.append("} // </"); //$NON-NLS-1$
+				text.append("} // <"); //$NON-NLS-1$
 				text.append(tagToAdd);
 				text.append("/>\n"); //$NON-NLS-1$
 				appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
@@ -856,7 +884,7 @@ public class JSPTranslator {
 				 * Store for use at end tag and for accurate pairing even with
 				 * extra end tags (with empty non-null array)
 				 */
-				fTagToVariableMap.push(tagToAdd, taglibVars);
+				fTagToVariableMap.push(tagToAdd, new RegionTag(customTag, tag));
 			}
 		}
 		/**
@@ -864,14 +892,23 @@ public class JSPTranslator {
 		 */
 		else if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_END_TAG_OPEN)) {
 			// pop the variables
-			TaglibVariable[] taglibVars = (TaglibVariable[]) fTagToVariableMap.pop(tagToAdd);
-			if (taglibVars != null) {
+			RegionTag regionTag = (RegionTag) fTagToVariableMap.pop(tagToAdd);
+			if (regionTag != null) {
+				TaglibVariable[] taglibVars = regionTag.tag.getTagVariables();
 				// even an empty array will indicate a need for a closing
 				// brace
 				StringBuffer text = new StringBuffer();
-				text.append("} // </"); //$NON-NLS-1$
+				if (regionTag.tag.isIterationTag())
+					doAfterBody(text, regionTag);
+				text.append("} "); //$NON-NLS-1$
+				text.append("// </"); //$NON-NLS-1$
 				text.append(tagToAdd);
-				text.append(">\n"); //$NON-NLS-1$
+				if (customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
+					text.append("/>\n"); //$NON-NLS-1$
+				}
+				else {
+					text.append(">\n"); //$NON-NLS-1$
+				}
 				appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
 
 				/*
@@ -888,6 +925,12 @@ public class JSPTranslator {
 				// report an unmatched end tag in fTranslationProblems ?
 			}
 		}
+	}
+
+	private void doAfterBody(StringBuffer buffer, RegionTag regionTag) {
+		buffer.append("\tif ( (new "); //$NON-NLS-1$
+		buffer.append(regionTag.tag.getTagClassName());
+		buffer.append("()).doAfterBody() != javax.servlet.jsp.tagext.BodyTag.EVAL_BODY_AGAIN)\n\t\tbreak;\n"); //$NON-NLS-1$
 	}
 
 	private IFile getFile() {
@@ -954,6 +997,30 @@ public class JSPTranslator {
 		setCurrentNode(new ZeroStructuredDocumentRegion(fStructuredDocument, fStructuredDocument.getLength()));
 		translateCodas();
 
+		/*
+		 * Any contents left in the map indicate start tags that never had end
+		 * tags. While the '{' that is present without the matching '}' should
+		 * cause a Java translation fault, that's not particularly helpful to
+		 * a user who may only know how to use custom tags as tags. Ultimately
+		 * unbalanced custom tags should just be reported as unbalanced tags,
+		 * and unbalanced '{'/'}' only reported when the user actually
+		 * unbalanced them with scriptlets.
+		 */
+		Iterator regionAndTaglibVariables = fTagToVariableMap.values().iterator();
+		while (regionAndTaglibVariables.hasNext()) {
+			RegionTag regionTag = (RegionTag) regionAndTaglibVariables.next();
+
+			StringBuffer text = new StringBuffer();
+			// Account for iteration tags that have a missing end tag
+			if (regionTag.tag.isIterationTag())
+				doAfterBody(text, regionTag);
+			text.append("} "); //$NON-NLS-1$
+			text.append("// [</"); //$NON-NLS-1$
+			text.append(regionTag.tag.getTagName());
+			text.append(">]"); //$NON-NLS-1$
+			appendToBuffer(text.toString(), fUserCode, false, fStructuredDocument.getLastStructuredDocumentRegion());
+		}
+		fTagToVariableMap.clear();
 		/*
 		 * Make sure any extra custom tag start tags won't cause compiler
 		 * problems, they should instead be reported as unbalanced tags
