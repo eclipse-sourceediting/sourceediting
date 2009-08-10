@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -169,9 +169,7 @@ public class OccurrencesSearchQuery extends BasicSearchQuery {
 	 * @return
 	 */
 	private String getOccurrencesCountText() {
-		String count = ""; //$NON-NLS-1$
-		// pa_TODO dynamically change count
-		return count;
+		return "" + this.getMatches().length; //$NON-NLS-1$
 	}
 
 	public ISearchResult getSearchResult() {
