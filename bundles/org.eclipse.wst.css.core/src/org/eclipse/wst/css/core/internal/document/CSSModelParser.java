@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1135,6 +1135,9 @@ public class CSSModelParser {
 			if (bOverOpenBrace && cursorNode instanceof CSSRuleDeclContainer) {
 				targetNode = (CSSNodeImpl) ((CSSRuleDeclContainer) cursorNode).getStyle();
 			}
+			else if(cursorPos == newStructuredDocumentRegion.getStartOffset() && cursorNode.getParentNode() != null) {
+				targetNode = (CSSNodeImpl) cursorNode.getParentNode();
+			}
 			else {
 				targetNode = cursorNode;
 			}
@@ -1167,7 +1170,7 @@ public class CSSModelParser {
 		ICSSNode next = null;
 		if (targetNode.hasChildNodes()) {
 			for (ICSSNode child = targetNode.getFirstChild(); child != null; child = child.getNextSibling()) {
-				if (child instanceof CSSStructuredDocumentRegionContainer && cursorPos < ((CSSStructuredDocumentRegionContainer) child).getStartOffset()) {
+				if (child instanceof CSSStructuredDocumentRegionContainer && cursorPos <= ((CSSStructuredDocumentRegionContainer) child).getStartOffset()) {
 					next = child;
 					break;
 				}
