@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.tests;
 
+import org.eclipse.wst.html.ui.tests.validation.TestHTMLValidator;
 import org.eclipse.wst.html.ui.tests.viewer.TestViewerConfigurationHTML;
 
 import junit.framework.Test;
@@ -28,7 +29,7 @@ public class HTMLUITestSuite extends junit.framework.TestSuite {
 		addTest(new TestSuite(HTMLUIPreferencesTest.class));
 		addTest(new TestSuite(TestViewerConfigurationHTML.class));
 		addTest(new TestSuite(TestEditorConfigurationHTML.class));
+		addTest(new TestSuite(TestHTMLValidator.class, "Test HTMLValidator"));
 		//		addTest(new SSEModelTestSuite());
-
 	}
 }
