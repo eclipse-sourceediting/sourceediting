@@ -178,7 +178,9 @@
 			<contentTypeIdentifier
 				id="org.eclipse.jst.jsp.core.jspsource">
 				<partitionType id="org.eclipse.jst.jsp.JSP_DIRECTIVE"/>
+				<partitionType id="org.eclipse.jst.jsp.JSP_COMMENT"/>
 				<partitionType id="org.eclipse.wst.html.HTML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.html.HTML_COMMENT"/>
 				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
 				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
 			</contentTypeIdentifier>
