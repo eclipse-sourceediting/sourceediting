@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -64,7 +64,7 @@ public class StructuredDocumentWalker {
 			if (nextNode == null) {
 				if (isOldNode(node)) {
 					// this may be the end of old flatnodes
-					int newStart = node.getEnd() - fLengthDifference;
+					int newStart = node.getEnd() + fLengthDifference;
 					nextNode = fStructuredDocument.getRegionAtCharacterOffset(newStart);
 				}
 			}
@@ -82,7 +82,7 @@ public class StructuredDocumentWalker {
 		IStructuredDocumentRegion nextNode = null;
 		if (isOldNode(node)) {
 			IStructuredDocumentRegion oldEndNode = fOldStructuredDocumentRegionList.item(fOldStructuredDocumentRegionList.getLength() - 1);
-			int newStart = oldEndNode.getEnd() - fLengthDifference;
+			int newStart = oldEndNode.getEnd() + fLengthDifference;
 			nextNode = fStructuredDocument.getRegionAtCharacterOffset(newStart);
 		}
 		else if (node != null) {
