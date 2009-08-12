@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -480,10 +480,11 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						IDOMNode aXMLNode = (IDOMNode) aNode;
 						CMElementDeclaration ed = modelQuery.getCMElementDeclaration((Element) aNode);
 						if ((aXMLNode.getEndStructuredDocumentRegion() == null) && ((ed == null) || (ed.getContentType() != CMElementDeclaration.EMPTY))) {
-							String proposedText = aNode.getNodeName();
+							String replacementText = aNode.getNodeName();
+							String displayText = replacementText;
 							String proposedInfo = (ed != null) ? getAdditionalInfo(null, ed) : null;
-							if ((node.getNodeType() == Node.TEXT_NODE) && !contentAssistRequest.getDocumentRegion().isEnded()) {
-								proposedText += ">"; //$NON-NLS-1$
+							if(!contentAssistRequest.getDocumentRegion().isEnded()) {
+								replacementText += ">"; //$NON-NLS-1$
 							}
 							CustomCompletionProposal proposal = null;
 							// double check to see if the region acted upon is
@@ -493,10 +494,10 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 								image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);
 							}
 							if (contentAssistRequest.getRegion().getType() == DOMRegionContext.XML_TAG_NAME) {
-								proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getStartOffset(), contentAssistRequest.getRegion().getTextLength(), proposedText.length(), image, proposedText, null, proposedInfo, XMLRelevanceConstants.R_END_TAG_NAME);
+								proposal = new CustomCompletionProposal(replacementText, contentAssistRequest.getStartOffset(), contentAssistRequest.getRegion().getTextLength(), replacementText.length(), image, displayText, null, proposedInfo, XMLRelevanceConstants.R_END_TAG_NAME);
 							}
 							else {
-								proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), proposedText.length(), image, NLS.bind(XMLUIMessages.Close_with__, (new Object[]{"'" + proposedText + "'"})), //$NON-NLS-1$ //$NON-NLS-2$
+								proposal = new CustomCompletionProposal(replacementText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), replacementText.length(), image, NLS.bind(XMLUIMessages.Close_with__, (new Object[]{"'" + displayText + "'"})), //$NON-NLS-1$ //$NON-NLS-2$
 											null, proposedInfo, XMLRelevanceConstants.R_END_TAG_NAME);
 							}
 							contentAssistRequest.addProposal(proposal);
