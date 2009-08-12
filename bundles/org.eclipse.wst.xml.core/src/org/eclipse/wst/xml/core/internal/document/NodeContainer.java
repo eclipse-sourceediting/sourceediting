@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -252,6 +252,10 @@ public abstract class NodeContainer extends NodeImpl implements Node, NodeList {
 		}
 		if (newChild == refChild)
 			return newChild; // nothing to do
+		//new child can not be a parent of this, would cause cycle
+		if(isParent(newChild)) {
+			throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, new String());
+		}
 
 		if (newChild.getNodeType() == DOCUMENT_FRAGMENT_NODE) {
 			// insert child nodes instead
@@ -510,5 +514,21 @@ public abstract class NodeContainer extends NodeImpl implements Node, NodeList {
 		} else {
 			roc.lockNode((NodeImpl) child);
 		}
+	}
+
+	/**
+	 * <p>Checks to see if the given <code>Node</code> is a parent of <code>this</code> node</p>
+	 * 
+	 * @param possibleParent the possible parent <code>Node</code> of <code>this</code> node
+	 * @return <code>true</code> if <code>possibleParent</code> is the parent of <code>this</code>,
+	 * <code>false</code> otherwise.
+	 */
+	private boolean isParent(Node possibleParent) {
+		Node parent = this.getParentNode();
+		while(parent != null && parent != possibleParent) {
+			parent = parent.getParentNode();
+		}
+
+		return parent == possibleParent;
 	}
 }
