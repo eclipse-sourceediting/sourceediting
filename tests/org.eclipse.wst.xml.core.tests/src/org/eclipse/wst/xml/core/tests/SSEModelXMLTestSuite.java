@@ -23,6 +23,7 @@ import org.eclipse.wst.xml.core.tests.document.TransitionTests;
 import org.eclipse.wst.xml.core.tests.dom.AttrImplTests;
 import org.eclipse.wst.xml.core.tests.dom.ElementImplTests;
 import org.eclipse.wst.xml.core.tests.dom.NameValidatorTests;
+import org.eclipse.wst.xml.core.tests.dom.NodeContainerTests;
 import org.eclipse.wst.xml.core.tests.dom.NodeListImplTests;
 import org.eclipse.wst.xml.core.tests.format.TestPartitionFormatterXML;
 import org.eclipse.wst.xml.core.tests.model.TestModelManager;
@@ -52,6 +53,7 @@ public class SSEModelXMLTestSuite extends TestSuite {
 		addTest(new TestSuite(ElementImplTests.class));
 		addTest(new TestSuite(AttrImplTests.class));
 		addTest(new TestSuite(NodeListImplTests.class));
+		addTest(new TestSuite(NodeContainerTests.class,"Test NodeContainer"));
 		addTest(new TestSuite(TransitionTests.class));
 		addTest(new TestSuite(XMLCorePreferencesTest.class));
 		addTest(new TestSuite(TestCatalogRetrivalAndModelCreation.class));
