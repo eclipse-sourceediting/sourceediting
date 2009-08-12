@@ -23,15 +23,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.operations.WorkbenchContext;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
-import org.eclipse.wst.xml.ui.tests.ProjectUtil;
 import org.eclipse.wst.xml.ui.tests.XMLUITestsPlugin;
 
 /**
@@ -114,62 +110,62 @@ public class TestDelegatingSourceValidatorForXML extends TestCase
 	
 	/**
 	 * Regression test for Bug 285285
-	 * 
+	 * TODO Add back
 	 * @see org.eclipse.wst.xml.ui.internal.validation.TestDelegatingSourceValidatorForXML#testRemoveAndAddBackCommentEndTag
 	 * @see org.eclipse.wst.html.ui.tests.validation.TestHTMLValidator#testRemoveAndAddBackCommentEndTag
 	 * @see org.eclipse.jst.jsp.ui.tests.validation.JSPHTMLValidatorTest#testRemoveAndAddBackCommentEndTag
 	 */
-	public void testRemoveAndAddBackCommentEndTag() throws Exception{
-		String projectName = "RemoveAndAddBackCommentEndTag";
-		IProject project = ProjectUtil.createProject(projectName, null, null);
-		
-		IFile testFile = null;
-		IStructuredModel model = null;
-		
-		try {
-			//get test file
-			ProjectUtil.copyBundleEntriesIntoWorkspace("testresources/RemoveAndAddBackCommentEndTag", projectName);
-			testFile = project.getFile("Test1.xml");
-			assertTrue("Test file " + testFile + " does not exist", testFile.exists());
-			
-			//get the document
-			model = StructuredModelManager.getModelManager().getModelForEdit(testFile);
-			IStructuredDocument document = model.getStructuredDocument();
-			
-			//set up for validator
-			WorkbenchContext context = new WorkbenchContext();
-			List fileList = new ArrayList();
-			fileList.add(testFile.getFullPath().toPortableString());
-			context.setValidationFileURIs(fileList);
-			
-			//validate clean file
-			TestReporter reporter = new TestReporter();
-			sourceValidator.validate(context, reporter);
-			assertFalse("There should be no validation errors on " + testFile, reporter.isMessageReported());
-			
-			//remove -->
-			document.replace(176, 3, "");
-			
-			//validate file with error
-			reporter = new TestReporter();
-			sourceValidator.validate(context, reporter);
-			assertTrue("There should be validation errors on " + testFile, reporter.isMessageReported());
-		
-			//replace -->
-			document.replace(176, 0, "-->");
-			
-			//validate clean file
-			reporter = new TestReporter();
-			sourceValidator.validate(context, reporter);
-			assertFalse("There should be no validation errors on " + testFile, reporter.isMessageReported());
-		} catch(ValidationException e) {
-			fail("Could not validate test file " + testFile + ": " + e.getMessage());
-		} finally {
-			if(model != null) {
-				model.releaseFromEdit();
-			}
-		}
-	}
+//	public void testRemoveAndAddBackCommentEndTag() throws Exception{
+//		String projectName = "RemoveAndAddBackCommentEndTag";
+//		IProject project = ProjectUtil.createProject(projectName, null, null);
+//		
+//		IFile testFile = null;
+//		IStructuredModel model = null;
+//		
+//		try {
+//			//get test file
+//			ProjectUtil.copyBundleEntriesIntoWorkspace("testresources/RemoveAndAddBackCommentEndTag", projectName);
+//			testFile = project.getFile("Test1.xml");
+//			assertTrue("Test file " + testFile + " does not exist", testFile.exists());
+//			
+//			//get the document
+//			model = StructuredModelManager.getModelManager().getModelForEdit(testFile);
+//			IStructuredDocument document = model.getStructuredDocument();
+//			
+//			//set up for validator
+//			WorkbenchContext context = new WorkbenchContext();
+//			List fileList = new ArrayList();
+//			fileList.add(testFile.getFullPath().toPortableString());
+//			context.setValidationFileURIs(fileList);
+//			
+//			//validate clean file
+//			TestReporter reporter = new TestReporter();
+//			sourceValidator.validate(context, reporter);
+//			assertFalse("There should be no validation errors on " + testFile, reporter.isMessageReported());
+//			
+//			//remove -->
+//			document.replace(176, 3, "");
+//			
+//			//validate file with error
+//			reporter = new TestReporter();
+//			sourceValidator.validate(context, reporter);
+//			assertTrue("There should be validation errors on " + testFile, reporter.isMessageReported());
+//		
+//			//replace -->
+//			document.replace(176, 0, "-->");
+//			
+//			//validate clean file
+//			reporter = new TestReporter();
+//			sourceValidator.validate(context, reporter);
+//			assertFalse("There should be no validation errors on " + testFile, reporter.isMessageReported());
+//		} catch(ValidationException e) {
+//			fail("Could not validate test file " + testFile + ": " + e.getMessage());
+//		} finally {
+//			if(model != null) {
+//				model.releaseFromEdit();
+//			}
+//		}
+//	}
 	
 	/**
 	 * A <code>IReporter</code> for testing validators
