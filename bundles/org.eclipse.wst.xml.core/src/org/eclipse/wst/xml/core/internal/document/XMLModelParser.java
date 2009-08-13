@@ -1275,75 +1275,20 @@ public class XMLModelParser {
 	 *            org.w3c.dom.Node
 	 */
 	private void insertNode(Node node) {
-		if (node == null)
-			return;
-		if (this.context == null)
-			return;
-
-		Node parent = this.context.getParentNode();
-		if (parent == null)
-			return;
-		Node next = this.context.getNextNode();
-		while (parent.getNodeType() == Node.ELEMENT_NODE) {
-			ElementImpl element = (ElementImpl) parent;
-			if (canContain(element, node)) {
-				if (!element.hasStartTag() && next == element.getFirstChild()) {
-					// first child of implicit tag
-					// deletege to the parent
-					parent = element.getParentNode();
-					if (parent == null)
-						return;
-					next = element;
+		if(node != null && this.context != null) {
+			Node parent = this.context.getParentNode();
+			if(parent != null) {
+				Node next = this.context.getNextNode();
+	
+				insertNode(parent, node, next);
+				next = node.getNextSibling();
+				if (next != null) {
 					this.context.setNextNode(next);
-					continue;
-				}
-				break;
-			}
-			parent = element.getParentNode();
-			if (parent == null)
-				return;
-
-			// promote siblings
-			Node newNext = element.getNextSibling();
-			Node child = next;
-			while (child != null) {
-				Node nextChild = child.getNextSibling();
-				element.removeChild(child);
-				parent.insertBefore(child, newNext);
-				child = nextChild;
-			}
-
-			// leave the old end tag where it is
-			if (element.hasEndTag()) {
-				Element end = element.removeEndTag();
-				if (end != null) {
-					parent.insertBefore(end, newNext);
-					if (next == null)
-						next = end;
+				} else {
+					this.context.setParentNode(node.getParentNode());
 				}
 			}
-			if (!element.hasStartTag()) {
-				// implicit element
-				if (!element.hasChildNodes()) {
-					parent.removeChild(element);
-				}
-			}
-
-			// update context
-			if (next == null)
-				next = newNext;
-			if (next != null)
-				this.context.setNextNode(next);
-			else
-				this.context.setParentNode(parent);
 		}
-
-		insertNode(parent, node, next);
-		next = node.getNextSibling();
-		if (next != null)
-			this.context.setNextNode(next);
-		else
-			this.context.setParentNode(node.getParentNode());
 	}
 
 	/**
