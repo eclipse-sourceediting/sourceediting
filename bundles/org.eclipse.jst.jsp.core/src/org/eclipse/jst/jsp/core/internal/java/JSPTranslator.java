@@ -61,6 +61,7 @@ import org.eclipse.jst.jsp.core.internal.contenttype.DeploymentDescriptorPropert
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.taglib.CustomTag;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelper;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibVariable;
@@ -249,13 +250,13 @@ public class JSPTranslator {
 	 * information. The region can be used later for positioning validation
 	 * messages.
 	 */
-	static class RegionTaglibVariables {
+	static class RegionTags {
 		ITextRegionCollection region;
-		TaglibVariable[] variables;
+		CustomTag tag;
 
-		RegionTaglibVariables(ITextRegionCollection region, TaglibVariable[] variables) {
+		RegionTags(ITextRegionCollection region, CustomTag tag) {
 			this.region = region;
-			this.variables = variables;
+			this.tag = tag;
 		}
 	}
 
@@ -813,7 +814,8 @@ public class JSPTranslator {
 			 * Start tag
 			 */
 			List problems = new ArrayList();
-			TaglibVariable[] taglibVars = helper.getTaglibVariables(tagToAdd, getStructuredDocument(), customTag, problems);
+			CustomTag tag = helper.getCustomTag(tagToAdd, getStructuredDocument(), customTag, problems);
+			TaglibVariable[] taglibVars = tag.getTagVariables();
 			fTranslationProblems.addAll(problems);
 			/*
 			 * Add AT_BEGIN variables
@@ -824,13 +826,18 @@ public class JSPTranslator {
 					appendToBuffer(decl, fUserCode, false, customTag);
 				}
 			}
+
+			boolean isEmptyTag = customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE);
 			/*
 			 * Add a single  { to limit the scope of NESTED variables
 			 */
 			StringBuffer text = new StringBuffer();
+			if (!isEmptyTag && tag.isIterationTag() && tag.getTagClassName() != null) {
+				text.append("\nwhile(true) "); //$NON-NLS-1$
+			}
 			text.append("{ // <"); //$NON-NLS-1$
 			text.append(tagToAdd);
-			if (customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
+			if (isEmptyTag) {
 				text.append("/>\n"); //$NON-NLS-1$
 			}
 			else {
@@ -847,16 +854,11 @@ public class JSPTranslator {
 			/*
 			 * For empty tags, add the corresponding } and AT_END variables immediately.  
 			 */
-			if (customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
+			if (isEmptyTag) {
 				text = new StringBuffer();
 				text.append("} // <"); //$NON-NLS-1$
 				text.append(tagToAdd);
-				if (customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
-					text.append("/>\n"); //$NON-NLS-1$
-				}
-				else {
-					text.append(">\n"); //$NON-NLS-1$
-				}
+				text.append("/>\n"); //$NON-NLS-1$
 				appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
 				/* Treat this as the end for empty tags */
 				for (int i = 0; i < taglibVars.length; i++) {
@@ -870,15 +872,15 @@ public class JSPTranslator {
 				/*
 				 * For non-empty tags, remember the variable information
 				 */
-				fTagToVariableMap.push(tagToAdd, new RegionTaglibVariables(customTag, taglibVars));
+				fTagToVariableMap.push(tagToAdd, new RegionTags(customTag, tag));
 			}
 		}
 		else if (customTag.getFirstRegion().getType().equals(DOMRegionContext.XML_END_TAG_OPEN)) {
 			/*
 			 * End tag
 			 */
-			RegionTaglibVariables regionAndTaglibVars = (RegionTaglibVariables) fTagToVariableMap.pop(tagToAdd);
-			if (regionAndTaglibVars != null) {
+			RegionTags regionAndTags = (RegionTags) fTagToVariableMap.pop(tagToAdd);
+			if (regionAndTags != null) {
 				/*
 				 * Even an empty array of variables will indicate a need for a
 				 * closing brace, so add one. If "regionAndTaglibVars" is
@@ -889,16 +891,13 @@ public class JSPTranslator {
 				 * unbalanced custom tags should just be reported as
 				 * unbalanced tags.
 				 */
-				TaglibVariable[] taglibVars = regionAndTaglibVars.variables;
+				TaglibVariable[] taglibVars = regionAndTags.tag.getTagVariables();
 				StringBuffer text = new StringBuffer();
+				if (regionAndTags.tag.isIterationTag())
+					doAfterBody(text, regionAndTags);
 				text.append("} // </"); //$NON-NLS-1$
 				text.append(tagToAdd);
-				if (customTag.getLastRegion().getType().equals(DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
-					text.append("/>\n"); //$NON-NLS-1$
-				}
-				else {
-					text.append(">\n"); //$NON-NLS-1$
-				}
+				text.append(">\n"); //$NON-NLS-1$
 				appendToBuffer(text.toString(), fUserCode, false, customTag); //$NON-NLS-1$
 				for (int i = 0; i < taglibVars.length; i++) {
 					if (taglibVars[i].getScope() == VariableInfo.AT_END) {
@@ -917,6 +916,12 @@ public class JSPTranslator {
 				fTranslationProblems.add(missingStartTag);
 			}
 		}
+	}
+
+	private void doAfterBody(StringBuffer buffer, RegionTags regionTag) {
+		buffer.append("\tif ( (new "); //$NON-NLS-1$
+		buffer.append(regionTag.tag.getTagClassName());
+		buffer.append("()).doAfterBody() != javax.servlet.jsp.tagext.BodyTag.EVAL_BODY_AGAIN)\n\t\tbreak;\n"); //$NON-NLS-1$
 	}
 
 	/**
@@ -997,11 +1002,19 @@ public class JSPTranslator {
 		 */
 		Iterator regionAndTaglibVariables = fTagToVariableMap.values().iterator();
 		while (regionAndTaglibVariables.hasNext()) {
-			ITextRegionCollection extraStartRegion = ((RegionTaglibVariables) regionAndTaglibVariables.next()).region;
+			RegionTags regionTag = (RegionTags) regionAndTaglibVariables.next();
+			ITextRegionCollection extraStartRegion = regionTag.region;
 			IJSPProblem missingEndTag = createJSPProblem(IJSPProblem.EndCustomTagMissing, IJSPProblem.F_PROBLEM_ID_LITERAL, "", extraStartRegion.getStartOffset(), extraStartRegion.getEndOffset());
 			fTranslationProblems.add(missingEndTag);
 
-			appendToBuffer("}", fUserCode, false, fStructuredDocument.getLastStructuredDocumentRegion());
+			StringBuffer text = new StringBuffer();
+			// Account for iteration tags that have a missing end tag
+			if (regionTag.tag.isIterationTag())
+				doAfterBody(text, regionTag);
+			text.append("} // [</"); //$NON-NLS-1$
+			text.append(regionTag.tag.getTagName());
+			text.append(">]"); //$NON-NLS-1$
+			appendToBuffer(text.toString(), fUserCode, false, fStructuredDocument.getLastStructuredDocumentRegion());
 		}
 		fTagToVariableMap.clear();
 

@@ -16,6 +16,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.jsp.tagext.IterationTag;
 import javax.servlet.jsp.tagext.TagAttributeInfo;
 import javax.servlet.jsp.tagext.TagData;
 import javax.servlet.jsp.tagext.TagExtraInfo;
@@ -80,6 +81,88 @@ public class TaglibHelper {
 		setProject(project);
 	}
 
+	private boolean isIterationTag(TLDElementDeclaration elementDecl, IStructuredDocument document, ITextRegionCollection customTag, List problems) {
+		Class tagClass;
+		try {
+			tagClass = Class.forName(elementDecl.getTagclass(), true, getClassloader());
+			if (tagClass != null) {
+				return IterationTag.class.isInstance(tagClass.newInstance());
+			}
+		} catch (ClassNotFoundException e) {
+			Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TagClassNotFound, JSPCoreMessages.TaglibHelper_3, elementDecl.getTagclass(), true);
+			if (createdProblem != null)
+				problems.add(createdProblem);
+			if (DEBUG)
+				Logger.logException(elementDecl.getTagclass(), e);
+		} catch (IllegalAccessException e) {
+			if (DEBUG)
+				Logger.logException(elementDecl.getTagclass(), e);
+		} catch (InstantiationException e) {
+			if (DEBUG)
+				Logger.logException(elementDecl.getTagclass(), e);
+		} catch (NoClassDefFoundError e) {
+			if (DEBUG)
+				Logger.logException(elementDecl.getTagclass(), e);
+		}
+		return false;
+	}
+
+	public CustomTag getCustomTag(String tagToAdd, IStructuredDocument structuredDoc, ITextRegionCollection customTag, List problems) {
+		List results = new ArrayList();
+		boolean isIterationTag = false;
+		String tagClass = null;
+		String teiClass = null;
+		if (problems == null)
+			problems = new ArrayList();
+		ModelQuery mq = getModelQuery(structuredDoc);
+		if (mq != null) {
+			TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(structuredDoc);
+
+			if (mgr != null) {
+
+				List trackers = mgr.getCMDocumentTrackers(-1);
+				Iterator taglibs = trackers.iterator();
+	
+				CMDocument doc = null;
+				CMNamedNodeMap elements = null;
+				while (taglibs.hasNext()) {
+					doc = (CMDocument) taglibs.next();
+					CMNode node = null;
+					if ((elements = doc.getElements()) != null && (node = elements.getNamedItem(tagToAdd)) != null && node.getNodeType() == CMNode.ELEMENT_DECLARATION) {
+	
+						if (node instanceof CMNodeWrapper) {
+							node = ((CMNodeWrapper) node).getOriginNode();
+						}
+						TLDElementDeclaration tldElementDecl = (TLDElementDeclaration) node;
+
+						tagClass = tldElementDecl.getTagclass();
+						teiClass = tldElementDecl.getTeiclass();
+						isIterationTag = isIterationTag(tldElementDecl, structuredDoc, customTag, problems);
+						/*
+						 * Although clearly not the right place to add validation
+						 * design-wise, this is the first time we have the
+						 * necessary information to validate the tag class.
+						 */
+						validateTagClass(structuredDoc, customTag, tldElementDecl, problems);
+	
+						// 1.2+ taglib style
+						addVariables(results, node, customTag);
+	
+						// for 1.1 need more info from taglib tracker
+						if (doc instanceof TaglibTracker) {
+							String uri = ((TaglibTracker) doc).getURI();
+							String prefix = ((TaglibTracker) doc).getPrefix();
+							// only for 1.1 taglibs
+							addTEIVariables(structuredDoc, customTag, results, tldElementDecl, prefix, uri, problems);
+						}
+						break;
+					}
+				}
+			}
+		}
+
+		return new CustomTag(tagToAdd, tagClass, teiClass, (TaglibVariable[]) results.toArray(new TaglibVariable[results.size()]), isIterationTag);
+	}
 	/**
 	 * @param tagToAdd
 	 *            is the name of the tag whose variables we want
