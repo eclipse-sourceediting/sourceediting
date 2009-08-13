@@ -13,6 +13,7 @@ package org.eclipse.jst.jsp.core.tests.translation;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -30,11 +31,13 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
+import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
 import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.validation.JSPJavaValidator;
@@ -514,6 +517,89 @@ public class JSPJavaTranslatorCoreTest extends TestCase {
 			assertTrue("String variableFromHeader1 not found", translation.getJavaText().indexOf("String variableFromHeader1") > 0);
 			assertTrue("header1 contents not included", translation.getJavaText().indexOf("String variableFromHeader1 = \"initialized in header 1\";") > 0);
 			assertTrue("header2 contents not included", translation.getJavaText().indexOf("variableFromHeader1 = \"reassigned in header 2\";") > 0);
+		}
+		finally {
+			if (model != null)
+				model.releaseFromEdit();
+		}
+	}
+
+	public void testIterationTags() throws Exception {
+		String testName = "testIterationTags";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
+		if (!project.isAccessible()) {
+			// Create new project
+			project = BundleResourceUtil.createSimpleProject(testName, null, null);
+			assertTrue(project.exists());
+			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
+		}
+		waitForBuildAndValidation(project);
+		IFile testFile = project.getFile("/WebContent/test.jsp");
+		assertTrue("test.jsp is not accessible", testFile.isAccessible());
+		IDOMModel model = null;
+		try {
+			model = (IDOMModel) StructuredModelManager.getModelManager().getModelForEdit(testFile);
+
+			ModelHandlerForJSP.ensureTranslationAdapterFactory(model);
+
+			JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
+			JSPTranslationExtension translation = translationAdapter.getJSPTranslation();
+			translation.setProblemCollectingActive(true);
+			assertNotNull("No Java translation found", translation);
+			translation.reconcileCompilationUnit();
+			translation.setProblemCollectingActive(false);
+			List problems = translation.getProblems();
+			assertNotNull("Translation had a null problems list.", problems);
+			Iterator it = problems.iterator();
+			String javaText = translation.getJavaText();
+			int startOffset = javaText.indexOf("<plain:simple>");
+			assertTrue("<plan:simple> scope not found.", startOffset > 0);
+			int endOffset = javaText.indexOf("</plain:simple>", startOffset);
+			assertTrue("</plan:simple> scope not found.", endOffset > 0);
+			// Finds all errors caused by "continue cannot be used outside of a loop" - should only occur between <plain:simple></plain:simple>
+			while (it.hasNext()) {
+				IProblem problem = (IProblem) it.next();
+				if (problem.isError()) {
+					if ("continue cannot be used outside of a loop".equals(problem.getMessage())) {
+						assertTrue("'continue cannot be used outside of a loop' outside of iteration tag: ", problem.getSourceStart() > startOffset && problem.getSourceEnd() < endOffset);
+					}
+					
+				}
+			}
+		}
+		finally {
+			if (model != null)
+				model.releaseFromEdit();
+		}
+	}
+
+	/**
+	 * Tests that an iteration tag will generate 
+	 * @throws Exception
+	 */
+	public void testIterationTagsIncomplete() throws Exception {
+		String testName = "testIterationTags";
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(testName);
+		if (!project.isAccessible()) {
+			// Create new project
+			project = BundleResourceUtil.createSimpleProject(testName, null, null);
+			assertTrue(project.exists());
+			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/" + testName, "/" + testName);
+		}
+		waitForBuildAndValidation(project);
+		IFile testFile = project.getFile("/WebContent/test_missing_end_tag.jsp");
+		assertTrue("test_missing_end_tag.jsp is not accessible", testFile.isAccessible());
+		IDOMModel model = null;
+		try {
+			model = (IDOMModel) StructuredModelManager.getModelManager().getModelForEdit(testFile);
+
+			ModelHandlerForJSP.ensureTranslationAdapterFactory(model);
+
+			JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
+			JSPTranslationExtension translation = translationAdapter.getJSPTranslation();
+			String javaText = translation.getJavaText();
+			int startOffset = javaText.indexOf("} // [</plain:loop>]");
+			assertTrue("Missing end tag was not accounted for.", startOffset != -1);
 		}
 		finally {
 			if (model != null)
