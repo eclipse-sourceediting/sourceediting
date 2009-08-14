@@ -10,6 +10,8 @@
  *     Mukul Gandhi - bug 276134 - improvements to schema aware primitive type support
  *                                 for attribute/element nodes  
  *     Jesper Steen Moller - Fixed namespace awareness
+ *     David Carver  - bug 281186 - implementation of fn:id and fn:idref.  Correct
+ *                                  loading of grammars if non-validating.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -26,6 +28,8 @@ import org.xml.sax.*;
  * Xerces loader class. The loading is always namespace aware.
  */
 public class XercesLoader implements DOMLoader {
+
+	private static final String NONVALIDATING_LOAD_DTD_GRAMMAR = "http://apache.org/xml/features/nonvalidating/load-dtd-grammar";
 
 	public static final String NAMESPACES_FEATURE = "http://xml.org/sax/features/namespaces";
 
@@ -50,7 +54,7 @@ public class XercesLoader implements DOMLoader {
 	Schema _schema = null;;
 
 	/**
-	 * Constructor for Xerxes loader.
+	 * Constructor for Xerces loader.
 	 */
 	public XercesLoader() {
 		_validating = false;
@@ -81,6 +85,8 @@ public class XercesLoader implements DOMLoader {
 		factory.setNamespaceAware(true);
 		factory.setAttribute(SCHEMA_VALIDATION_FEATURE,
 				new Boolean(_validating));
+		factory.setAttribute(LOAD_EXTERNAL_DTD_FEATURE, true);
+		factory.setAttribute(NONVALIDATING_LOAD_DTD_GRAMMAR, true);
 		factory.setAttribute(DOCUMENT_IMPLEMENTATION_PROPERTY,
 				DOCUMENT_PSVI_IMPLEMENTATION);
 		
@@ -89,7 +95,6 @@ public class XercesLoader implements DOMLoader {
 		}
 		else {
 		  factory.setValidating(_validating);	
-		  factory.setNamespaceAware(true);
 		}
 
 		try {

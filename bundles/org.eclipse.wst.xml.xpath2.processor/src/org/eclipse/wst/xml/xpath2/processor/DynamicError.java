@@ -334,5 +334,14 @@ public class DynamicError extends XPathException {
 	public static DynamicError invalidPrefix() {
 		return make_error("FONS0004", "No namespace found for prefix.", null);
 	}
+	
+	/**
+	 * No context document
+	 * @return
+	 * @since 1.1
+	 */
+	public static DynamicError noContextDoc() {
+		return make_error("FODC0001", "No context document.", null);
+	}
 
 }

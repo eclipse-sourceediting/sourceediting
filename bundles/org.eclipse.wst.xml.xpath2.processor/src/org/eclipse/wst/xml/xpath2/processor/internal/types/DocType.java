@@ -94,4 +94,21 @@ public class DocType extends NodeType {
 	public QName node_name() {
 		return null;
 	}
+
+	/**
+	 * @since 1.1
+	 */
+	@Override
+	public boolean isID() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/**
+	 * @since 1.1
+	 */
+	@Override
+	public boolean isIDREF() {
+		return false;
+	}
 }

@@ -8,7 +8,8 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 276134 - improvements to schema aware primitive type support
- *                                  for attribute/element nodes  
+ *                                  for attribute/element nodes
+ *     David Carver  - bug 281186 - implementation of fn:id and fn:idref
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -22,6 +23,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+import org.w3c.dom.TypeInfo;
 
 /**
  * A representation of the ElementType datatype
@@ -166,4 +168,26 @@ public class ElementType extends NodeType {
 
 		return rs;
 	}
+
+	/**
+	 * @since 1.1
+	 */
+	@Override
+	public boolean isID() {
+		return isElementType(SCHEMA_TYPE_ID);
+	}
+	
+	/**
+	 * @since 1.1
+	 */
+	@Override
+	public boolean isIDREF() {
+		return isElementType(SCHEMA_TYPE_IDREF);
+	}
+	
+	protected boolean isElementType(String typeName) {
+		TypeInfo typeInfo = _value.getSchemaTypeInfo();
+		return isType(typeInfo, typeName);
+	}
+
 }

@@ -171,6 +171,10 @@ public class FnFunctionLibrary extends FunctionLibrary {
 		
 		// XXX collation
 		add_function(new FnDefaultCollation());
+		
+		// ID and IDRef
+		add_function(new FnID());
+		add_function(new FnIDREF());
 
 	}
 }

@@ -1623,7 +1623,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		QName name = e.name();
 		if (name != null && !e.wild()) {
 			for (Iterator i = rs.iterator(); i.hasNext();) {
-				if (!name_test((AttrType) i.next(), name, "attribute"))
+				if (!name_test((NodeType) i.next(), name, "attribute"))
 
 					i.remove();
 			}
@@ -1659,7 +1659,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 		// match the name
 		QName name = e.arg();
 		for (Iterator i = rs.iterator(); i.hasNext();) {
-			if (!name_test((AttrType) i.next(), name, "attribute"))
+			if (!name_test((NodeType) i.next(), name, "attribute"))
 
 				i.remove();
 		}

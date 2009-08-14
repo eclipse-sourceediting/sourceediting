@@ -9,7 +9,8 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 276134 - improvements to schema aware primitive type support
  *                                 for attribute/element nodes
- *     David Carver - bug 277774 - XSDecimal returning wrong values. 
+ *     David Carver - bug 277774 - XSDecimal returning wrong values.
+ *     David Carver  - bug 281186 - implementation of fn:id and fn:idref
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import org.apache.xerces.dom.PSVIAttrNSImpl;
+import org.apache.xerces.xs.ItemPSVI;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -30,11 +33,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
+import org.w3c.dom.TypeInfo;
 
 /**
  * A representation of a Node datatype
  */
 public abstract class NodeType extends AnyType {
+	protected static final String SCHEMA_TYPE_IDREF = "IDREF";
+	protected static final String SCHEMA_TYPE_ID = "ID";
 	private Node _node;
 	private int _document_order;
 
@@ -215,5 +221,27 @@ public abstract class NodeType extends AnyType {
 		}
 		
 		return schemaTypeValue;
+	}
+	
+	public abstract boolean isID();
+	
+	public abstract boolean isIDREF();
+
+	/**
+	 * Utility method to check to see if a particular TypeInfo matches.
+	 * @param typeInfo
+	 * @param typeName
+	 * @return
+	 */
+	protected boolean isType(TypeInfo typeInfo, String typeName) {
+		if (typeInfo != null) {
+			String typeInfoName = typeInfo.getTypeName();
+			if (typeInfoName != null) {
+				if (typeInfo.getTypeName().equalsIgnoreCase(typeName)) {
+					return true;
+				}
+			} 
+		}
+		return false;
 	}
 }

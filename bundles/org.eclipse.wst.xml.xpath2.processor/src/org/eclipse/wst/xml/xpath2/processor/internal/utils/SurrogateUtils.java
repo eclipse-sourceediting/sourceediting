@@ -20,15 +20,21 @@ public class SurrogateUtils {
 	 */
 	public static String decodeXML(String str) {
 		String decodeString = str;
-		while (decodeString.contains("&#x1")) {
-			int startpos = decodeString.indexOf("&#x1");
-			String starthex = decodeString.substring(startpos);
+		decodeString = decode(decodeString, "&#x1");
+		decodeString = decode(decodeString, "&#x2");
+		return decodeString;
+	}
+	
+	private static String decode(String decodeStr, String key) {
+		while (decodeStr.contains(key)) {
+			int startpos = decodeStr.indexOf(key);
+			String starthex = decodeStr.substring(startpos);
 			int semipos = starthex.indexOf(';');
 			String hexValue = starthex.substring(4, semipos);
 			int i = Integer.parseInt(hexValue, 16);
 			char c = (char)i;
-			decodeString = decodeString.replaceAll("&#x1" + hexValue + ";", "" + c);
+			decodeStr = decodeStr.replaceAll(key + hexValue + ";", "" + c);
 		}
-		return decodeString;
+		return decodeStr;
 	}
 }
