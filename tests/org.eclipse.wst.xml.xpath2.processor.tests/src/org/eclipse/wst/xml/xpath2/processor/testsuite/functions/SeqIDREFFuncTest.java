@@ -26,7 +26,7 @@ public class SeqIDREFFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDREFFunc/fn-idref-2.xq";
       String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDREFFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -35,7 +35,7 @@ public class SeqIDREFFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:idref(\"argument1\")";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -63,7 +63,7 @@ public class SeqIDREFFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDREFFunc/fn-idref-22.xq";
       String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDREFFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -72,7 +72,7 @@ public class SeqIDREFFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:idref(\"argument1\", .)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
