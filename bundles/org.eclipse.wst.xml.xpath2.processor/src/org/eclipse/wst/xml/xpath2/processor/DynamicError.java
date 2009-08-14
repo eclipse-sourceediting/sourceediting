@@ -181,6 +181,24 @@ public class DynamicError extends XPathException {
 
 		return new DynamicError("FORX0003", error);
 	}
+
+	/**
+	 * Returns the dynamic error for an unsupported Unicode codepoint
+	 * 
+	 * @param err
+	 *            is the error
+	 * @return the DynamicError.
+	 * @since 1.1
+	 * 
+	 */
+	public static DynamicError unsupported_codepoint(String err) {
+		String error = "Unsupported codepoint";
+
+		if (err != null)
+			error += " " + err;
+
+		return new DynamicError("FOCH0001", error);
+	}
 	
 	/**
 	 * Returns the dynamic error for an unsupported normalization form

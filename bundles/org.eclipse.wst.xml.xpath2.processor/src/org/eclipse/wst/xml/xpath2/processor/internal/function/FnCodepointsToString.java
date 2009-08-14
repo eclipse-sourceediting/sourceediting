@@ -10,6 +10,7 @@
  *     Mukul Gandhi - improvements to the function implementation
  *     David Carver - bug 282096 - improvements for surrogate handling 
  *     Jesper Steen Moeller - bug 282096 - clean up string storage
+ *     Jesper Steen Moeller - bug 280553 - further checks of legal Unicode codepoints.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -29,6 +30,17 @@ import java.util.*;
  */
 public class FnCodepointsToString extends Function {
 	private static Collection _expected_args = null;
+	
+    /**
+     * The maximum value of a Unicode code point.
+     */
+    public static final int MIN_LEGAL_CODEPOINT = 0x1;
+
+
+    /**
+     * The maximum value of a Unicode code point.
+     */
+    public static final int MAX_LEGAL_CODEPOINT = 0x10ffff;
 
 	/**
 	 * Constructor for FnCodepointsToString.
@@ -76,14 +88,25 @@ public class FnCodepointsToString extends Function {
 		int codePointIndex = 0;
 		for (Iterator i = arg1.iterator(); i.hasNext();) {
 			XSInteger code = (XSInteger) i.next();
-			codePointArray[codePointIndex] = code.int_value().intValue();
+			
+			int codepoint = code.int_value().intValue();
+			if (codepoint < MIN_LEGAL_CODEPOINT || codepoint > MAX_LEGAL_CODEPOINT) {
+				throw DynamicError.unsupported_codepoint("U+" + Integer.toString(codepoint, 16).toUpperCase());
+			}
+
+			codePointArray[codePointIndex] = codepoint;			
 			codePointIndex++;
 		}
 
 		// "new String(int[] codePoints, int offset, int count)" is a facility
 		// introduced in Java 1.5
-		String str = new String(codePointArray, 0, codePointArray.length);
-		rs.add(new XSString(str));
+		try {
+			String str = new String(codePointArray, 0, codePointArray.length);
+			rs.add(new XSString(str));
+		} catch (IllegalArgumentException iae) {
+			// This should be duoble checked above, but rather safe than sorry
+			throw DynamicError.unsupported_codepoint(iae.getMessage());
+		}
 		
 		return rs;
 	}
