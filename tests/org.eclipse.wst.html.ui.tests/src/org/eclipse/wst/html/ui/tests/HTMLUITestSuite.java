@@ -13,6 +13,7 @@ package org.eclipse.wst.html.ui.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.wst.html.ui.tests.validation.TestHTMLValidator;
 import org.eclipse.wst.html.ui.tests.viewer.TestViewerConfigurationHTML;
 
 
@@ -28,7 +29,7 @@ public class HTMLUITestSuite extends junit.framework.TestSuite {
 		addTest(new TestSuite(HTMLUIPreferencesTest.class));
 		addTest(new TestSuite(TestViewerConfigurationHTML.class));
 		addTest(new TestSuite(TestEditorConfigurationHTML.class));
-		//TODO Add back, commenting out for junit failures addTest(new TestSuite(TestHTMLValidator.class, "Test HTMLValidator"));
+		addTest(new TestSuite(TestHTMLValidator.class, "Test HTMLValidator"));
 		//		addTest(new SSEModelTestSuite());
 	}
 }

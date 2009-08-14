@@ -147,8 +147,13 @@ public class TestDelegatingSourceValidatorForXML extends TestCase
 			sourceValidator.validate(context, reporter);
 			assertFalse("There should be no validation errors on " + testFile, reporter.isMessageReported());
 			
+			//need to dynamically find where the --> is because
+			//its different on unix vs windows because of line endings
+			String contents = document.get();
+			int endCommentIndex = contents.indexOf("-->");
+			
 			//remove -->
-			document.replace(176, 3, "");
+			document.replace(endCommentIndex, 3, "");
 			
 			//validate file with error
 			reporter = new TestReporter();
@@ -156,7 +161,7 @@ public class TestDelegatingSourceValidatorForXML extends TestCase
 			assertTrue("There should be validation errors on " + testFile, reporter.isMessageReported());
 		
 			//replace -->
-			document.replace(176, 0, "-->");
+			document.replace(endCommentIndex, 0, "-->");
 			
 			//validate clean file
 			reporter = new TestReporter();
