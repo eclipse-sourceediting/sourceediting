@@ -9,17 +9,16 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver - bug 282096 - improvements for surrogate handling
  *     David Carver - bug 262765 - improvements to Regular Expression   
+ *     Jesper Steen Moeller - bug 282096 - clean up string storage
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.utils.SurrogateUtils;
 
 import java.util.*;
 import java.util.regex.*;
@@ -73,13 +72,10 @@ public class FnMatches extends AbstractRegExFunction {
 		String str1 = "";
 		if (!arg1.empty()) {
 			str1 = ((XSString) arg1.first()).value();
-			str1 = SurrogateUtils.decodeXML(str1);
-			str1 = StringEscapeUtils.unescapeXml(str1);
 		}
 
 		ResultSequence arg2 = (ResultSequence) argiter.next();
 		String pattern = ((XSString) arg2.first()).value();
-		pattern = SurrogateUtils.decodeXML(pattern);
 		String flags = null;
 
 		if (argiter.hasNext()) {

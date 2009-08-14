@@ -8,17 +8,16 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver - bug 282096 - improvements for surrogate handling  
+ *     Jesper Steen Moeller - bug 282096 - clean up string storage
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.utils.SurrogateUtils;
 
 import java.util.*;
 
@@ -74,13 +73,11 @@ public class FnSubstringBefore extends Function {
 		String str2 = "";
 		if (!arg1.empty()) {
 			str1 = ((XSString) arg1.first()).value();
-			str1 = SurrogateUtils.decodeXML(str1);
 		}
 
 		ResultSequence arg2 = (ResultSequence) argiter.next();
 		if (!arg2.empty()) {
 			str2 = ((XSString) arg2.first()).value();
-			str2 = SurrogateUtils.decodeXML(str2);
 		}
 
 		int str1len = str1.length();
@@ -98,7 +95,7 @@ public class FnSubstringBefore extends Function {
 		}
 
 		
-		rs.add(new XSString(StringEscapeUtils.escapeXml(str1.substring(0, index))));
+		rs.add(new XSString(str1.substring(0, index)));
 
 		return rs;
 	}

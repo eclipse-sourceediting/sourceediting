@@ -10,17 +10,18 @@
  *     Mukul Gandhi - bug 273795 - improvements to function, substring
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *     David Carver - bug 282096 - improvements for surrogate handling 
+ *     Jesper Steen Moeller - bug 282096 - reimplemented to be surrogate sensitive
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.utils.SurrogateUtils;
+import org.eclipse.wst.xml.xpath2.processor.internal.utils.CodePointIterator;
+import org.eclipse.wst.xml.xpath2.processor.internal.utils.StringCodePointIterator;
 
 import java.util.*;
 
@@ -100,76 +101,42 @@ public class FnSubstring extends Function {
 		}
 
 		String str = ((XSString) stringArg.first()).value();
-		str = SurrogateUtils.decodeXML(str);
 		double dstart = ((XSDouble) startPosArg.first()).double_value();
 		
-		if (Double.NaN == dstart) {
+		// is start is NaN, no chars are returned
+		if (Double.NaN == dstart || Double.NEGATIVE_INFINITY == dstart) {
 			return emptyString(rs);
 		}
-
-		int start = (int) Math.round(dstart);
-
-		if (isStartOutOfBounds(str, start)) {
-		  return emptyString(rs);
-		}
+		long istart = Math.round(dstart);
 		
-		start = adjustStartPosition(start);
-
+		long ilength = Long.MAX_VALUE;
 		if (lengthArg != null) {
-		  return substringLength(rs, lengthArg, dstart, start, str);
+			double dlength = ((XSDouble) lengthArg.first()).double_value();
+			if (Double.NaN == dlength)
+				return emptyString(rs);
+			// Switch to the rounded kind
+			ilength = Math.round(dlength);
+			if (ilength <= 0)
+				return emptyString(rs);
 		}
 		
-		rs.add(new XSString(StringEscapeUtils.escapeXml(str.substring(start))));
+		
+		// could guess too short in cases supplementary chars 
+		StringBuilder sb = new StringBuilder((int) Math.min(str.length(), ilength));
+
+		// This looks like an inefficient way to iterate, but due to surrogate handling,
+		// string indexes are no good here. Welcome to UTF-16!
+		
+		CodePointIterator strIter = new StringCodePointIterator(str);
+		for (long p = 1; strIter.current() != CodePointIterator.DONE; ++p, strIter.next()) {
+			if (istart <= p && p - istart < ilength)
+				sb.appendCodePoint(strIter.current());
+		}
+		rs.add(new XSString(sb.toString()));
 
 		return rs;
 	}
 	
-	private static ResultSequence substringLength(ResultSequence rs, ResultSequence lengthArg, double dstart, int start, String str) {
-		  int length = adjustLength(lengthArg, dstart, start);
-		  int endpos = start + length;
-		  if (isEndPosOutOfBounds(endpos) || isStartOutOfBounds(str, endpos)) {
-			  return emptyString(rs);
-		  }
-		 
-		  if (start == 0 && endpos == 0) {
-			  rs.add(new XSString(StringEscapeUtils.escapeXml(str.substring(start))));
-		  } else {
-			  rs.add(new XSString(StringEscapeUtils.escapeXml(str.substring(start, endpos))));
-		  }
-		  return rs;
-	}
-
-	private static boolean isEndPosOutOfBounds(int endpos) {
-		return endpos < 0;
-	}
-
-	private static int adjustLength(ResultSequence arg3, double dstart,
-			int start) {
-		double dlength = ((XSDouble) arg3.first()).double_value();
-		  int length = (int) Math.round(dlength);
-		  if (dstart < 0) {
-			  length = (int)( dlength - (Math.abs(dstart) + 1));
-		  } else if (dstart == 0) {
-			  length = length - 1;
-		  } else if (isEndPosOutOfBounds(length)) {
-			  length = start - Math.abs(length);
-		  }
-		return length;
-	}
-
-	private static int adjustStartPosition(int start) {
-		if (start <= 0) {
-			start = 0;
-		} else {
-			start = start - 1;
-		}
-		return start;
-	}
-
-	private static boolean isStartOutOfBounds(String str, int start) {
-		return start > str.length();
-	}
-
 	private static ResultSequence emptyString(ResultSequence rs) {
 		rs.add(new XSString(""));
 		return rs;

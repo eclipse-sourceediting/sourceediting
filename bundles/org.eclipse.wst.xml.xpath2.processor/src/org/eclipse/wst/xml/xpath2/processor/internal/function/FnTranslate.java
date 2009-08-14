@@ -7,17 +7,19 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Steen Moeller - bug 282096 - clean up string storage and make
+ *                                         translate function surrogate aware
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
-import org.eclipse.wst.xml.xpath2.processor.internal.utils.SurrogateUtils;
+import org.eclipse.wst.xml.xpath2.processor.internal.utils.CodePointIterator;
+import org.eclipse.wst.xml.xpath2.processor.internal.utils.StringCodePointIterator;
 
 import java.util.*;
 
@@ -110,37 +112,58 @@ public class FnTranslate extends Function {
 		}
 
 		String str = ((XSString) arg1.first()).value();
-		str = SurrogateUtils.decodeXML(str);
 		String mapstr = ((XSString) arg2.first()).value();
-		mapstr = SurrogateUtils.decodeXML(mapstr);
 		String transstr = ((XSString) arg3.first()).value();
-		transstr = SurrogateUtils.decodeXML(transstr);
 
-		String result = new String(str);
-
-		// ok the spec says that first occurence decides how to change
-		// it... 
-		Map repmap = new Hashtable(256);
-		for (int i = 0; i < mapstr.length(); i++) {
-			String replace = "";
-			String chartofind = "" + mapstr.charAt(i);
-
-			if (transstr.length() > i)
-				replace += transstr.charAt(i);
-
-			if (repmap.containsKey(chartofind))
-				replace = (String) repmap.get(chartofind);
-
-			else
-				repmap.put(chartofind, replace);
-
-			result = result.replaceAll(chartofind, replace);
+		Map<Integer, Integer> replacements = buildReplacementMap(mapstr, transstr);
+		
+		StringBuffer sb = new StringBuffer(str.length());
+		CodePointIterator strIter = new StringCodePointIterator(str);
+		for (int input = strIter.current(); input != CodePointIterator.DONE; input = strIter.next()) {
+			Integer inputCodepoint = Integer.valueOf(input);
+			if (replacements.containsKey(inputCodepoint)) {
+				Integer replaceWith = (Integer)replacements.get(inputCodepoint);
+				if (replaceWith != null) {
+					sb.appendCodePoint(replaceWith.intValue());
+				}					
+			} else {
+				sb.appendCodePoint(input);
+			}
 		}
 		
-		result = StringEscapeUtils.escapeXml(result);
-		rs.add(new XSString(result));
+		rs.add(new XSString(sb.toString()));
 
 		return rs;
+	}
+
+	/**
+	 * Build a replacement map from the mapstr and the transstr for translation. The function returns a Map<Integer, Integer> mapping each codepoint
+	 * mentioned in the mapstr into the corresponding codepoint in transstr, or null if there is no matching mapping in transstr.
+	 * 
+	 * @param mapstr The "mapping from" string
+	 * @param transstr The "mapping into" string
+	 * @return A map which maps input codepoint to output codepoint (or null)
+	 */
+	private static Map<Integer, Integer> buildReplacementMap(String mapstr, String transstr) {
+		// Build mapping (map from codepoint -> codepoint)		
+		Map<Integer, Integer> replacements = new HashMap<Integer, Integer>(mapstr.length() * 4);
+
+		CodePointIterator mapIter = new StringCodePointIterator(mapstr);
+		CodePointIterator transIter = new StringCodePointIterator(transstr);
+		// Iterate through both mapIter and transIter and produce the mapping
+		int mapFrom = mapIter.current();
+		int mapTo = transIter.current();
+		while (mapFrom != CodePointIterator.DONE) {
+			Integer codepointFrom = Integer.valueOf(mapFrom);
+			if (! replacements.containsKey(codepointFrom)) {
+				// only overwrite if it doesn't exist already
+				Integer replacement = mapTo != CodePointIterator.DONE ? Integer.valueOf(mapTo) : null;
+				replacements.put(codepointFrom, replacement);
+			}
+			mapFrom = mapIter.next();
+			mapTo = transIter.next();	
+		}
+		return replacements;
 	}
 
 	/**
