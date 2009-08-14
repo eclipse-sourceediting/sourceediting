@@ -11,6 +11,7 @@
  *     Mukul Gandhi - bug 279406 - improvements to negative zero values for xs:float
  *     David Carver - bug 262765 - fixed rounding errors.
  *     David Carver - bug 282223 - fixed casting errors.
+ *     Jesper Steen Moller - Bug 286062 - Fix idiv error cases and increase precision  
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -98,6 +99,15 @@ public class XSFloat extends NumericType {
 	 */
 	public boolean nan() {
 		return Float.isNaN(_value);
+	}
+
+	/**
+	 * Check for whether this datatype represents negative or positive infinity
+	 * 
+	 * @return True is this datatype represents infinity. False otherwise
+	 */
+	public boolean infinite() {
+		return Float.isInfinite(_value);
 	}
 
 	/**
@@ -314,11 +324,17 @@ public class XSFloat extends NumericType {
 		ResultSequence carg = convertResultSequence(arg);
 		XSFloat val = (XSFloat) get_single_type(carg, XSFloat.class);
 
+		if (this.nan() || val.nan())
+			throw DynamicError.numeric_overflow("Dividend or divisor is NaN");
+
+		if (this.infinite())
+			throw DynamicError.numeric_overflow("Dividend is infinite");
+
 		if (val.zero())
 			throw DynamicError.div_zero(null);
-		
-		return ResultSequenceFactory.create_new(new XSInteger(
-				    BigInteger.valueOf((int) (float_value() / val.float_value()))));
+
+		BigDecimal result = BigDecimal.valueOf((float_value() / val.float_value()));
+		return ResultSequenceFactory.create_new(new XSInteger(result.toBigInteger()));
 	}
 
 	/**

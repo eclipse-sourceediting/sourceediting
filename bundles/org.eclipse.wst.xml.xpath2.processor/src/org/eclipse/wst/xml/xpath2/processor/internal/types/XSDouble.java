@@ -12,6 +12,7 @@
  *     Mukul Gandhi - bug 279406 - improvements to negative zero values for xs:double
  *     David Carver (STAR) - bug 262765 - various numeric formatting fixes and calculations
  *     David Carver (STAR) - bug 262765 - fixed rounding errors.      
+ *     Jesper Steen Moller - Bug 286062 - Fix idiv error cases and increase precision  
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -197,6 +198,15 @@ public class XSDouble extends NumericType {
 	 */
 	public boolean nan() {
 		return Double.isNaN(_value);
+	}
+
+	/**
+	 * Check for whether this XSDouble represents an infinite number (negative or positive)
+	 * 
+	 * @return True if this XSDouble represents infinity. False otherwise.
+	 */
+	public boolean infinite() {
+		return Double.isInfinite(_value);
 	}
 
 	/**
@@ -397,11 +407,17 @@ public class XSDouble extends NumericType {
 
 		XSDouble val = (XSDouble) get_single_type(carg, XSDouble.class);
 
+		if (this.nan() || val.nan())
+			throw DynamicError.numeric_overflow("Dividend or divisor is NaN");
+
+		if (this.infinite())
+			throw DynamicError.numeric_overflow("Dividend is infinite");
+
 		if (val.zero())
 			throw DynamicError.div_zero(null);
 
-		return ResultSequenceFactory.create_new(new XSInteger(BigInteger
-				.valueOf((int) (double_value() / val.double_value()))));
+		BigDecimal result = BigDecimal.valueOf((double_value() / val.double_value()));
+		return ResultSequenceFactory.create_new(new XSInteger(result.toBigInteger()));
 	}
 
 	/**

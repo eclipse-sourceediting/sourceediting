@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
+ *     Jesper Steen Moller  - Bug 286062 - Add type promotion for numeric operators  
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -49,7 +50,7 @@ public class FsPlus extends Function {
 	}
 
 	/**
-	 * Convert arguments for operation.
+	 * Convert and promote arguments for operation.
 	 * 
 	 * @param args
 	 *            input arguments.
@@ -60,6 +61,10 @@ public class FsPlus extends Function {
 	private static Collection convert_args(Collection args) throws DynamicError {
 		Collection result = new ArrayList();
 
+		// Keep track of numeric types for promotion
+		boolean has_float = false;
+		boolean has_double = false;
+		
 		// atomize arguments
 		for (Iterator i = args.iterator(); i.hasNext();) {
 			ResultSequence rs = FnData.atomize((ResultSequence) i.next());
@@ -78,11 +83,40 @@ public class FsPlus extends Function {
 
 			rs = ResultSequenceFactory.create_new();
 			rs.add(arg);
+			if (arg instanceof XSDouble) has_double = true;
+			if (arg instanceof XSFloat) has_float = true;
 			result.add(rs);
 		}
 
+		if (has_double) has_float = false;
+		
+		if (has_double || has_float) {
+			// promote arguments
+			for (Iterator i = result.iterator(); i.hasNext();) {
+				ResultSequence rs = (ResultSequence) i.next();
+								
+				AnyType arg = rs.first();
+				
+				if (has_double && (arg instanceof XSFloat)) {
+					arg = new XSDouble(((XSFloat)arg).float_value());
+				} else if (has_double && (arg instanceof XSDecimal)) {
+					arg = new XSDouble(((XSDecimal)arg).getValue().doubleValue());
+				} else if (has_float && (arg instanceof XSDecimal)) {
+					arg = new XSFloat(((XSDecimal)arg).getValue().floatValue());
+				}
+
+				if (rs.first() != arg) {
+					// Replace arg
+					rs.clear();
+					rs.add(arg);
+				}
+			}
+			
+		}
+		
 		return result;
 	}
+
 
 	/**
 	 * General operation on the arguments.
