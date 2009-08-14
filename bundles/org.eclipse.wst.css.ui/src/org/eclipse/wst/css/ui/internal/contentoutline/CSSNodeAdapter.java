@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,6 +21,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.PropertySheetPage;
+import org.eclipse.wst.css.core.internal.document.CSSStructuredDocumentRegionContainer;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSMediaRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
@@ -547,8 +548,20 @@ class CSSNodeAdapter implements IJFaceNodeAdapter, INodeAdapter, Runnable {
 
 			if (object instanceof ICSSStyleDeclItem)
 				return false;
-			else
-				return ((ICSSNode) object).hasChildNodes();
+			else {
+				if(((ICSSNode) object).hasChildNodes()) {
+					ICSSNode child = ((ICSSNode) object).getFirstChild();
+					
+					while(child != null) {
+						if(child instanceof CSSStructuredDocumentRegionContainer) {
+							String childText = ((CSSStructuredDocumentRegionContainer) child).getCssText();
+							if(childText != null && childText.length() > 0)
+								return true;
+						}
+						child = child.getNextSibling();
+					}
+				}
+			}
 		}
 		return false;
 	}
