@@ -544,7 +544,7 @@ public class SeqIntersectTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/atomic.xml";
       String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqIntersect/fn-intersect-node-args-015.xq";
       String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqIntersect/fn-intersect-node-args-015.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = removeIrrelevantNamespaces(getExpectedResult(resultFile));
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -581,7 +581,7 @@ public class SeqIntersectTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/atomic.xml";
       String xqFile = "/Queries/XQuery/Expressions/Operators/SeqOp/SeqIntersect/fn-intersect-node-args-016.xq";
       String resultFile = "/ExpectedTestResults/Expressions/Operators/SeqOp/SeqIntersect/fn-intersect-node-args-016.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = removeIrrelevantNamespaces(getExpectedResult(resultFile));
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -598,7 +598,7 @@ public class SeqIntersectTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = buildXMLResultString(rs);
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
