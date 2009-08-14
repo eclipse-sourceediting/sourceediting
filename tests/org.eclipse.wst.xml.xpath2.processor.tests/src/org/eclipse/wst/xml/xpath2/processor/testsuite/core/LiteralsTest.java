@@ -7,6 +7,8 @@
  * 
  * Contributors:
  *     David Carver (STAR) - initial API and implementation
+ *     Jesper Steen Moeller - bug 282096 - special case for a test which works
+ *                                         differently in XPath2 than in XQuery
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.testsuite.core;
@@ -2013,7 +2015,7 @@ public class LiteralsTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/PrimaryExpr/Literals/Literals057.xq";
       String resultFile = "/ExpectedTestResults/Expressions/PrimaryExpr/Literals/Literals057.txt";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = getExpectedResultNoEscape(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -2022,7 +2024,7 @@ public class LiteralsTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = extractXPathExpressionNoEscape(xqFile, inputFile);
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);

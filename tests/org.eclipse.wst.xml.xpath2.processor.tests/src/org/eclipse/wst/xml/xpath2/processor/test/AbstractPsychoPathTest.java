@@ -12,6 +12,7 @@
  *     Jesper S Moller - bug 283214 - fix XML result serialization
  *     Jesper S Moller - bug 283404 - fixed locale  
  *     Jesper S Moller - bug 281159 - fix document URIs and also filter XML namespace
+ *     Jesper Steen Moeller - bug 282096 - make test harness handle all string encoding                                       translate function surrogate aware
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -46,6 +47,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.DocType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.testsuite.functions.EscapeHTMLURIFuncTest;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -194,6 +196,14 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	}
 
 	protected String getExpectedResult(String xqFile) {
+		return getExpectedResult(xqFile, true);
+	}
+
+	protected String getExpectedResultNoEscape(String xqFile) {
+		return getExpectedResult(xqFile, false);
+	}
+
+	protected String getExpectedResult(String xqFile, boolean unescape) {
 		String resultFile = xqFile;
 		//
 		if (resultFile.length() < 10) { // <9 enough? like XPST0001
@@ -235,6 +245,7 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 			// e.printStackTrace();
 			content = "XPST0003";
 		}
+		if (unescape && content.contains("&")) return resolveCharacterReferences(content);
 		return content;
 	}
 
@@ -246,7 +257,15 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		return unwrapResult(getExpectedResult(resultFile), elemName);
 	}
 
+	public String extractXPathExpressionNoEscape(String xqFile, String inputFile) {
+		return extractXPathExpression(xqFile, inputFile, false);
+	}
+
 	public String extractXPathExpression(String xqFile, String inputFile) {
+		return extractXPathExpression(xqFile, inputFile, true);
+	}
+
+	public String extractXPathExpression(String xqFile, String inputFile, boolean unescape) {
 		// get the xpath2 expr from xq file, first
 		char[] cbuf = new char[2048];//
 		String content = null;
@@ -286,7 +305,11 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return xpath2Expr;
+		if (unescape && xpath2Expr.contains("&")) {
+			return resolveCharacterReferences(xpath2Expr);
+		} else {
+			return xpath2Expr;
+		}
 	}
 
 	protected String extractXPathExpression(String xqFile, String inputFile,
@@ -407,15 +430,21 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		return expectedResult;
 	}
 
-	protected String resolveCharacterReferences(String xpath)
-			throws IOException, DOMLoaderException {
-				   String docText = "<doc>" + xpath + "</doc>";
-				   InputStream is = new ByteArrayInputStream(docText.getBytes("UTF-8"));
-				   DOMLoader domloader = new XercesLoader();
-				   domloader.set_validating(false);
-				   Document temp = domloader.load(is);
-				   return temp.getDocumentElement().getFirstChild().getTextContent();
-			   }
+	protected String resolveCharacterReferences(String xpath) {
+		String docText = "<doc>" + xpath + "</doc>";
+		InputStream is;
+		try {
+			is = new ByteArrayInputStream(docText.getBytes("UTF-8"));
+			DOMLoader domloader = new XercesLoader();
+			domloader.set_validating(false);
+			Document temp = domloader.load(is);
+			return temp.getDocumentElement().getFirstChild().getTextContent();
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		} catch (DOMLoaderException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 
 }

@@ -1,4 +1,16 @@
-
+/*******************************************************************************
+ * Copyright (c) 2009 Standards for Technology for Automotive Retail and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     David Carver (STAR) - initial API and implementation
+ *     Jesper Steen Moeller - bug 282096 - special case for a test which works
+ *                                         differently in XPath2 than in XQuery
+ *******************************************************************************/
+ 
 package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
 
 import java.io.IOException;
@@ -12,19 +24,6 @@ import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
 public class NormalizeUnicodeFuncTest extends AbstractPsychoPathTest {
-
-	@Override
-	public String extractXPathExpression(String xqFile, String inputFile) {
-		String body = super.extractXPathExpression(xqFile, inputFile);
-		try {
-			body = resolveCharacterReferences(body);
-		} catch (DOMLoaderException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return body;
-	}
 	
    //Test normalize-unicode with simple text input.
    public void test_fn_normalize_unicode1args_1() throws Exception {
