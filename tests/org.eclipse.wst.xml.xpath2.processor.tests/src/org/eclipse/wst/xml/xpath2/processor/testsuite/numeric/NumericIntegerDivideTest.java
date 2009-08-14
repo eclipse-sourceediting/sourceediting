@@ -8,6 +8,7 @@
  * 
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
+ *     Jesper Moller - Bug 286062 - Reverts test expectancy for integer division 
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.testsuite.numeric;
 
@@ -1838,7 +1839,7 @@ public class NumericIntegerDivideTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/Operators/ArithExpr/NumericOpr/NumericIntegerDivide/op-numeric-integer-divide-1.xq";
       String resultFile = "/ExpectedTestResults/Expressions/Operators/ArithExpr/NumericOpr/NumericIntegerDivide/";
-      String expectedResult = "FOAR0001";
+      String expectedResult = "FOAR0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
