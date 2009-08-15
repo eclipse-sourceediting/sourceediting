@@ -10,6 +10,7 @@
  *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
  *     David Carver - bug 282223 - implementation of xs:duration data types. 
  *     Jesper Moller- bug 281159 - fix document loading and resolving URIs 
+ *     Jesper Moller - bug 286452 - always return the stable date/time from dynamic context
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -114,6 +115,14 @@ public interface DynamicContext extends StaticContext {
 	// default collection
 
 	/**
+	 * Returns the current date time using the GregorianCalendar.
+	 * 
+	 * @return The current date and time, which will always be same for the dynamic context.
+	 * @since 1.1
+	 */
+	public GregorianCalendar current_date_time();
+	
+	/**
 	 * Set focus.
 	 * 
 	 * @param focus
@@ -137,4 +146,5 @@ public interface DynamicContext extends StaticContext {
 	 * @return position of the node.
 	 */
 	public int node_position(Node n);
+
 }

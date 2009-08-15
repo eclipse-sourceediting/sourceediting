@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper S Moller - bug 286452 - always return the stable date/time from dynamic context
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -15,7 +16,6 @@ import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
 import java.util.*;
@@ -64,7 +64,7 @@ public class FnCurrentDate extends Function {
 			throws DynamicError {
 		assert args.size() == 0;
 
-		AnyType res = new XSDate(new GregorianCalendar(TimeZone.getTimeZone("GMT")), dc.tz());
+		AnyType res = new XSDate(dc.current_date_time(), dc.tz());
 
 		return ResultSequenceFactory.create_new(res);
 	}

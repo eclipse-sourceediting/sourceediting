@@ -11,6 +11,7 @@
  *     David Carver - bug 282223 - implementation of xs:duration data type.
  *                  - bug 262765 - fix handling of range expression op:to and empty sequence 
  *     Jesper Moller- bug 281159 - fix document loading and resolving URIs 
+ *     Jesper Moller- bug 286452 - always return the stable date/time from dynamic context
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -41,7 +42,7 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	private Focus _focus;
 	private XSDuration _tz;
 	private Map _loaded_documents;
-	private XSTime _current_time;
+	private GregorianCalendar _current_date_time;
 	private Hashtable _node_order;
 
 	/**
@@ -104,6 +105,18 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 		return _tz;
 	}
 
+	/**
+	 * Gets the Current stable date time from the dynamic context.
+	 * @since 1.1
+	 * @see org.eclipse.wst.xml.xpath2.processor.DynamicContext#get_current_time()
+	 */
+	public GregorianCalendar current_date_time() {
+		if (_current_date_time == null) {
+			_current_date_time = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+		}
+		return _current_date_time;
+	}
+	
 	/**
 	 * Changes the current focus.
 	 * 

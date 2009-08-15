@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper S Moller - bug 286452 - always return the stable date/time from dynamic context
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -15,13 +16,12 @@ import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
 import java.util.*;
 
 /**
- * Returns xs:time(fn:current-dateTime()). This is axs:time (with timezone) that
+ * Returns xs:time(fn:current-dateTime()). This is a xs:time (with timezone) that
  * is current at some time during the evaluation of a query or transformation in
  * which fn:current-time() is executed. This function is stable. The precise
  * instant during the query or transformation represented by the value of
@@ -64,7 +64,7 @@ public class FnCurrentTime extends Function {
 			throws DynamicError {
 		assert args.size() == 0;
 
-		AnyType res = new XSTime(new GregorianCalendar(TimeZone.getTimeZone("GMT")), dc.tz());
+		AnyType res = new XSTime(dc.current_date_time(), dc.tz());
 
 		return ResultSequenceFactory.create_new(res);
 	}
