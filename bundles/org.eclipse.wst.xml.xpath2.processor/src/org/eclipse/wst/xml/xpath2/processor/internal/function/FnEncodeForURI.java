@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     David Carver - STAR - bug 285321 - initial api and implementation 
+ *     Jesper Steen Moeller - bug 285319 - fix UTF-8 escaping
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -70,7 +71,7 @@ public class FnEncodeForURI extends AbstractURIFunction {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return escape_uri(args, true);
+		return escape_uri(args, true, true);
 	}
 	
 }

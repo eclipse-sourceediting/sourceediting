@@ -8,6 +8,7 @@
  * Contributors:
  *     David Carver - STAR - bug 262765 - renamed to correct function name. 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
+ *     Jesper Steen Moeller - bug 285319 - fix UTF-8 escaping
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -36,7 +37,7 @@ public class FnIriToURI extends AbstractURIFunction {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return escape_uri(args, false);
+		return escape_uri(args, false, true);
 	}	
 
 }

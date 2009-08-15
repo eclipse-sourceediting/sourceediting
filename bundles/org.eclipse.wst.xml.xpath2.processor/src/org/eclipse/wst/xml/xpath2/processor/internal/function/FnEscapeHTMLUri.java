@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver - STAR - bug 262765 - renamed to correct function name. 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
+ *     Jesper Steen Moeller - bug 285319 - fix UTF-8 escaping, and fix arity bug
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -90,7 +91,7 @@ public class FnEscapeHTMLUri extends AbstractURIFunction {
 	 * Constructor for FnEscape-html-Uri.
 	 */
 	public FnEscapeHTMLUri() {
-		super(new QName("escape-html-uri"), 1, 2);
+		super(new QName("escape-html-uri"), 1);
 	}
 
 	/**
@@ -105,6 +106,6 @@ public class FnEscapeHTMLUri extends AbstractURIFunction {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return escape_uri(args, false);
+		return escape_uri(args, false, false);
 	}
 }
