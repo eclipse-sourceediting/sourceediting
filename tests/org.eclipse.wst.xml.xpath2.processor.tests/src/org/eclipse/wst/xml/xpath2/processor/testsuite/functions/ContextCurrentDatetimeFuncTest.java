@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
+ *     Jesper S Moller - bug 286452 - expect arity error in test_fn_current_dateTime_8
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
@@ -320,8 +321,8 @@ public class ContextCurrentDatetimeFuncTest extends AbstractPsychoPathTest {
    public void test_fn_current_dateTime_8() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextCurrentDatetimeFunc/fn-current-dateTime-8.xq";
-      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextCurrentDatetimeFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+
+      String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
