@@ -104,7 +104,7 @@ public class ElementType extends NodeType {
 		PSVIElementNSImpl psviElem = (PSVIElementNSImpl)_value;
 		XSTypeDefinition typeDef = psviElem.getTypeDefinition();
 		
-		if (XSCtrLibrary.XML_SCHEMA_NS.equals(typeDef.getNamespace())) {
+		if (typeDef != null && XSCtrLibrary.XML_SCHEMA_NS.equals(typeDef.getNamespace())) {
 		  Object schemaTypeValue = getTypedValueForPrimitiveType(typeDef);
 		  if (schemaTypeValue != null) {
 			rs.add((AnyType)schemaTypeValue);  
