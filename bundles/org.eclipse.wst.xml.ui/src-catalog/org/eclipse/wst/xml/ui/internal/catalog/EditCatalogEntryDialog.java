@@ -47,7 +47,6 @@ import org.eclipse.ui.part.PageBook;
 import org.eclipse.wst.common.ui.internal.dialogs.SelectSingleFileDialog;
 import org.eclipse.wst.common.uriresolver.internal.URI;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
-import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogElement;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
@@ -386,40 +385,17 @@ public class EditCatalogEntryDialog extends Dialog {
 			String result = null;
 			if (key == null || !key.equals(keyField.getText()) || type != getKeyType())
 			{
-				// get system catalog
-				ICatalog systemCatalog = null;			
-				ICatalog defaultCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
-				INextCatalog[] nextCatalogs = defaultCatalog.getNextCatalogs();
-				for (int i = 0; i < nextCatalogs.length; i++) {
-					INextCatalog catalog = nextCatalogs[i];
-					ICatalog referencedCatalog = catalog.getReferencedCatalog();
-					if (referencedCatalog != null) {
-						if (XMLCorePlugin.SYSTEM_CATALOG_ID.equals(referencedCatalog.getId())) {
-							systemCatalog = referencedCatalog;
-						}
-					}
-				}
-				
 				try {
 					switch( getKeyType() )
 					{
 					case ICatalogEntry.ENTRY_TYPE_PUBLIC:
 						result = catalog.resolvePublic(keyField.getText(), null);		
-						if (result == null) {
-							result = systemCatalog.resolvePublic(keyField.getText(), null);
-						}
 						break;
 					case ICatalogEntry.ENTRY_TYPE_SYSTEM:
 						result = catalog.resolveSystem(keyField.getText());
-						if (result == null) {
-							result = systemCatalog.resolveSystem(keyField.getText());
-						}
 						break;
 					case ICatalogEntry.ENTRY_TYPE_URI:
 						result = catalog.resolveURI(keyField.getText());
-						if (result == null) {
-							result = systemCatalog.resolveURI(keyField.getText());
-						}
 						break;
 					}
 				}
