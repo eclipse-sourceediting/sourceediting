@@ -905,4 +905,32 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		assertEquals("true", actual);
 	}
+	
+	public void testElementTypedValue() throws Exception {
+		// test for fix in ElementType.java, involving incorrectly computing
+		// typed value of element node, in case of validating element node,
+		// with a user defined simple XSD type.
+		URL fileURL = bundle.getEntry("/bugTestFiles/elementTypedValueBug.xml");
+		URL schemaURL = bundle.getEntry("/bugTestFiles/elementTypedValueBug.xsd");
+
+		loadDOMDocument(fileURL, schemaURL);
+
+		// Get XSModel object for the Schema
+		XSModel schema = getGrammar(schemaURL);
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "Example/Transportation/mode eq 'air'";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+
+	}
 }
