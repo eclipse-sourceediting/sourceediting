@@ -83,8 +83,7 @@ public class AttrType extends NodeType {
 		PSVIAttrNSImpl psviAttr = (PSVIAttrNSImpl) _value;
 		XSTypeDefinition typeDef = psviAttr.getTypeDefinition();
 
-		if (typeDef != null
-				&& typeDef.getNamespace().equals(XSCtrLibrary.XML_SCHEMA_NS)) {
+		if (typeDef != null && XSCtrLibrary.XML_SCHEMA_NS.equals(typeDef.getNamespace())) {
 			Object schemaTypeValue = getTypedValueForPrimitiveType(typeDef);
 			if (schemaTypeValue != null) {
 				rs.add((AnyType) schemaTypeValue);
