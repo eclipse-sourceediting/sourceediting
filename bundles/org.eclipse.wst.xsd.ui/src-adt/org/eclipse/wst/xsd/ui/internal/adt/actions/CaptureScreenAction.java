@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2008 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,15 +11,19 @@
 package org.eclipse.wst.xsd.ui.internal.adt.actions;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.LayerConstants;
+import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editparts.LayerManager;
 import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.jface.action.Action;
@@ -34,6 +38,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xsd.ui.internal.adt.editor.Messages;
+import org.eclipse.wst.xsd.ui.internal.design.layouts.FillLayout;
 import org.eclipse.wst.xsd.ui.internal.editor.XSDEditorPlugin;
 
 public class CaptureScreenAction extends Action
@@ -170,7 +175,26 @@ public class CaptureScreenAction extends Action
        */
       ScalableRootEditPart rootEditPart = (ScalableRootEditPart) viewer.getEditPartRegistry().get(LayerManager.ID);
       IFigure rootFigure = ((LayerManager) rootEditPart).getLayer(LayerConstants.PRINTABLE_LAYERS);// rootEditPart.getFigure();
+    
       Rectangle rootFigureBounds = new Rectangle(new Point(0,0),rootFigure.getPreferredSize());
+      List rootEditPartChildren = rootEditPart.getChildren();
+      Iterator rootEditPartChildrenIterator = rootEditPartChildren.iterator();
+      while(rootEditPartChildrenIterator.hasNext()) {
+    	  Object object = rootEditPartChildrenIterator.next();
+    	  if(object instanceof AbstractGraphicalEditPart) {
+    		  AbstractGraphicalEditPart childAbstractGraphicalEditPart = (AbstractGraphicalEditPart)object;
+    		  List grandChildren = childAbstractGraphicalEditPart.getChildren();
+    		  Iterator grandChildrenIterator = grandChildren.iterator();
+    		  while(grandChildrenIterator.hasNext()) {
+    			  AbstractGraphicalEditPart grandChildAbstractGraphicalEditPart = (AbstractGraphicalEditPart)grandChildrenIterator.next();
+    			  IFigure figure = grandChildAbstractGraphicalEditPart.getFigure();
+    			  LayoutManager layoutManager = figure.getLayoutManager();
+    			  if(layoutManager instanceof FillLayout) {
+    				  rootFigureBounds = rootFigure.getBounds();
+    			  }
+    		  }
+    	  }
+      }
 
       /*
        * 2. Now we want to get the GC associated with the control on which all
