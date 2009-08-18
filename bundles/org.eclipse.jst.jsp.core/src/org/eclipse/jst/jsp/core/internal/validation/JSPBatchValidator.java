@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2008 IBM Corporation and others.
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -488,7 +488,7 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 			return null;
 		final ValidationResult result = new ValidationResult();
 		final IReporter reporter = result.getReporter(monitor);
-		fDependsOn = new HashSet();
+		fDependsOn = new HashSet(Arrays.asList(result.getDependsOn()));
 		
 		// add web.xml as a dependency
 		addDependsOn(DeploymentDescriptorPropertyCache.getInstance().getWebXML(resource.getFullPath()));
@@ -512,7 +512,8 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 				if (fragmentCheck((IFile) resource)) {
 					validateFile((IFile) resource, reporter);
 				}
-				result.setDependsOn((IResource[]) fDependsOn.toArray(new IResource[fDependsOn.size()]));
+				IResource[] resources = (IResource[]) fDependsOn.toArray(new IResource[fDependsOn.size()]);
+				result.setDependsOn(resources);
 				fDependsOn.clear();
 			}
 		};
