@@ -82,27 +82,28 @@ public class TaglibHelper {
 	}
 
 	private boolean isIterationTag(TLDElementDeclaration elementDecl, IStructuredDocument document, ITextRegionCollection customTag, List problems) {
-		Class tagClass;
-		try {
-			tagClass = Class.forName(elementDecl.getTagclass(), true, getClassloader());
-			if (tagClass != null) {
-				return IterationTag.class.isInstance(tagClass.newInstance());
+		if (elementDecl.getTagclass() != null) {
+			try {
+				Class tagClass = Class.forName(elementDecl.getTagclass(), true, getClassloader());
+				if (tagClass != null) {
+					return IterationTag.class.isInstance(tagClass.newInstance());
+				}
+			} catch (ClassNotFoundException e) {
+				Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TagClassNotFound, JSPCoreMessages.TaglibHelper_3, elementDecl.getTagclass(), true);
+				if (createdProblem != null)
+					problems.add(createdProblem);
+				if (DEBUG)
+					Logger.logException(elementDecl.getTagclass(), e);
+			} catch (IllegalAccessException e) {
+				if (DEBUG)
+					Logger.logException(elementDecl.getTagclass(), e);
+			} catch (InstantiationException e) {
+				if (DEBUG)
+					Logger.logException(elementDecl.getTagclass(), e);
+			} catch (NoClassDefFoundError e) {
+				if (DEBUG)
+					Logger.logException(elementDecl.getTagclass(), e);
 			}
-		} catch (ClassNotFoundException e) {
-			Object createdProblem = createJSPProblem(document, customTag, IJSPProblem.TagClassNotFound, JSPCoreMessages.TaglibHelper_3, elementDecl.getTagclass(), true);
-			if (createdProblem != null)
-				problems.add(createdProblem);
-			if (DEBUG)
-				Logger.logException(elementDecl.getTagclass(), e);
-		} catch (IllegalAccessException e) {
-			if (DEBUG)
-				Logger.logException(elementDecl.getTagclass(), e);
-		} catch (InstantiationException e) {
-			if (DEBUG)
-				Logger.logException(elementDecl.getTagclass(), e);
-		} catch (NoClassDefFoundError e) {
-			if (DEBUG)
-				Logger.logException(elementDecl.getTagclass(), e);
 		}
 		return false;
 	}
