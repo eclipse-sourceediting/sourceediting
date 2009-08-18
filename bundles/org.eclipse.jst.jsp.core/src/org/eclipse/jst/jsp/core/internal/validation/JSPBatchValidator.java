@@ -488,7 +488,13 @@ public final class JSPBatchValidator extends AbstractValidator implements IValid
 			return null;
 		final ValidationResult result = new ValidationResult();
 		final IReporter reporter = result.getReporter(monitor);
-		fDependsOn = new HashSet(Arrays.asList(result.getDependsOn()));
+		
+		if(result.getDependsOn() != null) {
+			fDependsOn = new HashSet(Arrays.asList(result.getDependsOn()));
+		}
+		else {
+			fDependsOn = new HashSet();
+		}
 		
 		// add web.xml as a dependency
 		addDependsOn(DeploymentDescriptorPropertyCache.getInstance().getWebXML(resource.getFullPath()));
