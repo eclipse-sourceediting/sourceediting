@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -296,7 +297,7 @@ public class XMLModelParser {
 	 * changeRegion method
 	 * 
 	 */
-	void changeRegion(IStructuredDocumentRegion flatNode, ITextRegion region) {
+	void changeRegion(RegionChangedEvent change, IStructuredDocumentRegion flatNode, ITextRegion region) {
 		if (flatNode == null || region == null)
 			return;
 		if (this.model.getDocument() == null)
@@ -309,15 +310,31 @@ public class XMLModelParser {
 			changeData(flatNode, region);
 		}
 		else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+			if (change.getOffset() >= flatNode.getStartOffset() + region.getTextEnd()) {
+				// change is entirely in white-space
+				return;
+			}
 			changeAttrName(flatNode, region);
 		}
 		else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+			if (change.getOffset() >= flatNode.getStartOffset() + region.getTextEnd()) {
+				// change is entirely in white-space
+				return;
+			}
 			changeAttrValue(flatNode, region);
 		}
 		else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+			if (change.getOffset() >= flatNode.getStartOffset() + region.getTextEnd()) {
+				// change is entirely in white-space
+				return;
+			}
 			changeAttrEqual(flatNode, region);
 		}
 		else if (regionType == DOMRegionContext.XML_TAG_NAME || isNestedTagName(regionType)) {
+			if (change.getOffset() >= flatNode.getStartOffset() + region.getTextEnd()) {
+				// change is entirely in white-space
+				return;
+			}
 			changeTagName(flatNode, region);
 		}
 		else {

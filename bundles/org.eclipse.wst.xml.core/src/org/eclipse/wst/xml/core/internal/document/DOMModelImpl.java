@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -702,7 +702,7 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 		XMLModelUpdater updater = getActiveUpdater();
 		if (updater != null) { // being updated
 			try {
-				updater.changeRegion(flatNode, region);
+				updater.changeRegion(event, flatNode, region);
 			}
 			catch (Exception ex) {
 				Logger.logException(ex);
@@ -722,7 +722,7 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 		XMLModelParser parser = getModelParser();
 		setActive(parser);
 		try {
-			parser.changeRegion(flatNode, region);
+			parser.changeRegion(event, flatNode, region);
 		}
 		catch (Exception ex) {
 			Logger.logException(ex);

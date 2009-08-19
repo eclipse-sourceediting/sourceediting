@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ package org.eclipse.wst.xml.core.internal.document;
 import java.util.Enumeration;
 import java.util.Iterator;
 
+import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegionList;
@@ -232,8 +233,11 @@ public class XMLModelUpdater {
 		return;
 	}
 
-	void changeRegion(IStructuredDocumentRegion flatNode, ITextRegion region) {
-		// future_TODO: optimize
+	void changeRegion(RegionChangedEvent change, IStructuredDocumentRegion flatNode, ITextRegion region) {
+		if (change.getOffset() >= flatNode.getStartOffset() + region.getTextEnd()) {
+			// change is entirely in white-space
+			return;
+		}
 
 		NodeImpl root = (NodeImpl) this.model.getDocument();
 		this.parentNode = root;
