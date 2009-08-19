@@ -25,6 +25,7 @@ import org.eclipse.wst.xml.core.tests.dom.ElementImplTests;
 import org.eclipse.wst.xml.core.tests.dom.NameValidatorTests;
 import org.eclipse.wst.xml.core.tests.dom.NodeContainerTests;
 import org.eclipse.wst.xml.core.tests.dom.NodeListImplTests;
+import org.eclipse.wst.xml.core.tests.dom.RegionChangedAdapterNotificationTests;
 import org.eclipse.wst.xml.core.tests.format.TestPartitionFormatterXML;
 import org.eclipse.wst.xml.core.tests.model.TestModelManager;
 import org.eclipse.wst.xml.core.tests.model.TestModelsFromFiles;
@@ -64,5 +65,7 @@ public class SSEModelXMLTestSuite extends TestSuite {
 		addTest(new TestSuite(TestPartitionFormatterXML.class));
 
 		addTest(new TestSuite(TestAttributesOrder.class));
+
+		addTest(new TestSuite(RegionChangedAdapterNotificationTests.class));
 	}
 }
