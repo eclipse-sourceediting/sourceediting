@@ -3,18 +3,19 @@
       id="org.eclipse.wst.xml.xpath2.processor.feature"
       label="%featureName"
       version="1.1.0.qualifier"
-      provider-name="%provider">
+      provider-name="%provider"
+      plugin="org.eclipse.wst.xml.xpath2">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+   <description>
+      %description
    </description>
 
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
+   <copyright>
+      %copyright
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
+   <license>
+      %license
    </license>
 
    <plugin
