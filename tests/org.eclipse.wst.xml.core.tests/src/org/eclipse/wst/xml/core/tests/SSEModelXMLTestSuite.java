@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 import org.eclipse.wst.xml.core.internal.document.test.NodeImplTestCase;
 import org.eclipse.wst.xml.core.tests.contentmodel.TestAttributesOrder;
 import org.eclipse.wst.xml.core.tests.contentmodel.TestCatalogRetrivalAndModelCreation;
+import org.eclipse.wst.xml.core.tests.document.FileBufferDocumentTester;
 import org.eclipse.wst.xml.core.tests.document.GetDocumentRegionsTest;
 import org.eclipse.wst.xml.core.tests.document.TestStructuredDocument;
 import org.eclipse.wst.xml.core.tests.document.TestXMLDocumentLoader;
@@ -46,6 +47,7 @@ public class SSEModelXMLTestSuite extends TestSuite {
 		addTest(new TestSuite(TestXMLModelLoader.class));
 		addTest(new TestSuite(TestXMLDocumentLoader.class));
 		addTest(new TestSuite(TestStructuredDocument.class));
+		addTest(new TestSuite(FileBufferDocumentTester.class));
 		
 		addTest(new TestSuite(TestModelManager.class));
 		addTest(new TestSuite(TestStructuredModel.class));
@@ -54,7 +56,7 @@ public class SSEModelXMLTestSuite extends TestSuite {
 		addTest(new TestSuite(ElementImplTests.class));
 		addTest(new TestSuite(AttrImplTests.class));
 		addTest(new TestSuite(NodeListImplTests.class));
-		addTest(new TestSuite(NodeContainerTests.class,"Test NodeContainer"));
+		addTest(new TestSuite(NodeContainerTests.class));
 		addTest(new TestSuite(TransitionTests.class));
 		addTest(new TestSuite(XMLCorePreferencesTest.class));
 		addTest(new TestSuite(TestCatalogRetrivalAndModelCreation.class));

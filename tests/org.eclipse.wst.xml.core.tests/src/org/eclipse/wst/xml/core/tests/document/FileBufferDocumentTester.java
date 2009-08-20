@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,7 +19,6 @@ import org.eclipse.core.filebuffers.LocationKind;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
@@ -63,22 +62,22 @@ public class FileBufferDocumentTester extends UnzippedProjectTester {
 //		Assert.assertNotNull(document);
 //	}
 
-	private void doTestCreateCreateEmpty(String filePath, Class expectedDocumentClass, Class expectedPartioner) throws CoreException {
-		IFile file = (IFile) fTestProject.findMember(filePath);
-		assertTrue("Test Case in error. Non-existent file existed! " + filePath, file == null);
-		IPath locationPath = new Path(filePath);
-		IFile nonExistingFile = fTestProject.getFile(locationPath);
-		locationPath = nonExistingFile.getFullPath();
-		ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager();
-		// can not "connect" to non-existant location
-		//bufferManager.connect(locationPath, null);
-		IDocument document = bufferManager.createEmptyDocument(locationPath);
-		assertNotNull(document);
-		assertTrue("wrong class of document", expectedDocumentClass.isInstance(document));
-		assertTrue("wrong partitioner in document", expectedPartioner.isInstance(document.getDocumentPartitioner()));
-		bufferManager.disconnect(locationPath, null);
-
-	}
+//	private void doTestCreateEmpty(String filePath, Class expectedDocumentClass, Class expectedPartioner) throws CoreException {
+//		IFile file = (IFile) fTestProject.findMember(filePath);
+//		assertTrue("Test Case in error. Non-existent file existed! " + filePath, file == null);
+//		IPath locationPath = new Path(filePath);
+//		IFile nonExistingFile = fTestProject.getFile(locationPath);
+//		locationPath = nonExistingFile.getFullPath();
+//		ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager();
+//		// can not "connect" to non-existant location
+//		//bufferManager.connect(locationPath, null);
+//		IDocument document = bufferManager.createEmptyDocument(locationPath, LocationKind.IFILE);
+//		assertNotNull(document);
+//		assertTrue("wrong class of document", expectedDocumentClass.isInstance(document));
+//		assertTrue("wrong partitioner in document: " + document.getDocumentPartitioner(), expectedPartioner.isInstance(document.getDocumentPartitioner()));
+//		bufferManager.disconnect(locationPath, LocationKind.IFILE, null);
+//
+//	}
 
 
 
@@ -186,9 +185,9 @@ public class FileBufferDocumentTester extends UnzippedProjectTester {
 		doTestCreate("testfiles/xml/UTF8With3ByteBOM.xml", BasicStructuredDocument.class, StructuredTextPartitionerForXML.class);
 	}
 
-	public void testNonExistentXML() throws CoreException {
-		doTestCreateCreateEmpty("testfiles/xml/testnonexistent.xml", BasicStructuredDocument.class, StructuredTextPartitionerForXML.class);
-	}
+//	public void testNonExistentXML() throws CoreException {
+//		doTestCreateEmpty("testfiles/xml/testnonexistent.xml", BasicStructuredDocument.class, StructuredTextPartitionerForXML.class);
+//	}
 
 	public void testSimpleCase() throws CoreException, IOException {
 		doTestCreate("testfiles/xml/testNormalCase.xml", BasicStructuredDocument.class, StructuredTextPartitionerForXML.class);

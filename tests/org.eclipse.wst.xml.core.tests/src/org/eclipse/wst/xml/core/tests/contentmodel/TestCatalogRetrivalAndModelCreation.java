@@ -214,6 +214,7 @@ public class TestCatalogRetrivalAndModelCreation extends TestCase {
 		} finally {
 			xmlCatalog.removeCatalogElement(publicDelegate);
 		}
+		delegateCat.delete();
 	}
 
 	public void testCatalog11DelegateSystem() throws MalformedURLException, IOException {
@@ -236,6 +237,7 @@ public class TestCatalogRetrivalAndModelCreation extends TestCase {
 		} finally {
 			xmlCatalog.removeCatalogElement(systemDelegate);
 		}
+		delegateCat.delete();
 	}
 
 	public void testCatalog11DelegateUri() throws MalformedURLException, IOException {
@@ -258,6 +260,7 @@ public class TestCatalogRetrivalAndModelCreation extends TestCase {
 		} finally {
 			xmlCatalog.removeCatalogElement(uriDelegate);
 		}
+		delegateCat.delete();
 	}
 
 	private File makeTempFile(String name, String contents) throws IOException {
@@ -265,6 +268,7 @@ public class TestCatalogRetrivalAndModelCreation extends TestCase {
 		FileWriter fw = new FileWriter(delegateCat);
 		fw.write(contents);
 		fw.close();
+		delegateCat.getParentFile().deleteOnExit();
 		return delegateCat;
 	}
 
