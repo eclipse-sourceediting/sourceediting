@@ -4,6 +4,12 @@
         <filter id="338792546">
             <message_arguments>
                 <message_argument value="org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext"/>
+                <message_argument value="node_position(Node)"/>
+            </message_arguments>
+        </filter>
+        <filter id="338792546">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext"/>
                 <message_argument value="tz()"/>
             </message_arguments>
         </filter>
@@ -18,31 +24,7 @@
         <filter id="403804204">
             <message_arguments>
                 <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
-                <message_argument value="evaluate_function(QName, Collection)"/>
-            </message_arguments>
-        </filter>
-        <filter id="403804204">
-            <message_arguments>
-                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
-                <message_argument value="set_variable(QName, AnyType)"/>
-            </message_arguments>
-        </filter>
-        <filter id="403804204">
-            <message_arguments>
-                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
                 <message_argument value="tz()"/>
-            </message_arguments>
-        </filter>
-        <filter id="403804204">
-            <message_arguments>
-                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
-                <message_argument value="resolve_uri(String)"/>
-            </message_arguments>
-        </filter>
-        <filter id="403804204">
-            <message_arguments>
-                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
-                <message_argument value="get_variable(QName)"/>
             </message_arguments>
         </filter>
         <filter id="403804204">
@@ -57,13 +39,25 @@
                 <message_argument value="get_doc(URI)"/>
             </message_arguments>
         </filter>
-        <filter id="405901410">
+        <filter id="403804204">
             <message_arguments>
                 <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
                 <message_argument value="evaluate_function(QName, Collection)"/>
             </message_arguments>
         </filter>
-        <filter id="405901410">
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="set_variable(QName, AnyType)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="resolve_uri(String)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
             <message_arguments>
                 <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
                 <message_argument value="get_variable(QName)"/>
@@ -72,7 +66,7 @@
         <filter id="405901410">
             <message_arguments>
                 <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
-                <message_argument value="get_doc(String)"/>
+                <message_argument value="get_variable(QName)"/>
             </message_arguments>
         </filter>
         <filter id="405901410">
@@ -85,6 +79,24 @@
             <message_arguments>
                 <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
                 <message_argument value="tz()"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="evaluate_function(QName, Collection)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="node_position(Node)"/>
+            </message_arguments>
+        </filter>
+        <filter id="405901410">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="get_doc(String)"/>
             </message_arguments>
         </filter>
     </resource>
@@ -242,13 +254,13 @@
         <filter id="405901410">
             <message_arguments>
                 <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
-                <message_argument value="expand_function_qname(QName)"/>
+                <message_argument value="make_atomic(QName)"/>
             </message_arguments>
         </filter>
         <filter id="405901410">
             <message_arguments>
                 <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
-                <message_argument value="make_atomic(QName)"/>
+                <message_argument value="expand_function_qname(QName)"/>
             </message_arguments>
         </filter>
         <filter id="405901410">

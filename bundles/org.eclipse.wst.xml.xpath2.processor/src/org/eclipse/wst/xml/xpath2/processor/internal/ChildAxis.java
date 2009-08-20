@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver (STAR) - bug 262765 - Was not handling xml loaded dynamically in variables. 
+ *     Jesper Moller - bug 275610 - Avoid big time and memory overhead for externals
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
@@ -54,8 +55,7 @@ public class ChildAxis extends ForwardAxis {
 				Node dnode = nl.item(i);
 				NodeType n = null;
 				try {
-					n = NodeType.dom_to_xpath(dnode, tempDC
-							.node_position(dnode));
+					n = NodeType.dom_to_xpath(dnode);
 				} catch (NullPointerException ex) {
 					// The node wasn't found, so try creating a dynamic context to look it up
 					// This happens when multiple variables are loaded with different docs so we create the context
@@ -66,7 +66,7 @@ public class ChildAxis extends ForwardAxis {
 						model = dnodePSVI.getSchemaInformation();
 					}
 					tempDC = new DefaultDynamicContext(model, dnode.getOwnerDocument());
-					n = NodeType.dom_to_xpath(dnode, tempDC.node_position(dnode));
+					n = NodeType.dom_to_xpath(dnode);
 				}
 
 				rs.add(n);

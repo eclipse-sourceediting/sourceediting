@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 276134 - improvements to schema aware primitive type support
  *                                  for attribute/element nodes
+ *     Jesper Moller - bug 275610 - Avoid big time and memory overhead for externals
  *     David Carver  - bug 281186 - implementation of fn:id and fn:idref
  *******************************************************************************/
 
@@ -39,7 +40,7 @@ public class ElementType extends NodeType {
 	 * Initialises to a null element
 	 */
 	public ElementType() {
-		this(null, 0);
+		this(null);
 	}
 
 	/**
@@ -47,11 +48,9 @@ public class ElementType extends NodeType {
 	 * 
 	 * @param v
 	 *            The element being represented
-	 * @param doc_order
-	 *            The document order
 	 */
-	public ElementType(Element v, int doc_order) {
-		super(v, doc_order);
+	public ElementType(Element v) {
+		super(v);
 		_value = v;
 
 		_string_value = null;

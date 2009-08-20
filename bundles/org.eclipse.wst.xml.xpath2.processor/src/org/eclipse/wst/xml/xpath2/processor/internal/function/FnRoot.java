@@ -10,6 +10,7 @@
  *     David Carver - STAR - bug 262765 - clean up fn:root according to spec. 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *     Jesper Steen Moeller - bug 281159 - tak extra care to find the root 
+ *     Jesper Steen Moller - bug 275610 - Avoid big time and memory overhead for externals
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -122,7 +123,7 @@ public class FnRoot extends Function {
 			root = newroot;
 		}
 
-		rs.add(NodeType.dom_to_xpath(root, dc.node_position(root)));
+		rs.add(NodeType.dom_to_xpath(root));
 
 		return rs;
 	}

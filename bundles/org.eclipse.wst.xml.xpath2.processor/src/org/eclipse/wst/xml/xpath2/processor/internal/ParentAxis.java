@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Moller - bug 275610 - Avoid big time and memory overhead for externals
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
@@ -49,7 +50,7 @@ public class ParentAxis extends ReverseAxis {
 
 		// if a parent exists... add it
 		if (parent != null)
-			rs.add(NodeType.dom_to_xpath(parent, dc.node_position(parent)));
+			rs.add(NodeType.dom_to_xpath(parent));
 
 		return rs;
 	}

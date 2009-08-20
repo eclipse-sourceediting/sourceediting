@@ -12,6 +12,7 @@
  *                  - bug 262765 - fix handling of range expression op:to and empty sequence 
  *     Jesper Moller- bug 281159 - fix document loading and resolving URIs 
  *     Jesper Moller- bug 286452 - always return the stable date/time from dynamic context
+ *     Jesper Moller- bug 275610 - Avoid big time and memory overhead for externals
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -43,7 +44,6 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	private XSDuration _tz;
 	private Map _loaded_documents;
 	private GregorianCalendar _current_date_time;
-	private Hashtable _node_order;
 
 	/**
 	 * Constructor.
@@ -59,40 +59,6 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 		_focus = null;
 		_tz = new XSDayTimeDuration();
 		_loaded_documents = new HashMap();
-		
-		init_node_order(doc);
-	}
-
-	private void init_node_order(Document doc) {
-		_node_order = new Hashtable();
-		add_node_order(doc, 1);
-	}
-
-	private int add_node_order(Node node, int pos) {
-
-		// add node
-		_node_order.put(node, new Integer(pos));
-		pos++;
-
-		// add attributes
-		NamedNodeMap attributes = node.getAttributes();
-		if (attributes != null) {
-			for (int i = 0; i < attributes.getLength(); i++) {
-				Attr a = (Attr) attributes.item(i);
-				_node_order.put(a, new Integer(pos));
-				pos++;
-			}
-		}
-
-		// add children [depth first]
-		NodeList children = node.getChildNodes();
-
-		for (int i = 0; i < children.getLength(); i++) {
-			Node n = children.item(i);
-
-			pos = add_node_order(n, pos);
-		}
-		return pos;
 	}
 
 	/**
@@ -224,11 +190,8 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 		if (doc == null)
 			return null;
 
-		// XXX comparing nodes will screw up now [doc order]
-		init_node_order(doc);
-		return ResultSequenceFactory.create_new(new DocType(doc, 0));
+		return ResultSequenceFactory.create_new(new DocType(doc));
 	}
-
 	/**
 	 * @since 1.1
 	 */
@@ -277,21 +240,6 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	@Override
 	public void set_variable(QName var, AnyType val) {
 		super.set_variable(var, val);
-	}
-
-	/**
-	 * Retrieve integer of the position of node
-	 * 
-	 * @return integer from _node_order.get(node)
-	 */
-	public int node_position(Node node) {
-		synchronized (this) {
-			Integer pos = (Integer) _node_order.get(node);
-	
-			assert pos != null;
-
-			return pos.intValue();
-		}
 	}
 
 }

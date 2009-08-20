@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Moller - bug 275610 - Avoid big time and memory overhead for externals
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -28,11 +29,9 @@ public class DocType extends NodeType {
 	 * 
 	 * @param v
 	 *            The document being represented
-	 * @param doc_order
-	 *            The document order
 	 */
-	public DocType(Document v, int doc_order) {
-		super(v, doc_order);
+	public DocType(Document v) {
+		super(v);
 		_value = v;
 		_string_value = null;
 	}

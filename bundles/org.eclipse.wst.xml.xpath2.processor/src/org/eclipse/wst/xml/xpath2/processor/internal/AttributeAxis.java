@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Moller - bug 275610 - Avoid big time and memory overhead for externals
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
@@ -47,7 +48,7 @@ public class AttributeAxis extends ForwardAxis {
 		for (int i = 0; i < attrs.getLength(); i++) {
 			Attr attr = (Attr) attrs.item(i);
 
-			rs.add(NodeType.dom_to_xpath(attr, dc.node_position(attr)));
+			rs.add(NodeType.dom_to_xpath(attr));
 		}
 
 		return rs;

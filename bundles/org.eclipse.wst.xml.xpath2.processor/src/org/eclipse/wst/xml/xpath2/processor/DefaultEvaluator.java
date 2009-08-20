@@ -10,6 +10,7 @@
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type 
  *     Jesper Steen Moeller - bug 285145 - check arguments to op:to
  *     Jesper Steen Moeller - bug 262765 - fixed node state iteration
+ *     Jesper Steen Moller  - bug 275610 - Avoid big time and memory overhead for externals
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -96,7 +97,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 
 		// initialize context item with root of document
 		ResultSequence rs = ResultSequenceFactory.create_new();
-		rs.add(new DocType(doc, _dc.node_position(doc)));
+		rs.add(new DocType(doc));
 
 		_dc.set_focus(new Focus(rs));
 
@@ -1513,8 +1514,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 					if (elem_count > 1)
 						break;
 
-					elem = new ElementType((Element) child, _dc
-							.node_position(child));
+					elem = new ElementType((Element) child);
 				}
 			}
 

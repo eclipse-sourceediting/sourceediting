@@ -10,7 +10,8 @@
  *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
  *     David Carver - bug 282223 - implementation of xs:duration data types. 
  *     Jesper Moller- bug 281159 - fix document loading and resolving URIs 
- *     Jesper Moller - bug 286452 - always return the stable date/time from dynamic context
+ *     Jesper Moller- bug 286452 - always return the stable date/time from dynamic context
+ *     Jesper Moller- bug 275610 - Avoid big time and memory overhead for externals
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -138,13 +139,5 @@ public interface DynamicContext extends StaticContext {
 	 */
 	public Focus focus();
 
-	/**
-	 * Get node position.
-	 * 
-	 * @param n
-	 *            is the node.
-	 * @return position of the node.
-	 */
-	public int node_position(Node n);
 
 }

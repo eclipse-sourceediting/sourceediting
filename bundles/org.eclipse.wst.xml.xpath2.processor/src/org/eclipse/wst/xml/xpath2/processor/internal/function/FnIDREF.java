@@ -99,12 +99,12 @@ public class FnIDREF extends Function {
 		
 		int itemcnt = 0;
 		if (hasID(ids, node)) {
-			ElementType element = new ElementType((Element) node, itemcnt);
+			ElementType element = new ElementType((Element) node);
 			rs.add(element);
 		}
 		
-		rs = processAttributes(node, ids, itemcnt, rs);
-		rs = processChildNodes(node, ids, itemcnt, rs);
+		rs = processAttributes(node, ids, rs);
+		rs = processChildNodes(node, ids, rs);
 
 		return rs;
 	}
@@ -118,7 +118,7 @@ public class FnIDREF extends Function {
 		return xsid;
 	}
 	
-	private static ResultSequence processChildNodes(Node node, List ids, int itemcnt, ResultSequence rs) {
+	private static ResultSequence processChildNodes(Node node, List ids, ResultSequence rs) {
 		if (!node.hasChildNodes()) {
 			return rs;
 		}
@@ -127,15 +127,14 @@ public class FnIDREF extends Function {
 		for (int nodecnt = 0; nodecnt < nodeList.getLength(); nodecnt++) {
 			Node childNode = nodeList.item(nodecnt);
 			if (childNode.getNodeType() == Node.ELEMENT_NODE && !isDuplicate(childNode, rs)) {
-				ElementType element = new ElementType((Element)childNode, itemcnt);
+				ElementType element = new ElementType((Element)childNode);
 				if (element.isIDREF()) {
 					if (hasID(ids, childNode)) {
-						itemcnt++;
 						rs.add(element);
 					}
 				} 
-				rs = processAttributes(childNode, ids, itemcnt, rs);
-				rs = processChildNodes(childNode, ids, itemcnt, rs);
+				rs = processAttributes(childNode, ids, rs);
+				rs = processChildNodes(childNode, ids, rs);
 			}
 		}
 		
@@ -143,7 +142,7 @@ public class FnIDREF extends Function {
 
 	}
 	
-	private static ResultSequence processAttributes(Node node, List idrefs, int itemcnt, ResultSequence rs) {
+	private static ResultSequence processAttributes(Node node, List idrefs, ResultSequence rs) {
 		if (!node.hasAttributes()) {
 			return rs;
 		}
@@ -151,11 +150,11 @@ public class FnIDREF extends Function {
 		NamedNodeMap attributeList = node.getAttributes();
 		for (int atsub = 0; atsub < attributeList.getLength(); atsub++) {
 			Attr atNode = (Attr) attributeList.item(atsub);
-			NodeType atType = new AttrType(atNode, 0);
+			NodeType atType = new AttrType(atNode);
 			if (atType.isID()) {
 				if (hasID(idrefs, atNode)) {
 					if (!isDuplicate(node, rs)) {
-						ElementType element = new ElementType((Element)node, 0);
+						ElementType element = new ElementType((Element)node);
 						rs.add(element);
 					}
 				}

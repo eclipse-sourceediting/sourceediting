@@ -10,6 +10,7 @@
  *     Mukul Gandhi - bug 276134 - improvements to schema aware primitive type support
  *                                 for attribute/element nodes
  *     David Carver - bug 277774 - XSDecimal returning wrong values.
+ *     Jesper Moller - bug 275610 - Avoid big time and memory overhead for externals
  *     David Carver  - bug 281186 - implementation of fn:id and fn:idref
  *******************************************************************************/
 
@@ -24,6 +25,7 @@ import java.util.Iterator;
 import org.apache.xerces.dom.PSVIAttrNSImpl;
 import org.apache.xerces.xs.ItemPSVI;
 import org.apache.xerces.xs.XSTypeDefinition;
+import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.w3c.dom.Attr;
@@ -42,7 +44,6 @@ public abstract class NodeType extends AnyType {
 	protected static final String SCHEMA_TYPE_IDREF = "IDREF";
 	protected static final String SCHEMA_TYPE_ID = "ID";
 	private Node _node;
-	private int _document_order;
 
 	/**
 	 * Initialises according to the supplied parameters
@@ -52,9 +53,8 @@ public abstract class NodeType extends AnyType {
 	 * @param document_order
 	 *            The document order
 	 */
-	public NodeType(Node node, int document_order) {
+	public NodeType(Node node) {
 		_node = node;
-		_document_order = document_order;
 	}
 
 	/**
@@ -64,15 +64,6 @@ public abstract class NodeType extends AnyType {
 	 */
 	public Node node_value() {
 		return _node;
-	}
-
-	/**
-	 * Retrieves the document order as an integer
-	 * 
-	 * @return Document order as an integer
-	 */
-	public int document_order() {
-		return _document_order;
 	}
 
 	// Accessors defined in XPath Data model
@@ -97,25 +88,25 @@ public abstract class NodeType extends AnyType {
 	}
 
 	// a little factory for converting from DOM to our representation
-	public static NodeType dom_to_xpath(Node node, int doc_pos) {
+	public static NodeType dom_to_xpath(Node node) {
 		switch (node.getNodeType()) {
 		case Node.ELEMENT_NODE:
-			return new ElementType((Element) node, doc_pos);
+			return new ElementType((Element) node);
 
 		case Node.COMMENT_NODE:
-			return new CommentType((Comment) node, doc_pos);
+			return new CommentType((Comment) node);
 
 		case Node.ATTRIBUTE_NODE:
-			return new AttrType((Attr) node, doc_pos);
+			return new AttrType((Attr) node);
 
 		case Node.TEXT_NODE:
-			return new TextType((Text) node, doc_pos);
+			return new TextType((Text) node);
 
 		case Node.DOCUMENT_NODE:
-			return new DocType((Document) node, doc_pos);
+			return new DocType((Document) node);
 
 		case Node.PROCESSING_INSTRUCTION_NODE:
-			return new PIType((ProcessingInstruction) node, doc_pos);
+			return new PIType((ProcessingInstruction) node);
 
 			// XXX
 		default:
@@ -173,7 +164,8 @@ public abstract class NodeType extends AnyType {
 	}
 
 	public static boolean same(NodeType a, NodeType b) {
-		return a.document_order() == b.document_order();
+		return (a.node_value().isSameNode(b.node_value()));
+		// While compare_node(a, b) == 0 is tempting, it is also expensive
 	}
 
 	public boolean before(NodeType two) {
@@ -181,7 +173,7 @@ public abstract class NodeType extends AnyType {
 	}
 
 	public static boolean before(NodeType a, NodeType b) {
-		return a.document_order() < b.document_order();
+		return compare_node(a, b) < 0;
 	}
 
 	public boolean after(NodeType two) {
@@ -189,12 +181,38 @@ public abstract class NodeType extends AnyType {
 	}
 
 	public static boolean after(NodeType a, NodeType b) {
-		if (same(a, b))
-			return false;
-
-		return !before(a, b);
+		return compare_node(a, b) > 0;
 	}
 	
+	private static int compare_node(NodeType a, NodeType b) {
+		Node nodeA = a.node_value();
+		Node nodeB = b.node_value();
+		
+		if (nodeA == nodeB || nodeA.isSameNode(nodeB)) return 0;
+
+		Document docA = getDocument(nodeA);
+		Document docB = getDocument(nodeB);
+		
+		if (docA != docB && ! docA.isSameNode(docB)) {
+			return compareDocuments(docA, docB);
+		}
+		short relation = nodeA.compareDocumentPosition(nodeB);
+		if ((relation & Node.DOCUMENT_POSITION_PRECEDING) != 0) 
+			  return 1;
+		if ((relation & Node.DOCUMENT_POSITION_FOLLOWING) != 0) 
+			  return -1;
+		throw new RuntimeException("Unexpected result from node comparison: " + relation);
+	}
+
+	private static int compareDocuments(Document docA, Document docB) {
+		// Arbitrary but fulfills the spec (provided documenURI is always set)
+		return docB.getDocumentURI().compareTo(docA.getDocumentURI());
+	}
+
+	private static Document getDocument(Node nodeA) {
+		return nodeA instanceof Document ? (Document)nodeA : nodeA.getOwnerDocument();
+	}
+
 	protected Object getTypedValueForPrimitiveType(XSTypeDefinition typeDef) {		
 		Object schemaTypeValue = null;
 		

@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Jesper Moller - bug 275610 - Avoid big time and memory overhead for externals
  *     David Carver  - bug 281186 - implementation of fn:id and fn:idref
  *******************************************************************************/
 
@@ -28,11 +29,9 @@ public class CommentType extends NodeType {
 	 * 
 	 * @param v
 	 *            The comment being represented
-	 * @param doc_order
-	 *            The document order
 	 */
-	public CommentType(Comment v, int doc_order) {
-		super(v, doc_order);
+	public CommentType(Comment v) {
+		super(v);
 		_value = v;
 	}
 

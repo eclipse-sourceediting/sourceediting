@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
+ *     Jesper Moller- bug 275610 - Avoid big time and memory overhead for externals
  *     David Carver  - bug 281186 - implementation of fn:id and fn:idref
  *******************************************************************************/
 
@@ -28,11 +29,9 @@ public class TextType extends NodeType {
 	 * 
 	 * @param v
 	 *            The value of the TextType node
-	 * @param doc_type
-	 *            The document ordering
 	 */
-	public TextType(Text v, int doc_type) {
-		super(v, doc_type);
+	public TextType(Text v) {
+		super(v);
 		_value = v;
 	}
 

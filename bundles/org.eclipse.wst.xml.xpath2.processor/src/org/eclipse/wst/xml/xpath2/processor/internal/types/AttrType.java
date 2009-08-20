@@ -11,6 +11,7 @@
  *                                 for attribute/element nodes 
  *     Jesper Moller - bug 281159 - we were missing out on qualified attributes
  *     David Carver  - bug 281186 - implementation of fn:id and fn:idref
+ *     Jesper Moller- bug 275610 - Avoid big time and memory overhead for externals
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -35,7 +36,7 @@ public class AttrType extends NodeType {
 	 * Initialises to null
 	 */
 	public AttrType() {
-		this(null, 0);
+		this(null);
 	}
 
 	/**
@@ -43,11 +44,9 @@ public class AttrType extends NodeType {
 	 * 
 	 * @param v
 	 *            The attribute being represented
-	 * @param doc_order
-	 *            The document order
 	 */
-	public AttrType(Attr v, int doc_order) {
-		super(v, doc_order);
+	public AttrType(Attr v) {
+		super(v);
 		_value = v;
 	}
 
