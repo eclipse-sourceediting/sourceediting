@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     David Carver - bug 262765 - eased restriction on data type...convert numerics to XSDouble. 
+ *     David Carver - bug 262765 - eased restriction on data type...convert numerics to XSDouble.
+ *     Jesper S Moller - bug 285806 - fixed fn:subsequence for indexes starting before 1
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -103,12 +104,9 @@ public class FnSubsequence extends Function {
 
 		int pos = 1;
 
-		if (start < 1)
-			start = 1;
-		int seqlen = seq.size();
-
 		int end = start + len;
 
+		// XXX: Huge optimization possible here!
 		for (Iterator i = seq.iterator(); i.hasNext();) {
 			at = (AnyType) i.next();
 
