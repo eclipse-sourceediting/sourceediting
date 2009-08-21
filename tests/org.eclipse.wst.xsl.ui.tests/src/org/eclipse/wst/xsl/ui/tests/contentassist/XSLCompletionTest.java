@@ -16,6 +16,7 @@ import java.io.File;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xsl.ui.tests.AbstractSourceViewerTest;
 
 /**
@@ -183,6 +184,36 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 		try {
 			ICompletionProposal[] proposals = getProposals(861);
 			assertTrue(proposals.length > 0);
+
+		} finally {
+			model.releaseFromEdit();
+		}
+		
+	}
+	
+	// Bug 281420 - Variable inserts wrong.
+	public void testVariableInsertPositionOffset() throws Exception {
+		fileName = "bug281420.xsl";
+		String xslFilePath = projectName + File.separator + fileName;
+		loadFileForTesting(xslFilePath);
+
+		try {
+			ICompletionProposal[] proposals = getProposals(4,25);
+			assertTrue("Did not find any proposals.", proposals.length > 0);
+			CustomCompletionProposal testprop = null;
+			for (int cnt = 0; cnt < proposals.length; cnt++) {
+				if (proposals[cnt].getDisplayString().equals("$test")) {
+					testprop = (CustomCompletionProposal) proposals[cnt];
+				}
+			}
+				
+			if (testprop == null) {
+				fail("Didn't find the $test proposal");
+			}
+			int startoffset = calculateOffset(4, 24);
+			if (testprop.getReplacementOffset() != startoffset) {
+				fail("Replacement Offset position worng expected " + startoffset + "but received " + testprop.getReplacementOffset());
+			}
 
 		} finally {
 			model.releaseFromEdit();
