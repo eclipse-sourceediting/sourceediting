@@ -15,11 +15,9 @@ package org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAnyElement;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
@@ -821,15 +819,22 @@ public class ModelQueryImpl implements ModelQuery
                          
     addValuesForXSIType(element, cmNode, list);
     
-    // Remove duplicates
-    Set set = new HashSet(list);
-
     if (extensionManager != null)
     {                    
-      set.addAll(extensionManager.getDataTypeValues(element, cmNode));
+      list.addAll(extensionManager.getDataTypeValues(element, cmNode));
     }          
-        
-    return (String[]) set.toArray(new String[set.size()]);
+    
+    // Remove duplicates
+    List duplicateFreeList = new ArrayList();
+    Iterator iterator = list.iterator();
+    while(iterator.hasNext()) {
+    	Object next = iterator.next();
+    	if(duplicateFreeList.indexOf(next) == -1) {
+    		duplicateFreeList.add(next);
+    	}
+    }
+    
+    return (String[]) duplicateFreeList.toArray(new String[duplicateFreeList.size()]);
   }    
 
            
