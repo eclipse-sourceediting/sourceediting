@@ -8,7 +8,9 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
 		<accessrules>
-			<accessrule kind="accessible" pattern="**/xsl/core/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/wst/xsl/core/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/wst/sse/**"/>
+			<accessrule kind="accessible" pattern="org/eclipse/wst/xml/**"/>
 		</accessrules>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
