@@ -30,6 +30,7 @@
  *                                 data type.
  *                    bug 279376   improvements to xs:yearMonthDuration division operation
  *                    bug 281046   implementation of xs:base64Binary data type                                
+ *  Jesper S Moller - bug 286061   correct handling of quoted string 
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -933,4 +934,50 @@ public class TestBugs extends AbstractPsychoPathTest {
 		assertEquals("true", actual);
 
 	}
+
+
+	public void testBug286061_quoted_string_literals_no_normalize() throws Exception {
+
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "'\"\"'"; // the expression '""' contains no escapes 
+
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		String resultValue = rs.first().string_value();
+
+		assertEquals("\"\"", resultValue);
+	}
+	
+	public void testBug286061_quoted_string_literals() throws Exception {
+
+		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		DynamicContext dc = setupDynamicContext(schema);
+
+		String xpath = "concat(  'Don''t try this' ,  \" at \"\"home\"\",\"  ,  ' she said'  )";
+
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		String resultValue = rs.first().string_value();
+
+		assertEquals("Don't try this at \"home\", she said", resultValue);
+	}
+
 }
