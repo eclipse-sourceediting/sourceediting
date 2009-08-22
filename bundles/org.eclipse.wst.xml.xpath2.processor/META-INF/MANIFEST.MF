@@ -16,7 +16,8 @@ Export-Package: org.eclipse.wst.xml.xpath2.processor,
  org.eclipse.wst.xml.xpath2.processor.internal;x-internal:=true,
  org.eclipse.wst.xml.xpath2.processor.internal.ast;x-internal:=true,
  org.eclipse.wst.xml.xpath2.processor.internal.function;x-internal:=true,
- org.eclipse.wst.xml.xpath2.processor.internal.types;x-internal:=true
+ org.eclipse.wst.xml.xpath2.processor.internal.types;x-internal:=true,
+ org.eclipse.wst.xml.xpath2.processor.internal.utils;x-internal:=true
 Bundle-Vendor: %provider
 Import-Package: com.ibm.icu.text;version="4.0.1",
  org.apache.commons.lang;version="2.1.0"

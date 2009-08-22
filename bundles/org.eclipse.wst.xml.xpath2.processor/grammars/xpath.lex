@@ -7,7 +7,9 @@
 // *
 // * Contributors:
 // *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
-// *     Jesper S Moller - bug 283214 - fix IF THEN ELSE parsing and update grammars 
+// *     David Carver - bug 280987 - fixed literal issues for integer and decimal
+// *     Jesper S Moller - bug 283214 - fix IF THEN ELSE parsing and update grammars
+// *     Jesper S Moller - bug 286061   correct handling of quoted string 
 // *******************************************************************************/
 
 
@@ -159,8 +161,7 @@ NCName		= ( {Letter} | "_") ( {NCNameChar} )*
 				// get rid of quotes
 				String str = yytext();
 				assert str.length() >= 2;
-				str = str.substring(1,str.length()-1);
-				return symbol(XpathSym.STRING, str); 
+				return symbol(XpathSym.STRING, org.eclipse.wst.xml.xpath2.processor.internal.utils.LiteralUtils.unquote(str)); 
 			}
 {Digits}		{ return symbol(XpathSym.INTEGER, new BigInteger(yytext())); }
 {DoubleLiteral}		{ return symbol(XpathSym.DOUBLE, new Double(yytext())); }

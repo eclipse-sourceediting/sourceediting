@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - improved comparison of xs:string with other XDM types
+ *  Jesper S Moller - bug 286061   correct handling of quoted string 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -74,26 +75,7 @@ public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 */
 	@Override
 	public String string_value() {
-		String value = normalize();
-		return value;
-	}
-	
-	private String normalize() {
-		String value = _value;
-		if (_value.contains("\"\"")) {
-			value = _value.replaceAll("\"\"", "\"");
-		}
-		if (_value.contains("&quote;")) {
-			value = _value.replaceAll("&quote;", "\"");
-		}
-		if (_value.contains("''")) {
-			value = _value.replaceAll("''", "'");
-		}
-		if (_value.contains("&apos;")) {
-			value = _value.replaceAll("&apos;", "'");
-		}
-		
-		return value; 
+		return _value;
 	}
 
 	/**
