@@ -16,6 +16,7 @@ import java.net.URL;
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.internal.Focus;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
@@ -71,6 +72,8 @@ public class ContextLastFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      DefaultDynamicContext dcx = (DefaultDynamicContext) dc;
+      
 
       String xpath = "last()";
       String actual = null;
@@ -78,6 +81,7 @@ public class ContextLastFuncTest extends AbstractPsychoPathTest {
 	   	  XPath path = compileXPath(dc, xpath);
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      dc.set_focus(null);
 	      ResultSequence rs = eval.evaluate(path);
          
           actual = buildResultString(rs);
