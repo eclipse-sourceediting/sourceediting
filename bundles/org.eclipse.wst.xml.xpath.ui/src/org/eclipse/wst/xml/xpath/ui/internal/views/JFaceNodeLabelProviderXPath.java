@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
+ *     David Carver (STAR) - bug 284306 - removed truncation of string value.
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath.ui.internal.views;
 
@@ -57,9 +58,6 @@ public class JFaceNodeLabelProviderXPath extends LabelProvider implements
 			if (nnm.getLength() > 0) {
 				Attr a = (Attr) nnm.item(0);
 				String val = a.getNodeValue();
-				if (val.length() > 15) {
-					val = val.substring(0, 15);
-				}
 				sb.append(" ").append(a.getName()).append("=").append(val);
 			}
 		}
