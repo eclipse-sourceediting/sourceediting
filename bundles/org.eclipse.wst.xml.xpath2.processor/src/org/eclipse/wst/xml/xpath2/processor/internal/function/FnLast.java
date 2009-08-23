@@ -62,6 +62,10 @@ public class FnLast extends Function {
 	public static ResultSequence last(Collection args, DynamicContext dc)
 			throws DynamicError {
 		assert args.size() == 0;
+		
+		if (dc.focus() == null || dc.context_item() == null) {
+			throw DynamicError.contextUndefined();
+		}
 
 		int last = dc.last();
 
