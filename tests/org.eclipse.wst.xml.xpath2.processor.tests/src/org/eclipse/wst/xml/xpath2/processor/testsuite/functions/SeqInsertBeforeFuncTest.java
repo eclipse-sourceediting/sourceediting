@@ -358,7 +358,7 @@ public class SeqInsertBeforeFuncTest extends AbstractPsychoPathTest {
    public void test_fn_insert_before_mix_args_010() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/GeneralSeqFunc/SeqInsertBeforeFunc/fn-insert-before-mix-args-010.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/GeneralSeqFunc/SeqInsertBeforeFunc/fn-insert-before-mix-args-010.txt";
+      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/GeneralSeqFunc/SeqInsertBeforeFunc/fn-insert-before-mix-args-010_alt.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
