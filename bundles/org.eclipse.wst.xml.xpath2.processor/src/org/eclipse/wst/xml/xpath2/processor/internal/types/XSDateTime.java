@@ -10,6 +10,7 @@
  *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
  *     Mukul Gandhi - improved string_value() implementation (motivated by bug, 281822)
  *     David Carver - bug 282223 - implementation of xs:duration.
+ *                  - bug 262765 - additional tweak to convert 24:00:00 to 00:00:00
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -223,7 +224,7 @@ Cloneable {
 		// 3 getting fraction of seconds
 
 		double[] ret = new double[3];
-
+		
 		String token = "";
 
 		for (int i = 0; i < str.length(); i++) {
@@ -278,6 +279,10 @@ Cloneable {
 			return null;
 
 		ret[2] = Double.parseDouble(token);
+		
+		if (ret[0] == 24.0) {
+			ret[0] = 00.0;
+		}
 
 		// XXX sanity check args...
 		return ret;
