@@ -1,5 +1,5 @@
 /*****************************************************************************
- * Copyright (c) 2004, 2007 IBM Corporation and others. All rights reserved. This
+ * Copyright (c) 2004, 2009 IBM Corporation and others. All rights reserved. This
  * program and the accompanying materials are made available under the terms
  * of the Eclipse Public License v1.0 which accompanies this distribution, and
  * is available at http://www.eclipse.org/legal/epl-v10.html
@@ -25,6 +25,7 @@ import org.eclipse.wst.css.core.tests.source.CSSSelectorTest;
 import org.eclipse.wst.css.core.tests.source.CSSSourceParserTest;
 import org.eclipse.wst.css.core.tests.source.CSSTextParserTest;
 import org.eclipse.wst.css.core.tests.source.CSSUrlTest;
+import org.eclipse.wst.css.core.tests.stylesheets.StyleSheetTest;
 import org.eclipse.wst.css.core.tests.testfiles.CSSModelLoadTest;
 
 
@@ -36,6 +37,7 @@ public class CSSAllTests extends TestSuite {
 		addModelTests(suite);
 
 		suite.addTestSuite(CSSCorePreferencesTest.class);
+		suite.addTestSuite(StyleSheetTest.class);
 		return suite;
 	}
 
