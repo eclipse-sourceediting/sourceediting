@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 Chase Technology Ltd - http://www.chasetechnology.co.uk
+ * Copyright (c) 2007, 2009 Chase Technology Ltd - http://www.chasetechnology.co.uk
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *     Doug Satchwell (Chase Technology Ltd) - initial API and implementation
  *     David Carver (STAR) - bug 230072 - Project level specific validation
  *                         - bug 226245 - XPath 2.0 validation for XSLT
+ *                         - bug 258937 - XML Catalog support for includes/imports 
  *******************************************************************************/
 package org.eclipse.wst.xsl.core.internal.validation;
 
@@ -36,6 +37,7 @@ import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.core.internal.Messages;
 import org.eclipse.wst.xsl.core.internal.XSLCorePlugin;
 import org.eclipse.wst.xsl.core.internal.util.Debug;
+import org.eclipse.wst.xsl.core.internal.util.XMLCatalog;
 import org.eclipse.wst.xsl.core.model.CallTemplate;
 import org.eclipse.wst.xsl.core.model.Include;
 import org.eclipse.wst.xsl.core.model.Parameter;
@@ -204,10 +206,17 @@ public class XSLValidator
 			if (includedFile == null || !includedFile.exists())
 			{ // included file does not exist
 				XSLAttribute att = include.getAttribute("href");  //$NON-NLS-1$
-				if (att != null)
-					createMarker(report, att, getPreference(ValidationPreferences.MISSING_INCLUDE), Messages.XSLValidator_4 + include.getHref());
-				else
-					createMarker(report, include, getPreference(ValidationPreferences.NAME_ATTRIBUTE_EMPTY), Messages.XSLValidator_23 );					
+				if (att != null) {
+					XMLCatalog catalog = new XMLCatalog();
+					if (!catalog.exists(att.getValue())) {
+						// Do we want to try and get the file?
+						// If we do then there might be performance issues
+						createMarker(report, att, getPreference(ValidationPreferences.MISSING_INCLUDE), Messages.XSLValidator_4 + include.getHref());
+					}
+				}
+				else {
+					createMarker(report, include, getPreference(ValidationPreferences.NAME_ATTRIBUTE_EMPTY), Messages.XSLValidator_23 );
+				}
 			}
 			else if (includedFile.equals(include.getStylesheet().getFile()))
 			{ // stylesheet including itself!
@@ -220,7 +229,13 @@ public class XSLValidator
 			IFile includedFile = include.getHrefAsFile();
 			if (includedFile == null || !includedFile.exists())
 			{ // included file does not exist
-				createMarker(report, include.getAttribute("href"), getPreference(ValidationPreferences.MISSING_INCLUDE), Messages.XSLValidator_8 + include.getHref()); //$NON-NLS-1$
+				XSLAttribute att = include.getAttribute("href");  //$NON-NLS-1$
+				if (att != null) {
+					XMLCatalog catalog = new XMLCatalog();
+					if (!catalog.exists(att.getValue())) {
+						createMarker(report, att, getPreference(ValidationPreferences.MISSING_INCLUDE), Messages.XSLValidator_4 + include.getHref());
+					}
+				}
 			}
 			else if (includedFile.equals(include.getStylesheet().getFile()))
 			{ // stylesheet including itself!

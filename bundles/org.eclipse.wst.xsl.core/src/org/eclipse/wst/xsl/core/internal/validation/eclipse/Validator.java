@@ -17,7 +17,6 @@ package org.eclipse.wst.xsl.core.internal.validation.eclipse;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -96,28 +95,8 @@ public class Validator extends AbstractNestedValidator
 	@Override
 	public ValidationReport validate(final String uri, InputStream inputstream, NestedValidatorContext context)
 	{
-		ValidationReport valreport = new ValidationReport(){
-
-			public String getFileURI()
-			{
-				return uri;
-			}
-
-			@SuppressWarnings("unchecked")
-			public HashMap getNestedMessages()
-			{
-				return new HashMap();
-			}
-
-			public ValidationMessage[] getValidationMessages()
-			{
-				return new ValidationMessage[0];
-			}
-
-			public boolean isValid()
-			{
-				return true;
-			}};
+		ValidationReport valreport = new XSLValidationReport(uri);
+		
 		try
 		{
 			String encUri = URIEncoder.encode(uri);
