@@ -97,8 +97,8 @@ public interface IModelManager {
 	 * given. For a managed model with the same contents, use "copy".
 	 * 
 	 * @param model
-	 * @return
-	 * @throws IOException
+	 * @return the model, or null of one could not be created
+	 * @throws IOException if the file's contents can not be read or its detected encoding does not support its contents
 	 */
 	public IStructuredModel createNewInstance(IStructuredModel model) throws IOException;
 
@@ -108,11 +108,12 @@ public interface IModelManager {
 	 * createStructuredDocumentFor is the right API to use.
 	 * 
 	 * @param iFile
-	 * @return
+	 * @return the document, or null if one could not be created
 	 * @throws ResourceAlreadyExists
 	 *             if the IFile already exists
-	 * @throws IOException
-	 * @throws CoreException
+	 * @throws CoreException if the file's contents or description can not be read
+	 * @throws IOException if the file's contents can not be read or its detected encoding does not support its contents
+	 * @throws ResourceAlreadyExists if the give file already exists
 	 */
 	IStructuredDocument createNewStructuredDocumentFor(IFile iFile) throws ResourceAlreadyExists, IOException, CoreException;
 
@@ -120,7 +121,13 @@ public interface IModelManager {
 	 * Factory method, since a proper IStructuredDocument must have a proper
 	 * parser assigned. Note: clients should verify IFile exists before using
 	 * this method. If this IFile does not exist, then
-	 * createNewStructuredDocument is the correct API to use.
+	 * {@link #createNewStructuredDocumentFor(IFile)} is the correct API to use.
+	 * 
+	 * @param iFile - the file
+	 * @return the document, or null if one could not be created
+	 * 
+	 * @throws CoreException if the file's contents or description can not be read
+	 * @throws IOException if the file's contents can not be read or its detected encoding does not support its contents
 	 */
 	IStructuredDocument createStructuredDocumentFor(IFile iFile) throws IOException, CoreException;
 
@@ -131,22 +138,33 @@ public interface IModelManager {
 	 * 
 	 * @param contentTypeId
 	 * @return a structured document with the correct parsing setup for the
-	 *         given content type, or null if one could not be created
+	 *         given content type ID, or null if one could not be created or
+	 *         the given content type ID is unknown or unsupported
 	 */
 	IStructuredDocument createStructuredDocumentFor(String contentTypeId);
 
 	/**
-	 * @deprecated -- I marked as deprecated to discouage use of this method.
-	 *             It does not really work for JSP fragments, since JSP
-	 *             Fragments need an IFile to correctly look up the content
-	 *             settings. Use IFile form instead. Note: some confustion
-	 *             with it and the form for HTPP encoding, so once a null arg
-	 *             is allowed in that API ... we can remove this one. (after
-	 *             verifying again with Tom/Linksbuild)
-	 */
-	IStructuredDocument createStructuredDocumentFor(String filename, InputStream inputStream, URIResolver resolver) throws IOException;
+	 * @deprecated - use IFile form instead as the correct encoding and content rules may not be applied otherwise
+	 * 
+	 * Creates and returns a properly configured structured document for the given contents with the given name
+	 * 
+	 * @param filename - the filename, which may be used to guess the content type
+	 * @param contents - the contents to load
+	 * @param resolver - the URIResolver to use for locating any needed resources
+	 * @return the IStructuredDocument or null of one could not be created
+	 * @throws IOException if the file's contents can not be read or its content type can not be determined
+	 */ 
+	IStructuredDocument createStructuredDocumentFor(String filename, InputStream contents, URIResolver resolver) throws IOException;
 
 	/**
+	 * Creates and returns a properly configured structured document for the given contents with the given name
+	 * 
+	 * @param filename - the filename, which may be used to guess the content type
+	 * @param inputStream - the contents to load
+	 * @param resolver - the URIResolver to use for locating any needed resources
+	 * @param ianaEncodingName - the IANA specified encoding to use when reading the contents
+	 * @return the IStructuredDocument or null if one could not be created
+	 * @throws IOException if the file's contents can not be read or its content type can not be determined
 	 * @deprecated - clients should convert the InputStream into text themselves
 	 *             and then use the version of this method taking a String for its
 	 *             content
@@ -154,12 +172,14 @@ public interface IModelManager {
 	IStructuredDocument createStructuredDocumentFor(String filename, InputStream inputStream, URIResolver resolver, String ianaEncodingName) throws IOException;
 
 	/**
-	 * @param filename
-	 * @param content
-	 * @param resolver
+	 * Creates and returns a properly configured structured document for the given contents with the given name
+	 * 
+	 * @param filename - the filename, which may be used to guess the content type
+	 * @param content - the contents to load
+	 * @param resolver - the URIResolver to use for locating any referenced resources
 	 * @return a structured document with the correct parsing setup for the
 	 *         given filename, or null if one could not be created
-	 * @throws IOException
+	 * @throws IOException if the file's contents can not be read or its detected encoding does not support its contents
 	 */
 	IStructuredDocument createStructuredDocumentFor(String filename, String content, URIResolver resolver) throws IOException;
 
@@ -169,8 +189,8 @@ public interface IModelManager {
 	 * 
 	 * @param iFile
 	 * @return a structured model, or null if one could not be created
-	 * @throws IOException
-	 * @throws CoreException
+	 * @throws CoreException if the file's contents or description can not be read
+	 * @throws IOException if the file's contents can not be read or its detected encoding does not support its contents
 	 */
 	IStructuredModel createUnManagedStructuredModelFor(IFile iFile) throws IOException, CoreException;
 
@@ -179,7 +199,7 @@ public interface IModelManager {
 	 * an appropriate StrucuturedModel appropriately initialized.
 	 * 
 	 * @param contentTypeId
-	 * @return a structured model for the given content type, or null if one could not be created
+	 * @return a structured model for the given content type, or null if one could not be created or the content type is unsupported
 	 */
 	IStructuredModel createUnManagedStructuredModelFor(String contentTypeId);
 
@@ -249,10 +269,22 @@ public interface IModelManager {
 	 * @param iFile
 	 * @return a structured model for the given file, or null if one could not
 	 *         be found or created
+	 * @throws CoreException if the file's contents or description can not be read
+	 * @throws IOException if the file's contents can not be read or its detected encoding does not support its contents
 	 */
 	public IStructuredModel getModelForEdit(IFile iFile) throws IOException, CoreException;
 
 	/**
+	 * Returns a structured model for the given file. If one does not already
+	 * exists, one will be created with an edit count of 1. If one already
+	 * exists, its edit count will be incremented before it is returned.
+	 * 
+	 * @param iFile
+	 * @param encodingRule the rule for handling encoding
+	 * @return a structured model for the given file, or null if one could not
+	 *         be found or created
+	 * @throws CoreException if the file's contents or description can not be read
+	 * @throws IOException if the file's contents can not be read or its detected encoding does not support its contents
 	 * @deprecated - encoding is handled automatically based on the file's
 	 *             contents or user preferences
 	 */
@@ -279,7 +311,24 @@ public interface IModelManager {
 	 */
 	public IStructuredModel getModelForEdit(IStructuredDocument textFileBufferDocument);
 
-	/*
+	/**
+	 * Returns a structured model for the given contents using the given ID.
+	 * If one does not already exist, one will be created with an edit count
+	 * of 1. If one already exists, its edit count will be incremented before
+	 * it is returned.
+	 * 
+	 * @param id
+	 *            - the id for the model
+	 * @param inStream
+	 *            - the initial contents of the model
+	 * @param resolver
+	 *            - the URIResolver to use for locating any needed resources
+	 * @return a structured model for the given content, or null if one could
+	 *         not be found or created
+	 * @throws UnsupportedEncodingException
+	 * @throws IOException
+	 *             if the contents can not be read or its detected encoding
+	 *             does not support its contents
 	 * @deprecated - a URI resolver should be automatically created when
 	 *             needed
 	 */
@@ -293,6 +342,8 @@ public interface IModelManager {
 	 * @param iFile
 	 * @return a structured model for the given file, or null if one could not
 	 *         be found or created
+	 * @throws CoreException if the file's contents or description can not be read
+	 * @throws IOException if the file's contents can not be read or its detected encoding does not support its contents
 	 */
 	public IStructuredModel getModelForRead(IFile iFile) throws IOException, CoreException;
 
@@ -324,6 +375,23 @@ public interface IModelManager {
 	public IStructuredModel getModelForRead(IStructuredDocument textFileBufferDocument);
 
 	/**
+	 * Returns a structured model for the given contents using the given ID.
+	 * If one does not already exist, one will be created with an read count
+	 * of 1. If one already exists, its read count will be incremented before
+	 * it is returned.
+	 * 
+	 * @param id
+	 *            - the id for the model
+	 * @param inStream
+	 *            - the initial contents of the model
+	 * @param resolver
+	 *            - the URIResolver to use for locating any needed resources
+	 * @return a structured model for the given content, or null if one could
+	 *         not be found or created
+	 * @throws UnsupportedEncodingException
+	 * @throws IOException
+	 *             if the contents can not be read or its detected encoding
+	 *             does not support its contents
 	 * @deprecated - a URI resolver should be automatically created when
 	 *             needed
 	 */
@@ -334,6 +402,14 @@ public interface IModelManager {
 	 * force is false. The idea is that a client should call this method once
 	 * with force set to false. If the exception is thrown, then prompt client
 	 * if they want to overwrite.
+	 * 
+	 * @param iFile
+	 * @param force
+	 * @return the new structured model, or 
+	 * @throws ResourceInUse if the given new ID is already in use by a managed model
+	 * @throws CoreException if the file's contents or description can not be read
+	 * @throws IOException if the file's contents can not be read or its detected encoding does not support its contents
+	 * @throws ResourceAlreadyExists if the give file already exists
 	 */
 	IStructuredModel getNewModelForEdit(IFile iFile, boolean force) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException;
 
@@ -342,31 +418,39 @@ public interface IModelManager {
 	 * force is false. The idea is that a client should call this method once
 	 * with force set to false. If the exception is thrown, then prompt client
 	 * if they want to overwrite.
+	 * 
+	 * @param iFile
+	 * @param force
+	 * @return the new structured model, or 
+	 * @throws ResourceInUse if the given new ID is already in use by a managed model
+	 * @throws CoreException if the file's contents or description can not be read
+	 * @throws IOException if the file's contents can not be read or its detected encoding does not support its contents
+	 * @throws ResourceAlreadyExists if the give file already exists
 	 */
 	IStructuredModel getNewModelForRead(IFile iFile, boolean force) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException;
 
 	/**
-	 * This function returns the reference count of underlying model.
+	 * This function returns the combined "read" and "edit" reference counts
+	 * of underlying model.
 	 * 
 	 * @param id
-	 *            Object The id of the model TODO: try to refine the design
-	 *            not to use this function
-	 * @deprecated - internal information that can be obtained from the model itself
+	 *            Object The id of the model
+	 * @deprecated - internal information that can be obtained from the model
+	 *             itself
 	 */
 	int getReferenceCount(Object id);
 
 	/**
-	 * This function returns the reference count of underlying model.
+	 * This function returns the "edit" reference count of underlying model.
 	 * 
 	 * @param id
-	 *            Object The id of the model TODO: try to refine the design
-	 *            not to use this function
+	 *            Object The id of the model
 	 * @deprecated - internal information that can be obtained from the model itself
 	 */
 	int getReferenceCountForEdit(Object id);
 
 	/**
-	 * This function returns the reference count of underlying model.
+	 * This function returns the "read" reference count of underlying model.
 	 * 
 	 * @param id
 	 *            Object The id of the model TODO: try to refine the design
@@ -385,7 +469,7 @@ public interface IModelManager {
 	boolean isShared(Object id);
 
 	/**
-	 * This function returns true if there are other references to the
+	 * This function returns true if there are other "edit" references to the
 	 * underlying model.
 	 * 
 	 * @param id
@@ -394,7 +478,7 @@ public interface IModelManager {
 	boolean isSharedForEdit(Object id);
 
 	/**
-	 * This function returns true if there are other references to the
+	 * This function returns true if there are other "read" references to the
 	 * underlying model.
 	 * 
 	 * @param id
@@ -411,7 +495,9 @@ public interface IModelManager {
 	public boolean isStateChanging();
 
 	/**
-	 * This method changes the id of the model. TODO: try to refine the design
+	 * This method changes the id of the model. 
+	 * 
+	 * TODO: try to refine the design
 	 * not to use this function
 	 * 
 	 * @deprecated
@@ -441,6 +527,18 @@ public interface IModelManager {
 	 */
 	IStructuredModel reloadModel(Object id, InputStream inStream) throws UnsupportedEncodingException;
 
+	/**
+	 * Saves the contents of the given structured document to the given file. If
+	 * the document belongs to a managed model, that model will be saved and
+	 * marked as non-dirty.
+	 * 
+	 * @param structuredDocument
+	 *            - the structured document
+	 * @param iFile
+	 *            - the file to save to
+	 * @throws UnsupportedEncodingException
+	 * @throws CoreException if the file's contents or description can not be read
+	 * @throws IOException if the file's contents can not be read or its detected encoding does not support its contents
+	 */
 	void saveStructuredDocument(IStructuredDocument structuredDocument, IFile iFile) throws UnsupportedEncodingException, IOException, CoreException;
-
 }
