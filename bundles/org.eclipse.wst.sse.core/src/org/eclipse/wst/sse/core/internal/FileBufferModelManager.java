@@ -249,7 +249,8 @@ public class FileBufferModelManager {
 
 	/**
 	 * Maps interesting documents in file buffers to those file buffers.
-	 * Required to allows us to go from documents to complete models.
+	 * Required to allow us to go from the document instances to complete
+	 * models.
 	 */
 	class FileBufferMapper implements IFileBufferListener {
 		public void bufferContentAboutToBeReplaced(IFileBuffer buffer) {
@@ -273,8 +274,10 @@ public class FileBufferModelManager {
 				info.contentTypeID = detectContentType(buffer.getLocation()).getId();
 				info.bufferReferenceCount++;
 
-				// Adds a document state validation listener to the document. The file buffer validates
-				// its state and returns the result
+				/*
+				 * Adds a document state validation listener to the document.
+				 * The file buffer validates its state and returns the result
+				 */
 				if (document instanceof BasicStructuredDocument) {
 					BasicStructuredDocument structuredDocument = (BasicStructuredDocument) document;
 					info.listener = new IDocumentStateValidationListener() {
@@ -336,7 +339,10 @@ public class FileBufferModelManager {
 					}
 				}
 
-				// Adds or removes the listener from the document based on the dirty state of the buffer
+				/*
+				 * Adds or removes the listener from the document based on the
+				 * dirty state of the buffer
+				 */
 				if (info != null && info.listener != null && textBuffer.getDocument() instanceof BasicStructuredDocument) {
 					BasicStructuredDocument document = (BasicStructuredDocument) textBuffer.getDocument();
 					if (isDirty)
@@ -374,45 +380,39 @@ public class FileBufferModelManager {
 		}
 	}
 
-	private static FileBufferModelManager instance;
+	private static FileBufferModelManager instance = new FileBufferModelManager();
 
 	public static FileBufferModelManager getInstance() {
-		if (instance == null) {
-			instance = new FileBufferModelManager();
-		}
 		return instance;
 	}
 
-	static final void shutdown() {
-		if (instance != null) {
-			if (Logger.DEBUG_FILEBUFFERMODELMANAGEMENT || Logger.DEBUG_FILEBUFFERMODELLEAKS) {
-				IDocument[] danglingDocuments = (IDocument[]) instance.fDocumentMap.keySet().toArray(new IDocument[0]);
-				for (int i = 0; i < danglingDocuments.length; i++) {
-					DocumentInfo info = (DocumentInfo) instance.fDocumentMap.get(danglingDocuments[i]);
-					if (info.modelReferenceCount > 0)
-						System.err.println("LEAKED MODEL: " + info.buffer.getLocation() + " " + (info.model != null ? info.model.getId() : null)); //$NON-NLS-1$ //$NON-NLS-2$
-					if (info.bufferReferenceCount > 0)
-						System.err.println("LEAKED BUFFER: " + info.buffer.getLocation() + " " + info.buffer.getDocument()); //$NON-NLS-1$ //$NON-NLS-2$
-				}
+	static synchronized final void shutdown() {
+		FileBuffers.getTextFileBufferManager().removeFileBufferListener(instance.fFileBufferListener);
+
+		if (Logger.DEBUG_FILEBUFFERMODELMANAGEMENT || Logger.DEBUG_FILEBUFFERMODELLEAKS) {
+			IDocument[] danglingDocuments = (IDocument[]) instance.fDocumentMap.keySet().toArray(new IDocument[0]);
+			for (int i = 0; i < danglingDocuments.length; i++) {
+				DocumentInfo info = (DocumentInfo) instance.fDocumentMap.get(danglingDocuments[i]);
+				if (info.modelReferenceCount > 0)
+					System.err.println("LEAKED MODEL: " + info.buffer.getLocation() + " " + (info.model != null ? info.model.getId() : null)); //$NON-NLS-1$ //$NON-NLS-2$
+				if (info.bufferReferenceCount > 0)
+					System.err.println("LEAKED BUFFER: " + info.buffer.getLocation() + " " + info.buffer.getDocument()); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-			FileBuffers.getTextFileBufferManager().removeFileBufferListener(instance.fFileBufferListener);
-			instance = null;
 		}
 	}
 
-	static final void startup() {
-		getInstance();
+	static synchronized final void startup() {
+		FileBuffers.getTextFileBufferManager().addFileBufferListener(getInstance().fFileBufferListener);
 	}
 
 	// a map of IStructuredDocuments to DocumentInfo objects
 	Map fDocumentMap = null;
 
-	IFileBufferListener fFileBufferListener = null;
+	FileBufferMapper fFileBufferListener = new FileBufferMapper();
 
 	FileBufferModelManager() {
 		super();
 		fDocumentMap = new Hashtable(4);
-		FileBuffers.getTextFileBufferManager().addFileBufferListener(fFileBufferListener = new FileBufferMapper());
 	}
 
 	public String calculateId(IFile file) {
@@ -462,8 +462,13 @@ public class FileBufferModelManager {
 	 * on top of it.
 	 */
 	public boolean connect(IDocument document) {
+		if (document == null) {
+			Exception iae = new IllegalArgumentException("can not connect() without a document"); //$NON-NLS-1$ 
+			Logger.logException(iae);
+			return false;
+		}
 		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
-		if( info == null)
+		if (info == null)
 			return false;
 		ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager();
 		IPath bufferLocation = info.buffer.getLocation();
@@ -569,6 +574,11 @@ public class FileBufferModelManager {
 	 * buffer so that it knows it can safely be disposed of.
 	 */
 	public boolean disconnect(IDocument document) {
+		if (document == null) {
+			Exception iae = new IllegalArgumentException("can not disconnect() without a document"); //$NON-NLS-1$ 
+			Logger.logException(iae);
+			return false;
+		}
 		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
 		if( info == null)
 			return false;
