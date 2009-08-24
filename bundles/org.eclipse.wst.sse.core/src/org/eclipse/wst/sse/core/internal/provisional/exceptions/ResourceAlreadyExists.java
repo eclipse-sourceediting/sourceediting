@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,10 @@ package org.eclipse.wst.sse.core.internal.provisional.exceptions;
 
 
 
+/**
+ * Indicates that a Resource which a model or document was expected to create
+ * already exists.
+ */
 public class ResourceAlreadyExists extends Exception {
 
 	/**
