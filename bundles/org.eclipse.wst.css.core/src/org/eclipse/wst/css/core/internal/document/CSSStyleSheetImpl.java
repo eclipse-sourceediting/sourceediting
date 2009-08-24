@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.wst.css.core.internal.document;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 import java.util.Vector;
 
 import org.eclipse.wst.css.core.internal.CSSCoreMessages;
@@ -37,6 +38,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.css.CSSFontFaceRule;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
+import org.w3c.dom.css.CSSStyleSheet;
 import org.w3c.dom.css.CSSUnknownRule;
 import org.w3c.dom.stylesheets.MediaList;
 import org.w3c.dom.stylesheets.StyleSheet;
@@ -280,6 +282,46 @@ class CSSStyleSheetImpl extends CSSDocumentImpl implements ICSSStyleSheet {
 		}
 
 		return list;
+	}
+
+	public CSSRuleList getCssRules(boolean shouldImport) {
+		if (!shouldImport)
+			return getCssRules();
+
+		CSSRuleListImpl list = new CSSRuleListImpl();
+		Stack refs = new Stack();
+		getRules(list, this, refs);
+		return list;
+	}
+
+	private void getRules(CSSRuleListImpl list, ICSSStyleSheet sheet, Stack refs) {
+		String href = sheet.getHref();
+		if (href != null) {
+			// Avoid circular @imports
+			if (refs.contains(href))
+				return;
+			refs.push(href);
+		}
+		boolean acceptImports = true;
+		for (ICSSNode node = sheet.getFirstChild(); node != null; node = node.getNextSibling()) {
+			// Import the stylesheet into the list
+			// @import rules must precede all other rules, according to the spec
+			if (node.getNodeType() == ICSSNode.IMPORTRULE_NODE && acceptImports) {
+				CSSStyleSheet importSheet = ((ICSSImportRule) node).getStyleSheet();
+				if (importSheet instanceof ICSSStyleSheet)
+					getRules(list, (ICSSStyleSheet) importSheet, refs);
+				else
+					list.appendNode(node);
+			}
+			// Add the rule to the list
+			else if (node instanceof CSSRule) {
+				list.appendNode(node);
+				if (node.getNodeType() != ICSSNode.CHARSETRULE_NODE)
+					acceptImports = false;
+			}
+		}
+		if (href != null)
+			refs.pop();
 	}
 
 	/**
