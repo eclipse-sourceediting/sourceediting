@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2007 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,8 +32,10 @@ import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
+import org.eclipse.ui.editors.text.ILocationProvider;
 import org.eclipse.ui.editors.text.StorageDocumentProvider;
 import org.eclipse.ui.texteditor.DocumentProviderRegistry;
 import org.eclipse.ui.texteditor.IDocumentProvider;
@@ -203,34 +205,48 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 
 	String calculateBaseLocation(IStorageEditorInput input) {
 		String location = null;
-		try {
-			IStorage storage = input.getStorage();
-			if (storage != null) {
-				IPath storagePath = storage.getFullPath();
-				String name = storage.getName();
-				if (storagePath != null) {
-					// If they are different, the IStorage contract is not
-					// being honored
-					// (https://bugs.eclipse.org/bugs/show_bug.cgi?id=73098).
-					// Favor the name.
-					if (!storagePath.lastSegment().equals(name)) {
-						IPath workingPath = storagePath.addTrailingSeparator();
-						location = workingPath.append(name).toString();
-					}
-					else {
-						location = storagePath.makeAbsolute().toString();
-					}
-				}
-				if (location == null)
-					location = name;
+		if (input instanceof IPathEditorInput) {
+			IPath path = ((IPathEditorInput) input).getPath();
+			if (path != null) {
+				location = path.toString();
 			}
 		}
-		catch (CoreException e) {
-			Logger.logException(e);
+		if (location == null && input instanceof ILocationProvider) {
+			IPath path = ((ILocationProvider) input).getPath(input);
+			if (path != null) {
+				location = path.toString();
+			}
 		}
-		finally {
-			if (location == null)
-				location = input.getName();
+		if (location == null) {
+			try {
+				IStorage storage = input.getStorage();
+				if (storage != null) {
+					IPath storagePath = storage.getFullPath();
+					String name = storage.getName();
+					if (storagePath != null) {
+						// If they are different, the IStorage contract is not
+						// being honored
+						// (https://bugs.eclipse.org/bugs/show_bug.cgi?id=73098).
+						// Favor the name.
+						if (!storagePath.lastSegment().equals(name)) {
+							IPath workingPath = storagePath.addTrailingSeparator();
+							location = workingPath.append(name).toString();
+						}
+						else {
+							location = storagePath.makeAbsolute().toString();
+						}
+					}
+					if (location == null)
+						location = name;
+				}
+			}
+			catch (CoreException e) {
+				Logger.logException(e);
+			}
+			finally {
+				if (location == null)
+					location = input.getName();
+			}
 		}
 		return location;
 	}
@@ -245,34 +261,42 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 		 * 
 		 */
 		String path = null;
-		try {
-			IStorage storage = input.getStorage();
-			if (storage != null) {
-				IPath storagePath = storage.getFullPath();
-				String name = storage.getName();
-				if (storagePath != null) {
-					// If they are different, the IStorage contract is not
-					// being honored
-					// (https://bugs.eclipse.org/bugs/show_bug.cgi?id=73098).
-					// Favor the name.
-					if (!storagePath.lastSegment().equals(name)) {
-						IPath workingPath = storagePath.addTrailingSeparator();
-						path = workingPath.append(name).toString();
-					}
-					else {
-						path = storagePath.makeAbsolute().toString();
-					}
-				}
-				if (path == null)
-					path = name;
+		if (input instanceof ILocationProvider) {
+			IPath ipath = ((ILocationProvider) input).getPath(input);
+			if (ipath != null) {
+				path = ipath.toString();
 			}
 		}
-		catch (CoreException e) {
-			Logger.logException(e);
-		}
-		finally {
-			if (path == null)
-				path = ""; //$NON-NLS-1$
+		if (path == null) {
+			try {
+				IStorage storage = input.getStorage();
+				if (storage != null) {
+					IPath storagePath = storage.getFullPath();
+					String name = storage.getName();
+					if (storagePath != null) {
+						// If they are different, the IStorage contract is not
+						// being honored
+						// (https://bugs.eclipse.org/bugs/show_bug.cgi?id=73098).
+						// Favor the name.
+						if (!storagePath.lastSegment().equals(name)) {
+							IPath workingPath = storagePath.addTrailingSeparator();
+							path = workingPath.append(name).toString();
+						}
+						else {
+							path = storagePath.makeAbsolute().toString();
+						}
+					}
+					if (path == null)
+						path = name;
+				}
+			}
+			catch (CoreException e) {
+				Logger.logException(e);
+			}
+			finally {
+				if (path == null)
+					path = input.getName(); //$NON-NLS-1$
+			}
 		}
 		/*
 		 * Prepend the hash to the path value so that we have a 1:1:1 match
@@ -592,7 +616,8 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 	 * @see org.eclipse.ui.editors.text.StorageDocumentProvider#getPersistedEncoding(java.lang.Object)
 	 */
 	protected String getPersistedEncoding(Object element) {
-		if (element instanceof IStorageEditorInput) {
+		String charset = super.getPersistedEncoding(element);
+		if (charset == null && element instanceof IStorageEditorInput) {
 			IStorage storage;
 			try {
 				storage = ((IStorageEditorInput) element).getStorage();
@@ -603,9 +628,9 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 						if (contents != null) {
 							QualifiedName[] detectionOptions = new QualifiedName[]{IContentDescription.BYTE_ORDER_MARK, IContentDescription.CHARSET};
 							IContentDescription description = Platform.getContentTypeManager().getDescriptionFor(contents, storage.getName(), detectionOptions);
-							String charset = description.getCharset();
-							if (charset != null)
-								return charset;
+							if (description != null) {
+								charset = description.getCharset();
+							}
 						}
 
 					}
@@ -626,7 +651,7 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 				Logger.logException(e);
 			}
 		}
-		return super.getPersistedEncoding(element);
+		return charset;
 	}
 
 	public IStructuredModel getModel(IEditorInput element) {
