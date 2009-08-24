@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.tests.contentmodels;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import junit.framework.Test;
@@ -22,6 +23,7 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jst.jsp.core.internal.provisional.JSP20Namespace;
 import org.eclipse.jst.jsp.core.tests.taglibindex.BundleResourceUtil;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
@@ -133,5 +135,60 @@ public class TestTaglibCMTests extends TestCase {
 				model.releaseFromEdit();
 			}
 		}
+	}
+
+	public void testTagFileHasHTMLContentModel() throws IOException, CoreException {
+		String DPROJECT_NAME = getName();
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(DPROJECT_NAME);
+		if (!project.exists()) {
+			// Create new project
+			project = BundleResourceUtil.createSimpleProject(DPROJECT_NAME, null, null);
+		}
+		project.refreshLocal(IResource.DEPTH_INFINITE, null);
+
+		IFile tagFile = project.getFile("test1.tag");
+		tagFile.create(new ByteArrayInputStream(new byte[0]), IResource.FORCE, null);
+
+		IDOMModel model = null;
+		try {
+			model = (IDOMModel) StructuredModelManager.getModelManager().getModelForEdit(tagFile);
+			model.getStructuredDocument().set("<b/>");
+			ModelQueryAdapter modelQueryAdapter = (ModelQueryAdapter) ((INodeNotifier) model.getDocument().getDocumentElement()).getAdapterFor(ModelQueryAdapter.class);
+			CMElementDeclaration declaration = modelQueryAdapter.getModelQuery().getCMElementDeclaration(model.getDocument().getDocumentElement());
+			assertNotNull("no CMElementDeclaration for 'b'", declaration);
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
+		project.delete(true, null);
+	}
+	public void testTagFileHasTagContentModel() throws IOException, CoreException {
+		String DPROJECT_NAME = getName();
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(DPROJECT_NAME);
+		if (!project.exists()) {
+			// Create new project
+			project = BundleResourceUtil.createSimpleProject(DPROJECT_NAME, null, null);
+		}
+		project.refreshLocal(IResource.DEPTH_INFINITE, null);
+
+		IFile tagFile = project.getFile("test1.tag");
+		tagFile.create(new ByteArrayInputStream(new byte[0]), IResource.FORCE, null);
+
+		IDOMModel model = null;
+		try {
+			model = (IDOMModel) StructuredModelManager.getModelManager().getModelForEdit(tagFile);
+			model.getStructuredDocument().set("<"+JSP20Namespace.ElementName.DOBODY+"/>");
+			ModelQueryAdapter modelQueryAdapter = (ModelQueryAdapter) ((INodeNotifier) model.getDocument().getDocumentElement()).getAdapterFor(ModelQueryAdapter.class);
+			CMElementDeclaration declaration = modelQueryAdapter.getModelQuery().getCMElementDeclaration(model.getDocument().getDocumentElement());
+			assertNotNull("no CMElementDeclaration for '"+JSP20Namespace.ElementName.DOBODY+"'", declaration);
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromEdit();
+			}
+		}
+		project.delete(true, null);
 	}
 }
