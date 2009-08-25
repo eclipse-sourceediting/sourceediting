@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.sse.core.internal.model.ModelLifecycleEvent;
 import org.eclipse.wst.sse.core.internal.provisional.IModelLifecycleListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -206,6 +206,6 @@ public class WebResourceChangeHandler implements IResourceChangeListener, IDocum
 	public void processPreModelEvent(ModelLifecycleEvent event) {}
 	
 	public void resourceChanged(IResourceChangeEvent event) {
-		Display.getDefault().asyncExec(irritator);
+		FileBuffers.getTextFileBufferManager().execute(irritator);
 	}
 }
