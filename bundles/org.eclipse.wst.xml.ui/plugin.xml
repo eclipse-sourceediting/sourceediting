@@ -54,8 +54,8 @@
 			class="org.eclipse.wst.xml.ui.internal.text.XMLDocumentRegionEdgeMatcher"
 			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
 		<provisionalConfiguration
-			type="structuredtextfoldingprovider"
-			class="org.eclipse.wst.xml.ui.internal.projection.StructuredTextFoldingProviderXML"
+			type="foldingstrategy"
+			class="org.eclipse.wst.xml.ui.internal.projection.XMLFoldingStrategy"
 			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
 		<provisionalConfiguration
 			type="org.eclipse.jface.text.quickassist.IQuickAssistProcessor"

@@ -22,7 +22,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
-import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
+import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 
 
@@ -64,7 +64,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(EditorPreferenceNames.READ_ONLY_FOREGROUND_SCALE, 30);
 		
 		// set default enable folding value
-		store.setDefault(IStructuredTextFoldingProvider.FOLDING_ENABLED, false);
+		store.setDefault(AbstractStructuredFoldingStrategy.FOLDING_ENABLED, true);
 		
 		// set default for show message dialog when unknown content type in editor
 		store.setDefault(EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG, true);

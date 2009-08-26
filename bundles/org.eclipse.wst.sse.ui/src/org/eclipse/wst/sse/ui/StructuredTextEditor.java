@@ -65,6 +65,7 @@ import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.information.InformationPresenter;
+import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.DefaultCharacterPairMatcher;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
@@ -176,12 +177,14 @@ import org.eclipse.wst.sse.ui.internal.editor.StructuredModelDocumentProvider;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
 import org.eclipse.wst.sse.ui.internal.hyperlink.OpenHyperlinkAction;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
-import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
+import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
 import org.eclipse.wst.sse.ui.internal.properties.ConfigurablePropertySheetPage;
 import org.eclipse.wst.sse.ui.internal.properties.ShowPropertiesAction;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ConfigurationPointCalculator;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.NullSourceEditingTextTools;
+import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
+import org.eclipse.wst.sse.ui.internal.reconcile.DocumentRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
 import org.eclipse.wst.sse.ui.internal.style.SemanticHighlightingManager;
 import org.eclipse.wst.sse.ui.internal.text.DocumentRegionEdgeMatcher;
@@ -854,8 +857,6 @@ public class StructuredTextEditor extends TextEditor {
 	private IContentOutlinePage fOutlinePage;
 
 	private OutlinePageListener fOutlinePageListener = null;
-	/** This editor's projection model updater */
-	private IStructuredTextFoldingProvider fProjectionModelUpdater;
 	/** This editor's projection support */
 	private ProjectionSupport fProjectionSupport;
 	private IPropertySheetPage fPropertySheetPage;
@@ -1290,6 +1291,8 @@ public class StructuredTextEditor extends TextEditor {
 		fInformationPresenter.install(getSourceViewer());
 
 		installSemanticHighlighting();
+		
+		
 	}
 
 	protected PropertySheetConfiguration createPropertySheetConfiguration() {
@@ -1462,12 +1465,6 @@ public class StructuredTextEditor extends TextEditor {
 		if (fSelectionHistory != null) {
 			fSelectionHistory.dispose();
 			fSelectionHistory = null;
-		}
-
-		// dispose of document folding support
-		if (fProjectionModelUpdater != null) {
-			fProjectionModelUpdater.uninstall();
-			fProjectionModelUpdater = null;
 		}
 
 		if (fProjectionSupport != null) {
@@ -1673,9 +1670,6 @@ public class StructuredTextEditor extends TextEditor {
 		else {
 			updateEditorControlsForContentType(null);
 		}
-
-		if (fProjectionModelUpdater != null)
-			updateProjectionSupport();
 
 		// start editor with smart insert mode
 		setInsertMode(SMART_INSERT);
@@ -2117,7 +2111,7 @@ public class StructuredTextEditor extends TextEditor {
 		super.handleCursorPositionChanged();
 		updateStatusField(StructuredTextEditorActionConstants.STATUS_CATEGORY_OFFSET);
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -2129,25 +2123,33 @@ public class StructuredTextEditor extends TextEditor {
 		if (EditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS.equals(property)) {
 			updateHoverBehavior();
 		}
+		
+		//enable or disable as you type validation
+		else if(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS.equals(property)) {
+			IReconciler reconciler = this.getSourceViewerConfiguration().getReconciler(this.getSourceViewer());
+			if (reconciler instanceof DocumentRegionProcessor) {
+				((DocumentRegionProcessor) reconciler).setValidatorStrategyEnabled(isValidationEnabled());
+			}
+		}
 
-		if (IStructuredTextFoldingProvider.FOLDING_ENABLED.equals(property)) {
+		else if (AbstractStructuredFoldingStrategy.FOLDING_ENABLED.equals(property)) {
 			if (getSourceViewer() instanceof ProjectionViewer) {
 				// install projection support if it has not even been
 				// installed yet
-				if (isFoldingEnabled() && (fProjectionSupport == null) && (fProjectionModelUpdater == null)) {
+				if (isFoldingEnabled() && (fProjectionSupport == null)) {
 					installProjectionSupport();
 				}
 				ProjectionViewer pv = (ProjectionViewer) getSourceViewer();
 				if (pv.isProjectionMode() != isFoldingEnabled()) {
-					if (pv.canDoOperation(ProjectionViewer.TOGGLE))
+					if (pv.canDoOperation(ProjectionViewer.TOGGLE)) {
 						pv.doOperation(ProjectionViewer.TOGGLE);
+					}
 				}
 			}
-			return;
 		}
 
 		// update content assist preferences
-		if (EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND.equals(property)) {
+		else if (EditorPreferenceNames.CODEASSIST_PROPOSALS_BACKGROUND.equals(property)) {
 			ISourceViewer sourceViewer = getSourceViewer();
 			if (sourceViewer != null) {
 				SourceViewerConfiguration configuration = getSourceViewerConfiguration();
@@ -2164,7 +2166,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 
 		// update content assist preferences
-		if (EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND.equals(property)) {
+		else if (EditorPreferenceNames.CODEASSIST_PROPOSALS_FOREGROUND.equals(property)) {
 			ISourceViewer sourceViewer = getSourceViewer();
 			if (sourceViewer != null) {
 				SourceViewerConfiguration configuration = getSourceViewerConfiguration();
@@ -2181,7 +2183,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 
 		// update content assist preferences
-		if (EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND.equals(property)) {
+		else if (EditorPreferenceNames.CODEASSIST_PARAMETERS_BACKGROUND.equals(property)) {
 			ISourceViewer sourceViewer = getSourceViewer();
 			if (sourceViewer != null) {
 				SourceViewerConfiguration configuration = getSourceViewerConfiguration();
@@ -2199,7 +2201,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 
 		// update content assist preferences
-		if (EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND.equals(property)) {
+		else if (EditorPreferenceNames.CODEASSIST_PARAMETERS_FOREGROUND.equals(property)) {
 			ISourceViewer sourceViewer = getSourceViewer();
 			if (sourceViewer != null) {
 				SourceViewerConfiguration configuration = getSourceViewerConfiguration();
@@ -2383,46 +2385,8 @@ public class StructuredTextEditor extends TextEditor {
 		});
 		fProjectionSupport.install();
 
-		IStructuredTextFoldingProvider updater = null;
-		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
-		String[] ids = getConfigurationPoints();
-		for (int i = 0; updater == null && i < ids.length; i++) {
-			updater = (IStructuredTextFoldingProvider) builder.getConfiguration(IStructuredTextFoldingProvider.ID, ids[i]);
-		}
-
-		fProjectionModelUpdater = updater;
-		if (fProjectionModelUpdater != null)
-			fProjectionModelUpdater.install(projectionViewer);
-
 		if (isFoldingEnabled())
 			projectionViewer.doOperation(ProjectionViewer.TOGGLE);
-	}
-
-	/**
-	 * Install everything necessary to get document folding working and enable
-	 * document folding
-	 */
-	private void updateProjectionSupport() {
-		// dispose of previous document folding support
-		if (fProjectionModelUpdater != null) {
-			fProjectionModelUpdater.uninstall();
-			fProjectionModelUpdater = null;
-		}
-
-		ProjectionViewer projectionViewer = (ProjectionViewer) getSourceViewer();
-		IStructuredTextFoldingProvider updater = null;
-		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
-		String[] ids = getConfigurationPoints();
-		for (int i = 0; updater == null && i < ids.length; i++) {
-			updater = (IStructuredTextFoldingProvider) builder.getConfiguration(IStructuredTextFoldingProvider.ID, ids[i]);
-		}
-
-		fProjectionModelUpdater = updater;
-		if (fProjectionModelUpdater != null)
-			fProjectionModelUpdater.install(projectionViewer);
-
-		if (fProjectionModelUpdater != null)
-			fProjectionModelUpdater.initialize();
 	}
 
 	/**
@@ -2434,7 +2398,14 @@ public class StructuredTextEditor extends TextEditor {
 	private boolean isFoldingEnabled() {
 		IPreferenceStore store = getPreferenceStore();
 		// check both preference store and vm argument
-		return (store.getBoolean(IStructuredTextFoldingProvider.FOLDING_ENABLED));
+		return (store.getBoolean(AbstractStructuredFoldingStrategy.FOLDING_ENABLED));
+	}
+	
+	/**
+	 * Determine if the user preference for as you type validation is enabled or not
+	 */
+	private boolean isValidationEnabled() {
+		return getPreferenceStore().getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
 	}
 
 	private void logUnexpectedDocumentKind(IEditorInput input) {
@@ -2482,15 +2453,11 @@ public class StructuredTextEditor extends TextEditor {
 			boolean projectionMode = projectionViewer.isProjectionMode();
 			if (projectionMode) {
 				projectionViewer.disableProjection();
-				if (fProjectionModelUpdater != null)
-					fProjectionModelUpdater.uninstall();
 			}
 
 			super.performRevert();
 
 			if (projectionMode) {
-				if (fProjectionModelUpdater != null)
-					fProjectionModelUpdater.install(projectionViewer);
 				projectionViewer.enableProjection();
 			}
 

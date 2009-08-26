@@ -55,8 +55,8 @@
 			class="org.eclipse.jst.jsp.ui.internal.text.JSPDocumentRegionEdgeMatcher"
 			target="org.eclipse.jst.jsp.core.jspsource" />
 		<provisionalConfiguration
-			type="structuredtextfoldingprovider"
-			class="org.eclipse.jst.jsp.ui.internal.projection.StructuredTextFoldingProviderJSP"
+			type="foldingstrategy"
+			class="org.eclipse.wst.xml.ui.internal.projection.XMLFoldingStrategy"
 			target="org.eclipse.jst.jsp.core.jspsource" />
 		<provisionalDefinition
 			type="preferencepages"
@@ -944,8 +944,8 @@
 			class="org.eclipse.wst.css.ui.internal.text.CSSDocumentRegionEdgeMatcher"
 			target="org.eclipse.jst.jsp.core.cssjspsource" />
 		<provisionalConfiguration
-			type="structuredtextfoldingprovider"
-			class="org.eclipse.wst.css.ui.internal.projection.StructuredTextFoldingProviderCSS"
+			type="foldingstrategy"
+			class="org.eclipse.wst.css.ui.internal.projection.CSSFoldingStrategy"
 			target="org.eclipse.jst.jsp.core.cssjspsource" />
 		<provisionalDefinition
 			type="preferencepages"

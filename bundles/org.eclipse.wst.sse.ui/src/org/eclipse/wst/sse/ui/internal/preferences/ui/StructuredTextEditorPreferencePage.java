@@ -51,7 +51,7 @@ import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.TabFolderLayout;
-import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
+import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 
 /**
@@ -157,7 +157,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		addCheckBox(appearanceComposite, label, EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG, 0);
 
 		label = SSEUIMessages.StructuredTextEditorPreferencePage_3;
-		addCheckBox(appearanceComposite, label, IStructuredTextFoldingProvider.FOLDING_ENABLED, 0);
+		addCheckBox(appearanceComposite, label, AbstractStructuredFoldingStrategy.FOLDING_ENABLED, 0);
 		
 		label = SSEUIMessages.StructuredTextEditorPreferencePage_1;
 		addCheckBox(appearanceComposite, label, EditorPreferenceNames.SEMANTIC_HIGHLIGHTING, 0);
@@ -295,7 +295,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG));
 
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, IStructuredTextFoldingProvider.FOLDING_ENABLED));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, AbstractStructuredFoldingStrategy.FOLDING_ENABLED));
 		
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, EditorPreferenceNames.SEMANTIC_HIGHLIGHTING));
 

@@ -33,6 +33,7 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationModelExtension;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.ITemporaryAnnotation;
 import org.eclipse.wst.sse.ui.internal.Logger;
@@ -64,18 +65,23 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	public static final int ELEMENT_ERROR_LIMIT = 25;
 
 	private IDocument fDocument = null;
-	// private IReconcileStep fFirstStep = null;
 	private IProgressMonitor fProgressMonitor = null;
 	private ISourceViewer fSourceViewer = null;
-//	private Comparator fComparator;
 
 	// list of "validator" annotations
 	// for gray/un-gray capability
 	private HashSet fMarkerAnnotations = null;
 
 	/**
-	 * Creates a new strategy. The editor parameter is for access to the
-	 * annotation model.
+	 * Creates a new strategy. The source viewer must be set manually
+	 * after creation before a reconciler using this constructor will work.
+	 */
+	public AbstractStructuredTextReconcilingStrategy() {
+		init();
+	}
+
+	/**
+	 * Creates a new strategy.
 	 * 
 	 * @param editor
 	 */
@@ -375,6 +381,16 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 
 	private void removeAllAnnotations() {
 		removeAnnotations(getAllAnnotationsToRemove());
+	}
+
+	/**
+	 * The user needs to manually set the viewer if the default
+	 * constructor was used. 
+	 *
+	 * @param viewer
+	 */
+	public void setViewer(SourceViewer viewer) {
+		fSourceViewer = viewer;
 	}
 
 	/**

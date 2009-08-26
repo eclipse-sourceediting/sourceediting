@@ -39,8 +39,8 @@
 			class="org.eclipse.wst.html.ui.internal.text.HTMLDocumentRegionEdgeMatcher"
 			target="org.eclipse.wst.html.core.htmlsource" />
 		<provisionalConfiguration
-			type="structuredtextfoldingprovider"
-			class="org.eclipse.wst.html.ui.internal.projection.StructuredTextFoldingProviderHTML"
+			type="foldingstrategy"
+			class="org.eclipse.wst.xml.ui.internal.projection.XMLFoldingStrategy"
 			target="org.eclipse.wst.html.core.htmlsource" />
 		<provisionalConfiguration
 			type="org.eclipse.jface.text.quickassist.IQuickAssistProcessor"

@@ -59,7 +59,6 @@ import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 import org.eclipse.wst.sse.ui.internal.correction.CompoundQuickAssistProcessor;
 import org.eclipse.wst.sse.ui.internal.derived.HTMLTextPresenter;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
-import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.style.ReconcilerHighlighter;
 import org.eclipse.wst.sse.ui.internal.provisional.style.StructuredPresentationReconciler;
@@ -598,22 +597,22 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * @return a reconciler
 	 */
 	final public IReconciler getReconciler(ISourceViewer sourceViewer) {
-		boolean reconcilingEnabled = fPreferenceStore.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
-		if (sourceViewer == null || !reconcilingEnabled)
-			return null;
-
-		/*
-		 * Only create reconciler if sourceviewer is present
-		 */
-		if (fReconciler == null && sourceViewer != null) {
-			StructuredRegionProcessor reconciler = new StructuredRegionProcessor();
-
-			// reconciler configurations
-			reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-
-			fReconciler = reconciler;
+		IReconciler reconciler = null;
+		
+		if (sourceViewer != null) {
+			//Only create reconciler if sourceViewer is present
+			if (fReconciler == null && sourceViewer != null) {
+				StructuredRegionProcessor newReconciler = new StructuredRegionProcessor();
+	
+				// reconciler configurations
+				newReconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+	
+				fReconciler = newReconciler;
+			}
+			reconciler = fReconciler;
 		}
-		return fReconciler;
+		
+		return reconciler;
 	}
 
 	/**

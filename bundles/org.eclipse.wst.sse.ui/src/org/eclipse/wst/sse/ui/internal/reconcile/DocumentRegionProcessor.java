@@ -21,13 +21,19 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.projection.AbstractStructuredFoldingStrategy;
+import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorBuilder;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorMetaData;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorStrategy;
@@ -56,9 +62,19 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 
 	private IReconcilingStrategy fSemanticHighlightingStrategy;
 	
+	/**
+	 * The folding strategy for this processor
+	 */
+	private AbstractStructuredFoldingStrategy fFoldingStrategy;
+	
 	private final String SSE_UI_ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
 
-
+	/**
+	 * true if as you type validation is enabled,
+	 * false otherwise
+	 */
+	private boolean fValidationEnabled;
+	
 	protected void beginProcessing() {
 		super.beginProcessing();
 		ValidatorStrategy validatorStrategy = getValidatorStrategy();
@@ -121,14 +137,69 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 		}
 		return fSpellcheckStrategy;
 	}
+	
+	/**
+	 * <p>Get the folding strategy for this processor. Retrieved from the 
+	 * extended configuration builder.  The processor chosen is set by the plugin.</p>
+	 * 
+	 * <p>EX:<br />
+	 * <code>&lt;extension point="org.eclipse.wst.sse.ui.editorConfiguration"&gt;<br />
+	 *  &lt;provisionalConfiguration<br />
+	 *			type="foldingstrategy"<br />
+	 *			class="org.eclipse.wst.xml.ui.internal.projection.XMLFoldingStrategy"<br />
+	 *			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" /&gt;<br />
+	 *	&lt;/extension&gt;</code></p>
+	 * 
+	 * <p>The type must be equal to <code>AbstractFoldingStrategy.ID</code> (AKA: foldingstrategy)
+	 * and the class must extend <code>org.eclipse.wst.sse.ui.internal.projection.AbstractFoldingStrategy</code>
+	 * and the target must be a structured editor content type ID</p>
+	 * 
+	 * @return the requested folding strategy or null if none can be found
+	 */
+	protected IReconcilingStrategy getFoldingStrategy() {
+		if(fFoldingStrategy == null && getDocument() != null) {
+			String contentTypeId = getContentType(getDocument());
+			if (contentTypeId == null) {
+				contentTypeId = IContentTypeManager.CT_TEXT;
+			}
+			
+			ITextViewer viewer = getTextViewer();
+			if(viewer instanceof StructuredTextViewer) {
+				ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
+				
+				IContentType type = Platform.getContentTypeManager().getContentType(contentTypeId);
+				while(fFoldingStrategy == null && type != null) {
+					fFoldingStrategy =(AbstractStructuredFoldingStrategy) builder.getConfiguration(
+							AbstractStructuredFoldingStrategy.ID, type.getId());
+				
+					type = type.getBaseType();
+				}
+				
+				if(fFoldingStrategy != null) {
+					fFoldingStrategy.setViewer((StructuredTextViewer)viewer);
+					fFoldingStrategy.setDocument(getDocument());
+				}
+			}
+		}
+		
+		return fFoldingStrategy;
+	}
+	
+	/**
+	 * Enable or disable as you type validation. Typically set by a user preference
+	 * 
+	 * @param enable true to enable as you type validation, false to disable
+	 */
+	public void setValidatorStrategyEnabled(boolean enable) {
+		fValidationEnabled = enable;
+	}
 
 	/**
 	 * @return Returns the ValidatorStrategy.
 	 */
 	protected ValidatorStrategy getValidatorStrategy() {
-		if (fValidatorStrategy == null) {
-			ValidatorStrategy validatorStrategy = null;
-
+		ValidatorStrategy validatorStrategy = null;
+		if (fValidatorStrategy == null && fValidationEnabled) {
 			if (getTextViewer() instanceof ISourceViewer) {
 				ISourceViewer viewer = (ISourceViewer) getTextViewer();
 				String contentTypeId = null;
@@ -166,8 +237,10 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 				}
 			}
 			fValidatorStrategy = validatorStrategy;
+		} else if(fValidatorStrategy != null && fValidationEnabled) {
+			validatorStrategy = fValidatorStrategy;
 		}
-		return fValidatorStrategy;
+		return validatorStrategy;
 	}
 	
 	public void setSemanticHighlightingStrategy(IReconcilingStrategy semanticHighlightingStrategy) {
@@ -178,7 +251,7 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 	protected IReconcilingStrategy getSemanticHighlightingStrategy() {
 		return fSemanticHighlightingStrategy;
 	}
-
+	
 	/**
 	 * @param dirtyRegion
 	 */
@@ -193,22 +266,33 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 
 		DirtyRegion dirty = null;
 		for (int i = 0; i < partitions.length; i++) {
+			dirty = createDirtyRegion(partitions[i], DirtyRegion.INSERT);
+
 			// [source]validator (extension) for this partition
 			if (getValidatorStrategy() != null) {
-				dirty = createDirtyRegion(partitions[i], DirtyRegion.INSERT);
 				getValidatorStrategy().reconcile(partitions[i], dirty);
+			}
+			
+			//if there is a folding strategy then reconcile it
+			if(getFoldingStrategy() != null) {
+				getFoldingStrategy().reconcile(dirty, partitions[i]);
 			}
 		}
 	}
 
 	public void setDocument(IDocument doc) {
 		super.setDocument(doc);
+		
 		IReconcilingStrategy validatorStrategy = getValidatorStrategy();
 		if (validatorStrategy != null) {
 			validatorStrategy.setDocument(doc);
 		}
 		
 		fSpellcheckStrategy = null;
+		if(fFoldingStrategy != null) {
+			fFoldingStrategy.uninstall();
+		}
+		fFoldingStrategy = null;
 	}
 
 	protected void setEntireDocumentDirty(IDocument document) {
@@ -232,9 +316,25 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 			if (spellingStrategy != null) {
 				spellingStrategy.reconcile(new Region(0, document.getLength()));
 			}
+			
+			//if there is a folding strategy then reconcile it
+			if(getFoldingStrategy() != null) {
+				getFoldingStrategy().reconcile(new Region(0, document.getLength()));
+			}
 		}
 	}
 
+	/**
+	 * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#install(org.eclipse.jface.text.ITextViewer)
+	 */
+	public void install(ITextViewer textViewer) {
+		super.install(textViewer);
+		
+		//determine if validation is enabled
+		this.fValidationEnabled = SSEUIPlugin.getInstance().getPreferenceStore().getBoolean(
+				CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
+	}
+	
 	/**
 	 * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#uninstall()
 	 */

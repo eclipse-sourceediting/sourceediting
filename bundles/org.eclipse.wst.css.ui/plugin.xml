@@ -30,8 +30,8 @@
 			class="org.eclipse.wst.css.ui.internal.text.CSSDocumentRegionEdgeMatcher"
 			target="org.eclipse.wst.css.core.csssource" />
 		<provisionalConfiguration
-			type="structuredtextfoldingprovider"
-			class="org.eclipse.wst.css.ui.internal.projection.StructuredTextFoldingProviderCSS"
+			type="foldingstrategy"
+			class="org.eclipse.wst.css.ui.internal.projection.CSSFoldingStrategy"
 			target="org.eclipse.wst.css.core.csssource" />
 		<provisionalConfiguration
 			type="autoeditstrategy"
