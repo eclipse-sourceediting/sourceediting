@@ -588,7 +588,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	 * @param dirtyRegion
 	 */
 	protected void process(DirtyRegion dirtyRegion) {
-		if (!isInstalled() || isInRewriteSession()) {
+		if (isInRewriteSession()) {
 			return;
 		}
 		/*
