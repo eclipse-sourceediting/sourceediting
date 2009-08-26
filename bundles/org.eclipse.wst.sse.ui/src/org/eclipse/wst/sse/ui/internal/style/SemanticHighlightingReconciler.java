@@ -111,12 +111,12 @@ public class SemanticHighlightingReconciler implements IReconcilingStrategy, IRe
 				if (document.containsReadOnly(regions[i].getStartOffset(), regions[i].getLength()))
 					addPosition(new Position(regions[i].getStartOffset(), regions[i].getLength()), null, true);
 				else {
-					for (int j = 0; j < fSemanticHighlightings.length; j++) {
-						if (fHighlightings[j].isEnabled()) {
-							Position[] consumes = fSemanticHighlightings[j].consumes(regions[i]);
+					for (int j = 0; j < fJobSemanticHighlightings.length; j++) {
+						if (fJobHighlightings[j].isEnabled()) {
+							Position[] consumes = fJobSemanticHighlightings[j].consumes(regions[i]);
 							if (consumes != null) {
 								for (int k = 0; k < consumes.length; k++)
-									addPosition(consumes[k], fHighlightings[j]);
+									addPosition(consumes[k], fJobHighlightings[j]);
 							}
 						}
 					}
