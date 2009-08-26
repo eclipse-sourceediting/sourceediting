@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ENTITY % coreattrs
+ "id          ID             #IMPLIED  -- document-wide unique id --
+  class       CDATA          #IMPLIED  -- space-separated list of classes --
+  style       %StyleSheet;   #IMPLIED  -- associated style info --
+  title       %Text;         #IMPLIED  -- advisory title --"
+  >
+
+<!ENTITY % i18n
+ "lang        %LanguageCode; #IMPLIED  -- language code --
+  dir         (ltr|rtl)      #IMPLIED  -- direction for weak/neutral text --"
+  >
+
+<!ENTITY % events
+ "onclick     %Script;       #IMPLIED  -- a pointer button was clicked --
+  ondblclick  %Script;       #IMPLIED  -- a pointer button was double clicked--
+  onmousedown %Script;       #IMPLIED  -- a pointer button was pressed down --
+  onmouseup   %Script;       #IMPLIED  -- a pointer button was released --
+  onmouseover %Script;       #IMPLIED  -- a pointer was moved onto --
+  onmousemove %Script;       #IMPLIED  -- a pointer was moved within --
+  onmouseout  %Script;       #IMPLIED  -- a pointer was moved away --
+  onkeypress  %Script;       #IMPLIED  -- a key was pressed and released --
+  onkeydown   %Script;       #IMPLIED  -- a key was pressed down --
+  onkeyup     %Script;       #IMPLIED  -- a key was released --"
+  >
+
+<!--
+Reserved Feature Switch 
+-->
+<!ENTITY % HTML.Reserved "IGNORE">
+
+<!ENTITY % reserved
+ "datasrc     %URI;          #IMPLIED  -- a single or tabular Data Source --
+  datafld     CDATA          #IMPLIED  -- the property or column name --
+  dataformatas (plaintext|html) plaintext -- text or html --"
+  >
