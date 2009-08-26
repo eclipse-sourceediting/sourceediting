@@ -19,6 +19,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.wst.html.internal.validation.HTMLValidator;
+import org.eclipse.wst.html.ui.tests.HTMLUITestsPlugin;
 import org.eclipse.wst.html.ui.tests.ProjectUtil;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -60,7 +61,7 @@ public class TestHTMLValidator extends TestCase {
 	 */
 	public void testRemoveAndAddBackCommentEndTag() throws Exception{
 		String projectName = "RemoveAndAddBackCommentEndTag";
-		IProject project = ProjectUtil.createProject(projectName, null, null);
+		IProject project = ProjectUtil.createProject(projectName, HTMLUITestsPlugin.getDefault().getStateLocation().append(getName()), null);
 		
 		IFile testFile = null;
 		IStructuredModel model = null;
@@ -111,6 +112,7 @@ public class TestHTMLValidator extends TestCase {
 				model.releaseFromEdit();
 			}
 		}
+		project.delete(true, null);
 	}
 	
 	/**

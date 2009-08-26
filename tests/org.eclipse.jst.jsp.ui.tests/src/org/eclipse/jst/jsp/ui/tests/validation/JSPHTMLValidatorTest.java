@@ -21,6 +21,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.jsp.core.internal.validation.JSPContentValidator;
 import org.eclipse.jst.jsp.ui.internal.validation.JSPContentSourceValidator;
+import org.eclipse.jst.jsp.ui.tests.JSPUITestsPlugin;
 import org.eclipse.jst.jsp.ui.tests.util.ProjectUtil;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -116,7 +117,7 @@ public class JSPHTMLValidatorTest extends TestCase {
 		JSPContentSourceValidator fValidator = new JSPContentSourceValidator();
 		
 		String projectName = "RemoveAndAddBackCommentEndTag";
-		IProject project = ProjectUtil.createProject(projectName, null, null);
+		IProject project = ProjectUtil.createProject(projectName, JSPUITestsPlugin.getDefault().getStateLocation().append(getName()), null);
 		
 		IFile testFile = null;
 		IStructuredModel model = null;
@@ -167,6 +168,7 @@ public class JSPHTMLValidatorTest extends TestCase {
 				model.releaseFromEdit();
 			}
 		}
+		project.delete(true, null);
 	}
 	
 	/**

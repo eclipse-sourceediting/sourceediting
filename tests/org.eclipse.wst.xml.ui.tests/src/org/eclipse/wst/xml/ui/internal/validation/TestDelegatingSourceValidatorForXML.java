@@ -121,7 +121,7 @@ public class TestDelegatingSourceValidatorForXML extends TestCase
 	 */
 	public void testRemoveAndAddBackCommentEndTag() throws Exception{
 		String projectName = "RemoveAndAddBackCommentEndTag";
-		IProject project = ProjectUtil.createProject(projectName, null, null);
+		IProject project = ProjectUtil.createProject(projectName, XMLUITestsPlugin.getDefault().getStateLocation().append(getName()), null);
 		
 		IFile testFile = null;
 		IStructuredModel model = null;
@@ -174,6 +174,7 @@ public class TestDelegatingSourceValidatorForXML extends TestCase
 				model.releaseFromEdit();
 			}
 		}
+		project.delete(true, null);
 	}
 	
 	/**
