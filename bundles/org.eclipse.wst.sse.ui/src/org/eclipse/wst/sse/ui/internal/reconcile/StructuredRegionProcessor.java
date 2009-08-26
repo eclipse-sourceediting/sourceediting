@@ -201,7 +201,7 @@ public class StructuredRegionProcessor extends DocumentRegionProcessor {
 	}
 
 	protected void process(DirtyRegion dirtyRegion) {
-		if (getDocument() == null || isInRewriteSession())
+		if (!isInstalled() || isInRewriteSession() || getDocument() == null)
 			return;
 
 		// use structured model to determine area to process
