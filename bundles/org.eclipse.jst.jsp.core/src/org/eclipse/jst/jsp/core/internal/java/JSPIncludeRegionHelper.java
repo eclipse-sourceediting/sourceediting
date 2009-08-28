@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +17,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 /**
- * Extension of XMLJSPRegionHelper inteded to parse entire included JSP files.
+ * Extension of XMLJSPRegionHelper intended to parse entire included JSP files.
  * Basically it expands the rules for what tags are parsed as JSP.
  * 
  * @author pavery
@@ -90,5 +90,9 @@ class JSPIncludeRegionHelper extends XMLJSPRegionHelper {
 	protected void processOtherRegions(IStructuredDocumentRegion sdRegion) {
 		processIncludeDirective(sdRegion);
 		processPageDirective(sdRegion);
+	}
+
+	protected void prepareText(IStructuredDocumentRegion sdRegion) {
+		fStrippedText = fTextBefore = fTextToParse.substring(sdRegion.getStartOffset(), sdRegion.getEndOffset());
 	}
 }
