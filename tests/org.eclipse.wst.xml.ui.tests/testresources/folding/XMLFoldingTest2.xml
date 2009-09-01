@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-	<foo></foo>
-	<foo>
-		<bar></bar>
-		<bar one="1"
+	<foo1></foo1>
+	<foo2>
+		<bar1></bar1>
+		<bar2 one="1"
 		two="2"
 		three="3">
 		
-		</bar>
+		</bar2>
 		
-		<bar>
-		</bar>
+		<bar3>
+		</bar3>
 	
-	</foo>
+	</foo2>
 
 </root>

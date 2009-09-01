@@ -32,9 +32,16 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.wst.css.core.internal.document.CSSStructuredDocumentRegionContainer;
+import org.eclipse.wst.css.ui.internal.projection.CSSFoldingStrategy;
 import org.eclipse.wst.css.ui.tests.ProjectUtil;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.w3c.dom.css.CSSStyleRule;
 
 /**
  * <p>Tests that code folding annotations are correctly added/removed from CSS Documents</p>
@@ -151,17 +158,10 @@ public class CSSCodeFoldingTest extends TestCase {
 	 */
 	public void testInitFolding() {
 		IFile file = getFile("CSSFoldingTest1.css");
-		
 		StructuredTextEditor editor  = getEditor(file);
 		
-		List expectedPositions = new ArrayList();
-		expectedPositions.add(new Position(26, 112));
-		expectedPositions.add(new Position(198, 67));
-		expectedPositions.add(new Position(433, 116));
-		expectedPositions.add(new Position(377, 39));
-		expectedPositions.add(new Position(284, 59));
-		
-		waitForReconcileThenVerify(editor.getTextViewer(), expectedPositions);
+		String[] keyWords = {"body", "#header", "#header form", "#header .btn", ".message"};
+		waitForReconcileThenVerify(editor, keyWords);
 	}
 	
 	/**
@@ -169,24 +169,25 @@ public class CSSCodeFoldingTest extends TestCase {
 	 */
 	public void testRemoveNode() {
 		IFile file = getFile("CSSFoldingTest1.css");
-		
 		StructuredTextEditor editor  = getEditor(file);
 		
 		try {
+			//find the position to remove
+			String[] initKeyWords = {"#header"};
+			List initExpectedPositions = getExpectedPositions(editor, initKeyWords);
+			Position removalPos = (Position)initExpectedPositions.remove(0);
+			
+			//remove the position
 			StructuredTextViewer viewer = editor.getTextViewer();
 			IDocument doc = viewer.getDocument();
-			doc.replace(266, 78, "");
+			doc.replace(removalPos.offset, removalPos.length, "");
 			editor.doSave(null);
 			
-			final List expectedPositions = new ArrayList();
-			expectedPositions.add(new Position(355, 116));
-			expectedPositions.add(new Position(26, 112));
-			expectedPositions.add(new Position(198, 67));
-			expectedPositions.add(new Position(299, 39));
-			
-			waitForReconcileThenVerify(viewer, expectedPositions);
+			//verify
+			String[] keyWords = {"body", "#header form", "#header .btn", ".message"};
+			waitForReconcileThenVerify(editor, keyWords);
 		} catch(BadLocationException e) {
-			fail("Test is broken, replace location has become invalid.\n" + e.getMessage());
+			fail("Test is broken, replace location is invalid.\n" + e.getMessage());
 		}
 	}
 	
@@ -195,27 +196,30 @@ public class CSSCodeFoldingTest extends TestCase {
 	 */
 	public void testAddNode() {
 		IFile file = getFile("CSSFoldingTest2.css");
-		
 		StructuredTextEditor editor  = getEditor(file);
 		
 		try {
+			//find the position to add the new node after
+			String[] initKeyWords = {"#header .btn"};
+			List initExpectedPositions = getExpectedPositions(editor, initKeyWords);
+			Position insertAfterPos = (Position)initExpectedPositions.get(0);
+			
+			//add the node
 			StructuredTextViewer viewer = editor.getTextViewer();
 			IDocument doc = viewer.getDocument();
-			doc.replace(266, 0, "\r\ntd {\r\nborder: 1px solid black;\r\n}\r\n");
+			String newNodeText = "\n.newClass {\nborder: 1px solid black;\n}\n";
+			doc.replace(insertAfterPos.offset+insertAfterPos.length+1, 0, newNodeText);
 			editor.doSave(null);
 			
-			List expectedPositions = new ArrayList();
-			expectedPositions.add(new Position(270, 30));
-			expectedPositions.add(new Position(198, 67));
-			expectedPositions.add(new Position(26, 112));
-			expectedPositions.add(new Position(321, 59));
-			expectedPositions.add(new Position(470, 116));
-			expectedPositions.add(new Position(414, 39));
-			
-			waitForReconcileThenVerify(viewer, expectedPositions);
+			//verify
+			String[] keyWords = {"body", "#header", "#header form", "#header .btn", ".message", ".newClass"};
+			waitForReconcileThenVerify(editor, keyWords);
 		} catch(BadLocationException e) {
-			fail("Test is broken, add location has become invalid.\n" + e.getMessage());
+			fail("Test is broken, add location is invalid.\n" + e.getMessage());
 		}
+		
+		//TODO: move this to the last test in this file
+		fIsLastTest = true;
 	}
 	
 	/**
@@ -281,10 +285,10 @@ public class CSSCodeFoldingTest extends TestCase {
 	 * 
 	 * @param viewer check for annotations at the given <code>expectedPositions</code>
 	 * in here after the dirty region reconciler job has finished
-	 * @param expectedPositions check for annotations at these positions in the given <code>viewer</code>
-	 * after the dirty region reconciler job has finished
+	 * @param keyWords check for annotations at the positions that these key words are in,
+	 * in the given <code>viewer</code> after the dirty region reconciler job has finished
 	 */
-	private void waitForReconcileThenVerify(final StructuredTextViewer viewer, final List expectedPositions) {
+	private void waitForReconcileThenVerify(StructuredTextEditor editor, String[] keyWords) {
 		Job[] jobs = Job.getJobManager().find(null);
 		Job job =  null;
 		for(int i = 0; i < jobs.length && job == null; ++i) {
@@ -298,8 +302,10 @@ public class CSSCodeFoldingTest extends TestCase {
 				//wait for dirty region reconciler job to finish before verifying annotations
 				job.join();
 			}
-		
-			verifyAnnotationPositions(viewer, expectedPositions);
+			
+			//wait over, now verify
+			List expectedPositions = getExpectedPositions(editor, keyWords);
+			verifyAnnotationPositions(editor.getTextViewer(), expectedPositions);
 		} catch (InterruptedException e) {
 			fail("Could not join job " + job + "\n" + e.getMessage());
 		}
@@ -329,7 +335,82 @@ public class CSSCodeFoldingTest extends TestCase {
 		}
 		
 		if(expectedPositions.size() != 0 ) {
-			fail("There were " + expectedPositions.size() + " less folding annotations then expected");
+			Iterator iter = expectedPositions.iterator();
+			String message = "The following expected folding annotatinos could not be found:";
+			while(iter.hasNext()) {
+				message += "\n\t" + iter.next();
+			}
+			fail(message);
 		}
+	}
+	
+	/**
+	 * <p>Searches the document associated with the given {@link StructuredTextEditor} for each
+	 * of the given <code>keyWords</code> and then uses the logic from the folding strategy
+	 * to determine the expected position of a folding annotation.</p>
+	 * 
+	 * <p><b>NOTE:</b> see {@link #calcFoldPosition(IndexedRegion)} for an important note</p>
+	 * 
+	 * @param editor the {@link StructuredTextEditor} to search for the given <code>keyWords</code>
+	 * @param keyWords a list of text markers in regions that should have a folding annotations
+	 * 
+	 * @return the {@link Position}s that there should be folding annotations on based on the
+	 * given <code>keyWords</code>
+	 */
+	private List getExpectedPositions(StructuredTextEditor editor, String[] keyWords) {
+		List expectedPositions = new ArrayList(keyWords.length);
+		
+		IDocument doc = editor.getTextViewer().getDocument();
+		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
+		IStructuredDocument structuredDoc = model.getStructuredDocument();
+		String text = structuredDoc.getText();
+		
+		for(int i = 0; i < keyWords.length; ++i) {
+			int offsetOfKeyword = text.indexOf(keyWords[i]);
+			IndexedRegion indexedRegion = model.getIndexedRegion(offsetOfKeyword);
+
+			Position pos = calcFoldPosition(indexedRegion);
+
+			if(pos != null) {
+				expectedPositions.add(pos);
+			}
+		}
+		
+		return expectedPositions;
+	}
+	
+	/**
+	 * <p>This is an almost exact copy of {@link CSSFoldingStrategy#calcNewFoldPosition}</p>
+	 * 
+	 * <p>This has to be done because these tests have to calculate the expected folding
+	 * locations on the fly because different OSs end up with different character counts
+	 * because of line endings</p>
+	 * 
+	 * <p>So unfortunately this logic is not really being tested by these tests, but the
+	 * more complicated and more likely to break logic of updating/adding/etc folding
+	 * locations is still being tested.</p>
+	 * 
+	 * @see CSSFoldingStrategy#calcNewFoldPosition
+	 */
+	private Position calcFoldPosition(IndexedRegion indexedRegion) {
+		Position newPos = null;
+
+		CSSStructuredDocumentRegionContainer node = (CSSStructuredDocumentRegionContainer)indexedRegion;
+		
+		int start = node.getStartOffset();
+		//so that multi-line CSS selector text does not get folded
+		if(node instanceof CSSStyleRule) {
+			CSSStyleRule rule = (CSSStyleRule)node;
+			start += rule.getSelectorText().length();
+		}
+		
+		//-1 for the end brace
+		int length = node.getEndOffset()-start-1;
+
+		if(length >= 0) {
+			newPos = new Position(start,length);
+		}
+	
+		return newPos;
 	}
 }

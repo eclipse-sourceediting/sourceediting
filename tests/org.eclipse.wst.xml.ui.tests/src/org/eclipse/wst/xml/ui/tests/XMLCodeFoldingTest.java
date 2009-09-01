@@ -32,8 +32,15 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.ui.internal.projection.XMLFoldingStrategy;
 import org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart;
 
 /**
@@ -148,18 +155,10 @@ public class XMLCodeFoldingTest extends TestCase {
 	 */
 	public void testInitFolding() {
 		IFile file = getFile("XMLFoldingTest1.xml");
-		
 		StructuredTextEditor editor  = getEditor(file);
 		
-		List expectedPositions = new ArrayList();
-		expectedPositions.add(new Position(40, 137));
-		expectedPositions.add(new Position(63, 104));
-		expectedPositions.add(new Position(146, 9));
-		expectedPositions.add(new Position(72, 5));
-		expectedPositions.add(new Position(49, 5));
-		expectedPositions.add(new Position(87, 45));
-		
-		waitForReconcileThenVerify(editor.getTextViewer(), expectedPositions);
+		String[] keyWords = {"root", "foo1", "foo2", "bar1", "bar2", "bar3"};
+		waitForReconcileThenVerify(editor, keyWords);
 	}
 	
 	/**
@@ -167,25 +166,25 @@ public class XMLCodeFoldingTest extends TestCase {
 	 */
 	public void testRemoveNode() {
 		IFile file = getFile("XMLFoldingTest1.xml");
-		
 		StructuredTextEditor editor  = getEditor(file);
 		
 		try {
+			//find the position to remove
+			String[] initKeyWords = {"bar2"};
+			List initExpectedPositions = getExpectedPositions(editor, initKeyWords);
+			Position removalPos = (Position)initExpectedPositions.remove(0);
+			
+			//remove the postion
 			StructuredTextViewer viewer = editor.getTextViewer();
 			IDocument doc = viewer.getDocument();
-			doc.replace(87, 51, "");
+			doc.replace(removalPos.offset, removalPos.length, "");
 			editor.doSave(null);
 			
-			final List expectedPositions = new ArrayList();
-			expectedPositions.add(new Position(63, 53));
-			expectedPositions.add(new Position(49, 5));
-			expectedPositions.add(new Position(95, 9));
-			expectedPositions.add(new Position(40, 86));
-			expectedPositions.add(new Position(72, 5));
-			
-			waitForReconcileThenVerify(viewer, expectedPositions);
+			//verify
+			String[] keyWords = {"root", "foo1", "foo2", "bar1", "bar3"};
+			waitForReconcileThenVerify(editor, keyWords);
 		} catch(BadLocationException e) {
-			fail("Test is broken, replace location has become invalid.\n" + e.getMessage());
+			fail("Test is broken, replace location is invalid.\n" + e.getMessage());
 		}
 	}
 	
@@ -194,45 +193,40 @@ public class XMLCodeFoldingTest extends TestCase {
 	 */
 	public void testAddNode() {
 		IFile file = getFile("XMLFoldingTest2.xml");
-		
 		StructuredTextEditor editor  = getEditor(file);
 		
 		try {
+			//find the position to add the new node after
+			String[] initKeyWords = {"bar2"};
+			List initExpectedPositions = getExpectedPositions(editor, initKeyWords);
+			Position insertAfterPos = (Position)initExpectedPositions.get(0);
+			
+			//add the node
 			StructuredTextViewer viewer = editor.getTextViewer();
 			IDocument doc = viewer.getDocument();
-			doc.replace(151, 0, "\r\n<addMe>\r\n\r\n\r\n</addMe>");
+			String newNodeText = "\r\n<addMe>\r\n\r\n\r\n</addMe>";
+			doc.replace(insertAfterPos.offset, 0, newNodeText);
 			editor.doSave(null);
 			
-			List expectedPositions = new ArrayList();
-			expectedPositions.add(new Position(72, 5));
-			expectedPositions.add(new Position(40, 160));
-			expectedPositions.add(new Position(87, 45));
-			expectedPositions.add(new Position(63, 127));
-			expectedPositions.add(new Position(153, 13));
-			expectedPositions.add(new Position(49, 5));
-			expectedPositions.add(new Position(146, 32));
-			
-			waitForReconcileThenVerify(viewer, expectedPositions);
+			//verify
+			String[] keyWords = {"root", "foo1", "foo2", "bar1", "bar2", "bar3", "addMe"};
+			waitForReconcileThenVerify(editor, keyWords);
 		} catch(BadLocationException e) {
-			fail("Test is broken, add location has become invalid.\n" + e.getMessage());
+			fail("Test is broken, add location is invalid.\n" + e.getMessage());
 		}
 	}
 	
 	/**
 	 * <p><b>TEST:</b> that even though .xsl documents do not have a specifically specified
-	 * folding strategy that by the power of higheracical content types the XML folding
+	 * folding strategy that by the power of hierarchical content types the XML folding
 	 * strategy is used for the XSLT document.
 	 */
-	public void testConfigTypeHeigheracryExploration() {
+	public void testConfigTypeHiearchyExploration() {
 		IFile file = getFile("XSLFoldingTest1.xsl");
+		StructuredTextEditor editor  = getEditor(file);
 		
-		StructuredTextEditor editor = getEditor(file);
-		
-		List expectedPositions = new ArrayList();
-		expectedPositions.add(new Position(122, 69));
-		expectedPositions.add(new Position(40, 168));
-		
-		waitForReconcileThenVerify(editor.getTextViewer(), expectedPositions);
+		String[] keyWords = {"xsl:stylesheet", "xsl:template"};
+		waitForReconcileThenVerify(editor, keyWords);
 		
 		//TODO: move this to the last test in this file
 		fIsLastTest = true;
@@ -304,10 +298,10 @@ public class XMLCodeFoldingTest extends TestCase {
 	 * 
 	 * @param viewer check for annotations at the given <code>expectedPositions</code>
 	 * in here after the dirty region reconciler job has finished
-	 * @param expectedPositions check for annotations at these positions in the given <code>viewer</code>
-	 * after the dirty region reconciler job has finished
+	 * @param keyWords check for annotations at the positions that these key words are in,
+	 * in the given <code>viewer</code> after the dirty region reconciler job has finished
 	 */
-	private void waitForReconcileThenVerify(final StructuredTextViewer viewer, final List expectedPositions) {
+	private void waitForReconcileThenVerify(StructuredTextEditor editor, String[] keyWords) {
 		Job[] jobs = Job.getJobManager().find(null);
 		Job job =  null;
 		for(int i = 0; i < jobs.length && job == null; ++i) {
@@ -321,8 +315,10 @@ public class XMLCodeFoldingTest extends TestCase {
 				//wait for dirty region reconciler job to finish before verifying annotations
 				job.join();
 			}
-		
-			verifyAnnotationPositions(viewer, expectedPositions);
+			
+			//wait over, now verify
+			List expectedPositions = getExpectedPositions(editor, keyWords);
+			verifyAnnotationPositions(editor.getTextViewer(), expectedPositions);
 		} catch (InterruptedException e) {
 			fail("Could not join job " + job + "\n" + e.getMessage());
 		}
@@ -346,13 +342,88 @@ public class XMLCodeFoldingTest extends TestCase {
 				Position pos = projectionModel.getPosition(annotation);
 				
 				boolean found = expectedPositions.remove(pos);
-
+				
 				assertTrue("Position " + pos + " is not one of the expected positions", found);
 			}
 		}
 		
 		if(expectedPositions.size() != 0 ) {
-			fail("There were " + expectedPositions.size() + " less folding annotations then expected");
+			Iterator iter = expectedPositions.iterator();
+			String message = "The following expected folding annotatinos could not be found:";
+			while(iter.hasNext()) {
+				message += "\n\t" + iter.next();
+			}
+			fail(message);
 		}
+	}
+	
+	/**
+	 * <p>Searches the document associated with the given {@link StructuredTextEditor} for each
+	 * of the given <code>keyWords</code> and then uses the logic from the folding strategy
+	 * to determine the expected position of a folding annotation.</p>
+	 * 
+	 * <p><b>NOTE:</b> see {@link #calcFoldPosition(IndexedRegion)} for an important note</p>
+	 * 
+	 * @param editor the {@link StructuredTextEditor} to search for the given <code>keyWords</code>
+	 * @param keyWords a list of text markers in regions that should have a folding annotations
+	 * 
+	 * @return the {@link Position}s that there should be folding annotations on based on the
+	 * given <code>keyWords</code>
+	 */
+	private List getExpectedPositions(StructuredTextEditor editor, String[] keyWords) {
+		List expectedPositions = new ArrayList(keyWords.length);
+		
+		IDocument doc = editor.getTextViewer().getDocument();
+		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
+		IStructuredDocument structuredDoc = model.getStructuredDocument();
+		String text = structuredDoc.getText();
+		
+		for(int i = 0; i < keyWords.length; ++i) {
+			int offsetOfKeyword = text.indexOf(keyWords[i]);
+			IndexedRegion indexedRegion = model.getIndexedRegion(offsetOfKeyword);
+
+			Position pos = calcFoldPosition(indexedRegion);
+
+			if(pos != null) {
+				expectedPositions.add(pos);
+			}
+		}
+		
+		return expectedPositions;
+	}
+	
+	/**
+	 * <p>This is an almost exact copy of {@link XMLFoldingStrategy#calcNewFoldPosition}</p>
+	 * 
+	 * <p>This has to be done because these tests have to calculate the expected folding
+	 * locations on the fly because different OSs end up with different character counts
+	 * because of line endings</p>
+	 * 
+	 * <p>So unfortunately this logic is not really being tested by these tests, but the
+	 * more complicated and more likely to break logic of updating/adding/etc folding
+	 * locations is still being tested.</p>
+	 * 
+	 * @see XMLFoldingStrategy#calcNewFoldPosition
+	 */
+	private Position calcFoldPosition(IndexedRegion indexedRegion) {
+		Position retPos = null;
+		
+		IDOMNode node = (IDOMNode)indexedRegion;
+		IStructuredDocumentRegion startRegion = node.getStartStructuredDocumentRegion();
+		IStructuredDocumentRegion endRegion = node.getEndStructuredDocumentRegion();
+		
+		int start;
+		int length;
+		//if the node has an endRegion (end tag) then folding region is
+		//	between the start and end tag
+		//else if the region is only an open tag or an open/close tag then don't fold it
+		if(startRegion != null && endRegion != null) {
+			start = startRegion.getStartOffset();
+			length = endRegion.getStartOffset() - start;
+			
+			retPos = new Position(start, length);
+		} 
+		
+		return retPos;
 	}
 }

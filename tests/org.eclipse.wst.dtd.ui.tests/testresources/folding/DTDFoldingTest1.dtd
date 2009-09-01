@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!ENTITY % coreattrs
+<!ENTITY % entity1
  "id          ID             #IMPLIED  -- document-wide unique id --
   class       CDATA          #IMPLIED  -- space-separated list of classes --
   style       %StyleSheet;   #IMPLIED  -- associated style info --
   title       %Text;         #IMPLIED  -- advisory title --"
   >
 
-<!ENTITY % i18n
+<!ENTITY % entity2
  "lang        %LanguageCode; #IMPLIED  -- language code --
   dir         (ltr|rtl)      #IMPLIED  -- direction for weak/neutral text --"
   >
 
-<!ENTITY % events
+<!ENTITY % entity3
  "onclick     %Script;       #IMPLIED  -- a pointer button was clicked --
   ondblclick  %Script;       #IMPLIED  -- a pointer button was double clicked--
   onmousedown %Script;       #IMPLIED  -- a pointer button was pressed down --
@@ -25,11 +25,11 @@
   >
 
 <!--
-Reserved Feature Switch 
+comment1
 -->
-<!ENTITY % HTML.Reserved "IGNORE">
+<!ENTITY % entity4 "IGNORE">
 
-<!ENTITY % reserved
+<!ENTITY % entity5
  "datasrc     %URI;          #IMPLIED  -- a single or tabular Data Source --
   datafld     CDATA          #IMPLIED  -- the property or column name --
   dataformatas (plaintext|html) plaintext -- text or html --"
