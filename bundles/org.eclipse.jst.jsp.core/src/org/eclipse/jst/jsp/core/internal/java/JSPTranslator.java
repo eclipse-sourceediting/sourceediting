@@ -518,6 +518,7 @@ public class JSPTranslator {
 		fCursorPosition = -1;
 
 		fIsErrorPage = fCursorInExpression = false;
+		fIsInASession = true;
 
 		fUserCode = new StringBuffer();
 		fUserDeclarations = new StringBuffer();
