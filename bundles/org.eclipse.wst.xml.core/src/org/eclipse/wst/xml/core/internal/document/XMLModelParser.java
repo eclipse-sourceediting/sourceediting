@@ -909,7 +909,7 @@ public class XMLModelParser {
 		if (regions == null)
 			return;
 
-		String data = null;
+		StringBuffer data = null;
 		boolean isJSPTag = false;
 		Iterator e = regions.iterator();
 		while (e.hasNext()) {
@@ -920,13 +920,16 @@ public class XMLModelParser {
 			}
 			else if (regionType == DOMRegionContext.XML_COMMENT_TEXT || isNestedCommentText(regionType)) {
 				if (data == null) {
-					data = flatNode.getText(region);
+					data = new StringBuffer(flatNode.getText(region));
+				}
+				else {
+					data.append(flatNode.getText(region));
 				}
 			}
 		}
 
 		if (data != null) {
-			ElementImpl element = (ElementImpl) createCommentElement(data, isJSPTag);
+			ElementImpl element = (ElementImpl) createCommentElement(data.toString(), isJSPTag);
 			if (element != null) {
 				if (!isEndTag(element)) {
 					element.setStartStructuredDocumentRegion(flatNode);
