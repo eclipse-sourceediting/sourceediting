@@ -1547,7 +1547,12 @@ public class JSPTranslator {
 				translateEmbeddedJSPInBlock((ITextRegionCollection) region, regions);
 				// ensure the rest of this method won't be called
 			}
-			if (contentRegion != null) {
+			/* NOTE: the type here is of the node preceding the current node
+			 * thus must check to see if the current node is JSP close, if it is
+			 * then the JSP is something akin to <%%> and should not be translated
+			 * (Bug 189318)
+			 */
+			if (contentRegion != null && contentRegion.getType() != DOMJSPRegionContexts.JSP_CLOSE) {
 				if (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN) {
 					translateExpression(contentRegion);
 				}
@@ -2566,14 +2571,7 @@ public class JSPTranslator {
 		// iterate XMLCONTENT and CDATA regions
 		// loop fCurrentNode until you hit </jsp:scriptlet> (or other closing
 		// tag name)
-		while (getCurrentNode() != null && getCurrentNode().getType() != DOMRegionContext.XML_TAG_NAME) // need
-		// to
-		// stop
-		// on
-		// the
-		// ending
-		// tag
-		// name...
+		while (getCurrentNode() != null && getCurrentNode().getType() != DOMRegionContext.XML_TAG_NAME && getCurrentNode().getType() != DOMJSPRegionContexts.JSP_CLOSE) // need to stop on the ending tag name...
 		{
 			start = getCurrentNode().getStartOffset();
 			end = getCurrentNode().getEndOffset();
