@@ -38,6 +38,7 @@ public class ProductManager {
 	private static final String USE_SINGLE_ROOT_STRUCTURE = "false"; //$NON-NLS-1$
 	private static final String VIEWER_SYNC_FOR_WEBSERVICES = "true"; //$NON-NLS-1$
 	private static final String ID_PERSPECTIVE_HIERARCHY_VIEW = "org.eclipse.ui.navigator.ProjectExplorer"; //$NON-NLS-1$
+	private static final String SHOW_JAVA_EE_MODULE_DEPENDENCY_PAGE = "true"; //$NON-NLS-1$
 	private static final String FINAL_PERSPECTIVE = "org.eclipse.jst.j2ee.J2EEPerspective"; //$NON-NLS-1$
 	private static final char RUNTIME_SEPARATOR = ':';
 	private static final String[] DEFAULT_RUNTIME_KEYS = 
@@ -95,6 +96,8 @@ public class ProductManager {
 				return FINAL_PERSPECTIVE;
 			else if (key.equals(IProductConstants.FINAL_PERSPECTIVE_WEB))
 				return FINAL_PERSPECTIVE;
+			else if (key.equals(IProductConstants.SHOW_JAVA_EE_MODULE_DEPENDENCY_PAGE))
+				return SHOW_JAVA_EE_MODULE_DEPENDENCY_PAGE;
 		}
 		return value;
 	}

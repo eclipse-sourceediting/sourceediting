@@ -32,6 +32,7 @@ public interface IProductConstants {
 	public static final String OUTPUT_FOLDER = "outputFolder"; //$NON-NLS-1$
 	public static final String USE_SINGLE_ROOT_STRUCTURE = "useSingleRootStructure"; //$NON-NLS-1$
 	public static final String ID_PERSPECTIVE_HIERARCHY_VIEW = "idPerspectiveHierarchyView"; //$NON-NLS-1$
+	public static final String SHOW_JAVA_EE_MODULE_DEPENDENCY_PAGE = "showJavaEEModuleDependencyPage"; //$NON-NLS-1$
 	
 	/**
      * Alters the final perspective used by the following new project wizards
