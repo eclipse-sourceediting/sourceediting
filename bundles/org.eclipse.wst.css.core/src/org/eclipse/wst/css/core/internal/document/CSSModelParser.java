@@ -1170,7 +1170,7 @@ public class CSSModelParser {
 		ICSSNode next = null;
 		if (targetNode.hasChildNodes()) {
 			for (ICSSNode child = targetNode.getFirstChild(); child != null; child = child.getNextSibling()) {
-				if (child instanceof CSSStructuredDocumentRegionContainer && cursorPos <= ((CSSStructuredDocumentRegionContainer) child).getStartOffset()) {
+				if (child instanceof CSSStructuredDocumentRegionContainer && cursorPos < ((CSSStructuredDocumentRegionContainer) child).getStartOffset()) {
 					next = child;
 					break;
 				}
