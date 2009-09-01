@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2006 IBM Corporation and others.
+ * Copyright (c) 2005, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.jdt.core.CompletionProposal;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.Signature;
+import org.eclipse.jdt.internal.ui.text.java.ProposalContextInformation;
 import org.eclipse.jdt.ui.text.java.CompletionProposalCollector;
 import org.eclipse.jdt.ui.text.java.CompletionProposalComparator;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposal;
@@ -167,6 +168,16 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 		displayString = getTranslation().fixupMangledName(displayString);
 		IContextInformation contextInformation = javaProposal.getContextInformation();
 		// String additionalInfo = javaProposal.getAdditionalProposalInfo();
+		
+		/* the context information is calculated with respect to the java document
+		 * thus it needs to be updated in respect of the JSP document.
+		 */
+		if(contextInformation instanceof ProposalContextInformation) {
+			ProposalContextInformation proposalInfo = (ProposalContextInformation)contextInformation;
+			int contextInfoJSPOffset = fTranslation.getJspOffset(proposalInfo.getContextInformationPosition());
+			proposalInfo.setContextInformationPosition(contextInfoJSPOffset);
+		}
+		
 		int relevance = javaProposal.getRelevance();
 		
 		boolean updateLengthOnValidate = true;
