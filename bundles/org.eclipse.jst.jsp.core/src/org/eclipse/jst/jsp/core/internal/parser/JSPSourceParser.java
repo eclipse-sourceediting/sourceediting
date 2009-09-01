@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2006 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -360,6 +360,13 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 				if (currentNode.getLastRegion() != null && currentNode.getLastRegion().getType() == DOMRegionContext.UNDEFINED) {
 					currentNode.getLastRegion().adjustLength(region.getLength());
 					currentNode.adjustLength(region.getLength());
+
+					//if adding this region to a previous container then need to add this
+					//region to the container and update its start location
+					if(currentNode.getLastRegion() instanceof ITextRegionContainer) {
+						region.adjustStart(-currentNode.getLastRegion().getStart() - currentNode.getStart());
+						((ITextRegionContainer)currentNode.getLastRegion()).getRegions().add(region);
+					}
 				}
 				// previous wasn't undefined
 				else {
