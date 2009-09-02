@@ -12,6 +12,7 @@
  *     Jesper Steen Moeller - bug 262765 - fixed node state iteration
  *     Jesper Steen Moller  - bug 275610 - Avoid big time and memory overhead for externals
  *     Jesper Steen Moller  - bug 280555 - Add pluggable collation support
+ *     Jesper Steen Moller  - bug 281938 - undefined context should raise error
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -1368,7 +1369,11 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	public Object visit(CntxItemExpr e) {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
-		rs.add(_dc.context_item());
+		AnyType contextItem = _dc.context_item();
+		if (contextItem == null) {
+			report_error(DynamicError.contextUndefined());
+		}
+		rs.add(contextItem);
 		return rs;
 	}
 

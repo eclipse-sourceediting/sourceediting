@@ -12,6 +12,7 @@
  *                                 numeric type promotion). 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *     Jesper Steen Moeller - bug 281159 - implement xs:anyUri -> xs:string promotion
+ *     Jesper Steen Moller  - bug 281938 - undefined context should raise error
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -273,6 +274,21 @@ public abstract class Function {
 		}
 
 		return result;
+	}
+
+	protected static ResultSequence getResultSetForArityZero(DynamicContext d_context)
+			throws DynamicError {
+		ResultSequence rs = ResultSequenceFactory.create_new();
+		
+		AnyType contextItem = d_context.context_item();
+		if (contextItem != null) {
+		  // if context item is defined, then that is the default argument
+		  // to fn:string function
+		  rs.add(new XSString(contextItem.string_value()));
+		} else {
+			throw DynamicError.contextUndefined();
+		}
+		return rs;
 	}
 
 	/**

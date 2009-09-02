@@ -12,6 +12,7 @@
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
  *     David Carver - bug 282096 - improvements for surrogate handling 
  *     Jesper Steen Moeller - bug 282096 - clean up string storage
+ *     Jesper Steen Moller  - bug 281938 - handle context and empty sequences correctly
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -90,14 +91,11 @@ public class FnStringLength extends Function {
 		else {
 		  arg1 = (ResultSequence) cargs.iterator().next();
 		}
-		
-		if (arg1.empty()) {
-		  // support for arity = 0
-		  return getResultSetForArityZero(d_context);
+
+		String str = "";
+		if (! arg1.empty()) {
+			str = ((XSString) arg1.first()).value();
 		}
-
-		String str = ((XSString) arg1.first()).value();
-
 		ResultSequence rs = ResultSequenceFactory.create_new();
 		rs.add(new XSInteger(BigInteger.valueOf(str.codePointCount(0, str.length()))));
 
@@ -116,23 +114,5 @@ public class FnStringLength extends Function {
 		}
 
 		return _expected_args;
-	}
-	
-	/*
-	 * Helper function for arity 0
-	 */
-	private static ResultSequence getResultSetForArityZero(DynamicContext d_context) {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-		
-		AnyType contextItem = d_context.context_item();
-		if (contextItem != null) {
-		  // if context item is defined, then that is the default argument
-		  // to fn:string function
-		  rs.add(new XSInteger(BigInteger.valueOf(contextItem.string_value().length())));
-		}
-		else {
-		  rs.add(new XSInteger(BigInteger.valueOf(0)));
-		}
-		return rs;
 	}
 }

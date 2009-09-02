@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Steen Moller - bug 281938 - handle missing focus
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal;
@@ -35,10 +36,11 @@ public class Focus {
 	/**
 	 * Retrieves previous item from current context position.
 	 * 
-	 * @return the item from _rs.
+	 * @return the item from _rs, or null if there is no context item.
 	 */
 	public AnyType context_item() {
 		// idexes start at 0
+		if (_cp > _rs.size()) return null;
 		return _rs.get(_cp - 1);
 	}
 

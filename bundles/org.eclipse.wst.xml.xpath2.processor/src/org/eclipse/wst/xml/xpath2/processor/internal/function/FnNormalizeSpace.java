@@ -10,6 +10,7 @@
  *     Mukul Gandhi - bug 274471 - improvements to normalize-space function (support for arity 0)
  *     David Carver (STAR) - bug 262765 - correct implementation to correctly get context node 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
+ *     Jesper Steen Moller  - bug 281938 - handle context and empty sequences correctly
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -91,16 +92,12 @@ public class FnNormalizeSpace extends Function {
 		  arg1 = (ResultSequence) cargs.iterator().next();
 		}
 
-		if (arg1.empty()) {
-		  // support for arity = 0
-		  arg1 = getResultSetForArityZero(d_context);
-		}
-
-		String str = ((XSString) arg1.first()).value();
-
 		ResultSequence rs = ResultSequenceFactory.create_new();
+		String str = "";
+		if (! arg1.empty()) {
+			str = ((XSString) arg1.first()).value();
+		} 
 		rs.add(new XSString(normalize(str)));
-
 		return rs;
 	}
 
@@ -200,23 +197,5 @@ public class FnNormalizeSpace extends Function {
 		}
 
 		return _expected_args;
-	}
-	
-	/*
-	 * Helper function for arity 0
-	 */
-	private static ResultSequence getResultSetForArityZero(DynamicContext d_context) {
-		ResultSequence rs = ResultSequenceFactory.create_new();
-		
-		AnyType contextItem = d_context.context_item();
-		if (contextItem != null) {
-		  // if context item is defined, then that is the default argument
-		  // to fn:string function
-		  rs.add(new XSString(contextItem.string_value()));
-		}
-		else {
-		  rs.add(new XSString(""));
-		}
-		return rs;
 	}
 }

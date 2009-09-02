@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 274471 - improvements to fn:string function (support for arity 0) 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
+ *     Jesper Steen Moller  - bug 281938 - handle context and empty sequences correctly
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -75,34 +76,14 @@ public class FnString extends Function {
 		if (arg1.size() > 1)
 			throw new DynamicError(TypeError.invalid_type(null));
 
+		ResultSequence rs = ResultSequenceFactory.create_new();
 		if (arg1.empty()) {
-			// support for arity = 0
-			return getResultSetForArityZero(d_context);
+			rs.add(new XSString(""));
+		} else {
+			AnyType at = arg1.first();
+			rs.add(new XSString(at.string_value()));
 		}
-
-		AnyType at = arg1.first();
-
-		ResultSequence rs = ResultSequenceFactory.create_new();
-		rs.add(new XSString(at.string_value()));
-
-		return rs;
-	}
-	
-	/*
-	 * Helper function for arity 0
-	 */
-	private static ResultSequence getResultSetForArityZero(DynamicContext d_context) {
-		ResultSequence rs = ResultSequenceFactory.create_new();
 		
-		AnyType contextItem = d_context.context_item();
-		if (contextItem != null) {
-		  // if context item is defined, then that is the default argument
-		  // to fn:string function
-		  rs.add(new XSString(contextItem.string_value()));
-		}
-		else {
-		  rs.add(new XSString(""));
-		}
 		return rs;
 	}
 
