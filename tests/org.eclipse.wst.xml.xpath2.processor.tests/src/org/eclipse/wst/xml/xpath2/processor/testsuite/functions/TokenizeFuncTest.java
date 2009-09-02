@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
+ *     Jesper S Moller     - Bug 281938 - fix newline handling
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
@@ -998,6 +999,10 @@ public class TokenizeFuncTest extends AbstractPsychoPathTest {
       DynamicContext dc = setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
+
+      // the XML rules for newlines should have been applied from the external environment, so we emulate it here
+      xpath = xpath.replaceAll("\r\n", "\n");
+      
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
