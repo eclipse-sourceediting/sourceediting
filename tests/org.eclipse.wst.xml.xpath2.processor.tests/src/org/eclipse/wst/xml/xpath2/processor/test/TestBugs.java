@@ -31,15 +31,19 @@
  *                    bug 279376   improvements to xs:yearMonthDuration division operation
  *                    bug 281046   implementation of xs:base64Binary data type                                
  *  Jesper S Moller - bug 286061   correct handling of quoted string 
+ *  Jesper S Moller - bug 280555 - Add pluggable collation support
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
 import java.net.URL;
+import java.util.Comparator;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.xerces.xs.XSModel;
+import org.eclipse.wst.xml.xpath2.processor.CollationProvider;
+import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DefaultEvaluator;
 import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.Evaluator;
@@ -52,6 +56,8 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
 
 public class TestBugs extends AbstractPsychoPathTest {
+
+	private static final String URN_X_ECLIPSE_XPATH20_FUNKY_COLLATOR = "urn:x-eclipse:xpath20:funky-collator";
 
 	public void testStringLengthWithElementArg() throws Exception {
 		// Bug 273719
@@ -978,6 +984,40 @@ public class TestBugs extends AbstractPsychoPathTest {
 		String resultValue = rs.first().string_value();
 
 		assertEquals("Don't try this at \"home\", she said", resultValue);
+	}
+
+	public void testBug280555_collations() throws Exception {
+		// Setup context
+		DefaultDynamicContext dc = setupDynamicContext(null);
+		dc.set_collation_provider(createLengthCollatorProvider());
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+
+		// Parse expression
+		XPath path = compileXPath(dc, " 'abc' < 'de' ");
+
+		// Evaluate once
+		XSBoolean bval = (XSBoolean) eval.evaluate(path).first();
+		assertTrue("'abc' < 'def' for normal collations", bval.value());
+		
+		// Evaluate again with the funny collator
+		dc.set_default_collation(URN_X_ECLIPSE_XPATH20_FUNKY_COLLATOR);
+		XSBoolean bval2 = (XSBoolean) eval.evaluate(path).first();
+		assertFalse("'abc' < 'def' for normal collations", bval2.value());
+}
+
+	private CollationProvider createLengthCollatorProvider() {
+		return new CollationProvider() {
+			public Comparator get_collation(String name) {
+				if (name.equals(URN_X_ECLIPSE_XPATH20_FUNKY_COLLATOR)) {
+					return new Comparator<String>() {
+						public int compare(String o1, String o2) {
+							return o1.length() - o2.length();
+						}
+					};
+				}
+				return null;
+			}
+		};
 	}
 
 }

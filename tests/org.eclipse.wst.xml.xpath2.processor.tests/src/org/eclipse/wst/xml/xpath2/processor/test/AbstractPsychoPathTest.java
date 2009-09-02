@@ -13,7 +13,8 @@
  *     Jesper S Moller - bug 283404 - fixed locale  
  *     Jesper S Moller - bug 281159 - fix document URIs and also filter XML namespace
  *     Jesper S Moller - bug 275610 - Avoid big time and memory overhead for externals
- *     Jesper Steen Moeller - bug 282096 - make test harness handle all string encoding                                       translate function surrogate aware
+ *     Jesper Steen Moeller - bug 282096 - make test harness handle all string encoding
+ *     Jesper Steen Moller  - bug 280555 - Add pluggable collation support
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
@@ -173,8 +174,10 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		return xsGrammars[0].toXSModel(xsGrammars);
 	}
 
-	protected DynamicContext setupDynamicContext(XSModel schema) {
-		DynamicContext dc = dynamicContext = new DefaultDynamicContext(schema, domDoc);
+	protected DefaultDynamicContext setupDynamicContext(XSModel schema) {
+		DefaultDynamicContext dc = new DefaultDynamicContext(schema, domDoc);
+		dynamicContext = dc;
+		
 		dc.add_namespace("xs", "http://www.w3.org/2001/XMLSchema");
 		dc.add_namespace("xsd", "http://www.w3.org/2001/XMLSchema");
 		dc.add_namespace("fn", "http://www.w3.org/2005/xpath-functions");
@@ -352,16 +355,18 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 	protected DynamicContext setupVariables(DynamicContext dc) {
 		dc.add_variable(new QName("x"));
 		dc.add_variable(new QName("var"));
-		AnyType docType = new DocType(domDoc);
-		ElementType elementType = new ElementType(domDoc.getDocumentElement());
-		dc.set_variable(new QName("input-context1"), docType);
-		dc.set_variable(new QName("input-context"), docType);
-		if (domDoc2 == null) {
-			dc.set_variable(new QName("input-context2"), docType);
-		} else {
-			dc.set_variable(new QName("input-context2"), (AnyType) new DocType(domDoc2));
+		
+		if (domDoc != null) {
+			AnyType docType = new DocType(domDoc);
+			ElementType elementType = new ElementType(domDoc.getDocumentElement());
+			dc.set_variable(new QName("input-context1"), docType);
+			dc.set_variable(new QName("input-context"), docType);
+			if (domDoc2 == null) {
+				dc.set_variable(new QName("input-context2"), docType);
+			} else {
+				dc.set_variable(new QName("input-context2"), (AnyType) new DocType(domDoc2));
+			}
 		}
-
 		return dc;
 	}
 
