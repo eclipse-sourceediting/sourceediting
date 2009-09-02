@@ -9,6 +9,7 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver (STAR) - bug 262765 - Added FnDefaultCollation.
  *     David Carver (STAR) - bug 285321 - implemented fn:encode-for-uri()
+ *     Jesper Moller       - bug 287369 - Support fn:codepoint-equal()
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.function;
@@ -62,6 +63,7 @@ public class FnFunctionLibrary extends FunctionLibrary {
 		add_function(new FnCodepointsToString());
 		add_function(new FnStringToCodepoints());
 		add_function(new FnCompare());
+		add_function(new FnCodepointEqual());
 		add_function(new FnConcat());
 		add_function(new FnStringJoin());
 		add_function(new FnSubstring());
