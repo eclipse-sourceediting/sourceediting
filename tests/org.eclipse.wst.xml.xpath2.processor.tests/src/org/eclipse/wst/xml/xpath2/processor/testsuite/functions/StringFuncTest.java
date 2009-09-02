@@ -8,6 +8,7 @@
  * 
  * Contributors:
  *     David Carver - STAR - initial api and implementation bug 262765 
+ *     Jesper Steen Moller - bug 281938 - work-around test being written for XQuery
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
 
@@ -16,6 +17,8 @@ import java.net.URL;
 import org.apache.xerces.xs.XSModel;
 import org.eclipse.wst.xml.xpath2.processor.*;
 import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.internal.Focus;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.DocType;
 import org.eclipse.wst.xml.xpath2.processor.test.AbstractPsychoPathTest;
       
       
@@ -1478,12 +1481,14 @@ public class StringFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:string()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+
+	      dc.set_focus(new Focus(ResultSequenceFactory.create_new()));
 	      ResultSequence rs = eval.evaluate(path);
          
           actual = buildResultString(rs);
@@ -1552,12 +1557,14 @@ public class StringFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:string(.)";
+      
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      dc.set_focus(new Focus(ResultSequenceFactory.create_new()));
 	      ResultSequence rs = eval.evaluate(path);
          
           actual = buildResultString(rs);
