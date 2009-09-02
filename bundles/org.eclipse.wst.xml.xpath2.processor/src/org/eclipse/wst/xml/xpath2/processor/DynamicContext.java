@@ -34,6 +34,7 @@ public interface DynamicContext extends StaticContext {
 
 	/**
 	 * The default collation which is guaranteed to always be implemented
+	 * @since 1.1
 	 */
 	public static final String CODEPOINT_COLLATION = "http://www.w3.org/2005/xpath-functions/collation/codepoint";
 
@@ -153,6 +154,7 @@ public interface DynamicContext extends StaticContext {
 	 * 
 	 * @param uri
 	 * @return A Jaa collator, or null, if no such Collator exists 
+	 * @since 1.1
 	 */
 	public Comparator<Object> get_collation(String uri); 
 	
@@ -160,6 +162,7 @@ public interface DynamicContext extends StaticContext {
 	 * Returns the current default collator
 	 * 
 	 * @return The default name to use as the collator
+	 * @since 1.1
 	 */
 	public String default_collation_name();
 

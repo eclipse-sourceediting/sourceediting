@@ -106,7 +106,7 @@ public class FnBaseUri extends Function {
 	/*
 	 * Helper function for base-uri support
 	 */
-	private static ResultSequence getBaseUri(AnyType att) {
+	public static ResultSequence getBaseUri(AnyType att) {
 		ResultSequence rs = ResultSequenceFactory.create_new();
 		XSAnyURI baseUri = null;
 		  // depending on the node type, we get the base-uri for the node.

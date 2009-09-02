@@ -15,6 +15,7 @@ import java.util.Comparator;
 
 /**
  * Service provider interface for looking up collations from within the dynamic context.
+ * @since 1.1
  */
 public interface CollationProvider {
 	/**

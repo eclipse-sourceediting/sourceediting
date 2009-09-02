@@ -84,6 +84,7 @@ public class FnFunctionLibrary extends FunctionLibrary {
 		add_function(new FnReplace());
 		add_function(new FnTokenize());
 		add_function(new FnEncodeForURI());
+		add_function(new FnResolveURI());
 
 		// boolean functions
 		add_function(new FnTrue());

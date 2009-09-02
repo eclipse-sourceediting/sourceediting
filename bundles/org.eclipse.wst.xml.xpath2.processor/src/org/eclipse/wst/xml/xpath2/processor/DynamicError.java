@@ -393,4 +393,24 @@ public class DynamicError extends XPathException {
 		return make_error("FODC0001", "No context document.", null);
 	}
 
+	/**
+	 * No base-uri defined.
+	 * 
+	 * @return
+	 * @since 1.1
+	 */
+	public static DynamicError noBaseURI() {
+		return make_error("FONS0005", "Base-uri not defined in the static context.", null);
+	}
+	
+	/**
+	 * Error resolving relative uri against base-uri.
+	 * 
+	 * @return
+	 * @since 1.1
+	 */
+	public static DynamicError errorResolvingURI() {
+		return make_error("FORG0002", "Invalid argument to fn:resolve-uri().", null);
+	}
+	
 }

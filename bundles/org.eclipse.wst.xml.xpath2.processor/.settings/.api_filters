@@ -21,6 +21,18 @@
         </filter>
     </resource>
     <resource path="src/org/eclipse/wst/xml/xpath2/processor/DynamicContext.java" type="org.eclipse.wst.xml.xpath2.processor.DynamicContext">
+        <filter id="403767336">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="CODEPOINT_COLLATION"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="get_collation(String)"/>
+            </message_arguments>
+        </filter>
         <filter id="403804204">
             <message_arguments>
                 <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
@@ -49,6 +61,12 @@
             <message_arguments>
                 <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
                 <message_argument value="set_variable(QName, AnyType)"/>
+            </message_arguments>
+        </filter>
+        <filter id="403804204">
+            <message_arguments>
+                <message_argument value="org.eclipse.wst.xml.xpath2.processor.DynamicContext"/>
+                <message_argument value="default_collation_name()"/>
             </message_arguments>
         </filter>
         <filter id="403804204">
@@ -254,13 +272,13 @@
         <filter id="405901410">
             <message_arguments>
                 <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
-                <message_argument value="make_atomic(QName)"/>
+                <message_argument value="expand_function_qname(QName)"/>
             </message_arguments>
         </filter>
         <filter id="405901410">
             <message_arguments>
                 <message_argument value="org.eclipse.wst.xml.xpath2.processor.StaticContext"/>
-                <message_argument value="expand_function_qname(QName)"/>
+                <message_argument value="make_atomic(QName)"/>
             </message_arguments>
         </filter>
         <filter id="405901410">

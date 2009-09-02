@@ -246,10 +246,16 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 		super.set_variable(var, val);
 	}
 
+	/**
+	 * @since 1.1
+	 */
 	public void set_default_collation(String _default_collation) {
 		this._default_collation_name = _default_collation;
 	}
 
+	/**
+	 * @since 1.1
+	 */
 	public String default_collation_name() {
 		return _default_collation_name;
 	}
@@ -262,12 +268,22 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 		}
 	};
 	
+	/**
+	 * @since 1.1
+	 * 
+	 */
 	public Comparator<Object> get_collation(String uri) {
 		if (CODEPOINT_COLLATION.equals(uri)) return CODEPOINT_COMPARATOR;
 		
 		return _collation_provider != null ? _collation_provider.get_collation(uri) : null;
 	}
 	
+	/**
+	 * 
+	 * 
+	 * @param provider
+	 * @since 1.1
+	 */
 	public void set_collation_provider(CollationProvider provider) {
 		this._collation_provider = provider;
 	}
