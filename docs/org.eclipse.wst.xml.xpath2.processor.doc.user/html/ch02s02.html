@@ -1,0 +1,101 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Schema Aware</title><link href="book.css" rel="stylesheet" type="text/css"><link href="../book.css" rel="stylesheet" type="text/css"><meta content="DocBook XSL Stylesheets V1.74.0" name="generator"><link rel="home" href="index.html" title="XPath 2.0 Processor User Manual"><link rel="up" href="ch02.html" title="Using PsychoPath XPath 2.0 API"><link rel="prev" href="ch02.html" title="Using PsychoPath XPath 2.0 API"><link rel="next" href="ch02s03.html" title="How to use the XPath 2.0 grammar with PsychoPath"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="Schema_Aware"></a>Schema Aware</h2></div></div></div><p></p><pre class="programlisting">/**
+ * First load and optionally validate the XML document 
+*/
+
+ SchemaFactory schemaFactory = new XMLSchemaFactory();
+ URL schemaURL = new File("XPexample.xsd").toURL();
+ Schema jaxpschema = schemaFactory.newSchema(schemaURL);
+
+// Create an InputStream from the XML document
+InputStream is = new FileInputStream(&ldquo;XPexample.xml&rdquo;);
+
+// Initializing the Xerces DOM loader.
+DOMLoader loader = new XercesLoader(jaxpschema);
+
+// Optionally set flag to validate XML document loader.setvalidating(validate);
+// Loads the XML document and stores the DOM root
+Document doc = loader.load(is);
+
+/**
+ * Dynamic contexts must be initialised to defaults
+ * dependent on the XML Schema.
+*/
+
+// Initialising the DynamicContext.
+DynamicContext dc = new DefaultDynamicContext(jaxpschema, doc);
+
+// Register the namespaces of the XPath 2.0 predefined datatypes
+dc.addnamespace(&ldquo;xs&rdquo;,&rdquo;[http://www.w3.org/2001/XMLSchema http://www.w3.org/2001/XMLSchema]&rdquo;);
+
+// Register the XPath 2.0 standard functions
+dc.addfunctionlibrary(new FnFunctionLibrary());
+dc.addfunctionlibrary(new XSCtrLibrary());
+
+/**
+ * Parsing the XPath 2.0 expression into an AST representation
+ */
+// Initialises PsychoPath&rsquo;s supplied parser.
+XPathParser xpp = new JflexCupParser();
+
+// Parses the XPath expression.
+XPath xp = xpp.parse(xpath);
+
+/**
+ * Static check the AST to verift structural validity of  
+ * XPath 2.0 expression
+ */
+
+// Initilising StaticChecker.
+StaticChecker namecheck = new StaticNameResolver(sc);
+
+// Static Checking the Xpath expression &rsquo;Hello World!&rsquo; namecheck.check(xp);
+/**
+ * Evaluate the XPath 2.0 expression
+ */
+
+// Initialising the evaluator with DynamicContext and the name
+// of the XML document XPexample.xml as parameters.
+Evaluator eval = new DefaultEvaluator(dc, doc); 
+
+// Evaluates the XPath 2.0 expression, storing the result
+// in the ResultSequence
+ResultSequence rs = eval.evaluate(xp); 
+</pre><p>XPath 2.0 defines everything to be a sequence of items, including
+      the arguments to expressions and the result of operations. Thus, the
+      overall result of an XPath expression evaluation is also a sequence of
+      items. PsychoPath uses the class ResultSequence as a Collections wrapper
+      to store these sequences and therefore, the result of an evaluation is
+      of this type also. The ResultSequence consists of zero or more items; an
+      item may be a node or a simple-value. &ldquo;Hello World!&rdquo; is an example of a
+      single value with length 1. A general sequence could be written as (&ldquo;a&rdquo;,
+      &ldquo;s&rdquo;, &ldquo;d&rdquo;, &ldquo;f&rdquo;).</p><p>Extraction of certain items from the ResultSequence class is
+      described below, with details of the different operations that one might
+      apply on the ResultSequence. Consider that &rsquo;rs&rsquo; is the ResultSequence,
+      then:</p><p></p><pre class="programlisting">// Will return the number of elements in the sequence, in this
+// case of &rsquo;Hello World!&rsquo; expression size = 1.
+rs.size(); 
+
+// Will return the n&rsquo;th element in the sequence, in this case of
+// &rsquo;Hello World!&rsquo;, if n = 1, then it will return
+// XSString of &ldquo;Hello World!&rdquo;, but if n = 2, it will return
+// Empty Result.
+rs.get(n);
+
+//Will return true if the sequence is empty.
+rs.empty(); 
+
+// Will return the first element of the sequence, 
+// in this example it will return XSString of &ldquo;Hello World!&rdquo; 
+rs.first() 
+</pre><p>However, all the items extracted will be of the type&rsquo;s base class
+      AnyType and need to be casted into its actual subtype.</p><p>Certain operations always return a particular type and using this
+      knowledge, the extracted item can be immediately casted. In our example
+      &ldquo;Hello World!&rdquo; returns a string (easily known as it is inside the quotes
+      &rsquo; &rsquo; ), so this can safely be casted as such:</p><p><pre class="programlisting">XSString xsstring = XSString)(rs.first());</pre>The
+      actual result can now be extracted from this XSString in the following
+      manner: <pre class="programlisting">String str = xsstring.value();</pre></p><p>The details of how to cast extracted items from AnyType into their
+      actual subtypes with examples is in the next section on How to use each
+      production in the grammar.</p><p>However, if the expected return type is unknown or multiple types
+      are possible, the types hierarchy can be traversed in a breadth first
+      manner making use of the Java instanceof operator to ascertain the
+      actual type.&nbsp;</p></div></body></html>

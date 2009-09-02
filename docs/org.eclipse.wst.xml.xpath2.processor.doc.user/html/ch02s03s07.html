@@ -1,0 +1,39 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Comparisons</title><link href="book.css" rel="stylesheet" type="text/css"><link href="../book.css" rel="stylesheet" type="text/css"><meta content="DocBook XSL Stylesheets V1.74.0" name="generator"><link rel="home" href="index.html" title="XPath 2.0 Processor User Manual"><link rel="up" href="ch02s03.html" title="How to use the XPath 2.0 grammar with PsychoPath"><link rel="prev" href="ch02s03s06.html" title="Range expressions"><link rel="next" href="ch02s03s08.html" title="Conditional Expressions"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="Comparisons"></a>Comparisons</h3></div></div></div><p>The simplest comparison operators are <span class="bold"><strong>eq</strong></span>, <span class="bold"><strong>ne</strong></span>,
+        <span class="bold"><strong>lt</strong></span>, <span class="bold"><strong>le</strong></span>, <span class="bold"><strong>gt</strong></span>,
+        <span class="bold"><strong>ge</strong></span>. These compare two atomic values
+        of the same type, for example two integers, two dates, or two strings.
+        (Collation hasn&rsquo;t been implemented in current version of PsychoPath).
+        If the operands are not atomic values, an error is raised.</p><p>The operators <span class="bold"><strong>=''',&nbsp;</strong></span>!='
+        <span class="italic">, '</span>&lt;=' <span class="italic">,
+        '</span>&gt; <span class="bold"><strong>, '''&lt;</strong></span>, and
+        <span class="bold"><strong>&gt;=</strong></span> can compare arbitrary
+        sequences. The result is true if any pair of items from the two
+        sequences has the specified relationship, for example <span class="italic">$A = $B</span> is true if there is an item in
+        <span class="italic">$A</span> that is equal to some item in
+        <span class="italic">$B</span>.</p><p>The operators <span class="bold"><strong>is</strong></span> and <span class="bold"><strong>isnot</strong></span> test whether the operands represent the
+        same (identical) node. For example, <span class="italic">title
+        <a class="ulink" href="1" target="_top">1</a> is * <a class="ulink" href="@note" target="_top">@note</a> <a class="ulink" href="1" target="_top">1</a> </span> is true if the first title child is the
+        first child element that has a <span class="italic">@note</span> attribute. If either operand is an
+        empty sequence the result is an empty sequence (which will usually be
+        treated as false).</p><p>The operators <span class="bold"><strong>&lt;&lt;</strong></span> and
+        <span class="bold"><strong>&gt;&gt;</strong></span> test whether one node
+        precedes or follows another in document order. Consider this XML
+        document:</p><pre class="programlisting">&lt;book&gt;
+ &lt;title&gt;Being a Dog Is a Full-Time Job&lt;/title&gt;
+ &lt;author&gt;Charles M. Schulz&lt;/author&gt;
+ &lt;character&gt;
+   &lt;name&gt;Snoopy&lt;/name&gt;
+   &lt;friend-of&gt;Peppermint Patty&lt;/friend-of&gt;
+   &lt;since&gt;1950-10-04&lt;/since&gt;
+   &lt;age&gt;2&lt;/age&gt;
+   &lt;qualification&gt;extroverted beagle&lt;/qualification&gt;
+ &lt;/character&gt;
+ &lt;character&gt;
+   &lt;name&gt;Peppermint Patty&lt;/name&gt;
+   &lt;since&gt;1966-08-22&gt;/since&gt;
+   &lt;age&gt;4&lt;/age&gt;
+   &lt;qualification&gt;bold, brash and tomboyish&lt;/qualification&gt;
+ &lt;/character&gt;
+&lt;/book&gt;
+</pre><p>Example:</p><p><pre class="programlisting">book/character name="Snoopy" &lt;&lt; book/character Patty" </pre></p><p><span class="bold"><strong>result:</strong></span></p><div class="orderedlist"><ol type="1"><li><p>xs:boolean: true</p></li></ol></div><p>book/character <a class="ulink" href="name=%22Peppermint" target="_top">Patty"</a>
+        &lt;&lt; book/character <a class="ulink" href="name=%22Snoopy%22" target="_top">name="Snoopy"</a> <span class="bold"><strong>result:</strong></span></p><div class="orderedlist"><ol type="1"><li><p>xs:boolean: false</p></li></ol></div></div></body></html>

@@ -1,0 +1,23 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Set difference, intersection and Union</title><link href="book.css" rel="stylesheet" type="text/css"><link href="../book.css" rel="stylesheet" type="text/css"><meta content="DocBook XSL Stylesheets V1.74.0" name="generator"><link rel="home" href="index.html" title="XPath 2.0 Processor User Manual"><link rel="up" href="ch02s03.html" title="How to use the XPath 2.0 grammar with PsychoPath"><link rel="prev" href="ch02s03s03.html" title="Axis steps"><link rel="next" href="ch02s03s05.html" title="Arithmetic Expressions"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="Set_difference.2C_intersection_and_Union"></a>Set difference, intersection and Union</h3></div></div></div><p>The expression E1 except E2 selects all nodes that are in E1
+        unless they are also in E2. Both expressions must return sequences of
+        nodes. The results are returned in document order. For example, @*
+        except @note returns all attributes except the note attribute. The
+        expression E1 intersect E2 selects all nodes that are in both E1 and
+        E2. Both expressions must return sequences of nodes. The results are
+        returned in document order. The expression E1 union E2 selects all
+        nodes that are in either E1 or E2 or both. Both expressions must
+        return sequences of nodes. The results are returned in document order.
+        A complete example of the above expression would be as follows.
+        Consider an XML document which looks like this:</p><pre class="programlisting">&lt;nodes&gt;
+  &lt;a&gt;
+    &lt;connecteda&gt;A&lt;/connecteda&gt;
+    &lt;connecteda&gt;B&lt;/connecteda&gt;
+    &lt;connecteda&gt;C&lt;/connecteda&gt;
+  &lt;/a&gt;
+  &lt;b&gt;
+    &lt;connectedb&gt;B&lt;/connectedb&gt;
+    &lt;connectedb&gt;C&lt;/connectedb&gt;
+    &lt;connectedb&gt;D&lt;/connectedb&gt;
+  &lt;/b&gt;
+&lt;/nodes&gt;
+</pre><p>Then an example of each of the expressions would be:</p><p><pre class="programlisting">data(/a/*) union data(/b/*)</pre></p><p> <span class="bold"><strong>result:</strong></span></p><div class="orderedlist"><ol type="1"><li><p>xs:string: A</p></li><li><p>xs:string: B</p></li><li><p>xs:string: C</p></li><li><p>xs:string: D</p></li></ol></div><p><pre class="programlisting">data(/a/*) intersect data(/b/*)</pre></p><p> <span class="bold"><strong>result:</strong></span></p><div class="orderedlist"><ol type="1"><li><p>xs:string: B</p></li><li><p>xs:string: C</p></li></ol></div><p><pre class="programlisting">data(/a/*) except data(/b/*)</pre></p><p> <span class="bold"><strong>result:</strong></span></p><div class="orderedlist"><ol type="1"><li><p>xs:string: D</p></li></ol></div></div></body></html>
