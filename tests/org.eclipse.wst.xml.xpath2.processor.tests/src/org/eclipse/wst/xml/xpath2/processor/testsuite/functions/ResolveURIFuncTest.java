@@ -71,6 +71,7 @@ public class ResolveURIFuncTest extends AbstractPsychoPathTest {
       XSModel schema = getGrammar();
 
       DynamicContext dc = setupDynamicContext(schema);
+      dc.set_base_uri("http://www.example/");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
       String actual = null;
