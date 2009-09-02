@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2009 Standards for Technology in Automotive Retail and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     David Carver - STAR - initial api and implementation bug 262765 
+ *     Jesper Moller       - bug 287369 - Support fn:codepoint-equal()
+ *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.testsuite.functions;
 
@@ -15,8 +26,8 @@ public class CodepointEqualTest extends AbstractPsychoPathTest {
    public void test_fn_codepoint_equal_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AllStringFunc/CompStringFunc/CodepointEqualFunc/fn-codepoint-equal-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AllStringFunc/CompStringFunc/CodepointEqualFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      
+      String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
