@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moeller - bug 282096 - clean up string storage
+ *     Jesper S Moller      - Bug 281938 - no matches should return full input 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -112,7 +113,7 @@ public class FnTokenize extends AbstractRegExFunction {
 			startpos = matcher.end();
 			tokens.add(token);
 		}
-		if (startpos > 0 && startpos < endpos) {
+		if (startpos < endpos) {
 			String token = src.substring(startpos, endpos);
 			tokens.add(token);
 		}
