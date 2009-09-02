@@ -12,6 +12,7 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -279,7 +280,7 @@ public class XSGMonth extends CalendarType implements CmpEq {
 	 *         otherwise
 	 * @throws DynamicError
 	 */
-	public boolean eq(AnyType arg) throws DynamicError {
+	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError {
 		XSGMonth val = (XSGMonth) NumericType.get_single_type(arg,
 				XSGMonth.class);
 

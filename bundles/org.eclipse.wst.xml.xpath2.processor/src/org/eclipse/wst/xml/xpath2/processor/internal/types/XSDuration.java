@@ -14,6 +14,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigInteger;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -229,7 +230,7 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 	 * @return True if they both represent the duration of time. False otherwise
 	 * @throws DynamicError
 	 */
-	public boolean eq(AnyType arg) throws DynamicError {
+	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError {
 		XSDuration val = (XSDuration) NumericType.get_single_type(arg,
 				XSDuration.class);
 
@@ -245,7 +246,7 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 	 *         stored. False otherwise
 	 * @throws DynamicError
 	 */
-	public boolean lt(AnyType arg) throws DynamicError {
+	public boolean lt(AnyType arg, DynamicContext context) throws DynamicError {
 		XSDuration val = (XSDuration) NumericType.get_single_type(arg,
 				XSDayTimeDuration.class);
 
@@ -261,7 +262,7 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 	 *         stored. False otherwise
 	 * @throws DynamicError
 	 */
-	public boolean gt(AnyType arg) throws DynamicError {
+	public boolean gt(AnyType arg, DynamicContext context) throws DynamicError {
 		XSDuration val = (XSDuration) NumericType.get_single_type(arg,
 				XSDayTimeDuration.class);
 

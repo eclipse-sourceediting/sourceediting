@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Moller - bug 280555 - Add pluggable collation support
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -14,6 +15,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.function;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -48,7 +50,7 @@ public class FnDistinctValues extends Function {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return distinct_values(args);
+		return distinct_values(args, dynamic_context());
 	}
 
 	/**
@@ -62,7 +64,7 @@ public class FnDistinctValues extends Function {
 	 *             Dynamic error.
 	 * @return Result of operation.
 	 */
-	private static boolean contains(ResultSequence rs, AnyAtomicType item)
+	private static boolean contains(ResultSequence rs, AnyAtomicType item, DynamicContext context)
 			throws DynamicError {
 		if (!(item instanceof CmpEq))
 			return false;
@@ -75,7 +77,7 @@ public class FnDistinctValues extends Function {
 
 			CmpEq cmp = (CmpEq) at;
 
-			if (cmp.eq(item))
+			if (cmp.eq(item, context))
 				return true;
 
 		}
@@ -91,7 +93,7 @@ public class FnDistinctValues extends Function {
 	 *             Dynamic error.
 	 * @return Result of fn:distinct-values operation.
 	 */
-	public static ResultSequence distinct_values(Collection args)
+	public static ResultSequence distinct_values(Collection args, DynamicContext context)
 			throws DynamicError {
 
 		assert args.size() == 1;
@@ -109,7 +111,7 @@ public class FnDistinctValues extends Function {
 			if (!(at instanceof AnyAtomicType))
 				DynamicError.throw_type_error();
 
-			if (!contains(rs, (AnyAtomicType) at))
+			if (!contains(rs, (AnyAtomicType) at, context))
 				rs.add(at);
 		}
 

@@ -8,10 +8,12 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
+ *     Jesper Moller - bug 280555 - Add pluggable collation support
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
@@ -43,7 +45,7 @@ public class FsLt extends Function {
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 
-		return fs_lt_value(args);
+		return fs_lt_value(args, dynamic_context());
 	}
 
 	/**
@@ -51,13 +53,15 @@ public class FsLt extends Function {
 	 * 
 	 * @param args
 	 *            input arguments.
+	 * @param context 
+	 *             Dynamic context
 	 * @throws DynamicError
 	 *             Dynamic error.
 	 * @return Result of the operation.
 	 */
-	public static ResultSequence fs_lt_value(Collection args)
+	public static ResultSequence fs_lt_value(Collection args, DynamicContext context)
 			throws DynamicError {
-		return FsEq.do_cmp_value_op(args, CmpLt.class, "lt");
+		return FsEq.do_cmp_value_op(args, CmpLt.class, "lt", context);
 	}
 
 	/**
@@ -65,12 +69,14 @@ public class FsLt extends Function {
 	 * 
 	 * @param args
 	 *            input arguments.
+	 * @param dc 
+	 *             The dynamic context
 	 * @throws DynamicError
 	 *             Dynamic error.
 	 * @return Result of the operation.
 	 */
-	public static ResultSequence fs_lt_general(Collection args)
+	public static ResultSequence fs_lt_general(Collection args, DynamicContext dc)
 			throws DynamicError {
-		return FsEq.do_cmp_general_op(args, FsLt.class, "fs_lt_value");
+		return FsEq.do_cmp_general_op(args, FsLt.class, "fs_lt_value", dc);
 	}
 }

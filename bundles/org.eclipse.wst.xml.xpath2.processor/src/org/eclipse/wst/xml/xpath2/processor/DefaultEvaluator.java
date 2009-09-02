@@ -11,6 +11,7 @@
  *     Jesper Steen Moeller - bug 285145 - check arguments to op:to
  *     Jesper Steen Moeller - bug 262765 - fixed node state iteration
  *     Jesper Steen Moller  - bug 275610 - Avoid big time and memory overhead for externals
+ *     Jesper Steen Moller  - bug 280555 - Add pluggable collation support
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -465,40 +466,40 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 
 			switch (cmpex.type()) {
 			case CmpExpr.EQ:
-				return FsEq.fs_eq_value(args);
+				return FsEq.fs_eq_value(args, _dc);
 
 			case CmpExpr.NE:
-				return FsNe.fs_ne_value(args);
+				return FsNe.fs_ne_value(args, _dc);
 
 			case CmpExpr.GT:
-				return FsGt.fs_gt_value(args);
+				return FsGt.fs_gt_value(args, _dc);
 
 			case CmpExpr.LT:
-				return FsLt.fs_lt_value(args);
+				return FsLt.fs_lt_value(args, _dc);
 
 			case CmpExpr.GE:
-				return FsGe.fs_ge_value(args);
+				return FsGe.fs_ge_value(args, _dc);
 
 			case CmpExpr.LE:
-				return FsLe.fs_le_value(args);
+				return FsLe.fs_le_value(args, _dc);
 
 			case CmpExpr.EQUALS:
-				return FsEq.fs_eq_general(args);
+				return FsEq.fs_eq_general(args, _dc);
 
 			case CmpExpr.NOTEQUALS:
-				return FsNe.fs_ne_general(args);
+				return FsNe.fs_ne_general(args, _dc);
 
 			case CmpExpr.GREATER:
-				return FsGt.fs_gt_general(args);
+				return FsGt.fs_gt_general(args, _dc);
 
 			case CmpExpr.LESSTHAN:
-				return FsLt.fs_lt_general(args);
+				return FsLt.fs_lt_general(args, _dc);
 
 			case CmpExpr.GREATEREQUAL:
-				return FsGe.fs_ge_general(args);
+				return FsGe.fs_ge_general(args, _dc);
 
 			case CmpExpr.LESSEQUAL:
-				return FsLe.fs_le_general(args);
+				return FsLe.fs_le_general(args, _dc);
 
 			case CmpExpr.IS:
 			case CmpExpr.LESS_LESS:
@@ -1775,7 +1776,7 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 			if (at instanceof NumericType) {
 				try {
 					_g_xsint.set_int(BigInteger.valueOf(_dc.context_position()));
-					return FsEq.fs_eq_fast(at, _g_xsint);
+					return FsEq.fs_eq_fast(at, _g_xsint, _dc);
 				} catch (DynamicError err) {
 					report_error(err);
 

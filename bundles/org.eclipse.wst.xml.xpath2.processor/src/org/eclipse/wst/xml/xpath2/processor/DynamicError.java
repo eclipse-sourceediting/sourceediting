@@ -12,6 +12,7 @@
  *     Jesper Steen Moeller - bug 28149 - add more fn:error info
  *     Jesper Steen Moller  - bug 281159 - fix document loading and resolving URIs 
  *     Jesper Steen Moller  - Bug 286062 - Add FOAR0002  
+ *     Jesper Steen Moller  - bug 280555 - Add pluggable collation support
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -199,7 +200,25 @@ public class DynamicError extends XPathException {
 
 		return new DynamicError("FOCH0001", error);
 	}
-	
+
+	/**
+	 * Returns the dynamic error for an unsupported normalization form
+	 * 
+	 * @param collationName
+	 *            is the error
+	 * @return the DynamicError.
+	 * @since 1.1
+	 * 
+	 */
+	public static DynamicError unsupported_collation(String collationName) {
+		String error = "Unsupported collation URI. ";
+
+		if (collationName != null)
+			error += " " + collationName;
+
+		return new DynamicError("FOCH0002", error);
+	}
+
 	/**
 	 * Returns the dynamic error for an unsupported normalization form
 	 * 

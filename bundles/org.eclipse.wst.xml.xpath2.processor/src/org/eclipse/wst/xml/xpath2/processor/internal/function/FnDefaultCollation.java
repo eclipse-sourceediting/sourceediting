@@ -8,6 +8,7 @@
  * Contributors:
  *     David Carver (STAR) - initial API and implementation
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
+ *     Jesper Steen Moeller - bug 280555 - Add pluggable collation support
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
@@ -17,7 +18,6 @@ import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
 
 /**
@@ -43,8 +43,6 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
  */
 public class FnDefaultCollation extends Function {
 
-	private static final String DEFAULT_COLLATION = "http://www.w3.org/2005/xpath-functions/collation/codepoint";
-
 	public FnDefaultCollation() {
 		super(new QName("default-collation"), 0);
 	}
@@ -53,7 +51,7 @@ public class FnDefaultCollation extends Function {
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 		ResultSequence rs = ResultSequenceFactory.create_new();
-		rs.add(new XSString(DEFAULT_COLLATION));
+		rs.add(new XSString(dynamic_context().default_collation_name()));
 		return rs;
 	}
 

@@ -20,6 +20,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -189,15 +190,15 @@ public class XSDecimal extends NumericType {
 	// comparisons
 	/**
 	 * Equality comparison between this number and the supplied representation.
-	 * 
-	 * 
 	 * @param at
 	 *            Representation to be compared with (must currently be of type
 	 *            XSDecimal)
+	 * 
+	 * 
 	 * @return True if the 2 representation represent the same number. False
 	 *         otherwise
 	 */
-	public boolean eq(AnyType at) throws DynamicError {
+	public boolean eq(AnyType at, DynamicContext context) throws DynamicError {
 		
 		ResultSequence rs = ResultSequenceFactory.create_new(at);
 		
@@ -221,7 +222,7 @@ public class XSDecimal extends NumericType {
 	 * @return True if the supplied type represents a number smaller than this
 	 *         one stored. False otherwise
 	 */
-	public boolean gt(AnyType arg) throws DynamicError {
+	public boolean gt(AnyType arg, DynamicContext context) throws DynamicError {
 		AnyType carg = convertArg(arg);
 		
 		XSDecimal val = (XSDecimal) get_single_type(carg, XSDecimal.class);
@@ -244,7 +245,7 @@ public class XSDecimal extends NumericType {
 	 * @return True if the supplied type represents a number greater than this
 	 *         one stored. False otherwise
 	 */
-	public boolean lt(AnyType arg) throws DynamicError {
+	public boolean lt(AnyType arg, DynamicContext context) throws DynamicError {
 		AnyType carg = convertArg(arg);
 		XSDecimal val = (XSDecimal) get_single_type(carg, XSDecimal.class);
 		return (_value.compareTo(val.getValue()) == -1);

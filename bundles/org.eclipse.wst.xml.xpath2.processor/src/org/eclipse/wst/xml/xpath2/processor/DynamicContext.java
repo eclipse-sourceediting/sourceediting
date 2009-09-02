@@ -12,21 +12,30 @@
  *     Jesper Moller- bug 281159 - fix document loading and resolving URIs 
  *     Jesper Moller- bug 286452 - always return the stable date/time from dynamic context
  *     Jesper Moller- bug 275610 - Avoid big time and memory overhead for externals
+ *     Jesper Moller- bug 280555 - Add pluggable collation support
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
 
-import org.eclipse.wst.xml.xpath2.processor.internal.Focus;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
-
 import java.net.URI;
-import java.util.*;
-import org.w3c.dom.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.GregorianCalendar;
+
+import org.eclipse.wst.xml.xpath2.processor.internal.Focus;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
 
 /**
  * Interface for dynamic context.
  */
 public interface DynamicContext extends StaticContext {
+
+	/**
+	 * The default collation which is guaranteed to always be implemented
+	 */
+	public static final String CODEPOINT_COLLATION = "http://www.w3.org/2005/xpath-functions/collation/codepoint";
 
 	/**
 	 * Get context item.
@@ -138,6 +147,20 @@ public interface DynamicContext extends StaticContext {
 	 * @return Focus
 	 */
 	public Focus focus();
-
+	
+	/**
+	 * Return a useful collator for the specified URI
+	 * 
+	 * @param uri
+	 * @return A Jaa collator, or null, if no such Collator exists 
+	 */
+	public Comparator<Object> get_collation(String uri); 
+	
+	/**
+	 * Returns the current default collator
+	 * 
+	 * @return The default name to use as the collator
+	 */
+	public String default_collation_name();
 
 }

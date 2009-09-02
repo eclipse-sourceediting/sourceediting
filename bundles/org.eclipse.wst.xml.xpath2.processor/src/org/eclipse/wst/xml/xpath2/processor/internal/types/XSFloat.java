@@ -22,6 +22,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -194,14 +195,14 @@ public class XSFloat extends NumericType {
 
 	/**
 	 * Equality comparison between this number and the supplied representation.
-	 * 
 	 * @param aa
 	 *            The datatype to compare with
+	 * 
 	 * @return True if the two representations are of the same number. False
 	 *         otherwise
 	 * @throws DynamicError
 	 */
-	public boolean eq(AnyType aa) throws DynamicError {
+	public boolean eq(AnyType aa, DynamicContext context) throws DynamicError {
 		AnyType carg = convertArg(aa);
 		if (!(carg instanceof XSFloat))
 			DynamicError.throw_type_error();
@@ -220,7 +221,7 @@ public class XSFloat extends NumericType {
 	 *         one stored. False otherwise
 	 * @throws DynamicError
 	 */
-	public boolean gt(AnyType arg) throws DynamicError {
+	public boolean gt(AnyType arg, DynamicContext context) throws DynamicError {
 		AnyType carg = convertArg(arg);
 		XSFloat val = (XSFloat) get_single_type(carg, XSFloat.class);
 		return float_value() > val.float_value();
@@ -235,7 +236,7 @@ public class XSFloat extends NumericType {
 	 *         one stored. False otherwise
 	 * @throws DynamicError
 	 */
-	public boolean lt(AnyType arg) throws DynamicError {
+	public boolean lt(AnyType arg, DynamicContext context) throws DynamicError {
 		AnyType carg = convertArg(arg);
 		XSFloat val = (XSFloat) get_single_type(carg, XSFloat.class);
 		return float_value() < val.float_value();

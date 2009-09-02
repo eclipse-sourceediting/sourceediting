@@ -20,6 +20,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -292,7 +293,7 @@ public class XSInteger extends XSDecimal {
 	 * (non-Javadoc)
 	 * @see org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal#gt(org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType)
 	 */
-	public boolean gt(AnyType arg) throws DynamicError {
+	public boolean gt(AnyType arg, DynamicContext context) throws DynamicError {
 		AnyType carg = convertArg(arg);
         XSInteger val = (XSInteger) get_single_type(carg, XSInteger.class);
         
@@ -312,7 +313,7 @@ public class XSInteger extends XSDecimal {
 	 * (non-Javadoc)
 	 * @see org.eclipse.wst.xml.xpath2.processor.internal.types.XSDecimal#lt(org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType)
 	 */
-	public boolean lt(AnyType arg) throws DynamicError {
+	public boolean lt(AnyType arg, DynamicContext context) throws DynamicError {
 		AnyType carg = convertArg(arg);
         XSInteger val = (XSInteger) get_single_type(carg, XSInteger.class);
         

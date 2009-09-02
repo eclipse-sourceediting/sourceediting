@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Moller - bug 280555 - Add pluggable collation support
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -15,6 +16,7 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -46,7 +48,7 @@ public class FnIndexOf extends Function {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return index_of(args);
+		return index_of(args, dynamic_context());
 	}
 
 	/**
@@ -73,11 +75,12 @@ public class FnIndexOf extends Function {
 	 * 
 	 * @param args
 	 *            Result from the expressions evaluation.
+	 * @param dynamicContext 
 	 * @throws DynamicError
 	 *             Dynamic error.
 	 * @return Result of fn:index-of operation.
 	 */
-	public static ResultSequence index_of(Collection args) throws DynamicError {
+	public static ResultSequence index_of(Collection args, DynamicContext dynamicContext) throws DynamicError {
 
 		assert args.size() == 2;
 
@@ -101,7 +104,7 @@ public class FnIndexOf extends Function {
 		for (Iterator i = arg1.iterator(); i.hasNext();) {
 			CmpEq candidate = get_comparable((AnyType) i.next());
 
-			if (candidate.eq(at))
+			if (candidate.eq(at, dynamicContext))
 				rs.add(new XSInteger(BigInteger.valueOf(index)));
 
 			index++;

@@ -7,10 +7,12 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Moller - bug 280555 - Add pluggable collation support
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -49,7 +51,7 @@ public class FnDeepEqual extends Function {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return deep_equal(args);
+		return deep_equal(args, dynamic_context());
 	}
 
 	/**
@@ -57,11 +59,13 @@ public class FnDeepEqual extends Function {
 	 * 
 	 * @param args
 	 *            Result from the expressions evaluation.
+	 * @param context
+	 *            Dynamic context
 	 * @throws DynamicError
 	 *             Dynamic error.
 	 * @return Result of fn:deep-equal operation.
 	 */
-	public static ResultSequence deep_equal(Collection args)
+	public static ResultSequence deep_equal(Collection args, DynamicContext context)
 			throws DynamicError {
 
 		assert args.size() == 2;
@@ -71,7 +75,7 @@ public class FnDeepEqual extends Function {
 		ResultSequence arg1 = (ResultSequence) citer.next();
 		ResultSequence arg2 = (ResultSequence) citer.next();
 
-		boolean result = deep_equal(arg1, arg2);
+		boolean result = deep_equal(arg1, arg2, context);
 
 		return ResultSequenceFactory.create_new(new XSBoolean(result));
 	}
@@ -83,9 +87,11 @@ public class FnDeepEqual extends Function {
 	 *            input1 xpath expression/variable.
 	 * @param two
 	 *            input2 xpath expression/variable.
+	 * @param context
+	 *            Current dynamic context 
 	 * @return Result of fn:deep-equal operation.
 	 */
-	public static boolean deep_equal(ResultSequence one, ResultSequence two) {
+	public static boolean deep_equal(ResultSequence one, ResultSequence two, DynamicContext context) {
 		if (one.empty() && two.empty())
 			return true;
 
@@ -99,7 +105,7 @@ public class FnDeepEqual extends Function {
 			AnyType a = (AnyType) onei.next();
 			AnyType b = (AnyType) twoi.next();
 
-			if (!deep_equal(a, b))
+			if (!deep_equal(a, b, context))
 				return false;
 		}
 		return true;
@@ -112,17 +118,18 @@ public class FnDeepEqual extends Function {
 	 *            input1 xpath expression/variable.
 	 * @param two
 	 *            input2 xpath expression/variable.
+	 * @param context 
 	 * @return Result of fn:deep-equal operation.
 	 */
-	public static boolean deep_equal(AnyType one, AnyType two) {
+	public static boolean deep_equal(AnyType one, AnyType two, DynamicContext context) {
 		if ((one instanceof AnyAtomicType) && (two instanceof AnyAtomicType))
-			return deep_equal((AnyAtomicType) one, (AnyAtomicType) two);
+			return deep_equal((AnyAtomicType) one, (AnyAtomicType) two, context);
 
 		else if (((one instanceof AnyAtomicType) && (two instanceof NodeType))
 				|| ((one instanceof NodeType) && (two instanceof AnyAtomicType)))
 			return false;
 		else if ((one instanceof NodeType) && (two instanceof NodeType))
-			return deep_equal((NodeType) one, (NodeType) two);
+			return deep_equal((NodeType) one, (NodeType) two, context);
 		else {
 			assert false;
 			return false;
@@ -138,7 +145,7 @@ public class FnDeepEqual extends Function {
 	 *            input2 xpath expression/variable.
 	 * @return Result of fn:deep-equal operation.
 	 */
-	public static boolean deep_equal(AnyAtomicType one, AnyAtomicType two) {
+	public static boolean deep_equal(AnyAtomicType one, AnyAtomicType two, DynamicContext context) {
 		if (!(one instanceof CmpEq))
 			return false;
 		if (!(two instanceof CmpEq))
@@ -147,7 +154,7 @@ public class FnDeepEqual extends Function {
 		CmpEq a = (CmpEq) one;
 
 		try {
-			if (a.eq(two))
+			if (a.eq(two, context))
 				return true;
 			return false;
 		} catch (DynamicError err) {
@@ -164,7 +171,7 @@ public class FnDeepEqual extends Function {
 	 *            input2 xpath expression/variable.
 	 * @return Result of fn:deep-equal operation.
 	 */
-	public static boolean deep_equal(NodeType one, NodeType two) {
+	public static boolean deep_equal(NodeType one, NodeType two, DynamicContext context) {
 		Node a = one.node_value();
 		Node b = two.node_value();
 

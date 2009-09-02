@@ -7,10 +7,12 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Moller - bug 280555 - Add pluggable collation support
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -44,7 +46,7 @@ public class FnMax extends Function {
 	 */
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
-		return max(args);
+		return max(args, dynamic_context());
 	}
 
 	/**
@@ -52,11 +54,13 @@ public class FnMax extends Function {
 	 * 
 	 * @param args
 	 *            Result from the expressions evaluation.
+	 * @param context 
+	 *            Relevant dynamic context
 	 * @throws DynamicError
 	 *             Dynamic error.
 	 * @return Result of fn:max operation.
 	 */
-	public static ResultSequence max(Collection args) throws DynamicError {
+	public static ResultSequence max(Collection args, DynamicContext context) throws DynamicError {
 
 		// XXX fix this
 		ResultSequence arg = get_arg(args, CmpGt.class);
@@ -76,7 +80,7 @@ public class FnMax extends Function {
 			if (max == null)
 				max = item;
 			else {
-				boolean res = item.gt((AnyType) max);
+				boolean res = item.gt((AnyType) max, context);
 
 				if (res)
 					max = item;

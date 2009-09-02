@@ -22,6 +22,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Iterator;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -241,15 +242,15 @@ public class XSDouble extends NumericType {
 
 	/**
 	 * Equality comparison between this number and the supplied representation.
-	 * 
 	 * @param aa
 	 *            Representation to be compared with (must currently be of type
 	 *            XSDouble)
+	 * 
 	 * @return True if the 2 representations represent the same number. False
 	 *         otherwise
 	 * @since 1.1
 	 */
-	public boolean eq(AnyType aa) throws DynamicError {
+	public boolean eq(AnyType aa, DynamicContext context) throws DynamicError {
 		ResultSequence rs = ResultSequenceFactory.create_new(aa);
 		ResultSequence crs = constructor(rs);
 		
@@ -272,7 +273,7 @@ public class XSDouble extends NumericType {
 	 * @return True if the supplied type represents a number smaller than this
 	 *         one stored. False otherwise
 	 */
-	public boolean gt(AnyType arg) throws DynamicError {
+	public boolean gt(AnyType arg, DynamicContext context) throws DynamicError {
 		AnyType carg = convertArg(arg);
 		
 		XSDouble val = (XSDouble) get_single_type(carg, XSDouble.class);
@@ -297,7 +298,7 @@ public class XSDouble extends NumericType {
 	 * @return True if the supplied type represents a number greater than this
 	 *         one stored. False otherwise
 	 */
-	public boolean lt(AnyType arg) throws DynamicError {
+	public boolean lt(AnyType arg, DynamicContext context) throws DynamicError {
 		AnyType carg = convertArg(arg);
 
 		XSDouble val = (XSDouble) get_single_type(carg, XSDouble.class);

@@ -9,16 +9,21 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - improved comparison of xs:string with other XDM types
  *  Jesper S Moller - bug 286061   correct handling of quoted string 
+ *  Jesper S Moller - bug 280555 - Add pluggable collation support
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import java.math.BigInteger;
+
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
-
-import java.util.*;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpEq;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpGt;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.CmpLt;
+import org.eclipse.wst.xml.xpath2.processor.internal.function.FnCompare;
 
 /**
  * A representation of the String datatype
@@ -112,21 +117,17 @@ public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 	// comparisons
 
 	// 666 indicates death [compare returned empty seq]
-	private int do_compare(AnyType arg) throws DynamicError {
-		Collection args = new ArrayList();
+	private int do_compare(AnyType arg, DynamicContext dc) throws DynamicError {
 
-		ResultSequence rs = ResultSequenceFactory.create_new(this);
-		args.add(rs);
-		args.add(ResultSequenceFactory.create_new(new 
-				                       XSString(arg.string_value())));
-		rs = FnCompare.compare(args);
+		ResultSequence rs = ResultSequenceFactory.create_new();
+		// XXX: This can't happen, I guess
+		if (arg == null) return 666;
 
-		if (rs.empty())
-			return 666;
+		XSString comparand = arg instanceof XSString ? (XSString)arg : new XSString(arg.string_value());
+		
+		BigInteger result = FnCompare.compare_string(dc.default_collation_name(), this, comparand, dc);
 
-		XSInteger i = (XSInteger) rs.first();
-
-		return i.int_value().intValue();
+		return result.intValue();
 	}
 
 	/**
@@ -139,8 +140,8 @@ public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 *         otherwise
 	 * @throws DynamicError
 	 */
-	public boolean eq(AnyType arg) throws DynamicError {
-		int cmp = do_compare(arg);
+	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError {
+		int cmp = do_compare(arg, context);
 
 		// XXX im not sure what to do here!!! because eq has to return
 		// something i fink....
@@ -160,8 +161,8 @@ public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 *         supplied. False otherwise
 	 * @throws DynamicError
 	 */
-	public boolean gt(AnyType arg) throws DynamicError {
-		int cmp = do_compare(arg);
+	public boolean gt(AnyType arg, DynamicContext context) throws DynamicError {
+		int cmp = do_compare(arg, context);
 
 		assert cmp != 666;
 
@@ -178,8 +179,8 @@ public class XSString extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 *         False otherwise
 	 * @throws DynamicError
 	 */
-	public boolean lt(AnyType arg) throws DynamicError {
-		int cmp = do_compare(arg);
+	public boolean lt(AnyType arg, DynamicContext context) throws DynamicError {
+		int cmp = do_compare(arg, context);
 
 		assert cmp != 666;
 

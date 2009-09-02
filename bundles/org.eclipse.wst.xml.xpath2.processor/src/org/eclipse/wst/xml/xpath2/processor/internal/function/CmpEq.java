@@ -7,10 +7,12 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
+ *     Jesper Moller - bug 280555 - Add pluggable collation support
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
@@ -24,9 +26,10 @@ public interface CmpEq {
 	 * 
 	 * @param arg
 	 *            argument of any type.
+	 * @param context TODO
 	 * @throws DynamicError
 	 *             Dynamic error.
 	 * @return Result of operation, true/false.
 	 */
-	public boolean eq(AnyType arg) throws DynamicError;
+	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError;
 }

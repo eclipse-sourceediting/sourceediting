@@ -12,10 +12,12 @@
  *     David Carver - bug 262765 - fixed comparison on sequence range values.
  *     Jesper S Moller - bug 283214 - fix eq for untyped atomic values
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
+ *     Jesper Steen Moeller - bug 280555 - Add pluggable collation support
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -49,7 +51,7 @@ public class FsEq extends Function {
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 
-		return fs_eq_value(args);
+		return fs_eq_value(args, dynamic_context());
 	}
 
 	/**
@@ -100,9 +102,9 @@ public class FsEq extends Function {
 	 *             Dynamic error.
 	 * @return Result of conversion.
 	 */
-	public static ResultSequence fs_eq_value(Collection args)
+	public static ResultSequence fs_eq_value(Collection args, DynamicContext dynamicContext)
 			throws DynamicError {
-		return do_cmp_value_op(args, CmpEq.class, "eq");
+		return do_cmp_value_op(args, CmpEq.class, "eq", dynamicContext);
 	}
 
 	/**
@@ -116,7 +118,7 @@ public class FsEq extends Function {
 	 *             Dynamic error.
 	 * @return Result of Equality operation.
 	 */
-	public static boolean fs_eq_fast(AnyType one, AnyType two)
+	public static boolean fs_eq_fast(AnyType one, AnyType two, DynamicContext dynamicContext)
 			throws DynamicError {
 
 		one = FnData.atomize(one);
@@ -133,7 +135,7 @@ public class FsEq extends Function {
 
 		CmpEq cmpone = (CmpEq) one;
 
-		return cmpone.eq(two);
+		return cmpone.eq(two, dynamicContext);
 	}
 
 	/**
@@ -143,12 +145,14 @@ public class FsEq extends Function {
 	 *            input1 of any type.
 	 * @param b
 	 *            input2 of any type.
+	 * @param dc
+	 *              Dynamic Context
 	 * @throws DynamicError
 	 *             Dynamic error.
 	 * @return Result of Equality operation.
 	 */
 	private static boolean do_general_pair(AnyType a, AnyType b,
-			Method comparator) throws DynamicError {
+			Method comparator, DynamicContext dc) throws DynamicError {
 
 		// section 3.5.2
 
@@ -201,7 +205,7 @@ public class FsEq extends Function {
 		args.add(one);
 		args.add(two);
 
-		Object margs[] = { args };
+		Object margs[] = { args, dc };
 
 		ResultSequence result = null;
 		try {
@@ -229,13 +233,15 @@ public class FsEq extends Function {
 	 * 
 	 * @param args
 	 *            input arguments.
+	 * @param dc
+	 *         Dynamic context 
 	 * @throws DynamicError
 	 *             Dynamic error.
 	 * @return Result of general equality operation.
 	 */
-	public static ResultSequence fs_eq_general(Collection args)
+	public static ResultSequence fs_eq_general(Collection args, DynamicContext dc)
 			throws DynamicError {
-		return do_cmp_general_op(args, FsEq.class, "fs_eq_value");
+		return do_cmp_general_op(args, FsEq.class, "fs_eq_value", dc);
 	}
 
 	// voodoo 3
@@ -253,18 +259,18 @@ public class FsEq extends Function {
 	 * @return Result of the operation.
 	 */
 	public static ResultSequence do_cmp_general_op(Collection args, Class type,
-			String mname) throws DynamicError {
+			String mname, DynamicContext dc) throws DynamicError {
 
 		// do the voodoo
 		Method comparator = null;
 
 		try {
-			Class margsdef[] = { Collection.class };
+			Class margsdef[] = { Collection.class, DynamicContext.class };
 
 			comparator = type.getMethod(mname, margsdef);
 
 		} catch (NoSuchMethodException err) {
-			assert false;
+			throw new RuntimeException("Can¿'t find method : " + mname, err);
 		}
 
 		// sanity check args and get them
@@ -290,7 +296,7 @@ public class FsEq extends Function {
 			for (Iterator j = two.iterator(); j.hasNext();) {
 				AnyType b = (AnyType) j.next();
 
-				if (do_general_pair(a, b, comparator))
+				if (do_general_pair(a, b, comparator, dc))
 					return ResultSequenceFactory
 							.create_new(new XSBoolean(true));
 			}
@@ -309,12 +315,14 @@ public class FsEq extends Function {
 	 *            type of the arguments.
 	 * @param mname
 	 *            Method name for template simulation.
+	 * @param dynamicContext 
+	 *             Dynamic error.
 	 * @throws DynamicError
 	 *             Dynamic error.
 	 * @return Result of the operation.
 	 */
 	public static ResultSequence do_cmp_value_op(Collection args, Class type,
-			String mname) throws DynamicError {
+			String mname, DynamicContext dynamicContext) throws DynamicError {
 
 		// sanity check args + convert em
 		if (args.size() != 2)
@@ -339,29 +347,29 @@ public class FsEq extends Function {
 			DynamicError.throw_type_error();
 
 		try {
-			Class margsdef[] = { AnyType.class };
+			Class margsdef[] = { AnyType.class, DynamicContext.class };
 			Method method = null;
 
 			method = type.getMethod(mname, margsdef);
 
-			Object margs[] = { arg2.first() };
+			Object margs[] = { arg2.first(), dynamicContext };
 			Boolean cmpres = (Boolean) method.invoke(arg, margs);
 
 			return ResultSequenceFactory.create_new(new XSBoolean(cmpres
 					.booleanValue()));
 		} catch (NoSuchMethodException err) {
 			assert false;
+			throw new RuntimeException("cannot compare using method " + mname, err);
 		} catch (IllegalAccessException err) {
 			assert false;
+			throw new RuntimeException("cannot compare using method " + mname, err);
 		} catch (InvocationTargetException err) {
 			Throwable ex = err.getTargetException();
 
 			if (ex instanceof DynamicError)
 				throw (DynamicError) ex;
 
-			ex.printStackTrace();
-			System.exit(1);
+			throw new RuntimeException("cannot compare using method " + mname, ex);
 		}
-		return null; // unreach!
 	}
 }

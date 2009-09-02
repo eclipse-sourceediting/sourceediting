@@ -13,6 +13,7 @@
  *     Jesper Moller- bug 281159 - fix document loading and resolving URIs 
  *     Jesper Moller- bug 286452 - always return the stable date/time from dynamic context
  *     Jesper Moller- bug 275610 - Avoid big time and memory overhead for externals
+ *     Jesper Moller- bug 280555 - Add pluggable collation support
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor;
@@ -23,6 +24,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.Focus;
 import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
+import java.text.Collator;
 import java.util.*;
 
 import org.w3c.dom.*;
@@ -44,6 +46,8 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 	private XSDuration _tz;
 	private Map _loaded_documents;
 	private GregorianCalendar _current_date_time;
+	private String _default_collation_name = CODEPOINT_COLLATION;
+	private CollationProvider _collation_provider;
 
 	/**
 	 * Constructor.
@@ -242,4 +246,30 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 		super.set_variable(var, val);
 	}
 
+	public void set_default_collation(String _default_collation) {
+		this._default_collation_name = _default_collation;
+	}
+
+	public String default_collation_name() {
+		return _default_collation_name;
+	}
+
+	// We are explicitly NOT using generics here, in anticipation of JDK1.4 compatibility
+	private static Comparator CODEPOINT_COMPARATOR = new Comparator() {
+		
+		public int compare(Object o1, Object o2) {
+			return ((String)o1).compareTo((String)o2);
+		}
+	};
+	
+	public Comparator<Object> get_collation(String uri) {
+		if (CODEPOINT_COLLATION.equals(uri)) return CODEPOINT_COMPARATOR;
+		
+		return _collation_provider != null ? _collation_provider.get_collation(uri) : null;
+	}
+	
+	public void set_collation_provider(CollationProvider provider) {
+		this._collation_provider = provider;
+	}
+	
 }

@@ -17,6 +17,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigDecimal;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -277,7 +278,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 * @return True if they both represent the duration of time. False otherwise
 	 * @throws DynamicError
 	 */
-	public boolean eq(AnyType arg) throws DynamicError {
+	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError {
 		if (arg instanceof XSDayTimeDuration) {
 			XSDayTimeDuration dayTimeDuration = (XSDayTimeDuration)arg;
 			return (monthValue() == 0 && dayTimeDuration.value() == 0.0);
@@ -287,7 +288,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 		}
 		XSDuration val = (XSDuration) NumericType
 				.get_single_type(arg, XSDuration.class);
-		return super.eq(val);
+		return super.eq(val, context);
 	}
 
 	/**
@@ -299,7 +300,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 *         stored. False otherwise
 	 * @throws DynamicError
 	 */
-	public boolean lt(AnyType arg) throws DynamicError {
+	public boolean lt(AnyType arg, DynamicContext context) throws DynamicError {
 		XSYearMonthDuration val = (XSYearMonthDuration) NumericType
 				.get_single_type(arg, XSYearMonthDuration.class);
 
@@ -315,7 +316,7 @@ public class XSYearMonthDuration extends XSDuration implements CmpEq, CmpLt,
 	 *         stored. False otherwise
 	 * @throws DynamicError
 	 */
-	public boolean gt(AnyType arg) throws DynamicError {
+	public boolean gt(AnyType arg, DynamicContext context) throws DynamicError {
 		XSYearMonthDuration val = (XSYearMonthDuration) NumericType
 				.get_single_type(arg, XSYearMonthDuration.class);
 

@@ -14,6 +14,7 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -335,7 +336,7 @@ Cloneable {
 	 * @return True if both XSTime's represent the same time. False otherwise
 	 * @throws DynamicError
 	 */
-	public boolean eq(AnyType arg) throws DynamicError {
+	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError {
 		XSTime val = (XSTime) NumericType.get_single_type(arg, XSTime.class);
 
 		return calendar().equals(val.calendar());
@@ -349,7 +350,7 @@ Cloneable {
 	 * @return True if the supplied time represnts a point in time after that
 	 *         represented by the time stored. False otherwise
 	 */
-	public boolean lt(AnyType arg) throws DynamicError {
+	public boolean lt(AnyType arg, DynamicContext context) throws DynamicError {
 		XSTime val = (XSTime) NumericType.get_single_type(arg, XSTime.class);
 
 		return calendar().before(val.calendar());
@@ -364,7 +365,7 @@ Cloneable {
 	 *         represented by the time stored. False otherwise
 	 * @throws DynamicError
 	 */
-	public boolean gt(AnyType arg) throws DynamicError {
+	public boolean gt(AnyType arg, DynamicContext context) throws DynamicError {
 		XSTime val = (XSTime) NumericType.get_single_type(arg, XSTime.class);
 
 		return calendar().after(val.calendar());

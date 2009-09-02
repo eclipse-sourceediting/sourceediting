@@ -15,6 +15,7 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -759,7 +760,7 @@ Cloneable {
 	 * @return True if the two dates and times are represent the same exact
 	 *         point in time. False otherwise.
 	 */
-	public boolean eq(AnyType arg) throws DynamicError {
+	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError {
 		XSDateTime val = (XSDateTime) NumericType.get_single_type(arg,
 				XSDateTime.class);
 
@@ -776,7 +777,7 @@ Cloneable {
 	 * @return True if in time, this date and time lies before the date and time
 	 *         supplied. False otherwise.
 	 */
-	public boolean lt(AnyType arg) throws DynamicError {
+	public boolean lt(AnyType arg, DynamicContext context) throws DynamicError {
 		XSDateTime val = (XSDateTime) NumericType.get_single_type(arg,
 				XSDateTime.class);
 
@@ -793,7 +794,7 @@ Cloneable {
 	 * @return True if in time, this date and time lies after the date and time
 	 *         supplied. False otherwise.
 	 */
-	public boolean gt(AnyType arg) throws DynamicError {
+	public boolean gt(AnyType arg, DynamicContext context) throws DynamicError {
 		XSDateTime val = (XSDateTime) NumericType.get_single_type(arg,
 				XSDateTime.class);
 

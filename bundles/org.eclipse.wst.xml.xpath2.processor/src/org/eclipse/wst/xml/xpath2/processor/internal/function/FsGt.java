@@ -8,10 +8,12 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Steen Moeller - bug 285145 - implement full arity checking
+ *     Jesper Steen Moeller - bug 280555 - Add pluggable collation support
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
@@ -43,7 +45,7 @@ public class FsGt extends Function {
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 
-		return fs_gt_value(args);
+		return fs_gt_value(args, dynamic_context());
 	}
 
 	/**
@@ -51,13 +53,15 @@ public class FsGt extends Function {
 	 * 
 	 * @param args
 	 *            input arguments.
+	 * @param dynamic
+	 *             Dynamic contexet
 	 * @throws DynamicError
 	 *             Dynamic error.
 	 * @return Result of the operation.
 	 */
-	public static ResultSequence fs_gt_value(Collection args)
+	public static ResultSequence fs_gt_value(Collection args, DynamicContext dynamic)
 			throws DynamicError {
-		return FsEq.do_cmp_value_op(args, CmpGt.class, "gt");
+		return FsEq.do_cmp_value_op(args, CmpGt.class, "gt", dynamic);
 	}
 
 	/**
@@ -65,13 +69,15 @@ public class FsGt extends Function {
 	 * 
 	 * @param args
 	 *            input arguments.
+	 * @param dc 
+	 *             The dynamic context
 	 * @throws DynamicError
 	 *             Dynamic error.
 	 * @return Result of the operation.
 	 */
-	public static ResultSequence fs_gt_general(Collection args)
+	public static ResultSequence fs_gt_general(Collection args, DynamicContext dc)
 			throws DynamicError {
-		return FsEq.do_cmp_general_op(args, FsGt.class, "fs_gt_value");
+		return FsEq.do_cmp_general_op(args, FsGt.class, "fs_gt_value", dc);
 	}
 
 }

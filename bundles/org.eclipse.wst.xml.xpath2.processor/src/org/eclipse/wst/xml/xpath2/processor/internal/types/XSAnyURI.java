@@ -19,6 +19,7 @@ package org.eclipse.wst.xml.xpath2.processor.internal.types;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
@@ -122,7 +123,7 @@ public class XSAnyURI extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 *         otherwise
 	 * @throws DynamicError
 	 */
-	public boolean eq(AnyType arg) throws DynamicError {
+	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError {
 		if (arg instanceof XSAnyURI || arg instanceof XSString) {
 			if (this.string_value().equals(arg.string_value())) {
 				return true;
@@ -139,7 +140,7 @@ public class XSAnyURI extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 * must be of type xs:anyURI (or, by promotion of this, xs:string)
 	 * @since 1.1
 	 */
-	public boolean gt(AnyType arg) throws DynamicError {
+	public boolean gt(AnyType arg, DynamicContext context) throws DynamicError {
 		if (!(arg instanceof XSAnyURI || arg instanceof XSString)) {
 			throw DynamicError.throw_type_error();	
 		}
@@ -159,7 +160,7 @@ public class XSAnyURI extends CtrType implements CmpEq, CmpGt, CmpLt {
 	 * 
 	 * @since 1.1
 	 */
-	public boolean lt(AnyType arg) throws DynamicError {
+	public boolean lt(AnyType arg, DynamicContext context) throws DynamicError {
 		if (!(arg instanceof XSAnyURI || arg instanceof XSString)) {
 			throw DynamicError.throw_type_error();
 		}
