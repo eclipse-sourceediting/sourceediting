@@ -26,7 +26,7 @@ public class ContextImplicitTimezoneFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextImplicitTimezoneFunc/fn-implicit-timezone-1.xq";
       String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextImplicitTimezoneFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -211,7 +211,7 @@ public class ContextImplicitTimezoneFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextImplicitTimezoneFunc/fn-implicit-timezone-6.xq";
       String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextImplicitTimezoneFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FOCA0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -359,7 +359,7 @@ public class ContextImplicitTimezoneFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextImplicitTimezoneFunc/fn-implicit-timezone-10.xq";
       String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextImplicitTimezoneFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FOCA0005";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -396,7 +396,7 @@ public class ContextImplicitTimezoneFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextImplicitTimezoneFunc/fn-implicit-timezone-11.xq";
       String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextImplicitTimezoneFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FODT0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -433,7 +433,7 @@ public class ContextImplicitTimezoneFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextImplicitTimezoneFunc/fn-implicit-timezone-12.xq";
       String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextImplicitTimezoneFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "FODT0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
