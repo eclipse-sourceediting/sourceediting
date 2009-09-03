@@ -173,7 +173,7 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 		String actual = result.string_value();
 
-		assertEquals("true", actual);
+		assertEquals("false", actual);
 	}
 
 	public void testNormalizeSpaceFunctionBug274471() throws Exception {
