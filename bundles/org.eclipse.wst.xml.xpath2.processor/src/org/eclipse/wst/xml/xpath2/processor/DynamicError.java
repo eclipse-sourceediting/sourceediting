@@ -413,4 +413,12 @@ public class DynamicError extends XPathException {
 		return make_error("FORG0002", "Invalid argument to fn:resolve-uri().", null);
 	}
 	
+	/**
+	 * Invalid Timezone value.
+	 * @return
+	 * @since 1.1
+	 */
+	public static DynamicError invalidTimezone() {
+		return make_error("FODT0003", "Invalid timezone value.", null);
+	}
 }

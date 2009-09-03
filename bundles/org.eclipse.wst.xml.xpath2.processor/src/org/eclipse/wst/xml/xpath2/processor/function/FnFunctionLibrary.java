@@ -112,11 +112,11 @@ public class FnFunctionLibrary extends FunctionLibrary {
 		add_function(new FnMinutesFromTime());
 		add_function(new FnSecondsFromTime());
 		add_function(new FnTimezoneFromTime());
-		
 		add_function(new FnDateTime());
 
-		// XXX implement timezone functs
+		// timezone functs
 		add_function(new FnImplicitTimezone());
+		add_function(new FnAdjustDateTimeToTimeZone());
 
 		// QName functs
 		add_function(new FnResolveQName());

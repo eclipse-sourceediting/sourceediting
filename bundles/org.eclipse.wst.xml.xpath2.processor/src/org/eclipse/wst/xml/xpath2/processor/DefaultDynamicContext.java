@@ -61,7 +61,7 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 		super(schema);
 
 		_focus = null;
-		_tz = new XSDayTimeDuration();
+		_tz = new XSDayTimeDuration(0, 5, 0, 0, true);
 		_loaded_documents = new HashMap();
 	}
 

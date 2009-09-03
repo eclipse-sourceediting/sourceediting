@@ -225,7 +225,7 @@ Cloneable {
 		// 3 getting fraction of seconds
 
 		double[] ret = new double[3];
-		
+
 		String token = "";
 
 		for (int i = 0; i < str.length(); i++) {
@@ -280,7 +280,7 @@ Cloneable {
 			return null;
 
 		ret[2] = Double.parseDouble(token);
-		
+
 		if (ret[0] == 24.0) {
 			ret[0] = 00.0;
 		}
@@ -500,7 +500,7 @@ Cloneable {
 			return rs;
 
 		AnyAtomicType aat = (AnyAtomicType) arg.first();
-		
+
 		if (!isCastable(aat)) {
 			throw DynamicError.cant_cast(null);
 		}
@@ -514,37 +514,36 @@ Cloneable {
 
 		return rs;
 	}
-	
+
 	private boolean isCastable(AnyAtomicType aat) {
 		if (aat instanceof XSString || aat instanceof XSUntypedAtomic) {
 			return true;
 		}
-		
+
 		if (aat instanceof XSTime) {
 			return false;
 		}
-		
+
 		if (aat instanceof XSDate || aat instanceof XSDateTime) {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	private XSDateTime castDateTime(AnyAtomicType aat) {
 		if (aat instanceof XSDate) {
 			XSDate date = (XSDate) aat;
 			return new XSDateTime(date.calendar(), date.tz());
 		}
-		
+
 		if (aat instanceof XSDateTime) {
 			XSDateTime dateTime = (XSDateTime) aat;
 			return new XSDateTime(dateTime.calendar(), dateTime.tz());
 		}
-		
+
 		return parseDateTime(aat.string_value());
 	}
-	
 
 	/**
 	 * Retrieve the year from the date stored
@@ -653,28 +652,27 @@ Cloneable {
 	@Override
 	public String string_value() {
 		String ret = "";
-		
+
 		Calendar adjustFortimezone = calendar();
 		int tzHours = 0;
 		int tzMinutes = 0;
 		if (timezoned()) {
-		   adjustFortimezone = calendar();
-		   tzHours = tz().hours();
-		   tzMinutes = tz().minutes();
-		   if (tz().negative()) {
-			   tzHours = tzHours * -1;
-			   tzMinutes = tzMinutes * -1;
-		   }
+			adjustFortimezone = calendar();
+			tzHours = tz().hours();
+			tzMinutes = tz().minutes();
+			if (tz().negative()) {
+				tzHours = tzHours * -1;
+				tzMinutes = tzMinutes * -1;
+			}
 		}
-		
+
 		if (adjustFortimezone.get(Calendar.ERA) == GregorianCalendar.BC) {
-			ret +="-";
+			ret += "-";
 		}
-		
+
 		adjustFortimezone.add(Calendar.HOUR_OF_DAY, tzHours);
 		adjustFortimezone.add(Calendar.MINUTE, tzMinutes);
 
-		
 		ret += pad_int(adjustFortimezone.get(Calendar.YEAR), 4);
 
 		ret += "-";
@@ -685,7 +683,7 @@ Cloneable {
 
 		// time
 		ret += "T";
-		
+
 		ret += pad_int(adjustFortimezone.get(Calendar.HOUR_OF_DAY), 2);
 
 		ret += ":";
@@ -709,21 +707,19 @@ Cloneable {
 			int min = _tz.minutes();
 			double secs = _tz.seconds();
 			if (hrs == 0 && min == 0 && secs == 0) {
-			  ret += "Z";
-			}
-			else {
-			  String tZoneStr = "";
-			  if (_tz.negative()) {
-				tZoneStr += "-";  
-			  }
-			  else {
-				tZoneStr += "+"; 
-			  }
-			  tZoneStr += pad_int(hrs, 2);  
-			  tZoneStr += ":";
-			  tZoneStr += pad_int(min, 2);
-			  
-			  ret += tZoneStr;
+				ret += "Z";
+			} else {
+				String tZoneStr = "";
+				if (_tz.negative()) {
+					tZoneStr += "-";
+				} else {
+					tZoneStr += "+";
+				}
+				tZoneStr += pad_int(hrs, 2);
+				tZoneStr += ":";
+				tZoneStr += pad_int(min, 2);
+
+				ret += tZoneStr;
 			}
 		}
 
