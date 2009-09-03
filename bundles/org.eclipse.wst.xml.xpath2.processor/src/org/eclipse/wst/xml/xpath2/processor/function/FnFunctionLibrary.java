@@ -117,6 +117,8 @@ public class FnFunctionLibrary extends FunctionLibrary {
 		// timezone functs
 		add_function(new FnImplicitTimezone());
 		add_function(new FnAdjustDateTimeToTimeZone());
+		add_function(new FnAdjustTimeToTimeZone());
+		add_function(new FnAdjustDateToTimeZone());
 
 		// QName functs
 		add_function(new FnResolveQName());
