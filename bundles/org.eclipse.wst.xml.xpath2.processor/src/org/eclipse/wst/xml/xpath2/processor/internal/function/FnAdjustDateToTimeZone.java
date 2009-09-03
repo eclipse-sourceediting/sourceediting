@@ -116,7 +116,7 @@ public class FnAdjustDateToTimeZone extends Function {
 			throw DynamicError.invalidTimezone();
 		}
 
-		if (date.tz().hours() != 0 || date.tz().minutes() != 0) {
+		if (date.tz() != null && (date.tz().hours() != 0 || date.tz().minutes() != 0)) {
 			if (!timezone.eq(impTimeZone, dc)) {
 				int hours = timezone.hours();
 				int minutes = timezone.minutes();
