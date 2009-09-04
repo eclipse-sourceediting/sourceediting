@@ -254,11 +254,12 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			return null; // no attribute
 
 		int length = this.attrNodes.getLength();
+		char[] nameChars = name.toCharArray();
 		for (int i = 0; i < length; i++) {
 			AttrImpl attr = (AttrImpl) this.attrNodes.item(i);
 			if (attr == null)
 				continue;
-			if (attr.matchName(name))
+			if (attr.matchName(nameChars))
 				return attr; // found
 		}
 

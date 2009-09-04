@@ -575,12 +575,15 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 			return (this.fName == null);
 		if (this.fName == null)
 			return false;
-		if (this.fName.length != name.length())
+		return CharOperation.equals(this.fName, name.toCharArray(), ignoreCase());
+	}
+
+	protected boolean matchName(char[] name) {
+		if (name == null)
+			return (this.fName == null);
+		if (this.fName == null)
 			return false;
-		String stringName = new String(this.fName);
-		if (stringName.equals(name))
-			return true;
-		return stringName.equalsIgnoreCase(name) && ignoreCase();
+		return CharOperation.equals(this.fName, name, ignoreCase());
 	}
 
 
