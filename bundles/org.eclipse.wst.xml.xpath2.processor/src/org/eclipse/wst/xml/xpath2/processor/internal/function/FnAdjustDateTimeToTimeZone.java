@@ -21,6 +21,11 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
 import java.util.*;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.Duration;
+import javax.xml.datatype.XMLGregorianCalendar;
+
 /**
  * Adjusts an xs:dateTime value to a specific timezone, or to no timezone at
  * all. If <code>$timezone</code> is the empty sequence, returns an
@@ -87,50 +92,58 @@ public class FnAdjustDateTimeToTimeZone extends Function {
 		}
 		XSDateTime dateTime = (XSDateTime) arg1.first();
 		XSDayTimeDuration timezone = null;
-
-		Calendar cal = dateTime.calendar();
-
+		
 		if (arg2.empty()) {
 			if (dateTime.timezoned()) {
-				XSDateTime localized = new XSDateTime(cal, null);
+				XSDateTime localized = new XSDateTime(dateTime.calendar(), null);
 				rs.add(localized);
 				return rs;
 			} else {
 				return arg1;
 			}
 		}
+
+		XMLGregorianCalendar xmlCalendar = null; 
 		
-		if (dateTime.timezoned() && !dateTime.tz().eq(impTimeZone, dc)) {
-			int hours = dateTime.tz().hours();
-			int minutes = dateTime.tz().minutes();
-			if (!dateTime.tz().negative()) {
-				hours *= -1;
-				minutes *= -1;
-			}
-			cal.add(Calendar.HOUR_OF_DAY, hours);
-			cal.add(Calendar.MINUTE, minutes);
-		}
-
-		timezone = (XSDayTimeDuration) arg2.first();
-		if (timezone.lt(minDuration, dc) || timezone.gt(maxDuration, dc)) {
-			throw DynamicError.invalidTimezone();
-		}
-
-		if (dateTime.tz() != null && (dateTime.tz().hours() != 0 || dateTime.tz().minutes() != 0)) {
-			if (!timezone.eq(impTimeZone, dc)) {
-				int hours = timezone.hours();
-				int minutes = timezone.minutes();
-				if (timezone.negative()) {
-					hours *= -1;
+		try {
+			xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar();
+			xmlCalendar.setYear(dateTime.year());
+			xmlCalendar.setMonth(dateTime.month());
+			xmlCalendar.setDay(dateTime.day());
+			xmlCalendar.setHour(dateTime.hour());
+			xmlCalendar.setMinute(dateTime.minute());
+			xmlCalendar.setSecond((int)dateTime.second());
+			if (dateTime.timezoned() && !dateTime.tz().eq(impTimeZone, dc)) {
+				int minutes = dateTime.tz().minutes() + (dateTime.tz().hours() * 60);
+				if (!dateTime.tz().negative()) {
 					minutes *= -1;
 				}
-				cal.add(Calendar.HOUR_OF_DAY, hours);
-				cal.add(Calendar.MINUTE, minutes);
+				xmlCalendar.setTimezone(minutes);				
 			}
+			
+			
+			timezone = (XSDayTimeDuration) arg2.first();
+			if (timezone.lt(minDuration, dc) || timezone.gt(maxDuration, dc)) {
+				throw DynamicError.invalidTimezone();
+			}
+
+			Duration duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
+
+
+			if (dateTime.tz() != null && (dateTime.tz().hours() != 0 || dateTime.tz().minutes() != 0)) {
+				if (!timezone.eq(impTimeZone, dc)) {
+					xmlCalendar.add(duration);
+				}
+			}
+			xmlCalendar.toGregorianCalendar();
+
+			rs.add(new XSDateTime(xmlCalendar.toGregorianCalendar(), timezone));
+			
+			
+		} catch (DatatypeConfigurationException e) {
+			throw DynamicError.invalidTimezone();
 		}
-
-		rs.add(new XSDateTime(cal, timezone));
-
+		
 		return rs;
 	}
 
