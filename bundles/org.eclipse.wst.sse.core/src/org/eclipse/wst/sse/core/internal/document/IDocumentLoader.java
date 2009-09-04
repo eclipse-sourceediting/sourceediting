@@ -23,8 +23,15 @@ import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
 import org.eclipse.wst.sse.core.internal.provisional.document.IEncodedDocument;
 
 
+/**
+ * Provides methods for the creation of an IStructuredDocument correctly
+ * prepared to work with a particular type of content.
+ */
 public interface IDocumentLoader {
 
+	/**
+	 * @return a new IStructuredDocument prepared by this loader
+	 */
 	IEncodedDocument createNewStructuredDocument();
 
 	/**
@@ -50,12 +57,15 @@ public interface IDocumentLoader {
 
 	IEncodedDocument createNewStructuredDocument(String filename, InputStream istream, EncodingRule encodingRule) throws java.io.IOException;
 
+	/**
+	 * @return the document partitioner
+	 */
 	IDocumentPartitioner getDefaultDocumentPartitioner();
 
 	IDocumentCharsetDetector getDocumentEncodingDetector();
 
 	/**
-	 * A utility method, but depends on subclasses to impliment the preferred
+	 * A utility method, but depends on subclasses to implement the preferred
 	 * end of line for a particular content type. Note: subclasses should not
 	 * re-implement this method (there's no reason to, even though its part of
 	 * interface). This method not only converts end-of-line characters, if
@@ -63,6 +73,8 @@ public interface IDocumentLoader {
 	 * structuredDocument. The returned value is either the original string,
 	 * if no conversion is needed, or a new string with end-of-lines
 	 * converted.
+	 * 
+	 * @deprecated - the content's line delimiters should be preserved
 	 */
 	StringBuffer handleLineDelimiter(StringBuffer originalString, IEncodedDocument theStructuredDocument);
 

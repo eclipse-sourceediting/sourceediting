@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,8 +16,8 @@ import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 
 /**
- * Interface to allow custom content types to be defined as extension points
- * in plugins.
+ * Responsible for providing the mechanisms used in the correct loading of an
+ * IStructuredDocument's contents and determine its self-described encoding.
  */
 public interface IDocumentTypeHandler {
 

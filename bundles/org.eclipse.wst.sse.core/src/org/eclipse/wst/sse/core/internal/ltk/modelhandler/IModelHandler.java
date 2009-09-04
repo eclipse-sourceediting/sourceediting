@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,10 @@ import java.util.List;
 import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;
 
 
+/**
+ * Responsible for providing the mechanisms used in the correct loading of an
+ * IStructuredModel's contents and initialization of its adapter factories.
+ */
 public interface IModelHandler extends IDocumentTypeHandler {
 	/**
 	 * This method should return Factories which are added automatically by

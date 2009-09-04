@@ -119,16 +119,25 @@ public interface IStructuredModel extends IAdaptable {
 
 	/**
 	 * @deprecated
+	 * @see IModelManager#copyModelForEdit(String, String)
 	 */
 	IStructuredModel copy(String id) throws ResourceInUse, ResourceAlreadyExists;
 
 	/**
 	 * Disable undo management.
+	 * 
+	 * @deprecated - the ability to enable and disable Undo management for the
+	 *             model cannot be guaranteed as it implicitly requires
+	 *             knowledge of the underlying undo/redo implementation
 	 */
 	void disableUndoManagement();
 
 	/**
 	 * Enable undo management.
+	 * 
+	 * @deprecated - the ability to enable and disable Undo management for the
+	 *             model cannot be guaranteed as it implicitly requires
+	 *             knowledge of the underlying undo/redo implementation
 	 */
 	void enableUndoManagement();
 
@@ -152,6 +161,10 @@ public interface IStructuredModel extends IAdaptable {
 
 	/**
 	 * @return The associated content type identifier (String) for this model.
+	 *         This value may be more accurate than the content type against
+	 *         which the model handler was registered.
+	 *         
+	 *         @see IModelHandler#getAssociatedContentTypeId()
 	 */
 	String getContentTypeIdentifier();
 
@@ -174,6 +187,9 @@ public interface IStructuredModel extends IAdaptable {
 	 */
 	IndexedRegion getIndexedRegion(int offset);
 
+	/**
+	 * @return the model's handler
+	 */
 	IModelHandler getModelHandler();
 
 	IModelManager getModelManager();
