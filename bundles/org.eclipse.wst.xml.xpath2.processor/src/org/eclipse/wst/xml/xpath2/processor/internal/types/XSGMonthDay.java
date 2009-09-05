@@ -9,7 +9,8 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver (STAR) - bug 262765 - Fix parsing of gMonthDay to valid date
  *     David Carver (STAR) - bug 282223 - fix timezone adjustment creation.
- *                                        fixed casting issue. 
+ *                                        fixed casting issue.
+ *     David Carver - bug 280547 - fix dates for comparison 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -250,8 +251,6 @@ public class XSGMonthDay extends CalendarType implements CmpEq {
 		   }
 		}
 
-		adjustFortimezone.add(Calendar.HOUR_OF_DAY, tzHours);
-		adjustFortimezone.add(Calendar.MINUTE, tzMinutes);
 		
 		ret += XSDateTime.pad_int(month(), 2);
 

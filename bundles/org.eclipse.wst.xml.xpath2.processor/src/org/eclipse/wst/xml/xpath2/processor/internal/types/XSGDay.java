@@ -8,7 +8,8 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver (STAR) - bug 262765 - Correct parsing of Date to get day correctly.
- *     David Carver (STAR) - bug 282223 - fixed issue with casting. 
+ *     David Carver (STAR) - bug 282223 - fixed issue with casting.
+ *     David Carver - bug 280547 - fix dates for comparison 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -237,8 +238,8 @@ public class XSGDay extends CalendarType implements CmpEq {
 		   }
 		}
 		
-		adjustFortimezone.add(Calendar.HOUR_OF_DAY, tzHours);
-		adjustFortimezone.add(Calendar.MINUTE, tzMinutes);
+		//adjustFortimezone.add(Calendar.HOUR_OF_DAY, tzHours);
+		//adjustFortimezone.add(Calendar.MINUTE, tzMinutes);
 		
 		ret += XSDateTime.pad_int(adjustFortimezone.get(Calendar.DAY_OF_MONTH), 2);
 		
@@ -301,8 +302,10 @@ public class XSGDay extends CalendarType implements CmpEq {
 	 */
 	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError {
 		XSGDay val = (XSGDay) NumericType.get_single_type(arg, XSGDay.class);
-
-		return calendar().equals(val.calendar());
+		Calendar thiscal = normalizeCalendar(calendar(), tz());
+		Calendar thatcal = normalizeCalendar(val.calendar(), val.tz());
+		
+		return thiscal.equals(thatcal);
 	}
 	
 	/**

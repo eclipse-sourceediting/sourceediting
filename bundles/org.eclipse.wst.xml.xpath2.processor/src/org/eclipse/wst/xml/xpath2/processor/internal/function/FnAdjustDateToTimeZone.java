@@ -95,7 +95,7 @@ public class FnAdjustDateToTimeZone extends Function {
 
 		if (arg2.empty()) {
 			if (date.timezoned()) {
-				XSDateTime localized = new XSDateTime(date.calendar(), null);
+				XSDate localized = new XSDate(date.calendar(), null);
 				rs.add(localized);
 				return rs;
 			} else {
@@ -118,7 +118,10 @@ public class FnAdjustDateToTimeZone extends Function {
 				}
 				xmlCalendar.setTimezone(minutes);
 			}
-			if (date.tz() != null && (date.tz().hours() != 0 || date.tz().minutes() != 0)) {
+			if (date.tz() == null || date.tz().hours() == 0 && date.tz().minutes() == 0) {
+				Duration duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
+				xmlCalendar.add(duration);
+			} else { 
 				if (!timezone.eq(impTimeZone, dc)) {
 					Duration duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
 					xmlCalendar.add(duration);

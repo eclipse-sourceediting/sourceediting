@@ -11,6 +11,7 @@
  *     Mukul Gandhi - improved string_value() implementation (motivated by bug, 281822)
  *     David Carver - bug 282223 - implementation of xs:duration.
  *                  - bug 262765 - additional tweak to convert 24:00:00 to 00:00:00
+ *     David Carver - bug 280547 - fix dates for comparison 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -474,8 +475,8 @@ Cloneable {
 
 			tzd = new XSDayTimeDuration(0, tz[1], tz[2], 0.0, tz[0] < 0);
 
-			cal.add(Calendar.HOUR_OF_DAY, mul * tz[1]);
-			cal.add(Calendar.MINUTE, mul * tz[2]);
+//			cal.add(Calendar.HOUR_OF_DAY, mul * tz[1]);
+//			cal.add(Calendar.MINUTE, mul * tz[2]);
 		}
 
 		return new XSDateTime(cal, tzd);
@@ -660,7 +661,7 @@ Cloneable {
 			adjustFortimezone = calendar();
 			tzHours = tz().hours();
 			tzMinutes = tz().minutes();
-			if (tz().negative()) {
+			if (!tz().negative()) {
 				tzHours = tzHours * -1;
 				tzMinutes = tzMinutes * -1;
 			}
@@ -670,8 +671,8 @@ Cloneable {
 			ret += "-";
 		}
 
-		adjustFortimezone.add(Calendar.HOUR_OF_DAY, tzHours);
-		adjustFortimezone.add(Calendar.MINUTE, tzMinutes);
+		//adjustFortimezone.add(Calendar.HOUR_OF_DAY, tzHours);
+		//adjustFortimezone.add(Calendar.MINUTE, tzMinutes);
 
 		ret += pad_int(adjustFortimezone.get(Calendar.YEAR), 4);
 
@@ -759,8 +760,10 @@ Cloneable {
 	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError {
 		XSDateTime val = (XSDateTime) NumericType.get_single_type(arg,
 				XSDateTime.class);
+		Calendar thiscal = normalizeCalendar(calendar(), tz());
+		Calendar thatcal = normalizeCalendar(val.calendar(), val.tz());
 
-		return calendar().equals(val.calendar());
+		return thiscal.equals(thatcal);
 	}
 
 	/**
@@ -776,8 +779,10 @@ Cloneable {
 	public boolean lt(AnyType arg, DynamicContext context) throws DynamicError {
 		XSDateTime val = (XSDateTime) NumericType.get_single_type(arg,
 				XSDateTime.class);
+		Calendar thiscal = normalizeCalendar(calendar(), tz());
+		Calendar thatcal = normalizeCalendar(val.calendar(), val.tz());
 
-		return calendar().before(val.calendar());
+		return thiscal.before(thatcal);
 	}
 
 	/**
@@ -793,8 +798,10 @@ Cloneable {
 	public boolean gt(AnyType arg, DynamicContext context) throws DynamicError {
 		XSDateTime val = (XSDateTime) NumericType.get_single_type(arg,
 				XSDateTime.class);
+		Calendar thiscal = normalizeCalendar(calendar(), tz());
+		Calendar thatcal = normalizeCalendar(val.calendar(), val.tz());
 
-		return calendar().after(val.calendar());
+		return thiscal.after(thatcal);
 	}
 
 	/**

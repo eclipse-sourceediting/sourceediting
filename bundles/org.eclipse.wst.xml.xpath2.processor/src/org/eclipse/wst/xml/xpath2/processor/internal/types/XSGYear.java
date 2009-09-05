@@ -8,6 +8,7 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     David Carver (STAR) - bug 282223 - fix casting issues. 
+ *     David Carver - bug 280547 - fix dates for comparison 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -267,8 +268,10 @@ public class XSGYear extends CalendarType implements CmpEq {
 	 */
 	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError {
 		XSGYear val = (XSGYear) NumericType.get_single_type(arg, XSGYear.class);
+		Calendar thiscal = normalizeCalendar(calendar(), tz());
+		Calendar thatcal = normalizeCalendar(val.calendar(), val.tz());
 
-		return calendar().equals(val.calendar());
+		return thiscal.equals(thatcal);
 	}
 	
 	/**

@@ -7,7 +7,8 @@
  *
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
- *     David Carver (STAR) - bug 262765 - Fixed parsing of gMonth values 
+ *     David Carver (STAR) - bug 262765 - Fixed parsing of gMonth values
+ *     David Carver - bug 280547 - fix dates for comparison 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -283,8 +284,10 @@ public class XSGMonth extends CalendarType implements CmpEq {
 	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError {
 		XSGMonth val = (XSGMonth) NumericType.get_single_type(arg,
 				XSGMonth.class);
+		Calendar thiscal = normalizeCalendar(calendar(), tz());
+		Calendar thatcal = normalizeCalendar(val.calendar(), val.tz());
 
-		return calendar().equals(val.calendar());
+		return thiscal.equals(thatcal);
 	}
 	
 	/**

@@ -15,7 +15,6 @@ import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
-import org.eclipse.wst.xml.xpath2.processor.StaticContext;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
@@ -130,8 +129,12 @@ public class FnAdjustDateTimeToTimeZone extends Function {
 			Duration duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
 
 
-			if (dateTime.tz() != null && (dateTime.tz().hours() != 0 || dateTime.tz().minutes() != 0)) {
+			if (dateTime.tz() == null || dateTime.tz().hours() == 0 && dateTime.tz().minutes() == 0) {
+				duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
+				xmlCalendar.add(duration);
+			} else { 
 				if (!timezone.eq(impTimeZone, dc)) {
+					duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
 					xmlCalendar.add(duration);
 				}
 			}

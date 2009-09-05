@@ -11,6 +11,7 @@
  *     Mukul Gandhi - bug 274792 - improvements to xs:date constructor function.
  *     David Carver - bug 282223 - implementation of xs:duration.
  *                                 fixed casting issue. 
+ *     David Carver - bug 280547 - fix dates for comparison 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
@@ -267,8 +268,8 @@ Cloneable {
 			ret +="-";
 		}
 		
-		adjustFortimezone.add(Calendar.HOUR_OF_DAY, tzHours);
-		adjustFortimezone.add(Calendar.MINUTE, tzMinutes);
+		//adjustFortimezone.add(Calendar.HOUR_OF_DAY, tzHours);
+		//adjustFortimezone.add(Calendar.MINUTE, tzMinutes);
 
 		
 		ret += XSDateTime.pad_int(adjustFortimezone.get(Calendar.YEAR), 4);
@@ -346,8 +347,10 @@ Cloneable {
 	 */
 	public boolean eq(AnyType arg, DynamicContext context) throws DynamicError {
 		XSDate val = (XSDate) NumericType.get_single_type(arg, XSDate.class);
+		Calendar thiscal = normalizeCalendar(calendar(), tz());
+		Calendar thatcal = normalizeCalendar(val.calendar(), val.tz());
 
-		return calendar().equals(val.calendar());
+		return thiscal.equals(thatcal);
 	}
 
 	/**
@@ -361,8 +364,10 @@ Cloneable {
 	 */
 	public boolean lt(AnyType arg, DynamicContext context) throws DynamicError {
 		XSDate val = (XSDate) NumericType.get_single_type(arg, XSDate.class);
+		Calendar thiscal = normalizeCalendar(calendar(), tz());
+		Calendar thatcal = normalizeCalendar(val.calendar(), val.tz());
 
-		return calendar().before(val.calendar());
+		return thiscal.before(thatcal);
 	}
 
 	/**
@@ -376,8 +381,10 @@ Cloneable {
 	 */
 	public boolean gt(AnyType arg, DynamicContext context) throws DynamicError {
 		XSDate val = (XSDate) NumericType.get_single_type(arg, XSDate.class);
+		Calendar thiscal = normalizeCalendar(calendar(), tz());
+		Calendar thatcal = normalizeCalendar(val.calendar(), val.tz());
 
-		return calendar().after(val.calendar());
+		return thiscal.after(thatcal);
 	}
 
 	// XXX this is incorrect [epoch]
