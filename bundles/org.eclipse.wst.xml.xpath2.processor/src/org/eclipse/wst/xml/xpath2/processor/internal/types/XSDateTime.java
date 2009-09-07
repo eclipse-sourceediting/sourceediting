@@ -25,6 +25,11 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
 
 import java.util.*;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.Duration;
+import javax.xml.datatype.XMLGregorianCalendar;
+
 /**
  * A representation of a date and time (and optional timezone)
  */
@@ -850,11 +855,19 @@ Cloneable {
 			if (at instanceof XSDateTime) {
 				XSDateTime val = (XSDateTime) NumericType.get_single_type(arg,
 						XSDateTime.class);
+				
+				Duration dtduration = null;
+				try {
+					Calendar thisCal = normalizeCalendar(calendar(), tz());
+					Calendar thatCal = normalizeCalendar(val.calendar(), val.tz());
+					long duration = thisCal.getTimeInMillis() - thatCal.getTimeInMillis();
+					dtduration = DatatypeFactory.newInstance().newDuration(duration);
 
-				double res = value() - val.value();
-
-				return ResultSequenceFactory.create_new(new XSDayTimeDuration(
-						res));
+				} catch (DatatypeConfigurationException ex) {
+					
+				}
+				return ResultSequenceFactory.create_new(XSDayTimeDuration.parseDTDuration(dtduration.toString()));
+				
 			} else if (at instanceof XSYearMonthDuration) {
 				XSYearMonthDuration val = (XSYearMonthDuration) at;
 
@@ -868,8 +881,17 @@ Cloneable {
 
 				XSDateTime res = (XSDateTime) clone();
 
-				res.calendar().add(Calendar.MILLISECOND,
-						(int) (val.value() * -1000.0));
+				try {
+					XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)calendar());
+					Duration dtduration = DatatypeFactory.newInstance().newDuration(val.string_value());
+					xmlCal.add(dtduration.negate());
+					res = new XSDateTime(xmlCal.toGregorianCalendar(), res.tz());
+				} catch (DatatypeConfigurationException ex) {
+					
+				}
+				
+//				res.calendar().add(Calendar.MILLISECOND,
+//						(int) (val.value() * -1000.0));
 				return ResultSequenceFactory.create_new(res);
 			} else {
 				DynamicError.throw_type_error();
@@ -914,9 +936,16 @@ Cloneable {
 				XSDuration val = (XSDuration) at;
 
 				XSDateTime res = (XSDateTime) clone();
+				
+				try {
+					XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)calendar());
+					Duration dtduration = DatatypeFactory.newInstance().newDuration(val.string_value());
+					xmlCal.add(dtduration);
+					res = new XSDateTime(xmlCal.toGregorianCalendar(), res.tz());
+				} catch (DatatypeConfigurationException ex) {
+					
+				}
 
-				res.calendar().add(Calendar.MILLISECOND,
-						(int) (val.value() * 1000.0));
 				return ResultSequenceFactory.create_new(res);
 			} else {
 				DynamicError.throw_type_error();

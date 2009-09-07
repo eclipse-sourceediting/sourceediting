@@ -294,7 +294,20 @@ public class XSDuration extends CtrType implements CmpEq, CmpLt, CmpGt {
 
 		if (negative())
 			ret *= -1;
+		
+		
 
+		return ret;
+	}
+	
+	public double time_value() {
+		double ret = 0;
+		ret += hours() * 60 * 60;
+		ret += minutes() * 60;
+		ret += seconds();
+
+		if (negative())
+			ret *= -1;
 		return ret;
 	}
 

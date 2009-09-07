@@ -438,7 +438,7 @@ Cloneable {
 				.get_single_type(arg, XSDayTimeDuration.class);
 
 		try {
-			double ms = val.value() * 1000.0;
+			double ms = val.time_value() * 1000.0;
 
 			XSTime res = (XSTime) clone();
 

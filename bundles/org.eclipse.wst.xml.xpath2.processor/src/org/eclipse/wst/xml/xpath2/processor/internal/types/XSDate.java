@@ -25,6 +25,11 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
 
 import java.util.*;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.Duration;
+import javax.xml.datatype.XMLGregorianCalendar;
+
 /**
  * Representation of a date of the form year-month-day and optional timezone
  */
@@ -423,11 +428,18 @@ Cloneable {
 			if (at instanceof XSDate) {
 				XSDate val = (XSDate) NumericType.get_single_type(arg,
 						XSDate.class);
+				Duration dtduration = null;
+				try {
+					Calendar thisCal = normalizeCalendar(calendar(), tz());
+					Calendar thatCal = normalizeCalendar(val.calendar(), val.tz());
+					long duration = thisCal.getTimeInMillis() - thatCal.getTimeInMillis();
+					dtduration = DatatypeFactory.newInstance().newDuration(duration);
 
-				double res = value() - val.value();
+				} catch (DatatypeConfigurationException ex) {
+					
+				}
+				return ResultSequenceFactory.create_new(XSDayTimeDuration.parseDTDuration(dtduration.toString()));
 
-				return ResultSequenceFactory.create_new(new XSDayTimeDuration(
-						res));
 			} else if (at instanceof XSYearMonthDuration) {
 				XSYearMonthDuration val = (XSYearMonthDuration) at;
 
@@ -438,11 +450,19 @@ Cloneable {
 
 			} else if (at instanceof XSDayTimeDuration) {
 				XSDuration val = (XSDuration) at;
-
+				
 				XSDate res = (XSDate) clone();
+				try {
+					XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)calendar());
+					Duration dtduration = DatatypeFactory.newInstance().newDuration(val.string_value());
+					xmlCal.add(dtduration.negate());
+					res = new XSDate(xmlCal.toGregorianCalendar(), res.tz());
+				} catch (DatatypeConfigurationException ex) {
+					
+				}
 
-				res.calendar().add(Calendar.MILLISECOND,
-						(int) (val.value() * -1000.0));
+//				res.calendar().add(Calendar.MILLISECOND,
+//						(int) (val.value() * -1000.0));
 				return ResultSequenceFactory.create_new(res);
 			} else {
 				DynamicError.throw_type_error();
@@ -483,12 +503,19 @@ Cloneable {
 				res.calendar().add(Calendar.MONTH, val.monthValue());
 				return ResultSequenceFactory.create_new(res);
 			} else if (at instanceof XSDayTimeDuration) {
-				XSDuration val = (XSDuration) at;
+				XSDayTimeDuration val = (XSDayTimeDuration) at;
 
 				XSDate res = (XSDate) clone();
+				
+				// We only need to add the Number of days dropping the rest.
+				int days = val.days(); 
+				if (val.negative()) {
+					days *= -1;
+				}
+				res.calendar().add(Calendar.DAY_OF_MONTH, days);
 
 				res.calendar().add(Calendar.MILLISECOND,
-						(int) (val.value() * 1000.0));
+						(int) (val.time_value() * 1000.0));
 				return ResultSequenceFactory.create_new(res);
 			} else {
 				DynamicError.throw_type_error();

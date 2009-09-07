@@ -246,7 +246,7 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 	public ResultSequence plus(ResultSequence arg) throws DynamicError {
 		XSDuration val = (XSDuration) NumericType
 				.get_single_type(arg, XSDayTimeDuration.class);
-
+		
 		double res = value() + val.value();
 
 		return ResultSequenceFactory.create_new(new XSDayTimeDuration(res));
@@ -348,5 +348,5 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 			return null; // unreach
 		}
 	}
-
+	
 }
