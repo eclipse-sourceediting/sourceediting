@@ -108,11 +108,7 @@ public class FnAdjustTimeToTimeZone extends Function {
 		
 		try {
 			if (time.tz() != null) {
-				int tz = time.tz().hours() * 60 + time.tz().minutes();
-				if (!time.tz().negative()) {
-					tz *= -1;
-				}
-				xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendarTime(time.hour(), time.minute(), (int)time.second(), tz );
+				xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)time.normalizeCalendar(time.calendar(), time.tz()));
 			} else {
 				xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendarTime(time.hour(), time.minute(), (int)time.second(), 0);
 			}
@@ -125,10 +121,8 @@ public class FnAdjustTimeToTimeZone extends Function {
 				Duration duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
 				xmlCalendar.add(duration);
 			} else { 
-				if (!timezone.eq(impTimeZone, dc)) {
-					Duration duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
-					xmlCalendar.add(duration);
-				}
+				Duration duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
+				xmlCalendar.add(duration);
 			}
 	
 			rs.add(new XSTime(xmlCalendar.toGregorianCalendar(), timezone));

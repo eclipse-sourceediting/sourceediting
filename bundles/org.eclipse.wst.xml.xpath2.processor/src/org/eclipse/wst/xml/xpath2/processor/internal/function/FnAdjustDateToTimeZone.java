@@ -74,8 +74,6 @@ public class FnAdjustDateToTimeZone extends Function {
 	public static ResultSequence adjustDate(Collection args,
 			DynamicContext dc) throws DynamicError {
 
-		XSDuration impTimeZone = (XSDuration) dc.tz();
-
 		Collection cargs = Function.convert_arguments(args, expectedArgs());
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
@@ -110,22 +108,19 @@ public class FnAdjustDateToTimeZone extends Function {
 		
 		
 		try {
-			XMLGregorianCalendar xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendarDate(date.year(), date.month(), date.day(), 0);
-			if (date.timezoned() && !date.tz().eq(impTimeZone, dc)) {
-				int minutes = date.tz().hours() * 60 + date.tz().minutes();
-				if (!date.tz().negative()) {
-					minutes *= -1;
-				}
-				xmlCalendar.setTimezone(minutes);
+			XMLGregorianCalendar xmlCalendar = null;
+			if (date.tz() != null) {
+				xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)date.normalizeCalendar(date.calendar(), date.tz()));
+			} else {
+				xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)date.calendar());
 			}
+			
 			if (date.tz() == null || date.tz().hours() == 0 && date.tz().minutes() == 0) {
 				Duration duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
 				xmlCalendar.add(duration);
 			} else { 
-				if (!timezone.eq(impTimeZone, dc)) {
-					Duration duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
-					xmlCalendar.add(duration);
-				}
+				Duration duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
+				xmlCalendar.add(duration);
 			}
 			rs.add(new XSDate(xmlCalendar.toGregorianCalendar(), timezone));
 		} catch (DatatypeConfigurationException ex) {

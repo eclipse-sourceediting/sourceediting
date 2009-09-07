@@ -24,6 +24,11 @@ import org.eclipse.wst.xml.xpath2.processor.internal.function.*;
 
 import java.util.*;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.Duration;
+import javax.xml.datatype.XMLGregorianCalendar;
+
 /**
  * A representation of the Time datatype
  */
@@ -381,7 +386,7 @@ Cloneable {
 	 * Mathematical subtraction between this time stored and the supplied
 	 * representation. This supplied representation must be of either type
 	 * XSTime (in which case the result is the duration of time between these
-	 * two times) or a XDTDayTimeDuration (in which case the result is the time
+	 * two times) or a XSDayTimeDuration (in which case the result is the time
 	 * when this duration is subtracted from the time stored).
 	 * 
 	 * @param arg
@@ -397,11 +402,17 @@ Cloneable {
 
 		if (at instanceof XSTime) {
 			XSTime val = (XSTime) at;
+			Duration dtduration = null;
+			try {
+				Calendar thisCal = normalizeCalendar(calendar(), tz());
+				Calendar thatCal = normalizeCalendar(val.calendar(), val.tz());
+				long duration = thisCal.getTimeInMillis() - thatCal.getTimeInMillis();
+				dtduration = DatatypeFactory.newInstance().newDuration(duration);
 
-			double res = value() - val.value();
-
-			return ResultSequenceFactory
-					.create_new(new XSDayTimeDuration(res));
+			} catch (DatatypeConfigurationException ex) {
+				
+			}
+			return ResultSequenceFactory.create_new(XSDayTimeDuration.parseDTDuration(dtduration.toString()));
 		} else if (at instanceof XSDayTimeDuration) {
 			XSDuration val = (XSDuration) at;
 
@@ -410,7 +421,14 @@ Cloneable {
 
 				XSTime res = (XSTime) clone();
 
-				res.calendar().add(Calendar.MILLISECOND, (int) ms);
+				try {
+					XMLGregorianCalendar xmlCal = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)calendar());
+					Duration dtduration = DatatypeFactory.newInstance().newDuration(val.string_value());
+					xmlCal.add(dtduration.negate());
+					res = new XSTime(xmlCal.toGregorianCalendar(), res.tz());
+				} catch (DatatypeConfigurationException ex) {
+					
+				}
 
 				return ResultSequenceFactory.create_new(res);
 			} catch (CloneNotSupportedException err) {
