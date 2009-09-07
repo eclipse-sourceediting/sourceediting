@@ -16,6 +16,14 @@
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.Duration;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
@@ -320,29 +328,55 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 
 		if (at instanceof XSDouble) {
 			XSDouble dt = (XSDouble) at;
-			double ret = 0;
-
-			if (!dt.zero())
-				ret = value() / dt.double_value();
+			double retval = 0;
+			
+			if (!dt.zero()) {
+				BigDecimal ret = BigDecimal.ZERO;
+				
+				if (dt.infinite() || dt.nan()) {
+					retval = value() / dt.double_value();
+				} else {
+					ret = BigDecimal.valueOf(value());
+					ret = ret.divide(BigDecimal.valueOf(dt.double_value()), 18, RoundingMode.HALF_EVEN);
+					retval = ret.doubleValue();
+				}
+			}
+//				ret = value() / dt.double_value();
+			
 
 			return ResultSequenceFactory
-					.create_new(new XSDayTimeDuration(ret));
+					.create_new(new XSDayTimeDuration(retval));
 		} else if (at instanceof XSDecimal) {
 			XSDecimal dt = (XSDecimal) at;
 			
-			int ret = 0;
-			
-			if (!dt.zero())
-				ret = (int) Math.round(value() / dt.double_value());
+			BigDecimal ret = BigDecimal.ZERO;
+							
+			if (!dt.zero()) {
+				ret = BigDecimal.valueOf(value());
+				ret = ret.divide(dt.getValue(), 18, RoundingMode.HALF_EVEN);
+			}
 			
 			return ResultSequenceFactory.create_new(new XSDayTimeDuration(
-					ret));	
+					ret.intValue()));	
 		} else if (at instanceof XSDayTimeDuration) {
 			XSDuration md = (XSDuration) at;
 
-			double res = value() / md.value();
+			BigDecimal res = null;
+			try {
+                Duration thisDuration  = DatatypeFactory.newInstance().newDuration(string_value());
+				Duration mdduration = DatatypeFactory.newInstance().newDuration(md.string_value());
+				double thistime = thisDuration.getTimeInMillis(Calendar.getInstance());
+				double thattime = mdduration.getTimeInMillis(Calendar.getInstance());
+				res = BigDecimal.valueOf(thistime);
+				BigDecimal l = BigDecimal.valueOf(thattime);
+				res = res.divide(l, 18, RoundingMode.HALF_EVEN);
+			} catch (DatatypeConfigurationException ex) {
+				
+			}
 
-			return ResultSequenceFactory.create_new(new XSDecimal(BigDecimal.valueOf(res)));
+//			double res = value() / md.value();
+
+			return ResultSequenceFactory.create_new(new XSDecimal(res));
 		} else {
 			DynamicError.throw_type_error();
 			return null; // unreach
