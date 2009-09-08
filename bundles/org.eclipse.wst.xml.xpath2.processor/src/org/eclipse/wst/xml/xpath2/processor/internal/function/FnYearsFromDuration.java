@@ -9,7 +9,8 @@
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0
  *     Mukul Gandhi - bug 273760 - wrong namespace for functions and data types
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type
- *     David Carver - bug 282223 - implementation of xs:duration. 
+ *     David Carver - bug 282223 - implementation of xs:duration.
+ *     David Carver (STAR) - bug 262765 - fixed expected xs:duration argument 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
@@ -92,7 +93,7 @@ public class FnYearsFromDuration extends Function {
 	public static Collection expected_args() {
 		if (_expected_args == null) {
 			_expected_args = new ArrayList();
-			_expected_args.add(new SeqType(new XSYearMonthDuration(),
+			_expected_args.add(new SeqType(new XSDuration(),
 					SeqType.OCC_QMARK));
 		}
 

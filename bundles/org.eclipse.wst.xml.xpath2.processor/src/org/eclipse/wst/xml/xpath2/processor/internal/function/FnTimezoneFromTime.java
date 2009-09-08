@@ -73,7 +73,9 @@ public class FnTimezoneFromTime extends Function {
 
 		XSTime dt = (XSTime) arg1.first();
 
-		rs.add(dt.tz());
+		if (dt.timezoned()) {
+			rs.add(dt.tz());
+		}
 
 		return rs;
 	}

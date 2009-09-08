@@ -106,16 +106,15 @@ public class FnAdjustDateToTimeZone extends Function {
 			throw DynamicError.invalidTimezone();
 		}
 		
+		if (date.tz() == null) {
+			rs.add(new XSDate(date.calendar(), timezone));
+			return rs;
+		}
 		
 		try {
-			XMLGregorianCalendar xmlCalendar = null;
-			if (date.tz() != null) {
-				xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)date.normalizeCalendar(date.calendar(), date.tz()));
-			} else {
-				xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)date.calendar());
-			}
+			XMLGregorianCalendar xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)date.normalizeCalendar(date.calendar(), date.tz()));
 			
-			if (date.tz() == null || date.tz().hours() == 0 && date.tz().minutes() == 0) {
+			if (date.tz().hours() == 0 && date.tz().minutes() == 0) {
 				Duration duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
 				xmlCalendar.add(duration);
 			} else { 

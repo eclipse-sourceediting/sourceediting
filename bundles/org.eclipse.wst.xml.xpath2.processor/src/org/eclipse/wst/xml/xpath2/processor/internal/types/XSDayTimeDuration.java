@@ -304,6 +304,9 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 		
 		XSDouble val = (XSDouble) NumericType.get_single_type(convertedRS,
 				                                  XSDouble.class);
+		if (val.nan()) {
+			throw DynamicError.nan();
+		}
 
 		double res = value() * val.double_value();
 
@@ -330,16 +333,22 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 			XSDouble dt = (XSDouble) at;
 			double retval = 0;
 			
+			if (dt.nan()) {
+				throw DynamicError.nan();
+			}
+			
 			if (!dt.zero()) {
 				BigDecimal ret = BigDecimal.ZERO;
 				
-				if (dt.infinite() || dt.nan()) {
+				if (dt.infinite()) {
 					retval = value() / dt.double_value();
 				} else {
 					ret = BigDecimal.valueOf(value());
 					ret = ret.divide(BigDecimal.valueOf(dt.double_value()), 18, RoundingMode.HALF_EVEN);
 					retval = ret.doubleValue();
 				}
+			} else {
+				throw DynamicError.overflowUnderflow();
 			}
 //				ret = value() / dt.double_value();
 			
@@ -354,6 +363,8 @@ public class XSDayTimeDuration extends XSDuration implements CmpEq, CmpLt,
 			if (!dt.zero()) {
 				ret = BigDecimal.valueOf(value());
 				ret = ret.divide(dt.getValue(), 18, RoundingMode.HALF_EVEN);
+			} else {
+				throw DynamicError.overflowUnderflow();
 			}
 			
 			return ResultSequenceFactory.create_new(new XSDayTimeDuration(

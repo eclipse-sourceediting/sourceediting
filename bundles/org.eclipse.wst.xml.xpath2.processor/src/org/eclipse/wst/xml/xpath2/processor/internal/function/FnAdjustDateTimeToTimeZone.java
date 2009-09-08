@@ -111,17 +111,15 @@ public class FnAdjustDateTimeToTimeZone extends Function {
 			throw DynamicError.invalidTimezone();
 		}
 		
-		XMLGregorianCalendar xmlCalendar = null; 
+		if (dateTime.tz() == null) {
+			rs.add(new XSDateTime(dateTime.calendar(), timezone));
+			return rs;
+		}
 		
-		try {
-			xmlCalendar = null;
-			if (dateTime.tz() != null) {
-				xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)dateTime.normalizeCalendar(dateTime.calendar(), dateTime.tz()));
-			} else {
-				xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)dateTime.calendar());
-			}
+		try {			
+			XMLGregorianCalendar xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)dateTime.normalizeCalendar(dateTime.calendar(), dateTime.tz()));
 			
-			if (dateTime.tz() == null || dateTime.tz().hours() == 0 && dateTime.tz().minutes() == 0) {
+			if (dateTime.tz().hours() == 0 && dateTime.tz().minutes() == 0) {
 				Duration duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
 				xmlCalendar.add(duration);
 			} else { 

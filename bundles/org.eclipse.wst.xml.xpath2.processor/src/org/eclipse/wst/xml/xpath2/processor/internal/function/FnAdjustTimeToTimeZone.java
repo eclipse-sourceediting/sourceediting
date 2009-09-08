@@ -117,7 +117,13 @@ public class FnAdjustTimeToTimeZone extends Function {
 			if (timezone.lt(minDuration, dc) || timezone.gt(maxDuration, dc)) {
 				throw DynamicError.invalidTimezone();
 			}
-			if (time.tz() == null || time.tz().hours() == 0 && time.tz().minutes() == 0) {
+			
+			if (time.tz() == null) {
+				rs.add(new XSTime(time.calendar(), timezone));
+				return rs;
+			}
+			
+			if (time.tz().hours() == 0 && time.tz().minutes() == 0) {
 				Duration duration = DatatypeFactory.newInstance().newDuration(timezone.string_value());
 				xmlCalendar.add(duration);
 			} else { 

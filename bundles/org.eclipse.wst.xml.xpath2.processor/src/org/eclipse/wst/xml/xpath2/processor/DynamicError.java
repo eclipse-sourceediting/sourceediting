@@ -421,4 +421,22 @@ public class DynamicError extends XPathException {
 	public static DynamicError invalidTimezone() {
 		return make_error("FODT0003", "Invalid timezone value.", null);
 	}
+	
+	/**
+	 * Overflow/underflow in duration operation.
+	 * @return
+	 * @since 1.1
+	 */
+	public static DynamicError overflowUnderflow() {
+		return make_error("FODT0002", "Overflow/underflow in duration operation.", null);
+	}
+	
+	/**
+	 * Overflow/underflow in duration operation.
+	 * @return
+	 * @since 1.1
+	 */
+	public static DynamicError nan() {
+		return make_error("FOCA0005", "NaN supplied as float/double value.", null);
+	}
 }
