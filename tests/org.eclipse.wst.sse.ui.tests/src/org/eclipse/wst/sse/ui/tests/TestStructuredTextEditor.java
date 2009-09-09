@@ -243,12 +243,12 @@ public class TestStructuredTextEditor extends TestCase {
 	 * @throws Exception
 	 */
 	public void testManyNonUIThreadsUpdatingEditorDocument() throws Exception {
-		final int numberOfJobs = 30;
+		final int numberOfJobs = 50;
 		/**
-		 * 16 minute timeout before we stop waiting for the change jobs to
+		 * 15 minute timeout before we stop waiting for the change jobs to
 		 * complete
 		 */
-		long timeout = 960000;
+		long timeout = 15*60*1000;
 
 		long startTime = System.currentTimeMillis();
 		IFile file = getOrCreateFile(PROJECT_NAME + "/" + "testManyBackgroundChanges.xml");
@@ -289,6 +289,8 @@ public class TestStructuredTextEditor extends TestCase {
 			};
 			changers[i].setUser(true);
 			changers[i].setSystem(false);
+		}
+		for (int i = 0; i < changers.length; i++) {
 			changers[i].schedule();
 		}
 
