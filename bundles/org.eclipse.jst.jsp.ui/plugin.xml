@@ -853,6 +853,11 @@
        </handler>
 	</extension>
 	
+	<extension point="org.eclipse.ui.perspectiveExtensions">
+        <perspectiveExtension targetID="org.eclipse.wst.web.ui.webDevPerspective">
+            <newWizardShortcut id="org.eclipse.jst.jsp.ui.internal.wizard.NewJSPWizard"/>
+        </perspectiveExtension> 
+	</extension>
 	
 	<!-- JSP Fragment Property Page -->
 	<extension point="org.eclipse.ui.propertyPages">
