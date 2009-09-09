@@ -2096,7 +2096,7 @@ class ProjectDescription {
 
 		/**
 		 * <pre>
-		 *                     		 1.0.1
+		 *                     		 1.1.0
 		 *                     		 Save classpath information (| is field delimiter)
 		 *                     		 Jars are saved as &quot;JAR:&quot;+ has11TLD + jar path 
 		 *                     		 URLRecords as &quot;URL:&quot;+URL

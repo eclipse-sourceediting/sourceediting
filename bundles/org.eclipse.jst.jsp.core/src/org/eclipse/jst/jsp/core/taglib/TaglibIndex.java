@@ -15,8 +15,8 @@ import java.io.File;
 import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.CRC32;
@@ -46,7 +46,9 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
+import org.eclipse.wst.sse.core.internal.util.AbstractMemoryListener;
 import org.osgi.framework.Bundle;
+import org.osgi.service.event.Event;
 
 /**
  * A non-extendable index manager for taglibs similar to the previous J2EE
@@ -116,7 +118,7 @@ public final class TaglibIndex {
 								// removing the index file ensures that we
 								// don't get stale data if the project is
 								// reopened
-								removeIndex(proj.getProject());
+								removeIndexFile(proj.getProject());
 							}
 						}
 					}
@@ -329,6 +331,79 @@ public final class TaglibIndex {
 		}
 	}
 
+	/**
+	 * An implementation of {@link Map} that has a limit to the number
+	 * of {@link Map.Entry}s it can store.  If the limit is reached then the
+	 * oldest {@link Map.Entry}s are automatically removed.
+	 */
+	private class LimitedHashMap extends LinkedHashMap {
+		/**
+		 * Default
+		 */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * the maximum number of {@link Map.Entry}s this map can store
+		 */
+		private int fLimit;
+
+		LimitedHashMap(int limit) {
+			super(limit);
+			fLimit = limit;
+		}
+
+		/**
+		 * If the size of this map has increased passed the limit then return
+		 * <code>true</code>, <code>false</code> otherwise.
+		 * 
+		 * @see java.util.LinkedHashMap#removeEldestEntry(java.util.Map.Entry)
+		 */
+		protected boolean removeEldestEntry(Map.Entry eldest) {
+			boolean willRemove = this.size() > fLimit;
+			if (willRemove) {
+				// save its references to disk before it gets bumped
+				((ProjectDescription) eldest.getValue()).saveReferences();
+			}
+			return willRemove;
+		}
+	}
+
+	/**
+	 * <p>A {@link AbstractMemoryListener} that clears the {@link ProjectDescription} cache
+	 * whenever specific memory events are received.</p>
+	 * 
+	 * <p>Events:
+	 * <ul>
+	 * <li>{@link AbstractMemoryListener#SEV_SERIOUS}</li>
+	 * <li>{@link AbstractMemoryListener#SEV_CRITICAL}</li>
+	 * </ul>
+	 * </p>
+	 */
+	private class MemoryListener extends AbstractMemoryListener {
+		/**
+		 * <p>Constructor causes this listener to listen for specific memory events.</p>
+		 * <p>Events:
+		 * <ul>
+		 * <li>{@link AbstractMemoryListener#SEV_SERIOUS}</li>
+		 * <li>{@link AbstractMemoryListener#SEV_CRITICAL}</li>
+		 * </ul>
+		 * </p>
+		 */
+		MemoryListener() {
+			super(new String[] { SEV_SERIOUS, SEV_CRITICAL });
+		}
+		
+		/**
+		 * On any memory event we handle clear out the project descriptions
+		 * 
+		 * @see org.eclipse.jst.jsp.core.internal.util.AbstractMemoryListener#handleMemoryEvent(org.osgi.service.event.Event)
+		 */
+		protected void handleMemoryEvent(Event event) {
+			clearProjectDescriptions();
+		}
+		
+	}
+	
 	static final boolean _debugChangeListener = false;
 
 	static boolean _debugEvents = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/events")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -347,6 +422,11 @@ public final class TaglibIndex {
 	private static final String DIRTY = "DIRTY";
 	static boolean ENABLED = false;
 
+	/**
+	 * The minimum limitation on the number of project descriptions to keep cached.
+	 */
+	private static final int MINIMUM_LIMIT_FOR_PROJECT_DESCRIPTIONS_CACHE = 3;
+	
 	static final ILock LOCK = Job.getJobManager().newLock();
 
 	/**
@@ -537,8 +617,8 @@ public final class TaglibIndex {
 	public static void shutdown() {
 		try {
 			LOCK.acquire();
-			if (_instance.isInitialized()) {
-				_instance.stop();
+			if (getInstance().isInitialized()) {
+				getInstance().stop();
 			}
 		}
 		finally {
@@ -573,6 +653,11 @@ public final class TaglibIndex {
 	private ResourceChangeListener fResourceChangeListener;
 
 	private ITaglibIndexListener[] fTaglibIndexListeners = null;
+	
+	/**
+	 * Used to keep the {@link ProjectDescription} cache clean when memory is low
+	 */
+	private MemoryListener fMemoryListener;
 
 	/** symbolic name for OSGI framework */
 	private final static String OSGI_FRAMEWORK_ID = "org.eclipse.osgi"; //$NON-NLS-1$
@@ -601,12 +686,16 @@ public final class TaglibIndex {
 					removeIndexes(false);
 				}
 
-				fProjectDescriptions = new Hashtable();
+				fProjectDescriptions = new LimitedHashMap(calculateCacheLimit());
 				fResourceChangeListener = new ResourceChangeListener();
 				fClasspathChangeListener = new ClasspathChangeListener();
+				fMemoryListener = new MemoryListener();
+
 				if (ENABLED) {
 					ResourcesPlugin.getWorkspace().addResourceChangeListener(fResourceChangeListener, IResourceChangeEvent.POST_CHANGE);
 					JavaCore.addElementChangedListener(fClasspathChangeListener);
+					//register the memory listener
+					fMemoryListener.connect();
 				}
 				setIntialized(true);
 			}
@@ -629,7 +718,7 @@ public final class TaglibIndex {
 	 * Based on org.eclipse.jdt.internal.core.search.indexing.IndexManager
 	 * 
 	 * @param containerPath
-	 * @return
+	 * @return the index file location for the given workspace path
 	 */
 	String computeIndexLocation(IPath containerPath) {
 		String fileName = computeIndexName(containerPath);
@@ -649,7 +738,7 @@ public final class TaglibIndex {
 
 	/**
 	 * @param project
-	 * @return
+	 * @return the ProjectDescription representing the given project
 	 */
 	ProjectDescription createDescription(IProject project) {
 		if (fProjectDescriptions == null)
@@ -859,7 +948,7 @@ public final class TaglibIndex {
 	/**
 	 * Removes index file for the given project.
 	 */
-	private void removeIndex(IProject project) {
+	void removeIndexFile(IProject project) {
 		File indexFile = new File(computeIndexLocation(project.getFullPath()));
 		if (indexFile.exists()) {
 			indexFile.delete();
@@ -919,6 +1008,8 @@ public final class TaglibIndex {
 
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(fResourceChangeListener);
 			JavaCore.removeElementChangedListener(fClasspathChangeListener);
+			//unregister the memory listener
+			fMemoryListener.disconnect();
 
 			/*
 			 * Clearing the existing saved states helps prune dead data from
@@ -926,6 +1017,23 @@ public final class TaglibIndex {
 			 */
 			removeIndexes(true);
 
+			clearProjectDescriptions();
+
+			setState(CLEAN);
+			fProjectDescriptions = null;
+			fResourceChangeListener = null;
+			fClasspathChangeListener = null;
+			fMemoryListener = null;
+		}
+	}
+	
+	/**
+	 * Have all of the ProjectDescriptions write their information to disk and
+	 * then clear our map of them
+	 */
+	void clearProjectDescriptions() {
+		try {
+			LOCK.acquire();
 			Iterator i = fProjectDescriptions.values().iterator();
 			while (i.hasNext()) {
 				ProjectDescription description = (ProjectDescription) i.next();
@@ -933,11 +1041,8 @@ public final class TaglibIndex {
 			}
 
 			fProjectDescriptions.clear();
-
-			setState(CLEAN);
-			fProjectDescriptions = null;
-			fResourceChangeListener = null;
-			fClasspathChangeListener = null;
+		} finally {
+			LOCK.release();
 		}
 	}
 
@@ -947,5 +1052,23 @@ public final class TaglibIndex {
 
 	private void setIntialized(boolean intialized) {
 		this.initialized = intialized;
+	}
+	
+	/**
+	 * <p>Calculate the maximum number of project descriptions to keep cached.</p>
+	 * <p>Calculated as:<br />
+	 * <code>MINIMUM_LIMIT_FOR_PROJECT_DESCRIPTIONS_CACHE + log(currentWorkspaceProjectCount)</code></p>
+	 * 
+	 * @return the maximum number of project descriptions to keep cached
+	 */
+	private int calculateCacheLimit() {
+		int limit = MINIMUM_LIMIT_FOR_PROJECT_DESCRIPTIONS_CACHE;
+		
+		int projectCount = ResourcesPlugin.getWorkspace().getRoot().getProjects().length;
+		if(projectCount > 0) {
+			limit += Math.log(projectCount);
+		}
+		
+		return limit;
 	}
 }
