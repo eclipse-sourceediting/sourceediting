@@ -8,10 +8,13 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Moller - bug 280555 - Add pluggable collation support
+ *     David Carver (STAR) - bug 262765 - fixed distinct-values comparison logic.
+ *                           There is probably an easier way to do the comparison.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -21,7 +24,14 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NumericType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSUntypedAtomic;
 
 /**
  * Returns the sequence that results from removing from $arg all but one of a
@@ -36,7 +46,7 @@ public class FnDistinctValues extends Function {
 	 * Constructor for FnDistinctValues.
 	 */
 	public FnDistinctValues() {
-		super(new QName("distinct-values"), 1);
+		super(new QName("distinct-values"), 1, 2);
 	}
 
 	/**
@@ -64,24 +74,71 @@ public class FnDistinctValues extends Function {
 	 *             Dynamic error.
 	 * @return Result of operation.
 	 */
-	private static boolean contains(ResultSequence rs, AnyAtomicType item, DynamicContext context)
+	private static boolean contains(ResultSequence rs, AnyAtomicType item, DynamicContext context, String collationURI)
 			throws DynamicError {
 		if (!(item instanceof CmpEq))
 			return false;
+		
+		return hasValue(rs, item, context, collationURI);
+	}
 
+	private static boolean hasValue(ResultSequence rs, AnyAtomicType item,
+			DynamicContext context, String collationURI)
+			throws DynamicError {
+		XSString itemStr = new XSString(item.string_value());
+		
 		for (Iterator i = rs.iterator(); i.hasNext();) {
 			AnyType at = (AnyType) i.next();
 
-			if (!(item instanceof CmpEq))
+			if (!(at instanceof CmpEq))
 				continue;
-
-			CmpEq cmp = (CmpEq) at;
-
-			if (cmp.eq(item, context))
-				return true;
-
+			
+			if (isBoolean(item, at)) {
+				XSBoolean boolat = (XSBoolean) at;
+				if (boolat.eq(item, context)) {
+					return true;
+				}
+			}
+			
+			if (isNumeric(item, at)) {
+				NumericType numericat = (NumericType) at;
+				if (numericat.eq(item, context)) {
+					return true;
+				}
+			}
+			
+			if (isDuration(item, at)) {
+				XSDuration durat = (XSDuration) at;
+				if (durat.eq(item, context)) {
+					return true;
+				}
+			}
+			
+			if (needsStringComparison(item, at)) {
+				XSString xstr1 = new XSString(at.string_value());
+				if (FnCompare.compare_string(collationURI, xstr1, itemStr, context).equals(BigInteger.ZERO)) {
+					return true;
+				}
+			}
 		}
 		return false;
+	}
+
+	private static boolean isDuration(AnyAtomicType item, AnyType at) {
+		return at instanceof XSDuration && item instanceof XSDuration;
+	}
+
+	private static boolean isBoolean(AnyAtomicType item, AnyType at) {
+		return at instanceof XSBoolean && item instanceof XSBoolean;
+	}
+
+	private static boolean isNumeric(AnyAtomicType item, AnyType at) {
+		return at instanceof NumericType && item instanceof NumericType;
+	}
+
+	private static boolean needsStringComparison(AnyAtomicType item, AnyType at) {
+		return (at instanceof XSString && (!(item instanceof NumericType) || item instanceof XSUntypedAtomic)
+			|| ((at instanceof XSFloat || at instanceof XSDouble) && (item instanceof XSFloat || item instanceof XSDouble))	);
 	}
 
 	/**
@@ -96,22 +153,30 @@ public class FnDistinctValues extends Function {
 	public static ResultSequence distinct_values(Collection args, DynamicContext context)
 			throws DynamicError {
 
-		assert args.size() == 1;
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
 		// get args
 		Iterator citer = args.iterator();
 		ResultSequence arg1 = (ResultSequence) citer.next();
+		ResultSequence arg2 = ResultSequenceFactory.create_new();
+		if (citer.hasNext()) {
+			arg2 = (ResultSequence) citer.next();
+		}
+		
+		String collationURI = context.default_collation_name();
+		if (!arg2.empty()) {
+			XSString collation = (XSString) arg2.first();
+			collationURI = collation.string_value();
+		}
 
-		// XXX lame
 		for (Iterator i = arg1.iterator(); i.hasNext();) {
 			AnyType at = (AnyType) i.next();
 
 			if (!(at instanceof AnyAtomicType))
 				DynamicError.throw_type_error();
 
-			if (!contains(rs, (AnyAtomicType) at, context))
+			if (!contains(rs, (AnyAtomicType) at, context, collationURI))
 				rs.add(at);
 		}
 
