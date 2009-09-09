@@ -348,7 +348,7 @@ public final class TaglibIndex {
 		private int fLimit;
 
 		LimitedHashMap(int limit) {
-			super(limit);
+			super(limit, .75f, true);
 			fLimit = limit;
 		}
 
