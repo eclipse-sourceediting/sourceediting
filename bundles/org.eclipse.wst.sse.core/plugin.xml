@@ -46,6 +46,7 @@
 	
 	<!-- Define the StructuredFilePropertyTester as it will handle tracing the entire -->
 	<!-- content type hierarchy for a file. Only operates on IFiles                   -->
+	<!-- Deprecated, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=288216         -->
 	<extension point="org.eclipse.core.expressions.propertyTesters">
 		<propertyTester
 			class="org.eclipse.wst.sse.core.internal.propertytester.StructuredFilePropertyTester"

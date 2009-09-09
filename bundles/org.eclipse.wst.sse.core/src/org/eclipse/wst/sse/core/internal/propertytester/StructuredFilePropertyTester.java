@@ -23,6 +23,9 @@ import org.eclipse.wst.sse.core.internal.Logger;
  * 
  * Based on org.eclipse.core.internal.propertytester.FilePropertyTester
  * 
+ * @deprecated use org.eclipse.core.resources.contentTypeId instead
+ * 
+ * https://bugs.eclipse.org/bugs/show_bug.cgi?id=288216 
  */
 public class StructuredFilePropertyTester extends PropertyTester {
 
