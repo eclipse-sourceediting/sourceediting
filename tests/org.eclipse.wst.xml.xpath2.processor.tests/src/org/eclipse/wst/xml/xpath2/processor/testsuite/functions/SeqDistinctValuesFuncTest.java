@@ -1468,7 +1468,7 @@ public class SeqDistinctValuesFuncTest extends AbstractPsychoPathTest {
    public void test_fn_distinct_values_mixed_args_001() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc/fn-distinct-values-mixed-args-001.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc/fn-distinct-values-mixed-args-alt-001.txt";
+      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc/fn-distinct-values-mixed-args-001.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1485,7 +1485,7 @@ public class SeqDistinctValuesFuncTest extends AbstractPsychoPathTest {
 	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
-         
+	      
           actual = buildResultString(rs);
 	
       } catch (XPathParserException ex) {
@@ -1616,7 +1616,7 @@ public class SeqDistinctValuesFuncTest extends AbstractPsychoPathTest {
    public void test_fn_distinct_values_mixed_args_005() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc/fn-distinct-values-mixed-args-005.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc/fn-distinct-values-mixed-args-alt-005.txt";
+      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc/fn-distinct-values-mixed-args-005.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1801,7 +1801,7 @@ public class SeqDistinctValuesFuncTest extends AbstractPsychoPathTest {
    public void test_fn_distinct_values_mixed_args_010() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc/fn-distinct-values-mixed-args-010.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc/fn-distinct-values-mixed-args-alt-010.txt";
+      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc/fn-distinct-values-mixed-args-010.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -2097,7 +2097,7 @@ public class SeqDistinctValuesFuncTest extends AbstractPsychoPathTest {
    public void test_fn_distinct_values_mixed_args_018() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc/fn-distinct-values-mixed-args-018.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc/fn-distinct-values-mixed-args-alt-018.txt";
+      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc/fn-distinct-values-mixed-args-018.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -2319,7 +2319,7 @@ public class SeqDistinctValuesFuncTest extends AbstractPsychoPathTest {
    public void test_fn_distinct_values_mixed_args_024() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc/fn-distinct-values-mixed-args-024.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc/fn-distinct-values-mixed-args-alt-024.txt";
+      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc/fn-distinct-values-mixed-args-024.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -2467,7 +2467,7 @@ public class SeqDistinctValuesFuncTest extends AbstractPsychoPathTest {
    public void test_fn_distinct_values_mixed_args_028() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc/fn-distinct-values-mixed-args-028.xq";
-      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc/fn-distinct-values-mixed-args-alt-028.txt";
+      String resultFile = "/ExpectedTestResults/Functions/SeqFunc/GeneralSeqFunc/SeqDistinctValuesFunc//fn-distinct-values-mixed-args-028.txt";
       String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -2646,6 +2646,22 @@ public class SeqDistinctValuesFuncTest extends AbstractPsychoPathTest {
       assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
+   }
+   
+   private boolean assertHasOneInstance(String value, String target) {
+	   boolean hasone = false;
+	   int index = target.indexOf(value);
+	   if (index != -1) {
+		   hasone = true;
+	   }
+	   if (index == -1) {
+		   return hasone;
+	   }
+	   index = target.substring(index).indexOf(value);
+	   if (index != -1) {
+		   hasone = false;
+	   }
+	   return hasone;
    }
 
 }
