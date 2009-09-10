@@ -35,7 +35,7 @@ public class LocalNameFromQNameFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:local-name-from-QName(())";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -43,7 +43,8 @@ public class LocalNameFromQNameFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<empty>" + buildResultString(rs) + "</empty>";
+          
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -53,7 +54,7 @@ public class LocalNameFromQNameFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -72,7 +73,7 @@ public class LocalNameFromQNameFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "fn:local-name-from-QName(((),()))";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -80,7 +81,7 @@ public class LocalNameFromQNameFuncTest extends AbstractPsychoPathTest {
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = buildResultString(rs);
+          actual = "<empty>" + buildResultString(rs) + "</empty>";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -90,7 +91,7 @@ public class LocalNameFromQNameFuncTest extends AbstractPsychoPathTest {
          actual = ex.code();
       }
 
-      assertEquals("XPath Result Error " + xqFile + ":", expectedResult, actual);
+      assertXMLEqual("XPath Result Error " + xqFile + ":", expectedResult, actual);
         
 
    }
@@ -100,7 +101,7 @@ public class LocalNameFromQNameFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/QNameFunc/LocalNameFromQnameFunc/LocalNameFromQNameFunc009.xq";
       String resultFile = "/ExpectedTestResults/Functions/QNameFunc/LocalNameFromQnameFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -137,7 +138,7 @@ public class LocalNameFromQNameFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/QNameFunc/LocalNameFromQnameFunc/LocalNameFromQNameFunc011.xq";
       String resultFile = "/ExpectedTestResults/Functions/QNameFunc/LocalNameFromQnameFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPST0017";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -174,7 +175,7 @@ public class LocalNameFromQNameFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/fsx.xml";
       String xqFile = "/Queries/XQuery/Functions/QNameFunc/LocalNameFromQnameFunc/LocalNameFromQNameFunc015.xq";
       String resultFile = "/ExpectedTestResults/Functions/QNameFunc/LocalNameFromQnameFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -211,7 +212,7 @@ public class LocalNameFromQNameFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/QNameFunc/LocalNameFromQnameFunc/LocalNameFromQNameFunc016.xq";
       String resultFile = "/ExpectedTestResults/Functions/QNameFunc/LocalNameFromQnameFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -248,7 +249,7 @@ public class LocalNameFromQNameFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/QNameFunc/LocalNameFromQnameFunc/LocalNameFromQNameFunc017.xq";
       String resultFile = "/ExpectedTestResults/Functions/QNameFunc/LocalNameFromQnameFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPTY0004";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
