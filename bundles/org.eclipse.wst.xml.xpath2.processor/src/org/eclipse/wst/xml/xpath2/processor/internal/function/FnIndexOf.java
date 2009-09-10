@@ -8,11 +8,13 @@
  * Contributors:
  *     Andrea Bittau - initial API and implementation from the PsychoPath XPath 2.0 
  *     Jesper Moller - bug 280555 - Add pluggable collation support
+ *     David Carver (STAR) - bug 262765 - fixed collation and comparison issues.
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -20,21 +22,33 @@ import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
 import org.eclipse.wst.xml.xpath2.processor.DynamicError;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
+import org.eclipse.wst.xml.xpath2.processor.internal.SeqType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.NumericType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
+import org.eclipse.wst.xml.xpath2.processor.internal.types.XSUntypedAtomic;
 
 /**
  * Returns a sequence of positive integers giving the positions within the
  * sequence $seqParam of items that are equal to $srchParam.
  */
 public class FnIndexOf extends Function {
+	
+	private static Collection _expected_args = null;
+	
 	/**
 	 * Constructor for FnIndexOf.
 	 */
 	public FnIndexOf() {
-		super(new QName("index-of"), 2);
+		super(new QName("index-of"), 2, 3);
 	}
 
 	/**
@@ -61,9 +75,14 @@ public class FnIndexOf extends Function {
 	 * @return Result of operation.
 	 */
 	private static CmpEq get_comparable(AnyType at) throws DynamicError {
+		if (at instanceof NodeType) {
+			XSString nodeString = new XSString(at.string_value());
+			return (CmpEq) nodeString;
+		}
+		
 		if (!(at instanceof AnyAtomicType))
 			DynamicError.throw_type_error();
-
+		
 		if (!(at instanceof CmpEq))
 			throw DynamicError.not_cmp(null);
 
@@ -81,8 +100,7 @@ public class FnIndexOf extends Function {
 	 * @return Result of fn:index-of operation.
 	 */
 	public static ResultSequence index_of(Collection args, DynamicContext dynamicContext) throws DynamicError {
-
-		assert args.size() == 2;
+		Function.convert_arguments(args, expected_args());
 
 		ResultSequence rs = ResultSequenceFactory.create_new();
 
@@ -90,26 +108,108 @@ public class FnIndexOf extends Function {
 		Iterator citer = args.iterator();
 		ResultSequence arg1 = (ResultSequence) citer.next();
 		ResultSequence arg2 = (ResultSequence) citer.next();
+		
+		if (arg1.empty()) {
+			return rs;
+		}
 
 		// sanity chex
 		if (arg2.size() != 1)
 			DynamicError.throw_type_error();
+		
+		String collationUri = dynamicContext.default_collation_name();
+		if (citer.hasNext()) {
+			ResultSequence arg3 = (ResultSequence) citer.next();
+			if (!arg3.empty()) {
+				XSString collation = (XSString) arg3.first();
+				collationUri = collation.string_value();
+			}
+		}
 
-		AnyType at = arg2.first();
+		AnyAtomicType at = (AnyAtomicType)arg2.first();
 
 		get_comparable(at);
 
 		int index = 1;
 
 		for (Iterator i = arg1.iterator(); i.hasNext();) {
-			CmpEq candidate = get_comparable((AnyType) i.next());
+			AnyType cmptype = (AnyType) i.next();
+			CmpEq candidate = get_comparable(cmptype);
 
-			if (candidate.eq(at, dynamicContext))
-				rs.add(new XSInteger(BigInteger.valueOf(index)));
+			if (!(at instanceof CmpEq))
+				continue;
+			
+			if (isBoolean(cmptype, at)) {
+				XSBoolean boolat = (XSBoolean) cmptype;
+				if (boolat.eq(at, dynamicContext)) {
+ 				   rs.add(new XSInteger(BigInteger.valueOf(index)));
+				}
+			} else 
+			
+			if (isNumeric(cmptype, at)) {
+				NumericType numericat = (NumericType) at;
+				if (numericat.eq(cmptype, dynamicContext)) {
+					rs.add(new XSInteger(BigInteger.valueOf(index)));
+				}
+			} else
+			
+			if (isDuration(cmptype, at)) {
+				XSDuration durat = (XSDuration) at;
+				if (durat.eq(cmptype, dynamicContext)) {
+					rs.add(new XSInteger(BigInteger.valueOf(index)));
+				}
+			} else
+			
+			if (needsStringComparison(cmptype, at)) {
+				XSString xstr1 = new XSString(cmptype.string_value());
+				XSString itemStr = new XSString(at.string_value());
+				if (FnCompare.compare_string(collationUri, xstr1, itemStr, dynamicContext).equals(BigInteger.ZERO)) {
+					rs.add(new XSInteger(BigInteger.valueOf(index)));
+				}
+			} 
+			
+//			if (candidate.eq(at, dynamicContext))
+//				rs.add(new XSInteger(BigInteger.valueOf(index)));
 
 			index++;
 		}
 
 		return rs;
 	}
+
+	private static boolean isDuration(AnyType item, AnyType at) {
+		return at instanceof XSDuration && item instanceof XSDuration;
+	}
+
+	private static boolean isBoolean(AnyType cmptype, AnyType at) {
+		return at instanceof XSBoolean && cmptype instanceof XSBoolean;
+	}
+
+	private static boolean isNumeric(AnyType item, AnyType at) {
+		return at instanceof NumericType && item instanceof NumericType;
+	}
+
+	private static boolean needsStringComparison(AnyType item, AnyType at) {
+		return (at instanceof XSString && (!(item instanceof NumericType) || item instanceof XSUntypedAtomic)
+			|| ((at instanceof XSFloat || at instanceof XSDouble) && (item instanceof XSFloat || item instanceof XSDouble))	);
+	}
+
+	/**
+	 * Obtain a list of expected arguments.
+	 * 
+	 * @return Result of operation.
+	 */
+	public static Collection expected_args() {
+		if (_expected_args == null) {
+			_expected_args = new ArrayList();
+			SeqType arg = new SeqType(AnyType.class, SeqType.OCC_STAR);
+			_expected_args.add(arg);
+			_expected_args.add(new SeqType(AnyAtomicType.class, SeqType.OCC_NONE));
+			_expected_args.add(new SeqType(new XSString(), SeqType.OCC_NONE));
+			_expected_args.add(arg);
+		}
+
+		return _expected_args;
+	}
+	
 }

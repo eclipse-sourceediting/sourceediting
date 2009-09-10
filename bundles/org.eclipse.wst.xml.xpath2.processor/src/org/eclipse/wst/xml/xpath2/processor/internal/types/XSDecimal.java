@@ -10,13 +10,15 @@
  *     Mukul Gandhi - bug 274805 - improvements to xs:integer data type
  *     David Carver - bug 277774 - XSDecimal returning wrong values.
  *     David Carver - bug 262765 - various numeric formatting fixes and calculations
- *     David Carver (STAR) - bug 282223 - Can't Cast Exponential values to Decimal values. 
+ *     David Carver (STAR) - bug 282223 - Can't Cast Exponential values to Decimal values.
+ *     David Carver (STAR) - bug 262765 - fixed edge case where rounding was occuring when it shouldn't. 
  *******************************************************************************/
 
 package org.eclipse.wst.xml.xpath2.processor.internal.types;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Iterator;
 
@@ -39,7 +41,7 @@ public class XSDecimal extends NumericType {
 	 * Initiates a representation of 0.0
 	 */
 	public XSDecimal() {
-		this(BigDecimal.valueOf(0.0));
+		this(BigDecimal.ZERO);
 	}
 
 	/**
@@ -53,7 +55,7 @@ public class XSDecimal extends NumericType {
 	}
 	
 	public XSDecimal(String x) {
-		_value = new BigDecimal(x);
+		_value = new BigDecimal(x, MathContext.DECIMAL128);
 	}
 
 	/**
@@ -199,17 +201,21 @@ public class XSDecimal extends NumericType {
 	 *         otherwise
 	 */
 	public boolean eq(AnyType at, DynamicContext context) throws DynamicError {
+		XSDecimal dt = null;
+		if (!(at instanceof XSDecimal)) { 
+			ResultSequence rs = ResultSequenceFactory.create_new(at);
+			
+			ResultSequence crs = constructor(rs);
+			if (crs.empty()) {
+				throw DynamicError.throw_type_error();
+			}
 		
-		ResultSequence rs = ResultSequenceFactory.create_new(at);
-		
-		ResultSequence crs = constructor(rs);
-		if (crs.empty()) {
-			throw DynamicError.throw_type_error();
-		}
-		
-		AnyType cat = crs.first();
+			AnyType cat = crs.first();
 
-		XSDecimal dt = (XSDecimal) cat;
+			dt = (XSDecimal) cat;
+	    } else {
+	    	dt = (XSDecimal) at;
+	    }
 		return (_value.compareTo(dt.getValue()) == 0);
 	}
 
