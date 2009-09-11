@@ -131,7 +131,7 @@ public class ModelQueryAdapterFactoryForJSP extends AbstractAdapterFactory imple
 		return modelQueryAdapterImpl;
 	}
 
-	ModelQuery createModelQuery(IStructuredModel model, URIResolver resolver) {
+	protected ModelQuery createModelQuery(IStructuredModel model, URIResolver resolver) {
 		return new JSPModelQueryImpl(model, resolver);
 	}
 

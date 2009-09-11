@@ -30,7 +30,7 @@ public class ModelQueryAdapterFactoryForTag extends ModelQueryAdapterFactoryForJ
 		return new ModelQueryAdapterFactoryForTag(getAdapterKey(), isShouldRegisterAdapter());
 	}
 
-	ModelQuery createModelQuery(IStructuredModel model, URIResolver resolver) {
+	protected ModelQuery createModelQuery(IStructuredModel model, URIResolver resolver) {
 		return new TagModelQuery(new SimpleAssociationProvider(new TagModelQueryCMProvider()));
 	}
 }
