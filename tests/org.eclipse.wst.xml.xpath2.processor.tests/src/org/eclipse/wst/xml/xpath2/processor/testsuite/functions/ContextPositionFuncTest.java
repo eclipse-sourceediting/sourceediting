@@ -63,7 +63,7 @@ public class ContextPositionFuncTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextPositionFunc/position-2.xq";
       String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextPositionFunc/";
-      String expectedResult = getExpectedResult(resultFile);
+      String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
@@ -72,12 +72,13 @@ public class ContextPositionFuncTest extends AbstractPsychoPathTest {
 
       DynamicContext dc = setupDynamicContext(schema);
 
-      String xpath = extractXPathExpression(xqFile, inputFile);
+      String xpath = "position()";
       String actual = null;
       try {
-	   	  XPath path = compileXPath(dc, xpath);
-	
+	   	  XPath path = compileXPath(dc, xpath);	
 	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      dc.set_focus(null);
+	      
 	      ResultSequence rs = eval.evaluate(path);
          
           actual = buildResultString(rs);
@@ -85,6 +86,7 @@ public class ContextPositionFuncTest extends AbstractPsychoPathTest {
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
+    	 ex.printStackTrace();
          actual = ex.code();
       } catch (DynamicError ex) {
          actual = ex.code();
