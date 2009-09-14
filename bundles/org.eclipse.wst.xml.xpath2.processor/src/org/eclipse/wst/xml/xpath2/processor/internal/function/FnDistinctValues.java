@@ -14,7 +14,6 @@
 
 package org.eclipse.wst.xml.xpath2.processor.internal.function;
 
-import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -24,14 +23,8 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
 import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyAtomicType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.NumericType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSUntypedAtomic;
 
 /**
  * Returns the sequence that results from removing from $arg all but one of a
@@ -41,7 +34,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.XSUntypedAtomic;
  * type xs:string. The order in which the sequence of values is returned is
  * implementation dependent.
  */
-public class FnDistinctValues extends Function {
+public class FnDistinctValues extends AbstractCollationEqualFunction {
 	/**
 	 * Constructor for FnDistinctValues.
 	 */
@@ -61,84 +54,6 @@ public class FnDistinctValues extends Function {
 	@Override
 	public ResultSequence evaluate(Collection args) throws DynamicError {
 		return distinct_values(args, dynamic_context());
-	}
-
-	/**
-	 * Support for Contains interface.
-	 * 
-	 * @param rs
-	 *            input1 expression sequence.
-	 * @param item
-	 *            input2 expression of any atomic type.
-	 * @throws DynamicError
-	 *             Dynamic error.
-	 * @return Result of operation.
-	 */
-	private static boolean contains(ResultSequence rs, AnyAtomicType item, DynamicContext context, String collationURI)
-			throws DynamicError {
-		if (!(item instanceof CmpEq))
-			return false;
-		
-		return hasValue(rs, item, context, collationURI);
-	}
-
-	private static boolean hasValue(ResultSequence rs, AnyAtomicType item,
-			DynamicContext context, String collationURI)
-			throws DynamicError {
-		XSString itemStr = new XSString(item.string_value());
-		
-		for (Iterator i = rs.iterator(); i.hasNext();) {
-			AnyType at = (AnyType) i.next();
-
-			if (!(at instanceof CmpEq))
-				continue;
-			
-			if (isBoolean(item, at)) {
-				XSBoolean boolat = (XSBoolean) at;
-				if (boolat.eq(item, context)) {
-					return true;
-				}
-			}
-			
-			if (isNumeric(item, at)) {
-				NumericType numericat = (NumericType) at;
-				if (numericat.eq(item, context)) {
-					return true;
-				}
-			}
-			
-			if (isDuration(item, at)) {
-				XSDuration durat = (XSDuration) at;
-				if (durat.eq(item, context)) {
-					return true;
-				}
-			}
-			
-			if (needsStringComparison(item, at)) {
-				XSString xstr1 = new XSString(at.string_value());
-				if (FnCompare.compare_string(collationURI, xstr1, itemStr, context).equals(BigInteger.ZERO)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	private static boolean isDuration(AnyAtomicType item, AnyType at) {
-		return at instanceof XSDuration && item instanceof XSDuration;
-	}
-
-	private static boolean isBoolean(AnyAtomicType item, AnyType at) {
-		return at instanceof XSBoolean && item instanceof XSBoolean;
-	}
-
-	private static boolean isNumeric(AnyAtomicType item, AnyType at) {
-		return at instanceof NumericType && item instanceof NumericType;
-	}
-
-	private static boolean needsStringComparison(AnyAtomicType item, AnyType at) {
-		return (at instanceof XSString && (!(item instanceof NumericType) || item instanceof XSUntypedAtomic)
-			|| ((at instanceof XSFloat || at instanceof XSDouble) && (item instanceof XSFloat || item instanceof XSDouble))	);
 	}
 
 	/**
@@ -182,4 +97,24 @@ public class FnDistinctValues extends Function {
 
 		return rs;
 	}
+	
+	/**
+	 * Support for Contains interface.
+	 * 
+	 * @param rs
+	 *            input1 expression sequence.
+	 * @param item
+	 *            input2 expression of any atomic type.
+	 * @throws DynamicError
+	 *             Dynamic error.
+	 * @return Result of operation.
+	 */
+	protected static boolean contains(ResultSequence rs, AnyAtomicType item,
+			DynamicContext context, String collationURI) throws DynamicError {
+		if (!(item instanceof CmpEq))
+			return false;
+
+		return hasValue(rs, item, context, collationURI);
+	}
+	
 }

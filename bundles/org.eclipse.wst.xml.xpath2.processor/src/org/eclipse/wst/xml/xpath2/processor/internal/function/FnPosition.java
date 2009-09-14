@@ -64,6 +64,10 @@ public class FnPosition extends Function {
 			throws DynamicError {
 		assert args.size() == 0;
 
+		if (dc.focus() == null) {
+			throw DynamicError.contextUndefined();
+		}
+		
 		return ResultSequenceFactory.create_new(new XSInteger(BigInteger.valueOf(dc
 				.context_position())));
 	}

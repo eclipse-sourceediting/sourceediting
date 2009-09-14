@@ -29,18 +29,15 @@ import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NumericType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSBoolean;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDouble;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSFloat;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSInteger;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSString;
-import org.eclipse.wst.xml.xpath2.processor.internal.types.XSUntypedAtomic;
 
 /**
  * Returns a sequence of positive integers giving the positions within the
  * sequence $seqParam of items that are equal to $srchParam.
  */
-public class FnIndexOf extends Function {
+public class FnIndexOf extends AbstractCollationEqualFunction {
 	
 	private static Collection _expected_args = null;
 	
@@ -134,7 +131,7 @@ public class FnIndexOf extends Function {
 
 		for (Iterator i = arg1.iterator(); i.hasNext();) {
 			AnyType cmptype = (AnyType) i.next();
-			CmpEq candidate = get_comparable(cmptype);
+			get_comparable(cmptype);
 
 			if (!(at instanceof CmpEq))
 				continue;
@@ -168,30 +165,10 @@ public class FnIndexOf extends Function {
 				}
 			} 
 			
-//			if (candidate.eq(at, dynamicContext))
-//				rs.add(new XSInteger(BigInteger.valueOf(index)));
-
 			index++;
 		}
 
 		return rs;
-	}
-
-	private static boolean isDuration(AnyType item, AnyType at) {
-		return at instanceof XSDuration && item instanceof XSDuration;
-	}
-
-	private static boolean isBoolean(AnyType cmptype, AnyType at) {
-		return at instanceof XSBoolean && cmptype instanceof XSBoolean;
-	}
-
-	private static boolean isNumeric(AnyType item, AnyType at) {
-		return at instanceof NumericType && item instanceof NumericType;
-	}
-
-	private static boolean needsStringComparison(AnyType item, AnyType at) {
-		return (at instanceof XSString && (!(item instanceof NumericType) || item instanceof XSUntypedAtomic)
-			|| ((at instanceof XSFloat || at instanceof XSDouble) && (item instanceof XSFloat || item instanceof XSDouble))	);
 	}
 
 	/**

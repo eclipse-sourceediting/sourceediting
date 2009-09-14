@@ -19,6 +19,7 @@ import org.eclipse.wst.xml.xpath2.processor.ResultSequenceFactory;
 import org.eclipse.wst.xml.xpath2.processor.internal.*;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.*;
 
+import java.math.BigInteger;
 import java.util.*;
 import org.w3c.dom.*;
 
@@ -32,12 +33,12 @@ import org.w3c.dom.*;
  * are compared (but not when names are compared), according to the rules in
  * 7.3.1 Collations in the specification.
  */
-public class FnDeepEqual extends Function {
+public class FnDeepEqual extends AbstractCollationEqualFunction {
 	/**
 	 * Constructor for FnDeepEqual.
 	 */
 	public FnDeepEqual() {
-		super(new QName("deep-equal"), 2);
+		super(new QName("deep-equal"), 2, 3);
 	}
 
 	/**
@@ -68,14 +69,20 @@ public class FnDeepEqual extends Function {
 	public static ResultSequence deep_equal(Collection args, DynamicContext context)
 			throws DynamicError {
 
-		assert args.size() == 2;
-
 		// get args
 		Iterator citer = args.iterator();
 		ResultSequence arg1 = (ResultSequence) citer.next();
 		ResultSequence arg2 = (ResultSequence) citer.next();
+		ResultSequence arg3 = null;
+		String collationURI = context.default_collation_name();
+		if (citer.hasNext()) {
+			arg3 = (ResultSequence) citer.next();
+			if (!arg3.empty()) {
+				collationURI = arg3.first().string_value();
+			}
+		}
 
-		boolean result = deep_equal(arg1, arg2, context);
+		boolean result = deep_equal(arg1, arg2, context, collationURI);
 
 		return ResultSequenceFactory.create_new(new XSBoolean(result));
 	}
@@ -91,7 +98,7 @@ public class FnDeepEqual extends Function {
 	 *            Current dynamic context 
 	 * @return Result of fn:deep-equal operation.
 	 */
-	public static boolean deep_equal(ResultSequence one, ResultSequence two, DynamicContext context) {
+	public static boolean deep_equal(ResultSequence one, ResultSequence two, DynamicContext context, String collationURI) {
 		if (one.empty() && two.empty())
 			return true;
 
@@ -105,7 +112,7 @@ public class FnDeepEqual extends Function {
 			AnyType a = (AnyType) onei.next();
 			AnyType b = (AnyType) twoi.next();
 
-			if (!deep_equal(a, b, context))
+			if (!deep_equal(a, b, context, collationURI))
 				return false;
 		}
 		return true;
@@ -121,9 +128,9 @@ public class FnDeepEqual extends Function {
 	 * @param context 
 	 * @return Result of fn:deep-equal operation.
 	 */
-	public static boolean deep_equal(AnyType one, AnyType two, DynamicContext context) {
+	public static boolean deep_equal(AnyType one, AnyType two, DynamicContext context, String collationURI) {
 		if ((one instanceof AnyAtomicType) && (two instanceof AnyAtomicType))
-			return deep_equal((AnyAtomicType) one, (AnyAtomicType) two, context);
+			return deep_equal((AnyAtomicType) one, (AnyAtomicType) two, context, collationURI);
 
 		else if (((one instanceof AnyAtomicType) && (two instanceof NodeType))
 				|| ((one instanceof NodeType) && (two instanceof AnyAtomicType)))
@@ -131,7 +138,6 @@ public class FnDeepEqual extends Function {
 		else if ((one instanceof NodeType) && (two instanceof NodeType))
 			return deep_equal((NodeType) one, (NodeType) two, context);
 		else {
-			assert false;
 			return false;
 		}
 	}
@@ -145,7 +151,7 @@ public class FnDeepEqual extends Function {
 	 *            input2 xpath expression/variable.
 	 * @return Result of fn:deep-equal operation.
 	 */
-	public static boolean deep_equal(AnyAtomicType one, AnyAtomicType two, DynamicContext context) {
+	public static boolean deep_equal(AnyAtomicType one, AnyAtomicType two, DynamicContext context, String collationURI) {
 		if (!(one instanceof CmpEq))
 			return false;
 		if (!(two instanceof CmpEq))
@@ -154,8 +160,29 @@ public class FnDeepEqual extends Function {
 		CmpEq a = (CmpEq) one;
 
 		try {
+			if (isNumeric(one, two)) {
+				NumericType numeric = (NumericType) one;
+				if (numeric.eq(two, context)) {
+					return true;
+				} else {
+					XSString value1 = new XSString(one.string_value());
+					if (value1.eq(two, context)) {
+						return true;
+					}
+				}
+			}
+
 			if (a.eq(two, context))
 				return true;
+			
+			if (needsStringComparison(one, two)) {
+				XSString xstr1 = new XSString(one.string_value());
+				XSString xstr2 = new XSString(two.string_value());
+				if (FnCompare.compare_string(collationURI, xstr1, xstr2,
+						context).equals(BigInteger.ZERO)) {
+					return true;
+				}
+			}
 			return false;
 		} catch (DynamicError err) {
 			return false; // XXX ???
@@ -174,12 +201,11 @@ public class FnDeepEqual extends Function {
 	public static boolean deep_equal(NodeType one, NodeType two, DynamicContext context) {
 		Node a = one.node_value();
 		Node b = two.node_value();
+		
+		if (a.isEqualNode(b)) {
+			return true;
+		}
 
-		if (a.getNodeType() != b.getNodeType())
-			return false;
-
-		// XXX implement
-		assert false;
 		return false;
 	}
 }
