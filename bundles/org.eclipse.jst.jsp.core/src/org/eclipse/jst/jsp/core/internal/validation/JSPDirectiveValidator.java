@@ -294,7 +294,7 @@ public class JSPDirectiveValidator extends JSPValidator {
 
 				reporter.addMessage(fMessageOriginator, message);
 			}
-			else {
+			else if (DeploymentDescriptorPropertyCache.getInstance().getURLMapping(file.getFullPath(), fileValue) == null) {
 				IPath testPath = FacetModuleCoreSupport.resolve(file.getFullPath(), fileValue);
 				if (testPath.segmentCount() > 1) {
 					IFile testFile = file.getWorkspace().getRoot().getFile(testPath);

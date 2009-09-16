@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation and others.
+ * Copyright (c) 2007, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -65,9 +65,10 @@ import org.xml.sax.SAXParseException;
 public final class DeploymentDescriptorPropertyCache {
 	private static final PropertyGroup[] NO_PROPERTY_GROUPS = new PropertyGroup[0];
 
-	private static class DeploymentDescriptor {
+	static class DeploymentDescriptor {
 		PropertyGroup[] groups;
 		long modificationStamp;
+		StringMatcher[] urlPatterns;
 		Float version = new Float(defaultWebAppVersion);
 	}
 
@@ -224,11 +225,11 @@ public final class DeploymentDescriptorPropertyCache {
 		}
 
 		public String toString() {
-			return number + ":" + url_pattern;
+			return number + ":" + url_pattern; //$NON-NLS-1$
 		}
 	}
 
-	private static class ResourceChangeListener implements IResourceChangeListener {
+	static class ResourceChangeListener implements IResourceChangeListener {
 		public void resourceChanged(IResourceChangeEvent event) {
 			IResourceDelta delta = event.getDelta();
 			if (event.getType() != IResourceChangeEvent.POST_CHANGE)
@@ -300,7 +301,7 @@ public final class DeploymentDescriptorPropertyCache {
 	/**
 	 * Copied from org.eclipse.core.internal.propertytester.StringMatcher, but
 	 * should be replaced with a more accurate implementation of the rules in
-	 * Servlet spec SRV.11.2
+	 * Servlet spec SRV.11.2 and RFC 2396
 	 */
 	private static class StringMatcher {
 		private static final char SINGLE_WILD_CARD = '\u0000';
@@ -314,7 +315,7 @@ public final class DeploymentDescriptorPropertyCache {
 
 		private boolean hasTrailingStar;
 
-		private final String pattern;
+		final String pattern;
 
 		private final int patternLength;
 
@@ -541,29 +542,33 @@ public final class DeploymentDescriptorPropertyCache {
 			}
 			return true;
 		}
+		
+		public String toString() {
+			return "StringMatcher: " + pattern; //$NON-NLS-1$
+		}
 	}
 
 	private static DeploymentDescriptorPropertyCache _instance = new DeploymentDescriptorPropertyCache();
 	private static final boolean _debugResolutionCache = false;
 
 	private static final float defaultWebAppVersion = 2.4f;
-	private static String EL_IGNORED = "el-ignored";
-	private static String ID = "id";
-	private static String INCLUDE_CODA = "include-coda";
-	private static String INCLUDE_PRELUDE = "include-prelude";
+	static String EL_IGNORED = "el-ignored"; //$NON-NLS-1$
+	private static String ID = "id"; //$NON-NLS-1$
+	static String INCLUDE_CODA = "include-coda"; //$NON-NLS-1$
+	static String INCLUDE_PRELUDE = "include-prelude"; //$NON-NLS-1$
 
-	private static String IS_XML = "is-xml";
-	private static String JSP_PROPERTY_GROUP = "jsp-property-group";
-	private static String PAGE_ENCODING = "page-encoding";
+	static String IS_XML = "is-xml"; //$NON-NLS-1$
+	private static String JSP_PROPERTY_GROUP = "jsp-property-group"; //$NON-NLS-1$
+	static String PAGE_ENCODING = "page-encoding"; //$NON-NLS-1$
 
-	private static String SCRIPTING_INVALID = "scripting-invalid";
-	private static String URL_PATTERN = "url-pattern";
-	private static final String WEB_APP_ELEMENT_LOCAL_NAME = ":web-app";
-	private static final String WEB_APP_ELEMENT_NAME = "web-app";
+	static String SCRIPTING_INVALID = "scripting-invalid"; //$NON-NLS-1$
+	static String URL_PATTERN = "url-pattern"; //$NON-NLS-1$
+	private static final String WEB_APP_ELEMENT_LOCAL_NAME = ":web-app"; //$NON-NLS-1$
+	private static final String WEB_APP_ELEMENT_NAME = "web-app"; //$NON-NLS-1$
 
-	private static final String WEB_APP_VERSION_NAME = "version";
-	private static final String WEB_INF = "WEB-INF";
-	private static final String WEB_XML = "web.xml";
+	private static final String WEB_APP_VERSION_NAME = "version"; //$NON-NLS-1$
+	private static final String WEB_INF = "WEB-INF"; //$NON-NLS-1$
+	private static final String WEB_XML = "web.xml"; //$NON-NLS-1$
 	// private static final String WEB_INF_WEB_XML = WEB_INF + IPath.SEPARATOR
 	// + WEB_XML;
 	private static final String SLASH_WEB_INF_WEB_XML = Path.ROOT.toString() + WEB_INF + IPath.SEPARATOR + WEB_XML;
@@ -626,7 +631,7 @@ public final class DeploymentDescriptorPropertyCache {
 		super();
 	}
 
-	private void _parseDocument(IPath path, Float[] version, List groupList, SubProgressMonitor subMonitor, Document document) {
+	private void _parseDocument(IPath path, Float[] version, List groupList, List urlPatterns, SubProgressMonitor subMonitor, Document document) {
 		Element webapp = document.getDocumentElement();
 		if (webapp != null) {
 			if (webapp.getTagName().equals(WEB_APP_ELEMENT_NAME) || webapp.getNodeName().endsWith(WEB_APP_ELEMENT_LOCAL_NAME)) {
@@ -672,6 +677,14 @@ public final class DeploymentDescriptorPropertyCache {
 				groupList.add(group);
 			}
 		}
+		
+		NodeList urlPatternElements = document.getElementsByTagName(URL_PATTERN);
+		for (int i = 0; i < urlPatternElements.getLength(); i++) {
+			String urlPattern = getContainedText(urlPatternElements.item(i));
+			if(urlPattern != null && urlPattern.length() > 0) {
+				urlPatterns.add(new StringMatcher(urlPattern));
+			}
+		}
 	}
 
 	/**
@@ -704,13 +717,14 @@ public final class DeploymentDescriptorPropertyCache {
 	 * SSE XML parser to find the property groups.
 	 */
 	private DeploymentDescriptor fetchDescriptor(IPath path, IProgressMonitor monitor) {
-		monitor.beginTask("Reading Deployment Descriptor", 3);
+		monitor.beginTask(Messages.DeploymentDescriptorPropertyCache_1, 3);
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 
 		PropertyGroup groups[] = null;
 
 		IStructuredModel model = null;
 		List groupList = new ArrayList();
+		List urlPatterns = new ArrayList();
 		Float[] version = new Float[1];
 		SubProgressMonitor subMonitor = new SubProgressMonitor(monitor, 2);
 		DocumentBuilder builder = CommonXML.getDocumentBuilder(false);
@@ -722,7 +736,7 @@ public final class DeploymentDescriptorPropertyCache {
 			inputSource.setCharacterStream(new StringReader(s));
 			inputSource.setSystemId(path.toString());
 			Document document = builder.parse(inputSource);
-			_parseDocument(path, version, groupList, subMonitor, document);
+			_parseDocument(path, version, groupList, urlPatterns, subMonitor, document);
 		}
 		catch (SAXException e1) {
 			/* encountered a fatal parsing error, try our own parser */
@@ -736,7 +750,7 @@ public final class DeploymentDescriptorPropertyCache {
 				monitor.worked(1);
 				if (model instanceof IDOMModel) {
 					IDOMDocument document = ((IDOMModel) model).getDocument();
-					_parseDocument(path, version, groupList, subMonitor, document);
+					_parseDocument(path, version, groupList, urlPatterns, subMonitor, document);
 				}
 			}
 			catch (Exception e) {
@@ -763,10 +777,29 @@ public final class DeploymentDescriptorPropertyCache {
 		DeploymentDescriptor deploymentDescriptor = new DeploymentDescriptor();
 		deploymentDescriptor.modificationStamp = file.getModificationStamp();
 		deploymentDescriptor.groups = groups;
+		deploymentDescriptor.urlPatterns = ((StringMatcher[]) urlPatterns.toArray(new StringMatcher[urlPatterns.size()]));
 		deploymentDescriptor.version = version[0];
 		monitor.done();
 		fDeploymentDescriptors.put(path, new SoftReference(deploymentDescriptor));
 		return deploymentDescriptor;
+	}
+
+	private DeploymentDescriptor getCachedDescriptor(IPath jspFilePath) {
+		IPath webxmlPath = getWebXMLPath(jspFilePath);
+		if (webxmlPath == null)
+			return null;
+
+		IFile webxmlFile = ResourcesPlugin.getWorkspace().getRoot().getFile(webxmlPath);
+		if (!webxmlFile.isAccessible())
+			return null;
+
+		Reference descriptorHolder = (Reference) fDeploymentDescriptors.get(webxmlPath);
+		DeploymentDescriptor descriptor = null;
+
+		if (descriptorHolder == null || ((descriptor = (DeploymentDescriptor) descriptorHolder.get()) == null) || (descriptor.modificationStamp == IResource.NULL_STAMP) || (descriptor.modificationStamp != webxmlFile.getModificationStamp())) {
+			descriptor = fetchDescriptor(webxmlPath, new NullProgressMonitor());
+		}
+		return descriptor;
 	}
 
 	private EntityResolver getEntityResolver() {
@@ -803,22 +836,10 @@ public final class DeploymentDescriptorPropertyCache {
 	public float getJSPVersion(IPath fullPath) {
 		float version = defaultWebAppVersion;
 		/* try applicable web.xml file first */
-		IPath webxmlPath = getWebXMLPath(fullPath);
-		if (webxmlPath != null) {
-			IFile webxmlFile = ResourcesPlugin.getWorkspace().getRoot().getFile(webxmlPath);
-			if (webxmlFile.isAccessible()) {
-				Reference descriptorHolder = (Reference) fDeploymentDescriptors.get(webxmlPath);
-				DeploymentDescriptor descriptor = null;
-
-				if (descriptorHolder == null || ((descriptor = (DeploymentDescriptor) descriptorHolder.get()) == null) || (descriptor.modificationStamp == IResource.NULL_STAMP) || (descriptor.modificationStamp != webxmlFile.getModificationStamp())) {
-					descriptor = fetchDescriptor(webxmlPath, new NullProgressMonitor());
-				}
-
-				if (descriptor.version != null) {
-					version = descriptor.version.floatValue();
-					return convertSpecVersions(version);
-				}
-			}
+		DeploymentDescriptor descriptor = getCachedDescriptor(fullPath);
+		if (descriptor != null && descriptor.version != null) {
+			version = descriptor.version.floatValue();
+			return convertSpecVersions(version);
 		}
 
 		/* check facet settings */
@@ -837,20 +858,9 @@ public final class DeploymentDescriptorPropertyCache {
 	 */
 	public PropertyGroup[] getPropertyGroups(IPath jspFilePath) {
 		List matchingGroups = new ArrayList(1);
-		IPath webxmlPath = getWebXMLPath(jspFilePath);
-		if (webxmlPath == null)
+		DeploymentDescriptor descriptor = getCachedDescriptor(jspFilePath);
+		if (descriptor == null)
 			return NO_PROPERTY_GROUPS;
-
-		IFile webxmlFile = ResourcesPlugin.getWorkspace().getRoot().getFile(webxmlPath);
-		if (!webxmlFile.isAccessible())
-			return NO_PROPERTY_GROUPS;
-
-		Reference descriptorHolder = (Reference) fDeploymentDescriptors.get(webxmlPath);
-		DeploymentDescriptor descriptor = null;
-
-		if (descriptorHolder == null || ((descriptor = (DeploymentDescriptor) descriptorHolder.get()) == null) || (descriptor.modificationStamp == IResource.NULL_STAMP) || (descriptor.modificationStamp != webxmlFile.getModificationStamp())) {
-			descriptor = fetchDescriptor(webxmlPath, new NullProgressMonitor());
-		}
 
 		for (int i = 0; i < descriptor.groups.length; i++) {
 			if (descriptor.groups[i].matches(FacetModuleCoreSupport.getRuntimePath(jspFilePath).toString(), false)) {
@@ -867,6 +877,28 @@ public final class DeploymentDescriptorPropertyCache {
 		return (PropertyGroup[]) matchingGroups.toArray(new PropertyGroup[matchingGroups.size()]);
 	}
 
+	/**
+	 * @param jspFilePath
+	 *            the path of the JSP file
+	 * @param reference
+	 *            a path reference to test for
+	 * @return a matching url-mapping value in the corresponding deployment
+	 *         descriptor for the given JSP file path, if a deployment
+	 *         descriptor could be found, null otherwise
+	 */
+	public String getURLMapping(IPath jspFilePath, String reference) {
+		DeploymentDescriptor descriptor = getCachedDescriptor(jspFilePath);
+		if (descriptor == null)
+			return null;
+		StringMatcher[] mappings = descriptor.urlPatterns;
+		for (int i = 0; i < mappings.length; i++) {
+			if (mappings[i].match(reference)) {
+				return mappings[i].pattern;
+			}
+		}
+		return null;
+	}
+	
 	private IPath getWebXMLPath(IPath fullPath) {
 		/*
 		 * It can take the better part of a full second to do this, so cache
