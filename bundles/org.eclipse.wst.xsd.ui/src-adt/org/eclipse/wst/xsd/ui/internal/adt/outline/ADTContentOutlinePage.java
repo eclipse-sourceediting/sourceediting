@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,11 +33,13 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.part.MultiPageSelectionProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.eclipse.wst.xsd.ui.internal.adapters.CategoryAdapter;
+import org.eclipse.wst.xsd.ui.internal.adapters.RedefineCategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAttributeDeclarationAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAttributeGroupDefinitionAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDComplexTypeDefinitionAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDElementDeclarationAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDModelGroupDefinitionAdapter;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDRedefineAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDSchemaDirectiveAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDSimpleTypeDefinitionAdapter;
@@ -156,15 +158,26 @@ public class ADTContentOutlinePage extends ExtensibleContentOutlinePage
         StructuredSelection selection = (StructuredSelection)event.getSelection();
         StructuredSelection currentSelection = (StructuredSelection) getTreeViewer().getSelection();
         
+        Object selectionFirstElement = selection.getFirstElement();
+        Object currentFirstElement = currentSelection.getFirstElement();
+       
         // TODO: Hack to prevent losing a selection when the schema is selected in the
         // source.  Fix is to prevent the source from firing off selection changes when
         // the selection source is not the source view.
-        if (selection.getFirstElement() instanceof IModel)
-        {
-          if (!(currentSelection.getFirstElement() instanceof IModelProxy))
+        
+        if (selectionFirstElement instanceof IModel)
+        {          
+          if (!(currentFirstElement instanceof IModelProxy) || currentFirstElement instanceof RedefineCategoryAdapter)
           {
             getTreeViewer().setSelection(event.getSelection(), true);
           }
+        }
+        else if (selectionFirstElement instanceof XSDSchemaDirectiveAdapter)
+        {
+        	if (!(currentFirstElement instanceof RedefineCategoryAdapter))
+        	{
+        		getTreeViewer().setSelection(event.getSelection(), true);
+        	}
         }
         else
         {
@@ -281,6 +294,8 @@ public class ADTContentOutlinePage extends ExtensibleContentOutlinePage
     if (statusLineLabelProvider != null && selection instanceof IStructuredSelection && !selection.isEmpty())
     {
       Object firstElement = ((IStructuredSelection) selection).getFirstElement();
+      if (firstElement instanceof XSDRedefineAdapter)
+    	  return;
       text = statusLineLabelProvider.getText(firstElement);
       image = statusLineLabelProvider.getImage(firstElement);
     }

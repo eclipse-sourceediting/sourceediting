@@ -72,6 +72,7 @@ import org.eclipse.wst.xsd.ui.internal.adapters.CategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.RedefineCategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.adapters.XSDBaseAdapter;
+import org.eclipse.wst.xsd.ui.internal.adapters.XSDRedefineAdapter;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.AddFieldAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseDirectEditAction;
 import org.eclipse.wst.xsd.ui.internal.adt.actions.BaseSelectionAction;
@@ -1037,6 +1038,8 @@ public class InternalXSDMultiPageEditor extends ADTMultiPageEditor implements IT
             {
               xsdSelections.add(xsdNode);
             }
+            if (xsdNode instanceof XSDRedefineAdapter)
+            	return;
           }
           if (!xsdSelections.isEmpty())
           {
