@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -198,9 +198,9 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
           enabled = false;
         }
         
-        String blockAttValue = complexType.getElement().getAttribute(XSDConstants.BLOCK_ATTRIBUTE);
-        if (blockAttValue != null)
+        if (complexType.getElement().hasAttribute(XSDConstants.BLOCK_ATTRIBUTE))
         {
+          String blockAttValue = complexType.getElement().getAttribute(XSDConstants.BLOCK_ATTRIBUTE);
           blockCombo.setText(blockAttValue);
         }
         else
@@ -209,10 +209,10 @@ public class XSDComplexTypeAdvancedSection extends AbstractSection
         }
         blockCombo.setEnabled(enabled);
 
-        String finalAttValue = complexType.getElement().getAttribute(XSDConstants.FINAL_ATTRIBUTE);
-        if (finalAttValue != null)
+        if (complexType.getElement().hasAttribute(XSDConstants.FINAL_ATTRIBUTE))
         {
-          finalCombo.setText(finalAttValue);
+        	String finalAttValue = complexType.getElement().getAttribute(XSDConstants.FINAL_ATTRIBUTE);
+            finalCombo.setText(finalAttValue);
         }
         else
         {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -93,9 +93,10 @@ public class XSDSimpleTypeAdvancedSection extends AbstractSection
     {
       XSDSimpleTypeDefinition simpleType = (XSDSimpleTypeDefinition) input;
 
-      String finalAttValue = simpleType.getElement().getAttribute(XSDConstants.FINAL_ATTRIBUTE);
-      if (finalAttValue != null)
+      
+      if (simpleType.getElement().hasAttribute(XSDConstants.FINAL_ATTRIBUTE))
       {
+        String finalAttValue = simpleType.getElement().getAttribute(XSDConstants.FINAL_ATTRIBUTE);
         finalCombo.setText(finalAttValue);
       }
       else

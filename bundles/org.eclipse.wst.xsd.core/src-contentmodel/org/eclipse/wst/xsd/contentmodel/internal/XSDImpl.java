@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -1920,7 +1920,9 @@ public class XSDImpl
     		Element element = xsdElementDeclaration.getElement();
     		if(element != null)
     		{
-    			return element.getAttribute(XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE);
+    			if (element.hasAttribute(XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE))
+    				return element.getAttribute(XSDConstants.SUBSTITUTIONGROUP_ATTRIBUTE);
+    			else return null;
     		}
     	}
       return "";
@@ -2591,8 +2593,12 @@ public class XSDImpl
 
     public String getNamespaceURI()
     {
-      String uri = xsdWildcard.getElement().getAttribute(XSDConstants.NAMESPACE_ATTRIBUTE);
-      return (uri != null && uri.length() > 0) ? uri : "##any";
+    	if (xsdWildcard.getElement().hasAttribute(XSDConstants.NAMESPACE_ATTRIBUTE))
+    	{
+    		return xsdWildcard.getElement().getAttribute(XSDConstants.NAMESPACE_ATTRIBUTE);
+    	}
+    	else 
+    		return "##any";
     }
 
     /**

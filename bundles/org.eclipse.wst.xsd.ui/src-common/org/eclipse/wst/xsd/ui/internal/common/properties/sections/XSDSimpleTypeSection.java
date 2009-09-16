@@ -396,16 +396,18 @@ public class XSDSimpleTypeSection extends RefactoringSection
       Element listNode = getFirstChildNodeIfExists(parent, XSDConstants.LIST_ELEMENT_TAG, false);
       if (listNode != null)
       {
-        reuseType = listNode.getAttribute(XSDConstants.ITEMTYPE_ATTRIBUTE);
+        if (listNode.hasAttribute(XSDConstants.ITEMTYPE_ATTRIBUTE))
+        	reuseType = listNode.getAttribute(XSDConstants.ITEMTYPE_ATTRIBUTE);
         XSDDOMHelper.removeNodeAndWhitespace(listNode);
       }
 
       Element unionNode = getFirstChildNodeIfExists(parent, XSDConstants.UNION_ELEMENT_TAG, false);
       if (unionNode != null)
       {
-        String memberAttr = unionNode.getAttribute(XSDConstants.MEMBERTYPES_ATTRIBUTE);
-        if (memberAttr != null)
+        
+        if (unionNode.hasAttribute(XSDConstants.MEMBERTYPES_ATTRIBUTE))
         {
+          String memberAttr = unionNode.getAttribute(XSDConstants.MEMBERTYPES_ATTRIBUTE);
           StringTokenizer stringTokenizer = new StringTokenizer(memberAttr);
           reuseType = stringTokenizer.nextToken();
         }

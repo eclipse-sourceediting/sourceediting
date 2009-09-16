@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -337,9 +337,10 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
         }
 
         Element element = eleDec.getElement();
-        String blockAttValue = element.getAttribute(XSDConstants.BLOCK_ATTRIBUTE);
-        if (blockAttValue != null)
+        
+        if (element.hasAttribute(XSDConstants.BLOCK_ATTRIBUTE))
         {
+          String blockAttValue = element.getAttribute(XSDConstants.BLOCK_ATTRIBUTE);
           blockCombo.setText(blockAttValue);
         }
         else
@@ -358,12 +359,11 @@ public class XSDElementDeclarationAdvancedSection extends AbstractSection
         {
           nillableCombo.setText(EMPTY);
         }
-
-
-        String finalAttValue = element.getAttribute(XSDConstants.FINAL_ATTRIBUTE);
-        if (finalAttValue != null)
+  
+        if (element.hasAttribute(XSDConstants.FINAL_ATTRIBUTE))
         {
-          finalCombo.setText(finalAttValue);
+        	String finalAttValue = element.getAttribute(XSDConstants.FINAL_ATTRIBUTE);
+            finalCombo.setText(finalAttValue);
         }
         else
         {

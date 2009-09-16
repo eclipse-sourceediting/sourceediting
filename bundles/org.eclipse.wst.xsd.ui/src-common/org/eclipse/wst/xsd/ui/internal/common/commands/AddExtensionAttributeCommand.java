@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -45,8 +45,8 @@ public class AddExtensionAttributeCommand extends AddExtensionCommand
       namespacePrefix = handleNamespacePrefices();
 
       attributeQName = namespacePrefix + ":" + attribute.getName(); //$NON-NLS-1$
-      String value = component.getElement().getAttribute(attributeQName);
-      if (value == null)
+     
+      if (!(component.getElement().hasAttribute(attributeQName)))
       {
         appInfoAttributeAdded = true;
         component.getElement().setAttribute(attributeQName, ""); //$NON-NLS-1$
