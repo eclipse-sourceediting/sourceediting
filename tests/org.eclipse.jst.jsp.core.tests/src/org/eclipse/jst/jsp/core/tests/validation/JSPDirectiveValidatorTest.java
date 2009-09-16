@@ -12,7 +12,11 @@ package org.eclipse.jst.jsp.core.tests.validation;
 
 import java.util.Iterator;
 
+import junit.framework.TestCase;
+
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
@@ -21,8 +25,6 @@ import org.eclipse.jst.jsp.core.tests.taglibindex.BundleResourceUtil;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
-
-import junit.framework.TestCase;
 
 public class JSPDirectiveValidatorTest extends TestCase {
 	
@@ -121,4 +123,30 @@ public class JSPDirectiveValidatorTest extends TestCase {
 		assertFalse("JSP Directive Validator reported an error for a fragment that should be locatable.", foundIncludeWithError);
 		assertTrue("JSP Directive Validator did not report the missing fragment.", foundMissingInclude);
 	}
+	
+	public void testIncludeMappedURL() throws Exception {
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("delos");
+		if (!project.exists()) {
+			BundleResourceUtil.createSimpleProject("delos", null, new String[]{JavaCore.NATURE_ID});
+			BundleResourceUtil.copyBundleEntriesIntoWorkspace("/testfiles/delos", "/delos");
+		}
+		assertTrue("project could not be created", project.exists());
+
+		JSPDirectiveValidator validator = new JSPDirectiveValidator();
+		IReporter reporter = new ReporterForTest();
+		ValidationContextForTest helper = new ValidationContextForTest();
+		String filePath = "/delos/WebContent/1.jsp";
+		assertTrue("unable to find file: " + filePath, ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filePath)).exists());
+		helper.setURI(filePath);
+		validator.validate(helper, reporter);
+		assertTrue("problems were found in JSP file", reporter.getMessages().isEmpty());
+		
+		try {
+			project.delete(true, null);
+		}
+		catch (CoreException e) {
+			// failure to clean up shouldn't fail the test
+		}
+	}
+
 }
