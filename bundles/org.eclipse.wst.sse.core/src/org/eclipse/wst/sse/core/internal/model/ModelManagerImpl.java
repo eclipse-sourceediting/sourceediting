@@ -2191,7 +2191,7 @@ public class ModelManagerImpl implements IModelManager {
 				// +1, include the "."
 				key = property.substring(SSECorePlugin.ID.length() + 1, property.length());
 			}
-			preferencesService.getString(SSECorePlugin.ID, key, null, lookupOrder);
+			value = preferencesService.getString(SSECorePlugin.ID, key, null, lookupOrder);
 		}
 		
 		return value;
