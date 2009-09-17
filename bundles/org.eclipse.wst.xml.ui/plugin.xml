@@ -453,10 +453,12 @@
 			id="org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidatorForXML">
 			<contentTypeIdentifier id="org.eclipse.core.runtime.xml">
 				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.xml.XML_COMMENT"/>
 				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
 			</contentTypeIdentifier>
 			<contentTypeIdentifier id="org.eclipse.wst.xml.core.xmlsource">
 				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.xml.XML_COMMENT"/>
 				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
 			</contentTypeIdentifier>
 		</validator>
@@ -1566,14 +1568,16 @@
 			<or>
             	<iterate ifEmpty="false">
 					<adapt type="org.eclipse.core.resources.IFile">
+						<!-- Force property tester to load, should not cause entire plug-in to start -->
 						<test property="org.eclipse.wst.sse.core.resources.contentTypeId" 
-							value="org.eclipse.wst.xml.core.xmlsource"/>
+							value="org.eclipse.wst.xml.core.xmlsource" forcePluginActivation="true"/>
 					</adapt>
 				</iterate>
 				<iterate ifEmpty="false">
 					<adapt type="org.eclipse.core.resources.IFile">
+						<!-- Force property tester to load, should not cause entire plug-in to start -->
 						<test property="org.eclipse.wst.sse.core.resources.contentTypeId"
-							value="org.eclipse.core.runtime.xml"/>
+							value="org.eclipse.core.runtime.xml" forcePluginActivation="true"/>
 					</adapt>
 				</iterate>
 			</or>

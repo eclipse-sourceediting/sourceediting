@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -80,7 +80,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     registerListener(fElementsCategory);
 
     fAttributesCategory = new CategoryAdapter(Messages._UI_GRAPH_ATTRIBUTES, XSDEditorPlugin.getDefault().getIconImage("obj16/attributesheader"), attributesList, xsdSchema, CategoryAdapter.ATTRIBUTES);   //$NON-NLS-1$
-    fAttributesCategory.setAllChildren(attributesList);
+    fAttributesCategory.setAllChildren(getAttributeList(xsdSchema,true));
     registerListener(fAttributesCategory);
 
     fTypesCategory = new CategoryAdapter(Messages._UI_GRAPH_TYPES, XSDEditorPlugin.getDefault().getIconImage("obj16/typesheader"), types, xsdSchema, CategoryAdapter.TYPES);  //$NON-NLS-1$
@@ -88,7 +88,7 @@ public class XSDSchemaAdapter extends XSDBaseAdapter implements IActionProvider,
     registerListener(fTypesCategory);
 
     fGroupsCategory = new CategoryAdapter(Messages._UI_GRAPH_GROUPS, XSDEditorPlugin.getDefault().getIconImage("obj16/groupsheader"), groups, xsdSchema, CategoryAdapter.GROUPS); //$NON-NLS-1$
-    fGroupsCategory.setAllChildren(groups);
+    fGroupsCategory.setAllChildren(getGroups(xsdSchema,true));
     registerListener(fGroupsCategory);
   }
 
