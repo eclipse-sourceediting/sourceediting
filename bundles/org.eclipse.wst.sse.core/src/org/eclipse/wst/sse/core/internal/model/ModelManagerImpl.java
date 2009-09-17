@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *  *     Frank Zigler/Web Performance, Inc. - 288196 - Deadlock in ModelManagerImpl after IOException
  *     
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.model;
@@ -261,7 +262,8 @@ public class ModelManagerImpl implements IModelManager {
 			URIResolver resolver, ReadEditType rwType, EncodingRule encodingRule,
 			SharedObject sharedObject) throws CoreException, IOException {
 		// XXX: Does not integrate with FileBuffers
-		boolean doRemove = false;
+		boolean doRemove = true;
+		try {
 		synchronized(sharedObject) {
 			InputStream inputStream = null;
 			IStructuredModel model = null;
@@ -286,16 +288,18 @@ public class ModelManagerImpl implements IModelManager {
 				// add to our cache
 				sharedObject.theSharedModel=model;
 				_initCount(sharedObject, rwType);
-			} else {
-				doRemove = true;
+				doRemove = false;
 			}
 		}
+		}
+		finally{
 		if (doRemove) {
 			SYNC.acquire();	
 			fManagedObjects.remove(id);	
 			SYNC.release();
 		}
 		sharedObject.setLoaded();
+		}
 	}
 
 	private IStructuredModel _commonCreateModel(InputStream inputStream, String id, IModelHandler handler, URIResolver resolver, ReadEditType rwType, String encoding, String lineDelimiter) throws IOException {
@@ -347,7 +351,8 @@ public class ModelManagerImpl implements IModelManager {
 	private void _doCommonCreateModel(InputStream inputStream, String id, IModelHandler handler,
 			URIResolver resolver, ReadEditType rwType, String encoding, String lineDelimiter,
 			SharedObject sharedObject) throws IOException {
-		boolean doRemove = false;
+		boolean doRemove = true;
+		try {
 		synchronized(sharedObject) {
 			IStructuredModel model = null;
 			try {
@@ -383,10 +388,11 @@ public class ModelManagerImpl implements IModelManager {
 
 				sharedObject.theSharedModel = model;
 				_initCount(sharedObject, rwType);
-			} else {
-				doRemove = true;
+				doRemove = false;
 			}
 		}
+		}
+		finally {
 		if (doRemove) {
 			SYNC.acquire();
 			// remove it if we didn't get one back
@@ -394,6 +400,7 @@ public class ModelManagerImpl implements IModelManager {
 			SYNC.release();
 		}
 		sharedObject.setLoaded();
+		}
 	}
 
 	private IStructuredModel _commonCreateModel(String id, IModelHandler handler, URIResolver resolver) throws ResourceInUse {
@@ -491,7 +498,7 @@ public class ModelManagerImpl implements IModelManager {
 	}
 
 	private void _doCommonGetModel(IFile file, String id, SharedObject sharedObject,ReadEditType rwType) {
-		boolean doRemove = false;
+		boolean doRemove = true;
 		synchronized(sharedObject) {
 			sharedObject.doWait=false;
 			IStructuredModel model = FileBufferModelManager.getInstance().getModel(file);
@@ -499,8 +506,7 @@ public class ModelManagerImpl implements IModelManager {
 			if (model != null) {
 				sharedObject.theSharedModel=model;
 				_initCount(sharedObject, rwType);
-			} else {
-				doRemove = true;
+				doRemove = false;
 			}
 		}
 		if (doRemove) {
