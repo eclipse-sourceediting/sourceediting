@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,8 +17,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMWriter;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -258,10 +263,25 @@ public class TreeContentHelper {
 		return result;
 	}
 
+	private boolean validateEdit(IStructuredModel model, Shell context) {
+		if (model != null && model.getBaseLocation() != null) {
+			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
+			if (!file.isAccessible())
+				return true;
+			return ResourcesPlugin.getWorkspace().validateEdit(new IFile[] {file}, context).isOK();
+		}
+		return false;
+	}
+
+	public void setNodeValue(Node node, String value) {
+		setNodeValue(node, value, null);
+	}
 	/**
 	 *  
 	 */
-	public void setNodeValue(Node node, String value) {
+	public void setNodeValue(Node node, String value, Shell context) {
+		if (node instanceof IDOMNode && !validateEdit(((IDOMNode) node).getModel(), context))
+			return;
 		int nodeType = node.getNodeType();
 		try {
 			switch (nodeType) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -42,9 +42,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DefaultInformationControl;
-import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
@@ -199,66 +197,6 @@ import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
  */
 
 public class StructuredTextEditor extends TextEditor {
-
-
-	// ISSUE: This use case is not clear to me.
-	// Is this listner and dance with dirty state for non-editor driven
-	// updates?
-	class InternalDocumentListener implements IDocumentListener {
-		// This is for the IDocumentListener interface
-		public void documentAboutToBeChanged(DocumentEvent event) {
-			fDirtyBeforeDocumentEvent = isDirty();
-		}
-
-		// This is for the IDocumentListener interface
-		public void documentChanged(DocumentEvent event) {
-			if (isEditorInputReadOnly()) {
-				// stop listening to document event
-				// caused by the undo after validateEdit
-				final int offset = event.getOffset() + event.getLength();
-				final IStructuredModel internalModel = getInternalModel();
-				fCurrentRunnable = new Runnable() {
-					public void run() {
-						if (!fEditorDisposed) {
-							boolean status = validateEditorInputState();
-							if (!status) {
-								if (internalModel != null) {
-									internalModel.getUndoManager().undo();
-									getSourceViewer().setSelectedRange(offset, 0);
-									if (!fDirtyBeforeDocumentEvent) {
-										// reset dirty state if
-										// model not dirty before
-										// document event
-										internalModel.setDirtyState(false);
-									}
-								}
-							}
-						}
-						fCurrentRunnable = null;
-					}
-				};
-				/*
-				 * We need to ensure that this is run via 'asyncExec' since
-				 * these notifications can come from a non-ui thread.
-				 * 
-				 * The non-ui thread call would occur when creating a new file
-				 * under ClearCase (or other library) control. The creation of
-				 * the new file would trigger a validateEdit call, on another
-				 * thread, that would prompt the user to add the new file to
-				 * version control.
-				 */
-				Display display = getDisplay();
-				if (display != null) {
-					if (Thread.currentThread() != display.getThread())
-						// future_TODO: there's probably a better
-						// way than relying on asycnExec
-						display.asyncExec(fCurrentRunnable);
-					else
-						fCurrentRunnable.run();
-				}
-			}
-		}
-	}
 
 	private class InternalModelStateListener implements IModelStateListener {
 		public void modelAboutToBeChanged(IStructuredModel model) {
@@ -1297,7 +1235,6 @@ public class StructuredTextEditor extends TextEditor {
 	private DropTarget fDropTarget;
 	boolean fEditorDisposed = false;
 	private IEditorPart fEditorPart;
-	private IDocumentListener fInternalDocumentListener;
 	private InternalModelStateListener fInternalModelStateListener;
 	private MouseTracker fMouseTracker;
 	private IContentOutlinePage fOutlinePage;
@@ -2004,9 +1941,6 @@ public class StructuredTextEditor extends TextEditor {
 		// but makes a memory leak
 		// less severe.
 		if (fStructuredModel != null) {
-			if (fStructuredModel.getStructuredDocument() != null) {
-				fStructuredModel.getStructuredDocument().removeDocumentListener(getInternalDocumentListener());
-			}
 			fStructuredModel.removeModelStateListener(getInternalModelStateListener());
 		}
 
@@ -2015,7 +1949,6 @@ public class StructuredTextEditor extends TextEditor {
 		if (getDocumentProvider() != null) {
 			IDocument doc = getDocumentProvider().getDocument(getEditorInput());
 			if (doc != null) {
-				doc.removeDocumentListener(getInternalDocumentListener());
 				if (doc instanceof IExecutionDelegatable) {
 					((IExecutionDelegatable) doc).setExecutionDelegate(null);
 				}
@@ -2391,13 +2324,6 @@ public class StructuredTextEditor extends TextEditor {
 		if (fEditorPart == null)
 			return this;
 		return fEditorPart;
-	}
-
-	private IDocumentListener getInternalDocumentListener() {
-		if (fInternalDocumentListener == null) {
-			fInternalDocumentListener = new InternalDocumentListener();
-		}
-		return fInternalDocumentListener;
 	}
 
 	IStructuredModel getInternalModel() {
@@ -2946,16 +2872,10 @@ public class StructuredTextEditor extends TextEditor {
 	private void setModel(IStructuredModel newModel) {
 		Assert.isNotNull(getDocumentProvider(), "document provider can not be null when setting model"); //$NON-NLS-1$
 		if (fStructuredModel != null) {
-			if (fStructuredModel.getStructuredDocument() != null) {
-				fStructuredModel.getStructuredDocument().removeDocumentListener(getInternalDocumentListener());
-			}
 			fStructuredModel.removeModelStateListener(getInternalModelStateListener());
 		}
 		fStructuredModel = newModel;
 		if (fStructuredModel != null) {
-			if (fStructuredModel.getStructuredDocument() != null) {
-				fStructuredModel.getStructuredDocument().addDocumentListener(getInternalDocumentListener());
-			}
 			fStructuredModel.addModelStateListener(getInternalModelStateListener());
 		}
 		// update() should be called whenever the model is
