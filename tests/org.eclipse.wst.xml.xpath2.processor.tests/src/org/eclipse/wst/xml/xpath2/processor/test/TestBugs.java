@@ -941,7 +941,6 @@ public class TestBugs extends AbstractPsychoPathTest {
 
 	}
 
-
 	public void testBug286061_quoted_string_literals_no_normalize() throws Exception {
 
 		URL fileURL = bundle.getEntry("/TestSources/emptydoc.xml");
@@ -1003,7 +1002,32 @@ public class TestBugs extends AbstractPsychoPathTest {
 		dc.set_default_collation(URN_X_ECLIPSE_XPATH20_FUNKY_COLLATOR);
 		XSBoolean bval2 = (XSBoolean) eval.evaluate(path).first();
 		assertFalse("'abc' < 'def' for normal collations", bval2.value());
-}
+    }
+	
+	public void testXPathDefaultNamespace() throws Exception {
+		// Test for the fix, for xpathDefaultNamespace
+		URL fileURL = bundle.getEntry("/bugTestFiles/xpathDefNamespaceTest.xml");
+		loadDOMDocument(fileURL);
+
+		// Get XML Schema Information for the Document
+		XSModel schema = getGrammar();
+
+		// set up XPath default namespace in Dynamic Context 
+		DynamicContext dc = setupDynamicContext(schema);
+		addXPathDefaultNamespace("http://xyz");
+
+		String xpath = "X/message = 'hello'";
+		XPath path = compileXPath(dc, xpath);
+
+		Evaluator eval = new DefaultEvaluator(dc, domDoc);
+		ResultSequence rs = eval.evaluate(path);
+
+		XSBoolean result = (XSBoolean) rs.first();
+
+		String actual = result.string_value();
+
+		assertEquals("true", actual);
+	}
 
 	private CollationProvider createLengthCollatorProvider() {
 		return new CollationProvider() {

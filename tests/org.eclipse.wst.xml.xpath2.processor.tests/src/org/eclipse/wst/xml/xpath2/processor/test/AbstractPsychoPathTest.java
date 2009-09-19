@@ -18,12 +18,17 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.xpath2.processor.test;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,15 +46,26 @@ import org.apache.xerces.xs.ElementPSVI;
 import org.apache.xerces.xs.XSModel;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.xml.xpath2.processor.*;
-import org.eclipse.wst.xml.xpath2.processor.ast.*;
-import org.eclipse.wst.xml.xpath2.processor.function.*;
+import org.eclipse.wst.xml.xpath2.processor.DOMLoader;
+import org.eclipse.wst.xml.xpath2.processor.DOMLoaderException;
+import org.eclipse.wst.xml.xpath2.processor.DefaultDynamicContext;
+import org.eclipse.wst.xml.xpath2.processor.DynamicContext;
+import org.eclipse.wst.xml.xpath2.processor.JFlexCupParser;
+import org.eclipse.wst.xml.xpath2.processor.ResultSequence;
+import org.eclipse.wst.xml.xpath2.processor.StaticChecker;
+import org.eclipse.wst.xml.xpath2.processor.StaticError;
+import org.eclipse.wst.xml.xpath2.processor.StaticNameResolver;
+import org.eclipse.wst.xml.xpath2.processor.XPathParser;
+import org.eclipse.wst.xml.xpath2.processor.XPathParserException;
+import org.eclipse.wst.xml.xpath2.processor.XercesLoader;
+import org.eclipse.wst.xml.xpath2.processor.ast.XPath;
+import org.eclipse.wst.xml.xpath2.processor.function.FnFunctionLibrary;
+import org.eclipse.wst.xml.xpath2.processor.function.XSCtrLibrary;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.DocType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.ElementType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.NodeType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
-import org.eclipse.wst.xml.xpath2.processor.testsuite.functions.EscapeHTMLURIFuncTest;
 import org.osgi.framework.Bundle;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -187,6 +203,10 @@ public class AbstractPsychoPathTest extends XMLTestCase {
 		dc.add_function_library(new XSCtrLibrary());
 		setupVariables(dc);
 		return dc;
+	}
+	
+	protected void addXPathDefaultNamespace(String uri) {
+	   dynamicContext.add_namespace(null, uri);	
 	}
 
 	protected XPath compileXPath(DynamicContext dc, String xpath)
