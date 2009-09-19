@@ -126,9 +126,14 @@ public class DefaultStaticContext implements StaticContext {
 	public void add_namespace(String prefix, String namespace) {
 		// XXX are these reserved ?
 		// refer to formal semantics section 2.5.1
-		if (prefix.equals("fs") || prefix.equals("op") || prefix.equals("dm"))
+		if ((prefix != null) && (prefix.equals("fs") || prefix.equals("op") || prefix.equals("dm")))
 			return;
-		_namespaces.put(prefix, namespace);
+		 if (prefix == null) {
+		   _default_namespace = namespace; 
+		   _namespaces.put("", namespace);
+		 } else {
+		   _namespaces.put(prefix, namespace);
+		 }
 	}
 
 	/**
