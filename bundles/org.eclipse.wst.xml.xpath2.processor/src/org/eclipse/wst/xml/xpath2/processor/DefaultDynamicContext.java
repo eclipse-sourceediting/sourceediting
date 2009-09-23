@@ -288,4 +288,10 @@ public class DefaultDynamicContext extends DefaultStaticContext implements
 		this._collation_provider = provider;
 	}
 	
+	// deprecated
+	public int node_position(Node node) {
+	  // unused parameter!
+	  return _focus.position();	
+	}
+	
 }

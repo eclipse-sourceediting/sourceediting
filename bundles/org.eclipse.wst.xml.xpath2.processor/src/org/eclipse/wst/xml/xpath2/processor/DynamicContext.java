@@ -26,6 +26,7 @@ import org.eclipse.wst.xml.xpath2.processor.internal.Focus;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.AnyType;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.QName;
 import org.eclipse.wst.xml.xpath2.processor.internal.types.XSDuration;
+import org.w3c.dom.Node;
 
 /**
  * Interface for dynamic context.
@@ -165,5 +166,8 @@ public interface DynamicContext extends StaticContext {
 	 * @since 1.1
 	 */
 	public String default_collation_name();
+	
+	// deprecated
+	public int node_position(Node node);
 
 }

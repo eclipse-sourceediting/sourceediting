@@ -55,6 +55,14 @@ public class ElementType extends NodeType {
 
 		_string_value = null;
 	}
+	
+	// deprecated
+	public ElementType(Element v, int nodePosition) {
+		// unused parameter, nodePosition!
+		super(v);
+		_value = v;
+		_string_value = null;
+	}
 
 	/**
 	 * Retrieves the actual element value being represented
