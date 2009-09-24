@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://exslt.org/common" xmlns="http://exslt.org/common" elementFormDefault="qualified">
+
+	<xsd:element name="document" type="DocumentType">
+		<xsd:annotation>
+			<xsd:documentation source="http://www.exslt.org/exsl/elements/document/exsl.document.html">
+			    The exsl:document element is used to create multiple result documents. As well as the main result document, there can be subsidiary result documents. Each subsidiary result document is created using an exsl:document element. The content of the exsl:document element is a template; this is instantiated to create a sequence of nodes; a root node is created with this sequence of nodes as its children; the tree with this root node represents the subsidiary result document. The href attribute specifies where the subsidiary document should be stored; it must be an absolute or relative URI; it must not have a fragment identifier.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	
+	<xsd:complexType name="DocumentType">
+		<xsd:sequence>
+			<xsd:any namespace="##other"/>
+		</xsd:sequence>
+		<xsd:attribute name="href" use="required" type="xsd:anyURI">
+		    <xsd:annotation>
+		    	<xsd:documentation source="http://www.exslt.org/exsl/elements/document/exsl.document.html">
+		    	     The href attribute specifies where the subsidiary document should be stored; it must be an absolute or relative URI; it must not have a fragment identifier.
+		    	</xsd:documentation>
+		    </xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="method" use="optional" type="MethodEnumeratedType"/>
+		<xsd:attribute name="version" use="optional" type="xsd:NMTOKEN"/>
+		<xsd:attribute name="encoding" use="optional" type="xsd:string"/>
+		<xsd:attribute name="omit-xml-declaration" use="optional" type="YesNoEnumeratedType"/>
+		<xsd:attribute name="doctype-public" use="optional" type="xsd:string"/>
+		<xsd:attribute name="doctype-system" use="optional" type="xsd:string"/>
+		<xsd:attribute name="cdata-section-elements" use="optional" type="xsd:string"/>
+		<xsd:attribute name="indent" use="optional" type="YesNoEnumeratedType"/>
+		<xsd:attribute name="media-type" use="optional" type="xsd:string"/>
+	</xsd:complexType>
+	
+	<xsd:simpleType name="MethodEnumeratedType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="xml"/>
+			<xsd:enumeration value="html"/>
+			<xsd:enumeration value="text"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="YesNoEnumeratedType">
+		<xsd:restriction base="xsd:token">
+			<xsd:enumeration value="yes"/>
+			<xsd:enumeration value="no"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>
