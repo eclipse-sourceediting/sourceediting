@@ -406,15 +406,15 @@ Cloneable {
 	// math
 	/**
 	 * Mathematical minus operator between this XSDate and a supplied result
-	 * sequence (XSDate, XDTYearMonthDuration and XDTDayTimeDuration are only
+	 * sequence (XSDate, XSYearMonthDuration and XSDayTimeDuration are only
 	 * valid ones).
 	 * 
 	 * @param arg
 	 *            The supplied ResultSequence that is on the right of the minus
 	 *            operator. If this is an XSDate, the result will be a
-	 *            XDTDayTimeDuration of the duration of time between these two
-	 *            dates. If arg is an XDTYearMonthDuration or an
-	 *            XDTDayTimeDuration the result will be a XSDate of the result
+	 *            XSDayTimeDuration of the duration of time between these two
+	 *            dates. If arg is an XSYearMonthDuration or an
+	 *            XSDayTimeDuration the result will be a XSDate of the result
 	 *            of the current date minus the duration of time supplied.
 	 * @return New ResultSequence consisting of the result of the mathematical
 	 *         minus operation.

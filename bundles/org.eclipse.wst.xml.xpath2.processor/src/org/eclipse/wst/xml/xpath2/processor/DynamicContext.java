@@ -168,6 +168,9 @@ public interface DynamicContext extends StaticContext {
 	public String default_collation_name();
 	
 	// deprecated
+	/**
+	 * @deprecated
+	 */
 	public int node_position(Node node);
 
 }

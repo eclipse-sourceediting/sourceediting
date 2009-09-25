@@ -22,7 +22,7 @@ import java.util.Calendar;
 public abstract class CalendarType extends CtrType {
 
 	public Calendar normalizeCalendar(Calendar cal, XSDuration timezone) {
-		Calendar adjusted = cal;
+		Calendar adjusted = (Calendar) cal.clone();
 		
 		if (timezone != null) {
 			int hours = timezone.hours();

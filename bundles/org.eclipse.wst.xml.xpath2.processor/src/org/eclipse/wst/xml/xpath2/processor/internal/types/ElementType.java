@@ -55,8 +55,14 @@ public class ElementType extends NodeType {
 
 		_string_value = null;
 	}
-	
-	// deprecated
+
+	/**
+	 * This deprecated and will be removed. Adopters need to use ElementType(Element)
+	 * @param v
+	 * @param nodePosition
+	 * @deprecated  Use ElementType(Element v) instead.
+	 */
+	@Deprecated
 	public ElementType(Element v, int nodePosition) {
 		// unused parameter, nodePosition!
 		super(v);
