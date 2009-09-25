@@ -433,9 +433,8 @@ public class DateLTTest extends AbstractPsychoPathTest {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateLT/op-date-less-than-2.xq";
       
-      // This file is wrong see: http://www.w3.org/Bugs/Public/show_bug.cgi?id=7530
       String resultFile = "/ExpectedTestResults/Expressions/Operators/CompExpr/ValComp/DurationDateTimeOp/DateLT/op-date-less-than-2.txt";
-      String expectedResult = "false";
+      String expectedResult = getExpectedResult(resultFile);
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
       
