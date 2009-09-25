@@ -30,10 +30,6 @@ public class EXSLTResolverExtension implements URIResolverExtension {
 			return getURLPath("/schemas/common.xsd");
 		}
 		
-		if (EXSLTCore.EXSLT_FUNC_NAMESPACE.equals(publicId)) {
-			return getURLPath("/schemas/function.xsd");
-		}
-		
 		return null;
 	}
 	
