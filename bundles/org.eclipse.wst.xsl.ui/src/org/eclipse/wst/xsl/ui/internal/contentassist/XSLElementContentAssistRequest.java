@@ -12,7 +12,6 @@
 package org.eclipse.wst.xsl.ui.internal.contentassist;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -21,6 +20,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xsl.ui.internal.contentassist.contentmodel.XSLContentModelGenerator;
+import org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXMLElementContentAssistRequest;
 import org.w3c.dom.Node;
  
 

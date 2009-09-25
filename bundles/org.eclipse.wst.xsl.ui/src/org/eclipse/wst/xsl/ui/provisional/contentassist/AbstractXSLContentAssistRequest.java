@@ -1,4 +1,4 @@
-package org.eclipse.wst.xsl.ui.internal.contentassist;
+package org.eclipse.wst.xsl.ui.provisional.contentassist;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,7 +30,7 @@ import org.w3c.dom.NodeList;
  * class and implement specific functionality.
  * 
  * @author dcarver
- *
+ * @since 1.1
  */
 public abstract class AbstractXSLContentAssistRequest implements IContentAssistProposalRequest {
 	protected IStructuredDocumentRegion documentRegion = null;

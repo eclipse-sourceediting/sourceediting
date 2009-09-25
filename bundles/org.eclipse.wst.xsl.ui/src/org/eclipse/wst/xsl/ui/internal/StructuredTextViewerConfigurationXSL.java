@@ -11,6 +11,13 @@
 
 package org.eclipse.wst.xsl.ui.internal;
 
+import java.util.ArrayList;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -20,9 +27,11 @@ import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider; // i
 																			// org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.contentassist.NoRegionContentAssistProcessor;
 import org.eclipse.wst.xsl.core.internal.text.IXSLPartitions;
 import org.eclipse.wst.xsl.core.internal.text.rules.StructuredTextPartitionerForXSL;
+import org.eclipse.wst.xsl.ui.internal.contentassist.ContentAssistProcessorFactory;
 import org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistProcessor;
 import org.eclipse.wst.xsl.ui.internal.editor.XSLHyperlinkDetector;
 import org.eclipse.wst.xsl.ui.internal.style.LineStyleProviderForXSL;
@@ -59,7 +68,7 @@ public class StructuredTextViewerConfigurationXSL extends
 		if ((partitionType.equals(IStructuredPartitions.DEFAULT_PARTITION))
 				|| (partitionType.equals(IXMLPartitions.XML_DEFAULT))
 				|| (partitionType.equals(IXSLPartitions.XSL_XPATH))) {
-			processors = new IContentAssistProcessor[] { new XSLContentAssistProcessor() };
+				processors = ContentAssistProcessorFactory.createProcessors();		
 		} else if (partitionType.equals(IStructuredPartitions.UNKNOWN_PARTITION)) {
 			processors = new IContentAssistProcessor[] { new NoRegionContentAssistProcessor() };
 		}

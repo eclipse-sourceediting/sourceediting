@@ -26,6 +26,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
+import org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXMLElementContentAssistRequest;
 import org.w3c.dom.Node;
 
 /**

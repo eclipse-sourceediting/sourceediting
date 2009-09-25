@@ -8,7 +8,7 @@
  *Contributors:
  *    David Carver - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.ui.internal.contentassist;
+package org.eclipse.wst.xsl.ui.provisional.contentassist;
 
 import java.util.ArrayList;
 
@@ -21,6 +21,7 @@ import org.w3c.dom.Node;
 /**
  * An empty content assist request.
  * @author dcarver
+ * @since 1.1
  *
  */
 public class NullContentAssistRequest extends AbstractXSLContentAssistRequest {

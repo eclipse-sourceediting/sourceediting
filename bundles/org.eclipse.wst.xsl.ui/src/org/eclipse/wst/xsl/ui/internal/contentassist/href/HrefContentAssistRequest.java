@@ -28,9 +28,9 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xsl.core.XSLCore;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
-import org.eclipse.wst.xsl.ui.internal.contentassist.AbstractXSLContentAssistRequest;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages;
+import org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXSLContentAssistRequest;
 import org.w3c.dom.Node;
 
 /**

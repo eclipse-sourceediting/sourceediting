@@ -1,17 +1,24 @@
-package org.eclipse.wst.xsl.ui.internal.contentassist;
+package org.eclipse.wst.xsl.ui.provisional.contentassist;
 
 import org.eclipse.jface.text.contentassist.ICompletionProposalExtension4;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
 
+/**
+ * Adopters can use the class to help build a custom content completion proposal.  
+ * @author dcarver
+ * @since 1.1
+ *
+ */
 public class CustomCompletionProposal extends
 		org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal
 		implements ICompletionProposalExtension4 {
 
 	/**
-	 * @param replacementString
-	 * @param replacementOffset
-	 * @param replacementLength
+	 * Constructor for the Custom Completion Proposal
+	 * @param replacementString 
+	 * @param replacementOffset 
+	 * @param replacementLength 
 	 * @param cursorPosition
 	 * @param image
 	 * @param displayString

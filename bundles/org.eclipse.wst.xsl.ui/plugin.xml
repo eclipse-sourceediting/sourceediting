@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="contentAssistProcessor" name="%XSLContentAssistExtension" schema="/schema/contentAssistProcessor.exsd"/>
 
 	<extension point="org.eclipse.ui.editors">
 		<editor name="%editorName" 
@@ -252,4 +253,14 @@
 		</enablement>
 	</commonWizard>
  </extension>
+ <extension
+       point="org.eclipse.wst.xsl.ui.contentAssistProcessor">
+    <processor
+          class="org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor">
+    </processor>
+    <processor
+          class="org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistProcessor">
+    </processor>
+ </extension>
+  
 </plugin>

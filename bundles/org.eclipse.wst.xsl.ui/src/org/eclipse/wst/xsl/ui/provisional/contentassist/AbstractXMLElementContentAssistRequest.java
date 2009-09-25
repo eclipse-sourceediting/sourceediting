@@ -8,7 +8,7 @@
  *Contributors:
  *    David Carver (STAR)  - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.ui.internal.contentassist;
+package org.eclipse.wst.xsl.ui.provisional.contentassist;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -45,7 +45,7 @@ import org.w3c.dom.NodeList;
  * proposals using the XML Content Model.
  * 
  * @author David Carver
- *
+ * @since 1.1
  */
 public abstract class AbstractXMLElementContentAssistRequest extends AbstractXSLContentAssistRequest {
 

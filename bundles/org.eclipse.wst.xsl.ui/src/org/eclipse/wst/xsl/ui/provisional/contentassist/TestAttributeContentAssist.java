@@ -8,7 +8,7 @@
  *Contributors:
  *    David Carver (STAR) - bug 240170 - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsl.ui.internal.contentassist;
+package org.eclipse.wst.xsl.ui.provisional.contentassist;
 
 import java.util.ArrayList;
 
@@ -25,7 +25,7 @@ import org.w3c.dom.Node;
  * This class provides content assistance for the xsl <emphasis>test</emphais> attribute.
  *  
  * @author dcarver
- *
+ * @since 1.1
  */
 public class TestAttributeContentAssist extends SelectAttributeContentAssist {
 
@@ -51,7 +51,7 @@ public class TestAttributeContentAssist extends SelectAttributeContentAssist {
 	
 	/** 
 	 * (non-Javadoc)
-	 * @see org.eclipse.wst.xsl.ui.internal.contentassist.SelectAttributeContentAssist#getCompletionProposals()
+	 * @see org.eclipse.wst.xsl.ui.provisional.contentassist.SelectAttributeContentAssist#getCompletionProposals()
 	 */
 	@Override
 	public ArrayList<ICompletionProposal> getCompletionProposals() {

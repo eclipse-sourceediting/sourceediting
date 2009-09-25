@@ -11,7 +11,7 @@
  *                                       position adjuster for matchString.
  *                          bug 281420 - fixed variable replacement offsets.
  *******************************************************************************/
-package org.eclipse.wst.xsl.ui.internal.contentassist;
+package org.eclipse.wst.xsl.ui.provisional.contentassist;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +22,13 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.xsl.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.xpath.core.util.XSLTXPathHelper;
 import org.eclipse.wst.xml.xpath.ui.internal.contentassist.XPathTemplateCompletionProcessor;
 import org.eclipse.wst.xml.xpath.ui.internal.templates.TemplateContextTypeIdsXPath;
 import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
+import org.eclipse.wst.xsl.ui.internal.contentassist.XPathElementContentAssist;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages;
 import org.w3c.dom.Element;
@@ -39,12 +39,12 @@ import org.w3c.dom.NodeList;
  * This class provides content assistance for the XSL select attribute.
  * 
  * @author dcarver
- * 
+ * @since 1.1
  */
 public class SelectAttributeContentAssist extends
 		AbstractXSLContentAssistRequest {
 
-	private static final String SELECT_ATTRIBUTE = "select"; //$NON-NLS-1$
+	protected static final String SELECT_ATTRIBUTE = "select"; //$NON-NLS-1$
 
 	private static final String XPATH_GLOBAL_VARIABLES = "/xsl:stylesheet/xsl:variable"; //$NON-NLS-1$
 
@@ -112,7 +112,7 @@ public class SelectAttributeContentAssist extends
 		return getAllCompletionProposals();
 	}
 
-	private IDOMAttr getAttribute(String attrName) {
+	protected IDOMAttr getAttribute(String attrName) {
 		return (IDOMAttr) ((IDOMElement) getNode()).getAttributeNode(attrName);
 	}
 

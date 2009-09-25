@@ -24,6 +24,7 @@ import org.eclipse.wst.xsl.core.model.Template;
 import org.eclipse.wst.xsl.core.model.XSLAttribute;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages;
+import org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXSLContentAssistRequest;
 import org.w3c.dom.Node;
 
 /**

@@ -28,8 +28,8 @@ import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.ui.texteditor.templates.AbstractTemplatesPage;
 import org.eclipse.wst.xml.xpath.ui.internal.XPathUIPlugin;
 import org.eclipse.wst.xml.xpath.ui.internal.templates.TemplateContextTypeIdsXPath;
-import org.eclipse.wst.xsl.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xsl.ui.internal.editor.XSLEditor;
+import org.eclipse.wst.xsl.ui.provisional.contentassist.CustomCompletionProposal;
 
 /**
  * The XSL Templates Page is used by the TemplatesViewer to display available

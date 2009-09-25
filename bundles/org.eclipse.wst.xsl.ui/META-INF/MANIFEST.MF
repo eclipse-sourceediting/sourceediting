@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.xsl.ui;singleton:=true
-Bundle-Version: 1.0.200.qualifier
+Bundle-Version: 1.1.0.qualifier
 Bundle-Activator: org.eclipse.wst.xsl.ui.internal.XSLUIPlugin
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui;bundle-version="[3.4.0,4.0.0)",
@@ -35,9 +35,11 @@ Export-Package: org.eclipse.wst.xsl.ui.internal;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.editor;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.handlers;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.preferences;x-internal:=true,
+ org.eclipse.wst.xsl.ui.internal.quickassist;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.style;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.templates;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.util;x-internal:=true,
  org.eclipse.wst.xsl.ui.internal.validation;x-internal:=true,
- org.eclipse.wst.xsl.ui.internal.wizards;x-internal:=true
+ org.eclipse.wst.xsl.ui.internal.wizards;x-internal:=true,
+ org.eclipse.wst.xsl.ui.provisional.contentassist
 Bundle-ActivationPolicy: lazy

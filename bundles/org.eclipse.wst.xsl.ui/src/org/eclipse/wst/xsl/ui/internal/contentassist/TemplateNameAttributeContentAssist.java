@@ -22,6 +22,7 @@ import org.eclipse.wst.xsl.core.model.CallTemplate;
 import org.eclipse.wst.xsl.core.model.StylesheetModel;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImageHelper;
 import org.eclipse.wst.xsl.ui.internal.util.XSLPluginImages;
+import org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXSLContentAssistRequest;
 import org.w3c.dom.Node;
 
 /**
