@@ -42,10 +42,13 @@ public class TestTemplateModeCompletionProposal extends
 			// assertEquals("Wrong offset returned", 471, offset);
 
 			ICompletionProposal[] proposals = getProposals(offset);
-			assertProposalExists("\"#all\"", proposals);
 			assertProposalExists("mode1", proposals);
 			assertProposalExists("mode2", proposals);
 			assertProposalExists("mode3", proposals);
+			
+			proposals = getXMLProposals(offset);
+			assertProposalExists("\"#all\"", proposals);
+
 		} finally {
 			model.releaseFromEdit();
 		}

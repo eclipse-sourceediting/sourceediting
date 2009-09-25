@@ -146,7 +146,7 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 		loadFileForTesting(xslFilePath);
 
 		try {
-			ICompletionProposal[] proposals = getProposals(37,18);
+			ICompletionProposal[] proposals = getXMLProposals(37,18);
 			assertTrue(proposals.length >= 1);
 			ICompletionProposal proposal = proposals[0];
 			assertTrue("Wrong attribute proposal returned:", proposal
@@ -162,7 +162,7 @@ public class XSLCompletionTest extends AbstractSourceViewerTest {
 		loadFileForTesting(xslFilePath);
 
 		try {
-			ICompletionProposal[] proposals = getProposals(31,58);
+			ICompletionProposal[] proposals = getXMLProposals(31,58);
 			assertTrue(proposals.length >= 2);
 
 			ICompletionProposal proposal = proposals[1];

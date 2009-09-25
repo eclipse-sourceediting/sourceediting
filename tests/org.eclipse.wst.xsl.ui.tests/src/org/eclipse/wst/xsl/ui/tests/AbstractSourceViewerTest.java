@@ -39,6 +39,7 @@ import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.xml.core.internal.encoding.XMLDocumentLoader;
+import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xsl.ui.internal.StructuredTextViewerConfigurationXSL;
 import org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistProcessor;
 
@@ -135,6 +136,11 @@ public class AbstractSourceViewerTest extends AbstractXSLUITest {
 				sourceViewer, offset);
 	}
 	
+	protected ICompletionProposal[] getXMLProposals(int offset) throws Exception {
+		return new XMLContentAssistProcessor().computeCompletionProposals(
+				sourceViewer, offset);
+	}
+	
 	/**
 	 * Get the content completion proposals at <code>lineNumber</code>, <code>numberOfCharacters</code>.
 	 * Number of characters refers to how many total characters from the starting offset of the line.  This is
@@ -150,6 +156,12 @@ public class AbstractSourceViewerTest extends AbstractXSLUITest {
 		int offset = calculateOffset(lineNumber, numberOfCharacters);
 		return new XSLContentAssistProcessor().computeCompletionProposals(sourceViewer, offset);
 	}
+	
+	protected ICompletionProposal[] getXMLProposals(int lineNumber, int numberOfCharacters) throws BadLocationException {
+		int offset = calculateOffset(lineNumber, numberOfCharacters);
+		return new XMLContentAssistProcessor().computeCompletionProposals(sourceViewer, offset);
+	}
+	
 
 	protected int calculateOffset(int lineNumber, int columnNumber)
 			throws BadLocationException {
