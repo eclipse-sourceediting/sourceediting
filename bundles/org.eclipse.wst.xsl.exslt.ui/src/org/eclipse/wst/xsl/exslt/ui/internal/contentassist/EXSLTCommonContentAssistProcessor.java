@@ -18,13 +18,8 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.wst.xsl.core.XSLCore;
-import org.eclipse.wst.xsl.ui.internal.XSLUIConstants;
-import org.eclipse.wst.xsl.ui.internal.XSLUIPlugin;
-import org.eclipse.wst.xsl.ui.internal.contentassist.XSLContentAssistRequestFactory;
 import org.eclipse.wst.xsl.ui.provisional.contentassist.AbstractXSLContentAssistProcessor;
 import org.eclipse.wst.xsl.ui.provisional.contentassist.IContentAssistProposalRequest;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 public class EXSLTCommonContentAssistProcessor extends
 		AbstractXSLContentAssistProcessor implements IContentAssistProcessor {
