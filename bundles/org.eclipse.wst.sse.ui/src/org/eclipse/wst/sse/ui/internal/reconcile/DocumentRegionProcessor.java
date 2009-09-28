@@ -260,10 +260,10 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 			return;
 
 		super.process(dirtyRegion);
-
-		// Also call the validation and spell-check strategies
+		
 		ITypedRegion[] partitions = computePartitioning(dirtyRegion);
-
+		
+		// call the validator strategy once for each effected partition
 		DirtyRegion dirty = null;
 		for (int i = 0; i < partitions.length; i++) {
 			dirty = createDirtyRegion(partitions[i], DirtyRegion.INSERT);
@@ -272,11 +272,14 @@ public class DocumentRegionProcessor extends DirtyRegionProcessor {
 			if (getValidatorStrategy() != null) {
 				getValidatorStrategy().reconcile(partitions[i], dirty);
 			}
-			
-			//if there is a folding strategy then reconcile it
-			if(getFoldingStrategy() != null) {
-				getFoldingStrategy().reconcile(dirty, partitions[i]);
-			}
+		}
+		
+		/* if there is a folding strategy then reconcile it for the
+		 * entire dirty region.
+		 * NOTE: the folding strategy does not care about the sub regions.
+		 */
+		if(getFoldingStrategy() != null) {
+			getFoldingStrategy().reconcile(dirtyRegion, null);
 		}
 	}
 

@@ -155,8 +155,16 @@ public abstract class AbstractStructuredFoldingStrategy
 	}
 	
 	/**
-	 * <p><b>NOTE:</b> This implementation of reconcile ignores the given subRegion and instead gets all of the
-	 * structured document regions effected by the range of the given DirtyRegion.</p>
+	 * <p><b>NOTE 1:</b> This implementation of reconcile ignores the given {@link IRegion} and instead gets all of the
+	 * structured document regions effected by the range of the given {@link DirtyRegion}.</p>
+	 * 
+	 * <p><b>NOTE 2:</b> In cases where multiple {@link IRegion} maybe dirty it is more efficient to pass one
+	 * {@link DirtyRegion} contain all of the {@link IRegion}s then one {@link DirtyRegion} for each IRegion.
+	 * Case in point, when processing the entire document it is <b>recommended</b> that this function be
+	 * called only <b>once</b> with one {@link DirtyRegion} that spans the entire document.</p>
+	 * 
+	 * @param dirtyRegion the region that needs its folding annotations processed
+	 * @param subRegion ignored
 	 * 
 	 * @see org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy#reconcile(org.eclipse.jface.text.reconciler.DirtyRegion, org.eclipse.jface.text.IRegion)
 	 */
