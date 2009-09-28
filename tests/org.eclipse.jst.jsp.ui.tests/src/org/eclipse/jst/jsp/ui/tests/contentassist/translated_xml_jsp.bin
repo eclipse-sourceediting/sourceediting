@@ -20,12 +20,8 @@ javax.servlet.http.HttpSession session = null;
 try {
 String consec1 = "test";
 String consec2 = "two";
-out.print(""+
-myFunc()
-);
-out.print(""+
-myFunc2()
-);
+out.print(myFunc());
+out.print(myFunc2());
 javax.swing.AbstractButton jb = new javax.swing.JButton();
 String includedString = "incd";
    jb. 

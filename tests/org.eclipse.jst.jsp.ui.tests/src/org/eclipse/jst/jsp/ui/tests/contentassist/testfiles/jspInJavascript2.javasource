@@ -15,17 +15,13 @@ Object page = null;
 javax.servlet.http.HttpSession session = null;
 
 try {
-out.print(""+
- testJspString 
-);
+out.print( testJspString );
   
 
         if( request.getAttribute("SoapURL") != null )
         {
         
-out.print(""+
- (String)request.getAttribute("SoapURL")
-);
+out.print( (String)request.getAttribute("SoapURL"));
 
         }
         else

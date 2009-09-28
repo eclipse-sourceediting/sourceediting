@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2007 IBM Corporation and others.
+ * Copyright (c) 2006, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -187,10 +187,10 @@ public class JSPTranslationTest extends TestCase {
 			
 			int jspTestPosition = translation.getJspText().indexOf("<%= ") + 4;
 			int javaOffset = translation.getJavaOffset(jspTestPosition) - classnameLength;
-			assertEquals("JSPTranslation java offset:", 1009, javaOffset);
+			assertEquals("JSPTranslation java offset:", 1000, javaOffset);
 			
 			// (<%= | %>)
-			int javaTestPostition = translation.getJavaText().indexOf("out.print(\"\"+\n   \n);") + 14;
+			int javaTestPostition = translation.getJavaText().indexOf("out.print(   );") + 10;
 			// dont' need to worry about classname length here because we are comparing
 			// with a position in the JSP document (which doesn't contain classname)
 			int jspOffset = translation.getJspOffset(javaTestPostition);
@@ -365,16 +365,16 @@ public class JSPTranslationTest extends TestCase {
 	private HashMap getXMLJSPPositions() {
 		if(fXMLJSPPositions == null) {
 			fXMLJSPPositions = new HashMap();
-			fXMLJSPPositions.put(new Position(882,52), new Position(920,31));
-			fXMLJSPPositions.put(new Position(961,7), new Position(952,7));
+			fXMLJSPPositions.put(new Position(882,52), new Position(910,31));
+			fXMLJSPPositions.put(new Position(961,7), new Position(942,7));
 			fXMLJSPPositions.put(new Position(1018,14), new Position(89,14));
-			fXMLJSPPositions.put(new Position(640,2), new Position(888,2));
+			fXMLJSPPositions.put(new Position(640,2), new Position(878,2));
 			fXMLJSPPositions.put(new Position(406,24), new Position(759,24));
-			fXMLJSPPositions.put(new Position(685,19), new Position(897,19));
-			fXMLJSPPositions.put(new Position(650,26), new Position(861,26));
-			fXMLJSPPositions.put(new Position(563,9), new Position(848,9));
+			fXMLJSPPositions.put(new Position(685,19), new Position(887,19));
+			fXMLJSPPositions.put(new Position(650,26), new Position(851,26));
+			fXMLJSPPositions.put(new Position(563,9), new Position(839,9));
 			fXMLJSPPositions.put(new Position(461,23), new Position(784,23));
-			fXMLJSPPositions.put(new Position(522,8), new Position(822,8));
+			fXMLJSPPositions.put(new Position(522,8), new Position(818,8));
 			fXMLJSPPositions.put(new Position(323,44), new Position(274,45));
 			fXMLJSPPositions.put(new Position(245,43), new Position(229,44));
 		}
