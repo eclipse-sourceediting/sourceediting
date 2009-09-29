@@ -38,7 +38,7 @@ import org.eclipse.core.runtime.Platform;
 public abstract class AbstractXSLUITest extends TestCase
 {
 	protected static IProject fTestProject;
-	private static boolean fTestProjectInitialized;
+	protected static boolean fTestProjectInitialized;
 	protected static final String PROJECT_FILES = "projectfiles";
 	protected static final String TEST_PROJECT_NAME = "xsltestfiles";
 
@@ -53,7 +53,7 @@ public abstract class AbstractXSLUITest extends TestCase
 			File srcDir = XSLModelXMLTestsPlugin.getTestFile("/" + PROJECT_FILES);
 			String destinationProjectString = fTestProject.getLocation().toOSString();
 			String destinationFolder = destinationProjectString + "/";
-			File targetDir = new File(destinationProjectString);
+			File targetDir = new File(destinationFolder);
 			copyDir(srcDir, targetDir);
 
 			fTestProject.refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -61,7 +61,7 @@ public abstract class AbstractXSLUITest extends TestCase
 		}
 	}
 
-	private static void getAndCreateProject() throws CoreException
+	protected static void getAndCreateProject() throws CoreException
 	{
 		IWorkspace workspace = getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
@@ -127,7 +127,7 @@ public abstract class AbstractXSLUITest extends TestCase
 		return ResourcesPlugin.getWorkspace();
 	}
 
-	private static void copyDir(File src, File target) throws Exception
+	protected static void copyDir(File src, File target) throws Exception
 	{
 		if (!target.exists())
 			target.mkdir();

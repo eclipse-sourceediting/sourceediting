@@ -18,6 +18,7 @@ import org.eclipse.wst.xsl.launching.tests.LaunchingSuite;
 import org.eclipse.wst.xsl.ui.tests.XSLUITestSuite;
 import org.eclipse.wst.xsl.core.tests.XSLCoreTestSuite;
 import org.eclipse.wst.xsl.exslt.core.tests.EXSLTCoreTestSuite;
+import org.eclipse.wst.xsl.exslt.ui.tests.EXSLTUITestSuite;
 
 /**
  * This class specifies all the bundles of this component that provide a test
@@ -34,6 +35,7 @@ public class AllTestsSuite extends TestSuite {
 		addTest(LaunchingSuite.suite());
 		addTest(AllPsychoPathTests.suite());
 		addTest(EXSLTCoreTestSuite.suite());
+		addTest(EXSLTUITestSuite.suite());
 	}
 
 	/**
