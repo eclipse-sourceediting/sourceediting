@@ -30,14 +30,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public class CommonContentAssistRequest extends SelectAttributeContentAssist {
+public class CommonSelectContentAssistRequest extends SelectAttributeContentAssist {
 
 	private static final String EXSLT_COMMON_NAMESPACE = "http://exslt.org/common";
 	private static final String NODE_SET = "node-set( )";
 	private static final String OBJECT_TYPE = "object-type( )";
 	
 	String prefix = "";
-	public CommonContentAssistRequest(Node node,
+	public CommonSelectContentAssistRequest(Node node,
 			IStructuredDocumentRegion documentRegion,
 			ITextRegion completionRegion, int begin, int length, String filter,
 			ITextViewer textViewer) {

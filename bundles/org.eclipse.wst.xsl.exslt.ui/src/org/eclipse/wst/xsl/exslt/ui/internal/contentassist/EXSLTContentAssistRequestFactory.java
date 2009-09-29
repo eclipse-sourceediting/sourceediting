@@ -87,9 +87,14 @@ public class EXSLTContentAssistRequestFactory {
 	private IContentAssistProposalRequest commonAttributeProposals(
 			NamedNodeMap nodeMap) {
 		if (hasAttributeAtTextRegion(ATTR_SELECT, nodeMap,
-				completionRegion) ||
-			hasAttributeAtTextRegion(ATTR_TEST, nodeMap, completionRegion)) {
-			return new CommonContentAssistRequest(xmlNode, sdRegion,
+				completionRegion)) {
+			return new CommonSelectContentAssistRequest(xmlNode, sdRegion,
+					completionRegion, documentPosition, 0, matchString,
+					textViewer);
+		}
+	
+		if (hasAttributeAtTextRegion(ATTR_TEST, nodeMap, completionRegion)) {
+			return new CommonTestContentAssistRequest(xmlNode, sdRegion,
 					completionRegion, documentPosition, 0, matchString,
 					textViewer);
 		}
