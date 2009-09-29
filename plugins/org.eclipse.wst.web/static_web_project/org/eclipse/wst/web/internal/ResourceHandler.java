@@ -30,8 +30,15 @@ public final class ResourceHandler extends NLS {
 	public static String NewDotDotDot;
 	public static String InvalidServerTarget;
 	public static String ConfigureSettings;
+	public static String Context_Root_cannot_be_empty_2;
+	public static String Names_cannot_contain_whitespace;
+	public static String The_character_is_invalid_in_a_context_root;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, ResourceHandler.class);
+	}
+	
+	public static String getString(String key, Object[] args) {
+		return NLS.bind(key, args);
 	}
 }

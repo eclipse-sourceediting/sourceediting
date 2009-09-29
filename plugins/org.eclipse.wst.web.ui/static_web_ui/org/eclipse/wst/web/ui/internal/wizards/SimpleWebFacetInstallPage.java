@@ -35,7 +35,7 @@ public class SimpleWebFacetInstallPage extends DataModelFacetInstallPage impleme
 
 	@Override
 	protected String[] getValidationPropertyNames() {
-		return new String[]{CONTENT_DIR};
+		return new String[]{CONTEXT_ROOT, CONTENT_DIR};
 	}
 
 	@Override
