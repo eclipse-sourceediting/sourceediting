@@ -2,7 +2,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.jsp.*;
 
-public class __2F_INCLUDES_TESTS_2F_jsp_include_test_2E_jsp extends javax.servlet.http.HttpServlet{
+public class __2F_INCLUDES_5F_TESTS_2F_jsp_5F_include_5F_test_2E_jsp extends javax.servlet.http.HttpServlet{
  String argh = "argh"; 
 
  public String globalIncludedString = "included";

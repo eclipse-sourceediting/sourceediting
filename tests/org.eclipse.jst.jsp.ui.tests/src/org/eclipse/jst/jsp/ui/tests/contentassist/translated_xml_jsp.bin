@@ -3,7 +3,7 @@ import javax.servlet.http.*;
 import javax.servlet.jsp.*;
 
 import java.util.List;
-public class __2F_INCLUDES_TESTS_2F_xml_2D_jsp_2F_most_2D_tags_2D_xml_2D_jsp_2E_jsp extends javax.servlet.http.HttpServlet{
+public class __2F_INCLUDES_5F_TESTS_2F_xml_2D_jsp_2F_most_2D_tags_2D_xml_2D_jsp_2E_jsp extends javax.servlet.http.HttpServlet{
 public String myFunc() { return "myfunc"; }
 
 public String myFunc2() { return "myfunc"; }
