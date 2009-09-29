@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2005 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -108,11 +108,11 @@ public class JSP2ServletNameUtil {
 	  // ensure rest of characters are valid	
 	  for (int i=0; i< length; i++) {
 		  char currentChar = name.charAt(i);
-		  if (Character.isJavaIdentifierPart(currentChar) == true  ) { 
-			  modifiedName.append(currentChar);
-		  } else {
+		  // [290769] Mangle _ since mangling inserts _ as a delimiter
+		  if (currentChar == '_' || !Character.isJavaIdentifierPart(currentChar))
 			  modifiedName.append(mangleChar(currentChar));
-		  }
+		  else
+			  modifiedName.append(currentChar);
 	  }
 	  return modifiedName.toString();
 	  
