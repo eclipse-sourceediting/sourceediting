@@ -65,10 +65,10 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
           throw new ParseException();
         }
       }
-                                                               jjtree.closeNodeScope(jjtn000, true);
-                                                               jjtc000 = false;
-                                                               jjtreeCloseNodeScope(jjtn000);
-                                                               {if (true) return jjtn000;}
+      jjtree.closeNodeScope(jjtn000, true);
+      jjtc000 = false;
+      jjtreeCloseNodeScope(jjtn000);
+      {if (true) return jjtn000;}
     } catch (Throwable jjte000) {
           if (jjtc000) {
             jjtree.clearNodeScope(jjtn000);
@@ -105,7 +105,6 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case OR1:
         case OR2:
-          
           break;
         default:
           jj_la1[1] = jj_gen;
@@ -161,7 +160,6 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case AND1:
         case AND2:
-          
           break;
         default:
           jj_la1[3] = jj_gen;
@@ -219,7 +217,6 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         case EQ2:
         case NEQ1:
         case NEQ2:
-          
           break;
         default:
           jj_la1[5] = jj_gen;
@@ -287,7 +284,6 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         case LE2:
         case GE1:
         case GE2:
-          
           break;
         default:
           jj_la1[7] = jj_gen;
@@ -361,7 +357,6 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case PLUS:
         case MINUS:
-          
           break;
         default:
           jj_la1[9] = jj_gen;
@@ -420,7 +415,6 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         case DIVIDE2:
         case MODULUS1:
         case MODULUS2:
-          
           break;
         default:
           jj_la1[11] = jj_gen;
@@ -588,7 +582,6 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case DOT:
         case LBRACKET:
-          
           break;
         default:
           jj_la1[15] = jj_gen;
@@ -636,11 +629,28 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         break;
       case LPAREN:
         jj_consume_token(LPAREN);
-        Expression();
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case INTEGER_LITERAL:
+        case FLOATING_POINT_LITERAL:
+        case STRING_LITERAL:
+        case TRUE:
+        case FALSE:
+        case NULL:
+        case LPAREN:
+        case MINUS:
+        case NOT1:
+        case NOT2:
+        case EMPTY:
+        case IDENTIFIER:
+          Expression();
+          break;
+        default:
+          jj_la1[16] = jj_gen;
+        }
         jj_consume_token(RPAREN);
         break;
       default:
-        jj_la1[16] = jj_gen;
+        jj_la1[17] = jj_gen;
         if (jj_2_2(3)) {
           FunctionInvocation();
         } else {
@@ -649,7 +659,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
             jj_consume_token(IDENTIFIER);
             break;
           default:
-            jj_la1[17] = jj_gen;
+            jj_la1[18] = jj_gen;
             jj_consume_token(-1);
             throw new ParseException();
           }
@@ -692,8 +702,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
           t = jj_consume_token(IDENTIFIER);
           break;
         default:
-          jj_la1[18] = jj_gen;
-          
+          jj_la1[19] = jj_gen;
         }
                                       jjtree.closeNodeScope(jjtn000, true);
                                       jjtc000 = false;
@@ -706,7 +715,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         jj_consume_token(RBRACKET);
         break;
       default:
-        jj_la1[19] = jj_gen;
+        jj_la1[20] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -747,8 +756,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         name = jj_consume_token(IDENTIFIER);
         break;
       default:
-        jj_la1[20] = jj_gen;
-        
+        jj_la1[21] = jj_gen;
       }
             if(null != prefix && null != name)
                     jjtn000.setFullFunctionName(prefix.image + ":" + (null == name ? "" : name.image));
@@ -757,15 +765,31 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case LPAREN:
         jj_consume_token(LPAREN);
-        Expression();
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case INTEGER_LITERAL:
+        case FLOATING_POINT_LITERAL:
+        case STRING_LITERAL:
+        case TRUE:
+        case FALSE:
+        case NULL:
+        case LPAREN:
+        case MINUS:
+        case NOT1:
+        case NOT2:
+        case EMPTY:
+        case IDENTIFIER:
+          Expression();
+          break;
+        default:
+          jj_la1[22] = jj_gen;
+        }
         label_8:
         while (true) {
           switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
           case COMMA:
-            
             break;
           default:
-            jj_la1[21] = jj_gen;
+            jj_la1[23] = jj_gen;
             break label_8;
           }
           jj_consume_token(COMMA);
@@ -778,8 +802,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         }
         break;
       default:
-        jj_la1[22] = jj_gen;
-        
+        jj_la1[24] = jj_gen;
       }
     } catch (Throwable jjte000) {
       if (jjtc000) {
@@ -830,7 +853,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         jj_consume_token(NULL);
         break;
       default:
-        jj_la1[23] = jj_gen;
+        jj_la1[25] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -856,89 +879,439 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
     finally { jj_save(1, xla); }
   }
 
-  final private boolean jj_3R_10() {
-    if (jj_scan_token(LPAREN)) return true;
+  final private boolean jj_3_1() {
+    if (jj_3R_9()) return true;
     return false;
   }
 
-  final private boolean jj_3R_9() {
+  final private boolean jj_3R_11() {
+    if (jj_3R_13()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_14()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_34() {
+    if (jj_3R_37()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_38() {
+    if (jj_3R_9()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_37() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_38()) {
+    jj_scanpos = xsp;
+    if (jj_3R_39()) return true;
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_10() {
     if (jj_scan_token(IDENTIFIER)) return true;
     if (jj_scan_token(COLON)) return true;
     Token xsp;
     xsp = jj_scanpos;
     if (jj_scan_token(47)) jj_scanpos = xsp;
     xsp = jj_scanpos;
-    if (jj_3R_10()) jj_scanpos = xsp;
+    if (jj_3R_12()) jj_scanpos = xsp;
+    return false;
+  }
+
+  final private boolean jj_3R_36() {
+    if (jj_scan_token(LBRACKET)) return true;
+    if (jj_3R_37()) return true;
+    if (jj_scan_token(RBRACKET)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_29() {
+    if (jj_3R_32()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_31() {
+    if (jj_scan_token(LPAREN)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_34()) jj_scanpos = xsp;
+    if (jj_scan_token(RPAREN)) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_32() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_35()) {
+    jj_scanpos = xsp;
+    if (jj_3R_36()) return true;
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_35() {
+    if (jj_scan_token(DOT)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(47)) jj_scanpos = xsp;
+    return false;
+  }
+
+  final private boolean jj_3R_28() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_30()) {
+    jj_scanpos = xsp;
+    if (jj_3R_31()) {
+    jj_scanpos = xsp;
+    if (jj_3_2()) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(47)) return true;
+    }
+    }
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_30() {
+    if (jj_3R_33()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_27() {
+    if (jj_3R_28()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_29()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_26() {
+    if (jj_3R_27()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_23() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_25()) {
+    jj_scanpos = xsp;
+    if (jj_3R_26()) return true;
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_22() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(32)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(33)) return true;
+    }
+    if (jj_3R_21()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_25() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(39)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(40)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(33)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(45)) return true;
+    }
+    }
+    }
+    if (jj_3R_23()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_24() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(34)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(35)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(36)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(37)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(38)) return true;
+    }
+    }
+    }
+    }
+    if (jj_3R_23()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_9() {
+    if (jj_3R_11()) return true;
+    if (jj_scan_token(COND)) return true;
+    if (jj_3R_11()) return true;
+    if (jj_scan_token(COLON)) return true;
+    if (jj_3R_11()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_21() {
+    if (jj_3R_23()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_24()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_39() {
+    if (jj_3R_11()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_19() {
+    if (jj_3R_21()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_22()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_20() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(16)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(17)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(14)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(15)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(22)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(23)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(20)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(21)) return true;
+    }
+    }
+    }
+    }
+    }
+    }
+    }
+    if (jj_3R_19()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_16() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(41)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(42)) return true;
+    }
+    if (jj_3R_15()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_41() {
+    if (jj_scan_token(COMMA)) return true;
+    if (jj_3R_37()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_17() {
+    if (jj_3R_19()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_20()) { jj_scanpos = xsp; break; }
+    }
     return false;
   }
 
   final private boolean jj_3_2() {
-    if (jj_3R_9()) return true;
+    if (jj_3R_10()) return true;
     return false;
   }
 
-  final private boolean jj_3_1() {
-    if (jj_scan_token(COND)) return true;
+  final private boolean jj_3R_18() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(18)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(19)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(24)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(25)) return true;
+    }
+    }
+    }
+    if (jj_3R_17()) return true;
     return false;
   }
 
+  final private boolean jj_3R_15() {
+    if (jj_3R_17()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_18()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_14() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(43)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(44)) return true;
+    }
+    if (jj_3R_13()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_40() {
+    if (jj_3R_37()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_13() {
+    if (jj_3R_15()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_16()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_33() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(10)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(11)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(5)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(6)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(8)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(12)) return true;
+    }
+    }
+    }
+    }
+    }
+    return false;
+  }
+
+  final private boolean jj_3R_12() {
+    if (jj_scan_token(LPAREN)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_40()) jj_scanpos = xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_41()) { jj_scanpos = xsp; break; }
+    }
+    if (jj_scan_token(RPAREN)) return true;
+    return false;
+  }
+
+  /** Generated Token Manager. */
   public JSPELParserTokenManager token_source;
   SimpleCharStream jj_input_stream;
-  public Token token, jj_nt;
+  /** Current token. */
+  public Token token;
+  /** Next token. */
+  public Token jj_nt;
   private int jj_ntk;
   private Token jj_scanpos, jj_lastpos;
   private int jj_la;
-  public boolean lookingAhead = false;
-//  private boolean jj_semLA;
   private int jj_gen;
-  final private int[] jj_la1 = new int[24];
+  final private int[] jj_la1 = new int[26];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static {
-      jj_la1_0();
-      jj_la1_1();
+      jj_la1_init_0();
+      jj_la1_init_1();
    }
-   private static void jj_la1_0() {
-      jj_la1_0 = new int[] {0x4001d60,0x0,0x0,0x0,0x0,0x30c0000,0x30c0000,0xf3c000,0xf3c000,0x0,0x0,0x0,0x0,0x0,0x4001d60,0x40002000,0x4001d60,0x0,0x0,0x40002000,0x0,0x10000000,0x4000000,0x1d60,};
+   private static void jj_la1_init_0() {
+      jj_la1_0 = new int[] {0x4001d60,0x0,0x0,0x0,0x0,0x30c0000,0x30c0000,0xf3c000,0xf3c000,0x0,0x0,0x0,0x0,0x0,0x4001d60,0x40002000,0x4001d60,0x4001d60,0x0,0x0,0x40002000,0x0,0x4001d60,0x10000000,0x4000000,0x1d60,};
    }
-   private static void jj_la1_1() {
-      jj_la1_1 = new int[] {0xa182,0x1800,0x1800,0x600,0x600,0x0,0x0,0x0,0x0,0x3,0x3,0x7c,0x7c,0x2182,0xa182,0x0,0x0,0x8000,0x8000,0x0,0x8000,0x0,0x0,0x0,};
+   private static void jj_la1_init_1() {
+      jj_la1_1 = new int[] {0xa182,0x1800,0x1800,0x600,0x600,0x0,0x0,0x0,0x0,0x3,0x3,0x7c,0x7c,0x2182,0xa182,0x0,0xa182,0x0,0x8000,0x8000,0x0,0x8000,0xa182,0x0,0x0,0x0,};
    }
   final private JJCalls[] jj_2_rtns = new JJCalls[2];
   private boolean jj_rescan = false;
   private int jj_gc = 0;
 
+  /** Constructor with InputStream. */
   public JSPELParser(java.io.InputStream stream) {
+     this(stream, null);
+  }
+  /** Constructor with InputStream and supplied encoding */
+  public JSPELParser(java.io.InputStream stream, String encoding) {
     jj_input_stream = new SimpleCharStream(stream, 1, 1);
     token_source = new JSPELParserTokenManager(jj_input_stream);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 24; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 26; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
+  /** Reinitialise. */
   public void ReInit(java.io.InputStream stream) {
+     ReInit(stream, null);
+  }
+  /** Reinitialise. */
+  public void ReInit(java.io.InputStream stream, String encoding) {
     jj_input_stream.ReInit(stream, 1, 1);
     token_source.ReInit(jj_input_stream);
     token = new Token();
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 24; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 26; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
+  /** Constructor. */
   public JSPELParser(java.io.Reader stream) {
     jj_input_stream = new SimpleCharStream(stream, 1, 1);
     token_source = new JSPELParserTokenManager(jj_input_stream);
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 24; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 26; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
+  /** Reinitialise. */
   public void ReInit(java.io.Reader stream) {
     jj_input_stream.ReInit(stream, 1, 1);
     token_source.ReInit(jj_input_stream);
@@ -946,26 +1319,28 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 24; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 26; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
+  /** Constructor with generated Token Manager. */
   public JSPELParser(JSPELParserTokenManager tm) {
     token_source = tm;
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 24; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 26; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
+  /** Reinitialise. */
   public void ReInit(JSPELParserTokenManager tm) {
     token_source = tm;
     token = new Token();
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 24; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 26; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1018,6 +1393,8 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
     return false;
   }
 
+
+/** Get the next Token. */
   final public Token getNextToken() {
     if (token.next != null) token = token.next;
     else token = token.next = token_source.getNextToken();
@@ -1026,8 +1403,9 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
     return token;
   }
 
+/** Get the specific Token. */
   final public Token getToken(int index) {
-    Token t = lookingAhead ? jj_scanpos : token;
+    Token t = token;
     for (int i = 0; i < index; i++) {
       if (t.next != null) t = t.next;
       else t = t.next = token_source.getNextToken();
@@ -1071,11 +1449,11 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
           if (exists) break;
         }
       }
-      if (!exists) jj_expentries.addElement(jj_expentry);
       if (pos != 0) jj_lasttokens[(jj_endpos = pos) - 1] = kind;
     }
   }
 
+  /** Generate ParseException. */
   public ParseException generateParseException() {
     jj_expentries.removeAllElements();
     boolean[] la1tokens = new boolean[51];
@@ -1086,7 +1464,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 24; i++) {
+    for (int i = 0; i < 26; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -1115,15 +1493,18 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
     return new ParseException(token, exptokseq, tokenImage);
   }
 
+  /** Enable tracing. */
   final public void enable_tracing() {
   }
 
+  /** Disable tracing. */
   final public void disable_tracing() {
   }
 
   final private void jj_rescan_token() {
     jj_rescan = true;
     for (int i = 0; i < 2; i++) {
+    try {
       JJCalls p = jj_2_rtns[i];
       do {
         if (p.gen > jj_gen) {
@@ -1135,6 +1516,7 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         }
         p = p.next;
       } while (p != null);
+      } catch(LookaheadSuccess ls) { }
     }
     jj_rescan = false;
   }
