@@ -219,14 +219,16 @@ public class RegionChangedAdapterNotificationTests extends TestCase {
 			structuredDocument.setText(this, "<a b= c></a>");
 	
 			Node before = document.getFirstChild();
-			final int[] changed = new int[]{-1};
+			final int[] changed = new int[]{-1, -1};
 			INodeAdapter adapter = new INodeAdapter() {
+				private int eCount = 0;
 				public boolean isAdapterForType(Object type) {
 					return type.equals(RegionChangedAdapterNotificationTests.class);
 				}
 	
 				public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
-					changed[0] = eventType;
+					assertTrue("Received more than 2 events.", eCount < 2);
+					changed[eCount++] = eventType;
 				}
 			};
 			((INodeNotifier) before).addAdapter(adapter);
@@ -240,8 +242,8 @@ public class RegionChangedAdapterNotificationTests extends TestCase {
 			Node after = document.getFirstChild();
 	
 			assertEquals("Node replaced", before, after);
-			
-			assertEquals("Property Changed Adapter Notification event not sent " + changed[0] + " " +structuredDocument.get(), INodeNotifier.CHANGE, changed[0]);
+			assertEquals("Property Removed Adapter Notification event not sent " + changed[0] + " " + structuredDocument.get(), INodeNotifier.REMOVE, changed[0]);
+			assertEquals("Property Added Adapter Notification event not sent " + changed[1] + " " + structuredDocument.get(), INodeNotifier.ADD, changed[1]);
 
 			assertEquals("unexpected document content", "<a bd= c></a>", structuredDocument.get());
 		}
