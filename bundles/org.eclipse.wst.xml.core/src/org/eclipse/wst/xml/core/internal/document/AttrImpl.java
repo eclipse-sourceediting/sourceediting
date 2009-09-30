@@ -656,11 +656,11 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		if (this.ownerElement != null) {
 			value = getValue();
 			startOffset = this.ownerElement.getStartOffset();
-			this.ownerElement.notify(CHANGE, this, value, null, startOffset);
+			this.ownerElement.notify(REMOVE, this, value, null, startOffset);
 		}
 		this.fName = name.toCharArray();
 		if (this.ownerElement != null) {
-			this.ownerElement.notify(CHANGE, this, null, value, startOffset);
+			this.ownerElement.notify(ADD, this, null, value, startOffset);
 		}
 	}
 
