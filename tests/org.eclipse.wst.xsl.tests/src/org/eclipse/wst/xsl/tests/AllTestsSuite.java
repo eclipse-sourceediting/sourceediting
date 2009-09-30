@@ -35,7 +35,7 @@ public class AllTestsSuite extends TestSuite {
 		addTest(LaunchingSuite.suite());
 		addTest(AllPsychoPathTests.suite());
 		addTest(EXSLTCoreTestSuite.suite());
-		addTest(EXSLTUITestSuite.suite());
+	//	addTest(EXSLTUITestSuite.suite());
 	}
 
 	/**
