@@ -331,6 +331,7 @@
 			<contentTypeIdentifier
 				id="org.eclipse.wst.html.core.htmlsource">
 				<partitionType id="org.eclipse.wst.html.HTML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.html.HTML_DECLARATION"/>
 				<partitionType id="org.eclipse.wst.html.HTML_COMMENT"/>
 				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
 				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
