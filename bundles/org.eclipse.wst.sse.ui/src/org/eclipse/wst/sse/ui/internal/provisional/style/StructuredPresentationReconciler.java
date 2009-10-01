@@ -812,13 +812,14 @@ public class StructuredPresentationReconciler implements IPresentationReconciler
 		if (endOffset < end && end < d.getLength())
 			partition= getPartition(d, end);
 
+		//if there is not damager for the partition then use the endOffset of the partition
 		IPresentationDamager damager= getDamager(partition.getType());
-		if (damager == null)
-			return -1;
+		if (damager != null) {
+			IRegion r= damager.getDamageRegion(partition, e, fDocumentPartitioningChanged);
+			endOffset = r.getOffset() + r.getLength();
+		}
 
-		IRegion r= damager.getDamageRegion(partition, e, fDocumentPartitioningChanged);
-
-		return r.getOffset() + r.getLength();
+		return endOffset;
 	}
 	
 	void processRecordedDamages() {
