@@ -1461,16 +1461,21 @@ public class JSPTranslator {
 		int end = sdr.getEndOffset();
 		String sdrText = ""; //$NON-NLS-1$
 
-		// read structured document regions until
-		// </jsp:scriptlet> or EOF
+		StringBuffer regionText = new StringBuffer();
+		// read structured document regions until </jsp:scriptlet> or EOF
 		while (sdr != null && sdr.getType() != DOMRegionContext.XML_TAG_NAME) {
 
 			// setup for next region
-			start = sdr.getStartOffset();
+			if (regionText.length() == 0)
+				start = sdr.getStartOffset();
 			sdrText = sdr.getText();
 
 			if (sdr.getType() == DOMRegionContext.XML_CDATA_TEXT) {
-
+				// Clear out the buffer
+				if (regionText.length() > 0) {
+					writeToBuffer(type, regionText.toString(), start, end);
+					regionText = new StringBuffer();
+				}
 				// just to be safe, make sure CDATA start & end are there
 				if (sdrText.startsWith("<![CDATA[") && sdrText.endsWith("]]>")) { //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -1481,14 +1486,15 @@ public class JSPTranslator {
 				}
 			}
 			else {
-
 				// handle entity references
-				sdrText = EscapedTextUtil.getUnescapedText(sdrText);
+				regionText.append(EscapedTextUtil.getUnescapedText(sdrText));
 				end = sdr.getEndOffset();
-				writeToBuffer(type, sdrText, start, end);
 			}
 			sdr = sdr.getNext();
 		}
+
+		if (regionText.length() > 0)
+			writeToBuffer(type, regionText.toString(), start, end);
 		setCurrentNode(sdr);
 		setSourceReferencePoint();
 	}
