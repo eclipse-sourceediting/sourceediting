@@ -463,7 +463,7 @@ unicode_range = "U"\+[0-9a-fA-F?]{1,6}("-"[0-9a-fA-F?]{1,6})?
  */
 
 <ST_DECLARATION> {
-	{ident} { yybegin(ST_DECLARATION_SEPARATOR); return CSS_DECLARATION_PROPERTY; }
+	\x2A?{ident} { yybegin(ST_DECLARATION_SEPARATOR); return CSS_DECLARATION_PROPERTY; }
 }
 
 <ST_DECLARATION_SEPARATOR> {
