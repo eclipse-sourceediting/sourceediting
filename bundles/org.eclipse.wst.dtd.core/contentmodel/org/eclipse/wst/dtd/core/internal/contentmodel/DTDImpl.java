@@ -741,6 +741,7 @@ public class DTDImpl {
 			dataTypeNameTable[DTDBasicTypeKind.CDATA] = CMDataType.CDATA;
 			dataTypeNameTable[DTDBasicTypeKind.ID] = CMDataType.ID;
 			dataTypeNameTable[DTDBasicTypeKind.IDREF] = CMDataType.IDREF;
+			dataTypeNameTable[DTDBasicTypeKind.IDREFS] = CMDataType.IDREFS;
 			dataTypeNameTable[DTDBasicTypeKind.ENTITY] = CMDataType.ENTITY;
 			dataTypeNameTable[DTDBasicTypeKind.ENTITIES] = CMDataType.ENTITIES;
 			dataTypeNameTable[DTDBasicTypeKind.NMTOKEN] = CMDataType.NMTOKEN;

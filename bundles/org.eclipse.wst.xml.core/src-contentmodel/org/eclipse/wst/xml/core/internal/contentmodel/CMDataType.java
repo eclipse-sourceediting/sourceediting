@@ -23,6 +23,7 @@ public interface CMDataType extends CMNode {
 	static final String CDATA = "CDATA"; //$NON-NLS-1$
 	static final String ID = "ID"; //$NON-NLS-1$
 	static final String IDREF = "IDREF"; //$NON-NLS-1$
+	static final String IDREFS = "IDREFS"; //$NON-NLS-1$
 	static final String ENTITY = "ENTITY"; //$NON-NLS-1$
 	static final String ENTITIES = "ENTITIES"; //$NON-NLS-1$
 	static final String NOTATION = "NOTATION"; //$NON-NLS-1$

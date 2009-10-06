@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -215,7 +215,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 
 	/** debug flag */
 	protected static final boolean DEBUG;
-	private static final long UPDATE_DELAY = 750;
+	private static final long UPDATE_DELAY = 500;
 
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerjob"); //$NON-NLS-1$
@@ -263,6 +263,10 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 	 * true if entire document needs to be reprocessed after rewrite session
 	 */
 	boolean fReprocessAfterRewrite = false;
+
+	/** The job should be reset because of document changes */
+	private boolean fReset = false;
+	private Object LOCK = new Object();
 
 	/**
 	 * Creates a new StructuredRegionProcessor
@@ -613,9 +617,10 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 		if (dr == null)
 			return;
 
-		cancel();
 		addRequest(dr);
-		schedule(getDelay());
+		synchronized (LOCK) {
+			fReset = true;
+		}
 
 		if (DEBUG) {
 			System.out.println("added request for: [" + dr.getText() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -628,7 +633,15 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 		if (!PlatformUI.isWorkbenchRunning())
 			return status;
 
+		boolean processed = false;
 		try {
+			synchronized (LOCK) {
+				if (fReset) {
+					fReset = false;
+					return status;
+				}
+			}
+			processed = true;
 			beginProcessing();
 
 			DirtyRegion[] toRefresh = getRequests();
@@ -649,8 +662,9 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 				Logger.logException("problem with reconciling", e); //$NON-NLS-1$
 		}
 		finally {
-			endProcessing();
-
+			if (processed)
+				endProcessing();
+			schedule(getDelay());
 			monitor.done();
 		}
 		return status;
@@ -724,6 +738,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler, IReconcile
 				DirtyRegion entireDocument = createDirtyRegion(0, document.getLength(), DirtyRegion.INSERT);
 				processDirtyRegion(entireDocument);
 			}
+			schedule(getDelay());
 		}
 	}
 

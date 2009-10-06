@@ -47,6 +47,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  * @author pavery
  */
 class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
+	private static final String DEFAULT_FRAGMENT_CONTENT_TYPE = "org.eclipse.jst.jsp.core.jspfragmentsource";
 	private final JSPTranslator fTranslator;
 	protected JSPSourceParser fLocalParser = null;
 	protected String fTextToParse = null;
@@ -135,7 +136,9 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 			 * translator for dealing with TEI variables
 			 */
 			try {
-				IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerFor(f);
+				IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerFor(f, false);
+				if (handler == null)
+					handler = ModelHandlerRegistry.getInstance().getHandlerForContentTypeId(DEFAULT_FRAGMENT_CONTENT_TYPE);
 				document = (IStructuredDocument) handler.getDocumentLoader().createNewStructuredDocument();
 				contents = FileContentCache.getInstance().getContents(f.getFullPath());
 			}

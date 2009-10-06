@@ -126,7 +126,7 @@ public class JSPTranslator {
 	private String fSessionVariableDeclaration = "javax.servlet.http.HttpSession session = null;" + ENDL; //$NON-NLS-1$
 	private String fFooter = "}}"; //$NON-NLS-1$
 	private String fException = "Throwable exception = null;"; //$NON-NLS-1$
-	public static final String EXPRESSION_PREFIX = "out.print(\"\"+"; //$NON-NLS-1$
+	public static final String EXPRESSION_PREFIX = "out.print("; //$NON-NLS-1$
 	public static final String EXPRESSION_SUFFIX = ");"; //$NON-NLS-1$
 	String fSuperclass = null;
 

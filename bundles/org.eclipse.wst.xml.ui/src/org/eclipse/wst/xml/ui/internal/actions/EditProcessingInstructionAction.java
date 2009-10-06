@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -58,38 +58,41 @@ public class EditProcessingInstructionAction extends NodeAction {
 	}
 
 	public void run() {
-		manager.beginNodeAction(this);
 		Shell shell = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
-
-		EditProcessingInstructionDialog dialog = null;
-		if (pi != null) {
-			dialog = new EditProcessingInstructionDialog(shell, pi);
-		}
-		else {
-			dialog = new EditProcessingInstructionDialog(shell, XMLUIMessages._UI_PI_TARGET_VALUE, XMLUIMessages._UI_PI_DATA_VALUE);
-		}
-
-		dialog.create();
-		dialog.getShell().setText(title);
-		dialog.setBlockOnOpen(true);
-		dialog.open();
-
-		if (dialog.getReturnCode() == Window.OK) {
+		if (validateEdit(manager.getModel(), shell)) {
+			manager.beginNodeAction(this);
+			
+	
+			EditProcessingInstructionDialog dialog = null;
 			if (pi != null) {
-				childRef = pi;
+				dialog = new EditProcessingInstructionDialog(shell, pi);
 			}
-
-			Document document = parent.getNodeType() == Node.DOCUMENT_NODE ? (Document) parent : parent.getOwnerDocument();
-			Node newNode = document.createProcessingInstruction(dialog.getTarget(), dialog.getData());
-			parent.insertBefore(newNode, childRef);
-
-			if (pi != null) {
-				parent.removeChild(pi);
+			else {
+				dialog = new EditProcessingInstructionDialog(shell, XMLUIMessages._UI_PI_TARGET_VALUE, XMLUIMessages._UI_PI_DATA_VALUE);
 			}
-
-			manager.reformat(newNode, false);
-			manager.setViewerSelection(newNode);
+	
+			dialog.create();
+			dialog.getShell().setText(title);
+			dialog.setBlockOnOpen(true);
+			dialog.open();
+	
+			if (dialog.getReturnCode() == Window.OK) {
+				if (pi != null) {
+					childRef = pi;
+				}
+	
+				Document document = parent.getNodeType() == Node.DOCUMENT_NODE ? (Document) parent : parent.getOwnerDocument();
+				Node newNode = document.createProcessingInstruction(dialog.getTarget(), dialog.getData());
+				parent.insertBefore(newNode, childRef);
+	
+				if (pi != null) {
+					parent.removeChild(pi);
+				}
+	
+				manager.reformat(newNode, false);
+				manager.setViewerSelection(newNode);
+			}
+			manager.endNodeAction(this);
 		}
-		manager.endNodeAction(this);
 	}
 }

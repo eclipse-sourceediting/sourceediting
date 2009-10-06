@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2008, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -40,6 +42,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.Position;
@@ -69,12 +72,13 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	
 	protected static final boolean DEBUG;
 	private static final boolean DEBUG_SAVE_OUTPUT = false;  //"true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.jsdt.web.core/debug/jstranslationstodisk")); //$NON-NLS-1$  //$NON-NLS-2$
-	private static final String ENDL = "\n"; //$NON-NLS-1$
+//	private static final String ENDL = "\n"; //$NON-NLS-1$
 	
-	private static final boolean REMOVE_XML_COMMENT = true;
 	private static final String XML_COMMENT_START = "<!--"; //$NON-NLS-1$
-	private static final String XML_COMMENT_END = "-->"; //$NON-NLS-1$
+//	private static final String XML_COMMENT_END = "-->"; //$NON-NLS-1$
 	private static final boolean REPLACE_INNER_BLOCK_SECTIONS_WITH_SPACE = false;
+	private static final Pattern fClientSideTagPattern = Pattern.compile("<[^)>]+/?>"); //$NON-NLS-1$
+	private static final Pattern fServerSideTagPattern = Pattern.compile("<%([^%]|%[^>])*%>"); //$NON-NLS-1$
 	
 	
 	static {
@@ -120,25 +124,6 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 	protected void advanceNextNode() {
 		setCurrentNode(getCurrentNode().getNext());
 	}	
-	
-	protected void cleanupXmlQuotes() {
-		if(REMOVE_XML_COMMENT) {
-			int index = -1;
-			int replaceLength  = XML_COMMENT_START.length();
-			while((index = fScriptText.indexOf(XML_COMMENT_START, index)) > -1) {
-				fScriptText.replace(index, index + replaceLength, new String(Util.getPad(replaceLength)));
-			}
-			
-			index = -1;
-			replaceLength  = XML_COMMENT_END.length();
-			while((index = fScriptText.indexOf(XML_COMMENT_END, index)) > -1) {
-				fScriptText.replace(index, index + replaceLength, new String(Util.getPad(replaceLength)));
-			}
-		}
-	}
-	
-	
-	
 	
 	public JsTranslator(IStructuredDocument document, 	String fileName) {
 		super("JavaScript translation for : "  + fileName); //$NON-NLS-1$
@@ -248,13 +233,13 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 		synchronized(fLock) {
 			scriptOffset = 0;
 			// reset progress monitor
-			cancelParse = false;
 			fScriptText = new StringBuffer();
 			fCurrentNode = fStructuredDocument.getFirstStructuredDocumentRegion();
 			rawImports.clear();
 			importLocationsInHtml.clear();
 			scriptLocationInHtml.clear();
 			missingEndTagRegionStart = -1;
+			cancelParse = false;
 		}
 		translate();
 	}
@@ -371,12 +356,9 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 					
 				}
 			}
+			
 		}
-		
-//		cleanupXmlQuotes();
-
 	}
-	
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.jsdt.web.core.javascript.IJsTranslator#translateInlineJSNode(org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion)
@@ -527,11 +509,52 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 //					fScriptText.append(regionText.substring(0, trailingTrim));
 //				}
 				else {
-					fScriptText.append(regionText);
+					// fix for https://bugs.eclipse.org/bugs/show_bug.cgi?id=284774
+					int index = -1;
+					int end = 0;
+					Matcher matcher = fClientSideTagPattern.matcher(regionText);
+					StringBuffer contents = new StringBuffer();
+					// find any instance of tags in the region text
+					if (!fServerSideTagPattern.matcher(regionText).matches()) {
+						while (index < regionText.length() && matcher.find(index + 1)) { //$NON-NLS-1$
+							index = matcher.start();
+							if (index > end)
+								contents.append(regionText.substring(end, index));
+							end = matcher.end();
+							// change the tag name to a valid variable name
+							int startOffset = container.getStartOffset(region) + index;
+							int line = container.getParentDocument().getLineOfOffset(startOffset);
+							int column;
+							try {
+								column = startOffset - container.getParentDocument().getLineOffset(line);
+							}
+							catch (BadLocationException e) {
+								column = -1;
+							}
+							if (line >= 0 && column >= 0) {
+								// if the column looks wrong, note any leading tabs would make it non-obvious
+								contents.append("__tag_" + (line+1) + "$" + column); //$NON-NLS-1$ //$NON-NLS-2$
+							}
+							else {
+								contents.append("__tag_" + startOffset); //$NON-NLS-1$ //$NON-NLS-2$
+							}
+						}
+						if (end > 0) {
+							contents.append(regionText.substring(end));
+						}
+						if (contents.length() != 0) {
+							fScriptText.append(contents.toString());
+						}
+						else {
+							fScriptText.append(regionText);
+						}
+					}
+					else {
+						fScriptText.append(Util.getPad(regionLength));
+					}
 					Position inHtml = new Position(scriptStart, scriptTextLength);
 					scriptLocationInHtml.add(inHtml);
 				}
-				
 				
 				scriptOffset = fScriptText.length();
 			}
@@ -564,7 +587,11 @@ public class JsTranslator extends Job implements IJsTranslator, IDocumentListene
 		}
 	}
 
-	
+	/**
+	 * @deprecated
+	 */
+	protected void cleanupXmlQuotes() {
+	}
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.text.IDocumentListener#documentAboutToBeChanged(org.eclipse.jface.text.DocumentEvent)

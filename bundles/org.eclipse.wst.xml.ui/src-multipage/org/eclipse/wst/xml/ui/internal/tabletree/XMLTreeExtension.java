@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004, 2008 IBM Corporation and others.
+ * Copyright (c) 2004, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -157,7 +157,7 @@ public class XMLTreeExtension extends TreeExtension {
 			String oldValue = treeContentHelper.getNodeValue((Node) item.getData());
 			String newValue = value.toString();
 			if ((newValue != null) && !newValue.equals(oldValue)) {
-				treeContentHelper.setNodeValue((Node) item.getData(), value.toString());
+				treeContentHelper.setNodeValue((Node) item.getData(), value.toString(), (control != null) ? control.getShell() : null);
 			}
 			// enableNodeSelectionListener(true);
 		}

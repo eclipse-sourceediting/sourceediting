@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2006 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -69,39 +69,41 @@ public class EditElementAction extends NodeAction {
 	}
 
 	public void run() {
-		manager.beginNodeAction(this);
 		Shell shell = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
-		EditElementDialog dialog = new EditElementDialog(shell, element);
-		dialog.create();
-		dialog.getShell().setText(title);
-		dialog.setBlockOnOpen(true);
-		dialog.open();
-
-		if (dialog.getReturnCode() == Window.OK) {
-			Document document = parent.getNodeType() == Node.DOCUMENT_NODE ? (Document) parent : parent.getOwnerDocument();
-			if (element != null) {
-				// here we need to do a rename... which seems to be quite hard
-				// to do :-(
-				if (element instanceof IDOMElement) {
-					IDOMElement elementImpl = (IDOMElement) element;
-					IDOMModel model = elementImpl.getModel();
-					String oldName = elementImpl.getNodeName();
-					String newName = dialog.getElementName();
-					setStructuredDocumentRegionElementName(model, elementImpl.getStartStructuredDocumentRegion(), oldName, newName);
-					setStructuredDocumentRegionElementName(model, elementImpl.getEndStructuredDocumentRegion(), oldName, newName);
+		if (validateEdit(manager.getModel(), shell)) {
+			manager.beginNodeAction(this);
+			EditElementDialog dialog = new EditElementDialog(shell, element);
+			dialog.create();
+			dialog.getShell().setText(title);
+			dialog.setBlockOnOpen(true);
+			dialog.open();
+	
+			if (dialog.getReturnCode() == Window.OK) {
+				Document document = parent.getNodeType() == Node.DOCUMENT_NODE ? (Document) parent : parent.getOwnerDocument();
+				if (element != null) {
+					// here we need to do a rename... which seems to be quite hard
+					// to do :-(
+					if (element instanceof IDOMElement) {
+						IDOMElement elementImpl = (IDOMElement) element;
+						IDOMModel model = elementImpl.getModel();
+						String oldName = elementImpl.getNodeName();
+						String newName = dialog.getElementName();
+						setStructuredDocumentRegionElementName(model, elementImpl.getStartStructuredDocumentRegion(), oldName, newName);
+						setStructuredDocumentRegionElementName(model, elementImpl.getEndStructuredDocumentRegion(), oldName, newName);
+					}
+				}
+				else {
+					Element newElement = document.createElement(dialog.getElementName());
+					NodeList nodeList = parent.getChildNodes();
+					int nodeListLength = nodeList.getLength();
+					Node refChild = (insertionIndex < nodeListLength) && (insertionIndex >= 0) ? nodeList.item(insertionIndex) : null;
+					parent.insertBefore(newElement, refChild);
+					manager.reformat(newElement, false);
+					manager.setViewerSelection(newElement);
 				}
 			}
-			else {
-				Element newElement = document.createElement(dialog.getElementName());
-				NodeList nodeList = parent.getChildNodes();
-				int nodeListLength = nodeList.getLength();
-				Node refChild = (insertionIndex < nodeListLength) && (insertionIndex >= 0) ? nodeList.item(insertionIndex) : null;
-				parent.insertBefore(newElement, refChild);
-				manager.reformat(newElement, false);
-				manager.setViewerSelection(newElement);
-			}
+			manager.endNodeAction(this);
 		}
-		manager.endNodeAction(this);
 	}
 
 	protected void setStructuredDocumentRegionElementName(IDOMModel model, IStructuredDocumentRegion flatNode, String oldName, String newName) {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2008 IBM Corporation and others.
+ * Copyright (c) 2001, 2009 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -157,14 +157,16 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 
 
 		public void run() {
-			beginNodeAction(this);
-			if (cmnode != null) {
-				addNodeForCMNode();
+			if (validateEdit(getModel(), getWorkbenchWindowShell())) {
+				beginNodeAction(this);
+				if (cmnode != null) {
+					addNodeForCMNode();
+				}
+				else {
+					addNodeForNodeType();
+				}
+				endNodeAction(this);
 			}
-			else {
-				addNodeForNodeType();
-			}
-			endNodeAction(this);
 		}
 	}
 
@@ -191,27 +193,29 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 		}
 
 		public void run() {
-			beginNodeAction(this);
-
-			for (Iterator i = list.iterator(); i.hasNext();) {
-				Node node = (Node) i.next();
-				if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
-					Attr attr = (Attr) node;
-					attr.getOwnerElement().removeAttributeNode(attr);
-				}
-				else {
-					Node parent = node.getParentNode();
-					if (parent != null) {
-						Node previousSibling = node.getPreviousSibling();
-						if ((previousSibling != null) && isWhitespaceTextNode(previousSibling)) {
-							parent.removeChild(previousSibling);
+			if (validateEdit(getModel(), getWorkbenchWindowShell())) {
+				beginNodeAction(this);
+	
+				for (Iterator i = list.iterator(); i.hasNext();) {
+					Node node = (Node) i.next();
+					if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
+						Attr attr = (Attr) node;
+						attr.getOwnerElement().removeAttributeNode(attr);
+					}
+					else {
+						Node parent = node.getParentNode();
+						if (parent != null) {
+							Node previousSibling = node.getPreviousSibling();
+							if ((previousSibling != null) && isWhitespaceTextNode(previousSibling)) {
+								parent.removeChild(previousSibling);
+							}
+							parent.removeChild(node);
 						}
-						parent.removeChild(node);
 					}
 				}
-			}
 
-			endNodeAction(this);
+				endNodeAction(this);
+			}
 		}
 	}
 
@@ -335,38 +339,40 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 		}
 
 		public void run() {
-			beginNodeAction(this);
-
-			Document document = parent.getNodeType() == Node.DOCUMENT_NODE ? (Document) parent : parent.getOwnerDocument();
-			Node newChildNode = null;
-			boolean format = true;
-			switch (nodeType) {
-				case Node.COMMENT_NODE : {
-					newChildNode = document.createComment(XMLUIMessages._UI_COMMENT_VALUE);
-					break;
+			if (validateEdit(getModel(), getWorkbenchWindowShell())) {
+				beginNodeAction(this);
+	
+				Document document = parent.getNodeType() == Node.DOCUMENT_NODE ? (Document) parent : parent.getOwnerDocument();
+				Node newChildNode = null;
+				boolean format = true;
+				switch (nodeType) {
+					case Node.COMMENT_NODE : {
+						newChildNode = document.createComment(XMLUIMessages._UI_COMMENT_VALUE);
+						break;
+					}
+					case Node.PROCESSING_INSTRUCTION_NODE : {
+						newChildNode = document.createProcessingInstruction(XMLUIMessages._UI_PI_TARGET_VALUE, XMLUIMessages._UI_PI_DATA_VALUE);
+						break;
+					}
+					case Node.CDATA_SECTION_NODE : {
+						newChildNode = document.createCDATASection(""); //$NON-NLS-1$
+						break;
+					}
+					case Node.TEXT_NODE : {
+						format = false;
+						newChildNode = document.createTextNode(parent.getNodeName());
+						break;
+					}
 				}
-				case Node.PROCESSING_INSTRUCTION_NODE : {
-					newChildNode = document.createProcessingInstruction(XMLUIMessages._UI_PI_TARGET_VALUE, XMLUIMessages._UI_PI_DATA_VALUE);
-					break;
+	
+				if (newChildNode != null) {
+					List list = new Vector(1);
+					list.add(newChildNode);
+					insertNodesAtIndex(parent, list, index, format);
 				}
-				case Node.CDATA_SECTION_NODE : {
-					newChildNode = document.createCDATASection(""); //$NON-NLS-1$
-					break;
-				}
-				case Node.TEXT_NODE : {
-					format = false;
-					newChildNode = document.createTextNode(parent.getNodeName());
-					break;
-				}
+	
+				endNodeAction(this);
 			}
-
-			if (newChildNode != null) {
-				List list = new Vector(1);
-				list.add(newChildNode);
-				insertNodesAtIndex(parent, list, index, format);
-			}
-
-			endNodeAction(this);
 		}
 	}
 
@@ -399,13 +405,15 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 		}
 
 		public void run() {
-			beginNodeAction(this);
-
-			if ((parent != null) && (cmnode != null)) {
-				remove(parent, startIndex, endIndex);
-				insert(parent, cmnode, startIndex);
+			if (validateEdit(getModel(), getWorkbenchWindowShell())) {
+				beginNodeAction(this);
+	
+				if ((parent != null) && (cmnode != null)) {
+					remove(parent, startIndex, endIndex);
+					insert(parent, cmnode, startIndex);
+				}
+				endNodeAction(this);
 			}
-			endNodeAction(this);
 		}
 	}
 
