@@ -26,7 +26,7 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
    public void test_externalcontextitem_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Expressions/ContextExpr/ExternalContextExpr/externalcontextitem-1.xq";
-      String resultFile = "/ExpectedTestResults/Expressions/ContextExpr/ExternalContextExpr/";
+
       String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -41,16 +41,12 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      Evaluator eval = new DefaultEvaluator(dc, null); // no context node
 	      ResultSequence rs = eval.evaluate(path);
 	
 	      AnyType result = rs.first();
-	      
-	      if (result == null) {
-	    	actual = "XPDY0002";  
-	      } else {
-	    	  actual = result.string_value();
-	      }
+
+	      actual = result.string_value();
 	      
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -881,16 +877,11 @@ public class ExternalContextExprTest extends AbstractPsychoPathTest {
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      Evaluator eval = new DefaultEvaluator(dc, null); // no context
 	      ResultSequence rs = eval.evaluate(path);
 	      
 	      AnyType result = rs.first();
-	
-	      if (result == null) {
-	    	  actual = "XPDY0002";
-	      } else {
-	    	  actual = result.string_value();
-	      }
+	      actual = result.string_value();
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {

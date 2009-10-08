@@ -25,7 +25,7 @@ public class SeqIDFuncTest extends AbstractPsychoPathTest {
    public void test_fn_id_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/";
+
       String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -40,7 +40,7 @@ public class SeqIDFuncTest extends AbstractPsychoPathTest {
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      Evaluator eval = new DefaultEvaluator(dc, null); // no context
 	      ResultSequence rs = eval.evaluate(path);
          
           actual = buildResultString(rs);
@@ -691,7 +691,6 @@ public class SeqIDFuncTest extends AbstractPsychoPathTest {
    public void test_fn_id_22() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeSeqFunc/SeqIDFunc/fn-id-22.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeSeqFunc/SeqIDFunc/";
       String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -706,7 +705,7 @@ public class SeqIDFuncTest extends AbstractPsychoPathTest {
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      Evaluator eval = new DefaultEvaluator(dc, null); // no context
 	      ResultSequence rs = eval.evaluate(path);
          
           actual = buildResultString(rs);

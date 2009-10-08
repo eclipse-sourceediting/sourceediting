@@ -3327,11 +3327,12 @@ public class SeqBooleanFuncTest extends AbstractPsychoPathTest {
       DynamicContext dc = setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
+      xpath = "fn:boolean(.)";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      Evaluator eval = new DefaultEvaluator(dc, null); // no context
 	      ResultSequence rs = eval.evaluate(path);
          
           actual = buildResultString(rs);

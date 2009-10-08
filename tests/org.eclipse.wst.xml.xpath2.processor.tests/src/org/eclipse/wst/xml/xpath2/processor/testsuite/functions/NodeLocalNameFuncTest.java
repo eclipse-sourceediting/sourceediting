@@ -39,11 +39,9 @@ public class NodeLocalNameFuncTest extends AbstractPsychoPathTest {
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      Evaluator eval = new DefaultEvaluator(dc, null);
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = "XPDY0002";
-	
+         	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -113,11 +111,9 @@ public class NodeLocalNameFuncTest extends AbstractPsychoPathTest {
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      Evaluator eval = new DefaultEvaluator(dc, null);
 	      ResultSequence rs = eval.evaluate(path);
          
-          actual = "XPDY0002";
-	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {

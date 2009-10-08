@@ -1471,7 +1471,7 @@ public class StringFuncTest extends AbstractPsychoPathTest {
    public void test_fn_string_1() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AccessorFunc/StringFunc/fn-string-1.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AccessorFunc/StringFunc/";
+
       String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1486,9 +1486,8 @@ public class StringFuncTest extends AbstractPsychoPathTest {
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      Evaluator eval = new DefaultEvaluator(dc, null); // no context document!
 
-	      dc.set_focus(new Focus(ResultSequenceFactory.create_new()));
 	      ResultSequence rs = eval.evaluate(path);
          
           actual = buildResultString(rs);
@@ -1547,7 +1546,7 @@ public class StringFuncTest extends AbstractPsychoPathTest {
    public void test_fn_string_3() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/AccessorFunc/StringFunc/fn-string-3.xq";
-      String resultFile = "/ExpectedTestResults/Functions/AccessorFunc/StringFunc/";
+
       String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -1563,8 +1562,8 @@ public class StringFuncTest extends AbstractPsychoPathTest {
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      dc.set_focus(new Focus(ResultSequenceFactory.create_new()));
+	      Evaluator eval = new DefaultEvaluator(dc, null);  // no context document!
+	      
 	      ResultSequence rs = eval.evaluate(path);
          
           actual = buildResultString(rs);

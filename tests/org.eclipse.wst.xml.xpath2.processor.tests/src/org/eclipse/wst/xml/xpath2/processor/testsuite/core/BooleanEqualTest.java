@@ -812,6 +812,9 @@ public class BooleanEqualTest extends AbstractPsychoPathTest {
       DynamicContext dc = setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
+      // override expression so that it is legal XPath 2.0
+      xpath = "(0,1) eq 0";
+
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);

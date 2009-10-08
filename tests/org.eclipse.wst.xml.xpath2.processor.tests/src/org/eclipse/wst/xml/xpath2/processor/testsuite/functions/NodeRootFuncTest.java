@@ -40,10 +40,8 @@ public class NodeRootFuncTest extends AbstractPsychoPathTest {
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      Evaluator eval = new DefaultEvaluator(dc, null); // no context
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = "XPDY0002";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
@@ -187,10 +185,8 @@ public class NodeRootFuncTest extends AbstractPsychoPathTest {
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      Evaluator eval = new DefaultEvaluator(dc, null); // no context
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = "XPDY0002";
 	
       } catch (XPathParserException ex) {
     	 actual = ex.code();

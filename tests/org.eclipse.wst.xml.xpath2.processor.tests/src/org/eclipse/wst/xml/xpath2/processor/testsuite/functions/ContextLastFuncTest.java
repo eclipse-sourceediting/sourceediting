@@ -71,17 +71,15 @@ public class ContextLastFuncTest extends AbstractPsychoPathTest {
       // Get XML Schema Information for the Document
       XSModel schema = getGrammar();
 
-      DynamicContext dc = setupDynamicContext(schema);
-      DefaultDynamicContext dcx = (DefaultDynamicContext) dc;
-      
+      DynamicContext dc = setupDynamicContext(schema);      
 
       String xpath = "last()";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      dc.set_focus(null);
+	      Evaluator eval = new DefaultEvaluator(dc, null); // no context document!
+	      
 	      ResultSequence rs = eval.evaluate(path);
          
           actual = buildResultString(rs);

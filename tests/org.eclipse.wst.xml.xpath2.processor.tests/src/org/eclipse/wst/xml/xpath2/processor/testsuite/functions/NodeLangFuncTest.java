@@ -152,11 +152,9 @@ public class NodeLangFuncTest extends AbstractPsychoPathTest {
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      Evaluator eval = new DefaultEvaluator(dc, null); // no context
 	      ResultSequence rs = eval.evaluate(path);
-         
-          actual = "XPDY0002";
-	
+         	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {
@@ -913,7 +911,6 @@ public class NodeLangFuncTest extends AbstractPsychoPathTest {
    public void test_fn_lang_22() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/NodeFunc/NodeLangFunc/fn-lang-22.xq";
-      String resultFile = "/ExpectedTestResults/Functions/NodeFunc/NodeLangFunc/";
       String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -928,13 +925,10 @@ public class NodeLangFuncTest extends AbstractPsychoPathTest {
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      Evaluator eval = new DefaultEvaluator(dc, null); // no context
 	      ResultSequence rs = eval.evaluate(path);
          
-	      // the way psychopath works is there always is a default context which is the document
-	      // we do check to make sure the context is valid.
-          actual = "XPDY0002";
-	
+	      // we cannot require that a context is always present
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {

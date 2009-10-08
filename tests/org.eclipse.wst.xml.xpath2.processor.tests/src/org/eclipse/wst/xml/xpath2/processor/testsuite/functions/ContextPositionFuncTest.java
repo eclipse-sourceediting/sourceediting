@@ -62,7 +62,7 @@ public class ContextPositionFuncTest extends AbstractPsychoPathTest {
    public void test_position_2() throws Exception {
       String inputFile = "/TestSources/emptydoc.xml";
       String xqFile = "/Queries/XQuery/Functions/ContextFunc/ContextPositionFunc/position-2.xq";
-      String resultFile = "/ExpectedTestResults/Functions/ContextFunc/ContextPositionFunc/";
+
       String expectedResult = "XPDY0002";
       URL fileURL = bundle.getEntry(inputFile);
       loadDOMDocument(fileURL);
@@ -76,8 +76,7 @@ public class ContextPositionFuncTest extends AbstractPsychoPathTest {
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      dc.set_focus(null);
+	      Evaluator eval = new DefaultEvaluator(dc, null);  // no context document!
 	      
 	      ResultSequence rs = eval.evaluate(path);
          

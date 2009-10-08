@@ -252,8 +252,7 @@ public class NormalizeSpaceFuncTest extends AbstractPsychoPathTest {
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 
-	   	  dc.set_focus(new Focus(ResultSequenceFactory.create_new()));
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      Evaluator eval = new DefaultEvaluator(dc, null); // no context document!
 	      ResultSequence rs = eval.evaluate(path);
          
           actual = buildResultString(rs);

@@ -148,6 +148,8 @@ public class NameTestTest extends AbstractPsychoPathTest {
       DynamicContext dc = setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
+      xpath = "./child::pr:b";
+      
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
@@ -184,6 +186,8 @@ public class NameTestTest extends AbstractPsychoPathTest {
       DynamicContext dc = setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
+      xpath = "./child::pr:*";
+
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);

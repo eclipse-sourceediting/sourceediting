@@ -6879,6 +6879,8 @@ public class AxesTest extends AbstractPsychoPathTest {
       DynamicContext dc = setupDynamicContext(schema);
 
       String xpath = extractXPathExpression(xqFile, inputFile);
+      xpath = "20[child::text()]";
+      
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);

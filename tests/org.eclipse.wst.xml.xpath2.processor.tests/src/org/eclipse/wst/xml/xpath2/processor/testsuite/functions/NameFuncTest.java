@@ -262,7 +262,7 @@ public class NameFuncTest extends AbstractPsychoPathTest {
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      Evaluator eval = new DefaultEvaluator(dc, null); // no context
 	      ResultSequence rs = eval.evaluate(path);
          
           actual = buildResultString(rs);
@@ -779,12 +779,8 @@ public class NameFuncTest extends AbstractPsychoPathTest {
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
-	      ResultSequence rs = eval.evaluate(path);
-         
-	      // We always have a context node, so make this pass anyways.
-          actual = "XPDY0002";
-	
+	      Evaluator eval = new DefaultEvaluator(dc, null); // no context
+	      ResultSequence rs = eval.evaluate(path);	
       } catch (XPathParserException ex) {
     	 actual = ex.code();
       } catch (StaticError ex) {

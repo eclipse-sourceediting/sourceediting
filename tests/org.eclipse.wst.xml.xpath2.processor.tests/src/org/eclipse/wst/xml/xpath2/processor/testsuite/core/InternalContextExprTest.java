@@ -36,11 +36,13 @@ public class InternalContextExprTest extends AbstractPsychoPathTest {
    	  dc.add_namespace("eg", "http://example.org");
 
       String xpath = extractXPathExpression(xqFile, inputFile);
+      // Override, since we don't have XQuery syntax
+      xpath = ".";
       String actual = null;
       try {
 	   	  XPath path = compileXPath(dc, xpath);
 	
-	      Evaluator eval = new DefaultEvaluator(dc, domDoc);
+	      Evaluator eval = new DefaultEvaluator(dc, null); // NO CONTEXT!
 	      ResultSequence rs = eval.evaluate(path);
          
           actual = buildResultString(rs);
