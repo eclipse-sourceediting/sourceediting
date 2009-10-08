@@ -50,7 +50,12 @@ public class FnNumber extends Function {
 
 		assert args.size() >= min_arity() && args.size() <= max_arity();
 
-		ResultSequence argument = (ResultSequence) args.iterator().next();
+		ResultSequence argument = null;
+		if (args.isEmpty()) {
+			argument = getResultSetForArityZero(dynamic_context());
+		} else {
+			argument = (ResultSequence) args.iterator().next();
+		}
 
 		return fn_number(argument, dynamic_context());
 	}
@@ -74,21 +79,20 @@ public class FnNumber extends Function {
 			throw new DynamicError(TypeError.invalid_type(null));
 
 		AnyType at = null;
-		if (arg.size() == 1)
+		if (arg.size() == 1) {
 			at = arg.first();
-		else
-			at = dc.context_item();
 
-		if (!(at instanceof AnyAtomicType))
-			DynamicError.throw_type_error();
+			if (!(at instanceof AnyAtomicType))
+				DynamicError.throw_type_error();
 
-		AnyAtomicType aat = (AnyAtomicType) at;
+			XSDouble d = XSDouble.parse_double(at.string_value());
+			if (d == null)
+				d = new XSDouble(Double.NaN);
+			rs.add(d);
+		} else {
+			rs.add(new XSDouble(Double.NaN));
+		}
 
-		XSDouble d = XSDouble.parse_double(aat.string_value());
-		if (d == null)
-			d = new XSDouble(Double.NaN);
-
-		rs.add(d);
 		return rs;
 	}
 

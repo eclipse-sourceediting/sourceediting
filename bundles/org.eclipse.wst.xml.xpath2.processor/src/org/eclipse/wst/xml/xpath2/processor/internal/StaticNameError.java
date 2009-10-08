@@ -22,6 +22,7 @@ public class StaticNameError extends StaticError {
 	 */
 	private static final long serialVersionUID = 4363370082563106074L;
 	public static final String NAME_NOT_FOUND = "XPST0008";
+	public static final String PREFIX_NOT_FOUND = "XPST0081";
 
 	/**
 	 * Constructor for static name error

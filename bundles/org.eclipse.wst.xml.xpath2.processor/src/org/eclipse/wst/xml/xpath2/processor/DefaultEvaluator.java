@@ -61,7 +61,6 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	}
 
 	private DynamicContext _dc;
-	private Document _doc;
 	private XPathException _err;
 
 	// stuff anyone may use
@@ -94,12 +93,11 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 	 */
 	public DefaultEvaluator(DynamicContext dc, Document doc) {
 		_dc = dc;
-		_doc = doc;
 		_err = null;
 
 		// initialize context item with root of document
 		ResultSequence rs = ResultSequenceFactory.create_new();
-		rs.add(new DocType(doc));
+		if (doc != null) rs.add(new DocType(doc));
 
 		_dc.set_focus(new Focus(rs));
 
@@ -1114,6 +1112,9 @@ public class DefaultEvaluator implements XPathVisitor, Evaluator {
 
 		// get context node
 		AnyType ci = _dc.context_item();
+		
+		if (ci == null) 
+			report_error(DynamicError.contextUndefined());
 
 		if (!(ci instanceof NodeType))
 			report_error(TypeError.ci_not_node(ci.string_type()));

@@ -64,7 +64,7 @@ public class FnPosition extends Function {
 			throws DynamicError {
 		assert args.size() == 0;
 
-		if (dc.focus() == null) {
+		if (dc.focus().context_item() == null) {
 			throw DynamicError.contextUndefined();
 		}
 		

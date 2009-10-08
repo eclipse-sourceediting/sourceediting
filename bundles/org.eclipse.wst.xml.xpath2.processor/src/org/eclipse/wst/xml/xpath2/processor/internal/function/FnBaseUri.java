@@ -43,7 +43,7 @@ public class FnBaseUri extends Function {
 	 * Constructor for FnBaseUri.
 	 */
 	public FnBaseUri() {
-		super(new QName("base-uri"), 1);
+		super(new QName("base-uri"), 0, 1);
 	}
 
 	/**
